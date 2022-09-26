@@ -1,15 +1,16 @@
-<codx-form
+<!-- <codx-form
   #form
   [headerText]="headerText"
   [subHeaderText]=""
   [body]="body"
   [footer]="footer"
   [data]="data"
+  [formControl]="dialogETemplate"
   [formModel]="formModel"
   [dialog]="dialog"
   *ngIf="isAfterRender"
->
-  <!-- <codx-form
+> -->
+<codx-form
   [dialog]="dialog"
   [headerText]="headerText"
   [subHeaderText]="subHeaderText"
@@ -357,7 +358,7 @@
             </div>
           </li>
           <li>
-            <a ngbDropdownItem href="#">
+            <a ngbDropdownItem>
               <div class="d-flex flex-column">
                 <span class="text-dark">Cấp quyền xem tài liệu</span>
                 <i class="fs-7 mt-1">Xin cấp quyền full xem tài liệu</i>
@@ -365,7 +366,7 @@
             </a>
           </li>
           <li>
-            <a ngbDropdownItem href="#">
+            <a ngbDropdownItem>
               <div class="d-flex flex-column">
                 <span class="text-dark">Cấp quyền full</span>
                 <i class="fs-7 mt-1">Xin cấp quyền full control</i>
@@ -382,50 +383,63 @@
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-center mt-4">
-      <div
-        class="d-flex align-items-center cursor-pointer"
-        (click)="openFormUploadFile()"
-      >
-        <span class="icon-attach_email icon-18 me-2 text-primary"></span>
-        <span class="text-primary fw-bold">
-          <codx-label
-            default="Đính kèm file"
-            name="lblAttachment"
-            formName="EmailTemplates"
-            gridViewName="grvEmailTemplates"
-          ></codx-label>
-        </span>
+      <div>
+        <div
+          class="d-flex align-items-center cursor-pointer"
+          (click)="openFormUploadFile()"
+        >
+          <span class="icon-attach_email icon-18 me-2 text-primary"></span>
+          <span class="text-primary fw-bold">
+            <codx-label
+              default="Đính kèm file"
+              name="lblAttachment"
+              formName="EmailTemplates"
+              gridViewName="grvEmailTemplates"
+            ></codx-label>
+          </span>
+        </div>
+        <div>
+          <codx-attachment
+            #attachment
+            [objectType]="formModel?.entityName"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            [functionID]="'EST04'"
+            (fileAdded)="fileAdded($event)"
+            (fileCount)="getfileCount($event)"
+            [objectId]="dialogETemplate.value.recID"
+            [allowMultiFile]="1"
+            [idBrowse]="'add'"
+          >
+          </codx-attachment>
+        </div>
       </div>
+
       <div #dataView id="dataView" (click)="focusCombobox()">
-        <codx-input
+        <!-- <codx-input
           type="combobox"
           [refValue]="'DataViewItems'"
           field="dataView"
           (valueChange)="valueChange($event)"
           placeholder="Chọn trường dữ liệu"
         >
-        </codx-input>
+        </codx-input> -->
+        <button
+          class="btn btn-sm btn-light d-flex align-items-center"
+          type="button"
+          id="dropdownMenuButton1"
+          aria-expanded="false"
+        >
+          <span>Chọn trường dữ liệu</span>
+          <span class="icon-keyboard_arrow_down icon-16 ms-2"></span>
+        </button>
       </div>
     </div>
-    <div>
-      <codx-attachment
-        #attachment
-        [objectType]="formModel?.entityName"
-        hideBtnSave="1"
-        hideFolder="1"
-        hideUploadBtn="1"
-        hideDes="1"
-        [functionID]="'EST04'"
-        (fileAdded)="fileAdded($event)"
-        (fileCount)="getfileCount($event)"
-        [objectId]="dialogETemplate.value.recID"
-        [allowMultiFile]="1"
-        [idBrowse]="'add'"
-      >
-      </codx-attachment>
-    </div>
-    <div #textarea class="request-box mt-4">
-      <div class="message" (click)="getPosition()" [style.width.px]="width">
+
+    <div #textarea class="request-box d-flex justify-content-between mt-4">
+      <div class="message w-100" (click)="getPosition()">
         <codx-input
           #richtexteditor
           type="textarea"
@@ -436,11 +450,29 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
+      <div class="ms-4" [style.width.px]="200" *ngIf="show">
+        <!-- <ejs-listview
+          id="ui-list"
+          #listviewInstance
+          [dataSource]="dataSource"
+          [enableVirtualization]="true"
+          headerTitle="Contacts"
+          [fields]="'name'"
+          height="500"
+          [template]="template"
+          [showHeader]="true"
+        ></ejs-listview> -->
+
+        <ejs-listview
+          id="sample-list-flat"
+          [dataSource]="dataSource"
+        ></ejs-listview>
+      </div>
     </div>
 
     <div class="d-flex flex-column mb-4 mt-20">
-      <div class="row mt-1">
-        <div class="col-7 d-flex align-items-center">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center me-3" *ngIf="showIsTemplate">
             <label class="ms-2 me-2">
               <codx-label
@@ -496,7 +528,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-5">
+        <div class="">
           <div class="d-flex align-items-center">
             <label class="mt-1 me-2">
               <codx-label
@@ -507,21 +539,22 @@
               >
               </codx-label>
             </label>
-            <codx-input
-              class="test-datetime ms-2"
-              type="datetime"
-              format="t"
-              field="sendTime"
-              [crrValue]="dialogETemplate.value.sendTime"
-              (valueChange)="valueChange($event)"
-            ></codx-input>
+            <div class="w-150px">
+              <codx-input
+                type="datetime"
+                format="t"
+                field="sendTime"
+                [crrValue]="dialogETemplate.value.sendTime"
+                (valueChange)="valueChange($event)"
+              ></codx-input>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </ng-template> -->
+  </ng-template>
 
-  <ng-template #body>
+  <!-- <ng-template #body>
     <div class="request-to">
       <div id="from">
         <div class="d-flex justify-content-between border-bottom mb-2">
@@ -847,14 +880,14 @@
         <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
           <li>
             <div class="mb-1 mx-3">
-              <!-- <codx-input
+              <codx-input
                 type="text"
                 [disabled]="false"
                 placeholder="Tìm kiếm"
 
                 (valueChange)="valueChange($event)"
               >
-              </codx-input> -->
+              </codx-input>
             </div>
           </li>
           <li>
@@ -889,36 +922,26 @@
       >
         <span class="icon-attach_email icon-18 me-2 text-primary"></span>
         <span class="text-primary fw-bold">
-          <!-- <codx-label
+          <codx-label
             default="Đính kèm file"
             name="lblAttachment"
             [formModel]="formModel"
-          ></codx-label> -->
+          ></codx-label>
         </span>
       </div>
       <div #dataView id="dataView" (click)="focusCombobox()">
-        <!-- <codx-input
-          type="combobox"
-          [refValue]="'DataViewItems'"
-          field="dataView"
-          (valueChange)="valueChange($event)"
-          placeholder="Chọn trường dữ liệu"
-        >
-        </codx-input> -->
         <codx-input
           type="combobox"
           [refValue]="'DataViewItems'"
           field="dataView"
           (valueChange)="valueChange($event)"
           placeholder="Chọn trường dữ liệu"
-          [formModel]="formModel"
-          [Group]="dialogETemplate"
         >
         </codx-input>
       </div>
     </div>
     <div>
-      <!-- <codx-attachment
+      <codx-attachment
         #attachment
         [objectType]="formModel?.entityName"
         hideBtnSave="1"
@@ -932,7 +955,7 @@
         [allowMultiFile]="1"
         [idBrowse]="'add'"
       >
-      </codx-attachment> -->
+      </codx-attachment>
     </div>
     <div #textarea class="request-box mt-4">
       <div class="message" (click)="getPosition()" [style.width.px]="width">
@@ -1009,7 +1032,7 @@
         </div>
       </div>
     </div>
-  </ng-template>
+  </ng-template> -->
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <a class="btn btn-primary fw-bold" (click)="onSaveWithTemplate(null)">
@@ -1110,3 +1133,9 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #template let-data>
+  <div class="e-list-wrapper e-list-avatar">
+    <span class="e-list-content">{{ data.name }}</span>
+  </div></ng-template
+>

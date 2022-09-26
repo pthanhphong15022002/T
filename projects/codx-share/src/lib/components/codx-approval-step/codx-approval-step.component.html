@@ -86,6 +86,7 @@
               <div class="d-flex flex-column">
                 <div class="text-dark fw-bold">
                   <codx-vll
+                    *ngIf="approver.status != '1'"
                     [value]="approver.status"
                     [name]="'ES003'"
                     [showIcon]="true"

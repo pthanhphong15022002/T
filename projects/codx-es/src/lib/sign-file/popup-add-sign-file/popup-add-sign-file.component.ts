@@ -682,7 +682,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   //#region Methods Save
   onSaveSignFile() {
-    this.dialogSignFile.patchValue(this.data);
+    //this.dialogSignFile.patchValue(this.data);
     if (this.dialogSignFile.invalid == true) {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
@@ -695,7 +695,7 @@ export class PopupAddSignFileComponent implements OnInit {
         if (res != null) {
           this.isSaved = true;
           //this.dialogSignFile.patchValue(res);
-          this.data = res;
+          // this.data = res;
           if (this.attachment.fileUploadList.length > 0) {
             this.attachment.objectId = res.recID;
             // this.attachment
@@ -725,7 +725,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.editSignFile(this.data).subscribe((res) => {
         if (res) {
           //this.dialogSignFile.patchValue(res);
-          this.data = res;
+          // this.data = res;
           console.log('EDIT SIGNFILE: ', res);
           console.log('...', this.dialogSignFile.value);
 
@@ -864,6 +864,8 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   async continue(currentTab) {
+    console.log(this.data);
+
     if (this.currentTab > 3) return;
 
     let oldNode = currentTab;
@@ -1007,14 +1009,12 @@ export class PopupAddSignFileComponent implements OnInit {
       dialogClose && dialogClose.close();
       this.dialog && this.dialog.close();
     } else {
-      this.esService
-        .editSignFile(this.dialogSignFile.value)
-        .subscribe((res) => {
-          if (res) {
-            dialogClose && dialogClose.close();
-            this.dialog && this.dialog.close(res);
-          }
-        });
+      this.esService.editSignFile(this.data).subscribe((res) => {
+        if (res) {
+          dialogClose && dialogClose.close();
+          this.dialog && this.dialog.close(this.data);
+        }
+      });
     }
   }
 
@@ -1025,6 +1025,11 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   close(dialogClose) {
+    if (this.isAddNew == false) {
+      if (this.data?.updateColumn != null) {
+        this.isEdit = true;
+      }
+    }
     if (
       this.processTab == 0 ||
       (this.isAddNew == false && this.isEdit == false) ||
@@ -1057,25 +1062,24 @@ export class PopupAddSignFileComponent implements OnInit {
     //Gửi duyệt
     this.esService
       .release(
-        this.dialogSignFile.value,
+        this.data,
         this.formModelCustom.entityName,
         this.formModelCustom.funcID
       )
       .subscribe((res) => {
         if (res?.msgCodeError == null && res?.rowCount) {
           this.dialogSignFile.patchValue({ approveStatus: '3' });
-          this.esService
-            .editSignFile(this.dialogSignFile.value)
-            .subscribe((result) => {
-              if (res) {
-                this.notify.notifyCode('Gửi duyệt thành công!');
-                this.dialog &&
-                  this.dialog.close({
-                    data: this.dialogSignFile.value,
-                    approved: true,
-                  });
-              }
-            });
+          this.data.approveStatus = '3';
+          this.esService.editSignFile(this.data).subscribe((result) => {
+            if (res) {
+              this.notify.notifyCode('Gửi duyệt thành công!');
+              this.dialog &&
+                this.dialog.close({
+                  data: this.data,
+                  approved: true,
+                });
+            }
+          });
         } else {
           this.notify.notifyCode(res?.msgCodeError);
         }

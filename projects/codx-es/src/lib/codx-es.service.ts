@@ -594,7 +594,7 @@ export class CodxEsService {
   }
 
   getApprovalSteps(model: GridModels): Observable<any> {
-    if (model.dataValue || model.dataValue != '' || model.dataValue != null) {
+    if (model.dataValue && (model.dataValue != '' || model.dataValue != null)) {
       return this.api.execSv(
         'es',
         'ERM.Business.ES',

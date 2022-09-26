@@ -7,10 +7,19 @@
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
           <codx-label
+            *ngIf="data?.approveStatus == 1 && isAddNew == true"
             name="lblTitleSignFile"
             default="Thêm mới tài liệu"
             [formModel]="formModelCustom"
           ></codx-label>
+          <codx-label
+            *ngIf="data?.approveStatus == 1 && isAddNew == false"
+            name="lblTitleEditSignFile"
+            default="Chỉnh sửa tài liệu"
+            [formModel]="formModelCustom"
+          ></codx-label>
+
+          <div *ngIf="data?.approveStatus != 1">{{ data?.title }}</div>
         </h2>
       </div>
       <div
@@ -186,9 +195,7 @@
             ngbDropdown
             class="dropdown"
             [style.visibility]="
-              currentTab == 3 && dialogSignFile.value.files?.length > 0
-                ? 'visible'
-                : 'hidden'
+              currentTab == 3 && data.files?.length > 0 ? 'visible' : 'hidden'
             "
           >
             <button
@@ -251,8 +258,8 @@
             (click)="approve()"
             [style.visibility]="
               currentTab == 3 &&
-              dialogSignFile.value.files?.length > 0 &&
-              dialogSignFile.value.approveStatus == '1'
+              data.files?.length > 0 &&
+              data.approveStatus == '1'
                 ? 'visible'
                 : 'hidden'
             "
@@ -318,7 +325,7 @@
                   #attachment
                   objectType="ES_SignFiles"
                   hideImageUpload="0"
-                  [objectId]="dialogSignFile.value.recID"
+                  [objectId]="data.recID"
                   hideBtnSave="1"
                   hideFolder="1"
                   hideUploadBtn="0"
@@ -360,7 +367,7 @@
                     type="text"
                     name="text"
                     field="title"
-                    [crrValue]="dialogSignFile.value?.title"
+                    [crrValue]="data?.title"
                     (valueChange)="valueChange($event)"
                   >
                   </codx-input>
@@ -376,7 +383,7 @@
                         [refValue]="cbxName['CategoryID']"
                         field="categoryID"
                         (valueChange)="valueChange($event)"
-                        [crrValue]="dialogSignFile.value?.categoryID"
+                        [crrValue]="data?.categoryID"
                       >
                       </codx-input>
                     </div>
@@ -390,7 +397,7 @@
                         field="priority"
                         (valueChange)="valueChange($event)"
                         [refValue]="cbxName['Priority']"
-                        [crrValue]="dialogSignFile.value?.priority"
+                        [crrValue]="data?.priority"
                       >
                       </codx-input>
                     </div>
@@ -406,7 +413,7 @@
                         name="text"
                         field="refNo"
                         [disabled]="true"
-                        [crrValue]="dialogSignFile.value.refNo"
+                        [crrValue]="data.refNo"
                       >
                       </codx-input>
                     </div>
@@ -420,7 +427,7 @@
                         format="d"
                         field="refDate"
                         [disabled]="oSignFile"
-                        [crrValue]="dialogSignFile.value.refDate"
+                        [crrValue]="data.refDate"
                         (valueChange)="valueChange($event)"
                       >
                       </codx-input>
@@ -437,7 +444,7 @@
                     [refValue]="cbxName['Owner']"
                     field="owner"
                     (valueChange)="valueChange($event)"
-                    [crrValue]="dialogSignFile.value?.owner"
+                    [crrValue]="data?.owner"
                   >
                   </codx-input>
                 </div>
@@ -451,7 +458,7 @@
                     [refValue]="cbxName['OrgUnitID']"
                     field="orgUnitID"
                     (valueChange)="valueChange($event)"
-                    [crrValue]="dialogSignFile.value?.orgUnitID"
+                    [crrValue]="data?.orgUnitID"
                   >
                   </codx-input>
                 </div>
@@ -467,9 +474,9 @@
                 *ngIf="currentTab == 2"
                 #viewApprovalStep
                 [transId]="
-                  dialogSignFile.value.approveControl == '1'
-                    ? dialogSignFile.value.recID
-                    : dialogSignFile.value.processID
+                  data.approveControl == '1'
+                    ? data.recID
+                    : data.processID
                 "
                 (addEditItem)="openFormAdd($event)"
               >
@@ -493,7 +500,7 @@
                   #attachment
                   objectType="ES_SignFiles"
                   hideImageUpload="0"
-                  [objectId]="dialogSignFile.value.recID"
+                  [objectId]="data.recID"
                   hideBtnSave="1"
                   hideFolder="1"
                   hideUploadBtn="0"
@@ -706,7 +713,7 @@
             [ngClass]="
               attachment?.fileUploadList?.length <= 0 &&
               currentTab == 0 &&
-              dialogSignFile.value.files?.length <= 0
+              data.files?.length <= 0
                 ? 'disabled'
                 : ''
             "
@@ -722,10 +729,10 @@
     </div>
     <div
       class="stepper-body no-header pt-2 w-100"
-      *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0"
+      *ngIf="currentTab == 3 && data.files?.length > 0"
     >
       <lib-pdf
-        [recID]="dialogSignFile.value.recID"
+        [recID]="data.recID"
         [isApprover]="false"
         [isDisable]="data?.approveStatus == '1' ? false : true"
         (isAreaControl)="setValueAreaControl($event)"

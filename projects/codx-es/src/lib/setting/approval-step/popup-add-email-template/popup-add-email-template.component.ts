@@ -75,6 +75,22 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
   width: any = 'auto';
 
+  show = false;
+  dataSource = [
+    { text: 'Hennessey Venom', id: 'list-01' },
+    { text: 'Bugatti Chiron', id: 'list-02' },
+    { text: 'Bugatti Veyron Super Sport', id: 'list-03' },
+    { text: 'SSC Ultimate Aero', id: 'list-04' },
+    { text: 'Koenigsegg CCR', id: 'list-05' },
+    { text: 'McLaren F1', id: 'list-06' },
+    { text: 'Aston Martin One- 77', id: 'list-07' },
+    { text: 'Jaguar XJ220', id: 'list-08' },
+    { text: 'McLaren P1', id: 'list-09' },
+    { text: 'Ferrari LaFerrari', id: 'list-10' },
+    { text: 'Zenvo ST1', id: 'list-11' },
+    { text: 'Lamborghini Veneno', id: 'list-12' },
+  ];
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -92,22 +108,25 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     console.log(this.formGroup);
 
     this.email = data?.data.dialogEmail;
+    this.email = {
+      templateID: '8bd48f33-b31e-ed11-9449-00155d035517',
+    };
     this.showIsPublish = data.data?.showIsPublish;
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
 
-    this.renderer.listen('window', 'click', (e: Event) => {
-      if (
-        this.dataView &&
-        e.target !== this.dataView?.nativeElement &&
-        this.textarea &&
-        this.isFocus == false
-      ) {
-        this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-        this.cr.detectChanges();
-      }
-      this.isFocus = false;
-    });
+    // this.renderer.listen('window', 'click', (e: Event) => {
+    //   if (
+    //     this.dataView &&
+    //     e.target !== this.dataView?.nativeElement &&
+    //     this.textarea &&
+    //     this.isFocus == false
+    //   ) {
+    //     this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+    //     this.cr.detectChanges();
+    //   }
+    //   this.isFocus = false;
+    // });
   }
 
   staticWidth: number = 0;
@@ -526,17 +545,19 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
   isFocus: boolean = false;
   focusCombobox(event = null) {
-    let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-    console.log('width', crrWidth);
+    this.show = !this.show;
+    // let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+    // console.log('width', crrWidth);
 
-    if (this.width == crrWidth || this.width == 'auto') {
-      this.width =
-        (this.textarea.nativeElement as HTMLElement).offsetWidth -
-        (this.dataView.nativeElement as HTMLElement).offsetWidth -
-        5;
-    }
+    // if (this.width == crrWidth || this.width == 'auto') {
+    //   this.width =
+    //     (this.textarea.nativeElement as HTMLElement).offsetWidth -
+    //     (this.dataView.nativeElement as HTMLElement).offsetWidth -
+    //     5;
+    // }
 
-    this.isFocus = true;
+    // this.isFocus = true;
+    this.width = (this.dataView.nativeElement as HTMLElement).offsetWidth + 5;
     this.cr.detectChanges();
   }
 }

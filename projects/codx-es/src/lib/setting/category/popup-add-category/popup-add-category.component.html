@@ -1,14 +1,3 @@
-<!-- <codx-form
-  #form
-  [dialog]="dialog"
-  [headerText]="headerText"
-  [subHeaderText]="subHeaderText"
-  [subHeader]="subHeader"
-  [body]="body"
-  [footer]="footer"
-  [data]="data"
-  *ngIf="isAfterRender"
-> -->
 <codx-form
   #form
   [headerText]="headerText"
@@ -73,14 +62,6 @@
         <div class="form-group">
           <codx-label fiedName="CategoryName" [formModel]="formModel">
           </codx-label>
-          <!-- <codx-input
-            type="text"
-            name="text"
-            field="categoryName"
-            [crrValue]="dialogCategory.value.categoryName"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input> -->
           <codx-input
             field="categoryName"
             [formModel]="formModel"
@@ -93,13 +74,6 @@
         <div class="form-group">
           <codx-label fiedName="CategoryID" [formModel]="formModel">
           </codx-label>
-          <!-- <codx-input
-            type="text"
-            field="categoryID"
-            [crrValue]="dialogCategory.value.categoryID"
-            disabled="true"
-          >
-          </codx-input> -->
           <codx-input
             type="text"
             field="categoryID"
@@ -111,17 +85,6 @@
       </div>
     </div>
     <div class="d-flex align-items-center mb-4">
-      <!-- <codx-input
-        #checkbox
-        type="switch"
-        id="switch"
-        [checked]="dialogCategory.value.eSign"
-        labelPosition="After"
-        field="eSign"
-        class="test-switch"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input> -->
       <codx-input
         #checkbox
         type="switch"
@@ -142,14 +105,6 @@
         <div class="form-group">
           <codx-label fiedName="SignatureType" [formModel]="formModel">
           </codx-label>
-          <!-- <codx-input
-            type="valuelist"
-            [refValue]="cbxName['SignatureType']"
-            [crrValue]="dialogCategory.value.signatureType"
-            field="signatureType"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input> -->
           <codx-input
             field="signatureType"
             [formModel]="formModel"
@@ -164,18 +119,6 @@
     </div>
     <div class="form-group">
       <codx-label fiedName="Memo" [formModel]="formModel"> </codx-label>
-      <!-- <codx-input
-        type="textarea"
-        format="ed2"
-        rows="3"
-        class="form-control"
-        field="memo"
-        ControlName="memo"
-        (valueChange)="valueChange($event)"
-        ngDefaultControl
-        [crrValue]="dialogCategory.value.memo ?? ''"
-      >
-      </codx-input> -->
       <codx-input
         type="textarea"
         format="ed2"
@@ -235,7 +178,7 @@
       </button>
     </div>
 
-    <div class="codx-approval" *ngIf="lstStep?.length > 0">
+    <!-- <div class="codx-approval" *ngIf="lstStep?.length > 0">
       <ng-container *ngFor="let item of lstStep; let index = index">
         <div class="codx-approval-step">
           <div class="codx-approval-header d-flex align-items-center mb-2">
@@ -289,7 +232,13 @@
           *ngIf="index == lstStep.length - 1"
         ></div>
       </ng-container>
-    </div>
+    </div> -->
+    <codx-approval-step
+      #approvalStep
+      [transID]="data.recID"
+      [approveStatus]="'1'"
+    >
+    </codx-approval-step>
   </ng-template>
   <ng-template #footer>
     <button
