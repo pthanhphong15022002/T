@@ -66,17 +66,16 @@ export class RoomsComponent extends UIComponent {
     private codxEpService: CodxEpService
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.funcID = this.router.snapshot.params['funcID'];    
+  }
+
+  onInit(): void {
+    //this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
       }
     });
-  }
-
-  onInit(): void {
-    //this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-   
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -96,7 +95,7 @@ export class RoomsComponent extends UIComponent {
     };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
-        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnGrids = [
             {
@@ -173,25 +172,6 @@ export class RoomsComponent extends UIComponent {
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
   }
-
-  // getEquiqments(equipments: any) {
-  //   equipments.map((res) => {
-  //     this.vllDevices.forEach((device) => {
-  //       if (res.equipmentID == device.value) {
-  //         this.lstDevices.push(device.text);
-  //       }
-  //     });
-  //   });
-  //   return this.lstDevices.join(';');
-  // }
-  // getCompanyName(companyID: string) {
-  //   this.codxEpService.getCompanyName(companyID).subscribe((res) => {
-  //     if (res.msgBodyData[0]) {
-  //       this.tempCompanyName = res.msgBodyData[0];
-  //     }
-  //   });
-  //   return this.tempCompanyName;
-  // }
 
   clickMF(event, data) {
     console.log(event);
@@ -298,7 +278,7 @@ export class RoomsComponent extends UIComponent {
   //     });
   // }
 
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
+  // closeDialog(evt?) {
+  //   this.dialog && this.dialog.close();
+  // }
 }
