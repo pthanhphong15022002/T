@@ -94,14 +94,27 @@
 
 <!-- tách riêng để dễ fix sau này -->
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <div class="d-flex justify-content-center h-60px">
-    <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [width]="30" [numberImages]="3">
+  <div *ngIf="setting?.resources" class="d-flex justify-content-center h-60px">
+    <codx-imgs
+      [objectId]="getResourceID(data)"
+      objectType="AD_Users"
+      [width]="30"
+      [numberImages]="3"
+    >
     </codx-imgs>
   </div>
+  <div *ngIf="!setting?.resources" class="d-flex justify-content-center h-60px">
+
+  </div>
   <div class="footer-bottom">
-    <div class="d-flex align-items-center justify-content-between">
-      <div *ngIf="data.tags">
-        <codx-tag [entityName]="view.formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data?.tags">
+    <div  class="d-flex align-items-center justify-content-between">
+      <div *ngIf="data.tags && setting?.tags">
+        <codx-tag
+          [entityName]="view.formModel.entityName"
+          [disabled]="true"
+          [isEdit]="false"
+          [value]="data?.tags"
+        >
         </codx-tag>
       </div>
       <div *ngIf="!data.tags"></div>
