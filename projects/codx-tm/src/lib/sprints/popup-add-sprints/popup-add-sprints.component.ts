@@ -242,7 +242,7 @@ export class PopupAddSprintsComponent implements OnInit {
   changeProject(e) {
     if (e.field == 'projectID' && e?.data && e?.data.trim() != '') {
       this.master[e.field] = e?.data;
-      var service = e.components?.service;
+      var service = e.component?.service;
 
       this.api
         .exec<any>(
