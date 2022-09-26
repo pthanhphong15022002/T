@@ -306,6 +306,7 @@
         [customSidebar]="withoutSidebar"
         [customThumbnail]="ngxThumbnail"
         [enableDragAndDrop]="true"
+        [pageViewMode]="'single'"
         [handTool]="true"
       >
       </ngx-extended-pdf-viewer>
@@ -373,7 +374,7 @@
                   >
                     <ng-template #signer let-approver>
                       <codx-temp-full
-                        cardCss="card-select  px-2 pt-2 pb-2"
+                        cardCss="card-select  px-2 pt-3 pb-2"
                         [(imageId)]="approver.authorID"
                         [imageObjType]="'AD_Users'"
                         [imageWidth]="35"

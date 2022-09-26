@@ -365,7 +365,7 @@
               </codx-imgs>
             </div>-->
           <div *ngIf="itemSelected.category == '3'" class="user-groups">
-            <codx-imgs [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="5"
+            <codx-imgs  [isToolTip]="false" [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="5"
               (mouseenter)="popoverEmpList(popoverList, itemSelected)" [ngbPopover]="popEmpList"
               popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
               autoClose="outside" [openDelay]="500">

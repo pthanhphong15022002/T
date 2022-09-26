@@ -19,6 +19,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { Device } from '../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component';
 
@@ -29,15 +30,12 @@ import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component
 })
 export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('gridTemplate') grid: TemplateRef<any>;
-  @ViewChild('itemTemplate') template!: TemplateRef<any>;
-  @ViewChild('statusCol') statusCol: TemplateRef<any>;
-  @ViewChild('rankingCol') rankingCol: TemplateRef<any>;
-  @ViewChild('categoryCol') categoryCol: TemplateRef<any>;
-  @ViewChild('avatar') avatar: TemplateRef<any>;
-  @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
-  @ViewChild('owner') owner: TemplateRef<any>;
+
+  @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
+  @ViewChild('locationCol') locationCol: TemplateRef<any>;
+  @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
+  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
   @Input() data!: any;
 
@@ -50,6 +48,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
 
+  vllDevices = [];
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -65,7 +64,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   str: string;
   dataSelected: any;
   devices: any;
-  tmplstDevice = [];
+  carsEquipments=[];
   temp: string;
   columnGrids: any;
   constructor(
@@ -84,52 +83,145 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     });
   }
   onInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    //this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    
+    this.cache.valueList('EP012').subscribe((res) => {
+      this.vllDevices = res.datas;
+      this.vllDevices.forEach((item) => {
+        let device = new Device();
+        device.id = item.value;
+        device.text = item.text;       
+        this.carsEquipments.push(device);
+        this.carsEquipments = JSON.parse(JSON.stringify(this.carsEquipments));
+      });
+    });
+    
   }
+
+  // ngAfterViewInit(): void {
+  //   this.buttons = {
+  //     id: 'btnAdd',
+  //   };
+  //   this.columnGrids = [
+  //     // {
+  //     //   field: 'resourceID',
+  //     //   headerText: 'Mã xe',
+  //     // },
+  //     // {
+  //     //   field: 'icon',
+  //     //   headerText: 'Ảnh đại diện',
+  //     //   template: this.avatar,
+  //     // },
+  //     // {
+  //     //   field: 'resourceName',
+  //     //   headerText: 'Tên xe',
+  //     // },
+  //     // {
+  //     //   field: 'capacity',
+  //     //   headerText: 'Số chỗ',
+  //     // },
+  //     // {
+  //     //   headerText: 'Người điều phối',
+  //     //   width: '20%',
+  //     //   template: this.owner,
+  //     // },
+  //   ];
+  //   this.views = [
+  //     {
+  //       sameData: true,
+  //       id: '1',
+  //       text: 'Danh mục xe',
+  //       type: ViewType.grid,
+  //       active: true,
+  //       model: {
+  //         resources: this.columnGrids,
+  //       },
+  //     },
+  //   ];
+  //   this.changeDetectorRef.detectChanges();
+  // }
 
   ngAfterViewInit(): void {
     this.buttons = {
       id: 'btnAdd',
     };
-    this.columnGrids = [
-      {
-        field: 'resourceID',
-        headerText: 'Mã xe',
-      },
-      {
-        field: 'icon',
-        headerText: 'Ảnh đại diện',
-        template: this.avatar,
-      },
-      {
-        field: 'resourceName',
-        headerText: 'Tên xe',
-      },
-      {
-        field: 'capacity',
-        headerText: 'Số chỗ',
-      },
-      {
-        headerText: 'Người điều phối',
-        width: '20%',
-        template: this.owner,
-      },
-    ];
-    this.views = [
-      {
-        sameData: true,
-        id: '1',
-        text: 'Danh mục xe',
-        type: ViewType.grid,
-        active: true,
-        model: {
-          resources: this.columnGrids,
-        },
-      },
-    ];
-    this.changeDetectorRef.detectChanges();
+    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+      this.cache
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnGrids = [
+            {
+              field: 'resourceName',
+              headerText: gv['ResourceName'].headerText,
+              width: '300',//gv['ResourceID'].width,
+              template: this.resourceNameCol,
+            },
+            {
+              headerText: gv['Category'].headerText,
+              //width: gv['Location'].width,
+              field: 'category',
+              template: this.locationCol,
+            },
+            {
+              headerText: gv['Equipments'].headerText,
+              //width: gv['Equipments'].width,
+              field: 'equipments',
+              template: this.equipmentsCol,
+              headerTextAlign: 'Center',
+              textAlign: 'Center',
+            },          
+            {
+              headerText: gv['Note'].headerText,
+              //width: gv['Note'].width,
+              field: 'note',
+              headerTextAlign: 'Center',  
+              textAlign: 'Center',            
+            },
+            {
+              headerText: 'Lái xe',//gv['Owner'].headerText,
+              //width:gv['Owner'].width,
+              width: 200,
+              template: this.preparatorCol,
+              headerTextAlign: 'Center',
+            },
+            {
+              headerText: gv['Owner'].headerText,
+              //width:gv['Owner'].width,
+              width: 200,
+              template: this.ownerCol,
+              headerTextAlign: 'Center',
+            },
+          ];
+          this.views = [
+            {
+              sameData: true,
+              id: '1',
+              text: 'Danh mục xe',
+              type: ViewType.grid,
+              active: true,
+              model: {
+                resources: this.columnGrids,
+              },
+            },
+          ];
+        });
+    });
+    this.detectorRef.detectChanges();
   }
-
+  openPopupDevice(template: any,lstEquipments? ) {    
+    this.carsEquipments.forEach(element => {
+      element.isSelected=false;
+    });
+    this.carsEquipments.forEach(element => {
+      lstEquipments.forEach(item=>{
+        if(element.id==item.equipmentID){
+          element.isSelected=true;
+        }
+      })
+    });
+    var dialog = this.callfc.openForm(template, '', 550, 430);
+    this.detectorRef.detectChanges();
+  }
   click(event: ButtonModel) {
     switch (event.id) {
       case 'btnAdd':
@@ -179,15 +271,33 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  // delete(obj?) {
+  //   this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  //   if (obj) {
+  //     this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+  //       console.log(res);
+  //     });
+  //   }
+  // }
+
   delete(obj?) {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
-        console.log(res);
+        if (res) {          
+          this.api.execSv(
+            'DM',
+            'ERM.Business.DM',
+            'FileBussiness',
+            'DeleteByObjectIDAsync',
+            [obj.recID, 'EP_Rooms', true]
+          )
+          .subscribe();
+        this.detectorRef.detectChanges();
+      }
       });
     }
   }
-
   onSelect(obj: any) {
     console.log(obj);
   }
@@ -204,7 +314,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
+  // closeDialog(evt?) {
+  //   this.dialog && this.dialog.close();
+  // }
 }
