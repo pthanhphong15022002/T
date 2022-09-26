@@ -73,7 +73,6 @@ export class PopupAddCarsComponent extends UIComponent {
 
   onInit(): void {
     this.initForm();
-
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -91,45 +90,21 @@ export class PopupAddCarsComponent extends UIComponent {
         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceCar));
       });
     });
-
-    this.codxEpService
-      .getComboboxName(
-        this.dialogRef.formModel.formName,
-        this.dialogRef.formModel.gridViewName
-      )
-      .then((res) => {
-        this.CbxName = res;
-        console.log('cbx', this.CbxName);
-      });
+    
   }
 
   initForm() {
     if (this.isAdd) {
-      this.headerText = 'Thêm mới xe';
-      //this.fGroupAddCar.value.resourceName=null;
+      this.headerText = 'Thêm mới xe';      
     } else {
-      this.headerText = 'Sửa thông tin xe';
-      this.avatarID = this.data.recID;
+      this.headerText = 'Sửa thông tin xe';      
     }
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.fGroupAddCar = item;
-        if (this.data) {
-          this.fGroupAddCar.patchValue(this.data);
-        }
-        this.fGroupAddCar.patchValue({
-          resourceType: '2',
-          linkType: '3',
-        });
+        this.fGroupAddCar = item;        
         this.isAfterRender = true;
-      });
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((res) => {
-        this.gviewCar = res;
-        console.log('grvEPT', this.gviewCar);
-      });
+      });    
   }
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
@@ -171,10 +146,14 @@ export class PopupAddCarsComponent extends UIComponent {
   }
 
   onSaveForm() {
+    this.data.linkType='3';
+    this.data.resourceType='2';
+    this.fGroupAddCar.patchValue(this.data);
     if (this.fGroupAddCar.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddCar, this.formModel);
       return;
     }
+
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         let tempEquip = new Equipments();
@@ -183,26 +162,11 @@ export class PopupAddCarsComponent extends UIComponent {
         this.lstEquipment.push(tempEquip);
       }
     });
+
     if (this.fGroupAddCar.value.category != 1) {
-      this.fGroupAddCar.value.companyID = null;
-    } else {
-      if (this.fGroupAddCar.value.companyID!=null && this.fGroupAddCar.value.companyID instanceof Object) {
-        this.fGroupAddCar.patchValue({
-          companyID: this.fGroupAddCar.value.companyID[0],
-        });
-      }
-    }
-    if (this.fGroupAddCar.value.owner instanceof Object) {
-      this.fGroupAddCar.patchValue({ owner: this.fGroupAddCar.value.owner[0] });
-    }
-    if (this.fGroupAddCar.value.linkID instanceof Object) {
-      this.fGroupAddCar.patchValue({
-        linkID: this.fGroupAddCar.value.linkID[0],
-      });
-    }
+      this.fGroupAddCar.patchValue({companyID:null});
+    }    
     this.fGroupAddCar.patchValue({
-      resourceType: '2',
-      linkType: '3',
       ranking:'1',
       equipments: this.lstEquipment,
     });
@@ -222,35 +186,13 @@ export class PopupAddCarsComponent extends UIComponent {
           this.dialogRef.close();
         }
         return;
-        // if (res.save) {
-        //   this.imageUpload.onSaveFile(res.save.recID);
-        //   this.dialogRef.close();
-        // }
-        // if (res.update) {
-        //   this.imageUpload
-        //     .updateFileDirectReload(res.update.recID)
-        //     .subscribe((result) => {
-        //       if (result) {
-        //         this.loadData.emit();
-        //       }
-        //     });
-        //   (this.dialogRef.dataService as CRUDService)
-        //     .update(res.update)
-        //     .subscribe();
-        // }
-        // return;
       });
   }
-
-  fileCount(event) {
-    this.fGroupAddCar.value.icon = event.data[0].data;
-  }
-  fileAdded(event) {
-    
-  }
-
-  popupUploadFile() {
-    this.attachment.uploadFile();
+  changeCategory(event:any){
+    if(event?.data && event?.data!='1'){
+      this.data.companyID=null;
+      this.detectorRef.detectChanges();
+    }
   }
 
   closeFormEdit(data) {
