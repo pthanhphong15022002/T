@@ -21,46 +21,14 @@ import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/
 })
 export class CardComponent implements OnInit {  
   @Input() formModel: any;
-  // @Input() type: any;
-  // html: string;
-  // count: number;
-  // tenant: string;
-  // oldFolderId: string;
-  // _propertyName: string = "";
-  // fullName: string = "";
-  // id: string = "";
-  // ext: string = "";
   user: any;
-  // item: FolderInfo;
   totalRating: number;
   totalViews: number;
-  // loaded: boolean;
-  // loadedFile: boolean;
-  // loadedFolder: boolean;
-  // setting: any;
-  // titleAccessDenied = "Bạn không có quyền truy cập thư mục này";
   @Input() data: any;
-  //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
-  // @ViewChild('view') view!: ViewsComponent;
-
-  // @Output() eventShow = new EventEmitter<boolean>();
   constructor(
-    private domSanitizer: DomSanitizer,
-    private tenantService: TenantService,
-    private folderService: FolderService,
-    private fileService: FileService,
-    private api: ApiHttpService,
     public dmSV: CodxDMService,
-    private modalService: NgbModal,
     private auth: AuthStore,
-    private notificationsService: NotificationsService,
-    private callfc: CallFuncService,
-    // private confirmationDialogService: ConfirmationDialogService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService
   ) {
-    // this.dmSV.confirmationDialogService = confirmationDialogService;
-    //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
   ngOnInit(): void {

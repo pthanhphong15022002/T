@@ -1,10 +1,10 @@
 
-<codx-views #codxViews  
+<codx-views #view  
     [views]="views" 
     [idField]="'recID'"
     [autoLoad]="true"
     [button]="buttonAdd" 
-    [entityName]="entityName" 
+    [entityName]="'FD_Cards'" 
     [selectedFirst]="true"
     (selectedChange)="selectedItem($event)"
     (buttonClick)="clickShowAssideRight()">
@@ -13,7 +13,7 @@
     <codx-temp-full 
         [dataItem]="data"
         [typeMF]="'hover'" 
-        [formModel]="codxViews.formModel"
+        [formModel]="view.formModel"
         imgCss="me-2"
         [typeMF]="'hover'" 
         (clickMF)="clickMF($event,data)"

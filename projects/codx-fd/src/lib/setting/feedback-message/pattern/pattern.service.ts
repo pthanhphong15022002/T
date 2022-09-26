@@ -1,23 +1,43 @@
 import { Injectable } from '@angular/core';
+import { ApiHttpService } from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PatternService {
-
-  id = "";
+  id = '';
   //recID = "";
   component = null;
   indexEdit = -1;
-  colorimg = "";
+  colorImage = '';
   load = true;
   private RecID = new BehaviorSubject<any>(null);
   recID = this.RecID.asObservable();
-  constructor() { }
+  constructor(private api: ApiHttpService) {}
 
   appendRecID(recID) {
     this.load = false;
     this.RecID.next(recID);
+  }
+
+  getFileByObjectID(recID) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByIbjectIDAsync',
+      recID
+    );
+  }
+
+  deleteFile(recID) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'DeleteByObjectIDAsync',
+      [recID, 'FD_Patterns', true]
+    );
   }
 }

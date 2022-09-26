@@ -109,17 +109,19 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           if (res) {
             this.data = res;
             this.recID = this.data.recID;
-            this.api
-              .execSv(
-                'DM',
-                'ERM.Business.DM',
-                'FileBussiness',
-                'GetListFileByIDAsync',
-                JSON.stringify([this.recID])
-              )
-              .subscribe((res) => {
-                debugger;
-              });
+            // this.api
+            //   .execSv(
+            //     'DM',
+            //     'ERM.Business.DM',
+            //     'FileBussiness',
+            //     'GetListFileByIDAsync',
+            //     JSON.stringify([this.recID])
+            //   )
+            //   .subscribe((res) => {
+            //     console.log(res);
+
+
+            //   });
           } else {
             this.setDefaut();
           }
@@ -195,7 +197,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.attachment.objectId = this.recID;
 
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
-        debugger;
+
         if (item2?.status == 0) {
         }
       });

@@ -28,6 +28,7 @@ import {
   NotificationsService,
   RequestOption,
 } from 'codx-core';
+import { CodxApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-approval-step/codx-approval-step.component';
 import { CodxEsService, GridModels } from '../../../codx-es.service';
 import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
@@ -39,6 +40,7 @@ import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-
 export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('editApprovalStep') editApprovalStep: TemplateRef<any>;
+  @ViewChild('approvalStep') approvalStep: CodxApprovalStepComponent;
 
   dialogCategory: FormGroup;
   isAfterRender: boolean = false;
@@ -78,9 +80,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.data = dialog?.dataService?.dataSelected;
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
-
-    console.log('formModel Cate', this.formModel);
-    console.log('category', this.data);
   }
 
   ngAfterViewInit(): void {
@@ -287,21 +286,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.cr.detectChanges();
   }
 
-  // valueChange(event) {
-  //   if (event?.field && event?.component) {
-  //     if (event?.data === Object(event?.data))
-  //       this.dialogCategory.patchValue({ [event['field']]: event.data.value });
-  //     else {
-  //       this.dialogCategory.patchValue({
-  //         [event['field']]: event.data.value,
-  //       });
-
-  //       this.dialogCategory.patchValue({ [event['field']]: event.data });
-  //     }
-  //   }
-  //   this.cr.detectChanges();
-  // }
-
   beforeSave(option: RequestOption) {
     let itemData = this.data;
     // let itemData = this.dialogCategory.value;
@@ -325,7 +309,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // this.dialog.dataService.dataSelected = this.dialogCategory.value;
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
@@ -333,14 +316,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res.update || res.save) {
           this.isSaved = true;
           this.updateAutonumber();
-          // if (res.save) {
-          //   this.updateApprovalStep(true);
-          // } else
           if (res.update) {
             (this.dialog.dataService as CRUDService)
               .update(res.update)
               .subscribe();
-            //this.updateApprovalStep(false);
           }
           if (isClose) {
             this.dialog && this.dialog.close();
@@ -429,6 +408,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
     popupeStep.closed.subscribe((res) => {
       if (res.event) {
+        this.approvalStep?.initForm();
       }
     });
   }

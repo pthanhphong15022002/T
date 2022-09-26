@@ -32,6 +32,7 @@ export class FeedbackMessageComponent extends UIComponent implements OnInit {
   formName = 'FDParameters';
   gridViewName = 'grvFDParameters';
   views: Array<ViewModel> = [];
+  funcID: any;
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
@@ -49,6 +50,7 @@ export class FeedbackMessageComponent extends UIComponent implements OnInit {
   onInit(): void {
     this.at.params.subscribe((params) => {
       if (params && params.funcID) {
+        this.funcID = params.funcID;
         switch (params.funcID) {
           case 'FDS011':
             this.type = this.fedsv.type = '1';

@@ -272,7 +272,7 @@ export class RolesComponent implements OnInit {
 
   ngOnInit(): void {      
     this.changePermission(0);
-    this.getRoleShare();
+    //this.getRoleShare();
   }
   getData(recID:any)
   {
@@ -286,6 +286,7 @@ export class RolesComponent implements OnInit {
   {
     if(this.fileEditing?.permissions && this.fileEditing?.permissions.length>0)
     {
+      
       var item = this.fileEditing?.permissions.filter(x=>x.objectID == this.user?.userID);
       this.hasShare = item[0]?.assign;
     }
@@ -367,7 +368,6 @@ export class RolesComponent implements OnInit {
   }
 
   checkCurrentRightUpdate(owner = true) {
-    if(!this.hasShare) return true;
     if (!this.isSystem) {
       if (this.user.administrator) 
         return false;
@@ -483,7 +483,7 @@ export class RolesComponent implements OnInit {
     // save old permission   
     // alert(1);
    // this.currentPemission = index;
-    debugger;
+    
     let isSystem = false;
     let objectType = "";
     if (this.currentPemission > -1) {
@@ -811,7 +811,7 @@ export class RolesComponent implements OnInit {
   }
 
   onSaveRole($event) {  
-    debugger;  
+      
     console.log($event);
     if ($event.data != undefined) {
       var data = $event.data;

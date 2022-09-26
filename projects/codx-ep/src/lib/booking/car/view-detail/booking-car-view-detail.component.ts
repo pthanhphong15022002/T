@@ -87,7 +87,7 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   }
 
   openFormFuncID(value, datas: any = null) {
-    debugger;
+    
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {
