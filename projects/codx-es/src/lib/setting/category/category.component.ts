@@ -24,6 +24,7 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../approval-step/approval-step.component';
+import { PopupAddEmailTemplateComponent } from '../approval-step/popup-add-email-template/popup-add-email-template.component';
 
 export class defaultRecource {}
 @Component({
@@ -83,20 +84,46 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.button = {
       id: 'btnAdd',
     };
-    this.esService.getFormModel(this.funcID).then((formModel) => {
+
+    this.moreFunc = [
+      {
+        id: 'btnEdit',
+        icon: 'icon-list-chechbox',
+        text: 'Sửa',
+      },
+      {
+        id: 'btnDelete',
+        icon: 'icon-list-chechbox',
+        text: 'Xóa',
+      },
+      {
+        id: 'btnEmail',
+        icon: 'icon-list-chechbox',
+        text: 'EmailTemplate',
+      },
+    ];
+  }
+
+  onLoading(evt: any) {
+    let formModel = this.viewBase.formModel;
+    if (formModel) {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnsGrid = [
             {
               field: 'categoryID',
-              headerText: gv['CategoryID'].headerText,
+              headerText: gv
+                ? gv['CategoryID'].headerText || 'categoryID'
+                : 'categoryID',
               template: '',
               width: 100,
             },
             {
               field: 'categoryName',
-              headerText: gv['CategoryName'].headerText,
+              headerText: gv
+                ? gv['CategoryName'].headerText || 'CategoryName'
+                : 'CategoryName',
               template: '',
               width: 180,
             },
@@ -108,13 +135,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'icon',
-              headerText: gv['Icon'].headerText,
+              headerText: gv ? gv['Icon'].headerText || 'Icon' : 'Icon',
               template: this.icon,
               width: 80,
             },
             {
               field: 'memo',
-              headerText: gv['Memo'].headerText,
+              headerText: gv ? gv['Memo'].headerText || 'Memo' : 'Memo',
               template: this.memo,
               width: 180,
             },
@@ -146,13 +173,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           ];
           this.cr.detectChanges();
         });
-    });
+    }
   }
 
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.addNew();
+        this.add();
         break;
       case 'btnEdit':
         this.edit();
@@ -160,10 +187,29 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       case 'btnDelete':
         this.delete();
         break;
+      case 'btnEmail':
+        let data = {
+          dialog: this.dialog,
+          formGroup: null,
+          dialogEmail: null,
+          showIsTemplate: true,
+          showIsPublish: true,
+          showSendLater: true,
+        };
+
+        this.callfunc.openForm(
+          PopupAddEmailTemplateComponent,
+          '',
+          800,
+          screen.height,
+          '',
+          data
+        );
+        break;
     }
   }
 
-  addNew(evt?: any) {
+  add(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();

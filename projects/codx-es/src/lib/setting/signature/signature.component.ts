@@ -10,6 +10,7 @@ import { FormGroup } from '@angular/forms';
 import {
   AuthService,
   ButtonModel,
+  CacheService,
   CallFuncService,
   DialogRef,
   FormModel,
@@ -57,22 +58,16 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   columnsGrid;
   dataSelected: any;
   dialog!: DialogRef;
-  formModel: FormModel;
 
   constructor(
     private callfunc: CallFuncService,
     private cr: ChangeDetectorRef,
+    private cacheSv: CacheService,
     private readonly auth: AuthService,
     private activedRouter: ActivatedRoute,
     private esService: CodxEsService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.esService.getFormModel(this.funcID).then((res) => {
-      if (res) {
-        this.formModel = res;
-        this.isAfterRender = true;
-      }
-    });
   }
 
   views: Array<ViewModel> = [];
@@ -99,79 +94,98 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       id: 'btnAdd',
     };
 
-    this.columnsGrid = [
-      {
-        field: 'email',
-        headerText: 'Email',
-        template: '',
-        width: 200,
-      },
-      {
-        field: 'fullName',
-        headerText: 'Tên',
-        template: '',
-        width: 200,
-      },
-      {
-        field: 'signatureType',
-        headerText: 'Phân loại',
-        template: this.signatureType,
-        width: 150,
-      },
-      {
-        field: 'supplier',
-        headerText: 'Nhà cung cấp',
-        template: this.supplier,
-        width: 150,
-      },
-      {
-        field: 'signature1',
-        headerText: 'Chữ kí chính',
-        template: this.imageSignature1,
-        width: 150,
-        textAlign: 'Center',
-      },
-      {
-        field: 'signature2',
-        headerText: 'Chữ kí nháy',
-        template: this.imageSignature2,
-        width: 150,
-        textAlign: 'Center',
-      },
-      {
-        field: 'stamp',
-        headerText: 'Con dấu',
-        template: this.imageStamp,
-        width: 150,
-        textAlign: 'Center',
-      },
-      {
-        field: 'otpControl',
-        headerText: 'OTP',
-        template: this.oTPControl,
-        width: 150,
-      },
-    ];
-    this.views = [
-      {
-        sameData: true,
-        type: ViewType.list,
-        active: false,
-        model: {
-          template: this.listItem,
-        },
-      },
-      {
-        sameData: true,
-        type: ViewType.grid,
-        active: true,
-        model: {
-          resources: this.columnsGrid,
-        },
-      },
-    ];
-
     this.cr.detectChanges();
+  }
+  onLoading(evt: any) {
+    let formModel = this.viewBase.formModel;
+    if (formModel) {
+      this.cacheSv
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.columnsGrid = [
+            {
+              field: 'email',
+              headerText: gv ? gv['Email'].headerText || 'Email' : 'Email',
+              template: '',
+              width: 200,
+            },
+            {
+              field: 'fullName',
+              headerText: gv
+                ? gv['FullName'].headerText || 'FullName'
+                : 'FullName',
+              template: '',
+              width: 200,
+            },
+            {
+              field: 'signatureType',
+              headerText: gv
+                ? gv['SignatureType'].headerText || 'SignatureType'
+                : 'SignatureType',
+              template: this.signatureType,
+              width: 150,
+            },
+            {
+              field: 'supplier',
+              headerText: gv
+                ? gv['Supplier'].headerText || 'Supplier'
+                : 'Supplier',
+              template: this.supplier,
+              width: 150,
+            },
+            {
+              field: 'signature1',
+              headerText: gv
+                ? gv['Signature1'].headerText || 'Signature1'
+                : 'Signature1',
+              template: this.imageSignature1,
+              width: 150,
+              textAlign: 'Center',
+            },
+            {
+              field: 'signature2',
+              headerText: gv
+                ? gv['Signature2'].headerText || 'Signature2'
+                : 'Signature2',
+              template: this.imageSignature2,
+              width: 150,
+              textAlign: 'Center',
+            },
+            {
+              field: 'stamp',
+              headerText: gv ? gv['Stamp'].headerText || 'Stamp' : 'Stamp',
+              template: this.imageStamp,
+              width: 150,
+              textAlign: 'Center',
+            },
+            {
+              field: 'otpControl',
+              headerText: gv ? gv['OTPControl'].headerText || 'Icon' : 'Icon',
+              template: this.oTPControl,
+              width: 150,
+            },
+          ];
+          this.views = [
+            {
+              sameData: true,
+              type: ViewType.list,
+              active: false,
+              model: {
+                template: this.listItem,
+              },
+            },
+            {
+              sameData: true,
+              type: ViewType.grid,
+              active: true,
+              model: {
+                resources: this.columnsGrid,
+              },
+            },
+          ];
+          this.cr.detectChanges();
+        });
+    }
   }
 
   click(evt: ButtonModel) {

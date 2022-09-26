@@ -41,7 +41,7 @@ export class IncommingAddComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('tmpagency') tmpagency: any;
   @ViewChild('tmpdept') tmpdept: any;
-  @ViewChild('myform') myForm: any;
+  @ViewChild('form') myForm: any;
   submitted = false;
   checkAgenciesErrors = false;
   dltDis = false;
@@ -97,7 +97,8 @@ export class IncommingAddComponent implements OnInit {
     this.dataRq.formName = this.formModel?.formName;
     this.dataRq.funcID = this.formModel?.funcID;
 
-    if (this.type == 'add' || this.type == 'copy') {
+    if (this.type == 'add' || this.type == 'copy') 
+    {
       this.dispatch.copies = 1;
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
@@ -108,8 +109,15 @@ export class IncommingAddComponent implements OnInit {
         if(this.formModel?.funcID == "ODT41") this.dispatch.owner = user?.userID
       }
       this.dispatch.createdOn = new Date();
-    } else if (this.type == 'edit') {
+    } 
+    else if (this.type == 'edit') 
+    {
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
+      if(this.dispatch.departmentName) 
+      {
+        this.activeDiv = "dv"
+        this.hidepb = false
+      }
     }
 
     this.getKeyRequied();
@@ -147,12 +155,16 @@ export class IncommingAddComponent implements OnInit {
   }
 
   changeValueDept(event: any) {
-    this.dispatch.agencyID = event?.data;
+    
+    this.dispatch.departmentName = event?.data;
+    if(event?.component?.itemsSelected[0]?.AgencyID)
+      this.dispatch.departmentID = event?.component?.itemsSelected[0]?.AgencyID;
   }
 
   //Người chịu trách nhiệm
   changeValueOwner(event: any) {
     this.dispatch.owner = event.data?.value[0];
+
   }
   //Nơi nhận
   changeValueBUID(event: any) {
@@ -213,6 +225,8 @@ export class IncommingAddComponent implements OnInit {
       ) {
         this.hidepb = false;
         this.activeDiv = 'dv';
+        this.myForm?.formGroup.patchValue({departmentName: null})
+        //this.ref.detectChanges()
         //this.showAgency = true;
         //this.checkAgenciesErrors = false;
       }

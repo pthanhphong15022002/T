@@ -141,6 +141,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     } else if (this.action == 'edit') {
       // this.setTimeEdit();
       this.resources = this.meeting.resources;
+     if(this.resources?.length > 0 ){
+      this.resources.forEach(obj=>this.listUserID.push(obj.resourceID))
+     }
     } else if (this.action == 'copy') {
       this.meeting.meetingType = '1';
       this.resources = [];
@@ -234,7 +237,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
-        this.attachment.clearData();
+        this.attachment?.clearData();
         if (res) {
           this.dialog.close([res.save]);
         } else this.dialog.close();
@@ -245,7 +248,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        this.attachment.clearData();
+        this.attachment?.clearData();
         this.dialog.close();
       });
   }
@@ -285,7 +288,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notify('Vui lòng nhập đường link họp online !');
       return;
     }
-    if (this.attachment.fileUploadList.length)
+    if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.meeting.attachments = Array.isArray(res) ? res.length : 1;
@@ -311,6 +314,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ];
 
   setTitle(e: any) {
+    
     this.title =
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     //this.changDetec.detectChanges();
@@ -668,7 +672,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.calendarID = param.CalendarID;
-          // this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
+          this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
           this.getTimeWork(
             moment(new Date(this.meeting.startDate))
               .set({ hour: 0, minute: 0, second: 0 })

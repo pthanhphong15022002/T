@@ -87,7 +87,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
   }
 
   openFormFuncID(value, datas: any = null) {
-    debugger;
+    
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {

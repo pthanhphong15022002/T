@@ -171,18 +171,10 @@ export class PopupAddCarsComponent extends UIComponent {
   }
 
   onSaveForm() {
-    // const invalid = [];
-    // const controls = this.gviewCar;
-    // for (const name in controls) {
-    //   if (this.gviewCar[name].isRequire) {
-    //     invalid.push(name);
-    //   }
-    // }
     if (this.fGroupAddCar.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddCar, this.formModel);
       return;
     }
-
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         let tempEquip = new Equipments();
@@ -194,7 +186,7 @@ export class PopupAddCarsComponent extends UIComponent {
     if (this.fGroupAddCar.value.category != 1) {
       this.fGroupAddCar.value.companyID = null;
     } else {
-      if (this.fGroupAddCar.value.companyID instanceof Object) {
+      if (this.fGroupAddCar.value.companyID!=null && this.fGroupAddCar.value.companyID instanceof Object) {
         this.fGroupAddCar.patchValue({
           companyID: this.fGroupAddCar.value.companyID[0],
         });
@@ -211,29 +203,42 @@ export class PopupAddCarsComponent extends UIComponent {
     this.fGroupAddCar.patchValue({
       resourceType: '2',
       linkType: '3',
+      ranking:'1',
       equipments: this.lstEquipment,
     });
 
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res.save) {
-          this.imageUpload.onSaveFile(res.save.recID);
-          this.dialogRef.close();
-        }
-        if (res.update) {
+        if (res) {
+          let objectID= res.save.recID !=null? res.save.recID:res.update.recID;
           this.imageUpload
-            .updateFileDirectReload(res.update.recID)
+            .updateFileDirectReload(objectID)
             .subscribe((result) => {
               if (result) {
-                this.loadData.emit();
+                //this.loadData.emit();
               }
             });
-          (this.dialogRef.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
+          this.dialogRef.close();
         }
         return;
+        // if (res.save) {
+        //   this.imageUpload.onSaveFile(res.save.recID);
+        //   this.dialogRef.close();
+        // }
+        // if (res.update) {
+        //   this.imageUpload
+        //     .updateFileDirectReload(res.update.recID)
+        //     .subscribe((result) => {
+        //       if (result) {
+        //         this.loadData.emit();
+        //       }
+        //     });
+        //   (this.dialogRef.dataService as CRUDService)
+        //     .update(res.update)
+        //     .subscribe();
+        // }
+        // return;
       });
   }
 
@@ -241,7 +246,7 @@ export class PopupAddCarsComponent extends UIComponent {
     this.fGroupAddCar.value.icon = event.data[0].data;
   }
   fileAdded(event) {
-    debugger;
+    
   }
 
   popupUploadFile() {
@@ -251,23 +256,5 @@ export class PopupAddCarsComponent extends UIComponent {
   closeFormEdit(data) {
     this.initForm();
     this.closeEdit.emit(data);
-  }
-  dataValid() {
-    var data = this.fGroupAddCar.value;
-    var result = true;
-    var requiredControlName = ['resourceName', 'owner', 'capacity', 'category'];
-    requiredControlName.forEach((item) => {
-      var x = data[item];
-      if (!data[item]) {
-        let fieldName = item.charAt(0).toUpperCase() + item.slice(1);
-        this.notificationsService.notifyCode(
-          'E0001',
-          0,
-          '"' + this.gviewCar[fieldName].headerText + '"'
-        );
-        result = false;
-      }
-    });
-    return result;
   }
 }

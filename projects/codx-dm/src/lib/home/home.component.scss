@@ -57,10 +57,15 @@ codx-treeview .no-permission {
 .text-muted {
   color: #91919f!important;
 }
-// thead, tbody { display: block; }
 
-// tbody {
-//     height: 80vh;       /* Just for the demo          */
-//     overflow-y: auto;    /* Trigger vertical scroll    */
-//     overflow-x: hidden;  /* Hide the horizontal scroll */
-// }
+.tb-dm tbody {
+  display:block;
+  height: calc(100% - 107px);
+  overflow:auto;
+}
+.tb-dm thead, .tb-dm tbody tr {
+  display:table;
+  height: 30px;
+  width:100%;
+  table-layout:fixed;
+}

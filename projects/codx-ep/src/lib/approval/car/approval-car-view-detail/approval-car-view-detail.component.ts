@@ -87,7 +87,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   }
 
   openFormFuncID(value, datas: any = null) {
-    debugger;
+    
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {

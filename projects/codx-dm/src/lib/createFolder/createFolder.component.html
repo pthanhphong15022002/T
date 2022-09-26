@@ -57,7 +57,7 @@
           }}</ng-template>
           <ng-template #thenBlockErrorElseFolder>{{ message }}</ng-template>
         </div>
-        <div class="mt-2">
+        <div class="mt-5 mb-2">
           <button
             (click)="isShowAll(true)"
             type="button"
@@ -76,7 +76,7 @@
             <ul class="nav nav-tabs nav-tabs-line">
               <li class="nav-item">
                 <a
-                  class="nav-link active"
+                  class="nav-link active fw-bold"
                   data-toggle="tab"
                   (click)="onSetPermision(false)"
                 >
@@ -98,7 +98,7 @@
               id="tab_role"
               role="tabpanel"
             >
-              <div class="dms-user-mini-group">
+              <div class="dms-user-mini-group border rounded p-2">
                 <ng-container
                   *ngIf="fileEditing != null && fileEditing.permissions != null"
                 >
@@ -115,7 +115,7 @@
                     >
                       <div class="user-mini-item">
                         <div class="d-flex align-items-center">
-                          <div class="me-2">
+                          <div>
                             <div
                               *ngIf="
                                 perm.objectID == null || perm.objectID == '';
