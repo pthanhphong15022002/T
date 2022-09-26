@@ -237,7 +237,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
-        this.attachment.clearData();
+        this.attachment?.clearData();
         if (res) {
           this.dialog.close([res.save]);
         } else this.dialog.close();
@@ -248,7 +248,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        this.attachment.clearData();
+        this.attachment?.clearData();
         this.dialog.close();
       });
   }

@@ -134,7 +134,7 @@ export class PopupAddSprintsComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.attachment.clearData();
+          this.attachment?.clearData();
           this.dialog.close();
         }
       });
