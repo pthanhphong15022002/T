@@ -113,14 +113,14 @@
       </div>
     </div>
     <div class="col-4">
-      <div class="d-flex align-items-center">
-        <div class="me-3">
+      <div class="d-flex justify-content-end">
+        <div class="ms-3">
           <codx-input name="verifyControl" type="switch" class="test-switch" field="verifyControl"
             [checked]="taskGroups.verifyControl === '1'" (valueChange)="valueWitch($event)"
             [refValue]="gridViewSetup.VerifyControl.referedValue">
           </codx-input>
         </div>
-        <div class="me-3">
+        <div class="ms-3">
           <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.verifyControl == '1'"
             (click)="openShare(controlShare, true)">
           </span>
@@ -141,14 +141,14 @@
       </div>
     </div>
     <div class="col-4">
-      <div class="d-flex align-items-center">
-        <div class="me-3">
+      <div class="d-flex justify-content-end">
+        <div class="ms-3">
           <codx-input name="approveControl" type="switch" class="test-switch" field="approveControl"
             [checked]="taskGroups.approveControl === '1'" (valueChange)="valueWitch($event)"
             [refValue]="gridViewSetup.ApproveControl.referedValue">
           </codx-input>
         </div>
-        <div class="me-3">
+        <div class="ms-3">
           <span class="icon-edit text-primary icon-18" *ngIf="taskGroups.approveControl == '1'"
             (click)="openShare(controlShare, false)">
 
@@ -169,13 +169,13 @@
       </div>
     </div>
     <div class="col-4">
-      <div class="d-flex align-items-center">
-        <div class="me-3">
+      <div class="d-flex justify-content-end">
+        <div class="ms-3">
           <codx-input name="maxHoursControl" type="switch" class="test-switch" field="maxHoursControl"
             [checked]="taskGroups.maxHoursControl === '1'" (valueChange)="valueWitch($event)">
           </codx-input>
         </div>
-        <div class="me-3">
+        <div class="ms-3">
           <span class="icon-edit text-primary icon-18" (click)="openPopupLink()"
             *ngIf="taskGroups.maxHoursControl == '1'"></span>
         </div>
@@ -194,9 +194,12 @@
       </div>
     </div>
     <div class="col-4">
-      <codx-input name="editControl" type="switch" class="test-switch" field="editControl"
-        [checked]="taskGroups.editControl ==='1'" (valueChange)="valueWitch($event)">
-      </codx-input>
+      <div class="d-flex justify-content-end">
+        <codx-input name="editControl" type="switch" class="test-switch" field="editControl"
+          [checked]="taskGroups.editControl ==='1'" (valueChange)="valueWitch($event)">
+        </codx-input>
+        <span class="ms-3"></span>
+      </div>
     </div>
   </div>
   <div class="form-group row mt-3">
@@ -211,9 +214,12 @@
       </div>
     </div>
     <div class="col-4">
-      <codx-input name="dueDateControl" type="switch" class="test-switch" field="dueDateControl"
-        [checked]="taskGroups.dueDateControl === '1'" (valueChange)="valueWitch($event)">
-      </codx-input>
+      <div class="d-flex justify-content-end">
+        <codx-input name="dueDateControl" type="switch" class="test-switch" field="dueDateControl"
+          [checked]="taskGroups.dueDateControl === '1'" (valueChange)="valueWitch($event)">
+        </codx-input>
+        <span class="ms-3"></span>
+      </div>
     </div>
   </div>
   <div class="form-group row mt-3">
@@ -229,9 +235,12 @@
       </div>
     </div>
     <div class="col-4">
-      <codx-input name="autoCompleted" type="switch" class="test-switch" field="autoCompleted"
-        [checked]="taskGroups.autoCompleted === '1'" (valueChange)="valueWitch($event)">
-      </codx-input>
+      <div class="d-flex justify-content-end">
+        <codx-input name="autoCompleted" type="switch" class="test-switch" field="autoCompleted"
+          [checked]="taskGroups.autoCompleted === '1'" (valueChange)="valueWitch($event)">
+        </codx-input>
+        <span class="ms-3"></span>
+      </div>
     </div>
   </div>
   <div class="form-group row mt-3">
@@ -246,9 +255,12 @@
       </div>
     </div>
     <div class="col-4">
-      <codx-input name="extendControl" type="switch" class="test-switch" field="extendControl"
-        [checked]="taskGroups.extendControl ==='1'" (valueChange)="valueWitch($event)">
-      </codx-input>
+      <div class="d-flex justify-content-end">
+        <codx-input name="extendControl" type="switch" class="test-switch" field="extendControl"
+          [checked]="taskGroups.extendControl ==='1'" (valueChange)="valueWitch($event)">
+        </codx-input>
+        <span class="ms-3"></span>
+      </div>
     </div>
   </div>
   <div class="form-group row mt-3">
@@ -263,24 +275,25 @@
       </div>
     </div>
     <div class="col-4">
-      <codx-input name="confirmControl" type="switch" class="test-switch" field="confirmControl"
-        [checked]="taskGroups.confirmControl==='1'" (valueChange)="valueWitch($event)">
-      </codx-input>
+      <div class="d-flex justify-content-end">
+        <codx-input name="confirmControl" type="switch" class="test-switch" field="confirmControl"
+          [checked]="taskGroups.confirmControl==='1'" (valueChange)="valueWitch($event)">
+        </codx-input>
+        <span class="ms-3"></span>
+      </div>
     </div>
   </div>
 </ng-template>
 <ng-template #tabJob>
-  <div class="form-group row mt-3">
-    <div class="form-group col-8">
+  <div class="d-flex algin-items-center justify-content-between">
+    <div class="d-flex flex-column">
       <codx-label fiedName="CheckListControl" default="Nhập việc cần làm" formName="TaskGroups"
         gridViewName="grvTaskGroups"></codx-label>
-      <div>
-        <codx-label class="fw-normal text-gray-500" fiedName="CheckListControl" default="Kiểm soát nhập liệu checklist"
-          formName="TaskGroups" gridViewName="grvTaskGroups">
-        </codx-label>
-      </div>
+      <codx-label class="fw-normal text-gray-500" fiedName="CheckListControl" default="Kiểm soát nhập liệu checklist"
+        formName="TaskGroups" gridViewName="grvTaskGroups">
+      </codx-label>
     </div>
-    <div class="col-4">
+    <div class="ms-3">
       <codx-input name="checkListControl" type="valuelist" [refValue]="gridViewSetup.CheckListControl.referedValue"
         field="CheckListControl" placeholder="" [crrValue]="taskGroups.checkListControl"
         (valueChange)="valueCheck($event)">
@@ -288,29 +301,32 @@
     </div>
   </div>
   <div class="workToDo" *ngIf="taskGroups.checkListControl == '2'">
-    <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
-      <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between mt-3 mb-5">
+      <span class="text-primary fw-bold">
         <codx-label default="Công việc cần làm" formName="TaskGroups" gridViewName="grvTaskGroups">
         </codx-label>
-        <span class="text-primary fw-bold"></span>
-      </div>
-      <div class="d-flex mt-2">
-        <a (click)="addTodolist()" class="btn btn-sm btn-outline-secondary">
-          <i class="icon-add icon-16 text-dark-75"></i>
-          <codx-label default="Add to do list" formName="TaskGroups" gridViewName="grvTaskGroups">
-          </codx-label>
-        </a>
-      </div>
+      </span>
+      <a (click)="addTodolist()" class="btn btn-sm btn-light-primary">
+        <i class="icon-add icon-16"></i>
+        <codx-label default="Add to do list" formName="TaskGroups" gridViewName="grvTaskGroups">
+        </codx-label>
+      </a>
     </div>
     <div class="form-group">
       <div class="checkbox-list">
         <ng-container *ngFor="let item of listTodo; index as i;">
-          <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
-            <label class="checkbox checkbox-square checkbox-sm mb-0">
-              <input #checkShareRight1 type="checkbox" id="checkShareRight1"
-                (change)="onChangeToDoStatus(checkShareRight1.checked, i)" disabled="disabled">
-              <span></span>{{item.text}}
-            </label>
+          <div
+            class="d-flex justify-content-between align-items-center checkbox-item py-2 px-3 rounded-1 bg-gray-100 mb-2">
+            <div class="d-flex algin-items-center">
+              <div class="d-flex justify-content-between pt-1">
+                <label class="checkbox checkbox-square mb-0">
+                  <input #checkShareRight1 type="checkbox" id="checkShareRight1"
+                    (change)="onChangeToDoStatus(checkShareRight1.checked, i)" disabled="disabled">
+                  <span></span>
+                </label>
+              </div>
+              <span class="ms-2 text-dark">{{item.text}}</span>
+            </div>
             <span (click)="onDeleteTodo(i)" class="icon-close icon-16 ms-2 text-danger"></span>
           </div>
         </ng-container>
@@ -321,8 +337,8 @@
             [ngModelOptions]="{standalone: true}" required matInput class="form-control" (keydown.enter)="onAddToDo()"
             placeholder="Add..." />
           <div class="input-group-append">
-            <button (click)="onAddToDo()" class="btn btn-secondary" type="button">
-              <span class="icon-add icon-20"></span>
+            <button (click)="onAddToDo()" class="btn btn-icon btn-light-primary" type="button">
+              <span class="icon-add icon-16"></span>
             </button>
           </div>
         </div>

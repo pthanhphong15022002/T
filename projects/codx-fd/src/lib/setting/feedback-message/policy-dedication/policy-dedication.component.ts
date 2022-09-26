@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TenantStore, UIComponent } from 'codx-core';
 
 @Component({
-  selector: 'lib-policy-dedication',
+  selector: 'app-policy-dedication',
   templateUrl: './policy-dedication.component.html',
   styleUrls: ['./policy-dedication.component.scss']
 })

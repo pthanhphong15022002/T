@@ -6,27 +6,25 @@
         <e-tabitem>
           <ng-template #headerText class="">
             <div class="nav-item">
-              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex px-0">
-                <span class="icon-info icon-24 me-2"></span>
-                <span class="d-flex flex-column align-items-start">
-                  <span class="fw-bolder">
-                    <codx-label name="Apps" formName="UserRoles" default="Ứng dụng">
-                    </codx-label>
-                  </span>
+              <a class="nav-link d-flex px-0">
+                <span class="icon-apps icon-20 me-2"></span>
+                <span class="fw-bold">
+                  <codx-label name="Apps" formName="UserRoles" default="Ứng dụng">
+                  </codx-label>
                 </span>
               </a>
             </div>
           </ng-template>
           <ng-template #content>
             <div class="form-group mt-3">
-              <div class="text-dark fw-bolder d-flex justify-content-end">
+              <div class="text-dark fw-bold d-flex justify-content-end">
                 <codx-label fiedName="lblChoose" formName="UserRoles" gridViewName="grvUserRoles" default="Đã chọn">
                 </codx-label>
                 ({{countApp}})
               </div>
             </div>
-            <div class="form-group row mt-3">
-              <div class="col-4 px-5 pb-9" *ngFor="let item of lstFunc; let i= index">
+            <div class="listsrole row px-6 mt-3">
+              <div class="col-4 pb-5" *ngFor="let item of lstFunc; let i= index">
                 <div class="d-flex" *ngIf="!item.isPortal">
                   <div class="w-30px mt-1">
                     <input type="checkbox" [(ngModel)]="item.ischeck" class="check-{{i}} checkbox-round"
@@ -62,56 +60,52 @@
         <e-tabitem>
           <ng-template #headerText class="">
             <div class="nav-item">
-              <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex px-0">
-                <span class="icon-info icon-24 me-2"></span>
-                <span class="d-flex flex-column align-items-start">
-                  <span class="fw-bolder">
-                    <codx-label name="Employees" formName="UserRoles" default="Dịch vụ nhân viên">
-                    </codx-label>
-                  </span>
+              <a class="nav-link d-flex px-0">
+                <span class="icon-assignment_ind icon-20 me-2"></span>
+                <span class="fw-bold">
+                  <codx-label name="Employees" formName="UserRoles" default="Dịch vụ nhân viên">
+                  </codx-label>
                 </span>
               </a>
             </div>
           </ng-template>
           <ng-template #content>
-            <div class="form-group">
-              <div class="form-group mt-3">
-                <div class="text-dark fw-bolder d-flex justify-content-end">
-                  <codx-label fiedName="lblChoose" formName="UserRoles" gridViewName="grvUserRoles" default="Đã chọn">
-                  </codx-label>
-                  ({{countService}})
-                </div>
+            <div class="form-group mt-3">
+              <div class="text-dark fw-bold d-flex justify-content-end">
+                <codx-label fiedName="lblChoose" formName="UserRoles" gridViewName="grvUserRoles" default="Đã chọn">
+                </codx-label>
+                ({{countService}})
               </div>
-              <div class="form-group row mt-3">
-                <div class="col-4 px-5 pb-9" *ngFor="let item of lstEmp; let i= index">
-                  <div class="d-flex" *ngIf="item.isPortal">
-                    <div class="w-30px mt-1">
-                      <input type="checkbox" [(ngModel)]="item.ischeck" class="check-{{i}} checkbox-round"
-                        name="Checkboxes4" (change)="onChange($event,item)">
-                    </div>
-                    <div class="w-100">
-                      <div class="d-flex">
-                        <div class="w-40px me-3">
-                          <img class="w-40px" src="../../../{{item.smallIcon}}" alt="" />
+            </div>
+            <div class="listsrole row px-6 mt-3">
+              <div class="col-4 px-5 pb-9" *ngFor="let item of lstEmp; let i= index">
+                <div class="d-flex" *ngIf="item.isPortal">
+                  <div class="w-30px mt-1">
+                    <input type="checkbox" [(ngModel)]="item.ischeck" class="check-{{i}} checkbox-round"
+                      name="Checkboxes4" (change)="onChange($event,item)">
+                  </div>
+                  <div class="w-100">
+                    <div class="d-flex">
+                      <div class="w-40px me-3">
+                        <img class="w-40px" src="../../../{{item.smallIcon}}" alt="" />
+                      </div>
+                      <div class="w-100 d-flex flex-column">
+                        <div class="fw-bold pb-2" style="font-weight: bold">
+                          {{item.customName}}
                         </div>
-                        <div class="w-100 d-flex flex-column">
-                          <div class="fw-bold pb-2" style="font-weight: bold">
-                            {{item.customName}}
+                        <div class="w-100">
+                          <div *ngIf="item.ischeck; else checkEmpIsNull">
+                            <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole" refValue="UserRoles"
+                              (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false"
+                              [disabled]="false" loadFull="true">
+                            </codx-input>
                           </div>
-                          <div class="w-100">
-                            <div *ngIf="item.ischeck; else checkEmpIsNull">
-                              <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole"
-                                refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false"
-                                [multiple]="false" [disabled]="false" loadFull="true">
-                              </codx-input>
-                            </div>
-                            <ng-template #checkEmpIsNull>
-                              <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole"
-                                refValue="UserRoles" (valueChange)="onCbx($event,item)" [dataSelected]="false"
-                                [multiple]="false" [disabled]="true" loadFull="true">
-                              </codx-input>
-                            </ng-template>
-                          </div>
+                          <ng-template #checkEmpIsNull>
+                            <codx-input type="combobox" field="recID" [crrValue]="item.recIDofRole" refValue="UserRoles"
+                              (valueChange)="onCbx($event,item)" [dataSelected]="false" [multiple]="false"
+                              [disabled]="true" loadFull="true">
+                            </codx-input>
+                          </ng-template>
                         </div>
                       </div>
                     </div>

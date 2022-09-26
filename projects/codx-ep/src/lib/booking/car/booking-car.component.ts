@@ -5,7 +5,7 @@ import {
   Injector,
   AfterViewInit,
 } from '@angular/core';
-import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel } from 'codx-core';
+import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel, CallFuncService } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
@@ -24,6 +24,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('itemTemplate') template!: TemplateRef<any>;
+  @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
 
   service = 'EP';
   assemblyName = 'EP';
@@ -47,11 +49,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   fields: any;
   resourceField: any;
   funcID: string;
-
+  itemDetail;
   columnsGrid: any;
   constructor(
     private injector: Injector,    
     private codxEpService: CodxEpService,
+    private callFuncService:CallFuncService,
     ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -80,10 +83,10 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '2';
 
-    this.model.page = 1;
-    this.model.pageSize = 200;
-    this.model.predicate = 'ResourceType=@0';
-    this.model.dataValue = '2';
+    // this.model.page = 1;
+    // this.model.pageSize = 200;
+    // this.model.predicate = 'ResourceType=@0';
+    // this.model.dataValue = '2';
 
     this.moreFunc = [
       {
@@ -121,8 +124,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
-    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
         sameData: false,
@@ -142,6 +143,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
          template6: this.mfButton,//header          
          template8: this.contentTmp,//content
          statusColorRef: 'vl003',
+        },
+      },{
+        id: '2',
+        type: ViewType.listdetail,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.template,
+          panelRightRef: this.panelRight,
         },
       },
       {
@@ -170,17 +180,35 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         break;
     }
   }
+  changeItemDetail(event) {
+    this.itemDetail = event?.data;
+  }
+
+  getDetailBooking(id: any) {
+    this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        this.itemDetail?.recID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
 
   addNew(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
       option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfc.openSide(
+      option.FormModel = this.formModel;
+      this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.dataSelected, true],
+        [this.viewBase?.dataService?.dataSelected, true],
         option
       );
     });
@@ -190,14 +218,14 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     if (obj) {
       this.viewBase.dataService.dataSelected = obj;
       this.viewBase.dataService
-        .edit(this.viewBase.dataService.dataSelected)
+        .edit(this.viewBase?.dataService?.dataSelected)
         .subscribe((res) => {
           this.dataSelected = this.viewBase.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
           option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.viewBase?.formModel;
-          this.dialog = this.callfc.openSide(
+          option.FormModel = this.formModel;
+          this.dialog = this.callFuncService.openSide(
             PopupAddBookingCarComponent,
             [this.viewBase.dataService.dataSelected, false],
             option

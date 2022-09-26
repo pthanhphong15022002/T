@@ -10,12 +10,11 @@
   color: #f64e60;
 }
 
-.bg-red {
-  codx-view-list-detail .codx-detail-footer .tab-content {
-    background-color: blue;
-    border: 1px solid red;
-  }
-}
+// .bg-red {
+//   codx-view-list-detail .codx-detail-footer .tab-content {
+//     border: 1px solid red;
+//   }
+// }
 
 textarea.codx-textarea {
   border-radius: 2px !important;
@@ -43,10 +42,10 @@ codx-view-kanban .e-card .border {
   border: 0 !important;
 }
 
-ejs-richtexteditor .e-dialog > .e-dlg-content,
-ejs-richtexteditor .e-dialog > .e-dlg-header-content,
-ejs-richtexteditor .e-dialog > .e-footer-content,
-ejs-richtexteditor .e-dialog > .e-dlg-header-content + .e-dlg-content {
+ejs-richtexteditor .e-dialog>.e-dlg-content,
+ejs-richtexteditor .e-dialog>.e-dlg-header-content,
+ejs-richtexteditor .e-dialog>.e-footer-content,
+ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
   padding: 15px;
 }
 

@@ -87,7 +87,7 @@
                                     <ng-container
                                         *ngIf="cardType == CARDTYPE_EMNUM.Thankyou ||  cardType == CARDTYPE_EMNUM.CommentForChange">
                                         <div class="checkbox-inline mb-3 check-1 d-flex">
-                                            <div class="me-3" *ngFor="let item of vllData">
+                                            <div class="me-3" *ngFor="let item of lstRating">
                                                 <codx-input class="rounded-circle mr-1i" [crrValue]="item.value"
                                                     [label]="item.text" type="radio" field="rating" #checkboxRating
                                                     name="radio" (valueChange)="valueChange($event, checkboxRating)"
@@ -146,11 +146,11 @@
                                             <ngb-carousel #carousel [wrap]="false" [interval]="0" [keyboard]="false"
                                                 [pauseOnHover]="false" [showNavigationArrows]="showNavigationArrows"
                                                 [showNavigationIndicators]="false">
-                                                <ng-container *ngFor="let item of lstCard; let i = index;">
-                                                    <ng-template ngbSlide *ngIf="i * 4 < lstCard.length">
+                                                <ng-container *ngFor="let item of lstPattern; let i = index;">
+                                                    <ng-template ngbSlide *ngIf="i * 4 < lstPattern.length">
                                                         <div class="d-flex">
                                                             <ng-container
-                                                                *ngFor="let itemChild of lstCard; let idxChild = index;">
+                                                                *ngFor="let itemChild of lstPattern; let idxChild = index;">
                                                                 <ng-container
                                                                     *ngIf="idxChild >= (i * 4) && idxChild < (i + 1 * 4)">
                                                                     <ng-container
@@ -185,7 +185,7 @@
                                         </div>
                                     </ng-container>
                                     <ng-container *ngIf="parameter">
-                                        <ng-container *ngIf="parameter.HasGifts == '1' ">
+                                        <ng-container *ngIf="parameter.HasGifts && parameter.HasGifts == '1'">
                                             <div class="form-group mt-6">
                                                 <codx-label fiedName="ItemID" [formModel]="dialog.formModel" name="lblfGift"
                                                     default="Quà tặng"></codx-label>
@@ -216,7 +216,7 @@
                                             </div>
 
                                         </ng-container>
-                                        <ng-container *ngIf="parameter.HasPoints == '1'">
+                                        <ng-container *ngIf="parameter.HasPoints && parameter.HasPoints == '1'">
                                             <div class="row border border-primary rounded ms-1">
                                                 <div
                                                     class="col-6 bg-primary text-white d-flex align-items-center justify-content-center">

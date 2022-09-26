@@ -58,7 +58,7 @@
                                     <!-- <span class="icon-arrow_back icon-22 mr-5 text-hover-primary"
                                         (click)="backLocation()"></span> -->
                                     <div class="d-flex flex-column flex-grow-1">
-                                        <div class="font-size-h3 font-weight-bold text-dark-75 mb-3">
+                                        <div class="fs-3 fw-bold text-dark-75 mb-3">
                                             {{datafuntion?.customName}}
                                         </div>
                                         <div class="text-dark-75"> {{datafuntion?.description}}</div>
@@ -66,26 +66,26 @@
                                 </div>
 
                                 <hr />
-                                <div class="font-size-h4 font-weight-bold text-dark mb-6 mt-6"
+                                <div class="fs-4 fw-bold text-dark mb-6 mt-6"
                                     *ngIf="type == '1' || type == '2' || type == '3' || type =='6'">
                                     <codx-label name="lblCard" [formName]="formName" [gridViewName]="gridViewName"
                                         default='Thiệp'>
                                     </codx-label>
                                 </div>
                                 <ng-container *ngIf="type == '1' || type == '2' || type == '3' || type =='6'">
-                                    <app-ballot [type]="type" funcID=""></app-ballot>
+                                    <app-pattern [type]="type" funcID=""></app-pattern>
                                 </ng-container>
                                 <div class="clear">
                                     <hr />
-                                    <app-policycard [typeCard]="type" (changeLock)="changeLock($event)">
-                                    </app-policycard>
+                                    <app-policy-card [typeCard]="type" (changeLock)="changeLock($event)">
+                                    </app-policy-card>
                                 </div>
                                 <div class="clear">
                                     <app-policy-coin [typeCard]="type" *ngIf="!isLockCoin"></app-policy-coin>
                                 </div>
                                 <div class="clear">
-                                    <app-policydedication [typeCard]="type" *ngIf="!isLockDedicate">
-                                    </app-policydedication>
+                                    <app-policy-dedication [typeCard]="type" *ngIf="!isLockDedicate">
+                                    </app-policy-dedication>
                                 </div>
                             </div>
                         </div>

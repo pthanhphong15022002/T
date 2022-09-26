@@ -42,7 +42,7 @@ import { PopupSavePostComponent } from './popup-save/popup-save.component';
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent extends UIComponent implements OnInit,AfterViewInit {
+export class ListPostComponent extends UIComponent implements OnInit, AfterViewInit {
 
   service = "WP";
   assemblyName = "ERM.Business.WP"
@@ -57,57 +57,57 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
   title: string = '';
   searchField = '';
   checkFormAddPost = false;
-  predicateWP:string ='(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
-  dataValueWP:string = '0;1;5;2';
-  predicateFD:string = "Category =@0 && Stop=false";
-  dataValueFD:string = "3";
+  predicateWP: string = '(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
+  dataValueWP: string = '0;1;5;2';
+  predicateFD: string = "Category =@0 && Stop=false";
+  dataValueFD: string = "3";
   modal: DialogRef;
   headerText = '';
-  lstData:any;
-  lstUserShare:any[] = [];
+  lstData: any;
+  lstUserShare: any[] = [];
   lstUserTag: any = [];
-  @Input() funcID:string ="";
-  @Input() objectID:string = "";
+  @Input() funcID: string = "";
+  @Input() objectID: string = "";
   @Input() predicates;
   @Input() dataValues;
   @Input() isShowCreate = true;
   @Input() module: "WP" | "FD" = "WP";
-  @Input() formModel:FormModel = null;
-  @Input() formName:string = "";
-  @Input() gridViewName:string = "";
+  @Input() formModel: FormModel = null;
+  @Input() formName: string = "";
+  @Input() gridViewName: string = "";
 
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(
-    private injector:Injector,
+    private injector: Injector,
     private authStore: AuthStore,
     private dt: ChangeDetectorRef,
     private notifySvr: NotificationsService,
-    private route:ActivatedRoute,
+    private route: ActivatedRoute,
   ) {
     super(injector)
   }
   ngAfterViewInit(): void {
   }
-  
+
   onInit(): void {
     this.user = this.authStore.get();
-    this.route.params.subscribe((param:any) => {
-      if(param) {
+    this.route.params.subscribe((param: any) => {
+      if (param) {
         this.funcID = param['funcID'];
-        if(!this.funcID) return;
+        if (!this.funcID) return;
         // this.getGridViewSetUp(this.funcID);
         this.getValueList();
       }
     });
-    if(!this.formModel){
+    if (!this.formModel) {
       this.formModel = new FormModel();
       this.formModel.funcID = this.funcID;
-      this.formModel.gridViewName= this.gridViewName;
+      this.formModel.gridViewName = this.gridViewName;
       this.formModel.formName = this.formName;
     }
   }
-  getValueList(){
+  getValueList() {
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
         this.lstData = res.datas;
@@ -121,33 +121,33 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
       }
     });
     this.cache.message('WP011').subscribe((mssg: any) => {
-      if(mssg){
-        this.title =  Util.stringFormat(mssg.defaultName,this.user.userName);
+      if (mssg) {
+        this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
         this.dt.detectChanges();
       }
     });
   }
 
-  getGridViewSetUp(funcID:string) {
-    if(!funcID) return;
+  getGridViewSetUp(funcID: string) {
+    if (!funcID) return;
     this.cache
       .functionList(funcID)
       .subscribe((func) => {
-        if(func){
+        if (func) {
           this.cache
-          .gridViewSetup(func.formName, func.gridViewName)
-          .subscribe((grd: any) => {
-            if(grd){
-              this.headerText = grd['Comments']?grd['Comments']['headerText']: "";
-              this.dt.detectChanges();
-            }
-          });
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                this.headerText = grd['Comments'] ? grd['Comments']['headerText'] : "";
+                this.dt.detectChanges();
+              }
+            });
         }
       });
   }
 
-  beforDelete(option:RequestOption,data:any){
-    if(!option || !data) return false;
+  beforDelete(option: RequestOption, data: any) {
+    if (!option || !data) return false;
     option.service = "WP";
     option.assemblyName = "ERM.Business.WP";
     option.className = "CommentsBusiness";
@@ -156,21 +156,21 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
     return true;
   }
   removePost(data: any) {
-    if(!data) return;
+    if (!data) return;
     (this.listview.dataService as CRUDService).
-    delete([data],true,(op:any)=>this.beforDelete(op,data)).
-    subscribe((res) => {
-      if (res) {
-        if(data.files){
-          this.api.execSv("DM",
-          "ERM.Business.DM",
-          "FileBussiness",
-          "DeleteByObjectIDAsync",
-          [data.recID, 'WP_Comments', true]
-        ).subscribe();
+      delete([data], true, (op: any) => this.beforDelete(op, data)).
+      subscribe((res) => {
+        if (res) {
+          if (data.files) {
+            this.api.execSv("DM",
+              "ERM.Business.DM",
+              "FileBussiness",
+              "DeleteByObjectIDAsync",
+              [data.recID, 'WP_Comments', true]
+            ).subscribe();
+          }
         }
-      }
-    });
+      });
 
   }
 
@@ -196,7 +196,7 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
 
   }
   openEditModal(data: any) {
-    if(!data) return;
+    if (!data) return;
     let dataEdit = { ...data };
     let obj = {
       post: dataEdit,
@@ -219,7 +219,7 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
   }
 
   openModalShare(data: any) {
-    if(!data) return;
+    if (!data) return;
     var obj = {
       post: data,
       status: 'share',
@@ -239,8 +239,8 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
       option
     );
   }
-  openModalDownload(data: any){
-    if(!data) return;
+  openModalDownload(data: any) {
+    if (!data) return;
     var obj = {
       post: data,
       headerText: 'Thêm vào kho lưu trữ',
@@ -248,10 +248,10 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.callfc.openForm(PopupSavePostComponent, '', 300, 200, '', obj, '');
+    this.callfc.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
   }
   pushComment(data: any) {
-    if(!data) return;
+    if (!data) return;
     this.listview.dataService.data.map((p) => {
       if (p.recID == data.refID) {
         p.listComment.push(data);
@@ -260,40 +260,39 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
     });
   }
 
-  showListTag(item:any) {
-    if(!item || !item.listTag) return;
+  showListTag(item: any) {
+    if (!item || !item.listTag) return;
     item.isShowTag = true;
     this.lstUserTag = item.listTag;
     this.dt.detectChanges();
   }
-  showListShare(item:any) {
-    if(!item || !item.listShare) return;
-    if(item.shareControl=='U' ||
-      item.shareControl=='G' || item.shareControl=='R' ||
-      item.shareControl=='P' || item.shareControl=='D' ||
-      item.shareControl=='O')
-      {
-        item.isShowShare = !item.isShowShare;
-        this.lstUserShare = item.listShare;
-        this.dt.detectChanges();
+  showListShare(item: any) {
+    if (!item || !item.listShare) return;
+    if (item.shareControl == 'U' ||
+      item.shareControl == 'G' || item.shareControl == 'R' ||
+      item.shareControl == 'P' || item.shareControl == 'D' ||
+      item.shareControl == 'O') {
+      item.isShowShare = !item.isShowShare;
+      this.lstUserShare = item.listShare;
+      this.dt.detectChanges();
     }
   }
-  closeListShare(item:any){
-    if(!item) return;
-    if(item.isShowShare){
+  closeListShare(item: any) {
+    if (!item) return;
+    if (item.isShowShare) {
       item.isShowShare = false;
       this.dt.detectChanges();
     }
   }
-  closeListTag(item:any){
-    if(!item) return;
-    if(item.isShowTag){
+  closeListTag(item: any) {
+    if (!item) return;
+    if (item.isShowTag) {
       item.isShowTag = false;
       this.dt.detectChanges();
     }
   }
   naviagte(data: any) {
-    if(!data) return;
+    if (!data) return;
     this.api
       .execSv(
         'WP',
@@ -309,22 +308,22 @@ export class ListPostComponent extends UIComponent implements OnInit,AfterViewIn
       });
   }
   getFiles(event: any, data: any) {
-    if(!event || !data) return;
+    if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file:any){
-    if(!file) return;
+  clickViewDetail(file: any) {
+    if (!file) return;
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupDetailComponent,'',0,0,'',file,'',option);
+    this.callfc.openForm(PopupDetailComponent, '', 0, 0, '', file, '', option);
   }
-  clickShowComment(data:any){
+  clickShowComment(data: any) {
     data.isShowComment = !data.isShowComment;
     this.dt.detectChanges();
   }
-  replyTo(data:any) {
+  replyTo(data: any) {
     data.showReply = !data.showReply;
     this.dt.detectChanges();
   }

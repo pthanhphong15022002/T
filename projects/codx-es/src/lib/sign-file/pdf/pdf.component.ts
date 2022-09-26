@@ -48,7 +48,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     // pipe
     //   .transform('Ngày phát hành 1', 'lblReleaseDay', 'Sys')
     //   .subscribe((res) => {
-    //     debugger;
+    //     
     //   });
   }
 

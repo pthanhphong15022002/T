@@ -1,45 +1,64 @@
-<codx-views #view [funcID]="'FDS'" [views]="views" [autoLoad]="false" ></codx-views>
+<codx-views #view [funcID]="'FDS026'" [views]="views" [autoLoad]="false" [entityName]="functionList?.entityName">
+</codx-views>
 
 <ng-template #panelLeftRef>
     <div class="ml-20 mr-6 gift-list">
         <div class="d-flex">
             <div class="gift-card w-100px card-with-dropdown-item ms-12"
-                *ngFor="let item of lstPattent; trackBy: trackByfn; let i = index">
+                *ngFor="let item of lstPattern; trackBy: trackByfn; let i = index">
                 <div class="card-img has-action-menu cursor-pointer" #elm
-                    *ngIf="i < lstPattent.length - 1; else template">
+                    *ngIf="i < lstPattern.length - 1; else template">
                     <div class="action-menu d-flex">
                         <div class="d-flex align-items-center">
-                            <a class="action-item" (click)="openFormEdit(item.recID, i, elm)">
+                            <a class="action-item" (click)="openFormEdit(item, i, elm)">
                                 <div class="d-flex align-items-center btn-tooltip">
                                     <span class="icon-edit icon-20 ml-2 mr-2"></span>
                                     <span class="tooltiptext">
                                         <codx-label name="lblEdit" [formModel]="" default='Edit'>
-                                    </codx-label>
+                                        </codx-label>
                                     </span>
                                 </div>
                             </a>
-                            <a class="action-item" (click)="delete(item.recID, i)">
+                            <a class="action-item" (click)="delete(item, i)">
                                 <div class="d-flex align-items-center btn-tooltip">
                                     <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
-                                    <!-- <span class="tooltiptext"> -->
+                                    <span class="tooltiptext">
                                         <codx-label name="lblDelete" [formModel]="" default='Delete'>
-                                            </codx-label>
-                                    <!-- </span> -->
+                                        </codx-label>
+                                    </span>
                                 </div>
                             </a>
                         </div>
                     </div>
-                    <codx-img class="img-pat" [objectId]="item.patternID" funcId="FED20426" objectType="FED_Patterns"
-                        [width]="100" (reloadChanged)="reloadChanged($event)" *ngIf="!item?.backgroundColor"
-                        cssClass="pic symbol-100px symbol-3by2" imageType="square">
-                    </codx-img>
+                    <ng-container #viewImage>
+                        <div *ngIf="!item?.backgroundColor; else otherColor">
+                            <div *ngIf="lstFile">
+                                <ng-container *ngFor="let dt of lstFile">
+                                    <div class="w-100 position-relative" *ngIf="dt.objectID == item.recID">
+                                        <ng-container *ngIf="dt.referType == REFER_TYPE.IMAGE">
+                                            <ng-container *ngIf="dt.recID;else imageSrc">
+                                                <codx-img [recId]="dt.recID" class="img-pat pointer"
+                                                    [objectId]="dt.objectID" [width]="100" [imgOn]="item?.modifiedOn"
+                                                    cssClass="pic symbol-100px symbol-3by2" imageType="square">
+                                                </codx-img>
+                                            </ng-container>
+                                            <ng-template #imageSrc>
+                                                <img [src]="dt.data || dt.avatar" alt="" class="image">
+                                            </ng-template>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
                     <ng-template #otherColor>
-                        <span class="font-size-h3 font-weight-boldest img-pat-edit noimage symbol-label text-white"
+                        <span
+                            class="font-size-h3 font-weight-boldest img-pat-edit noimage symbol-label text-white border-5px"
                             [style.background-color]="item.backgroundColor" style="
-              background-image: none;
-              width: 100px !important;
-              height: 150px !important;
-            "></span>
+                        background-image: none;
+                        width: 100px !important;
+                        height: 150px !important;
+                        "></span>
                     </ng-template>
                     <span class="icon-check text-white default" *ngIf="item.isDefault"></span>
                 </div>

@@ -104,8 +104,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       icon: 'icon-person_outline',
       text: 'Người tham dự',
       name: 'tabPeopleInfo',
-      subName: 'Thành viên tham gia buổi họp',
-      subText: 'Thành viên tham gia buổi họp',
+      subName: 'Thành viên tham gia',
+      subText: 'Thành viên tham gia',
     },
     {
       icon: 'icon-layers',
@@ -140,7 +140,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogData?.data[0];
+    this.data = dialogRef?.dataService?.dataSelected;
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
@@ -148,24 +148,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onInit(): void {    
-    this.initForm();
-    
-    if (!this.isAdd) {
+    this.initForm();    
+    if(!this.isAdd) {
       this.titleAction = 'Chỉnh sửa';
-    }   
-      this.codxEpService
-        .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-        .then((res) => {
-          this.CbxName = res;
-          console.log('cbxEPT1', this.CbxName);
-        });
-
-      this.cacheService
-        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-        .subscribe((res) => {
-          console.log('grvEPT1', res);
-          this.grvBookingRoom = res;
-        });
+    }  
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
@@ -175,8 +161,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.lstDeviceRoom.push(device);
         });
 
-        if (!this.isAdd && this.fGroupAddBookingRoom.value.equipments != null) {
-          this.fGroupAddBookingRoom.value.equipments.forEach((equip) => {
+        if (!this.isAdd && this.data?.equipments != null) {
+          this.data?.equipments.forEach((equip) => {
             let tmpDevice = new Device();
             tmpDevice.id = equip.equipmentID;
             tmpDevice.isSelected = equip.isPicked;
@@ -191,7 +177,34 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
         //this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
       });
+      if (this.data) {       
+          if (this.data.hours == 24) {
+          this.isFullDay = true;
+        } else {
+          this.isFullDay = false;
+        }   
+      
+        if (this.isAdd) {
+          this.data.attendees= 1;
+          this.link = null;
+          this.data.bookingOn = new Date();
+          this.endTime = null;
+          this.startTime = null;
+        }
+        if (!this.isAdd) {
+          if (this.data?.hours == 24) {
+            this.isFullDay = true;
+  
+            this.detectorRef.detectChanges();
+          }
+          let tmpStartTime=new Date(this.data?.startDate);
+          let tmpEndTime=new Date(this.data?.endDate);            
+          this.startTime = ('0'+tmpStartTime.getHours()).toString().slice(-2)+':'+('0'+tmpStartTime.getMinutes()).toString().slice(-2);
+          this.endTime = ('0'+tmpEndTime.getHours()).toString().slice(-2)+':'+('0'+tmpEndTime.getMinutes()).toString().slice(-2);
 
+          
+        }
+      }
       if (this.isAdd) {
         let people = this.authService.userValue;
         this.tempAtender = {
@@ -285,63 +298,18 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             }
           });
       }  
-      this.codxEpService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.fGroupAddBookingRoom = item;
-        if (this.data) {
-          this.fGroupAddBookingRoom.patchValue(this.data);
-          this.fGroupAddBookingRoom.patchValue({
-            resourceType: '1',
-          });
-        }
-        this.isAfterRender = true;
-        if (this.data) {
-          console.log('fgroupEPT1', this.data);
-          this.fGroupAddBookingRoom.patchValue(this.data);
-          this.fGroupAddBookingRoom.patchValue({
-            requester: this.authService.userValue.userName,
-          });
-    
-          if (this.data.hours == 24) {
-            this.isFullDay = true;
-          } else {
-            this.isFullDay = false;
-          }
-    
-          this.fGroupAddBookingRoom.addControl(
-            'isFullDay',
-            new FormControl(this.isFullDay)
-          );          
-        
-          if (this.isAdd) {
-            this.fGroupAddBookingRoom.patchValue({ attendees: 1 });
-            this.link = null;
-            this.fGroupAddBookingRoom.value.bookingOn = new Date();
-            this.endTime = null;
-            this.startTime = null;
-          }
-          if (!this.isAdd) {
-            if (this.fGroupAddBookingRoom.value.hours == 24) {
-              this.isFullDay = true;
-    
-              this.detectorRef.detectChanges();
-            }
-            this.startTime = this.fGroupAddBookingRoom.value.startDate
-              .toString()
-              .slice(16, 21);
-            this.endTime = this.fGroupAddBookingRoom.value.endDate
-              .toString()
-              .slice(16, 21);
-          }
-        }
-        console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingRoom);
-        
-      });   
-      this.detectorRef.detectChanges();
-      
   }
 
+  initForm() {
+    this.codxEpService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {
+        this.fGroupAddBookingRoom = item;        
+        this.isAfterRender = true;        
+        console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingRoom);        
+      });   
+      this.detectorRef.detectChanges();       
+  }
   ngAfterViewInit(): void {
     if (this.dialogRef) {
       if (!this.isSaveSuccess) {
@@ -353,21 +321,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
 
-  initForm() {
-    
-    // this.codxEpService
-    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    //   .then((item) => {
-    //     if(item){
-    //       this.fGroupAddBookingRoom = item;
-    //       console.log('this.fGroupAddBookingRoom',item);
-    //       this.isAfterRender = true;
-          
-    //     }        
-    //   });
-
-    
-  }
+  
   setStatusTime(modifiedOn: any) {
     let dateSent = new Date(modifiedOn);
     let currentDate = new Date();
@@ -395,7 +349,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   beforeSave(option: any) {
-    let itemData = this.fGroupAddBookingRoom.value;
+    let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [
       itemData,
@@ -408,12 +362,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm() {
+    this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
       this.codxEpService.notifyInvalid(
         this.fGroupAddBookingRoom,
         this.formModel
       );
-      return;
+      
     }
     if (this.tmpEndDate - this.tmpStartDate <= 0) {
       this.notificationsService.notifyCode('EP003');
@@ -423,7 +378,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         ((this.endTime - this.startTime) / 1000 / 60 / 60).toFixed()
       );
       if (!isNaN(hours) && hours > 0) {
-        this.fGroupAddBookingRoom.patchValue({ hours: hours });
+        this.data.hours=hours;
       }
     }
 
@@ -435,24 +390,20 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.lstEquipment.push(tempEquip);
     });
 
-    if (this.fGroupAddBookingRoom.value.resourceID instanceof Object) {
-      this.fGroupAddBookingRoom.patchValue({
-        resourceID: this.fGroupAddBookingRoom.value.resourceID[0],
-      });
+    if (this.data?.resourceID instanceof Object) {
+      this.data.resourceID= this.data?.resourceID[0];      
     }
-    if (this.fGroupAddBookingRoom.value.reasonID instanceof Object) {
-      this.fGroupAddBookingRoom.patchValue({
-        reasonID: this.fGroupAddBookingRoom.value.reasonID[0],
-      });
+    if (this.data?.reasonID instanceof Object) {
+      this.data.reasonID= this.data?.reasonID[0];
     }
-    let tmpBookingOn = new Date(this.fGroupAddBookingRoom.value.bookingOn);
+    let tmpBookingOn = new Date(this.data?.bookingOn);
 
-    this.fGroupAddBookingRoom.patchValue({
-      category: '1',
-      status: '1',
-      resourceType: '1',
-      attendees: this.fGroupAddBookingRoom.value.attendees,
-      startDate: new Date(
+    this.data.category = '1';
+    this.data.status = '1';
+    this.data.resourceType= '1';
+
+    this.data.attendees= this.data?.attendees;
+    this.data.startDate= new Date(
         tmpBookingOn.getFullYear(),
         tmpBookingOn.getMonth(),
         tmpBookingOn.getDate(),
@@ -460,7 +411,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.tmpStartDate.getMinutes(),
         0
       ),
-      endDate: new Date(
+      this.data.endDate= new Date(
         tmpBookingOn.getFullYear(),
         tmpBookingOn.getMonth(),
         tmpBookingOn.getDate(),
@@ -468,16 +419,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.tmpEndDate.getMinutes(),
         0
       ),
-      equipments: this.lstEquipment,
-      requester: this.curUser.userName,
-    });
+      this.data.equipments= this.lstEquipment,
+      this.data.requester= this.curUser.userName,
+    
 
     this.attendeesList.forEach((item) => {
       this.tmpAttendeesList.push(item);
     });
     this.tmpAttendeesList.push(this.curUser);
-    console.log('data', this.fGroupAddBookingRoom.value);
-    console.log('attend', this.attendeesList);
 
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
@@ -491,7 +440,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.attQuantity = res.update.attachments;
           }
           if (this.attObjectID || this.attQuantity > 0) {
-            this.attachment.objectId = this.fGroupAddBookingRoom.value.recID;
+            this.attachment.objectId = this.data?.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
                 if (item2?.status == 0) {
@@ -510,12 +459,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.notificationsService.notifyCode('E0011');
         }
       });
-  }
-  changeTime(data) {
-    if (!data.field || !data.data) return;
-    this.fGroupAddBookingRoom.patchValue({
-      [data['field']]: data.data.fromDate,
-    });
   }
   UpdateAttendeesList() {
     this.attendeesList = [];
@@ -540,9 +483,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
       }
     });
-    this.fGroupAddBookingRoom.patchValue({
-      attendees: this.attendeesList.length + 1,
-    });
+    this.data.attendees= this.attendeesList.length + 1;
+  
   }
   valueCbxUserChange(event?) {
     this.lstUser = [];
@@ -611,7 +553,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         objectName: string;
       } = {
         id: item.id,
-        quantity: this.fGroupAddBookingRoom.value.attendees,
+        quantity: this.data?.attendees,
         text: item.text,
         objectName: item.objectName,
         objectType: item.objectType,
@@ -628,38 +570,36 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
   }
-  valueAttendeesChange(event) {
-    if (event?.field) {
-      if (event.data instanceof Object) {
-        this.fGroupAddBookingRoom.patchValue({ attendees: event.data.value });
-      } else {
-        this.fGroupAddBookingRoom.patchValue({ attendees: event.data });
-      }
-    }
-    this.lstStationery.forEach((item) => {
-      item.quantity = this.fGroupAddBookingRoom.value.attendees;
-    });
-    this.detectorRef.detectChanges();
-  }
+  // valueAttendeesChange(event) {
+  //   if (event?.field) {
+  //     if (event.data instanceof Object) {
+  //       this.data.attendees = event.data.value;
+  //     } else {
+  //       this.data.pv({ attendees: event.data });
+  //     }
+  //   }
+  //   this.lstStationery.forEach((item) => {
+  //     item.quantity = this.data?.attendees;
+  //   });
+  //   this.detectorRef.detectChanges();
+  // }
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.fGroupAddBookingRoom.patchValue({
-          [event['field']]: event.data.value,
-        });
+        this.data['field']= event.data.value;        
       } else {
-        this.fGroupAddBookingRoom.patchValue({ [event['field']]: event.data });
+        this.data['field']= event.data.value;
       }
     }
-    this.detectorRef.detectChanges();
   }
+  
   valueAllDayChange(event) {
     if (event?.field == 'day') {
       this.isFullDay = event.data;
       if (this.isFullDay) {
         this.startTime = '00:00';
         this.endTime = '23:59';
-        this.fGroupAddBookingRoom.patchValue({ hours: 24 });
+        this.data.hours= 24;
       } else {
         this.endTime = null;
         this.startTime = null;
@@ -687,6 +627,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       });
     }
+    this.detectorRef.detectChanges();
   }
   closeForm() {
     this.initForm();
@@ -723,7 +664,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   valueDateChange(event: any) {
     if (event.data.fromDate) {
-      this.fGroupAddBookingRoom.patchValue({ bookingOn: event.data.fromDate });
+      this.data.bookingOn=event.data.fromDate;
     }
   }
 
@@ -736,9 +677,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.isFullDay = false;
       this.beginHour = parseInt(this.startTime.split(':')[0]);
       this.beginMinute = parseInt(this.startTime.split(':')[1]);
-      if (this.fGroupAddBookingRoom.value.bookingOn) {
+      if (this.data?.bookingOn) {
         if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
-          let tmpDay = new Date(this.fGroupAddBookingRoom.value.bookingOn);
+          let tmpDay = new Date(this.data?.bookingOn);
           this.tmpStartDate = new Date(
             tmpDay.getFullYear(),
             tmpDay.getMonth(),
@@ -769,9 +710,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.isFullDay = false;
       this.endHour = parseInt(this.endTime.split(':')[0]);
       this.endMinute = parseInt(this.endTime.split(':')[1]);
-      if (this.fGroupAddBookingRoom.value.bookingOn) {
+      if (this.data?.bookingOn) {
         if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
-          let tmpDay = new Date(this.fGroupAddBookingRoom.value.bookingOn);
+          let tmpDay = new Date(this.data?.bookingOn);
           this.tmpEndDate = new Date(
             tmpDay.getFullYear(),
             tmpDay.getMonth(),
@@ -797,27 +738,31 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     console.log('end', this.tmpEndDate);
   }
   checkedOnlineChange(event) {
-    this.fGroupAddBookingRoom.patchValue({
-      online: event.data instanceof Object ? event.data.checked : event.data,
-    });
-
-    if (!this.fGroupAddBookingRoom.value.online)
-      this.fGroupAddBookingRoom.patchValue({ onlineUrl: null });
+    if(event.data instanceof Object)
+    {
+      this.data.online = event.data.checked;
+    }
+    else{
+      this.data.online = event.data;
+    }
+    if (!this.data?.online)
+      this.data.onlineUrl=null;
     this.detectorRef.detectChanges();
   }
+
   openPopupLink() {
     this.callfc.openForm(this.addLink, '', 500, 250);
     this.detectorRef.detectChanges();
   }
 
-  public setdata(data: any) {
-    if (this.isAdd) {
-      this.isAdd = true;
-      this.initForm();
-    } else {
-      this.fGroupAddBookingRoom.patchValue(data);
-    }
-  }
+  // public setdata(data: any) {
+  //   if (this.isAdd) {
+  //     this.isAdd = true;
+  //     this.initForm();
+  //   } else {
+  //     this.data.pv(data);
+  //   }
+  // }
 
   popup(evt: any) {
     this.attachment.openPopup();
@@ -826,7 +771,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.attachment.uploadFile();
   }
   fileAdded(event: any) {
-    this.fGroupAddBookingRoom.patchValue({ attachments: event.data.length });
+    this.data.attachments= event.data.length;
   }
   fileCount(event: any) {}
 }

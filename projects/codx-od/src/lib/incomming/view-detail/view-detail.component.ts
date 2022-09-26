@@ -136,8 +136,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.getDataValuelist();
   }
   setHeight() {
-    let main,
-      header = 0;
+    let main, header = 0;
     let ele = document.getElementsByClassName(
       'codx-detail-main'
     ) as HTMLCollectionOf<HTMLElement>;

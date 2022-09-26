@@ -76,7 +76,7 @@ export class AttachmentComponent implements OnInit {
   titleDialog = 'Thêm file';
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
-  titleUpload = 'Upload';
+  titleUpload = 'Tải lên';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
  
@@ -504,7 +504,6 @@ export class AttachmentComponent implements OnInit {
             this.atSV.folderId.next(id);
 
             this.changeDetectorRef.detectChanges();
-            debugger;
             this.remotePermission = res[0].permissions;
           }
         });

@@ -1,23 +1,6 @@
-<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form [headerText]="titleDialog" [subHeader]="subHeader" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
     <form name="frm_move">
-      <div class="form-group">
-        <div class="d-flex justify-content-between">
-          <div class="breadcrum-box me-2 flex-grow-1">
-            <span class="text-dark-75 fw-bold">{{fullName}}</span>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col col-3">
-          <codx-input name="group" class="test-check" type="radio" style="width:100%" [checked]="true"
-            [label]="titleCopyTo" (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
-        </div>
-        <div class="col col-3">
-          <codx-input name="group" class="test-check" type="radio" style="width:100%" [checked]="false"
-            [label]="titleMove" (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
-        </div>
-      </div>
       <div class="mt-2 moveto ms-n4">
         <codx-treeview id="treeAdd" #treeAdd [itemTemplate]="templatetree" [data]="listNodeMove"
           entityName="DM_FolderInfo" service="DM" textField="folderName" fieldCheck="hasChildren" [enableCheck]=false
@@ -35,5 +18,25 @@
   <ng-template #footer>
     <button type="button" class="btn btn-primary" id="btnMove" [disabled]="disable()"
       (click)="CopyDataTo()">{{titleSave}}</button>
+  </ng-template>
+  <ng-template #subHeader>
+    <div class="w-100">
+      <div class="d-flex justify-content-between w-100">
+        <div class="breadcrum-box me-2 flex-grow-1 border p-2 my-2">
+          <span class="fs-5 fw-normal">{{objectType == "file" ? "Tập tin: " : "Thư mục: "}}</span> 
+          <span class="fs-5 fw-normal">{{fullName}}</span>
+        </div>
+      </div>
+      <div class="d-flex w-100 mt-5">
+        <div class="me-10">
+          <codx-input name="group" class="test-check" type="radio" style="width:100%" [checked]="true"
+            [label]="titleCopyTo" (valueChange)="onSaveRightChanged($event, 'copyto')"></codx-input>
+        </div>
+        <div>
+          <codx-input name="group" class="test-check" type="radio" style="width:100%" [checked]="false"
+            [label]="titleMove" (valueChange)="onSaveRightChanged($event, 'move')"></codx-input>
+        </div>
+      </div>
+    </div>
   </ng-template>
 </codx-form>
