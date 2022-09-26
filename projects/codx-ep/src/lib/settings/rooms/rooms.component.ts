@@ -257,10 +257,46 @@ export class RoomsComponent extends UIComponent {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
-        console.log(res);
+        if (res) {          
+          this.api
+          .execSv(
+            'DM',
+            'ERM.Business.DM',
+            'FileBussiness',
+            'DeleteByObjectIDAsync',
+            [obj.recID, 'EP_Rooms', true]
+          )
+          .subscribe();
+        this.detectorRef.detectChanges();
+      }
       });
     }
   }
+
+  // delete(data?) {
+  //   this.viewBase.dataService.delete([data], true, (opt) => {
+  //       opt.service = 'EP';
+  //       opt.assemblyName = 'ERM.Business.EP';
+  //       opt.className = 'ResourcesBusiness';
+  //       opt.methodName = 'DeleteResourceAsync';
+  //       opt.data = data?.recID;
+  //       return true;
+  //     })
+  //     .subscribe((res: any) => {
+  //       if (res) {          
+  //         this.api
+  //           .execSv(
+  //             'DM',
+  //             'ERM.Business.DM',
+  //             'FileBussiness',
+  //             'DeleteByObjectIDAsync',
+  //             [res.recID, 'EP_Rooms', true]
+  //           )
+  //           .subscribe();
+  //         this.detectorRef.detectChanges();
+  //       }
+  //     });
+  // }
 
   closeDialog(evt?) {
     this.dialog && this.dialog.close();

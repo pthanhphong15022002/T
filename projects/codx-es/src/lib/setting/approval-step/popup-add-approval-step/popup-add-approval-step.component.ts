@@ -174,9 +174,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         if (this.isAdd) {
           this.esService
             .getDataDefault('EST04', this.formModel.entityName, 'recID')
-            .subscribe((res) => {
+            .subscribe((res: any) => {
               if (res) {
-                this.dialogApprovalStep.patchValue(res);
+                this.dialogApprovalStep.patchValue(res.data);
                 this.dialogApprovalStep.patchValue({ stepNo: this.stepNo });
                 this.dialogApprovalStep.patchValue({ transID: this.transId });
                 this.esService.getNewDefaultEmail().subscribe((res) => {
@@ -261,7 +261,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  checkedOnlineChange(event) {}
+  checkedOnlineChange(event) { }
 
   openSetupEmail(email) {
     if (email?.isEmail == '1') {

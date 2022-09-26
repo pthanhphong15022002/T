@@ -190,8 +190,7 @@ export class ApprovalCarsComponent extends UIComponent {
         this.edit(data);
         break;
     }
-  }
-
+  }  
   closeAddForm(event) {}
 
   changeItemDetail(event) {
