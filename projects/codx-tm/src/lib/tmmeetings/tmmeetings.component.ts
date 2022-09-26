@@ -316,7 +316,7 @@ export class TMMeetingsComponent
       let month = date1.getMonth() + 1;
       let myDay = this.addZero(date1.getDate());
       let year = date1.getFullYear();
-      let day1 = date1.getDay() ==0? "Chủ nhật":  'Thứ ' +date1.getDay() + 1;
+      let day1 = date1.getDay() ==0? "Chủ nhật":  'Thứ ' +(date1.getDay()+1);
       
       day +=
         '<div class="fs-2hx fw-bold text-gray-800 me-2 lh-1">' +
