@@ -16,7 +16,7 @@ import { EditSkillComponent } from './edit-skill/edit-skill.component';
   selector: 'lib-employee-infomation',
   templateUrl: './employee-infomation.component.html',
   styleUrls: ['./employee-infomation.component.css'],
-  encapsulation: ViewEncapsulation.None
+  // encapsulation: ViewEncapsulation.None
 
 })
 export class EmployeeInfomationComponent implements OnInit {
@@ -99,9 +99,9 @@ export class EmployeeInfomationComponent implements OnInit {
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
     // this.layout.setUrl(this.codxMwpService.urlback);
-    this.cache.functionList(this.functionID).subscribe(f=>{
-      if(f) this.layout.setLogo(f.smallIcon);
-  })
+    this.cache.functionList(this.functionID).subscribe(f => {
+      if (f) this.layout.setLogo(f.smallIcon);
+    })
     this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res => {
       if (res) {
         this.defautFunc = res[0]

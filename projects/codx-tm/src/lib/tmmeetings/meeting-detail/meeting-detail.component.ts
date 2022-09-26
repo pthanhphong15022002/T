@@ -21,6 +21,8 @@ import {
   AuthStore,
   DialogData,
   LayoutService,
+  PageTitleService,
+  ApiHttpService,
 } from 'codx-core';
 
 @Component({
@@ -59,7 +61,7 @@ export class MeetingDetailComponent extends UIComponent {
   active = 1;
   functionParent = 'TMT0501';
   listRecID = [];
-  vllMeetingType = 'CO002'
+  vllMeetingType = 'CO002';
   // service = 'TM';
   // entityName = 'TM_Tasks';
   // idField = 'taskID';
@@ -71,6 +73,7 @@ export class MeetingDetailComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private layout: LayoutService,
+    private pageTitle: PageTitleService,
     private tmService: CodxTMService,
     private route: ActivatedRoute,
     private authStore: AuthStore,
@@ -81,10 +84,11 @@ export class MeetingDetailComponent extends UIComponent {
     super(injector);
     this.getQueryParams();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe(f=>this.pageTitle.setSubTitle(f?.customName))
     this.cache.functionList(this.functionParent).subscribe((f) => {
       if (f) this.layout.setUrl(f.url);
     });
-    this.layout.setLogo(null) ;//null tạo icon back
+    this.layout.setLogo(null); //null tạo icon back
     this.urlDetail = 'tm/sprintdetails/TMT03011';
     this.loadData();
   }
