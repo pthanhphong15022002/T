@@ -34,3 +34,17 @@ codx-view-list-card{
   text-align: center;
   height: 60px !important;
 }
+
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:focus,
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:focus {
+  border-color: rgb(194, 202, 202);
+}
+
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:hover,
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:hover {
+  border-color: rgb(212, 216, 221);
+}
+
+codx-view-kanban .e-card .border {
+  border: 0 !important;
+}

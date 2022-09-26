@@ -148,7 +148,7 @@
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [title]="data?.meetingName"
-    [status]="data.status"
+    [status]="data?.status"
     [statusVll]="statusVll"
     [icoStatus2]="data?.isOnline"
     [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-24'"
@@ -164,7 +164,7 @@
 
 <!-- tách riêng để dễ fix sau này -->
 <ng-template #cardImgFooter let-data let-setting="setting">
-  <div class="d-flex justify-content-center h-60px">
+  <div *ngIf="setting?.resources" class="d-flex justify-content-center h-60px">
     <codx-imgs
       [objectId]="getResourceID(data)"
       objectType="AD_Users"
@@ -173,9 +173,12 @@
     >
     </codx-imgs>
   </div>
+  <div *ngIf="!setting?.resources" class="d-flex justify-content-center h-60px">
+
+  </div>
   <div class="footer-bottom">
-    <div class="d-flex align-items-center justify-content-between">
-      <div *ngIf="data.tags">
+    <div  class="d-flex align-items-center justify-content-between">
+      <div *ngIf="data.tags && setting?.tags">
         <codx-tag
           [entityName]="view.formModel.entityName"
           [disabled]="true"
