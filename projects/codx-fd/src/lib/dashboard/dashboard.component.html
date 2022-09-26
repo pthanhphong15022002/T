@@ -1,3 +1,9 @@
+<codx-views #codxViews 
+[views]="views" 
+[autoLoad]="false" 
+[idField]="'recID'">
+</codx-views>
+
 <ng-template #panelContent>
     <div class="page-home bg-body p-6 rounded-4">
         <div class="d-flex">
@@ -93,9 +99,15 @@
                     </div>
                     <div class="box-body">
                         <div class="history-box">
-                            <codx-listview [itemTemplate]="tmpHistoryCoins" #listviewCoins [pageSize]=12 service="FD"
-                                assemblyName="ERM.Business.FD" className="KudosTransBusiness"
-                                method="HistoryWalletAsync" [predicate]="predicateCoins" [dataValue]="dataValueCoins"
+                            <codx-listview 
+                                [itemTemplate]="tmpHistoryCoins" #listviewCoins 
+                                [pageSize]=10 
+                                service="FD"
+                                assemblyName="ERM.Business.FD" 
+                                className="KudosTransBusiness"
+                                method="HistoryWalletAsync" 
+                                [predicate]="predicateCoins" 
+                                [dataValue]="dataValueCoins"
                                 entityName="FD_KudosTrans">
                             </codx-listview>
                         </div>
@@ -108,29 +120,38 @@
 <ng-template #tmpHistoryCoins let-item>
     <div class="d-flex align-items-start wallet-item me-2">
         <div class="me-3 max-h-40">
-            <img class="w-40px" src="/assets/demos/svg/{{ item.transType | vll:'L1422' : 'icon' | async }}">
+            <img class="w-40px" src="/assets/demos/svg/{{ item.transType | vll:'L1427' : 'icon' | async }}">
         </div>
         <div class="d-flex flex-column flex-grow-1">
-            <div class="text-dark fw-bolder">{{item?.userName}}</div>
-            <div class="text-dark-75 font-size-sm">
-                {{item?.cardType| vll:'L1422':'text'|async}}
+            <div class="text-dark fw-bolder">
+                <ng-container [ngSwitch]="item.transType">
+                    <ng-container *ngSwitchCase="'1'">
+                        <span>{{item.UserName}}</span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'1'">
+                        <span>{{item.UserName}}</span>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="text-dark-75 font-size-sm" *ngIf="item.refType">
+                {{item?.refType| vll:'L1422':'text'|async}}
             </div>
             <div class="text-muted font-size-sm">{{item?.createdOn | fmDT:'dmy'}}</div>
         </div>
         <div class="d-flex align-items-center text-center">
             <ng-container *ngIf="item.transType =='4';else elsTmp">
-                <span [ngClass]="item?.coCoins > 0 ? 'text-success':'text-danger'">
-                    {{item?.coCoins> 0?"+":""}}{{item?.coCoins}}
+                <span [ngClass]="item.coCoins > 0 ? 'text-success':'text-danger'">
+                    {{item.coCoins> 0?"+":""}}{{item.coCoins}}
                 </span>
-                <span [ngClass]="item?.coCoins > 0 ? 'text-success ms-1':'text-danger ms-1'">
+                <span [ngClass]="item.coCoins > 0 ? 'text-success ms-1':'text-danger ms-1'">
                     <codx-label [formModel]="codxViews.formModel" name="lblCoins" default="xu"></codx-label>
                 </span>
             </ng-container>
             <ng-template #elsTmp>
-                <span [ngClass]="item?.coins > 0 ? 'text-success':'text-danger'">
+                <span [ngClass]="item.coins > 0 ? 'text-success':'text-danger'">
                     {{item?.coins > 0?"+":""}}{{item?.coins}}
                 </span>
-                <span [ngClass]="item?.coins > 0 ? 'text-success ms-1':'text-danger ms-1'">
+                <span [ngClass]="item.coins > 0 ? 'text-success ms-1':'text-danger ms-1'">
                     <codx-label [formModel]="codxViews.formModel" name="lblCoins" default="xu"></codx-label>
                 </span>
             </ng-template>
@@ -138,5 +159,3 @@
     </div>
 </ng-template>
 
-<codx-views #codxViews [views]="views" [autoLoad]="false" [idField]="'recID'">
-</codx-views>

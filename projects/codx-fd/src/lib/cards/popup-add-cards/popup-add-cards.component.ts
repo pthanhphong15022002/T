@@ -176,22 +176,22 @@ export class PopupAddCardsComponent implements OnInit {
       industry: new FormControl(null),
       pattern: new FormControl(""),
       rating: new FormControl(""),
-      gift:new FormControl(""),
+      giftID:new FormControl(""),
       quanlity: new FormControl(0),
       coins: new FormControl(0)
     })
   }
-  valueChange(e, element = null)
+  valueChange(e)
   {
-    if(!e || !e?.data){
+    if(!e?.field || !e?.data){
       return;
     }
-    let value = e;
-    let field = value.field;
+    let data = e.data;
+    let field = e.field;
     switch(field){
       case "rating":
-        this.ratting = value.data;
-        this.form.patchValue({rating : value.data});
+        this.ratting = data;
+        this.form.patchValue({rating : data});
         break;
       case "giftID":
         break;
@@ -201,7 +201,7 @@ export class PopupAddCardsComponent implements OnInit {
           this.notifySV.notify("Vui lòng chọn quà tặng trước!");
           return;
         }
-        let quantity = value.data;
+        let quantity = data;
         if(quantity > this.giftCount){
           this.quantity = this.quantityOld + 1;
           this.totalCoint = this.quantity * this.gift.Price;
@@ -223,11 +223,11 @@ export class PopupAddCardsComponent implements OnInit {
         this.form.patchValue({ quanlity : this.quantity});
         break;
       case "behavior":
-        this.behavior = value.data;
+        this.behavior = data;
         this.form.patchValue({behavior: this.behavior});
         break;
       case "industry":
-        this.industry = value.data;
+        this.industry = data;
         let obj = {};
         obj[field] = this.industry;
         this.api.execSv("BS", "ERM.Business.BS", "IndustriesBusiness", "GetListByID", this.industry).subscribe(
@@ -246,11 +246,11 @@ export class PopupAddCardsComponent implements OnInit {
         this.form.patchValue(obj);
         break;
       case "situation":
-        this.situation = value.data;
+        this.situation = data;
         this.form.patchValue({situation: this.situation});
         break;
       case "receiver":
-        this.userReciver = value.data;
+        this.userReciver = data;
         this.form.patchValue({receiver: this.userReciver});
         this.checkValidateWallet(this.userReciver);
         break;

@@ -1047,6 +1047,14 @@ export class CodxEsService {
       userID
     );
   }
+
+  loadDataCbx(dataRequest: DataRequest) {
+    this.api
+      .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', dataRequest)
+      .subscribe((item) => {
+        return item;
+      });
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;

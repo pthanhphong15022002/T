@@ -76,20 +76,135 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   width: any = 'auto';
 
   show = false;
-  dataSource = [
-    { text: 'Hennessey Venom', id: 'list-01' },
-    { text: 'Bugatti Chiron', id: 'list-02' },
-    { text: 'Bugatti Veyron Super Sport', id: 'list-03' },
-    { text: 'SSC Ultimate Aero', id: 'list-04' },
-    { text: 'Koenigsegg CCR', id: 'list-05' },
-    { text: 'McLaren F1', id: 'list-06' },
-    { text: 'Aston Martin One- 77', id: 'list-07' },
-    { text: 'Jaguar XJ220', id: 'list-08' },
-    { text: 'McLaren P1', id: 'list-09' },
-    { text: 'Ferrari LaFerrari', id: 'list-10' },
-    { text: 'Zenvo ST1', id: 'list-11' },
-    { text: 'Lamborghini Veneno', id: 'list-12' },
+
+  public headerTitle: string = 'Syncfusion Blog';
+  public cssClass: string = 'e-list-template';
+  dataSource: any = [
+    {
+      id: '01',
+      title: 'newsData[0].title',
+      description: 'newsData[0].description',
+      text: 'Syncfusion Blog',
+      imgSrc: '1',
+      timeStamp: 'Syncfusion Blog - October 19, 2017',
+    },
+    {
+      id: '02',
+      title: 'newsData[1].title',
+      description: 'newsData[1].description',
+      text: 'Syncfusion Blog',
+      imgSrc: '2',
+      timeStamp: 'Syncfusion Blog - October 18, 2017',
+    },
+    {
+      id: '03',
+      title: 'newsData[2].title',
+      description: ' newsData[2].description',
+      text: 'Syncfusion Blog',
+      imgSrc: '3',
+      timeStamp: 'Syncfusion Blog - October 18, 2017',
+    },
+    {
+      id: '04',
+      title: 'newsData[3].title',
+      description: 'newsData[3].description',
+      text: 'Syncfusion Blog',
+      imgSrc: '4',
+      timeStamp: 'Syncfusion Blog - October 18, 2017',
+    },
+    {
+      id: '05',
+      title: 'newsData[4].title',
+      description: 'newsData[4].description',
+      text: 'Syncfusion Blog',
+      imgSrc: '5',
+      timeStamp: 'Syncfusion Blog - October 17, 2017',
+    },
+    {
+      id: '06',
+      title: 'newsData[5].title',
+      description: 'newsData[5].description',
+      text: 'Syncfusion Blog',
+      imgSrc: '6',
+      timeStamp: 'Syncfusion Blog - October 17, 2017',
+    },
+    {
+      id: '07',
+      title: 'newsData[6].title',
+      description: 'newsData[6].description',
+      text: 'Syncfusion Blog',
+      imgSrc: '7',
+      timeStamp: 'Syncfusion Blog - October 13, 2017',
+    },
   ];
+  @ViewChild('listviewInstance')
+  public listviewInstance: any;
+
+  onActionComplete(args: any): void {
+    let listHeader: HTMLElement = this.listviewInstance.element
+      .childNodes[0] as HTMLElement;
+    let header: HTMLElement = listHeader.childNodes[0] as HTMLElement;
+    if (header.style.display === 'none' || listHeader.childNodes.length === 3) {
+      if (listHeader.childNodes[2] != null) {
+        let childHeader: HTMLElement = listHeader.childNodes[2] as HTMLElement;
+        childHeader.remove();
+      }
+    } else {
+      let headerEle: HTMLElement = this.listviewInstance.element.querySelector(
+        '.e-list-header'
+      ) as HTMLElement;
+      let headerElement: HTMLElement =
+        this.listviewInstance.element.querySelector(
+          '#list-logo'
+        ) as HTMLElement;
+      let clone: HTMLElement = headerElement.cloneNode(true) as HTMLElement;
+      headerEle.appendChild(clone);
+    }
+    this.postAction();
+  }
+  postAction() {
+    //Customizing the elements to perform our own events
+    let share: any = document.getElementsByClassName('share');
+    let comments: any = document.getElementsByClassName('comments');
+    let bookmark: any = document.getElementsByClassName('bookmark');
+    let timeStamp: any = document.getElementsByClassName('timeStamp');
+
+    for (let i: number = 0; i < comments.length; i++) {
+      comments[i].setAttribute(
+        'title',
+        'We can customize this element to perform our own action'
+      );
+      comments[i].addEventListener('click', (event: any) => {
+        event.stopPropagation();
+      });
+    }
+
+    for (let i: number = 0; i < bookmark.length; i++) {
+      bookmark[i].setAttribute(
+        'title',
+        'We can customize this element to perform our own action'
+      );
+      bookmark[i].addEventListener('click', (event: any) => {
+        event.stopPropagation();
+      });
+    }
+
+    for (let i: number = 0; i < share.length; i++) {
+      share[i].setAttribute(
+        'title',
+        'We can customize this element to perform our own action'
+      );
+      share[i].addEventListener('click', (event: any) => {
+        event.stopPropagation();
+      });
+    }
+
+    for (let i: number = 0; i < timeStamp.length; i++) {
+      timeStamp[i].addEventListener('click', (event: any) => {
+        event.stopPropagation();
+      });
+    }
+  }
 
   constructor(
     private api: ApiHttpService,
