@@ -168,9 +168,9 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.formModelCustom.entityName,
                   'recID'
                 )
-                .subscribe((dataDefault) => {
+                .subscribe((dataDefault: any) => {
                   if (dataDefault) {
-                    this.data = dataDefault;
+                    this.data = dataDefault.data;
                     this.data.recID = this.oSignFile.recID;
                     this.data.title = this.oSignFile.title;
                     this.data.categoryID = this.oSignFile.categoryID;
@@ -849,7 +849,7 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  saveCategoryTemplate() {}
+  saveCategoryTemplate() { }
   //#endregion
 
   //#region Change Tab

@@ -1,12 +1,11 @@
-import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { ViewFileDialogComponent } from './components/viewFileDialog/viewFileDialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
+import { CodxCoreModule } from 'codx-core';
 import { BreadcumbComponent } from './components/breadcumb/breadcumb.component';
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
-import { ModuleWithProviders, NgModule, Type } from '@angular/core';
+import { NgModule, Type } from '@angular/core';
 import { SelectweekComponent } from './components/selectweek/selectweek.component';
 import { CodxTabsComponent } from './components/codx-tabs/codx-tabs.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -92,6 +91,12 @@ import { FileComponent } from './components/codx-note/file/file.component';
 import { AttachmentComponent } from './components/attachment/attachment.component';
 import { CodxImportAddMappingTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping-template/codx-import-add-mapping-template.component';
 import { NotifyDrawerSliderComponent } from './layout/drawers/notify-drawer/notify-drawer-slider/notify-drawer-slider.component';
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
+import { SettingCalendarComponent } from './components/setting-calendar/setting-calendar.component';
+import { PopupEditCalendarComponent } from './components/setting-calendar/popup-edit-calendar/popup-edit-calendar.component';
+import { PopupAddCalendarComponent } from './components/setting-calendar/popup-add-calendar/popup-add-calendar.component';
+import { PopupAddDayoffsComponent } from './components/setting-calendar/popup-add-dayoffs/popup-add-dayoffs.component';
+import { PopupAddEventComponent } from './components/setting-calendar/popup-add-event/popup-add-event.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -155,6 +160,11 @@ const T_Component: Type<any>[] = [
   CodxViewAssignComponent,
   CodxCommentHistoryComponent,
   CodxTreeHistoryComponent,
+  SettingCalendarComponent,
+  PopupAddCalendarComponent,
+  PopupAddDayoffsComponent,
+  PopupAddEventComponent,
+  PopupEditCalendarComponent,
   FileComponent,
 ];
 
@@ -178,7 +188,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     BoldReportsModule,
     BoldReportDesignerModule,
     BoldReportViewerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   exports: [T_Component, T_Pipe],
 })

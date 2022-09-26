@@ -32,10 +32,10 @@ export class PopupAddRoomsComponent extends UIComponent {
   @Input() editResources: any;
   @Input() isAdd = true;
   @Output() closeEdit = new EventEmitter();
-  dialog: any;
+  dialogRef: any;
   cacheGridViewSetup: any;
   CbxName: any;
-  dialogAddRoom: FormGroup;
+  fGroupAddRoom: FormGroup;
   vllDevices = [];
   lstDevices: [];
   isAfterRender = false;
@@ -52,14 +52,14 @@ export class PopupAddRoomsComponent extends UIComponent {
     private injector: Injector,
     private authService: AuthService,
     private codxEpService: CodxEpService,
-    @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
+    @Optional() dialogData?: DialogData,
+    @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialog?.dataService?.dataSelected;
-    this.isAdd = dt?.data[1];
-    this.dialog = dialog;
-    this.formModel = this.dialog.formModel;
+    this.data = dialogRef?.dataService?.dataSelected;
+    this.isAdd = dialogData?.data[1];
+    this.dialogRef = dialogRef;
+    this.formModel = this.dialogRef.formModel;
   }
 
   onInit(): void {
@@ -81,16 +81,7 @@ export class PopupAddRoomsComponent extends UIComponent {
         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceRoom));
       });
     });
-
-    this.codxEpService
-      .getComboboxName(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .then((res) => {
-        this.CbxName = res;
-        console.log('cbx', this.CbxName);
-      });
+    
   }
 
   initForm() {
@@ -103,25 +94,9 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.dialogAddRoom = item;
-        if (this.data) {
-          this.dialogAddRoom.patchValue(this.data);
-          this.dialogAddRoom.patchValue({
-            resourceType: '1',
-          });
-        }
+        this.fGroupAddRoom = item;        
         this.isAfterRender = true;
       });
-  }
-
-  valueCbxChange(event: any) {
-    if (event?.field != null) {
-      if (event.data instanceof Object) {
-        this.dialogAddRoom.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.dialogAddRoom.patchValue({ [event['field']]: event.data });
-      }
-    }
   }
 
   checkedChange(event: any, device: any) {
@@ -135,8 +110,10 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   onSaveForm() {
-    if (this.dialogAddRoom.invalid == true) {
-      this.codxEpService.notifyInvalid(this.dialogAddRoom, this.formModel);
+    this.data.resourceType='1';
+    this.fGroupAddRoom.patchValue(this.data);
+    if (this.fGroupAddRoom.invalid == true) {
+      this.codxEpService.notifyInvalid(this.fGroupAddRoom, this.formModel);
       return;
     }
     this.tmplstDevice.forEach((element) => {
@@ -146,23 +123,13 @@ export class PopupAddRoomsComponent extends UIComponent {
         tempEquip.createdBy = this.authService.userValue.userID;
         this.lstEquipment.push(tempEquip);
       }
-    });
-    this.dialogAddRoom.patchValue({
-      resourceType: '1',
-      linkType: '0',
+    });    
+    this.fGroupAddRoom.patchValue({      
       equipments: this.lstEquipment,
-    });
-    if (this.dialogAddRoom.value.owner instanceof Object) {
-      this.dialogAddRoom.patchValue({
-        owner: this.dialogAddRoom.value.owner[0],
-      });
-    }
-    if (this.dialogAddRoom.value.companyID instanceof Object) {
-      this.dialogAddRoom.patchValue({
-        companyID: this.dialogAddRoom.value.companyID[0],
-      });
-    }
-    this.dialog.dataService
+      category: '1',
+      linkType: '0',
+    });    
+    this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res) {
@@ -174,20 +141,21 @@ export class PopupAddRoomsComponent extends UIComponent {
                 //this.loadData.emit();
               }
             });
-          this.dialog.close();
+          this.dialogRef.close();
         }
         return;
       });
   }
 
   beforeSave(option: RequestOption) {
-    let itemData = this.dialogAddRoom.value;
+    let itemData = this.fGroupAddRoom.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
-  closeFormEdit(data) {
-    this.initForm();
-    this.closeEdit.emit(data);
-  }
+
+  // closeFormEdit(data) {
+  //   this.initForm();
+  //   this.closeEdit.emit(data);
+  // }
 }

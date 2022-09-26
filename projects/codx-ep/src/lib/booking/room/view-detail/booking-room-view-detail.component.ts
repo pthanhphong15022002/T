@@ -30,28 +30,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;
-  files = [
-    {
-      id: '6322a7433821591f25a3ff77',
-      recID: '41894ed5-34ad-11ed-945f-00155d035517',
-      fileID: '6322a7436e021f501d602bf6',
-      fileName: 'Tuyên dương học sinh giỏi.pdf',
-      eSign: true,
-      comment: '.pdf',
-      createdOn: '2022-09-14T21:17:07.028-07:00',
-      areas: [],
-      createdBy: 'ADMIN',
-      modifiedOn: null,
-      modifiedBy: null,
-      write: true,
-      delete: true,
-      share: true,
-      assign: true,
-      includeTables: null,
-      updateColumns: '',
-      unbounds: null,
-    },
-  ];
+  files = [];
 
   constructor(
     private injector: Injector,
@@ -78,6 +57,19 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           if (res) {
             this.itemDetail = res;
             this.detectorRef.detectChanges();
+          }
+        });
+        this.files=[];
+        this.api.execSv(
+          'DM',
+          'ERM.Business.DM',
+          'FileBussiness',
+          'GetFilesForOutsideAsync',
+          [this.funcID, this.itemDetail.recID, 'EP_Bookings']
+        ).subscribe((res:[])=>{
+          if(res){
+            console.log(res);
+            this.files=res;
           }
         });
       //this.itemDetail = changes.itemDetail.currentValue;

@@ -130,12 +130,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       ])
       .subscribe((response: any) => {
         if (response) {
-          response['_uuid'] = response['taskID'] ?? Util.uid();
-          response['idField'] = 'taskID';
-          // response['isNew'] = function () {
-          //   return response[response.taskID] != response['_uuid'];
-          // };
-          this.task = response;
+          var data = response.data;
+          data['_uuid'] = data['taskID'] ?? Util.uid();
+          data['idField'] = 'taskID';
+          this.task = data;
           this.loadingAll = true;
           this.openInfo();
         }
@@ -342,9 +340,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         if (res[0]) {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
-          var taskParent = res[1][0] ;
-          if(this.taskParent?.confirmControl=="1") this.tmSv.sendAlertMail(taskParent?.recID,"TM_0008",this.functionID).subscribe()
-         
+          var taskParent = res[1][0];
+          if (this.taskParent?.confirmControl == "1") this.tmSv.sendAlertMail(taskParent?.recID, "TM_0008", this.functionID).subscribe()
+
           //lưu his giao việc
           var objectType = this.formModel.entityName
           var objectID = this.task.refID
