@@ -75,7 +75,7 @@
       (param?.PlanControl != '0' || param?.PlanControl == null) && showPlan
     ">
     <div class="form-group row">
-      <div class="col-4">
+      <div class="col-5 pe-0">
         <div>
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
@@ -84,7 +84,7 @@
           (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <div>
           <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Ngày kết thúc">
           </codx-label>
@@ -93,7 +93,7 @@
           (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-4">
+      <div class="col-2 ps-0">
         <div>
           <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
