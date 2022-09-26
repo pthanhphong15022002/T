@@ -1,3 +1,5 @@
+import { Device } from './../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
+import { Equipments } from './../../models/equipments.model';
 import {
   Component,
   TemplateRef,
@@ -23,11 +25,11 @@ import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.compon
   templateUrl: 'rooms.component.html',
   styleUrls: ['rooms.component.scss'],
 })
-export class RoomsComponent extends UIComponent implements AfterViewInit {
+export class RoomsComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
 
-  @ViewChild('resourceIDCol') resourceIDCol: TemplateRef<any>;
+  @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
@@ -47,6 +49,7 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
   lstDevices = [];  
   funcID: string;
   showToolBar = 'true';
+  roomEquipments=[];
 
   service = 'EP';
   assemblyName = 'EP';
@@ -72,11 +75,19 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    //this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
    
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
+      this.vllDevices.forEach((item) => {
+        let device = new Device();
+        device.id = item.value;
+        device.text = item.text;       
+        this.roomEquipments.push(device);
+        this.roomEquipments = JSON.parse(JSON.stringify(this.roomEquipments));
+      });
     });
+    
   }
 
   ngAfterViewInit(): void {
@@ -85,25 +96,24 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
     };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
-        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnGrids = [
             {
-              field: 'resourceID',
-              headerText: gv['ResourceID'].headerText,
-              width: gv['ResourceID'].width,
-              template: this.resourceIDCol,
+              field: 'resourceName',
+              headerText: gv['ResourceName'].headerText,
+              width: '300',//gv['ResourceID'].width,
+              template: this.resourceNameCol,
             },
             {
               headerText: gv['Location'].headerText,
-              width: 200,//gv['Location'].width,
+              //width: gv['Location'].width,
               field: 'location',
-              textAlign: 'Center',
               template: this.locationCol,
             },
             {
               headerText: gv['Equipments'].headerText,
-              width: gv['Equipments'].width,
+              //width: gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
               headerTextAlign: 'Center',
@@ -111,7 +121,7 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
             },          
             {
               headerText: gv['Note'].headerText,
-              width: gv['Note'].width,
+              //width: gv['Note'].width,
               field: 'note',
               headerTextAlign: 'Center',  
               textAlign: 'Center',            
@@ -148,25 +158,40 @@ export class RoomsComponent extends UIComponent implements AfterViewInit {
     });
     this.detectorRef.detectChanges();
   }
-
-  getEquiqments(equipments: any) {
-    equipments.map((res) => {
-      this.vllDevices.forEach((device) => {
-        if (res.equipmentID == device.value) {
-          this.lstDevices.push(device.text);
+  openPopupDevice(template: any,lstEquipments? ) {    
+    this.roomEquipments.forEach(element => {
+      element.isSelected=false;
+    });
+    this.roomEquipments.forEach(element => {
+      lstEquipments.forEach(item=>{
+        if(element.id==item.equipmentID){
+          element.isSelected=true;
         }
-      });
-    });
-    return this.lstDevices.join(';');
+      })
+    });   
+
+    var dialog = this.callfc.openForm(template, '', 550, 430);
+    this.detectorRef.detectChanges();
   }
-  getCompanyName(companyID: string) {
-    this.codxEpService.getCompanyName(companyID).subscribe((res) => {
-      if (res.msgBodyData[0]) {
-        this.tempCompanyName = res.msgBodyData[0];
-      }
-    });
-    return this.tempCompanyName;
-  }
+
+  // getEquiqments(equipments: any) {
+  //   equipments.map((res) => {
+  //     this.vllDevices.forEach((device) => {
+  //       if (res.equipmentID == device.value) {
+  //         this.lstDevices.push(device.text);
+  //       }
+  //     });
+  //   });
+  //   return this.lstDevices.join(';');
+  // }
+  // getCompanyName(companyID: string) {
+  //   this.codxEpService.getCompanyName(companyID).subscribe((res) => {
+  //     if (res.msgBodyData[0]) {
+  //       this.tempCompanyName = res.msgBodyData[0];
+  //     }
+  //   });
+  //   return this.tempCompanyName;
+  // }
 
   clickMF(event, data) {
     console.log(event);
