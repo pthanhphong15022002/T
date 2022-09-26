@@ -141,6 +141,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     } else if (this.action == 'edit') {
       // this.setTimeEdit();
       this.resources = this.meeting.resources;
+     if(this.resources?.length > 0 ){
+      this.resources.forEach(obj=>this.listUserID.push(obj.resourceID))
+     }
     } else if (this.action == 'copy') {
       this.meeting.meetingType = '1';
       this.resources = [];
@@ -285,7 +288,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notify('Vui lòng nhập đường link họp online !');
       return;
     }
-    if (this.attachment.fileUploadList.length)
+    if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           this.meeting.attachments = Array.isArray(res) ? res.length : 1;
