@@ -272,15 +272,34 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  // delete(obj?) {
+  //   this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  //   if (obj) {
+  //     this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+  //       console.log(res);
+  //     });
+  //   }
+  // }
+
   delete(obj?) {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
-        console.log(res);
+        if (res) {          
+          this.api
+          .execSv(
+            'DM',
+            'ERM.Business.DM',
+            'FileBussiness',
+            'DeleteByObjectIDAsync',
+            [obj.recID, 'EP_Rooms', true]
+          )
+          .subscribe();
+        this.detectorRef.detectChanges();
+      }
       });
     }
   }
-
   onSelect(obj: any) {
     console.log(obj);
   }

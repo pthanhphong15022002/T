@@ -288,16 +288,35 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   //   }
   // }
 
-  delete(data?: any) {
+  // delete(data?: any) {
+  //   this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  //   this.viewBase.dataService.dataSelected = data;
+  //   this.viewBase.dataService
+  //     .delete([this.viewBase.dataService.dataSelected], true)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.codxEpService.deleteFile(data.recID, this.formModel.entityName, true);
+  //       }
+  //     });
+  // }
+  delete(obj?) {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-    this.viewBase.dataService.dataSelected = data;
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected], true)
-      .subscribe((res) => {
-        if (res) {
-          this.codxEpService.deleteFile(data.recID, this.formModel.entityName, true);
-        }
+    if (obj) {
+      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+        if (res) {          
+          this.api
+          .execSv(
+            'DM',
+            'ERM.Business.DM',
+            'FileBussiness',
+            'DeleteByObjectIDAsync',
+            [obj.recID, 'EP_Rooms', true]
+          )
+          .subscribe();
+        this.detectorRef.detectChanges();
+      }
       });
+    }
   }
 
   clickMF(event, data) {
