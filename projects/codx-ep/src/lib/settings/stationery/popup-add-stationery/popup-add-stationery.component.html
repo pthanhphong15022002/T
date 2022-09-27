@@ -11,99 +11,89 @@
   [tabContent]="[tabGeneralInfo, tabUsageNorms, tabMoreInfo]"
   (setTitle)="setTitle($event)"
   [data]="data"
-  [formControl]="dialogAddStationery"
 >
   <ng-template #tabGeneralInfo>
     <div id="rome" class="tabpanel">
-      <div class="tab-content">
-        <div class="d-flex flex-column mb-4">
-          <div class="d-flex justify-content-between align-items-center">
-            <codx-label
-              class="fw-bold"
-              fiedName="ResourceName"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-          </div>
-
-          <codx-input
-            ControlName="resourceName"
-            [formModel]="form.formModel"
-            [Group]="dialogAddStationery"
-          ></codx-input>
-        </div>
-
-        <div class="d-flex row align-items-center mb-2">
-          <div class="col-8">
-            <codx-label
-              class="fw-bold"
-              fiedName="GroupID"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-
-            <codx-input
-              ControlName="groupID"
-              [formModel]="form.formModel"
-              [Group]="dialogAddStationery"
-            >
-            </codx-input>
-          </div>
-          <div class="col-4">
-            <codx-label
-              class="fw-bold"
-              fiedName="Code"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-
-            <codx-input
-              ControlName="code"
-              [formModel]="form.formModel"
-              [Group]="dialogAddStationery"
-            ></codx-input>
-          </div>
-        </div>
-
-        <div class="d-flex flex-column mb-4">
+      <div class="row">
+        <div class="form-group col-8">
           <codx-label
             class="fw-bold"
-            fiedName="Location"
+            fiedName="ResourceName"
             [formModel]="form.formModel"
           >
           </codx-label>
           <codx-input
-            ControlName="location"
+            ControlName="resourceName"
             [formModel]="form.formModel"
-            [Group]="dialogAddStationery"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+        <div class="form-group col-4">
+          <codx-label
+            class="fw-bold"
+            fiedName="UMID"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+          <codx-input
+            ControlName="uMID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-8">
+          <codx-label
+            class="fw-bold"
+            fiedName="GroupID"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+
+          <codx-input
+            ControlName="groupID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
+        <div class="form-group col-4">
+          <codx-label
+            class="fw-bold"
+            fiedName="Code"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
 
-        <div class="d-flex flex-column mb-4">
+          <codx-input
+            ControlName="code"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-12">
           <codx-label
             class="fw-bold"
             fiedName="Owner"
             [formModel]="form.formModel"
           >
           </codx-label>
-
-          <div class="position-relative">
-            <codx-input
-              type="combobox"
-              ControlName="owner"
-              [formModel]="form.formModel"
-              [Group]="dialogAddStationery"
-              [multiple]="false"
-            >
-            </codx-input>
-            <div class="position-absolute translate-middle-y top-50 end-0 me-3">
-              <span class="icon-person_pin_circle"> </span>
-            </div>
-          </div>
+          <codx-input
+            ControlName="owner"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
         </div>
+      </div>
 
-        <div class="d-flex flex-column mb-4">
+      <div class="row">
+        <div class="form-group col-12">
           <codx-label
             class="fw-bold"
             fiedName="Note"
@@ -114,46 +104,46 @@
           <codx-input
             ControlName="note"
             [formModel]="form.formModel"
-            [Group]="dialogAddStationery"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
+      </div>
 
-        <div class="d-flex flex-column mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <codx-label
-              class="fw-bold"
-              default="Hình ảnh màu sắc"
-              name="lblImageStationary"
-            >
-            </codx-label>
-            <span class="icon-select_all text-primary icon-20"></span>
-          </div>
+      <div class="d-flex justify-content-start mb-4">
+        <div class="upload-img">
+          <codx-img
+            #imageUpLoad
+            width="150"
+            imageType="square"
+            [objectType]="formModel?.entityName"
+            [objectId]="data?.recID"
+            aria-disabled="true"
+            [funcId]="formModel?.funcID"
+            [isAllowEdit]="true"
+            [objectId]="''"
+          >
+          </codx-img>
         </div>
-
-        <div class="container">
-          <div class="d-flex justify-content-start mb-4">
-            <div class="upload-img">
-              <codx-img
-                #imageUpLoad
-                width="50"
-                imageType="square"
-                [objectType]="formModel?.entityName"
-                [objectId]="data?.recID"
-                aria-disabled="true"
-                [funcId]="formModel?.funcID"
-                [isAllowEdit]="true"
-                [objectId]="''"
-              >
-              </codx-img>
+        <div class="d-flex align-items-center">
+          <div class="ms-4">
+            <div class="m-2 d-flex align-items-center">
+              <span class="me-2 fw-bold text-black-50">Màu sắc: </span>
+              <codx-colorpicker
+                (valueChange)="valueChange($event)"
+              ></codx-colorpicker>
             </div>
-            <div class="button-color">
-              <button
-                *ngFor="let item of splitColor(this.data.color)"
-                type="button"
-                class="btn btn-sm w-30px h-30px mx-2 border"
-                [ngStyle]="{ 'background-color': item }"
-              ></button>
+            <div class="m-2">
+              <span class="fw-bold text-black-50">Tồn kho: </span>
+              <span class="fw-bold">1</span>
+            </div>
+            <div class="m-2">
+              <span class="fw-bold text-black-50">Đã dành hàng: </span>
+              <span class="fw-bold">1</span>
+            </div>
+            <div class="m-2">
+              <span class="fw-bold text-black-50">Sẵn sàng xuất: </span>
+              <span class="fw-bold">1</span>
             </div>
           </div>
         </div>
@@ -162,121 +152,104 @@
   </ng-template>
 
   <ng-template #tabUsageNorms>
-    <div class="d-flex justify-content-end">
-      <span class="icon-add_circle text-primary icon-20"></span>
+    <div class="d-flex justify-content-center">
+      <div>Theo số lượng người được đăng ký</div>
+      <div class="d-flex align-items-center">
+        <codx-input type="switch"></codx-input>
+      </div>
     </div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Định mức</th>
-          <th scope="col">Cấp bậc nhân viên</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1/Người/tháng</td>
-          <td>Tất cả nhân viên</td>
-        </tr>
-        <tr>
-          <td>2/Từng lần đăng ký</td>
-          <td>Tất cả nhân viên</td>
-        </tr>
-      </tbody>
-    </table>
   </ng-template>
 
   <ng-template #tabMoreInfo>
     <div id="rome" class="tabpanel">
-      <div class="tab-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h4 class="fw-bolder text-gray-800 d-block mb-2">
-            <codx-label
-              name="lblInformation"
-              default="Thông tin khác"
-              [formModel]="form.formModel"
-            ></codx-label>
-          </h4>
-          <span class="icon-layers text-primary fs-1"></span>
-        </div>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bolder text-gray-800 d-block mb-2">
+          <codx-label
+            name="lblInformation"
+            default="Thông tin khác"
+            [formModel]="form.formModel"
+          ></codx-label>
+        </h4>
+        <span class="icon-layers text-primary fs-1"></span>
+      </div>
 
-        <div class="d-flex row align-items-center mb-4">
-          <div class="col-4">
-            <codx-label
-              class="fw-bold"
-              fiedName="AvailableQty"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-            <codx-input
-              [min]="0"
-              ControlName="availableQty"
-              [formModel]="form.formModel"
-              [Group]="dialogAddStationery"
-            ></codx-input>
-          </div>
-          <div class="col-4">
-            <codx-label
-              class="fw-bold"
-              fiedName="ReservedQty"
-              aria-disabled="false"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-            <codx-input
-              [min]="0"
-              ControlName="reservedQty"
-              [formModel]="form.formModel"
-              [Group]="dialogAddStationery"
-            ></codx-input>
-          </div>
-          <div class="col-4">
-            <codx-label
-              class="fw-bold"
-              fiedName="CurrentQty"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-            <codx-input
-              [min]="0"
-              ControlName="currentQty"
-              [formModel]="form.formModel"
-              [Group]="dialogAddStationery"
-            ></codx-input>
-          </div>
-        </div>
-
-        <div class="d-flex flex-stack mb-4">
-          <div class="col-6">
-            <codx-label
-              class="fw-bold"
-              fiedName="CostPrice"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-            <codx-input
-              [min]="0"
-              ControlName="costPrice"
-              [formModel]="form.formModel"
-              [Group]="dialogAddStationery"
-            ></codx-input>
-          </div>
-        </div>
-
-        <div class="d-flex flex-column mb-4">
+      <div class="d-flex row align-items-center mb-4">
+        <div class="col-4">
           <codx-label
             class="fw-bold"
-            fiedName="Note"
+            fiedName="AvailableQty"
             [formModel]="form.formModel"
           >
           </codx-label>
-
           <codx-input
-            ControlName="note"
+            [min]="0"
+            ControlName="availableQty"
             [formModel]="form.formModel"
-            [Group]="dialogAddStationery"
-          >
-          </codx-input>
+            [Group]="form.formGroup"
+          ></codx-input>
         </div>
+        <div class="col-4">
+          <codx-label
+            class="fw-bold"
+            fiedName="ReservedQty"
+            aria-disabled="false"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+          <codx-input
+            [min]="0"
+            ControlName="reservedQty"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+        <div class="col-4">
+          <codx-label
+            class="fw-bold"
+            fiedName="CurrentQty"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+          <codx-input
+            [min]="0"
+            ControlName="currentQty"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="d-flex flex-stack mb-4">
+        <div class="col-6">
+          <codx-label
+            class="fw-bold"
+            fiedName="CostPrice"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+          <codx-input
+            [min]="0"
+            ControlName="costPrice"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column mb-4">
+        <codx-label
+          class="fw-bold"
+          fiedName="Note"
+          [formModel]="form.formModel"
+        >
+        </codx-label>
+
+        <codx-input
+          ControlName="note"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
       </div>
     </div>
   </ng-template>
@@ -284,56 +257,6 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-light-primary" (click)="onSaveForm()">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="form.formModel"
-        ></codx-label>
-      </button>
-    </div>
-  </ng-template>
-
-  <ng-template #popupColor let-dialog>
-    <div class="card-header">
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 id="modal-basic-title">
-            <codx-label
-              name="lblEquipment"
-              default="Chọn màu"
-              [formModel]="form.formModel"
-            ></codx-label>
-          </h2>
-          <button
-            type="button"
-            class="btn btn-xs btn-icon btn-light btn-hover-primary"
-            aria-label="Close"
-            (click)="dialog.close()"
-          >
-            <span
-              class="icon-close icon-20 text-dark text-hover-primary"
-            ></span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      <codx-input
-        type="colorpicker"
-        [showText]="true"
-        [modeSwitcher]="true"
-        [crrValue]="color"
-        field="color"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-      <!--end::Card body-->
-    </div>
-    <div
-      class="card-footer d-flex justify-content-end"
-      (click)="closeDialog($event)"
-    >
-      <button type="button" class="btn btn-primary" (click)="dialog.close()">
         <codx-label
           name="lblSave"
           default="Lưu"

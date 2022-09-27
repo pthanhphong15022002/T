@@ -63,7 +63,7 @@ export class PopupAddCarsComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogRef?.dataService?.dataSelected;
+    this.data = dialogRef?.dataService?.dataSelected.data;
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
@@ -89,10 +89,8 @@ export class PopupAddCarsComponent extends UIComponent {
         this.lstDeviceCar.push(device);
         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceCar));
       });
-    });
-    
+    });    
   }
-
   initForm() {
     if (this.isAdd) {
       this.headerText = 'Thêm mới xe';      

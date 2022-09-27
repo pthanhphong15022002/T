@@ -1,0 +1,44 @@
+<codx-form
+  #form
+  [headerText]="title"
+  [subHeader]="subHeader"
+  [body]="body"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="d-flex justify-content-between">
+      <div class="form-group">
+        <codx-label
+          fiedName="RuleType"
+          [formModel]="form.formModel"
+          default="Căn cứ"
+        ></codx-label>
+        <codx-input
+          type="valuelist"
+          [formModel]="formModel"
+          [field]="'RuleType'"
+          [refValue]=""
+          [crrValue]=""
+          (valueChange)="valueChange()"
+        ></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          fiedName="Quantity"
+          [formModel]="form.formModel"
+          default="Số lượng"
+        ></codx-label>
+        <codx-input
+          type="number"
+          [min]="0"
+          [step]="1"
+          [formModel]="formModel"
+          [field]=""
+          [refValue]=""
+          [crrValue]=""
+          (valueChange)="valueChange()"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

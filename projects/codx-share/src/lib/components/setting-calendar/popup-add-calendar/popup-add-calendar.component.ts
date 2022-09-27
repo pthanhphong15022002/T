@@ -22,7 +22,6 @@ export class PopupAddCalendarComponent extends UIComponent {
   formModel: FormModel;
   isAfterRender: boolean = false;
   user: any;
-  funcID: string;
   calendarID: string;
   data: any;
 
@@ -36,7 +35,6 @@ export class PopupAddCalendarComponent extends UIComponent {
   ) {
     super(injector);
     this.user = this.authService.get();
-    this.funcID = this.router.snapshot.params['funcID'];
     this.dialog = dialog;
     const [formModel, calendarID] = dt?.data;
     this.formModel = formModel;
