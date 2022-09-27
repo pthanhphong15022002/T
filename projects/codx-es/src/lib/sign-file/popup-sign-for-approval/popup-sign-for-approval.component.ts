@@ -120,6 +120,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         formGroup: this.dialogSignFile,
       }
     );
+    this.pdfView.curPage = this.pdfView.pageMax;
     dialogADR.closed.subscribe((res) => {
       console.log('res.event', res.event);
       if (res.event) {
