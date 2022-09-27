@@ -38,7 +38,7 @@ export class PostsComponent implements OnInit {
     this.loadListPostComponent();
   }
 
-  private loadListPostComponent() { 
+  loadListPostComponent() { 
     var formModel = {
       entityName: 'WP_Comments',
       entityPermission: 'WP_Comments',
@@ -49,7 +49,8 @@ export class PostsComponent implements OnInit {
     var a = this.lstComment.createComponent(ListPostComponent);
     a.instance.predicateWP = `(CreatedBy="${this.user?.userID}")`;
     a.instance.isShowCreate = false;
-    // a.instance.codxViews = this.viewComponents;
+    a.instance.formModel = formModel;
+    a.instance
   }
 
 }
