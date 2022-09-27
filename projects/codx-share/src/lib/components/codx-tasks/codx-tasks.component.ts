@@ -48,7 +48,8 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -165,7 +166,7 @@ export class CodxTasksComponent
     this.request.service = 'TM';
     this.request.assemblyName = 'TM';
     this.request.className = 'TaskBusiness';
-    this.request.method = 'GetTasksAsync';
+    this.request.method = 'pg';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
@@ -218,23 +219,6 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '8',
-        type: ViewType.schedule,
-        active: false,
-        sameData: true,
-        request2: this.modelResource,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-          template: this.eventTemplate,
-          template3: this.cellTemplate,
-          statusColorRef: this.vllStatus,
-        },
-      },
-    ];
-
-    if (this.funcID == 'TMT03011') {
-      var calendar = {
         id: '7',
         type: ViewType.calendar,
         active: false,
@@ -246,9 +230,8 @@ export class CodxTasksComponent
           template3: this.cellTemplate,
           statusColorRef: this.vllStatus,
         },
-      };
-      this.viewsActive.push(calendar);
-    }
+      },
+    ];
 
     var viewDefaultID = '2';
     if (this.viewMode && this.viewMode.trim() != '') {
@@ -275,7 +258,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
@@ -347,7 +330,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -480,7 +463,7 @@ export class CodxTasksComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '800px';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
@@ -659,6 +642,14 @@ export class CodxTasksComponent
               );
           }
         });
+    } else if (status == '80') {
+      this.updateStatusCancel(
+        moreFunc,
+        taskAction,
+        updateControl,
+        maxHoursControl,
+        maxHours
+      );
     } else
       this.updatStatusAfterCheck(
         moreFunc,
@@ -667,6 +658,45 @@ export class CodxTasksComponent
         maxHoursControl,
         maxHours
       );
+  }
+
+  //kiểm tra dk Cancel task
+  updateStatusCancel(
+    moreFunc,
+    taskAction,
+    updateControl,
+    maxHoursControl,
+    maxHours
+  ) {
+    var isCheck = false;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        taskAction.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '00' && element.status != '10') {
+              isCheck = false;
+              return;
+            }
+          });
+          if (isCheck) {
+            this.notiService.notifyCode('TM008');
+          } else
+            this.updatStatusAfterCheck(
+              moreFunc,
+              taskAction,
+              updateControl,
+              maxHoursControl,
+              maxHours
+            );
+        }
+      });
   }
 
   updatStatusAfterCheck(
@@ -695,8 +725,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -784,8 +814,33 @@ export class CodxTasksComponent
   //#endregion
   //#region Event
   changeView(evt: any) {
-    let idx = this.viewsActive.findIndex((x) => x.id === '16');
+    let idx = -1;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    idx = this.viewsActive.findIndex((x) => x.id === '8');
+    if (this.funcID != 'TMT0201') {
+      if (idx > -1) return;
+      var schedule = {
+        id: '8',
+        type: ViewType.schedule,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.modelResource,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          statusColorRef: this.vllStatus,
+        },
+      };
+      this.viewsActive.push(schedule);
+    } else {
+      if (idx > -1) this.viewsActive.splice(idx, 1);
+    }
+
+    idx = this.viewsActive.findIndex((x) => x.id === '16');
     if (this.funcID == 'TMT0203') {
       if (idx > -1) return;
       var tree = {
@@ -806,16 +861,17 @@ export class CodxTasksComponent
           dataObj: null,
         },
         model: {
-          template: this.itemViewList,
+          template: this.treeView,
         },
       };
       this.viewsActive.push(tree);
     } else {
       if (idx > -1) this.viewsActive.splice(idx, 1);
     }
+    
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1365,7 +1421,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
         [e?.data, 'view', this.isAssignTask],

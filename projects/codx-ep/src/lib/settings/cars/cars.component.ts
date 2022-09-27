@@ -147,7 +147,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
-        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnGrids = [
             {
@@ -204,7 +204,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               },
             },
           ];
-          this.detectorRef.detectChanges();
         });
     });
     this.detectorRef.detectChanges();
@@ -272,15 +271,33 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  // delete(obj?) {
+  //   this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  //   if (obj) {
+  //     this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+  //       console.log(res);
+  //     });
+  //   }
+  // }
+
   delete(obj?) {
     this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
-        console.log(res);
+        if (res) {          
+          this.api.execSv(
+            'DM',
+            'ERM.Business.DM',
+            'FileBussiness',
+            'DeleteByObjectIDAsync',
+            [obj.recID, 'EP_Rooms', true]
+          )
+          .subscribe();
+        this.detectorRef.detectChanges();
+      }
       });
     }
   }
-
   onSelect(obj: any) {
     console.log(obj);
   }
@@ -297,7 +314,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
+  // closeDialog(evt?) {
+  //   this.dialog && this.dialog.close();
+  // }
 }

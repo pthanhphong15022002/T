@@ -13,13 +13,13 @@
       <div class="row mt-5">
         <div class="col-10">
           <div class="border border-secondary h-100">
-            <div *ngIf="!checkFile" class="ms-3 mt-2">
+            <!-- <div *ngIf="!checkFile" class="ms-3 mt-2">
               <span >{{data?.reportName}}</span>
-            </div>
+            </div> -->
 
             <div class="m-3">
                 <codx-attachment #attachment [objectType]="'SYS_ReportList'" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                hideDes="1" hideImageUpload="0" hideImageThumb="1" [functionID]="dialog.formModel.funcID" [objectId]="recID"
+                hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="dialog.formModel.funcID" [objectId]="data.recID"
                 [allowMultiFile]="'0'" [idBrowse]="'add'" [allowExtensions]="'.rdl, .rdlc'">
               </codx-attachment>
             </div>

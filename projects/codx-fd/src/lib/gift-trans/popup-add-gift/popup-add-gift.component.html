@@ -141,14 +141,14 @@
                     type="textarea" 
                     field="siutuation"
                     name="siutuation"
-                    [disabled]="form.controls['transType'].value == '4'"
+                    [disabled]="giftTrans.TransType == '4'"
                     (valueChange)="valueChange($event)"
                     >
                 </codx-input>
             </div>
         </div>
         <div class="mt-3">
-            <ng-container *ngIf="form.controls['transType'].value == '4' ">
+            <ng-container *ngIf="form.controls['transType'].value == '4'">
                 <div class="d-flex">
                     <ng-container *ngFor="let item of lstPattern">
                         <ng-container *ngTemplateOutlet="patternItem ; context{ $implicit: item }"></ng-container>

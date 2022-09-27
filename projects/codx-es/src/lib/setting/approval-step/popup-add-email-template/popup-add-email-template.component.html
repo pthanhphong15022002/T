@@ -382,10 +382,10 @@
         </ul>
       </div>
     </div>
-    <div class="d-flex justify-content-between align-items-center mt-4">
+    <div class="d-flex justify-content-between align-items-end mt-4">
       <div>
         <div
-          class="d-flex align-items-center cursor-pointer"
+          class="d-flex align-items-center cursor-pointer mb-2"
           (click)="openFormUploadFile()"
         >
           <span class="icon-attach_email icon-18 me-2 text-primary"></span>
@@ -417,28 +417,28 @@
         </div>
       </div>
 
-      <div #dataView id="dataView" (click)="focusCombobox()">
-        <!-- <codx-input
-          type="combobox"
-          [refValue]="'DataViewItems'"
-          field="dataView"
-          (valueChange)="valueChange($event)"
-          placeholder="Chọn trường dữ liệu"
-        >
-        </codx-input> -->
+      <div #dataView id="dataView" (click)="clickDataView()">
         <button
           class="btn btn-sm btn-light d-flex align-items-center"
           type="button"
-          id="dropdownMenuButton1"
           aria-expanded="false"
         >
-          <span>Chọn trường dữ liệu</span>
+          <span>
+            <codx-label
+              default="Chọn trường dữ liệu"
+              name="lblChooseField"
+              [formModel]="formModel"
+            ></codx-label>
+          </span>
           <span class="icon-keyboard_arrow_down icon-16 ms-2"></span>
         </button>
       </div>
     </div>
 
-    <div #textarea class="request-box d-flex justify-content-between mt-4">
+    <div
+      #textarea
+      class="request-box d-flex justify-content-between mt-4 h-250px"
+    >
       <div class="message w-100" (click)="getPosition()">
         <codx-input
           #richtexteditor
@@ -448,107 +448,39 @@
           [crrValue]="dialogETemplate.value.message"
           height="250"
           (valueChange)="valueChange($event)"
+          (keyup)="keyUp($event)"
         ></codx-input>
       </div>
-      <div class="ms-4" [style.width.px]="200" *ngIf="show">
-        <!-- <ejs-listview
-          id="ui-list"
-          #listviewInstance
-          [dataSource]="dataSource"
-          [enableVirtualization]="true"
-          headerTitle="Contacts"
-          [fields]="'name'"
-          height="500"
-          [template]="template"
-          [showHeader]="true"
-        ></ejs-listview> -->
-
-        <ejs-listview
-          id="sample-list-flat"
-          [dataSource]="dataSource"
-        ></ejs-listview>
-      </div>
-    </div>
-
-    <div class="d-flex flex-column mb-4 mt-20">
-      <div class="d-flex justify-content-between">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center me-3" *ngIf="showIsTemplate">
-            <label class="ms-2 me-2">
-              <codx-label
-                default="Lưu thành template"
-                fiedName="IsTemplate"
-                formName="EmailTemplates"
-                gridViewName="grvEmailTemplates"
-              >
-              </codx-label>
-            </label>
-            <codx-input
-              type="switch"
-              [crrValue]="dialogETemplate.value.isTemplate"
-              field="isTemplate"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
+      <div class="ms-4 scroll-y" [style.width.px]="200" *ngIf="show">
+        <div class="col-lg-12 control-section">
+          <div class="mb-1 mx-3">
+            <input
+              #textbox
+              class="codx-text default e-input form-control ng-pristine ng-valid ng-touched"
+              type="text"
+              id="textbox"
+              placeholder="Tìm kiếm"
+              title="Type in a name"
+              (keyup)="onkeyup($event)"
+            />
           </div>
-          <div class="d-flex align-items-center me-3" *ngIf="showIsPublish">
-            <label class="ms-2 me-2">
-              <codx-label
-                default="Dùng chung"
-                formName="EmailTemplates"
-                gridViewName="grvEmailTemplates"
-                fiedName="IsPublish"
+          <ejs-listview
+            id="listview_template"
+            #listviewInstance
+            [dataSource]="dataSource"
+            [cssClass]="cssClass"
+            (actionComplete)="onActionComplete($event)"
+            [showHeader]="false"
+          >
+            <ng-template #template let-dataSource="">
+              <div
+                class="card-template px-2 pt-3 pb-2 ps-3 text-dark"
+                (click)="clickItem(dataSource)"
               >
-              </codx-label>
-            </label>
-            <codx-input
-              type="switch"
-              [crrValue]="dialogETemplate.value.isPublish"
-              field="isPublish"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-          <div class="d-flex align-items-center me-3" *ngIf="showSendLater">
-            <label class="ms-2 me-2">
-              <codx-label
-                default="Gửi ngay"
-                formName="EmailTemplates"
-                gridViewName="grvEmailTemplates"
-                fiedName="SendLater"
-              >
-              </codx-label>
-            </label>
-            <codx-input
-              type="switch"
-              [crrValue]="sendNow"
-              field="sendLater"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="">
-          <div class="d-flex align-items-center">
-            <label class="mt-1 me-2">
-              <codx-label
-                default="Gửi vào lúc"
-                formName="EmailTemplates"
-                gridViewName="grvEmailTemplates"
-                fiedName="SendTime"
-              >
-              </codx-label>
-            </label>
-            <div class="w-150px">
-              <codx-input
-                type="datetime"
-                format="t"
-                field="sendTime"
-                [crrValue]="dialogETemplate.value.sendTime"
-                (valueChange)="valueChange($event)"
-              ></codx-input>
-            </div>
-          </div>
+                {{ dataSource?.headerText }}
+              </div>
+            </ng-template>
+          </ejs-listview>
         </div>
       </div>
     </div>
@@ -1034,6 +966,73 @@
     </div>
   </ng-template> -->
   <ng-template #footer>
+    <div class="d-flex flex-column mt-4 mb-8">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center me-3" *ngIf="showIsTemplate">
+            <label class="ms-2 me-2">
+              <codx-label fiedName="IsTemplate" [formModel]="formModel">
+              </codx-label>
+            </label>
+            <codx-input
+              type="switch"
+              [crrValue]="dialogETemplate.value.isTemplate"
+              field="isTemplate"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+          <div class="d-flex align-items-center me-3" *ngIf="showIsPublish">
+            <label class="ms-2 me-2">
+              <codx-label [formModel]="formModel" fiedName="IsPublish">
+              </codx-label>
+            </label>
+            <codx-input
+              type="switch"
+              [crrValue]="dialogETemplate.value.isPublish"
+              field="isPublish"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+          <div class="d-flex align-items-center me-3" *ngIf="showSendLater">
+            <label class="ms-2 me-2">
+              <codx-label [formModel]="formModel" fiedName="SendLater">
+              </codx-label>
+            </label>
+            <codx-input
+              type="switch"
+              [crrValue]="dialogETemplate.value.sendLater"
+              field="sendLater"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="">
+          <div class="d-flex align-items-center">
+            <label class="mt-1 me-2">
+              <codx-label
+                default="Gửi vào lúc"
+                formName="EmailTemplates"
+                gridViewName="grvEmailTemplates"
+                fiedName="SendTime"
+              >
+              </codx-label>
+            </label>
+            <div class="w-150px">
+              <codx-input
+                type="datetime"
+                format="t"
+                field="sendTime"
+                [crrValue]="dialogETemplate.value.sendTime"
+                (valueChange)="valueChange($event)"
+              ></codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="d-flex justify-content-end">
       <a class="btn btn-primary fw-bold" (click)="onSaveWithTemplate(null)">
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
@@ -1139,3 +1138,15 @@
     <span class="e-list-content">{{ data.name }}</span>
   </div></ng-template
 >
+
+<ng-template #headerSearch>
+  <div class="mb-1 mx-3">
+    <codx-input
+      type="text"
+      [disabled]="false"
+      placeholder="Tìm kiếm"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+</ng-template>

@@ -479,12 +479,10 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-    debugger
     ScrollComponent.reinitialization();
-    if ($data == null || $data.data == null) {
+    if (!$data && ($data == null || $data?.data == null)) {
       return;
     }
-    debugger
     this.isSearch = false;
     this.clearWaitingThumbnail();
     let id = $data.data.recID;

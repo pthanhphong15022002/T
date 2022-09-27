@@ -1,10 +1,21 @@
 <div class="cal-toolbar d-flex align-items-center mb-3">
   <div class="me-1 header-combo" *ngIf="param">
-    <codx-input class="form-control min-w-200px" style="width: 200px" type="combobox" placeholder="Lịch làm việc"
-      [field]="'WKTemplateID'" [refValue]="'WKTemplateID'" [multiple]="false" (valueChange)="changeCombobox($event)">
+    <codx-input
+      class="form-control min-w-200px"
+      style="width: 200px"
+      type="combobox"
+      placeholder="Lịch làm việc"
+      [field]="'WKTemplateID'"
+      [refValue]="'WKTemplateID'"
+      [multiple]="false"
+      (valueChange)="changeCombobox($event)"
+    >
     </codx-input>
   </div>
-  <button class="btn btn-icon btn-primary me-1" (click)="openCalendarSettings()">
+  <button
+    class="btn btn-icon btn-primary me-1"
+    (click)="openCalendarSettings()"
+  >
     <span class="icon-settings text-white icon-18"></span>
   </button>
   <button class="btn btn-primary" (click)="addCalendar()">
@@ -13,10 +24,21 @@
 </div>
 
 <div class="cal-container">
-  <codx-schedule height="100%" #schedule [enableAdaptiveUI]="false" [eventTemplate]="eventTemplate"
-    [templateResourceHeader]="resourceHeader" [options]="model" [optionsResource]="model"
-    [resourceTooltipTemplate]="resourceTootip" [templateCell]="cellTemplate" [currentView]="currentView"
-    [allowGridLines]="false" [isCalendarView]="true" [isTimelineView]="true">
+  <codx-schedule
+    height="100%"
+    #schedule
+    [enableAdaptiveUI]="false"
+    [eventTemplate]="eventTemplate"
+    [templateResourceHeader]="resourceHeader"
+    [options]="model"
+    [optionsResource]="model"
+    [resourceTooltipTemplate]="resourceTootip"
+    [templateCell]="cellTemplate"
+    [currentView]="currentView"
+    [allowGridLines]="false"
+    [isCalendarView]="true"
+    [isTimelineView]="true"
+  >
   </codx-schedule>
 
   <ng-template #cellTemplate let-data>
@@ -25,13 +47,19 @@
 
   <ng-template #eventTemplate let-data>
     <div class="symbol symbol-40px symbol-circle me-4">
-      <codx-img [objectId]="data?.resourceData.assignTo" objectName="AD_Users"></codx-img>
+      <codx-img
+        [objectId]="data?.resourceData.assignTo"
+        objectName="AD_Users"
+      ></codx-img>
     </div>
   </ng-template>
 
   <ng-template #resourceTootip let-data>
     <div class="template-wrap symbol symbol-40px symbol-circle me-4">
-      <codx-img [objectId]="data?.resourceData.assignTo" objectName="AD_Users"></codx-img>
+      <codx-img
+        [objectId]="data?.resourceData.assignTo"
+        objectName="AD_Users"
+      ></codx-img>
       <div class="res-text">Tên: {{ data.resourceData.userName }}</div>
       <div class="res-text">Vị trí: {{ data.resourceData.positionName }}</div>
     </div>
