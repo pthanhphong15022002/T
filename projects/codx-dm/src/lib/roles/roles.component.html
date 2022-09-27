@@ -47,7 +47,7 @@
                                             </ng-template> -->
                                         </div>
                                     </div>
-                                    <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder">
+                                    <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder && fileEditing?.assign">
                                         <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer" (click)="removeUserRight(i)">
                                             <i class="icon-close text-danger icon-16"></i>
                                         </div>

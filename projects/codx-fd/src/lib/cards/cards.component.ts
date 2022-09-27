@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Permission } from '@shared/models/file.model';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ButtonModel, ViewModel, CodxListviewComponent, ViewsComponent, ApiHttpService, NotificationsService, AuthStore, CallFuncService, FilesService, CacheService, DataRequest, ViewType, UIComponent, SidebarModel, AuthService } from 'codx-core';
 import { FD_Permissions } from '../models/FD_Permissionn.model';
 import { FED_Card } from '../models/FED_Card.model';
@@ -17,12 +18,9 @@ import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.compon
   styleUrls: ['./cards.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class CardsComponent implements OnInit {
+export class CardsComponent extends UIComponent {
 
   user = null;
-  predicate = "CardType = @0 && Deleted == false";
-  dataValue = "";
-  entityName = "FD_Cards"
   buttonAdd: ButtonModel;
   views: Array<ViewModel> = [];
   itemSelected: any = null;
@@ -30,27 +28,18 @@ export class CardsComponent implements OnInit {
   funcID:string = "";
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
-  @ViewChild('codxViews') codxViews: ViewsComponent;
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
   constructor(
-    private api: ApiHttpService,
-    private dt: ChangeDetectorRef,
+    private inject: Injector,
     private notifiSV: NotificationsService,
     private auth: AuthService,
-    private callcSV: CallFuncService,
-    private route: ActivatedRoute,
   ) {
+    super(inject);
     this.user = this.auth.userValue;
   }
 
 
-  ngOnInit(): void {
-    this.route.params.subscribe((param) => {
-      if(param){
-        this.funcID = param.funcID;
-        this.dt.detectChanges();
-      }
-    });
+  onInit(): void {
   }
   ngAfterViewInit() {
     this.buttonAdd = {
@@ -78,14 +67,15 @@ export class CardsComponent implements OnInit {
     else {
       this.selectedID = event.data.recID;
     }
-    this.dt.detectChanges();
+    this.detectorRef.detectChanges();
   }
   clickShowAssideRight() {
     let option = new SidebarModel();
-    option.DataService = this.codxViews.dataService;
-    option.FormModel = this.codxViews.formModel;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
     option.Width = '550px';
-    this.callcSV.openSide(PopupAddCardsComponent, this.funcID, option);
+    this.funcID = this.router.snapshot.paramMap.get('funcID');
+    this.callfc.openSide(PopupAddCardsComponent, this.funcID, option);
   }
 
 

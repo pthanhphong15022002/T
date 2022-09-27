@@ -1047,6 +1047,25 @@ export class CodxEsService {
       userID
     );
   }
+
+  loadDataCbx(
+    service: string,
+    dataRequest: DataRequest = null
+  ): Observable<any> {
+    if (dataRequest == null) {
+      dataRequest = new DataRequest();
+      dataRequest.comboboxName = 'DataViewItems';
+      dataRequest.page = 1;
+      dataRequest.pageSize = 10;
+    }
+    return this.api.execSv(
+      service,
+      'ERM.Business.CM',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      [dataRequest]
+    );
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;

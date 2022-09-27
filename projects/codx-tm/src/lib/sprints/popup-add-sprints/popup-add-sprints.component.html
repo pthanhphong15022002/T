@@ -11,6 +11,9 @@
     </div>
 
     <div class="form-group" *ngIf="master.iterationType == '0'">
+      <div class="text-dark fw-bold mb-1">
+        <codx-label fiedName="IterationName" [formModel]="form.formModel" default="Tên kỳ"></codx-label>
+      </div>
       <codx-input field="iterationName" [disabled]="readOnly" [formModel]="form.formModel" [Group]="form.formGroup"
         (valueChange)="changeData($event)">
       </codx-input>

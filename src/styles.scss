@@ -492,3 +492,15 @@ codx-view-list-detail .codx-detail-footer {
   top: 90% !important;
   left: 90% !important;
 }
+
+.codx-detail-footer .mh-200px {
+  max-height: 178px !important;
+}
+
+codx-view-list-tree {
+  background-color: var(--white);
+}
+
+codx-mfunc .icon-file_copy {
+  font-size: 15px !important;
+}
