@@ -911,8 +911,8 @@ export class CodxDMService {
     //  console.log(http.status);
   }
 
-  getImage(data) {
-    if (data.folderName != undefined)
+  getImage(data:any) {
+    if (data?.folderName && !data?.extension)
       return '../../../assets/codx/dms/folder.svg';
     else {
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
@@ -929,6 +929,7 @@ export class CodxDMService {
   }
 
   getSvg(icon) {
+    debugger;
     var path = window.location.origin;
     return `${path}/${icon}`;
   }
