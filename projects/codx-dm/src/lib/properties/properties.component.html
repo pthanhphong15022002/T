@@ -1,8 +1,11 @@
 <codx-form headerText="{{titleDialog}}" [subHeader]="header" [body]="body" [dialog]="dialog">
     <ng-template #header>
         <div class="offcanvas-header w-100" kt-hidden-height="46">
-            <div class="btn-extand d-flex justify-content-end">
-                <a class="text-dark-75 text-hover-primary d-flex align-items-center me-15px" (click)="extendShow()">
+            <div class="btn-extand d-flex align-items-center" [ngClass]="!hideExtend?'justify-content-between':'justify-content-end'">
+                <ng-container *ngIf="!hideExtend">
+                    <span  [style.marginLeft]="'52%'">Thông tin mở rộng</span>
+                </ng-container>
+                <a class="text-dark-75 text-hover-primary d-flex align-items-center me-15px cursor-pointer" (click)="extendShow()">
                     <span *ngIf="hideExtend" class="me-2 text-dark">{{titleExpand}}</span>
                     <span class="icon-login icon-20 ms-1 ext_button m-4"></span>
                 </a>
@@ -264,7 +267,7 @@
                 </div>
                 <div [ngStyle]="{'display': hideExtend ? 'none' : 'block'}"
                     [attr.disabled]="hideExtend ? true : null" *ngIf="fileEditing != null"
-                    class="extend-more pl-3 w-400px dm-tab-properties">
+                    class="extend-more pl-3 w-400px dm-tab-properties px-2">
                     <ejs-tab>
                         <e-tabitems>
                             <e-tabitem>

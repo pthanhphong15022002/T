@@ -41,7 +41,7 @@ export class PropertiesComponent implements OnInit {
   titleRating = 'Đánh giá';
   titleRatingDesc = 'Đánh giá tài liệu này ?';
   titleRatingDesc2 = 'Cho người khác biết suy nghĩ của bạn!';
-  titleSend = 'Gởi';
+  titleSend = 'Gửi';
   titleHistory = 'Lịch sử';
   readonly = false;
   currentRate = 1;
