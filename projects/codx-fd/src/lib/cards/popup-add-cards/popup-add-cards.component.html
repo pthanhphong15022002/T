@@ -1,4 +1,4 @@
-<codx-form [dialog]="dialog" [body]="body" [subHeader]="subheader"></codx-form>
+<codx-form [dialog]="dialog" [body]="body" [footer]="footer" [subHeader]="subheader"></codx-form>
 <ng-template #subheader>
     <div class="offcanvas-header d-flex align-items-center justify-content-between w-100" kt-hidden-height="46">
         <h2 class="m-0"> {{title}}</h2>
@@ -24,14 +24,14 @@
                                     <ng-container
                                         *ngIf="cardType != CARDTYPE_EMNUM.SuggestionImprovement && cardType != CARDTYPE_EMNUM.Share">
                                         <div class="form-group">
-                                            <codx-label fiedName="Receiver" [formModel]="dialog.formModel" name="lblfReciver"
+                                            <codx-label [formModel]="dialog.formModel" name="lblfReciver"
                                                 default="Người nhận quà">
                                             </codx-label>
                                             <codx-input 
                                                 type="combobox" 
                                                 name="cbbReciver"
                                                 class=" form-control borderless p-0"
-                                                [crrValue]="form.controls['receiver']" 
+                                                [crrValue]="form.controls['receiver'].value" 
                                                 [multiple]="true"
                                                 [loadFull]="true"
                                                 field="receiver" 
@@ -54,7 +54,7 @@
                                                 field="behavior"
                                                 [refValue]="refValue"
                                                 (valueChange)="valueChange($event)" 
-                                                [loadFull]="true">
+                                                >
                                             </codx-input>
                                         </div>
                                     </ng-container>
@@ -119,7 +119,6 @@
 
                                         </div>
                                     </ng-container>
-
                                     <ng-container *ngIf="cardType != CARDTYPE_EMNUM.Radio">
                                         <div class="form-group">
                                             <div class="d-flex align-items-center justify-content-between mt-4">
@@ -221,19 +220,16 @@
                                                     name="lblfGift"
                                                     default="Quà tặng">
                                                 </codx-label>
-                                                <codx-combobox 
-                                                    name="cbbGift"
+                                                <codx-input
+                                                    type="combobox"
                                                     class="form-control borderless p-0" 
-                                                    placeholder="{{'Tên quà tặng' | lang:
-                                                    'Gift':'tblGiftName' | async}}" 
-                                                    refValue="Gifts"
-                                                    [loadFull]="false" 
+                                                    refValue="FDGifts"
                                                     field="giftID"
                                                     [crrValue]="form.controls['giftID'].value"
                                                     (valueChange)="valueChange($event)">
-                                                </codx-combobox>
+                                                </codx-input>
                                             </div>
-                                            <div class="d-flex form-group row mt-3">
+                                            <div class="d-flex form-group row">
                                                 <div class="col-lg-6 col-md-6">
                                                     <codx-label 
                                                         name="Quantity" 
@@ -245,7 +241,7 @@
                                                         type="number" 
                                                         [min]="0" 
                                                         class="form-control"
-                                                        [crrValue]="form.controls['quanlity'].value" 
+                                                        [crrValue]="form.controls['quantity'].value" 
                                                         field="quantity"
                                                         (valueChange)="valueChange($event)">
                                                     </codx-input>
@@ -255,18 +251,15 @@
                                                     </codx-label>
                                                     <codx-input 
                                                         class="form-control" 
-                                                        type="text" 
-                                                        placeholder="{{'Tổng xu' | lang:
-                                                        'Gift':'TotalPrice' | async}}" 
-                                                        [crrValue]="totalCoint"
+                                                        type="text"  
+                                                        [crrValue]="amount"
                                                         [disabled]="true">
                                                     </codx-input>
                                                 </div>
                                             </div>
-
                                         </ng-container>
                                         <ng-container *ngIf="parameter.HasPoints && parameter.HasPoints == '1'">
-                                            <div class="row border border-primary rounded ms-1">
+                                            <div class="row border border-primary rounded mt-6">
                                                 <div
                                                     class="col-6 bg-primary text-white d-flex align-items-center justify-content-center">
                                                     <codx-label [formModel]="dialog.formModel" name="lblfGivePoint" default="Tặng xu">
@@ -298,14 +291,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="offcanvas-footer mt-10">
-                    <div class="d-flex align-items-center justify-content-end">
-                        <button type="button" class="btn btn-primary" (click)="Save()">
-                            <codx-label [formModel]="dialog.formModel" name="lblSave" default="Lưu"></codx-label>
-                        </button>
-                    </div>
-                </div>
             </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #footer>
+    <div class="offcanvas-footer mt-10">
+        <div class="d-flex align-items-center justify-content-end">
+            <button type="button" class="btn btn-primary" (click)="Save()">
+                <codx-label [formModel]="dialog.formModel" name="lblSave" default="Lưu"></codx-label>
+            </button>
         </div>
     </div>
 </ng-template>
@@ -338,13 +334,13 @@
             </div>
             <div class="d-flex justify-content-center my-6" [innerHTML]="form.controls['situation'].value"></div>
             <div class="d-flex align-items-center justify-content-center my-4">
-                <ng-cintainer *ngIf="ratting">
+                <ng-cintainer *ngIf="rating">
                     <div class="d-flex align-items-center me-4">
                         <span class="me-2">
-                            <img class="w-30px h-30px" src="/assets/themes/fd/default/img/{{ratting | vll:ratingVll:'icon' | async}}" />
+                            <img class="w-30px h-30px" src="/assets/themes/fd/default/img/{{rating | vll:ratingVll:'icon' | async}}" />
                         </span>
                         <span class="">
-                            {{ratting | vll:ratingVll:'text'|async}}
+                            {{rating | vll:ratingVll:'text'|async}}
                         </span>
                     </div>
                 </ng-cintainer>

@@ -4,7 +4,7 @@
         <div class="container p-6 vh-100">
             <div class="d-flex">
                 <div class="row h-500px min-h-500px me-4 d-flex justify-content-center text-center p-6" 
-                    [style.background]="data.background | backgroundImage:data.backgroundColor">
+                    [style.background]="data.backgroundColor">
                     <div class="card-title fw-bolder display-6"
                         [style.color]="data.pattern?.headerColor">
                         {{data?.cardType | vll:'L1422':'text'|async}}
@@ -128,17 +128,59 @@
             </div>
             <div class="mt-6 clear">
                 <div class="text-primary fw-bolder mb-4"><codx-label formName="" name="lblShare" default="Chia sẻ"></codx-label></div>
-                <ng-container *ngIf="data.sharedWiths">
-                    <ng-container *ngFor="let item of data.sharedWiths">
+                <ng-container *ngIf="data.listShare">
+                    <ng-container *ngFor="let item of data.listShare">
                         <ng-container *ngTemplateOutlet="templateShare; context:{$implicit:item}"></ng-container>
                     </ng-container>
                 </ng-container>
             </div>
             <div class="mt-6 clear">
-                <ng-container *ngIf="data.gifts  && data.gifts?.length">
-                    <div class="text-primary fw-bolder"><codx-label formName="" name="lblGift" default="Quà tặng"></codx-label></div>
-                    <div class="mt-9 group-gifts" *ngFor="let item of data?.gifts">
-                        <ng-container *ngTemplateOutlet="templateGift  context:{ $implicit: item}"></ng-container>
+                <ng-container *ngIf="data.hasGift">
+                    <div class="text-primary fw-bolder">
+                        <codx-label formName="" name="lblGift" default="Quà tặng"></codx-label>
+                    </div>
+                    <div class="mt-9 group-gifts" *ngIf="data.gifts">
+                        <div class="d-flex">
+                            <div class="">
+                                <codx-img
+                                    [objectId]="data.gifts.giftID"
+                                    objectType="FD_Gifts" 
+                                    [width]="200"
+                                    [imageType]="'square'">
+                                </codx-img>
+                            </div>
+                            <div class="ms-2 d-flex flex-column">
+                                <div class="text-dark font-weight-bold">{{data.gifts.giftName}}</div>
+                                <div class="text-dark">
+                                    <span class="font-weight-normal text-dark-50">
+                                        <codx-label formName=""name="lblPrice" default="Giá:"></codx-label>
+                                    </span>
+                                    <span class="ms-1">{{data.gifts.price}}</span>
+                                    <span class="ms-1">
+                                        <codx-label formName="" name="lblCoin" default="xu"></codx-label>
+                                    </span> 
+                                </div>
+                                <div class="text-dark">
+                                    <span class="font-weight-normal text-dark-50 mr-1">
+                                        <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
+                                    </span>
+                                    <span [innerHTML]="data.gifts.memo"></span>
+                                </div>
+                                <div class="text-dark">
+                                    <span class="font-weight-normal text-dark-50 mr-1">
+                                        <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
+                                    </span>
+                                    <span>{{data.gifts.quantity}}</span>
+                                </div>
+                                <div class="d-flex mt-2">
+                                    <div class="px-2 b rounded-pill"
+                                        [style.color]="data.gifts.status | vll:'L1428':'color' | async"
+                                        [style.background-color]="(data.gifts.status | vll:'L1428':'color' | async) + '30'">
+                                        {{data.gifts.status |vll:"L1428":"text" | async}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </ng-container>
             </div>
@@ -177,17 +219,20 @@
 
 <ng-template #templateShare let-item>
     <div class="my-2">
-        <codx-img objectType="AD_Users" [objectId]="item.objectID"
-            class="symbol symbol-circle symbol-30 mr-3" [width]="35">
-        </codx-img>
-        <span class="ms-2 fw-bolder">{{item.objectName}}</span>
+        <ng-container *ngIf="item.objectID && item.objectName">
+            <codx-img objectType="AD_Users" [objectId]="item.objectID"
+                class="symbol symbol-circle symbol-30 mr-3" [width]="35">
+            </codx-img>
+            <span class="ms-2 fw-bolder">{{item.objectName}}</span>
+        </ng-container>
     </div>
 </ng-template>
 
 <ng-template #templateGift let-item>
     <div class="row">
         <div class="col-3">
-            <codx-img class="max-h-80px w-80px h-80px" [objectId]="item.giftID"
+            <codx-img class="max-h-80px w-80px h-80px" 
+            [objectId]="item.giftID"
             objectType="FD_Gifts" [width]="200">
         </codx-img>
         </div>
