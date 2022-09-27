@@ -166,7 +166,7 @@ export class CodxTasksComponent
     this.request.service = 'TM';
     this.request.assemblyName = 'TM';
     this.request.className = 'TaskBusiness';
-    this.request.method = 'GetTasksAsync';
+    this.request.method = 'pg';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
@@ -222,7 +222,8 @@ export class CodxTasksComponent
         id: '8',
         type: ViewType.schedule,
         active: false,
-        sameData: true,
+        sameData: false,
+        request: this.request,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -854,7 +855,7 @@ export class CodxTasksComponent
           dataObj: null,
         },
         model: {
-          template: this.itemViewList,
+          template: this.treeView,
         },
       };
       this.viewsActive.push(tree);

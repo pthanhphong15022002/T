@@ -47,7 +47,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() hoverPopover = new EventEmitter<any>();
   firstLoad = true;
   viewTags= '' ;
-
+  vllPriority = 'L0186' ;
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
