@@ -96,6 +96,9 @@ export class UserComponent extends UIComponent {
       case 'SYS03':
         this.edit(data);
         break;
+      case 'SYS04':
+        this.copy(data);
+        break;
       // case 'SYS02':
       //   this.delete(data);
       //   break;
@@ -146,12 +149,12 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event) {
-          e.event.modifiedOn = new Date();
-          this.view.dataService.update(e.event).subscribe();
-        }
-      });
+      // this.dialog.closed.subscribe((e) => {
+      //   if (e?.event) {
+      //     e.event.modifiedOn = new Date();
+      //     this.view.dataService.update(e.event).subscribe();
+      //   }
+      // });
     });
   }
 
@@ -188,6 +191,31 @@ export class UserComponent extends UIComponent {
         //   }
         // });
       });
+  }
+
+  copy(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+
+    }
+    this.view.dataService.addNew().subscribe((res: any) => {
+      data.userID = this.view.dataService.dataSelected?.userID
+      var obj = {
+        formType: 'copy',
+        dataCopy: data,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = 'Auto';
+      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      // this.dialog.closed.subscribe((x) => {
+      //   if (x.event) {
+      //     x.event.modifiedOn = new Date();
+      //     this.view.dataService.update(x.event).subscribe();
+      //   }
+      // });
+    });
   }
 
   stop(data: any) {

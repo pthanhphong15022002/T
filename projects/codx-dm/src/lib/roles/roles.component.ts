@@ -558,13 +558,17 @@ export class RolesComponent implements OnInit {
     .closed.subscribe((x) => {
       if (x.event.status == 'Y'){
         if (list == null) {
-          if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
+          if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
             this.fileEditing.permissions.splice(index, 1);//remove element from array  
+            this.currentPemission = 0;
+            debugger;
+            var check = this.fileEditing.permissions.filter(x=>x.objectID == this.userID && x.objectType != "1" && x.objectType != "7");
+            if(check.length == 0) this.fileEditing.assign = false;
             this.changePermission(0);
           }
         }
         else {
-          if (list != null && list.length > 0) {
+          if (list && list.length > 0) {
             list.splice(index, 1);//remove element from array  
             this.changeDetectorRef.detectChanges();
           }
@@ -634,6 +638,7 @@ export class RolesComponent implements OnInit {
         // });
         this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
           if (res != null) {
+            debugger;
             this.dmSV.fileEditing.next(this.fileEditing);
             this.notificationsService.notify(res.message);
           }
@@ -812,7 +817,6 @@ export class RolesComponent implements OnInit {
 
   onSaveRole($event) {  
       
-    console.log($event);
     if ($event.data != undefined) {
       var data = $event.data;
       for(var i=0; i<data.length; i++) {

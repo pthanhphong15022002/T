@@ -488,82 +488,94 @@ export class HomeComponent extends UIComponent {
     let id = $data.data.recID;
     let item = $data.data;
     if (item.read) {
-      var breadcumb = [];
-      var breadcumbLink = [];
-      this.dmSV.page = 1;
-
-      if (this.codxview.currentView.currentComponent?.treeView != null) {
-        this.codxview.currentView.currentComponent.treeView.textField = "folderName";
-        var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
-        breadcumb.push(this.dmSV.menuActive.getValue());
-        breadcumbLink.push(this.dmSV.idMenuActive);
-        for (var i = list.length - 1; i >= 0; i--) {
-          breadcumb.push(list[i].text);
-          breadcumbLink.push(list[i].id);
-        }
-        this.dmSV.breadcumbLink = breadcumbLink;
-        this.dmSV.breadcumb.next(breadcumb);
-      }
-
-      this.dmSV.folderName = item.folderName;
-      this.dmSV.parentFolderId = item.parentId;
-      this.dmSV.level = item.level;
-      this.dmSV.getRight(item);
-      this.dmSV.loadedFile = false;
-      this.dmSV.loadedFolder = false;
-      this.data = [];
-      this.dmSV.folderId.next(id);
-      this.dmSV.folderID = id;
-      var items = item.items;
-      this.dmSV.listFolder = [];
-      this.dmSV.listFiles = [];
-      if (items == undefined || items.length <= 0) {
-        // this.folderService.options.srtColumns = this.sortColumn;
-        // this.folderService.options.srtDirections = this.sortDirection;
-        // this.folderService.options.funcID = this.view.funcID;
-        // this.folderService.getFolders(id).subscribe(async (res) => {
-        //   if (res != null) {
-        //     var data = res[0];
-        //     this.listFolders = data;
-        //     this.data = [...this.data, ...data];
-        //     this.dmSV.listFolder = data;
-        //     var tree = this.codxview.currentView.currentComponent.treeView;
-        //     item.items = [];
-        //     if (tree != undefined)
-        //      tree.addChildNodes(item, data);
-        //     this.changeDetectorRef.detectChanges();
-        //     this._beginDrapDrop();
-        //   }
-        //   this.dmSV.loadedFolder = true;
-        // });
-      } else {
-        this.data = [...this.data, ...item.items];
-        this.dmSV.listFolder = item.items;
-        this.dmSV.loadedFolder = true;
-        this.changeDetectorRef.detectChanges();
-      }
-      this.folderService.options.srtColumns = this.sortColumn;
-      this.folderService.options.srtDirections = this.sortDirection;
-      this.fileService.options.funcID = this.view.funcID;
-      debugger
-      this.fileService.GetFiles(id).subscribe(async res => {
-        if (res != null) {
-          this.dmSV.listFiles = res[0];
-          this.dmSV.totalPage = parseInt(res[1]);
-        }
-        else {
-          this.dmSV.listFiles = [];
-        }
-
-        if (this.sortDirection == null || this.sortDirection == "asc") {
-          this.data = [...this.dmSV.listFolder, ...res[0]];
-        }
-        else
-          this.data = [...this.dmSV.listFiles, ...this.dmSV.listFolder];
-
-        this.dmSV.loadedFile = true;
-        this.changeDetectorRef.detectChanges();
+      if(item.extension)
+      {
+        var dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        this.fileService.getFile(id).subscribe(data => {
+          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data,  this.view?.currentView?.formModel], "",dialogModel);
       });
+      }
+      else
+      {
+        var breadcumb = [];
+        var breadcumbLink = [];
+        this.dmSV.page = 1;
+
+        if (this.codxview.currentView.currentComponent?.treeView != null) {
+          this.codxview.currentView.currentComponent.treeView.textField = "folderName";
+          var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(id);
+          breadcumb.push(this.dmSV.menuActive.getValue());
+          breadcumbLink.push(this.dmSV.idMenuActive);
+          for (var i = list.length - 1; i >= 0; i--) {
+            breadcumb.push(list[i].text);
+            breadcumbLink.push(list[i].id);
+          }
+          this.dmSV.breadcumbLink = breadcumbLink;
+          this.dmSV.breadcumb.next(breadcumb);
+        }
+
+        this.dmSV.folderName = item.folderName;
+        this.dmSV.parentFolderId = item.parentId;
+        this.dmSV.level = item.level;
+        this.dmSV.getRight(item);
+        this.dmSV.loadedFile = false;
+        this.dmSV.loadedFolder = false;
+        this.data = [];
+        this.dmSV.folderId.next(id);
+        this.dmSV.folderID = id;
+        var items = item.items;
+        this.dmSV.listFolder = [];
+        this.dmSV.listFiles = [];
+        if (items == undefined || items.length <= 0) {
+          // this.folderService.options.srtColumns = this.sortColumn;
+          // this.folderService.options.srtDirections = this.sortDirection;
+          // this.folderService.options.funcID = this.view.funcID;
+          // this.folderService.getFolders(id).subscribe(async (res) => {
+          //   if (res != null) {
+          //     var data = res[0];
+          //     this.listFolders = data;
+          //     this.data = [...this.data, ...data];
+          //     this.dmSV.listFolder = data;
+          //     var tree = this.codxview.currentView.currentComponent.treeView;
+          //     item.items = [];
+          //     if (tree != undefined)
+          //      tree.addChildNodes(item, data);
+          //     this.changeDetectorRef.detectChanges();
+          //     this._beginDrapDrop();
+          //   }
+          //   this.dmSV.loadedFolder = true;
+          // });
+        } else {
+          this.data = [...this.data, ...item.items];
+          this.dmSV.listFolder = item.items;
+          this.dmSV.loadedFolder = true;
+          this.changeDetectorRef.detectChanges();
+        }
+        this.folderService.options.srtColumns = this.sortColumn;
+        this.folderService.options.srtDirections = this.sortDirection;
+        this.fileService.options.funcID = this.view.funcID;
+        debugger
+        this.fileService.GetFiles(id).subscribe(async res => {
+          if (res != null) {
+            this.dmSV.listFiles = res[0];
+            this.dmSV.totalPage = parseInt(res[1]);
+          }
+          else {
+            this.dmSV.listFiles = [];
+          }
+
+          if (this.sortDirection == null || this.sortDirection == "asc") {
+            this.data = [...this.dmSV.listFolder, ...res[0]];
+          }
+          else
+            this.data = [...this.dmSV.listFiles, ...this.dmSV.listFolder];
+
+          this.dmSV.loadedFile = true;
+          this.changeDetectorRef.detectChanges();
+        });
+      }
+      
     } else {
       if (item.read != null)
         this.notificationsService.notify(this.titleAccessDenied);
