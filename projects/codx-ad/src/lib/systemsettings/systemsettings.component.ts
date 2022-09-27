@@ -6,6 +6,7 @@ import {
   ViewModel,
   ViewType,
   DialogRef,
+  Util,
 } from 'codx-core';
 import {
   Component,
@@ -40,6 +41,11 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   dialog!: DialogRef;
   functionList: SYS_FunctionList[] = [];
+  pwLifeDays = "";
+  pwExpireWarning= "";
+  pwDuplicate= "";
+  blockSystem="";
+  freezeInMinutes="";
   name = '';
   private all = ['Thông tin chung', 'Chính sách bảo mật', 'Cấu hình ứng dụng'];
   active = 1;
@@ -90,6 +96,8 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
     ];
   }
 
+
+
   //#region loadData
   loadData() {
     this.api
@@ -123,13 +131,38 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
     this.systemSetting[e.field] = e.data;
     if (e.field) {
       this.api
-        .callSv('SYS', 'AD', 'SystemSettingsBusiness', 'UpdateSystemAsync', [
+        .execSv('SYS', 'AD', 'SystemSettingsBusiness', 'UpdateSystemAsync', [
           this.systemSetting,
         ])
-        .subscribe();
+        .subscribe(res=>{
+          if(res){
+            console.log(res);
+            this.systemSetting[e.field] = res[e.field];
+          }
+        });
     }
-
+    this.cache.message('AD010').subscribe((mssg: any) => {
+      if (mssg)
+        this.pwLifeDays = Util.stringFormat(mssg.defaultName, '<b>' + this.systemSetting.pwLifeDays + '</b>');
+    });
+    this.cache.message('AD011').subscribe((mssg: any) => {
+      if (mssg)
+        this.pwExpireWarning = Util.stringFormat(mssg.defaultName, '<b>' + this.systemSetting.pwExpireWarning + '</b>');
+    });
+    this.cache.message('AD012').subscribe((mssg: any) => {
+      if (mssg)
+        this.pwDuplicate = Util.stringFormat(mssg.defaultName, '<b>' + this.systemSetting.pwDuplicate + '</b>');
+    });
+    this.cache.message('AD013').subscribe((mssg: any) => {
+      if (mssg)
+        this.blockSystem = Util.stringFormat(mssg.defaultName, '<b>' + this.systemSetting.blockSystem + '</b>');
+    });
+    this.cache.message('AD014').subscribe((mssg: any) => {
+      if (mssg)
+        this.freezeInMinutes = Util.stringFormat(mssg.defaultName, '<b>' + this.systemSetting.freezeInMinutes + '</b>');
+    });
     console.log(e);
+
   }
 
   clickModule(e) {
