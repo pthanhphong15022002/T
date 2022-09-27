@@ -97,6 +97,7 @@ import { PopupEditCalendarComponent } from './components/setting-calendar/popup-
 import { PopupAddCalendarComponent } from './components/setting-calendar/popup-add-calendar/popup-add-calendar.component';
 import { PopupAddDayoffsComponent } from './components/setting-calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupAddEventComponent } from './components/setting-calendar/popup-add-event/popup-add-event.component';
+import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -166,6 +167,7 @@ const T_Component: Type<any>[] = [
   PopupAddEventComponent,
   PopupEditCalendarComponent,
   FileComponent,
+  InfoLeftComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

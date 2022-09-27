@@ -89,9 +89,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   endHour = 24;
   endMinute = 59;
   tempDate = new Date();
-  subHeaderText = 'Đặt phòng họp';
-  titleAction = 'Thêm mới';
-  title = 'đặt phòng';
+  // subHeaderText = 'Đặt phòng họp';
+  // titleAction = 'Thêm mới';
+  tmpTitle='';
+  title = '';
   tabInfo: any[] = [
     {
       icon: 'icon-info',
@@ -140,8 +141,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogRef?.dataService?.dataSelected;
-    this.isAdd = dialogData?.data[1];
+    this.data = dialogData?.data[0];   
+    this.isAdd = dialogData?.data[1];    
+    this.tmpTitle = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
@@ -149,9 +151,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   onInit(): void {    
     this.initForm();    
-    if(!this.isAdd) {
-      this.titleAction = 'Chỉnh sửa';
-    }  
+    // if(!this.isAdd) {
+    //   this.titleAction = 'Chỉnh sửa';
+    // }  
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
@@ -634,7 +636,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.closeEdit.emit();
   }
   setTitle(e: any) {
-    this.title = this.titleAction + ' ' + e.toString().toLowerCase();
+    this.title=this.tmpTitle;
     this.detectorRef.detectChanges();
   }
   lstDevices = [];

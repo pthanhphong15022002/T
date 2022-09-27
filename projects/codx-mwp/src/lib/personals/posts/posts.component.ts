@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Post } from '@shared/models/post';
-import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, ViewContainerRef, TemplateRef } from '@angular/core';
 import { ApiHttpService, UploadFile, AuthStore, TenantStore, CacheService, CallFuncService, ViewsComponent } from 'codx-core';
 import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 
@@ -15,6 +15,7 @@ export class PostsComponent implements OnInit {
   user: any;
 
   @ViewChild('lstComment', { read: ViewContainerRef }) lstComment!: ViewContainerRef;
+  moreFuncTmp:TemplateRef<any>;
 
   viewComponents: ViewsComponent;
 
@@ -38,7 +39,7 @@ export class PostsComponent implements OnInit {
     this.loadListPostComponent();
   }
 
-  private loadListPostComponent() { 
+  loadListPostComponent() { 
     var formModel = {
       entityName: 'WP_Comments',
       entityPermission: 'WP_Comments',
@@ -47,9 +48,11 @@ export class PostsComponent implements OnInit {
       funcID: 'WP',
     }
     var a = this.lstComment.createComponent(ListPostComponent);
-    a.instance.predicateWP = `(CreatedBy="${this.user?.userID}")`;
+    a.instance.predicateWP = `CreatedBy="${this.user?.userID}" && Category="1"`;
     a.instance.isShowCreate = false;
-    // a.instance.codxViews = this.viewComponents;
+    a.instance.formModel = formModel;
+    a.instance.moreFunc = true;
+    a.instance.moreFuncTmp = this.moreFuncTmp;
   }
 
 }

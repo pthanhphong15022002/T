@@ -71,6 +71,9 @@ export class CodxTasksComponent
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
+  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
+
+  
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
 
@@ -80,6 +83,7 @@ export class CodxTasksComponent
 
   model?: DataRequest;
   request: ResourceModel;
+  requestSchedule:ResourceModel ;
   requestTree: ResourceModel;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
@@ -150,11 +154,17 @@ export class CodxTasksComponent
 
   //#region Init
   onInit(): void {
+    // this.modelResource = new ResourceModel();
+    // this.modelResource.assemblyName = 'TM';
+    // this.modelResource.className = 'TaskBusiness';
+    // this.modelResource.service = 'TM';
+    // this.modelResource.method = 'GetUserByTasksAsync';
+
     this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'TM';
-    this.modelResource.className = 'TaskBusiness';
-    this.modelResource.service = 'TM';
-    this.modelResource.method = 'GetUserByTasksAsync';
+    this.modelResource.assemblyName = 'HR';
+    this.modelResource.className = 'OrganizationUnitsBusiness';
+    this.modelResource.service = 'HR';
+    this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
@@ -166,9 +176,18 @@ export class CodxTasksComponent
     this.request.service = 'TM';
     this.request.assemblyName = 'TM';
     this.request.className = 'TaskBusiness';
-    this.request.method = 'pg';
+    this.request.method = 'GetTasksAsync';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
+
+    this.requestSchedule = new ResourceModel(); 
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.predicate ="Category=@0 and CreatedBy=@1";
+    this.requestSchedule.dataValue ='2;'+this.user.userID ;
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -825,11 +844,12 @@ export class CodxTasksComponent
         type: ViewType.schedule,
         active: false,
         sameData: false,
-        request: this.request,
+        request:this.requestSchedule,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
+          template4: this.resourceHeader,
           template: this.eventTemplate,
           template3: this.cellTemplate,
           statusColorRef: this.vllStatus,
@@ -1442,12 +1462,12 @@ export class CodxTasksComponent
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: { name: 'userID' },
+    resourceId: { name: 'owner' },//trung voi idField của resourceField
   };
   resourceField = {
     Name: 'Resources',
-    Field: 'userID',
-    IdField: 'userID',
+    Field: 'owner',
+    IdField: 'owner',
     TextField: 'userName',
     Title: 'Resources',
   };

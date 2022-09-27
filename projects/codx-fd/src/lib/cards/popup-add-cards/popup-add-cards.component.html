@@ -29,8 +29,9 @@
                                             </codx-label>
                                             <codx-input 
                                                 type="combobox" 
+                                                name="cbbReciver"
                                                 class=" form-control borderless p-0"
-                                                [crrValue]="form.value.receiver" 
+                                                [crrValue]="form.controls['receiver']" 
                                                 [multiple]="true"
                                                 [loadFull]="true"
                                                 field="receiver" 
@@ -47,14 +48,13 @@
                                             </codx-label>
                                             <codx-input 
                                                 type="combobox" 
-                                                name="combobox"
+                                                name="cbbBehavior"
                                                 class=" form-control borderless p-0" 
-                                                [crrValue]="form.value.behavior"
+                                                [crrValue]="form.controls['behavior'].value"
                                                 field="behavior"
-                                                ngDefaultControl
                                                 [refValue]="refValue"
                                                 (valueChange)="valueChange($event)" 
-                                                loadFull="true">
+                                                [loadFull]="true">
                                             </codx-input>
                                         </div>
                                     </ng-container>
@@ -65,13 +65,11 @@
                                                 default="Lĩnh vực"></codx-label>
                                             <codx-input 
                                                 type="combobox" 
-                                                name="combobox" 
+                                                name="cbbIndustry" 
                                                 [class]="'mt-2'"
                                                 field="industry" 
-                                                [crrValue]="form.value.industry"
-                                                ngDefaultControl 
+                                                [crrValue]="form.controls['industry'].value"
                                                 [refValue]="'Industries'" 
-                                                service="BS"
                                                 (valueChange)="valueChange($event)" 
                                                 [loadFull]="true">
                                             </codx-input>
@@ -97,7 +95,7 @@
                                         <codx-input 
                                             class="form-control p-0" 
                                             type="textarea"
-                                            [crrValue]="form.value.situation" 
+                                            [crrValue]="form.controls['situation'].value" 
                                             field="situation"
                                             (valueChange)="valueChange($event)" 
                                             placeholder=""
@@ -132,24 +130,32 @@
                                                     <span class="icon-person_add_alt_1 icon-18"></span>
                                                 </a>
                                             </div>
-                                            <div class="{{lstShare.length <= 0 ? '' : 'user-mini-group'}}">
-                                                <div class="user-mini-item" *ngFor="let item of lstShare; index as i;">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="symbol symbol-30 symbol-circle mr-2">
-                                                           
-                                                        <div>
+                                            <ng-container *ngIf="objectType == '1' || objectType == '2' || objectType == '3' || objectType == '4' || objectType == '5' || objectType == '6' || objectType == '9' ;else tmpShare">
+                                                <div class="d-flex">
+                                                    <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
+                                                        <span class="symbol-circle">
+                                                            <img src="assets/themes/sys/default/img/{{(shareControl | vll:'L1901':'icon' | async)}}" />
+                                                        </span>
+                                                        <span class="fs-7 ms-1">{{shareControl | vll:'L1901':'text' |async}}</span>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <ng-template #tmpShare>
+                                                <div class="'user-mini-group'">
+                                                    <div class="user-mini-item" *ngFor="let item of lstShare">
+                                                        <div class="d-flex align-items-center">
                                                             <codx-img class="symbol symbol-30 symbol-circle"
                                                                 [objectId]="item.objectID"
                                                                 objectType="AD_Users">
                                                             </codx-img>
+                                                            <div class="text-dark-75">{{item.objectName}}</div>
+                                                            <span class="icon-close icon-16 ml-2 text-danger"
+                                                                (click)="removeUser(item)"></span>
                                                         </div>
-                                                        </div>
-                                                        <div class="text-dark-75">{{item.objectName}}</div>
-                                                        <span class="icon-close icon-16 ml-2 text-danger"
-                                                            (click)="removeUser(item)"></span>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </ng-template>
+                                            
                                         </div>
                                     </ng-container>
                                     <ng-container
@@ -179,25 +185,23 @@
                                                                     *ngIf="idxChild >= (i * 4) && idxChild < (i + 1 * 4)">
                                                                     <ng-container
                                                                         *ngIf="!itemChild.backgroundColor;else haveBackGround">
-                                                                        <div [class.item-card]="form.value.pattern == itemChild.patternID"
-                                                                            class=" mx-5 radio-box d-flex justify-content-between align-items-center item-card-gift h-120px w-80px border ">
+                                                                        <div [class.item-card]="patternSelected.patternID == itemChild.patternID"
+                                                                            class=" mx-5 position-relative d-flex justify-content-between align-items-center h-120px w-80px border ">
                                                                             <codx-img
                                                                                 class=" h-120px w-80px border-radius-large"
                                                                                 [objectId]="itemChild.patternID"
                                                                                 [funcId]="funcID"
                                                                                 objectType="FD_Patterns" [width]="164"
-                                                                                (click)="selectCard(itemChild,element)"
-                                                                                #element>
+                                                                                (click)="selectCard(itemChild)">
                                                                             </codx-img>
                                                                         </div>
                                                                     </ng-container>
                                                                     <ng-template #haveBackGround>
-                                                                        <div class="mx-5 radio-box d-flex justify-content-between align-items-center item-card-gift"
+                                                                        <div class="mx-5 position-relative d-flex justify-content-between align-items-center "
                                                                             [style.background-color]="itemChild.backgroundColor"
                                                                             style="height: 120px; width: 80px;"
-                                                                            (click)="selectCard(itemChild,element)"
-                                                                            #element
-                                                                            [class.item-card]="form.value.pattern == itemChild.patternID">
+                                                                            (click)="selectCard(itemChild)"
+                                                                            [class.item-card]="patternSelected.patternID == itemChild.patternID">
                                                                         </div>
                                                                     </ng-template>
                                                                 </ng-container>
@@ -223,8 +227,9 @@
                                                     placeholder="{{'Tên quà tặng' | lang:
                                                     'Gift':'tblGiftName' | async}}" 
                                                     refValue="Gifts"
-                                                    loadFull="false" 
+                                                    [loadFull]="false" 
                                                     field="giftID"
+                                                    [crrValue]="form.controls['giftID'].value"
                                                     (valueChange)="valueChange($event)">
                                                 </codx-combobox>
                                             </div>
@@ -240,7 +245,7 @@
                                                         type="number" 
                                                         [min]="0" 
                                                         class="form-control"
-                                                        [crrValue]="form.value.quanlity" 
+                                                        [crrValue]="form.controls['quanlity'].value" 
                                                         field="quantity"
                                                         (valueChange)="valueChange($event)">
                                                     </codx-input>
@@ -248,8 +253,12 @@
                                                 <div class="col-lg-6 col-md-6" #TotalPrice>
                                                     <codx-label [formModel]="dialog.formModel" name="lblfTotalPrice" default="Tổng xu">
                                                     </codx-label>
-                                                    <codx-input class="form-control" type="text" placeholder="{{'Tổng xu' | lang:
-                                                    'Gift':'TotalPrice' | async}}" [crrValue]="totalCoint"
+                                                    <codx-input 
+                                                        class="form-control" 
+                                                        type="text" 
+                                                        placeholder="{{'Tổng xu' | lang:
+                                                        'Gift':'TotalPrice' | async}}" 
+                                                        [crrValue]="totalCoint"
                                                         [disabled]="true">
                                                     </codx-input>
                                                 </div>
@@ -260,7 +269,7 @@
                                             <div class="row border border-primary rounded ms-1">
                                                 <div
                                                     class="col-6 bg-primary text-white d-flex align-items-center justify-content-center">
-                                                    <codx-label [formModel]="dialog.formModel" name="lblfGivePrice" default="Tặng xu">
+                                                    <codx-label [formModel]="dialog.formModel" name="lblfGivePoint" default="Tặng xu">
                                                     </codx-label>
                                                 </div>
                                                 <div class="col-6 d-flex justify-content-evenly align-items-center ">
@@ -268,8 +277,14 @@
                                                         (click)="subPoint()">
                                                         <span class="icon-remove icon-18"></span>
                                                     </button>
-                                                    <input type="text" min="1" class="text-center" [value]="givePrice"
-                                                        readonly style="outline: none; border: none;" />
+                                                    <codx-input 
+                                                        type="text" 
+                                                        [disabled]="true"
+                                                        class="text-center" 
+                                                        [crrValue]="givePoint"
+                                                        readonly 
+                                                        [className]="'border-none'" >
+                                                    </codx-input>
                                                     <button class="btn bg-transparent" type="button"
                                                         (click)="addPoint()">
                                                         <span class="icon-add icon-18 "></span>
@@ -296,7 +311,7 @@
 </ng-template>
 
 <ng-template #tmpViewCard let-dialog>
-    <div class="p-2 h-100 w-100" [style.background]="cardSelected.background | backgroundImage:cardSelected.backgroundColor">
+    <div class="p-2 h-100 w-100" [style.background]="patternSelected.background | backgroundImage:patternSelected.backgroundColor">
         <div class="d-flex justify-content-end">
             <button class="btn" (click)="closeViewCard(dialog)">
                 <i class="icon-close"></i>

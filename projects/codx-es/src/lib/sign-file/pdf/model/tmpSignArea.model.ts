@@ -29,6 +29,7 @@ export class tmpSignArea {
 
 export class tmpAreaName {
   Signer: string;
+  Type: string;
   PageNumber: number;
   StepNo: number;
   LabelType: string;

@@ -849,7 +849,7 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  saveCategoryTemplate() { }
+  saveCategoryTemplate() {}
   //#endregion
 
   //#region Change Tab
