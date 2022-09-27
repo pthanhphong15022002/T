@@ -73,7 +73,7 @@
                 <codx-label class="text-dark" default="Tiền hạch toán">
                 </codx-label>
                 <div>
-                  <codx-label default="kiểm soát chiều dài tối thiểu phải khi nhập PW">
+                  <codx-label default="Đồng tiền dùng để hạch toán trên hệ thống">
                   </codx-label>
                 </div>
 
@@ -90,7 +90,7 @@
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Thời hạn mật khẩu sẽ hết hạn sau {0} ngày">
+                  <codx-label default="Đồng tiền nguyên tệ trên hệ thống">
                   </codx-label>
                 </div>
 
@@ -107,7 +107,7 @@
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Không cho phép sử dụng trùng mật khẩu {0} lần gần nhất">
+                  <codx-label default="Định nghĩa số lẻ của đơn giá">
                   </codx-label>
                 </div>
 
@@ -124,7 +124,7 @@
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Tự động khóa không cho phép đăng nhập khi sai mật khẩu {0} lần">
+                  <codx-label default="Tỷ giá">
                   </codx-label>
                 </div>
 
@@ -141,7 +141,7 @@
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Hệ thống sẽ bị khóa {0} phút sau khi bị khóa đăng nhập">
+                  <codx-label default="Số lượng">
                   </codx-label>
                 </div>
 
@@ -158,7 +158,7 @@
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Hệ thống sẽ bị khóa {0} phút sau khi bị khóa đăng nhập">
+                  <codx-label default="Số lượng quy đổi">
                   </codx-label>
                 </div>
 
@@ -175,7 +175,7 @@
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Hệ thống sẽ bị khóa {0} phút sau khi bị khóa đăng nhập">
+                  <codx-label default="Tỉ lệ %">
                   </codx-label>
                 </div>
 
@@ -192,7 +192,7 @@
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Hệ thống sẽ bị khóa {0} phút sau khi bị khóa đăng nhập">
+                  <codx-label default="Hệ số">
                   </codx-label>
                 </div>
 
@@ -249,8 +249,7 @@
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Thời hạn mật khẩu sẽ hết hạn sau {0} ngày">
-                  </codx-label>
+                  <span class="fs-6" [innerHTML]="pwLifeDays"></span>
                 </div>
 
               </div>
@@ -267,8 +266,8 @@
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Chương trình cảnh báo hết hạn trước {0} ngày">
-                  </codx-label>
+                  <span class="fs-6" [innerHTML]="pwExpireWarning"></span>
+
                 </div>
 
               </div>
@@ -285,8 +284,8 @@
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
-                  </codx-label>
+                  <span class="fs-6" [innerHTML]="pwDuplicate"></span>
+
                 </div>
 
               </div>
@@ -303,8 +302,7 @@
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
-                  </codx-label>
+                  <span class="fs-6" [innerHTML]="blockSystem"></span>
                 </div>
 
               </div>
@@ -321,8 +319,7 @@
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
-                  </codx-label>
+                  <span class="fs-6" [innerHTML]="freezeInMinutes"></span>
                 </div>
 
               </div>
