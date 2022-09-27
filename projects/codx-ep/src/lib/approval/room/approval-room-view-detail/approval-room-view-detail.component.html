@@ -166,23 +166,50 @@
             </div>
           </a>
           <ng-template ngbNavContent>
-            <ng-container
-              *ngIf="
-                data?.tasks && data?.tasks[0] && data?.tasks[0].length > 0;
-                else defaulEmpt
-              "
-            >
-              <codx-treeview
-                #treeAdd
-                id="treeAdd"
-                [data]="data?.tasks[0]"
-                [showSearch]="false"
-                [itemTemplate]="templateorg"
-                [autoLoad]="false"
-                [isOutput]="true"
-                [isLoadChild]="false"
-              ></codx-treeview>
-            </ng-container>
+            <div *ngIf="itemDetail.bookingItems?.length>0">
+              <div *ngFor="let item of itemDetail?.bookingItems">  
+                <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-50">
+                  <div class="d-flex flex-row">
+                    <div class="me-2">
+                      <codx-img
+                        [objectId]="item.recID"
+                        imageType="square"
+                        width="35"
+                        objectType="EP_Stationery"
+                      ></codx-img>
+                    </div>  
+                    <div class="ms-2">
+                      <div class="">
+                        <span href="#" class=" fw-bold">{{ item.itemName }}</span>
+                      </div>
+                      <div class="d-flex flex-row flex-grow-1">
+                        <codx-label                          
+                          default="Đơn vị tính:"
+                          name="lblQuantity"
+                          class="text-gray-600"
+                        ></codx-label>
+                        <span class="d-block ms-2 fw-bold">{{item.umid}}</span>
+                      </div>
+                    </div>
+                  </div>
+          
+                  <div class="d-flex align-items-center me-3">
+                    <codx-label
+                      default="Số lượng:"
+                      name="lblQuantity"
+                      class="text-gray-600"
+                    ></codx-label>
+                    <span class="ms-2 fw-bold">{{item.quantity}}</span>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+
+            <div *ngIf="itemDetail?.bookingItems ==null">
+              <ng-container *ngTemplateOutlet="defaulEmpt">
+              </ng-container>
+            </div>
           </ng-template>
         </li>
       </ul>

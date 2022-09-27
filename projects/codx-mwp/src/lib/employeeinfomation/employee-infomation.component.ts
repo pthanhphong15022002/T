@@ -96,6 +96,7 @@ export class EmployeeInfomationComponent implements OnInit {
     private layout: LayoutService,
     private inject: Injector
   ) {
+    debugger
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
     // this.layout.setUrl(this.codxMwpService.urlback);
@@ -219,32 +220,33 @@ export class EmployeeInfomationComponent implements OnInit {
     this.loadEmployee(employee, e => {
 
     });
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "2").subscribe((response: any) => {
+      if (response) {
+        this.updateExperiences(response);
+      }
+    });
+
+    // this.codxMwpService.LoadData(employee.Employee.employeeID, "", "4").subscribe((response: any) => {
+    //   if (response) {
+    //     this.updateTraining(response);
+    //   }
+    // });
+    // this.codxMwpService.LoadData(employee.Employee.employeeID, "", "5").subscribe((response: any) => {
+    //   this.updateHobby(response);
+    // });
+
+    // this.codxMwpService.LoadData(employee.Employee.employeeID, "", "7").subscribe((response: any) => {
+    //   if (response) {
+    //     this.updateRelation(response);
+    //   }
+    // });
+    // this.codxMwpService.LoadData(employee.Employee.employeeID, "", "8").subscribe((response: any) => {
+    //   if (response) {
+    //     this.updateSkill(response);
+    //   }
+    // });
     setTimeout(() => {
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "2").subscribe((response: any) => {
-        if (response) {
-          this.updateExperiences(response);
-        }
-      });
-
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "4").subscribe((response: any) => {
-        if (response) {
-          this.updateTraining(response);
-        }
-      });
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "5").subscribe((response: any) => {
-        this.updateHobby(response);
-      });
-
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "7").subscribe((response: any) => {
-        if (response) {
-          this.updateRelation(response);
-        }
-      });
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "8").subscribe((response: any) => {
-        if (response) {
-          this.updateSkill(response);
-        }
-      });
+     
     }, 100);
 
   }
@@ -325,7 +327,7 @@ export class EmployeeInfomationComponent implements OnInit {
         active: true,
         sameData: false,
         model: {
-          panelLeftRef: this.panelLeftRef,
+          // panelLeftRef: this.panelLeftRef,
           panelRightRef: this.panelRightRef,
           widthLeft: '320px'
         }
@@ -458,9 +460,9 @@ export class EmployeeInfomationComponent implements OnInit {
   }
 
   editDataEdu(data) {
-    this.allowedu = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    this.codxMwpService.educationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
+    // this.allowedu = true;
+    // this.codxMwpService.EmployeeInfomation = this;
+    // this.codxMwpService.educationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
   }
 
   addRelation() {

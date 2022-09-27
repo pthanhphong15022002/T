@@ -1,0 +1,31 @@
+export class BS_Calendars {
+  calendarID: string;
+  calendarName: string = '';
+  category: string;
+  description: string;
+  wKTemplateID: string;
+  weekendDays: string;
+  daysPerYear: any;
+  daysPerMonth: any;
+  daysPerWeek: any;
+  hoursPerDay: any;
+  stdHours: number;
+  startTime: string;
+  endTime: string;
+  dayoffCalendard: boolean;
+  dayoffCode: string;
+  dayoffColor: string;
+  specialDayColor: string;
+  useShift: boolean;
+  stop: boolean;
+  owner: string;
+  bUID: string;
+  createdOn: any;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+  employeeID: string;
+  positionID: string;
+  orgUnitID: string;
+  divisionID: string;
+}

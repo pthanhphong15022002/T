@@ -417,22 +417,19 @@
         </div>
       </div>
 
-      <div #dataView id="dataView" (click)="focusCombobox()">
-        <!-- <codx-input
-          type="combobox"
-          [refValue]="'DataViewItems'"
-          field="dataView"
-          (valueChange)="valueChange($event)"
-          placeholder="Chọn trường dữ liệu"
-        >
-        </codx-input> -->
+      <div #dataView id="dataView" (click)="clickDataView()">
         <button
           class="btn btn-sm btn-light d-flex align-items-center"
           type="button"
-          id="dropdownMenuButton1"
           aria-expanded="false"
         >
-          <span>Chọn trường dữ liệu</span>
+          <span>
+            <codx-label
+              default="Chọn trường dữ liệu"
+              name="lblChooseField"
+              [formModel]="formModel"
+            ></codx-label>
+          </span>
           <span class="icon-keyboard_arrow_down icon-16 ms-2"></span>
         </button>
       </div>
@@ -451,45 +448,36 @@
           [crrValue]="dialogETemplate.value.message"
           height="250"
           (valueChange)="valueChange($event)"
+          (keyup)="keyUp($event)"
         ></codx-input>
       </div>
       <div class="ms-4 scroll-y" [style.width.px]="200" *ngIf="show">
         <div class="col-lg-12 control-section">
-          <!-- ListView element -->
+          <div class="mb-1 mx-3">
+            <input
+              #textbox
+              class="codx-text default e-input form-control ng-pristine ng-valid ng-touched"
+              type="text"
+              id="textbox"
+              placeholder="Tìm kiếm"
+              title="Type in a name"
+              (keyup)="onkeyup($event)"
+            />
+          </div>
           <ejs-listview
             id="listview_template"
             #listviewInstance
             [dataSource]="dataSource"
             [cssClass]="cssClass"
-            [headerTitle]="headerTitle"
             (actionComplete)="onActionComplete($event)"
-            [showHeader]="true"
+            [showHeader]="false"
           >
             <ng-template #template let-dataSource="">
               <div
-                class="{{
-                  dataSource.category
-                    ? 'clearfix desc e-list-wrapper e-list-multi-line e-list-avatar'
-                    : 'clearfix e-list-wrapper e-list-multi-line e-list-avatar'
-                }}"
+                class="card-template px-2 pt-3 pb-2 ps-3 text-dark"
+                (click)="clickItem(dataSource)"
               >
-                <span
-                  *ngIf="dataSource.imgSrc !== ''"
-                  class="e-avatar e-avatar-{{ dataSource.imgSrc }}"
-                ></span>
-                <span class="e-list-item-header">{{ dataSource.title }} </span>
-                <span
-                  class="e-list-content e-text-overflow"
-                  [innerHTML]="dataSource.description"
-                ></span>
-                <div id="list-logo" *ngIf="dataSource.timeStamp !== ''">
-                  <span class="bookmark"></span>
-                  <span class="comments"></span>
-                  <span class="share"></span>
-                </div>
-                <div class="timeStamp" *ngIf="dataSource.timeStamp !== ''">
-                  {{ dataSource.timeStamp }}
-                </div>
+                {{ dataSource?.headerText }}
               </div>
             </ng-template>
           </ejs-listview>
@@ -983,12 +971,7 @@
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center me-3" *ngIf="showIsTemplate">
             <label class="ms-2 me-2">
-              <codx-label
-                default="Lưu thành template"
-                fiedName="IsTemplate"
-                formName="EmailTemplates"
-                gridViewName="grvEmailTemplates"
-              >
+              <codx-label fiedName="IsTemplate" [formModel]="formModel">
               </codx-label>
             </label>
             <codx-input
@@ -1001,12 +984,7 @@
           </div>
           <div class="d-flex align-items-center me-3" *ngIf="showIsPublish">
             <label class="ms-2 me-2">
-              <codx-label
-                default="Dùng chung"
-                formName="EmailTemplates"
-                gridViewName="grvEmailTemplates"
-                fiedName="IsPublish"
-              >
+              <codx-label [formModel]="formModel" fiedName="IsPublish">
               </codx-label>
             </label>
             <codx-input
@@ -1019,17 +997,12 @@
           </div>
           <div class="d-flex align-items-center me-3" *ngIf="showSendLater">
             <label class="ms-2 me-2">
-              <codx-label
-                default="Gửi ngay"
-                formName="EmailTemplates"
-                gridViewName="grvEmailTemplates"
-                fiedName="SendLater"
-              >
+              <codx-label [formModel]="formModel" fiedName="SendLater">
               </codx-label>
             </label>
             <codx-input
               type="switch"
-              [crrValue]="sendNow"
+              [crrValue]="dialogETemplate.value.sendLater"
               field="sendLater"
               (valueChange)="valueChange($event)"
             >
@@ -1165,3 +1138,15 @@
     <span class="e-list-content">{{ data.name }}</span>
   </div></ng-template
 >
+
+<ng-template #headerSearch>
+  <div class="mb-1 mx-3">
+    <codx-input
+      type="text"
+      [disabled]="false"
+      placeholder="Tìm kiếm"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+</ng-template>

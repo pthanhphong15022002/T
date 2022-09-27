@@ -147,7 +147,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
-        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnGrids = [
             {
@@ -204,7 +204,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               },
             },
           ];
-          this.detectorRef.detectChanges();
         });
     });
     this.detectorRef.detectChanges();
@@ -286,8 +285,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
         if (res) {          
-          this.api
-          .execSv(
+          this.api.execSv(
             'DM',
             'ERM.Business.DM',
             'FileBussiness',
@@ -316,7 +314,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
+  // closeDialog(evt?) {
+  //   this.dialog && this.dialog.close();
+  // }
 }

@@ -1,0 +1,41 @@
+<div class="d-flex align-items-center mb-3">
+  <div class="me-1">
+    <codx-input
+      class="form-control"
+      ngDefaultControl
+      type="combobox"
+      placeholder="Lịch làm việc"
+      [refValue]="'Calendars'"
+      [crrValue]="'this.calendarID'"
+      [multiple]="false"
+      (valueChange)="changeCombobox($event)"
+    >
+    </codx-input>
+  </div>
+  <button
+    class="btn btn-icon btn-primary me-1"
+    (click)="openCalendarSettings()"
+  >
+    <span class="icon-settings text-white icon-18"></span>
+  </button>
+  <button class="btn btn-primary" (click)="addCalendar()">
+    <span>Thêm</span>
+  </button>
+</div>
+
+<codx-schedule
+  #schedule
+  height="100%"
+  [enableAdaptiveUI]="false"
+  [templateCell]="cellTemplate"
+  [currentView]="currentView"
+  [allowGridLines]="false"
+  [isCalendarView]="true"
+  [isTimelineView]="false"
+>
+</codx-schedule>
+
+<ng-template #cellTemplate let-data>
+  <div [innerHtml]="getCellContent(data.date)"></div>
+  <div></div>
+</ng-template>

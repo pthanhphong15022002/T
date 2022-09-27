@@ -15,12 +15,14 @@ import {
   NodeSelection,
   RichTextEditorComponent,
 } from '@syncfusion/ej2-angular-richtexteditor';
+import { DataManager, Query } from '@syncfusion/ej2-data';
 import {
   ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
   CodxInputComponent,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -43,6 +45,11 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
   @ViewChild('richtexteditor', { static: false })
   richtexteditor: CodxInputComponent;
+
+  @ViewChild('listviewInstance', { static: false })
+  public listviewInstance: any;
+
+  @ViewChild('textbox', { static: false }) textboxEle: any;
 
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
@@ -72,139 +79,13 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   sendNow: boolean = false;
 
   methodEdit: boolean = false;
+  dataSource: any = {};
 
   width: any = 'auto';
 
   show = false;
 
-  public headerTitle: string = 'Syncfusion Blog';
   public cssClass: string = 'e-list-template';
-  dataSource: any = [
-    {
-      id: '01',
-      title: 'newsData[0].title',
-      description: 'newsData[0].description',
-      text: 'Syncfusion Blog',
-      imgSrc: '1',
-      timeStamp: 'Syncfusion Blog - October 19, 2017',
-    },
-    {
-      id: '02',
-      title: 'newsData[1].title',
-      description: 'newsData[1].description',
-      text: 'Syncfusion Blog',
-      imgSrc: '2',
-      timeStamp: 'Syncfusion Blog - October 18, 2017',
-    },
-    {
-      id: '03',
-      title: 'newsData[2].title',
-      description: ' newsData[2].description',
-      text: 'Syncfusion Blog',
-      imgSrc: '3',
-      timeStamp: 'Syncfusion Blog - October 18, 2017',
-    },
-    {
-      id: '04',
-      title: 'newsData[3].title',
-      description: 'newsData[3].description',
-      text: 'Syncfusion Blog',
-      imgSrc: '4',
-      timeStamp: 'Syncfusion Blog - October 18, 2017',
-    },
-    {
-      id: '05',
-      title: 'newsData[4].title',
-      description: 'newsData[4].description',
-      text: 'Syncfusion Blog',
-      imgSrc: '5',
-      timeStamp: 'Syncfusion Blog - October 17, 2017',
-    },
-    {
-      id: '06',
-      title: 'newsData[5].title',
-      description: 'newsData[5].description',
-      text: 'Syncfusion Blog',
-      imgSrc: '6',
-      timeStamp: 'Syncfusion Blog - October 17, 2017',
-    },
-    {
-      id: '07',
-      title: 'newsData[6].title',
-      description: 'newsData[6].description',
-      text: 'Syncfusion Blog',
-      imgSrc: '7',
-      timeStamp: 'Syncfusion Blog - October 13, 2017',
-    },
-  ];
-  @ViewChild('listviewInstance')
-  public listviewInstance: any;
-
-  onActionComplete(args: any): void {
-    let listHeader: HTMLElement = this.listviewInstance.element
-      .childNodes[0] as HTMLElement;
-    let header: HTMLElement = listHeader.childNodes[0] as HTMLElement;
-    if (header.style.display === 'none' || listHeader.childNodes.length === 3) {
-      if (listHeader.childNodes[2] != null) {
-        let childHeader: HTMLElement = listHeader.childNodes[2] as HTMLElement;
-        childHeader.remove();
-      }
-    } else {
-      let headerEle: HTMLElement = this.listviewInstance.element.querySelector(
-        '.e-list-header'
-      ) as HTMLElement;
-      let headerElement: HTMLElement =
-        this.listviewInstance.element.querySelector(
-          '#list-logo'
-        ) as HTMLElement;
-      let clone: HTMLElement = headerElement.cloneNode(true) as HTMLElement;
-      headerEle.appendChild(clone);
-    }
-    this.postAction();
-  }
-  postAction() {
-    //Customizing the elements to perform our own events
-    let share: any = document.getElementsByClassName('share');
-    let comments: any = document.getElementsByClassName('comments');
-    let bookmark: any = document.getElementsByClassName('bookmark');
-    let timeStamp: any = document.getElementsByClassName('timeStamp');
-
-    for (let i: number = 0; i < comments.length; i++) {
-      comments[i].setAttribute(
-        'title',
-        'We can customize this element to perform our own action'
-      );
-      comments[i].addEventListener('click', (event: any) => {
-        event.stopPropagation();
-      });
-    }
-
-    for (let i: number = 0; i < bookmark.length; i++) {
-      bookmark[i].setAttribute(
-        'title',
-        'We can customize this element to perform our own action'
-      );
-      bookmark[i].addEventListener('click', (event: any) => {
-        event.stopPropagation();
-      });
-    }
-
-    for (let i: number = 0; i < share.length; i++) {
-      share[i].setAttribute(
-        'title',
-        'We can customize this element to perform our own action'
-      );
-      share[i].addEventListener('click', (event: any) => {
-        event.stopPropagation();
-      });
-    }
-
-    for (let i: number = 0; i < timeStamp.length; i++) {
-      timeStamp[i].addEventListener('click', (event: any) => {
-        event.stopPropagation();
-      });
-    }
-  }
 
   constructor(
     private api: ApiHttpService,
@@ -258,6 +139,28 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.formModel.formName = 'EmailTemplates';
     this.formModel.gridViewName = 'grvEmailTemplates';
     this.formModel.funcID = '';
+
+    var request = new DataRequest();
+    let service = 'BI';
+    request.comboboxName = 'DataViewItems';
+    request.page = 1;
+    request.pageSize = 10;
+    this.esService.loadDataCbx(service, request).subscribe((cbx) => {
+      console.log(cbx);
+      if (cbx) {
+        var item = JSON.parse(cbx[0]);
+        var result = [];
+        item.forEach((element) => {
+          var obj = {
+            fieldName: element['FieldName'],
+            headerText: element['HeaderText'],
+          };
+          result.push(obj);
+        });
+        this.dataSource = result;
+        this.cr.detectChanges();
+      }
+    });
     this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
       this.cache.setGridView(this.formModel.gridViewName, gridView);
       this.cache
@@ -414,12 +317,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
         });
-      } else if (event.field == 'dataView') {
-        //setup dataView
-        this.insert(event.data);
-        this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-        this.cr.detectChanges();
-        this.isFocus = true;
       } else if (event.field == 'sendLater') {
         this.dialogETemplate.patchValue({
           [event['field']]: !event.data,
@@ -632,23 +529,24 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.range = this.selection.getRange(document);
   }
 
-  insert(data: string = null) {
-    if (data != null && data != '') {
+  insert(data: any) {
+    if (data && data != null) {
       this.saveSelection = this.selection.save(this.range, document);
       this.saveSelection.restore();
 
-      // let html =
-      //   '<span style="color: gray; text-decoration: inherit; display: none"> [' +
-      //   data +
-      //   '] </span>' +
-      //   '<span style="color: gray; text-decoration: inherit; display: block"> [123] </span>';
-      // this.richtexteditor.control.executeCommand('insertHTML', html);
+      let html =
+        '<span style="color: gray; text-decoration: inherit" id="' +
+        data?.fieldName +
+        '"> [' +
+        data?.headerText +
+        '] </span>';
+      this.richtexteditor.control.executeCommand('insertHTML', html);
 
-      this.richtexteditor.control.executeCommand('fontColor', 'gray');
-      this.richtexteditor.control.executeCommand(
-        'insertText',
-        ' [' + data + '] '
-      );
+      // this.richtexteditor.control.executeCommand('fontColor', 'gray');
+      // this.richtexteditor.control.executeCommand(
+      //   'insertText',
+      //   ' [' + data + '] '
+      // );
       this.richtexteditor.control.executeCommand('fontColor', 'black');
 
       this.range = this.selection.getRange(document);
@@ -659,7 +557,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   isFocus: boolean = false;
-  focusCombobox(event = null) {
+
+  clickDataView(event = null) {
     this.show = !this.show;
     // let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
     // console.log('width', crrWidth);
@@ -672,7 +571,32 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     // }
 
     // this.isFocus = true;
-    this.width = (this.dataView.nativeElement as HTMLElement).offsetWidth + 5;
+    // this.width = (this.dataView.nativeElement as HTMLElement).offsetWidth + 5;
     this.cr.detectChanges();
   }
+
+  clickItem(item) {
+    if (item) {
+      this.insert(item);
+    }
+  }
+
+  onkeyup(event) {
+    let value = this.textboxEle.nativeElement.value;
+    let data = new DataManager(this.dataSource).executeLocal(
+      new Query().where('headerText', 'startswith', value, true)
+    );
+    if (!value) {
+      this.listviewInstance.dataSource = this.dataSource.slice();
+    } else {
+      this.listviewInstance.dataSource = data;
+    }
+    this.listviewInstance.dataBind();
+  }
+
+  keyUp(event) {
+    this.range = this.selection.getRange(document);
+  }
+
+  onActionComplete(args: any): void {}
 }
