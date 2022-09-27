@@ -83,6 +83,7 @@ export class CodxTasksComponent
 
   model?: DataRequest;
   request: ResourceModel;
+  requestSchedule:ResourceModel ;
   requestTree: ResourceModel;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
@@ -178,6 +179,15 @@ export class CodxTasksComponent
     this.request.method = 'GetTasksAsync';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
+
+    this.requestSchedule = new ResourceModel(); 
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.predicate ="Category=@0 and CreatedBy=@1";
+    this.requestSchedule.dataValue ='2;'+this.user.userID ;
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -834,7 +844,7 @@ export class CodxTasksComponent
         type: ViewType.schedule,
         active: false,
         sameData: false,
-        request: this.request,
+        request:this.requestSchedule,
         request2: this.modelResource,
         model: {
           eventModel: this.fields,
@@ -1452,12 +1462,12 @@ export class CodxTasksComponent
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: { name: 'userID' },
+    resourceId: { name: 'owner' },//trung voi idField của resourceField
   };
   resourceField = {
     Name: 'Resources',
-    Field: 'userID',
-    IdField: 'userID',
+    Field: 'owner',
+    IdField: 'owner',
     TextField: 'userName',
     Title: 'Resources',
   };

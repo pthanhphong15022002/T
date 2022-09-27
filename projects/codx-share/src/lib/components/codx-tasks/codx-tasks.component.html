@@ -309,31 +309,9 @@
 </ng-template>
 
 <ng-template #resourceHeader let-data>
-  <!-- <div class="container">
-    <div class="row">
-      <div class="col-4">
-        <div>
-          <codx-img
-            [objectId]="data.resourceData.userID"
-            [objectType]="'AD_Users'"
-            [width]="50"
-          ></codx-img>
-        </div>
-      </div>
-      <div class="col-8">
-        <div>
-          {{ data.resourceData.userName }} ({{ data.resourceData.events }})
-        </div>
-      
-        <div class="row">
-          <span>{{ data.resourceData.postionName }}</span>
-        </div>
-      </div>
-    </div>
-  </div> -->
   <div  class="container">
     <codx-temp-full
-      [imageId]="data.resourceData?.userID"
+      [imageId]="data.resourceData?.owner"
       [title]="data.resourceData.userName"
       [subTitle]="data.resourceData.postionName"
       [content]="data.resourceData.events + ' công việc'"
