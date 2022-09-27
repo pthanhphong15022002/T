@@ -16,6 +16,7 @@
   [idField]="idField"
   [className]="className"
   [method]="method"  
+  
 >
 
 <ng-template #resourceNameCol let-data>  
@@ -24,17 +25,19 @@
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data?.resourceName}}</span>
       <div class="d-flex flex-row">
-        <span class="text-gray-600">Phân loại:</span>
+        <codx-label default="Phân loại:" [formModel]="formModel" name="lblRanking" class="text-gray-600"></codx-label>
         <span class="fw-bold ms-1">{{ data?.ranking| vll: "EP005" : 'text' | async}}</span>
       </div>
       <div class="d-flex flex-row">
         <div>
-          <span class="text-gray-600">Diện tích:</span>
+          <codx-label default="Diện tích:" name="lblArea" class="text-gray-600"></codx-label>
+          
           <span class="fw-bold ms-1">{{data?.area}} m2</span>
         </div>
         <span class="text-gray-600">&ensp;|&ensp;</span>
         <div>
-          <span class="text-gray-600">Sức chứa:</span>
+          <codx-label default="Sức chứa:" name="lblCapacity" class="text-gray-600"></codx-label>
+          
           <span class="fw-bold ms-1">{{data?.capacity}} người</span>
         </div>
       </div>

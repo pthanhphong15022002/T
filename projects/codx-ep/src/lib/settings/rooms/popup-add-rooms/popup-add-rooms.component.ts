@@ -47,7 +47,8 @@ export class PopupAddRoomsComponent extends UIComponent {
   headerText = '';
   subHeaderText = '';
   lstEquipment = [];
-
+  moreFunc:any;
+  functionList:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -56,10 +57,12 @@ export class PopupAddRoomsComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogRef?.dataService?.dataSelected;
+    this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
+    this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    
   }
 
   onInit(): void {
@@ -85,11 +88,11 @@ export class PopupAddRoomsComponent extends UIComponent {
   }
 
   initForm() {
-    if (this.isAdd) {
-      this.headerText = 'Thêm mới phòng';
-    } else {
-      this.headerText = 'Sửa thông tin phòng';
-    }
+    // if (this.isAdd) {
+    //   this.headerText = 'Thêm mới phòng';
+    // } else {
+    //   this.headerText = 'Sửa thông tin phòng';
+    // }
 
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -104,6 +107,11 @@ export class PopupAddRoomsComponent extends UIComponent {
     if (index != -1) {
       this.tmplstDevice[index].isSelected = event.data;
     }
+  }
+  setTitle(e: any) {
+    //this.title = this.titleAction + ' ' + e;
+    this.detectorRef.detectChanges();
+    console.log(e);
   }
   openPopupDevice(template: any) {
     var dialog = this.callfc.openForm(template, '', 550, 430);
@@ -130,7 +138,7 @@ export class PopupAddRoomsComponent extends UIComponent {
       linkType: '0',
     });    
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 1)
       .subscribe((res) => {
         if (res) {
           let objectID= res.save.recID !=null? res.save.recID:res.update.recID;
