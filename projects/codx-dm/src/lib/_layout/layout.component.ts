@@ -20,7 +20,6 @@ export class LayoutComponent extends LayoutBaseComponent implements AfterViewIni
   override headerHTMLAttributes: any = {};
   override headerLeft: string = 'menu';
   override asideDisplay: boolean = false;
-  override toolbarFixed=false;
   override asideCSSClasses?: string;
   disableInput = false;
   module = 'DM';
