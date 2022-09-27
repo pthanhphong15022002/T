@@ -27,7 +27,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() listRoles?: any;
   @Input() totalData?: any;
 
-  // listDataTree: any[] = [];
+  vllPriority = 'L0186'
   // dataTree: any[] = [];
   dialog: any;
   @Output() clickMoreFunction = new EventEmitter<any>();
