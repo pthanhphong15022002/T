@@ -330,8 +330,13 @@
 .rotate-back {
     transform: rotate(180deg);
 }
+.dm-tab-properties .e-toolbar-items .e-template
+{
+    border: solid 2px transparent !important;
+}
 .dm-tab-properties .e-toolbar-items .e-active
 {
+    border: solid 2px transparent !important;
     border-bottom: solid 2px #166ACC !important;
 }
 .dm-tab-properties .e-toolbar-items .e-active .e-tab-text
