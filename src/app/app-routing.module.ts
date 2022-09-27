@@ -5,8 +5,8 @@ import { HoverPreloadStrategy } from 'ngx-hover-preload';
 import { AuthGuard } from 'codx-core';
 import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
-import { CalendarComponent } from 'projects/codx-tm/src/lib/setting/calendar/calendar.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 export const routes: Routes = [
   {
     path: ':tenant',
@@ -131,7 +131,7 @@ export const routes: Routes = [
           },
           {
             path: 'settingcalendar/:funcID',
-            component: CalendarComponent,
+            component: SettingCalendarComponent,
           },
         ],
       },
