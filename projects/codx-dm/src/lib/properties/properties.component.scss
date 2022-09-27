@@ -300,5 +300,23 @@ div.offcanvas {
 }
 
 .border-left {
-    border-left: 0.5px solid #ebeef1 !important;
+    border-left: 0.5px solid var(--gray-200) !important;
+}
+
+.history-item.line-hor {
+    position: relative;
+}
+
+.history-item.line-hor::before {
+    width: 1px;
+    height: 100%;
+    display: block;
+    content: " ";
+    position: absolute;
+    left: 17px;
+    background-color: var(--gray-300);
+}
+
+.history-item.line-hor:last-child:before {
+    display: none;
 }

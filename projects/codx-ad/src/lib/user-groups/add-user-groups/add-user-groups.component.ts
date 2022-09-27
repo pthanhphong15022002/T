@@ -58,9 +58,10 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   userType: any;
   isUserGroup = false;
   isPopupCbb = false;
-  dataUserCbb: any = [];
+  dataUserCbb: any = new Array();
   formUserGroup: FormGroup;
   lstUser: any;
+  dataUserCbbTemp: any;
 
   constructor(
     private injector: Injector,
@@ -87,6 +88,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.dataUserCbb = res;
+            this.dataUserCbbTemp = JSON.parse(JSON.stringify(this.dataUserCbb));
           }
         });
     }
@@ -201,9 +203,9 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         if (res.save) {
           if (res.save?.functions) {
             res.save.chooseRoles = res.save?.functions;
-            // (this.dialog.dataService as CRUDService)
-            //   .update(res.save)
-            //   .subscribe();
+            (this.dialog.dataService as CRUDService)
+              .update(res.save)
+              .subscribe();
           }
           this.dialog.close(res.save);
           this.changeDetector.detectChanges();
@@ -217,9 +219,9 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res.update) {
           res.update['chooseRoles'] = res.update?.functions;
-          // (this.dialog.dataService as CRUDService)
-          //   .update(res.update)
-          //   .subscribe();
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
           this.dialog.close(res.update);
           this.changeDetector.detectChanges();
         }
@@ -238,8 +240,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   }
 
   saveUserRoles() {
-    var lstUser = [];
-    var checkDifference;
+    var lstUser: any = new Array();
+    var checkDifference = true;
     if (this.viewChooseRole) {
       checkDifference =
         JSON.stringify(this.viewChooseRoleTemp) ===
@@ -272,7 +274,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         .alertCode('AD004', null, lstUserName.join(', '))
         .subscribe((x) => {
           if (x.event.status == 'Y') {
-            this.saveUser(lstUser, checkDifference, countUserHaveGroup);
+            this.saveUser(lstUser, checkDifference);
           } else {
             return;
           }
@@ -282,12 +284,11 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     }
   }
 
-  saveUser(lstUser, checkDifference, countUserHaveGroup = 0) {
-    var dataUserCbbTemp = this.dataUserCbb;
-    var checkDifferenceUserCbb;
+  saveUser(lstUser, checkDifference) {
+    var checkDifferenceUserCbb = true;
     if (this.dataUserCbb) {
       checkDifferenceUserCbb =
-        JSON.stringify(dataUserCbbTemp) === JSON.stringify(this.dataUserCbb);
+        JSON.stringify(this.dataUserCbbTemp) === JSON.stringify(this.dataUserCbb);
     }
     if (this.isAddMode) {
       if (this.dataUserCbb.length > 0) {
@@ -296,7 +297,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           .subscribe((x) => {
             if (x?.event.status == 'Y') {
               this.onAdd();
-              if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
+              if (this.dataUserCbb.length > 0 && this.viewChooseRole.length > 0) {
                 this.adService
                   .updateUserRoles(
                     lstUser,
@@ -311,7 +312,10 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           });
       } else this.onAdd();
     } else {
-      if (!checkDifferenceUserCbb || (!checkDifference && checkDifference != undefined)) {
+      if (
+        !checkDifferenceUserCbb ||
+        (!checkDifference)
+      ) {
         this.notification
           .alertCode('AD005', null, this.adUserGroup.userName)
           .subscribe((x) => {
@@ -323,11 +327,12 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               ) {
                 this.adService
                   .updateUserRoles(
-                    lstUser,
+                    this.dataUserCbbTemp,
                     this.viewChooseRole,
                     true,
                     this.adUserGroup,
-                    this.dataUserCbb
+                    this.dataUserCbb,
+                    false
                   )
                   .subscribe();
               }
@@ -442,7 +447,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.isPopupCbb = !this.isPopupCbb;
   }
 
-  deleteUserCbb(index) {
+  deleteUserCbb(index, item) {
     this.dataUserCbb.splice(index, 1);
     this.changeDetector.detectChanges();
   }
