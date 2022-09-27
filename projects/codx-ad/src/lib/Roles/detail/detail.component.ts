@@ -2,8 +2,10 @@ import {
   ChangeDetectorRef,
   Component,
   Injector,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -27,7 +29,7 @@ declare var $: any;
 })
 export class RoleDetailComponent
   extends UIComponent
-  implements OnInit, OnDestroy
+  implements OnDestroy, OnChanges
 {
   // dataPermissions: any;
   // dataAdvances: any;
@@ -83,17 +85,9 @@ export class RoleDetailComponent
     this.tenant = this.tenantStore.get()?.tenant;
     this.roleName = this.tempService.roleName;
   }
-
-  // action(para: ActionArg): void { }
-
-  ngOnDestroy(): void {
-    if (this.sub) this.sub.unsubscribe();
-    this.RolesService.appendPesmission(null);
-  }
-  onChangeSelectedFunction(data) {
-    this.roleName = this.tempService.roleName + ' - ' + data.nameFunction;
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
+    debugger;
     var rid = this.at.snapshot.queryParams.recID;
     if (rid) {
       this.recid = rid;
@@ -156,32 +150,58 @@ export class RoleDetailComponent
       },
     ];
   }
+  ngOnDestroy(): void {
+    if (this.sub) this.sub.unsubscribe();
+    this.RolesService.appendPesmission(null);
+  }
+  onChangeSelectedFunction(data) {
+    this.roleName = this.tempService.roleName + ' - ' + data.nameFunction;
+  }
 
   LoadAsside() {
     //$('#kt_aside_menu').empty();
-    // this.api
-    //   .execSv('BI', 'ERM.Business.BI', 'CubeListBusiness', 'SaveRole', [])
-    //   .subscribe((res: any) => {
-    //
-    //   });
-    // this.api
-    //   .execSv(
-    //     'SYS',
-    //     'ERM.Business.SYS',
-    //     'FunctionListBusiness',
-    //     'GetFunctionRoleAsync',
-    //     [this.recid]
-    //   )
-    //   .subscribe((res: any) => {
-    //     console.log('check GetFunctionRoleAsync', res);
-    //     if (res) {
-    //       var data = res;
-    //       this.myTree = data;
-    //       this.df.detectChanges();
-    //       this.loadSource();
-    //     }
-    //   });
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'FunctionListBusiness',
+        'GetFunctionRoleAsync',
+        [this.recid]
+      )
+      .subscribe((res: any) => {
+        console.log('check GetFunctionRoleAsync', res);
+        if (res) {
+          var data = res;
+          this.myTree = data;
+          this.df.detectChanges();
+          //this.loadSource();
+        }
+      });
   }
+
+  onSelectionAddChanged(evt: any, tree: any) {
+    if (evt) {
+      this.api
+        .execSv(
+          'SYS',
+          'ERM.Business.SYS',
+          'FunctionListBusiness',
+          'GetFunctionRoleAsync',
+          [this.recid, evt.data.functionID]
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            var data = res;
+            var dataTree = tree.dicDatas[evt.data.functionID];
+            dataTree.items = data;
+            //this.myTree = data;
+            this.df.detectChanges();
+            //this.loadSource();
+          }
+        });
+    }
+  }
+
   loadSource() {
     var formName = this.RolesService.formName;
     var gridViewName = this.RolesService.gridViewName;
