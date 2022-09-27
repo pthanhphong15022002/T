@@ -59,6 +59,7 @@ export class HomeComponent extends UIComponent {
   titleCreatedBy = 'Người tạo';
   titleCreatedOn = 'Ngày tạo';
   titleLength = 'Dung lượng';
+  titleDisc = "Mô tả";
   sortColumn: string;
   sortDirection: string;
   textSearch: string;
@@ -263,7 +264,27 @@ export class HomeComponent extends UIComponent {
         this.displayThumbnail(item.recID, item.thumbnail);
       }
     });
-
+    this.dmSV.isRefreshTree.subscribe(res => {
+      if (res) {
+        var ele = document.getElementsByClassName('collapse');
+        for(var i = 0; i < ele.length; i++) {
+          // Only if there is only single class
+          if(ele[i].className.includes('show')) {
+            ele[i].classList.remove('show');
+            ele[i].classList.add('hide');
+          }
+        }
+        ele = document.getElementsByClassName('item-selected');
+        if (ele.length > 0) ele[0].classList.remove('item-selected');
+        ele = document.getElementsByClassName('icon-arrow_drop_down');
+        if (ele.length > 0) 
+        {
+          ele[0].classList.add('icon-arrow_right');
+          ele[0].classList.remove('icon-arrow_drop_down');
+        }
+        this.data = this.view.dataService.data
+      }
+    });
     // this.dmSV.isFolderId.subscribe(res => {
     //   if (res != null) {
     //     var tree = this.codxview.currentView.currentComponent.treeView;
@@ -283,7 +304,16 @@ export class HomeComponent extends UIComponent {
         this.changeDetectorRef.detectChanges();
       }
     });
-
+    this.dmSV.isAddFolder.subscribe((item) => {
+      if (item) {
+        this.data = [];
+        var ele = document.getElementsByClassName('item-selected');
+        if (ele.length > 0) ele[0].classList.remove('item-selected');
+        var ele2 = document.getElementsByClassName(item?.recID);
+        if (ele2.length > 0) ele2[0].classList.add('item-selected');
+        this.onSelectionChanged(item);
+      }
+    });
     this.dmSV.isEmptyTrashData.subscribe((item) => {
       if (item) {
         this.data = [];
@@ -449,9 +479,8 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-    debugger
     ScrollComponent.reinitialization();
-    if ($data == null || $data.data == null) {
+    if (!$data && ($data == null || $data?.data == null)) {
       return;
     }
     this.isSearch = false;
@@ -516,6 +545,7 @@ export class HomeComponent extends UIComponent {
       this.folderService.options.srtColumns = this.sortColumn;
       this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
+      debugger
       this.fileService.GetFiles(id).subscribe(async res => {
         if (res != null) {
           this.dmSV.listFiles = res[0];
@@ -565,7 +595,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: false,
+          resizable: true,
         },
       },
       {
@@ -580,7 +610,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: false,
+          resizable: true,
         },
       },
       {
@@ -593,7 +623,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: false,
+          resizable: true,
         },
       },
       {
@@ -606,50 +636,8 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: false,
+          resizable: true,
         }
-        // },{
-        //   id: '2',
-        //   icon: 'icon-appstore',
-        //   text: 'Card',
-        //   hide:true,
-        //   type: ViewType.content,
-        //   active: true,
-        //   sameData: true,
-        //   model: {
-        //     template: this.templateMain,
-        //     panelRightRef: this.templateRight,
-        //     template2: this.templateCard,
-        //     resizable: true,
-        //   },
-        // },
-        // {
-        //   id: '2',
-        //   icon: 'icon-apps',
-        //   text: 'Small Card',
-        //   type: ViewType.content,
-        //   sameData: true,
-        //   hide:true,
-        //   model: {
-        //     template: this.templateMain,
-        //     panelRightRef: this.templateRight,
-        //     template2: this.templateSmallCard,
-        //     resizable: true,
-        //   },
-        // },
-        // {
-        //   id: '2',
-        //   icon: 'icon-format_list_bulleted',
-        //   text: 'List',
-        //   type: ViewType.content,
-        //   sameData: true,
-        //   hide:true,
-        //   model: {
-        //     template: this.templateMain,
-        //     panelRightRef: this.templateRight,
-        //     template2: this.templateList,
-        //     resizable: true,
-        //   },
       },
     ];
     this.orgViews = [
@@ -994,6 +982,7 @@ export class HomeComponent extends UIComponent {
   }
 
   requestEnded(e: any) {
+    debugger
     this.isSearch = false;
     if (e.type === "read") {
       this.data = [];
@@ -1081,7 +1070,6 @@ export class HomeComponent extends UIComponent {
           breadcumb.push(this.dmSV.titleRequestBy);
           break;
       }
-
       this.fileService.options.funcID = this.view.funcID;
       this.dmSV.listFiles = [];
       this.dmSV.loadedFile = false;

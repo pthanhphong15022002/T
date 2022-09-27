@@ -566,11 +566,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       })
       .subscribe((res) => {
         this.dialog.close(res);
-        this.attachment.clearData();
-        if(res && res.save){
-          var task = res.save ;
-          if(task?.confirmControl=="1") this.tmSv.sendAlertMail(task?.recID,"TM_0008",this.functionID).subscribe();
-          if(task?.category=='1' && task.verifyControl == '1') this.tmSv.sendAlertMail(task?.recID,"TM_0018",this.functionID).subscribe();
+        this.attachment?.clearData();
+        if (res && res.save) {
+          var task = res.save;
+          if (task?.confirmControl == "1") this.tmSv.sendAlertMail(task?.recID, "TM_0008", this.functionID).subscribe();
+          if (task?.category == '1' && task.verifyControl == '1') this.tmSv.sendAlertMail(task?.recID, "TM_0018", this.functionID).subscribe();
         }
       });
   }
@@ -586,17 +586,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                 this.dialog.dataService.addDatas.clear();
                 if (res.update) {
                   this.dialog.close(res.update);
-                  this.attachment.clearData();
-                  this.tmSv.sendAlertMail(this.task.recID,'TM_0002',this.functionID).subscribe() ;   //mai test laji vi sao khong vao
-            
+                  this.attachment?.clearData();
+                  this.tmSv.sendAlertMail(this.task.recID, 'TM_0002', this.functionID).subscribe();   //mai test laji vi sao khong vao
+
                 }
               }
               this.dialog.close();
-              this.attachment.clearData();
+              this.attachment?.clearData();
             });
         } else {
           this.dialog.close();
-          this.attachment.clearData();
+          this.attachment?.clearData();
         }
       });
     } else {
@@ -607,11 +607,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             if (res.update) {
               this.dialog.dataService.addDatas.clear();
               this.dialog.close(res.update);
-              this.attachment.clearData();
+              this.attachment?.clearData();
             }
           } else {
             this.dialog.close();
-            this.attachment.clearData();
+            this.attachment?.clearData();
           }
 
         });

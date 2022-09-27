@@ -5,21 +5,21 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialogRef"
-  [formModel]="dialogRef.formModel"
-  [formControl]="fGroupAddDriver"
+  [formModel]="formModel"
+  [data]="data"
   *ngIf="isAfterRender"
 >
 <ng-template #body>
   <div class="form-group">
     <codx-label
       fiedName="ResourceName"
-      [formModel]="dialogRef.formModel"
+      [formModel]="form.formModel"
     >
     </codx-label>
     <codx-input
       ControlName="resourceName"
       [formModel]="form.formModel"
-      [Group]="fGroupAddDriver"
+      [Group]="form.formGroup"
     >
     </codx-input>
   </div>
@@ -28,25 +28,26 @@
     <div class="col-4 form-group">
       <codx-label
         fiedName="Category"
-        [formModel]="dialogRef.formModel"
+        [formModel]="form.formModel"
       >
       </codx-label>      
       <codx-input
           ControlName="category"
           [formModel]="form.formModel"
-          [Group]="fGroupAddDriver"
+          [Group]="form.formGroup"
+          (valueChange)="changeCategory($event)"
         >
         </codx-input>
     </div>
     <div class="col-8 form-group" >
       <codx-label
         fiedName="CompanyID"
-        [formModel]="dialogRef.formModel"
+        [formModel]="form.formModel"
         >
       </codx-label>
       <codx-input
-        [disabled]="fGroupAddDriver.value.category == 1 ? false :true"
-        [Group]="fGroupAddDriver"
+        [disabled]="data.category == 1 ? false :true"
+        [Group]="form.formGroup"
         ControlName="companyID"
         [formModel]="form.formModel"
       >
@@ -57,22 +58,22 @@
 
   <div class="row">
     <div class="col-9 form-group">
-      <codx-label fiedName="linkID" [formModel]="dialogRef.formModel" ></codx-label>
+      <codx-label fiedName="LinkID" [formModel]="form.formModel"></codx-label>
       <codx-input
         ControlName="linkID"
         [formModel]="form.formModel"
-        [Group]="fGroupAddDriver"
+        [Group]="form.formGroup"
         (valueChange)="valueCbxCarChange($event)"
         >
       </codx-input>      
     </div>
     <div class="col-3 form-group">
-      <codx-label fiedName="Code" [formModel]="dialogRef.formModel">
+      <codx-label fiedName="Code" [formModel]="form.formModel">
       </codx-label>
       <codx-input
         ControlName="code"
         [formModel]="form.formModel"
-        [Group]="fGroupAddDriver" 
+        [Group]="form.formGroup" 
       >
       </codx-input>
     </div>
@@ -80,14 +81,13 @@
 
   <div class="row">
     <div class="form-group">
-      <codx-label fiedName="Owner" [formModel]="dialogRef.formModel">
+      <codx-label fiedName="Owner" [formModel]="form.formModel">
       </codx-label>
 
       <codx-input
         ControlName="owner"
-        [Group]="fGroupAddDriver"
+        [Group]="form.formGroup"
         [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"  
       >
       </codx-input>  
     </div>
@@ -95,18 +95,18 @@
 
   <div class="row">
     <div class="form-group">
-      <codx-label fiedName="Note" [formModel]="dialogRef.formModel"></codx-label>         
+      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>         
       <codx-input
         ControlName="note"
         [formModel]="form.formModel"
-        [Group]="fGroupAddDriver" 
+        [Group]="form.formGroup" 
       >
       </codx-input>   
       <!-- <codx-input
         type="textarea" format="ed2" rows="3"
         field="note"
         placeholder="Ghi chú"
-        [crrValue]="fGroupAddDriver.value.note"
+        [crrValue]="form.formGroup.value.note"
         (valueChange)="valueChange($event)"
       >
       </codx-input> -->
@@ -119,17 +119,18 @@
     </codx-img>
   </div>
 </ng-template>
-</codx-form>
-
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button class="btn btn-light-primary" (click)="onSaveForm()">
       <codx-label
-        name="lblSave"
-        default="Lưu"
-        [formModel]="dialogRef.formModel"
-      ></codx-label>
+          name="lblSave"
+          default="Lưu"
+          [formModel]="form.formModel"
+        ></codx-label>
     </button>
   </div>
 </ng-template>
+
+</codx-form>
+

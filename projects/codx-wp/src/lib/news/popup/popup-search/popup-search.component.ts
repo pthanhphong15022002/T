@@ -25,7 +25,7 @@ export class PopupSearchComponent implements OnInit {
     @Optional() dialog?:DialogRef
   ) 
   {
-    this.funcID = dd.data.funcID;
+    this.funcID = dd.data;
     this.dialogRef = dialog;
   }
 

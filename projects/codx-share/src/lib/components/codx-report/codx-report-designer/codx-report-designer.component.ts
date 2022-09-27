@@ -13,7 +13,7 @@ export class CodxReportDesignerComponent implements OnInit, AfterViewInit {
   @ViewChild('designer') designerInst!: BoldReportDesignerComponent;
   @Input() serviceDesignUrl: string = '';
   @Input() toolbarDesignSettings: any;
-  @Input()  reportUUID: any = '';;
+  @Input()  reportUUID: any = '';
   @Input() isAdmin: boolean = true;
   @Input() showToolbar: boolean = true;
   @Input() locale: string = 'vi-VN';

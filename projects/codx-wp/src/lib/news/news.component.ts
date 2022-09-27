@@ -115,7 +115,6 @@ export class NewsComponent implements OnInit {
     });
   }
 
-  searchEvent(event: any) { }
 
   clickViewDetail(data: any) {
     this.api
@@ -126,28 +125,30 @@ export class NewsComponent implements OnInit {
       'UpdateViewNewsAsync',
       data.recID
     )
-    .subscribe((res:any) => {
-      if(res){
-        this.codxService.navigate('','/wp/news/'+this.funcID + '/' + data.category +'/' + data.recID);
-      }
-    });
+    .subscribe();
+    this.codxService.navigate('','/wp/news/'+this.funcID + '/' + data.category +'/' + data.recID);
   }
   clickShowPopupCreate(newsType:string) {
     let option = new DialogModel();
     option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
-    let modal =  this.callfc.openForm(PopupAddComponent,'',0,0,'',{type:newsType},'',option);
+    let modal =  this.callfc.openForm(PopupAddComponent,'',0,0,'',newsType,'',option);
     modal.closed.subscribe((res:any) => {
-      if(res.event) this.loadDataAync(this.funcID,this.category); // sau này có xét duyệt thì bỏ đi
-    })
+      if(res?.event){
+        let dataNew = res.event;
+        this.lstHotNew.pop();
+        this.lstHotNew.unshift(dataNew);
+        this.changedt.detectChanges();
+      }
+      })
   }
 
   clickShowPopupSearch() {
     let option = new DialogModel();
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupSearchComponent,"",0,0,"",{funcID: this.funcID},"",option);
+    this.callfc.openForm(PopupSearchComponent,"",0,0,"", this.funcID,"",option);
   }
 
 

@@ -4,22 +4,22 @@
   [subHeaderText]="subHeaderText"
   [body]="body"
   [footer]="footer"
-  [dialog]="dialog"
+  [dialog]="dialogRef"
   [formModel]="formModel"
-  [formControl]="dialogAddRoom"
+  [data]="data"
   *ngIf="isAfterRender"
 >
   <ng-template #body>
     <div class="form-group">
       <codx-label
         fiedName="ResourceName"
-        [formModel]="dialog.formModel"
+        [formModel]="form.formModel"
       >
       </codx-label>
       <codx-input
         ControlName="resourceName"
         [formModel]="form.formModel"
-        [Group]="dialogAddRoom"
+        [Group]="form.formGroup"
       >
       </codx-input>
     </div>
@@ -28,13 +28,13 @@
       <div class="form-group col-5">
         <codx-label
           fiedName="Ranking"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         >
         </codx-label>
         <codx-input
           ControlName="ranking"
           [formModel]="form.formModel"
-          [Group]="dialogAddRoom">
+          [Group]="form.formGroup">
           >
         </codx-input>
       </div>
@@ -42,7 +42,7 @@
       <div class="form-group col-3">
         <codx-label
           fiedName="Area"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         >
         </codx-label>
         <codx-input
@@ -50,7 +50,7 @@
           [min]="0"
           ControlName="area"
           [formModel]="form.formModel"
-          [Group]="dialogAddRoom"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -58,7 +58,7 @@
       <div class="form-group col-4">
         <codx-label
           fiedName="Capacity"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         >
         </codx-label>
         <codx-input
@@ -66,7 +66,7 @@
           [min]="0"
           ControlName="capacity"
           [formModel]="form.formModel"
-          [Group]="dialogAddRoom"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -76,13 +76,13 @@
       <div class="form-group col-4">
         <codx-label
           fiedName="Location"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         >
         </codx-label>
         <codx-input
           ControlName="location"
           [formModel]="form.formModel"
-          [Group]="dialogAddRoom"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -90,44 +90,56 @@
       <div class="col-8 form-group">
         <codx-label
           fiedName="CompanyID"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         >
         </codx-label>
         <codx-input
           ControlName="companyID"
           [formModel]="form.formModel"
-          [Group]="dialogAddRoom"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
     </div>
 
-    <div class="row">
-      <div class="form-group">
-        <codx-label
-          fiedName="Owner"
-          [formModel]="dialog.formModel"
+    <div class="form-group">
+      <codx-label
+        fiedName="Owner"
+        [formModel]="form.formModel"
+      >
+      </codx-label>
+        <codx-input
+          ControlName="owner"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
-        </codx-label>
-          <codx-input
-            ControlName="owner"
-            [formModel]="form.formModel"
-            [Group]="dialogAddRoom"
-          >
-          </codx-input>
-      </div>
+        </codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="Preparator"
+        [formModel]="form.formModel"
+      >
+      </codx-label>
+        <codx-input
+          ControlName="preparator"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
     </div>
 
     <div class="row">
       <div class="form-group">
         <codx-label
           fiedName="Note"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           ControlName="note"
           [formModel]="form.formModel"
-          [Group]="dialogAddRoom"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -135,7 +147,7 @@
     <div class=" form-group d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2">
       <codx-label
         fiedName="Equipments"
-        [formModel]="dialog.formModel"
+        [formModel]="form.formModel"
       ></codx-label>
 
       <span class="text-end align-items-end">
@@ -181,7 +193,7 @@
         <codx-label
           name="lblSave"
           default="Lưu"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>
@@ -196,7 +208,7 @@
             <codx-label
               name="lblEquipment"
               default="Thiết bị"
-              [formModel]="dialog.formModel"
+              [formModel]="form.formModel"
             ></codx-label>
           </h2>
           <button
@@ -214,7 +226,7 @@
           <codx-label
             name="lblChooseEquipments"
             default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
-            [formModel]="dialog.formModel"
+            [formModel]="form.formModel"
           ></codx-label>
         </div>
       </div>
@@ -251,7 +263,7 @@
         <codx-label
           name="lblSave"
           default="Lưu"
-          [formModel]="dialog.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>

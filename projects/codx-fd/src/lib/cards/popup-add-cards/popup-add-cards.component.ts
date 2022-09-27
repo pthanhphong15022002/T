@@ -14,13 +14,14 @@ import { CardType, Valuelist } from '../../models/model';
 })
 export class PopupAddCardsComponent implements OnInit {
   funcID:string ="";
-  entityPer:string = "";
   entityName = "FD_Cards"
-  dataValue:string ="";
-  lstCard:any[] = [];
-  parameter: any;
+  gridViewName:string = "";
+  formName:string = "";
+
+  lstPattern:any[] = [];
+  parameter: any = null;
   totalCoint:number = 0;
-  givePrice:number = 0;
+  givePoint:number = 0;
   quantity:number = 0;
   quantityOld:number = 0;
   situation:string = "";
@@ -35,21 +36,28 @@ export class PopupAddCardsComponent implements OnInit {
   dialog: DialogRef;
   title:string ="";
   cardType:string ="";
-  CARDTYPE_EMNUM = CardType;
+  CARDTYPE_EMNUM = {
+    Commendation : "1",
+    Thankyou : "2",
+    CommentForChange : "3",
+    SuggestionImprovement : "4",
+    Share : "5",
+    Congratulation : "6",
+    Radio : "7"
+  };
   form: FormGroup;
   refValue = "Behaviors_Grp";
   userReciver:string = "";
   userReciverName:string ="";
-  vllData: any;
-  vll:string = "";
   lstShare:any[] = [];
   gift:any;
   giftCount:number;
   shareControl:string = "9";
   objectType:string ="";
   totalRecorItem = 4;
-  cardSelected: any;
+  patternSelected: any;
   ratingVll:string ="";
+  lstRating:any= null;
   MEMBERTYPE = {
     CREATED: "1",
     SHARE: "2",
@@ -82,84 +90,134 @@ export class PopupAddCardsComponent implements OnInit {
     @Optional() dd?:DialogData
   ) 
   {
-    this.funcID = dd.data.funcID;
-    this.cardType = dd.data.cardType;
-    this.title = dd.data.title;
-    this.vll = dd.data.valueList;
+    this.funcID = dd.data;
     this.dialog = dialogRef;
     this.user = this.auth.userValue;
   }
 
   ngOnInit(): void {
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if(res){
-        this.cardType = res.dataValue;
-        this.dataValue = res.dataValue;
-        this.entityPer =  res.entityName;
-        if(!this.vll){
-          this.cache.valueList(this.vll).subscribe((res) => {
-            if (res)
-            {
-              this.vllData = res.datas;
+    this.initForm();
+    this.loadDataAsync(this.funcID);
+  }
+  loadDataAsync(funcID:string){
+    if(funcID){
+      this.cache.functionList(funcID)
+      .subscribe((func:any) => {
+        if(func && func?.formName && func?.gridViewName && func?.entityName && func?.description){
+          this.cardType = func.dataValue;
+          this.formName = func.formName;
+          this.gridViewName = func.gridViewName;
+          this.entityName = func.entityName;
+          this.title = func.description
+          this.cache.gridViewSetup(this.formName,this.gridViewName)
+          .subscribe((grdSetUp:any) => {
+            if(grdSetUp && grdSetUp?.Rating?.referedValue){
+              this.ratingVll = grdSetUp.Rating.referedValue;
+              this.cache.valueList(this.ratingVll)
+              .subscribe((vll:any) => {
+                if(vll){
+                  this.lstRating = vll.datas;
+                  console.log(vll);
+                }
+              })
+              this.dt.detectChanges();
             }
-          });
+          })
+          this.loadParameter(this.cardType);
+          if(this.cardType  == this.CARDTYPE_EMNUM.Commendation ||
+            this.cardType  == this.CARDTYPE_EMNUM.Congratulation || 
+            this.cardType  == this.CARDTYPE_EMNUM.Thankyou || 
+            this.cardType  == this.CARDTYPE_EMNUM.CommentForChange )
+          {
+            this.loadDataPattern(this.cardType);
+          }
         }
-        this.initForm();
-        this.handleVllRating(this.cardType);
-        this.LoadDataCard();
-        this.loadParameter(this.cardType);
-      }
-    })
-    
+      })
+    }
   }
   loadParameter(cardType:string){
-    this.api.execSv("SYS","ERM.Business.SYS","SettingsBusiness","GetParameterByFDAsync",["FDParameters",cardType])
+    this.api.execSv("SYS","ERM.Business.SYS","SettingValuesBusiness","GetParameterByFDAsync",["FDParameters",cardType])
     .subscribe((res:any)=>{
       if(res){
         this.parameter = JSON.parse(res);
-        console.log('loadParameter: ',this.parameter)
+        if(this.parameter.MaxSendControl === "1"){
+          this.getCountCardSend(this.user.userID, this.cardType);
+        }
+        if(this.parameter.MaxPointControl === "1"){
+          if(this.parameter.ActiveCoins){
+            this.getCountPointSend(this.user.userID, this.cardType,this.parameter.ActiveCoins);
+          }
+        }
+        console.log(this.parameter);
         this.dt.detectChanges();
       }
     })
   }
-
+  countCardSend:number = 0;
+  getCountCardSend(senderID:string,cardType:string){
+    this.api.execSv("FD","ERM.Business.FD","CardsBusiness","GetCountCardSendAsync",[senderID,cardType])
+    .subscribe((res:number) => {
+      if(res >=0 ){
+        this.countCardSend = res;
+      }
+    })
+  }
+  countCardReive:number = 0;
+  getCountCardRecive(reciverID:string,cardType:string){
+    this.api.execSv("FD","ERM.Business.FD","CardsBusiness","GetCountCardReciveAsync",[reciverID,cardType])
+    .subscribe((res:number) => {
+      if(res >=0 ){
+        this.countCardReive = res;
+      }
+    })
+  }
+  countPointSend:number = 0;
+  getCountPointSend(userID:string,cardType:string,activeCoins:string){
+    this.api.execSv("FD","ERM.Business.FD","CardsBusiness","GetCountPointSendAsync",[userID,cardType,activeCoins])
+    .subscribe((res:number) => {
+      if(res >=0 ){
+        this.countPointSend = res;
+      }
+    })
+  }
+  loadDataPattern(cardType:string) {
+    this.api
+      .execSv("FD","ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [
+        cardType,
+      ])
+      .subscribe((res:any) => {
+        if (res && res.length > 0)
+        {
+          this.lstPattern = res;
+          this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault});
+          this.dt.detectChanges();
+        }
+      });
+  }
   initForm(){
     this.form = new FormGroup({
       receiver: new FormControl(""),
       behavior : new FormControl(null),
       situation : new FormControl(""),
       industry: new FormControl(null),
-      pattern: new FormControl(""),
+      patternID: new FormControl(""),
       rating: new FormControl(""),
-      gift:new FormControl(""),
+      giftID:new FormControl(""),
       quanlity: new FormControl(0),
       coins: new FormControl(0)
     })
   }
-
-  handleVllRating(cardType: string): void {
-    if (cardType == CardType.Thankyou) {
-      this.ratingVll = Valuelist.RatingThankYou;
-    }
-    else if (cardType == CardType.CommentForChange) {
-      this.ratingVll = Valuelist.RatingCommentForChange;
-    }
-    else{
-      this.ratingVll = Valuelist.CardType;
-    }
-    this.dt.detectChanges();
-  }
-  valueChange(e, element = null)
+  valueChange(e:any)
   {
-    if(!e || !e.data){
+    if(!e?.field || !e?.data){
       return;
     }
-    let value = e;
-    let field = value.field;
+    let data = e.data;
+    let field = e.field;
     switch(field){
       case "rating":
-        this.ratting = value.data;
-        this.form.patchValue({rating : value.data});
+        this.ratting = data;
+        this.form.patchValue({rating : data});
         break;
       case "giftID":
         break;
@@ -169,7 +227,7 @@ export class PopupAddCardsComponent implements OnInit {
           this.notifySV.notify("Vui lòng chọn quà tặng trước!");
           return;
         }
-        let quantity = value.data;
+        let quantity = data;
         if(quantity > this.giftCount){
           this.quantity = this.quantityOld + 1;
           this.totalCoint = this.quantity * this.gift.Price;
@@ -191,11 +249,11 @@ export class PopupAddCardsComponent implements OnInit {
         this.form.patchValue({ quanlity : this.quantity});
         break;
       case "behavior":
-        this.behavior = value.data;
+        this.behavior = data;
         this.form.patchValue({behavior: this.behavior});
         break;
       case "industry":
-        this.industry = value.data;
+        this.industry = data;
         let obj = {};
         obj[field] = this.industry;
         this.api.execSv("BS", "ERM.Business.BS", "IndustriesBusiness", "GetListByID", this.industry).subscribe(
@@ -214,12 +272,15 @@ export class PopupAddCardsComponent implements OnInit {
         this.form.patchValue(obj);
         break;
       case "situation":
-        this.situation = value.data;
+        this.situation = data;
         this.form.patchValue({situation: this.situation});
         break;
       case "receiver":
-        this.userReciver = value.data;
+        this.userReciver = data;
         this.form.patchValue({receiver: this.userReciver});
+        if(this.parameter.MaxReceiveControl == "1"){
+          this.getCountCardRecive(data,this.cardType);
+        }
         this.checkValidateWallet(this.userReciver);
         break;
       default:
@@ -249,12 +310,12 @@ export class PopupAddCardsComponent implements OnInit {
 
   Save() {
     if (!this.userReciver && this.cardType != "5" && this.cardType != "4") {
-      this.notifySV.notify("Vui lòng chọn người nhận trước !");
+      this.notifySV.notify("Vui lòng chọn người nhận !");
       return;
     }
     else if (!this.refValue && this.cardType != "5" && this.cardType != "4") {
       if (!this.form.value["behavior"]) {
-        this.notifySV.notify("Vui lòng chọn hành vi!");
+        this.notifySV.notify("Vui lòng chọn qui tắc ứng xử!");
         return;
       }
     }
@@ -264,24 +325,40 @@ export class PopupAddCardsComponent implements OnInit {
     }
     else
     {
-      if (this.gift) {
-        this.gift.Quanlity = this.quantity;
-        this.gift.Price = this.price * this.quantity;
-        var lstGift = [];
-        lstGift.push(this.gift);
-      }
       let card = new FED_Card();
       card = this.form.value;
       card.functionID = this.funcID;
-      card.entityPer = this.entityPer;
+      card.entityPer = this.entityName;
       card.cardType = this.cardType;
-      card.coins = this.givePrice;
-      card.gifts = lstGift;
       card.listShare = this.lstShare;
       card.objectType = this.objectType;
-      card.shareds = card.comment;
-      if(this.cardSelected && this.cardSelected.patternID){
-        card.pattern = this.cardSelected.patternID;
+      card.pattern = this.patternSelected.patternID;
+      if(this.parameter){
+        // max send
+        if(this.parameter.MaxSendControl === "1")
+        {
+          if(this.countCardSend > this.parameter.MaxSends){
+            this.notifySV.notify("Bạn đã gửi tối đa số phiểu cho phép");
+            return;
+          }
+        }
+        // max recive
+        if(this.parameter.MaxReceiveControl === "1")
+        {
+          if(this.countCardReive > this.parameter.MaxReceives){
+            this.notifySV.notify("Người nhận đã nhận tối đa số phiểu cho phép");
+            return;
+          }
+        }
+        // max point
+        if(this.parameter.MaxPointControl === "1")
+        {
+          if(this.givePoint > this.parameter.MaxPoints){
+            this.notifySV.notify("Tặng quá số xu cho phép");
+            return;
+          }  
+        }
+        
       }
       this.api
         .execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", card)
@@ -310,6 +387,7 @@ export class PopupAddCardsComponent implements OnInit {
     this.callfc.openForm(content, '', 420, window.innerHeight);
   }
 
+
   eventApply(event: any) {
     if (!event) {
       return;
@@ -327,8 +405,7 @@ export class PopupAddCardsComponent implements OnInit {
       case this.SHARECONTROLS.MYGROUP:
       case this.SHARECONTROLS.MYTEAM:
         let p = new FD_Permissions();
-          p.objectType = data[0].objectType;
-          p.memberType = this.MEMBERTYPE.SHARE;
+          p.objectType = this.objectType;
           this.lstShare.push(p);
         break;
       case this.SHARECONTROLS.DEPARMENTS:
@@ -342,7 +419,6 @@ export class PopupAddCardsComponent implements OnInit {
           p.objectType = x.objectType;
           p.objectID = x.id;
           p.objectName = x.text;
-          p.memberType = this.MEMBERTYPE.SHARE;
           this.lstShare.push(p);
         });
         break;
@@ -357,50 +433,12 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  LoadDataCard() {
-    this.api
-      .execSv("FD","ERM.Business.FD", "PatternsBusiness", "GetPatternsAsync", [
-        this.cardType,
-      ])
-      .subscribe((res:any) => {
-        if (res && res.length > 0) {
-          this.lstCard = res;
-          if(this.lstCard.length > this.totalRecorItem){
-            this.showNavigationArrows = true;
-          }
-          var cardDefault = this.lstCard.find((item) => item.isDefault == true);
-          var cardFirst = this.lstCard[0];
-          var cardDefaultIdx;
-          if (cardDefault != null) {
-            cardDefaultIdx = this.lstCard.findIndex(
-              (item) => item == cardDefault
-            );
-            this.lstCard.splice(cardDefaultIdx, 1);
-            this.lstCard.unshift(cardDefault);
-
-            this.cardSelected = cardDefault;
-            this.cardSelected.selected = true;
-          } else {
-            cardDefaultIdx = this.lstCard.findIndex(
-              (item) => item == cardFirst
-            );
-            this.lstCard.splice(cardDefaultIdx, 1);
-            this.lstCard.unshift(cardFirst);
-
-            this.cardSelected = cardFirst;
-            this.cardSelected.selected = true;
-          }
-          this.dt.detectChanges();
-        }
-      });
-  }
-  selectCard(item, element) {
-    if (this.cardSelected) {
-      this.cardSelected.selected = false;
+  selectCard(item) {
+    if (!item)
+    {
+      return;
     }
-    item.selected = true
-    this.cardSelected = item;
-    this.form.patchValue({ pattern: item.patternID });
+    this.patternSelected = item;
     this.dt.detectChanges();
   }
 
@@ -413,7 +451,20 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   subPoint(){
-
+    this.givePoint--;
+    this.dt.detectChanges();
   }
-  addPoint(){}
+  addPoint(){
+    // max points
+    let point = this.givePoint + 1;
+    if(this.parameter.MaxPointPerOnceControl === "1")
+    {
+      if(point > this.parameter.MaxPointPerOnce){
+        this.notifySV.notify("Vượt quá số xu cho phép tặng");
+        return;
+      }
+    }
+    this.givePoint++;
+    this.dt.detectChanges();
+  }
 }

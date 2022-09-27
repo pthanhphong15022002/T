@@ -1,4 +1,4 @@
-<div class="font-size-h4 font-weight-bold text-dark mb-6 mt-6" *ngIf="isShowPolicyCard">
+<div class="fs-4 fw-bold text-dark mb-6 mt-6" *ngIf="isShowPolicyCard">
     <codx-label name="lblPolicyCard" [formModel]="formModel" [default]="'Chính sách phiếu'"></codx-label>
 </div>
 <div class="list-setting ml-10 policyCard">
@@ -14,11 +14,9 @@
         </div>
         <div class="ml-4 d-flex justify-content-between">
             <span class="switch switch-sm">
-                <codx-input type="switch" name="checkbox" class="" ngDefaultControl field="HasPoints"
-                    (valueChange)="lvInputChangeSwitch($event, null)" [checked]="item.HasPoints === '1' ? true:false"
-                    label="">
+                <codx-input type="switch" class="test-check" field="HasPoints" (valueChange)="valueChangeSwitch($event)"
+                    [checked]="item.HasPoints === '1' ? true : false">
                 </codx-input>
-                <span></span>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center"></span>
         </div>
@@ -35,9 +33,8 @@
         </div>
         <div class="ml-4 d-flex align-items-center">
             <span class="switch switch-sm">
-                <codx-input type="switch" name="checkbox" class="" ngDefaultControl field="HasGifts"
-                    (valueChange)="lvInputChangeSwitch($event, null)" [checked]="item.HasGifts === '1' ? true:false"
-                    label="">
+                <codx-input type="switch" class="test-check" field="HasGifts" (valueChange)="valueChangeSwitch($event)"
+                    [checked]="item.HasGifts === '1' ? true:false" label="">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center"></span>
@@ -47,7 +44,8 @@
         *ngIf="item.hasOwnProperty('ApprovalControl')">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark font-weight-bold font-size-h6">
-                <codx-label name="lblApprovalControl" [formModel]="formModel" [default]="'ApprovalControl'"></codx-label>
+                <codx-label name="lblApprovalControl" [formModel]="formModel" [default]="'ApprovalControl'">
+                </codx-label>
             </div>
             <div class="text-dark-50">
                 <codx-label name="lblApprovalControl2" [formModel]="formModel"
@@ -57,25 +55,23 @@
         </div>
         <div class="d-flex align-items-center ml-4">
             <ng-template #UserGroups let-modal>
-                <app-comboboxpopup title="ApprovalControl" [pageSize]=10 (clickSave)="changeCombobox($event)"
-                    funcId="AD008" comboboxName="ApproverGroups" [modal]="modal" [height]="500">
-                </app-comboboxpopup>
+                <codx-combobox-popup [comboboxName]="'ApproverGroups'" [field]="'cbbUser'" [multiple]="true"
+                    [width]="700" [height]="600" [value]="" [formModel]="formModel"
+                    (clickSave)="changeCombobox($event)">
+                </codx-combobox-popup>
             </ng-template>
 
             <div class="d-flex align-items-center">
                 <span class="switch switch-sm ml-3">
-                    <label>
-                        <codx-input type="switch" name="checkbox" class="" ngDefaultControl field="ApprovalControl"
-                            (valueChange)="lvInputChangeSwitch($event, null)"
-                            [checked]="item.ApprovalControl === '1' ? true:false" label=""
-                            [disabled]="this.typeCard == '7'?true:false">
-                        </codx-input>
-                        <span></span>
-                    </label>
+                    <codx-input type="switch" class="test-check" field="ApprovalControl"
+                        (valueChange)="valueChangeSwitch($event)"
+                        [checked]="item.ApprovalControl === '1' ? true : false"
+                        [disabled]="this.typeCard == '7' ? true : false">
+                    </codx-input>
                 </span>
                 <span class="w-30px h-20px d-flex justify-content-center">
-                    <span class="icon-edit_file text-hover-primary icon-20"
-                        (click)="openPopupCombobox(UserGroups)"></span>
+                    <span class="icon-edit text-hover-primary icon-20"
+                        (click)="openPopupCbb(UserGroups)"></span>
                 </span>
             </div>
         </div>
@@ -93,17 +89,12 @@
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
-                <label>
-                    <codx-input type="switch" name="checkbox" class="" ngDefaultControl field="MaxSendControl"
-                        (valueChange)="lvInputChangeSwitch($event, null)"
-                        [checked]="item.MaxSendControl === '1' ? true:false" label="">
-                    </codx-input>
-
-                    <span></span>
-                </label>
+                <codx-input type="switch" class="test-check" field="MaxSendControl"
+                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxSendControl === '1' ? true : false">
+                </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class="icon-edit_file text-hover-primary icon-20" (click)="open(content, 0)"></span>
+                <span class=" icon-edit text-hover-primary icon-20" (click)="open(content, 0)"></span>
             </span>
 
         </div>
@@ -112,7 +103,8 @@
         *ngIf="item.hasOwnProperty('MaxReceiveControl')">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark font-weight-bold font-size-h6">
-                <codx-label name="lblLimitedVouchers" [formModel]="formModel" [default]="'Giới hạn phiếu nhận'"></codx-label>
+                <codx-label name="lblLimitedVouchers" [formModel]="formModel" [default]="'Giới hạn phiếu nhận'">
+                </codx-label>
             </div>
             <div class="text-dark-50">
                 {{'Số lượng' | lang:'PolicyCard':'lblQuantity' | async}}
@@ -122,14 +114,12 @@
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
-                <codx-input type="switch" name="checkbox" class="" ngDefaultControl field="MaxReceiveControl"
-                    (valueChange)="lvInputChangeSwitch($event, null)"
-                    [checked]="item.MaxReceiveControl === '1' ? true:false" label="">
+                <codx-input type="switch" class="test-check" field="MaxReceiveControl"
+                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxReceiveControl === '1' ? true : false">
                 </codx-input>
-                <span></span>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class="icon-edit_file text-hover-primary icon-20" (click)="open(content, 1)"></span>
+                <span class="icon-edit text-hover-primary icon-20" (click)="open(content, 1)"></span>
             </span>
 
         </div>
@@ -147,17 +137,12 @@
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
-                <label>
-                    <codx-input type="switch" name="checkbox" class="" ngDefaultControl field="MaxPointControl"
-                        (valueChange)="lvInputChangeSwitch($event, null)"
-                        [checked]="item.MaxPointControl === '1' ? true:false" label="">
-                    </codx-input>
-
-                    <span></span>
-                </label>
+                <codx-input type="switch" class="test-check" field="MaxPointControl"
+                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxPointControl === '1' ? true:false">
+                </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class="icon-edit_file text-hover-primary icon-20" (click)="open(content, 2)"></span>
+                <span class="icon-edit text-hover-primary icon-20" (click)="open(content, 2)"></span>
             </span>
 
         </div>
@@ -165,7 +150,8 @@
     <div class="d-flex align-items-start py-4" *ngIf="item.hasOwnProperty('MaxPointPerOnceControl')">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark font-weight-bold font-size-h6">
-                <codx-label name="lblCoinVotesLimit" [formModel]="formModel" [default]="'Giới hạn xu cho/phiếu'"></codx-label>
+                <codx-label name="lblCoinVotesLimit" [formModel]="formModel" [default]="'Giới hạn xu cho/phiếu'">
+                </codx-label>
             </div>
             <div class="text-dark-50">{{'Số lượng' | lang:'PolicyCard':'lblQuantity' | async}}
                 {{item.MaxPointPerOnce}} {{'xu mỗi phiếu' | lang:'PolicyCard':'lblCoinVotes' | async}}
@@ -173,16 +159,14 @@
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
-                <codx-input type="switch" name="checkbox" class="" ngDefaultControl field="MaxPointPerOnceControl"
-                    (valueChange)="lvInputChangeSwitch($event, null)"
-                    [checked]="item.MaxPointPerOnceControl === '1' ? true:false" label="">
+                <codx-input type="switch" class="test-check" field="MaxPointPerOnceControl"
+                    (valueChange)="valueChangeSwitch($event)"
+                    [checked]="item.MaxPointPerOnceControl === '1' ? true : false">
                 </codx-input>
-                <span></span>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class="icon-edit_file text-hover-primary icon-20" (click)="open(content, 3)"></span>
+                <span class="icon-edit text-hover-primary icon-20" (click)="open(content, 3)"></span>
             </span>
-
         </div>
     </div>
     <div class="d-flex align-items-start py-4 border-bottom border-light" *ngIf="item.hasOwnProperty('RuleSelected')">
@@ -198,10 +182,9 @@
         </div>
         <div class="ml-4">
             <div class="lv-control">
-                <codx-input type="select" name="select" class="control-vll w-250px" placeholder="" ngDefaultControl
-                    refValue="L1439" field="edit" [value]="item.RuleSelected"
-                    (valueChange)="changeValueListRuleSelected($event)">
-                </codx-input> 
+                <codx-input type="valuelist" class="control-vll w-250px" placeholder="" refValue="L1439" field="edit"
+                    [crrValue]="item.RuleSelected" (valueChange)="changeValueListRuleSelected($event)">
+                </codx-input>
             </div>
         </div>
     </div>
@@ -209,7 +192,8 @@
         *ngIf="item.hasOwnProperty('PolicyControl') && item?.PolicyControl!==''">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark font-weight-bold">
-                <codx-label name="lblApplyCoinPoint" [formModel]="formModel" [default]="'Áp dụng chính sách tính xu/điểm'">
+                <codx-label name="lblApplyCoinPoint" [formModel]="formModel"
+                    [default]="'Áp dụng chính sách tính xu/điểm'">
                 </codx-label>
             </div>
             <div class="text-dark-50">
@@ -219,9 +203,8 @@
         </div>
         <div class="ml-4">
             <div class="lv-control">
-                <codx-input type="select" name="select" class="control-vll w-250px" placeholder="" ngDefaultControl
-                    [refValue]="valueListNameCoin" field="PolicyControl" [value]="item.PolicyControl"
-                    (valueChange)="changValuelist($event)">
+                <codx-input type="valuelist" class="control-vll w-250px" placeholder="" [refValue]="valueListNameCoin"
+                    field="PolicyControl" [crrValue]="item.PolicyControl" (valueChange)="valueChangValueList($event)">
                 </codx-input>
             </div>
         </div>
@@ -231,35 +214,32 @@
 <ng-template #content let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{ modelForm.title }}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <i class="icon-close icon-20 text-dark text-hover-primary"></i>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
         </button>
     </div>
     <div class="modal-body">
         <div class="row form-group">
             <div class="col-xl-3 col-md-3">
-                <label class="col-form-label">
-                    <codx-label name="lblQuantity" [formModel]="formModel" [default]="'Số lượng'"></codx-label>
-                </label>
+                <codx-label name="lblQuantity" [formModel]="formModel" [default]="'Số lượng'"></codx-label>
             </div>
             <div class="col-xl-9 col-md-9">
-                <codx-input type="number" min="1" class="form-control" [(ngModel)]="modelForm.quantity" name="quantity"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="3">
+                <codx-input [crrValue]="modelForm.quantity" type="number" min="1" class="form-control" [showSpinButton]="false"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="3"
+                    (valueChange)="valueChangeQuantity($event)">
                 </codx-input>
             </div>
         </div>
 
         <div class="row form-group" *ngIf="modelForm.type == 0 || modelForm.type == 1 || modelForm.type == 2">
             <div class="col-xl-3 col-md-3">
-                <label class="col-form-label">
-                    <codx-label name="lblCycle" [formModel]="formModel" [default]="'Chu kỳ'"></codx-label>
-                </label>
+                <codx-label name="lblCycle" [formModel]="formModel" [default]="'Chu kỳ'"></codx-label>
             </div>
             <div class="col-xl-9 col-md-9">
                 <div class="lv-control">
-                    <codx-input type="select" name="select" class="control-vll w-338px" placeholder="" ngDefaultControl
-                        refValue="L1435" field="edit" [value]="modelForm.cycle"
-                        (valueChange)="changValueListPopup($event,modelForm.type)"></codx-input>
+                    <codx-input type="valuelist" class="control-vll w-338px" placeholder="" refValue="L1435"
+                        field="edit" [crrValue]="modelForm.cycle"
+                        (valueChange)="changValueListPopup($event,modelForm.type)">
+                    </codx-input>
                 </div>
             </div>
         </div>

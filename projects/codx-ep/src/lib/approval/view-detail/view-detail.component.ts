@@ -87,7 +87,7 @@ export class ViewDetailComponent extends UIComponent implements OnChanges {
   }
 
   openFormFuncID(value, datas: any = null) {
-    debugger;
+    
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {

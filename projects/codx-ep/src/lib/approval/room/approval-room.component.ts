@@ -22,7 +22,8 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
-  
+
+  @ViewChild('titleTmp') titleTmp?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   
@@ -131,7 +132,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           //panelLeftRef:this.panelLeft,
           eventModel:this.fields,
           resourceModel:this.resourceField,//resource
-          //template:this.cardTemplate,
+          //template2:this.titleTmp,
           template4: this.resourceHeader,
           template5: this.resourceTootip,//tooltip
           template6: this.mfButton,//header          
@@ -152,7 +153,7 @@ export class ApprovalRoomsComponent extends UIComponent {
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          debugger;
+          
           this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
@@ -210,14 +211,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         break;
     }
   }
-  getReasonName(reasonID: string) {
-    this.codxEpService.getReasonName(reasonID).subscribe((res) => {
-      if (res.msgBodyData[0]) {
-        this.tempReasonName = res.msgBodyData[0];
-      }
-    });
-    return this.tempReasonName;
-  }
+ 
   closeAddForm(event) {}
 
   changeItemDetail(event) {

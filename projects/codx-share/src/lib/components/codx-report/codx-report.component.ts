@@ -32,6 +32,7 @@ export class CodxReportComponent implements OnInit, AfterViewInit, OnChanges {
   ) {
     this._user = this.auth.get();
     this.serviceViewUrl = environment.apiUrl + '/api/ReportViewer';
+    this.serviceDesignUrl = environment.apiUrl + '/api/ReportDesigner';
     this.toolbarViewSettings = {
       showToolbar: this.showToolbar,
       customGroups: [{

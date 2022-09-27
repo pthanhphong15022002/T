@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center justify-content-between mt-3 mb-3">
+<div class="d-flex align-items-center justify-content-between mt-1 mb-2">
     <div class="d-flex align-items-center ms-1 text-hover-underline" (click)="showVotes(dataComment)">
         <ng-container *ngIf="dataComment.totalVote > 0">
             <div class="flex align-items-center">
@@ -26,7 +26,7 @@
         <div class="btn-like btn-feed delay-500">
             <div *ngIf="!dataComment.myVotedType;else myVoted">
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <span class="fw-bold ms-2" style="color: gray;">
+                    <span class="fw-bold text-dark">
                         <codx-label [formModel]="formModel" name="lblLike" default="Thích"></codx-label>
                     </span>
                 </div>
@@ -54,8 +54,7 @@
     <div class="col-6 p-0">
         <div class="btn-feed" (click)="showComments(dataComment)">
             <div class="d-flex align-items-center justify-content-center">
-                <span class="icon-chat_bubble_outline icon-18"></span>
-                <span class="text-dark fw-bold ms-2">
+                <span class="text-dark fw-bold">
                     <codx-label [formModel]="formModel" name="lblComments" default="Bình luận"></codx-label>
                 </span>
             </div>

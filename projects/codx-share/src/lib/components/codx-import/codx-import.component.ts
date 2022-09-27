@@ -206,7 +206,7 @@ export class CodxImportComponent implements OnInit, OnChanges , AfterViewInit {
   }
   getHeight()
   {
-    debugger;
+    
     var heightP = (document.getElementsByClassName("tab-content")[0] as HTMLElement).offsetHeight;
     var height = (document.getElementsByClassName("tab-pane")[0] as HTMLElement).offsetHeight;
     this.hScroll = heightP-height;

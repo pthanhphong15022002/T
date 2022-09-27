@@ -1,13 +1,25 @@
-<div class="card-body p-0 codx-card-custom" *ngIf="isAfterRender">
+<div
+  class="card-body p-0 codx-card-custom"
+  *ngIf="isAfterRender && formModelCustom"
+>
   <div class="codx-stepper stepper stepper-pills">
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
           <codx-label
+            *ngIf="data?.approveStatus == 1 && isAddNew == true"
             name="lblTitleSignFile"
             default="Thêm mới tài liệu"
-            [formModel]="formModel"
+            [formModel]="formModelCustom"
           ></codx-label>
+          <codx-label
+            *ngIf="data?.approveStatus == 1 && isAddNew == false"
+            name="lblTitleEditSignFile"
+            default="Chỉnh sửa tài liệu"
+            [formModel]="formModelCustom"
+          ></codx-label>
+
+          <div *ngIf="data?.approveStatus != 1">{{ data?.title }}</div>
         </h2>
       </div>
       <div
@@ -49,7 +61,7 @@
                 <codx-label
                   name="lblUploadFile"
                   default="Tải tài liệu"
-                  [formModel]="formModel"
+                  [formModel]="formModelCustom"
                 ></codx-label>
               </div>
             </div>
@@ -89,7 +101,7 @@
                 <codx-label
                   name="lblFileInfo"
                   default="Thông tin tài liệu"
-                  [formModel]="formModel"
+                  [formModel]="formModelCustom"
                 ></codx-label>
               </div>
             </div>
@@ -130,7 +142,7 @@
                 <codx-label
                   name="lblApprovalStep"
                   default="Quy trình duyệt"
-                  [formModel]="formModel"
+                  [formModel]="formModelCustom"
                 ></codx-label>
               </div>
             </div>
@@ -170,7 +182,7 @@
                 <codx-label
                   name="lblSignArea"
                   default="Thiết lập vùng ký"
-                  [formModel]="formModel"
+                  [formModel]="formModelCustom"
                 ></codx-label>
               </div>
             </div>
@@ -183,9 +195,7 @@
             ngbDropdown
             class="dropdown"
             [style.visibility]="
-              currentTab == 3 && dialogSignFile.value.files?.length > 0
-                ? 'visible'
-                : 'hidden'
+              currentTab == 3 && data.files?.length > 0 ? 'visible' : 'hidden'
             "
           >
             <button
@@ -197,7 +207,7 @@
                 <codx-label
                   class="me-3"
                   name="lblSave"
-                  [formModel]="formModel"
+                  [formModel]="formModelCustom"
                   default="Lưu"
                 ></codx-label>
               </span>
@@ -217,9 +227,9 @@
                   <div class="d-flex flex-column">
                     <span class="text-dark">
                       <codx-label
-                        name="lblSaveTemplate"
-                        [formModel]="formModel"
-                        default="Lưu thành mẫu"
+                        name="lblSaveNewTemplate"
+                        [formModel]="formModelCustom"
+                        default="Lưu thành quy trình mẫu"
                       ></codx-label>
                     </span>
                   </div>
@@ -233,9 +243,9 @@
                 >
                   <div class="d-flex flex-column">
                     <codx-label
-                      name="lblSaveCateTemplate"
-                      [formModel]="formModel"
-                      default="Lưu tài liệu mẫu"
+                      name="lblUpdateApproval"
+                      [formModel]="formModelCustom"
+                      default="Cập nhật vào quy trình mẫu"
                     >
                     </codx-label>
                   </div>
@@ -248,8 +258,8 @@
             (click)="approve()"
             [style.visibility]="
               currentTab == 3 &&
-              dialogSignFile.value.files?.length > 0 &&
-              dialogSignFile.value.approveStatus == '1'
+              data.files?.length > 0 &&
+              data.approveStatus == '1'
                 ? 'visible'
                 : 'hidden'
             "
@@ -275,14 +285,14 @@
             <codx-label
               *ngIf="currentTab == 0"
               name="lblUploadFile"
-              [formModel]="formModel"
+              [formModel]="formModelCustom"
               default="Upload file"
             >
             </codx-label>
             <codx-label
               *ngIf="currentTab == 1"
               name="lblTitleAddSignFile"
-              [formModel]="formModel"
+              [formModel]="formModelCustom"
               default="Bổ sung thông tin tài liệu"
             >
             </codx-label>
@@ -290,7 +300,7 @@
               *ngIf="currentTab == 2"
               name="lblSubHeaderApprover"
               default="Quy trình xét duyệt"
-              [formModel]="formModel"
+              [formModel]="formModelCustom"
             >
             </codx-label>
           </h2>
@@ -304,7 +314,7 @@
           data-kt-scroll-wrappers=".stepper-body"
           data-kt-scroll-offset="0px"
         >
-          <div class="tab-content">
+          <!-- <div class="tab-content">
             <div
               class="tab-pane fade"
               id="pane_1"
@@ -315,7 +325,7 @@
                   #attachment
                   objectType="ES_SignFiles"
                   hideImageUpload="0"
-                  [objectId]="dialogSignFile.value.recID"
+                  [objectId]="data.recID"
                   hideBtnSave="1"
                   hideFolder="1"
                   hideUploadBtn="0"
@@ -357,7 +367,7 @@
                     type="text"
                     name="text"
                     field="title"
-                    [crrValue]="dialogSignFile.value?.title"
+                    [crrValue]="data?.title"
                     (valueChange)="valueChange($event)"
                   >
                   </codx-input>
@@ -369,11 +379,10 @@
                       </codx-label>
                       <codx-input
                         type="combobox"
-                        name="combobox"
                         [refValue]="cbxName['CategoryID']"
                         field="categoryID"
                         (valueChange)="valueChange($event)"
-                        [crrValue]="dialogSignFile.value?.categoryID"
+                        [crrValue]="data?.categoryID"
                       >
                       </codx-input>
                     </div>
@@ -387,7 +396,7 @@
                         field="priority"
                         (valueChange)="valueChange($event)"
                         [refValue]="cbxName['Priority']"
-                        [crrValue]="dialogSignFile.value?.priority"
+                        [crrValue]="data?.priority"
                       >
                       </codx-input>
                     </div>
@@ -403,7 +412,7 @@
                         name="text"
                         field="refNo"
                         [disabled]="true"
-                        [crrValue]="dialogSignFile.value.refNo"
+                        [crrValue]="data.refNo"
                       >
                       </codx-input>
                     </div>
@@ -417,7 +426,7 @@
                         format="d"
                         field="refDate"
                         [disabled]="oSignFile"
-                        [crrValue]="dialogSignFile.value.refDate"
+                        [crrValue]="data.refDate"
                         (valueChange)="valueChange($event)"
                       >
                       </codx-input>
@@ -434,7 +443,7 @@
                     [refValue]="cbxName['Owner']"
                     field="owner"
                     (valueChange)="valueChange($event)"
-                    [crrValue]="dialogSignFile.value?.owner"
+                    [crrValue]="data?.owner"
                   >
                   </codx-input>
                 </div>
@@ -448,7 +457,7 @@
                     [refValue]="cbxName['OrgUnitID']"
                     field="orgUnitID"
                     (valueChange)="valueChange($event)"
-                    [crrValue]="dialogSignFile.value?.orgUnitID"
+                    [crrValue]="data?.orgUnitID"
                   >
                   </codx-input>
                 </div>
@@ -464,9 +473,9 @@
                 *ngIf="currentTab == 2"
                 #viewApprovalStep
                 [transId]="
-                  dialogSignFile.value.approveControl == '1'
-                    ? dialogSignFile.value.recID
-                    : dialogSignFile.value.processID
+                  data.approveControl == '1'
+                    ? data.recID
+                    : data.processID
                 "
                 (addEditItem)="openFormAdd($event)"
               >
@@ -477,9 +486,9 @@
               id="pane_4"
               [ngClass]="currentTab == 3 ? 'active show' : ''"
             ></div>
-          </div>
+          </div> -->
 
-          <!-- <div class="tab-content">
+          <div class="tab-content">
             <div
               class="tab-pane fade"
               id="pane_1"
@@ -490,11 +499,11 @@
                   #attachment
                   objectType="ES_SignFiles"
                   hideImageUpload="0"
-                  [objectId]="dialogSignFile.value.recID"
+                  [objectId]="data.recID"
                   hideBtnSave="1"
                   hideFolder="1"
                   hideUploadBtn="0"
-                  [functionID]="formModel.funcID"
+                  [functionID]="formModelCustom.funcID"
                   type="inline"
                 >
                 </codx-attachment>
@@ -512,7 +521,7 @@
                   <i class="icon-cloud_upload fs-5"></i>
                   <codx-label
                     name=""
-                    [formModel]="formModel"
+                    [formModel]="formModelCustom"
                     class=""
                     default="Thêm mới"
                   ></codx-label>
@@ -526,17 +535,11 @@
             >
               <div class="w-100 form-content mw-500px mx-auto">
                 <div class="form-group">
-                  <codx-label
-                    fiedName="Title"
-                    default="Tên tài liệu"
-                    [formModel]="formModel"
-                  >
+                  <codx-label fiedName="Title" [formModel]="formModelCustom">
                   </codx-label>
                   <codx-input
-                    type="text"
-                    name="text"
                     field="title"
-                    [formModel]="formModel"
+                    [formModel]="formModelCustom"
                     [Group]="dialogSignFile"
                   >
                   </codx-input>
@@ -546,31 +549,36 @@
                     <div class="form-group">
                       <codx-label
                         fiedName="CategoryID"
-                        [formModel]="formModel"
-                        default="Phân loại"
+                        [formModel]="formModelCustom"
                       >
                       </codx-label>
                       <codx-input
-                        type="combobox"
                         field="categoryID"
-                        [formModel]="formModel"
+                        [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
                         (valueChange)="valueChange($event)"
                       >
                       </codx-input>
+                      <!-- <codx-input
+                        type="combobox"
+                        [refValue]="'FileCategories'"
+                        field="123"
+                        (valueChange)="valueChange($event)"
+                        [crrValue]="data?.categoryID"
+                      >
+                      </codx-input> -->
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <codx-label
-                        default="Mức độ ưu tiên"
                         fiedName="Priority"
-                        [formModel]="formModel"
+                        [formModel]="formModelCustom"
                       >
                       </codx-label>
                       <codx-input
                         field="priority"
-                        [formModel]="formModel"
+                        [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
                       >
                       </codx-input>
@@ -582,16 +590,13 @@
                     <div class="form-group">
                       <codx-label
                         fiedName="RefNo"
-                        [formModel]="formModel"
-                        default="Số văn bản"
+                        [formModel]="formModelCustom"
                       >
                       </codx-label>
                       <codx-input
-                        type="text"
-                        name="text"
                         field="refNo"
                         [disabled]="true"
-                        [formModel]="formModel"
+                        [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
                       >
                       </codx-input>
@@ -601,15 +606,14 @@
                     <div class="form-group">
                       <codx-label
                         fiedName="RefDate"
-                        [formModel]="formModel"
-                        default="Ngày văn bản"
+                        [formModel]="formModelCustom"
                       >
                       </codx-label>
                       <codx-input
                         type="datetime"
                         format="d"
                         field="refDate"
-                        [formModel]="formModel"
+                        [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
                       >
                       </codx-input>
@@ -617,17 +621,12 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <codx-label
-                    fiedName="EmployeeID"
-                    [formModel]="formModel"
-                    default="Người yêu cầu"
-                  >
+                  <codx-label fiedName="Owner" [formModel]="formModelCustom">
                   </codx-label>
                   <codx-input
-                    type="combobox"
-                    field="employeeID"
+                    field="owner"
                     (valueChange)="valueChange($event)"
-                    [formModel]="formModel"
+                    [formModel]="formModelCustom"
                     [Group]="dialogSignFile"
                   >
                   </codx-input>
@@ -635,14 +634,12 @@
                 <div class="form-group">
                   <codx-label
                     fiedName="OrgUnitID"
-                    [formModel]="formModel"
-                    default="Phòng ban"
+                    [formModel]="formModelCustom"
                   >
                   </codx-label>
                   <codx-input
-                    type="combobox"
                     field="orgUnitID"
-                    [formModel]="formModel"
+                    [formModel]="formModelCustom"
                     [Group]="dialogSignFile"
                   >
                   </codx-input>
@@ -670,7 +667,7 @@
               id="pane_4"
               [ngClass]="currentTab == 3 ? 'active show' : ''"
             ></div>
-          </div> -->
+          </div>
         </div>
 
         <div
@@ -685,7 +682,7 @@
             >
               <codx-label
                 name="lblBack"
-                [formModel]="formModel"
+                [formModel]="formModelCustom"
                 default="Quay lại"
               >
               </codx-label>
@@ -698,7 +695,7 @@
             >
               <codx-label
                 name=""
-                [formModel]="formModel"
+                [formModel]="formModelCustom"
                 class=""
                 default="Quy trình mẫu"
                 class=""
@@ -715,14 +712,14 @@
             [ngClass]="
               attachment?.fileUploadList?.length <= 0 &&
               currentTab == 0 &&
-              dialogSignFile.value.files?.length <= 0
+              data.files?.length <= 0
                 ? 'disabled'
                 : ''
             "
           >
             <codx-label
               name="lblContinue"
-              [formModel]="formModel"
+              [formModel]="formModelCustom"
               default="Tiếp tục"
             ></codx-label>
           </button>
@@ -731,10 +728,10 @@
     </div>
     <div
       class="stepper-body no-header pt-2 w-100"
-      *ngIf="currentTab == 3 && dialogSignFile.value.files?.length > 0"
+      *ngIf="currentTab == 3 && data.files?.length > 0"
     >
       <lib-pdf
-        [recID]="dialogSignFile.value.recID"
+        [recID]="data.recID"
         [isApprover]="false"
         [isDisable]="data?.approveStatus == '1' ? false : true"
         (isAreaControl)="setValueAreaControl($event)"
@@ -756,7 +753,7 @@
               class="dialog-title line-clamp line-clamp-1"
               name="lblProcessTemplate"
               default="Quy trình mẫu"
-              [formModel]="formModel"
+              [formModel]="formModelCustom"
             ></codx-label>
           </div>
         </div>
@@ -776,15 +773,15 @@
         <label class="me-2">
           <codx-label
             fiedName=""
-            [formModel]="formModel"
+            [formModel]="formModelCustom"
             default="Quy trình mẫu"
           ></codx-label>
         </label>
         <codx-input
           type="combobox"
-          class="form-control"
-          field="processID"
+          field="recID"
           refValue="ProcessTemplate"
+          [crrValue]="'002ba6f2-37f0-11ed-97b6-509a4c39550b'"
           (valueChange)="processIDChange($event)"
         >
         </codx-input>
@@ -796,11 +793,15 @@
           class="btn btn-primary"
           (click)="onSaveProcessTemplateID(dialogTemplate)"
         >
-          <codx-label name="lblOk" default="OK" [formModel]="formModel">
+          <codx-label name="lblOk" default="OK" [formModel]="formModelCustom">
           </codx-label>
         </a>
         <a class="btn btn-secondary" (click)="closeDialogTmp(dialogTemplate)">
-          <codx-label name="lblExit" default="Hủy" [formModel]="formModel">
+          <codx-label
+            name="lblExit"
+            default="Hủy"
+            [formModel]="formModelCustom"
+          >
           </codx-label>
         </a>
       </div>
@@ -825,13 +826,13 @@
             <codx-label
               *ngIf="isAddNew"
               name="lblCloseAddNewForm"
-              [formModel]="formModel"
+              [formModel]="formModelCustom"
               default="Bạn có muốn lưu quy trình đã thiết lập"
             ></codx-label>
             <codx-label
               *ngIf="!isAddNew"
               name="lblCloseEditForm"
-              [formModel]="formModel"
+              [formModel]="formModelCustom"
               default="Bạn có muốn lưu quy trình đã đã chỉnh sửa"
             ></codx-label>
           </div>
@@ -845,7 +846,7 @@
     </div>
     <div class="d-flex justify-content-end">
       <a class="btn btn-primary me-2" (click)="clickIsSave(true, dialogClose)">
-        <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
+        <codx-label name="lblSave" default="Lưu" [formModel]="formModelCustom">
         </codx-label>
       </a>
       <a
@@ -853,7 +854,11 @@
         class="btn btn-light-primary me-2"
         (click)="clickIsSave(false, dialogClose)"
       >
-        <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
+        <codx-label
+          name="lblExit"
+          default="Thoát"
+          [formModel]="formModelCustom"
+        >
         </codx-label>
       </a>
       <a
@@ -861,7 +866,11 @@
         class="btn btn-light-primary me-2"
         (click)="clickNotSave(dialogClose)"
       >
-        <codx-label name="lblExit" default="Thoát" [formModel]="formModel">
+        <codx-label
+          name="lblExit"
+          default="Thoát"
+          [formModel]="formModelCustom"
+        >
         </codx-label>
       </a>
     </div>

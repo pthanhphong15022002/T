@@ -63,7 +63,6 @@
   [imageId]="data?.createdBy"
   imageObjType="AD_Users"
   [resources]="data?.bookingAttendees"
-  resourceObjType="AD_Users"
   [titleLine]="2"
   [dataItem]="data"
   [formModel]="view.formModel"
@@ -121,6 +120,10 @@
 </ng-template>
 
 <ng-template #footerTmp let-data> </ng-template>
+
+<ng-template #titleTmp let-data> 
+  {{data.date}}
+</ng-template>
 
 <ng-template #mfButton let-data>
   <div class="mt-2 me-2">

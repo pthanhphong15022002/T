@@ -49,6 +49,7 @@ import {
 import { PopupCaPropsComponent } from './sign-file/popup-ca-props/popup-ca-props.component';
 import { PdfComponent } from './sign-file/pdf/pdf.component';
 import { PopupAddSignatureComponent } from './setting/signature/popup-add-signature/popup-add-signature.component';
+import { PopupAddCategoryComponent } from './setting/category/popup-add-category/popup-add-category.component';
 
 const routes: Routes = [
   {
@@ -124,6 +125,7 @@ const routes: Routes = [
     CodxEsComponent,
     PopupAddSignatureComponent,
     PopupAddAutoNumberComponent,
+    PopupAddCategoryComponent,
     PopupAddSignFileComponent,
     PopupAddEmailTemplateComponent,
     ApprovalStepComponent,

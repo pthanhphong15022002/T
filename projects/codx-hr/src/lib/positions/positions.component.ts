@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, CRUDService, DialogRef, NotificationsService, RequestOption, ScrollComponent, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'lib-positions',
@@ -35,6 +36,10 @@ export class PositionsComponent  extends UIComponent {
   listEmployee = [];
   popoverDataSelected: any;
   orgUnitID: any;
+  dtService: CRUDService;
+  predicate = `OrgUnitID=@0`;
+  dataValue: string = "";
+  isLoaded: boolean = false;
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -46,6 +51,12 @@ export class PositionsComponent  extends UIComponent {
     inject: Injector
   ) {
     super(inject);
+    var dataSv = new CRUDService(inject);
+    // dataSv.request.gridViewName = 'grvPositions';
+    // dataSv.request.entityName = 'HR_Positions';
+    // dataSv.request.formName = 'Positions';
+    //dataSv.request.pageSize = 15;
+    this.dtService = dataSv;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
@@ -221,7 +232,22 @@ export class PositionsComponent  extends UIComponent {
     }
   }
 
-  async onSelectionChanged($event) {
+ onSelectionChanged(evt: any) {
+  ScrollComponent.reinitialization();
+  if(this.listview){
+    if(!this.isLoaded)
+      this.listview.dataService.setPredicate(this.predicate, this.dataValue.split(';')).subscribe(res=>{   
+    });
+    else
+    this.isLoaded = false;
+  }else{
+    this.isLoaded = true;
+    if(evt && evt.data)
+    this.dataValue = evt.data.orgUnitID;
+  this.changedt.detectChanges();
+  
+  }
+ 
    // await this.setEmployeePredicate($event.dataItem.orgUnitID);
     // this.employList.onChangeSearch();
   }

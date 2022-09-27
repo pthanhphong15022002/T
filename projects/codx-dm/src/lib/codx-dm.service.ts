@@ -131,6 +131,7 @@ export class CodxDMService {
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
 
+  
   public ChangeDataViewFile = new BehaviorSubject<any>(null);
   isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
 
@@ -257,9 +258,10 @@ export class CodxDMService {
   public listFolderAside = new BehaviorSubject<FolderInfo[]>(null);
   isListFolderAside = this.listFolderAside.asObservable();
 
-  public refreshTree = new BehaviorSubject<string>(null);
+  public refreshTree = new BehaviorSubject<boolean>(null);
   isRefreshTree = this.refreshTree.asObservable();
 
+  
   // public listFolder = new BehaviorSubject<FolderInfo[]>(null);
   // isListFolder = this.listFolder.asObservable();
 
@@ -489,7 +491,7 @@ export class CodxDMService {
 
       this.fileService.options.funcID = this.idMenuActive;
       this.fileService.GetFiles(data.recID).subscribe(async (res) => {
-        this.listFiles = res;
+        this.listFiles = res[0];
         this.loadedFile = true;
         this.ChangeData.next(true);
       });
@@ -909,8 +911,8 @@ export class CodxDMService {
     //  console.log(http.status);
   }
 
-  getImage(data) {
-    if (data.folderName != undefined)
+  getImage(data:any) {
+    if (data?.folderName && !data?.extension)
       return '../../../assets/codx/dms/folder.svg';
     else {
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
@@ -927,6 +929,7 @@ export class CodxDMService {
   }
 
   getSvg(icon) {
+    debugger;
     var path = window.location.origin;
     return `${path}/${icon}`;
   }
@@ -1322,12 +1325,12 @@ export class CodxDMService {
         case "DMT0204": // di chuyen
         case "DMT0216": // di chuyen
           var title = `${this.titleCopy} ${type}`;
-          this.callfc.openForm(MoveComponent, "", 450, 400, "", [type, data, title, true], "");   
+          this.callfc.openForm(MoveComponent, "", 950, 650, "", [type, data, title, true], "");   
           break;  
 
         case "DMT0214": //"copy": // copy file hay thu muc
           var title = `${this.titleCopy}`;
-          this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, true], "");   
+          this.callfc.openForm(CopyComponent, "", 950, 650, "", [type, data, title, true], "");   
           break;
   
         case "DMT0203": //"rename": // copy file hay thu muc

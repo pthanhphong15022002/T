@@ -67,7 +67,7 @@
                     <span>{{item.userName}}</span>
                 </div>
                 <div class="text-hover-danger mt-1 me-1">
-                    <span class="icon-clear icon-16" (click)="deleteUserCbb(i)">
+                    <span class="icon-clear icon-16" (click)="deleteUserCbb(i, item)">
                     </span>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                 </span>
             </div>
             <div *ngFor="let item of viewChooseRole; let i = index">
-                <div class="py-2 d-flex justify-content-between" *ngIf="!item.isPortal">
+                <div class="py-2 d-flex justify-content-between algin-items-center" *ngIf="!item.isPortal">
                     <div class="text-start">
                         <div class="d-flex align-items-center">
                             <div class="me-2">
@@ -102,8 +102,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-end">
-                        <div class="text-end">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="badge badge-light">
                             <div [style.color]="item.color">
                                 {{item.roleName}}
                             </div>
@@ -120,7 +120,7 @@
                 </span>
             </div>
             <div *ngFor="let item of viewChooseRole; let i = index">
-                <div class="py-2 d-flex justify-content-between" *ngIf="item.isPortal">
+                <div class="py-2 d-flex justify-content-between algin-items-center" *ngIf="item.isPortal">
                     <div class="text-start">
                         <div class="d-flex align-items-center">
                             <div class="me-2">
@@ -133,8 +133,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-end">
-                        <div class="text-end">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="badge badge-light">
                             <div [style.color]="item.color">
                                 {{item.roleName}}
                             </div>

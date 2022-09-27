@@ -105,7 +105,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         this.form?.formGroup.patchValue({ fullName: this.data.fullName });
       } else if (event?.field == 'signatureType') {
         if (event?.data == '2') {
-          this.data.supplier = '0';
+          this.data.supplier = '1';
         }
       } else if (event?.data === Object(event?.data))
         this.data[event['field']] = event?.data.value[0];
@@ -192,6 +192,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       .editSignature(this.data)
                       .subscribe((res) => {});
                   }
+                  this.dialog && this.dialog.close(result);
                 });
             this.imgStamp.imageUpload &&
               this.imgStamp

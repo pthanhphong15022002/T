@@ -22,7 +22,7 @@
             [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'"
             (fileCount)="getFileCount($event)">
         </codx-attachment>
-        <div *ngIf="fileUpload" class="d-flex position-relative">
+        <div *ngIf="fileUpload" class="d-flex position-relative ms-10">
             <div class="my-3">
                 <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
                     <ng-container *ngIf="fileUpload.recID;else imageSrc">
@@ -31,7 +31,7 @@
                         </codx-img>
                     </ng-container>
                     <ng-template #imageSrc>
-                        <img [src]="fileUpload.data || fileUpload.thumbnail" alt="" class="image">
+                        <img [src]="fileUpload.data || fileUpload.avatar" alt="" class="image">
                     </ng-template>
                 </ng-container>
                 <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">
@@ -86,7 +86,7 @@
                                     </li>
                                     <li>
                                         <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment()">
-                                            <span class="icon-delete icon-16 me-2"></span>
+                                            <span class="icon-close text-danger icon-16 me-2"></span>
                                             <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa">
                                             </codx-label>
                                         </a>
@@ -123,7 +123,7 @@
                             </codx-img>
                         </ng-container>
                         <ng-template #imageSrc>
-                            <img [src]="fileUpload.data || fileUpload.thumbnail" alt="" class="image">
+                            <img [src]="fileUpload.data || fileUpload.avatar" alt="" class="image">
                         </ng-template>
                     </ng-container>
                     <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">

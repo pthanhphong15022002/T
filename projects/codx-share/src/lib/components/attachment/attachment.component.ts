@@ -76,7 +76,7 @@ export class AttachmentComponent implements OnInit {
   titleDialog = 'Thêm file';
   title = 'Đã thêm file thành công';
   title2 = 'Vui lòng chọn file tải lên';
-  titleUpload = 'Upload';
+  titleUpload = 'Tải lên';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
  
@@ -504,7 +504,6 @@ export class AttachmentComponent implements OnInit {
             this.atSV.folderId.next(id);
 
             this.changeDetectorRef.detectChanges();
-            debugger;
             this.remotePermission = res[0].permissions;
           }
         });
@@ -736,6 +735,7 @@ export class AttachmentComponent implements OnInit {
   }
 
   async onMultiFileSave() {
+    debugger;
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
@@ -757,6 +757,7 @@ export class AttachmentComponent implements OnInit {
         .toPromise()
         .then((res) => {
           if (res != null) {
+            debugger;
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);

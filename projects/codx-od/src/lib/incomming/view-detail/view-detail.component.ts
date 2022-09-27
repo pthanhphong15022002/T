@@ -136,8 +136,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.getDataValuelist();
   }
   setHeight() {
-    let main,
-      header = 0;
+    let main, header = 0;
     let ele = document.getElementsByClassName(
       'codx-detail-main'
     ) as HTMLCollectionOf<HTMLElement>;
@@ -402,7 +401,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       });
       datas = this.view.dataService.data[index];
     }
-    if (funcID != 'recallUser' && funcID != 'ODT201' && funcID != "SYS02")
+    if (funcID != 'recallUser' && funcID != 'ODT201' && funcID != 'SYS02')
       this.view.dataService.onAction.next({ type: 'update', data: datas });
     delete datas._uuid;
     delete datas.__loading;
@@ -825,7 +824,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 {
                   oSignFile: signFile,
                   files: this.data?.files,
-                  formModel: this.view?.currentView?.formModel,
+                  //formModel: this.view?.currentView?.formModel,
                 },
                 '',
                 dialogModel

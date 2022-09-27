@@ -114,15 +114,16 @@ export class TaskDailyComponent implements OnInit {
       },
       { field: 'buid', headerText: 'Bộ phận người thực hiện', width: 140 },
     ];
-    this.loadData();
+    //this.loadData();
   }
   ngAfterViewInit(): void {
-     this._user = this.authStore.get();
-    let sk = `${this._user.userID}|${this._user.securityKey}`
-    this.src = `/report?sk=${window.btoa(sk)}`;
-    this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
-    debugger
-    //this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&parameters=${JSON.stringify(this.param)}`;
+    //  this._user = this.authStore.get();
+    // let sk = `${this._user.userID}|${this._user.securityKey}`
+    // let _preArray =this.predicate.split('&&').join(';');
+    // this.src = `/${this._user.tenant}/report?reportID=${this.funcID}&predicates=${_preArray}&dataValues=${this.dataValue}`;
+    // this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
+    // debugger
+    // //this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&parameters=${JSON.stringify(this.param)}`;
 
     this.views = [
       {
@@ -319,6 +320,12 @@ export class TaskDailyComponent implements OnInit {
     // this.predicate = this.fields.join('&&');
     // this.dataValue = this.values.join(';');
     this.param = {predicate: evt.predicates, dataValue: evt.dataValues};
+    this.predicate = evt.predicates;
+    this.dataValue = evt.dataValues;
+    // let _preArray =evt.predicates.split('&&').join(';');
+    // this.src = `/${this._user.tenant}/report?reportID=${this.funcID}&predicates=${_preArray}&dataValues=${evt.dataValues}`;
+    // this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
+    //this.iframe && this.iframe.nativeElement.contentWindow.reload();
   }
 
   printReport() {

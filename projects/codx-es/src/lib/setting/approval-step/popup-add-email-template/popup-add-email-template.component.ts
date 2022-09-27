@@ -15,11 +15,14 @@ import {
   NodeSelection,
   RichTextEditorComponent,
 } from '@syncfusion/ej2-angular-richtexteditor';
+import { DataManager, Query } from '@syncfusion/ej2-data';
 import {
   ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   CodxInputComponent,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -43,6 +46,11 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('richtexteditor', { static: false })
   richtexteditor: CodxInputComponent;
 
+  @ViewChild('listviewInstance', { static: false })
+  public listviewInstance: any;
+
+  @ViewChild('textbox', { static: false }) textboxEle: any;
+
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
   dialog: DialogRef;
@@ -58,6 +66,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   showCC = false;
   showBCC = false;
 
+  data: any = {};
+
   vllShare = 'ES014';
   container: HTMLElement;
 
@@ -66,13 +76,20 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   lstTo = [];
   lstCc = [];
   lstBcc = [];
+  sendNow: boolean = false;
 
   methodEdit: boolean = false;
+  dataSource: any = {};
 
   width: any = 'auto';
 
+  show = false;
+
+  public cssClass: string = 'e-list-template';
+
   constructor(
     private api: ApiHttpService,
+    private cache: CacheService,
     private esService: CodxEsService,
     private callFunc: CallFuncService,
     private auth: AuthStore,
@@ -87,22 +104,25 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     console.log(this.formGroup);
 
     this.email = data?.data.dialogEmail;
+    this.email = {
+      templateID: '8bd48f33-b31e-ed11-9449-00155d035517',
+    };
     this.showIsPublish = data.data?.showIsPublish;
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
 
-    this.renderer.listen('window', 'click', (e: Event) => {
-      if (
-        this.dataView &&
-        e.target !== this.dataView?.nativeElement &&
-        this.textarea &&
-        this.isFocus == false
-      ) {
-        this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-        this.cr.detectChanges();
-      }
-      this.isFocus = false;
-    });
+    // this.renderer.listen('window', 'click', (e: Event) => {
+    //   if (
+    //     this.dataView &&
+    //     e.target !== this.dataView?.nativeElement &&
+    //     this.textarea &&
+    //     this.isFocus == false
+    //   ) {
+    //     this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+    //     this.cr.detectChanges();
+    //   }
+    //   this.isFocus = false;
+    // });
   }
 
   staticWidth: number = 0;
@@ -120,61 +140,97 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.formModel.gridViewName = 'grvEmailTemplates';
     this.formModel.funcID = '';
 
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) {
-          this.dialogETemplate = res;
-
+    var request = new DataRequest();
+    let service = 'BI';
+    request.comboboxName = 'DataViewItems';
+    request.page = 1;
+    request.pageSize = 10;
+    this.esService.loadDataCbx(service, request).subscribe((cbx) => {
+      console.log(cbx);
+      if (cbx) {
+        var item = JSON.parse(cbx[0]);
+        var result = [];
+        item.forEach((element) => {
+          var obj = {
+            fieldName: element['FieldName'],
+            headerText: element['HeaderText'],
+          };
+          result.push(obj);
+        });
+        this.dataSource = result;
+        this.cr.detectChanges();
+      }
+    });
+    this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
+      this.cache.setGridView(this.formModel.gridViewName, gridView);
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((gridViewSetup) => {
+          this.cache.setGridViewSetup(
+            this.formModel.formName,
+            this.formModel.gridViewName,
+            gridViewSetup
+          );
           this.esService
-            .getEmailTemplate(this.email.templateID)
-            .subscribe((res1) => {
-              if (res1 != null) {
-                this.dialogETemplate.patchValue(res1[0]);
-                this.dialogETemplate.addControl(
-                  'recID',
-                  new FormControl(res1[0].recID)
-                );
+            .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+            .then((res) => {
+              if (res) {
+                this.dialogETemplate = res;
 
-                // if (res[0].isTemplate) {
-                //   this.methodEdit = true;
-                // }
+                this.esService
+                  .getEmailTemplate(this.email.templateID)
+                  .subscribe((res1) => {
+                    if (res1 != null) {
+                      this.data = res1[0];
+                      this.sendNow = res1?.sendLater ?? false;
+                      this.dialogETemplate.patchValue(res1[0]);
+                      this.dialogETemplate.addControl(
+                        'recID',
+                        new FormControl(res1[0].recID)
+                      );
 
-                let lstUser = res1[1];
-                if (lstUser.length > 0) {
-                  lstUser.forEach((element) => {
-                    switch (element.sendType) {
-                      case '1':
-                        this.lstFrom.push(element);
-                        break;
-                      case '2':
-                        this.lstTo.push(element);
-                        break;
-                      case '3':
-                        this.lstCc.push(element);
-                        break;
-                      case '4':
-                        this.lstBcc.push(element);
-                        break;
+                      // if (res[0].isTemplate) {
+                      //   this.methodEdit = true;
+                      // }
+
+                      let lstUser = res1[1];
+                      if (lstUser.length > 0) {
+                        lstUser.forEach((element) => {
+                          switch (element.sendType) {
+                            case '1':
+                              this.lstFrom.push(element);
+                              break;
+                            case '2':
+                              this.lstTo.push(element);
+                              break;
+                            case '3':
+                              this.lstCc.push(element);
+                              break;
+                            case '4':
+                              this.lstBcc.push(element);
+                              break;
+                          }
+                        });
+                      }
+
+                      if (this.lstFrom.length == 0) {
+                        const user = this.auth.get();
+                        let defaultFrom = new EmailSendTo();
+                        defaultFrom.objectType = 'U';
+                        defaultFrom.objectID = user.userID;
+                        defaultFrom.text = user.userName;
+
+                        this.lstFrom.push(defaultFrom);
+                      }
+                      this.formModel.currentData = this.data;
+                      this.isAfterRender = true;
                     }
+                    this.cr.detectChanges();
                   });
-                }
-
-                if (this.lstFrom.length == 0) {
-                  const user = this.auth.get();
-                  let defaultFrom = new EmailSendTo();
-                  defaultFrom.objectType = 'U';
-                  defaultFrom.objectID = user.userID;
-                  defaultFrom.text = user.userName;
-
-                  this.lstFrom.push(defaultFrom);
-                }
-                this.isAfterRender = true;
               }
-              this.cr.detectChanges();
             });
-        }
-      });
+        });
+    });
   }
 
   ngOnInit(): void {
@@ -261,12 +317,11 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
         });
-      } else if (event.field == 'dataView') {
-        //setup dataView
-        this.insert(event.data);
-        this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-        this.cr.detectChanges();
-        this.isFocus = true;
+      } else if (event.field == 'sendLater') {
+        this.dialogETemplate.patchValue({
+          [event['field']]: !event.data,
+        });
+        this.sendNow = event?.data;
       } else if (event.data instanceof Object) {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data,
@@ -474,23 +529,24 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.range = this.selection.getRange(document);
   }
 
-  insert(data: string = null) {
-    if (data != null && data != '') {
+  insert(data: any) {
+    if (data && data != null) {
       this.saveSelection = this.selection.save(this.range, document);
       this.saveSelection.restore();
 
-      // let html =
-      //   '<span style="color: gray; text-decoration: inherit; display: none"> [' +
-      //   data +
-      //   '] </span>' +
-      //   '<span style="color: gray; text-decoration: inherit; display: block"> [123] </span>';
-      // this.richtexteditor.control.executeCommand('insertHTML', html);
+      let html =
+        '<span style="color: gray; text-decoration: inherit" id="' +
+        data?.fieldName +
+        '"> [' +
+        data?.headerText +
+        '] </span>';
+      this.richtexteditor.control.executeCommand('insertHTML', html);
 
-      this.richtexteditor.control.executeCommand('fontColor', 'gray');
-      this.richtexteditor.control.executeCommand(
-        'insertText',
-        ' [' + data + '] '
-      );
+      // this.richtexteditor.control.executeCommand('fontColor', 'gray');
+      // this.richtexteditor.control.executeCommand(
+      //   'insertText',
+      //   ' [' + data + '] '
+      // );
       this.richtexteditor.control.executeCommand('fontColor', 'black');
 
       this.range = this.selection.getRange(document);
@@ -501,18 +557,46 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   isFocus: boolean = false;
-  focusCombobox(event = null) {
-    let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-    console.log('width', crrWidth);
 
-    if (this.width == crrWidth || this.width == 'auto') {
-      this.width =
-        (this.textarea.nativeElement as HTMLElement).offsetWidth -
-        (this.dataView.nativeElement as HTMLElement).offsetWidth -
-        5;
-    }
+  clickDataView(event = null) {
+    this.show = !this.show;
+    // let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
+    // console.log('width', crrWidth);
 
-    this.isFocus = true;
+    // if (this.width == crrWidth || this.width == 'auto') {
+    //   this.width =
+    //     (this.textarea.nativeElement as HTMLElement).offsetWidth -
+    //     (this.dataView.nativeElement as HTMLElement).offsetWidth -
+    //     5;
+    // }
+
+    // this.isFocus = true;
+    // this.width = (this.dataView.nativeElement as HTMLElement).offsetWidth + 5;
     this.cr.detectChanges();
   }
+
+  clickItem(item) {
+    if (item) {
+      this.insert(item);
+    }
+  }
+
+  onkeyup(event) {
+    let value = this.textboxEle.nativeElement.value;
+    let data = new DataManager(this.dataSource).executeLocal(
+      new Query().where('headerText', 'startswith', value, true)
+    );
+    if (!value) {
+      this.listviewInstance.dataSource = this.dataSource.slice();
+    } else {
+      this.listviewInstance.dataSource = data;
+    }
+    this.listviewInstance.dataBind();
+  }
+
+  keyUp(event) {
+    this.range = this.selection.getRange(document);
+  }
+
+  onActionComplete(args: any): void {}
 }

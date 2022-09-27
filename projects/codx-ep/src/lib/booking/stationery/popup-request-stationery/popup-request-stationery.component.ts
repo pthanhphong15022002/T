@@ -16,10 +16,11 @@ import {
   ViewsComponent,
   ScrollComponent,
   DataRequest,
+  NotificationsService,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
-import { ES_SignFile } from 'projects/codx-es/src/public-api';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { tempResources } from '../../../models/EP_Resources.models';
 @Component({
   selector: 'popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
@@ -42,8 +43,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   dialogSignFile: FormGroup;
   lstDataFile = [];
   isAddNew: boolean = true; // flag thêm mới signfile
-  processID: String = '';
-  transID: String = '';
   gvSetup: any;
 
   isSaved: boolean = false; // flag đã gọi hàm lưu signfile
@@ -55,16 +54,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   dialog: DialogRef;
   data: any = {};
-  autoNo: string; //Số văn bản tự động mặc định
-
-  newNode: number; //vị trí node mới
-  oldNode: number; //vị trí node trước
-
   isAfterSaveProcess: boolean = false;
   model: DataRequest;
   option: SidebarModel;
-  oSignFile: ES_SignFile;
-  user: any = {};
   showPlan: boolean = true;
 
   cart = [];
@@ -75,6 +67,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private epService: CodxEpService,
+    private notificationsService: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -98,7 +91,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
       .then((item) => {
         this.dialogAddRoom = item;
         if (this.data) {
-          this.dialogAddRoom.patchValue(this.data);
           this.dialogAddRoom.patchValue({
             resourceType: '1',
           });
@@ -107,51 +99,20 @@ export class PopupRequestStationeryComponent extends UIComponent {
       });
   }
 
-  popup(data, current) {
-    this.attachment.openPopup();
-  }
-
   changeTab(tabNo) {
     this.currentTab = tabNo;
 
     this.detectorRef.detectChanges();
   }
 
-  valueChange(event) {
-    
+  beforeSave(option: any) {
+    let itemData = this.dialogAddRoom.value;
+    option.methodName = 'AddEditItemAsync';
+    //option.data = [itemData, this.isAdd, null, null, this.lstStationery];
+    return true;
   }
 
-  processIDChange(event) {
-    if (event?.field && event?.component && event?.data != '') {
-      if (event?.field == 'processID') {
-        this.processID = event?.data;
-      }
-    }
-  }
-
-  //#region Methods Save
-  onSaveSignFile() {
-    this.detectorRef.detectChanges();
-  }
-
-  onSaveProcessTemplateID(dialogTmp: DialogRef) {
-    if (
-      this.processID != '' &&
-      this.dialogSignFile.value.approveControl != '1'
-    ) {
-      this.dialogSignFile.patchValue({
-        processID: this.processID,
-        approveControl: '2',
-      });
-      this.onSaveSignFile();
-
-      dialogTmp && dialogTmp.close();
-    }
-  }
-
-  //#region Change Tab
-
-  //#endregion
+  onSaveForm() {}
 
   close() {
     this.dialog && this.dialog.close();
@@ -160,45 +121,45 @@ export class PopupRequestStationeryComponent extends UIComponent {
   //#endregion
 
   //#region cart
-  groupBy(list, keyGetter) {
-    const map = new Map();
-    list.forEach((item) => {
-      const key = keyGetter(item);
-      const collection = map.get(key);
-      if (!collection) {
-        map.set(key, [item]);
-      } else {
-        collection.push(item);
-      }
-    });
-    return map;
-  }
 
-  addCart(event, data) {
-    //check if item exist in cart
-    if (this.cart.includes(data)) {
-      this.cart.push(data);
+  addCart(event, data: tempResources) {
+    let tmpResource = new tempResources();
+    tmpResource = { ...data };
+
+    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
+
+    if (isPresent) {
+      this.cart.filter((item: tempResources) => {
+        if (item.recID == tmpResource.recID) {
+          if (tmpResource.quantity <= tmpResource.availableQty) {
+            item.quantity = item.quantity + 1;
+          } else {
+            this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3');
+          }
+        }
+      });
     } else {
       this.cartQty = this.cartQty + 1;
-      this.cart.push(data);
+      tmpResource.quantity = 1;
+      if (tmpResource.quantity <= tmpResource.availableQty) {
+        this.cart.push(tmpResource);
+        this.cache.message('EP001').subscribe((mssg) => {
+          this.notificationsService.notify(mssg.defaultName, '1');
+        });
+      } else {
+        this.notificationsService.notify('Hết hàng', '3');
+      }
     }
+    console.log(this.cart);
+    this.detectorRef.detectChanges();
   }
 
   //#endregion
-
-  setValueAreaControl(event) {}
-
   click(data) {}
 
   clickMF($event, data) {}
 
   itemByRecID(index, item) {
     return item.recID;
-  }
-
-  test() {
-    if (this.currentTab < 2) {
-      this.currentTab++;
-    }
   }
 }
