@@ -1,13 +1,15 @@
 <codx-form headerText="{{titleDialog}}" [subHeader]="header" [body]="body" [dialog]="dialog">
     <ng-template #header>
-        <div class="offcanvas-header w-100" kt-hidden-height="46">
-            <div class="btn-extand d-flex align-items-center" [ngClass]="!hideExtend?'justify-content-between':'justify-content-end'">
+        <div class="offcanvas-header w-100">
+            <div class="btn-extand d-flex align-items-center me-4"
+                [ngClass]="!hideExtend?'justify-content-end':'justify-content-end'">
                 <ng-container *ngIf="!hideExtend">
-                    <span  [style.marginLeft]="'52%'">Thông tin mở rộng</span>
+                    <span [style.marginLeft]="'52%'">Thông tin mở rộng</span>
                 </ng-container>
-                <a class="text-dark-75 text-hover-primary d-flex align-items-center me-15px cursor-pointer" (click)="extendShow()">
-                    <span *ngIf="hideExtend" class="me-2 text-dark">{{titleExpand}}</span>
-                    <span class="icon-login icon-20 ms-1 ext_button m-4"></span>
+                <a class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
+                    (click)="extendShow()">
+                    <span *ngIf="hideExtend" class="text-dark me-2">{{titleExpand}}</span>
+                    <span class="icon-login icon-20 ext_button"></span>
                 </a>
             </div>
         </div>
@@ -15,16 +17,16 @@
     <ng-template #body>
         <div class="offcanvas-content offcanvas-extend fixed-extend">
             <div class="d-flex">
-                <div class="flex-grow-1 extend-main border-right">
+                <div class="flex-grow-1 extend-main">
                     <div class="dms-info">
                         <div class="d-flex align-items-center">
                             <div
                                 *ngIf="fileEditing != null && fileEditing.extension != null && fileEditing.extension != ''">
-                                <img alt="{{fileEditing.fileName}}" class="max-h-30px me-2"
+                                <img alt="{{fileEditing.fileName}}" class="mh-25px me-2"
                                     src="../../../assets/codx/dms/{{getAvatar(fileEditing.extension)}}">
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
-                                <div *ngIf="fileEditing != null" class="text-dark-75 fw-bold">
+                                <div *ngIf="fileEditing != null" class="text-gray-600 fw-bold">
                                     {{fileEditing.fileName}}
                                 </div>
                             </div>
@@ -32,17 +34,17 @@
                         <div *ngIf="fileEditing != null">
                             {{fileEditing.description}}
                         </div>
-                        <div *ngIf="fileEditing != null" class="mt-4 pic-file max-h-140px">
+                        <div *ngIf="fileEditing != null" class="mt-4 pic-file h-140px d-flex justify-content-center">
                             <div *ngIf="fileEditing.thumbnail != null && fileEditing.thumbnail != ''">
-                                <img alt="" class="w-100 me-2" style="max-height: 200px"
-                                    [src]="getThumbnail(fileEditing)">
+                                <img alt="" class="w-auto" style="height: 140px" [src]="getThumbnail(fileEditing)">
                             </div>
                             <!-- <img alt="" class="w-100 me-2" src="../../../assets/demos/dms/demo1.png"> -->
                         </div>
                         <div class="dms-btn d-flex justify-content-between mt-4">
                             <div class="d-flex">
                                 <ng-container *ngIf="fileEditing != null">
-                                    <codx-tag entityName="DM_FileInfo" [isEdit]="false" [disabled]="true" [value]="fileEditing.tags">
+                                    <codx-tag entityName="DM_FileInfo" [isEdit]="false" [disabled]="true"
+                                        [value]="fileEditing.tags">
                                     </codx-tag>
                                     <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="listTag"> </tags> -->
                                     <!-- <tags [editMode]='false' [entityName]="'TM_Task'" [(value)]="fileEditing.tags">
@@ -52,67 +54,66 @@
                                 </ng-container>
                             </div>
                             <div class="d-flex">
-                                <a (click)="openRight(2, false)"
-                                    class="btn btn-xs btn-outline-primary fw-bold btn-pill">{{titleShare}}</a>
+                                <a (click)="openRight(2, false)" class="btn btn-sm btn-light-primary">{{titleShare}}</a>
                                 <!-- <a (click)="openRight(2, true)"
                                     class="btn btn-xs btn-outline-primary fw-bold btn-pill">Chia sẻ</a> -->
                             </div>
                         </div>
                         <div *ngIf="fileEditing != null" class="d-flex mt-6">
-                            <span class="text-dark-75 me-2">{{titleFiletype}}:</span>
+                            <span class="text-gray-600 me-2">{{titleFiletype}}:</span>
                             <span class="fw-bold">{{fileEditing.type}} ({{fileEditing.extension}})</span>
                         </div>
-                        <div *ngIf="fileEditing != null" class="d-flex mb-2">
-                            <span class="text-dark-75 me-2">{{titleFilesize}}:</span>
+                        <div *ngIf="fileEditing != null" class="d-flex mb-1">
+                            <span class="text-gray-600 me-2">{{titleFilesize}}:</span>
                             <span class="text-dark fw-bold">{{getSizeKB(fileEditing.fileSize)}} KB
                                 ({{getSizeByte(fileEditing.fileSize)}} bytes)</span>
                         </div>
                         <div class="border-bottom my-3"></div>
                         <div *ngIf="fileEditing != null && fileEditing.createdOn != null && fileEditing.createdOn != ''"
-                            class="d-flex mb-2">
-                            <span class="text-dark-75 me-2">{{titleCreator}}:</span>
+                            class="d-flex mb-1">
+                            <span class="text-gray-600 me-2">{{titleCreator}}:</span>
                             <span class="text-dark fw-bold">{{fileEditing.userName}}</span>
                             <span class="icon-access_time icon-16 ms-5 me-1"></span>
                             <span class="text-dark fw-bold">{{fileEditing.createdOn | date:
                                 'dd/MM/yyyy'}}</span>
                         </div>
                         <div *ngIf="fileEditing != null && fileEditing.version != null && fileEditing.version != ''"
-                            class="d-flex mb-2">
-                            <span class="text-dark-75 me-2">{{titleVersion}}:</span>
+                            class="d-flex mb-1">
+                            <span class="text-gray-600 me-2">{{titleVersion}}:</span>
                             <span class="text-dark fw-bold">{{fileEditing.version}}</span>
                             <span *ngIf="fileEditing.comment != ''" class="icon-comment icon-18 text-warning ms-2"
                                 title="{{fileEditing.comment}}"></span>
                         </div>
-                        <div *ngIf="fileEditing != null" class="d-flex mb-2">
-                            <span class="text-dark-75 me-2">{{titleLanguage}}:</span>
+                        <div *ngIf="fileEditing != null" class="d-flex mb-1">
+                            <span class="text-gray-600 me-2">{{titleLanguage}}:</span>
                             <span class="text-dark fw-bold">{{fileEditing.language}}</span>
                         </div>
-                        <div *ngIf="fileEditing != null" class="d-flex mb-2">
-                            <span class="text-dark-75 me-2">{{titleAuthor}}:</span>
+                        <div *ngIf="fileEditing != null" class="d-flex mb-1">
+                            <span class="text-gray-600 me-2">{{titleAuthor}}:</span>
                             <span class="text-dark fw-bold">{{fileEditing.author}}</span>
                         </div>
                         <div class="border-bottom my-3"></div>
-                        <div *ngIf="fileEditing != null" class="d-flex mb-2">
-                            <span class="text-dark-75 me-2">{{titlePublisher}}:</span>
+                        <div *ngIf="fileEditing != null" class="d-flex mb-1">
+                            <span class="text-gray-600 me-2">{{titlePublisher}}:</span>
                             <span class="text-dark fw-bold">{{fileEditing.publisher}}</span>
                         </div>
-                        <div *ngIf="fileEditing != null" class="d-flex mb-2">
-                            <span class="text-dark-75 me-2">{{titleCopyrights}}:</span>
+                        <div *ngIf="fileEditing != null" class="d-flex mb-1">
+                            <span class="text-gray-600 me-2">{{titleCopyrights}}:</span>
                             <span class="text-dark fw-bold">{{fileEditing.copyRights}}</span>
                         </div>
                     </div>
                     <div *ngIf="fileEditing != null" class="card-rating mt-6">
-                        <div class="fw-bold text-dark-75 mb-4">{{titleRating}}</div>
+                        <div class="fw-bold text-gray-600 mb-4">{{titleRating}}</div>
                         <div class="d-flex">
                             <div class="d-flex flex-column me-20">
-                                <div class="font-size-h1 fw-bolder text-warning mb-2">{{totalRating}}</div>
+                                <div class="fs-1 fw-bolder text-warning mb-2">{{totalRating}}</div>
                                 <div class="rating-group">
                                     <div class="d-flex">
-                                        <span class="icon-star text-muted icon-16 me-1"></span>
-                                        <span class="icon-star text-muted icon-16 me-1"></span>
-                                        <span class="icon-star text-muted icon-16 me-1"></span>
-                                        <span class="icon-star text-muted icon-16 me-1"></span>
-                                        <span class="icon-star text-muted icon-16 me-1"></span>
+                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
                                     </div>
                                     <div [style.width]="styleRating" class="d-flex rating-percent">
                                         <span class="icon-star text-warning icon-16 me-1"></span>
@@ -122,58 +123,53 @@
                                         <span class="icon-star text-warning icon-16 me-1"></span>
                                     </div>
                                 </div>
-                                <div class="text-dark-75 font-size-sm mt-2">{{totalViews}} {{titleRating}}</div>
+                                <div class="text-gray-600 font-size-sm mt-2">{{totalViews}} {{titleRating}}</div>
                             </div>
                             <div class="d-flex flex-column">
-                                <div class="d-flex mb-2">
-                                    <span class="me-1 text-dark-75">5</span>
-                                    <span class="icon-star text-dark-75 icon-16 me-3"></span>
+                                <div class="d-flex mb-1">
+                                    <span class="me-1 text-gray-600">5</span>
+                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
                                     <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar"
-                                            [style.width]="rating5" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating5"
+                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <div class="text-muted font-size-sm">{{rating5}}</div>
+                                    <div class="text-gray-500 font-size-sm">{{rating5}}</div>
                                 </div>
-                                <div class="d-flex mb-2">
-                                    <span class="me-1 text-dark-75">4</span>
-                                    <span class="icon-star text-dark-75 icon-16 me-3"></span>
+                                <div class="d-flex mb-1">
+                                    <span class="me-1 text-gray-600">4</span>
+                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
                                     <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar"
-                                            [style.width]="rating4" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating4"
+                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <div class="text-muted font-size-sm">{{rating4}}</div>
+                                    <div class="text-gray-500 font-size-sm">{{rating4}}</div>
                                 </div>
-                                <div class="d-flex mb-2">
-                                    <span class="me-1 text-dark-75">3</span>
-                                    <span class="icon-star text-dark-75 icon-16 me-3"></span>
+                                <div class="d-flex mb-1">
+                                    <span class="me-1 text-gray-600">3</span>
+                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
                                     <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar"
-                                            [style.width]="rating3" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating3"
+                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <div class="text-muted font-size-sm">{{rating3}}</div>
+                                    <div class="text-gray-500 font-size-sm">{{rating3}}</div>
                                 </div>
-                                <div class="d-flex mb-2">
-                                    <span class="me-1 text-dark-75">2</span>
-                                    <span class="icon-star text-dark-75 icon-16 me-3"></span>
+                                <div class="d-flex mb-1">
+                                    <span class="me-1 text-gray-600">2</span>
+                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
                                     <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar"
-                                            [style.width]="rating2" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating2"
+                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <div class="text-muted font-size-sm">{{rating2}}</div>
+                                    <div class="text-gray-500 font-size-sm">{{rating2}}</div>
                                 </div>
-                                <div class="d-flex mb-2">
-                                    <span class="me-1 text-dark-75">1</span>
-                                    <span class="icon-star text-dark-75 icon-16 me-3"></span>
+                                <div class="d-flex mb-1">
+                                    <span class="me-1 text-gray-600">1</span>
+                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
                                     <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar"
-                                            [style.width]="rating1" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating1"
+                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <div class="text-muted font-size-sm">{{rating1}}</div>
+                                    <div class="text-gray-500 font-size-sm">{{rating1}}</div>
                                 </div>
                             </div>
                         </div>
@@ -191,7 +187,7 @@
                                     </ngb-rating>
                                 </div>
                             </div>
-                            <div class="text-muted font-size-sm">{{titleRatingDesc2}}</div>
+                            <div class="text-gray-500 font-size-sm">{{titleRatingDesc2}}</div>
                             <div class="d-flex align-items-center mt-4">
                                 <div class="comment-box flex-grow-1">
                                     <codx-input placeholder="Nhận xét của bạn..." class="form-control test-datetime"
@@ -211,18 +207,17 @@
                                         placeholder="Nhận xét của bạn..."></textarea> -->
                                 </div>
                                 <span (click)="setComment()"
-                                    class="btn btn-sm btn-primary ms-2">{{titleSend}}</span>
+                                    class="btn btn-primary ms-3 min-w-60px">{{titleSend}}</span>
                             </div>
                         </div>
                         <ng-container *ngIf="fileEditing.views != null">
                             <ng-container *ngFor="let view of fileEditing.views; let i = index">
                                 <div *ngIf="view.rating > 0"
-                                    class="d-flex flex-column py-3 flex-grow-1 border-bottom user-rating">
+                                    class="d-flex flex-column py-3 w-100 border-bottom user-rating">
                                     <div class="d-flex align-items-center">
-                                        <div class="symbol symbol-30 symbol-circle me-3">
+                                        <div class="me-3">
                                             <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users"
-                                                imgCss="w-20px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                                [imageWidth]="25">
+                                                imgCss="w-30px" [imageWidth]="30">
                                             </codx-temp-full>
                                             <!-- <div
                                                 *ngIf="view.objectID == null || view.objectID == ''; then thenAvatar11 else elsethenAvatar11">
@@ -238,13 +233,12 @@
                                         </div>
                                         <div class="d-flex flex-column flex-grow-1">
                                             <div class="text-dark fw-bold">{{view.userName}}</div>
-                                            <!-- <span class="text-muted">Business Analyst</span> -->
+                                            <!-- <span class="text-gray-500">Business Analyst</span> -->
                                         </div>
                                         <div class="d-flex flex-column">
-                                            <div
-                                                class="task-date text-dark-75 d-flex flex-column align-items-center">
-                                                <div class="text-muted font-size-md mb-1">
-                                                    <span class="text-dark-75 me-2">{{view.viewDate |
+                                            <div class="task-date text-gray-600 d-flex flex-column align-items-center">
+                                                <div class="text-gray-500 font-size-md mb-1">
+                                                    <span class="text-gray-600 me-2">{{view.viewDate |
                                                         timefrom}}</span>
                                                 </div>
                                                 <div class="d-flex user-rated">
@@ -257,7 +251,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="rating-comment mt-2 mb-1 text-dark-75">
+                                    <div class="rating-comment mt-1 text-italic text-gray-600">
                                         {{view.comment}}
                                     </div>
                                 </div>
@@ -265,18 +259,19 @@
                         </ng-container>
                     </div>
                 </div>
-                <div [ngStyle]="{'display': hideExtend ? 'none' : 'block'}"
-                    [attr.disabled]="hideExtend ? true : null" *ngIf="fileEditing != null"
-                    class="extend-more pl-3 w-400px dm-tab-properties px-2">
+                <div [ngStyle]="{'display': hideExtend ? 'none' : 'block'}" [attr.disabled]="hideExtend ? true : null"
+                    *ngIf="fileEditing != null"
+                    class="extend-more pl-3 w-400px dm-tab-properties pe-2 ms-5 border-left">
                     <ejs-tab>
                         <e-tabitems>
                             <e-tabitem>
                                 <ng-template #headerText>
-                                   <div>{{titleVersion}}</div>
+                                    <div>{{titleVersion}}</div>
                                 </ng-template>
                                 <ng-template #content>
                                     <div class="pt-5">
-                                        <ng-container *ngIf="(fileEditing.history && fileEditing.history.length>0 ), else defaulEmpt">
+                                        <ng-container
+                                            *ngIf="(fileEditing.history && fileEditing.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let his of fileEditing.history; let i = index">
                                                 <ng-container *ngIf="his.fileName != null && his.fileName != ''">
                                                     <div class="d-flex history-item pb-4 line-hor">
@@ -286,10 +281,12 @@
                                                         <div class="d-flex flex-column flex-grow-1">
                                                             <div class="d-flex">
                                                                 <div class="text-dark fw-bold">{{his.fileName}}</div>
-                                                                <div class="text-dark-75 ms-3">{{his.createdOn | timefrom}}</div>
+                                                                <div class="text-gray-600 ms-3">{{his.createdOn |
+                                                                    timefrom}}</div>
                                                             </div>
-                                                            <div class="text-primary font-size-md">{{his.userName}}</div>                                                
-                                                            <div class="text-dark-75">{{his.coment}}</div>
+                                                            <div class="text-primary font-size-md">{{his.userName}}
+                                                            </div>
+                                                            <div class="text-gray-600">{{his.coment}}</div>
                                                         </div>
                                                     </div>
                                                 </ng-container>
@@ -300,13 +297,15 @@
                             </e-tabitem>
                             <e-tabitem>
                                 <ng-template #headerText>
-                                   <div>{{titleHistory}}</div>
+                                    <div>{{titleHistory}}</div>
                                 </ng-template>
                                 <ng-template #content>
                                     <div class="pt-5">
-                                        <ng-container *ngIf="(fileEditing?.history && fileEditing?.history.length>0 ), else defaulEmpt">
+                                        <ng-container
+                                            *ngIf="(fileEditing?.history && fileEditing?.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let history of fileEditing.history; let i = index">
-                                                <ng-container *ngIf="history.fileName == null || history.fileName == ''">
+                                                <ng-container
+                                                    *ngIf="history.fileName == null || history.fileName == ''">
                                                     <div class="d-flex history-item pb-4 line-hor">
                                                         <div class="symbol symbol-30 symbol-circle me-4">
                                                             <codx-temp-full [imageId]="history.createdBy"
@@ -319,12 +318,14 @@
                                                             <div class="d-flex justify-content-between">
                                                                 <!-- <div class="text-dark text-hover-primary fw-bold">
                                                                     {{history.userName}}</div> -->
-                                                                <div class="task-date text-dark-75 d-flex align-items-center">
+                                                                <div
+                                                                    class="task-date text-gray-600 d-flex align-items-center">
                                                                     <span>{{history.createdOn | timefrom}}</span>
                                                                 </div>
                                                             </div>
-                                                            <!-- <span class="text-muted">Business Analyst</span> -->
-                                                            <div class="task-name font-size-sm">{{history.description}}</div>
+                                                            <!-- <span class="text-gray-500">Business Analyst</span> -->
+                                                            <div class="task-name font-size-sm">{{history.description}}
+                                                            </div>
                                                             <div class="task-name font-size-sm">{{history.note}}</div>
                                                         </div>
                                                     </div>
@@ -335,7 +336,7 @@
                                 </ng-template>
                             </e-tabitem>
                         </e-tabitems>
-                       
+
                     </ejs-tab>
                 </div>
             </div>
@@ -344,14 +345,14 @@
 </codx-form>
 <ng-template #defaulEmpt>
     <div class="container">
-      <div class="list-empty card card-flush h-100">
-        <div class="d-flex flex-column flex-center justify-content-center">
-          <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-          <div class="fw-bold mt-1 text-center">
-            {{ "SYS011" | mssg | async }}
-          </div>
-          <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+        <div class="list-empty card card-flush h-100">
+            <div class="d-flex flex-column flex-center justify-content-center">
+                <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+                <div class="fw-bold mt-1 text-center">
+                    {{ "SYS011" | mssg | async }}
+                </div>
+                <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+            </div>
         </div>
-      </div>
     </div>
-  </ng-template>
+</ng-template>

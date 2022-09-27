@@ -71,6 +71,9 @@ export class CodxTasksComponent
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
+  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
+
+  
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
 
@@ -150,11 +153,17 @@ export class CodxTasksComponent
 
   //#region Init
   onInit(): void {
+    // this.modelResource = new ResourceModel();
+    // this.modelResource.assemblyName = 'TM';
+    // this.modelResource.className = 'TaskBusiness';
+    // this.modelResource.service = 'TM';
+    // this.modelResource.method = 'GetUserByTasksAsync';
+
     this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'TM';
-    this.modelResource.className = 'TaskBusiness';
-    this.modelResource.service = 'TM';
-    this.modelResource.method = 'GetUserByTasksAsync';
+    this.modelResource.assemblyName = 'HR';
+    this.modelResource.className = 'OrganizationUnitsBusiness';
+    this.modelResource.service = 'HR';
+    this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
@@ -166,7 +175,7 @@ export class CodxTasksComponent
     this.request.service = 'TM';
     this.request.assemblyName = 'TM';
     this.request.className = 'TaskBusiness';
-    this.request.method = 'pg';
+    this.request.method = 'GetTasksAsync';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
@@ -830,6 +839,7 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
+          template4: this.resourceHeader,
           template: this.eventTemplate,
           template3: this.cellTemplate,
           statusColorRef: this.vllStatus,

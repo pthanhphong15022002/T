@@ -204,7 +204,7 @@ export class PopupAddComponent implements OnInit {
               (res2: any) => {
                 if (res2) {
                   this.notifSV.notifyCode('SYS006');
-                  this.dialogRef.close();
+                  this.dialogRef.close(data);
                 }
               }
             );
@@ -293,20 +293,6 @@ export class PopupAddComponent implements OnInit {
           }
         }
       });
-  }
-  insertWPComment(data: WP_News, approveControl: string) {
-    if (data.createPost) {
-      var post = new WP_Comments();
-      post.category = "4";
-      post.refID = data.recID;
-      post.refType = "WP_News";
-      post.content = data.subject;
-      post.shareControl = data.shareControl;
-      post.permissions = data.permissions;
-      post.approveControl = approveControl;
-      post.approveStatus = null;
-      this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post, null]).subscribe();
-    }
   }
   valueChange(event: any) {
     if (!event || !event.field || !event.data) {
