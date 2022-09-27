@@ -1462,7 +1462,7 @@ export class CodxTasksComponent
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: { name: 'owner' },
+    resourceId: { name: 'owner' },//trung voi idField của resourceField
   };
   resourceField = {
     Name: 'Resources',
