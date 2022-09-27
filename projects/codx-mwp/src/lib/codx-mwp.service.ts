@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService, AuthService } from 'codx-core';
 import { BehaviorSubject, catchError, map, Observable, finalize, of } from 'rxjs';
-import { EmployeeInfomationComponent } from './employeeinfomation/employee-infomation.component';
-import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +8,8 @@ import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.comp
 export class CodxMwpService {
   user: any;
   employeeID: any = "";
-  EmployeeInfomation: EmployeeInfomationComponent;
-  infoLeftComponent: InfoLeftComponent;
+  EmployeeInfomation: any;
+  infoLeftComponent: any;
   employeeComponent: any;
   urlback = '';
   currentSection: any = "InfoPersonal";
