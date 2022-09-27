@@ -51,7 +51,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   formType: any;
   formGroupAdd: FormGroup;
-  gridViewSetup: any = [];
   checkBtnAdd = false;
   saveSuccess = false;
   dataAfterSave: any;
@@ -93,11 +92,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     }
     this.dialog = dialog;
     this.user = auth.get();
-    this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
   }
 
   capitalizeWords(arr) {
@@ -207,14 +201,14 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         if (res.save) {
           if (res.save?.functions) {
             res.save.chooseRoles = res.save?.functions;
-            (this.dialog.dataService as CRUDService)
-              .update(res.save)
-              .subscribe();
-            this.changeDetector.detectChanges();
+            // (this.dialog.dataService as CRUDService)
+            //   .update(res.save)
+            //   .subscribe();
           }
+          this.dialog.close(res.save);
+          this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
   }
 
   onUpdate() {
@@ -223,13 +217,13 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res.update) {
           res.update['chooseRoles'] = res.update?.functions;
-          (this.dialog.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
+          // (this.dialog.dataService as CRUDService)
+          //   .update(res.update)
+          //   .subscribe();
+          this.dialog.close(res.update);
           this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
   }
 
   onSave() {
@@ -317,7 +311,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           });
       } else this.onAdd();
     } else {
-      if (!checkDifferenceUserCbb || !checkDifference) {
+      if (!checkDifferenceUserCbb || (!checkDifference && checkDifference != undefined)) {
         this.notification
           .alertCode('AD005', null, this.adUserGroup.userName)
           .subscribe((x) => {
@@ -420,7 +414,11 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   getDataUserInCbb(event) {
     this.checkOpenCbbPopup++;
     if (event?.dataSelected) {
-      if (this.checkOpenCbbPopup >= 2 || this.formType == 'add' || this.formType == 'edit') {
+      if (
+        this.checkOpenCbbPopup >= 2 ||
+        this.formType == 'add' ||
+        this.formType == 'edit'
+      ) {
         if (this.dataUserCbb) {
           let i = 0;
           event?.dataSelected.forEach((dt) => {
