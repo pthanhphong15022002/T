@@ -4,27 +4,6 @@
     left: auto;
 }
 
-.offcanvas-md.extend-show {
-    width: 860px !important;
-    left: -860px;
-}
-
-.icon-16 {
-    font-size: 16px !important;
-    line-height: 16px !important;
-    height: 16px !important;
-    width: 16px !important;
-}
-
-.ml-5,
-.mx-5 {
-    margin-left: 1.25rem !important;
-}
-
-.mr-1,
-.mx-1 {
-    margin-right: 0.25rem !important;
-}
 
 .card-rating .font-size-h1,
 .card-rating .rating-group+div {
@@ -35,17 +14,6 @@
     font-size: 3.5rem !important;
 }
 
-.font-size-h1 {
-    font-size: 2rem !important;
-}
-
-.text-warning {
-    color: #ffa800 !important;
-}
-
-.font-weight-bolder {
-    font-weight: 600 !important;
-}
 
 .mb-2,
 .my-2 {
@@ -68,66 +36,16 @@
     display: flex !important;
 }
 
-.text-dark-75 {
-    color: #3e4347 !important;
-}
-
-.text-dark-75 {
-    color: #3f4254 !important;
-}
-
-.mr-1,
-.mx-1 {
-    margin-right: 0.25rem !important;
-}
-
-.icon-16 {
-    font-size: 16px !important;
-    line-height: 16px !important;
-    height: 16px !important;
-    width: 16px !important;
-}
-
-.text-dark-75 {
-    color: #3e4347 !important;
-}
-
-.text-dark-75 {
-    color: #3f4254 !important;
-}
-
-.mr-3,
-.mx-3 {
-    margin-right: 0.75rem !important;
-}
-
-.mr-20,
-.mx-20 {
-    margin-right: 5rem !important;
-}
-
 .progress.progress-xs {
     height: 0.5rem;
 }
 
-.text-muted {
-    color: #91919f !important;
-}
-
 .progress.progress-xs .progress-bar {
     border-radius: 0.28rem;
 }
 
-.bg-warning {
-    background-color: #ffa800 !important;
-}
-
 .progress.progress-xs .progress-bar {
     border-radius: 0.28rem;
-}
-
-.bg-warning {
-    background-color: #ffa800 !important;
 }
 
 // @media (prefers-reduced-motion: reduce)
@@ -153,17 +71,6 @@
 
 .d-flex {
     display: flex !important;
-}
-
-.icon-16 {
-    font-size: 16px !important;
-    line-height: 16px !important;
-    height: 16px !important;
-    width: 16px !important;
-}
-
-.text-muted {
-    color: #91919f !important;
 }
 
 .progress-bar {
@@ -311,9 +218,6 @@ div.offcanvas {
     color: #ff1e1e;
 }
 
-.card-rating .rating-group {
-    margin-left: 5px;
-}
 
 .rating-group {
     position: relative;
@@ -393,4 +297,8 @@ div.offcanvas {
 
 .dm-tab-properties .e-toolbar-items .e-active .e-tab-text {
     color: #166ACC !important;
+}
+
+.border-left {
+    border-left: 0.5px solid #ebeef1 !important;
 }
