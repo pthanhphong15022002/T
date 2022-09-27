@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
-import { FileUpload } from '@shared/models/file.model';
+import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation, Injector } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-import { AuthService, CacheService, CallFuncService, CodxService, DialogRef, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
+import { AuthService, DialogRef, ImageViewerComponent, LayoutService, SidebarModel, UserModel, LayoutBaseComponent, CallFuncService } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CodxDMService } from '../codx-dm.service';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
 
@@ -14,14 +13,15 @@ import { CreateFolderComponent } from '../createFolder/createFolder.component';
   styleUrls: ['./layout.component.scss'],
   encapsulation:ViewEncapsulation.None
 })
-export class LayoutComponent implements OnInit, AfterViewInit {
+export class LayoutComponent extends LayoutBaseComponent implements AfterViewInit {
   // Public variables
-  contentContainerClasses = '';
-  headerCSSClasses?: string;
-  headerHTMLAttributes: any = {};
-  headerLeft: string = 'menu';
-  asideDisplay: boolean = false;
-  asideCSSClasses?: string;
+  override contentContainerClasses = '';
+  override headerCSSClasses?: string;
+  override headerHTMLAttributes: any = {};
+  override headerLeft: string = 'menu';
+  override asideDisplay: boolean = false;
+  override toolbarFixed=false;
+  override asideCSSClasses?: string;
   disableInput = false;
   module = 'DM';
   dialog: DialogRef;
@@ -29,15 +29,12 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   itemHdd: any;
   submenu: string;
  // totalUsed: string;
-
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
   public titleHddUsed = 'Đã sử dụng 0MB trong tổng số 50.00 GB';
 
-  @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
-  @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
-  user: UserModel | null = null;
-
+  // @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
+  // @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
   public funcs$: Observable<any>;
 /*
 db.DM_FolderInfo.updateMany(
@@ -56,16 +53,14 @@ db.DM_FolderInfo.updateMany(
 //   }
 
   constructor(
-    private layout: LayoutService,
-    private auth: AuthService,
-    public codxService: CodxService,
-    public cache: CacheService,
-    private callfc: CallFuncService,
+    private injector: Injector,
     public dmSV: CodxDMService,
     private folderService: FolderService,
     private fileService: FileService,
+    private callfc:CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,    
   ) {
+    super(injector);
     this.codxService.init('DM');
     this.fileService.getTotalHdd().subscribe(item => {
       //  totalUsed: any;
@@ -76,7 +71,7 @@ db.DM_FolderInfo.updateMany(
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     // build view by layout config settings
     this.asideDisplay = this.layout.getProp('aside.display') as boolean;
     this.asideCSSClasses = this.layout.getStringCSSClasses('aside');
@@ -176,7 +171,7 @@ db.DM_FolderInfo.updateMany(
       return "progress-bar";
   }
 
-  ngAfterViewInit(): void {
+  onAfterViewInit(): void {
     if (this.codxHeader) {
       for (const key in this.headerHTMLAttributes) {
         if (this.headerHTMLAttributes.hasOwnProperty(key)) {
@@ -217,9 +212,9 @@ db.DM_FolderInfo.updateMany(
     this.callfc.openSide(CreateFolderComponent, data, option);
   }
 
-  public reloadAvatar(data: any): void {
-    this.imageViewer?.reloadImageWhenUpload();
-  }
+  // public reloadAvatar(data: any): void {
+  //   this.imageViewer?.reloadImageWhenUpload();
+  // }
 
   public contentResized(size: any) {
     // if(size){
