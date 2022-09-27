@@ -552,7 +552,7 @@ export class PopupAddSignFileComponent implements OnInit {
           if (res != null) {
             this.isSaved = true;
             this.dialogSignFile.patchValue(res);
-            if (this.attachment.fileUploadList.length > 0) {
+            if (this.attachment?.fileUploadList.length > 0) {
               this.attachment.objectId = res.recID;
               // this.attachment
               //   .addFileObservable(this.attachment.fileUploadList[0])
