@@ -71,6 +71,9 @@ export class CodxTasksComponent
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
+  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
+
+  
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
 
@@ -80,6 +83,7 @@ export class CodxTasksComponent
 
   model?: DataRequest;
   request: ResourceModel;
+  requestSchedule:ResourceModel ;
   requestTree: ResourceModel;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
@@ -150,11 +154,17 @@ export class CodxTasksComponent
 
   //#region Init
   onInit(): void {
+    // this.modelResource = new ResourceModel();
+    // this.modelResource.assemblyName = 'TM';
+    // this.modelResource.className = 'TaskBusiness';
+    // this.modelResource.service = 'TM';
+    // this.modelResource.method = 'GetUserByTasksAsync';
+
     this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'TM';
-    this.modelResource.className = 'TaskBusiness';
-    this.modelResource.service = 'TM';
-    this.modelResource.method = 'GetUserByTasksAsync';
+    this.modelResource.assemblyName = 'HR';
+    this.modelResource.className = 'OrganizationUnitsBusiness';
+    this.modelResource.service = 'HR';
+    this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
@@ -169,6 +179,15 @@ export class CodxTasksComponent
     this.request.method = 'GetTasksAsync';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
+
+    this.requestSchedule = new ResourceModel(); 
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.predicate ="Category=@0 and CreatedBy=@1";
+    this.requestSchedule.dataValue ='2;'+this.user.userID ;
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -219,23 +238,6 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '8',
-        type: ViewType.schedule,
-        active: false,
-        sameData: true,
-        request2: this.modelResource,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-          template: this.eventTemplate,
-          template3: this.cellTemplate,
-          statusColorRef: this.vllStatus,
-        },
-      },
-    ];
-
-    if (this.funcID == 'TMT03011') {
-      var calendar = {
         id: '7',
         type: ViewType.calendar,
         active: false,
@@ -247,9 +249,8 @@ export class CodxTasksComponent
           template3: this.cellTemplate,
           statusColorRef: this.vllStatus,
         },
-      };
-      this.viewsActive.push(calendar);
-    }
+      },
+    ];
 
     var viewDefaultID = '2';
     if (this.viewMode && this.viewMode.trim() != '') {
@@ -276,7 +277,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
@@ -348,7 +349,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -481,7 +482,7 @@ export class CodxTasksComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '800px';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
@@ -832,8 +833,34 @@ export class CodxTasksComponent
   //#endregion
   //#region Event
   changeView(evt: any) {
-    let idx = this.viewsActive.findIndex((x) => x.id === '16');
+    let idx = -1;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    idx = this.viewsActive.findIndex((x) => x.id === '8');
+    if (this.funcID != 'TMT0201') {
+      if (idx > -1) return;
+      var schedule = {
+        id: '8',
+        type: ViewType.schedule,
+        active: false,
+        sameData: false,
+        request:this.requestSchedule,
+        request2: this.modelResource,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template4: this.resourceHeader,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          statusColorRef: this.vllStatus,
+        },
+      };
+      this.viewsActive.push(schedule);
+    } else {
+      if (idx > -1) this.viewsActive.splice(idx, 1);
+    }
+
+    idx = this.viewsActive.findIndex((x) => x.id === '16');
     if (this.funcID == 'TMT0203') {
       if (idx > -1) return;
       var tree = {
@@ -854,13 +881,14 @@ export class CodxTasksComponent
           dataObj: null,
         },
         model: {
-          template: this.itemViewList,
+          template: this.treeView,
         },
       };
       this.viewsActive.push(tree);
     } else {
       if (idx > -1) this.viewsActive.splice(idx, 1);
     }
+    
   }
 
   requestEnded(evt: any) {}
@@ -1413,7 +1441,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
         [e?.data, 'view', this.isAssignTask],
@@ -1434,12 +1462,12 @@ export class CodxTasksComponent
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: { name: 'userID' },
+    resourceId: { name: 'owner' },//trung voi idField của resourceField
   };
   resourceField = {
     Name: 'Resources',
-    Field: 'userID',
-    IdField: 'userID',
+    Field: 'owner',
+    IdField: 'owner',
     TextField: 'userName',
     Title: 'Resources',
   };

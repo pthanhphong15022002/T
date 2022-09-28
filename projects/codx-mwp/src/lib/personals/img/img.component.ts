@@ -74,7 +74,6 @@ export class ImgComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
-    console.log('check listView', this.listView);
   }
 
   // getFile() {

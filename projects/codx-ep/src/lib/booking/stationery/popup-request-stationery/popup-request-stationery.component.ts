@@ -19,7 +19,6 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
-import { ES_SignFile } from 'projects/codx-es/src/public-api';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { tempResources } from '../../../models/EP_Resources.models';
 @Component({

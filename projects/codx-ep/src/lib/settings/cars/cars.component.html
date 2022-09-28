@@ -14,33 +14,21 @@
   [method]="method"
   (buttonClick)="click($event)"
   (selectedChange)="onSelect($event)"
-  (requestEnded)="closeDialog($event)"
 >
 
 <ng-template #resourceNameCol let-data>  
   <div class="d-flex flex-row align-items-center">
     <codx-img [objectId]="data.recID" [imageType]="'square'" width="50" [objectType]="formModel?.entityName"></codx-img>  
     <div class="ms-2 d-flex flex-column">
-      <span class="fw-bold">{{data.resourceName}}</span>
+      <span class="fw-bold">{{data.resourceName}} - {{data.code}}</span>
       <div class="d-flex flex-row">
-        <span class="text-gray-600">Phân loại:</span>
+        <codx-label default="Phân loại:" name="lblCategory" class="text-gray-600"></codx-label>
         <span class="fw-bold ms-1">{{ data.ranking| vll: "EP005" : 'text' | async}}</span>
       </div>
       <div class="d-flex flex-row">
-        <span class="text-gray-600">Chỗ ngồi:</span>
+        <codx-label default="Chỗ ngồi:" name="lblCategory" class="text-gray-600"></codx-label>
         <span class="fw-bold ms-1">{{ data.capacity}}</span>
       </div>
-      <!-- <div class="d-flex flex-row">
-        <div>
-          <span class="text-gray-600">Diện tích:</span>
-          <span class="fw-bold ms-1">{{data.area}} m2</span>
-        </div>
-        <span class="text-gray-600">&ensp;|&ensp;</span>
-        <div>
-          <span class="text-gray-600">Sức chứa:</span>
-          <span class="fw-bold ms-1">{{data.capacity}} người</span>
-        </div>
-      </div> -->
     </div>
   </div>  
 </ng-template>
@@ -126,7 +114,7 @@
     </div>      
     <codx-mfunc
       [dataItem]="data"
-      [formModel]="viewBase.formModel"
+      [formModel]="formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
     ></codx-mfunc>
@@ -141,7 +129,7 @@
     </div>      
     <codx-mfunc
       [dataItem]="data"
-      [formModel]="viewBase.formModel"
+      [formModel]="formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
     ></codx-mfunc>

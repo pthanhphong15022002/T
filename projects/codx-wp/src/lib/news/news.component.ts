@@ -135,8 +135,11 @@ export class NewsComponent implements OnInit {
     option.IsFull = true;
     let modal =  this.callfc.openForm(PopupAddComponent,'',0,0,'',newsType,'',option);
     modal.closed.subscribe((res:any) => {
-      if(!res?.event){
-         this.loadDataAync(this.funcID,this.category); // sau này có xét duyệt thì bỏ đi
+      if(res?.event){
+        let dataNew = res.event;
+        this.lstHotNew.pop();
+        this.lstHotNew.unshift(dataNew);
+        this.changedt.detectChanges();
       }
       })
   }

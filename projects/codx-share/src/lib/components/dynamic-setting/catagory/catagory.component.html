@@ -37,14 +37,14 @@
   <div class="list-item" [ngClass]="collapse ? ' d-none' : ''" [attr.data-group]="data.refLineID">
     <div class="d-flex justify-content-between">
       <div class="d-flex flex-column">
-        <div class="fs-6 fw-bold text-dark mb-1">
+        <div class="fs-6 fw-bold text-dark">
           {{ data.tilte }}
         </div>
-        <div class="text-muted">
+        <div class="text-gray-500">
           {{ data.description }}
         </div>
       </div>
-      <div class="d-flex align-items-center ms-4">
+      <div class="d-flex align-items-top ms-4">
         <codx-input [style]="
             data.controlType == 'TextBox' || data.controlType == 'Combobox'
               ? 'width: 200px'
@@ -55,23 +55,28 @@
           [checked]="dataValue[data.fieldName] == '1'" [crrValue]="dataValue[data.fieldName] || ''"
           (valueChange)="valueChange($event)">
         </codx-input>
-        <a [routerLink]="
+        <div class="w-30px setting-btnright ms-2">
+          <a [routerLink]="
             data.reference ? '../../../../' + data.reference : 'detail'
           " [state]="{
             setting: setting | group: data.recID:'2',
             function: function,
             dataValue: dataValue[data.fieldName],
             urlOld: urlOld
-          }" *ngIf="data.displayMode === '1'"><span class="icon-keyboard_arrow_right icon-20 ms-6"></span></a>
-        <a href="javascript:void(0)" (click)="openPopup($event, data.reference, data.fieldName)"
-          *ngIf="data.displayMode === '2'"><span class="icon-edit-one icon-20 ms-3"></span></a>
-        <a href="javascript:void(0)" *ngIf="data.displayMode === '3'" (click)="collapseItem($event, data.recID)"><span
-            class="icon-keyboard_arrow_right icon-20 ms-3 button-collapse" [attr.data-id]="data.recID"></span></a>
-        <ng-container *ngIf="data.displayMode === '4' || data.displayMode === '5'">
-          <codx-input type="Share" [refValue]="data.refValue" field="popup" [dataShared]="[]" [showInput]="false"
-            [listCombobox]="data.reference" [multiple]="data.displayMode === '5'">
-          </codx-input>
-        </ng-container>
+          }" *ngIf="data.displayMode === '1'"> <span class="w-30px d-flex justify-content-center"><span
+                class="icon-keyboard_arrow_right icon-22"></span></span></a>
+          <a href="javascript:void(0)" (click)="openPopup($event, data.reference, data.fieldName)"
+            *ngIf="data.displayMode === '2'"><span class="w-30px d-flex justify-content-center"><span
+                class="icon-edit-one icon-20"></span></span></a>
+          <a href="javascript:void(0)" *ngIf="data.displayMode === '3'" (click)="collapseItem($event, data.recID)"><span
+              class="w-30px d-flex justify-content-center"><span class="icon-keyboard_arrow_right icon-22"
+                [attr.data-id]="data.recID"></span></span></a>
+          <ng-container *ngIf="data.displayMode === '4' || data.displayMode === '5'">
+            <codx-input type="Share" [refValue]="data.refValue" field="popup" [dataShared]="[]" [showInput]="false"
+              [listCombobox]="data.reference" [multiple]="data.displayMode === '5'">
+            </codx-input>
+          </ng-container>
+        </div>
       </div>
     </div>
     <hr *ngIf="!isGroup" />

@@ -155,7 +155,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
-        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnGrids = [
             {
@@ -204,7 +204,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
             {
               sameData: true,
               id: '1',
-              text: 'Danh mục xe',
+              text: 'Danh mục lái xe',
               type: ViewType.grid,
               active: true,
               model: {
@@ -262,7 +262,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
 
   edit(obj?) {
     if (obj) {
-      this.viewBase.dataService.dataSelected = obj;
+      this.viewBase.dataService.dataSelected.data = obj;
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
         .subscribe((res) => {
@@ -331,7 +331,5 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
+  
 }

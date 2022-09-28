@@ -119,7 +119,7 @@ export class AddNoteComponent implements OnInit {
       if (res) this.functionList = res;
     });
     if (this.component == 'note-drawer') {
-      if (this.formType == 'add') this.currentDate = new Date(Date.now());
+      if (this.formType == 'add') this.currentDate = new Date();
       else
         this.currentDate = JSON.parse(
           JSON.stringify(dt.data?.dataUpdate?.createdOn)

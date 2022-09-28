@@ -147,7 +147,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     };
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
-        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnGrids = [
             {
@@ -194,9 +194,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
           ];
           this.views = [
             {
-              sameData: true,
-              id: '1',
-              text: 'Danh mục xe',
+              sameData: true,              
               type: ViewType.grid,
               active: true,
               model: {
@@ -204,7 +202,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               },
             },
           ];
-          this.detectorRef.detectChanges();
         });
     });
     this.detectorRef.detectChanges();
@@ -254,7 +251,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
 
   edit(obj?) {
     if (obj) {
-      this.viewBase.dataService.dataSelected = obj;
+      this.viewBase.dataService.dataSelected.data = obj;
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
         .subscribe((res) => {
@@ -286,8 +283,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     if (obj) {
       this.viewBase.dataService.delete([obj], true).subscribe((res) => {
         if (res) {          
-          this.api
-          .execSv(
+          this.api.execSv(
             'DM',
             'ERM.Business.DM',
             'FileBussiness',
@@ -316,7 +312,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
+  // closeDialog(evt?) {
+  //   this.dialog && this.dialog.close();
+  // }
 }

@@ -22,9 +22,7 @@ import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
-import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { CodxAdComponent } from './codx-ad.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { PopupContactComponent } from './company-setting/popup-contact/popup-contact.component';
 import { ViewUsersComponent } from './users/view-users/view-users.component';
@@ -36,12 +34,13 @@ import { SharedModule } from '@shared/shared.module';
 import { RolesComponent } from './Roles/home/home.component';
 import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
 import { RoleDetailComponent } from './Roles/detail/detail.component';
-import { AsideroledetailComponent } from './_layout/asideroledetail/asideroledetail.component';
+import { AsideroledetailComponent } from './Roles/asideroledetail/asideroledetail.component';
 import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
 import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 
 export const routes: Routes = [
   {
@@ -72,10 +71,6 @@ export const routes: Routes = [
         path: 'roles/:funcID',
         component: RolesComponent,
       },
-      {
-        path: 'roledetails/:funcID',
-        component: RoleDetailComponent,
-      },
     ],
   },
   {
@@ -89,6 +84,16 @@ export const routes: Routes = [
       {
         path: 'accountinfo/:funcID',
         component: CompanySettingComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
+      {
+        path: 'roledetails/:funcID',
+        component: RoleDetailComponent,
       },
     ],
   },
