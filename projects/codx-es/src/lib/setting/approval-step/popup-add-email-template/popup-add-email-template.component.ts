@@ -117,6 +117,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       this.isInside = false;
     });
   }
+  ngAfterViewInit(): void {}
 
   click() {
     this.isInside = true;
