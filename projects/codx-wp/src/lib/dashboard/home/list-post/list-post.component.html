@@ -142,7 +142,7 @@
         </div>
       </div>
       <ng-container *ngIf="moreFunc && moreFuncTmp ;else defaultMoreFunc">
-        <ng-container *ngTemplateOutlet="moreFuncTmp"></ng-container>
+        <ng-container *ngTemplateOutlet="moreFuncTmp;context: { $implicit: item }"></ng-container>
       </ng-container>
       <ng-template #defaultMoreFunc>
         <div class="more">
