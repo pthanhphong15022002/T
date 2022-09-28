@@ -14,7 +14,7 @@ export class AppConfigService extends AppConfig {
   }
 
   load() {
-    return this.http.get<AppConfig>('appconfig.json').pipe(map(res => {
+    return this.http.get<AppConfig>('assets/config/config.json').pipe(map(res => {
       this.apiUrl = res.apiUrl;
       environment.apiUrl = res.apiUrl;
       environment.shopping = res.shopping;
