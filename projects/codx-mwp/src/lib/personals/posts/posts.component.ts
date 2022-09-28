@@ -51,8 +51,6 @@ export class PostsComponent implements OnInit {
     a.instance.predicateWP = `CreatedBy="${this.user?.userID}" && Category="1" && Stop="false"`;
     a.instance.isShowCreate = false;
     a.instance.formModel = this.formModel;
-    a.instance.moreFunc = true;
-    a.instance.moreFuncTmp = this.moreFC;
   }
 
   removePost(e) {
