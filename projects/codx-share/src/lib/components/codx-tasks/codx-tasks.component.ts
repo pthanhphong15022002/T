@@ -189,7 +189,7 @@ export class CodxTasksComponent
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
       this.modelResource.method = 'GetListUserByResourceAsync';
-      this.modelResource.dataObj = this.dataObj
+      this.modelResource.dataValue = this.dataObj?.resources
     }
    
     this.resourceKanban = new ResourceModel();
