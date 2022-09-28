@@ -5,18 +5,13 @@ export const environment = {
   dfPe: '',
   appVersion: 'v101lv',
   TNDATA_KEY: 'tnf649fc9a5f55',
-  //apiUrl: 'https://codx.com.vn',
   apiUrl: 'http://172.16.7.34:8011',
-  // shopping: 'https://register.codx.com.vn/shopping',
   librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
   pdfUrl: 'http://172.16.7.34:8015/api/pdf',
   shopping: 'http://172.16.7.34:8111/Shopping',
-  // librOfficeUrl: 'http://172.16.7.33:9980/loleaflet/2afbc52/loleaflet.html',
   urlUpload: 'http://172.16.1.210:8011',
-  //public urlThumbnail = 'http://192.168.18.36:8011/api/';
   urlTenant: '',
   urlThumbnail: 'http://172.16.1.210:8011',
-  //public urlFile = 'http://192.168.18.36:8011/api/';
   urlFile: 'http://172.16.1.210:8011',
   appName: 'hps-file-test', // Tam thoi de hard
   StoreNames: {
