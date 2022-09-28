@@ -342,4 +342,12 @@ export class ApproveComponent extends UIComponent {
   clickBtnAdd() {
 
   }
+
+  setStyles(data:any) {
+    let styles = {
+      backgroundColor: data,
+      color: 'white',
+    };
+    return styles;
+  }
 }
