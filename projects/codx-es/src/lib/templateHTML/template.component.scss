@@ -1,0 +1,16 @@
+.step-default .step-number {
+  color: #c9c9d4 !important;
+}
+.step-approve .step-number {
+  color: #1bc5bd !important;
+}
+.step-pending .step-number {
+  color: #ffa800 !important;
+}
+.codx-approval-foreground {
+  .codx-approval-step::after {
+    content: "";
+    background-color: transparent;
+    width: 0px;
+  }
+}

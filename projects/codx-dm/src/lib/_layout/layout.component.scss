@@ -288,3 +288,8 @@ ejs-switch .form-control {
   padding-left: 18px;
   padding-right: 18px;
 }
+
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
+}

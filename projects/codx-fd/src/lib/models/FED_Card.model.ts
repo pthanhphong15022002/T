@@ -49,6 +49,7 @@ export class FED_Card {
     shareds: string;
     transType: string;
     tagType: string;
+    shareControl:string;
     listShare:any[];
     objectType:string ="";
 
