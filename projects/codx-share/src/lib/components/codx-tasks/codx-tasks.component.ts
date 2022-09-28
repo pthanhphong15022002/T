@@ -867,10 +867,11 @@ export class CodxTasksComponent
       if (this.funcID == 'TMT0203') {
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
-        
       } else {
         this.requestSchedule.predicate = 'Category=@0 or Category=@1';
         this.requestSchedule.dataValue = '1;2';      
+       
+        this.dataObj = null;
       }
       if (idx > -1) return;
       var schedule = {
