@@ -56,9 +56,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     COMMENTS: "2",
     FEEDBACK: "3",
     SHARE: "4",
-    PICTURES: "9",
-    VIDEO: "10",
-    FILE: "1"
   }
   SHARECONTROLS = {
     OWNER: "1",
