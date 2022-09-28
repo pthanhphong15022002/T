@@ -222,7 +222,7 @@ export class RoomsComponent extends UIComponent {
   //   });
   // });
     this.view.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.view.dataService.dataSelected.data;
+      this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view?.dataService;

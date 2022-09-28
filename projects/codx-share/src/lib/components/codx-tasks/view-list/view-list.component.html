@@ -6,8 +6,8 @@
   <div class="w-50px min-w-50px">
     <div class="d-flex align-items-center">
       <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''"></span>
-      <span [class]="data?.priority | vll: 'L0186':'icon' | async" [style.color]="
-                  data?.priority | vll: 'L0186':'textColor' | async
+      <span [class]="data?.priority | vll: vllPriority:'icon' | async" [style.color]="
+                  data?.priority | vll: vllPriority:'textColor' | async
                     ">
       </span>
     </div>

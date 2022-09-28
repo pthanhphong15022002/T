@@ -251,7 +251,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
 
   edit(obj?) {
     if (obj) {
-      this.viewBase.dataService.dataSelected.data = obj;
+      this.viewBase.dataService.dataSelected = obj;
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
         .subscribe((res) => {
