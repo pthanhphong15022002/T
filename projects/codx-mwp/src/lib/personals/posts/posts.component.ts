@@ -15,7 +15,14 @@ export class PostsComponent implements OnInit {
   user: any;
 
   @ViewChild('lstComment', { read: ViewContainerRef }) lstComment!: ViewContainerRef;
-  moreFuncTmp:TemplateRef<any>;
+  @ViewChild('moreFC') moreFC :TemplateRef<any>;
+  formModel = {
+    entityName: 'WP_Comments',
+    entityPermission: 'WP_Comments',
+    gridViewName: 'grvWPComments',
+    formName: 'WPComments',
+    funcID: 'WP',
+  }
 
   viewComponents: ViewsComponent;
 
@@ -40,19 +47,15 @@ export class PostsComponent implements OnInit {
   }
 
   loadListPostComponent() { 
-    var formModel = {
-      entityName: 'WP_Comments',
-      entityPermission: 'WP_Comments',
-      gridViewName: 'grvWPComments',
-      formName: 'WPComments',
-      funcID: 'WP',
-    }
     var a = this.lstComment.createComponent(ListPostComponent);
     a.instance.predicateWP = `CreatedBy="${this.user?.userID}" && Category="1"`;
     a.instance.isShowCreate = false;
-    a.instance.formModel = formModel;
+    a.instance.formModel = this.formModel;
     a.instance.moreFunc = true;
-    a.instance.moreFuncTmp = this.moreFuncTmp;
+    a.instance.moreFuncTmp = this.moreFC;
   }
 
+  removePost(e) {
+    
+  }
 }
