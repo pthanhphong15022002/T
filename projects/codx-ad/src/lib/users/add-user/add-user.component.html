@@ -28,7 +28,7 @@
           loadFull="true" *ngIf="formType == 'edit'">
         </codx-input>
         <codx-input type="combobox" refValue="EmployeeUser" field="employeeID" [crrValue]="adUser.employeeID"
-          (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true" *ngIf="formType == 'add'">
+          (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true" *ngIf="formType == 'add' || formType == 'copy'">
         </codx-input>
       </div>
     </div>
@@ -65,7 +65,7 @@
         [disabled]="!adUser.email ? false : true" *ngIf="formType == 'edit'">
       </codx-input>
       <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChangeM($event)"
-        [disabled]="false" *ngIf="formType == 'add'">
+        [disabled]="false" *ngIf="formType == 'add' || formType == 'copy'">
       </codx-input>
     </div>
     <div class="form-group col-6 pe-0">

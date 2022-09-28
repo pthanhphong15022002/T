@@ -1,3 +1,4 @@
+import { PopupAddQuotaComponent } from './settings/stationery/popup-add-quota/popup-add-quota.component';
 import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -137,6 +138,7 @@ const Components: Type<any>[] = [
   PopupAddStationeryComponent,
   PopupAddDriversComponent,
   PopupAddEpCardsComponent,
+  PopupAddQuotaComponent,
   StationeryComponent,
   CarsComponent,
   DriversComponent,

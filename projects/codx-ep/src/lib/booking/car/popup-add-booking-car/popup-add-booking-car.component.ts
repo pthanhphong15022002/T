@@ -100,6 +100,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   driver: any;
   smallListPeople = [];
   editCarDevice = null;
+  tmpTitle='';
   tempArray = [];
   constructor(
     private injector: Injector,
@@ -111,17 +112,18 @@ export class PopupAddBookingCarComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogRef?.dataService?.dataSelected;
+    this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
+    this.tmpTitle = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
   }
   onInit(): void {
     this.initForm();  
-    if (!this.isAdd) {
-      this.titleAction = 'Chỉnh sửa';
-    }      
+    // if (!this.isAdd) {
+    //   this.titleAction = 'Chỉnh sửa';
+    // }      
     if (this.isAdd) {
       this.data.attendees= 1;
       this.data.bookingOn = new Date();  
@@ -209,7 +211,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.detectorRef.detectChanges();       
   }
   setTitle(e: any) {
-    this.title = this.titleAction + ' ' + e.toString().toLowerCase();
+    this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
   }
 

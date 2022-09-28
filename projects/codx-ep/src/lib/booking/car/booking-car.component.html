@@ -13,7 +13,6 @@
   [idField]="idField"
   [className]="className"
   [method]="method"
-  (requestEnded)="closeEditForm($event)"
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
@@ -93,24 +92,20 @@
 </ng-template>
 
 <ng-template #resourceHeader let-data>
-  <div class="container">
-    <div class="row">
-      <div class="col-4">
-        <div>
-          <codx-img
-            objectId="data.resourceData.resourceID"
-            [width]="30"
-          ></codx-img>
-        </div>
+  <div class="d-flex flex-row ms-5 align-items-center">
+    <codx-img [objectId]="data.resourceData.recID" [imageType]="'square'" [width]="50" [objectType]="'EP_Cars'"></codx-img>  
+    <div class="ms-2 d-flex flex-column">
+      <span class="fw-bold">{{data?.resourceData.resourceName}} - {{data?.resourceData.code}}</span>
+      <div class="d-flex flex-row">
+        <codx-label default="Phân loại:" name="lblCategory" class="text-gray-600"></codx-label>
+        <span class="fw-bold ms-1">{{ data.resourceData.ranking| vll: "EP005" : 'text' | async}}</span>
       </div>
-      <div class="col-8">
-        <div>
-          {{ data.resourceData.resourceName }} ({{ data.resourceData.events }})
-        </div>
-        <div>{{ data.resourceData.companyID }}</div>
+      <div class="d-flex flex-row">
+        <codx-label default="Chỗ ngồi:" name="lblCategory" class="text-gray-600"></codx-label>
+        <span class="fw-bold ms-1">{{ data.resourceData.capacity}}</span>
       </div>
     </div>
-  </div>
+  </div>  
 </ng-template>
 
 <ng-template #resourceTootip let-data>

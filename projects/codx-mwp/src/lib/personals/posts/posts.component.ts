@@ -48,7 +48,7 @@ export class PostsComponent implements OnInit {
       funcID: 'WP',
     }
     var a = this.lstComment.createComponent(ListPostComponent);
-    a.instance.predicateWP = `(CreatedBy="${this.user?.userID}")`;
+    a.instance.predicateWP = `CreatedBy="${this.user?.userID}" && Category="1"`;
     a.instance.isShowCreate = false;
     a.instance.formModel = formModel;
     a.instance.moreFunc = true;

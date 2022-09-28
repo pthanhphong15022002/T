@@ -50,6 +50,7 @@ export class PopupAddSprintsComponent implements OnInit {
   imageUpload: UploadFile = new UploadFile();
   showLabelAttachment = false;
   isHaveFile = false;
+  customName = '' ;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
@@ -70,6 +71,11 @@ export class PopupAddSprintsComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) {
+        this.customName = f?.customName ;
+      }
+    });
     if (this.funcID == 'TMT0301') this.master.iterationType == '1';
     else if (this.funcID == 'TMT0302') this.master.iterationType == '0';
     this.sprintDefaut = this.dialog.dataService.data[0];
@@ -245,12 +251,7 @@ export class PopupAddSprintsComponent implements OnInit {
       var service = e.component?.service;
 
       this.api
-        .exec<any>(
-          service,
-          'ProjectsBusiness',
-          'GetProjectByIDAsync',
-          e?.data
-        )
+        .exec<any>(service, 'ProjectsBusiness', 'GetProjectByIDAsync', e?.data)
         .subscribe((res) => {
           if (res) this.master.iterationName = res?.projectName;
         });
