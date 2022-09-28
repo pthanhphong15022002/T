@@ -41,7 +41,6 @@
               },
               "src/favicon.ico",
               "src/assets",
-              "src/appconfig.json",
               {
                 "glob": "**/*",
                 "input": "node_modules/codx-core/assets/media",
@@ -150,8 +149,7 @@
                 "output": "/assets/"
               },
               "src/favicon.ico",
-              "src/assets",
-              "src/appconfig.json"
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss"
