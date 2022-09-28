@@ -1,4 +1,4 @@
-<codx-views #codxViews 
+<codx-views #codxViews
 [views]="views" 
 [autoLoad]="false" 
 [idField]="'recID'">
@@ -99,9 +99,8 @@
                     </div>
                     <div class="box-body">
                         <div class="history-box">
-                            <codx-listview 
+                            <codx-listview
                                 [itemTemplate]="tmpHistoryCoins" #listviewCoins 
-                                [pageSize]=10 
                                 service="FD"
                                 assemblyName="ERM.Business.FD" 
                                 className="KudosTransBusiness"
