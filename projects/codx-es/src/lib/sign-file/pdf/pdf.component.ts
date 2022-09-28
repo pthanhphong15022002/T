@@ -56,6 +56,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
   @ViewChild('ngxPdfView') ngxPdfView: NgxExtendedPdfViewerComponent;
+
   // @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
   // @ViewChild('itemTmpl') itemTmpl: TemplateRef<any>;
 
@@ -180,12 +181,14 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   onInit() {
     this.esService.getSignFormat().subscribe((res: any) => {
-      this.signPerRow = res.signPerRow;
-      this.align = res.align;
-      this.direction = res.direction;
-      this.areaControl = res.areaControl == '1';
-      this.isAwait = res.await == '1';
-      this.allowEdit = res.allowEditAreas ? res.allowEditAreas : true;
+      this.signPerRow = res.SignPerRow;
+      this.align = res.Align;
+      this.direction = res.Direction;
+      this.areaControl = res.AreaControl == '1';
+      this.isAwait = res.Await == '1';
+      this.allowEdit = res.AllowEditAreas ? res.AllowEditAreas : true;
+      console.log('format', res);
+
       this.detectorRef.detectChanges();
     });
 
@@ -442,6 +445,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   loadedPdf(e: any) {
     this.pageMax = e.pagesCount;
     console.log('page max', this.pageMax);
+    let ngxService: NgxExtendedPdfViewerService =
+      new NgxExtendedPdfViewerService();
+    ngxService.addPageToRenderQueue(this.pageMax);
   }
 
   saveToDB(tmpArea: tmpSignArea) {
@@ -533,6 +539,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   lstLayer: Map<number, Konva.Layer> = new Map();
   //          <pageNumber, Layer>
+  pageW = 0;
+  pageH = 0;
   pageRendered(e: any) {
     let rendedPage = Array.from(document.getElementsByClassName('page'))?.find(
       (ele) => {
@@ -554,7 +562,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       if (warpper) {
         warpper.appendChild(virtual);
         canvasBounds = (warpper.firstChild as Element).getBoundingClientRect();
-
+        this.pageW = canvasBounds.width;
+        this.pageH = canvasBounds.height;
         let stage = new Konva.Stage({
           container: id,
           id: id,
@@ -760,41 +769,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           this.maxTopDiv = div;
         }
       });
-      // let tmpArea: tmpSignArea = {
-      //   signer: 'authorID',
-      //   labelType: '1',
-      //   labelValue: '',
-      //   isLock: false,
-      //   allowEditAreas: this.allowEdit,
-      //   signDate: false,
-      //   dateFormat: '1',
-      //   location: {
-      //     top: (this.maxTop + 33) / this.yScale,
-      //     left: 10 / this.xScale,
-      //     width: this.xScale,
-      //     height: this.yScale,
-      //     pageNumber: this.pageMax - 1,
-      //   },
-      //   stepNo: 1,
-      //   fontStyle: '',
-      //   fontFormat: '',
-      //   fontSize: 14,
-      //   signatureType: 2,
-      //   comment: '',
-      //   createdBy: 'authorID',
-      //   modifiedBy: 'authorID',
-      //   recID: 'recID',
-      // };
-      // this.addArea(
-      //   'https://webbachthang.com/wp-content/uploads/2017/12/avatar-la-gi-01.jpg',
-      //   'img',
-      //   1,
-      //   true,
-      //   false,
-      //   'ADMIN',
-      //   1,
-      //   tmpArea
-      // );
+
       console.log('max div', this.maxTopDiv);
     }
   }
@@ -1163,21 +1138,120 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
 
   autoSign() {
-    console.log('lst signer', this.lstSigners);
-
+    //da co vung ky
     let lstSigned = this.lstAreas.filter((area) => {
       return area.signer && ['1', '2', '8'].includes(area.labelType);
     });
-    console.log('lst signed', lstSigned);
 
+    //lst da ky id
     let lstSignedID = [];
     lstSigned.forEach((area) => lstSignedID.push(area.signer));
-    console.log('lst signedid', lstSignedID);
 
+    //lst chua ky
     let lstUnsign = this.lstSigners.filter((signer) => {
       return !lstSignedID.includes(signer.authorID);
     });
-    console.log('lst unsign', lstUnsign);
+
+    //create sign area
+    let areaW = (this.pageW - 20) / this.signPerRow;
+    let imgW = areaW > 220 ? 200 : areaW;
+
+    let unsignIdx = [];
+    for (let index = 0; index < this.signPerRow; index++) {
+      unsignIdx.push(areaW * index + 10);
+    }
+    //can le
+    switch (this.align) {
+      //can trai
+      case '2': {
+        break;
+      }
+
+      //can phai
+      case '3': {
+        let moveR = areaW - imgW;
+        unsignIdx = unsignIdx.map((area) => {
+          return area + moveR;
+        });
+        break;
+      }
+
+      //can giua
+      default: {
+        let moveC = areaW - imgW;
+        unsignIdx = unsignIdx.map((area) => {
+          return area + moveC / 2;
+        });
+        break;
+      }
+    }
+    //chieu chu ky
+    if (this.direction == '2') {
+      unsignIdx = unsignIdx.reverse();
+    }
+    lstUnsign.forEach((person, idx) => {
+      let recID = Guid.newGuid();
+      let url = '';
+      let labelType = '';
+      switch (person.signType) {
+        //chu ky
+        case 'S2': {
+          url = person.signature;
+          labelType = '1';
+          break;
+        }
+
+        //con dau
+        case 'S3': {
+          url = person.stamp;
+          labelType = '2';
+          break;
+        }
+
+        default: {
+          break;
+        }
+      }
+      if (url != '' && labelType != '') {
+        let tmpName: tmpAreaName = {
+          Signer: person.authorID,
+          Type: 'img',
+          PageNumber: this.curPage - 1,
+          StepNo: person.stepNo,
+          LabelType: labelType,
+        };
+        let img = document.createElement('img') as HTMLImageElement;
+        img.setAttribute('crossOrigin', 'anonymous');
+        img.src = url;
+        img.onload = () => {
+          console.log(person);
+
+          let imgArea = new Konva.Image({
+            image: img,
+            width: imgW,
+            height: 100,
+            x: unsignIdx[idx],
+            y: this.maxTop + 10,
+            id: recID,
+            name: JSON.stringify(tmpName),
+            draggable: true,
+          });
+          imgArea.scale({ x: this.xScale, y: this.yScale });
+
+          // this.saveNewToDB(
+          //   '',
+          //   'img',
+          //   '1',
+          //   person.authorID,
+          //   person.stepNo,
+          //   imgArea
+          // );
+
+          let layer = this.lstLayer.get(this.pageMax);
+          layer?.add(imgArea);
+        };
+      }
+    });
   }
 
   //pop up
