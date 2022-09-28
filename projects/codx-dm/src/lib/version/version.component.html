@@ -55,7 +55,7 @@
 
           <ng-container *ngIf="fileEditing && fileEditing.history">
               <ng-container *ngFor="let file of fileEditing.history">
-                  <ng-container *ngIf="file.fileName != '' && file.fileName != null">
+                  <ng-container *ngIf="file.fileName">
                     <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
                     <ng-template #simple>
                         <codx-temp-full 
@@ -63,13 +63,20 @@
                             imgCss="w-30px me-3"
                             [title]="file?.fileName" 
                             [subTitleTmp]="cardImgFooter"
-                            [descLine]="1">
+                            [descLine]="1"
+                            class="py-2"
+                        >
                         </codx-temp-full>
                     </ng-template>
                     <ng-template #full>
-                        <codx-temp-full imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" imgCss="w-30px me-3"
-                            title="{{file.fileName}}" [subTitleTmp]="cardImgFooter"
-                            [descLine]="1">
+                        <codx-temp-full 
+                            imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" 
+                            imgCss="w-30px me-3"
+                            title="{{file.fileName}}" 
+                            [subTitleTmp]="cardImgFooter"
+                            [descLine]="1"
+                            class="py-2"
+                        >
                         </codx-temp-full>
                     </ng-template>
                     <ng-template #cardImgFooter let-data>

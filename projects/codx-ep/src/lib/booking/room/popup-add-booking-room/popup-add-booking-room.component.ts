@@ -41,6 +41,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('form') form: any;
 
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
@@ -354,6 +355,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm() {
+    this.data.requester=this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
       this.codxEpService.notifyInvalid(

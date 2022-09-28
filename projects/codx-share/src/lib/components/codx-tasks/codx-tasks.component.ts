@@ -188,7 +188,8 @@ export class CodxTasksComponent
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+      this.modelResource.method = 'GetListUserByResourceAsyncLogic';
+      this.modelResource.dataObj = this.dataObj
     }
    
     this.resourceKanban = new ResourceModel();
