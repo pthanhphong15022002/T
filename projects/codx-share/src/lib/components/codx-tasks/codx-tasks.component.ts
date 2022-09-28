@@ -861,7 +861,7 @@ export class CodxTasksComponent
         this.dataValueResource = '2;' + this.user.userID;
       } else if (this.funcID == 'TMT0202') {
         this.predicateResource = 'Category=@0 or Category=@1';
-        this.dataValueResource = '1;2';   
+        this.dataValueResource = '1;2';       
       }
       if (idx > -1) return;
       var schedule = {
