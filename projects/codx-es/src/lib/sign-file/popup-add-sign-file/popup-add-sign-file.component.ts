@@ -102,7 +102,7 @@ export class PopupAddSignFileComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.formModelCustom = data?.data?.formModel;
-    this.data = data?.data?.option?.DataService.dataSelected?.data || {};
+    this.data = data?.data?.option?.DataService.dataSelected || {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
