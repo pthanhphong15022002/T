@@ -35,7 +35,6 @@ import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add
 export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
-  @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
   @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
@@ -156,9 +155,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
-    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
+    this.view.dataService.methodDelete = 'DeleteBookingAsync';
+    this.view.dataService.methodSave = 'AddEditItemAsync';
+    this.view.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
         sameData: false,
@@ -240,9 +239,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'btnDelete':
         this.delete();
         break;
-      case 'btnAddReport':
-        this.addReport();
-        break;
+      // case 'btnAddReport':
+      //   this.addReport();
+      //   break;
     }
   }
   clickMF(event, data) {
@@ -281,27 +280,27 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         break;
     }
   }
-  addReport() {
-    let option = new DialogModel();
-    option.DataService = this.viewBase.dataService;
-    option.FormModel = this.viewBase.formModel;
-    this.callfc.openForm(
-      PopupAddReportComponent,
-      '',
-      screen.width,
-      screen.height,
-      this.funcID,
-      null,
-      '',
-      option
-    );
-  }
+  // addReport() {
+  //   let option = new DialogModel();
+  //   option.DataService = this.view.dataService;
+  //   option.FormModel = this.view.formModel;
+  //   this.callfc.openForm(
+  //     PopupAddReportComponent,
+  //     '',
+  //     screen.width,
+  //     screen.height,
+  //     this.funcID,
+  //     null,
+  //     '',
+  //     option
+  //   );
+  // }
   addNew(evt?) {
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
+    this.view.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.dataService;
+      option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingRoomComponent,
@@ -313,29 +312,29 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      this.viewBase.dataService.dataSelected = evt;
-      this.viewBase.dataService
-        .edit(this.viewBase.dataService.dataSelected)
+      this.view.dataService.dataSelected = evt;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          this.dataSelected = this.viewBase.dataService.dataSelected;
+          this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
-          option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.viewBase?.formModel;
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
           this.dialog = this.callFuncService.openSide(
             PopupAddBookingRoomComponent,
-            [this.viewBase.dataService.dataSelected, false,this.popupTitle],
+            [this.view.dataService.dataSelected, false,this.popupTitle],
             option
           );
         });
     }
   }
   delete(evt?) {
-    let deleteItem = this.viewBase.dataService.dataSelected;
+    let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
     }
-    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {
       console.log(res);
     });
   }  

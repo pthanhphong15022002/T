@@ -141,14 +141,14 @@ export class CodxReportViewerComponent
     if (event.value === 'Excel Template') {
       let reportItem;
       this.api.exec("SYS",
-      "ReportBusiness",
-      "GetReportInfoAsync",
+      "ReportListBusiness",
+      "GetByReportIDAsync",
        this.reportUUID).subscribe(res => {
         reportItem = res;
         let gridModel = new DataRequest();
         gridModel.formName = "";
         gridModel.entityName = reportItem.entityName;
-        gridModel.funcID = "";
+        gridModel.funcID = this.reportUUID;
         gridModel.gridViewName = "";
         gridModel.page = 0;
         gridModel.pageSize = 5000;

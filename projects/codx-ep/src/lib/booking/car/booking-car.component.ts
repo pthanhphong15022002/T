@@ -27,14 +27,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
 
+  showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Bookings';
-  predicate = 'ResourceType=@0';
-  dataValue = '2';
-  idField = 'RecID';
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
+  idField = 'recID';
+  predicate = 'ResourceType=@0';
+  dataValue = '2';
   formModel: FormModel;
   modelResource?: ResourceModel;
   request?: ResourceModel;

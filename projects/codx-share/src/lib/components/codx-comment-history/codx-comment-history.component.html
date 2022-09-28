@@ -29,7 +29,7 @@
 </ng-container>
 <!-- COMMENT -->
 <ng-template #C>
-    <div class="position-relative py-2 send-comt aqua">
+    <div class="position-relative pb-3 px-5 send-comt">
         <ng-container *ngIf="type=='create'; else modView">
             <div class="d-flex align-items-center">
                 <div class="me-3">
@@ -94,7 +94,7 @@
     </div>
     <ng-template #modView>
         <ng-container *ngIf="data">
-            <div class="d-flex mt-4">
+            <div class="d-flex">
                 <div class="me-2" *ngIf="viewIcon">
                     <img class="iconHistory" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
                 </div>

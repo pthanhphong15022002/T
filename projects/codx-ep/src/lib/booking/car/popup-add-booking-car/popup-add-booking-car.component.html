@@ -1,8 +1,8 @@
 <codx-layout-add
-#form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]="" 
-[footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd"
-[tabContent]="[tabGeneralInfo, tabPeopleInfo,tabMoreInfo]" (setTitle)="setTitle($event)"
-[data]="data" 
+  #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]="" 
+  [footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd" (setTitle)="setTitle($event)"
+  [tabContent]="[tabGeneralInfo, tabPeopleInfo,tabMoreInfo]" 
+  [data]="data" *ngIf="isAfterRender"
 >
   <ng-template #tabGeneralInfo>
     <div class="form-group">
@@ -38,11 +38,15 @@
                 class="me-1 ps-2"
                 [ngClass]="[
                 item.isSelected ? 'text-primary' : 'text-muted',
-                item.id != '0'
-                  ? '{{item.icon}}'
-                  : '{{item.icon}}'
-                  
-              ]"
+                item.id == '1'
+                ? 'icon-wifi'
+                : item.id == '2'
+                ? 'icon-personal_video'
+                : item.id == '3'
+                ? 'icon-mic_none'
+                : item.id == '4'
+                ? 'icon-switch_video'
+                : ' icon-thermostat']"
               >
               </span
               >{{ item?.text }}

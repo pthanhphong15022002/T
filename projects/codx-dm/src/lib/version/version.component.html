@@ -41,30 +41,42 @@
             type="textarea" format="ed2" style="width:100%" [crrValue]="comment"
             (valueChange)="txtValue($event, 'comment')"></codx-input>              
           </div>
-          <div class="modal-main">
+          <div class="modal-main py-2">
               <div *ngIf="this.updateversion" class="d-flex align-items-center file-item mt-1">
-                  <img alt="" class="max-h-35px mr-2"
-                      src="../../../assets/codx/dms/{{dmSV.getAvatar(fileEditing.extension)}}">
-                  <div class="d-flex flex-column flex-grow-1">
-                      <span class="text-dark">{{fileEditing.fileName}}</span>
-                  </div>
+                <codx-temp-full 
+                    [imageSrc]="'../../../assets/codx/dms/'+dmSV.getAvatar(fileEditing.extension)"
+                    [imageWidth]="30"
+                    imgCss="w-30px me-3"
+                    [title]="fileEditing.fileName"
+                >
+                </codx-temp-full>
               </div>
           </div>         
 
-          <ng-container *ngIf="fileEditing != null && fileEditing.history != null">
+          <ng-container *ngIf="fileEditing && fileEditing.history">
               <ng-container *ngFor="let file of fileEditing.history">
-                  <ng-container *ngIf="file.fileName != '' && file.fileName != null">
+                  <ng-container *ngIf="file.fileName">
                     <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
                     <ng-template #simple>
-                        <codx-temp-full imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" imgCss="w-35px me-3"
-                            title="{{file.fileName}}" [subTitleTmp]="cardImgFooter"
-                            [descLine]="1">
+                        <codx-temp-full 
+                            imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" 
+                            imgCss="w-30px me-3"
+                            [title]="file?.fileName" 
+                            [subTitleTmp]="cardImgFooter"
+                            [descLine]="1"
+                            class="py-2"
+                        >
                         </codx-temp-full>
                     </ng-template>
                     <ng-template #full>
-                        <codx-temp-full imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" imgCss="w-35px me-3"
-                            title="{{file.fileName}}" [subTitleTmp]="cardImgFooter"
-                            [descLine]="1">
+                        <codx-temp-full 
+                            imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" 
+                            imgCss="w-30px me-3"
+                            title="{{file.fileName}}" 
+                            [subTitleTmp]="cardImgFooter"
+                            [descLine]="1"
+                            class="py-2"
+                        >
                         </codx-temp-full>
                     </ng-template>
                     <ng-template #cardImgFooter let-data>

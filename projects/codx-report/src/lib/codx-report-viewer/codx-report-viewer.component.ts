@@ -31,6 +31,7 @@ import {
   NotificationsService,
   SidebarModel,
 } from 'codx-core';
+import { PopupParametersComponent } from '../popup-parameters/popup-parameters.component';
 
 @Component({
   selector: 'report-viewer',
@@ -56,16 +57,6 @@ export class CodxReportViewerComponent implements OnInit, AfterViewInit,OnChange
   missingLabel = '';
   param: any = {};
   user: any;
-  menuItems: MenuItemModel[] = [
-    {
-      id: 'param',
-      text: 'Tham số hiển thị',
-      iconCss: 'icon-playlist_add text-muted',
-    },
-    {
-      separator: true,
-    },
-  ];
   toolbarContainerCssClasses: string = '';
   maxPin: number = 5;
   dialog: DialogRef;
@@ -121,4 +112,49 @@ export class CodxReportViewerComponent implements OnInit, AfterViewInit,OnChange
       this.print = false;
     }, 10000);
   }
+  public addDisabled  (args: MenuEventArgs) {
+    if (args.item.text === 'Link') {
+        args.element.classList.add('e-disabled');
+    }
+}
+
+  openParamDialog(){
+    this.dialog = this.callfc.openForm(
+      PopupParametersComponent,"Tham số hiển thị",400,600,"",
+      [this.lstParamsNotGroup, this.maxPin],""
+    );
+  this.dialog.closed.subscribe(res=> {
+    res.event && this.loadParams();
+    })
+  }
+  onCreated(): void {
+    if (Browser.isDevice) {
+        this.contextmenu.animationSettings.effect = 'ZoomIn';
+    } else {
+        this.contextmenu.animationSettings.effect = 'SlideDown';
+    }
+}
+private loadParams(){
+  this.objParam = this.param = {};
+  this.api.exec<any>(
+    "SYS",
+    "ReportParametersBusiness",
+    "GetReportParamAsync",
+    this.reportUUID
+  ).subscribe(res=>{
+    if(res.parameters && res.parameters.length > 0){
+      for(let i =0;i< res.parameters.length;i++){
+        if(!res.parameters[i].dependences){
+          res.parameters[i].isEnable = true;
+        }
+      }
+    }
+      this.lstParamsNotGroup = res.parameters;
+      this.lstPined = res.parameters.filter(x=> x.isPin == true);
+      if(res.maxPin){
+        this.maxPin = parseInt(JSON.parse(res.maxPin.dataValue)['MaxPin']);
+      }
+  });
+}
+
 }

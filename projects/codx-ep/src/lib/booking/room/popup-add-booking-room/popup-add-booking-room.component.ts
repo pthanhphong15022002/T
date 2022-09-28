@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Injector,
+  Input,
   Optional,
   Output,
   ViewChild,
@@ -40,10 +41,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('form') form: any;
 
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
-
+  @Input() data!: any;
   fGroupAddBookingRoom: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
@@ -58,6 +60,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     optional: boolean;
     modifiedOn: string;
   };
+  dataUserCbb: any = new Array();
   attendeesList = [];
   tmpAttendeesList = [];
   grvBookingRoom: any;
@@ -88,6 +91,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   beginMinute = 0;
   endHour = 24;
   endMinute = 59;
+  isPopupCbb=true;
   tempDate = new Date();
   // subHeaderText = 'Đặt phòng họp';
   // titleAction = 'Thêm mới';
@@ -127,7 +131,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   funcID: string;
   isAdd = false;
   range: any;
-  data: any = {};
   isSaveSuccess = false;
   constructor(
     private injector: Injector,
@@ -151,9 +154,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   onInit(): void {    
     this.initForm();    
-    // if(!this.isAdd) {
-    //   this.titleAction = 'Chỉnh sửa';
-    // }  
       this.cacheService.valueList('EP012').subscribe((res) => {
         this.vllDevices = res.datas;
         this.vllDevices.forEach((item) => {
@@ -195,8 +195,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
         if (!this.isAdd) {
           if (this.data?.hours == 24) {
-            this.isFullDay = true;
-  
+            this.isFullDay = true;  
             this.detectorRef.detectChanges();
           }
           let tmpStartTime=new Date(this.data?.startDate);
@@ -222,18 +221,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.detectorRef.detectChanges();
       }
 
-      if (!this.isAdd) {
-        // if (this.data.attachments > 0) {
-        //   this.codxEpService
-        //     .getFiles(
-        //       this.formModel.funcID,
-        //       this.data.recID,
-        //       this.formModel.entityName
-        //     )
-        //     .subscribe((res) => {
-        //       console.log('get file', res);
-        //     });
-        // }
+      if (!this.isAdd) {        
         this.apiHttpService
           .callSv(
             'EP',
@@ -306,13 +294,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.fGroupAddBookingRoom = item;        
-        this.isAfterRender = true;        
-        console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingRoom);        
+        if(item){
+          this.fGroupAddBookingRoom = item;        
+          this.isAfterRender = true;   
+          this.fGroupAddBookingRoom.patchValue(item);     
+        }     
       });   
       this.detectorRef.detectChanges();       
   }
   ngAfterViewInit(): void {
+   
     if (this.dialogRef) {
       if (!this.isSaveSuccess) {
         this.dialogRef.closed.subscribe((res: any) => {
@@ -364,6 +355,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm() {
+    this.data.requester=this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
       this.codxEpService.notifyInvalid(
@@ -776,4 +768,33 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.attachments= event.data.length;
   }
   fileCount(event: any) {}
+  openPopupCbb() {
+    this.isPopupCbb = !this.isPopupCbb;
+  }
+  checkOpenCbbPopup = 0;
+  getDataUserInCbb(event) {
+    this.checkOpenCbbPopup++;
+    if (event?.dataSelected) {
+      if (
+        this.checkOpenCbbPopup >= 2
+        
+      ) {
+        if (this.dataUserCbb) {
+          let i = 0;
+          event?.dataSelected.forEach((dt) => {
+            this.dataUserCbb.forEach((x) => {
+              if (dt.UserID == x.userID) {
+                event?.dataSelected.splice(i, 1);
+              }
+            });
+            i++;
+          });
+        }
+      }
+      event?.dataSelected.forEach((e: any) => {
+        this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
+      });
+      this.detectorRef.detectChanges();
+    }
+  }
 }
