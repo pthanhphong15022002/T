@@ -48,8 +48,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -261,6 +260,20 @@ export class CodxTasksComponent
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
+        },
+      },
+      {
+        id: '8',
+        type: ViewType.schedule,
+        active: false,
+        sameData: true,
+        request2: this.modelResource,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          statusColorRef: this.vllStatus,
         },
       },
       {
@@ -770,8 +783,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -923,7 +936,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
