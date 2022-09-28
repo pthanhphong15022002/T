@@ -26,6 +26,8 @@ export class CardsComponent extends UIComponent {
   itemSelected: any = null;
   cardType = "";
   funcID:string = "";
+  selectedID:string = "";
+  grdViewSetup:any = null;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
@@ -59,7 +61,6 @@ export class CardsComponent extends UIComponent {
     ];
   }
 
-  selectedID:string = "";
   selectedItem(event: any) {
     if(!event || !event.data){
       this.selectedID = "";
