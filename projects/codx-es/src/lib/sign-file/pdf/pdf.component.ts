@@ -56,8 +56,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
   @ViewChild('ngxPdfView') ngxPdfView: NgxExtendedPdfViewerComponent;
-  @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
-  @ViewChild('itemTmpl') itemTmpl: TemplateRef<any>;
+  // @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
+  // @ViewChild('itemTmpl') itemTmpl: TemplateRef<any>;
 
   //core
   dialog: import('codx-core').DialogRef;
@@ -220,8 +220,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           }
           this.curFileID = sf?.files[0]?.fileID;
           this.curFileUrl = res.urls[0];
-          this.curSignerID = res.approvers[0]?.authorID;
-          this.curSignerRecID = res.approvers[0]?.recID;
+          this.curSignerID = this.signerInfo?.authorID;
+          this.curSignerRecID = this.signerInfo?.recID;
         }
         this.detectorRef.detectChanges();
       });
@@ -321,6 +321,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       });
     this.tr.remove();
     let layerChildren = this.lstLayer.get(area.location.pageNumber + 1);
+
     this.tr.resizeEnabled(
       this.isDisable ? false : area.allowEditAreas ? true : area.isLock
     );
@@ -418,8 +419,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       this.esService
         .updateSignFileTrans(
           imgUrl.replace('data:image/png;base64,', ''),
-          x,
-          y,
+          x / this.xScale,
+          y / this.yScale,
           width,
           height,
           this.pageMax,
@@ -511,9 +512,20 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
             this.curSelectedArea = this.lstLayer
               .get(tmpArea.location.pageNumber + 1)
               .find((child) => child.id() == tmpArea.recID);
-            this.lstAreas.push(tmpArea);
+            this.esService
+              .getSignAreas(
+                this.recID,
+                this.fileInfo.fileID,
+                this.isApprover,
+                this.user.userID
+              )
+              .subscribe((res) => {
+                if (res) {
+                  this.lstAreas = res;
+                  this.detectorRef.detectChanges();
+                }
+              });
             console.log('ket qua luu', this.lstAreas);
-            this.detectorRef.detectChanges();
           }
         });
     }
@@ -573,7 +585,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           lstAreaOnPage?.forEach((area) => {
             let isRender = false;
             if (
-              !this.isApprover ||
+              (!this.isApprover && !area.isLock) ||
               (this.isApprover &&
                 area.signer == this.curSignerID &&
                 area.stepNo == this.stepNo)
@@ -1129,22 +1141,44 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
 
   changeSuggestState(e: any) {
+    console.log('goi y trang ky', e);
+
     this.needSuggest = e.data;
     if (this.needSuggest) {
-      if (this.isDisable) {
-        this.curPage = this.pageMax;
-      }
+      this.curPage = this.pageMax;
       // else {
       //   this.pdfviewerControl.navigation.goToLastPage();
       //   this.pdfviewerControl.scrollSettings.delayPageRequestTimeOnScroll = 300;
       // }
     }
   }
+
   changeAutoSignState(e: any, mode: number) {
-    console.log('change changeAutoSignState chua lam');
     this.autoSignState = e.data;
+    if (this.autoSignState) {
+      console.log('change changeAutoSignState dang lam', this.autoSignState);
+      this.curPage = this.pageMax;
+      this.autoSign();
+    }
   }
-  //button
+
+  autoSign() {
+    console.log('lst signer', this.lstSigners);
+
+    let lstSigned = this.lstAreas.filter((area) => {
+      return area.signer && ['1', '2', '8'].includes(area.labelType);
+    });
+    console.log('lst signed', lstSigned);
+
+    let lstSignedID = [];
+    lstSigned.forEach((area) => lstSignedID.push(area.signer));
+    console.log('lst signedid', lstSignedID);
+
+    let lstUnsign = this.lstSigners.filter((signer) => {
+      return !lstSignedID.includes(signer.authorID);
+    });
+    console.log('lst unsign', lstUnsign);
+  }
 
   //pop up
   openPopUpCAProps(ca) {
