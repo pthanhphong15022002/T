@@ -196,9 +196,8 @@ export class UserComponent extends UIComponent {
   copy(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
-
     }
-    this.view.dataService.addNew().subscribe((res: any) => {
+    this.view.dataService.copy().subscribe((res: any) => {
       data.userID = this.view.dataService.dataSelected?.userID
       var obj = {
         formType: 'copy',
