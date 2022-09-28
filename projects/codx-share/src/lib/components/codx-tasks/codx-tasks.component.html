@@ -26,10 +26,12 @@
   </share-view-list>
 </ng-template>
 
-<ng-template *ngIf="funcID == 'TMT0203'" #treeView>
+<ng-template *ngIf="funcID == 'TMT0203'" #treeView let-data>
   <share-tree-view
     [formModel]="view.formModel"
     [vllStatus]="vllStatus"
+    [data]="data"
+    [listRoles]="listRoles"
     (clickMoreFunction)="receiveMF($event)"
   >
   </share-tree-view>
@@ -43,7 +45,7 @@
     [typeMF]="'hover'"
     [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
     [icoStatus2]="data?.priority"
-    [icoStatusVll2]="'L0186'"
+    [icoStatusVll2]="vllPriority"
     [imageId]="data.createdBy"
     [imageWidth]="35"
     imgCss="me-3"
@@ -67,7 +69,7 @@
     [typeMF]="'hover'"
     [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''"
     [icoStatus2]="data?.priority"
-    [icoStatusVll2]="'L0186'"
+    [icoStatusVll2]="'TM005'"
     [title]="data.userName"
     [subTitle]="data.positionName"
     [content]="data.taskName"
@@ -87,7 +89,7 @@
 
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div class="d-flex flex-column flex-grow-1 mt-2">
-    <div class="d-flex align-items-center mb-2">
+    <div *ngIf="setting?.tags" class="d-flex align-items-center mb-2">
       <codx-tag
         [entityName]="view.formModel.entityName"
         [disabled]="true"
@@ -111,7 +113,10 @@
 
     <!--begin::Item-->
     <div class="d-flex justify-content-between align-items-end mt-2">
-      <div class="d-flex align-items-end me-2 codx-badge">
+      <div
+        *ngIf="setting?.countObjects"
+        class="d-flex align-items-end me-2 codx-badge"
+      >
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-mode_comment icon-20 text-gray-400"></span>
           <span
@@ -180,7 +185,7 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div  [style.color]="data.status | vll: vllStatus:'textColor' | async">
+  <div [style.color]="data.status | vll: vllStatus:'textColor' | async">
     <div>{{ data.taskName }}</div>
   </div>
 </ng-template>
@@ -217,6 +222,7 @@
       [openDelay]="500"
     >
       <codx-imgs
+        [isToolTip]="false"
         [width]="25"
         [objectId]="data?.assignTo"
         objectType="AD_Users"
@@ -302,6 +308,17 @@
   </div>
 </ng-template>
 
+<ng-template #resourceHeader let-data>
+  <div  class="container">
+    <codx-temp-full
+      [imageId]="data.resourceData?.owner"
+      [title]="data.resourceData.userName"
+      [subTitle]="data.resourceData.postionName"
+      [content]="data.resourceData.events + ' công việc'"
+    >
+    </codx-temp-full>
+  </div>
+</ng-template>
 <codx-views
   #view
   [service]="service"
@@ -311,7 +328,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]=" showButtonAdd? button : ''"
+  [button]="showButtonAdd ? button : ''"
   (buttonClick)="click($event)"
   (viewChanged)="changeView($event)"
   (requestEnded)="requestEnded($event)"

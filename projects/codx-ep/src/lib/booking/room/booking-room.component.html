@@ -1,5 +1,5 @@
 <codx-views
-#base
+#view
 [funcID]="funcID"
 [service]="service"
 [assemblyName]="assemblyName"
@@ -13,13 +13,11 @@
 [idField]="idField"
 [className]="className"
 [method]="method"
-(requestEnded)="closeEditForm($event)"
 (selectedChange)="changeItemDetail($event)"
 [selectedFirst]="true"
 [autoLoad]="true"
 
 >
-</codx-views>
 
 <ng-template #chart>
   <room-dashboard></room-dashboard>
@@ -34,28 +32,29 @@
 </ng-template>
 
 <ng-template #resourceHeader let-data>
-  <div class="container">
-    <div class="row">
-      <div class="col-4">
-        <div>
-          <codx-img
-            [objectId]="data.resourceData.recID"
-            [objectType]="'EP_Rooms'"
-            [width]="50"
-          ></codx-img>
-        </div>
+  <div class="d-flex flex-row ms-5 align-items-center">
+    <codx-img [objectId]="data?.resourceData.recID" [imageType]="'square'" width="50" [objectType]="'EP_Rooms'"></codx-img>  
+    <div class="ms-2 d-flex flex-column">
+      <span class="fw-bold">{{data?.resourceData.resourceName}}</span>
+      <div class="d-flex flex-row">
+        <codx-label default="Phân loại:" [formModel]="formModel" name="lblRanking" class="text-gray-600"></codx-label>
+        <span class="fw-bold ms-1">{{ data?.resourceData.ranking| vll: "EP005" : 'text' | async}}</span>
       </div>
-      <div class="col-8">
+      <div class="d-flex flex-row">
         <div>
-          {{ data.resourceData.resourceName }} ({{ data.resourceData.events }})
+          <codx-label default="Diện tích:" name="lblArea" class="text-gray-600"></codx-label>
+          
+          <span class="fw-bold ms-1">{{data?.resourceData.area}} m2</span>
         </div>
-        <div>{{ data.resourceData.companyID }}</div>
-        <div class="row">
-          <span>{{ data.resourceData.location }}</span>
+        <span class="text-gray-600">&ensp;|&ensp;</span>
+        <div>
+          <codx-label default="Sức chứa:" name="lblCapacity" class="text-gray-600"></codx-label>
+          
+          <span class="fw-bold ms-1">{{data?.resourceData.capacity}} người</span>
         </div>
       </div>
     </div>
-  </div>
+  </div> 
 </ng-template>
 <!-- <ng-template #resourceTootip let-data>
   <div class="template-wrap">
@@ -260,8 +259,9 @@
   [date]="data?.createdOn"
   [imageId]="data?.createdBy"
   imageObjType="AD_Users"
+  
   [resources]="data?.bookingAttendees"
-  resourceObjType="AD_Users"
+  
   [titleLine]="2"
   [dataItem]="data"
   [formModel]="formModel"
@@ -285,3 +285,5 @@
   ></booking-room-view-detail>
 </ng-template>
 <ng-template #footerTmp let-data> </ng-template>
+
+</codx-views>

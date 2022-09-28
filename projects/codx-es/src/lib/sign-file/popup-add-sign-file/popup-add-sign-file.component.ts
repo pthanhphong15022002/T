@@ -102,7 +102,7 @@ export class PopupAddSignFileComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.formModelCustom = data?.data?.formModel;
-    this.data = data?.data?.option?.DataService.dataSelected || {};
+    this.data = data?.data?.option?.DataService.dataSelected?.data || {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
@@ -141,6 +141,7 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.oSignFile) {
       this.esService.getFormModel('EST011').then((formModel) => {
         this.formModelCustom = formModel;
+
         let sf = this.esService
           .getSFByID(this.oSignFile.recID)
           .subscribe((signFile) => {
@@ -167,9 +168,9 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.formModelCustom.entityName,
                   'recID'
                 )
-                .subscribe((dataDefault) => {
+                .subscribe((dataDefault: any) => {
                   if (dataDefault) {
-                    this.data = dataDefault;
+                    this.data = dataDefault.data;
                     this.data.recID = this.oSignFile.recID;
                     this.data.title = this.oSignFile.title;
                     this.data.categoryID = this.oSignFile.categoryID;
@@ -298,6 +299,7 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   initForm1() {
+    this.esService.loadDataCbx('ES');
     const user = this.auth.get();
     this.esService.getEmployee(this.user?.userID).subscribe((emp) => {
       if (emp) {
@@ -330,7 +332,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.approveControl = '3';
               this.data.refDate = new Date();
 
-              this.autoNo = JSON.parse(JSON.stringify(this.data.refNo));
+              this.autoNo = JSON.parse(JSON.stringify(this.data?.refNo));
 
               this.formModelCustom.currentData = this.data;
               this.dialogSignFile.patchValue(this.data);

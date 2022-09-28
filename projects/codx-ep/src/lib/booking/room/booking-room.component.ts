@@ -35,7 +35,6 @@ import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add
 export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
-  @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('report') report: TemplateRef<any>;
   @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
@@ -68,10 +67,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   fields: any;
   resourceField: any;
   funcID: string;
+  popupTitle='';
   lstPined: any = [];
   titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
   itemDetail;
+  funcIDName;
   formModel: FormModel;
   constructor(
     private injector: Injector,
@@ -86,6 +87,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
+        
+      }
+    });
+    this.cache.functionList(this.funcID).subscribe(res => {
+      if (res) {            
+        this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
   }
@@ -148,9 +155,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
-    this.viewBase.dataService.methodSave = 'AddEditItemAsync';
-    this.viewBase.dataService.methodUpdate = 'AddEditItemAsync';
+    this.view.dataService.methodDelete = 'DeleteBookingAsync';
+    this.view.dataService.methodSave = 'AddEditItemAsync';
+    this.view.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
         sameData: false,
@@ -174,10 +181,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         },
       },
       {
-        id: '2',
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.panelRight,
@@ -185,11 +191,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       },
       {
         sameData: true,
-        id: '3',
         type: ViewType.content,
         active: false,
-        text: 'Chart',
-        icon: 'icon-bar_chart',
         model: {
           panelLeftRef: this.chart,
         },
@@ -225,6 +228,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   valueChange(evt: any, a?: any, type?: any) {}
 
   click(evt: ButtonModel) {
+    this.popupTitle=evt?.text + " " + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -235,12 +239,13 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'btnDelete':
         this.delete();
         break;
-      case 'btnAddReport':
-        this.addReport();
-        break;
+      // case 'btnAddReport':
+      //   this.addReport();
+      //   break;
     }
   }
   clickMF(event, data) {
+    this.popupTitle=event?.text + " " + this.funcIDName;
     switch (event?.functionID) {
       case 'EPT40101': //duyet
         this.edit(data);
@@ -275,31 +280,31 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         break;
     }
   }
-  addReport() {
-    let option = new DialogModel();
-    option.DataService = this.viewBase.dataService;
-    option.FormModel = this.viewBase.formModel;
-    this.callfc.openForm(
-      PopupAddReportComponent,
-      '',
-      screen.width,
-      screen.height,
-      this.funcID,
-      null,
-      '',
-      option
-    );
-  }
+  // addReport() {
+  //   let option = new DialogModel();
+  //   option.DataService = this.view.dataService;
+  //   option.FormModel = this.view.formModel;
+  //   this.callfc.openForm(
+  //     PopupAddReportComponent,
+  //     '',
+  //     screen.width,
+  //     screen.height,
+  //     this.funcID,
+  //     null,
+  //     '',
+  //     option
+  //   );
+  // }
   addNew(evt?) {
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
+    this.view.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
-      option.DataService = this.viewBase?.dataService;
+      option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingRoomComponent,
-        [this.dataSelected, true],
+        [this.dataSelected, true,this.popupTitle],
         option
       );
     });
@@ -307,36 +312,30 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      this.viewBase.dataService.dataSelected = evt;
-      this.viewBase.dataService
-        .edit(this.viewBase.dataService.dataSelected)
+      this.view.dataService.dataSelected = evt;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          this.dataSelected = this.viewBase.dataService.dataSelected;
+          this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
-          option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.viewBase?.formModel;
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
           this.dialog = this.callFuncService.openSide(
             PopupAddBookingRoomComponent,
-            [this.viewBase.dataService.dataSelected, false],
+            [this.view.dataService.dataSelected, false,this.popupTitle],
             option
           );
         });
     }
   }
   delete(evt?) {
-    let deleteItem = this.viewBase.dataService.dataSelected;
+    let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
     }
-    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {
       console.log(res);
     });
-  }
-
-  closeEditForm(evt?: any) {
-    if (evt) {
-      this.dialog && this.dialog.close();
-    }
-  }
+  }  
 }

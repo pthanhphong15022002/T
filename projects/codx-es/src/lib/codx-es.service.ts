@@ -992,8 +992,34 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(vcW, vcH, stepNo, isAwait, userID, sfID, mode, comment) {
-    let data = [vcW, vcH, stepNo, isAwait, userID, sfID, mode, comment];
+  updateSignFileTrans(
+    imgUrl,
+    x,
+    y,
+    width,
+    height,
+    page,
+    stepNo,
+    isAwait,
+    userID,
+    sfID,
+    mode,
+    comment
+  ) {
+    let data = [
+      imgUrl,
+      x,
+      y,
+      width,
+      height,
+      page,
+      stepNo,
+      isAwait,
+      userID,
+      sfID,
+      mode,
+      comment,
+    ];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
@@ -1045,6 +1071,25 @@ export class CodxEsService {
       'EmployeesBusiness',
       'GetEmpUsers',
       userID
+    );
+  }
+
+  loadDataCbx(
+    service: string,
+    dataRequest: DataRequest = null
+  ): Observable<any> {
+    if (dataRequest == null) {
+      dataRequest = new DataRequest();
+      dataRequest.comboboxName = 'DataViewItems';
+      dataRequest.page = 1;
+      dataRequest.pageSize = 10;
+    }
+    return this.api.execSv(
+      service,
+      'ERM.Business.CM',
+      'DataBusiness',
+      'LoadDataCbxAsync',
+      [dataRequest]
     );
   }
 }

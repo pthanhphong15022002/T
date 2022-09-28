@@ -26,7 +26,6 @@ import { PopupAddRoomsComponent } from './popup-add-rooms/popup-add-rooms.compon
   styleUrls: ['rooms.component.scss'],
 })
 export class RoomsComponent extends UIComponent {
-  @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
 
   @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
@@ -59,24 +58,32 @@ export class RoomsComponent extends UIComponent {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-
-  tempCompanyName = '';
+  moreFunc:any;
+  funcIDName:any;
+  afterViewInit = false;
+  popupTitle='';
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
-    this.codxEpService.getFormModel(this.funcID).then((res) => {
-      if (res) {
-        this.formModel = res;
-      }
-    });
+          
   }
 
   onInit(): void {
-    //this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-   
+    //this.view.dataService.methodDelete = 'DeleteResourceAsync';
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;        
+        this.cache.functionList(this.funcID).subscribe(res => {
+          if (res) {            
+            this.funcIDName = res.customName.toString().toLowerCase();
+          }
+        });
+      }
+    });
+    
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -86,17 +93,16 @@ export class RoomsComponent extends UIComponent {
         this.roomEquipments.push(device);
         this.roomEquipments = JSON.parse(JSON.stringify(this.roomEquipments));
       });
-    });
-    
+    });    
   }
 
   ngAfterViewInit(): void {
     this.buttons = {
       id: 'btnAdd',
-    };
+    };    
     this.codxEpService.getFormModel(this.funcID).then((formModel) => {
       this.cache
-        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.columnGrids = [
             {
@@ -144,14 +150,12 @@ export class RoomsComponent extends UIComponent {
           this.views = [
             {
               sameData: true,
-              id: '1',
-              text: 'Danh mục phòng',
               type: ViewType.grid,
               active: true,
               model: {
                 resources: this.columnGrids,
               },
-            },
+            },            
           ];
           this.detectorRef.detectChanges();
         });
@@ -174,37 +178,21 @@ export class RoomsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  // getEquiqments(equipments: any) {
-  //   equipments.map((res) => {
-  //     this.vllDevices.forEach((device) => {
-  //       if (res.equipmentID == device.value) {
-  //         this.lstDevices.push(device.text);
-  //       }
-  //     });
-  //   });
-  //   return this.lstDevices.join(';');
-  // }
-  // getCompanyName(companyID: string) {
-  //   this.codxEpService.getCompanyName(companyID).subscribe((res) => {
-  //     if (res.msgBodyData[0]) {
-  //       this.tempCompanyName = res.msgBodyData[0];
-  //     }
-  //   });
-  //   return this.tempCompanyName;
-  // }
-
   clickMF(event, data) {
     console.log(event);
+    this.popupTitle=event?.text + " " + this.funcIDName;      
     switch (event?.functionID) {
-      case 'SYS03':
+      case 'SYS03':        
         this.edit(data);
         break;
       case 'SYS02':
         this.delete(data);
         break;
+
     }
   }
   click(evt: ButtonModel) {
+    this.popupTitle=evt?.text + " " + this.funcIDName;  
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -219,15 +207,29 @@ export class RoomsComponent extends UIComponent {
   }
 
   addNew() {
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
+  //   this.view.dataService.addNew().subscribe((res: any) => {
+  //   this.dataSelected = this.view.dataService.dataSelected;
+  //   let option = new SidebarModel();
+  //   option.DataService = this.view?.dataService;
+  //   option.FormModel = this.view?.formModel;
+  //   option.Width = '550px';
+  //   this.dialog = this.callfc.openSide(PopupAddRoomsComponent, this.dataSelected, option);
+  //   this.dialog.closed.subscribe((e) => {
+  //     if (e?.event) {
+  //       e.event.modifiedOn = new Date();
+  //       this.view.dataService.update(e.event).subscribe();
+  //     }
+  //   });
+  // });
+    this.view.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.dataService;
+      option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
-        [this.dataSelected, true],
+        [this.dataSelected, true,this.popupTitle],
         option
       );
     });
@@ -235,18 +237,18 @@ export class RoomsComponent extends UIComponent {
 
   edit(obj?) {
     if (obj) {
-      this.viewBase.dataService.dataSelected = obj;
-      this.viewBase.dataService
-        .edit(this.viewBase.dataService.dataSelected)
+      this.view.dataService.dataSelected = obj;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          this.dataSelected = this.viewBase.dataService.dataSelected;
+          this.dataSelected = this.view?.dataService?.dataSelected;
           let option = new SidebarModel();
           option.Width = '550px';
-          option.DataService = this.viewBase?.dataService;
+          option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddRoomsComponent,
-            [this.viewBase.dataService.dataSelected, false],
+            [this.view.dataService.dataSelected, false,this.popupTitle],
             option
           );
         });
@@ -254,9 +256,9 @@ export class RoomsComponent extends UIComponent {
   }
 
   delete(obj?) {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
-      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+      this.view.dataService.delete([obj], true).subscribe((res) => {
         if (res) {          
           this.api
           .execSv(
@@ -274,7 +276,7 @@ export class RoomsComponent extends UIComponent {
   }
 
   // delete(data?) {
-  //   this.viewBase.dataService.delete([data], true, (opt) => {
+  //   this.view.dataService.delete([data], true, (opt) => {
   //       opt.service = 'EP';
   //       opt.assemblyName = 'ERM.Business.EP';
   //       opt.className = 'ResourcesBusiness';
@@ -298,7 +300,7 @@ export class RoomsComponent extends UIComponent {
   //     });
   // }
 
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
+  // closeDialog(evt?) {
+  //   this.dialog && this.dialog.close();
+  // }
 }

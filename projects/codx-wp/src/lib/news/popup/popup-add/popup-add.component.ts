@@ -48,6 +48,7 @@ export class PopupAddComponent implements OnInit {
   shareText: string = "";
   shareWith: String = "";
   permissions: Permission[] = [];
+  messageImage: string = "";
 
   NEWSTYPE = {
     POST: "1",
@@ -96,8 +97,7 @@ export class PopupAddComponent implements OnInit {
     @Optional() dialogRef?: DialogRef
 
   ) {
-
-    this.newsType = dd.data.type;
+    this.newsType = dd.data;
     if (this.newsType != this.NEWSTYPE.POST) {
       this.isVideo = false;
     }
@@ -108,7 +108,6 @@ export class PopupAddComponent implements OnInit {
   }
 
 
-  messageImage: string = "";
   ngOnInit(): void {
     this.cache.message('WP017').subscribe((mssg: any) => {
       if (mssg) this.messageImage = Util.stringFormat(mssg.defaultName);
@@ -125,41 +124,8 @@ export class PopupAddComponent implements OnInit {
       this.shareControl = this.SHARECONTROLS.EVERYONE;
     });
     this.tagName = "";
-    this.shareControl = this.SHARECONTROLS.EVERYONE;
-    this.myPermission = new Permission();
-    this.myPermission.objectType = this.SHARECONTROLS.OWNER;
-    this.myPermission.memberType = this.MEMBERTYPE.CREATED;
-    this.myPermission.objectID = this.user.userID;
-    this.myPermission.objectName = this.user.userName;
-    this.myPermission.create = true;
-    this.myPermission.update = true;
-    this.myPermission.delete = true;
-    this.myPermission.upload = true;
-    this.myPermission.download = true;
-    this.myPermission.assign = true;
-    this.myPermission.share = true;
-    this.myPermission.read = true;
-    this.myPermission.isActive = true;
-    this.myPermission.createdBy = this.user.userID;
-    this.myPermission.createdOn = new Date();
-    // appover 
-    this.apprPermission = new Permission();
-    this.apprPermission.objectType = this.SHARECONTROLS.ADMINISTRATOR;
-    this.apprPermission.read = true;
-    this.apprPermission.isActive = true;
-    this.apprPermission.createdBy = this.user.userID;
-    this.apprPermission.createdOn = new Date();
-    let evrPermission = new Permission();
-    evrPermission.objectType = this.shareControl;
-    evrPermission.memberType = this.MEMBERTYPE.SHARE;
-    evrPermission.read = true;
-    evrPermission.isActive = true;
-    evrPermission.createdBy = this.user.userID;
-    evrPermission.createdOn = new Date();
     this.shareWith = "";
-    this.permissions.push(this.myPermission);
-    this.permissions.push(this.apprPermission);
-    this.permissions.push(evrPermission);
+    this.objectType = "";
     this.initForm();
   }
   openFormShare(content: any) {
@@ -214,24 +180,19 @@ export class PopupAddComponent implements OnInit {
       });
       return;
     }
-    let objNews = new WP_News();
-    objNews = this.formGroup.value;
-    objNews.newsType = this.newsType;
-    objNews.status = '1';
-    objNews.shareControl = this.shareControl;
-    objNews.permissions = this.permissions;
-    objNews.isActive = true;
-    if (objNews.allowShare) {
-      objNews.permissions.map((p: Permission) => { p.share = true });
-    }
-    objNews.createdBy = this.user.userID;
+    let tmpNews = new WP_News();
+    tmpNews = this.formGroup.value;
+    tmpNews.newsType = this.newsType;
+    tmpNews.shareControl = this.shareControl;
+    tmpNews.objectType = this.objectType;
+    tmpNews.permissions = this.permissions;
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'InsertNewsAsync',
-        objNews
+        tmpNews
       )
       .subscribe(async (res: any) => {
         if (res) {
@@ -242,11 +203,8 @@ export class PopupAddComponent implements OnInit {
             (await this.codxATMImage.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
-                  this.initForm();
-                  this.shareControl = this.SHARECONTROLS.EVERYONE;
-                  this.notifSV.notifyCode('E0026');
-                  this.dialogRef.close();
-                  this.insertWPComment(data, "3");
+                  this.notifSV.notifyCode('SYS006');
+                  this.dialogRef.close(data);
                 }
               }
             );
@@ -304,25 +262,19 @@ export class PopupAddComponent implements OnInit {
       });
       return;
     }
-    let objNews = new WP_News();
-    objNews = this.formGroup.value;
-    objNews.newsType = this.newsType;
-    objNews.status = "2";
-    objNews.approveControl = "0";
-    objNews.shareControl = this.shareControl;
-    objNews.permissions = this.permissions;
-    objNews.isActive = true;
-    if (objNews.allowShare) {
-      objNews.permissions.map((p: Permission) => { p.share = true });
-    }
-    objNews.createdBy = this.user.userID;
+    let tmpNews = new WP_News();
+    tmpNews = this.formGroup.value;
+    tmpNews.newsType = this.newsType;
+    tmpNews.shareControl = this.shareControl;
+    tmpNews.objectType = this.objectType;
+    tmpNews.permissions = this.permissions;
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'InsertNewsAsync',
-        objNews
+        tmpNews
       )
       .subscribe(async (res: any) => {
         if (res) {
@@ -333,11 +285,8 @@ export class PopupAddComponent implements OnInit {
             (await this.codxATMImage.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
-                  this.initForm();
-                  this.shareControl = this.SHARECONTROLS.EVERYONE;
-                  this.notifSV.notifyCode('E0026');
+                  this.notifSV.notifyCode('SYS006');
                   this.dialogRef.close(res);
-                  this.insertWPComment(data, "0");
                 }
               }
             );
@@ -345,23 +294,8 @@ export class PopupAddComponent implements OnInit {
         }
       });
   }
-  insertWPComment(data: WP_News, approveControl: string) {
-    if (data.createPost) {
-      var post = new WP_Comments();
-      post.category = "4";
-      post.refID = data.recID;
-      post.refType = "WP_News";
-      post.content = data.subject;
-      post.shareControl = data.shareControl;
-      post.permissions = data.permissions;
-      post.approveControl = approveControl;
-      post.approveStatus = null;
-      post.createdBy = data.createdBy;
-      this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post, null]).subscribe();
-    }
-  }
   valueChange(event: any) {
-    if (!event || event.data == "" || !event.data) {
+    if (!event || !event.field || !event.data) {
       return;
     }
     let field = event.field;
@@ -398,188 +332,69 @@ export class PopupAddComponent implements OnInit {
     this.changedt.detectChanges();
   }
   eventApply(event: any) {
-    if (!event) {
+    if (!event || !event[0] || !event[0].objectType) {
       return;
     }
-    let data = event[0];
-    let countPermission = 0;
-    if (this.shareControl) {
-      this.permissions = [];
-      this.permissions.push(this.myPermission);
-      this.permissions.push(this.apprPermission);
-    }
-    this.shareControl = data.objectType;
-    this.shareIcon = data.icon;
-    this.shareText = data.objectName;
-    if (data.dataSelected) {
-      countPermission = data.dataSelected.length;
-    }
-    switch (this.shareControl) {
-      case this.SHARECONTROLS.OWNER:
-        break;
-      case this.SHARECONTROLS.EVERYONE:
-        let evrPermission = new Permission();
-        evrPermission.objectType = this.shareControl;
-        evrPermission.memberType = this.MEMBERTYPE.SHARE;
-        evrPermission.read = true;
-        evrPermission.isActive = true;
-        evrPermission.createdBy = this.user.userID;
-        evrPermission.createdOn = new Date();
-        this.shareWith = "";
-        this.permissions.push(evrPermission);
-        break;
-      case this.SHARECONTROLS.MYGROUP:
-      case this.SHARECONTROLS.MYTEAM:
-      case this.SHARECONTROLS.MYDEPARMENTS:
-      case this.SHARECONTROLS.MYDIVISION:
-      case this.SHARECONTROLS.MYCOMPANY:
-        let permission = new Permission();
-        permission.objectType = this.shareControl;
-        permission.memberType = this.MEMBERTYPE.SHARE;
-        permission.read = true;
-        permission.isActive = true;
-        permission.createdBy = this.user.userID;
-        permission.createdOn = new Date();
-        this.shareWith = "";
-        this.permissions.push(permission);
-        break;
-      case this.SHARECONTROLS.OGRHIERACHY:
-      case this.SHARECONTROLS.DEPARMENTS:
-        data.dataSelected.forEach((x: any) => {
-          let p = new Permission();
-          p.objectType = this.shareControl;
-          p.objectID = x.OrgUnitID;
-          p.objectName = x.OrgUnitName;
-          p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(p);
-        });
-        if (countPermission > 1) {
-          this.cache.message('WP002').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].OrgUnitName + '</b>', countPermission - 1, this.shareText);
-          });
-        }
-        else {
-          this.cache.message('WP001').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].OrgUnitName + '</b>');
-          });
-        }
-        break;
-      case this.SHARECONTROLS.POSITIONS:
-        data.dataSelected.forEach((x: any) => {
-          let p = new Permission();
-          p.objectType = this.shareControl;
-          p.objectID = x.PositionID;
-          p.objectName = x.PositionName;
-          p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(p);
-
-        });
-        if (countPermission > 1) {
-          this.cache.message('WP002').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].PositionName + '</b>', countPermission - 1, this.shareText);
-          });
-        }
-        else {
-          this.cache.message('WP001').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].PositionName + '</b>');
-          });
-        }
-        break;
-      case this.SHARECONTROLS.ROLES:
-        data.dataSelected.forEach((x: any) => {
-          let p = new Permission();
-          p.objectType = this.shareControl;
-          p.objectID = x.RoleID;
-          p.objectName = x.RoleName;
-          p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(p);
-        });
-        if (countPermission > 1) {
-          this.cache.message('WP002').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].RoleName + '</b>', countPermission - 1, this.shareText);
-          });
-        }
-        else {
-          this.cache.message('WP001').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].RoleName + '</b>');
-          });
-        }
-        break;
-      case this.SHARECONTROLS.GROUPS:
-        data.dataSelected.forEach((x: any) => {
-          let p = new Permission();
-          p.objectType = this.shareControl;
-          p.objectID = x.UserID;
-          p.objectName = x.UserName;
-          p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(p);
-
-        });
-        if (countPermission > 1) {
-          this.cache.message('WP002').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>', countPermission - 1, this.shareText);
-          });
-        }
-        else {
-          this.cache.message('WP001').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>');
-          });
-        }
-        break;
-      default:
-        data.dataSelected.forEach((x: any) => {
-          let p = new Permission();
-          p.objectType = this.shareControl;
-          p.objectID = x.UserID;
-          p.objectName = x.UserName;
-          p.memberType = this.MEMBERTYPE.SHARE;
-          p.read = true;
-          p.isActive = true;
-          p.createdBy = this.user.userID;
-          p.createdOn = new Date();
-          this.permissions.push(p);
-        });
-        if (countPermission > 1) {
-          this.cache.message('WP002').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>', countPermission - 1, this.shareText);
-          });
-        }
-        else {
-          this.cache.message('WP001').subscribe((mssg: any) => {
-            if (mssg)
-              this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data.dataSelected[0].UserName + '</b>');
-          });
-        }
-        break;
-
-    }
-    this.changedt.detectChanges();
+    this.shareControl = event[0].objectType;
+    this.objectType = event[0].objectType;
+    this.getValueShare(this.shareControl, event);
   }
+  getValueShare(shareControl: string, data: any[] = null) {
+    let listPermission = data;
+    this.cache.valueList('L1901').subscribe((vll: any) => {
+      if(vll){
+        let modShare = vll.datas.find((x: any) => x.value == shareControl);
+        this.shareControl = shareControl;
+        this.shareIcon = modShare.icon;
+        this.shareText = modShare.text;
+        if (listPermission) {
+          this.permissions = []
+          this.shareWith = "";
+          switch (this.shareControl) {
+            case this.SHARECONTROLS.OWNER:
+            case this.SHARECONTROLS.EVERYONE:
+            case this.SHARECONTROLS.MYGROUP:
+            case this.SHARECONTROLS.MYTEAM:
+            case this.SHARECONTROLS.MYDEPARMENTS:
+            case this.SHARECONTROLS.MYDIVISION:
+            case this.SHARECONTROLS.MYCOMPANY:
+              break;
+            case this.SHARECONTROLS.OGRHIERACHY:
+            case this.SHARECONTROLS.DEPARMENTS:
+            case this.SHARECONTROLS.POSITIONS:
+            case this.SHARECONTROLS.ROLES:
+            case this.SHARECONTROLS.GROUPS:
+            case this.SHARECONTROLS.USER:
+              listPermission.forEach((x: any) => {
+                let p = new Permission();
+                p.objectType = this.objectType;
+                p.objectID = x.id;
+                p.objectName = x.text;
+                p.memberType = this.MEMBERTYPE.SHARE;
+                this.permissions.push(p);
+              });
+              if (listPermission.length > 1) {
+                this.cache.message('WP002').subscribe((mssg: any) => {
+                  if (mssg)
+                    this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + listPermission[0].text + '</b>', listPermission.length - 1, this.shareText);
+                });
+              }
+              else {
+                this.cache.message('WP001').subscribe((mssg: any) => {
+                  if (mssg)
+                    this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + listPermission[0].text + '</b>');
+                });
+              }   
+              break;
+            default:
+              
+          }
+        }
+        this.changedt.detectChanges();
+        }
+    });
+  }
+  
   initForm() {
     this.formGroup = new FormGroup({
       Tags: new FormControl(''),
@@ -589,11 +404,9 @@ export class PopupAddComponent implements OnInit {
       Subject: new FormControl(''),
       SubContent: new FormControl(''),
       Contents: new FormControl(''),
-      Image: new FormControl(''),
       AllowShare: new FormControl(false),
       CreatePost: new FormControl(false),
     });
-    this.changedt.detectChanges();
   }
   clearValueForm() {
     this.formGroup.controls['Tags'].setValue("");

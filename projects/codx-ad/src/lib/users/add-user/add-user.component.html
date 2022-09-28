@@ -5,8 +5,7 @@
 <ng-template #tabDescription>
   <div class="mt-3 pb-5">
     <codx-img #imageUpload class="symbol symbol-120 symbol-circle me-2 image-inpt-wrapper fullImage" [width]="60"
-      [funcId]="formModel?.funcID" [objectId]="adUser.userID" [objectType]="'AD_Users'" data-kt-menu-trigger="click"
-      data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="true">
+      [funcId]="formModel?.funcID" [objectId]="adUser.userID" [objectType]="'AD_Users'" [isAllowEdit]="true">
     </codx-img>
   </div>
   <div class="row mx-0 mt-3">
@@ -29,7 +28,7 @@
           loadFull="true" *ngIf="formType == 'edit'">
         </codx-input>
         <codx-input type="combobox" refValue="EmployeeUser" field="employeeID" [crrValue]="adUser.employeeID"
-          (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true" *ngIf="formType == 'add'">
+          (valueChange)="valueEmp($event)" [multiple]="false" loadFull="true" *ngIf="formType == 'add' || formType == 'copy'">
         </codx-input>
       </div>
     </div>
@@ -66,7 +65,7 @@
         [disabled]="!adUser.email ? false : true" *ngIf="formType == 'edit'">
       </codx-input>
       <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChangeM($event)"
-        [disabled]="false" *ngIf="formType == 'add'">
+        [disabled]="false" *ngIf="formType == 'add' || formType == 'copy'">
       </codx-input>
     </div>
     <div class="form-group col-6 pe-0">

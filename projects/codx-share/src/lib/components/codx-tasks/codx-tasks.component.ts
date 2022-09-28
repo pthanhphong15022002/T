@@ -70,6 +70,8 @@ export class CodxTasksComponent
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
+  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
 
@@ -79,6 +81,7 @@ export class CodxTasksComponent
 
   model?: DataRequest;
   request: ResourceModel;
+  requestSchedule: ResourceModel;
   requestTree: ResourceModel;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
@@ -117,6 +120,7 @@ export class CodxTasksComponent
   vllVerifyStatus = 'TM008';
   vllExtendStatus = 'TM010';
   vllConfirmStatus = 'TM009';
+  vllPriority = 'TM005';
   gridViewSetup: any;
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
@@ -128,6 +132,8 @@ export class CodxTasksComponent
   listViewModel = [];
   dataReferences = [];
   titleAction = '';
+  predicateResource: any;
+  dataValueResource: any;
 
   constructor(
     inject: Injector,
@@ -145,16 +151,46 @@ export class CodxTasksComponent
     });
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    //chay code chet cho nhanh, muon dong thi bat len
+    // this.cache.functionList(this.funcID).subscribe(f => {
+    //   if (f) {
+    //     this.cache.gridViewSetup(f?.formName, f?.gridViewName).subscribe(res => {
+    //        if(res){
+    //         this.vllPriority = res['Priority']['referedValue']
+    //         this.vllStatus = res['Status']['referedValue']
+    //         this.vllApproveStatus = res['ApproveStatus']['referedValue']
+    //         this.vllConfirmStatus = res['ConfirmStatus']['referedValue']
+    //         this.vllVerifyStatus = res['VerifyStatus']['referedValue']
+    //         this.vllExtendStatus = res['ExtendStatus']['referedValue']
+    //        }
+    //     })
+    //   }
+    // })
   }
 
   //#region Init
   onInit(): void {
-    this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'TM';
-    this.modelResource.className = 'TaskBusiness';
-    this.modelResource.service = 'TM';
-    this.modelResource.method = 'GetUserByTasksAsync';
+    // this.modelResource = new ResourceModel();
+    // this.modelResource.assemblyName = 'TM';
+    // this.modelResource.className = 'TaskBusiness';
+    // this.modelResource.service = 'TM';
+    // this.modelResource.method = 'GetUserByTasksAsync';
 
+    this.modelResource = new ResourceModel();
+    if(this.funcID!='TMT03011'){
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+    }else{
+      //xu ly khi truyeefn vao 1 list resourece
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+    }
+   
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
@@ -168,6 +204,15 @@ export class CodxTasksComponent
     this.request.method = 'GetTasksAsync';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
+
+    this.requestSchedule = new ResourceModel();
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.predicate = this.predicateResource; //"Category=@0 and CreatedBy=@1";
+    this.requestSchedule.dataValue = this.dataValueResource; //'2;' + this.user.userID;
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -231,10 +276,7 @@ export class CodxTasksComponent
           statusColorRef: this.vllStatus,
         },
       },
-    ];
-
-    if (this.funcID == 'TMT03011') {
-      var calendar = {
+      {
         id: '7',
         type: ViewType.calendar,
         active: false,
@@ -246,9 +288,8 @@ export class CodxTasksComponent
           template3: this.cellTemplate,
           statusColorRef: this.vllStatus,
         },
-      };
-      this.viewsActive.push(calendar);
-    }
+      },
+    ];
 
     var viewDefaultID = '2';
     if (this.viewMode && this.viewMode.trim() != '') {
@@ -275,7 +316,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       this.dialog = this.callfc.openSide(
@@ -347,7 +388,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -480,7 +521,7 @@ export class CodxTasksComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '800px';
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
@@ -659,6 +700,14 @@ export class CodxTasksComponent
               );
           }
         });
+    } else if (status == '80') {
+      this.updateStatusCancel(
+        moreFunc,
+        taskAction,
+        updateControl,
+        maxHoursControl,
+        maxHours
+      );
     } else
       this.updatStatusAfterCheck(
         moreFunc,
@@ -667,6 +716,45 @@ export class CodxTasksComponent
         maxHoursControl,
         maxHours
       );
+  }
+
+  //kiểm tra dk Cancel task
+  updateStatusCancel(
+    moreFunc,
+    taskAction,
+    updateControl,
+    maxHoursControl,
+    maxHours
+  ) {
+    var isCheck = false;
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTaskChildDetailAsync',
+        taskAction.taskID
+      )
+      .subscribe((res) => {
+        if (res) {
+          res.forEach((element) => {
+            if (element.status != '00' && element.status != '10') {
+              isCheck = false;
+              return;
+            }
+          });
+          if (isCheck) {
+            this.notiService.notifyCode('TM008');
+          } else
+            this.updatStatusAfterCheck(
+              moreFunc,
+              taskAction,
+              updateControl,
+              maxHoursControl,
+              maxHours
+            );
+        }
+      });
   }
 
   updatStatusAfterCheck(
@@ -784,8 +872,41 @@ export class CodxTasksComponent
   //#endregion
   //#region Event
   changeView(evt: any) {
-    let idx = this.viewsActive.findIndex((x) => x.id === '16');
+    let idx = -1;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    idx = this.viewsActive.findIndex((x) => x.id === '8');
+    if (this.funcID != 'TMT0201') {
+      if (this.funcID == 'TMT0203') {
+        this.predicateResource = 'Category=@0 and CreatedBy=@1';
+        this.dataValueResource = '2;' + this.user.userID;
+      } else if (this.funcID == 'TMT0202') {
+        this.predicateResource = 'Category=@0 or Category=@1';
+        this.dataValueResource = '1;2';      
+      }
+      if (idx > -1) return;
+      var schedule = {
+        id: '8',
+        type: ViewType.schedule,
+        active: false,
+        sameData: false,
+        request: this.requestSchedule,
+        request2: this.modelResource,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template4: this.resourceHeader,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          statusColorRef: this.vllStatus,
+        },
+      };
+      this.viewsActive.push(schedule);
+    } else {
+      if (idx > -1) this.viewsActive.splice(idx, 1);
+    }
+
+    idx = this.viewsActive.findIndex((x) => x.id === '16');
     if (this.funcID == 'TMT0203') {
       if (idx > -1) return;
       var tree = {
@@ -806,7 +927,7 @@ export class CodxTasksComponent
           dataObj: null,
         },
         model: {
-          template: this.itemViewList,
+          template: this.treeView,
         },
       };
       this.viewsActive.push(tree);
@@ -905,17 +1026,6 @@ export class CodxTasksComponent
   }
   //#endregion
 
-  // openViewListTaskResource(data) {
-  //   this.dialog = this.callfc.openForm(
-  //     PopupViewTaskResourceComponent,
-  //     '',
-  //     400,
-  //     500,
-  //     '',
-  //     [data, this.funcID]
-  //   );
-  // }
-
   popoverEmpList(p: any, task) {
     this.listTaskResousceSearch = [];
     this.countResource = 0;
@@ -940,8 +1050,7 @@ export class CodxTasksComponent
           this.countResource = res.length;
           p.open();
           this.popoverCrr = p;
-          // this.titlePopover =
-          //   'Danh sách được phân công (' + this.countResource + ')';
+         
         }
       });
   }
@@ -1365,7 +1474,7 @@ export class CodxTasksComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
         [e?.data, 'view', this.isAssignTask],
@@ -1386,12 +1495,12 @@ export class CodxTasksComponent
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: { name: 'userID' },
+    resourceId: { name: 'owner' }, //trung voi idField của resourceField
   };
   resourceField = {
     Name: 'Resources',
-    Field: 'userID',
-    IdField: 'userID',
+    Field: 'owner',
+    IdField: 'owner',
     TextField: 'userName',
     Title: 'Resources',
   };

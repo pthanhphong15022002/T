@@ -1,3 +1,5 @@
+import { HttpClient } from '@angular/common/http';
+import { AppConfigService } from './../assets/config/app-config.service';
 import { NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,19 +30,22 @@ import { CodxEsModule } from 'projects/codx-es/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { FileComponent } from './file/file.component';
+import { AppConfig } from 'src/assets/config/app-config';
 
 
 //import { ReportComponent } from './modules/report/report.component';
 registerLocaleData(localeFr);
 
-function appInitializer(authService: AuthService) {
+function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   return () => {
     return new Promise((resolve) => {
-      authService.getUserByToken().subscribe((v) => {
-        resolve(v);
+      appConfig.load().subscribe(res => {
+        authService.getUserByToken().subscribe((v) => {
+          resolve(v);
+        });
       });
     });
-  };
+  }
 }
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
@@ -109,10 +114,15 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   exports: [],
   providers: [
     {
+      provide: AppConfig,
+      deps: [HttpClient],
+      useExisting: AppConfigService
+    },
+    {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
       multi: true,
-      deps: [AuthService],
+      deps: [AuthService, AppConfigService],
     },
     { provide: LOCALE_ID, useValue: 'vi-VN' },
   ],

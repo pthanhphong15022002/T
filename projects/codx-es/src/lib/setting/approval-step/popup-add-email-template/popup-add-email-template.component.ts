@@ -15,12 +15,14 @@ import {
   NodeSelection,
   RichTextEditorComponent,
 } from '@syncfusion/ej2-angular-richtexteditor';
+import { DataManager, Query } from '@syncfusion/ej2-data';
 import {
   ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
   CodxInputComponent,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -43,6 +45,11 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   @ViewChild('textarea', { static: false }) textarea: ElementRef;
   @ViewChild('richtexteditor', { static: false })
   richtexteditor: CodxInputComponent;
+
+  @ViewChild('listviewInstance', { static: false })
+  public listviewInstance: any;
+
+  @ViewChild('textbox', { static: false }) textboxEle: any;
 
   headerText: string = 'Thiết lập Email';
   subHeaderText: string = '';
@@ -72,24 +79,13 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   sendNow: boolean = false;
 
   methodEdit: boolean = false;
+  dataSource: any = {};
 
   width: any = 'auto';
 
   show = false;
-  dataSource = [
-    { text: 'Hennessey Venom', id: 'list-01' },
-    { text: 'Bugatti Chiron', id: 'list-02' },
-    { text: 'Bugatti Veyron Super Sport', id: 'list-03' },
-    { text: 'SSC Ultimate Aero', id: 'list-04' },
-    { text: 'Koenigsegg CCR', id: 'list-05' },
-    { text: 'McLaren F1', id: 'list-06' },
-    { text: 'Aston Martin One- 77', id: 'list-07' },
-    { text: 'Jaguar XJ220', id: 'list-08' },
-    { text: 'McLaren P1', id: 'list-09' },
-    { text: 'Ferrari LaFerrari', id: 'list-10' },
-    { text: 'Zenvo ST1', id: 'list-11' },
-    { text: 'Lamborghini Veneno', id: 'list-12' },
-  ];
+
+  public cssClass: string = 'e-list-template';
 
   constructor(
     private api: ApiHttpService,
@@ -143,6 +139,28 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.formModel.formName = 'EmailTemplates';
     this.formModel.gridViewName = 'grvEmailTemplates';
     this.formModel.funcID = '';
+
+    var request = new DataRequest();
+    let service = 'BI';
+    request.comboboxName = 'DataViewItems';
+    request.page = 1;
+    request.pageSize = 10;
+    this.esService.loadDataCbx(service, request).subscribe((cbx) => {
+      console.log(cbx);
+      if (cbx) {
+        var item = JSON.parse(cbx[0]);
+        var result = [];
+        item.forEach((element) => {
+          var obj = {
+            fieldName: element['FieldName'],
+            headerText: element['HeaderText'],
+          };
+          result.push(obj);
+        });
+        this.dataSource = result;
+        this.cr.detectChanges();
+      }
+    });
     this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
       this.cache.setGridView(this.formModel.gridViewName, gridView);
       this.cache
@@ -299,12 +317,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
         });
-      } else if (event.field == 'dataView') {
-        //setup dataView
-        this.insert(event.data);
-        this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-        this.cr.detectChanges();
-        this.isFocus = true;
       } else if (event.field == 'sendLater') {
         this.dialogETemplate.patchValue({
           [event['field']]: !event.data,
@@ -517,23 +529,24 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.range = this.selection.getRange(document);
   }
 
-  insert(data: string = null) {
-    if (data != null && data != '') {
+  insert(data: any) {
+    if (data && data != null) {
       this.saveSelection = this.selection.save(this.range, document);
       this.saveSelection.restore();
 
-      // let html =
-      //   '<span style="color: gray; text-decoration: inherit; display: none"> [' +
-      //   data +
-      //   '] </span>' +
-      //   '<span style="color: gray; text-decoration: inherit; display: block"> [123] </span>';
-      // this.richtexteditor.control.executeCommand('insertHTML', html);
+      let html =
+        '<span style="color: gray; text-decoration: inherit" id="' +
+        data?.fieldName +
+        '"> [' +
+        data?.headerText +
+        '] </span>';
+      this.richtexteditor.control.executeCommand('insertHTML', html);
 
-      this.richtexteditor.control.executeCommand('fontColor', 'gray');
-      this.richtexteditor.control.executeCommand(
-        'insertText',
-        ' [' + data + '] '
-      );
+      // this.richtexteditor.control.executeCommand('fontColor', 'gray');
+      // this.richtexteditor.control.executeCommand(
+      //   'insertText',
+      //   ' [' + data + '] '
+      // );
       this.richtexteditor.control.executeCommand('fontColor', 'black');
 
       this.range = this.selection.getRange(document);
@@ -544,7 +557,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   }
 
   isFocus: boolean = false;
-  focusCombobox(event = null) {
+
+  clickDataView(event = null) {
     this.show = !this.show;
     // let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
     // console.log('width', crrWidth);
@@ -557,7 +571,32 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     // }
 
     // this.isFocus = true;
-    this.width = (this.dataView.nativeElement as HTMLElement).offsetWidth + 5;
+    // this.width = (this.dataView.nativeElement as HTMLElement).offsetWidth + 5;
     this.cr.detectChanges();
   }
+
+  clickItem(item) {
+    if (item) {
+      this.insert(item);
+    }
+  }
+
+  onkeyup(event) {
+    let value = this.textboxEle.nativeElement.value;
+    let data = new DataManager(this.dataSource).executeLocal(
+      new Query().where('headerText', 'startswith', value, true)
+    );
+    if (!value) {
+      this.listviewInstance.dataSource = this.dataSource.slice();
+    } else {
+      this.listviewInstance.dataSource = data;
+    }
+    this.listviewInstance.dataBind();
+  }
+
+  keyUp(event) {
+    this.range = this.selection.getRange(document);
+  }
+
+  onActionComplete(args: any): void {}
 }

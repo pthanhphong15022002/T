@@ -72,10 +72,11 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
   @Input() dataValues;
   @Input() isShowCreate = true;
   @Input() module: "WP" | "FD" = "WP";
-  @Input() formModel: FormModel = null;
-  @Input() formName: string = "";
-  @Input() gridViewName: string = "";
-
+  @Input() formModel:FormModel = null;
+  @Input() formName:string = "";
+  @Input() gridViewName:string = "";
+  @Input() moreFunc:any = null;
+  @Input() moreFuncTmp:TemplateRef<any> = null;
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(

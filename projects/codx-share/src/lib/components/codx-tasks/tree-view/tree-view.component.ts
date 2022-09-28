@@ -27,11 +27,11 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() listRoles?: any;
   @Input() totalData?: any;
 
-  listDataTree: any[] = [];
-  dataTree: any[] = [];
+  vllPriority ='TM005'
+  // dataTree: any[] = [];
   dialog: any;
   @Output() clickMoreFunction = new EventEmitter<any>();
-  @Output() clickShowTaskChildren = new EventEmitter<any>();
+  // @Output() clickShowTaskChildren = new EventEmitter<any>();
 
   constructor(
     private api: ApiHttpService,
@@ -46,20 +46,20 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   ngOnInit(): void { }
 
   ngAfterViewInit(): void {
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTasksChildrenDeTailsTreeOneStepAsync',
-        this.data.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.data.items = res;
-          this.listDataTree.push(this.data)
-        }
-      });
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskBusiness',
+    //     'GetListTasksChildrenDeTailsTreeOneStepAsync',
+    //     this.data.taskID
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.data.items = res;
+    //       this.listDataTree.push(this.data)
+    //     }
+    //   });
   }
   //#endregion
 
@@ -92,21 +92,21 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   //#region Function
   showTaskChildren(item) {
     // this.clickShowTaskChildren.emit({ item: item});
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetListTasksTreeAsync',
-        item.taskID
-      )
-      .subscribe((res) => {
-        if (res) {
-          var index = this.listDataTree.findIndex(x => x.taskID == res[0].taskID);
-          if (index != -1)
-            this.listDataTree[index] = res[0];
-        }
-      });
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskBusiness',
+    //     'GetListTasksTreeAsync',
+    //     item.taskID
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       var index = this.listDataTree.findIndex(x => x.taskID == res[0].taskID);
+    //       if (index != -1)
+    //         this.listDataTree[index] = res[0];
+    //     }
+    //   });
   }
   //#endregion
 }
