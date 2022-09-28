@@ -76,7 +76,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   lstTo = [];
   lstCc = [];
   lstBcc = [];
-  sendNow: boolean = false;
 
   methodEdit: boolean = false;
   dataSource: any = {};
@@ -111,22 +110,21 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.showIsTemplate = data.data?.showIsTemplate;
     this.showSendLater = data.data.showSendLater;
 
-    // this.renderer.listen('window', 'click', (e: Event) => {
-    //   if (
-    //     this.dataView &&
-    //     e.target !== this.dataView?.nativeElement &&
-    //     this.textarea &&
-    //     this.isFocus == false
-    //   ) {
-    //     this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-    //     this.cr.detectChanges();
-    //   }
-    //   this.isFocus = false;
-    // });
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (this.isInside == false && this.show == true) {
+        this.show = false;
+      }
+      this.isInside = false;
+    });
+  }
+
+  click() {
+    this.isInside = true;
   }
 
   staticWidth: number = 0;
-  ngAfterViewInit(): void {
+  n;
+  AfterViewInit(): void {
     if (this.textarea && this.staticWidth != 0)
       this.staticWidth = (
         this.textarea.nativeElement as HTMLElement
@@ -182,7 +180,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                   .subscribe((res1) => {
                     if (res1 != null) {
                       this.data = res1[0];
-                      this.sendNow = res1?.sendLater ?? false;
                       this.dialogETemplate.patchValue(res1[0]);
                       this.dialogETemplate.addControl(
                         'recID',
@@ -321,7 +318,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         this.dialogETemplate.patchValue({
           [event['field']]: !event.data,
         });
-        this.sendNow = event?.data;
       } else if (event.data instanceof Object) {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data,
@@ -556,9 +552,10 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isFocus: boolean = false;
+  isInside: boolean = false;
 
   clickDataView(event = null) {
+    this.isInside = true;
     this.show = !this.show;
     // let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
     // console.log('width', crrWidth);
@@ -570,7 +567,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     //     5;
     // }
 
-    // this.isFocus = true;
+    // this.isInside = true;
     // this.width = (this.dataView.nativeElement as HTMLElement).offsetWidth + 5;
     this.cr.detectChanges();
   }
