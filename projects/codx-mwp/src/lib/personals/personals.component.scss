@@ -1,6 +1,6 @@
 .pw-profile {
     background-color: #d7d7d7;
-    height: 150px;
+    height: 136px;
     border-radius: 12px 12px 0 0 !important;
     padding: 25px 45px;
     background-size: cover;
@@ -10,8 +10,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    //height: calc(100vh - 216px);
-    //border: 1px aqua solid;
+    height: calc(100vh - 232px);
 }
 
 .personal-container .pw-menu {
@@ -34,6 +33,11 @@
     border: 0 !important;
 }
 
+.personal-container .e-listview .e-list-item:hover,
+.personal-container .e-listview .e-list-item.e-active {
+    background-color: #fff;
+}
+
 .pw-menu {
     height: 48px;
     line-height: 48px;
@@ -41,7 +45,7 @@
     background-color: var(--bs-body-bg);
     width: 100%;
     margin: 0 auto;
-    margin-top: -28px !important;
+    margin-top: -18px !important;
     position: relative;
     z-index: 99;
     justify-content: space-around;
@@ -52,8 +56,8 @@
 }
 
 .pw-content {
-    margin-top: 20px;
-    padding: 20px 25px;
+    margin-top: 16px;
+    padding: 15px 20px;
     min-width: 720px;
     background-color: white;
     box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
@@ -116,4 +120,13 @@
 
 codx-card-img .card-icon-nowrap {
     white-space: normal !important;
+}
+
+.pw-storgae .home-notebooks,
+.pw-storgae .home-storage {
+    height: calc(100vh - 350px) !important;
+}
+
+.pw-storgae .home-img {
+    height: calc(100vh - 300px) !important;
 }
