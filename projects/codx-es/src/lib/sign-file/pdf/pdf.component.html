@@ -455,7 +455,7 @@
                       type="switch"
                       field="autoSignLastLine"
                       [disabled]="isDisable"
-                      [crrValue]="autoSignState"
+                      [(crrValue)]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
                     <!--end::Switch-->

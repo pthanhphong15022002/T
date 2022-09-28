@@ -1,5 +1,5 @@
 <codx-views
-  #base
+  #view
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
@@ -101,10 +101,6 @@
   </div>
 </ng-template>
 
-<ng-template #accordingToRequester>
-  <codx-input type="switch"></codx-input>
-</ng-template>
-
 <ng-template #owner let-data>
   <div class="d-flex has-action-menu">
     <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
@@ -113,7 +109,7 @@
     </div>
     <codx-mfunc
       [dataItem]="data"
-      [formModel]="viewBase.formModel"
+      [formModel]="formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
     ></codx-mfunc>
@@ -123,7 +119,7 @@
 <ng-template #columnsList let-data>
   <div class="p-4">
     <div class="d-flex justify-content-between align-items-center">
-      <div class="m-4">
+      <div class="w-25 m-4">
         <div class="d-flex align-items-center">
           <codx-img
             [objectId]="data?.recID"
@@ -137,12 +133,12 @@
               <span>{{ data?.resourceID }}</span>
               <span> | </span>
               <span>Nhóm: </span>
-              <span class="fw-bold">{{ data?.groupID }}</span>
+              <span class="fw-bold">{{ data?.groupName }}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-start">
+      <div class="w-25 d-flex justify-content-start">
         <span>Màu sắc: </span>
         <div *ngFor="let color of splitColor(data?.color)">
           <div
@@ -152,7 +148,7 @@
           ></div>
         </div>
       </div>
-      <div>
+      <div class="w-25">
         <div class="my-2">
           <span class="fw-bold text-black-50">Tồn kho: </span>
           <span class="fw-bold">{{ data?.currentQty }}</span>
@@ -166,7 +162,7 @@
           <span class="fw-bold">{{ data?.availableQty }}</span>
         </div>
       </div>
-      <div>
+      <div class="w-25">
         <div class="my-2">Người điều phối</div>
         <div class="d-flex justify-content-between align-items-center">
           <codx-img
@@ -178,14 +174,10 @@
           >
           </codx-img>
           <div>
-            <div>{{ data?.owner }}</div>
-            <div class="text-black-50">Thủ kho</div>
+            <div>{{ data?.employeeName }}</div>
+            <div class="text-black-50">{{data?.positionName}}</div>
           </div>
         </div>
-      </div>
-      <div>
-        <span class="me-2">Theo số lượng người đăng ký</span
-        ><codx-input type="switch"></codx-input>
       </div>
     </div>
   </div>
