@@ -105,11 +105,11 @@
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data?.carName}}</span>
       <div class="d-flex flex-row">
-        <span class="text-gray-600">Phân loại:</span>
+        <codx-label default="Phân loại:" name="lblCategory" class="text-gray-600"></codx-label>
         <span class="fw-bold ms-1">{{ data.carRanking| vll: "EP005" : 'text' | async}}</span>
       </div>
       <div class="d-flex flex-row">
-        <span class="text-gray-600">Chỗ ngồi:</span>
+        <codx-label default="Chỗ ngồi:" name="lblCategory" class="text-gray-600"></codx-label>
         <span class="fw-bold ms-1">{{ data.carCapacity}}</span>
       </div>
     </div>

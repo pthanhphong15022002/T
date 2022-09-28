@@ -41,7 +41,7 @@ export class FED_Card {
     entityName: string;
     entityPer: string;
     files: any;
-    gift: any;
+    giftID: any;
     gifts: any;
     totalGift: number;
     coins: number;

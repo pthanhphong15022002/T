@@ -17,6 +17,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  ApiHttpService
 } from 'codx-core';
 import {
   FileInfo,
@@ -292,6 +293,7 @@ export class CodxDMService {
     private folderService: FolderService,
     private fileService: FileService,
     private callfc: CallFuncService,
+    private api: ApiHttpService,
     //  private confirmationDialogService: ConfirmationDialogService,
     private notificationsService: NotificationsService
   ) {
@@ -911,8 +913,8 @@ export class CodxDMService {
     //  console.log(http.status);
   }
 
-  getImage(data) {
-    if (data.folderName != undefined)
+  getImage(data:any) {
+    if (data?.folderName && !data?.extension)
       return '../../../assets/codx/dms/folder.svg';
     else {
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
@@ -929,6 +931,7 @@ export class CodxDMService {
   }
 
   getSvg(icon) {
+    debugger;
     var path = window.location.origin;
     return `${path}/${icon}`;
   }
@@ -1019,19 +1022,19 @@ export class CodxDMService {
   getType(item: any, ret: string) {
     var type = 'folder';
     if (ret == 'name') {
-      if (item.folderName == null || item.folderName == undefined)
+      if(item.extension)
         type = 'file';
     } else {
       // entity
       type = 'DM_FolderInfo';
-      if (item.folderName == null || item.folderName == undefined)
+      if ((item.folderName == null || item.folderName == undefined)&& !item.extension)
         type = 'DM_FileInfo';
     }
 
     return type;
   }
 
-  setRequest(
+  setRequest( 
     type: string,
     recId: string,
     id: string,
@@ -1166,6 +1169,7 @@ export class CodxDMService {
   }
 
   clickMF($event, data: any , view:any = null) {
+    debugger;
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
 
@@ -1307,12 +1311,35 @@ export class CodxDMService {
 
         case "DMT0207":  // permission
         case "DMT0220":
-          this.dataFileEditing = data;            
-          this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1",data.recID,view], "").closed.subscribe(item=>{
-            if(item?.event)
-              view?.dataService.update(item.event).subscribe();
-          });
-          break;
+        {
+            if(type == "file" || this.type =="DM_FileInfo")
+            {
+              this.api
+              .execSv("DM", 'DM', 'FileBussiness', 'GetFilesByIDAsync', data.recID)
+              .subscribe((item:any) => {
+                this.dataFileEditing = item;   
+                this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1",data.recID,view,type], "").closed.subscribe(item=>{
+                  if(item?.event)
+                    view?.dataService.update(item.event).subscribe();
+                });
+              });
+            }
+            else
+            {
+              this.api
+              .execSv("DM", 'DM', 'FolderBussiness', 'GetFolderByIdAsync', data.recID)
+              .subscribe((item:any) => {
+                this.dataFileEditing = item;   
+                this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1",data.recID,view,type], "").closed.subscribe(item=>{
+                  if(item?.event)
+                    view?.dataService.update(item.event).subscribe();
+                });
+              });
+            }
+        break;
+
+        }
+        
 
         case "DMT0205": // bookmark folder
         case "DMT0223": // unbookmark folder

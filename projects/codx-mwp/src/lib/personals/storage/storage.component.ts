@@ -213,17 +213,55 @@ export class StorageComponent
     this.checkFormComment = true;
     this.detectorRef.detectChanges();
 
-    var arr = [];
+    var arr: any = new Array();
     if (e?.details) {
       for (let i = 0; i < e?.details?.length; i++) {
-        arr.push(e?.details[i].refID);
+        arr.push(e?.details[i]?.refID);
       }
-      var a = this.detail.createComponent(ListPostComponent);
+    }
+    var formModel = {
+      entityName: 'WP_Comments',
+      entityPermission: 'WP_Comments',
+      gridViewName: 'grvWPComments',
+      formName: 'WPComments',
+      funcID: 'WP',
+    };
+    var a = this.detail.createComponent(ListPostComponent);
+    if (arr?.length == 0) {
+      this.generateGuid();
+      a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
+    } else {
       a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
       a.instance.dataValueWP = `[${arr.join(';')}]`;
-      a.instance.isShowCreate = false;
-      this.detectorRef.detectChanges();
     }
+    a.instance.isShowCreate = false;
+    a.instance.formModel = formModel;
+  }
+
+  guidID: any;
+  generateGuid() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    this.guidID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
   }
 
   onUpdateBackground(e) {}

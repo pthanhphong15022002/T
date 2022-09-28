@@ -27,14 +27,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
 
+  showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Bookings';
-  predicate = 'ResourceType=@0';
-  dataValue = '2';
-  idField = 'RecID';
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
+  idField = 'recID';
+  predicate = 'ResourceType=@0';
+  dataValue = '2';
   formModel: FormModel;
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -50,6 +51,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   resourceField: any;
   funcID: string;
   itemDetail;
+  popupTitle='';
+  funcIDName='';
   columnsGrid: any;
   constructor(
     private injector: Injector,    
@@ -61,6 +64,11 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
+      }
+    });
+    this.cache.functionList(this.funcID).subscribe(res => {
+      if (res) {            
+        this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
   }
@@ -168,6 +176,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   click(evt: ButtonModel) {
+    this.popupTitle=evt?.text + " " + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -208,7 +217,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.viewBase?.dataService?.dataSelected, true],
+        [this.viewBase?.dataService?.dataSelected, true,this.popupTitle],
         option
       );
     });
@@ -227,7 +236,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callFuncService.openSide(
             PopupAddBookingCarComponent,
-            [this.viewBase.dataService.dataSelected, false],
+            [this.viewBase.dataService.dataSelected, false,this.popupTitle],
             option
           );
         });
@@ -250,6 +259,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   clickMF(event, data) {
+    this.popupTitle=event?.text + " " + this.funcIDName;
     console.log(event);
     switch (event?.functionID) {
       case 'SYS03':
@@ -260,9 +270,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         break;
     }
   }
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
-  }
+  
 
   onSelect(obj: any) {
     console.log(obj);

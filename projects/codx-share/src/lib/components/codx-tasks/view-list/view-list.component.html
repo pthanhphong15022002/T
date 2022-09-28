@@ -6,8 +6,8 @@
   <div class="w-50px min-w-50px">
     <div class="d-flex align-items-center">
       <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''"></span>
-      <span [class]="data?.priority | vll: 'L0186':'icon' | async" [style.color]="
-                  data?.priority | vll: 'L0186':'textColor' | async
+      <span [class]="data?.priority | vll: vllPriority:'icon' | async" [style.color]="
+                  data?.priority | vll: vllPriority:'textColor' | async
                     ">
       </span>
     </div>
@@ -43,7 +43,7 @@
 
   <div class="w-150px min-w-150px">
     <div *ngIf="data.category == '3'" class="">
-      <codx-imgs  [isToolTip]="false" [width]="30" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="4"
+      <codx-imgs [isToolTip]="false" [width]="30" [objectId]="data?.assignTo" objectType="AD_Users" [numberImages]="4"
         (click)="popoverEmpList(popoverList,data)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
         #popoverList="ngbPopover" placement="right bottom" container="body" autoClose="outside" [openDelay]="500">
       </codx-imgs>
@@ -129,37 +129,39 @@
     <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
     <span>{{'('+countResource +')'}}</span>
   </div>
-  <div>
+  <div class="my-1">
     <codx-searchbar *ngIf="countResource>0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
-  <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
-    <div class="me-3">
-      <div style=" position: relative">
-        <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
-        </codx-img>
-        <div style="position: absolute; right: 0px;bottom: 0px">
-          <ng-container *ngFor="let role of listRoles">
-            <ng-container *ngIf="role.value== item.roleType">
-              <span><img src="/assets/themes/tm/default/img/{{role.icon}}" alt=""></span>
+  <div class="userlist mh-300px overflow-auto">
+    <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
+      <div class="me-3">
+        <div style=" position: relative">
+          <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
+          </codx-img>
+          <div style="position: absolute; right: 0px;bottom: 0px">
+            <ng-container *ngFor="let role of listRoles">
+              <ng-container *ngIf="role.value== item.roleType">
+                <span><img src="/assets/themes/tm/default/img/{{role.icon}}" alt=""></span>
+              </ng-container>
             </ng-container>
-          </ng-container>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="d-flex flex-column flex-grow-1">
-      <div class="text-dark fw-bold">{{item?.resourceName}}</div>
-      <div class="text-gray-600 fs-7">{{item?.positionName}}</div>
-      <div class="text-dark">
-        {{item?.memo}}
-      </div>
-      <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
-        <div class="d-flex align-items-end me-2 codx-badge">
-          <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true" [showBgColor]="true"
-            class="badge badge-light badge-md fs-7 me-2">
-          </codx-vll>
-          <span class="text-gray-700">{{
-            item.dueDate | date: "dd/MM/yyyy"
-            }}</span>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold">{{item?.resourceName}}</div>
+        <div class="text-gray-600 fs-7">{{item?.positionName}}</div>
+        <div class="text-dark">
+          {{item?.memo}}
+        </div>
+        <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
+          <div class="d-flex align-items-end me-2 codx-badge">
+            <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true"
+              [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
+            </codx-vll>
+            <span class="text-gray-700">{{
+              item.dueDate | date: "dd/MM/yyyy"
+              }}</span>
+          </div>
         </div>
       </div>
     </div>

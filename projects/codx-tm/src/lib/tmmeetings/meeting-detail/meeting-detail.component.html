@@ -1,20 +1,14 @@
-<ng-template #titleTmp >
+<ng-template #titleTmp>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-1">
       <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
         {{ meeting.meetingName }}
       </div>
-      <div
-        class="badge badge-danger label-status"
-        [style.border-color]="
+      <div class="badge badge-danger label-status" [style.border-color]="
           (meeting?.meetingType | vll: 'CO002':'textColor' | async) + '30'
-        "
-        [style.background-color]="
+        " [style.background-color]="
           (meeting?.meetingType | vll: 'CO002':'textColor' | async) + '30'
-        "
-        [style.color]="meeting?.meetingType | vll: 'CO002':'textColor' | async"
-        style="border: none"
-      >
+        " [style.color]="meeting?.meetingType | vll: 'CO002':'textColor' | async" style="border: none">
         {{ meeting?.meetingType | vll: "CO002":"text" | async }}
       </div>
     </div>
@@ -41,36 +35,24 @@
   <div class="w-100">
     <div class="row m-0 bg-body rounded-2 mb-3 p-3">
       <div class="col-8">
-        <codx-temp-full
-          cardCss="card-template"
-          [titleTmp]="titleTmp"
-          [desc]="
+        <codx-temp-full cardCss="card-template" [titleTmp]="titleTmp" [desc]="
             convertHtmlAgency(
               startDateMeeting,
               getDate(startDateMeeting, endDateMeeting),
               userName
             )
-          "
-          [dataItem]="meeting"
-          [footer]="footer"
-        >
+          " [dataItem]="meeting" [footer]="footer">
         </codx-temp-full>
         <div class="row">
           <div class="d-flex col-4">
             <ng-container *ngFor="let item of tabControl; let i = index">
-              <a
-                [class]="
+              <a [class]="
                   'btn btn-sm btn-light-primary my-3 me-2' +
                   ' ' +
                   (item.isActive ? 'active' : '')
-                "
-              >
-                <codx-label
-                  [name]="'lbl' + item.name"
-                  [formName]="'SYS'"
-                  [default]="item.textDefault"
-                  (click)="clickMenu(item)"
-                >
+                ">
+                <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
+                  (click)="clickMenu(item)">
                 </codx-label>
               </a>
             </ng-container>
@@ -79,40 +61,24 @@
       </div>
       <div class="col-4">
         <div class="d-flex justify-content-end">
-          <codx-imgs
-            class=""
-            [objectId]="meeting.avataResource"
-            objectType="AD_Users"
-            [numberImages]="6"
-          >
+          <codx-imgs class="" [objectId]="meeting.avataResource" objectType="AD_Users" [numberImages]="6">
           </codx-imgs>
         </div>
 
         <div class="d-flex justify-content-end" style="padding-top: 40px ; cursor: pointer;">
-          <codx-label
-            class="text-gray-800 text-primary"
-            default="Xem công việc >>"
-            (click)="viewDetail(meeting)"
-          >
+          <codx-label class="text-gray-800 text-primary" default="Xem công việc >>" (click)="viewDetail(meeting)">
           </codx-label>
         </div>
       </div>
     </div>
-    <div class="m-0 bg-body rounded-2">
+    <div class="m-0 bg-body rounded-2 py-3 px-5 h-100">
       <ng-container *ngIf="name == 'Nội dung họp'">
         <ng-container *ngTemplateOutlet="templateMeeting"> </ng-container>
       </ng-container>
       <ng-container *ngIf="name == 'Thảo luận'">
-        <div class="tab_container" >
-          <codx-tree-history
-            [objectID]="meeting.meetingID"
-            [objectType]="'CO_Meetings'"
-            [actionType]="'C'"
-            [addNew]="true"
-            [viewIcon]="false"
-            [viewVote]="true"
-            [funcID]="funcID"
-          >
+        <div class="tab_container">
+          <codx-tree-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [actionType]="'C'"
+            [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="funcID">
           </codx-tree-history>
         </div>
       </ng-container>
@@ -127,24 +93,13 @@
 
 <ng-template #templateMeeting>
   <div class="">
-    <codx-note
-      [showMenu]="true"
-      [showMF]="true"
-      service="CO"
-      assembly="ERM.Business.CO"
-      className="MeetingsBusiness"
-      method="UpdateContentMeetingAsync"
-      [objectParentID]="meetingID"
-      [data]="meeting.contents"
-      [objectID]=""
-      [objectType]="'CO_Meetings'"
-      [vllControlShare]="'TM003'"
-      [vllRose]="'TM002'"
-    >
+    <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO" className="MeetingsBusiness"
+      method="UpdateContentMeetingAsync" [objectParentID]="meetingID" [data]="meeting.contents" [objectID]=""
+      [objectType]="'CO_Meetings'" [vllControlShare]="'TM003'" [vllRose]="'TM002'">
     </codx-note>
   </div>
 </ng-template>
 
 <ng-template #templateAssign>
-  <codx-tasks-share  [dataObj]="dataObj"  [showButtonAdd]="false"></codx-tasks-share>
+  <codx-tasks-share [dataObj]="dataObj" [showButtonAdd]="false"></codx-tasks-share>
 </ng-template>

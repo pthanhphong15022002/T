@@ -1,34 +1,14 @@
 <div class="pw-storgae">
-  <div
-    class="hover-scroll-overlay-y"
-    data-kt-scroll="true"
-    data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-height="auto"
-    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
-    data-kt-scroll-wrappers=".codx-wrapper, .wrapper, .pw-storgae, .pw-content"
-    data-kt-scroll-offset="0px"
-  >
-    <codx-listview
-      #listView
-      [dataService]="dtService"
-      [predicate]="predicate"
-      [dataValue]="dataValue"
-      [itemTemplate]="templateListCard"
-      type="cardView"
-      service="DM"
-    >
+  <div class="hover-scroll-overlay-y home-img" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".codx-wrapper, .wrapper, .pw-storgae, .pw-content" data-kt-scroll-offset="0px">
+    <codx-listview #listView [dataService]="dtService" [predicate]="predicate" [dataValue]="dataValue"
+      [itemTemplate]="templateListCard" type="cardView" service="DM">
     </codx-listview>
 
     <ng-template #templateListCard let-item>
-      <codx-card-img
-        cardCss="border rounded-4 w-200px"
-        (click)="openImg(item)"
-        [imageRecId]="item.recID"
-        [imgOn]="item?.modifiedOn"
-        [imageObjType]="item.objectType"
-        imageWidth="200"
-        imgCss="h-150px"
-      >
+      <codx-card-img cardCss="border rounded-4 w-200px" (click)="openImg(item)" [imageRecId]="item.recID"
+        [imgOn]="item?.modifiedOn" [imageObjType]="item.objectType" imageWidth="200" imgCss="h-150px">
       </codx-card-img>
     </ng-template>
   </div>

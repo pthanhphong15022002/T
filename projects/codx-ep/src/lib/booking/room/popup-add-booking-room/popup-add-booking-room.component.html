@@ -1,6 +1,7 @@
-<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]="" 
-  [footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd"
-  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]" (setTitle)="setTitle($event)"
+<codx-layout-add 
+  #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]="" 
+  [footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd" (setTitle)="setTitle($event)"
+  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]" 
   [data]="data" >
 
   
@@ -16,7 +17,7 @@
         | async
         }}</span>
     </div>
-    <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+    <codx-input ControlName="resourceID" [formModel]="form.formModel"  [crrValue]="data.resourceID"
       (valueChange)="valueCbxRoomChange($event)">
     </codx-input>
     <div class="row">
@@ -156,6 +157,11 @@
           <codx-input type="Combobox" [refValue]="'MultiUsers'" [multiple]="false" [showInput]="false" refType="P"
             [title]="'Không bắt buộc tham dự'" (valueChange)="valueCbxUserOptionalChange($event)">
           </codx-input>
+          <!-- <button class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupCbb()">
+            <span class="icon-person_add icon-18"></span></button>
+          <codx-combobox-popup [comboboxName]="'Users'" [field]="'cbbUser'" [multiple]="true" [width]="700" [height]="600"
+            [value]="" [formModel]="formModel" (clickSave)="getDataUserInCbb($event)">
+        </codx-combobox-popup> -->
         </div>
         <div class="mx-2">
           <codx-input type="Combobox" [refValue]="'MultiUsers'" [showInput]="false" refType="P"

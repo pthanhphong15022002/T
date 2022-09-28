@@ -9,15 +9,7 @@ import {
   Output,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  ApiHttpService,
-  CacheService,
-  DataRequest,
-  LangPipe,
-  NotificationsService,
-  UIComponent,
-  ViewData,
-} from 'codx-core';
+import { DataRequest, NotificationsService, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'app-policy-card',
@@ -78,7 +70,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       this.handleSaveParameter();
     }
   }
-  changValuelist(data) {
+  valueChangValueList(data) {
     this.item[data.field] = data.data.value;
     this.handleLock(data.data.value);
     let objectUpdate = {};
@@ -118,49 +110,46 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       isLockDedicate: this.isLockDedicate,
     });
   }
-  ViewData() {}
-  changeValueSwitch(nameProperty) {
-    this.item[nameProperty] = this.item[nameProperty] === '0' ? '1' : '0';
-    this.objectUpdate[nameProperty] = this.item[nameProperty];
-    this.handleSaveParameter();
-  }
-  lvInputChangeSwitch(data, value) {
-    if (data?.field) {
-      this.changeValueSwitch(data?.field);
+
+  valueChangeSwitch(e) {
+    if (e) {
+      var field = e.field;
+      this.objectUpdate[field] = e.data;
+      this.item[field] = !this.item[field];
+      this.handleSaveParameter();
     }
   }
+
   handleSaveParameter() {
     this.onSaveCMParameter(this.objectUpdate);
-    this.modalService.dismissAll();
   }
+
   onSaveCMParameter(objectUpdate) {
     this.api
       .callSv(
         'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
         'SaveParamsOfPolicyAsync',
-        ['FED_Parameters', this.typeCard, JSON.stringify(objectUpdate)]
+        ['FDParameters', this.typeCard, JSON.stringify(objectUpdate)]
       )
       .subscribe((res) => {
         if (res && res.msgBodyData.length > 0) {
           if (res.msgBodyData[0] === true) {
             this.item[this.fieldUpdate] = objectUpdate[this.fieldUpdate];
-
             this.change.detectChanges();
             //this.objectUpdate = {};
           }
         }
       });
   }
+  
   modelForm = { title: '', type: 0, quantity: 0, cycle: '' };
   async LoadLabel() {
     // var langPipe = new LangPipe(this.api, this.cache);
   }
 
-  options = new DataRequest();
-  conboboxName = '';
-  openPopupCombobox(content) {
+  openPopupCbb(content) {
     // this.cbxsv.dataSelcected = [];
     var split = this.item.Approvers.split(';');
     if (split.length > 1) {
@@ -190,12 +179,6 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
           }
         });
     }
-    // this.cbxsv.appendData();
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      centered: true,
-      size: 'md',
-    });
     this.change.detectChanges();
   }
   open(content, typeContent) {
@@ -230,19 +213,19 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     this.change.detectChanges();
   }
   changeValueListRuleSelected(selected) {
-    this.item.RuleSelected = selected.data.value;
-    this.objectUpdate['RuleSelected'] = selected.data.value;
+    this.item.RuleSelected = selected.data;
+    this.objectUpdate['RuleSelected'] = selected.data;
     this.handleSaveParameter();
   }
   changValueListPopup(selected, typeContent) {
     if (typeContent == 0) {
-      this.item.MaxSendPeriod = selected.data.value;
+      this.item.MaxSendPeriod = selected.data;
     }
     if (typeContent == 1) {
-      this.item.MaxReceivePeriod = selected.data.value;
+      this.item.MaxReceivePeriod = selected.data;
     }
     if (typeContent == 2) {
-      this.item.MaxPointPeriod = selected.data.value;
+      this.item.MaxPointPeriod = selected.data;
     }
   }
 
@@ -282,17 +265,19 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     }
 
     return this.api
-      .callSv('SYS', 'CM', 'ParametersBusiness', 'SaveParamsOfPolicyAsync', [
-        'FED_Parameters',
-        this.typeCard,
-        JSON.stringify(objectUpdate),
-      ])
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'SaveParamsOfPolicyAsync',
+        ['FDParameters', this.typeCard, JSON.stringify(objectUpdate)]
+      )
       .subscribe((res) => {
+        debugger;
         if (res && res.msgBodyData[0]) {
           if (res.msgBodyData[0] == true) {
             this.notificationsService.notify('Hệ thống thực thi thành công!');
-            this.modalService.dismissAll();
-            //this.LoadData();
+            this.LoadData();
             return;
           }
           this.notificationsService.notify('Có lỗi xảy ra!');
@@ -301,18 +286,20 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   }
   LoadData() {
     this.api
-      .call(
-        'ERM.Business.FED',
+      .execSv(
+        'FD',
+        'ERM.Business.FD',
         'SettingsBusiness',
         'GetDataForPolicyCardAsync',
-        [this.typeCard]
+        this.typeCard
       )
-      .subscribe((res) => {
-        if (res && res.msgBodyData.length > 0) {
-          this.item = res.msgBodyData[0].parameter;
+      .subscribe((res: any) => {
+        if (res && res.length > 0) {
+          this.item = JSON.parse(res[0].dataValue);
           if (Object.keys(this.item).length == 0) {
             this.isShowPolicyCard = false;
           }
+          console.log('check item', this.item);
           this.handleLock(this.item.PolicyControl);
           this.setValueListName(this.item);
           this.change.detectChanges();
@@ -323,12 +310,10 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     this.settingSV.getParameter().subscribe((res) => {
       if (res) {
         this.setValueListName(res[0]);
-        this.change.detectChanges();
       }
     });
   }
   setValueListName(list) {
-    // let item = this.mainService.convertListToObject(list, "fieldName", "fieldValue");
     if (!list) return;
     var item = JSON.parse(list.dataValue);
     const isActiveCoins = item.hasOwnProperty('ActiveCoins');
@@ -346,5 +331,9 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       return;
     }
     this.change.detectChanges();
+  }
+
+  valueChangeQuantity(event) {
+    if (event) this.modelForm.quantity = event.data;
   }
 }

@@ -194,9 +194,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
           ];
           this.views = [
             {
-              sameData: true,
-              id: '1',
-              text: 'Danh mục xe',
+              sameData: true,              
               type: ViewType.grid,
               active: true,
               model: {

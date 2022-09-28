@@ -197,13 +197,13 @@
                 </div>
                 <div *ngIf="itemSelected?.priority">
                   <span class="icon-14 me-1" [class]="
-                      itemSelected?.priority | vll: 'L0186':'icon' | async
+                      itemSelected?.priority | vll: vllPriority:'icon' | async
                     " [style.color]="
-                      itemSelected?.priority | vll: 'L0186':'textColor' | async
+                      itemSelected?.priority | vll: vllPriority:'textColor' | async
                     ">
                   </span>
                   <span class="text-gray-700">{{
-                    itemSelected?.priority | vll: "L0186":"text" | async
+                    itemSelected?.priority | vll: vllPriority:"text" | async
                     }}</span>
                 </div>
                 <div #priority *ngIf="!itemSelected?.priority">
