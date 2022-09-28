@@ -48,7 +48,8 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -71,7 +72,6 @@ export class CodxTasksComponent
   @ViewChild('treeView') treeView!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
-
 
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
@@ -121,7 +121,7 @@ export class CodxTasksComponent
   vllVerifyStatus = 'TM008';
   vllExtendStatus = 'TM010';
   vllConfirmStatus = 'TM009';
-  vllPriority ='TM005';
+  vllPriority = 'TM005';
   gridViewSetup: any;
   taskGroup: TM_TaskGroups;
   taskExtend: TM_TaskExtends = new TM_TaskExtends();
@@ -133,6 +133,8 @@ export class CodxTasksComponent
   listViewModel = [];
   dataReferences = [];
   titleAction = '';
+  predicateResource: any;
+  dataValueResource: any;
 
   constructor(
     inject: Injector,
@@ -151,7 +153,7 @@ export class CodxTasksComponent
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    //chay code chet cho nhanh, muon dong thi bat len 
+    //chay code chet cho nhanh, muon dong thi bat len
     // this.cache.functionList(this.funcID).subscribe(f => {
     //   if (f) {
     //     this.cache.gridViewSetup(f?.formName, f?.gridViewName).subscribe(res => {
@@ -202,8 +204,8 @@ export class CodxTasksComponent
     this.requestSchedule.className = 'TaskBusiness';
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
-    this.requestSchedule.predicate = "Category=@0 and CreatedBy=@1";
-    this.requestSchedule.dataValue = '2;' + this.user.userID;
+    this.requestSchedule.predicate = this.predicateResource; //"Category=@0 and CreatedBy=@1";
+    this.requestSchedule.dataValue = this.dataValueResource; //'2;' + this.user.userID;
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -760,8 +762,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -854,6 +856,13 @@ export class CodxTasksComponent
 
     idx = this.viewsActive.findIndex((x) => x.id === '8');
     if (this.funcID != 'TMT0201') {
+      if (this.funcID == 'TMT0203') {
+        this.predicateResource = 'Category=@0 and CreatedBy=@1';
+        this.dataValueResource = '2;' + this.user.userID;
+      } else if (this.funcID == 'TMT0202') {
+        this.predicateResource = 'Category=@0 or Category=@1';
+        this.dataValueResource = '1;2';
+      }
       if (idx > -1) return;
       var schedule = {
         id: '8',
@@ -904,10 +913,9 @@ export class CodxTasksComponent
     } else {
       if (idx > -1) this.viewsActive.splice(idx, 1);
     }
-
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1478,7 +1486,7 @@ export class CodxTasksComponent
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: { name: 'owner' },//trung voi idField của resourceField
+    resourceId: { name: 'owner' }, //trung voi idField của resourceField
   };
   resourceField = {
     Name: 'Resources',
