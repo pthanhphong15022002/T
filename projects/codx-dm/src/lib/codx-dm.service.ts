@@ -1327,7 +1327,7 @@ export class CodxDMService {
             else
             {
               this.api
-              .execSv("DM", 'DM', 'FolderBussiness', 'GetFoldersByIDAsync', data.recID)
+              .execSv("DM", 'DM', 'FolderBussiness', 'GetFolderByIdAsync', data.recID)
               .subscribe((item:any) => {
                 this.dataFileEditing = item;   
                 this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1",data.recID,view,type], "").closed.subscribe(item=>{

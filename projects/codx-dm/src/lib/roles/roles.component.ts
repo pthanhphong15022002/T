@@ -561,9 +561,12 @@ export class RolesComponent implements OnInit {
           if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
             this.fileEditing.permissions.splice(index, 1);//remove element from array  
             this.currentPemission = 0;
-            debugger;
-            var check = this.fileEditing.permissions.filter(x=>x.objectID == this.userID && x.objectType != "1" && x.objectType != "7");
-            if(check.length == 0) this.fileEditing.assign = false;
+            if(this.userID.toLocaleLowerCase() != "admin")
+            {
+              var check = this.fileEditing.permissions.filter(x=>x.objectID == this.userID && x.objectType != "1" && x.objectType != "7");
+              var checkEveryOne = this.fileEditing.permissions.filter(x=>x.objectType == "9");
+              if(check.length == 0 && checkEveryOne.length == 0) this.fileEditing.assign = false;
+            }
             this.changePermission(0);
           }
         }
