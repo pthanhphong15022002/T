@@ -62,6 +62,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   formUserGroup: FormGroup;
   lstUser: any;
   dataUserCbbTemp: any;
+  dataCopy: any;
 
   constructor(
     private injector: Injector,
@@ -81,6 +82,22 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
         JSON.stringify(this.data?.chooseRoles)
+      );
+      this.countListViewChoose();
+      this.adService
+        .getUserByUserGroup(this.adUserGroup.userID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.dataUserCbb = res;
+            this.dataUserCbbTemp = JSON.parse(JSON.stringify(this.dataUserCbb));
+          }
+        });
+    } else if (this.formType == 'copy') {
+      this.dataCopy = dt?.data?.dataCopy;
+      this.adUserGroup = JSON.parse(JSON.stringify(this.dataCopy));
+      this.viewChooseRole = this.dataCopy?.chooseRoles;
+      this.viewChooseRoleTemp = JSON.parse(
+        JSON.stringify(this.dataCopy?.chooseRoles)
       );
       this.countListViewChoose();
       this.adService
@@ -288,7 +305,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     var checkDifferenceUserCbb = true;
     if (this.dataUserCbb) {
       checkDifferenceUserCbb =
-        JSON.stringify(this.dataUserCbbTemp) === JSON.stringify(this.dataUserCbb);
+        JSON.stringify(this.dataUserCbbTemp) ===
+        JSON.stringify(this.dataUserCbb);
     }
     if (this.isAddMode) {
       if (this.dataUserCbb.length > 0) {
@@ -297,7 +315,10 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           .subscribe((x) => {
             if (x?.event.status == 'Y') {
               this.onAdd();
-              if (this.dataUserCbb.length > 0 && this.viewChooseRole.length > 0) {
+              if (
+                this.dataUserCbb.length > 0 &&
+                this.viewChooseRole.length > 0
+              ) {
                 this.adService
                   .updateUserRoles(
                     lstUser,
@@ -312,10 +333,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           });
       } else this.onAdd();
     } else {
-      if (
-        !checkDifferenceUserCbb ||
-        (!checkDifference)
-      ) {
+      if (!checkDifferenceUserCbb || !checkDifference) {
         this.notification
           .alertCode('AD005', null, this.adUserGroup.userName)
           .subscribe((x) => {

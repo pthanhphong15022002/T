@@ -41,7 +41,7 @@
               },
               "src/favicon.ico",
               "src/assets",
-
+              "src/appconfig.json",
               {
                 "glob": "**/*",
                 "input": "node_modules/codx-core/assets/media",
@@ -62,8 +62,6 @@
               "node_modules/@ctrl/ngx-emoji-mart/picker.css",
               "./node_modules/codx-core/assets/sass/style.scss",
               "src/styles.scss"
-
-
             ],
             "scripts": [
               "node_modules/codemirror/lib/codemirror.js",
@@ -152,7 +150,8 @@
                 "output": "/assets/"
               },
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/appconfig.json"
             ],
             "styles": [
               "src/styles.scss"

@@ -669,6 +669,7 @@ export class CodxDMService {
   filterMoreFunction(e: any, data: any, modeView = false) {
     var type = this.getType(data, 'entity');
     var bookmark = this.isBookmark(data);
+    debugger;
     var list =
       'DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233'; //DMT08
     if (e) {
@@ -1020,6 +1021,7 @@ export class CodxDMService {
   }
 
   getType(item: any, ret: string) {
+    debugger;
     var type = 'folder';
     if (ret == 'name') {
       if(item.extension)
@@ -1027,7 +1029,7 @@ export class CodxDMService {
     } else {
       // entity
       type = 'DM_FolderInfo';
-      if ((item.folderName == null || item.folderName == undefined)&& !item.extension)
+      if (!item.folderName && item.extension)
         type = 'DM_FileInfo';
     }
 
@@ -1272,7 +1274,8 @@ export class CodxDMService {
             });
           break;
           
-        case "DMT0222": // properties file         
+        case "DMT0222": // properties file      
+          debugger   
           option.DataService = this.dataService;
           option.FormModel = this.formModel;
           option.Width = '550px';
@@ -1294,7 +1297,7 @@ export class CodxDMService {
 
         case "DMT0202": // chinh sua thu muc  
         case "DMT0209": // properties folder         
-          
+          debugger
           option.DataService = this.dataService;
           option.FormModel = this.formModel;
           option.Width = '550px';
@@ -1327,7 +1330,7 @@ export class CodxDMService {
             else
             {
               this.api
-              .execSv("DM", 'DM', 'FolderBussiness', 'GetFoldersByIDAsync', data.recID)
+              .execSv("DM", 'DM', 'FolderBussiness', 'GetFolderByIdAsync', data.recID)
               .subscribe((item:any) => {
                 this.dataFileEditing = item;   
                 this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1",data.recID,view,type], "").closed.subscribe(item=>{
