@@ -66,6 +66,21 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
   lstData: any;
   lstUserShare: any[] = [];
   lstUserTag: any = [];
+  CARDTYPE_EMNUM = {
+    Commendation : "1",
+    Thankyou : "2",
+    CommentForChange : "3",
+    SuggestionImprovement : "4",
+    Share : "5",
+    Congratulation : "6",
+    Radio : "7"
+  };
+  CATEGORY = {
+    POST: "1",
+    COMMENTS: "2",
+    FEEDBACK: "3",
+    SHARE: "4",
+  }
   @Input() funcID: string = "";
   @Input() objectID: string = "";
   @Input() predicates;
@@ -292,8 +307,8 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
       this.dt.detectChanges();
     }
   }
-  naviagte(data: any) {
-    if (!data) return;
+  naviagteWPNew(data: any) {
+    if (!data || !data.recID || !data.category) return;
     this.api
       .execSv(
         'WP',

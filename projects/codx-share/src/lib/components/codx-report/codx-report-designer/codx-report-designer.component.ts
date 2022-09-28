@@ -93,7 +93,7 @@ onToolbarDesignerClick(args:any) {
 }
 
 onAjaxBeforeLoad(args:any) {
-    args.headers.push({ Key: 'lvtk', Value: this._user.token });
+  args.headers && args.headers.push({ Key: 'lvtk', Value: this._user.token });
     args.data = JSON.stringify({ reportType: "RDL" });
 }
 
