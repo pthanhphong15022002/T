@@ -118,12 +118,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
+     
   }
   onInit(): void {
-    this.initForm();  
-    // if (!this.isAdd) {
-    //   this.titleAction = 'Chỉnh sửa';
-    // }      
+    this.initForm();
     if (this.isAdd) {
       this.data.attendees= 1;
       this.data.bookingOn = new Date();  
@@ -205,8 +203,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.fGroupAddBookingCar = item;        
-        this.isAfterRender = true;        
-        console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingCar);        
+        this.isAfterRender = true;              
       });   
       this.detectorRef.detectChanges();       
   }
@@ -214,7 +211,17 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
   }
-
+ngAfterViewInit(): void {
+    this.initForm();
+    if (this.dialogRef) {
+      if (!this.isSaveSuccess) {
+        this.dialogRef.closed.subscribe((res: any) => {
+          console.log('Close without saving or save failed', res);
+          this.dialogRef.dataService.saveFailed.next(null);
+        });
+      }
+    }
+  }
   beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
@@ -224,7 +231,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
   onSaveForm() {
     this.fGroupAddBookingCar.patchValue(this.data);
-    if (this.data.invalid == true) {
+    if (this.fGroupAddBookingCar.invalid == true) {
       this.codxEpService.notifyInvalid(
         this.fGroupAddBookingCar,
         this.formModel
@@ -232,13 +239,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
       return;
     }
     if (
-      this.data.value.startDate &&
-      this.data.value.endDate
+      this.data.startDate &&
+      this.data.endDate
     ) {
       let hours = parseInt(
         (
-          (this.data.value.endDate -
-            this.data.value.startDate) /
+          (this.data.endDate -
+            this.data.startDate) /
           1000 /
           60 /
           60

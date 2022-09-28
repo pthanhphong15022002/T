@@ -93,9 +93,12 @@ export class UserGroupsComponent extends UIComponent {
       case 'SYS03':
         this.edit(data);
         break;
+      case 'SYS04':
+        this.copy(data);
+        break;
       case 'SYS02':
         this.delete(data);
-        break;
+        break
     }
   }
 
@@ -126,6 +129,23 @@ export class UserGroupsComponent extends UIComponent {
       var obj = {
         userType: 'userGroup',
         formType: 'add',
+      }
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
+    });
+  }
+
+  copy(data) {
+    if(data) this.view.dataService.dataSelected = data;
+    this.view.dataService.addNew().subscribe((res: any) => {
+      data.userID = this.view.dataService.dataSelected?.userID
+      var obj = {
+        userType: 'userGroup',
+        formType: 'copy',
+        dataCopy: data,
       }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
