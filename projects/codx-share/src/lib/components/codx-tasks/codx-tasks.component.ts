@@ -48,8 +48,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -232,10 +231,7 @@ export class CodxTasksComponent
           statusColorRef: this.vllStatus,
         },
       },
-    ];
-
-    if (this.funcID == 'TMT03011') {
-      var calendar = {
+      {
         id: '7',
         type: ViewType.calendar,
         active: false,
@@ -247,9 +243,25 @@ export class CodxTasksComponent
           template3: this.cellTemplate,
           statusColorRef: this.vllStatus,
         },
-      };
-      this.viewsActive.push(calendar);
-    }
+      }
+    ];
+
+    // if (this.funcID == 'TMT03011') {
+    //   var calendar = {
+    //     id: '7',
+    //     type: ViewType.calendar,
+    //     active: false,
+    //     sameData: true,
+    //     model: {
+    //       eventModel: this.fields,
+    //       resourceModel: this.resourceField,
+    //       template: this.eventTemplate,
+    //       template3: this.cellTemplate,
+    //       statusColorRef: this.vllStatus,
+    //     },
+    //   };
+    //   this.viewsActive.push(calendar);
+    // }
 
     var viewDefaultID = '2';
     if (this.viewMode && this.viewMode.trim() != '') {
@@ -743,8 +755,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -863,7 +875,7 @@ export class CodxTasksComponent
     }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
