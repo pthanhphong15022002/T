@@ -25,8 +25,8 @@
                                     src="../../../assets/codx/dms/{{getAvatar(fileEditing.extension)}}">
                             </div>
                             <div class="d-flex flex-column flex-grow-1">
-                                <div *ngIf="fileEditing != null" class="text-gray-600 fw-bold">
-                                    {{formatFileName(fileEditing.fileName)+fileEditing.extension}}
+                                <div *ngIf="fileEditing" class="text-gray-600 fw-bold">
+                                    {{fileEditing.fileName}}
                                 </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                             <span class="text-dark fw-bold">{{fileEditing.copyRights}}</span>
                         </div>
                     </div>
-                    <div *ngIf="fileEditing != null" class="card-rating mt-6">
+                    <div *ngIf="fileEditing" class="card-rating mt-6">
                         <div class="fw-bold text-gray-600 mb-4">{{titleRating}}</div>
                         <div class="d-flex">
                             <div class="d-flex flex-column me-20">
@@ -210,7 +210,7 @@
                                     class="btn btn-primary ms-3 min-w-60px">{{titleSend}}</span>
                             </div>
                         </div>
-                        <ng-container *ngIf="fileEditing.views != null">
+                        <ng-container *ngIf="fileEditing.views">
                             <ng-container *ngFor="let view of fileEditing.views; let i = index">
                                 <div *ngIf="view.rating > 0"
                                     class="d-flex flex-column py-3 w-100 border-bottom user-rating">
@@ -249,7 +249,7 @@
                 </div>
                 <div [ngStyle]="{'display': hideExtend ? 'none' : 'block'}" [attr.disabled]="hideExtend ? true : null"
                     *ngIf="fileEditing != null"
-                    class="extend-more pl-3 w-350px min-w-350px dm-tab-properties pe-2 ms-5 border-left py-2">
+                    class="extend-more pl-3 w-350px min-w-350px dm-tab-properties pe-2 ms-5 border-left px-2">
                     <ejs-tab>
                         <e-tabitems>
                             <e-tabitem>
@@ -293,28 +293,25 @@
                                             *ngIf="(fileEditing?.history && fileEditing?.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let history of fileEditing.history; let i = index"
                                                 class="history-item pb-6 line-hor">
-                                                <ng-container
-                                                    *ngIf="history.fileName == null || history.fileName == ''">
-                                                    <div class="d-flex ">
-                                                        <div class="me-3">
-                                                            <codx-temp-full [imageId]="history.createdBy"
-                                                                imageObjType="AD_Users" imgCss="w-35px"
-                                                                [imageWidth]="35">
-                                                            </codx-temp-full>
-                                                        </div>
-                                                        <div class="d-flex flex-column flex-grow-1">
-                                                            <!-- <div class="text-dark text-hover-primary fw-bold">
-                                                                    {{history.userName}}</div> -->
-
-                                                            <div class="task-date text-gray-500">
-                                                                <span>{{history.createdOn | timefrom}}</span>
-                                                            </div>
-                                                            <!-- <span class="text-gray-500">Business Analyst</span> -->
-                                                            <div class="task-name">{{history.description}}</div>
-                                                            <div class="task-name">{{history.note}}</div>
-                                                        </div>
+                                                <div class="d-flex ">
+                                                    <div class="me-3">
+                                                        <codx-temp-full [imageId]="history.createdBy"
+                                                            imageObjType="AD_Users" imgCss="w-35px"
+                                                            [imageWidth]="35">
+                                                        </codx-temp-full>
                                                     </div>
-                                                </ng-container>
+                                                    <div class="d-flex flex-column flex-grow-1">
+                                                        <!-- <div class="text-dark text-hover-primary fw-bold">
+                                                                {{history.userName}}</div> -->
+
+                                                        <div class="task-date text-gray-500">
+                                                            <span>{{history.createdOn | timefrom}}</span>
+                                                        </div>
+                                                        <!-- <span class="text-gray-500">Business Analyst</span> -->
+                                                        <div class="task-name">{{history.description}}</div>
+                                                        <div class="task-name">{{history.note}}</div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </ng-container>
                                     </div>
