@@ -179,11 +179,19 @@ export class CodxTasksComponent
     // this.modelResource.method = 'GetUserByTasksAsync';
 
     this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'HR';
-    this.modelResource.className = 'OrganizationUnitsBusiness';
-    this.modelResource.service = 'HR';
-    this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
-
+    if(this.funcID!='TMT03011'){
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+    }else{
+      //xu ly khi truyeefn vao 1 list resourece
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+    }
+   
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
@@ -861,7 +869,7 @@ export class CodxTasksComponent
         this.dataValueResource = '2;' + this.user.userID;
       } else if (this.funcID == 'TMT0202') {
         this.predicateResource = 'Category=@0 or Category=@1';
-        this.dataValueResource = '1;2';       
+        this.dataValueResource = '1;2';      
       }
       if (idx > -1) return;
       var schedule = {
@@ -1005,17 +1013,6 @@ export class CodxTasksComponent
   }
   //#endregion
 
-  // openViewListTaskResource(data) {
-  //   this.dialog = this.callfc.openForm(
-  //     PopupViewTaskResourceComponent,
-  //     '',
-  //     400,
-  //     500,
-  //     '',
-  //     [data, this.funcID]
-  //   );
-  // }
-
   popoverEmpList(p: any, task) {
     this.listTaskResousceSearch = [];
     this.countResource = 0;
@@ -1040,8 +1037,7 @@ export class CodxTasksComponent
           this.countResource = res.length;
           p.open();
           this.popoverCrr = p;
-          // this.titlePopover =
-          //   'Danh sách được phân công (' + this.countResource + ')';
+         
         }
       });
   }
