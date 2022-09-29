@@ -947,7 +947,71 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //change
   chooseSignDate = true;
-  changeAnnotPro(type, recID, createdOn) {}
+  changeAnnotPro(type, recID) {
+    console.log('dang chon ', this.curSelectedArea);
+    switch (type) {
+      case '6': {
+        this.curSelectedArea.text(this.formAnnot.value.content);
+        this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
+        this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
+        let style = 'normal';
+        if (this.isBold && this.isItalic) {
+          style.replace('normal', '');
+          style = 'bold italic';
+        } else if (this.isBold) {
+          style.replace('normal', '');
+          style = 'bold';
+        } else if (this.isItalic) {
+          style.replace('normal', '');
+          style = 'italic';
+        }
+
+        this.curSelectedArea.attrs.fontStyle = style;
+        this.curSelectedArea.attrs.textDecoration = this.isUnd
+          ? 'line-through'
+          : '';
+        this.curSelectedArea.draw();
+        this.tr.forceUpdate();
+        //save to db
+        let y = this.curSelectedArea.position().y;
+        let x = this.curSelectedArea.position().x;
+        let w = this.xScale;
+        let h = this.yScale;
+        let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
+        let t = new Konva.Text({});
+        t.draggable();
+        let tmpArea: tmpSignArea = {
+          signer: tmpName.Signer,
+          labelType: tmpName.LabelType,
+          labelValue: '',
+          isLock: this.curSelectedArea.draggable(),
+          allowEditAreas: this.allowEdit,
+          signDate: false,
+          dateFormat: '1',
+          location: {
+            top: y / this.yScale,
+            left: x / this.xScale,
+            width: w / this.xScale,
+            height: h / this.yScale,
+            pageNumber: this.curPage - 1,
+          },
+          stepNo: tmpName.StepNo,
+          fontStyle: this.curSelectedArea.attrs.fontFamily,
+          fontFormat:
+            this.curSelectedArea.attrs.fontStyle +
+            this.curSelectedArea.attrs.textDecoration,
+          fontSize: this.curSelectedArea.attrs.fontSize,
+          signatureType: 2,
+          comment: '',
+          createdBy: tmpName.Signer,
+          modifiedBy: tmpName.Signer,
+          recID: this.curSelectedArea.attrs.id,
+        };
+        this.saveToDB(tmpArea);
+      }
+    }
+  }
+
   changeQRRenderState(e) {
     this.renderQRAllPage = !this.renderQRAllPage;
   }
@@ -1124,17 +1188,21 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   changeAutoSignState(e: any, mode: number) {
     if (e.data && !this.autoSignState) {
-      this.autoSignState = e.data;
       this.curPage = this.pageMax;
       this.autoSign();
-      this.detectorRef.detectChanges();
     }
+    this.autoSignState = e.data;
+    this.detectorRef.detectChanges();
   }
 
   autoSign() {
     //da co vung ky
     let lstSigned = this.lstAreas.filter((area) => {
-      return area.signer && ['1', '2', '8'].includes(area.labelType);
+      return (
+        area.signer &&
+        ['1', '2', '8'].includes(area.labelType) &&
+        area.location.pageNumber + 1 == this.pageMax
+      );
     });
 
     //lst da ky id
@@ -1206,7 +1274,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           break;
         }
       }
-      console.log(url, person.signType, person);
 
       if (url != '' && labelType != '') {
         let recID = Guid.newGuid();
@@ -1235,17 +1302,75 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           });
           imgArea.scale({ x: this.xScale, y: this.yScale });
 
-          this.saveNewToDB(
-            '',
-            'img',
-            '1',
-            person.authorID,
-            person.stepNo,
-            imgArea
-          );
+          //save to db
+
+          let y = imgArea.position().y;
+          let x = imgArea.position().x;
+          let w = this.xScale;
+          let h = this.yScale;
+
+          let tmpArea: tmpSignArea = {
+            signer: person.authorID,
+            labelType: labelType,
+            labelValue: url,
+            isLock: false,
+            allowEditAreas: this.allowEdit,
+            signDate: false,
+            dateFormat: '1',
+            location: {
+              top: y / this.yScale,
+              left: x / this.xScale,
+              width: w / this.xScale,
+              height: h / this.yScale,
+              pageNumber: this.curPage - 1,
+            },
+            stepNo: person.stepNo,
+            fontStyle: '',
+            fontFormat: '',
+            fontSize: 1,
+            signatureType: 2,
+            comment: '',
+            createdBy: person.authorID,
+            modifiedBy: person.authorID,
+            recID: recID,
+          };
 
           let layer = this.lstLayer.get(this.pageMax);
           layer?.add(imgArea);
+          this.esService
+            .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
+            .subscribe((res) => {
+              if (res) {
+                imgArea?.id(res);
+                imgArea?.off('dragend');
+                imgArea?.on('dragend transformend', (e: any) => {
+                  this.addDragResizeEevent(
+                    tmpArea,
+                    e.type,
+                    imgArea?.getPosition(),
+                    imgArea?.scale()
+                  );
+                });
+                imgArea.draw();
+                this.curSelectedArea = this.lstLayer
+                  .get(tmpArea.location.pageNumber + 1)
+                  .find((child) => child.id() == tmpArea.recID);
+                this.esService
+                  .getSignAreas(
+                    this.recID,
+                    this.fileInfo.fileID,
+                    this.isApprover,
+                    this.user.userID
+                  )
+                  .subscribe((res) => {
+                    if (res) {
+                      this.lstAreas = res;
+                      this.detectorRef.detectChanges();
+                    }
+                  });
+                console.log('ket qua luu', this.lstAreas);
+              }
+            });
         };
       }
     });
