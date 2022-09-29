@@ -92,7 +92,7 @@
                         </div>
                         <div *ngIf="data.currentcounts>0" class="symbol-group symbol-hover mt-2">
                             <codx-img [width]="30" [objectId]="data.currentEmpID" objectType="HR_Employees"
-                                [numberImages]="2" placement="bottom" container="body" autoClose="outside"
+                                [numberImages]="2" placement="bottom" container="body" autoClose="outside" [objectName]="data.employeeName"
                                 [openDelay]="500" (click)="loadEmployByCountStatus(popEmpList,data.positionID,'50;60')"
                                 [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover">
                             </codx-img>
@@ -112,7 +112,7 @@
                             </codx-label>
                         </div>
                         <div *ngIf="data.onboard>0" class="symbol-group symbol-hover mt-2">
-                            <codx-img [width]="30" [objectId]="data.onboardEmpID" objectType="HR_Employees"
+                            <codx-img [width]="30" [objectId]="data.onboardEmpID" objectType="HR_Employees" [objectName]="data.employeeName"
                                 [numberImages]="2" placement="bottom" container="body" autoClose="outside"
                                 [openDelay]="500">
                             </codx-img>
@@ -132,7 +132,7 @@
                             </codx-label>
                         </div>
                         <div *ngIf="data.offboard>0" class="symbol-group symbol-hover mt-2">
-                            <codx-img [width]="30" [objectId]="data.offboardEmpID" objectType="HR_Employees"
+                            <codx-img [width]="30" [objectId]="data.offboardEmpID" objectType="HR_Employees" [objectName]="data.employeeName"
                                 [numberImages]="7" placement="bottom" container="body" autoClose="outside"
                                 [openDelay]="500">
                             </codx-img>
@@ -269,7 +269,7 @@
     <div class="d-flex align-items-start user-card p-2 mt-1 codx-bghover rounded-1"
         *ngFor="let item of listEmployeeSearch">
         <div class="me-3 ms-2">
-            <codx-img [width]="30" [objectId]="item?.employeeID" objectType="HR_Employees">
+            <codx-img [width]="30" [objectId]="item?.employeeID" [objectName]="item?.employeeName" objectType="HR_Employees">
             </codx-img>
         </div>
         <div class="d-flex flex-column flex-grow-1">
