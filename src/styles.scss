@@ -536,10 +536,14 @@ codx-mfunc .icon-file_copy {
   font-size: 11px;
 }
 
-lib-positions {
-  height: 100%;
-}
+// lib-positions {
+//   height: 100%;
+// }
 
-codx-tmmeetings {
+// codx-tmmeetings {
+//   height: 100%;
+// }
+
+codx-wrapper> :nth-child(2) {
   height: 100%;
 }

@@ -45,7 +45,11 @@ codx-view-list-detail ejs-listview .e-ul>li {
   height: calc(100vh - 235px) !important;
 }
 
-lib-taskextends {
+// lib-taskextends {
+//   height: 100%;
+// }
+
+codx-wrapper> :nth-child(2) {
   height: 100%;
 }
 
