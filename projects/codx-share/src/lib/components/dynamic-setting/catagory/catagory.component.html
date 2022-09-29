@@ -4,6 +4,7 @@
   [body]="body"
   [showHeader]="dialog"
   [dialog]="dialog!"
+  [footer]="footer"
 >
 </codx-form>
 
@@ -107,7 +108,7 @@
               [crrValue]="
                 autoDefault && autoDefault[data.fieldName]
                   ? !autoDefault[data.fieldName].stop
-                  : dataValue[data.fieldName]
+                  : dataValue[data.fieldName] || ''
               "
               (valueChange)="valueChange($event, data.fieldName, autoDefault)"
             >

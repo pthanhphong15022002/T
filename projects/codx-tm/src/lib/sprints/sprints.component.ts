@@ -57,9 +57,7 @@ export class SprintsComponent extends UIComponent {
   valuelist = {};
   action = 'edit';
   listMoreFunc = [];
-  customName ='' ;
   titleAction = '' ;
-  title ='' ;
 
   constructor(
     inject: Injector,
@@ -76,8 +74,6 @@ export class SprintsComponent extends UIComponent {
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
         this.tmSv.urlback = f.url;
-        this.customName = f?.customName ;
-        this.customName  = this.customName.charAt(0).toLocaleLowerCase() + this.customName.slice(1);
       }
     });
     this.cache.moreFunction('Sprints', 'grvSprints').subscribe((res) => {
@@ -118,7 +114,7 @@ export class SprintsComponent extends UIComponent {
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'add',this.title],
+        [this.view.dataService.dataSelected, 'add',this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -144,7 +140,7 @@ export class SprintsComponent extends UIComponent {
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddSprintsComponent,
-          [this.view.dataService.dataSelected, 'edit',this.title],
+          [this.view.dataService.dataSelected, 'edit',this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -166,7 +162,7 @@ export class SprintsComponent extends UIComponent {
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'copy',this.title],
+        [this.view.dataService.dataSelected, 'copy',this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -201,7 +197,6 @@ export class SprintsComponent extends UIComponent {
   clickMF(e: any, data: any) {
     this.itemSelected = data;
     this.titleAction = e?.text ;
-    this.title = this.titleAction + ' ' + this.customName ;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -230,7 +225,6 @@ export class SprintsComponent extends UIComponent {
   }
   click(evt: ButtonModel) {
     this.titleAction = evt?.text ;
-    this.title = this.titleAction + ' ' + this.customName ;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -296,8 +290,7 @@ export class SprintsComponent extends UIComponent {
   }
 
   changeView(evt: any) {
-    console.log('evt: ', evt);
-    var t = this;
+   
   }
 
   requestEnded(evt: any) {

@@ -90,7 +90,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
     objectType: string;
   };
   attendeesList = [];
-
+  checkLoopS=true;
+  checkLoopE=true;
+  checkLoop=true;
   grvBookingCar: any;
   strAttendees: string = '';
   vllDevices = [];
@@ -336,7 +338,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
   driverChangeWithCar(carID: string) {
     this.codxEpService.getGetDriverByCar(carID).subscribe((res) => {
       if (res) {
-        var x = res;
         let driverInfo: {
           id: string;
           text: string;
@@ -405,40 +406,41 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     let startTime =new Date(this.data.startDate);
     let endTime =new Date(this.data.endDate);
-    let crrTime = new Date();
-    if(startTime.getFullYear() < crrTime.getFullYear() || endTime.getFullYear() < crrTime.getFullYear() || endTime.getFullYear() < startTime.getFullYear() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }     
-    else if(startTime.getMonth() < crrTime.getMonth() || endTime.getMonth() < crrTime.getMonth() || endTime.getMonth() < startTime.getMonth() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }
-    else if(startTime.getDate() < crrTime.getDate() || endTime.getDate() < crrTime.getDate() || endTime.getDate() < startTime.getDate() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }
-    else if(startTime.getHours() < crrTime.getHours() || endTime.getHours() < crrTime.getHours() || endTime.getHours() < startTime.getHours() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }
-    else if(startTime.getMinutes() <= crrTime.getMinutes() || endTime.getMinutes() <= crrTime.getMinutes() || endTime.getMinutes() <= startTime.getMinutes() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
+    if(endTime <= startTime){
+      this.checkLoop=!this.checkLoop;
+      if(!this.checkLoop){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      } 
     }   
+   
   }
   startDateChange(evt:any){
     if (!evt.field || !evt.data) {
       return;  
-    } 
-    this.data.startDate= evt.data.fromDate;    
-    this.timeCheck()
+    }
+    this.data.startDate = evt.data.fromDate;    
+    if(new Date() >= new Date(this.data.startDate)){
+      this.checkLoopS=!this.checkLoopS;
+      if(!this.checkLoopS){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      }  
+    }
+    this.timeCheck();
   }
   endDateChange(evt:any){
     if (!evt.field || !evt.data) {
       return;  
     } 
     this.data.endDate= evt.data.fromDate; 
-    this.timeCheck()   
+    if(new Date() >= new Date(this.data.endDate)){      
+      this.checkLoopE=!this.checkLoopE;
+      if(!this.checkLoopE){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      } 
+    }
+    this.timeCheck();  
   }
 }
