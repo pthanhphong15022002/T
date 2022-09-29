@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ApiHttpService, ButtonModel, CodxListviewComponent, DataRequest, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CacheService, CodxListviewComponent, DataRequest, FormModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { catchError, map, Observable, of, finalize, Subscription } from 'rxjs';
 
 @Component({
@@ -38,6 +38,7 @@ export class EmpContactsComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private changedt: ChangeDetectorRef,
+    private cache: CacheService,
   ) { }
 
   ngOnDestroy(): void {
@@ -165,5 +166,31 @@ export class EmpContactsComponent implements OnInit {
 
   }
 
+  placeholder(
+    value: string,
+    formModel: FormModel,
+    field: string
+  ): Observable<string> {
+    if (value) {
+      return of(`<span>${value}</span>`);
+    } else {
+      return this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .pipe(
+          map((datas) => {
+            if (datas && datas[field]) {
+              var gvSetup = datas[field];
+              if (gvSetup) {
+                if (!value) {
+                  var headerText = gvSetup.headerText as string;
+                  return `<span class="opacity-50">${headerText}</span>`;
+                }
+              }
+            }
 
+            return `<span class="opacity-50">${field}</span>`;
+          })
+        );
+    }
+  }
 }

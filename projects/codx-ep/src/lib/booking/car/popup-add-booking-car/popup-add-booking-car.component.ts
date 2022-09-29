@@ -34,6 +34,7 @@ export class Device {
 })
 export class PopupAddBookingCarComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
+  @ViewChild('form') form: any;
 
   @Input() editResources: any;
   @Input() isAdd = true;
@@ -118,14 +119,39 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-     
+    this.data.requester =this.authService?.userValue?.userName;
   }
   onInit(): void {
-    this.initForm();
+    this.initForm(); 
+      this.cacheService.valueList('EP012').subscribe((res) => {
+        this.vllDevices = res.datas;
+        this.vllDevices.forEach((item) => {
+          let device = new Device();
+          device.id = item.value;
+          device.text = item.text;
+          this.lstDeviceCar.push(device);
+        });
+
+        if (!this.isAdd && this.data?.equipments != null) {
+          this.data?.equipments.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = equip.isPicked;
+            this.lstDeviceCar.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
+          });
+        }
+        //this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
+      });
     if (this.isAdd) {
       this.data.attendees= 1;
       this.data.bookingOn = new Date();  
-
+      
       let people = this.authService.userValue;
       this.tempAtender = {
         userId: people.userID,
@@ -138,31 +164,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       
       this.detectorRef.detectChanges();
     }
-    this.cacheService.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
-      this.vllDevices.forEach((item) => {
-        let device = new Device();
-        device.id = item.value;
-        device.text = item.text;
-        this.lstDeviceCar.push(device);
-      });
-
-      if (!this.isAdd && this.data?.equipments != null) {
-        this.data?.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceCar.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
-          });
-          this.tmplstDevice.push(tmpDevice);
-        });
-      }
-      //this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
-    });
+    
 
     if (!this.isAdd) {
       this.driverChangeWithCar(this.data?.resourceID);
@@ -211,9 +213,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
   }
-ngAfterViewInit(): void {
-    this.initForm();
-    if (this.dialogRef) {
+  ngAfterViewInit(): void {
+        if (this.dialogRef) {
       if (!this.isSaveSuccess) {
         this.dialogRef.closed.subscribe((res: any) => {
           console.log('Close without saving or save failed', res);
@@ -267,20 +268,21 @@ ngAfterViewInit(): void {
       this.attendeesList.push(people);
     });
     
-    if (this.data.value.resourceID instanceof Object) {
-      this.data.resourceID= this.data.value.resourceID[0];
-    }
-    if (this.data.value.agencyName instanceof Object) {
-      this.data.agencyName= this.data.value.agencyName[0];
-    }
-    if (this.data.value.reasonID instanceof Object) {
-      this.data.reasonID= this.data.value.reasonID[0];
-    }
+    // if (this.data.value.resourceID instanceof Object) {
+    //   this.data.resourceID= this.data.value.resourceID[0];
+    // }
+    // if (this.data.value.agencyName instanceof Object) {
+    //   this.data.agencyName= this.data.value.agencyName[0];
+    // }
+    // if (this.data.value.reasonID instanceof Object) {
+    //   this.data.reasonID= this.data.value.reasonID[0];
+    // }
     this.data.stopOn = this.data.endDate;
     this.data.bookingOn= this.data.startDate;
     this.data.category= '2';
     this.data.status= '1';
     this.data.resourceType= '2';
+    this.data.equipments= this.lstEquipment,
 
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
@@ -310,8 +312,8 @@ ngAfterViewInit(): void {
   valueCbxCarChange(event?) {
     if (event?.data != null && event?.data != '') {      
       this.tmplstDevice = [];
-      var cbxRoom = event.component.dataService.data;
-      cbxRoom.forEach((element) => {
+      var cbxCar = event.component.dataService.data;
+      cbxCar.forEach((element) => {
         if (element.ResourceID == event.data) {
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
@@ -397,5 +399,46 @@ ngAfterViewInit(): void {
     this.initForm();
     this.closeEdit.emit(data);
   }
-
+  timeCheck(){
+    if(!this.data.startDate || !this.data.endDate){
+      return;
+    }
+    let startTime =new Date(this.data.startDate);
+    let endTime =new Date(this.data.endDate);
+    let crrTime = new Date();
+    if(startTime.getFullYear() < crrTime.getFullYear() || endTime.getFullYear() < crrTime.getFullYear() || endTime.getFullYear() < startTime.getFullYear() ){
+      this.notificationsService.notifyCode('EP003');
+      return;
+    }     
+    else if(startTime.getMonth() < crrTime.getMonth() || endTime.getMonth() < crrTime.getMonth() || endTime.getMonth() < startTime.getMonth() ){
+      this.notificationsService.notifyCode('EP003');
+      return;
+    }
+    else if(startTime.getDate() < crrTime.getDate() || endTime.getDate() < crrTime.getDate() || endTime.getDate() < startTime.getDate() ){
+      this.notificationsService.notifyCode('EP003');
+      return;
+    }
+    else if(startTime.getHours() < crrTime.getHours() || endTime.getHours() < crrTime.getHours() || endTime.getHours() < startTime.getHours() ){
+      this.notificationsService.notifyCode('EP003');
+      return;
+    }
+    else if(startTime.getMinutes() <= crrTime.getMinutes() || endTime.getMinutes() <= crrTime.getMinutes() || endTime.getMinutes() <= startTime.getMinutes() ){
+      this.notificationsService.notifyCode('EP003');
+      return;
+    }   
+  }
+  startDateChange(evt:any){
+    if (!evt.field || !evt.data) {
+      return;  
+    } 
+    this.data.startDate= evt.data.fromDate;    
+    this.timeCheck()
+  }
+  endDateChange(evt:any){
+    if (!evt.field || !evt.data) {
+      return;  
+    } 
+    this.data.endDate= evt.data.fromDate; 
+    this.timeCheck()   
+  }
 }

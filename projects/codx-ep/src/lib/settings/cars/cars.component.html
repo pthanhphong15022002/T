@@ -8,12 +8,12 @@
   [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
+  (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
   [idField]="idField"
   [className]="className"
-  [method]="method"
-  (buttonClick)="click($event)"
-  (selectedChange)="onSelect($event)"
+  [method]="method"  
+  
 >
 
 <ng-template #resourceNameCol let-data>  
