@@ -9,7 +9,7 @@ import { PopupAddGiftComponent } from './popup-add-gift/popup-add-gift.component
   templateUrl: './gift-trans.component.html',
   styleUrls: ['./gift-trans.component.scss']
 })
-export class GiftTransComponent extends UIComponent implements OnInit,AfterViewInit {
+export class GiftTransComponent extends UIComponent {
     views:Array<ViewModel>;
     buttonAdd: ButtonModel;
     service:string = "FD";
