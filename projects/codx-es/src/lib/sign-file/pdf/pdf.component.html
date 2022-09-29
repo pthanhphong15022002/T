@@ -42,7 +42,7 @@
             <ng-template #content>
               <ng-container>
                 <div
-                  class="ca-space d-flex align-items-start cursor-pointer px-2 pb-2"
+                  class="ca-space d-flex align-items-start cursor-pointer px-2 pb-3"
                   *ngFor="let ca of lstCA; let idx = index"
                 >
                   <div class="position-relative symbol me-3">
@@ -65,7 +65,7 @@
                       [name]="'lblCAMemo' + idx"
                       [formModel]=""
                       [default]="'Certified by ' + ca.signerName"
-                      class="fw-bold mb-2"
+                      class="fw-bold mb-2 text-hover-primary"
                       (click)="goToSelectedCA(ca, idx)"
                     ></codx-label>
                     <div

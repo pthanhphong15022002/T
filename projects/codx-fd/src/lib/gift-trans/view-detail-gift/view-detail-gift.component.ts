@@ -22,16 +22,19 @@ export class ViewDetailGiftComponent implements OnInit,OnChanges {
   
 
   ngOnInit(): void {
-    this.getDataInfor();
+    if(this.objectID){
+      this.getDataInfor(this.objectID);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes['objectID'] && (changes['objectID'].currentValue !=  changes['objectID'].previousValue)){
-      this.getDataInfor();
+      this.getDataInfor(this.objectID);
     }
   }
-  getDataInfor(){
-    this.api.execSv(this.service,this.assemblyName,this.className,"GetGiftTranInforAsync",this.objectID)
+  getDataInfor(objectID:string){
+    if(!objectID) return;
+    this.api.execSv(this.service,this.assemblyName,this.className,"GetGiftTranInforAsync",objectID)
     .subscribe((res:any) => {
       if(res){
         this.data = res;

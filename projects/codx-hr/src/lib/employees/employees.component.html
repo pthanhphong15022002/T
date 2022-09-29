@@ -23,7 +23,7 @@
   <ng-container>
     <div (dblclick)="doubleClick(data)">
       <codx-card-center cardCss="border w-250px h-200" [formModel]="view.formModel" [imageId]="data.employeeID"
-        [imageObjType]="view.formModel.entityName" [imgOn]="data?.modifiedOn" [title]="
+        [imageObjType]="view.formModel.entityName" [imgOn]="data?.modifiedOn" [imageObjName]="data.employeeName" [title]="
           placeholder(data.employeeName, view.formModel, 'EmployeeName') | async
         " [subTitle]="
           placeholder(data.positionName, view.formModel, 'PositionID') | async
@@ -67,7 +67,7 @@
 <ng-template #itemEmployee let-data>
   <div class="d-flex align-items-top">
     <div class="d-flex align-items-start">
-      <codx-img [width]="40" class="me-4" [objectId]="data.employeeID" objectType="HR_Employees">
+      <codx-img [width]="40" class="me-4" [objectId]="data.employeeID" [objectName]="data.employeeName" objectType="HR_Employees">
       </codx-img>
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex align-items-center">

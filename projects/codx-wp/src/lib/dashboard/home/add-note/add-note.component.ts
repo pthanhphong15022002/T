@@ -303,7 +303,9 @@ export class AddNoteComponent implements OnInit {
 
   onCreateNote() {
     var date = new Date(this.currentDate);
-    this.note.createdOn = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+    this.note.createdOn = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    )
       .toISOString()
       .split('T')[0];
     this.note.noteType = this.type;
@@ -423,7 +425,12 @@ export class AddNoteComponent implements OnInit {
   }
 
   onEdit() {
-    this.note.createdOn = this.currentDate;
+    var date = new Date(this.currentDate);
+    this.note.createdOn = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .split('T')[0];
     this.note.isNote = true;
     if (this.checkPin == true) this.note.isPin = this.pin;
     if (this.listNote.length != 0) this.note.checkList = this.listNote;
@@ -444,8 +451,8 @@ export class AddNoteComponent implements OnInit {
               this.deleteFileByRecID(x.recID, true);
             });
           }
-          if (this.listFileUpload.length > 0) {
-            this.listFileUpload.forEach((dt) => {
+          if (this.listFileUpload?.length > 0) {
+            this.listFileUpload?.forEach((dt) => {
               dt.objectID = this.note.recID;
             });
             this.attachmentEdit.fileUploadList = this.listFileUpload;

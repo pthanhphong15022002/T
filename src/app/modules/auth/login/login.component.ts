@@ -183,7 +183,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     );
   }
 
-  valueChange(e) {}
+  valueChange(event:any) {
+    if(!event)
+      return;
+    let field = event.field;
+    let value = event.data;
+    this.f.password.patchValue(value);
+    this.dt.detectChanges();
+  }
 
   submit() {
     //$(this.error.nativeElement).html('');
