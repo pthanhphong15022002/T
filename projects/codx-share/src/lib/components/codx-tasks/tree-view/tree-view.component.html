@@ -5,7 +5,7 @@
     </div>
   </div>
 
-  <div [ngbTooltip]="(data?.memo || data?.memo2) ? tempHtml:  'Không có mô tả'">
+  <div [ngbTooltip]="data?.memo || data?.memo2 ? tempHtml : 'Không có mô tả'">
     <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
   </div>
   <div class="w-100px min-w-100px">
@@ -103,10 +103,10 @@
       type="hover"
     >
     </codx-mfunc>
-  </div> 
+  </div>
 </div>
 
 <ng-template #tempHtml>
-  <span *ngIf="data?.category =='2'" [innerHTML]="data?.memo2"></span>
-  <span *ngIf="data?.category !='2'" [innerHTML]="data?.memo"></span>
+  <span *ngIf="data?.category == '2'" [innerHTML]="data?.memo2"></span>
+  <span *ngIf="data?.category != '2'" [innerHTML]="data?.memo"></span>
 </ng-template>

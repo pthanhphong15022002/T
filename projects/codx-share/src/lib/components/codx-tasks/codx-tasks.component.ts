@@ -178,12 +178,12 @@ export class CodxTasksComponent
     // this.modelResource.method = 'GetUserByTasksAsync';
 
     this.modelResource = new ResourceModel();
-    if(this.funcID!='TMT03011'){
+    if (this.funcID != 'TMT03011') {
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
       this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
-    }else{
+    } else {
       //xu ly khi truyeefn vao 1 list resourece
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
@@ -191,7 +191,7 @@ export class CodxTasksComponent
       this.modelResource.method = 'GetListUserByResourceAsync';
       this.modelResource.dataValue = this.dataObj?.resources
     }
-   
+
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
@@ -232,7 +232,7 @@ export class CodxTasksComponent
     }
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
-    this.viewsActive = [
+    this.views = [
       {
         id: '1',
         type: ViewType.list,
@@ -278,16 +278,16 @@ export class CodxTasksComponent
       },
     ];
 
-    var viewDefaultID = '2';
-    if (this.viewMode && this.viewMode.trim() != '') {
-      viewDefaultID = this.viewMode;
-    }
-    this.viewsActive.forEach((obj) => {
-      if (obj.id == viewDefaultID) {
-        obj.active = true;
-      }
-    });
-    this.views = this.viewsActive;
+    // var viewDefaultID = '2';
+    // if (this.viewMode && this.viewMode.trim() != '') {
+    //   viewDefaultID = this.viewMode;
+    // }
+    // this.viewsActive.forEach((obj) => {
+    //   if (obj.id == viewDefaultID) {
+    //     obj.active = true;
+    //   }
+    // });
+    // this.views = this.viewsActive;
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
@@ -869,8 +869,8 @@ export class CodxTasksComponent
         this.requestSchedule.dataValue = '2;' + this.user.userID;
       } else {
         this.requestSchedule.predicate = 'Category=@0 or Category=@1';
-        this.requestSchedule.dataValue = '1;2';      
-       
+        this.requestSchedule.dataValue = '1;2';
+
         this.dataObj = null;
       }
       if (idx > -1) return;
@@ -1039,7 +1039,7 @@ export class CodxTasksComponent
           this.countResource = res.length;
           p.open();
           this.popoverCrr = p;
-         
+
         }
       });
   }
