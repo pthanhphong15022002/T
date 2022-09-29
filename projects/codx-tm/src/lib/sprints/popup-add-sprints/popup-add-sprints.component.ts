@@ -33,7 +33,7 @@ import { TM_Sprints } from '../../models/TM_Sprints.model';
 })
 export class PopupAddSprintsComponent implements OnInit {
   master: any;
-  title = 'Thêm Task Board';
+  title = '';
   readOnly = false;
   listUserDetail = [];
   resources = '';
@@ -50,6 +50,9 @@ export class PopupAddSprintsComponent implements OnInit {
   imageUpload: UploadFile = new UploadFile();
   showLabelAttachment = false;
   isHaveFile = false;
+  titleAction = '' ;
+  customName ='' ;
+
   
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -68,7 +71,7 @@ export class PopupAddSprintsComponent implements OnInit {
   ) {
     this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.action = dt?.data[1];
-    this.title = dt?.data[2] ;
+    this.titleAction = dt?.data[2] ;
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
@@ -92,6 +95,13 @@ export class PopupAddSprintsComponent implements OnInit {
 
   //#region init
   ngOnInit(): void {
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) {
+        this.customName = f?.customName ;
+        this.title = this.titleAction + " " + this.customName.charAt(0).toLocaleLowerCase() + this.customName.slice(1);
+      }
+    });
+
     if (this.action == 'add') {
       this.master.viewMode = '1';
       if (this.funcID == 'TMT0301') this.master.iterationType = '1';
