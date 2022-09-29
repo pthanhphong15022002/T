@@ -2,10 +2,7 @@
   <div class="container">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <img
-          src="../assets/themes/sys/default/img/DataEmpty.svg"
-          class="w-400px"
-        />
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-400px" />
         <div class="fs-5 text-dark fw-bold mt-2 text-center">
           {{ "SYS011" | mssg | async }}
         </div>
@@ -20,10 +17,10 @@
     <ng-template #header>
       <div class="container_detail mt-3">
         <div class="d-flex flex-grow-1 mb-4">
-          <div class="symbol symbol-60px symbol-circle me-4">
+          <div class="me-3">
             <codx-img [objectId]="
                 taskExtends ? itemSelected.userID : itemSelected?.createdBy
-              " objectType="AD_Users" [width]="60">
+              " objectType="AD_Users" [width]="50">
             </codx-img>
           </div>
           <div class="d-flex flex-column flex-grow-1">
@@ -89,7 +86,7 @@
                     itemSelected?.extendStatus != null &&
                     itemSelected?.extendStatus >= '3'
                   " [name]="vllExtendStatus" [field]="'ExtendStatus'" [value]="itemSelected?.extendStatus"
-                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7"> 
+                  [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7">
                 </codx-vll>
                 <codx-vll *ngIf="
                     itemSelected?.approveStatus != null &&
@@ -348,7 +345,7 @@
           </div>
         </div>
         <div *ngIf="viewTags !=''" class="mt-2">
-          <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="viewTags" >
+          <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="viewTags">
           </codx-tag>
         </div>
       </div>
@@ -365,7 +362,7 @@
               </codx-imgs>
             </div>-->
           <div *ngIf="itemSelected.category == '3'" class="user-groups">
-            <codx-imgs  [isToolTip]="false" [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="5"
+            <codx-imgs [isToolTip]="false" [objectId]="itemSelected?.assignTo" objectType="AD_Users" [numberImages]="5"
               (mouseenter)="popoverEmpList(popoverList, itemSelected)" [ngbPopover]="popEmpList"
               popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
               autoClose="outside" [openDelay]="500">
@@ -425,8 +422,9 @@
       </div>
     </ng-template>
     <ng-template #footer>
-      <codx-tabs  [vllStatus]="vllStatus" [entityName]="formModel.entityName" [formModel]="formModel"
-        [objectID]="itemSelected.recID" [funcID]="formModel.funcID" [dataTree]="dataTree" [dataReferences]="dataReferences"></codx-tabs>
+      <codx-tabs [vllStatus]="vllStatus" [entityName]="formModel.entityName" [formModel]="formModel"
+        [objectID]="itemSelected.recID" [funcID]="formModel.funcID" [dataTree]="dataTree"
+        [dataReferences]="dataReferences"></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
 </ng-container>

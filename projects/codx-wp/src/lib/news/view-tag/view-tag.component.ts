@@ -10,8 +10,8 @@ import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService
 export class ViewTagComponent implements OnInit {
   funcID = "";
   entityName = "WP_News";
-  predicate = "(ApproveStatus==@0 or ApproveStatus==null) && Status==@1";
-  dataValue = "5;2";
+  predicate = "Category != @0 && (ApproveStatus==@1 or ApproveStatus==null) && Status==@2 && Stop==false";
+  dataValue = "companyinfo;5;2";
   predicates:any = ["Tags.Contains(@0)"];
   dataValues:any;
   sortColumns = "CreatedOn";
@@ -46,13 +46,16 @@ export class ViewTagComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((param:any) => {
-      this.funcID = param['funcID'];
-      this.tagName = param['tagName'];
-      this.dataValues = [this.tagName];
-      if(this.codxListView){
-        this.codxListView.dataService.setPredicates(this.predicates,this.dataValues).subscribe();
+      if(param){
+        this.funcID = param['funcID'];
+        this.tagName = param['tagName'];
+        this.dataValues = [this.tagName];
+        if(this.codxListView){
+          this.codxListView.dataService.setPredicates(this.predicates,this.dataValues).subscribe();
+        }
+        this.loadData();
       }
-      this.loadData();
+      
     })
   }
 

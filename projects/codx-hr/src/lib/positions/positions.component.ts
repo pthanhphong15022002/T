@@ -112,6 +112,10 @@ export class PositionsComponent  extends UIComponent {
     this.changedt.detectChanges();
   }
 
+ receiveMF(e: any) {
+    this.clickMF(e.e, this.itemSelected);
+  }
+
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS03':
