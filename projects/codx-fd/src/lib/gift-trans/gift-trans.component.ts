@@ -25,7 +25,6 @@ export class GiftTransComponent extends UIComponent implements OnInit,AfterViewI
     @ViewChild("itemTemplate") itemTemplate:TemplateRef<any>;
     @ViewChild("panelRightRef") panelRightRef:TemplateRef<any>;
     @ViewChild("panelLefRef") panelLefRef:TemplateRef<any>;
-    @ViewChild("codxViews") codxViews:ViewsComponent;
 
     
     constructor(
@@ -65,10 +64,10 @@ export class GiftTransComponent extends UIComponent implements OnInit,AfterViewI
 
 
     clickShowAssideRight() {
-        if(!this.codxViews) return;
+        if(!this.view) return;
         let option = new SidebarModel();
-        option.DataService = (this.codxViews.dataService as CRUDService);
-        option.FormModel = this.codxViews.formModel;
+        option.DataService = (this.view.dataService as CRUDService);
+        option.FormModel = this.view.formModel;
         this.callfc.openSide(PopupAddGiftComponent,null,option,"");
     }
     selectedChange(event:any){
