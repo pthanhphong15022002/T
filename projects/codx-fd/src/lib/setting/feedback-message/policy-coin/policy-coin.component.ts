@@ -86,6 +86,6 @@ export class PolicyCoinComponent extends UIComponent implements OnInit {
   }
 
   LoadDetailPolicy(recID) {
-    // this.codxService.navigate(["/" + this.tenant + "/fed/detailpolicy"], { queryParams: { type: "coin", cardtype: this.typeCard,funcID:this.funcID,recID:recID } });
+    this.codxService.navigate('','fd/detailpolicy', { type: "coin", cardtype: this.typeCard,funcID:this.funcID,recID:recID });
   }
 }
