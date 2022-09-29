@@ -293,14 +293,15 @@ export class StorageComponent
 
   removePost(data) {
     if(data) {
-      var details = this.dataUpdate?.details;
-      for(let i = 0; i < details.length; i++) {
-        if(details[i].refID == data.recID)
+      for(let i = 0; i < this.dataUpdate?.details.length; i++) {
+        if(this.dataUpdate?.details[i].refID == data.recID)
         {
-          details.splice(i, 1);
+          this.dataUpdate?.details.splice(i, 1);
         }
       }
-      
+      this.api.exec('ERM.Business.WP', 'StoragesBusiness', 'UpdateStorageAsync', this.dataUpdate).subscribe(res =>{
+        if(res) debugger;
+      });
     }
   }
 }
