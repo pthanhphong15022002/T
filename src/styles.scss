@@ -556,3 +556,16 @@ codx-wrapper> :nth-child(2) {
 .login-aside .e-input-group.e-control-wrapper:not(.e-disabled) .e-input-group-icon:hover {
   background-color: transparent;
 }
+
+.system-settings {
+  max-width: 1100px;
+  display: flex;
+  margin: 0 auto;
+}
+
+
+lib-company-setting {
+  max-width: 1100px;
+  display: flex;
+  margin: 0 auto;
+}

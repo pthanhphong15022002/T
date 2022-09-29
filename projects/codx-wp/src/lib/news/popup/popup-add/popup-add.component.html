@@ -100,11 +100,18 @@
                                 </div>
                             </ng-template>
                             <div class="d-none">
-                                <codx-attachment #codxATMImage [functionID]="dialogRef?.formModel.funcID"
-                                    [objectType]="dialogRef?.formModel.entityName" [objectType]="'WP_News'"
-                                    [idBrowse]="'atmImage'" [allowMultiFile]="0" [showMessage]="0"
-                                    [hideImageUpload]="'1'" [hideUploadBtn]="1" [hideBtnSave]="1" [hideImageThumb]="1"
-                                    [hideUploadBtn]="1" [showMessage]="0" (fileCount)="addImage($event)">
+                                <codx-attachment #codxATMImage 
+                                    [functionID]="dialogRef?.formModel.funcID"
+                                    [objectType]="'WP_News'"
+                                    [allowMultiFile]="0" 
+                                    [showMessage]="0"
+                                    [hideImageUpload]="'1'" 
+                                    [hideUploadBtn]="1" 
+                                    [hideBtnSave]="1"
+                                    [hideImageThumb]="1"
+                                    [hideUploadBtn]="1" 
+                                    [showMessage]="0" 
+                                    (fileCount)="addFiles($event)">
                                 </codx-attachment>
                             </div>
                         </div>
@@ -157,14 +164,15 @@
                             </ng-container>
                         </div>
 
-                        <div class="d-none">
-                            <codx-attachment #codxATMVideo [functionID]="dialogRef?.formModel.funcID"
+                        <!-- <div class="d-none">
+                            <codx-attachment 
+                                [functionID]="dialogRef?.formModel.funcID"
                                 [objectType]="dialogRef?.formModel.entityName" [objectType]="'WP_News'"
                                 [allowMultiFile]="0" [showMessage]="0" [hideImageUpload]="'1'" [hideUploadBtn]="1"
                                 [hideBtnSave]="1" [hideImageThumb]="1" [idBrowse]="'atmVideo'"
-                                (fileCount)="addVideo($event)">
+                                (fileCount)="addFiles($event)">
                             </codx-attachment>
-                        </div>
+                        </div> -->
                     </div>
                 </ng-template>
             </div>
