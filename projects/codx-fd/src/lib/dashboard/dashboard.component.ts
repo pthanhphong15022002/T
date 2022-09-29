@@ -64,7 +64,7 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
 
   lstCountCard:any[] = [];
   getDataAmountCard(){
-    this.api.call("ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", [])
+    this.api.execSv("FD","ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", [])
     .subscribe((res:any) => {
       if (res) 
       {
