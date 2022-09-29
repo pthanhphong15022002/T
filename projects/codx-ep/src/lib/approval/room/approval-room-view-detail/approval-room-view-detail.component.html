@@ -150,11 +150,18 @@
             </div>
           </a>
           <ng-template ngbNavContent>
-            <ng-container *ngTemplateOutlet="defaulEmpt">
-              <span>{{itemDetail.memo}}</span>
-            </ng-container>
+            <div *ngIf="itemDetail?.memo !=null">
+              <span>{{ itemDetail?.memo }}</span>
+            </div>
+            <div *ngIf="itemDetail?.memo ==null">
+              <ng-container *ngTemplateOutlet="defaulEmpt">
+              </ng-container>
+            </div>
+            
+              
           </ng-template>
         </li>
+        
         <li [ngbNavItem]="2">
           <a ngbNavLink>
             <div class="d-flex align-item-center">

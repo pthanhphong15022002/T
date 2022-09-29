@@ -9,10 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  ApiHttpService,
   CallFuncService,
-  CRUDService,
-  NotificationsService,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -173,14 +170,21 @@ export class PatternComponent extends UIComponent implements OnInit {
       option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
-        if (e?.event?.save) {
-          this.view.dataService.add(e.event.save).subscribe();
+        if (e?.event?.data?.save) {
           this.lstPattern.splice(this.lstPattern.length - 1, 1);
-          this.lstPattern.push(e.event.save);
+          this.lstPattern.push(e.event?.data?.save);
           this.lstPattern.push({});
+          if (e.event.data.save.isDefault) {
+            this.lstPattern.forEach((dt, index) => {
+              if (dt.recID == e.event.data.save.recID)
+                this.lstPattern[index].isDefault = true;
+              else this.lstPattern[index].isDefault = false;
+            });
+          }
         }
       });
     });
+    this.change.detectChanges();  
   }
 
   openFormEdit(item = null, i = null, elm = null) {
@@ -204,9 +208,9 @@ export class PatternComponent extends UIComponent implements OnInit {
         this.dialog.closed.subscribe((e) => {
           if (e?.event?.data.update) {
             this.lstPattern.forEach((dt, index) => {
-              if (dt.recID == e.event.data.update.recID) {
+              if (dt.recID == e.event.data.update.recID)
                 this.lstPattern[index] = e.event.data.update;
-              }
+              else this.lstPattern[index].isDefault = false;
             });
             if (e.event.listFile) {
               this.lstFile = new Array();
@@ -237,7 +241,7 @@ export class PatternComponent extends UIComponent implements OnInit {
             if (dt.objectID == res.data.recID)
               this.patternSV.deleteFile(res.data.recID);
           });
-          this.lstPattern.splice(index, index);
+          this.lstPattern.splice(index, 1);
         }
       });
     this.change.detectChanges();

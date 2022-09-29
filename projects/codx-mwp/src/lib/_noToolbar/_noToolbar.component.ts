@@ -16,17 +16,13 @@ export class LayoutNoToolbarComponent extends LayoutBaseComponent {
   module = 'MWP';
   dialog!: DialogRef;
   override aside = true;
- // override asideFixed = false; 
+  override asideFixed = false;
   override toolbar = false;
-  constructor(
-    inject: Injector,
-    private callfc: CallFuncService
-  ) {
+  constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
   }
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
   onAfterViewInit(): void {}
 

@@ -4,6 +4,7 @@
   [body]="body"
   [showHeader]="dialog"
   [dialog]="dialog!"
+  [footer]="footer"
 >
 </codx-form>
 
@@ -58,55 +59,74 @@
       [attr.data-group]="data.refLineID"
     >
       <div class="d-flex justify-content-between">
-        <ng-container
-          *ngIf="data.icon && data.icon.includes('.svg'); else icon"
-        >
-          <span
-            [inlineSVG]="'./assets/themes/sys/default/img/' + data.icon"
-            class="svg-icon"
-          ></span>
-        </ng-container>
-        <ng-template #icon>
-          <span [ngClass]="data.icon" class="icon-16"></span>
-        </ng-template>
-
-        <div class="d-flex flex-column">
-          <div class="fs-6 fw-bold text-dark">
+        <div class="w-50px">
+          <ng-container
+            *ngIf="data.icon && data.icon.includes('.svg'); else icon"
+          >
+            <span
+              [inlineSVG]="'./assets/themes/sys/default/img/' + data.icon"
+              class="svg-icon"
+            ></span>
+          </ng-container>
+          <ng-template #icon>
+            <span [ngClass]="data.icon" class="icon-16"></span>
+          </ng-template>
+        </div>
+        <div class="d-flex flex-column w-100">
+          <div class="fw-bold text-dark">
             {{ data.tilte }}
           </div>
           <div class="text-gray-500">
             {{ data.description }}
           </div>
         </div>
-        <div class="d-flex align-items-top ms-4">
-          <codx-input
-            [style]="
-              data.controlType == 'TextBox' || data.controlType == 'Combobox'
-                ? 'width: 200px'
-                : ''
-            "
+        <div
+          class="d-flex align-items-top ms-4 min-w-300px justify-content-end"
+        >
+          <ng-container
             *ngIf="data.controlType && data.controlType != 'GroupControl'"
-            [type]="data.controlType == 'TextBox' ? 'text' : data.controlType"
-            [name]="data.controlType"
-            placeholder=""
-            ngDefaultControl
-            [refType]="data.referedType"
-            [refValue]="data.referedValue || data.referdValue"
-            [loadFull]="true"
-            [field]="data.fieldName"
-            [checked]="dataValue[data.fieldName] == '1'"
-            [crrValue]="dataValue[data.fieldName] || ''"
-            (valueChange)="valueChange($event)"
           >
-          </codx-input>
+            <codx-input
+              [style]="
+                data.controlType == 'TextBox' || data.controlType == 'Combobox'
+                  ? 'width: 200px'
+                  : ''
+              "
+              [type]="data.controlType == 'TextBox' ? 'text' : data.controlType"
+              [name]="data.controlType"
+              placeholder=""
+              ngDefaultControl
+              [refType]="data.referedType"
+              [refValue]="data.referedValue || data.referdValue"
+              [loadFull]="true"
+              [field]="data.fieldName"
+              [checked]="
+                autoDefault && autoDefault[data.fieldName]
+                  ? !autoDefault[data.fieldName].stop
+                  : dataValue[data.fieldName] == '1'
+              "
+              [crrValue]="
+                autoDefault && autoDefault[data.fieldName]
+                  ? !autoDefault[data.fieldName].stop
+                  : dataValue[data.fieldName] || ''
+              "
+              (valueChange)="valueChange($event, data.fieldName, autoDefault)"
+            >
+            </codx-input>
+          </ng-container>
+
           <ng-container *ngIf="data.category == '2'">
             <codx-input
               type="Switch"
               name="Switch"
               placeholder=""
               [field]="data.fieldName"
-              [checked]="autoDefault ? autoDefault[data.fieldName] : false"
-              (valueChange)="valueChange($event)"
+              [crrValue]="
+                autoDefault && autoDefault[data.fieldName]
+                  ? !autoDefault[data.fieldName].stop
+                  : false
+              "
+              (valueChange)="valueChange($event, data.fieldName, autoDefault)"
             >
             </codx-input>
             <codx-label
@@ -186,4 +206,15 @@
       <hr *ngIf="!isGroup" />
     </div>
   </ng-template>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex flex-stack" *ngIf="dialog">
+    <div class="right justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="click($event)">
+        <codx-label name="lblSave" formName="Settings" default="Lưu">
+        </codx-label>
+      </button>
+    </div>
+  </div>
 </ng-template>
