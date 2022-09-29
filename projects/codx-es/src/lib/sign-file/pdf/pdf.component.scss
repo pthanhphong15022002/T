@@ -469,7 +469,8 @@
     left: 0 !important;
   }
   ngx-extended-pdf-viewer .pdfViewer .page {
-    border: 0 !important;
+    // border: 0 !important;
+    border-image: none !important;
   }
   .reason_Info > p {
     margin: 0;
