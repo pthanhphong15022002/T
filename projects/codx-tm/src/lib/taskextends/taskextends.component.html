@@ -1,35 +1,68 @@
-<codx-views #view service="TM" entityName="TM_TaskExtends" idField="taskID" assemblyName="ERM.Business.TM"
-  className="TaskExtendsBusiness" method="GetListTaskExtendsAsync" [views]="views" (requestEnded)="requestEnded($event)"
-  (selectedChange)="selectedChange($event)" [selectedFirst]="true" [autoLoad]="true">
+<codx-views
+  #view
+  service="TM"
+  entityName="TM_TaskExtends"
+  idField="taskID"
+  assemblyName="ERM.Business.TM"
+  className="TaskExtendsBusiness"
+  method="GetListTaskExtendsAsync"
+  [views]="views"
+  (requestEnded)="requestEnded($event)"
+  (selectedChange)="selectedChange($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+>
 </codx-views>
 
 <ng-template #panelRight>
-  <share-view-detail #detail [formModel]="view.formModel" [taskID]="taskExtends?.taskID" [taskExtends]="taskExtends" 
-    [vllStatus]="vllStatus" [vllExtendStatus]="vllExtendStatus" (clickMoreFunction)="receiveMF($event)">
+  <share-view-detail
+    #detail
+    [formModel]="view.formModel"
+    [taskID]="taskExtends?.taskID"
+    [taskExtends]="taskExtends"
+    [vllStatus]="vllStatus"
+    [vllExtendStatus]="vllExtendStatus"
+    (clickMoreFunction)="receiveMF($event)"
+  >
   </share-view-detail>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template list-task border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
-    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" [imageId]="data.createdBy" imageObjType="AD_Users"
-    [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.reason"
-    [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
+  <codx-temp-full
+    cardCss="card-template border-bottom p-3 list-task"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [imageId]="data.createdBy"
+    imageObjType="AD_Users"
+    [title]="data.userNameCreate"
+    [subTitle]="data.positionNameCreate"
+    [content]="data.reason"
+    [formModel]="view.formModel"
+    [footer]="footerList"
+    [dataItem]="data"
+  >
   </codx-temp-full>
 </ng-template>
-
 
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-2">
     <div class="d-flex align-items-end ms-14 codx-badge">
       <span>
-        <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
-          [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
+        <codx-vll
+          [formModel]="view.formModel"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 me-2"
+        >
         </codx-vll>
       </span>
       <span>
         <span class="fs-7 text-gray-600">{{
           data.createdOn | date: "dd/MM/yyyy"
-          }}</span>
+        }}</span>
       </span>
     </div>
   </div>
