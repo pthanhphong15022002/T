@@ -277,6 +277,44 @@ export class CodxTasksComponent
           statusColorRef: this.vllStatus,
         },
       },
+      {
+        id: '8',
+        type: ViewType.schedule,
+        active: false,
+        sameData: false,
+        request: this.requestSchedule,
+        request2: this.modelResource,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template4: this.resourceHeader,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          statusColorRef: this.vllStatus,
+        },
+      },
+      {
+        id: '16',
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        text: 'Cây',
+        icon: 'icon-account_tree',
+        // request: {
+        //   idField: 'recID',
+        //   parentIDField: 'ParentID',
+        //   service: 'TM',
+        //   assemblyName: 'TM',
+        //   className: 'TaskBusiness',
+        //   method: 'GetTasksAsync',
+        //   autoLoad: true,
+        //   dataObj: null,
+        // },
+        model: {
+          // template: this.treeView,
+          panelLeftRef: this.treeView
+        },
+      },
     ];
 
     // var viewDefaultID = '2';
@@ -896,35 +934,35 @@ export class CodxTasksComponent
       if (idx > -1) this.viewsActive.splice(idx, 1);
     }
 
-    idx = this.viewsActive.findIndex((x) => x.id === '16');
-    if (this.funcID == 'TMT0203') {
-      if (idx > -1) return;
-      var tree = {
-        id: '16',
-        type: ViewType.content,
-        active: false,
-        sameData: false,
-        text: 'Cây',
-        icon: 'icon-account_tree',
-        // request: {
-        //   idField: 'recID',
-        //   parentIDField: 'ParentID',
-        //   service: 'TM',
-        //   assemblyName: 'TM',
-        //   className: 'TaskBusiness',
-        //   method: 'GetTasksAsync',
-        //   autoLoad: true,
-        //   dataObj: null,
-        // },
-        model: {
-          // template: this.treeView,
-          panelLeftRef: this.treeView
-        },
-      };
-      this.viewsActive.push(tree);
-    } else {
-      if (idx > -1) this.viewsActive.splice(idx, 1);
-    }
+    // idx = this.viewsActive.findIndex((x) => x.id === '16');
+    // if (this.funcID == 'TMT0203') {
+    //   if (idx > -1) return;
+    //   var tree = {
+    //     id: '16',
+    //     type: ViewType.content,
+    //     active: false,
+    //     sameData: false,
+    //     text: 'Cây',
+    //     icon: 'icon-account_tree',
+    //     // request: {
+    //     //   idField: 'recID',
+    //     //   parentIDField: 'ParentID',
+    //     //   service: 'TM',
+    //     //   assemblyName: 'TM',
+    //     //   className: 'TaskBusiness',
+    //     //   method: 'GetTasksAsync',
+    //     //   autoLoad: true,
+    //     //   dataObj: null,
+    //     // },
+    //     model: {
+    //       // template: this.treeView,
+    //       panelLeftRef: this.treeView
+    //     },
+    //   };
+    //   this.viewsActive.push(tree);
+    // } else {
+    //   if (idx > -1) this.viewsActive.splice(idx, 1);
+    // }
   }
 
   requestEnded(evt: any) { }
