@@ -40,7 +40,6 @@ export class ApproveComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('codxView') codxViews: ViewsComponent;
   @ViewChild('viewdetail') viewdetail: ApproveDetailComponent;
 
 
@@ -84,7 +83,6 @@ export class ApproveComponent extends UIComponent {
   ]
   constructor
     (
-      private dt: ChangeDetectorRef,
       private notifySvr: NotificationsService,
       private auth: AuthService,
       private callFuc: CallFuncService,
@@ -114,7 +112,7 @@ export class ApproveComponent extends UIComponent {
       }
       this.getGridViewSetUp().subscribe();
       this.loadTabAsside(this.predicate, this.dataValue, this.entityName);
-      this.dt.detectChanges();
+      this.detectorRef.detectChanges();
     });
   }
   ngAfterViewInit(): void {
@@ -128,7 +126,6 @@ export class ApproveComponent extends UIComponent {
         panelRightRef: this.panelRightRef
       }
     }];
-    this.dt.detectChanges();
   }
 
   getGridViewSetUp() {
@@ -137,7 +134,7 @@ export class ApproveComponent extends UIComponent {
         subscribe((grd: any) => {
           if (grd) {
             this.gridViewSetUp = grd;
-            this.dt.detectChanges();
+            this.detectorRef.detectChanges();
           }
         });
     }
@@ -160,33 +157,33 @@ export class ApproveComponent extends UIComponent {
             }
             else tab.total = res.filter((x: any) => x == tab.value).length;
           })
-          this.dt.detectChanges();
+          this.detectorRef.detectChanges();
         }
         else {
           this.tabAsside.map((tab: any) => tab.total = 0);
-          this.dt.detectChanges();
+          this.detectorRef.detectChanges();
         }
       }
     );
   }
   loadData(predicate: string, dataValue: string) {
-    this.codxViews.entityName = this.entityName;
+    this.view.entityName = this.entityName;
     if (predicate && dataValue) {
-      this.codxViews.dataService.setPredicates([predicate], [dataValue]).subscribe();
+      this.view.dataService.setPredicates([predicate], [dataValue]).subscribe();
     }
     else {
-      this.codxViews.dataService.setPredicates([], []).subscribe();
+      this.view.dataService.setPredicates([], []).subscribe();
     }
   }
   selectedID: string = "";
   clickViewDetail(postID: string) {
     this.selectedID = postID;
-    this.dt.detectChanges();
+    this.detectorRef.detectChanges();
   }
   selectedChange(event: any) {
     if (!event.data) return;
     this.selectedID = event.data.recID;
-    this.dt.detectChanges();
+    this.detectorRef.detectChanges();
   }
   clickApprovePost(event: any) {
     let approveStatus = event.approveStatus;
@@ -228,9 +225,9 @@ export class ApproveComponent extends UIComponent {
             }
           });
           this.tabAsside[1].total++;
-          this.codxViews.dataService.remove(data).subscribe();
+          this.view.dataService.remove(data).subscribe();
           this.notifySvr.notifyCode("WP005");
-          this.dt.detectChanges();
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -246,9 +243,9 @@ export class ApproveComponent extends UIComponent {
             if (t.value == data.approveStatus) t.total--;
           })
           this.tabAsside[2].total++;
-          this.codxViews.dataService.remove(data).subscribe();
+          this.view.dataService.remove(data).subscribe();
           this.notifySvr.notifyCode("WP007");
-          this.dt.detectChanges();
+          this.detectorRef.detectChanges();
         }
       }
       );
@@ -261,7 +258,7 @@ export class ApproveComponent extends UIComponent {
         if (res) {
           this.dataDetail = null;
           this.notifySvr.notifyCode("WP009");
-          this.dt.detectChanges();
+          this.detectorRef.detectChanges();
         }
       }
       );
@@ -285,8 +282,8 @@ export class ApproveComponent extends UIComponent {
         break;
       case 'SYS03':
         let option = new DialogModel();
-        option.DataService = this.codxViews.dataService;
-        option.FormModel = this.codxViews.formModel;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
         if (this.entityName == "WP_News") {
           option.IsFull = true;
           this.callFuc.openForm(PopupEditComponent, 'Cập nhật bài viết', 0, 0, this.funcID, data, '', option);
@@ -301,8 +298,8 @@ export class ApproveComponent extends UIComponent {
                   headerText: 'Chỉnh sửa bài viết',
                 };
                 let option = new DialogModel();
-                option.DataService = this.codxViews.dataService;
-                option.FormModel = this.codxViews.formModel;
+                option.DataService = this.view.dataService;
+                option.FormModel = this.view.formModel;
                 this.callfc.openForm(PopupAddPostComponent, '', 700, 550, '', obj, '', option).closed.subscribe((data: any) => {
                   if (data.result) {
                     console.log(data);
@@ -333,7 +330,7 @@ export class ApproveComponent extends UIComponent {
 
   deletedPost(data: any) {
     if (!data) return;
-    this.codxViews.dataService.delete(
+    this.view.dataService.delete(
       [data],
       true,
       (opt: any) => this.beforDeletedPost(opt, data)).subscribe();

@@ -35,7 +35,7 @@ import { environment } from 'src/environments/environment';
     SharedModule,
     CoreModule,
     ERMModule,
-
+    CodxCoreModule,
     AuthRoutingModule,
     HoverPreloadModule,
     CodxCoreModule.forRoot({environment}),

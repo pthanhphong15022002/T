@@ -70,8 +70,7 @@
                     </codx-input>
                 </span>
                 <span class="w-30px h-20px d-flex justify-content-center">
-                    <span class="icon-edit text-hover-primary icon-20"
-                        (click)="openPopupCbb(UserGroups)"></span>
+                    <span class="icon-edit text-hover-primary icon-20" (click)="openPopupCbb(UserGroups)"></span>
                 </span>
             </div>
         </div>
@@ -94,7 +93,7 @@
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class=" icon-edit text-hover-primary icon-20" (click)="open(content, 0)"></span>
+                <span class="icon-edit text-hover-primary icon-20" (click)="open(content, 0)"></span>
             </span>
 
         </div>
@@ -223,9 +222,9 @@
                 <codx-label name="lblQuantity" [formModel]="formModel" [default]="'Số lượng'"></codx-label>
             </div>
             <div class="col-xl-9 col-md-9">
-                <codx-input [crrValue]="modelForm.quantity" type="number" min="1" class="form-control" [showSpinButton]="false"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="3"
-                    (valueChange)="valueChangeQuantity($event)">
+                <codx-input [crrValue]="modelForm.quantity" type="number" min="1" class="form-control"
+                    [showSpinButton]="false" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    placeholder="3" (valueChange)="valueChangeQuantity($event)">
                 </codx-input>
             </div>
         </div>
@@ -245,7 +244,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="onSavePopup(modelForm.type)">
+        <button type="button" class="btn btn-primary" (click)="onSavePopup(modelForm.type)"
+            (click)="modal.close('Save click')">
             {{'Lưu' | lang:'PolicyCard':'lblSave' | async}}
         </button>
     </div>

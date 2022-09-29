@@ -46,9 +46,18 @@
                                                 <div
                                                     class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
                                                     <div class="d-flex flex-column flex-grow-1">
-                                                        <input class="form-control border-0 p-0 ps-3" type="Password"
+                                                        <codx-input 
+                                                            type="password" 
+                                                            field="Password" 
+                                                            placeholder="Mật khẩu" 
+                                                            formControlName="password"
+                                                            [class]="'border-0'"
+                                                            (valueChange)="valueChange($event)"
+                                                            >
+                                                        </codx-input>
+                                                        <!-- <input class="form-control border-0 p-0 ps-3" type="Password"
                                                             placeholder="Mật khẩu" formControlName="password"
-                                                            field="Password">
+                                                            field="Password"> -->
                                                     </div>
                                                 </div>
                                             </div>

@@ -142,11 +142,17 @@
             </ng-container>
             <ng-template #video>
                 <div class="w-100 border h-500px" (click)="clickUploadFile()">
-                    <div class="w-100" *ngIf="fileVideo.length > 0">
-                        <video controls class="w-100 h-300px">
-                            <source [src]="fileVideo[0].data || fileVideo[0].srcVideo" alt="" />
+                    <ng-container *ngIf="fileVideo;else haveVideo">
+                        <video controls class="w-100 h-450px">
+                            <source [src]="fileVideo.srcVideo" type="video/mp4">
                         </video>
-                    </div>
+                    </ng-container>
+                    <ng-template #haveVideo>
+                        <wp-video 
+                            [ObjectID]="data.recID"
+                            [ObjectType]="'WP_News'">
+                        </wp-video>
+                    </ng-template>
                 </div>
             </ng-template>
         </div>
@@ -169,6 +175,6 @@
 </div>
 <!-- templateshare -->
 <ng-template #controlShare let-dialog>
-    <codx-share [dialog]="dialog" [multiple]="false" listName="WP003" (eventApply)="eventApply($event)">
+    <codx-share [dialog]="dialog" [multiple]="false" listName="WP001" (eventApply)="eventApply($event)">
     </codx-share>
 </ng-template>

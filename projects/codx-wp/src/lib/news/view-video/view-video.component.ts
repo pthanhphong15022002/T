@@ -4,7 +4,7 @@ import { ApiHttpService, AuthService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-view-file',
+  selector: 'wp-video',
   templateUrl: './view-video.component.html',
   styleUrls: ['./view-video.component.scss']
 })
@@ -26,16 +26,18 @@ export class ViewVideoComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.ObjectID){
-      this.getFileByObjectID();
+      this.getFileByObjectID(this.ObjectID);
     }
   }
 
-  getFileByObjectID(){
+  getFileByObjectID(objectID:string){
+    if(!objectID) return;
     this.api.execSv(
-      "DM","ERM.Business.DM",
+      "DM",
+      "ERM.Business.DM",
       "FileBussiness",
       "GetFilesByObjectIDImageAsync",
-      this.ObjectID)
+      [objectID])
     .subscribe((files:any[]) => {
       if(files.length > 0){
         let fileVideo = files.find((f:any) => f.referType == this.FILE_REFERTYPE.VIDEO);
