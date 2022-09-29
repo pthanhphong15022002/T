@@ -1,4 +1,4 @@
-<codx-views #codxViews 
+<codx-views #view 
 [views]="views" 
 [idField]="'recID'" 
 [button]="buttonAdd" 
@@ -16,7 +16,7 @@
         <codx-temp-full 
             [dataItem]="data"
             [typeMF]="'hover'" 
-            [formModel]="codxViews.formModel"
+            [formModel]="view.formModel"
             (clickMF)="clickMF($event,data)"
             [imageId]="data.itemID"
             imageObjType="AD_Users"
@@ -33,7 +33,7 @@
         <codx-temp-full 
             [dataItem]="data"
             [typeMF]="'hover'" 
-            [formModel]="codxViews.formModel"
+            [formModel]="view.formModel"
             (clickMF)="clickMF($event,data)"
             [imageId]="data.itemID"
             imageObjType="AD_Users"
@@ -50,5 +50,5 @@
 </ng-template>
 
 <ng-template #panelRightRef>
-    <fd-detail-gift [objectID]="selectedGiftID" [formModel]="codxViews.formModel"></fd-detail-gift>  
+    <fd-detail-gift [objectID]="selectedGiftID" [formModel]="view.formModel"></fd-detail-gift>  
 </ng-template>

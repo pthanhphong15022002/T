@@ -197,7 +197,9 @@ export class PopupAddCardsComponent implements OnInit {
         if (res && res.length > 0)
         {
           this.lstPattern = res;
-          this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault});
+          this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault == true});
+          console.log(res);
+          console.log(this.patternSelected);
           this.dt.detectChanges();
         }
       });
