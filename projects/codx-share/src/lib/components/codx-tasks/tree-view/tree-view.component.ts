@@ -11,7 +11,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel, ViewTreeDetailComponent, DataService, DataRequest } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel, ViewTreeDetailComponent, DataService, DataRequest, PageTitleService, CodxService, CacheService } from 'codx-core';
 
 @Component({
   selector: 'share-tree-view',
@@ -31,6 +31,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   vllPriority ='TM005'
   dataTree: any[] = [];
   dialog: any;
+  favorite  = '' ;
   @Output() clickMoreFunction = new EventEmitter<any>();
   // @Output() clickShowTaskChildren = new EventEmitter<any>();
  
@@ -38,11 +39,17 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
+    private pageTitle: PageTitleService,
+    private codxService : CodxService,
+    private cache : CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) { 
-    
-     }
+    if (this.codxService.activeFav) {
+          this.cache.favorite(this.codxService.activeFav).subscribe((x) => {
+            this.favorite = x?.favorite
+          });
+   }}
   //#endregion
 
   //#region Init
@@ -67,8 +74,16 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dataTree = res[0];
+          let breadCrumbs = [
+            {
+              title: this.favorite + ' (' +res[1] + ')',
+            },
+          ];
+
+          this.pageTitle.setBreadcrumbs(breadCrumbs);
         }
-      });
+        }
+      );
   }
   //#endregion
 

@@ -15,7 +15,7 @@
   </share-view-detail>
 </ng-template>
 
-<ng-template *ngIf="funcID == 'TMT0203'" #treeView >
+<ng-template *ngIf="funcID == 'TMT0203'" #treeView>
   <share-tree-view
     [formModel]="view.formModel"
     [vllStatus]="vllStatus"
@@ -308,7 +308,7 @@
 </ng-template>
 
 <ng-template #resourceHeader let-data>
-  <div  class="container">
+  <div class="container">
     <codx-temp-full
       [imageId]="data.resourceData?.owner"
       [title]="data.resourceData.userName"
@@ -337,5 +337,6 @@
   (onActions)="onActions($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
+  [viewActiveType]="viewMode"
 >
 </codx-views>

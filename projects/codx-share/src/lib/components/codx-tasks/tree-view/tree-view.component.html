@@ -16,7 +16,7 @@
 <ng-template #templateTreeView let-item>
   <div class="d-flex flex-row align-datas-top p-3 border-bottom">
     <div class="w-50px min-w-50px">
-      <span *ngIf="item?.isAssign ">
+      <span *ngIf="item?.isAssign">
         <span class="icon-18 icon-add_box me-2 align-datas-start"></span>
       </span>
     </div>
@@ -130,9 +130,9 @@
       </codx-mfunc>
     </div>
   </div>
-  
-<ng-template #tempHtml>
-  <span *ngIf="item?.category == '2'" [innerHTML]="item?.memo2"></span>
-  <span *ngIf="item?.category != '2'" [innerHTML]="item?.memo"></span>
-</ng-template>
+
+  <ng-template #tempHtml>
+    <span *ngIf="item?.category == '2'" [innerHTML]="item?.memo2"></span>
+    <span *ngIf="item?.category != '2'" [innerHTML]="item?.memo"></span>
+  </ng-template>
 </ng-template>

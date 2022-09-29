@@ -1,6 +1,6 @@
 import { Component, OnInit, Injector, ChangeDetectorRef, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TenantStore, UIComponent } from 'codx-core';
+import { NotificationsService, TenantStore, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'app-policy-dedication',
@@ -8,12 +8,13 @@ import { TenantStore, UIComponent } from 'codx-core';
   styleUrls: ['./policy-dedication.component.scss']
 })
 export class PolicyDedicationComponent extends UIComponent implements OnInit {
-  private funcID;
+  funcID: any;
   tenant: string;
   constructor(
-    private changedr: ChangeDetectorRef,
+    private change: ChangeDetectorRef,
     private tenantStore: TenantStore,
     private at: ActivatedRoute,
+    private notification: NotificationsService,
     injector: Injector,
   ) {
     super(injector);
@@ -38,7 +39,7 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
     let applyFor = "2";
     this.api
       .call(
-        "ERM.Business.FED",
+        "ERM.Business.FD",
         "SettingsBusiness",
         "GetDataForPolicyCoinDedicationAsync",
         [this.typeCard, this.categoryID,applyFor]
@@ -46,21 +47,29 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res && res.msgBodyData.length > 0) {
           this.policyDedicationList = res.msgBodyData[0];
-          this.changedr.detectChanges();
         }
       });
 
   }
-  onSaveStatusPolicy(data){
+  onSaveStatusPolicy(data, item){
     this.api
       .execSv<any>(
-        "FED",
-        "ERM.Business.FED",
+        "FD",
+        "ERM.Business.FD",
         "WalletsBusiness",
         "OnSavePolicySettingWalletAsync",
-        [data.field]
+        [item.recID]
       )
       .subscribe((res) => {
+        if (res) this.notification.notifyCode('SYS007');
+        else {
+          for (let i = 0; i < this.policyDedicationList.length; i++) {
+            if (this.policyDedicationList[i].recID == item.recID)
+              this.policyDedicationList[i].actived = false;
+          }
+          this.change.detectChanges();
+          this.notification.notifyCode('SYS021');
+        }
       });
   }
 

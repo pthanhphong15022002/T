@@ -6,6 +6,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxBpComponent } from './codx-bp.component';
 import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { ProcessesComponent } from './processes/processes.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,10 @@ export const routes: Routes = [
       {
         path: 'testhtml',
         component: TesthtmlComponent,
+      },
+      {
+        path: 'testhtml',
+        component: ProcessesComponent,
       }
     ]
   }
@@ -24,7 +29,9 @@ export const routes: Routes = [
   declarations: [
     CodxBpComponent,
     TesthtmlComponent,
-    LayoutComponent
+    LayoutComponent,
+    ProcessesComponent,
+
   ],
   imports: [
     RouterModule.forChild(routes),

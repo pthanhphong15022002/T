@@ -485,7 +485,7 @@ export class HomeComponent extends UIComponent {
     }
     this.isSearch = false;
     this.clearWaitingThumbnail();
-    let id = $data.data.recID;
+    let id = $data?.data?.recID;
     let item = $data.data;
     if (item.read) {
       if(item.extension)
@@ -598,20 +598,6 @@ export class HomeComponent extends UIComponent {
     this.views = [
       {
         id: '1',
-        icon: 'icon-search',
-        text: 'Search',
-        hide: true,
-        type: ViewType.treedetail,
-        sameData: true,
-        model: {
-          template: this.templateMain,
-          panelRightRef: this.templateRight,
-          template2: this.templateSearch,
-          resizable: true,
-        },
-      },
-      {
-        id: '1',
         icon: 'icon-appstore',
         text: 'Card',
         type: ViewType.treedetail,
@@ -622,6 +608,20 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
+          resizable: true,
+        },
+      },
+      {
+        id: '1',
+        icon: 'icon-search',
+        text: 'Search',
+        hide: true,
+        type: ViewType.treedetail,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSearch,
           resizable: true,
         },
       },
@@ -994,7 +994,6 @@ export class HomeComponent extends UIComponent {
   }
 
   requestEnded(e: any) {
-    debugger
     this.isSearch = false;
     if (e.type === "read") {
       this.data = [];

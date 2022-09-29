@@ -77,6 +77,31 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   color: var(--text-primary) !important;
 }
 
+/** custom bootstrap  **/
+.e-multi-select-wrapper input[type=text] {
+  font-size: 13px;
+}
+
+input.e-input,
+textarea.e-input,
+.e-input-group,
+.e-input-group.e-control-wrapper {
+  font-size: 13px;
+}
+
+.popover-body {
+  padding: 1rem;
+}
+
+.extend-more .e-input-group .e-input-group-icon,
+.extend-more .e-input-group.e-control-wrapper .e-input-group-icon {
+  min-width: 22px;
+}
+
+.e-input-group .e-input-group-icon,
+.e-input-group.e-control-wrapper .e-input-group-icon {
+  min-width: 26px;
+}
 
 /***END Khong duoc xoa***/
 .user-mini-icon {
@@ -503,4 +528,31 @@ codx-view-list-tree {
 
 codx-mfunc .icon-file_copy {
   font-size: 15px !important;
+}
+
+/***/
+
+.symbol.symbol-25px .symbol-label {
+  font-size: 11px;
+}
+
+// lib-positions {
+//   height: 100%;
+// }
+
+// codx-tmmeetings {
+//   height: 100%;
+// }
+
+codx-wrapper> :nth-child(2) {
+  height: 100%;
+}
+
+.login-aside .e-input-group {
+  background-color: transparent;
+}
+
+.login-aside .e-input-group:not(.e-disabled) .e-input-group-icon:hover,
+.login-aside .e-input-group.e-control-wrapper:not(.e-disabled) .e-input-group-icon:hover {
+  background-color: transparent;
 }
