@@ -36,7 +36,6 @@ import { CodxAdService } from '../codx-ad.service';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent extends UIComponent {
-  // @Input() formModel: any;
   views: Array<ViewModel> = [];
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
@@ -44,9 +43,6 @@ export class UserComponent extends UIComponent {
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
-
-  // @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
-
   user: any;
   funcID: string;
   constructor(
@@ -149,12 +145,13 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      // this.dialog.closed.subscribe((e) => {
-      //   if (e?.event) {
-      //     e.event.modifiedOn = new Date();
-      //     this.view.dataService.update(e.event).subscribe();
-      //   }
-      // });
+      this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        // if (e?.event) {
+        //   e.event.modifiedOn = new Date();
+        //   this.view.dataService.update(e.event).subscribe();
+        // }
+      });
     });
   }
 
@@ -172,6 +169,7 @@ export class UserComponent extends UIComponent {
   edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      // this.view.dataService.dataSelected.userID = data._uuid;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -185,10 +183,11 @@ export class UserComponent extends UIComponent {
         option.Width = 'Auto';
         this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
         this.dialog.closed.subscribe((x) => {
-          if (x.event) {
-            x.event.modifiedOn = new Date();
-            this.view.dataService.update(x.event).subscribe();
-          }
+          if (!x?.event) this.view.dataService.clear();
+          // if (x.event) {
+          //   x.event.modifiedOn = new Date();
+          //   this.view.dataService.update(x.event).subscribe();
+          // }
         });
       });
   }
@@ -198,11 +197,14 @@ export class UserComponent extends UIComponent {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.copy().subscribe((res: any) => {
-      data.userID = this.view.dataService.dataSelected?.userID
-      var obj = {
-        formType: 'copy',
-        dataCopy: data,
-      };
+      if (res) {
+        // data.userID = this.view.dataService.dataSelected?.userID;
+        res['chooseRoles'] = data.chooseRoles;
+        var obj = {
+          formType: 'copy',
+          dataCopy: res,
+        };
+      }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;

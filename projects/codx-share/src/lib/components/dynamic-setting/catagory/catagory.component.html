@@ -1,84 +1,189 @@
-<div class="list-group">
-  <h3 class="list-header">{{ title }}</h3>
-  <div class="list-content">
-    <ng-container *ngIf="groupSetting && groupSetting.length > 0; else noGroup">
-      <ng-container *ngFor="let item of groupSetting">
-        <ng-container *ngTemplateOutlet="
-            template;
-            context: { $implicit: item, isGroup: true }
-          ">
-        </ng-container>
-        <ng-container *ngIf="item.displayMode !== '1'">
-          <ng-container *ngFor="let itemchild of setting | group: item.recID">
-            <ng-container *ngTemplateOutlet="
-                template;
-                context: {
-                  $implicit: itemchild,
-                  collapse: item.displayMode === '3'
-                }
-              ">
+<codx-form
+  headerText=""
+  #form
+  [body]="body"
+  [showHeader]="dialog"
+  [dialog]="dialog!"
+>
+</codx-form>
+
+<ng-template #body>
+  <div class="list-group">
+    <h3 class="list-header">{{ title }}</h3>
+    <div class="list-content">
+      <ng-container
+        *ngIf="groupSetting && groupSetting.length > 0; else noGroup"
+      >
+        <ng-container *ngFor="let item of groupSetting">
+          <ng-container
+            *ngTemplateOutlet="
+              template;
+              context: { $implicit: item, isGroup: true }
+            "
+          >
+          </ng-container>
+          <ng-container *ngIf="item.displayMode !== '1'">
+            <ng-container *ngFor="let itemchild of setting | group: item.recID">
+              <ng-container
+                *ngTemplateOutlet="
+                  template;
+                  context: {
+                    $implicit: itemchild,
+                    collapse: item.displayMode === '3'
+                  }
+                "
+              >
+              </ng-container>
             </ng-container>
           </ng-container>
         </ng-container>
       </ng-container>
-    </ng-container>
-    <ng-template #noGroup>
-      <ng-container *ngFor="let item of setting">
-        <ng-container *ngTemplateOutlet="
-            template;
-            context: { $implicit: item, collapse: item.displayMode === '3' }
-          ">
-        </ng-container>
-      </ng-container>
-    </ng-template>
-  </div>
-</div>
-<ng-template #template let-data let-collapse="collapse" let-isGroup="isGroup">
-  <div class="list-item" [ngClass]="collapse ? ' d-none' : ''" [attr.data-group]="data.refLineID">
-    <div class="d-flex justify-content-between">
-      <div class="d-flex flex-column">
-        <div class="fs-6 fw-bold text-dark">
-          {{ data.tilte }}
-        </div>
-        <div class="text-gray-500">
-          {{ data.description }}
-        </div>
-      </div>
-      <div class="d-flex align-items-top ms-4">
-        <codx-input [style]="
-            data.controlType == 'TextBox' || data.controlType == 'Combobox'
-              ? 'width: 200px'
-              : ''
-          " *ngIf="data.controlType && data.controlType != 'GroupControl'" [type]="data.controlType"
-          [name]="data.controlType" placeholder="" ngDefaultControl [refType]="data.referedType"
-          [refValue]="data.referedValue || data.referdValue" [loadFull]="true" [field]="data.fieldName"
-          [checked]="dataValue[data.fieldName] == '1'" [crrValue]="dataValue[data.fieldName] || ''"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-        <div class="w-30px setting-btnright ms-2">
-          <a [routerLink]="
-            data.reference ? '../../../../' + data.reference : 'detail'
-          " [state]="{
-            setting: setting | group: data.recID:'2',
-            function: function,
-            dataValue: dataValue[data.fieldName],
-            urlOld: urlOld
-          }" *ngIf="data.displayMode === '1'"> <span class="w-30px d-flex justify-content-center"><span
-                class="icon-keyboard_arrow_right icon-22"></span></span></a>
-          <a href="javascript:void(0)" (click)="openPopup($event, data.reference, data.fieldName)"
-            *ngIf="data.displayMode === '2'"><span class="w-30px d-flex justify-content-center"><span
-                class="icon-edit-one icon-20"></span></span></a>
-          <a href="javascript:void(0)" *ngIf="data.displayMode === '3'" (click)="collapseItem($event, data.recID)"><span
-              class="w-30px d-flex justify-content-center"><span class="icon-keyboard_arrow_right icon-22"
-                [attr.data-id]="data.recID"></span></span></a>
-          <ng-container *ngIf="data.displayMode === '4' || data.displayMode === '5'">
-            <codx-input type="Share" [refValue]="data.refValue" field="popup" [dataShared]="[]" [showInput]="false"
-              [listCombobox]="data.reference" [multiple]="data.displayMode === '5'">
-            </codx-input>
+      <ng-template #noGroup>
+        <ng-container *ngFor="let item of setting">
+          <ng-container
+            *ngTemplateOutlet="
+              template;
+              context: { $implicit: item, collapse: item.displayMode === '3' }
+            "
+          >
           </ng-container>
+        </ng-container>
+      </ng-template>
+    </div>
+  </div>
+  <ng-template #template let-data let-collapse="collapse" let-isGroup="isGroup">
+    <div
+      class="list-item"
+      [ngClass]="collapse ? ' d-none' : ''"
+      [attr.data-group]="data.refLineID"
+    >
+      <div class="d-flex justify-content-between">
+        <ng-container
+          *ngIf="data.icon && data.icon.includes('.svg'); else icon"
+        >
+          <span
+            [inlineSVG]="'./assets/themes/sys/default/img/' + data.icon"
+            class="svg-icon"
+          ></span>
+        </ng-container>
+        <ng-template #icon>
+          <span [ngClass]="data.icon" class="icon-16"></span>
+        </ng-template>
+
+        <div class="d-flex flex-column">
+          <div class="fs-6 fw-bold text-dark">
+            {{ data.tilte }}
+          </div>
+          <div class="text-gray-500">
+            {{ data.description }}
+          </div>
+        </div>
+        <div class="d-flex align-items-top ms-4">
+          <codx-input
+            [style]="
+              data.controlType == 'TextBox' || data.controlType == 'Combobox'
+                ? 'width: 200px'
+                : ''
+            "
+            *ngIf="data.controlType && data.controlType != 'GroupControl'"
+            [type]="data.controlType == 'TextBox' ? 'text' : data.controlType"
+            [name]="data.controlType"
+            placeholder=""
+            ngDefaultControl
+            [refType]="data.referedType"
+            [refValue]="data.referedValue || data.referdValue"
+            [loadFull]="true"
+            [field]="data.fieldName"
+            [checked]="dataValue[data.fieldName] == '1'"
+            [crrValue]="dataValue[data.fieldName] || ''"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+          <ng-container *ngIf="data.category == '2'">
+            <codx-input
+              type="Switch"
+              name="Switch"
+              placeholder=""
+              [field]="data.fieldName"
+              [checked]="autoDefault ? autoDefault[data.fieldName] : false"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+            <codx-label
+              name="lblUseAutoNumber"
+              formName="Settings"
+              default="Sử dụng số tự động"
+            >
+            </codx-label>
+            <a
+              href="javascript:void(0)"
+              (click)="
+                autoDefault &&
+                  autoDefault[data.fieldName] &&
+                  openPopup(
+                    $event,
+                    'cpnAutoNumbers',
+                    data.fieldName,
+                    data.recID
+                  )
+              "
+              ><span class="w-30px d-flex justify-content-center"
+                ><span class="icon-edit-one icon-20"></span></span
+            ></a>
+          </ng-container>
+          <div class="w-30px setting-btnright ms-2">
+            <a
+              [routerLink]="
+                data.reference ? '../../../../' + data.reference : 'detail'
+              "
+              [state]="{
+                setting: setting | group: data.recID:'2',
+                function: function,
+                dataValue: dataValue[data.fieldName],
+                urlOld: urlOld
+              }"
+              *ngIf="data.displayMode === '1'"
+            >
+              <span class="w-30px d-flex justify-content-center"
+                ><span class="icon-keyboard_arrow_right icon-22"></span></span
+            ></a>
+            <a
+              href="javascript:void(0)"
+              (click)="
+                openPopup($event, data.reference, data.fieldName, data.recID)
+              "
+              *ngIf="data.displayMode === '2'"
+              ><span class="w-30px d-flex justify-content-center"
+                ><span class="icon-edit-one icon-20"></span></span
+            ></a>
+            <a
+              href="javascript:void(0)"
+              *ngIf="data.displayMode === '3'"
+              (click)="collapseItem($event, data.recID)"
+              ><span class="w-30px d-flex justify-content-center"
+                ><span
+                  class="icon-keyboard_arrow_right icon-22"
+                  [attr.data-id]="data.recID"
+                ></span></span
+            ></a>
+            <ng-container
+              *ngIf="data.displayMode === '4' || data.displayMode === '5'"
+            >
+              <codx-input
+                type="Share"
+                [refValue]="data.refValue || 'L1901'"
+                field="popup"
+                [dataShared]="[]"
+                [showInput]="false"
+                [listCombobox]="data.reference"
+                [multiple]="data.displayMode === '5'"
+              >
+              </codx-input>
+            </ng-container>
+          </div>
         </div>
       </div>
+      <hr *ngIf="!isGroup" />
     </div>
-    <hr *ngIf="!isGroup" />
-  </div>
+  </ng-template>
 </ng-template>
