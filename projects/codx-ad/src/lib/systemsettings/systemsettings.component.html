@@ -1,12 +1,7 @@
-<div class="content d-flex flex-column flex-column-fluid p-0 mw-1100px" id="kt_content">
-  <div id="erm_content" class="w-100">
-    <codx-views #view entityName="AD_SystemSettings" service="SYS" assemblyName="ERM.Business.AD"
-      className="SystemSettingsBusiness" [method]="'GetOneAsync'" [views]="views" idField="recID">
-    </codx-views>
+<codx-views #view entityName="AD_SystemSettings" service="SYS" assemblyName="ERM.Business.AD"
+  className="SystemSettingsBusiness" [method]="'GetOneAsync'" [views]="views" idField="recID">
+</codx-views>
 
-  </div>
-
-</div>
 <ng-template #paneleft let-data>
   <ejs-tab headerPlacement="Left">
     <e-tabitems>
@@ -14,7 +9,7 @@
         <ng-template #headerText>
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-20 me-2"></span>
+              <span class="icon-assignment icon-20 me-2"></span>
               <span class="fw-bold">
                 <codx-label name="Description" formName="SystemSetting" default="Thông tin chung">
                 </codx-label>
@@ -203,6 +198,7 @@
                 </codx-input>
               </div>
             </div>
+
           </div>
 
         </ng-template>
@@ -212,7 +208,7 @@
 
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-20 me-2"></span>
+              <span class="icon-security icon-20 me-2"></span>
               <span class="fw-bold">
                 <codx-label name="Security" formName="SystemSetting" default="Chính sách bảo mật">
                 </codx-label>
@@ -337,7 +333,7 @@
         <ng-template #headerText class="">
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-20 me-2"></span>
+              <span class="icon-assignment icon-20 me-2"></span>
               <span class="fw-bold">
                 <codx-label name="App" formName="SystemSetting" default="Cấu hình ứng dụng">
                 </codx-label>
@@ -354,10 +350,13 @@
                   <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" />
                   <div>
                     <div class="fw-bold" style="font-weight: bold; margin-left: 10px;">
-                      {{item.customName}}
+                      <codx-label formName="SystemSetting" gridViewName="grvSystemSetting" [default]="item.customName">
+
+                      </codx-label>
+
                     </div>
                     <div style="margin-left: 10px;">
-                      <codx-label name="App" formName="SystemSetting" default="Cu Phúc cute vô đối">
+                      <codx-label formName="SystemSetting" gridViewName="grvSystemSetting" [default]="item.description">
                       </codx-label>
                     </div>
                   </div>
