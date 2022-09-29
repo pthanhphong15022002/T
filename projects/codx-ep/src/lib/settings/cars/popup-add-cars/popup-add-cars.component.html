@@ -10,6 +10,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
+    
       <div class="form-group">
         <codx-label
           fiedName="ResourceName"
@@ -90,8 +91,7 @@
           [formModel]="form.formModel"
         >
         </codx-label>
-        <codx-input 
-            
+        <codx-input             
           [disabled]="data?.category == 1 ? false :true"
           ControlName="companyID"
           [formModel]="form.formModel"
@@ -202,6 +202,7 @@
           [objectId]="data?.recID">
       </codx-img>
     </div>
+      
   </ng-template>
 
   <ng-template #footer>
