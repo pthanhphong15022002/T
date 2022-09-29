@@ -1129,8 +1129,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
 
   changeAutoSignState(e: any, mode: number) {
-    this.autoSignState = e.data;
-    if (this.autoSignState) {
+    if (e.data && !this.autoSignState) {
+      this.autoSignState = e.data;
       console.log('change changeAutoSignState dang lam', this.autoSignState);
       this.curPage = this.pageMax;
       this.autoSign();
@@ -1190,11 +1190,11 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       unsignIdx = unsignIdx.reverse();
     }
     lstUnsign.forEach((person, idx) => {
-      let recID = Guid.newGuid();
       let url = '';
       let labelType = '';
       switch (person.signType) {
         //chu ky
+        case 'S1':
         case 'S2': {
           url = person.signature;
           labelType = '1';
@@ -1212,20 +1212,23 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           break;
         }
       }
+      console.log(url, person.signType, person);
+
       if (url != '' && labelType != '') {
-        let tmpName: tmpAreaName = {
-          Signer: person.authorID,
-          Type: 'img',
-          PageNumber: this.curPage - 1,
-          StepNo: person.stepNo,
-          LabelType: labelType,
-        };
-        let img = document.createElement('img') as HTMLImageElement;
+        let recID = Guid.newGuid();
+        const img = document.createElement('img') as HTMLImageElement;
         img.setAttribute('crossOrigin', 'anonymous');
         img.src = url;
         img.onload = () => {
-          console.log(person);
+          console.log('url', url);
 
+          let tmpName: tmpAreaName = {
+            Signer: person.authorID,
+            Type: 'img',
+            PageNumber: this.curPage - 1,
+            StepNo: person.stepNo,
+            LabelType: labelType,
+          };
           let imgArea = new Konva.Image({
             image: img,
             width: imgW,
@@ -1238,14 +1241,14 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           });
           imgArea.scale({ x: this.xScale, y: this.yScale });
 
-          // this.saveNewToDB(
-          //   '',
-          //   'img',
-          //   '1',
-          //   person.authorID,
-          //   person.stepNo,
-          //   imgArea
-          // );
+          this.saveNewToDB(
+            '',
+            'img',
+            '1',
+            person.authorID,
+            person.stepNo,
+            imgArea
+          );
 
           let layer = this.lstLayer.get(this.pageMax);
           layer?.add(imgArea);
