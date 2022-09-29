@@ -184,12 +184,12 @@ export class UserComponent extends UIComponent {
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-        // this.dialog.closed.subscribe((x) => {
-        //   if (x.event) {
-        //     x.event.modifiedOn = new Date();
-        //     this.view.dataService.update(x.event).subscribe();
-        //   }
-        // });
+        this.dialog.closed.subscribe((x) => {
+          if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
       });
   }
 
