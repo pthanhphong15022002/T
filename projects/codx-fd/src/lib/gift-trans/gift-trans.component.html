@@ -15,6 +15,7 @@
     <ng-container *ngIf="data.transType == '1'; else transType2">
         <codx-temp-full 
             [dataItem]="data"
+            cardCss="card-template border-bottom px-2 pt-4 pb-2" 
             [typeMF]="'hover'" 
             [formModel]="view.formModel"
             (clickMF)="clickMF($event,data)"
@@ -32,6 +33,7 @@
     <ng-template #transType2>
         <codx-temp-full 
             [dataItem]="data"
+            cardCss="card-template border-bottom px-2 pt-4 pb-2" 
             [typeMF]="'hover'" 
             [formModel]="view.formModel"
             (clickMF)="clickMF($event,data)"

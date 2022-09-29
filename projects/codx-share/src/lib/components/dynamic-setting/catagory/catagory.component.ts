@@ -310,16 +310,32 @@ export class CatagoryComponent implements OnInit {
       var dt = this.settingValue.find((x) => x.category == this.category);
       if (this.category == '1') {
         this.dataValue[field] = value;
-        dt.dataValue = JSON.stringify(this.dataValue);
-        this.api
-          .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-          .subscribe((res) => {
-            if (res) {
-            }
-            this.changeDetectorRef.detectChanges();
-            console.log(res);
-          });
+        if (!this.dialog) {
+          dt.dataValue = JSON.stringify(this.dataValue);
+          this.api
+            .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+            .subscribe((res) => {
+              if (res) {
+              }
+              this.changeDetectorRef.detectChanges();
+              console.log(res);
+            });
+        }
       }
     }
+  }
+
+  click($event: any) {
+    debugger;
+    var dt = this.settingValue.find((x) => x.category == this.category);
+    dt.dataValue = JSON.stringify(this.dataValue);
+    this.api
+      .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+      .subscribe((res) => {
+        if (res) {
+        }
+        this.changeDetectorRef.detectChanges();
+        console.log(res);
+      });
   }
 }

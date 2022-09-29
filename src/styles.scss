@@ -547,3 +547,12 @@ codx-mfunc .icon-file_copy {
 codx-wrapper> :nth-child(2) {
   height: 100%;
 }
+
+.login-aside .e-input-group {
+  background-color: transparent;
+}
+
+.login-aside .e-input-group:not(.e-disabled) .e-input-group-icon:hover,
+.login-aside .e-input-group.e-control-wrapper:not(.e-disabled) .e-input-group-icon:hover {
+  background-color: transparent;
+}

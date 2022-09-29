@@ -86,7 +86,6 @@
             *ngIf="data.controlType && data.controlType != 'GroupControl'"
           >
             <codx-input
-              *ngIf="data.fieldName == 'CalendarID'"
               [style]="
                 data.controlType == 'TextBox' || data.controlType == 'Combobox'
                   ? 'width: 200px'
@@ -206,4 +205,15 @@
       <hr *ngIf="!isGroup" />
     </div>
   </ng-template>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex flex-stack" *ngIf="dialog">
+    <div class="right justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="click($event)">
+        <codx-label name="lblSave" formName="Settings" default="Lưu">
+        </codx-label>
+      </button>
+    </div>
+  </div>
 </ng-template>

@@ -78,14 +78,16 @@
                                             <codx-label name="lblOwner" [formModel]="dialog.formModel" name="lblfOwner"
                                                 default="Người nhận phiếu">
                                             </codx-label>
-                                            <div class="mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <codx-img class="symbol symbol-35 symbol-circle mr-3"
-                                                        [objectId]="userReciver" objectType="AD_Users">
-                                                    </codx-img>
-                                                    <div class="ms-3 text-dark font-size-lg">{{userReciverName}}</div>
+                                            <ng-container *ngIf="userReciverName">
+                                                <div class="mt-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <codx-img class="symbol symbol-35 symbol-circle mr-3"
+                                                            [objectId]="userReciver" objectType="AD_Users">
+                                                        </codx-img>
+                                                        <div class="ms-3 text-dark font-size-lg">{{userReciverName}}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </ng-container>
                                         </div>
                                     </ng-container>
                                     <div class=" form-group" #situation>

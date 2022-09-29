@@ -71,10 +71,10 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     }
   }
   valueChangValueList(data) {
-    this.item[data.field] = data.data.value;
-    this.handleLock(data.data.value);
+    this.item[data.field] = data.data;
+    this.handleLock(data.data);
     let objectUpdate = {};
-    objectUpdate[data.field] = data.data.value;
+    objectUpdate[data.field] = data.data;
     this.onSaveCMParameter(objectUpdate);
   }
   handleLock(status) {
@@ -305,7 +305,6 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
           if (Object.keys(this.item).length == 0) {
             this.isShowPolicyCard = false;
           }
-          console.log('check item', this.item);
           this.handleLock(this.item.PolicyControl);
           this.setValueListName(this.item);
           this.change.detectChanges();
