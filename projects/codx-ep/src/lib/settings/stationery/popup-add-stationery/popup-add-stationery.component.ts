@@ -7,13 +7,14 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import {
   DialogData,
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  RequestOption,
   UIComponent,
 } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -25,6 +26,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 })
 export class PopupAddStationeryComponent extends UIComponent {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  @ViewChild('form') form: any;
   @Output() loadData = new EventEmitter();
   isAfterRender = false;
   dialogAddStationery: FormGroup;
@@ -43,7 +45,7 @@ export class PopupAddStationeryComponent extends UIComponent {
       icon: 'icon-person_add_alt_1',
       text: 'Định mức sử dụng',
       subName: 'Định mức khi đặt VPP',
-      name: 'tabPeopleInfo',
+      name: 'tabQuotaInfo',
     },
     {
       icon: 'icon-tune',
@@ -71,7 +73,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
-    this.data = dialog?.dataService?.dataSelected;
+    this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
@@ -90,18 +92,17 @@ export class PopupAddStationeryComponent extends UIComponent {
       });
   }
 
-  beforeSave(option: any) {
-    let itemData = this.data;
+  beforeSave(option: RequestOption) {
+    debugger;
+    let itemData = this.dialogAddStationery.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
 
   onSaveForm() {
+    this.data.resourceType='6';
     this.dialogAddStationery.patchValue(this.data);
-    if (this.dialogAddStationery.invalid == true) {
-      return;
-    }
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -124,17 +125,6 @@ export class PopupAddStationeryComponent extends UIComponent {
         }
         this.dialog.close();
       });
-    console.log('FormGroup', this.dialogAddStationery);
-  }
-
-  checkedOnlineChange(event) {
-    this.dialogAddStationery.patchValue({
-      online: event.data instanceof Object ? event.data.checked : event.data,
-    });
-
-    if (!this.dialogAddStationery.value.online)
-      this.dialogAddStationery.patchValue({ onlineUrl: null });
-    this.detectorRef.detectChanges();
   }
 
   setdata(data: any) {
@@ -177,12 +167,6 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   buttonClick(e: any) {}
-
-  splitColor(color: string): any {
-    if (color) {
-      return color.split(';');
-    }
-  }
 
   fileCount(event) {}
 

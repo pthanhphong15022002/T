@@ -2,21 +2,21 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  Optional,
   Type,
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Switch } from '@syncfusion/ej2-angular-buttons';
 import {
   ApiHttpService,
   CacheService,
   CallFuncService,
+  DialogData,
   DialogModel,
+  DialogRef,
   LayoutService,
 } from 'codx-core';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
-import { stringify } from 'querystring';
-
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -32,28 +32,46 @@ export class CatagoryComponent implements OnInit {
   title = '';
   listName = 'SYS001';
   setting = [];
+  settingMore = [];
   settingValue = [];
   groupSetting = [];
   function: any = {};
   valuelist: any = {};
   dataValue: any = {};
+  catagoryName: any = '';
   urlOld = '';
+  lstFuncID: any[] = [];
+  autoDefault?: any;
+  dialog?: DialogRef;
   constructor(
     private route: ActivatedRoute,
     private cacheService: CacheService,
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
-    private layout: LayoutService
-  ) {}
+    private layout: LayoutService,
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
+  ) {
+    this.dialog = dialog;
+    if (data) {
+      this.setting = data.data?.setting;
+      this.valuelist = data.data?.valuelist;
+      this.category = data.data?.category;
+      this.function = data.data?.function;
+      //this.loadSettingValue();
+    }
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((routeParams) => {
       this.layout.setLogo(null);
       this.urlOld = '..' + window.location.pathname;
       var state = history.state;
-      if (state) {
+      if (state && !this.dialog) {
+        debugger;
         this.setting = state.setting || [];
+        this.settingMore = state.settingMore || [];
         this.function = state.function || [];
         this.valuelist = state.valuelist || {};
         this.groupSetting = this.setting.filter((x) => {
@@ -63,14 +81,16 @@ export class CatagoryComponent implements OnInit {
         });
       }
       var catagory = routeParams.catagory;
-      if (this.valuelist && this.valuelist.datas) {
+      if (this.valuelist && this.valuelist.datas && catagory) {
         const ds = (this.valuelist.datas as any[]).find(
           (item) => item.default == catagory
         );
         this.category = ds.value;
         this.title = ds.text;
-        this.loadSettingValue();
+        if (this.category === '2') this.getIDAutoNumber();
       }
+      this.loadSettingValue();
+
       // this.cacheService.valueList(this.listName).subscribe((res) => {
       //   if (res && res.datas) {
       //     const ds = (res.datas as any[]).find(
@@ -83,11 +103,14 @@ export class CatagoryComponent implements OnInit {
       // });
       this.changeDetectorRef.detectChanges();
     });
+    if (this.dialog) {
+      this.dialog.closed.subscribe((res) => {
+        this.dialog = null;
+      });
+    }
   }
 
-  openPopup(evt: any, reference: any, value: any) {
-    if (!reference) return;
-    var component = this.components[reference] as Type<any>;
+  openPopup(evt: any, reference: any, value: any, recID: any) {
     var width = 0,
       height = 0,
       title = '',
@@ -95,48 +118,63 @@ export class CatagoryComponent implements OnInit {
       data = {},
       cssClass = '',
       dialogModel = new DialogModel();
-    switch (reference.toLowerCase()) {
-      case 'cpnautonumbers':
-        this.api
-          .execSv(
-            'SYS',
-            'ERM.Business.AD',
-            'AutoNumberDefaultsBusiness',
-            'GetByFuncNEntityAsync',
-            [value]
-          )
-          .subscribe((res: any) => {
-            if (res) {
-              data['autoNoCode'] = res.autoNumber;
-              width = (screen.width * 40) / 100;
-              height = 550;
-              this.callfc.openForm(
-                component,
-                title,
-                width,
-                height,
-                funcID,
-                data,
-                cssClass,
-                dialogModel
-              );
-            }
-          });
+    if (!reference) {
+      var itemChild = this.setting.filter(
+        (x) => x.refLineID === recID && x.lineType === '2'
+      );
+      data['setting'] = itemChild;
+      data['valuelist'] = this.valuelist;
+      data['category'] = this.category;
+      data['function'] = this.function;
+      width = (screen.width * 40) / 100;
+      height = 550;
+      this.callfc.openForm(
+        CatagoryComponent,
+        title,
+        width,
+        height,
+        funcID,
+        data,
+        cssClass,
+        dialogModel
+      );
+    } else {
+      var component = this.components[reference] as Type<any>;
+      switch (reference.toLowerCase()) {
+        case 'cpnautonumbers':
+          this.api
+            .execSv(
+              'SYS',
+              'ERM.Business.AD',
+              'AutoNumberDefaultsBusiness',
+              'GetByFuncNEntityAsync',
+              [value]
+            )
+            .subscribe((res: any) => {
+              if (res) {
+                data['autoNoCode'] = res.autoNumber;
+                width = (screen.width * 40) / 100;
+                height = 550;
+                this.callfc.openForm(
+                  component,
+                  title,
+                  width,
+                  height,
+                  funcID,
+                  data,
+                  cssClass,
+                  dialogModel
+                );
+              }
+            });
 
-        break;
-      case 'cpnCalendar':
-        break;
+          break;
+        case 'cpnCalendar':
+          break;
+        default:
+          break;
+      }
     }
-    // this.callfc.openForm(
-    //   component,
-    //   title,
-    //   width,
-    //   height,
-    //   funcID,
-    //   data,
-    //   cssClass,
-    //   dialogModel
-    // );
   }
 
   collapseItem(evt: any, recID: string) {
@@ -172,17 +210,24 @@ export class CatagoryComponent implements OnInit {
         'SYS',
         'SettingValuesBusiness',
         'GetListValueBySettingAsync',
-        [this.function?.formName, this.category]
+        [this.function?.formName, this.category, this.lstFuncID]
       )
       .subscribe((res) => {
         if (res) {
-          this.settingValue = res;
-          this.loadValue();
+          if (res.length > 1) {
+            this.autoDefault = res[1];
+          } else {
+            this.settingValue = res[0];
+            this.loadValue();
+          }
+
           // this.itemMenu = Object.keys(res);
         }
         this.changeDetectorRef.detectChanges();
-        console.log(res);
+        //console.log(res);
       });
+    if (this.category === '2' || this.category === '7') {
+    }
   }
 
   loadValue() {
@@ -193,6 +238,23 @@ export class CatagoryComponent implements OnInit {
           this.dataValue = JSON.parse(value);
         }
         break;
+    }
+  }
+
+  getIDAutoNumber() {
+    if (this.settingMore.length > 0) {
+      //var lstFuncID: any[] = [];
+      this.setting.forEach((item, i) => {
+        let url = item.reference;
+        if (url) {
+          let arr = url.split('/') as any[];
+          let funcID = arr[arr.length - 1];
+          var isCheck = this.settingMore.find(
+            (res) => res.fieldName === funcID
+          );
+          if (isCheck) this.lstFuncID.push(funcID);
+        }
+      });
     }
   }
 
