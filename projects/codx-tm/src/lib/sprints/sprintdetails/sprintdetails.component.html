@@ -62,7 +62,8 @@
       </div>
     </div>
     <div class="col-4" *ngIf="resources && resources != ''">
-      <codx-imgs style="float: right"
+      <codx-imgs
+        style="float: right"
         [objectId]="resources"
         objectType="AD_Users"
         [numberImages]="7"
@@ -92,7 +93,7 @@
         </ng-container>
         <ng-container *ngIf="name == 'Công việc'">
           <codx-tasks-share
-              style="height: 500px;"
+            style="height: 500px"
             *ngIf="dataObj"
             [dataObj]="dataObj"
             [showButtonAdd]="showButtonAdd"
@@ -106,7 +107,7 @@
               <codx-tree-history
                 [objectID]="iterationID"
                 [objectType]="'TM_Sprints'"
-                [actionType]=""
+                [actionType]="'C1'"
                 [viewIcon]="true"
                 [funcID]="functionParent"
               >

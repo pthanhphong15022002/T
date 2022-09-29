@@ -8,10 +8,10 @@ import { TenantStore, UIComponent } from 'codx-core';
   styleUrls: ['./policy-dedication.component.scss']
 })
 export class PolicyDedicationComponent extends UIComponent implements OnInit {
-  private funcID;
+  funcID: any;
   tenant: string;
   constructor(
-    private changedr: ChangeDetectorRef,
+    private change: ChangeDetectorRef,
     private tenantStore: TenantStore,
     private at: ActivatedRoute,
     injector: Injector,
@@ -32,7 +32,7 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
   categoryID: string = "2";
   policyDedicationList = [];
   addPolicy() {
-    alert('Tính năng đang phát triển ở version kế tiếp');
+    // alert('Tính năng đang phát triển ở version kế tiếp');
   }
   LoadData() {
     let applyFor = "2";
@@ -46,7 +46,7 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res && res.msgBodyData.length > 0) {
           this.policyDedicationList = res.msgBodyData[0];
-          this.changedr.detectChanges();
+          this.change.detectChanges();
         }
       });
 

@@ -1,4 +1,4 @@
-<codx-views #codxView 
+<codx-views #view 
   [funcID]="funcID" 
   [entityName]="entityName" 
   idField="recID" 
@@ -13,7 +13,7 @@
     <ng-container *ngFor="let item of tabAsside">
       <li class="nav-item" [class.text-primary]="item.active">
         <a class="nav-link fw-bold" href="javascript:;" (click)="clickTabApprove(item, item.predicate, item.datavalue)">
-          <codx-label [formName]="codxView.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
+          <codx-label [formName]="view.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
           <span>({{ item.total }})</span>
         </a>
       </li>
@@ -22,8 +22,8 @@
 </ng-template>
 <ng-template #panelRightRef>
   <div class="py-3 news-appr-right">
-    <app-view-detail #viewdetail [objectID]="selectedID" [entityName]="entityName" [dataService]="codxView.dataService"
-      [funcID]="funcID" (evtApproval)="clickApprovePost($event)" [formModel]="codxView.formModel">
+    <app-view-detail #viewdetail [objectID]="selectedID" [entityName]="entityName" [dataService]="view.dataService"
+      [funcID]="funcID" (evtApproval)="clickApprovePost($event)" [formModel]="view.formModel">
     </app-view-detail>
   </div>
 </ng-template>
@@ -36,7 +36,7 @@
         [typeMF]="'hover'" 
         (clickMF)="clickMF($event,data)" 
         [descLine]="2"
-        [formModel]="codxView.formModel" 
+        [formModel]="view.formModel" 
         [resourceObjType]="entityName" 
         imgCss="me-2"
         cardCss="card-template border-bottom px-5 py-3" 
@@ -56,7 +56,7 @@
         [typeMF]="'hover'" 
         (clickMF)="clickMF($event,data)"
         (click)="clickViewDetail(data.recID)" 
-        [formModel]="codxView.formModel" 
+        [formModel]="view.formModel" 
         [resourceObjType]="'AD_Users'"
         [resources]="data.createdBy" 
         [icoCss]="'w-40px symbol h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +(data.category | vll:'WP004':'icon' | async)"
