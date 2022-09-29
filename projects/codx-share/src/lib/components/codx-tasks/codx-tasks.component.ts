@@ -132,8 +132,8 @@ export class CodxTasksComponent
   listViewModel = [];
   dataReferences = [];
   titleAction = '';
-  predicateResource: any;
-  dataValueResource: any;
+  // predicateSchedule: any;
+  // dataValueSchedule: any;
 
   constructor(
     inject: Injector,
@@ -188,8 +188,8 @@ export class CodxTasksComponent
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserByResourceAsyncLogic';
-      this.modelResource.dataObj = this.dataObj
+      this.modelResource.method = 'GetListUserByResourceAsync';
+      this.modelResource.dataValue = this.dataObj?.resources
     }
    
     this.resourceKanban = new ResourceModel();
@@ -212,8 +212,8 @@ export class CodxTasksComponent
     this.requestSchedule.className = 'TaskBusiness';
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
-    this.requestSchedule.predicate = this.predicateResource; //"Category=@0 and CreatedBy=@1";
-    this.requestSchedule.dataValue = this.dataValueResource; //'2;' + this.user.userID;
+    // this.requestSchedule.predicate = this.predicateSchedule; //"Category=@0 and CreatedBy=@1";
+    // this.requestSchedule.dataValue = this.dataValueSchedule; //'2;' + this.user.userID;
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -261,20 +261,6 @@ export class CodxTasksComponent
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
-        },
-      },
-      {
-        id: '8',
-        type: ViewType.schedule,
-        active: false,
-        sameData: true,
-        request2: this.modelResource,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-          template: this.eventTemplate,
-          template3: this.cellTemplate,
-          statusColorRef: this.vllStatus,
         },
       },
       {
@@ -879,11 +865,13 @@ export class CodxTasksComponent
     idx = this.viewsActive.findIndex((x) => x.id === '8');
     if (this.funcID != 'TMT0201') {
       if (this.funcID == 'TMT0203') {
-        this.predicateResource = 'Category=@0 and CreatedBy=@1';
-        this.dataValueResource = '2;' + this.user.userID;
-      } else if (this.funcID == 'TMT0202') {
-        this.predicateResource = 'Category=@0 or Category=@1';
-        this.dataValueResource = '1;2';      
+        this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
+        this.requestSchedule.dataValue = '2;' + this.user.userID;
+      } else {
+        this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+        this.requestSchedule.dataValue = '1;2';      
+       
+        this.dataObj = null;
       }
       if (idx > -1) return;
       var schedule = {
@@ -915,7 +903,7 @@ export class CodxTasksComponent
         type: ViewType.listtree,
         active: false,
         sameData: false,
-        text: 'Cây',
+        // text: 'Cây',
         icon: 'icon-account_tree',
         request: {
           idField: 'recID',

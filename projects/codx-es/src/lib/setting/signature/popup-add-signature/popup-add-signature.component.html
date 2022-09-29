@@ -120,34 +120,32 @@
     </div>
     <div class="d-flex flex-column flex-grow-1 pe-8">
       <div class="d-flex flex-wrap">
-        <div class="text-center">
+        <div class="text-center me-6">
           <div
-            class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
+            class="border border-gray-300 rounded mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
-              <div class="m-auto">
-                <!-- <codx-img
+              <!-- <codx-img
                   [objectId]="data.signature1 == null ? '' : data.recID + '1'"
                   imageType="square"
                   [width]="50"
                   [recId]="data.signature1"
                 ></codx-img> -->
 
-                <codx-img
-                  #imgSignature1
-                  class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                  [width]="80"
-                  [objectId]="data.recID + '1'"
-                  [objectType]="'ES_Signatures'"
-                  data-kt-menu-trigger="click"
-                  data-kt-menu-attach="parent"
-                  data-kt-menu-placement="bottom-end"
-                  data-kt-menu-flip="bottom"
-                  [isAllowEdit]="true"
-                  [funcId]="'ESS21'"
-                >
-                </codx-img>
-              </div>
+              <codx-img
+                #imgSignature1
+                class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                [width]="80"
+                [objectId]="data.recID + '1'"
+                [objectType]="'ES_Signatures'"
+                data-kt-menu-trigger="click"
+                data-kt-menu-attach="parent"
+                data-kt-menu-placement="bottom-end"
+                data-kt-menu-flip="bottom"
+                [isAllowEdit]="true"
+                [funcId]="'ESS21'"
+              >
+              </codx-img>
             </div>
           </div>
           <codx-label
@@ -155,9 +153,9 @@
             [formModel]="dialog.formModel"
           ></codx-label>
         </div>
-        <div class="text-center">
+        <div class="text-center me-6">
           <div
-            class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
+            class="border border-gray-300 rounded mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
               <!-- <codx-img
@@ -182,12 +180,16 @@
               </codx-img>
             </div>
           </div>
-          <codx-label fiedName="Signature2" [formModel]="dialog.formModel">
+          <codx-label
+            class=""
+            fiedName="Signature2"
+            [formModel]="dialog.formModel"
+          >
           </codx-label>
         </div>
-        <div class="text-center">
+        <div class="text-center me-6">
           <div
-            class="border border-gray-300 border-dashed rounded py-3 px-4 me-6 mb-3 d-flex align-items-center"
+            class="border border-gray-300 rounded mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
               <!-- <codx-img
