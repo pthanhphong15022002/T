@@ -197,7 +197,9 @@ export class PopupAddCardsComponent implements OnInit {
         if (res && res.length > 0)
         {
           this.lstPattern = res;
-          this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault});
+          this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault == true});
+          console.log(res);
+          console.log(this.patternSelected);
           this.dt.detectChanges();
         }
       });
@@ -369,10 +371,10 @@ export class PopupAddCardsComponent implements OnInit {
       card.functionID = this.funcID;
       card.entityPer = this.entityName;
       card.cardType = this.cardType;
+      card.shareControl = this.shareControl;
       card.listShare = this.lstShare;
       card.objectType = this.objectType;
       card.pattern = this.patternSelected.patternID;
-      card.approveStatus = "5"
       if(this.gift){
         card.hasGifts = true;
       }
@@ -413,7 +415,7 @@ export class PopupAddCardsComponent implements OnInit {
             let cardID = res[1].recID;
             (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
             this.dialog.close();
-            this.postFeedBack(cardID,this.shareControl);
+            // this.postFeedBack(cardID,this.shareControl);
           }
           else
           {

@@ -306,7 +306,20 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       });
     this.detectorRef.detectChanges();
   }
+<<<<<<< HEAD
   ngAfterViewInit(): void {    
+=======
+
+  ngAfterViewInit(): void {
+    if (this.dialogRef) {
+      if (!this.isSaveSuccess) {
+        this.dialogRef.closed.subscribe((res: any) => {
+          console.log('Close without saving or save failed', res);
+          this.dialogRef.dataService.saveFailed.next(null);
+        });
+      }
+    }
+>>>>>>> db6327dfae96fa3c623b9ae5c49531b4175a1358
   }
 
   setStatusTime(modifiedOn: any) {
@@ -377,19 +390,35 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.lstEquipment.push(tempEquip);
     });
 
+<<<<<<< HEAD
+=======
+    if (this.data?.resourceID instanceof Object) {
+      this.data.resourceID = this.data?.resourceID[0];
+    }
+    if (this.data?.reasonID instanceof Object) {
+      this.data.reasonID = this.data?.reasonID[0];
+    }
+>>>>>>> db6327dfae96fa3c623b9ae5c49531b4175a1358
     let tmpBookingOn = new Date(this.data?.bookingOn);
     this.data.category = '1';
     this.data.status = '1';
     this.data.resourceType = '1';
+<<<<<<< HEAD
     this.data.equipments = this.lstEquipment;
     this.data.requester = this.curUser.userName;
     this.data.startDate = new Date(
+=======
+
+    this.data.attendees = this.data?.attendees;
+    (this.data.startDate = new Date(
+>>>>>>> db6327dfae96fa3c623b9ae5c49531b4175a1358
       tmpBookingOn.getFullYear(),
       tmpBookingOn.getMonth(),
       tmpBookingOn.getDate(),
       this.tmpStartDate.getHours(),
       this.tmpStartDate.getMinutes(),
       0
+<<<<<<< HEAD
     );
     this.data.endDate = new Date(
       tmpBookingOn.getFullYear(),
@@ -403,6 +432,22 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.attendeesList.forEach((item) => {
       this.tmpAttendeesList.push(item);
     });
+=======
+    )),
+      (this.data.endDate = new Date(
+        tmpBookingOn.getFullYear(),
+        tmpBookingOn.getMonth(),
+        tmpBookingOn.getDate(),
+        this.tmpEndDate.getHours(),
+        this.tmpEndDate.getMinutes(),
+        0
+      )),
+      (this.data.equipments = this.lstEquipment),
+      (this.data.requester = this.curUser.userName),
+      this.attendeesList.forEach((item) => {
+        this.tmpAttendeesList.push(item);
+      });
+>>>>>>> db6327dfae96fa3c623b9ae5c49531b4175a1358
     this.tmpAttendeesList.push(this.curUser);
 
     this.dialogRef.dataService
@@ -455,7 +500,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
     this.data.attendees = this.attendeesList.length + 1;
+<<<<<<< HEAD
     this.detectorRef.detectChanges();
+=======
+>>>>>>> db6327dfae96fa3c623b9ae5c49531b4175a1358
   }
   valueCbxUserChange(event?) {
     this.lstUser = [];
@@ -546,7 +594,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (event.data instanceof Object) {
         this.data['field'] = event.data.value;
       } else {
+<<<<<<< HEAD
         this.data['field'] = event.data;
+=======
+        this.data['field'] = event.data.value;
+>>>>>>> db6327dfae96fa3c623b9ae5c49531b4175a1358
       }
     }
     this.detectorRef.detectChanges();
@@ -612,6 +664,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   valueDateChange(event: any) {
+<<<<<<< HEAD
     if (event.data) {
       this.data.bookingOn = event.data;
       let selectTime = new Date(this.data.bookingOn);
@@ -620,6 +673,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.notificationsService.notifyCode('EP003');
         return;
       }
+=======
+    if (event.data.fromDate) {
+      this.data.bookingOn = event.data.fromDate;
+>>>>>>> db6327dfae96fa3c623b9ae5c49531b4175a1358
     }
   }
 

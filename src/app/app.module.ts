@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { AppConfigService } from './../assets/config/app-config.service';
 import { NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,7 +29,8 @@ import { CodxEsModule } from 'projects/codx-es/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { FileComponent } from './file/file.component';
-import { AppConfig } from 'src/assets/config/app-config';
+import { AppConfigService } from '@core/services/config/app-config.service';
+import { AppConfig } from '@core/services/config/app-config';
 
 
 //import { ReportComponent } from './modules/report/report.component';

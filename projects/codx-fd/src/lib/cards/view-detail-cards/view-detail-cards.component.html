@@ -6,24 +6,24 @@
                 <div class="row h-500px min-h-500px me-4 d-flex justify-content-center text-center p-6" 
                     [style.background]="data.backgroundColor">
                     <div class="card-title fw-bolder display-6"
-                        [style.color]="data.pattern?.headerColor">
+                        [style.color]="data.pattern.headerColor">
                         {{data?.cardType | vll:'L1422':'text'|async}}
                     </div>
                     <div class="d-flex align-items-center justify-content-center">
                         <codx-img class="symbol symbol-40 symbol-circle"
-                            [objectId]="data.sender?.userID" objectType="AD_Users"
+                            [objectId]="data.senderID" objectType="AD_Users"
                             [width]="35">
                         </codx-img>
                         <span class="pic-send mx-3">
                             <img alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
                         </span>
                         <codx-img class="symbol symbol-40 symbol-circle"
-                            [objectId]="data.receiver?.userID" objectType="AD_Users"
+                            [objectId]="data.receiverID" objectType="AD_Users"
                             [width]="35">
                         </codx-img>
                     </div>
                     <div class="text-dark modal-card-sms mt-6"
-                        [style.color]="data.pattern?.textColor"
+                        [style.color]="data.pattern.textColor"
                         [innerHTML]="data.situation">
                     </div>
                     <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
@@ -53,14 +53,15 @@
                             <div class="d-flex justify-content-between mb-2">
                                 <div class="d-flex align-items-center user-card py-3">
                                     <codx-img class="symbol symbol-40 symbol-circle"
-                                        [objectId]="data.sender?.userID" 
+                                        [objectId]="data.sender.userID" 
                                         [objectType]="'AD_Users'"
                                         [width]="35">
                                     </codx-img>
                                     <div class="d-flex flex-column flex-grow-1 ms-2">
                                         <div class="text-dark fw-bolder">
-                                            {{data.sender.employeeName}}</div>
-                                        <div class="text-dark">{{data.sender.positionName}}
+                                            {{data.sender.userName}}</div>
+                                        <div class="text-dark">
+                                            {{data.sender.positionName}}
                                         </div>
                                     </div>
                                 </div>
@@ -73,12 +74,13 @@
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex align-items-center user-card py-3">
                                     <codx-img class="symbol symbol-40 symbol-circle mr-3"
-                                        [objectId]="data.receiver.userID" objectType="AD_Users"
+                                        [objectId]="data.receiver.userID" 
+                                        objectType="AD_Users"
                                         [width]="35">
                                     </codx-img>
                                     <div class="d-flex flex-column flex-grow-1 ms-2">
                                         <div class="text-dark fw-bolder">
-                                            {{data.receiver.employeeName}}</div>
+                                            {{data.receiver.userName}}</div>
                                         <div class="text-dark">
                                             {{data.receiver.positionName}}
                                         </div>
@@ -144,14 +146,14 @@
                             <div class="">
                                 <codx-img
                                     [objectId]="data.gifts.giftID"
-                                    objectType="FD_Gifts" 
+                                    objectType="FD_Gifts"
                                     [width]="200"
-                                    [imageType]="'square'">
+                                    imageType="square">
                                 </codx-img>
                             </div>
-                            <div class="ms-2 d-flex flex-column">
-                                <div class="text-dark font-weight-bold">{{data.gifts.giftName}}</div>
-                                <div class="text-dark">
+                            <div class="ms-6">
+                                <div class="fw-bolder">{{data.gifts.giftName}}</div>
+                                <div class="mt-2">
                                     <span class="font-weight-normal text-dark-50">
                                         <codx-label formName=""name="lblPrice" default="Giá:"></codx-label>
                                     </span>
@@ -160,24 +162,24 @@
                                         <codx-label formName="" name="lblCoin" default="xu"></codx-label>
                                     </span> 
                                 </div>
-                                <div class="text-dark">
-                                    <span class="font-weight-normal text-dark-50 mr-1">
+                                <div class="mt-2">
+                                    <span class="font-weight-normal">
                                         <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
                                     </span>
-                                    <span [innerHTML]="data.gifts.memo"></span>
+                                    <span>{{data.gifts.memo}}</span>
                                 </div>
-                                <div class="text-dark">
+                                <div class="mt-2">
                                     <span class="font-weight-normal text-dark-50 mr-1">
                                         <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
                                     </span>
                                     <span>{{data.gifts.quantity}}</span>
                                 </div>
-                                <div class="d-flex mt-2">
-                                    <div class="px-2 b rounded-pill"
+                                <div class="mt-2">
+                                    <span class="p-2 b rounded-pill"
                                         [style.color]="data.gifts.status | vll:'L1428':'color' | async"
                                         [style.background-color]="(data.gifts.status | vll:'L1428':'color' | async) + '30'">
                                         {{data.gifts.status |vll:"L1428":"text" | async}}
-                                    </div>
+                                    </span>
                                 </div>
                             </div>
                         </div>

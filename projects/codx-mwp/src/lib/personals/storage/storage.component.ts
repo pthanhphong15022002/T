@@ -1,3 +1,4 @@
+import { detach } from '@syncfusion/ej2-base';
 import {
   ApiHttpService,
   AuthStore,
@@ -17,6 +18,7 @@ import {
   CacheService,
   ScrollComponent,
   NotificationsService,
+  RequestOption,
 } from 'codx-core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
@@ -70,6 +72,8 @@ export class StorageComponent
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('listView') listView: CodxListviewComponent;
+  @ViewChild('moreFC') moreFC: TemplateRef<any>;
+  @ViewChild('detail') lstComment: TemplateRef<any>;
 
   constructor(
     inject: Injector,
@@ -208,7 +212,11 @@ export class StorageComponent
       });
   }
 
+  dataUpdate: any = [];
+  dataComments: any = [];
+  a: any;
   openStorageDetail(e) {
+    this.dataUpdate = e;
     this.dataSort = [];
     this.checkFormComment = true;
     this.detectorRef.detectChanges();
@@ -226,16 +234,20 @@ export class StorageComponent
       formName: 'WPComments',
       funcID: 'WP',
     };
-    var a = this.detail.createComponent(ListPostComponent);
+    this.a = this.detail.createComponent(ListPostComponent);
     if (arr?.length == 0) {
       this.generateGuid();
-      a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
+      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
     } else {
-      a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
-      a.instance.dataValueWP = `[${arr.join(';')}]`;
+      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
+      this.a.instance.dataValueWP = `[${arr.join(';')}]`;
     }
-    a.instance.isShowCreate = false;
-    a.instance.formModel = formModel;
+    this.a.instance.isShowCreate = false;
+    this.a.instance.formModel = formModel;
+    this.a.instance.moreFunc = true;
+    this.a.instance.moreFuncTmp = this.moreFC;
+    this.detectorRef.detectChanges();
+    this.dataComments = this.a.instance.listview?.dataService?.data;
   }
 
   guidID: any;
@@ -284,5 +296,46 @@ export class StorageComponent
     );
     this.detectorRef.detectChanges();
     this.checkDESC = false;
+  }
+
+  removePost(data) {
+    if (data) {
+      for (let i = 0; i < this.dataUpdate?.details.length; i++) {
+        if (this.dataUpdate?.details[i].refID == data.recID) {
+          this.dataUpdate?.details.splice(i, 1);
+        }
+      }
+      this.api
+        .exec('ERM.Business.WP', 'StoragesBusiness', 'UpdateStorageAsync', [
+          this.dataUpdate.recID,
+          this.dataUpdate,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            var dataSelected =
+              this.a.instance?.listview?.dataService?.dataSelected;
+            if (this.a.instance?.listview?.dataService?.data && dataSelected) {
+              (this.a.instance.listview.dataService as CRUDService)
+                .remove(dataSelected)
+                .subscribe();
+              this.detectorRef.detectChanges();
+              // for (
+              //   let x = 0;
+              //   x < this.a.instance?.listview?.dataService?.data.length;
+              //   x++
+              // ) {
+              //   if (
+              //     this.a.instance?.listview?.dataService?.data[x].recID ==
+              //     this.a.instance?.listview?.dataService?.dataSelected?.recID
+              //   ) {
+              //     this.a.instance?.listview?.dataService?.data.splice(x, 1);
+              //     this.detectorRef.detectChanges();
+              //   }
+              // }
+            }
+            // this.a.instance?.listview?.dataService?.data.splice(0, 1);
+          }
+        });
+    }
   }
 }

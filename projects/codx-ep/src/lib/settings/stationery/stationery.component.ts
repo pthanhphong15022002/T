@@ -27,7 +27,6 @@ import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-st
   styleUrls: ['./stationery.component.scss'],
 })
 export class StationeryComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('base') viewBase: ViewsComponent;
   @ViewChild('resourceID') resourceID: TemplateRef<any>;
   @ViewChild('resourceName') resourceName: TemplateRef<any>;
   @ViewChild('productImg') productImg: TemplateRef<any>;
@@ -36,7 +35,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   @ViewChild('note') note: TemplateRef<any>;
   @ViewChild('quantity') quantity: TemplateRef<any>;
   @ViewChild('owner') owner: TemplateRef<any>;
-  @ViewChild('accordingToRequester') accordingToRequester: TemplateRef<any>;
   @ViewChild('columnsList') columnsList: TemplateRef<any>;
   @ViewChild('templateListCard') templateListCard: TemplateRef<any>;
 
@@ -97,7 +95,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.view.dataService.methodDelete = 'DeleteResourceAsync';
 
     this.buttons = {
       id: 'btnAdd',
@@ -130,10 +128,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       {
         headerText: 'Số lượng tồn kho',
         template: this.quantity,
-      },
-      {
-        headerText: 'Theo số lượng người đăng ký',
-        template: this.accordingToRequester,
       },
       {
         headerText: 'Người quản lý',
@@ -210,12 +204,12 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew() {
-    this.viewBase.dataService.addNew().subscribe((res: any) => {
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      let dataSelected = this.viewBase.dataService.dataSelected;
+      let dataSelected = this.view.dataService.dataSelected;
       option.Width = '800px';
-      option.FormModel = this.viewBase?.formModel;
-      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.DataService = this.view?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
         [dataSelected, true],
@@ -226,29 +220,30 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   edit(data?) {
     if (data) {
-      this.viewBase.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = data;
     }
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
         let option = new SidebarModel();
         option.Width = '800px';
-        option.FormModel = this.viewBase?.formModel;
-        option.DataService = this.viewBase?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.DataService = this.view?.dataService;
         this.dialog = this.callfc.openSide(
           PopupAddStationeryComponent,
-          [this.viewBase.dataService.dataSelected, false],
+          [this.view.dataService.dataSelected, false],
           option
         );
       });
   }
 
   delete(data?) {
+    debugger;
     if (data) {
-      this.viewBase.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = data;
     }
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
       .subscribe();
   }
 

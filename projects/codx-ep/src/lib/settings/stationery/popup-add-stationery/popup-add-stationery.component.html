@@ -13,146 +13,147 @@
   [data]="data"
 >
   <ng-template #tabGeneralInfo>
-    <div id="rome" class="tabpanel">
-      <div class="row">
-        <div class="form-group col-8">
-          <codx-label
-            class="fw-bold"
-            fiedName="ResourceName"
-            [formModel]="form.formModel"
-          >
-          </codx-label>
-          <codx-input
-            ControlName="resourceName"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
+    <ng-container *ngIf="form && form.formGroup">
+      <div id="rome" class="tabpanel">
+        <div class="row">
+          <div class="form-group col-8">
+            <codx-label
+              class="fw-bold"
+              fiedName="ResourceName"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              ControlName="resourceName"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="form-group col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="UMID"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              ControlName="uMID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
         </div>
-        <div class="form-group col-4">
-          <codx-label
-            class="fw-bold"
-            fiedName="UMID"
-            [formModel]="form.formModel"
-          >
-          </codx-label>
-          <codx-input
-            ControlName="uMID"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
+
+        <div class="row">
+          <div class="form-group col-8">
+            <codx-label
+              class="fw-bold"
+              fiedName="GroupID"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+
+            <codx-input
+              ControlName="groupID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="Code"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+
+            <codx-input
+              ControlName="code"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="form-group col-8">
-          <codx-label
-            class="fw-bold"
-            fiedName="GroupID"
-            [formModel]="form.formModel"
-          >
-          </codx-label>
-
-          <codx-input
-            ControlName="groupID"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
+        <div class="row">
+          <div class="form-group col-12">
+            <codx-label
+              class="fw-bold"
+              fiedName="Owner"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              ControlName="owner"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+            >
+            </codx-input>
+          </div>
         </div>
-        <div class="form-group col-4">
-          <codx-label
-            class="fw-bold"
-            fiedName="Code"
-            [formModel]="form.formModel"
-          >
-          </codx-label>
 
-          <codx-input
-            ControlName="code"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
+        <div class="row">
+          <div class="form-group col-12">
+            <codx-label
+              class="fw-bold"
+              fiedName="Note"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+
+            <codx-input
+              ControlName="note"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="form-group col-12">
-          <codx-label
-            class="fw-bold"
-            fiedName="Owner"
-            [formModel]="form.formModel"
-          >
-          </codx-label>
-          <codx-input
-            ControlName="owner"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group col-12">
-          <codx-label
-            class="fw-bold"
-            fiedName="Note"
-            [formModel]="form.formModel"
-          >
-          </codx-label>
-
-          <codx-input
-            ControlName="note"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
-        </div>
-      </div>
-
-      <div class="d-flex justify-content-start mb-4">
-        <div class="upload-img">
-          <codx-img
-            #imageUpLoad
-            width="150"
-            imageType="square"
-            [objectType]="formModel?.entityName"
-            [objectId]="data?.recID"
-            aria-disabled="true"
-            [funcId]="formModel?.funcID"
-            [isAllowEdit]="true"
-            [objectId]="''"
-          >
-          </codx-img>
-        </div>
-        <div class="d-flex align-items-center">
-          <div class="ms-4">
-            <div class="m-2 d-flex align-items-center">
-              <span class="me-2 fw-bold text-black-50">Màu sắc: </span>
-              <codx-colorpicker
-                (valueChange)="valueChange($event)"
-              ></codx-colorpicker>
-            </div>
-            <div class="m-2">
-              <span class="fw-bold text-black-50">Tồn kho: </span>
-              <span class="fw-bold">1</span>
-            </div>
-            <div class="m-2">
-              <span class="fw-bold text-black-50">Đã dành hàng: </span>
-              <span class="fw-bold">1</span>
-            </div>
-            <div class="m-2">
-              <span class="fw-bold text-black-50">Sẵn sàng xuất: </span>
-              <span class="fw-bold">1</span>
+        <div class="d-flex justify-content-start mb-4">
+          <div class="upload-img">
+            <codx-img
+              #imageUpLoad
+              width="150"
+              imageType="square"
+              [objectType]="form.formModel?.entityName"
+              [objectId]="data?.recID"
+              aria-disabled="true"
+              [funcId]="form.formModel?.funcID"
+              [isAllowEdit]="true"
+            >
+            </codx-img>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="ms-4">
+              <div class="m-2 d-flex align-items-center">
+                <span class="me-2 fw-bold text-black-50">Màu sắc: </span>
+                <codx-colorpicker
+                  (valueChange)="valueChange($event)"
+                ></codx-colorpicker>
+              </div>
+              <div class="m-2">
+                <span class="fw-bold text-black-50">Tồn kho: </span>
+                <span class="fw-bold">1</span>
+              </div>
+              <div class="m-2">
+                <span class="fw-bold text-black-50">Đã dành hàng: </span>
+                <span class="fw-bold">1</span>
+              </div>
+              <div class="m-2">
+                <span class="fw-bold text-black-50">Sẵn sàng xuất: </span>
+                <span class="fw-bold">1</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-container>
   </ng-template>
 
   <ng-template #tabUsageNorms>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-between mt-8">
       <div>Theo số lượng người được đăng ký</div>
       <div class="d-flex align-items-center">
         <codx-input type="switch"></codx-input>

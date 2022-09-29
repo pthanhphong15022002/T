@@ -99,10 +99,11 @@ export class EmployeeInfomationComponent implements OnInit {
     debugger
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
+    this.layout.setLogo(null);
     // this.layout.setUrl(this.codxMwpService.urlback);
-    this.cache.functionList(this.functionID).subscribe(f => {
-      if (f) this.layout.setLogo(f.smallIcon);
-    })
+    // this.cache.functionList(this.functionID).subscribe(f => {
+    //   if (f) this.layout.setLogo(null);
+    // })
     this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res => {
       if (res) {
         this.defautFunc = res[0]
