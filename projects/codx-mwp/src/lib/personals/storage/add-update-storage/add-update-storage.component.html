@@ -1,4 +1,5 @@
-<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
+    [formModel]="dialog?.formModel">
     <ng-template popup add #body>
         <div class="form-group">
             <codx-label name="lblStorageTitle" [formName]="formModel.formName" default="Kho lưu trữ">

@@ -44,3 +44,11 @@ codx-view-list-detail ejs-listview .e-ul>li {
 .meeting-des .e-rte-content {
   height: calc(100vh - 235px) !important;
 }
+
+lib-taskextends {
+  height: 100%;
+}
+
+lib-taskextends .e-splitter.e-splitter-horizontal {
+  border: 0;
+}

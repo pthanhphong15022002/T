@@ -363,40 +363,39 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   onSave() {
-    this.getHTMLFirstPost(this.adUser);
-    // this.saveSuccess = true;
-    // this.formUser.patchValue(this.adUser);
-    // if (this.formUser.invalid) {
-    //   this.adService.notifyInvalid(this.formUser, this.formModel);
-    //   return;
-    // } else {
-    //   if (this.isAddMode) {
-    //     if (this.checkBtnAdd == false) {
-    //       this.onAdd();
-    //     } else {
-    //       if (
-    //         this.countListViewChooseRoleApp > 0 ||
-    //         this.countListViewChooseRoleService > 0
-    //       ) {
-    //         this.adService
-    //           .addUserRole(this.dataAfterSave, this.viewChooseRole)
-    //           .subscribe((res: any) => {
-    //             if (res) {
-    //               res.chooseRoles = res?.functions;
-    //               this.dialog.close(res);
-    //               (this.dialog.dataService as CRUDService)
-    //                 .update(res)
-    //                 .subscribe();
-    //               this.changeDetector.detectChanges();
-    //             }
-    //           });
-    //       }
-    //       this.notification.notifyCode('SYS006');
-    //     }
-    //     this.getHTMLFirstPost(this.adUser);
-    //     this.adService.createFirstPost(this.tmpPost).subscribe();
-    //   } else this.onUpdate();
-    // }
+    this.saveSuccess = true;
+    this.formUser.patchValue(this.adUser);
+    if (this.formUser.invalid) {
+      this.adService.notifyInvalid(this.formUser, this.formModel);
+      return;
+    } else {
+      if (this.isAddMode) {
+        if (this.checkBtnAdd == false) {
+          this.onAdd();
+        } else {
+          if (
+            this.countListViewChooseRoleApp > 0 ||
+            this.countListViewChooseRoleService > 0
+          ) {
+            this.adService
+              .addUserRole(this.dataAfterSave, this.viewChooseRole)
+              .subscribe((res: any) => {
+                if (res) {
+                  res.chooseRoles = res?.functions;
+                  this.dialog.close(res);
+                  (this.dialog.dataService as CRUDService)
+                    .update(res)
+                    .subscribe();
+                  this.changeDetector.detectChanges();
+                }
+              });
+          }
+          this.notification.notifyCode('SYS006');
+        }
+        this.getHTMLFirstPost(this.adUser);
+        this.adService.createFirstPost(this.tmpPost).subscribe();
+      } else this.onUpdate();
+    }
   }
 
   getHTMLFirstPost(data) {
@@ -405,9 +404,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
     viewRef.detectChanges();
     let contentDialog = viewRef.rootNodes;
     let html = contentDialog[1] as HTMLElement;
-    debugger;
     this.tmpPost = {
-      content: this.comments,
+      content: html.innerHTML,
       approveControl: '0',
       category: '1',
       shareControl: '9',
