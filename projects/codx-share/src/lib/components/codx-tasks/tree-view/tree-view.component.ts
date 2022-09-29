@@ -7,10 +7,11 @@ import {
   OnInit,
   Optional,
   Output,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel, ViewTreeDetailComponent, DataService } from 'codx-core';
+import { ApiHttpService, CallFuncService, DialogData, DialogRef, FormModel, ViewTreeDetailComponent, DataService, DataRequest } from 'codx-core';
 
 @Component({
   selector: 'share-tree-view',
@@ -28,38 +29,46 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() totalData?: any;
 
   vllPriority ='TM005'
-  // dataTree: any[] = [];
+  dataTree: any[] = [];
   dialog: any;
   @Output() clickMoreFunction = new EventEmitter<any>();
   // @Output() clickShowTaskChildren = new EventEmitter<any>();
-
+ 
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) { }
+  ) { 
+    
+     }
   //#endregion
 
   //#region Init
   ngOnInit(): void { }
 
   ngAfterViewInit(): void {
-    // this.api
-    //   .execSv<any>(
-    //     'TM',
-    //     'ERM.Business.TM',
-    //     'TaskBusiness',
-    //     'GetListTasksChildrenDeTailsTreeOneStepAsync',
-    //     this.data.taskID
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.data.items = res;
-    //       this.listDataTree.push(this.data)
-    //     }
-    //   });
+    var gridModel = new DataRequest();
+    gridModel.formName = this.formModel.formName;
+    gridModel.entityName = this.formModel.entityName;
+    gridModel.funcID = this.formModel.funcID;
+    gridModel.gridViewName = this.formModel.gridViewName;
+    gridModel.treeField = 'ParentID';
+   
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetTasksAsync',
+        gridModel
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dataTree = res[0];
+        }
+      });
   }
   //#endregion
 
@@ -90,23 +99,22 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region Function
-  showTaskChildren(item) {
-    // this.clickShowTaskChildren.emit({ item: item});
-    // this.api
-    //   .execSv<any>(
-    //     'TM',
-    //     'ERM.Business.TM',
-    //     'TaskBusiness',
-    //     'GetListTasksTreeAsync',
-    //     item.taskID
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       var index = this.listDataTree.findIndex(x => x.taskID == res[0].taskID);
-    //       if (index != -1)
-    //         this.listDataTree[index] = res[0];
-    //     }
-    //   });
+  selectionChange(parent) {
+   if(parent.isItem){
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetListTasksChildrenDeTailsTreeOneStepAsync',
+        parent.data.taskID
+      )
+      .subscribe((res) => {
+        if (res && res?.length >0) {
+          parent.data.items=res ;
+        }
+      });
+   }
   }
   //#endregion
 }

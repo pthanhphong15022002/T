@@ -55,6 +55,8 @@ export class DynamicSettingComponent implements OnInit {
   }
 
   navigate(evt: any, catagory: string) {
+    let categoryAdd = '';
+    if (catagory === '2') categoryAdd = '7';
     this.loaded = false;
     var res = this.valuelist as any;
     if (res && res.datas) {
@@ -64,6 +66,7 @@ export class DynamicSettingComponent implements OnInit {
         setting: this.dataSetting[this.catagory],
         function: this.view.function,
         valuelist: this.valuelist,
+        settingMore: this.dataSetting[categoryAdd],
       };
       const ds = (res.datas as any[]).find((item) => item.value == catagory);
       var path = window.location.pathname;

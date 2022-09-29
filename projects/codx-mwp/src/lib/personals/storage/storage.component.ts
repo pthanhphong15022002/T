@@ -70,6 +70,7 @@ export class StorageComponent
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('listView') listView: CodxListviewComponent;
+  @ViewChild('moreFC') moreFC: TemplateRef<any>;
 
   constructor(
     inject: Injector,
@@ -208,7 +209,9 @@ export class StorageComponent
       });
   }
 
+  dataUpdate: any = [];
   openStorageDetail(e) {
+    this.dataUpdate = e;
     this.dataSort = [];
     this.checkFormComment = true;
     this.detectorRef.detectChanges();
@@ -236,6 +239,8 @@ export class StorageComponent
     }
     a.instance.isShowCreate = false;
     a.instance.formModel = formModel;
+    a.instance.moreFunc = true;
+    a.instance.moreFuncTmp = this.moreFC;
   }
 
   guidID: any;
@@ -284,5 +289,19 @@ export class StorageComponent
     );
     this.detectorRef.detectChanges();
     this.checkDESC = false;
+  }
+
+  removePost(data) {
+    if(data) {
+      for(let i = 0; i < this.dataUpdate?.details.length; i++) {
+        if(this.dataUpdate?.details[i].refID == data.recID)
+        {
+          this.dataUpdate?.details.splice(i, 1);
+        }
+      }
+      this.api.exec('ERM.Business.WP', 'StoragesBusiness', 'UpdateStorageAsync', this.dataUpdate).subscribe(res =>{
+        if(res) debugger;
+      });
+    }
   }
 }

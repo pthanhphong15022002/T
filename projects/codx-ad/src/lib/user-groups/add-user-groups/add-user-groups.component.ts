@@ -63,6 +63,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   lstUser: any;
   dataUserCbbTemp: any;
   dataCopy: any;
+  oldID: any;
 
   constructor(
     private injector: Injector,
@@ -74,11 +75,12 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     @Optional() dt?: DialogData
   ) {
     super(injector);
-    this.formType = dt?.data?.formType;
+    this.formType = JSON.parse(JSON.stringify(dt?.data?.formType));
     this.userType = dt?.data?.userType;
     this.data = dialog.dataService!.dataSelected;
     this.adUserGroup = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
+      this.adUserGroup.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
         JSON.stringify(this.data?.chooseRoles)
@@ -94,20 +96,22 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         });
     } else if (this.formType == 'copy') {
       this.dataCopy = dt?.data?.dataCopy;
+      this.oldID = JSON.parse(JSON.stringify(dt?.data?.oldID));
       this.adUserGroup = JSON.parse(JSON.stringify(this.dataCopy));
-      this.viewChooseRole = this.dataCopy?.chooseRoles;
-      this.viewChooseRoleTemp = JSON.parse(
-        JSON.stringify(this.dataCopy?.chooseRoles)
-      );
-      this.countListViewChoose();
-      this.adService
-        .getUserByUserGroup(this.adUserGroup.userID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.dataUserCbb = res;
-            this.dataUserCbbTemp = JSON.parse(JSON.stringify(this.dataUserCbb));
-          }
-        });
+      this.adUserGroup.email = '';
+      if (this.dataCopy?.chooseRoles) {
+        this.viewChooseRole = this.dataCopy?.chooseRoles;
+        this.viewChooseRoleTemp = JSON.parse(
+          JSON.stringify(this.dataCopy?.chooseRoles)
+        );
+        this.countListViewChoose();
+      }
+      this.adService.getUserByUserGroup(this.oldID).subscribe((res: any) => {
+        if (res) {
+          this.dataUserCbb = res;
+          this.dataUserCbbTemp = JSON.parse(JSON.stringify(this.dataUserCbb));
+        }
+      });
     }
     this.dialog = dialog;
     this.user = auth.get();
@@ -119,20 +123,19 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {
+  onInit(): void {}
+
+  ngAfterViewInit() {
+    this.formModel = this.form?.formModel;
     if (this.formType == 'edit') {
       this.title = 'Cập nhật nhóm người dùng';
       this.isAddMode = false;
-    } else this.title = this.form?.title;
+    } else this.title = 'Thêm nhóm người dùng';
     this.adService.getListUser().subscribe((res) => {
       if (res) {
         this.lstUser = res;
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this.formModel = this.form?.formModel;
     this.initForm();
   }
 
@@ -199,9 +202,14 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     var checkDifference =
       JSON.stringify(this.viewChooseRoleTemp) ===
       JSON.stringify(this.viewChooseRole);
-    if (this.formType == 'add') {
+    if (this.formType == 'add' || this.formType == 'copy') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
+      if (this.formType == 'copy') {
+        this.viewChooseRole.map((dt) => {
+          dt.userID = this.adUserGroup.userID;
+        });
+      }
       data = [this.adUserGroup, this.viewChooseRole, true, true, false];
     }
     if (this.formType == 'edit') {
@@ -224,7 +232,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               .update(res.save)
               .subscribe();
           }
-          this.dialog.close(res.save);
+          this.dialog.close();
           this.changeDetector.detectChanges();
         }
       });
@@ -239,7 +247,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-          this.dialog.close(res.update);
+          this.dialog.close();
           this.changeDetector.detectChanges();
         }
       });
@@ -247,8 +255,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    this.formUserGroup.patchValue(this.adUserGroup);
-    if (this.formUserGroup.invalid) {
+    if (this.formUserGroup) this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup?.invalid) {
       this.adService.notifyInvalid(this.formUserGroup, this.formModel);
       return;
     } else {
@@ -286,7 +294,10 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         lstUserName.push(userName);
       });
     }
-    if (countUserHaveGroup > 0 && this.formType == 'add') {
+    if (
+      countUserHaveGroup > 0 &&
+      (this.formType == 'add' || this.formType == 'copy')
+    ) {
       this.notification
         .alertCode('AD004', null, lstUserName.join(', '))
         .subscribe((x) => {
@@ -319,6 +330,11 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
                 this.dataUserCbb.length > 0 &&
                 this.viewChooseRole.length > 0
               ) {
+                if (this.formType == 'copy') {
+                  this.viewChooseRole.map((dt) => {
+                    dt.userID = this.adUserGroup.userID;
+                  });
+                }
                 this.adService
                   .updateUserRoles(
                     lstUser,
@@ -355,6 +371,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
                   .subscribe();
               }
             } else this.onUpdate();
+            this.dialog.close();
           });
       } else this.onUpdate();
     }
@@ -428,11 +445,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     { icon: 'icon-playlist_add_check', text: 'Phân quyền', name: 'Roles' },
   ];
 
-  setTitle(e: any) {
-    this.title = 'Thêm ' + e;
-    this.changeDetector.detectChanges();
-  }
-
   checkOpenCbbPopup = 0;
   getDataUserInCbb(event) {
     this.checkOpenCbbPopup++;
@@ -440,7 +452,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
       if (
         this.checkOpenCbbPopup >= 2 ||
         this.formType == 'add' ||
-        this.formType == 'edit'
+        this.formType == 'edit' ||
+        this.formType == 'copy'
       ) {
         if (this.dataUserCbb) {
           let i = 0;
