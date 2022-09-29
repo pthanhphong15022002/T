@@ -39,3 +39,8 @@
     height: 38px;
     min-height: 38px;
 }
+
+
+lib-systemsettings .e-tab .e-tab-header.e-vertical:before {
+    display: none;
+}
