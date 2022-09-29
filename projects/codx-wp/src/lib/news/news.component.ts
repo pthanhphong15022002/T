@@ -146,6 +146,7 @@ export class NewsComponent implements OnInit {
 
   clickShowPopupSearch() {
     let option = new DialogModel();
+    option.DataService = this.codxView.dataService;
     option.FormModel = this.codxView.formModel;
     option.IsFull = true;
     this.callfc.openForm(PopupSearchComponent,"",0,0,"", this.funcID,"",option);
