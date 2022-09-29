@@ -1,7 +1,8 @@
 <codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="functionList?.entityName"
-    (buttonClick)="openFormCreate($event, true)" [buttons]="button" service="FD" assemblyName="ERM.Business.FD"
-    className="GiftsBusiness" method="LoadDataGiftAsync" [predicate]="predicate" [dataValue]="dataValue"></codx-views>
-
+    (buttonClick)="openFormCreate($event, true)" [button]="button" service="FD" assemblyName="ERM.Business.FD"
+    className="GiftsBusiness" method="LoadDataGiftAsync" [predicate]="predicate" [dataValue]="dataValue"
+    idField="recID">
+</codx-views>
 <ng-template #template let-data>
     <div class="container-listview category-gift">
         <div class="list-table" *ngIf="this.searchType == '0' || this.searchType == '1' ">
@@ -21,77 +22,74 @@
 
 <ng-template #itemGift let-dataItem>
     <!-- <div (mouseenter)="PopoverEmpEnter(empPopover, dataItem)"> -->
-        <div class="list-item d-flex align-items-start" #empPopover="ngbPopover" [ngbPopover]="moreFunction"
-            placement="top" container="body">
-            <!-- <div class="pic mr-3"> -->
-            <!-- <img alt="" class="" src="../../../assets/demos/svg/pic-quatang.png"> -->
-            <div class="img">
-                <codx-img [funcId]="funcID" aria-disabled="true" [objectType]="functionList?.formName" [width]="35"
-                    [objectId]="dataItem?.giftID">
-                </codx-img>
-            </div>
-            <div class="d-flex flex-column flex-grow-1 infor">
-                <div class="text-dark font-weight-bold font-size-h6">{{dataItem?.giftName}}</div>
-                <div class="d-flex align-items-center font-size-md">
-                    <div class="d-flex text-dark mr-2">{{dataItem?.giftID}}</div>
-                    <span class="text-muted font-size-sm">|</span>
-                    <div class="d-flex ml-2">
-                        <span class="text-dark-50 mr-1 left-5">
-                            <codx-label name="lblGroup" [formName]="functionList?.formName" default="Nhóm:">
-                            </codx-label>
-                        </span>
-                        <span class="text-dark font-weight-bold left-5">{{dataItem?.groupName}}</span>
-                    </div>
-                </div>
-                <div class="text-dark">
-                    <span class="text-dark-50 mr-1 text-nowrap">
-                        <codx-label name="lblDescription" [formName]="functionList?.formName" default="Mô tả:">
+    <div class="list-item d-flex align-items-start" #empPopover="ngbPopover" [ngbPopover]="moreFunction" placement="top"
+        container="body">
+        <!-- <div class="pic mr-3"> -->
+        <!-- <img alt="" class="" src="../../../assets/demos/svg/pic-quatang.png"> -->
+        <div class="img">
+            <codx-img [funcId]="funcID" aria-disabled="true" [objectType]="functionList?.formName" [width]="35"
+                [objectId]="dataItem?.giftID">
+            </codx-img>
+        </div>
+        <div class="d-flex flex-column flex-grow-1 infor">
+            <div class="text-dark font-weight-bold font-size-h6">{{dataItem?.giftName}}</div>
+            <div class="d-flex align-items-center font-size-md">
+                <div class="d-flex text-dark mr-2">{{dataItem?.giftID}}</div>
+                <span class="text-muted font-size-sm">|</span>
+                <div class="d-flex ml-2">
+                    <span class="text-dark-50 mr-1 left-5">
+                        <codx-label name="lblGroup" [formName]="functionList?.formName" default="Nhóm:">
                         </codx-label>
                     </span>
-                    <span [innerHTML]="dataItem?.memo"></span>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center mr-4">
-                        <span class="text-dark-50 mr-1">
-                            <codx-label name="lblStorage" [formName]="functionList?.formName" default="Tồn kho:">
-                            </codx-label>
-                        </span>
-                        <span class="text-primary font-size-h4 font-weight-bold left-5">{{dataItem?.onhand}}</span>
-                    </div>
-                    <div class="d-flex align-items-center mr-4">
-                        <span class="text-dark-50 mr-1 left-10">
-                            <codx-label name="lbl" [formName]="functionList?.formName" default="Đã giành hàng:">
-                            </codx-label>
-                        </span>
-                        <span
-                            class="text-warning font-size-h4 font-weight-bold left-5">{{dataItem?.reservedQty}}</span>
-                    </div>
-                    <div class="d-flex align-items-center mr-4">
-                        <span class="text-dark-50 mr-1 left-10">
-                            <codx-label name="lblExport" [formName]="functionList?.formName"
-                                default="Sẵn sàng xuất:">
-                            </codx-label>
-                        </span>
-                        <span
-                            class="text-success font-size-h4 font-weight-bold left-5">{{dataItem?.availableQty}}</span>
-                    </div>
-                    <div ngbDropdown class="d-inline-block" container="body">
-                        <button type="button" class="btn btn-icon btn-sm" id="dropdownShowDescription"
-                            ngbDropdownToggle ata-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            *ngIf="dataItem?.description != null && dataItem?.description.length > 0 ">
-                            <span class="icon-assignment icon-18 text-dark-75"></span>
-                        </button>
-                        <div ngbDropdownMenu aria-labelledby="dropdownShowDescription">
-                            <div [innerHTML]="dataItem?.description" class="w-500px p-6"></div>
-                        </div>
-                    </div>
+                    <span class="text-dark font-weight-bold left-5">{{dataItem?.groupName}}</span>
                 </div>
             </div>
-            <div class="d-flex align-items-center justify-content-end w-100px">
-                <div class="font-size-h4 text-dark font-weight-bold">{{dataItem?.price}}</div>
-                <span class="text-warning ml-2 icon-20 icon-monetization_on"></span>
+            <div class="text-dark">
+                <span class="text-dark-50 mr-1 text-nowrap">
+                    <codx-label name="lblDescription" [formName]="functionList?.formName" default="Mô tả:">
+                    </codx-label>
+                </span>
+                <span [innerHTML]="dataItem?.memo"></span>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center mr-4">
+                    <span class="text-dark-50 mr-1">
+                        <codx-label name="lblStorage" [formName]="functionList?.formName" default="Tồn kho:">
+                        </codx-label>
+                    </span>
+                    <span class="text-primary font-size-h4 font-weight-bold left-5">{{dataItem?.onhand}}</span>
+                </div>
+                <div class="d-flex align-items-center mr-4">
+                    <span class="text-dark-50 mr-1 left-10">
+                        <codx-label name="lbl" [formName]="functionList?.formName" default="Đã giành hàng:">
+                        </codx-label>
+                    </span>
+                    <span class="text-warning font-size-h4 font-weight-bold left-5">{{dataItem?.reservedQty}}</span>
+                </div>
+                <div class="d-flex align-items-center mr-4">
+                    <span class="text-dark-50 mr-1 left-10">
+                        <codx-label name="lblExport" [formName]="functionList?.formName" default="Sẵn sàng xuất:">
+                        </codx-label>
+                    </span>
+                    <span class="text-success font-size-h4 font-weight-bold left-5">{{dataItem?.availableQty}}</span>
+                </div>
+                <div ngbDropdown class="d-inline-block" container="body">
+                    <button type="button" class="btn btn-icon btn-sm" id="dropdownShowDescription" ngbDropdownToggle
+                        ata-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        *ngIf="dataItem?.description != null && dataItem?.description.length > 0 ">
+                        <span class="icon-assignment icon-18 text-dark-75"></span>
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownShowDescription">
+                        <div [innerHTML]="dataItem?.description" class="w-500px p-6"></div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="d-flex align-items-center justify-content-end w-100px">
+            <div class="font-size-h4 text-dark font-weight-bold">{{dataItem?.price}}</div>
+            <span class="text-warning ml-2 icon-20 icon-monetization_on"></span>
+        </div>
+    </div>
     <!-- </div> -->
     <hr>
 </ng-template>

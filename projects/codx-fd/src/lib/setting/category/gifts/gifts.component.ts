@@ -62,6 +62,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
   description: any;
   functionList: any;
   gridViewSetup: any;
+  button?: ButtonModel;
 
   popupFiled = 1;
 
@@ -83,11 +84,10 @@ export class GiftsComponent extends UIComponent implements OnInit {
       })
   }
 
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
-
   onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
     this.initForm();
     this.initHandForm();
     this.user = this.auth?.get();

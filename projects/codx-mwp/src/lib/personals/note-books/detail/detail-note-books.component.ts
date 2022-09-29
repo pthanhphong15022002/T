@@ -49,7 +49,6 @@ export class DetailNoteBooksComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('listView') listView: TemplateRef<any>;
-  @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('lstGrid') lstGrid: CodxGridviewComponent;
   @ViewChild('list') list: TemplateRef<any>;
   @ViewChild('memo', { static: true }) memo;
@@ -142,7 +141,6 @@ export class DetailNoteBooksComponent extends UIComponent {
         sameData: true,
         id: '1',
         active: true,
-        text: 'Lưới',
         model: {
           resources: this.columnsGrid,
         },
@@ -152,7 +150,6 @@ export class DetailNoteBooksComponent extends UIComponent {
         id: '2',
         type: ViewType.list,
         active: false,
-        text: 'Danh sách',
         model: {
           template: this.listView,
         },
