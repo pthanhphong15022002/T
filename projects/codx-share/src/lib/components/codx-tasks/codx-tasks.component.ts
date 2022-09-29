@@ -39,7 +39,6 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { TreeViewComponent } from './tree-view/tree-view.component';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -73,7 +72,6 @@ export class CodxTasksComponent
   @ViewChild('detail') detail: ViewDetailComponent;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
   // @ViewChild('treeView') treeView!: TreeViewComponent;
-
 
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
@@ -920,7 +918,7 @@ export class CodxTasksComponent
         // },
         model: {
           // template: this.treeView,
-          panelLeftRef : this.treeView
+          panelLeftRef: this.treeView
         },
       };
       this.viewsActive.push(tree);

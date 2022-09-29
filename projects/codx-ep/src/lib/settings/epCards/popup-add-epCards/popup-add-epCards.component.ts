@@ -82,6 +82,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
       .then((item) => {
         this.fGroupAddEpCards = item;
         if (this.data) {
+          this.data.resourceType='7';
           this.fGroupAddEpCards.patchValue(this.data);
         }
         //patch thêm value
@@ -102,10 +103,10 @@ export class PopupAddEpCardsComponent extends UIComponent {
   }
 
   onSaveForm() {
-    if (this.fGroupAddEpCards.invalid == true) {
-      this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
-      return;
-    }
+    // if (this.fGroupAddEpCards.invalid == true) {
+    //   this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
+    //   return;
+    // }
     //patch thêm value
     if (this.fGroupAddEpCards.value.owner instanceof Object) {
       this.fGroupAddEpCards.patchValue({
@@ -115,21 +116,16 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res.save) {
-          this.imageUpload.onSaveFile(res.save.recID);
-          this.dialogRef.close();
-        }
-        if (res.update) {
+        if (res) {
+          let objectID = res.save.recID != null ? res.save.recID:res.update.recID;
           this.imageUpload
-            .updateFileDirectReload(res.update.recID)
+            .updateFileDirectReload(objectID)
             .subscribe((result) => {
               if (result) {
-                this.loadData.emit();
+                //this.loadData.emit();
               }
             });
-          (this.dialogRef.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
+          this.dialogRef.close();
         }
         return;
       });
