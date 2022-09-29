@@ -15,6 +15,16 @@
   </share-view-detail>
 </ng-template>
 
+<ng-template *ngIf="funcID == 'TMT0203'" #treeView >
+  <share-tree-view
+    [formModel]="view.formModel"
+    [vllStatus]="vllStatus"
+    [listRoles]="listRoles"
+    (clickMoreFunction)="receiveMF($event)"
+  >
+  </share-tree-view>
+</ng-template>
+
 <ng-template #itemViewList let-data>
   <share-view-list
     [formModel]="view.formModel"
@@ -24,17 +34,6 @@
     (clickMoreFunction)="receiveMF($event)"
   >
   </share-view-list>
-</ng-template>
-
-<ng-template *ngIf="funcID == 'TMT0203'" #treeView let-data>
-  <share-tree-view
-    [formModel]="view.formModel"
-    [vllStatus]="vllStatus"
-    [data]="data"
-    [listRoles]="listRoles"
-    (clickMoreFunction)="receiveMF($event)"
-  >
-  </share-tree-view>
 </ng-template>
 
 <ng-template #itemTemplate let-data>

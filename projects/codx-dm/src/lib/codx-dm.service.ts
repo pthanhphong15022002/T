@@ -918,16 +918,15 @@ export class CodxDMService {
     if (data?.folderName && !data?.extension)
       return '../../../assets/codx/dms/folder.svg';
     else {
-      return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      // if (data.hasThumbnail == null || data.hasThumbnail == false) {
-      //   return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      // } else if (data.thumbnail.indexOf('../../../') > -1)
-      //   return data.thumbnail;
-      // else {
-      //   let url = `${this.urlThumbnail}/${data.thumbnail}`;
-      //   return url;
-      //   //return this.checkUrl(url, data);
-      // }
+      //return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+      if (data.hasThumbnail == null || data.hasThumbnail == false) {
+        return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+      } else if (data.thumbnail.indexOf('../../../') > -1)
+        return data.thumbnail;
+      else {
+        return environment.urlUpload + "/" +data.thumbnail;
+        //return this.checkUrl(url, data);
+      }
     }
   }
 

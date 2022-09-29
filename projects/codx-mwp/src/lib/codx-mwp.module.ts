@@ -62,16 +62,6 @@ import { TasksComponent } from './tasks/tasks.component';
 import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: LayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'employeeinfomation/:funcID',
-  //       component: EmployeeInfomationComponent,
-  //     },
-  //   ],
-  // },
   {
     path: '',
     component: LayoutComponent,
@@ -80,11 +70,6 @@ export const routes: Routes = [
         path: 'tasks/:funcID',
         component: TasksComponent,
       },
-      // {
-      //   path:'',
-      //   redirectTo:'personals/:funcID',
-      //   component: PersonalsComponent,
-      // },
     ],
   },
   {
@@ -99,12 +84,18 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutNoToolbarComponent,
+    component: LayoutOnlyHeaderComponent,
     children: [
       {
         path: 'personals/:funcID',
         component: PersonalsComponent,
       },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoToolbarComponent,
+    children: [
       {
         path: 'employeeinfomation/:funcID',
         component: EmployeeInfomationComponent,
