@@ -96,27 +96,27 @@ export class AddUpdateStorageComponent implements OnInit {
     this.storage.storageType = 'WP_Comments';
 
     this.storage.details = [
-      // {
-      //   recID: null,
-      //   refID: 'd5b77791-0118-4c45-baeb-9446e4ca03db',
-      //   memo: null,
-      //   createdOn: '2022-05-25T07:30:44.086+00:00',
-      //   createdBy: 'ADMIN',
-      // },
-      // {
-      //   recID: null,
-      //   refID: '1cff3577-4847-48f8-8daf-4bf7df8a58f6',
-      //   memo: null,
-      //   createdOn: '2022-05-25T07:30:44.086+00:00',
-      //   createdBy: 'ADMIN',
-      // },
-      // {
-      //   recID: null,
-      //   refID: '9689247a-8265-44a8-8c50-82a89706a7ef',
-      //   memo: null,
-      //   createdOn: '2022-05-25T07:30:44.086+00:00',
-      //   createdBy: 'ADMIN',
-      // },
+      {
+        recID: null,
+        refID: 'e83e5a83-55d4-4a0a-a499-5c23fe44b629',
+        memo: null,
+        createdOn: '2022-09-29T07:30:44.086+00:00',
+        createdBy: 'ADMIN',
+      },
+      {
+        recID: null,
+        refID: '6d82885f-a8bc-48c5-a106-cf22fcafcb7e',
+        memo: null,
+        createdOn: '2022-09-29T07:30:44.086+00:00',
+        createdBy: 'ADMIN',
+      },
+      {
+        recID: null,
+        refID: 'e70054cc-346a-4e6f-8aac-c80a46fba682',
+        memo: null,
+        createdOn: '2022-09-29T07:30:44.086+00:00',
+        createdBy: 'ADMIN',
+      },
     ];
 
     this.dialog.dataService

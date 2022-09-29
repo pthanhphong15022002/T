@@ -80,8 +80,8 @@
         data-kt-scroll="true"
         data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".page-content, .sprints-task-header"
-        data-kt-scroll-wrappers=".sprints-task-detail, .no-wrapper"
+        data-kt-scroll-dependencies=".sprints-task-header"
+        data-kt-scroll-wrappers=".page-content, .no-wrapper"
         data-kt-scroll-offset="0px"
       >
         <ng-container *ngIf="name == 'Dashboard'">
@@ -92,6 +92,7 @@
         </ng-container>
         <ng-container *ngIf="name == 'Công việc'">
           <codx-tasks-share
+              style="height: 500px;"
             *ngIf="dataObj"
             [dataObj]="dataObj"
             [showButtonAdd]="showButtonAdd"

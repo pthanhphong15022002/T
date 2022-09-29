@@ -1,4 +1,4 @@
-<div *ngIf="policyCoinList.length > 0">
+<!-- <div *ngIf="policyCoinList.length > 0">
     <hr />
     <div class="d-flex align-items-center justify-content-between">
         <div class="fs-4 fw-bold text-dark mb-6 mt-6">
@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="list-setting ml-10">
-        <div *ngFor=" let item of policyCoinList ; ; trackBy: trackByFn;let last = last">
+        <div *ngFor=" let item of policyCoinList; trackBy: trackByFn;let last = last">
             <ng-container *ngTemplateOutlet="rowPolicyCoin ;context: {item:item,isLast:last  }">
             </ng-container>
         </div>
@@ -22,21 +22,14 @@
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
-                <label>
-                    <!-- <input type="checkbox" [(ngModel)]="item.actived" (click)="onSaveStatusPolicy(item.recID)"
-                        name="select" /> -->
-
                     <codx-input type="switch" name="checkbox" class="" ngDefaultControl [field]="item.recID"
                         (valueChange)="onSaveStatusPolicy($event)" [checked]="item.actived" label="">
                     </codx-input>
-                    <span></span>
-                </label>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
                 <span class="icon-keyboard_arrow_right icon-22"
                     (click)="item.actived && LoadDetailPolicy(item.recID)"></span>
             </span>
-
         </div>
     </div>
-</ng-template>
+</ng-template> -->

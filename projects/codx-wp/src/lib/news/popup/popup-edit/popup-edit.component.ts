@@ -147,7 +147,7 @@ export class PopupEditComponent implements OnInit {
                 this.initForm();
                 this.shareControl = this.SHARECONTROLS.EVERYONE;
                 this.notifSV.notifyCode('SYS007');
-                this.insertWPComment(result);
+
                 this.dialogRef.close();
               }
             });
@@ -157,7 +157,6 @@ export class PopupEditComponent implements OnInit {
             this.initForm();
             this.shareControl = this.SHARECONTROLS.EVERYONE;
             this.notifSV.notifyCode('SYS007');
-            this.insertWPComment(result);
             this.dialogRef.close();
           }
         }
