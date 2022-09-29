@@ -1134,6 +1134,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       console.log('change changeAutoSignState dang lam', this.autoSignState);
       this.curPage = this.pageMax;
       this.autoSign();
+      this.detectorRef.detectChanges();
     }
   }
 
