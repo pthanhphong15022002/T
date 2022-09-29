@@ -454,7 +454,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     this.esService
       .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
       .subscribe((res) => {
-        console.log('da update area', tmpArea);
+        if (res) {
+          console.log('da update area', tmpArea);
+        }
       });
   }
 
@@ -553,7 +555,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       let id = 'layer' + e.pageNumber.toString();
       virtual.id = id;
       virtual.style.zIndex = '2';
-      virtual.style.border = '1px solid blue';
+      // virtual.style.border = '1px solid blue';
       virtual.style.position = 'absolute';
       virtual.style.top = '0';
 
@@ -978,12 +980,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         let w = this.xScale;
         let h = this.yScale;
         let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
-        let t = new Konva.Text({});
-        t.draggable();
+        console.log(this.formAnnot.value.content);
+
         let tmpArea: tmpSignArea = {
           signer: tmpName.Signer,
           labelType: tmpName.LabelType,
-          labelValue: '',
+          labelValue: this.curSelectedArea.attrs.text,
           isLock: this.curSelectedArea.draggable(),
           allowEditAreas: this.allowEdit,
           signDate: false,
