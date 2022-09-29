@@ -346,7 +346,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .updateFileDirectReload(res.update.userID)
               .subscribe((result) => {
                 if (result) {
+                  debugger;
                   this.loadData.emit();
+                  this.dialog.close(res.update);
                 }
               });
           }
@@ -354,7 +356,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-          this.dialog.close(res.update);
+         
           this.changeDetector.detectChanges();
         }
       });

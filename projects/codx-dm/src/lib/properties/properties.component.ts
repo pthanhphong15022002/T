@@ -164,9 +164,9 @@ export class PropertiesComponent implements OnInit {
 
   getThumbnail(data) {
     if (data.hasThumbnail)
-      return `${environment.urlUpload}/${data.thumbnail}`;
+      return environment.urlUpload + "/" +data.thumbnail;
     else
-     return `../../../assets/codx/dms/{{getAvatar(data.extension)}}`;
+     return `../../../assets/codx/dms/`+this.getAvatar(data.extension);
   }
 
   getAvatar(filename: string) {
