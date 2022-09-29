@@ -1116,22 +1116,15 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
 
   changeSuggestState(e: any) {
-    console.log('goi y trang ky', e);
-
     this.needSuggest = e.data;
     if (this.needSuggest) {
       this.curPage = this.pageMax;
-      // else {
-      //   this.pdfviewerControl.navigation.goToLastPage();
-      //   this.pdfviewerControl.scrollSettings.delayPageRequestTimeOnScroll = 300;
-      // }
     }
   }
 
   changeAutoSignState(e: any, mode: number) {
     if (e.data && !this.autoSignState) {
       this.autoSignState = e.data;
-      console.log('change changeAutoSignState dang lam', this.autoSignState);
       this.curPage = this.pageMax;
       this.autoSign();
       this.detectorRef.detectChanges();
