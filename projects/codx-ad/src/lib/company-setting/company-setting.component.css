@@ -223,3 +223,8 @@ codx-wrapper {
   height: 38px;
   min-height: 38px;
 }
+
+
+lib-company-setting .e-tab .e-tab-header.e-vertical:before {
+  display: none;
+}
