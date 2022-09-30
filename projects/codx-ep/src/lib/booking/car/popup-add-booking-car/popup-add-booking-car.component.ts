@@ -88,6 +88,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     roleType: string;
     status: string;
     objectType: string;
+    objectID:any;
   };
   attendeesList = [];
   checkLoopS=true;
@@ -161,6 +162,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         status: '1',
         objectType: 'AD_Users',
         roleType: '1',
+        objectID:undefined,
       };
       this.curUser = this.tempAtender;
       
@@ -186,6 +188,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                 status: people.status,
                 objectType: 'AD_Users',
                 roleType: people.roleType,
+                objectID:undefined,
               };
               if (
                 this.tempAtender.userId == this.authService.userValue.userID
@@ -324,6 +327,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
           status: '1',
           objectType: 'EP_Driver',
           roleType: '2',
+          objectID: res.msgBodyData[0].recID,
         };        
         this.driver = this.tempAtender;
         this.detectorRef.detectChanges();
@@ -339,6 +343,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         status: '1',
         objectType: 'AD_Users',
         roleType: '3',
+        objectID:undefined,
       };
       if (this.tempAtender.userId != this.curUser.userId) {
         this.lstPeople.push(this.tempAtender);

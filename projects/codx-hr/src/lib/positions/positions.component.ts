@@ -12,7 +12,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
   templateUrl: './positions.component.html',
   styleUrls: ['./positions.component.css']
 })
-export class PositionsComponent  extends UIComponent {
+export class PositionsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   dialog!: DialogRef;
@@ -37,7 +37,7 @@ export class PositionsComponent  extends UIComponent {
   popoverDataSelected: any;
   orgUnitID: any;
   dtService: CRUDService;
-  predicate = `OrgUnitID=@0`;
+  predicate = "";
   dataValue: string = "";
   isLoaded: boolean = false;
 
@@ -85,17 +85,17 @@ export class PositionsComponent  extends UIComponent {
 
   ngAfterViewInit(): void {
     this.views = [
-      {
-        id: '1',
-        type: ViewType.treedetail,
-        active: false,
-        sameData: true,
-        model: {
-          resizable: true,
-          template: this.templateTree,
-          panelRightRef: this.templateDetail
-        }
-      },
+      // {
+      //   id: '1',
+      //   type: ViewType.treedetail,
+      //   active: false,
+      //   sameData: true,
+      //   model: {
+      //     resizable: true,
+      //     template: this.templateTree,
+      //     panelRightRef: this.templateDetail
+      //   }
+      // },
       {
         id: '2',
         type: ViewType.treedetail,
@@ -189,21 +189,21 @@ export class PositionsComponent  extends UIComponent {
     this.listEmployeeSearch = [];
     var stt = status.split(';');
     // this.popover["_elementRef"] = new ElementRef(el);
-    
+
     // if (p.isOpen()) {
     //   p.close();
     // }
     // this.posInfo = {};
-   
+
     this.codxHr.loadEmployByCountStatus(posID, stt)
       .subscribe(response => {
 
         this.listEmployee = response;
         this.listEmployeeSearch = response;
         this.countResource = response.length;
-        
+
         p.open();
-        this.popover = p;  
+        this.popover = p;
 
       });
     // this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
@@ -232,48 +232,22 @@ export class PositionsComponent  extends UIComponent {
     }
   }
 
- onSelectionChanged(evt: any) {
-  ScrollComponent.reinitialization();
-  if(this.listview){
-    if(!this.isLoaded)
-      this.listview.dataService.setPredicate(this.predicate, this.dataValue.split(';')).subscribe(res=>{   
-    });
-    else
-    this.isLoaded = false;
-  }else{
-    this.isLoaded = true;
-    if(evt && evt.data)
-    this.dataValue = evt.data.orgUnitID;
-  this.changedt.detectChanges();
-  
-  }
- 
-   // await this.setEmployeePredicate($event.dataItem.orgUnitID);
-    // this.employList.onChangeSearch();
-  }
-
-  setEmployeePredicate(orgUnitID): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this
-        .loadEOrgChartListChild(orgUnitID)
-        .pipe()
-        .subscribe((response) => {
-          if (response) {
-            var v = '';
-            var p = '';
-            for (let index = 0; index < response.length; index++) {
-              const element = response[index];
-              if (v != '') v = v + ';';
-              if (p != '') p = p + '||';
-              v = v + element;
-              p = p + 'OrgUnitID==@' + index.toString();
-            }
-            // this.employList.predicate = p;
-            // this.employList.dataValue = v;
-          }
-          resolve('');
+  onSelectionChanged(evt: any) {
+    ScrollComponent.reinitialization();
+    if (this.listview) {
+      if (!this.isLoaded)
+        this.listview.dataService.setPredicate(this.predicate, this.dataValue.split(';')).subscribe(res => {
         });
-    });
+      else
+        this.isLoaded = false;
+    } else {
+      this.isLoaded = true;
+      if (evt && evt.data) {
+        this.predicate = "PositionID=@0";
+        this.dataValue = evt.data.positionID;
+      }
+      this.changedt.detectChanges();
+    }
   }
 
   loadEOrgChartListChild(orgUnitID): Observable<any> {

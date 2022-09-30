@@ -50,7 +50,6 @@ export class GiftsComponent extends UIComponent implements OnInit {
   @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('template') panelLeftRef: TemplateRef<any>;
-  @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
@@ -76,7 +75,6 @@ export class GiftsComponent extends UIComponent implements OnInit {
   functionList: any;
   gridViewSetup: any;
   button?: ButtonModel;
-  formModel: any;
   dialog!: DialogRef;
 
   popupFiled = 1;
@@ -98,13 +96,6 @@ export class GiftsComponent extends UIComponent implements OnInit {
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.functionList = res;
-        this.formModel = {
-          entityName: this.functionList.entityName,
-          entityPermission: this.functionList.entityName,
-          formName: this.functionList.formName,
-          gridViewName: this.functionList.gridViewName,
-          funcID: this.funcID,
-        };
       }
     });
   }
@@ -132,7 +123,6 @@ export class GiftsComponent extends UIComponent implements OnInit {
         },
       },
     ];
-    this.userPermission = this.viewbase.userPermission;
     this.changedr.detectChanges();
   }
 
@@ -442,33 +432,6 @@ export class GiftsComponent extends UIComponent implements OnInit {
     this.description = data;
   }
 
-  lstElastisSearch: any;
-  // action(para: ActionArg): void {
-  //   switch (para.type) {
-  //     case ActionType.add:
-  //       this.openForm(null, true);
-  //       break;
-  //     case ActionType.advFilter:
-  //       this.listView.setSearchAdv(JSON.stringify(para.arg));
-  //       break;
-  //     case ActionType.quickSearch:
-  //       this.searchType = para.searchType;
-  //       if (para.searchType == "1") {
-  //         this.listView.SearchText = para.arg;
-  //         this.listView.onChangeSearch();
-  //         break;
-  //       } else if (para.searchType == "2") {
-  //         if (para?.arg == "") {
-  //           this.searchType = "0";
-  //           this.predicate = "Category=@0";
-  //           this.dataValue = "1";
-  //         } else {
-  //           this.lstElastisSearch = para.lstFTsearch;
-  //         }
-  //         this.dt.detectChanges();
-  //       }
-  //   }
-  // }
   openTangqua() {}
 
   convertDateTime(date) {
@@ -476,5 +439,20 @@ export class GiftsComponent extends UIComponent implements OnInit {
     return datetime;
   }
 
-  clickMF(event: any, data: any) {}
+  delete(data) {}
+
+  clickMF(e: any, data: any) {
+    if (e) {
+      switch (e.functionID) {
+        case 'SYS02':
+          this.delete(data);
+          break;
+        case 'SYS03':
+          this.edit(data);
+          break;
+        case 'FED204211':
+          break;
+      }
+    }
+  }
 }

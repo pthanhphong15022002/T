@@ -1,4 +1,4 @@
-<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="functionList?.entityName"
+<codx-views [views]="views" #view [funcID]="funcID" [entityName]="functionList?.entityName"
     (buttonClick)="openFormCreate($event, true)" [button]="button" service="FD" assemblyName="ERM.Business.FD"
     className="GiftsBusiness" method="LoadDataGiftAsync" [predicate]="predicate" [dataValue]="dataValue"
     idField="recID">
@@ -6,11 +6,9 @@
 <ng-template #template let-data>
     <div class="container-listview category-gift">
         <div class="list-table" *ngIf="this.searchType == '0' || this.searchType == '1' ">
-            <codx-temp-full [typeMF]="'hover'" [dataItem]="data" [formModel]="formModel"
+            <codx-temp-full [typeMF]="'hover'" [dataItem]="data" [formModel]="view.formModel"
                 (clickMF)="clickMF($event, data)" typeMF="hover" [titleTmp]="itemGift" [imgOn]="data.modifiedOn">
             </codx-temp-full>
-        </div>
-        <div class="list-table" *ngIf="this.searchType == '2'">
         </div>
     </div>
 </ng-template>
@@ -84,7 +82,7 @@
     <hr>
 </ng-template>
 
-<ng-template #formChange let-modal>
+<!-- <ng-template #formChange let-modal>
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">
@@ -113,8 +111,7 @@
                 <label #NewOnhand>{{ 'Tồn kho mới' | lang:
                     'Gifts':'NewOnhand':'grvGifts': NewOnhand| async}}</label>
                 <codx-input type="number" min="0" class="form-control" placeholder="" formControlName='newOnhand'
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="changeHand($event)"
-                    [ngClass]="{'is-invalid': onHandForm.controls['newOnhand'].invalid}">
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="changeHand($event)">
                 </codx-input>
             </div>
         </div>
@@ -124,10 +121,9 @@
             </button>
         </div>
     </div>
-    <!-- </form> -->
-</ng-template>
+</ng-template> -->
 
-<ng-template #panelRightRef>
+<!-- <ng-template #panelRightRef>
     <div id="update_infor" class="offcanvas offcanvas-md offcanvas-right">
         <div class="offcanvas-header" kt-hidden-height="46">
             <div class="d-flex align-items-center justify-content-between header">
@@ -139,7 +135,6 @@
                         default="Chỉnh sửa">
                     </codx-label>
                 </h2>
-                <!-- Cập nhật thông tin -->
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary" id="dms_properties_close">
                     <span (click)="clickClosePopup()" class="icon-close icon-18"></span>
                 </a>
@@ -291,9 +286,9 @@
             </div>
         </div>
     </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #moreFunction>
+<!-- <ng-template #moreFunction>
     <div class="flex" (mouseleave)="PopoverEmpLeave(empPopover)" #empPopover="ngbPopover" [ngbPopover]=""
         autoClose="outside">
         <a class="action-item d-flex align-items-center" placement="top" [ngbTooltip]="update">
@@ -321,4 +316,4 @@
             <ng-template #more><span class="tooltiptext">{{item.customName}}</span></ng-template>
         </a>
     </div>
-</ng-template>
+</ng-template> -->

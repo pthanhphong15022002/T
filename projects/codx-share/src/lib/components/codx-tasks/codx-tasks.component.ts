@@ -154,24 +154,6 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funcID == 'TMT0203') this.isAssignTask = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
-    //chay code chet cho nhanh, muon dong thi bat len
-    // this.cache.functionList(this.funcID).subscribe(f => {
-    //   if (f) {
-    //     this.cache.gridViewSetup(f?.formName, f?.gridViewName).subscribe(res => {
-    //        if(res){
-    //         this.vllPriority = res['Priority']['referedValue']
-    //         this.vllStatus = res['Status']['referedValue']
-    //         this.vllApproveStatus = res['ApproveStatus']['referedValue']
-    //         this.vllConfirmStatus = res['ConfirmStatus']['referedValue']
-    //         this.vllVerifyStatus = res['VerifyStatus']['referedValue']
-    //         this.vllExtendStatus = res['ExtendStatus']['referedValue']
-    //        }
-    //     })
-    //   }
-    // })
   }
 
   //#region Init
@@ -230,6 +212,24 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funcID == 'TMT0203') this.isAssignTask = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+    //chay code chet cho nhanh, muon dong thi bat len
+    // this.cache.functionList(this.funcID).subscribe(f => {
+    //   if (f) {
+    //     this.cache.gridViewSetup(f?.formName, f?.gridViewName).subscribe(res => {
+    //        if(res){
+    //         this.vllPriority = res['Priority']['referedValue']
+    //         this.vllStatus = res['Status']['referedValue']
+    //         this.vllApproveStatus = res['ApproveStatus']['referedValue']
+    //         this.vllConfirmStatus = res['ConfirmStatus']['referedValue']
+    //         this.vllVerifyStatus = res['VerifyStatus']['referedValue']
+    //         this.vllExtendStatus = res['ExtendStatus']['referedValue']
+    //        }
+    //     })
+    //   }
+    // })
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {
@@ -291,7 +291,7 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template7:this.footerNone,
+          template7: this.footerNone,
           template4: this.resourceHeader,
           template: this.eventTemplate,
           template3: this.cellTemplate,
@@ -357,6 +357,7 @@ export class CodxTasksComponent
           'add',
           this.isAssignTask,
           this.titleAction,
+          this.funcID,
         ],
         option
       );
@@ -427,6 +428,7 @@ export class CodxTasksComponent
           'copy',
           this.isAssignTask,
           this.titleAction,
+          this.funcID,
           data,
         ],
         option
@@ -438,24 +440,6 @@ export class CodxTasksComponent
             false
           );
       });
-      // this.dialog.closed.subscribe((e) => {
-      //   if (e?.event == null)
-      //     this.view.dataService.delete(
-      //       [this.view.dataService.dataSelected],
-      //       false
-      //     );
-      //   if (e?.event && e?.event != null) {
-      //     this.view.dataService.data = e?.event.concat(
-      //       this.view.dataService.data
-      //     );
-      //     this.view.dataService.setDataSelected(res[0]);
-      //     this.view.dataService.afterSave.next(res);
-      //     this.notiService.notifyCode('TM005');
-
-      //     this.itemSelected = this.view.dataService.data[0];
-      //     this.detectorRef.detectChanges();
-      //   }
-      // });
     });
   }
 
@@ -560,6 +544,7 @@ export class CodxTasksComponent
             'edit',
             this.isAssignTask,
             this.titleAction,
+            this.funcID,
           ],
           option
         );
@@ -904,7 +889,8 @@ export class CodxTasksComponent
   //#region Event
   changeView(evt: any) {
     let idx = -1;
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     idx = this.viewsActive.findIndex((x) => x.id === '8');
     if (this.funcID != 'TMT0201') {
@@ -1395,6 +1381,7 @@ export class CodxTasksComponent
 
   clickMFAfterParameter(e, data) {
     this.titleAction = e.text;
+    this.isAssignTask = data?.category == '3';
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1526,7 +1513,7 @@ export class CodxTasksComponent
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask],
+        [data, 'view', isAssignTask, this.funcID],
         option
       );
     }
