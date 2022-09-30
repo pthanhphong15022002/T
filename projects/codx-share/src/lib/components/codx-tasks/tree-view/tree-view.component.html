@@ -14,7 +14,7 @@
 </codx-treeview>
 
 <ng-template #templateTreeView let-item>
-  <div class="d-flex flex-row align-datas-top p-3 border-bottom">
+  <div class="d-flex flex-row align-datas-top p-3 border-bottom" (dblclick)="dbClick(item)">
     <div class="w-50px min-w-50px">
       <span *ngIf="item?.isAssign">
         <span class="icon-18 icon-add_box me-2 align-datas-start"></span>

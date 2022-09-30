@@ -74,6 +74,9 @@
                 <li class="nav-item">
                   <span class="nav-link fw-bold active">Tất cả</span>
                 </li>
+                <li class="nav-item" *ngFor="let item of groupStationery">
+                  <span class="nav-link fw-bold">{{ item?.resourceName }}</span>
+                </li>
                 <li class="nav-item">
                   <span class="nav-link fw-bold">Văn phòng phẩm</span>
                 </li>
@@ -126,11 +129,11 @@
   <codx-card-img
     cardCss="border w-200px h-100"
     [imageSrc]="
-      data.icon ? data.icon : '../assets/media/svg/files/blank-image.svg'
+      data?.icon ? data?.icon : '../assets/media/svg/files/blank-image.svg'
     "
-    [title]="data.resourceName"
-    [subTitle]="data.resourceName"
-    [content]="data.costPrice | currency: 'VND':'symbol':'3.0'"
+    [title]="data?.resourceName"
+    [subTitle]="data?.resourceName"
+    [content]="data?.costPrice | currency: 'VND':'symbol':'3.0'"
     [rootData]="data"
     [footer]="cardItemFooter"
   >
@@ -143,19 +146,19 @@
       <div class="d-flex align-items-end me-2 codx-badge mb-3">
         <div class="d-flex align-items-center position-relative me-4">
           <span class="icon-view_agenda icon-20 text-gray-400"></span>
-          <span>{{ data.currentQty }}</span>
+          <span>{{ data?.currentQty }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span
             class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
           ></span>
-          <span>{{ data.reservedQty }}</span>
+          <span>{{ data?.reservedQty }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
           <span
             class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
           ></span>
-          <span>{{ data.availableQty }}</span>
+          <span>{{ data?.availableQty }}</span>
         </div>
       </div>
       <div
@@ -169,21 +172,22 @@
 </ng-template>
 
 <ng-template #addNewRequest let-dialogSaveToTemplate>
-  <div class="row" style="height: 99%">
+  <div *ngIf="isAfterRender && formModel" class="row" style="height: 99%">
     <div class="left col-6">
       <div class="d-flex justify-content-between">
         <div class="d-flex">
           <codx-img
-            [objectId]="'ADMIN'"
-            [objectName]="'Lê Phạm Hoài Thương'"
+            [objectId]="user?.userID"
+            [objectName]="user?.userName"
             [objectType]="'AD_Users'"
           ></codx-img>
           <div>
-            <div>Lê Phạm Hoài Thương</div>
-            <div>Thư ký trung tâm - NDX</div>
+            <div>{{ user?.userName }}</div>
+            <div>{{ user?.employee?.positionName }}</div>
           </div>
         </div>
         <div
+          *ngIf="!isAddNew"
           class="badge border-0 me-2"
           [style.background-color]="'4' | vll: 'VL003':'color' | async"
           [style.color]="'4' | vll: 'VL003':'textColor' | async"
@@ -200,16 +204,16 @@
           >
           </codx-label>
           <codx-input
-            ControlName="bookingOn"
+            field="bookingOn"
             [formModel]="formModel"
-            [Group]="dialogAddRoom"
+            [Group]="dialogAddBookingStationery"
           >
           </codx-input>
         </div>
         <div class="form-group d-flex col-4">
           <codx-input
             type="radio"
-            [crrValue]="data.recID"
+            [crrValue]="data?.recID"
             name="requestBy"
             ControlName="recID"
           >
@@ -223,7 +227,7 @@
         <div class="form-group d-flex col-4">
           <codx-input
             type="radio"
-            [crrValue]="data.recID"
+            [crrValue]="data?.recID"
             name="requestBy"
             ControlName="recID"
           >
@@ -244,9 +248,9 @@
           >
           </codx-label>
           <codx-input
-            ControlName="BUID"
-            [formModel]="formModel"
-            [Group]="dialogAddRoom"
+            type="combobox"
+            field="bUID"
+            refValue="BusinessUnits"
           >
           </codx-input>
         </div>
@@ -271,7 +275,7 @@
           <codx-input
             ControlName="reasonID"
             [formModel]="formModel"
-            [Group]="dialogAddRoom"
+            [Group]="dialogAddBookingStationery"
           >
           </codx-input>
         </div>
@@ -282,7 +286,7 @@
           <codx-input
             ControlName="note"
             [formModel]="formModel"
-            [Group]="dialogAddRoom"
+            [Group]="dialogAddBookingStationery"
           >
           </codx-input>
         </div>

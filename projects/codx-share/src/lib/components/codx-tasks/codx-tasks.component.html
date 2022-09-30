@@ -21,6 +21,7 @@
     [vllStatus]="vllStatus"
     [listRoles]="listRoles"
     (clickMoreFunction)="receiveMF($event)"
+    (viewTask) = "viewTask($event)"
   >
   </share-tree-view>
 </ng-template>
@@ -32,6 +33,7 @@
     [data]="data"
     [listRoles]="listRoles"
     (clickMoreFunction)="receiveMF($event)"
+    (viewTask) = "viewTask($event)"
   >
   </share-view-list>
 </ng-template>
@@ -184,7 +186,7 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <div [style.color]="data.status | vll: vllStatus:'textColor' | async">
+  <div [style.color]="data.status | vll: vllStatus:'textColor' | async" (dblclick)="viewTask(data)">
     <div>{{ data.taskName }}</div>
   </div>
 </ng-template>

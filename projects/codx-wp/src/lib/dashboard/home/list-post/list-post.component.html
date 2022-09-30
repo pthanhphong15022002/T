@@ -220,9 +220,17 @@
       </ng-template>
     </div>
     <ng-container *ngIf="item.category == CATEGORY.SHARE; else shareTemplate">
-      <div class="mt-3">
+      <ng-container *ngIf="item.isContentTmp;else noContentTemp">
+        <ng-container *ngTemplateOutlet="item.contentTmp; context:{ $implicit:item }"></ng-container>
+      </ng-container>  
+      <ng-template #noContentTemp>
+        <div class="my-3">
+          <div [innerHTML]="item.content"></div>
+        </div>
+      </ng-template>
+      <!-- <div class="mt-3">
         <div [innerHTML]="item.content"></div>
-      </div>
+      </div> -->
       <div class="mt-2">
         <codx-file 
           [objectID]="item.recID" 
@@ -280,9 +288,14 @@
       <!-- end share -->
     </ng-container>
     <ng-template #shareTemplate>
-      <div class="my-3">
-        <div [innerHTML]="item.content"></div>
-      </div>
+      <ng-container *ngIf="item.isContentTmp;else noContentShareTemp">
+        <ng-container *ngTemplateOutlet="item.contentTmp; context:{ $implicit:item }"></ng-container>
+      </ng-container>  
+      <ng-template #noContentShareTemp>
+        <div class="my-3">
+          <div [innerHTML]="item.content"></div>
+        </div>
+      </ng-template>
       <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
     </ng-template>
     <!-- commemt -->
