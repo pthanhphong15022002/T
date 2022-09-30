@@ -53,3 +53,11 @@ codx-view-list-detail ejs-listview .e-ul>li {
 lib-taskextends .e-splitter.e-splitter-horizontal {
   border: 0;
 }
+
+codx-view-list-card .codx_cardcenter .text-gray-700.line-clamp {
+  height: 40px;
+}
+
+codx-view-list-card .codx_cardcenter .h-60px {
+  height: 50px !important;
+}

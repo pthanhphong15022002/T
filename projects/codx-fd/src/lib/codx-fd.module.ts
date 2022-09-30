@@ -98,6 +98,14 @@ export const routes: Routes = [
         component: SettingComponent,
       },
       {
+        path: 'setting/cards/:funcID',
+        component: FeedbackMessageComponent,
+      },
+      {
+        path: 'detailpolicy',
+        component: DetailPolicyComponent,
+      },
+      {
         path: 'setting/gifts/:funcID',
         component: GiftsComponent,
       },
@@ -122,12 +130,8 @@ export const routes: Routes = [
         component: DedicationrankComponent,
       },
       {
-        path: 'setting/cards/:funcID',
-        component: FeedbackMessageComponent,
-      },
-      {
-        path: 'detailpolicy',
-        component: DetailPolicyComponent,
+        path: 'setting/fedranges/:funcID',
+        component: DedicationrankComponent,
       },
     ],
   },
