@@ -16,6 +16,8 @@ export class ViewListComponent implements OnInit {
   @Input() formModel?: FormModel;
   @Input() vllStatus?:any;
   @Input() listRoles?: any;
+  @Input() showMoreFunc?: any;
+
   listTaskResousceSearch = [];
   listTaskResousce = [];
   countResource = 0;

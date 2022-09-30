@@ -11,7 +11,7 @@
   </div>
 </div>
 <ng-container *ngIf="itemSelected?.taskID">
-  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer"
+  <codx-detail-tmp [header]="header" [formModel]="formModel" [body]="body" [footer]="footer" [hideMF]="!showMoreFunc"
     (clickMF)="clickMF($event, itemSelected)" (changeDataMF)="changeDataMF($event, itemSelected)"
     [dataItem]="itemSelected">
     <ng-template #header>
