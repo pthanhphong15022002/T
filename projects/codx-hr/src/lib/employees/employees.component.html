@@ -1,6 +1,7 @@
 <codx-views #view funcID="HRT03" service="HR" entityName="HR_Employees" [views]="views" [button]="button"
   (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-  method="GetModelFormEmployAsync" [formModel]="view.formModel" [selectedFirst]="true" [itemSelected]="itemSelected">
+  method="GetModelFormEmployAsync" [formModel]="view.formModel" [selectedFirst]="true" [itemSelected]="itemSelected"
+  [viewActiveType]="'1'">
 </codx-views>
 
 <ng-template #panelLeftRef>
