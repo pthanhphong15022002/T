@@ -20,9 +20,11 @@ export class ViewListComponent implements OnInit {
   listTaskResousce = [];
   countResource = 0;
   popoverCrr: any;
-  vllPriority ="TM005"
+  vllPriority ="TM005" ;
+  
 
   @Output() clickMoreFunction = new EventEmitter<any>();
+  @Output() viewTask = new EventEmitter<any>();
 
   lstTaskbyParent = [];
 
@@ -38,6 +40,10 @@ export class ViewListComponent implements OnInit {
 
   clickMF(e: any, dt?: any) {
     this.clickMoreFunction.emit({e:e,data:dt})
+  }
+
+  dbClick(data){
+    this.viewTask.emit(data) ;
   }
 
   changeDataMF(e, data) {

@@ -8,9 +8,10 @@
   [dialog]="dialog"
   [openMore]="true"
   (buttonClick)="buttonClick($event)"
-  [tabContent]="[tabGeneralInfo, tabUsageNorms, tabMoreInfo]"
+  [tabContent]="[tabGeneralInfo, tabQuotaInfo, tabMoreInfo]"
   (setTitle)="setTitle($event)"
   [data]="data"
+  *ngIf="isAfterRender"
 >
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
@@ -130,20 +131,23 @@
               <div class="m-2 d-flex align-items-center">
                 <span class="me-2 fw-bold text-black-50">Màu sắc: </span>
                 <codx-colorpicker
+                  field="color"
+                  mode="Palette"
+                  [value]="data?.color ? data?.color : '#fff'"
                   (valueChange)="valueChange($event)"
                 ></codx-colorpicker>
               </div>
               <div class="m-2">
                 <span class="fw-bold text-black-50">Tồn kho: </span>
-                <span class="fw-bold">1</span>
+                <span class="fw-bold">{{ data?.currentQty }}</span>
               </div>
               <div class="m-2">
                 <span class="fw-bold text-black-50">Đã dành hàng: </span>
-                <span class="fw-bold">1</span>
+                <span class="fw-bold">{{ data?.reservedQty }}</span>
               </div>
               <div class="m-2">
                 <span class="fw-bold text-black-50">Sẵn sàng xuất: </span>
-                <span class="fw-bold">1</span>
+                <span class="fw-bold">{{ data?.availableQty }}</span>
               </div>
             </div>
           </div>
@@ -152,7 +156,7 @@
     </ng-container>
   </ng-template>
 
-  <ng-template #tabUsageNorms>
+  <ng-template #tabQuotaInfo>
     <div class="d-flex justify-content-between mt-8">
       <div>Theo số lượng người được đăng ký</div>
       <div class="d-flex align-items-center">
@@ -162,97 +166,99 @@
   </ng-template>
 
   <ng-template #tabMoreInfo>
-    <div id="rome" class="tabpanel">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bolder text-gray-800 d-block mb-2">
-          <codx-label
-            name="lblInformation"
-            default="Thông tin khác"
-            [formModel]="form.formModel"
-          ></codx-label>
-        </h4>
-        <span class="icon-layers text-primary fs-1"></span>
-      </div>
+    <<ng-container *ngIf="form && form.formGroup">
+      <div id="rome" class="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4 class="fw-bolder text-gray-800 d-block mb-2">
+            <codx-label
+              name="lblInformation"
+              default="Thông tin khác"
+              [formModel]="form.formModel"
+            ></codx-label>
+          </h4>
+          <span class="icon-layers text-primary fs-1"></span>
+        </div>
 
-      <div class="d-flex row align-items-center mb-4">
-        <div class="col-4">
+        <div class="d-flex row align-items-center mb-4">
+          <div class="col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="AvailableQty"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              [min]="0"
+              ControlName="availableQty"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="ReservedQty"
+              aria-disabled="false"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              [min]="0"
+              ControlName="reservedQty"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="CurrentQty"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              [min]="0"
+              ControlName="currentQty"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+        </div>
+
+        <div class="d-flex flex-stack mb-4">
+          <div class="col-6">
+            <codx-label
+              class="fw-bold"
+              fiedName="CostPrice"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              [min]="0"
+              ControlName="costPrice"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column mb-4">
           <codx-label
             class="fw-bold"
-            fiedName="AvailableQty"
+            fiedName="Note"
             [formModel]="form.formModel"
           >
           </codx-label>
+
           <codx-input
-            [min]="0"
-            ControlName="availableQty"
+            ControlName="note"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-          ></codx-input>
-        </div>
-        <div class="col-4">
-          <codx-label
-            class="fw-bold"
-            fiedName="ReservedQty"
-            aria-disabled="false"
-            [formModel]="form.formModel"
           >
-          </codx-label>
-          <codx-input
-            [min]="0"
-            ControlName="reservedQty"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
-        </div>
-        <div class="col-4">
-          <codx-label
-            class="fw-bold"
-            fiedName="CurrentQty"
-            [formModel]="form.formModel"
-          >
-          </codx-label>
-          <codx-input
-            [min]="0"
-            ControlName="currentQty"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
+          </codx-input>
         </div>
       </div>
-
-      <div class="d-flex flex-stack mb-4">
-        <div class="col-6">
-          <codx-label
-            class="fw-bold"
-            fiedName="CostPrice"
-            [formModel]="form.formModel"
-          >
-          </codx-label>
-          <codx-input
-            [min]="0"
-            ControlName="costPrice"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
-        </div>
-      </div>
-
-      <div class="d-flex flex-column mb-4">
-        <codx-label
-          class="fw-bold"
-          fiedName="Note"
-          [formModel]="form.formModel"
-        >
-        </codx-label>
-
-        <codx-input
-          ControlName="note"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-input>
-      </div>
-    </div>
+    </ng-container>
   </ng-template>
 
   <ng-template #footer>

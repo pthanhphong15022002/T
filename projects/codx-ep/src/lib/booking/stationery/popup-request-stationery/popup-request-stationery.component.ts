@@ -15,8 +15,9 @@ import {
   FormModel,
   ViewsComponent,
   ScrollComponent,
-  DataRequest,
   NotificationsService,
+  UserModel,
+  AuthStore,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -40,7 +41,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   formModel: FormModel;
   isAfterRender = true;
   cbxName: any = {};
-  dialogSignFile: FormGroup;
   lstDataFile = [];
   isAddNew: boolean = true; // flag thêm mới signfile
   gvSetup: any;
@@ -55,17 +55,23 @@ export class PopupRequestStationeryComponent extends UIComponent {
   dialog: DialogRef;
   data: any = {};
   isAfterSaveProcess: boolean = false;
-  model: DataRequest;
   option: SidebarModel;
   showPlan: boolean = true;
 
   cart = [];
   cartQty = 0;
 
-  dialogAddRoom: FormGroup;
+  user: UserModel;
+
+  model?: FormModel;
+  groupStationery;
+  lstStationery;
+
+  dialogAddBookingStationery: FormGroup;
 
   constructor(
     private injector: Injector,
+    private auth: AuthStore,
     private epService: CodxEpService,
     private notificationsService: NotificationsService,
     @Optional() dialog: DialogRef,
@@ -79,7 +85,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.option = data?.data?.option;
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.user = this.auth.get();
+    this.initForm();
+  }
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
@@ -89,10 +98,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.epService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.dialogAddRoom = item;
+        debugger;
+        this.dialogAddBookingStationery = item;
         if (this.data) {
-          this.dialogAddRoom.patchValue({
-            resourceType: '1',
+          this.dialogAddBookingStationery.patchValue({
+            resourceType: '6',
           });
         }
         this.isAfterRender = true;
@@ -106,13 +116,21 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   beforeSave(option: any) {
-    let itemData = this.dialogAddRoom.value;
+    let itemData = this.dialogAddBookingStationery.value;
     option.methodName = 'AddEditItemAsync';
-    //option.data = [itemData, this.isAdd, null, null, this.lstStationery];
+    option.data = [itemData, this.isAddNew, null, null, this.lstStationery];
     return true;
   }
 
-  onSaveForm() {}
+  onSaveForm() {
+    this.dialogAddBookingStationery.patchValue(this.data);
+    // this.dialog.dataService
+    //   .save((opt: any) => this.beforeSave(opt))
+    //   .subscribe((res) => {
+    //     this.dialog.close();
+    //   });
+    console.log(this.dialogAddBookingStationery);
+  }
 
   close() {
     this.dialog && this.dialog.close();
@@ -162,4 +180,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   itemByRecID(index, item) {
     return item.recID;
   }
+
+  valueChange(){}
 }

@@ -33,7 +33,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   dialog: any;
   favorite  = '' ;
   @Output() clickMoreFunction = new EventEmitter<any>();
-  // @Output() clickShowTaskChildren = new EventEmitter<any>();
+  @Output() viewTask = new EventEmitter<any>();
  
   constructor(
     private api: ApiHttpService,
@@ -130,6 +130,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         }
       });
    }
+  }
+
+  dbClick(data){
+    this.viewTask.emit(data) ;
   }
   //#endregion
 }
