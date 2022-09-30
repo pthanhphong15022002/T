@@ -32,6 +32,7 @@ import { SettingService } from './setting.service';
   templateUrl: './setting.component.html',
   styleUrls: ['./setting.component.scss'],
 })
+
 export class SettingComponent extends UIComponent implements OnInit {
   tenant: string;
   func = {};
@@ -54,7 +55,8 @@ export class SettingComponent extends UIComponent implements OnInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
   @Output() scrollPosition: EventEmitter<number> = new EventEmitter<number>();
-
+  @ViewChild('elementId', {static: true}) ell: ElementRef;
+ 
   constructor(
     private injector: Injector,
     private changedr: ChangeDetectorRef,
@@ -62,7 +64,7 @@ export class SettingComponent extends UIComponent implements OnInit {
     private at: ActivatedRoute,
     private fdsv: CodxFdService,
     private settingSV: SettingService,
-    private el: ElementRef,
+    private el: ElementRef
   ) {
     super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
@@ -116,6 +118,8 @@ export class SettingComponent extends UIComponent implements OnInit {
     this.detectorRef.detectChanges();
   }
 
+  
+  
   scroll(el: HTMLElement, numberActive) {
     if (el)
       el.scrollIntoView({
