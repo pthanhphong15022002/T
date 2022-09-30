@@ -1,64 +1,69 @@
 <codx-views #view [funcID]="funcID" [views]="views" [autoLoad]="false"></codx-views>
 
 <ng-template #panelLeftRef>
-    <div class="content h-100 d-flex flex-column flex-column-fluid p-0" id="kt_content">
-        <div id="erm_content" class="d-flex flex-column-fluid h-100" (sectionChange)="onSectionChange($event)">
+    <div class="content h-100 d-flex flex-column flex-column-fluid p-0">
+        <div class="d-flex flex-column-fluid h-100" (sectionChange)="onSectionChange($event)">
             <div class="d-flex container h-100">
-                <div class="aside-detail flex-row-auto w-250px me-6">
+                <div class="aside-detail flex-row-auto w-250px me-6" id="erm_content">
                     <div class="aside-menu me-6">
                         <ul class="menu-nav">
-                            <li class="menu-item" [class.menu-item-active]="currentActive == 1">
+                            <li class="menu-item" [class.menu-item-active]="currentActive == 1"
+                                href="#notificationFeedback">
                                 <a class="menu-link d-flex align-items-center fw-bold text-dark"
                                     (click)="scroll(notificationFeedback,1)" [attr.data-fid]="'FDS01'">
                                     <i class="icon-near_me me-2"></i>
-                                    <codx-label name="lblFeedbackMessage" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                        default='Thông điệp phản hồi'>
+                                    <codx-label name="lblFeedbackMessage" [formName]="functionList?.formName"
+                                        [gridViewName]="functionList?.gridViewName" default='Thông điệp phản hồi'>
                                     </codx-label>
                                 </a>
                             </li>
-                            <li class="menu-item" [class.menu-item-active]="currentActive == 2">
+                            <li class="menu-item" [class.menu-item-active]="currentActive == 2" href="#itemCategory">
                                 <a class="menu-link d-flex align-items-center fw-bold text-dark"
                                     (click)="scroll(itemCategory,2)" [attr.data-fid]="'FDS02'">
                                     <i class="icon-format_list_bulleted me-2"></i>
-                                    <codx-label name="lblCategory" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName" default='Danh mục'>
+                                    <codx-label name="lblCategory" [formName]="functionList?.formName"
+                                        [gridViewName]="functionList?.gridViewName" default='Danh mục'>
                                     </codx-label>
                                 </a>
                             </li>
-                            <li class="menu-item" [class.menu-item-active]="currentActive == 3">
+                            <li class="menu-item" [class.menu-item-active]="currentActive == 3" href="#itemWallet">
                                 <a class="menu-link d-flex align-items-center fw-bold text-dark"
                                     (click)="scroll(itemWallet,3)" [attr.data-fid]="'FDS03'">
                                     <i class="icon-account_balance_wallet me-2"></i>
-                                    <codx-label name="lblWallet" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
+                                    <codx-label name="lblWallet" [formName]="functionList?.formName"
+                                        [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
                                     </codx-label>
                                 </a>
                             </li>
-                            <li class="menu-item" [class.menu-item-active]="currentActive == 4">
+                            <li class="menu-item" [class.menu-item-active]="currentActive == 4"
+                                href="#itemRankDedication">
                                 <a class="menu-link d-flex align-items-center fw-bold text-dark"
                                     (click)="scroll(itemRankDedication,4)" [attr.data-fid]="'FDS04'">
                                     <i class="icon-credit_card me-2"></i>
-                                    <codx-label name="lblDedicateRank" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                        default='Hạng cống hiến'>
+                                    <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
+                                        [gridViewName]="functionList?.gridViewName" default='Hạng cống hiến'>
                                     </codx-label>
                                 </a>
                             </li>
-                            <li class="menu-item" [class.menu-item-active]="currentActive == 5">
+                            <li class="menu-item" [class.menu-item-active]="currentActive == 5" href="#itemStatistical">
                                 <a class="menu-link d-flex align-items-center fw-bold text-dark"
                                     (click)="scroll(itemStatistical,5)" [attr.data-fid]="'FDS05'">
                                     <i class="icon-bar_chart me-2"></i>
-                                    <codx-label name="lblStatistical" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                        default='Thống kê'>
+                                    <codx-label name="lblStatistical" [formName]="functionList?.formName"
+                                        [gridViewName]="functionList?.gridViewName" default='Thống kê'>
                                     </codx-label>
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div class="bg-body rounded-3 p-6 flex-grow-1 h-100 overflow-auto">
+                <div class="bg-body rounded-3 p-6 flex-grow-1 h-100 overflow-auto" data-spy="scroll"
+                    data-target="#erm_content" data-offset="0">
                     <div class="main-detail d-flex flex-column flex-grow-1 data-scroll">
                         <div class="list-group" id="notificationFeedback" [attr.data-index]=1 #notificationFeedback>
                             <h3 class=" list-header mt-4">
-                                <codx-label name="lblFeedbackMessage" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                    default='Thông điệp phản hồi'>
+                                <codx-label name="lblFeedbackMessage" [formName]="functionList?.formName"
+                                    [gridViewName]="functionList?.gridViewName" default='Thông điệp phản hồi'>
                                 </codx-label>
                             </h3>
                             <div class="list-content" *ngFor="let item of func['FDS01']">
@@ -74,10 +79,10 @@
                                 <hr />
                             </div>
                         </div>
-
                         <div class="list-group" id="itemCategory" [attr.data-index]=2 #itemCategory>
                             <h3 class="list-header mt-4">
-                                <codx-label name="lblCategory" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName" default='Danh mục'>
+                                <codx-label name="lblCategory" [formName]="functionList?.formName"
+                                    [gridViewName]="functionList?.gridViewName" default='Danh mục'>
                                 </codx-label>
                             </h3>
                             <div class="list-content" *ngFor="let item of funcChildFDS02$|async">
@@ -97,7 +102,8 @@
 
                         <div class="list-group" id="itemWallet" [attr.data-index]=3 #itemWallet>
                             <h3 class="list-header mt-4">
-                                <codx-label name="lblWallet" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
+                                <codx-label name="lblWallet" [formName]="functionList?.formName"
+                                    [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
                                 </codx-label>
                             </h3>
                             <div class="list-content" *ngFor="let item of func['FDS03']">
@@ -115,8 +121,8 @@
 
                         <div class="list-group" id="itemeankDedication" [attr.data-index]=4 #itemRankDedication>
                             <h3 class="list-header mt-4">
-                                <codx-label name="lblDedicateRank" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                    default='Hạng cống hiến'>
+                                <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
+                                    [gridViewName]="functionList?.gridViewName" default='Hạng cống hiến'>
                                 </codx-label>
                             </h3>
                             <div class="list-content">
@@ -129,12 +135,15 @@
                                             <thead>
                                                 <tr>
                                                     <th scope="col">
-                                                        <codx-label name="lblRanking" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
+                                                        <codx-label name="lblRanking"
+                                                            [formName]="functionList?.formName"
+                                                            [gridViewName]="functionList?.gridViewName"
                                                             default='Xếp hạng'>
                                                         </codx-label>
                                                     </th>
                                                     <th scope="col">
-                                                        <codx-label name="lblWallet" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
+                                                        <codx-label name="lblWallet" [formName]="functionList?.formName"
+                                                            [gridViewName]="functionList?.gridViewName"
                                                             default='Điểm cống hiến'>
                                                         </codx-label>
                                                     </th>
@@ -163,7 +172,8 @@
 
                         <div class="list-group" id="itemStatistical" [attr.data-index]=5 #itemStatistical>
                             <h3 class="list-header mt-4">
-                                <codx-label name="lblStatistical" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName" default='Thống kê'>
+                                <codx-label name="lblStatistical" [formName]="functionList?.formName"
+                                    [gridViewName]="functionList?.gridViewName" default='Thống kê'>
                                 </codx-label>
                             </h3>
                             <div class="list-content">
@@ -171,15 +181,15 @@
                                     <span class="icon-settings icon-20 me-3"></span>
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="font-weight-bold text-dark mb-2">
-                                            <codx-label name="lblFeedBackStatistic" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                                default='Thống kê phiếu
+                                            <codx-label name="lblFeedBackStatistic" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName" default='Thống kê phiếu
                                         phản
                                         hồi'>
                                             </codx-label>
                                         </div>
                                         <div class="text-dark-50">
-                                            <codx-label name="lblDefaultSetting" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                                default='Mặc định cấu hình xem dữ liệu thống kê các phiếu
+                                            <codx-label name="lblDefaultSetting" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName" default='Mặc định cấu hình xem dữ liệu thống kê các phiếu
                                         phản
                                         hồi theo thiết lập đã chọn'>
                                             </codx-label>
@@ -198,14 +208,14 @@
                                     <span class="icon-settings icon-20 me-3"></span>
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="font-weight-bold text-dark mb-2">
-                                            <codx-label name="lblRankDedication" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                                default='Danh sách xếp hạng
+                                            <codx-label name="lblRankDedication" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName" default='Danh sách xếp hạng
                                         cống hiến'>
                                             </codx-label>
                                         </div>
                                         <div class="text-dark-50">
-                                            <codx-label name="lblDefaultSetting2" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
-                                                default='Mặc định cấu hình xem dữ liệu danh sách xếp hạng
+                                            <codx-label name="lblDefaultSetting2" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName" default='Mặc định cấu hình xem dữ liệu danh sách xếp hạng
                                         cống
                                         hiến theo thiết lập đã chọn'>
                                             </codx-label>
@@ -225,12 +235,14 @@
                                     <span class="icon-settings icon-20 me-3"></span>
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="font-weight-bold text-dark mb-2">
-                                            <codx-label name="lblSelectTopEmp" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
+                                            <codx-label name="lblSelectTopEmp" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName"
                                                 default='Top danh sách nhân viên hoạt động nhiều nhất'>
                                             </codx-label>
                                         </div>
                                         <div class="text-dark-50">
-                                            <codx-label name="lblSelectTopEmp2" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
+                                            <codx-label name="lblSelectTopEmp2" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName"
                                                 default='Top danh sách nhân viên hoạt động nhiều nhất'>
                                             </codx-label>
                                         </div>
@@ -248,12 +260,14 @@
                                 <span class="icon-settings icon-20 me-3"></span>
                                 <div class="d-flex flex-column flex-grow-1">
                                     <div class="font-weight-bold text-dark mb-2">
-                                        <codx-label name="lblSelectTopByCard" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
+                                        <codx-label name="lblSelectTopByCard" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName"
                                             default='Top nhân viên theo từng loại phiếu'>
                                         </codx-label>
                                     </div>
                                     <div class="text-dark-50">
-                                        <codx-label name="lblSelectTopByCard2" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
+                                        <codx-label name="lblSelectTopByCard2" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName"
                                             default='Top nhân viên theo từng loại phiếu'>
                                         </codx-label>
                                     </div>
@@ -270,12 +284,14 @@
                                 <span class="icon-settings icon-20 me-3"></span>
                                 <div class="d-flex flex-column flex-grow-1">
                                     <div class="font-weight-bold text-dark mb-2">
-                                        <codx-label name="lblSelectTopBehaviors" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
+                                        <codx-label name="lblSelectTopBehaviors" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName"
                                             default='Top hành vi được chọn nhiều nhất'>
                                         </codx-label>
                                     </div>
                                     <div class="text-dark-50">
-                                        <codx-label name="lblSelectTopBehaviors2" [formName]="functionList?.formName" [gridViewName]="functionList?.gridViewName"
+                                        <codx-label name="lblSelectTopBehaviors2" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName"
                                             default='Top hành vi được chọn nhiều nhất'>
                                         </codx-label>
                                     </div>
@@ -310,7 +326,8 @@
         <form>
             <div class="form-group row">
                 <label class="col-3 col-form-label">
-                    <codx-label name="lblValue" [formName]="" [gridViewName]="functionList?.gridViewName" default='Giá trị'>
+                    <codx-label name="lblValue" [formName]="" [gridViewName]="functionList?.gridViewName"
+                        default='Giá trị'>
                     </codx-label>
                 </label>
                 <div class="col-9">

@@ -569,3 +569,22 @@ lib-company-setting {
   display: flex;
   margin: 0 auto;
 }
+
+.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon).btn.pe-0 {
+  padding-right: 0 !important;
+}
+
+.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+  font-family: 'Roboto';
+}
+
+
+
+codx-tmmeetings .toolbar {
+  margin-bottom: 0 !important;
+}
+
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
+}

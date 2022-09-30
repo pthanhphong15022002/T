@@ -34,6 +34,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllStatus?: any;
   @Input() vllExtendStatus?: any;
   @Input() vllApproveStatus?: any;
+  @Input() showMoreFunc?: any;
+  
   dataTree?: any[];
   dataReferences?: any[];
   @Input() taskID: string;

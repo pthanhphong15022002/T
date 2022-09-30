@@ -81,9 +81,9 @@
         data-kt-scroll="true"
         data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".sprints-task-header"
+        data-kt-scroll-dependencies=".sprints-task-header, .header"
         data-kt-scroll-wrappers=".page-content, .no-wrapper"
-        data-kt-scroll-offset="0px"
+        [attr.data-kt-scroll-offset]="offset"
       >
         <ng-container *ngIf="name == 'Dashboard'">
           <codx-sprintdetails-dashboard
@@ -93,10 +93,10 @@
         </ng-container>
         <ng-container *ngIf="name == 'Công việc'">
           <codx-tasks-share
-            style="height: 500px"
             *ngIf="dataObj"
             [dataObj]="dataObj"
             [showButtonAdd]="showButtonAdd"
+            [showMoreFunc]="showMoreFunc"
             [funcID]="funcID"
           >
           </codx-tasks-share>

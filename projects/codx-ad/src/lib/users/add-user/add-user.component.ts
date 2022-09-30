@@ -325,12 +325,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
               if (result) {
+                debugger;
                 this.loadData.emit();
               }
+              this.dialog.close(res.save);
             });
           res.save.chooseRoles = res.save?.functions;
           (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-          this.dialog.close();
           this.changeDetector.detectChanges();
         }
       });
@@ -348,15 +349,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 if (result) {
                   debugger;
                   this.loadData.emit();
-                  this.dialog.close(res.update);
                 }
+                this.dialog.close(res.update);
               });
           }
           res.update.chooseRoles = res.update.functions;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-         
           this.changeDetector.detectChanges();
         }
       });

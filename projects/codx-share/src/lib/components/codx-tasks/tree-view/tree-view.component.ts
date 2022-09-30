@@ -26,14 +26,14 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() dataService: DataService;
   @Input() vllStatus?: any;
   @Input() listRoles?: any;
-  @Input() totalData?: any;
+  @Input() showMoreFunc?: any;
 
   vllPriority ='TM005'
   dataTree: any[] = [];
   dialog: any;
   favorite  = '' ;
   @Output() clickMoreFunction = new EventEmitter<any>();
-  // @Output() clickShowTaskChildren = new EventEmitter<any>();
+  @Output() viewTask = new EventEmitter<any>();
  
   constructor(
     private api: ApiHttpService,
@@ -130,6 +130,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         }
       });
    }
+  }
+
+  dbClick(data){
+    this.viewTask.emit(data) ;
   }
   //#endregion
 }

@@ -91,6 +91,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   onInit(): void {
     this.epService.getFormModel(this.funcID).then((res) => {
       this.formModel = res;
+      console.log(this.formModel);
     });
   }
 
@@ -196,7 +197,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       case 'EPS2301':
         break;
       case 'EPS2302':
-        this.addQuota();
+        this.addQuota(data);
         break;
       default:
         break;
@@ -220,6 +221,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   edit(data?) {
     if (data) {
+      data.uMID = data.umid;
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
@@ -247,26 +249,13 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       .subscribe();
   }
 
-  addQuota() {
-    this.dialog = this.callfc.openForm(
-      PopupAddQuotaComponent,
-      '',
-      300,
-      400,
-      '',
-      [this.formModel]
-    );
+  addQuota(data) {
+    this.callfc.openForm(PopupAddQuotaComponent, '', 500, 200, '', [data]);
   }
 
   closeEditForm(evt?: any) {
     if (evt) {
       this.dialog && this.dialog.close();
-    }
-  }
-
-  splitColor(color: string): any {
-    if (color) {
-      return color.split(';');
     }
   }
 }

@@ -91,11 +91,19 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutNoAsideComponent,
+    component: LayoutOnlyHeaderComponent,
     children: [
       {
         path: 'settings/:funcID',
         component: SettingComponent,
+      },
+      {
+        path: 'setting/cards/:funcID',
+        component: FeedbackMessageComponent,
+      },
+      {
+        path: 'detailpolicy',
+        component: DetailPolicyComponent,
       },
       {
         path: 'setting/gifts/:funcID',
@@ -121,19 +129,9 @@ export const routes: Routes = [
         path: 'setting/fedranges/:funcID',
         component: DedicationrankComponent,
       },
-    ],
-  },
-  {
-    path: '',
-    component: LayoutOnlyHeaderComponent,
-    children: [
       {
-        path: 'setting/cards/:funcID',
-        component: FeedbackMessageComponent,
-      },
-      {
-        path: 'detailpolicy',
-        component: DetailPolicyComponent,
+        path: 'setting/fedranges/:funcID',
+        component: DedicationrankComponent,
       },
     ],
   },

@@ -73,6 +73,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
+    debugger;
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
@@ -93,7 +94,6 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   beforeSave(option: RequestOption) {
-    debugger;
     let itemData = this.dialogAddStationery.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
@@ -101,7 +101,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
-    this.data.resourceType='6';
+    this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
@@ -146,7 +146,6 @@ export class PopupAddStationeryComponent extends UIComponent {
         this.dialogAddStationery.patchValue({ [event['field']]: event.data });
       }
     }
-    this.colorItem = event.data;
   }
 
   closeDialog(evt: any) {

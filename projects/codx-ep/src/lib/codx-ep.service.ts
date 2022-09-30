@@ -174,7 +174,15 @@ export class CodxEpService {
       .subscribe();
   }
 
-  getResource(){}
+  getStationeryGroup(model: any) {
+    return this.api.callSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListAsync',
+      [model]
+    );
+  }
 
   getGetDriverByCar(carID: string) {
     return this.api.callSv(
