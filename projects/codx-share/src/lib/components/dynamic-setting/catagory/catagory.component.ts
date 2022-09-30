@@ -171,9 +171,18 @@ export class CatagoryComponent implements OnInit {
               });
           }
           break;
-        case 'cpnCalendar':
+        case 'cpncalendar':
           break;
-        case 'cpnAlertRules':
+        case 'cpnalertrules':
+          var rule = this.alertRules[value];
+          if (!rule) return;
+          data['formGroup'] = null;
+          data['templateID'] = rule.recID;
+          // data['showIsTemplate'] = null;
+          // data['showIsPublish'] = null;
+          // data['showSendLater'] = null;
+
+          this.callfc.openForm(component, '', 800, screen.height, '', data);
           break;
         default:
           break;
@@ -319,15 +328,20 @@ export class CatagoryComponent implements OnInit {
       }
       if (this.category === '5') {
         var rule = this.alertRules[fieldName];
+        if (!rule) return;
+        if (typeof value == 'string') {
+          value = value === '1';
+        }
+        if (value === rule[field]) return;
         rule[field] = value;
-        // this.api
-        //   .execAction('AD_AlertRules', [rule], 'UpdateAsync')
-        //   .subscribe((res) => {
-        //     if (res) {
-        //     }
-        //     this.changeDetectorRef.detectChanges();
-        //     console.log(res);
-        //   });
+        this.api
+          .execAction('AD_AlertRules', [rule], 'UpdateAsync')
+          .subscribe((res) => {
+            if (res) {
+            }
+            this.changeDetectorRef.detectChanges();
+            console.log(res);
+          });
       } else {
         var dt = this.settingValue.find((x) => x.category == this.category);
         if (this.category == '1') {
