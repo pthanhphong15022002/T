@@ -26,7 +26,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() dataService: DataService;
   @Input() vllStatus?: any;
   @Input() listRoles?: any;
-  @Input() totalData?: any;
+  @Input() showMoreFunc?: any;
 
   vllPriority ='TM005'
   dataTree: any[] = [];

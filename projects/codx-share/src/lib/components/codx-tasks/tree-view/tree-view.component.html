@@ -118,7 +118,7 @@
       >
       </codx-vll>
     </div>
-    <div class="w-10px min-w-10px">
+    <div class="w-10px min-w-10px" *ngIf="showMoreFunc">
       <codx-mfunc
         [formModel]="formModel"
         (clickMF)="clickMF($event, data)"

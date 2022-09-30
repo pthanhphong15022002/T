@@ -54,6 +54,8 @@ export class CodxTasksComponent
   @Input() funcID?: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
+  @Input() showMoreFunc = true;
+
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @Input() service = 'TM';
@@ -70,6 +72,7 @@ export class CodxTasksComponent
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView!: TemplateRef<any>;
+  @ViewChild('footerNone') footerNone!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
   // @ViewChild('treeView') treeView!: TreeViewComponent;
@@ -288,6 +291,7 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
+          template7:this.footerNone,
           template4: this.resourceHeader,
           template: this.eventTemplate,
           template3: this.cellTemplate,

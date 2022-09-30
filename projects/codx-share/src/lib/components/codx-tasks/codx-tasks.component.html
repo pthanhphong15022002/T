@@ -9,6 +9,7 @@
     [vllExtendStatus]="vllExtendStatus"
     [popoverCrr]="popoverCrr"
     [vllStatus]="vllStatus"
+    [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
     (hoverPopover)="hoverPopover($event)"
   >
@@ -20,6 +21,7 @@
     [formModel]="view.formModel"
     [vllStatus]="vllStatus"
     [listRoles]="listRoles"
+    [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
     (viewTask) = "viewTask($event)"
   >
@@ -32,6 +34,7 @@
     [vllStatus]="vllStatus"
     [data]="data"
     [listRoles]="listRoles"
+    [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
     (viewTask) = "viewTask($event)"
   >
@@ -42,6 +45,7 @@
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
+    [hideMF]="!showMoreFunc"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
@@ -65,6 +69,7 @@
   <codx-card-img
     cardCss="border h-100"
     imageObjType="AD_Users"
+    [hideMF]="!showMoreFunc"
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
@@ -184,7 +189,8 @@
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
-
+<ng-template #footerNone>
+</ng-template>
 <ng-template #eventTemplate let-data>
   <div [style.color]="data.status | vll: vllStatus:'textColor' | async" (dblclick)="viewTask(data)">
     <div>{{ data.taskName }}</div>
