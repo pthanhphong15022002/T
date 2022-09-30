@@ -6,6 +6,7 @@ import { LayoutService } from '@shared/services/layout.service';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, ButtonModel, CodxGridviewComponent, ImageViewerComponent, NotificationsService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-giftgroup',
@@ -14,7 +15,7 @@ import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 })
 export class GiftgroupComponent implements OnInit {
 
-  funcID = 'FDS0121';
+  funcID = '';
   views: Array<ViewModel> = [];
   dataItem: any;
   userPermission: any;
@@ -46,9 +47,13 @@ export class GiftgroupComponent implements OnInit {
     private layoutService: LayoutService,
     private mwpService: CodxMwpService,
     private authStore: AuthStore,
+    private route: ActivatedRoute,
     injector: Injector,
   ) {
     this.user = this.authStore.get();
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
   }
   button: Array<ButtonModel> = [{
     id: '1',

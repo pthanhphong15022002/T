@@ -7,7 +7,8 @@
   [selectedFirst]="true"
   (selectedChange)="onSelectionChanged($event)"
   [button]="button"
-  (viewChanged)="changeView($event)"
+  (viewChanged)="changeView($event)" 
+  [viewActiveType]="'15'"
 ></codx-views>
 <ng-template #templateDetail>
   <ng-container *ngIf="orgUnitID">

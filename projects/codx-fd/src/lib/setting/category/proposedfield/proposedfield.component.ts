@@ -6,6 +6,7 @@ import { ApiHttpService, AuthStore, ButtonModel, CodxGridviewComponent, ImageVie
 import { LayoutModel } from '@shared/models/layout.model';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-proposedfield',
@@ -14,7 +15,7 @@ import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 })
 export class ProposedfieldComponent implements OnInit {
 
-  funcID = 'FDS0125';
+  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;
@@ -55,8 +56,12 @@ export class ProposedfieldComponent implements OnInit {
     private layoutService: LayoutService,
     private authStore: AuthStore,
     private mwpService: CodxMwpService,
+    private route: ActivatedRoute,
   ) {
     this.user = this.authStore.get();
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
   }
   button: Array<ButtonModel> = [{
     id: '1',
