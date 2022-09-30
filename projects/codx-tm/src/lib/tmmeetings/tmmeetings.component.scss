@@ -2,28 +2,34 @@
 //   margin-left: 20px;
 //   font-size: xx-large;
 // }
-codx-view-list-card{
+codx-view-list-card {
   background: white;
 }
-.footer-bottom{
-  position: absolute; 
+
+.footer-bottom {
+  position: absolute;
   bottom: 10px;
   left: 20px;
-  right: 20px; 
+  right: 20px;
 }
+
 .card-footer .btn:not(.btn-icon) {
-  min-width: 0px!important;
+  min-width: 0px !important;
 }
-.schedule-overview .overview-scheduler {  
-  padding: 0!important; 
+
+.schedule-overview .overview-scheduler {
+  padding: 0 !important;
 }
-.schedule-overview .overview-content{
-  border: 0!important;
+
+.schedule-overview .overview-content {
+  border: 0 !important;
 }
-.e-schedule .e-month-view .e-appointment{
-  padding: 7px 10px!important;
-  border-left-width: 4px!important;
+
+.e-schedule .e-month-view .e-appointment {
+  padding: 7px 10px !important;
+  border-left-width: 4px !important;
 }
+
 .cut-size-long {
   display: -webkit-box;
   max-width: 150px;

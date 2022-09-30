@@ -89,7 +89,8 @@ export class CatagoryComponent implements OnInit {
         );
         this.category = ds.value;
         this.title = ds.text;
-        if (this.category === '2') this.getIDAutoNumber();
+        if (this.category === '2' || this.category === '7')
+          this.getIDAutoNumber();
         else if (this.category === '5') this.getAlertRule();
       }
       this.loadSettingValue();
@@ -177,7 +178,7 @@ export class CatagoryComponent implements OnInit {
           var rule = this.alertRules[value];
           if (!rule) return;
           data['formGroup'] = null;
-          data['templateID'] = rule.recID;
+          data['templateID'] = rule.emailTemplate;
           // data['showIsTemplate'] = null;
           // data['showIsPublish'] = null;
           // data['showSendLater'] = null;
@@ -253,11 +254,15 @@ export class CatagoryComponent implements OnInit {
 
   getIDAutoNumber() {
     this.setting.forEach((item, i) => {
-      let url = item.reference;
-      if (url) {
-        let arr = url.split('/') as any[];
-        let funcID = arr[arr.length - 1];
-        this.lstFuncID.push(funcID);
+      if (this.category === '7') {
+        this.lstFuncID.push(item.fieldName);
+      } else {
+        let url = item.reference;
+        if (url) {
+          let arr = url.split('/') as any[];
+          let funcID = arr[arr.length - 1];
+          this.lstFuncID.push(funcID);
+        }
       }
     });
   }
