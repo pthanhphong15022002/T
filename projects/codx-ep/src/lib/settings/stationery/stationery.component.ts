@@ -91,7 +91,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   onInit(): void {
     this.epService.getFormModel(this.funcID).then((res) => {
       this.formModel = res;
-      console.log(this.formModel);
     });
   }
 
@@ -240,7 +239,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(data?) {
-    debugger;
     if (data) {
       this.view.dataService.dataSelected = data;
     }
