@@ -160,7 +160,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         userName: people.userName,
         status: '1',
         objectType: 'AD_Users',
-        roleType: '2',
+        roleType: '1',
       };
       this.curUser = this.tempAtender;
       
@@ -304,9 +304,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.data['field']= event.data.value;        
+        this.data[event.field]= event.data.value;        
       } else {
-        this.data['field']= event.data.value;
+        this.data[event?.field]= event.data;
       }
     }
   }
@@ -338,18 +338,14 @@ export class PopupAddBookingCarComponent extends UIComponent {
   driverChangeWithCar(carID: string) {
     this.codxEpService.getGetDriverByCar(carID).subscribe((res) => {
       if (res) {
-        let driverInfo: {
-          id: string;
-          text: string;
-          objectType: string;
-          objectName: string;
-        } = {
-          id: res.msgBodyData[0].resourceID,
-          text: res.msgBodyData[0].resourceName,
-          objectType: undefined,
-          objectName: undefined,
-        };
-        this.driver = driverInfo;
+        this.tempAtender = {
+          userId: res.msgBodyData[0].resourceID,
+          userName: res.msgBodyData[0].resourceName,
+          status: '1',
+          objectType: 'EP_Driver',
+          roleType: '2',
+        };        
+        this.driver = this.tempAtender;
         this.detectorRef.detectChanges();
       }
     });

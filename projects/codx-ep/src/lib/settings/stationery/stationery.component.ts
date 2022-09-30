@@ -208,7 +208,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       let option = new SidebarModel();
       let dataSelected = this.view.dataService.dataSelected;
       option.Width = '800px';
-      option.FormModel = this.view?.formModel;
+      option.FormModel = this.formModel;
       option.DataService = this.view?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
@@ -227,7 +227,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         let option = new SidebarModel();
         option.Width = '800px';
-        option.FormModel = this.view?.formModel;
+        option.FormModel = this.formModel;
         option.DataService = this.view?.dataService;
         this.dialog = this.callfc.openSide(
           PopupAddStationeryComponent,
