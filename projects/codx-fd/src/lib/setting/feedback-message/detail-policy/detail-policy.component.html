@@ -37,7 +37,7 @@
                                         </codx-label>
                                     </a>
                                 </li>
-                                <li class="menu-item" (click)="redirectPage('itemStatiscal')">
+                                <li class="menu-item" (click)="redirectPage('itemStatistical')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-bar_chart icon-20 mr-2"></i>
                                         <codx-label name="lblStatistical" [formModel]="" default='Thống kê'>
@@ -52,7 +52,7 @@
                             <div class="list-content">
                                 <div class="d-flex justify-content-between mb-6" *ngIf="policy">
                                     <span class="icon-arrow_back icon-22 mr-5 text-hover-primary"
-                                        (click)="backLocation()"></span>
+                                        onclick="history.back()"></span>
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="font-size-h3 font-weight-bold text-dark mb-1">
                                             {{policy?.policyName}}</div>
@@ -83,32 +83,27 @@
                                                                     : item.value}} </div>
                                                 </td>
                                                 <td class="w-50px">
-                                                    <div class="dropdown ml-6">
-                                                        <button class="btn btn-icon btn-md" type="button"
-                                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                                            aria-haspopup="true" aria-expanded="false">
-                                                            <span class="icon-more_vert icon-20"></span>
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            <a class="dropdown-item">
-                                                                <div class="d-flex align-items-center"
-                                                                    (click)="open(content, item.id, item.value)">
-                                                                    <span class="icon-create icon-18"></span>
-                                                                    <span class="ml-3">
-                                                                        <codx-label name="lblUpdate" [formModel]=""
-                                                                            default='Chỉnh sửa'>
-                                                                        </codx-label>
-                                                                    </span>
-                                                                </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <div ngbDropdown class="dropdown" container="body">
+                                                            <a href="javascript:void(0)"
+                                                                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                                                                ngbDropdownToggle id="dropdownMenuButton1"
+                                                                aria-expanded="false">
+                                                                <i class="icon-more_vert icon-20 text-dark-75"></i>
                                                             </a>
-                                                            <!-- <a class="dropdown-item"
-                                                                    (click)="Delete(item.recID, item.id)">
-                                                                    <div class="d-flex align-items-center"
-                                                                        *ngIf="item.value != 0">
-                                                                        <span class="icon-delete icon-18"></span>
-                                                                        <span class="ml-3">Xóa</span>
-                                                                    </div>
-                                                                </a> -->
+                                                            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                                                                <li>
+                                                                    <a (click)="open(content, item.id, item.value)"
+                                                                        ngbDropdownItem href="javascript:void(0)">
+                                                                        <span [class]="'icon-create icon-18'"></span>
+                                                                        <span class="ml-3">
+                                                                            <codx-label name="lblUpdate" [formModel]=""
+                                                                                default='Chỉnh sửa'>
+                                                                            </codx-label>
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -141,9 +136,8 @@
                                 <codx-label name="lblUpdatePoint" [formModel]="" default='Chỉnh sửa số điểm'>
                                 </codx-label>
                             </h4>
-                            <button type="button" class="close" aria-label="Close"
+                            <button type="button" class="btn-close" aria-label="Close"
                                 (click)="modal.dismiss('Cross click')">
-                                <i class="icon-close icon-20 text-dark text-hover-primary"></i>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -154,7 +148,7 @@
                                 </label>
                                 <div class="col-9" #ele>
                                     <codx-input type="number" [ele]="ele" [attr.data-id]="id" class="form-control"
-                                        (valueChange)="valueChange($event, ele)" field="{{id}}" value="{{value}}">
+                                        (valueChange)="valueChange($event, ele)" field="{{id}}" [crrValue]="value">
                                     </codx-input>
                                 </div>
                             </div>

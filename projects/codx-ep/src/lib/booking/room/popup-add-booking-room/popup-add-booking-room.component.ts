@@ -66,6 +66,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   grvBookingRoom: any;
   peopleAttend = [];
   tempArray = [];
+  
+  checkLoopS=true;
+  checkLoopE=true;
+  checkLoop=true;
+
   curUser: any;
   hostUser: any;
   hostUserId: any;
@@ -651,7 +656,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   valueStartTimeChange(event: any) {
     if (event?.field == 'startTime') {
       this.startTime = event.data.fromDate;
-      this.isFullDay = false;
+      this.isFullDay = false;      
       this.beginHour = parseInt(this.startTime.split(':')[0]);
       this.beginMinute = parseInt(this.startTime.split(':')[1]);
       if (this.data?.bookingOn) {
@@ -669,17 +674,21 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     }
     if (this.beginHour >= this.endHour) {
-      this.notificationsService.notifyCode('EP003');
-      return;
+      this.checkLoopS=!this.checkLoopS;
+      if(!this.checkLoopS){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      }
     } else if (
       this.beginHour == this.endHour &&
       this.beginMinute >= this.endMinute
     ) {
-      this.notificationsService.notifyCode('EP003');
-      return;
+      this.checkLoopS=!this.checkLoopS;
+      if(!this.checkLoopS){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      }
     }
-    console.log('start', this.tmpStartDate);
-    console.log('end', this.tmpEndDate);
   }
   valueEndTimeChange(event: any) {
     if (event?.field == 'endTime') {
@@ -702,17 +711,21 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     }
     if (this.beginHour > this.endHour) {
-      this.notificationsService.notifyCode('EP003');
-      return;
+      this.checkLoopE=!this.checkLoopE;
+      if(!this.checkLoopE){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      }
     } else if (
       this.beginHour == this.endHour &&
       this.beginMinute > this.endMinute
     ) {
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }
-    console.log('start', this.tmpStartDate);
-    console.log('end', this.tmpEndDate);
+      this.checkLoopE=!this.checkLoopE;
+      if(!this.checkLoopE){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      }
+    }    
   }
   checkedOnlineChange(event) {
     if (event.data instanceof Object) {

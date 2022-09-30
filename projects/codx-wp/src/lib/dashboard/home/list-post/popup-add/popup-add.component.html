@@ -94,7 +94,12 @@
 </codx-form>
 <ng-template #create>
     <div>
-        <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
+        <codx-input 
+            format="ed3" 
+            [class]="'border-none'" 
+            type="textarea" 
+            [crrValue]="message" 
+            [placeholder]="title"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>

@@ -128,8 +128,9 @@ export class CatagoryComponent implements OnInit {
       data['valuelist'] = this.valuelist;
       data['category'] = this.category;
       data['function'] = this.function;
-      width = (screen.width * 40) / 100;
-      height = 550;
+      width = 500;
+      height = 100 * itemChild.length;
+
       this.callfc.openForm(
         CatagoryComponent,
         title,
@@ -326,13 +327,13 @@ export class CatagoryComponent implements OnInit {
   }
 
   click($event: any) {
-    debugger;
     var dt = this.settingValue.find((x) => x.category == this.category);
     dt.dataValue = JSON.stringify(this.dataValue);
     this.api
       .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
       .subscribe((res) => {
         if (res) {
+          this.dialog.close();
         }
         this.changeDetectorRef.detectChanges();
         console.log(res);
