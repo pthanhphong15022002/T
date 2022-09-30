@@ -73,3 +73,31 @@ codx-tabs .tab-comt .tab_container .tree-body {
 codx-tasks-share .e-splitter.e-splitter-horizontal {
   border: 0;
 }
+
+
+.tm-viewlist {
+  width: 1000px;
+
+}
+
+.tasks-share-content codx-views>.container-fluid {
+  height: 100% !important;
+  overflow-x: auto !important;
+  width: 100%;
+}
+
+
+.tasks-share-content codx-views>.container-fluid .row.h-100 {
+  margin: 0 !important;
+}
+
+.tasks-share-content codx-views>.container-fluid .h-100.col-12,
+.tasks-share-content codx-views>.container-fluid .h-100.col-9 {
+  padding: 0 !important;
+}
+
+.tasks-share-content codx-views>.container-fluid .h-100.col-12 .card-body,
+.tasks-share-content codx-views>.container-fluid .h-100.col-9 .card-body {
+  width: 1000px;
+  //border: 1px aqua solid;
+}
