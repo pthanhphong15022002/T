@@ -11,7 +11,7 @@
             <div class="form-group mt-3">
                 <codx-label name="lblNoteBookMemo" [formName]="formModel.formName" default="Diễn giải"></codx-label>
                 <codx-input rows="4" format="ed2" type="textarea" field="memo" [placeholder]="gridViewSetup?.memo"
-                    class="test-textarea" ngDefaultControl [crrValue]="formType == 'edit' ? noteBooks?.memo : empty"
+                    class="test-textarea" ngDefaultControl [crrValue]="formType == 'edit' ? noteBooks?.memo || '' : empty"
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>

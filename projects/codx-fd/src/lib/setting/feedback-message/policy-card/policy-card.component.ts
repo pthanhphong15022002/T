@@ -137,10 +137,9 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         if (res && res.msgBodyData.length > 0) {
           if (res.msgBodyData[0] === true) {
             this.item[this.fieldUpdate] = objectUpdate[this.fieldUpdate];
-            this.notificationsService.notifyCode('SYS007');
             this.change.detectChanges();
           }
-        } else this.notificationsService.notifyCode('SYS021');
+        }
       });
   }
 
@@ -282,11 +281,9 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         debugger;
         if (res && res.msgBodyData[0]) {
           if (res.msgBodyData[0] == true) {
-            this.notificationsService.notify('Hệ thống thực thi thành công!');
             this.LoadData();
             return;
           }
-          this.notificationsService.notify('Có lỗi xảy ra!');
         }
       });
   }
@@ -321,8 +318,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   setValueListName(list) {
     if (!list) return;
     var item;
-    if(list?.dataValue)
-      item = JSON.parse(list.dataValue);
+    if (list?.dataValue) item = JSON.parse(list.dataValue);
     else item = list;
     const isActiveCoins = item.hasOwnProperty('ActiveCoins');
     const isActiveMyKudos = item.hasOwnProperty('ActiveMyKudos');

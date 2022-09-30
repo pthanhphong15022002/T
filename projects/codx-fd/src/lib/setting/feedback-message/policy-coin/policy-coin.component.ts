@@ -59,10 +59,11 @@ export class PolicyCoinComponent extends UIComponent implements OnInit {
   }
 
   refreshActive(item) {
-    this.policyCoinList.forEach((obj) => {
+    var dt = JSON.parse(JSON.stringify(this.policyCoinList));
+    dt.forEach((obj) => {
       if (obj.recID == item.recID) obj.actived = !item.actived;
     });
-    console.log('check active', this.policyCoinList);
+    this.policyCoinList = dt;
     this.changeDr.detectChanges();
   }
 
