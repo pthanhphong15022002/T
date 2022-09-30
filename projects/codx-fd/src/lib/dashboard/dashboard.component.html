@@ -119,14 +119,15 @@
                     <div class="box-body">
                         <div class="history-box">
                             <codx-listview
-                                [itemTemplate]="tmpHistoryCoins" #listviewCoins 
+                                #listviewCoins 
+                                [itemTemplate]="tmpHistoryCoins" 
                                 service="FD"
                                 assemblyName="ERM.Business.FD" 
                                 className="KudosTransBusiness"
-                                method="HistoryWalletAsync" 
-                                [predicate]="predicateCoins" 
-                                [dataValue]="dataValueCoins"
-                                entityName="FD_KudosTrans">
+                                method="GetHistoryWalletAsync"
+                                [predicate]="null"
+                                [dataValue]="null"
+                                [entityName]="'FD_KudosTrans'">
                             </codx-listview>
                         </div>
                     </div>
