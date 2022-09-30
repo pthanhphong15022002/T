@@ -45,6 +45,5 @@
 .nav.nav-tabs.nav-tabs-line .show>.nav-link {
     background-color: transparent;
     border: 0;
-    border-bottom: 1px solid #3699ff;
-    transition: color .15s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+    border-bottom: 2px solid var(--primary-active);
 }

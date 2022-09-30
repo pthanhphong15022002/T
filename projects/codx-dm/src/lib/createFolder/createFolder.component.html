@@ -1,9 +1,4 @@
-<codx-form
-  headerText="{{ titleDialog }}"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
->
+<codx-form headerText="{{ titleDialog }}" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
     <div class="offcanvas-content">
       <div class="offcanvas-wrapper">
@@ -13,20 +8,12 @@
           </label>
           <div class="d-flex">
             <div class="w-100">
-              <codx-input
-                [placeholder]="titleFolderName"
-                [class]="validate('folderName')"
-                type="text"
-                [crrValue]="folderName"
-                (valueChange)="changeValue($event, 'folderName')"
-              ></codx-input>
+              <codx-input [placeholder]="titleFolderName" [class]="validate('folderName')" type="text"
+                [crrValue]="folderName" (valueChange)="changeValue($event, 'folderName')"></codx-input>
             </div>
             <div class="ms-1 h-32px icon-document">
-              <codx-valuelist
-                [name]="'L1470'"
-                [iconOnly]="true"
-                (valueChange)="valueChange($event, 'icon')"
-              ></codx-valuelist>
+              <codx-valuelist [name]="'L1470'" [iconOnly]="true" (valueChange)="valueChange($event, 'icon')">
+              </codx-valuelist>
             </div>
           </div>
           <!-- <div *ngIf="checkFileName() != '0'"  class="d-flex mb-4 invalid-feedback">
@@ -39,116 +26,71 @@
                         </ng-template>
                     </div> -->
         </div>
-        <div
-          id="folderError"
-          autofocus
-          *ngIf="errorshow && folderName === ''"
-          class="d-flex mb-4 invalid-feedback"
-        >
-          <div
-            *ngIf="
+        <div id="folderError" autofocus *ngIf="errorshow && folderName === ''" class="d-flex mb-4 invalid-feedback">
+          <div *ngIf="
               folderName === '';
               then thenBlockErrorFolder;
               else thenBlockErrorElseFolder
-            "
-          ></div>
+            "></div>
           <ng-template #thenBlockErrorFolder>{{
             titleFolderRequired
-          }}</ng-template>
+            }}</ng-template>
           <ng-template #thenBlockErrorElseFolder>{{ message }}</ng-template>
         </div>
-        <div class="mt-5 mb-2">
-          <button
-            (click)="isShowAll(true)"
-            type="button"
-            class="btn btn-sm btn-primary"
-          >
+        <div class="mt-4 mb-5">
+          <button (click)="isShowAll(true)" type="button" class="btn btn-sm btn-primary pe-0">
             {{ titleExpand
             }}<i class="icon-keyboard_arrow_right icon-16 ms-2"></i>
           </button>
         </div>
 
-        <div
-          *ngIf="this.showAll != null && isShowAll(false)"
-          class="permission-group"
-        >
+        <div *ngIf="this.showAll != null && isShowAll(false)" class="permission-group">
           <div class="d-flex align-items-center justify-content-between">
             <ul class="nav nav-tabs nav-tabs-line">
               <li class="nav-item">
-                <a
-                  class="nav-link active fw-bold"
-                  data-toggle="tab"
-                  (click)="onSetPermision(false)"
-                >
+                <a class="nav-link active fw-bold" data-toggle="tab" (click)="onSetPermision(false)">
                   <span class="nav-text">{{ titleShare }}</span>
                 </a>
               </li>
             </ul>
-            <button
-              type="button"
-              (click)="openRight()"
-              class="btn btn-sm btn-outline-primary"
-            >
+            <button type="button" (click)="openRight()" class="btn btn-sm btn-outline-primary">
               {{ titleSelectObject }}
             </button>
           </div>
           <div class="tab-content mt-2">
-            <div
-              class="tab-pane fade show active"
-              id="tab_role"
-              role="tabpanel"
-            >
+            <div class="tab-pane fade show active" id="tab_role" role="tabpanel">
               <div class="dms-user-mini-group border rounded p-2">
-                <ng-container
-                  *ngIf="fileEditing != null && fileEditing.permissions != null"
-                >
-                  <ng-container
-                    *ngFor="let perm of fileEditing.permissions; index as i"
-                  >
-                    <ng-container
-                      *ngIf="
+                <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
+                  <ng-container *ngFor="let perm of fileEditing.permissions; index as i">
+                    <ng-container *ngIf="
                         perm.isActive != false &&
                         ((!modeSharing &&
                           (!perm.isSharing || perm.isSharing == null)) ||
                           (modeSharing && perm.isSharing))
-                      "
-                    >
+                      ">
                       <div class="user-mini-item">
                         <div class="d-flex align-items-center">
                           <div>
-                            <div
-                              *ngIf="
+                            <div *ngIf="
                                 perm.objectID == null || perm.objectID == '';
                                 then thenAvatar1;
                                 else elsethenAvatar1
-                              "
-                            ></div>
+                              "></div>
                             <ng-template #thenAvatar1>
-                              <codx-temp-full
-                                imageSrc="../../../assets/codx/user/user-admin.svg"
-                                [imageWidth]="20"
+                              <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="20"
                                 imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
-                                [subTitle]="perm.objectName"
-                                [descLine]="1"
-                              >
+                                [subTitle]="perm.objectName" [descLine]="1">
                               </codx-temp-full>
                             </ng-template>
                             <ng-template #elsethenAvatar1>
-                              <codx-temp-full
-                                [imageId]="perm.objectID"
-                                imageObjType="AD_Users"
-                                imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
-                                [imageWidth]="20"
-                                [subTitle]="perm.objectName"
-                              >
+                              <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
+                                imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle" [imageWidth]="20"
+                                [subTitle]="perm.objectName">
                               </codx-temp-full>
                             </ng-template>
                           </div>
-                          <span
-                            *ngIf="perm.isSystem == false && this.assignRight"
-                            (click)="removeUserRight(i)"
-                            class="icon-close icon-16 ms-2 text-danger"
-                          >
+                          <span *ngIf="perm.isSystem == false && this.assignRight" (click)="removeUserRight(i)"
+                            class="icon-close icon-16 ms-2 text-danger">
                           </span>
                         </div>
                       </div>
@@ -156,24 +98,15 @@
                   </ng-container>
                 </ng-container>
               </div>
-              <div class="share-groups mt-4">
-                <div
-                  class="d-flex align-items-center justify-content-between share-item mt-4"
-                >
+              <div class="share-groups mt-6">
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
                   <div class="text-dark-75">{{ titleApprovar }}</div>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input
-                        class="test-check"
-                        type="switch"
-                        style="width: 100%"
-                        [crrValue]="approval"
-                        field="approval"
-                        [disabled]="
+                      <codx-input class="test-check" type="switch" style="width: 100%" [crrValue]="approval"
+                        field="approval" [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        "
-                        (valueChange)="onSaveRightChanged($event, 'approval')"
-                      ></codx-input>
+                        " (valueChange)="onSaveRightChanged($event, 'approval')"></codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="checkApproval" #checkApproval
                                                     [checked]="approval" id="checkApproval"
@@ -183,45 +116,26 @@
                                             </label>  [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"  -->
                     </span>
                     <div class="w-80px">
-                      <button
-                        type="button"
-                        [disabled]="disableRight('approval')"
-                        (click)="openApproval()"
-                        class="btn btn-sm btn-outline-primary"
-                      >
+                      <button type="button" [disabled]="disableRight('approval')" (click)="openApproval()"
+                        class="btn btn-sm btn-outline-primary">
                         {{ titleSetting }}
                       </button>
                       <ng-container *ngIf="showPopup">
-                        <codx-combobox-popup
-                          comboboxName="ApproverGroups"
-                          [field]="approvers"
-                          [width]="width"
-                          [height]="height"
-                          [value]="approvers"
-                          (clickSave)="changeValueOwner($event)"
-                        >
+                        <codx-combobox-popup comboboxName="ApproverGroups" [field]="approvers" [width]="width"
+                          [height]="height" [value]="approvers" (clickSave)="changeValueOwner($event)">
                         </codx-combobox-popup>
                       </ng-container>
                     </div>
                   </div>
                 </div>
-                <div
-                  class="d-flex align-items-center justify-content-between share-item mt-4"
-                >
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
                   <div class="text-dark-75">{{ titleVersionControl }}</div>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input
-                        class="test-check"
-                        type="switch"
-                        style="width: 100%"
-                        [checked]="revision"
-                        field="revision"
-                        [disabled]="
+                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="revision"
+                        field="revision" [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        "
-                        (valueChange)="onSaveRightChanged($event, 'revision')"
-                      ></codx-input>
+                        " (valueChange)="onSaveRightChanged($event, 'revision')"></codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="checkRevision" #checkRevision
                                                     [checked]="revision" id="checkRevision"
@@ -233,23 +147,14 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div
-                  class="d-flex align-items-center justify-content-between share-item mt-4"
-                >
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
                   <div class="text-dark-75">{{ titleStoreControl }}</div>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input
-                        class="test-check"
-                        type="switch"
-                        style="width: 100%"
-                        [checked]="physical"
-                        field="physical"
-                        [disabled]="
+                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="physical"
+                        field="physical" [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        "
-                        (valueChange)="onSaveRightChanged($event, 'physical')"
-                      ></codx-input>
+                        " (valueChange)="onSaveRightChanged($event, 'physical')"></codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="checkPhysical" #checkPhysical
                                                     [checked]="physical" id="checkPhysical"
@@ -259,36 +164,23 @@
                                             </label> btn btn-light-primary btn-sm -->
                     </span>
                     <div class="w-80px">
-                      <button
-                        type="button"
-                        [disabled]="disableRight('physical')"
-                        (click)="openPhysical()"
-                        class="btn btn-sm btn-outline-primary"
-                      >
+                      <button type="button" [disabled]="disableRight('physical')" (click)="openPhysical()"
+                        class="btn btn-sm btn-outline-primary">
                         {{ titleSetting }}
                       </button>
                     </div>
                   </div>
                 </div>
-                <div
-                  class="d-flex align-items-center justify-content-between share-item mt-4"
-                >
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
                   <div class="text-dark-75">{{ titleCopyrightsControl }}</div>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input
-                        class="test-check"
-                        type="switch"
-                        style="width: 100%"
-                        [checked]="copyrightsControl"
-                        field="copyrightsControl"
-                        [disabled]="
+                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="copyrightsControl"
+                        field="copyrightsControl" [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        "
-                        (valueChange)="
+                        " (valueChange)="
                           onSaveRightChanged($event, 'copyrightsControl')
-                        "
-                      >
+                        ">
                       </codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="checkCopyrights" #checkCopyrights
@@ -301,23 +193,14 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div
-                  class="d-flex align-items-center justify-content-between share-item mt-4"
-                >
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
                   <div class="text-dark-75">{{ titleSecurityControl }}</div>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input
-                        class="test-check"
-                        type="switch"
-                        style="width: 100%"
-                        [checked]="security"
-                        field="security"
-                        [disabled]="
+                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="security"
+                        field="security" [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        "
-                        (valueChange)="onSaveRightChanged($event, 'security')"
-                      ></codx-input>
+                        " (valueChange)="onSaveRightChanged($event, 'security')"></codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="checkSecurity" #checkSecurity
                                                     [checked]="security" id="checkSecurity"
@@ -329,25 +212,16 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
-                <div
-                  class="d-flex align-items-center justify-content-between share-item mt-4"
-                >
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
                   <div class="text-dark-75">{{ titleCreateSubFolder }}</div>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
-                      <codx-input
-                        class="test-check"
-                        type="switch"
-                        style="width: 100%"
-                        [checked]="createSubFolder"
-                        field="createSubFolder"
-                        [disabled]="
+                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="createSubFolder"
+                        field="createSubFolder" [disabled]="
                           this.updateRight == false || this.propertiesFolder
-                        "
-                        (valueChange)="
+                        " (valueChange)="
                           onSaveRightChanged($event, 'checkFolder')
-                        "
-                      ></codx-input>
+                        "></codx-input>
                       <!-- <label>
                                                 <input type="checkbox" name="select" #checkFolder
                                                     [checked]="createSubFolder" id="checkFolder"
@@ -362,43 +236,29 @@
                 <div *ngIf="this.createSubFolder" class="mt-6">
                   <table class="table w-100">
                     <thead>
-                      <tr class="py-2 border-bottom">
-                        <th class="w-120px">{{ titleLevel }}</th>
-                        <th class="w-150px">{{ titleSetting }}</th>
-                        <th>{{ titleDesctionSub }}</th>
-                        <th class="w-50px"></th>
-                        <th></th>
+                      <tr class="border-bottom fw-bold">
+                        <th class="w-100px text-dark">{{ titleLevel }}</th>
+                        <th class="w-150px text-dark">{{ titleSetting }}</th>
+                        <th class="text-dark">{{ titleDesctionSub }}</th>
+                        <th class="w-50px text-dark"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr
-                        *ngFor="let sub of listSubFolder; index as i"
-                        class="border-bottom has-action-menu"
-                      >
+                      <tr *ngFor="let sub of listSubFolder; index as i" class="border-bottom has-action-menu">
                         <td>{{ SubLevel(sub) }}</td>
                         <td>
                           <div class="d-flex flex-column">
-                            <div class="text-dark fw-bold">
-                              {{ SubType(sub) }}
-                            </div>
-                            <div class="text-50">{{ SubFormat(sub) }}</div>
+                            <div class="text-dark">{{ SubType(sub) }}</div>
+                            <div class="text-gray-500 fs-7">{{ SubFormat(sub) }}</div>
                           </div>
                         </td>
                         <td [innerHtml]="sub.description"></td>
                         <td>
-                          <div
-                            class="action-menu d-flex align-items-center cursor-pointer"
-                          >
-                            <div
-                              class="btn btn-sm btn-icon btn-white cursor-pointer"
-                              (click)="onDeleteSub(i)"
-                            >
+                          <div class="action-menu d-flex align-items-center cursor-pointer">
+                            <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onDeleteSub(i)">
                               <i class="icon-close text-primary icon-18"></i>
                             </div>
-                            <div
-                              class="btn btn-sm btn-icon btn-white cursor-pointer"
-                              (click)="onEditSub(i)"
-                            >
+                            <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onEditSub(i)">
                               <i class="icon-edit text-primary icon-18"></i>
                             </div>
                           </div>
@@ -422,19 +282,12 @@
                                                         </div>
                                                     </div> -->
                         </td>
-                        <td></td>
                       </tr>
                       <tr>
-                        <td
-                          class="cursor-pointer"
-                          (click)="openSubFolder()"
-                          colspan="4"
-                        >
-                          <div class="d-flex align-items-center">
-                            <span class="icon-add icon-18 me-1"></span>
-                            <span class="text-dark">{{
-                              titletitleCreateSubFolder
-                            }}</span>
+                        <td class="cursor-pointer" (click)="openSubFolder()" colspan="4">
+                          <div class="d-flex align-items-center text-primary text-hover-primary">
+                            <span class="icon-add_circle icon-16 me-1"></span>
+                            <span>{{titletitleCreateSubFolder}}</span>
                           </div>
                         </td>
                       </tr>

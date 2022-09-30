@@ -1,4 +1,4 @@
-<div class="d-flex flex-row align-items-top p-3 border-bottom">
+<div class="d-flex flex-row align-items-top p-3 border-bottom" (dblclick)="dbClick(data)">
   <div class="w-100 min-w-200px ps-3">
     <div class="a" [ngbTooltip]="data.taskName">
       {{ data?.taskName }}</div>
@@ -98,7 +98,7 @@
       </div>
     </div>
   </div>
-  <div class="w-10px min-w-10px">
+  <div class="w-10px min-w-10px" *ngIf="showMoreFunc">
     <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)"
       [isBookMark]="false" [dataItem]="data" type="hover">
     </codx-mfunc>

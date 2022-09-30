@@ -1,8 +1,8 @@
-<div class="row border p-4">
-    <div class="col-8 px-6 py-4 bg-gray-200 position-relative">
+<div class="row mx-0">
+    <div class="col-8 p-5 bg-gray-200 show-pic position-relative">
         <ng-container [ngSwitch]="file.referType">
             <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
-                <div class="w-100 vh-100 img-full">
+                <div class="w-100 h-100 img-full">
                     <!-- <img [src]="file.thumbnail" alt="" class="w-100 image"> -->
                     <codx-img [recId]="file.recID" [objectId]="file.objectID" objectType="WP_Comments"
                         imageType="square" [width]="0" cssClass="w-100 h-auto image"></codx-img>
@@ -25,25 +25,25 @@
                 </div>
             </ng-container>
         </ng-container>
-        <div class="position-absolute top-0 w-100 p-6">
+        <div class="position-absolute img-btntop">
             <div class="d-flex justify-content-between">
-                <div class="close rounded-circle bg-secondary">
+                <div class="btn btn-icon rounded-circle btn-light-danger">
                     <a href="javascript:void(0);" (click)="clickClosePopup()">
                         <i class="icon-close"></i>
                     </a>
                 </div>
                 <div class="">
-                    <span class="rounded-circle bg-secondary">
+                    <span class="btn rounded-circle btn-icon btn-light-primary ms-1">
                         <a href="javascript:void(0)">
                             <i class="icon-zoom_in"></i>
                         </a>
                     </span>
-                    <span class="rounded-circle bg-secondary">
+                    <span class="btn btn-icon rounded-circle btn-light-primary ms-1">
                         <a href="javascript:void(0)">
                             <i class="icon-zoom_out"></i>
                         </a>
                     </span>
-                    <span class="rounded-circle bg-secondary">
+                    <span class="btn btn-icon rounded-circle btn-light-primary ms-1">
                         <a href="javascript:void(0)">
                             <i class="icon-fullscreen"></i>
                         </a>
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div class="col-4" *ngIf="parentPost">
+    <div class="col-4 mt-5 ps-6" *ngIf="parentPost">
         <div class="d-flex">
             <div class="me-2">
                 <codx-img [objectId]="parentPost.createdBy" objectType="AD_Users" [width]="40">
