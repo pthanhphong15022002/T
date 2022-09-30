@@ -583,3 +583,8 @@ lib-company-setting {
 codx-tmmeetings .toolbar {
   margin-bottom: 0 !important;
 }
+
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
+}
