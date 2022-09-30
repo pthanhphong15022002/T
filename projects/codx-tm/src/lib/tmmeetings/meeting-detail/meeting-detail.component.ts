@@ -69,6 +69,7 @@ export class MeetingDetailComponent extends UIComponent {
   // className = 'TaskBusiness';
   // method = 'GetListTaskAssignByByMeetingAsync';
   dataObj: any;
+ 
 
   constructor(
     private injector: Injector,
