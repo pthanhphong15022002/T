@@ -220,6 +220,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   edit(data?) {
     if (data) {
+      data.uMID = data.umid;
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
