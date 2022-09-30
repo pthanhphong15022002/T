@@ -13,6 +13,7 @@ import {
   CacheService,
   LayoutService,
   NotificationsService,
+  ScrollComponent,
 } from 'codx-core';
 import moment from 'moment';
 import { CodxTMService } from '../../codx-tm.service';
@@ -60,7 +61,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   showTabMeetings = true;
   showButtonAdd = true;
   showMoreFunc = true ;
-
+offset = "0px";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -147,9 +148,14 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     }
   }
   ngOnInit(): void {
+    var body = document.querySelectorAll('body.toolbar-enabled');
+    if(body && body.length > 0)
+    this.offset ="65px";
     this.loadTabView();
   }
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void { 
+    
+  }
   loadTabView() {
     // if(this.showTabDasboard)this.all.push('Dashboard')
     // if(this.showTabTasks)this.all.push('Công việc')
