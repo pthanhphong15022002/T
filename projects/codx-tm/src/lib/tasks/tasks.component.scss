@@ -82,7 +82,7 @@ codx-tasks-share .e-splitter.e-splitter-horizontal {
 
 .tasks-share-content codx-views>.container-fluid {
   height: 100% !important;
-  overflow-x: auto !important;
+  // overflow-x: auto !important;
   width: 100%;
 }
 
@@ -100,4 +100,18 @@ codx-tasks-share .e-splitter.e-splitter-horizontal {
 .tasks-share-content codx-views>.container-fluid .h-100.col-9 .card-body {
   width: 1000px;
   //border: 1px aqua solid;
+}
+
+// .tasks-share-content ::-webkit-scrollbar-thumb {
+//   background-color: #cbcdd7 !important;
+//   background-color: aqua !important;
+// }
+
+// .tasks-share-content ::-webkit-scrollbar {
+//   height: 0.65rem;
+// }
+
+
+codx-tmmeetings .codx-toolbar {
+  margin-bottom: 0 !important;
 }
