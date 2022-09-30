@@ -18,7 +18,7 @@ export class DedicationrankComponent extends UIComponent implements OnInit {
 
   datafuntion = null;
   titlePage = "";
-  funcID = 'FDS014';
+  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;
@@ -49,8 +49,12 @@ export class DedicationrankComponent extends UIComponent implements OnInit {
     private notificationsService: NotificationsService,
     public location: Location,
     private mwpService: CodxMwpService,
+    private route: ActivatedRoute,
   ) {
     super(injector);
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
   }
   button: Array<ButtonModel> = [{
     id: '1',

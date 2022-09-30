@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Observable, Subject } from 'rxjs';
 import { ApiHttpService, CodxGridviewComponent, NotificationsService, ViewsComponent, AuthStore, ButtonModel, ViewModel, ViewType } from 'codx-core';
@@ -13,7 +14,7 @@ import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 })
 export class BehaviorComponent implements OnInit {
 
-  funcID = 'FDS0124';
+  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;
@@ -51,8 +52,12 @@ export class BehaviorComponent implements OnInit {
     private changedr: ChangeDetectorRef,
     private mwpService: CodxMwpService,
     private authStore: AuthStore,
+    private route: ActivatedRoute,
   ) {
     this.user = this.authStore.get();
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
   }
   button: Array<ButtonModel> = [{
     id: '1',

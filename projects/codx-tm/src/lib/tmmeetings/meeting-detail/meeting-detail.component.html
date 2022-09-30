@@ -72,14 +72,14 @@
       data-kt-scroll-wrappers=".page-content, .no-wrapper"
       data-kt-scroll-offset="0px"
     >
-      <div class="m-0 bg-body rounded-2 py-3 px-5 h-100">
+      <div class="m-0 bg-body rounded-2 py-3 px-5">
         <ng-container *ngIf="name == 'Nội dung họp'">
           <ng-container *ngTemplateOutlet="templateMeeting"> </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Thảo luận'">
           <div class="tab_container">
             <codx-tree-history
-              [objectID]="meeting.meetingID"
+              [objectID]="meeting?.meetingID"
               [objectType]="'CO_Meetings'"
               [actionType]="'C'"
               [addNew]="true"

@@ -61,7 +61,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   showTabMeetings = true;
   showButtonAdd = true;
   showMoreFunc = true ;
-offset = "0px";
+   offset = "0px";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -148,9 +148,10 @@ offset = "0px";
     }
   }
   ngOnInit(): void {
-    var body = document.querySelectorAll('body.toolbar-enabled');
-    if(body && body.length > 0)
-    this.offset ="65px";
+    // var body = document.querySelectorAll('body.toolbar-enabled');
+    // if(body && body.length > 0)
+    if(this.name =='Công việc')
+    this.offset ="65px";else this.offset ="0px"
     this.loadTabView();
   }
   ngAfterViewInit(): void { 
@@ -186,6 +187,10 @@ offset = "0px";
         return;
       }
     });
+    // var body = document.querySelectorAll('body.toolbar-enabled');
+    // if(body && body.length > 0)
+    if(this.name =='Công việc')
+    this.offset ="65px";else this.offset = "0px" ;
     item.isActive = true;
     this.changeDetectorRef.detectChanges();
   }

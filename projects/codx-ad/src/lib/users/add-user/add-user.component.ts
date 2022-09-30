@@ -321,30 +321,19 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.save) {
-          try
-          {
-            debugger;
-            this.imageUpload
+          this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
-              debugger;
               if (result) {
+                debugger;
                 this.loadData.emit();
-                this.dialog.close(res.save);
               }
-             
+              this.dialog.close(res.save);
             });
-          }
-          catch(ex)
-          {
-            debugger
-            this.dialog.close(res.save);
-          }
           res.save.chooseRoles = res.save?.functions;
           (this.dialog.dataService as CRUDService).update(res.save).subscribe();
           this.changeDetector.detectChanges();
         }
-        //this.dialog.close(res.save);
       });
   }
 
@@ -360,8 +349,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 if (result) {
                   debugger;
                   this.loadData.emit();
-                  this.dialog.close(res.update);
                 }
+                this.dialog.close(res.update);
               });
           }
           res.update.chooseRoles = res.update.functions;
@@ -370,7 +359,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe();
           this.changeDetector.detectChanges();
         }
-        this.dialog.close(res.update);
       });
   }
 
