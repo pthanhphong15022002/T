@@ -62,7 +62,8 @@
       </div>
     </div>
     <div class="col-4" *ngIf="resources && resources != ''">
-      <codx-imgs style="float: right"
+      <codx-imgs
+        style="float: right"
         [objectId]="resources"
         objectType="AD_Users"
         [numberImages]="7"
@@ -80,8 +81,8 @@
         data-kt-scroll="true"
         data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".page-content, .sprints-task-header"
-        data-kt-scroll-wrappers=".sprints-task-detail, .no-wrapper"
+        data-kt-scroll-dependencies=".sprints-task-header"
+        data-kt-scroll-wrappers=".page-content, .no-wrapper"
         data-kt-scroll-offset="0px"
       >
         <ng-container *ngIf="name == 'Dashboard'">
@@ -92,6 +93,7 @@
         </ng-container>
         <ng-container *ngIf="name == 'Công việc'">
           <codx-tasks-share
+            style="height: 500px"
             *ngIf="dataObj"
             [dataObj]="dataObj"
             [showButtonAdd]="showButtonAdd"
@@ -105,7 +107,7 @@
               <codx-tree-history
                 [objectID]="iterationID"
                 [objectType]="'TM_Sprints'"
-                [actionType]=""
+                [actionType]="'C1'"
                 [viewIcon]="true"
                 [funcID]="functionParent"
               >

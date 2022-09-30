@@ -71,10 +71,10 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     }
   }
   valueChangValueList(data) {
-    this.item[data.field] = data.data.value;
-    this.handleLock(data.data.value);
+    this.item[data.field] = data.data;
+    this.handleLock(data.data);
     let objectUpdate = {};
-    objectUpdate[data.field] = data.data.value;
+    objectUpdate[data.field] = data.data;
     this.onSaveCMParameter(objectUpdate);
   }
   handleLock(status) {
@@ -137,13 +137,13 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         if (res && res.msgBodyData.length > 0) {
           if (res.msgBodyData[0] === true) {
             this.item[this.fieldUpdate] = objectUpdate[this.fieldUpdate];
+            this.notificationsService.notifyCode('SYS007');
             this.change.detectChanges();
-            //this.objectUpdate = {};
           }
-        }
+        } else this.notificationsService.notifyCode('SYS021');
       });
   }
-  
+
   modelForm = { title: '', type: 0, quantity: 0, cycle: '' };
   async LoadLabel() {
     // var langPipe = new LangPipe(this.api, this.cache);
@@ -210,22 +210,28 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       centered: true,
       size: 'sm',
     });
-    this.change.detectChanges();
   }
   changeValueListRuleSelected(selected) {
     this.item.RuleSelected = selected.data;
     this.objectUpdate['RuleSelected'] = selected.data;
     this.handleSaveParameter();
   }
+
+  MaxSendPeriod: any;
+  MaxReceivePeriod: any;
+  MaxPointPeriod: any;
   changValueListPopup(selected, typeContent) {
-    if (typeContent == 0) {
-      this.item.MaxSendPeriod = selected.data;
-    }
-    if (typeContent == 1) {
-      this.item.MaxReceivePeriod = selected.data;
-    }
-    if (typeContent == 2) {
-      this.item.MaxPointPeriod = selected.data;
+    if (selected) {
+      var dt = JSON.parse(JSON.stringify(selected.data));
+      if (typeContent == 0) {
+        this.MaxSendPeriod = dt;
+      }
+      if (typeContent == 1) {
+        this.MaxReceivePeriod = dt;
+      }
+      if (typeContent == 2) {
+        this.MaxPointPeriod = dt;
+      }
     }
   }
 
@@ -240,21 +246,21 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       this.item.MaxSends = this.modelForm.quantity;
       objectUpdate = {
         MaxSends: this.modelForm.quantity,
-        MaxSendPeriod: this.item.MaxSendPeriod,
+        MaxSendPeriod: this.MaxSendPeriod,
       };
     }
     if (typeContent == 1) {
       this.item.MaxReceives = this.modelForm.quantity;
       objectUpdate = {
         MaxReceives: this.modelForm.quantity,
-        MaxReceivePeriod: this.item.MaxReceivePeriod,
+        MaxReceivePeriod: this.MaxReceivePeriod,
       };
     }
     if (typeContent == 2) {
       this.item.MaxPoints = this.modelForm.quantity;
       objectUpdate = {
         MaxPoints: this.modelForm.quantity,
-        MaxPointPeriod: this.item.MaxPointPeriod,
+        MaxPointPeriod: this.MaxPointPeriod,
       };
     }
     if (typeContent == 3) {
@@ -299,7 +305,6 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
           if (Object.keys(this.item).length == 0) {
             this.isShowPolicyCard = false;
           }
-          console.log('check item', this.item);
           this.handleLock(this.item.PolicyControl);
           this.setValueListName(this.item);
           this.change.detectChanges();
@@ -315,7 +320,10 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   }
   setValueListName(list) {
     if (!list) return;
-    var item = JSON.parse(list.dataValue);
+    var item;
+    if(list?.dataValue)
+      item = JSON.parse(list.dataValue);
+    else item = list;
     const isActiveCoins = item.hasOwnProperty('ActiveCoins');
     const isActiveMyKudos = item.hasOwnProperty('ActiveMyKudos');
     if (isActiveCoins && isActiveMyKudos) {

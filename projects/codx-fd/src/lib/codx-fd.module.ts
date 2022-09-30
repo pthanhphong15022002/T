@@ -1,3 +1,4 @@
+import { LayoutNoAsideComponent } from './../../../codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { BehaviorComponent } from './setting/category/behavior/behavior.component';
 import { BehaviorruleComponent } from './setting/category/behaviorrule/behaviorrule.component';
 import { GiftgroupComponent } from './setting/category/giftgroup/giftgroup.component';
@@ -8,11 +9,22 @@ import { DedicationrankComponent } from './setting/dedicationrank/dedicationrank
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AccumulationChartModule, ChartAllModule } from '@syncfusion/ej2-angular-charts';
-import { ProgressBar, ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
+import {
+  AccumulationChartModule,
+  ChartAllModule,
+} from '@syncfusion/ej2-angular-charts';
+import {
+  ProgressBar,
+  ProgressBarModule,
+} from '@syncfusion/ej2-angular-progressbar';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import path from 'path';
@@ -40,6 +52,7 @@ import { EditPatternComponent } from './setting/feedback-message/pattern/edit-pa
 import { PolicyCardComponent } from './setting/feedback-message/policy-card/policy-card.component';
 import { PolicyCoinComponent } from './setting/feedback-message/policy-coin/policy-coin.component';
 import { PolicyDedicationComponent } from './setting/feedback-message/policy-dedication/policy-dedication.component';
+import { DetailPolicyComponent } from './setting/feedback-message/detail-policy/detail-policy.component';
 
 export const routes: Routes = [
   {
@@ -112,6 +125,10 @@ export const routes: Routes = [
         path: 'setting/cards/:funcID',
         component: FeedbackMessageComponent,
       },
+      {
+        path: 'detailpolicy',
+        component: DetailPolicyComponent,
+      },
     ],
   },
 ];
@@ -144,10 +161,11 @@ const Component: Type<any>[] = [
   PolicyCardComponent,
   PolicyCoinComponent,
   PolicyDedicationComponent,
+  DetailPolicyComponent,
 ];
 
 @NgModule({
-  imports: [ 
+  imports: [
     CommonModule,
     OverlayModule,
     InlineSVGModule.forRoot(),
@@ -162,9 +180,7 @@ const Component: Type<any>[] = [
     ProgressBarModule,
     RouterModule.forChild(routes),
   ],
-  exports: [
-    RouterModule
-  ],
+  exports: [RouterModule],
   declarations: Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

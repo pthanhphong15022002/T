@@ -78,14 +78,16 @@
                                             <codx-label name="lblOwner" [formModel]="dialog.formModel" name="lblfOwner"
                                                 default="Người nhận phiếu">
                                             </codx-label>
-                                            <div class="mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <codx-img class="symbol symbol-35 symbol-circle mr-3"
-                                                        [objectId]="userReciver" objectType="AD_Users">
-                                                    </codx-img>
-                                                    <div class="ms-3 text-dark font-size-lg">{{userReciverName}}</div>
+                                            <ng-container *ngIf="userReciverName">
+                                                <div class="mt-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <codx-img class="symbol symbol-35 symbol-circle mr-3"
+                                                            [objectId]="userReciver" objectType="AD_Users">
+                                                        </codx-img>
+                                                        <div class="ms-3 text-dark font-size-lg">{{userReciverName}}</div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </ng-container>
                                         </div>
                                     </ng-container>
                                     <div class=" form-group" #situation>
@@ -184,23 +186,22 @@
                                                                     *ngIf="idxChild >= (i * 4) && idxChild < (i + 1 * 4)">
                                                                     <ng-container
                                                                         *ngIf="!itemChild.backgroundColor;else haveBackGround">
-                                                                        <div [class.item-card]="patternSelected.patternID == itemChild.patternID"
-                                                                            class=" mx-5 position-relative d-flex justify-content-between align-items-center h-120px w-80px border ">
+                                                                        <div class="ms-5 h-120px w-80px border ">
                                                                             <codx-img
-                                                                                class=" h-120px w-80px border-radius-large"
                                                                                 [objectId]="itemChild.patternID"
                                                                                 [funcId]="funcID"
-                                                                                objectType="FD_Patterns" [width]="164"
+                                                                                objectType="FD_Patterns" 
+                                                                                [width]="164"
                                                                                 (click)="selectCard(itemChild)">
                                                                             </codx-img>
                                                                         </div>
                                                                     </ng-container>
                                                                     <ng-template #haveBackGround>
-                                                                        <div class="mx-5 position-relative d-flex justify-content-between align-items-center "
+                                                                        <div class="mx-5 position-relative h-120px w-80px border"
                                                                             [style.background-color]="itemChild.backgroundColor"
                                                                             style="height: 120px; width: 80px;"
-                                                                            (click)="selectCard(itemChild)"
-                                                                            [class.item-card]="patternSelected.patternID == itemChild.patternID">
+                                                                            (click)="selectCard(itemChild)">
+                                                                            <i *ngIf="itemChild.patternID == patternSelected.patternID" class="icon-check_circle pattern-selected"></i>
                                                                         </div>
                                                                     </ng-template>
                                                                 </ng-container>

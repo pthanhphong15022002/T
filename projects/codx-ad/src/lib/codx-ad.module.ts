@@ -38,7 +38,8 @@ import { AsideroledetailComponent } from './Roles/asideroledetail/asideroledetai
 import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
-import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
+import { LayoutNoAsideToolbarFluidComponent } from './../../../codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
+
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 
@@ -75,8 +76,12 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutNoAsideToolbarFluidComponent,
+    component: LayoutOnlyHeaderComponent,
     children: [
+      {
+        path: 'roledetails/:funcID',
+        component: RoleDetailComponent,
+      },
       {
         path: 'systemsetting/:funcID',
         component: SystemsettingsComponent,
@@ -84,16 +89,6 @@ export const routes: Routes = [
       {
         path: 'accountinfo/:funcID',
         component: CompanySettingComponent,
-      },
-    ],
-  },
-  {
-    path: '',
-    component: LayoutOnlyHeaderComponent,
-    children: [
-      {
-        path: 'roledetails/:funcID',
-        component: RoleDetailComponent,
       },
     ],
   },
@@ -115,6 +110,7 @@ const T_Component: Type<any>[] = [
   AsideroledetailComponent,
   AddUserGroupsComponent,
   SystemsettingsComponent,
+
 ];
 @NgModule({
   imports: [

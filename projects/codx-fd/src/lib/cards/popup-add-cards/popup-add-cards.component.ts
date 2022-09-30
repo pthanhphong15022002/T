@@ -197,7 +197,9 @@ export class PopupAddCardsComponent implements OnInit {
         if (res && res.length > 0)
         {
           this.lstPattern = res;
-          this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault});
+          this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault == true});
+          console.log(res);
+          console.log(this.patternSelected);
           this.dt.detectChanges();
         }
       });
@@ -372,7 +374,11 @@ export class PopupAddCardsComponent implements OnInit {
       card.shareControl = this.shareControl;
       card.listShare = this.lstShare;
       card.objectType = this.objectType;
-      card.pattern = this.patternSelected.patternID;
+      if(this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement || this.cardType != this.CARDTYPE_EMNUM.Share ){
+        if(this.patternSelected?.patternID){
+          card.pattern = this.patternSelected.patternID;
+        }
+      }
       if(this.gift){
         card.hasGifts = true;
       }

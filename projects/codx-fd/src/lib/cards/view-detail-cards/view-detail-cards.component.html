@@ -6,7 +6,7 @@
                 <div class="row h-500px min-h-500px me-4 d-flex justify-content-center text-center p-6" 
                     [style.background]="data.backgroundColor">
                     <div class="card-title fw-bolder display-6"
-                        [style.color]="data.pattern.headerColor">
+                        [style.color]="data.headerColor">
                         {{data?.cardType | vll:'L1422':'text'|async}}
                     </div>
                     <div class="d-flex align-items-center justify-content-center">
@@ -23,7 +23,7 @@
                         </codx-img>
                     </div>
                     <div class="text-dark modal-card-sms mt-6"
-                        [style.color]="data.pattern.textColor"
+                        [style.color]="data.textColor"
                         [innerHTML]="data.situation">
                     </div>
                     <div class="d-flex align-items-center justify-content-center group-hasGift mt-6">
@@ -123,8 +123,8 @@
                         </ng-container>
                     </div>
                         <div class="text-primary fw-bolder mt-4"><codx-label formName="" name="lblSituation" default="Nội dung"></codx-label></div>
-                        <div class="modal-card-sms mt-3" [style.color]="data.pattern?.textColor"
-                            [innerHTML]="data.situation">
+                        <div class="modal-card-sms mt-3">
+                            <span [innerHTML]="data.situation"></span>
                         </div>
                 </div>    
             </div>

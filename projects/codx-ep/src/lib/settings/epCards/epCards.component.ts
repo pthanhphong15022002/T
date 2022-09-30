@@ -25,7 +25,8 @@ import { PopupAddEpCardsComponent } from './popup-add-epCards/popup-add-epCards.
 })
 export class EpCardsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('view') viewBase: ViewsComponent;
-  @ViewChild('avatarCol') avatarCol: TemplateRef<any>;
+  @ViewChild('avatarCol') avatarCol: TemplateRef<any>; 
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
   funcID: string;
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -79,7 +80,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         .subscribe((gv) => {
           this.columnGrids = [
             {
-              field: 'code',
+              field: 'resourceID',
               headerText: gv['ResourceID'].headerText,
               width: gv['ResourceID'].width,
             },
@@ -106,9 +107,11 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
               width: gv['Note'].width,
             },
             {
-              field: 'owner',
               headerText: gv['Owner'].headerText,
-              width: gv['Owner'].width,
+              //width:gv['Owner'].width,
+              width: 200,
+              template: this.ownerCol,
+              headerTextAlign: 'Center',
             },
           ];
           this.views = [
@@ -128,7 +131,18 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     });
     this.detectorRef.detectChanges();
   }
+  clickMF(event, data) {
+    console.log(event);       
+    switch (event?.functionID) {
+      case 'SYS03':        
+        this.edit(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
 
+    }
+  }
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -147,8 +161,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew() {
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      
+    this.viewBase.dataService.addNew().subscribe((res) => {      
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';

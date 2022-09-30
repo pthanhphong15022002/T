@@ -7,7 +7,7 @@
 
 <ng-template #cardTemp let-data>
     <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
-        [title]="data.employeeName" [subTitle]="(data.positionName || 'Bộ phận')" [dataItem]="data"
+        [title]="data.employeeName" [subTitle]="(data.positionName || 'Bộ phận')" [dataItem]="data" [imageObjName]="data.employeeName"
         [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer" [typeMF]="'hover'"
         (clickMF)="clickMF($event, data)">
     </codx-card-center>
@@ -37,7 +37,7 @@
 <ng-template #itemEmployee let-data>
     <div class="d-flex align-items-top">
         <div class="d-flex align-items-start">
-            <codx-img [width]="40" class="me-4" [objectId]="data.employeeID" objectType="HR_Employees">
+            <codx-img [width]="40" class="me-4" [objectId]="data.employeeID" [objectName]="data.employeeName" objectType="HR_Employees">
             </codx-img>
             <div class="d-flex flex-column flex-grow-1">
                 <div class="d-flex align-items-center">

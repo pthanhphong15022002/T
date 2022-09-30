@@ -164,9 +164,9 @@ export class PropertiesComponent implements OnInit {
 
   getThumbnail(data) {
     if (data.hasThumbnail)
-      return `${environment.urlUpload}/${data.thumbnail}`;
+      return environment.urlUpload + "/" +data.thumbnail;
     else
-     return `../../../assets/codx/dms/{{getAvatar(data.extension)}}`;
+     return `../../../assets/codx/dms/`+this.getAvatar(data.extension);
   }
 
   getAvatar(filename: string) {
@@ -334,5 +334,11 @@ export class PropertiesComponent implements OnInit {
       return "icon-star text-warning icon-16 mr-1";
     else
       return "icon-star text-muted icon-16 mr-1";
+  }
+  getInformation(id:any)
+  {
+    // this.api.execSv("HR","HR","EmployeesBusiness","GetEmpUsers",id).subscribe(item=>{
+      
+    // })
   }
 }

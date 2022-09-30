@@ -20,8 +20,27 @@
                         </h4>
                     </div>
                     <div class="box-body">
-                        <div class="thongdiep-group ps-6">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="ps-6">
+                            <ng-container *ngFor="let item of lstCountCard">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="text-dark fw-bolder">
+                                        <codx-label [formModel]="codxViews.formModel"
+                                            [default]="item.Text">
+                                        </codx-label>
+                                    </div>
+                                    <div class="d-flex w-100px justify-content-end">
+                                        <div class="d-flex align-items-center me-6">
+                                            <span class="text-dark me-2">{{item.CountRecvive}}</span>
+                                            <span class="icon-doc_in icon-18 text-primary"></span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="text-dark me-2">{{item.CountSend}}</span>
+                                            <span class="icon-doc_out icon-16 text-warning"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <!-- <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
                                     <codx-label [formModel]="codxViews.formModel" name="lblCommendation"
                                         default="Tuyên dương"></codx-label>
@@ -85,7 +104,7 @@
                                         <span class="icon-doc_out icon-16 text-warning"></span>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -119,21 +138,27 @@
 <ng-template #tmpHistoryCoins let-item>
     <div class="d-flex align-items-start wallet-item me-2">
         <div class="me-3 max-h-40">
-            <img class="w-40px" src="/assets/demos/svg/{{ item.transType | vll:'L1427' : 'icon' | async }}">
+            <ng-container *ngIf="item.transType == '1' || item.transType == '4' ; else fieldTransType">
+                <img class="w-40px" src="/assets/demos/svg/{{ item.refType | vll:'L1422' : 'icon' | async }}">
+            </ng-container>
+            <ng-template #fieldTransType>
+                <img class="w-40px" src="/assets/demos/svg/{{ item.transType | vll:'L1427' : 'icon' | async }}">
+            </ng-template>
         </div>
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark fw-bolder">
-                <ng-container [ngSwitch]="item.transType">
+                <!-- <ng-container [ngSwitch]="item.transType">
                     <ng-container *ngSwitchCase="'1'">
-                        <span>{{item.UserName}}</span>
+                        <span>{{item.ReciverName}}</span>
                     </ng-container>
                     <ng-container *ngSwitchCase="'1'">
-                        <span>{{item.UserName}}</span>
+                        <span>{{item.ReciverName}}</span>
                     </ng-container>
-                </ng-container>
+                </ng-container> -->
+                <span>{{item.title}}</span>
             </div>
             <div class="text-dark-75 font-size-sm" *ngIf="item.refType">
-                {{item?.refType| vll:'L1422':'text'|async}}
+                {{item.refType| vll:'L1422':'text'|async}}
             </div>
             <div class="text-muted font-size-sm">{{item?.createdOn | fmDT:'dmy'}}</div>
         </div>
