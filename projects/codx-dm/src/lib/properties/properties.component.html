@@ -53,16 +53,16 @@
                                 </ng-container>
                             </div>
                             <div class="d-flex">
-                                <a (click)="openRight(2, false)" class="btn btn-sm btn-light-primary">{{titleShare}}</a>
+                                <a (click)="openRight(2, false)" class="btn btn-sm btn-outline-primary">{{titleShare}}</a>
                                 <!-- <a (click)="openRight(2, true)"
                                     class="btn btn-xs btn-outline-primary fw-bold btn-pill">Chia sẻ</a> -->
                             </div>
                         </div>
-                        <div *ngIf="fileEditing != null" class="d-flex my-3">
+                        <div *ngIf="fileEditing" class="d-flex my-3">
                             <span class="text-gray-600 me-2 w-100px">{{titleFiletype}}:</span>
                             <span class="">{{fileEditing.type}} ({{fileEditing.extension}})</span>
                         </div>
-                        <div *ngIf="fileEditing != null" class="d-flex my-3">
+                        <div *ngIf="fileEditing" class="d-flex my-3">
                             <span class="text-gray-600 me-2 w-100px">{{titleFilesize}}:</span>
                             <span class="">{{getSizeKB(fileEditing.fileSize)}} KB
                                 ({{getSizeByte(fileEditing.fileSize)}} bytes)</span>

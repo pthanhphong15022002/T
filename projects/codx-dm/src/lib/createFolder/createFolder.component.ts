@@ -539,6 +539,7 @@ export class CreateFolderComponent implements OnInit {
 
   checkPermission() {
     //this.isSystem = false;
+    debugger;
     this.readRight = this.dmSV.parentRead;
     this.createRight = this.dmSV.parentCreate;
     this.updateRight = this.dmSV.parentUpdate;
