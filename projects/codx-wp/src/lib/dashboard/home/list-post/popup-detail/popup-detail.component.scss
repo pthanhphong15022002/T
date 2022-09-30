@@ -4,14 +4,27 @@
     height: 100% !important;
     align-items: center;
     display: flex;
+    justify-content: center;
+}
+
+.show-pic {
+    height: calc(100vh);
 }
 
 .img-full .image>img {
-    width: 100%;
+    width: auto;
     height: auto;
+    max-height: calc(100vh - 35px);
+    max-width: 100%;
 }
 
 .img-full {
     display: flex;
     align-items: center;
+}
+
+.img-btntop {
+    top: 15px;
+    left: 15px;
+    right: 15px;
 }
