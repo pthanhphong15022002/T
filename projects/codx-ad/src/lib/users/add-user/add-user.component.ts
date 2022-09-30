@@ -133,6 +133,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .getUserGroupByID(this.adUser.userGroup)
         .subscribe((res) => {
           if (res) this.dataUG = res;
+          console.log('check this.dataUG', this.dataUG);
         });
     } else this.title = 'Thêm người dùng';
     this.formGroupAdd = new FormGroup({
@@ -167,7 +168,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adService.notifyInvalid(this.formUser, this.formModel);
       return;
     } else {
-      if (this.checkValueChangeUG == true || this.adUser.userGroup) {
+      if (
+        this.checkValueChangeUG == true ||
+        (this.adUser.userGroup && this.dataUG && this.dataUG?.length > 0)
+      ) {
         this.dataUG.forEach((dt) => {
           var userID = '';
           var userName = '';

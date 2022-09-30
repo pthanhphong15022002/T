@@ -23,6 +23,7 @@ export class BehaviorruleComponent implements OnInit {
   user: any;
   userName = '';
   isOpen = false;
+  button?: ButtonModel;
 
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
@@ -55,11 +56,11 @@ export class BehaviorruleComponent implements OnInit {
       if(params) this.funcID = params['funcID'];
     })
   }
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
   columnsGrid = [];
   ngOnInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
     this.initForm();
     this.columnsGrid = [
       // { field: 'noName', nameColumn: '', template: this.GiftIDCell, width: 30 },
