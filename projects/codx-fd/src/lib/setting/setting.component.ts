@@ -1,4 +1,11 @@
-import { TemplateRef } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import {
+  HostListener,
+  Inject,
+  Output,
+  TemplateRef,
+  EventEmitter,
+} from '@angular/core';
 import { CodxFdService } from './../codx-fd.service';
 import {
   ChangeDetectorRef,
@@ -25,6 +32,7 @@ import { SettingService } from './setting.service';
   templateUrl: './setting.component.html',
   styleUrls: ['./setting.component.scss'],
 })
+
 export class SettingComponent extends UIComponent implements OnInit {
   tenant: string;
   func = {};
@@ -46,13 +54,17 @@ export class SettingComponent extends UIComponent implements OnInit {
   @ViewChild('itemRankDedication') itemRankDedication: ElementRef;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
+  @Output() scrollPosition: EventEmitter<number> = new EventEmitter<number>();
+  @ViewChild('elementId', {static: true}) ell: ElementRef;
+ 
   constructor(
     private injector: Injector,
     private changedr: ChangeDetectorRef,
     private tenantStore: TenantStore,
     private at: ActivatedRoute,
     private fdsv: CodxFdService,
-    private settingSV: SettingService
+    private settingSV: SettingService,
+    private el: ElementRef
   ) {
     super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
@@ -91,12 +103,23 @@ export class SettingComponent extends UIComponent implements OnInit {
         },
       },
     ];
-    this.at.queryParamMap.subscribe((params: any) => {
-      if (params) this.scrollToID(params?.params?.redirectPage);
-    });
+    let myInterval = setInterval(() => {
+      this.at.queryParamMap.subscribe((params: any) => {
+        if (params && params?.params?.index && params?.params?.redirectPage) {
+          this.currentActive = params && params?.params?.index;
+          this.scrollToID(params?.params?.redirectPage);
+        }
+      });
+    }, 200);
+    setTimeout(() => {
+      clearInterval(myInterval);
+      return;
+    }, 3000);
     this.detectorRef.detectChanges();
   }
 
+  
+  
   scroll(el: HTMLElement, numberActive) {
     if (el)
       el.scrollIntoView({
@@ -109,13 +132,15 @@ export class SettingComponent extends UIComponent implements OnInit {
 
   scrollToID(id) {
     let el = document.getElementById(id);
-    var html = el as HTMLElement;
-    if (html)
-      html.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
-      });
+    if (el) {
+      var html = el as HTMLElement;
+      if (html)
+        html.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest',
+        });
+    }
   }
 
   LoadData() {

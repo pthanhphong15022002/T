@@ -208,6 +208,7 @@ db.DM_FolderInfo.updateMany(
     let data = {} as any;
     data.title = this.titleAddFolder;
     data.id =  null;
+    data.type = "add";
     this.callfc.openSide(CreateFolderComponent, data, option);
   }
 

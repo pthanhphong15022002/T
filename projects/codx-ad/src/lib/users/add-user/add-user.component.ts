@@ -326,13 +326,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
+                this.dialog.close(res.save);
               }
             });
           res.save.chooseRoles = res.save?.functions;
           (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-          this.dialog.close();
           this.changeDetector.detectChanges();
         }
+        this.dialog.close(res.save);
       });
   }
 
@@ -356,9 +357,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-         
           this.changeDetector.detectChanges();
         }
+        this.dialog.close(res.update);
       });
   }
 
