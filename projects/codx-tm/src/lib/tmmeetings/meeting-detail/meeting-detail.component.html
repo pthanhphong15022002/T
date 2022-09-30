@@ -70,13 +70,13 @@
       data-kt-scroll-height="auto"
       data-kt-scroll-dependencies=".meeting-details-header, .header"
       data-kt-scroll-wrappers=".page-content, .no-wrapper"
-      data-kt-scroll-offset="0px"
+      [attr.data-kt-scroll-offset]="offset"
     >
       <div class="m-0 bg-body rounded-2 py-3 px-5">
-        <ng-container *ngIf="name == 'Nội dung họp'">
+        <ng-container *ngIf="name == 'MeetingContents'">
           <ng-container *ngTemplateOutlet="templateMeeting"> </ng-container>
         </ng-container>
-        <ng-container *ngIf="name == 'Thảo luận'">
+        <ng-container *ngIf="name == 'Comments'">
           <div class="tab_container">
             <codx-tree-history
               [objectID]="meeting?.meetingID"
@@ -90,7 +90,7 @@
             </codx-tree-history>
           </div>
         </ng-container>
-        <ng-container *ngIf="name == 'Giao việc'">
+        <ng-container *ngIf="name =='AssignTo'">
           <div *ngIf="dataObj">
             <ng-container *ngTemplateOutlet="templateAssign"> </ng-container>
           </div>
@@ -155,9 +155,10 @@
   </ng-template>
 
   <ng-template #templateAssign>
-    <codx-tasks-share
-      [dataObj]="dataObj"
-      [showButtonAdd]="false"
+    <codx-tasks-share 
+       [funcID]="'TMT0203'"   
+       [dataObj]="dataObj"
+       [showButtonAdd]="false"
     ></codx-tasks-share>
   </ng-template>
 
