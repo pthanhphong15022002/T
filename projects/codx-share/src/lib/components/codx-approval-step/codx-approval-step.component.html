@@ -148,7 +148,7 @@
 
 </div> -->
 
-<div class="w-550px mx-auto bg-white p-5 mb-10">
+<div class="w-650px mx-auto bg-white p-5 mb-10">
   <div class="codx-approval step-signature-temp">
     <ng-container *ngFor="let item of process; let index = index">
       <div class="codx-approval-step pb-3 step-approve">
@@ -169,11 +169,11 @@
                 [desc]="'HR Manager'"
               >
               </codx-temp-full>
-              <div class="d-flex align-items-center ms-6">
+              <div
+                class="d-flex align-items-center ms-6 flex-column flex-column"
+              >
+                <span class="badge badge-light-success ms-6">Đã duyệt</span>
                 <div class="text-dark fs-7">12 giờ trước</div>
-                <span class="badge badge-light-success ms-6 my-1"
-                  >Đã duyệt</span
-                >
               </div>
             </div>
             <div class="d-flex align-items-center justify-content-between mb-3">
@@ -209,29 +209,36 @@
                 inviting me.
               </div>
             </div>
-            <div class="overflow-auto pb-5">
-              <div class="d-flex align-items-center min-w-700px">
+            <div class="d-attach pb-5">
+              <div class="d-flex flex-wrap align-items-center">
                 <codx-temp-full
-                  cardCss="sm-card rounded-1 px-2 py-3 d-flex flex-aligns-center me-5"
+                  cardCss="sm-card rounded-1 px-2 py-3 d-flex flex-aligns-center me-5 w-250px"
                   imageSrc="../assets/codx/dms/doc.svg"
                   imgCss="img-folder me-4"
-                  [title]="'Checklisttestcase.xslx'"
-                  [subTitle]="'3.12MB'"
+                  [title]="
+                    'Checklisttestcase.xslxChecklisttestcase.xslxChecklisttestcase.xslx'
+                  "
+                  [titleLine]="2"
+                  titleCss="w-175px"
                 >
                 </codx-temp-full>
                 <codx-temp-full
-                  cardCss="sm-card rounded-1 px-2 py-3 d-flex flex-aligns-center me-5"
+                  cardCss="sm-card rounded-1 px-2 py-3 d-flex flex-aligns-center me-5 w-250px"
                   imageSrc="../assets/codx/dms/xls.svg"
                   imgCss="img-folder me-4"
                   [title]="'Checklisttestcase.xslx'"
+                  [titleLine]="2"
+                  titleCss="w-175px"
                   [subTitle]="'3.12MB'"
                 >
                 </codx-temp-full>
                 <codx-temp-full
-                  cardCss="sm-card rounded-1 px-2 py-3 w-200px"
+                  cardCss="sm-card rounded-1 px-2 py-3 w-250px"
                   imageSrc="../assets/codx/dms/pdf.svg"
                   imgCss="img-folder me-4"
                   [title]="'Checklisttestcase.xslx'"
+                  [titleLine]="2"
+                  titleCss="w-175px"
                   [subTitle]="'3.12MB'"
                 >
                 </codx-temp-full>
@@ -259,9 +266,9 @@
             [desc]="'HR Manager'"
           >
           </codx-temp-full>
-          <div class="d-flex align-items-center ms-6">
+          <div class="d-flex align-items-center ms-6 flex-column">
+            <span class="badge badge-light-warning ms-6">Chờ duyệt</span>
             <div class="text-dark fs-7">12 giờ trước</div>
-            <span class="badge badge-light-warning ms-6 my-1">Chờ duyệt</span>
           </div>
         </div>
         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -299,9 +306,9 @@
             [desc]="'HR Manager'"
           >
           </codx-temp-full>
-          <div class="d-flex align-items-center ms-6">
+          <div class="d-flex align-items-center ms-6 flex-column">
+            <span class="badge badge-light-warning ms-6">Chờ duyệt</span>
             <div class="text-dark fs-7">12 giờ trước</div>
-            <span class="badge badge-light-warning ms-6 my-1">Chờ duyệt</span>
           </div>
         </div>
       </div>
@@ -323,9 +330,9 @@
             [desc]="'HR Manager'"
           >
           </codx-temp-full>
-          <div class="d-flex align-items-center ms-6">
+          <div class="d-flex align-items-center ms-6 flex-column">
+            <span class="badge badge-light ms-6">Chờ giải quyêt</span>
             <div class="text-dark fs-7"></div>
-            <span class="badge badge-light ms-6 my-1">Chờ giải quyêt</span>
           </div>
         </div>
         <div class="d-flex align-items-center justify-content-between mb-3">
