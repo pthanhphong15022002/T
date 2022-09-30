@@ -49,8 +49,13 @@ export class MeetingDetailComponent extends UIComponent {
   month: any;
   day: any;
   startTime: any;
-  name = 'Thảo luận';
-  private all = ['Nội dung họp', 'Thảo luận', 'Giao việc'];
+  name = 'Comments';
+  // private all = ['Nội dung họp', 'Thảo luận', 'Giao việc'];
+  private all: TabControl[] = [
+    { name: 'MeetingContents', textDefault: 'Nội dung họp', isActive: false },
+    { name: 'Comments', textDefault: 'Thảo luận', isActive: true },
+    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+  ];
   startDateMeeting: any;
   endDateMeeting: any;
   userName: any;
@@ -69,6 +74,7 @@ export class MeetingDetailComponent extends UIComponent {
   // className = 'TaskBusiness';
   // method = 'GetListTaskAssignByByMeetingAsync';
   dataObj: any;
+  offset = '0px'
  
 
   constructor(
@@ -100,13 +106,14 @@ export class MeetingDetailComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     if (this.tabControl.length == 0) {
-      this.all.forEach((res, index) => {
-        var tabModel = new TabControl();
-        tabModel.name = tabModel.textDefault = res;
-        if (index == 1) tabModel.isActive = true;
-        else tabModel.isActive = false;
-        this.tabControl.push(tabModel);
-      });
+      this.tabControl = this.all ;
+      // this.all.forEach((res, index) => {
+      //   var tabModel = new TabControl();
+      //   tabModel.name = tabModel.textDefault = res;
+      //   if (index == 1) tabModel.isActive = true;
+      //   else tabModel.isActive = false;
+      //   this.tabControl.push(tabModel);
+      // });
     } else {
       this.active = this.tabControl.findIndex(
         (x: TabControl) => x.isActive == true
@@ -157,9 +164,10 @@ export class MeetingDetailComponent extends UIComponent {
 
   clickMenu(item) {
     this.name = item.name;
-    if (this.name == 'Giao việc') {
+    if (this.name == 'AssignTo') {
       this.getListRecID(this.meetingID);
-    }
+      this.offset ="65px"
+    }else    this.offset ="0px"
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;

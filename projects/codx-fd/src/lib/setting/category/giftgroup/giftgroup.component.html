@@ -1,5 +1,5 @@
 <codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'FD_Gifts'"
-    (buttonClick)="openFormCreate($event, true)" [buttons]="button"></codx-views>
+    (buttonClick)="openFormCreate($event, true)" [button]="button" idField="giftID"></codx-views>
 
 <ng-template #panelLeft>
     <div class="list-table">
@@ -86,7 +86,8 @@
                             </codx-input>
                         </div>
                         <div class="form-group">
-                            <codx-label name="lblGiftName" formName="FD_Gifts" default="Tên nhóm quà" class="font-w500 font-1rem">
+                            <codx-label name="lblGiftName" formName="FD_Gifts" default="Tên nhóm quà"
+                                class="font-w500 font-1rem">
                             </codx-label>
                             <span class="required"></span>
                             <codx-input type="text" class="form-control" placeholder="Điện thoại iPhone 12 64GB"
@@ -97,7 +98,8 @@
                             </codx-input>
                         </div>
                         <div class="form-group mt-3">
-                            <codx-label name="lblMemoGiftGroup" formName="FD_Gifts" default="Mô tả" class="font-w500 font-1rem">
+                            <codx-label name="lblMemoGiftGroup" formName="FD_Gifts" default="Mô tả"
+                                class="font-w500 font-1rem">
                             </codx-label>
                             <span class="required"></span>
                             <codx-input type="textarea" class="form-control test-textarea" rows="3"

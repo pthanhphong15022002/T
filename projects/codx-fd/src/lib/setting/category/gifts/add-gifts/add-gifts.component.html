@@ -1,0 +1,40 @@
+<codx-form [headerText]="" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel" [data]="dataUpdate"> 
+    <ng-template #body>
+        <div class="modal-body">
+            <div class="text-dark-75 mb-3">
+                {{onHandForm.controls['giftName'].value}}
+                <br>
+                <div [innerHTML]="dataUpdate.memo"></div>
+            </div>
+            <div class="form-group mt-3">
+                <label #Onhand>{{ 'Tồn kho hiện tại' | lang:
+                    'Gifts':'Onhand':'grvGifts': Onhand| async}}</label>
+                <codx-input type="number" class="form-control" placeholder="" formControlName='onhand'
+                    [crrValue]="dataUpdate.onhand" [attr.disabled]="true">
+                </codx-input>
+            </div>
+            <div class="form-group mt-3">
+                <label #NewOnhand>{{ 'Tồn kho mới' | lang:
+                    'Gifts':'NewOnhand':'grvGifts': NewOnhand| async}}</label>
+                <codx-input type="number" min="0" class="form-control" placeholder="" formControlName='newOnhand'
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="changeHand($event)"
+                    [ngClass]="{'is-invalid': onHandForm.controls['newOnhand'].invalid}">
+                </codx-input>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="onChangeOnHandOfGift()">
+                <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+                <codx-label name="lblSave" [formName]="formModel?.formName" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

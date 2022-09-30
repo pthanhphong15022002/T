@@ -292,12 +292,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 text: string;
                 objectType: string;
                 umid: string;
-                objectID:string;
+                objectID:any;
               } = {
                 id: stationery.itemID,
                 text: stationery.itemName,
                 quantity: stationery.quantity,
-                objectType: undefined,
+                objectType: "EP_Stationery",
                 objectID: stationery.itemRecID,                
                 umid: stationery.umid,
               };
@@ -376,16 +376,26 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.formModel
       );
     }
-    if (this.tmpEndDate - this.tmpStartDate <= 0) {
-      this.notificationsService.notifyCode('EP003');
-    }
-    if (this.startTime && this.endTime) {
-      let hours = parseInt(
-        ((this.endTime - this.startTime) / 1000 / 60 / 60).toFixed()
-      );
-      if (!isNaN(hours) && hours > 0) {
-        this.data.hours = hours;
-      }
+    this.bookingOnCheck();     
+    this.data.startDate = new Date(
+      this.data.bookingOn.getFullYear(),
+      this.data.bookingOn.getMonth(),
+      this.data.bookingOn.getDate(),
+      this.data.startDate.getHours(),
+      this.data.startDate.getMinutes(),
+      0
+    );
+    this.data.endDate = new Date(
+      this.data.bookingOn.getFullYear(),
+      this.data.bookingOn.getMonth(),
+      this.data.bookingOn.getDate(),
+      this.data.endDate.getHours(),
+      this.data.endDate.getMinutes(),
+      0
+    );    
+    if(this.data.startDate>= this.data.endDate){
+      this.notificationsService.notifyCode('E0011');
+      return;
     }
 
     this.tmplstDevice.forEach((element) => {
@@ -395,50 +405,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       tempEquip.isPicked = element.isSelected;
       this.lstEquipment.push(tempEquip);
     });
-
-    let tmpBookingOn = new Date(this.data?.bookingOn);
+    this.data.equipments = this.lstEquipment;
     this.data.category = '1';
     this.data.status = '1';
     this.data.resourceType = '1';
-
-    this.data.equipments = this.lstEquipment;
-    this.data.requester = this.curUser.userName;
-    
-    this.data.attendees = this.data?.attendees;
-    this.data.startDate = new Date(
-      tmpBookingOn.getFullYear(),
-      tmpBookingOn.getMonth(),
-      tmpBookingOn.getDate(),
-      this.tmpStartDate.getHours(),
-      this.tmpStartDate.getMinutes(),
-      0
-    );
-    this.data.endDate = new Date(
-      tmpBookingOn.getFullYear(),
-      tmpBookingOn.getMonth(),
-      tmpBookingOn.getDate(),
-      this.tmpEndDate.getHours(),
-      this.tmpEndDate.getMinutes(),
-      0
-    );
+    this.data.requester = this.curUser.userName;     
 
     this.attendeesList.forEach((item) => {
       this.tmpAttendeesList.push(item);
-    });
-    
-      (this.data.endDate = new Date(
-        tmpBookingOn.getFullYear(),
-        tmpBookingOn.getMonth(),
-        tmpBookingOn.getDate(),
-        this.tmpEndDate.getHours(),
-        this.tmpEndDate.getMinutes(),
-        0
-      )),
-      (this.data.equipments = this.lstEquipment),
-      (this.data.requester = this.curUser.userName),
-      this.attendeesList.forEach((item) => {
-        this.tmpAttendeesList.push(item);
-      });
+    });    
     this.tmpAttendeesList.push(this.curUser);
 
     this.dialogRef.dataService
@@ -449,7 +424,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             res.save != null ? res.save.recID : res.update.recID;
           this.attQuantity =
             res.save != null ? res.save.attachments : res.update.attachments;
-
           if (this.attObjectID && this.attQuantity > 0) {
             this.attachment.objectId = this.attObjectID;
             (await this.attachment.saveFilesObservable()).subscribe(
@@ -467,6 +441,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       });
   }
+
   UpdateAttendeesList() {
     this.attendeesList = [];
     if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
@@ -491,7 +466,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
     this.form.data.attendees = this.attendeesList.length + 1;
-    //this.form.FormGroup.patchValue({attendees:this.data.attendees});
     this.changeDetectorRef.detectChanges();
   }
   valueCbxUserChange(event?) {
@@ -564,8 +538,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         quantity: this.data.attendees,
         text: item.text,
         umid: item.dataSelected.UMID,
-        objectType: item.objectType,
-        objectID:''
+        objectType: "EP_Stationery",
+        objectID:'',
       };
       this.lstStationery.push(tempStationery);
     });
@@ -651,32 +625,22 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   valueDateChange(event: any) {
     if (event.data) {
-      this.data.bookingOn = event.data.fromDate;
-      let selectDate=new Date(this.data.bookingOn);
-      let crrDate = new Date();
-      if (selectDate.getFullYear()< crrDate.getFullYear()) {
-        this.checkLoop=!this.checkLoop;
-        if(!this.checkLoop){
-          this.notificationsService.notifyCode('EP003');
-          return;
-        }
-      } 
-      else if (selectDate.getMonth()< crrDate.getMonth()) {
-        this.checkLoop=!this.checkLoop;
-        if(!this.checkLoop){
-          this.notificationsService.notifyCode('EP003');
-          return;
-        }
-      } 
-      else if (selectDate.getDate()< crrDate.getDate()) {
-        this.checkLoop=!this.checkLoop;
-        if(!this.checkLoop){
-          this.notificationsService.notifyCode('EP003');
-          return;
-        }
-      }     
+      this.data.bookingOn = event.data.fromDate;  
+      this.bookingOnCheck();              
     }
   } 
+  bookingOnCheck(){
+    let selectDate=new Date(this.data.bookingOn);    
+    let tmpCrrDate =new Date(); 
+    let crrDate = new Date(tmpCrrDate.getFullYear(),tmpCrrDate.getMonth(),tmpCrrDate.getDate());
+    if (selectDate < crrDate) {
+      this.checkLoop=!this.checkLoop;
+      if(!this.checkLoop){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      }
+    } 
+  }
   valueAttendeesChange(event:any){
     if(event?.data){
       this.fGroupAddBookingRoom.patchValue({attendees:event.data});
@@ -692,7 +656,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (this.data?.bookingOn) {
         if (!isNaN(this.beginHour) && !isNaN(this.beginMinute)) {
           let tmpDay = new Date(this.data?.bookingOn);
-          this.tmpStartDate = new Date(
+          this.data.startDate = new Date(
             tmpDay.getFullYear(),
             tmpDay.getMonth(),
             tmpDay.getDate(),
@@ -729,7 +693,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (this.data?.bookingOn) {
         if (!isNaN(this.endHour) && !isNaN(this.endMinute)) {
           let tmpDay = new Date(this.data?.bookingOn);
-          this.tmpEndDate = new Date(
+          this.data.endDate = new Date(
             tmpDay.getFullYear(),
             tmpDay.getMonth(),
             tmpDay.getDate(),
@@ -748,7 +712,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     } else if (
       this.beginHour == this.endHour &&
-      this.beginMinute > this.endMinute
+      this.beginMinute >= this.endMinute
     ) {
       this.checkLoopE=!this.checkLoopE;
       if(!this.checkLoopE){
@@ -776,6 +740,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.isPopupCbb = !this.isPopupCbb;
   }
   checkOpenCbbPopup = 0;
+  
   getDataUserInCbb(event) {
     this.checkOpenCbbPopup++;
     if (event?.dataSelected) {
