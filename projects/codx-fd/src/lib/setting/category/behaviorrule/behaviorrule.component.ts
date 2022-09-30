@@ -6,6 +6,7 @@ import { LayoutService } from '@shared/services/layout.service';
 import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxFormDynamicComponent, CodxGridviewComponent, NotificationsService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-behaviorrule',
@@ -14,7 +15,7 @@ import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 })
 export class BehaviorruleComponent implements OnInit {
 
-  funcID = 'FDS0123';
+  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;
@@ -47,8 +48,12 @@ export class BehaviorruleComponent implements OnInit {
     private mwpService: CodxMwpService,
     private authStore: AuthStore,
     private callfc: CallFuncService,
+    private route: ActivatedRoute,
   ) {
     this.user = this.authStore.get();
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
   }
   button: Array<ButtonModel> = [{
     id: '1',

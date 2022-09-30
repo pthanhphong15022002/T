@@ -14,7 +14,7 @@
         <codx-label fiedName="UserID" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
           default="Mã người dùng">
         </codx-label>
-        <codx-input field="userID" type="text" [disabled]="true"
+        <codx-input field="userID" type="text" [disabled]="formType == 'edit' ? true : false"
           [crrValue]="adUser.userID" >
         </codx-input>
       </div>
