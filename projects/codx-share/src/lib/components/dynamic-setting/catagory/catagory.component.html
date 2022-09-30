@@ -92,7 +92,7 @@
                   ? 'width: 200px'
                   : ''
               "
-              [type]="data.controlType == 'TextBox' ? 'text' : data.controlType"
+              [type]="data | type"
               [name]="data.controlType"
               placeholder=""
               ngDefaultControl
@@ -110,7 +110,7 @@
                   ? !autoDefault[data.fieldName].stop
                   : dataValue[data.fieldName] || ''
               "
-              (valueChange)="valueChange($event, data.fieldName, autoDefault)"
+              (valueChange)="valueChange($event, data, autoDefault)"
             >
             </codx-input>
           </ng-container>
@@ -126,7 +126,7 @@
                   ? !autoDefault[data.fieldName].stop
                   : false
               "
-              (valueChange)="valueChange($event, data.fieldName, autoDefault)"
+              (valueChange)="valueChange($event, data, autoDefault)"
             >
             </codx-input>
             <codx-label
@@ -140,16 +140,46 @@
               (click)="
                 autoDefault &&
                   autoDefault[data.fieldName] &&
-                  openPopup(
-                    $event,
-                    'cpnAutoNumbers',
-                    data.fieldName,
-                    data.recID
-                  )
+                  openPopup($event, data, 'cpnAutoNumbers')
               "
               ><span class="w-30px d-flex justify-content-center"
                 ><span class="icon-edit-one icon-20"></span></span
             ></a>
+          </ng-container>
+          <ng-container *ngIf="data.category == '5'">
+            <codx-input
+              type="checkbox"
+              name="checkbox"
+              class="check-circle"
+              placeholder=""
+              field="isAlert"
+              [crrValue]="
+                alertRules && alertRules[data.fieldName]
+                  ? alertRules[data.fieldName].isAlert
+                  : false
+              "
+              (valueChange)="valueChange($event, data, null)"
+            >
+            </codx-input>
+            <codx-label name="lblAlert" formName="Settings" default="Thông báo">
+            </codx-label>
+
+            <codx-input
+              type="checkbox"
+              name="checkbox"
+              placeholder=""
+              class="check-circle"
+              field="isMail"
+              [crrValue]="
+                alertRules && alertRules[data.fieldName]
+                  ? alertRules[data.fieldName].isMail
+                  : false
+              "
+              (valueChange)="valueChange($event, data, null)"
+            >
+            </codx-input>
+            <codx-label name="lblEmail" formName="Settings" default="Email">
+            </codx-label>
           </ng-container>
           <div class="w-30px setting-btnright ms-2">
             <a
@@ -169,12 +199,15 @@
             ></a>
             <a
               href="javascript:void(0)"
-              (click)="
-                openPopup($event, data.reference, data.fieldName, data.recID)
-              "
+              (click)="openPopup($event, data)"
               *ngIf="data.displayMode === '2'"
               ><span class="w-30px d-flex justify-content-center"
-                ><span class="icon-edit-one icon-20"></span></span
+                ><span
+                  class="icon-20"
+                  [ngClass]="
+                    data.category == '5' ? 'icon-email' : 'icon-edit-one'
+                  "
+                ></span></span
             ></a>
             <a
               href="javascript:void(0)"

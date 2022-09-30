@@ -57,25 +57,28 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
       });
   }
   onSaveStatusPolicy(data, item) {
-    this.api
-      .execSv<any>(
-        'FD',
-        'ERM.Business.FD',
-        'WalletsBusiness',
-        'OnSavePolicySettingWalletAsync',
-        [item.recID]
-      )
-      .subscribe((res) => {
-        if (res) this.notification.notifyCode('SYS007');
-        else {
-          for (let i = 0; i < this.policyDedicationList.length; i++) {
-            if (this.policyDedicationList[i].recID == item.recID)
-              this.policyDedicationList[i].actived = false;
-          }
-          this.change.detectChanges();
-          this.notification.notifyCode('SYS021');
-        }
-      });
+    if (data && item) {
+      this.api
+        .execSv<any>(
+          'FD',
+          'ERM.Business.FD',
+          'WalletsBusiness',
+          'OnSavePolicySettingWalletAsync',
+          [item.recID]
+        )
+        .subscribe((res) => {
+          this.refreshActive(item);
+        });
+    }
+  }
+
+  refreshActive(item) {
+    var dt = JSON.parse(JSON.stringify(this.policyDedicationList));
+    dt.forEach((obj) => {
+      if (obj.recID == item.recID) obj.actived = !item.actived;
+    });
+    this.policyDedicationList = dt;
+    this.change.detectChanges();
   }
 
   LoadDetailPolicy(recID) {

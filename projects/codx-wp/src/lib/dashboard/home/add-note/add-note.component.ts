@@ -34,9 +34,7 @@ import {
   NoteType,
 } from '@shared/models/notes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { editAreaClick } from '@syncfusion/ej2-angular-richtexteditor';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { DatePipe } from '@angular/common';
 import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
 import { NoteServices } from '../../../services/note.services';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
