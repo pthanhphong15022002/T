@@ -241,23 +241,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
       );
       return;
     }
-    if (
-      this.data.startDate &&
-      this.data.endDate
-    ) {
-      let hours = parseInt(
-        (
-          (this.data.endDate -
-            this.data.startDate) /
-          1000 /
-          60 /
-          60
-        ).toFixed()
-      );
+    if (this.data.startDate!=null && this.data.endDate!=null && this.data.startDate >= this.data.endDate) {
+      let hours = parseInt(((this.data.endDate -this.data.startDate)/1000/60/60).toFixed());
       if (!isNaN(hours) && hours > 0) {
-        this.data.hours= hours;
+        this.data.hours = hours;
       }
-    }
+    } else {
+      this.notificationsService.notifyCode('EP003');
+      return;
+    }    
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
@@ -269,16 +261,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.lstPeople.forEach((people) => {
       this.attendeesList.push(people);
     });
-    
-    // if (this.data.value.resourceID instanceof Object) {
-    //   this.data.resourceID= this.data.value.resourceID[0];
-    // }
-    // if (this.data.value.agencyName instanceof Object) {
-    //   this.data.agencyName= this.data.value.agencyName[0];
-    // }
-    // if (this.data.value.reasonID instanceof Object) {
-    //   this.data.reasonID= this.data.value.reasonID[0];
-    // }
+    this.attendeesList.push(this.driver);
     this.data.stopOn = this.data.endDate;
     this.data.bookingOn= this.data.startDate;
     this.data.category= '2';
@@ -297,9 +280,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
         }
       });
     this.detectorRef.detectChanges();
-  }
-  buttonClick(e: any) {
-    //console.log(e);
   }
   valueChange(event) {
     if (event?.field) {
@@ -370,17 +350,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  // valueCbxDriverChange(event) {
-  //   this.driver= event.data.dataSelected[0];
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
-  // changeTime(data) {
-  //   if (!data.field || !data.data) return;
-  //   this.data.patchValue({
-  //     [data['field']]: data.data.fromDate,
-  //   });
-  // }
   openPopupDevice(template: any) {
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();

@@ -49,21 +49,10 @@
             <codx-input field="bookingOn" [crrValue]="data.bookingOn" format="d" type="datetime" class="test-datetime"
               (valueChange)="valueDateChange($event)">
             </codx-input>
-            <!-- <codx-input type="datetime" class="form-control test-datetime" format="d" field="bookingOn"
-              [crrValue]="data?.bookingOn" (valueChange)="valueDateChange($event)">
-            </codx-input> -->
           </div>
           <div class="col-3 form-group">
             <codx-label fiedName="StartDate" aria-disabled="false" [formModel]="form.formModel">
             </codx-label>
-            <!-- <codx-input   
-              format="t"       
-              ControlName="startDate"
-              [formModel]="form.formModel" 
-              [Group]="form.formGroup"  
-              (valueChange)="valueStartTimeChange($event)"
-            >
-            </codx-input> -->
             <codx-input type="datetime" class="test-datetime" field="startTime" [crrValue]="startTime" format="t"
               (valueChange)="valueStartTimeChange($event)">
             </codx-input>
@@ -86,13 +75,6 @@
         <div class="form-group">
           <codx-label fiedName="ReasonID" [formModel]="form.formModel">
           </codx-label>
-          <!-- <codx-input
-            [refValue]="'EP_BookingRooms'"
-            ControlName="reasonID"  
-            [formModel]="form.formModel"  
-            [Group]="form.formGroup"          
-          >
-          </codx-input> -->
           <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup">
           </codx-input>
         </div>
@@ -159,17 +141,7 @@
             </div>
           </div>
       
-          <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
-            <!-- <div class="symbol-group"  *ngIf="hostUser!=null" >
-              <div class="symbol symbol-30px symbol-circle">
-                <codx-img
-                  [objectId]="hostUser.userId"
-                  objectType="AD_Users"
-                ></codx-img>
-                <span class="symbol-badge  badge  badge-sm  badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white" ></span>
-              </div>
-            </div> -->
-      
+          <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">           
             <div class="symbol-group-badge" *ngIf="curUser != null">
               <div class="symbol symbol-30px symbol-circle">
                 <codx-img [width]="30" [objectId]="curUser?.userId" objectType="AD_Users"></codx-img>
@@ -346,7 +318,12 @@
     <div class="d-flex flex-stack mb-4 form-group" *ngFor="let item of lstStationery">
       <div class="d-flex align-items-center me-3">
         <div class="pe-4">
-          <codx-img [objectId]="item.id" objectType="EP_Stationery"></codx-img>
+          <codx-img
+              [objectId]="item.objectID"
+              imageType="square"
+              width="50"
+              objectType="EP_Stationery"
+            ></codx-img>
         </div>
         <div class="flex-grow-2">
           <span class="text-gray-800 text-hover-primary fw-bolder lh-0">{{
