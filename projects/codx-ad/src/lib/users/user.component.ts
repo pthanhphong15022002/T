@@ -147,10 +147,11 @@ export class UserComponent extends UIComponent {
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
-        // if (e?.event) {
-        //   e.event.modifiedOn = new Date();
-        //   this.view.dataService.update(e.event).subscribe();
-        // }
+        if (e?.event) {
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e.event).subscribe();
+          this.changeDetectorRef.detectChanges();
+        }
       });
     });
   }
@@ -184,10 +185,11 @@ export class UserComponent extends UIComponent {
         this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
         this.dialog.closed.subscribe((x) => {
           if (!x?.event) this.view.dataService.clear();
-          // if (x.event) {
-          //   x.event.modifiedOn = new Date();
-          //   this.view.dataService.update(x.event).subscribe();
-          // }
+          if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+            this.changeDetectorRef.detectChanges();
+          }
         });
       });
   }
@@ -210,12 +212,12 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      // this.dialog.closed.subscribe((x) => {
-      //   if (x.event) {
-      //     x.event.modifiedOn = new Date();
-      //     this.view.dataService.update(x.event).subscribe();
-      //   }
-      // });
+      this.dialog.closed.subscribe((x) => {
+        if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
     });
   }
 
