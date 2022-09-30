@@ -114,6 +114,21 @@ textarea.e-input,
   background-color: #f1f1fa;
 }
 
+.user-mini-icon.w-20px.h-20px {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+img.w-20px.h-20px {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
+}
+
 .rounded {
   border-radius: 0.475rem !important;
 }
@@ -587,4 +602,13 @@ codx-tmmeetings .toolbar {
 .e-splitter.e-splitter-horizontal,
 .e-splitter.e-splitter-vertical {
   border: 0;
+}
+
+.user-mini-nav-custom {
+  height: 24px;
+  padding: 2px 8px 2px 2px !important;
+  border-radius: 20px;
+  margin-bottom: 3px;
+  background-color: #f3f3f3;
+  margin-right: 10px;
 }
