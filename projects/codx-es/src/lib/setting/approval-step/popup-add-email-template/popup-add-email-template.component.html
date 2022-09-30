@@ -983,7 +983,14 @@
             >
             </codx-input>
           </div>
-          <div class="d-flex align-items-center me-3" *ngIf="showIsPublish">
+          <div
+            class="d-flex align-items-center me-3"
+            [style.visibility]="
+              showIsPublish && dialogETemplate.value.isTemplate == true
+                ? 'visible'
+                : 'hidden'
+            "
+          >
             <label class="ms-2 me-2">
               <codx-label [formModel]="formModel" fiedName="IsPublish">
               </codx-label>
@@ -1011,7 +1018,12 @@
           </div>
         </div>
         <div class="">
-          <div class="d-flex align-items-center">
+          <div
+            class="d-flex align-items-center"
+            [style.visibility]="
+              dialogETemplate.value.sendLater == true ? 'visible' : 'hidden'
+            "
+          >
             <label class="mt-1 me-2">
               <codx-label
                 default="Gửi vào lúc"
@@ -1028,7 +1040,6 @@
                 field="sendTime"
                 [crrValue]="dialogETemplate.value.sendTime"
                 (valueChange)="valueChange($event)"
-                [disabled]="dialogETemplate.value.sendLater == false"
               ></codx-input>
             </div>
           </div>

@@ -77,7 +77,8 @@
           <codx-input
             type="text"
             field="categoryID"
-            [crrValue]="data.categoryID"
+            [formModel]="formModel"
+            [Group]="form.formGroup"
             disabled="true"
           >
           </codx-input>
@@ -155,6 +156,7 @@
             type="text"
             name="text"
             [crrValue]="viewAutoNumber"
+            [formModel]="formModel"
             disabled="true"
           >
           </codx-input>

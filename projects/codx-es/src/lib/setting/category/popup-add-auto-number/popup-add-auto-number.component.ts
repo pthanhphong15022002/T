@@ -221,6 +221,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       stringFormat = stringFormat.replace('Số', strNumber);
     }
     this.viewAutoNumber = stringFormat;
+    console.log(this.viewAutoNumber);
+
     this.cr.detectChanges();
   }
 

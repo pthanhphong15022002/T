@@ -106,12 +106,12 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     // this.email = {
     //   templateID: '8bd48f33-b31e-ed11-9449-00155d035517',
     // };
-    this.templateID = data?.data.templateID;
+    this.templateID = data?.data?.templateID;
     console.log(this.templateID);
 
-    this.showIsPublish = data.data?.showIsPublish;
-    this.showIsTemplate = data.data?.showIsTemplate;
-    this.showSendLater = data.data?.showSendLater;
+    this.showIsPublish = data.data?.showIsPublish ?? true;
+    this.showIsTemplate = data.data?.showIsTemplate ?? true;
+    this.showSendLater = data.data?.showSendLater ?? true;
 
     this.renderer.listen('window', 'click', (e: Event) => {
       if (this.isInside == false && this.show == true) {

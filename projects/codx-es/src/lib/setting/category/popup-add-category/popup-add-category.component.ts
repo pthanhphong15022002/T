@@ -472,6 +472,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           stringFormat = stringFormat.replace('Số', strNumber);
         }
         this.viewAutoNumber = stringFormat;
+        console.log('form cate', this.viewAutoNumber);
       });
     });
   }
