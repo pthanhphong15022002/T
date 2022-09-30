@@ -9,18 +9,24 @@ import { DialogData, DialogRef, UIComponent } from 'codx-core';
 export class AddGiftsComponent extends UIComponent implements OnInit {
   formModel: any;
   dialog!: DialogRef;
-  onHandForm: any;
   dataUpdate: any;
   formType: any;
   header: 'Thêm quà tặng';
 
-  constructor(private injector: Injector, 
+  constructor(
+    private injector: Injector,
     private dt: DialogRef,
-    private data: DialogData,
-    ) {
+    private data: DialogData
+  ) {
     super(injector);
     this.dialog = dt;
-    this.dataUpdate = JSON.parse(JSON.stringify(this.dialog.dataService.dataSelected));
+    this.dataUpdate = JSON.parse(
+      JSON.stringify(this.dialog.dataService.dataSelected)
+    );
+    // if (!this.dialog.dataService.formModel.entityName)
+    //   this.dialog.dataService.formModel.entityName =
+    //     this.dialog.dataService.formModel.entityPer;
+    this.formModel = this.dialog.dataService.formModel;
     debugger;
   }
 
