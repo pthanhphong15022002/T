@@ -118,8 +118,6 @@ export class SettingComponent extends UIComponent implements OnInit {
     this.detectorRef.detectChanges();
   }
 
-  
-  
   scroll(el: HTMLElement, numberActive) {
     if (el)
       el.scrollIntoView({

@@ -178,7 +178,7 @@ export class CatagoryComponent implements OnInit {
           var rule = this.alertRules[value];
           if (!rule) return;
           data['formGroup'] = null;
-          data['templateID'] = rule.recID;
+          data['templateID'] = rule.emailTemplate;
           // data['showIsTemplate'] = null;
           // data['showIsPublish'] = null;
           // data['showSendLater'] = null;
