@@ -104,26 +104,26 @@ export class FeedbackMessageComponent extends UIComponent implements OnInit {
     this.detectorRef.detectChanges();
   }
 
-  redirectPage(page) {
-    this.codxService.navigate('', 'fd/settings/FDS', { redirectPage: page });
+  redirectPage(page, number) {
+    this.codxService.navigate('', 'fd/settings/FDS', { redirectPage: page, index: number });
   }
 
   onSaveCMParameter(objectUpdate) {
-    // this.api
-    //   .callSv(
-    //     'SYS',
-    //     'ERM.Business.SYS',
-    //     'SettingValuesBusiness',
-    //     'SaveParamsOfPolicyAsync',
-    //     ['FDParameters', this.type, JSON.stringify(objectUpdate)]
-    //   )
-    //   .subscribe((res) => {
-    //     if (res && res.msgBodyData.length > 0) {
-    //       if (res.msgBodyData[0] === true) {
-    //         this.changedr.detectChanges();
-    //       }
-    //     }
-    //   });
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'SaveParamsOfPolicyAsync',
+        ['FDParameters', this.type, JSON.stringify(objectUpdate)]
+      )
+      .subscribe((res) => {
+        if (res && res.msgBodyData.length > 0) {
+          if (res.msgBodyData[0] === true) {
+            this.changedr.detectChanges();
+          }
+        }
+      });
   }
   changeLock(data) {
     this.isLockCoin = data.isLockCoin;

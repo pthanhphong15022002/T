@@ -59,6 +59,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   showTabComments = true;
   showTabMeetings = true;
   showButtonAdd = true;
+  showMoreFunc = true ;
 
 
   constructor(
@@ -131,6 +132,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
             this.getListUserByResource(this.resources);
           }
           this.showButtonAdd = false;
+          this.showMoreFunc = false;
         }
       });
     }

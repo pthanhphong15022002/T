@@ -48,11 +48,14 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
+  @Input() showMoreFunc = true;
+
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @Input() service = 'TM';
@@ -69,6 +72,7 @@ export class CodxTasksComponent
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView!: TemplateRef<any>;
+  @ViewChild('footerNone') footerNone!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
   // @ViewChild('treeView') treeView!: TreeViewComponent;
@@ -152,7 +156,7 @@ export class CodxTasksComponent
     });
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+    if (this.funcID == 'TMT0203') this.isAssignTask = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     //chay code chet cho nhanh, muon dong thi bat len
     // this.cache.functionList(this.funcID).subscribe(f => {
     //   if (f) {
@@ -190,7 +194,7 @@ export class CodxTasksComponent
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
       this.modelResource.method = 'GetListUserByResourceAsync';
-      this.modelResource.dataValue = this.dataObj?.resources
+      this.modelResource.dataValue = this.dataObj?.resources;
     }
 
     this.resourceKanban = new ResourceModel();
@@ -287,6 +291,7 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
+          template7:this.footerNone,
           template4: this.resourceHeader,
           template: this.eventTemplate,
           template3: this.cellTemplate,
@@ -312,7 +317,7 @@ export class CodxTasksComponent
         // },
         model: {
           // template: this.treeView,
-          panelLeftRef: this.treeView
+          panelLeftRef: this.treeView,
         },
       },
     ];
@@ -809,8 +814,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -965,7 +970,7 @@ export class CodxTasksComponent
     // }
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1079,7 +1084,6 @@ export class CodxTasksComponent
           this.countResource = res.length;
           p.open();
           this.popoverCrr = p;
-
         }
       });
   }
@@ -1500,13 +1504,29 @@ export class CodxTasksComponent
 
   onActions(e: any) {
     if (e.type === 'dbClick') {
+      this.viewTask(e?.data);
+      // let option = new SidebarModel();
+      // option.DataService = this.view?.dataService;
+      // option.FormModel = this.view?.formModel;
+      // option.Width = '800px';
+      // this.callfc.openSide(
+      //   PopupAddComponent,
+      //   [e?.data, 'view', this.isAssignTask],
+      //   option
+      // );
+    }
+  }
+
+  viewTask(data) {
+    if (data) {
+      var isAssignTask = data?.category == '3';
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [e?.data, 'view', this.isAssignTask],
+        [data, 'view', isAssignTask],
         option
       );
     }

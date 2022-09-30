@@ -293,3 +293,13 @@ ejs-switch .form-control {
 .e-splitter.e-splitter-vertical {
   border: 0;
 }
+
+.pic-file.h-140px {
+  height: 140px;
+  overflow: hidden;
+}
+
+.pic-file.h-140px img.w-auto {
+  width: 100% !important;
+  height: auto !important;
+}

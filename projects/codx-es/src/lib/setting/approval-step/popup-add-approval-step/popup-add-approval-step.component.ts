@@ -261,14 +261,13 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  checkedOnlineChange(event) { }
+  checkedOnlineChange(event) {}
 
   openSetupEmail(email) {
     if (email?.isEmail == '1') {
       let data = {
-        dialog: this.dialog,
         formGroup: this.dialogApprovalStep,
-        dialogEmail: email,
+        templateID: email?.templateID,
         showIsTemplate: true,
         showIsPublish: true,
         showSendLater: true,

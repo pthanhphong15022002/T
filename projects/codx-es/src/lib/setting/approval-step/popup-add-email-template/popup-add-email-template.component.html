@@ -324,7 +324,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-between border-bottom mt-4">
-      <div class="d-flex align-items-center flex-grow-1">
+      <div class="w-100">
         <codx-input
           type="text"
           class="borderless"
@@ -438,6 +438,7 @@
     <div
       #textarea
       class="request-box d-flex justify-content-between mt-4 h-250px"
+      (click)="click()"
     >
       <div class="message w-100" (click)="getPosition()">
         <codx-input
@@ -1027,6 +1028,7 @@
                 field="sendTime"
                 [crrValue]="dialogETemplate.value.sendTime"
                 (valueChange)="valueChange($event)"
+                [disabled]="dialogETemplate.value.sendLater == false"
               ></codx-input>
             </div>
           </div>

@@ -8,7 +8,7 @@
                 </div>
                 <div class="form-group">
                     <codx-label name="lblTitle" formName="Notes" default="Tiêu đề"></codx-label>
-                    <codx-input type="text" field="title" placeholder="" [crrValue]="note?.title"
+                    <codx-input type="text" field="title" placeholder="" [crrValue]="note?.title || ''"
                         (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
@@ -36,7 +36,7 @@
                     <div *ngIf="formType == 'add'">
                         <div *ngIf="type == 'text'">
                             <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
-                                [crrValue]="empty" placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)"
+                                [crrValue]="empty || ''" placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)"
                                 ngDefaultControl field="memo">
                             </codx-input>
                         </div>
@@ -44,7 +44,7 @@
                             <ng-container *ngFor="let item of listNote; index as i">
                                 <div class="flex align-items-center">
                                     <ng-container *ngIf="type == 'check'; else list">
-                                        <codx-input #noteAddText type="checkBox" [crrValue]="item?.status"
+                                        <codx-input #noteAddText type="checkBox" [crrValue]="item?.status || ''"
                                             field="status" labelPosition="Before" class="test-check"
                                             (valueChange)="valueChange($event, item, i)">
                                         </codx-input>
@@ -55,7 +55,7 @@
                                     <div class="w-100" #txtNoteEdit name="txtTodoEdit">
                                         <codx-input #txtNoteEdit type="text" name="txtTodoEdit"
                                             class="test-textbox border-0 input-note" (keyUpEnter)="onUpdateNote($event)"
-                                            [crrValue]="item?.listNote" field="listNote"
+                                            [crrValue]="item?.listNote || ''" field="listNote"
                                             (valueChange)="valueChange($event, item, i)" placeholder="Nhập ghi chú...">
                                         </codx-input>
                                     </div>
