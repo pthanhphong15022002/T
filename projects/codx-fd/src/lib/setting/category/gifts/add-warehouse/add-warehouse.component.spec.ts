@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BehaviorruleComponent } from './behaviorrule.component';
+import { AddWarehouseComponent } from './add-warehouse.component';
 
-describe('BehaviorruleComponent', () => {
-  let component: BehaviorruleComponent;
-  let fixture: ComponentFixture<BehaviorruleComponent>;
+describe('AddWarehouseComponent', () => {
+  let component: AddWarehouseComponent;
+  let fixture: ComponentFixture<AddWarehouseComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BehaviorruleComponent ]
+      declarations: [ AddWarehouseComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BehaviorruleComponent);
+    fixture = TestBed.createComponent(AddWarehouseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

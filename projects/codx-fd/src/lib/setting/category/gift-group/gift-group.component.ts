@@ -1,19 +1,5 @@
-import { ActivatedRoute } from '@angular/router';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Observable, Subject } from 'rxjs';
-import {
-  ApiHttpService,
-  CodxGridviewComponent,
-  NotificationsService,
-  ViewsComponent,
-  AuthStore,
-  ButtonModel,
-  ViewModel,
-  ViewType,
-  UIComponent,
-  SidebarModel,
-  DialogRef,
-} from 'codx-core';
+import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import {
   Component,
@@ -25,61 +11,84 @@ import {
   TemplateRef,
   ContentChild,
   Injector,
+  EventEmitter,
+  Output,
 } from '@angular/core';
+import { LayoutService } from '@shared/services/layout.service';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  AuthStore,
+  ButtonModel,
+  CodxGridviewComponent,
+  DialogRef,
+  ImageViewerComponent,
+  NotificationsService,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
-import { AddBehaviorComponent } from './add-behavior/add-behavior.component';
+import { ActivatedRoute } from '@angular/router';
+import { AddGiftGroupComponent } from './add-gift-group/add-gift-group.component';
+import { SettingService } from '../../setting.service';
 
 @Component({
-  selector: 'app-behavior',
-  templateUrl: './behavior.component.html',
-  styleUrls: ['./behavior.component.scss'],
+  selector: 'app-gift-group',
+  templateUrl: './gift-group.component.html',
+  styleUrls: ['./gift-group.component.scss'],
 })
-export class BehaviorComponent extends UIComponent implements OnInit {
+export class GiftGroupComponent extends UIComponent implements OnInit {
   funcID = '';
-  dataItem: any;
   views: Array<ViewModel> = [];
+  dataItem: any;
   userPermission: any;
   showHeader: boolean = true;
   user: any;
   userName = '';
-  addEditForm: FormGroup;
-  isAddMode = true;
-  valueTrue = true;
-  predicate = 'Category=@0 and IsGroup = @1';
-  dataValue = '1;false';
-  entityName = 'BS_Competences';
-  parentName = '';
+  functionList: any;
   button?: ButtonModel;
   dialog: DialogRef;
+  moreFuncs = [
+    {
+      id: 'btnEdit',
+      icon: 'icon-list-checkbox',
+      text: 'Chỉnh sửa',
+    },
+    {
+      id: 'btnDelete',
+      icon: 'icon-list-checkbox',
+      text: 'Xóa',
+    },
+  ];
 
-  @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
-  @ViewChild('competenceName', { static: true })
-  competenceName: TemplateRef<any>;
-  @ViewChild('parentNameR', { static: true }) parentNameR: TemplateRef<any>;
-  @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
   @ViewChild('createdOn', { static: true }) createdOn: TemplateRef<any>;
+  @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
   @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
+  @ViewChild('viewbase') viewbase: ViewsComponent;
+  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
 
-  myModel = {
-    template: null,
-  };
   constructor(
-    private injector: Injector,
-    private notificationsService: NotificationsService,
     private changedr: ChangeDetectorRef,
     private authStore: AuthStore,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    injector: Injector
   ) {
     super(injector);
     this.user = this.authStore.get();
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
     });
   }
   columnsGrid = [];
@@ -88,24 +97,21 @@ export class BehaviorComponent extends UIComponent implements OnInit {
       id: 'btnAdd',
     };
     this.columnsGrid = [
+      { field: 'giftID', headerText: 'Mã đơn', width: 50 },
+      { field: 'giftName', headerText: 'Tên nhóm quà tặng', width: 150 },
+      { field: 'memo', headerText: 'Mô tả', template: this.memo, width: 150 },
       {
-        field: 'parentName',
-        headerText: 'Quy tắc',
-        template: this.parentNameR,
-      },
-      { field: 'competenceID', headerText: 'Mã hành vi' },
-      {
-        field: 'competenceName',
-        headerText: 'Mô tả',
-        template: this.competenceName,
-      },
-      { field: 'memo', headerText: 'Ghi chú', template: this.memo },
-      {
-        field: 'createName',
+        field: 'createBy',
         headerText: 'Người tạo',
         template: this.itemCreateBy,
+        width: 200,
       },
-      { field: 'createdOn', headerText: 'Ngày tạo', template: this.createdOn },
+      {
+        field: 'createdOn',
+        headerText: 'Ngày tạo',
+        template: this.createdOn,
+        width: 100,
+      },
     ];
     this.changedr.detectChanges();
   }
@@ -122,18 +128,27 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     ];
     this.changedr.detectChanges();
   }
+  headerStyle = {
+    textAlign: 'center',
+    backgroundColor: '#F1F2F3',
+    fontWeight: 'bold',
+    border: 'none',
+  };
 
-  valueChange(e) {
-    if (e) {
-      var field = e.field;
-      var dt = e.data;
-      if (field === 'stop') this.addEditForm.patchValue({ stop: dt.checked });
-      else {
-        var obj = {};
-        obj[field] = dt?.value ? dt.value : dt;
-        this.addEditForm.patchValue(obj);
-      }
-    }
+  columnStyle = {
+    border: 'none',
+    fontSize: '13px !important',
+    fontWeight: 400,
+    lineHeight: 1.4,
+  };
+
+  PopoverEmpEnter(p: any, dataItem) {
+    this.dataItem = dataItem;
+    p.open();
+  }
+
+  PopoverEmpLeave(p: any) {
+    p.close();
   }
 
   add() {
@@ -142,10 +157,10 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddBehaviorComponent, obj, option);
+      this.dialog = this.callfc.openSide(AddGiftGroupComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
           this.view.dataService.add(e.event, 1).subscribe();
@@ -164,10 +179,10 @@ export class BehaviorComponent extends UIComponent implements OnInit {
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(AddBehaviorComponent, obj, option);
+        this.dialog = this.callfc.openSide(AddGiftGroupComponent, obj, option);
         this.dialog.closed.subscribe((e) => {
           if (e?.event) {
             this.view.dataService.update(e.event).subscribe();
@@ -187,8 +202,8 @@ export class BehaviorComponent extends UIComponent implements OnInit {
   }
 
   beforeDelete(op: any, data) {
-    op.methodName = 'DeleteCompetencesAsync';
-    op.data = data?.competenceID;
+    op.methodName = 'DeleteGiftGroupAsync';
+    op.data = data?.giftID;
     return true;
   }
 

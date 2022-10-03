@@ -1,0 +1,36 @@
+<codx-views [views]="views" #view [funcID]="funcID" [entityName]="'BS_Competences'" (buttonClick)="add()"
+    [button]="button" service="BS" assemblyName="ERM.Business.BS" className="CompetencesBusiness"
+    method="LoadDataCompetencesAsync" [predicate]="'Category=@0 and IsGroup = @1'" [dataValue]="'1;true'"
+    entityName="BS_Competences"></codx-views>
+
+<ng-template #itemCreateBy let-dataItem>
+    <div class="d-flex align-items-center" #itemCreateBy>
+        <div class="h-30 w-30">
+            <codx-img class="symbol symbol-30px symbol-circle me-4" [objectId]="dataItem.createdBy" [width]="30"
+                objectType="AD_Users">
+            </codx-img>
+        </div>
+        <div *ngIf="dataItem.createName == null; else other" class="text-dark font-size-lg">
+            {{ userName }}
+        </div>
+        <ng-template #other>
+            <span>{{ dataItem.createName }}</span>
+        </ng-template>
+    </div>
+</ng-template>
+
+<ng-template #competenceName let-item>
+    <span [innerHTML]="item.competenceName"></span>
+</ng-template>
+
+<ng-template #memo let-item>
+    <span [innerHTML]="item.memo"></span>
+</ng-template>
+
+<ng-template #createdOn let-item>
+    <div class="d-flex has-action-menu">
+        <span>{{ item.createdOn | date: "dd/MM/yyy" }}</span>
+        <codx-mfunc [dataItem]="item" [formModel]="view?.formModel" (clickMF)="clickMF($event, item)" type="hover">
+        </codx-mfunc>
+    </div>
+</ng-template>
