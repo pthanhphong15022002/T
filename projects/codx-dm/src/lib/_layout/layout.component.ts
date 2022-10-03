@@ -33,6 +33,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
   public titleHddUsed = 'Đã sử dụng 0MB trong tổng số 50.00 GB';
+  public Showtitle = true;
 
   @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
   @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
@@ -163,6 +164,15 @@ db.DM_FolderInfo.updateMany(
       this.titleHddUsed = item.messageHddUsed;
       this.changeDetectorRef.detectChanges();
     }    
+  }
+  ClickSowTitle(){
+    if(this.Showtitle==false)
+    {
+    this.Showtitle = false;
+    }else{
+      this.Showtitle = true;
+    }
+
   }
 
   getPercentClass() {

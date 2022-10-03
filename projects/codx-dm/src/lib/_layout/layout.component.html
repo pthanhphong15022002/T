@@ -20,7 +20,7 @@
             <div role="progressbar" attr.aria-valuenow="{{percentUsed}}" aria-valuemin="0" aria-valuemax="100"
               class="progress-bar" attr.style="width: {{percentUsed}}%"></div>
           </div>
-          <div class="mt-2 mx-6 text-light fw-normal fs-7">
+          <div class="mt-2 mx-6 text-light fw-normal fs-7" *a-ngIf="ShowTitle">
             {{ titleHddUsed }}
           </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="d-flex align-items-center flex-wrap mt-3">
               <div ngbDropdown class="nav-item dropdown mr-1">
                 <button ngbDropdownToggle [className]="setClassActive()" type="button" id="dropdownMenuButton"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="ClickSowTitle">
                   <span class="icon-dashboard icon-20"></span>
                 </button>
                 <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
