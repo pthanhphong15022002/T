@@ -79,7 +79,7 @@ export class AttachmentComponent implements OnInit {
   titleUpload = 'Tải lên';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
- 
+
   urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
@@ -156,7 +156,7 @@ export class AttachmentComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    
+
     this.user = this.auth.get();
     this.dialog = dialog;
     if (data?.data != null) {
@@ -207,11 +207,11 @@ export class AttachmentComponent implements OnInit {
           if (
             document
               .getElementsByName('UploadFiles')
-              [i].getAttribute('idbutton') == null
+            [i].getAttribute('idbutton') == null
           ) {
             document
               .getElementsByName('UploadFiles')
-              [i].setAttribute('idbutton', this.idBrowse);
+            [i].setAttribute('idbutton', this.idBrowse);
             break;
           }
         }
@@ -317,7 +317,7 @@ export class AttachmentComponent implements OnInit {
     if (status === 'File uploaded successfully') {
       this.uploadObj.remove(
         this.filesDetails[
-          this.filesList.indexOf(args.currentTarget.parentElement)
+        this.filesList.indexOf(args.currentTarget.parentElement)
         ]
       );
     } else {
@@ -444,7 +444,7 @@ export class AttachmentComponent implements OnInit {
         pathFolder,
         pathID
       )
-      .subscribe((item) => {});
+      .subscribe((item) => { });
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async (res) => {
@@ -735,7 +735,7 @@ export class AttachmentComponent implements OnInit {
   }
 
   async onMultiFileSave() {
-    debugger;
+
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
@@ -757,7 +757,7 @@ export class AttachmentComponent implements OnInit {
         .toPromise()
         .then((res) => {
           if (res != null) {
-            debugger;
+
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
@@ -1094,7 +1094,7 @@ export class AttachmentComponent implements OnInit {
     try {
       //  var item = await isAllowAddFileAsync();
       var uploadFile = fileItem.item.rawFile;
-      var appName = environment.appName ; // Tam thoi de hard
+      var appName = environment.appName; // Tam thoi de hard
       fileItem = await this.serviceAddFile(fileItem);
       if (isAddFile) this.addFile(fileItem);
 
@@ -1262,7 +1262,7 @@ export class AttachmentComponent implements OnInit {
       });
   }
 
-  closeFileDialog(form): void {}
+  closeFileDialog(form): void { }
 
   arrayBufferToBase64(buffer) {
     var binary = '';
@@ -2852,12 +2852,10 @@ export class AttachmentComponent implements OnInit {
   handleDeleteCount(e: any) {
     this.fileCount.emit(e);
   }
-  handleView(e:any)
-  {
+  handleView(e: any) {
     this.viewFile.emit(e);
   }
-  handleDelete(e:any)
-  {
+  handleDelete(e: any) {
     this.fileDelete.emit(e);
   }
 }

@@ -326,7 +326,7 @@ export class CatagoryComponent implements OnInit {
   }
 
   click($event: any) {
-    debugger;
+
     var dt = this.settingValue.find((x) => x.category == this.category);
     dt.dataValue = JSON.stringify(this.dataValue);
     this.api

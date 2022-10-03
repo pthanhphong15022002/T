@@ -238,7 +238,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(data?) {
-    debugger;
+
     if (data) {
       this.view.dataService.dataSelected = data;
     }

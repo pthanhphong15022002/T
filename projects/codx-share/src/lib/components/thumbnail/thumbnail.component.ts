@@ -47,7 +47,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
   ngOnInit(): void {
     // this.files = JSON.parse(this.data);
-   // this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.detectChanges();
     this.dmSV.isFileEditing.subscribe(item => {
       if (item != undefined) {
         if (this.files.length > 0) {
@@ -148,7 +148,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
               this.changeDetectorRef.detectChanges();
             }
           }
-        }       
+        }
       }
     })
   }
@@ -158,18 +158,18 @@ export class ThumbnailComponent implements OnInit, OnChanges {
       var id = file.recID;
       var that = this;
       if (this.checkDownloadRight(file)) {
-        debugger;
+
         this.fileService.downloadFile(id).subscribe(async res => {
           if (res) {
             fetch(res)
-            .then(response => response.blob())
-            .then(blob => {
-              const link = document.createElement("a");
-              link.href = URL.createObjectURL(blob);
-              link.download = file.fileName;
-              link.click();
-            })
-            .catch(console.error);
+              .then(response => response.blob())
+              .then(blob => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = file.fileName;
+                link.click();
+              })
+              .catch(console.error);
           }
         });
       }

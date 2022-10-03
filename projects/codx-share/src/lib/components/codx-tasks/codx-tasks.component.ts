@@ -71,8 +71,6 @@ export class CodxTasksComponent
   @ViewChild('treeView') treeView!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
-  // @ViewChild('treeView') treeView!: TreeViewComponent;
-
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
 
@@ -235,7 +233,6 @@ export class CodxTasksComponent
     this.viewMode = this.dataObj?.viewMode;
     this.views = [
       {
-        id: '1',
         type: ViewType.list,
         active: false,
         sameData: true,
@@ -244,7 +241,6 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '2',
         type: ViewType.listdetail,
         active: false,
         sameData: true,
@@ -254,7 +250,6 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '6',
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -265,7 +260,6 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '7',
         type: ViewType.calendar,
         active: false,
         sameData: true,
@@ -278,7 +272,6 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '8',
         type: ViewType.schedule,
         active: false,
         sameData: false,
@@ -314,19 +307,8 @@ export class CodxTasksComponent
           // template: this.treeView,
           panelLeftRef: this.treeView
         },
-      },
+      }
     ];
-
-    // var viewDefaultID = '2';
-    // if (this.viewMode && this.viewMode.trim() != '') {
-    //   viewDefaultID = this.viewMode;
-    // }
-    // this.viewsActive.forEach((obj) => {
-    //   if (obj.id == viewDefaultID) {
-    //     obj.active = true;
-    //   }
-    // });
-    // this.views = this.viewsActive;
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
@@ -967,16 +949,14 @@ export class CodxTasksComponent
 
   requestEnded(evt: any) { }
 
-  onDragDrop(e: any) {
-    if (e.type == 'drop') {
-      this.api
-        .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data)
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.update(e.data);
-          }
-        });
-    }
+  onDragDrop(data) {
+    this.api
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.update(data);
+        }
+      });
   }
 
   //update Status of Tasks
@@ -1499,16 +1479,21 @@ export class CodxTasksComponent
   }
 
   onActions(e: any) {
-    if (e.type === 'dbClick') {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      this.callfc.openSide(
-        PopupAddComponent,
-        [e?.data, 'view', this.isAssignTask],
-        option
-      );
+    switch (e.type) {
+      case "drop":
+        this.onDragDrop(e.data);
+        break;
+      case "dbClick":
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        this.callfc.openSide(
+          PopupAddComponent,
+          [e?.data, 'view', this.isAssignTask],
+          option
+        );
+        break;
     }
   }
   //#endregion

@@ -279,7 +279,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         ['FDParameters', this.typeCard, JSON.stringify(objectUpdate)]
       )
       .subscribe((res) => {
-        debugger;
+
         if (res && res.msgBodyData[0]) {
           if (res.msgBodyData[0] == true) {
             this.notificationsService.notify('Hệ thống thực thi thành công!');
@@ -321,7 +321,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   setValueListName(list) {
     if (!list) return;
     var item;
-    if(list?.dataValue)
+    if (list?.dataValue)
       item = JSON.parse(list.dataValue);
     else item = list;
     const isActiveCoins = item.hasOwnProperty('ActiveCoins');
