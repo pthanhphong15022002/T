@@ -40,32 +40,51 @@ codx-treeview .no-permission {
 }
 
 .d-flex {
-  display: flex!important;
+  display: flex !important;
 }
 
 .text-muted {
-  color: #91919f!important;
+  color: #91919f !important;
 }
 
 .icon-16 {
-  font-size: 16px!important;
-  line-height: 16px!important;
-  height: 16px!important;
-  width: 16px!important;
+  font-size: 16px !important;
+  line-height: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
 }
 
 .text-muted {
-  color: #91919f!important;
+  color: #91919f !important;
 }
 
-.tb-dm tbody {
-  display:block;
-  height: calc(100% - 107px);
-  overflow:auto;
-}
-.tb-dm thead, .tb-dm tbody tr {
-  display:table;
+// .tb-dm tbody {
+//   display: block;
+//   height: calc(100% - 107px);
+//   overflow: auto;
+// }
+
+.tb-dm thead,
+.tb-dm tbody tr {
+  display: table;
   height: 30px;
-  width:100%;
-  table-layout:fixed;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.dms-listview {
+
+  .table tr:first-child,
+  .table th:first-child,
+  .table td:first-child {
+    padding-left: 1rem;
+  }
+}
+
+.w-30 {
+  width: 30%;
+}
+
+.w-20 {
+  width: 20%;
 }
