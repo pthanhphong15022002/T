@@ -76,12 +76,16 @@
                   <div class="tmpTag-body">
                     <ng-container *ngFor="let tag of lstUserTag">
                       <div class="d-flex align-items-center mb-2" >
-                        <codx-img class="me-2" [width]="25" [imageType]="'circle'" [objectId]="tag.objectID"
+                        <codx-img 
+                          class="me-2" 
+                          [width]="30" 
+                          [imageType]="'circle'" 
+                          [objectId]="tag.objectID"
                           objectType="AD_Users">
                         </codx-img>
-                        <div class="text-dark">
+                        <span class="fw-bolder">
                           {{ tag.objectName }}
-                        </div>
+                        </span>
                       </div>
                     </ng-container>
                   </div>
@@ -129,12 +133,15 @@
                     </div>
                     <div class="tmpshare-body">
                       <div class="d-flex align-items-center mb-2" *ngFor="let share of lstUserShare">
-                        <codx-img class="me-2" [width]="25" [imageType]="'circle'" [objectId]="share.objectID"
+                        <codx-img class="me-2" 
+                          [width]="30" 
+                          [imageType]="'circle'" 
+                          [objectId]="share.objectID"
                           objectType="AD_Users">
                         </codx-img>
-                        <div class="text-dark">
+                        <span class="fw-bolder">
                           {{ share.objectName }}
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
