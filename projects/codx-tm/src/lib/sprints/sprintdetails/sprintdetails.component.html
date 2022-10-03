@@ -58,25 +58,6 @@
               </codx-label>
             </a>
           </ng-container>
-          <ng-container *ngFor="let item of tabControl; let i = index">
-            <li [ngbNavItem]="i + 1" class="nav-item">
-              <a ngbNavLink class="nav-link">
-                <codx-label
-                  [name]="'tab' + item.name"
-                  [formName]="'SYS'"
-                  [default]="item.textDefault || item.name"
-                >
-                </codx-label>
-              </a>
-      
-              <ng-template ngbNavContent>
-                <ng-container
-                  *ngTemplateOutlet="tab; context: { $implicit: item.name }"
-                >
-                </ng-container>
-              </ng-template>
-            </li>
-          </ng-container>
         </div>
       </div>
     </div>
@@ -104,7 +85,6 @@
         data-kt-scroll-wrappers=".page-content, .no-wrapper"
         [attr.data-kt-scroll-offset]="offset"
       >
-      <ng-template #tab let-name>
         <ng-container *ngIf="name == 'Dashboard'">
           <codx-sprintdetails-dashboard
             [projectID]="projectID"
@@ -154,9 +134,7 @@
             [showButtonAdd]="false"
           ></codx-tmmeetings>
         </ng-container>
-      </ng-template>
       </div>
-      
     </div>
   </div>
 </div>
