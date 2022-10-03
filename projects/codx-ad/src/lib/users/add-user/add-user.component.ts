@@ -133,6 +133,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .getUserGroupByID(this.adUser.userGroup)
         .subscribe((res) => {
           if (res) this.dataUG = res;
+          console.log('check this.dataUG', this.dataUG);
         });
     } else this.title = 'Thêm người dùng';
     this.formGroupAdd = new FormGroup({
@@ -167,7 +168,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adService.notifyInvalid(this.formUser, this.formModel);
       return;
     } else {
-      if (this.checkValueChangeUG == true || this.adUser.userGroup) {
+      if (
+        this.checkValueChangeUG == true ||
+        (this.adUser.userGroup && this.dataUG && this.dataUG?.length > 0)
+      ) {
         this.dataUG.forEach((dt) => {
           var userID = '';
           var userName = '';
@@ -325,12 +329,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
               if (result) {
+                debugger;
                 this.loadData.emit();
               }
+              this.dialog.close(res.save);
             });
           res.save.chooseRoles = res.save?.functions;
           (this.dialog.dataService as CRUDService).update(res.save).subscribe();
-          this.dialog.close();
           this.changeDetector.detectChanges();
         }
       });
@@ -346,16 +351,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .updateFileDirectReload(res.update.userID)
               .subscribe((result) => {
                 if (result) {
-
                   this.loadData.emit();
-                  this.dialog.close(res.update);
                 }
+                this.dialog.close(res.update);
               });
           }
           res.update.chooseRoles = res.update.functions;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
+          this.dialog.close(res.update);
 
           this.changeDetector.detectChanges();
         }

@@ -561,13 +561,15 @@ export class CodxDMService {
                 .subscribe(async (res) => {
                   let list = this.listFiles;
                   //list = list.filter(item => item.recID != id);
+
                   let index = list.findIndex(
                     (d) => d.recID.toString() === id.toString()
                   ); //find index in your array
-                  if (index > -1) {
+                  if (index >= 0) {
                     list.splice(index, 1); //remove element from array
                     //this.changeData(null, list, id);
                     this.listFiles = list;
+                    this.notificationsService.notifyCode("DM046", this.user?.userName)
                     this.ChangeData.next(true);
                     //  this.changeDetectorRef.detectChanges();
                   }
@@ -576,6 +578,8 @@ export class CodxDMService {
                     this.updateHDD.next(i);
                     //   this.changeDetectorRef.detectChanges();
                   });
+
+
                 });
             } else {
               this.folderService
@@ -669,7 +673,6 @@ export class CodxDMService {
   filterMoreFunction(e: any, data: any, modeView = false) {
     var type = this.getType(data, 'entity');
     var bookmark = this.isBookmark(data);
-
     var list =
       'DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233'; //DMT08
     if (e) {
@@ -931,7 +934,6 @@ export class CodxDMService {
   }
 
   getSvg(icon) {
-
     var path = window.location.origin;
     return `${path}/${icon}`;
   }
@@ -1020,7 +1022,6 @@ export class CodxDMService {
   }
 
   getType(item: any, ret: string) {
-
     var type = 'folder';
     if (ret == 'name') {
       if (item.extension)

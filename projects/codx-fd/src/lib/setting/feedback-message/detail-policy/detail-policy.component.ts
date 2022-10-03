@@ -2,7 +2,12 @@ import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActionArgs } from '@syncfusion/ej2-angular-grids';
-import { ApiHttpService, TenantStore, UIComponent } from 'codx-core';
+import {
+  ApiHttpService,
+  NotificationsService,
+  TenantStore,
+  UIComponent,
+} from 'codx-core';
 import { CodxFdService } from '../../../codx-fd.service';
 
 @Component({
@@ -28,6 +33,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private tenantStore: TenantStore,
+    private notification: NotificationsService,
     injector: Injector
   ) {
     super(injector);
@@ -46,26 +52,25 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
         this.recID = params.recID;
       }
       if (params && params.type) {
-        let catagory = '2';
+        let category = '2';
         let applyFor = '2';
         if (params.type == 'coin') {
-          catagory = '1';
+          category = '1';
         }
         if (params.type == 'wallet') {
           this.cardtype = null;
-          catagory = params.category;
+          category = params.category;
           applyFor = '1';
           this.tabActive = 3;
         }
         this.api
-          .call('ERM.Business.FED', 'PoliciesBusiness', 'GetPolicyAsync', [
-            catagory,
+          .call('ERM.Business.FD', 'PoliciesBusiness', 'GetPolicyAsync', [
+            category,
             this.cardtype,
             applyFor,
             this.recID,
           ])
           .subscribe((res) => {
-            //this.ngxLoader.stop();
             if (res && res.msgBodyData[0]) {
               var data = res.msgBodyData[0] as [];
               this.policy = data['Policie'];
@@ -107,7 +112,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
 
   save(modal) {
     this.api
-      .call('ERM.Business.FED', 'PoliciesLinesBusiness', 'SaveAsync', [
+      .call('ERM.Business.FD', 'PoliciesLinesBusiness', 'SaveAsync', [
         this.id,
         this.value,
         this.policy.itemType,
@@ -116,19 +121,18 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           var data = res.msgBodyData[0];
+          for (let i = 0; i < this.lstPolicyLine.length; i++) {
+            if (this.lstPolicyLine[i].recID == data.recID)
+              this.lstPolicyLine[i].value = data.value;
+          }
+          this.changedr.detectChanges();
           modal.dismiss('Cross click');
-          var t = this;
-          // _.filter(this.lstPolicyLine, function (o) {
-          //   if (o.id == data.itemSelect) {
-          //     o.value = data.value;
-          //     t.changedr.detectChanges();
-          //   }
-          // });
-        }
+          this.notification.notifyCode('SYS007');
+        } else this.notification.notifyCode('SYS021');
       });
   }
 
-  Delete(recID, id) {
+  delete(recID, id) {
     this.api
       .call('ERM.Business.FED', 'PoliciesLinesBusiness', 'DeleteAsync', [recID])
       .subscribe((res) => {

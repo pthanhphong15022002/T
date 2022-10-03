@@ -86,7 +86,6 @@ export class RoleDetailComponent
   }
   ngOnChanges(changes: SimpleChanges): void { }
   onInit(): void {
-
     var rid = this.at.snapshot.queryParams.recID;
     if (rid) {
       this.recid = rid;

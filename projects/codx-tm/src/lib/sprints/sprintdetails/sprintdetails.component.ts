@@ -13,6 +13,7 @@ import {
   CacheService,
   LayoutService,
   NotificationsService,
+  ScrollComponent,
 } from 'codx-core';
 import moment from 'moment';
 import { CodxTMService } from '../../codx-tm.service';
@@ -33,7 +34,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   user: any;
   funcID: any;
   tabControl: TabModelSprints[] = [];
-  name = 'Công việc';
+  name = 'AssignTo';
   projectID: any;
   resources: any;
   searchField = '';
@@ -43,12 +44,19 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   vllStatus = 'TM004';
   vllRole = 'TM002';
   popoverCrr: any;
-  private all = [
-    'Dashboard',
-    'Công việc',
-    'Lịch sử',
-    'Bình luận',
-    'Họp định kì',
+  // private all = [
+  //   'Dashboard',
+  //   'Công việc',
+  //   'Lịch sử',
+  //   'Bình luận',
+  //   'Họp định kì',
+  // ];
+  private all: TabModelSprints[] = [
+    { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
+    { name: 'AssignTo', textDefault: 'Công việc', isActive: true },
+    { name: 'History', textDefault: 'Lịch sử', isActive: false },
+    { name: 'Comments', textDefault: 'Bình luận', isActive: false },
+    { name: 'Meetings', textDefault: 'Họp định kì', isActive: false },
   ];
   nameObj: any;
   projectCategory: string = "2";  //set cứng đợi bảng PM_Projects hoàn thiện xong join projectID
@@ -59,7 +67,8 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   showTabComments = true;
   showTabMeetings = true;
   showButtonAdd = true;
-
+  showMoreFunc = true ;
+   offset = "0px";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -131,6 +140,7 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
             this.getListUserByResource(this.resources);
           }
           this.showButtonAdd = false;
+          this.showMoreFunc = false;
         }
       });
     }
@@ -141,27 +151,27 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
       // this.showTabHistory = false;
       // this.showTabComments = false;
       // this.showTabMeetings = false;
-      this.all = ['Dashboard', 'Công việc'];
+      // this.all = ['Dashboard', 'Công việc'];
+      this.all = [
+        { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
+        { name: 'AssignTo', textDefault: 'Công việc', isActive: true },
+      ];
     }
   }
   ngOnInit(): void {
+    // var body = document.querySelectorAll('body.toolbar-enabled');
+    // if(body && body.length > 0)
+    if(this.name =='AssignTo' || this.name =='Meetings')
+    this.offset ="65px";else this.offset ="0px"
     this.loadTabView();
   }
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void { 
+    
+  }
   loadTabView() {
-    // if(this.showTabDasboard)this.all.push('Dashboard')
-    // if(this.showTabTasks)this.all.push('Công việc')
-    // if(this.showTabHistory)this.all.push('Lịch sử')
-    // if(this.showTabComments)this.all.push('Bình luận')
-    // if(this.showTabMeetings)this.all.push('Họp định kì')
+  
     if (this.tabControl.length == 0) {
-      this.all.forEach((res, index) => {
-        var tabModel = new TabModelSprints();
-        tabModel.name = tabModel.textDefault = res;
-        if (index == 1) tabModel.isActive = true;
-        else tabModel.isActive = false;
-        this.tabControl.push(tabModel);
-      });
+      this.tabControl = this.all;
     } else {
       this.active = this.tabControl.findIndex(
         (x: TabModelSprints) => x.isActive == true
@@ -178,6 +188,10 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         return;
       }
     });
+    // var body = document.querySelectorAll('body.toolbar-enabled');
+    // if(body && body.length > 0)
+    if(this.name =='AssignTo' || this.name =='Meetings')
+    this.offset ="65px";else this.offset = "0px" ;
     item.isActive = true;
     this.changeDetectorRef.detectChanges();
   }

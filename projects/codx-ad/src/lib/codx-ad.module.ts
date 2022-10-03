@@ -42,22 +42,12 @@ import { LayoutNoAsideToolbarFluidComponent } from './../../../codx-share/src/li
 
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent,
-    // children: [
-    //   {
-    //     path:'users/:funcID',
-    //     component: UserComponent,
-    //   }
-    //   ,{
-    //     path:'users/companysetting/:funcID',
-    //     component: CompanySettingComponent
-    //   }
-
-    // ]
+    component: NoSubAsideComponent,
     children: [
       {
         path: 'users/:funcID',
@@ -110,6 +100,7 @@ const T_Component: Type<any>[] = [
   AsideroledetailComponent,
   AddUserGroupsComponent,
   SystemsettingsComponent,
+  NoSubAsideComponent,
 
 ];
 @NgModule({

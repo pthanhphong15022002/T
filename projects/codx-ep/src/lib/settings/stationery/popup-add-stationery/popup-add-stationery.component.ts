@@ -93,7 +93,6 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   beforeSave(option: RequestOption) {
-
     let itemData = this.dialogAddStationery.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
@@ -146,7 +145,6 @@ export class PopupAddStationeryComponent extends UIComponent {
         this.dialogAddStationery.patchValue({ [event['field']]: event.data });
       }
     }
-    this.colorItem = event.data;
   }
 
   closeDialog(evt: any) {

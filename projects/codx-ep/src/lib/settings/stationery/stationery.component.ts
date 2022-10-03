@@ -196,7 +196,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       case 'EPS2301':
         break;
       case 'EPS2302':
-        this.addQuota();
+        this.addQuota(data);
         break;
       default:
         break;
@@ -208,7 +208,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       let option = new SidebarModel();
       let dataSelected = this.view.dataService.dataSelected;
       option.Width = '800px';
-      option.FormModel = this.view?.formModel;
+      option.FormModel = this.formModel;
       option.DataService = this.view?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
@@ -220,6 +220,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   edit(data?) {
     if (data) {
+      data.uMID = data.umid;
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
@@ -227,7 +228,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         let option = new SidebarModel();
         option.Width = '800px';
-        option.FormModel = this.view?.formModel;
+        option.FormModel = this.formModel;
         option.DataService = this.view?.dataService;
         this.dialog = this.callfc.openSide(
           PopupAddStationeryComponent,
@@ -238,7 +239,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(data?) {
-
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -247,26 +247,13 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       .subscribe();
   }
 
-  addQuota() {
-    this.dialog = this.callfc.openForm(
-      PopupAddQuotaComponent,
-      '',
-      300,
-      400,
-      '',
-      [this.formModel]
-    );
+  addQuota(data) {
+    this.callfc.openForm(PopupAddQuotaComponent, '', 500, 200, '', [data]);
   }
 
   closeEditForm(evt?: any) {
     if (evt) {
       this.dialog && this.dialog.close();
-    }
-  }
-
-  splitColor(color: string): any {
-    if (color) {
-      return color.split(';');
     }
   }
 }

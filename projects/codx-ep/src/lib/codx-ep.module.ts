@@ -63,15 +63,15 @@ const routes: Route[] = [
         component: BookingStationeryComponent,
       },
       {
-        path: 'approvalrooms/:funcID',
+        path: 'approverooms/:funcID',
         component: ApprovalRoomsComponent,
       },
       {
-        path: 'approvalcars/:funcID',
+        path: 'approvecars/:funcID',
         component: ApprovalCarsComponent,
       },
       {
-        path: 'approvalstationery/:funcID',
+        path: 'approvestationery/:funcID',
         component: ApprovalStationeryComponent,
       },
       {

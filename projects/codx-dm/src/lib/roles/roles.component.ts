@@ -1,6 +1,4 @@
-import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
-import { Subject } from "rxjs";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
@@ -10,11 +8,6 @@ import { SystemDialogService } from 'projects/codx-share/src/lib/components/view
 import { FileInfo, FileUpload, HistoryFile, ItemInterval, Permission, SubFolder } from '@shared/models/file.model';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { threadId } from 'worker_threads';
-import { traceChildTaskBar } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
-import { AddUserComponent } from 'projects/codx-ad/src/lib/users/add-user/add-user.component';
-import { AddRoleComponent } from '../addrole/addrole.component';
 
 @Component({
   selector: 'roles',
@@ -637,7 +630,6 @@ export class RolesComponent implements OnInit {
         // });
         this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
           if (res != null) {
-
             this.dmSV.fileEditing.next(this.fileEditing);
             this.notificationsService.notify(res.message);
           }
