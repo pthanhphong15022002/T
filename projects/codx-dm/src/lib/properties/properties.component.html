@@ -194,22 +194,9 @@
                                 <div class="comment-box flex-grow-1">
                                     <codx-input placeholder="Nhận xét của bạn..." class="form-control test-datetime"
                                         type="textarea" format="ed2" style="width:100%" [crrValue]="commenttext"
-                                        (valueChange)="txtValue($event, 'commenttext')"></codx-input>
-                                    <!-- <codx-input placeholder="Nhận xét của bạn..."
-                                        class="form-control test-datetime"
-                                        type="textarea" 
-                                        style="width:100%" dataformat="d"                               
-                                        [crrValue]="commenttext"    
-                                        (valueChange)="txtValue($event, 'commenttext')" 
-                                    ></codx-input> -->
-                                    <!-- <textarea ng-trim="false" pattern="/^[/\S/]+$/i" matInput #comment
-                                        [(ngModel)]='commenttext' name="commenttext"
-                                        (keyup.enter)="ValidateCommentAndPost(comment, $event);"
-                                        (keyup.enter)="onKeydown($event)" class="form-control"
-                                        placeholder="Nhận xét của bạn..."></textarea> -->
+                                        (valueChange)="txtValue($event, 'commenttext')" ></codx-input>
                                 </div>
-                                <span (click)="setComment()"
-                                    class="btn btn-primary ms-3 min-w-60px">{{titleSend}}</span>
+                                <span (click)="setComment()" class="btn btn-primary ms-3 min-w-60px">{{titleSend}}</span>
                             </div>
                         </div>
                         <ng-container *ngIf="fileEditing.views">

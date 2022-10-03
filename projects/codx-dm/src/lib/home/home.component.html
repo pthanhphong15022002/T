@@ -1,6 +1,6 @@
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" [orgView]="orgViews"
-  (sortChanged)="sortChanged($event)" [autoSort]="false" [autoSearch]="false" [selectedFirst]="false"
+   [autoSort]="false" [autoSearch]="false" [selectedFirst]="false"
   (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
   (viewChanged)="changeView($event)" (viewChanging)="viewChanging($event)" (filterChange)="filterChange($event)"
   [autoFilter]="false" (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)"
@@ -29,7 +29,7 @@
 <ng-template #templateRight>
   <ng-container *ngTemplateOutlet="empty"></ng-container>
   <div *ngIf="isSearch && this.dmSV.loadedFile">
-    <h5 class="text-warning">
+    <!-- <h5 class="text-warning">
       <codx-label name="lblSearch1" [formModel]="view.formModel" default="Kết quả tìm kiếm:" class="fw-bold">
       </codx-label>
       {{ this.textSearch }}
@@ -38,7 +38,7 @@
         {{ this.totalSearch }}
         <codx-label name="lblSearch3" [formModel]="views" default="kết quả được tìm thấy" class="fw-bold"></codx-label>
       </div>
-    </h5>
+    </h5> -->
   </div>
   <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
     class="w-100 scroll-y home" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
