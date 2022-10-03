@@ -35,6 +35,7 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
+  viewType = ViewType; 
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   devices: any;

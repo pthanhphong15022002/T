@@ -101,7 +101,7 @@
   <div class="d-flex has-action-menu">
     <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
     <div class="ms-4">
-      <div class="fw-bold">{{ data?.owner }}</div>
+      <div class="fw-bold">{{ data?.ownerName }}</div>
     </div>
     <codx-mfunc
       [dataItem]="data"
@@ -163,14 +163,14 @@
         <div class="d-flex align-items-center">
           <codx-img
             [objectId]="data?.owner"
-            [objectName]="data?.owner"
+            [objectName]="data?.ownerName"
             objectType="AD_Users"
             imageType="square"
             [width]="40"
           >
           </codx-img>
           <div class="ms-2">
-            <div>{{ data?.owner }}</div>
+            <div>{{ data?.ownerName}}</div>
             <div class="text-black-50">{{ data?.position }}</div>
           </div>
         </div>
@@ -188,9 +188,9 @@
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="border w-250px h-100"
-    [imageSrc]="
-      data?.icon ? data?.icon : '../assets/media/svg/files/blank-image.svg'
-    "
+    [imageSrc]="data?.icon ? '' : '../assets/media/svg/files/blank-image.svg'"
+    [imageObjType]="'EP_Stationery'"
+    [imageId]="data?.recID"
     [title]="data?.resourceName"
     [rootData]="data"
     [footer]="cardItemFooter"

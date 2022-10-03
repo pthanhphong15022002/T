@@ -4,7 +4,6 @@ import {
   Injector,
   Optional,
   Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -122,6 +121,7 @@ export class PopupAddStationeryComponent extends UIComponent {
               }
             });
         }
+        this.detectorRef.detectChanges();
         this.dialog.close();
       });
   }
@@ -164,9 +164,9 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  buttonClick(e: any) { }
+  buttonClick(e: any) {}
 
-  fileCount(event) { }
+  fileCount(event) {}
 
-  fileAdded(event) { }
+  fileAdded(event) {}
 }
