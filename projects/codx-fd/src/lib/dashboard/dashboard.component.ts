@@ -62,14 +62,17 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
     this.getDataAmountCard();
   }
 
+  lstCountCard:any[] = [];
   getDataAmountCard(){
-    this.api.call("ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", [])
+    this.api.execSv("FD","ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", [])
     .subscribe((res:any) => {
       if (res) 
       {
-        var data = res.msgBodyData[0];
-        this.reciver = data['fbReceiver'];
-        this.sender = data['fbSender'];
+        // var data = res.msgBodyData[0];
+        // this.reciver = data['fbReceiver'];
+        // this.sender = data['fbSender'];
+        this.lstCountCard = JSON.parse(res);
+        console.log(this.lstCountCard);
         this.dt.detectChanges();
       }
     });

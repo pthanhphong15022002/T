@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { Observable, Subject } from 'rxjs';
 import { ApiHttpService, CodxGridviewComponent, NotificationsService, ViewsComponent, AuthStore, ButtonModel, ViewModel, ViewType } from 'codx-core';
@@ -13,7 +14,7 @@ import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 })
 export class BehaviorComponent implements OnInit {
 
-  funcID = 'FDS0124';
+  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;
@@ -27,6 +28,7 @@ export class BehaviorComponent implements OnInit {
   dataValue = '1;false';
   entityName = 'BS_Competences';
   parentName = '';
+  button?: ButtonModel;
 
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
@@ -51,17 +53,20 @@ export class BehaviorComponent implements OnInit {
     private changedr: ChangeDetectorRef,
     private mwpService: CodxMwpService,
     private authStore: AuthStore,
+    private route: ActivatedRoute,
   ) {
     this.user = this.authStore.get();
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
   }
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
   columnsGrid = [];
   ngOnInit(): void {
+    this.button = {
+      id: 'btnAdd'
+    }
     this.initForm();
     this.columnsGrid = [
-      // { field: 'noName', nameColumn: '', template: this.GiftIDCell, width: 30 },
       { field: 'parentName', headerText: 'Quy tắc', template: this.parentNameR, width: 200 },
       { field: 'competenceID', headerText: 'Mã hành vi', width: 100 },
       { field: 'competenceName', headerText: 'Mô tả', template: this.competenceName },
@@ -69,7 +74,6 @@ export class BehaviorComponent implements OnInit {
       { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy, width: 200 },
       { field: 'createdOn', headerText: 'Ngày tạo', template: this.createdOn, width: 100 }
     ];
-    // this.mwpService.layoutcpn.next(new LayoutModel(true, '', false, true));
     this.changedr.detectChanges();
   }
   ngAfterViewInit() {

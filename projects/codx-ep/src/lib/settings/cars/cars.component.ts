@@ -29,7 +29,7 @@ import { PopupAddCarsComponent } from './popup-add-cars/popup-add-cars.component
   styleUrls: ['cars.component.scss'],
 })
 export class CarsComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('view') viewBase: ViewsComponent;
+  //@ViewChild('view') viewBase: ViewsComponent;
 
   @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
@@ -83,7 +83,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     });
   }
   onInit(): void {
-    //this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    //this.view.dataService.methodDelete = 'DeleteResourceAsync';
     
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
@@ -235,11 +235,11 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew() {
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.viewBase.dataService.dataSelected;
+    this.view.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.dataService;
+      option.DataService = this.view.dataService;
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddCarsComponent,
@@ -251,18 +251,18 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
 
   edit(obj?) {
     if (obj) {
-      this.viewBase.dataService.dataSelected = obj;
-      this.viewBase.dataService
-        .edit(this.viewBase.dataService.dataSelected)
+      this.view.dataService.dataSelected = obj;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          this.dataSelected = this.viewBase.dataService.dataSelected;
+          this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '550px';
-          option.DataService = this.viewBase?.dataService;
+          option.DataService = this.view.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddCarsComponent,
-            [this.viewBase.dataService.dataSelected, false],
+            [this.view.dataService.dataSelected, false],
             option
           );
         });
@@ -270,18 +270,18 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
 
   // delete(obj?) {
-  //   this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+  //   this.view.dataService.methodDelete = 'DeleteResourceAsync';
   //   if (obj) {
-  //     this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+  //     this.view.dataService.delete([obj], true).subscribe((res) => {
   //       console.log(res);
   //     });
   //   }
   // }
 
   delete(obj?) {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
-      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
+      this.view.dataService.delete([obj], true).subscribe((res) => {
         if (res) {          
           this.api.execSv(
             'DM',

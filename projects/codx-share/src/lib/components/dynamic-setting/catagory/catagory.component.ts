@@ -16,6 +16,7 @@ import {
   DialogRef,
   LayoutService,
 } from 'codx-core';
+import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 @Component({
   selector: 'lib-catagory',
@@ -26,15 +27,15 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
-    cpnCalendar: null,
+    cpnAlertRules: PopupAddEmailTemplateComponent,
   };
   category = '';
   title = '';
   listName = 'SYS001';
   setting = [];
-  settingMore = [];
   settingValue = [];
   groupSetting = [];
+  alertRules = [];
   function: any = {};
   valuelist: any = {};
   dataValue: any = {};
@@ -66,12 +67,13 @@ export class CatagoryComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((routeParams) => {
       this.layout.setLogo(null);
+      this.lstFuncID = [];
+      this.autoDefault = null;
+      this.dataValue = {};
       this.urlOld = '..' + window.location.pathname;
       var state = history.state;
       if (state && !this.dialog) {
-        debugger;
         this.setting = state.setting || [];
-        this.settingMore = state.settingMore || [];
         this.function = state.function || [];
         this.valuelist = state.valuelist || {};
         this.groupSetting = this.setting.filter((x) => {
@@ -87,20 +89,12 @@ export class CatagoryComponent implements OnInit {
         );
         this.category = ds.value;
         this.title = ds.text;
-        if (this.category === '2') this.getIDAutoNumber();
+        if (this.category === '2' || this.category === '7')
+          this.getIDAutoNumber();
+        else if (this.category === '5') this.getAlertRule();
       }
       this.loadSettingValue();
 
-      // this.cacheService.valueList(this.listName).subscribe((res) => {
-      //   if (res && res.datas) {
-      //     const ds = (res.datas as any[]).find(
-      //       (item) => item.default == catagory
-      //     );
-      //     this.category = ds.value;
-      //     this.title = ds.text;
-      //     this.loadSettingValue();
-      //   }
-      // });
       this.changeDetectorRef.detectChanges();
     });
     if (this.dialog) {
@@ -110,7 +104,10 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
-  openPopup(evt: any, reference: any, value: any, recID: any) {
+  openPopup(evt: any, item: any, reference: string = '') {
+    let value = item.fieldName,
+      recID = item.recID;
+    if (!reference) reference = item.reference;
     var width = 0,
       height = 0,
       title = '',
@@ -126,8 +123,9 @@ export class CatagoryComponent implements OnInit {
       data['valuelist'] = this.valuelist;
       data['category'] = this.category;
       data['function'] = this.function;
-      width = (screen.width * 40) / 100;
-      height = 550;
+      width = 500;
+      height = 100 * itemChild.length;
+
       this.callfc.openForm(
         CatagoryComponent,
         title,
@@ -142,34 +140,50 @@ export class CatagoryComponent implements OnInit {
       var component = this.components[reference] as Type<any>;
       switch (reference.toLowerCase()) {
         case 'cpnautonumbers':
-          this.api
-            .execSv(
-              'SYS',
-              'ERM.Business.AD',
-              'AutoNumberDefaultsBusiness',
-              'GetByFuncNEntityAsync',
-              [value]
-            )
-            .subscribe((res: any) => {
-              if (res) {
-                data['autoNoCode'] = res.autoNumber;
-                width = (screen.width * 40) / 100;
-                height = 550;
-                this.callfc.openForm(
-                  component,
-                  title,
-                  width,
-                  height,
-                  funcID,
-                  data,
-                  cssClass,
-                  dialogModel
-                );
-              }
-            });
-
+          if (
+            this.autoDefault &&
+            this.autoDefault[value] &&
+            !this.autoDefault[value].stop
+          ) {
+            this.api
+              .execSv(
+                'SYS',
+                'ERM.Business.AD',
+                'AutoNumberDefaultsBusiness',
+                'GetByFuncNEntityAsync',
+                [value]
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  data['autoNoCode'] = res.autoNumber;
+                  width = (screen.width * 40) / 100;
+                  height = 550;
+                  this.callfc.openForm(
+                    component,
+                    title,
+                    width,
+                    height,
+                    funcID,
+                    data,
+                    cssClass,
+                    dialogModel
+                  );
+                }
+              });
+          }
           break;
-        case 'cpnCalendar':
+        case 'cpncalendar':
+          break;
+        case 'cpnalertrules':
+          var rule = this.alertRules[value];
+          if (!rule) return;
+          data['formGroup'] = null;
+          data['templateID'] = rule.emailTemplate;
+          // data['showIsTemplate'] = null;
+          // data['showIsPublish'] = null;
+          // data['showSendLater'] = null;
+
+          this.callfc.openForm(component, '', 800, screen.height, '', data);
           break;
         default:
           break;
@@ -220,11 +234,8 @@ export class CatagoryComponent implements OnInit {
             this.settingValue = res[0];
             this.loadValue();
           }
-
-          // this.itemMenu = Object.keys(res);
         }
         this.changeDetectorRef.detectChanges();
-        //console.log(res);
       });
     if (this.category === '2' || this.category === '7') {
     }
@@ -242,41 +253,131 @@ export class CatagoryComponent implements OnInit {
   }
 
   getIDAutoNumber() {
-    if (this.settingMore.length > 0) {
-      //var lstFuncID: any[] = [];
-      this.setting.forEach((item, i) => {
+    this.setting.forEach((item, i) => {
+      if (this.category === '7') {
+        this.lstFuncID.push(item.fieldName);
+      } else {
         let url = item.reference;
         if (url) {
           let arr = url.split('/') as any[];
           let funcID = arr[arr.length - 1];
-          var isCheck = this.settingMore.find(
-            (res) => res.fieldName === funcID
-          );
-          if (isCheck) this.lstFuncID.push(funcID);
+          this.lstFuncID.push(funcID);
         }
+      }
+    });
+  }
+
+  getAlertRule() {
+    debugger;
+    var lstRoleID = [];
+    if (this.setting) {
+      this.setting.forEach((element) => {
+        if (element.fieldName) lstRoleID.push(element.fieldName);
       });
+    }
+    if (lstRoleID.length > 0) {
+      this.api
+        .execSv<any>('SYS', 'AD', 'AlertRulesBusiness', 'GetDicByIDAsync', [
+          lstRoleID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.alertRules = res;
+          }
+          this.changeDetectorRef.detectChanges();
+        });
     }
   }
 
-  valueChange(evt: any) {
+  valueChange(evt: any, data: any, autoDefault: any = null) {
+    var fieldName = data.fieldName;
     var field = evt.field;
     var value = evt.data;
 
-    if (typeof value == 'boolean') {
-      value = +value + '';
-    }
-    var dt = this.settingValue.find((x) => x.category == this.category);
-    if (this.category == '1') {
-      this.dataValue[field] = value;
-      dt.dataValue = JSON.stringify(this.dataValue);
-      this.api
-        .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-        .subscribe((res) => {
-          if (res) {
+    if (autoDefault) {
+      if (typeof value == 'string') {
+        value = value === '1';
+      }
+      var auto = autoDefault[fieldName];
+      if (!auto) {
+        //Chị Thương bảo nếu chưa có số tự động thì cảnh báo và báo C Thương thiết lập.
+        // this.api
+        //   .execSv(
+        //     'SYS',
+        //     'ERM.Business.AD',
+        //     'AutoNumberDefaultsBusiness',
+        //     'GenAutoDefaultAsync',
+        //     [fieldName]
+        //   )
+        //   .subscribe((res) => {
+        //     if (res) {
+        //       auto = autoDefault[fieldName] = res;
+        //       this.changeDetectorRef.detectChanges();
+        //     }
+        //   });
+      } else {
+        if (!value === auto.stop) return;
+        auto.stop = !value;
+        this.api
+          .execAction('AD_AutoNumberDefaults', [auto], 'UpdateAsync')
+          .subscribe((res) => {
+            if (res) {
+            }
+            this.changeDetectorRef.detectChanges();
+            console.log(res);
+          });
+      }
+    } else {
+      if (typeof value == 'boolean') {
+        value = +value + '';
+      }
+      if (this.category === '5') {
+        var rule = this.alertRules[fieldName];
+        if (!rule) return;
+        if (typeof value == 'string') {
+          value = value === '1';
+        }
+        if (value === rule[field]) return;
+        rule[field] = value;
+        this.api
+          .execAction('AD_AlertRules', [rule], 'UpdateAsync')
+          .subscribe((res) => {
+            if (res) {
+            }
+            this.changeDetectorRef.detectChanges();
+            console.log(res);
+          });
+      } else {
+        var dt = this.settingValue.find((x) => x.category == this.category);
+        if (this.category == '1') {
+          this.dataValue[field] = value;
+          if (!this.dialog) {
+            dt.dataValue = JSON.stringify(this.dataValue);
+            this.api
+              .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+              .subscribe((res) => {
+                if (res) {
+                }
+                this.changeDetectorRef.detectChanges();
+                console.log(res);
+              });
           }
-          this.changeDetectorRef.detectChanges();
-          console.log(res);
-        });
+        }
+      }
     }
+  }
+
+  click($event: any) {
+    var dt = this.settingValue.find((x) => x.category == this.category);
+    dt.dataValue = JSON.stringify(this.dataValue);
+    this.api
+      .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close();
+        }
+        this.changeDetectorRef.detectChanges();
+        console.log(res);
+      });
   }
 }

@@ -40,8 +40,7 @@
                                             </codx-input>
                                         </div>
                                     </ng-container>
-                                    <ng-container
-                                        *ngIf="refValue != '' && cardType != CARDTYPE_EMNUM.SuggestionImprovement && cardType != CARDTYPE_EMNUM.Share && cardType != CARDTYPE_EMNUM.Radio">
+                                    <ng-container *ngIf="parameter && parameter.RuleSelected == '1'">
                                         <div class="form-group">
                                             <codx-label fiedName="Behavior" [formModel]="dialog.formModel" name="lblfBehavior"
                                                 default="Qui tắc ứng xử">
@@ -49,46 +48,46 @@
                                             <codx-input 
                                                 type="combobox" 
                                                 name="cbbBehavior"
-                                                class=" form-control borderless p-0" 
                                                 [crrValue]="form.controls['behavior'].value"
                                                 field="behavior"
-                                                [refValue]="refValue"
+                                                [refValue]="'Behaviors'"
                                                 (valueChange)="valueChange($event)" 
                                                 >
                                             </codx-input>
                                         </div>
                                     </ng-container>
-                                    <ng-container
-                                        *ngIf="cardType == CARDTYPE_EMNUM.SuggestionImprovement || cardType == CARDTYPE_EMNUM.Share">
+                                    <ng-container *ngIf="cardType == CARDTYPE_EMNUM.SuggestionImprovement || cardType == CARDTYPE_EMNUM.Share">
                                         <div class="form-group">
                                             <codx-label fiedName="Industry" [formModel]="dialog.formModel" name="lblfIndustry"
                                                 default="Lĩnh vực"></codx-label>
                                             <codx-input 
                                                 type="combobox" 
                                                 name="cbbIndustry" 
-                                                [class]="'mt-2'"
                                                 field="industry" 
+                                                [refValue]="'Industries'"
                                                 [crrValue]="form.controls['industry'].value"
-                                                [refValue]="'Industries'" 
-                                                (valueChange)="valueChange($event)" 
-                                                [loadFull]="true">
+                                                (valueChange)="valueChange($event)">
                                             </codx-input>
                                         </div>
                                         <div class="form-group">
-                                            <codx-label name="lblOwner" [formModel]="dialog.formModel" name="lblfOwner"
+                                            <codx-label
+                                                 [formModel]="dialog.formModel" 
+                                                name="lblfReciver"
                                                 default="Người nhận phiếu">
                                             </codx-label>
-                                            <div class="mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <codx-img class="symbol symbol-35 symbol-circle mr-3"
-                                                        [objectId]="userReciver" objectType="AD_Users">
+                                            <ng-container *ngIf="userReciverName">
+                                                <div class="mt-2 d-flex align-items-center">
+                                                    <codx-img
+                                                        [objectId]="userReciver" 
+                                                        objectType="AD_Users" 
+                                                        [width]="35">
                                                     </codx-img>
-                                                    <div class="ms-3 text-dark font-size-lg">{{userReciverName}}</div>
+                                                    <span class="ms-3 text-dark font-size-lg">{{userReciverName}}</span>
                                                 </div>
-                                            </div>
+                                            </ng-container>
                                         </div>
                                     </ng-container>
-                                    <div class=" form-group" #situation>
+                                    <div class=" form-group">
                                         <codx-label fiedName="Situation" [formModel]="dialog.formModel" name="lblfStuation"
                                             default="Nội dung gửi">
                                         </codx-label>
@@ -116,14 +115,16 @@
                                                     >
                                                 </codx-input>
                                             </div>
-
                                         </div>
                                     </ng-container>
                                     <ng-container *ngIf="cardType != CARDTYPE_EMNUM.Radio">
                                         <div class="form-group">
                                             <div class="d-flex align-items-center justify-content-between mt-4">
-                                                <codx-label name="share" [formModel]="dialog.formModel" name="lblfShare"
-                                                    default="Chia sẻ đến"></codx-label>
+                                                <codx-label
+                                                    [formModel]="dialog.formModel" 
+                                                    name="lblfShare"
+                                                    default="Chia sẻ đến">
+                                                </codx-label>
                                                 <a class="btn btn-icon btn-xs btn-light-primary"
                                                     (click)="openFormShare(controlShare)">
                                                     <span class="icon-person_add_alt_1 icon-18"></span>
@@ -344,14 +345,17 @@
                     </div>
                 </ng-cintainer>
 
-                <!-- <div class="d-flex align-items-start">
-                    <img src="/assets/img/feedback/gift 1.png"
-                        *ngIf="data.hasGift"
-                        class="symbol-image icon-surface1 h-30px mr-2" />
-                    <img src="/assets/img/feedback/money-1.png"
-                        *ngIf="data.hasPoint"
-                        class="symbol-image icon-money-1 h-30px mr-2" />
-                </div> -->
+                <div class="d-flex align-items-start">
+                    <ng-container *ngIf="form.controls['giftID'].value && gift">
+                        <img class="symbol-image icon-surface1 h-30px mr-2" 
+                        src="/assets/img/feedback/gift 1.png"/>
+                    </ng-container>
+                    <ng-container *ngIf="givePoint > 0">
+                        <img class="symbol-image icon-money-1 h-30px mr-2" 
+                        src="/assets/img/feedback/money-1.png"/>
+                    </ng-container>
+                    
+                </div>
             </div>
         </div> 
     </div>

@@ -39,7 +39,6 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { TreeViewComponent } from './tree-view/tree-view.component';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -49,11 +48,14 @@ import { TreeViewComponent } from './tree-view/tree-view.component';
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
+  @Input() showMoreFunc = true;
+
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @Input() service = 'TM';
@@ -70,10 +72,10 @@ export class CodxTasksComponent
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('treeView') treeView!: TemplateRef<any>;
+  @ViewChild('footerNone') footerNone!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
   // @ViewChild('treeView') treeView!: TreeViewComponent;
-
 
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
@@ -152,24 +154,6 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    //chay code chet cho nhanh, muon dong thi bat len
-    // this.cache.functionList(this.funcID).subscribe(f => {
-    //   if (f) {
-    //     this.cache.gridViewSetup(f?.formName, f?.gridViewName).subscribe(res => {
-    //        if(res){
-    //         this.vllPriority = res['Priority']['referedValue']
-    //         this.vllStatus = res['Status']['referedValue']
-    //         this.vllApproveStatus = res['ApproveStatus']['referedValue']
-    //         this.vllConfirmStatus = res['ConfirmStatus']['referedValue']
-    //         this.vllVerifyStatus = res['VerifyStatus']['referedValue']
-    //         this.vllExtendStatus = res['ExtendStatus']['referedValue']
-    //        }
-    //     })
-    //   }
-    // })
   }
 
   //#region Init
@@ -192,7 +176,7 @@ export class CodxTasksComponent
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
       this.modelResource.method = 'GetListUserByResourceAsync';
-      this.modelResource.dataValue = this.dataObj?.resources
+      this.modelResource.dataValue = this.dataObj?.resources;
     }
 
     this.resourceKanban = new ResourceModel();
@@ -228,6 +212,24 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funcID == 'TMT0203') this.isAssignTask = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+    //chay code chet cho nhanh, muon dong thi bat len
+    // this.cache.functionList(this.funcID).subscribe(f => {
+    //   if (f) {
+    //     this.cache.gridViewSetup(f?.formName, f?.gridViewName).subscribe(res => {
+    //        if(res){
+    //         this.vllPriority = res['Priority']['referedValue']
+    //         this.vllStatus = res['Status']['referedValue']
+    //         this.vllApproveStatus = res['ApproveStatus']['referedValue']
+    //         this.vllConfirmStatus = res['ConfirmStatus']['referedValue']
+    //         this.vllVerifyStatus = res['VerifyStatus']['referedValue']
+    //         this.vllExtendStatus = res['ExtendStatus']['referedValue']
+    //        }
+    //     })
+    //   }
+    // })
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else {
@@ -279,6 +281,45 @@ export class CodxTasksComponent
           statusColorRef: this.vllStatus,
         },
       },
+      {
+        id: '8',
+        type: ViewType.schedule,
+        active: false,
+        sameData: false,
+        request: this.requestSchedule,
+        request2: this.modelResource,
+        model: {
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          template7: this.footerNone,
+          template4: this.resourceHeader,
+          template: this.eventTemplate,
+          template3: this.cellTemplate,
+          statusColorRef: this.vllStatus,
+        },
+      },
+      {
+        id: '16',
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        text: 'Cây',
+        icon: 'icon-account_tree',
+        // request: {
+        //   idField: 'recID',
+        //   parentIDField: 'ParentID',
+        //   service: 'TM',
+        //   assemblyName: 'TM',
+        //   className: 'TaskBusiness',
+        //   method: 'GetTasksAsync',
+        //   autoLoad: true,
+        //   dataObj: null,
+        // },
+        model: {
+          // template: this.treeView,
+          panelLeftRef: this.treeView,
+        },
+      },
     ];
 
     // var viewDefaultID = '2';
@@ -316,6 +357,7 @@ export class CodxTasksComponent
           'add',
           this.isAssignTask,
           this.titleAction,
+          this.funcID,
         ],
         option
       );
@@ -386,6 +428,7 @@ export class CodxTasksComponent
           'copy',
           this.isAssignTask,
           this.titleAction,
+          this.funcID,
           data,
         ],
         option
@@ -397,24 +440,6 @@ export class CodxTasksComponent
             false
           );
       });
-      // this.dialog.closed.subscribe((e) => {
-      //   if (e?.event == null)
-      //     this.view.dataService.delete(
-      //       [this.view.dataService.dataSelected],
-      //       false
-      //     );
-      //   if (e?.event && e?.event != null) {
-      //     this.view.dataService.data = e?.event.concat(
-      //       this.view.dataService.data
-      //     );
-      //     this.view.dataService.setDataSelected(res[0]);
-      //     this.view.dataService.afterSave.next(res);
-      //     this.notiService.notifyCode('TM005');
-
-      //     this.itemSelected = this.view.dataService.data[0];
-      //     this.detectorRef.detectChanges();
-      //   }
-      // });
     });
   }
 
@@ -519,6 +544,7 @@ export class CodxTasksComponent
             'edit',
             this.isAssignTask,
             this.titleAction,
+            this.funcID,
           ],
           option
         );
@@ -773,8 +799,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -863,7 +889,8 @@ export class CodxTasksComponent
   //#region Event
   changeView(evt: any) {
     let idx = -1;
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     idx = this.viewsActive.findIndex((x) => x.id === '8');
     if (this.funcID != 'TMT0201') {
@@ -898,38 +925,38 @@ export class CodxTasksComponent
       if (idx > -1) this.viewsActive.splice(idx, 1);
     }
 
-    idx = this.viewsActive.findIndex((x) => x.id === '16');
-    if (this.funcID == 'TMT0203') {
-      if (idx > -1) return;
-      var tree = {
-        id: '16',
-        type: ViewType.content,
-        active: false,
-        sameData: false,
-        text: 'Cây',
-        icon: 'icon-account_tree',
-        // request: {
-        //   idField: 'recID',
-        //   parentIDField: 'ParentID',
-        //   service: 'TM',
-        //   assemblyName: 'TM',
-        //   className: 'TaskBusiness',
-        //   method: 'GetTasksAsync',
-        //   autoLoad: true,
-        //   dataObj: null,
-        // },
-        model: {
-          // template: this.treeView,
-          panelLeftRef : this.treeView
-        },
-      };
-      this.viewsActive.push(tree);
-    } else {
-      if (idx > -1) this.viewsActive.splice(idx, 1);
-    }
+    // idx = this.viewsActive.findIndex((x) => x.id === '16');
+    // if (this.funcID == 'TMT0203') {
+    //   if (idx > -1) return;
+    //   var tree = {
+    //     id: '16',
+    //     type: ViewType.content,
+    //     active: false,
+    //     sameData: false,
+    //     text: 'Cây',
+    //     icon: 'icon-account_tree',
+    //     // request: {
+    //     //   idField: 'recID',
+    //     //   parentIDField: 'ParentID',
+    //     //   service: 'TM',
+    //     //   assemblyName: 'TM',
+    //     //   className: 'TaskBusiness',
+    //     //   method: 'GetTasksAsync',
+    //     //   autoLoad: true,
+    //     //   dataObj: null,
+    //     // },
+    //     model: {
+    //       // template: this.treeView,
+    //       panelLeftRef: this.treeView
+    //     },
+    //   };
+    //   this.viewsActive.push(tree);
+    // } else {
+    //   if (idx > -1) this.viewsActive.splice(idx, 1);
+    // }
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(e: any) {
     if (e.type == 'drop') {
@@ -1043,7 +1070,6 @@ export class CodxTasksComponent
           this.countResource = res.length;
           p.open();
           this.popoverCrr = p;
-
         }
       });
   }
@@ -1355,6 +1381,7 @@ export class CodxTasksComponent
 
   clickMFAfterParameter(e, data) {
     this.titleAction = e.text;
+    this.isAssignTask = data?.category == '3';
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -1464,13 +1491,29 @@ export class CodxTasksComponent
 
   onActions(e: any) {
     if (e.type === 'dbClick') {
+      this.viewTask(e?.data);
+      // let option = new SidebarModel();
+      // option.DataService = this.view?.dataService;
+      // option.FormModel = this.view?.formModel;
+      // option.Width = '800px';
+      // this.callfc.openSide(
+      //   PopupAddComponent,
+      //   [e?.data, 'view', this.isAssignTask],
+      //   option
+      // );
+    }
+  }
+
+  viewTask(data) {
+    if (data) {
+      var isAssignTask = data?.category == '3';
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [e?.data, 'view', this.isAssignTask],
+        [data, 'view', isAssignTask, this.funcID],
         option
       );
     }

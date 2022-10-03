@@ -1,6 +1,7 @@
 <codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
   [dialog]="dialogRef" [formModel]="formModel" [data]="data" *ngIf="isAfterRender">
-  <ng-template #body>
+  
+  <ng-template #body>    
     <div class="form-group">
       <codx-label fiedName="ResourceName" [formModel]="form.formModel">
       </codx-label>

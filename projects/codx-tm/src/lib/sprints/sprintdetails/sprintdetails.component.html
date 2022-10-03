@@ -74,7 +74,7 @@
         #popoverList="ngbPopover" placement="bottom left right" container="body" autoClose="outside"></codx-imgs> -->
     </div>
   </div>
-  <div class="page-content d-flex flex-row">
+  <div class="page-content d-flex flex-row" style="height : 100%">
     <div class="w-100">
       <div
         class="m-0 bg-body rounded-2 sprints-task-detail"
@@ -83,7 +83,7 @@
         data-kt-scroll-height="auto"
         data-kt-scroll-dependencies=".sprints-task-header"
         data-kt-scroll-wrappers=".page-content, .no-wrapper"
-        data-kt-scroll-offset="0px"
+        [attr.data-kt-scroll-offset]="offset"
       >
         <ng-container *ngIf="name == 'Dashboard'">
           <codx-sprintdetails-dashboard
@@ -91,17 +91,17 @@
             [resources]="resources"
           ></codx-sprintdetails-dashboard>
         </ng-container>
-        <ng-container *ngIf="name == 'Công việc'">
+        <ng-container *ngIf="name == 'AssignTo'">
           <codx-tasks-share
-            style="height: 500px"
             *ngIf="dataObj"
             [dataObj]="dataObj"
             [showButtonAdd]="showButtonAdd"
+            [showMoreFunc]="showMoreFunc"
             [funcID]="funcID"
           >
           </codx-tasks-share>
         </ng-container>
-        <ng-container *ngIf="name == 'Lịch sử'">
+        <ng-container *ngIf="name == 'History'">
           <ng-container>
             <ng-container>
               <codx-tree-history
@@ -115,7 +115,7 @@
             </ng-container>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="name == 'Bình luận'">
+        <ng-container *ngIf="name == 'Comments'">
           <ng-container>
             <codx-tree-history
               [objectID]="iterationID"
@@ -129,7 +129,7 @@
             </codx-tree-history>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="name == 'Họp định kì'">
+        <ng-container *ngIf="name == 'Meetings'">
           <codx-tmmeetings
             [dataObj]="dataObj"
             [showButtonAdd]="false"

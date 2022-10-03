@@ -14,8 +14,8 @@
         <codx-label fiedName="UserID" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
           default="Mã người dùng">
         </codx-label>
-        <codx-input field="userID" type="text" [disabled]="true"
-          [crrValue]="adUser.userID" >
+        <codx-input field="userID" type="text" [disabled]="formType == 'edit' ? true : false"
+          [crrValue]="adUser.userID">
         </codx-input>
       </div>
     </div>
@@ -39,7 +39,7 @@
       default="Tên người dùng">
     </codx-label>
     <codx-input type="text" field="userName" [crrValue]="adUser.userName" (valueChange)="valueChangeU($event)"
-    [placeholder]="gridViewSetup?.UserName?.headerText">
+      [placeholder]="gridViewSetup?.UserName?.headerText">
     </codx-input>
   </div>
   <div class="form-group">
@@ -47,7 +47,8 @@
       default="Nhóm người dùng">
     </codx-label>
     <codx-input type="combobox" field="userGroup" [crrValue]="adUser.userGroup" refValue="UserGroups"
-      (valueChange)="valueUG($event)" [multiple]="false" loadFull="true" [placeholder]="gridViewSetup?.UserGroup?.headerText">
+      (valueChange)="valueUG($event)" [multiple]="false" loadFull="true"
+      [placeholder]="gridViewSetup?.UserGroup?.headerText">
     </codx-input>
   </div>
   <div class="form-group">
@@ -61,13 +62,14 @@
   <div class="form-group row m-0">
     <div class="form-group col-6 ps-0">
       <codx-label fiedName="Email" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-        default="Email" >
+        default="Email">
       </codx-label>
       <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChangeM($event)"
         [disabled]="!adUser.email ? false : true" *ngIf="formType == 'edit'">
       </codx-input>
       <codx-input field="email" type="text" [crrValue]="adUser.email" (valueChange)="valueChangeM($event)"
-        [disabled]="false" *ngIf="formType == 'add' || formType == 'copy'" [placeholder]="gridViewSetup?.Email?.headerText">
+        [disabled]="false" *ngIf="formType == 'add' || formType == 'copy'"
+        [placeholder]="gridViewSetup?.Email?.headerText">
       </codx-input>
     </div>
     <div class="form-group col-6 pe-0">
@@ -75,7 +77,7 @@
         default="Phone">
       </codx-label>
       <codx-input type="text" field="mobile" [crrValue]="adUser.phone" (valueChange)="valueChangeP($event)"
-      [placeholder]="gridViewSetup?.Mobile?.headerText">
+        [placeholder]="gridViewSetup?.Mobile?.headerText">
       </codx-input>
     </div>
   </div>
@@ -83,8 +85,11 @@
 <ng-template #tabRoles>
   <div class="form-group mt-3">
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="openPopup(viewChooseRole)">Chỉnh sửa
-        quyền</button>
+      <button type="button" class="btn btn-primary" (click)="openPopup(viewChooseRole)">
+        <codx-label name="titleUserRoles" formName="UserRoles" default="Chỉnh sửa
+        quyền">
+        </codx-label>
+      </button>
     </div>
 
     <!-- List checkbox of UserRoles -->
@@ -92,7 +97,7 @@
     <div class="" *ngIf="countListViewChooseRoleApp > 0">
 
       <div class="d-flex align-items-center mb-3">
-        <codx-label class="me-1" name="titleUserRoles" formName="UserRoles" default="Ứng dụng được phần quyền ">
+        <codx-label class="me-1" name="titleUserRoles" formName="UserRoles" default="Ứng dụng được phần quyền">
         </codx-label>
         <span class="fw-bold">({{countListViewChooseRoleApp}})</span>
       </div>

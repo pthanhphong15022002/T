@@ -1,4 +1,4 @@
-<!-- <div *ngIf="policyDedicationList.length > 0">
+<div *ngIf="policyDedicationList.length > 0">
     <hr />
     <div class="d-flex align-items-center justify-content-between">
         <div class="fs-4 fw-bold text-dark mb-6 mt-6">
@@ -7,14 +7,14 @@
         </div>
     </div>
     <div class="list-setting ml-10">
-        <div *ngFor=" let item of policyDedicationList ; let last = last">
-            <ng-container *ngTemplateOutlet="rowPolicyCoin ;context: {item:item,isLast:last  }">
+        <div *ngFor=" let item of policyDedicationList">
+            <ng-container *ngTemplateOutlet="rowPolicyCoin; context: { $implicit: item }">
             </ng-container>
         </div>
     </div>
 </div>
-<ng-template #rowPolicyCoin let-item="item" let-isLast="isLast">
-    <div class="d-flex align-items-start py-4 border-light" [class.border-bottom]="!isLast">
+<ng-template #rowPolicyCoin let-item>
+    <div class="d-flex align-items-start py-4 border-light">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark font-weight-bold font-size-h6">{{item.policyName}}
             </div>
@@ -22,16 +22,14 @@
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
-                <codx-input type="switch" name="checkbox" class="" ngDefaultControl [field]="item.recID"
-                    (valueChange)="onSaveStatusPolicy($event)" [checked]="item.actived" label="">
+                <codx-input type="switch" class="test-check" ngDefaultControl [field]="item.recID"
+                    (valueChange)="onSaveStatusPolicy($event, item)" [checked]="item.actived" label="">
                 </codx-input>
-                <span></span>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
                 <span class="icon-keyboard_arrow_right icon-22"
                     (click)="item.actived && LoadDetailPolicy(item.recID)"></span>
             </span>
-
         </div>
     </div>
-</ng-template> -->
+</ng-template>

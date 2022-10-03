@@ -92,26 +92,21 @@ export class NewsComponent implements OnInit {
     this.api.execSv(this.service,this.assemblyName,this.className,"GetDatasNewsAsync",[funcID,category])
     .subscribe((res:any[]) => 
     {
+      if(res && res[0] && res[1] && res[2])
+      {
         this.lstHotNew = res[0]; // tin mới nhất
         this.lstVideo = res[1]; // video
         this.lstGroup = res[2]; // tin cũ hơn
-        if(this.lstVideo.length == 0){
-          this.listSlider = [];
-        }
-        else {
-          if (res[1].length <= this.silderNumber) {
-            this.carousel?.pause();
-            this.listSlider.push(this.lstVideo);
-          }
-          else
-          {
-            this.isAllowNavigationArrows = true;
-            this.carousel?.cycle();
-            this.listSlider.push(res[1].splice(0, 3));
-            this.listSlider.push(res[1]);
-          }
-        }
+        // if (res[1].length <= this.silderNumber) {
+        //   this.carousel?.pause();
+        // }
+        // else
+        // {
+        //   this.isAllowNavigationArrows = true;
+        //   this.carousel?.cycle();
+        // }
         this.changedt.detectChanges();
+      }
     });
   }
 
@@ -136,10 +131,17 @@ export class NewsComponent implements OnInit {
     let modal =  this.callfc.openForm(PopupAddComponent,'',0,0,'',newsType,'',option);
     modal.closed.subscribe((res:any) => {
       if(res?.event){
-        let dataNew = res.event;
-        this.lstHotNew.pop();
-        this.lstHotNew.unshift(dataNew);
-        this.changedt.detectChanges();
+        let data = res.event;
+        if(data.newsType == this.NEWSTYPE.POST){
+          this.lstHotNew.pop();
+          this.lstHotNew.unshift(data);
+          this.changedt.detectChanges();
+        }
+        // else
+        // {
+        //   this.lstVideo.unshift(data);
+        //   this.changedt.detectChanges();
+        // }
       }
       })
   }

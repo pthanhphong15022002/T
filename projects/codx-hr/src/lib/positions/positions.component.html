@@ -1,6 +1,6 @@
 <codx-views #view [autoLoad]="true" idField="positionID" [views]="views" [selectedFirst]="true"
-    (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="click($event)"
-    [itemSelected]="itemSelected">
+    (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="click($event)" [formModel]="view.formModel"
+    [itemSelected]="itemSelected" [viewActiveType]="'15'">
 </codx-views>
 
 <ng-template #templateTree let-data>
@@ -15,15 +15,13 @@
 
 <ng-template #panelRightRef>
     <div class="d-flex flex-row panelmain" style="width: 100%;" *ngIf="dataValue">
-        <div class="d-flex flex-column flex-column-fluid pr-1" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
-        data-kt-scroll-height="auto" data-kt-scroll-wrappers=".panelmain, .wrapper"
-        data-kt-scroll-offset="0">
-            <codx-listview #listview [itemTemplate]="itemTemplate" [funcID]="funcID" service="HR"
+        <div class="d-flex flex-column flex-column-fluid pr-1" data-kt-scroll="true"
+            data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
+            data-kt-scroll-wrappers=".panelmain, .wrapper" data-kt-scroll-offset="0">
+            <codx-listview #listview [itemTemplate]="itemTemplate" [funcID]="view.formModel.funcID" service="HR"
                 className="PositionsBusiness" method="GetModelFormPositionsAsync" assemblyName="ERM.Business.HR"
-                entityName="HR_Positions" [predicate]="predicate"
-                [dataService]="dtService"
-                [selectFirst]="false"
-                [dataValue]="dataValue" (clickMF)="receiveMF($event)" [typeMF]="'hover'">
+                entityName="HR_Positions" [predicate]="predicate" [dataService]="dtService" [selectFirst]="false"
+                [dataValue]="dataValue" (clickMF)="clickMF($event)" [typeMF]="'hover'" [formModel]="view.formModel">
             </codx-listview>
         </div>
     </div>
@@ -38,7 +36,7 @@
                 <div class="text-dark mt-2">{{(data.orgUnitID||'') + (data.departmentID ? ' | ' + data.departmentID: '')
                     + (data.divisionID ? ' | ' + data.divisionID: '')}}
                 </div>
-                <div class="mr-5 d-flex align-items-center mt-1">    
+                <div class="mr-5 d-flex align-items-center mt-1">
                     <codx-label class="me-1" name="lblReportTo" formName="Positions" default="Báo cáo trực tiếp:">
                     </codx-label>
                     <span #reportTo>{{ data.reportTo | formatvalue: view.formModel:"reportTo":reportTo | async }}</span>
