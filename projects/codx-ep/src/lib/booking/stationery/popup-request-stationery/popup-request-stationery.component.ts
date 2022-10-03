@@ -98,7 +98,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.epService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        debugger;
         this.dialogAddBookingStationery = item;
         if (this.data) {
           this.dialogAddBookingStationery.patchValue({

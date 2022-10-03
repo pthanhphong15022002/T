@@ -2,7 +2,7 @@
   [formModel]="dialog.formModel" [data]="master">
   <ng-template popup adde #body>
     <div class="form-group">
-      <div class="image-input image-input-outline" id="kt_user_add_avatar">
+      <div class="image-input image-input-outline mb-3" id="kt_user_add_avatar">
         <codx-img #imageAvatar [width]="50" [objectId]="master ? master.iterationID : ''"
           [objectName]="master ? master.iterationName : ''" objectType="TM_Sprints" [funcId]="funcID" isAllowEdit="true"
           [updateDirect]="isUploadImg" [width]="70" [disabled]="readOnly" [height]="70">

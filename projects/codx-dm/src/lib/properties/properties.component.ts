@@ -64,7 +64,7 @@ export class PropertiesComponent implements OnInit {
   styleRating: string;
   historyFileName: string;
   fileEditing: FileUpload;
-  commenttext: string;
+  commenttext: string = "";
   shareContent: string;
   requestContent: string;
   requestTitle: string;
@@ -216,6 +216,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   txtValue($event, type) {
+    debugger;
     switch(type) {
       case "commenttext":
         this.commenttext = $event.data;
