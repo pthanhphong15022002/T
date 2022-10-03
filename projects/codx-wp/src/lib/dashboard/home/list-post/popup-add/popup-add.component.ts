@@ -101,7 +101,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   status: string = "";
   dialogData: any;
   dialogRef: DialogRef;
-  listFileUpload: any[] = [];
+  listFileUpload:any[] = [];
 
   @Input() isShow: boolean;
   constructor(
@@ -453,12 +453,19 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     return of(isSuccess);
   }
   addFile(files: any) {
+    if(!files)return;
     if (this.listFileUpload.length == 0) {
-      this.listFileUpload = files;
+      this.listFileUpload = [];
     }
-    else {
-      this.listFileUpload.concat(files);
-    }
+    // this.listFileUpload = this.listFileUpload.concat(files);
+    files.map((f:any)=>{
+      let isExist = this.listFileUpload.some((e:any)=>  e.fileName == f.fileName);
+      if(!isExist)
+      {
+        this.listFileUpload.push(f);
+      }
+    });
+    // this.listFileUpload.push(files);
     this.dt.detectChanges();
   }
 
