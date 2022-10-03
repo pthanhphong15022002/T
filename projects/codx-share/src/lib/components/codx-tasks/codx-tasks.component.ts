@@ -308,7 +308,6 @@ export class CodxTasksComponent
         //   dataObj: null,
         // },
         model: {
-          // template: this.treeView,
           panelLeftRef: this.treeView,
         },
       }
