@@ -1482,13 +1482,14 @@ export class CodxTasksComponent
   viewTask(data) {
     if (data) {
       var isAssignTask = data?.category == '3';
+      var funcID = isAssignTask ? 'TMT0203' :'TMT0201'
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask, this.funcID],
+        [data, 'view', isAssignTask, funcID],
         option
       );
     }
