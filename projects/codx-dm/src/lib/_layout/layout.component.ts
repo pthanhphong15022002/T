@@ -1,12 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation, HostListener, Renderer2 } from '@angular/core';
 import { FileUpload } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
+import { AccumulationChartComponent, AccumulationTheme, IAccLoadedEventArgs, IAccPointRenderEventArgs, IAccTextRenderEventArgs } from '@syncfusion/ej2-angular-charts';
 import { AuthService, CacheService, CallFuncService, CodxService, DialogRef, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { Observable, of } from 'rxjs';
 import { CodxDMService } from '../codx-dm.service';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
+
+import { Browser } from '@syncfusion/ej2-base';
 
 @Component({
   selector: 'codx-layout',
@@ -14,6 +17,7 @@ import { CreateFolderComponent } from '../createFolder/createFolder.component';
   styleUrls: ['./layout.component.scss'],
   encapsulation:ViewEncapsulation.None
 })
+
 export class LayoutComponent implements OnInit, AfterViewInit {
   // Public variables
   contentContainerClasses = '';
@@ -33,7 +37,11 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
   public titleHddUsed = 'Đã sử dụng 0MB trong tổng số 50.00 GB';
-  public Showtitle = true;
+  public titleHddUsed_small = 0;
+  public titleHddHdd_small = '100';
+  public totalUsed_small = 95;
+  public totalHdd_small = 95;
+  showtitle = true;
 
   @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
   @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
@@ -56,6 +64,13 @@ db.DM_FolderInfo.updateMany(
 //     this.codxService.init(this.module);
 //   }
 
+public layoutColor: string;
+  public cellSpacing: number[] = [15, 15];
+  public cellAspectRatio: number = 0.8;
+  
+
+ 
+
   constructor(
     private layout: LayoutService,
     private auth: AuthService,
@@ -66,16 +81,21 @@ db.DM_FolderInfo.updateMany(
     private folderService: FolderService,
     private fileService: FileService,
     private changeDetectorRef: ChangeDetectorRef,    
+    private renderer: Renderer2
   ) {
     this.codxService.init('DM');
     this.fileService.getTotalHdd().subscribe(item => {
       //  totalUsed: any;
       // totalHdd: any;
-      this.getHDDInformaton(item);      
+      this.getHDDInformaton(item);
+      document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',(item));       
     })
 
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
+  
+
+
 
   ngOnInit(): void {
     // build view by layout config settings
@@ -89,6 +109,8 @@ db.DM_FolderInfo.updateMany(
       this.submenu = res;
       this.changeDetectorRef.detectChanges();
     });
+
+    
     // this.dmSV.isSetRight.subscribe(res => {      
     //   if (this.dmSV.parentCreate) {
     //     this.disableInput = false;
@@ -107,10 +129,11 @@ db.DM_FolderInfo.updateMany(
     });
 
     this.dmSV.isUpdateHDD.subscribe(item => {     
-      this.getHDDInformaton(item);        
+      this.getHDDInformaton(item);
+      document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',(item));        
     });
     
-   
+
   }
 
   setClassActive() {    
@@ -154,26 +177,98 @@ db.DM_FolderInfo.updateMany(
       this.changeDetectorRef.detectChanges();
     });
   }
-
+  
   getHDDInformaton(item: any) {
+    
     if (item != null) {
+      debugger;
       this.itemHdd = item;
       this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
-      this.percentUsed = this.percentUsed.toFixed(0);
+      this.titleHddUsed_small  = this.percentUsed.toFixed(1);
+       this.titleHddHdd_small = (100 * ((item.totalHdd - item.totalUsed) / item.totalHdd)).toFixed(1);
+       /* this.totalUsed_small = item.totalUsed;
+       this.totalHdd_small = item.totalHdd; */
+      //this.percentUsed = this.percentUsed.toFixed(0);
       //console.log(this.percentUsed);
       this.titleHddUsed = item.messageHddUsed;
       this.changeDetectorRef.detectChanges();
-    }    
-  }
-  ClickSowTitle(){
-    if(this.Showtitle==false)
-    {
-    this.Showtitle = false;
-    }else{
-      this.Showtitle = true;
-    }
 
+      this.data = [
+        { Product : "Đã dùng : "+this.titleHddUsed_small+"%", Percentage : this.titleHddUsed_small, TextMapping : "Đã dùng : "+this.titleHddUsed_small+"%"},
+        { Product : "Trống : "+this.titleHddHdd_small+"%", Percentage : this.titleHddHdd_small, TextMapping : "Trống : "+this.titleHddHdd_small+"%"}
+      ];
+    }
+   
   }
+
+   //Pie Chart
+   
+   public data: Object[] = [
+    { Product : "Đã dùng : "+this.titleHddUsed_small+"%", Percentage : this.titleHddUsed_small, TextMapping : "Đã dùng : "+this.titleHddUsed_small+"%"},
+    { Product : "Trống : "+this.titleHddHdd_small+"%", Percentage : this.titleHddHdd_small, TextMapping : "Trống : "+this.titleHddHdd_small+"%"}
+  ];
+
+  public animation: Object = {
+    enable: true
+  };
+  public border: Object = { width:3 };
+  public pieTooltipSetting: Object = { enable: true, format: '${point.x}' };
+  public palettes: string[] = ["#00bcd4", "#f5f9fa", "#FEC200", "#CA765A", "#2485FA", "#F57D7D", "#C152D2",
+    "#8854D9", "#3D4EB8", "#00BCD7", "#4472c4", "#ed7d31", "#ffc000", "#70ad47", "#5b9bd5", "#c1c1c1", "#6f6fe2", "#e269ae", "#9e480e", "#997300"];
+    
+  public pielegendSettings: Object = {
+    visible: false,
+  };
+  public dataLabel: Object = {
+    visible: true,
+    position: 'Inside',
+    connectorStyle: { length: '5px', type:'Curve'}
+  };
+  
+public pointRender(args: IAccPointRenderEventArgs): void {
+  let selectedTheme: string = location.hash.split('/')[1];
+  selectedTheme = selectedTheme ? selectedTheme : 'Material';
+  if (selectedTheme.indexOf('dark') > -1 )
+  {
+    if(selectedTheme.indexOf('material') > -1 )
+    {
+      args.border.color = '#303030' ;
+      this.layoutColor= '#303030' ;
+    }
+    else if(selectedTheme.indexOf('bootstrap5') > -1 )
+    {
+      args.border.color = '#343a40' ;
+      this.layoutColor= '#343a40' ;
+    }
+    else if(selectedTheme.indexOf('bootstrap') > -1 )
+    {
+      args.border.color = '#1A1A1A' ;
+      this.layoutColor= '#1A1A1A' ;
+    }
+    else if(selectedTheme.indexOf('tailwind') > -1 )
+    {
+      args.border.color = '#1F2937' ;
+      this.layoutColor= '#1F2937' ;
+    }
+    else if(selectedTheme.indexOf('fluent') > -1 )
+    {
+      args.border.color = '#252423' ;
+      this.layoutColor= '#252423' ;
+    }
+    else if(selectedTheme.indexOf('fabric') > -1 )
+    {
+      args.border.color = '#201f1f' ;
+      this.layoutColor= '#201f1f' ;
+    }
+    else
+    {
+      args.border.color = '#222222' ;
+      this.layoutColor= '#222222' ;
+    }
+  }
+};
+
+  
 
   getPercentClass() {
     if (this.itemHdd != null) {
@@ -195,6 +290,35 @@ db.DM_FolderInfo.updateMany(
         }
       }
     }
+document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',()=>{
+
+  if(this.showtitle==false)
+    {
+      
+    /* this.titleHddUsed_small = this.percentUsed ;
+    this.changeDetectorRef.detectChanges(); */
+    this.showtitle = true;
+    }else{
+      //debugger;
+    /* this.titleHddUsed_small = this.percentUsed ;
+    this.changeDetectorRef.detectChanges(); */
+      this.showtitle = false;
+      /* if (item != null) { */
+        //this.itemHdd = item;
+        
+        //this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
+        //console.log(this.percentUsed);
+        //this.titleHddUsed_small = 100 * (item.totalUsed / item.totalHdd);
+        //this.titleHddUsed = item.messageHddUsed;
+        
+      //} 
+    }
+//console.log('abc123')
+});
+// bắt sự kiện class
+    // this.renderer.listen('button.btn-minimize', 'click', (event) => {
+    //   console.log(event);
+    // });
   }
 
   disable() {
@@ -319,7 +443,16 @@ db.DM_FolderInfo.updateMany(
       childs: []
     }
   ]); */
+
+
+  
+
+
+
+
+
 }
+
 
 // import { Component, OnInit, Injector } from '@angular/core';
 // import {

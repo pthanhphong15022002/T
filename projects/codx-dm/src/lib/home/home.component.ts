@@ -479,12 +479,12 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-    debugger
+    
     ScrollComponent.reinitialization();
     if ($data == null || $data.data == null) {
       return;
     }
-    debugger
+    
     this.isSearch = false;
     this.clearWaitingThumbnail();
     let id = $data.data.recID;
@@ -547,7 +547,7 @@ export class HomeComponent extends UIComponent {
       this.folderService.options.srtColumns = this.sortColumn;
       this.folderService.options.srtDirections = this.sortDirection;
       this.fileService.options.funcID = this.view.funcID;
-      debugger
+      
       this.fileService.GetFiles(id).subscribe(async res => {
         if (res != null) {
           this.dmSV.listFiles = res[0];
@@ -620,6 +620,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -678,6 +679,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -984,7 +986,7 @@ export class HomeComponent extends UIComponent {
   }
 
   requestEnded(e: any) {
-    debugger
+    
     this.isSearch = false;
     if (e.type === "read") {
       this.data = [];
