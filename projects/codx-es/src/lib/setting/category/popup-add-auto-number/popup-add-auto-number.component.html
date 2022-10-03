@@ -1,4 +1,4 @@
-<codx-form
+<!-- <codx-form
   [dialog]="dialog"
   [headerText]="headerText"
   [subHeaderText]="subHeaderText"
@@ -62,7 +62,7 @@
           </codx-label>
           <codx-input
             type="text"
-            [crrValue]="dialogAutoNum.value.fixedString"
+            [crrValue]="'123'"
             field="fixedString"
             (valueChange)="valueChange($event, 'fixedString')"
           >
@@ -141,8 +141,6 @@
         </div>
       </div>
       <div class="col-5">
-        <!-- <codx-label fiedName="Interval" [formModel]="formModel" default="Chu kỳ reset ">
-        </codx-label> -->
         <div class="form-group">
           <codx-input
             type="valuelist"
@@ -152,6 +150,143 @@
             field="interval"
             (valueChange)="valueChange($event)"
             [disabled]="!dialogAutoNum.value.autoReset"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form> -->
+
+<codx-form
+  [headerText]="headerText"
+  [subHeaderText]=""
+  [body]="body"
+  [footer]="footer"
+  [data]="data"
+  [formModel]="formModel"
+  [dialog]="dialog"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="StringFormat" [formModel]="formModel">
+          </codx-label>
+          <codx-input
+            field="stringFormat"
+            [Group]="dialogAutoNum"
+            [formModel]="formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="MaxLength" [formModel]="formModel">
+          </codx-label>
+          <codx-input
+            [min]="0"
+            field="maxLength"
+            [formModel]="formModel"
+            [Group]="dialogAutoNum"
+            (valueChange)="valueChange($event)"
+            [showSpinButton]="false"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label fiedName="FixedString" [formModel]="formModel">
+          </codx-label>
+          <codx-input
+            type="text"
+            [Group]="dialogAutoNum"
+            [formModel]="formModel"
+            field="fixedString"
+            (valueChange)="valueChange($event, 'fixedString')"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label fiedName="Separator" [formModel]="formModel">
+          </codx-label>
+          <codx-input
+            field="separator"
+            [Group]="dialogAutoNum"
+            [formModel]="formModel"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label fiedName="DateFormat" [formModel]="formModel">
+          </codx-label>
+          <codx-input
+            [Group]="dialogAutoNum"
+            [formModel]="formModel"
+            field="dateFormat"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label name="lblReview" default="Xem trước" [formModel]="formModel">
+      </codx-label>
+      <codx-input
+        type="text"
+        cssClass="form-control"
+        [crrValue]="viewAutoNumber"
+        [disabled]="true"
+      >
+      </codx-input>
+    </div>
+    <div class="row">
+      <div class="col-7">
+        <div class="form-group">
+          <codx-input
+            type="checkbox"
+            labelPosition="after"
+            field="autoReset"
+            class="test-check"
+            (valueChange)="valueChange($event)"
+            [crrValue]="data.autoReset"
+          >
+          </codx-input>
+          <codx-label class="ms-2" fiedName="autoReset" [formModel]="formModel">
+          </codx-label>
+        </div>
+      </div>
+      <div class="col-5">
+        <div class="form-group">
+          <codx-input
+            field="interval"
+            [formModel]="formModel"
+            [Group]="dialogAutoNum"
+            (valueChange)="valueChange($event)"
+            [disabled]="!data.autoReset"
           ></codx-input>
         </div>
       </div>

@@ -194,7 +194,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                       // }
 
                       let lstUser = res1[1];
-                      if (lstUser.length > 0) {
+                      if (lstUser && lstUser.length > 0) {
                         lstUser.forEach((element) => {
                           switch (element.sendType) {
                             case '1':
@@ -239,7 +239,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
   onSaveWithTemplate(dialog: DialogRef) {
     if (this.dialogETemplate.value.isTemplate) {
-      this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 250);
+      this.callFunc.openForm(this.addTemplateName, '', 400, 250);
     } else {
       this.onSaveForm1(dialog);
     }

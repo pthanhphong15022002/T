@@ -130,7 +130,11 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.dialogSignature.patchValue(this.data);
 
     if (this.dialogSignature.invalid == true) {
-      this.esService.notifyInvalid(this.dialogSignature, this.formModel);
+      this.esService.notifyInvalid(
+        this.dialogSignature,
+        this.formModel,
+        this.data
+      );
       return;
     }
 

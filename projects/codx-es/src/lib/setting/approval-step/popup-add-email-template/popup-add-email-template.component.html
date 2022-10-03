@@ -1025,12 +1025,7 @@
             "
           >
             <label class="mt-1 me-2">
-              <codx-label
-                default="Gửi vào lúc"
-                formName="EmailTemplates"
-                gridViewName="grvEmailTemplates"
-                fiedName="SendTime"
-              >
+              <codx-label [formModel]="formModel" fiedName="SendTime">
               </codx-label>
             </label>
             <div class="w-150px">

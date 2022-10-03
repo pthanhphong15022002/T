@@ -305,7 +305,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     console.log('result data:', this.data);
     console.log('result formGroup: ', this.form.formGroup);
     if (this.dialogCategory.invalid == true) {
-      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
+      this.esService.notifyInvalid(
+        this.dialogCategory,
+        this.formModel,
+        this.data
+      );
       return;
     }
 
@@ -371,7 +375,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   openPopupApproval() {
     this.dialogCategory.patchValue(this.data);
     if (this.dialogCategory.invalid == true) {
-      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
+      this.esService.notifyInvalid(
+        this.dialogCategory,
+        this.formModel,
+        this.data
+      );
       return;
     }
     if (this.isAdd) {
