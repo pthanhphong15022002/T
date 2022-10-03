@@ -1,143 +1,112 @@
-<codx-form [headerText]="" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel"
-    [data]="dataUpdate">
+<codx-form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel"
+    [data]="dataUpdate" #form>
     <ng-template #body>
-        <!-- <div class="offcanvas-content offcanvas-extend content">
-            <div class="offcanvas-wrapper">
-                <div class="d-flex">
-                    <div class="flex-grow-1 extend-main border-right">
-                        <div class="form-group">
-                            <div class="font-w500 font-1rem">
-                                <codx-label name="lblGiftName" [formName]="functionList?.formName"
-                                    default="Tên quà tặng"></codx-label>
-                                <span class="required"></span>
-                            </div>
-                            <codx-input type="text" class="form-control" placeholder="Tên quà tặng" ngDefaultControl
-                                [crrValue]="addEditForm.controls['giftName'].value" (valueChange)="valueChange($event)"
-                                field="giftName" autocomplete="off"></codx-input>
-                        </div>
-                        <div class="form-group row mt-3">
-                            <div class="col-lg-6 col-md-6">
-                                <div class="font-w500 font-1rem">
-                                    <codx-label name="lblGiftCode" [formName]="functionList?.formName"
-                                        default="Mã quà tặng">
-                                    </codx-label>
-                                    <span class="required"></span>
-                                </div>
-                                <codx-input type="text" [disabled]="isAddMode ? false : true" class="form-control"
-                                    ngDefaultControl [crrValue]="addEditForm.controls['giftID'].value"
-                                    placeholder="ITEM20210206001" (valueChange)="valueChange($event)" field="giftID">
-                                </codx-input>
-                            </div>
-                            <div class="col-lg-6 col-md-6">
-                                <div class="font-w500 font-1rem">
-                                    <codx-label name="lblGiftGroup" [formName]="functionList?.formName"
-                                        default="Nhóm quà tặng">
-                                    </codx-label>
-                                </div>
-                                <codx-input (valueChange)="changeCombobox($event, 'groupID')" id="edit-usergroups"
-                                    ngDefaultControl type="combobox" name="combobox"
-                                    [crrValue]="addEditForm.controls['groupID'].value"
-                                    class=" form-control borderless p-0" style="border: none;" placeholder="{{'Nhóm quà tặng' | lang:
-                            '':'':'' | async}}" refValue="GiftGroup" [predicate]="predicate" loadFull="false"
-                                    field="groupID" service="FD">
-                                </codx-input>
-                            </div>
-                        </div>
-                        <div class="form-group row mt-3">
-                            <div class="col-lg-6 col-md-6">
-                                <div class="font-w500 font-1rem">
-                                    <codx-label name="lblOwner" [formName]="functionList?.formName"
-                                        default="Chủ sở hữu"></codx-label>
-                                </div>
-                                <codx-input id="edit-usergroups" type="combobox" name="combobox" ngDefaultControl #owner
-                                    [crrValue]="addEditForm.controls['owner'].value"
-                                    (valueChange)="changeCombobox($event, 'owner')" class=" form-control borderless p-0"
-                                    style="border: none;" refValue="Users" [predicate]="" field="owner" service="AD">
-                                </codx-input>
-                            </div>
-                        </div>
-                        <div class="form-group mt-3" style="width: 490px;">
-                            <div class="font-w500 font-1rem">
-                                <codx-label name="lblMemo" [formName]="functionList?.formName" default="Mô tả">
-                                </codx-label>
-                                <span class="required"></span>
-                            </div>
-                            <codx-input type="text" class="form-control text" rows="3"
-                                (valueChange)="valueChange($event)" ngDefaultControl
-                                [crrValue]="addEditForm.controls['memo'].value" field="memo">
-                            </codx-input>
-                        </div>
-                        <div class="form-group mt-3" style="width: 490px;">
-                            <div class="font-w500 font-1rem">
-                                <codx-label name="lblDescription" [formName]="functionList?.formName"
-                                    default="Mô tả khác">
-                                </codx-label>
-                            </div>
-                            <codx-input dataformat="ed" name="editor" class="w-490px test-textarea" placeholder=""
-                                ngDefaultControl [crrValue]="addEditForm.controls['description'].value"
-                                (valueChange)="valueChange($event)" type="textarea" field="description">
-                            </codx-input>
-                        </div>
-                        <div class="form-group row mt-3">
-                            <div class="col-lg-6 col-md-6">
-                                <div class="font-w500 font-1rem">
-                                    <codx-label name="lblPrice" [formName]="functionList?.formName"
-                                        default="Đơn giá (xu)">
-                                    </codx-label>
-                                    <span class="required"></span>
-                                </div>
-                                <codx-input type="number" class="form-control" placeholder="21" type="text"
-                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" field="price"
-                                    (valueChange)="valueChange($event)" ngDefaultControl
-                                    [crrValue]="addEditForm.controls['price'].value"></codx-input>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-start pic-grif">
-                            <div class="pic-edit mr-5 upload-img" style="border: none;">
-                                <codx-img funcId="FDS0122" #imageUpLoad aria-disabled="true" objectType="FD_Gifts"
-                                    [isAllowEdit]="true" [width]="90" [objectId]="addEditForm.controls['giftID'].value">
-                                </codx-img>
-                            </div>
-                            <div class="d-flex flex-column mt-4">
-                                <div class="d-flex align-items-center mr-6">
-                                    <span class="text-dark-75 mr-2">
-                                        <codx-label name="lblStorage" [formName]="functionList?.formName"
-                                            default="Tồn kho:">
-                                        </codx-label>
-                                    </span>
-                                    <span
-                                        class="text-dark font-weight-bold left-5">{{addEditForm?.controls['onhand'].value}}</span>
-                                </div>
-                                <div class="d-flex align-items-center mr-6">
-                                    <span class="text-dark-75 mr-2">
-                                        <codx-label name="lblPrice" [formName]="functionList?.formName"
-                                            default="Đã giành hàng:">
-                                        </codx-label>
-                                    </span>
-                                    <span
-                                        class="text-dark font-weight-bold left-5">{{addEditForm?.controls['reservedQty'].value}}</span>
-                                </div>
-                                <div class="d-flex align-items-center mr-6">
-                                    <span class="text-dark-75 mr-2">
-                                        <codx-label name="lblPrice" [formName]="functionList?.formName"
-                                            default="Sẵn sàng xuất:">
-                                        </codx-label>
-                                    </span>
-                                    <span
-                                        class="text-dark font-weight-bold left-5">{{addEditForm?.controls['availableQty'].value}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="form-group">
+            <div class="font-w500 font-1rem">
+                <codx-label fiedName="GiftName" [formModel]="form.formModel" default="Tên quà tặng">
+                </codx-label>
+            </div>
+            <codx-input (valueChange)="valueChange($event)" [Group]="form.formGroup" [formModel]="form.formModel"
+                field="giftName">
+            </codx-input>
+        </div>
+        <div class="form-group row mt-3">
+            <div class="col-lg-6 col-md-6">
+                <div class="font-w500 font-1rem">
+                    <codx-label fiedName="GiftCode" [formModel]="form.formModel" default="Mã quà tặng">
+                    </codx-label>
+                </div>
+                <codx-input [disabled]="isAddMode ? false : true" (valueChange)="valueChange($event)" field="giftID"
+                    [Group]="form.formGroup" [formModel]="form.formModel">
+                </codx-input>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="font-w500 font-1rem">
+                    <codx-label fiedName="GiftGroup" [formModel]="form.formModel" default="Nhóm quà tặng">
+                    </codx-label>
+                </div>
+                <codx-input (valueChange)="changeCombobox($event)" class="form-control borderless p-0"
+                    style="border: none;" [Group]="form.formGroup" [formModel]="form.formModel" field="groupID">
+                </codx-input>
+            </div>
+        </div>
+        <div class="form-group row mt-3">
+            <div class="col-lg-6 col-md-6">
+                <div class="font-w500 font-1rem">
+                    <codx-label fiedName="Owner" [formModel]="form.formModel" default="Chủ sở hữu">
+                    </codx-label>
+                </div>
+                <codx-input (valueChange)="changeCombobox($event)" class="form-control borderless p-0"
+                    style="border: none;" field="owner" [Group]="form.formGroup" [formModel]="form.formModel">
+                </codx-input>
+            </div>
+        </div>
+        <div class="form-group mt-3" style="width: 490px;">
+            <div class="font-w500 font-1rem">
+                <codx-label fiedName="Memo" [formModel]="formModel" default="Mô tả">
+                </codx-label>
+            </div>
+            <codx-input class="form-control text" rows="3" (valueChange)="valueChange($event)" [Group]="form.formGroup"
+                [formModel]="form.formModel" field="memo">
+            </codx-input>
+        </div>
+        <div class="form-group mt-3" style="width: 490px;">
+            <div class="font-w500 font-1rem">
+                <codx-label fiedName="Description" [formModel]="formModel" default="Mô tả khác">
+                </codx-label>
+            </div>
+            <codx-input dataformat="ed" class="w-490px test-textarea" [Group]="form.formGroup"
+                [formModel]="form.formModel" (valueChange)="valueChange($event)" field="description">
+            </codx-input>
+        </div>
+        <div class="form-group row mt-3">
+            <div class="col-lg-6 col-md-6">
+                <div class="font-w500 font-1rem">
+                    <codx-label fiedName="Price" [formModel]="formModel" default="Đơn giá (xu)">
+                    </codx-label>
+                </div>
+                <codx-input class="form-control" [Group]="form.formGroup" [formModel]="form.formModel"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" field="price"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+        </div>
+        <div class="d-flex align-items-start pic-grif">
+            <div class="pic-edit mr-5 upload-img" style="border: none;">
+                <codx-img funcId="FDS0122" #imageUpLoad aria-disabled="true" objectType="FD_Gifts" [isAllowEdit]="true"
+                    [width]="90" [objectId]="dataUpdate.giftID">
+                </codx-img>
+            </div>
+            <div class="d-flex flex-column mt-4">
+                <div class="d-flex align-items-center mr-6">
+                    <span class="text-dark-75 mr-2">
+                        <codx-label fiedName="Storage" [formModel]="formModel" default="Tồn kho:">
+                        </codx-label>
+                    </span>
+                    <span class="text-dark font-weight-bold left-5">{{dataUpdate.onhand}}</span>
+                </div>
+                <div class="d-flex align-items-center mr-6">
+                    <span class="text-dark-75 mr-2">
+                        <codx-label fiedName="Price" [formModel]="formModel" default="Đã giành hàng:">
+                        </codx-label>
+                    </span>
+                    <span class="text-dark font-weight-bold left-5">{{
+                        dataUpdate.reservedQty}}</span>
+                </div>
+                <div class="d-flex align-items-center mr-6">
+                    <span class="text-dark-75 mr-2">
+                        <codx-label fiedName="Price" [formModel]="formModel" default="Sẵn sàng xuất:">
+                        </codx-label>
+                    </span>
+                    <span class="text-dark font-weight-bold left-5">{{dataUpdate.availableQtyF}}</span>
                 </div>
             </div>
-        </div> -->
+        </div>
     </ng-template>
-
     <ng-template #footer>
-        <div class="d-flex justify-content-between mt-4">
+        <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
-                <codx-label name="lblSave" [formName]="formModel?.formName" default="Lưu"></codx-label>
+                <codx-label fiedName="Save" [formModel]="formModel" default="Lưu"></codx-label>
             </button>
         </div>
     </ng-template>

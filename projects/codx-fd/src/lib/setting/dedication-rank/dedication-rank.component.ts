@@ -10,11 +10,11 @@ import { ApiHttpService, ButtonModel, CodxGridviewComponent, ImageViewerComponen
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 @Component({
-  selector: 'app-dedicationrank',
-  templateUrl: './dedicationrank.component.html',
-  styleUrls: ['./dedicationrank.component.scss']
+  selector: 'app-dedication-rank',
+  templateUrl: './dedication-rank.component.html',
+  styleUrls: ['./dedication-rank.component.scss']
 })
-export class DedicationrankComponent extends UIComponent implements OnInit {
+export class DedicationRankComponent extends UIComponent implements OnInit {
 
   datafuntion = null;
   titlePage = "";

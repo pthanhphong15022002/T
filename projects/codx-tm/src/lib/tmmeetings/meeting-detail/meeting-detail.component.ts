@@ -102,35 +102,6 @@ export class MeetingDetailComponent extends UIComponent {
     this.layout.setLogo(null); //null tạo icon back
     this.urlDetail = 'tm/sprintdetails/TMT03011';
 
-    // if (this.meetingID) {
-    //   this.tmService.getMeetingID(this.meetingID).subscribe((res) => {
-    //     if (res) {
-    //       this.data = res;
-    //       // this.createdByName = res.userName;
-    //       // this.nameObj = res.meetingName;
-    //       // this.projectID = res.refID;  // ở meeting là refID
-    //       var resourceTaskControl = [];
-    //       var arrayResource = res?.resources;
-    //       if (arrayResource && arrayResource.length > 0) {
-    //         arrayResource.forEach(data => {
-    //           if (data.taskControl) resourceTaskControl.push(data.resourceID);
-    //         })
-    //       }
-    //       this.resources = resourceTaskControl.length > 0 ? resourceTaskControl.join(";") : '',
-    //         this.dataObj = {
-    //           projectID: this.projectID ? this.projectID : '',
-    //           resources: this.resources,
-    //           fromDate: res.fromDate ? moment(new Date(res.fromDate)) : '',
-    //           endDate: res.toDate ? moment(new Date(res.toDate)) : '',
-    //         };
-    //       if (this.resources != null) {
-    //         this.getListUserByResource(this.resources);
-    //       }
-    //       // this.showButtonAdd = false;
-    //       // this.showMoreFunc = false;
-    //     }
-    //   });
-    // }
     this.loadData();
   }
 
@@ -141,13 +112,6 @@ export class MeetingDetailComponent extends UIComponent {
   ngAfterViewInit(): void {
     if (this.tabControl.length == 0) {
       this.tabControl = this.all;
-      // this.all.forEach((res, index) => {
-      //   var tabModel = new TabControl();
-      //   tabModel.name = tabModel.textDefault = res;
-      //   if (index == 1) tabModel.isActive = true;
-      //   else tabModel.isActive = false;
-      //   this.tabControl.push(tabModel);
-      // });
     } else {
       this.active = this.tabControl.findIndex(
         (x: TabControl) => x.isActive == true
