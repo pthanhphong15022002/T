@@ -189,7 +189,127 @@
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
-<ng-template #footerNone> </ng-template>
+
+<ng-template #contentTmp let-data>
+  <div>
+    <h2>{{ data.taskName }}</h2>
+  </div>
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <i class="icon-person me-1"></i>
+    <span class="ms-1 fw-bold" >
+      {{data?.userNameCreate}}
+    </span>
+  </div>
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <div *ngIf="data?.priority">
+      <span
+        class="icon-14 me-1"
+        [class]="data?.priority | vll: vllPriority:'icon' | async"
+        [style.color]="data?.priority | vll: vllPriority:'textColor' | async"
+      >
+      </span>
+      <span class="text-gray-700">{{
+        data?.priority | vll: vllPriority:"text" | async
+      }}</span>
+    </div>
+    <div #priority *ngIf="!data?.priority">
+      {{
+        data?.priority
+          | formatvalue: view.formModel:"priority":priority:"Tasks":"grvTasks"
+          | async
+      }}
+    </div>
+  </div>
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today me-1"></i>
+      <span class="ms-1 fw-bold">
+        <span #dueDate>{{
+          data?.dueDate
+            | date: "dd/MM/yyyy"
+            | formatvalue: view.formModel:"dueDate":dueDate:"Tasks":"grvTasks"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <codx-label
+      default="Nội dung:"
+      name="lblMemo"
+      [formModel]="view.formModel"
+      class="text-gray-600"
+    ></codx-label>
+    <span class="ms-2 fw-bold">
+      <span class="text-gray-700" [innerHTML]="data?.memo"></span>
+      <span #memo *ngIf="!data?.memo">{{
+        data?.memo
+          | formatvalue: view.formModel:"memo":memo:"Tasks":"grvTasks"
+          | async
+      }}</span>
+    </span>
+  </div>
+  <div class="d-flex mb-2">
+    <div class="d-flex text-dark me-6">
+      <codx-label fiedName="Owner" formName="Tasks" gridViewName="grvTasks" default="Người thực hiện" class="text-gray-600 me-4">
+      </codx-label>
+      <div class="d-flex justify-content-end">
+        <codx-imgs
+          [objectId]="data?.owner"
+          objectType="AD_Users"
+          [numberImages]="4"
+          [width]="30"
+        >
+        </codx-imgs>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div *ngIf="data.bookingItems?.length > 0">
+    <div *ngFor="let item of data.bookingItems">
+      <div class="d-flex mb-4 justify-content-between">
+        <div class="d-flex flex-row">
+          <div class="me-2">
+            <codx-img
+              [objectId]="item.recID"
+              imageType="square"
+              width="35"
+              objectType="EP_Stationery"
+            ></codx-img>
+          </div>
+          <div class="">
+            <div class="">
+              <span href="#" class="fw-bold">{{ item.itemName }}</span>
+            </div>
+            <div class="d-flex flex-row flex-grow-1">
+              <codx-label
+                default="Đơn vị tính:"
+                name="lblQuantity"
+                class="text-gray-600"
+              ></codx-label>
+              <span class="d-block ms-2 fw-bold">{{ item.umid }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center me-3">
+          <codx-label
+            default="Số lượng:"
+            name="lblQuantity"
+            class="text-gray-600"
+          ></codx-label>
+          <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #eventTemplate let-data>
   <div
     [style.color]="data.status | vll: vllStatus:'textColor' | async"
@@ -198,6 +318,9 @@
     <div>{{ data.taskName }}</div>
   </div>
 </ng-template>
+
+<!-- content -->
+<ng-template #footerNone> </ng-template>
 
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
@@ -328,6 +451,18 @@
     </codx-temp-full>
   </div>
 </ng-template>
+
+<ng-template #mfButton let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+
 <codx-views
   #view
   [service]="service"
