@@ -25,8 +25,9 @@
     <div class="note-text">
         <div *ngIf="formType == 'add'">
             <div *ngIf="type == 'text'">
-                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea" [crrValue]="empty || ''"
-                    placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)" ngDefaultControl field="memo">
+                <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
+                    [crrValue]="empty || ''" placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)"
+                    ngDefaultControl field="memo">
                 </codx-input>
             </div>
             <div *ngIf="type == 'check' || type =='list'">
@@ -140,9 +141,11 @@
                 </codx-input>
             </div>
         </div>
-        <button type="button" class="btn btn-primary ms-1" (click)="saveNote()" *ngIf="!readOnly">
-            <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
-        </button>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary ms-1" (click)="saveNote()" *ngIf="!readOnly">
+                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+            </button>
+        </div>
     </div>
 </div>
 
