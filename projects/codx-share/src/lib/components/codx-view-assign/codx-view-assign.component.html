@@ -31,17 +31,17 @@
         </div>
         <div class="d-flex align-items-center ms-7">
           <div
-            [class]="'d-flex align-items-center me-3'+ ' ' +(data?.items?.length > 0? 'text-success' : 'text-gray-600')">
-            <span class="text-hover-primary icon-person_outline icon-16"></span>
+            [class]="'d-flex align-items-center me-4'+ ' ' +(data?.items?.length > 0? 'text-dark' : 'text-gray-600')">
+            <span class="text-dark icon-person_outline icon-16"></span>
             <span class="ms-1"> {{data?.items? data?.items?.length : 0}}</span>
           </div>
-          <div [class]="'d-flex align-items-center me-3'+ ' ' +(data?.todo > 0? 'text-success' : 'text-gray-600')">
-            <span class="text-hover-primary icon-check-correct icon-16"></span>
+          <div [class]="'d-flex align-items-center me-4'+ ' ' +(data?.todo > 0? 'text-dark' : 'text-gray-600')">
+            <span class="text-dark icon-check-correct icon-16"></span>
             <span class="ms-1">
               {{data?.todo}}</span>
           </div>
-          <div [class]="'d-flex align-items-center'+ ' ' +(data?.attachments >0? 'text-success' : 'text-gray-600')">
-            <span class="text-hover-primary icon-attach_file icon-16"></span>
+          <div [class]="'d-flex align-items-center'+ ' ' +(data?.attachments >0? 'text-dark' : 'text-gray-600')">
+            <span class="text-dark icon-attach_file icon-16"></span>
             <span>
               {{data?.attachments}}
             </span>
