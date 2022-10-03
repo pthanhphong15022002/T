@@ -115,48 +115,50 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
         }
       });
     }
-    if (this.meetingID) {
-      this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
-        if (res) {
-          this.data = res;
-          this.createdByName = res.userName;
-          this.nameObj = res.meetingName;
-          this.projectID = res.refID;  // ở meeting là refID
-          var resourceTaskControl = [];
-          var arrayResource = res?.resources;
-          if (arrayResource && arrayResource.length > 0) {
-            arrayResource.forEach(data => {
-              if (data.taskControl) resourceTaskControl.push(data.resourceID);
-            })
-          }
-          this.resources = resourceTaskControl.length > 0 ? resourceTaskControl.join(";") : '',
-            this.dataObj = {
-              projectID: this.projectID ? this.projectID : '',
-              resources: this.resources,
-              fromDate: res.fromDate ? moment(new Date(res.fromDate)) : '',
-              endDate: res.toDate ? moment(new Date(res.toDate)) : '',
-            };
-          if (this.resources != null) {
-            this.getListUserByResource(this.resources);
-          }
-          this.showButtonAdd = false;
-          this.showMoreFunc = false;
-        }
-      });
-    }
 
-    this.functionParent = this.tmSv.functionParent;
-    if (this.meetingID) {
-      //sau mấy cái này sẽ được truyền qua state
-      // this.showTabHistory = false;
-      // this.showTabComments = false;
-      // this.showTabMeetings = false;
-      // this.all = ['Dashboard', 'Công việc'];
-      this.all = [
-        { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
-        { name: 'AssignTo', textDefault: 'Công việc', isActive: true },
-      ];
-    }
+    //hủy sửa lại theo Thương
+    // if (this.meetingID) {
+    //   this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
+    //     if (res) {
+    //       this.data = res;
+    //       this.createdByName = res.userName;
+    //       this.nameObj = res.meetingName;
+    //       this.projectID = res.refID;  // ở meeting là refID
+    //       var resourceTaskControl = [];
+    //       var arrayResource = res?.resources;
+    //       if (arrayResource && arrayResource.length > 0) {
+    //         arrayResource.forEach(data => {
+    //           if (data.taskControl) resourceTaskControl.push(data.resourceID);
+    //         })
+    //       }
+    //       this.resources = resourceTaskControl.length > 0 ? resourceTaskControl.join(";") : '',
+    //         this.dataObj = {
+    //           projectID: this.projectID ? this.projectID : '',
+    //           resources: this.resources,
+    //           fromDate: res.fromDate ? moment(new Date(res.fromDate)) : '',
+    //           endDate: res.toDate ? moment(new Date(res.toDate)) : '',
+    //         };
+    //       if (this.resources != null) {
+    //         this.getListUserByResource(this.resources);
+    //       }
+    //       this.showButtonAdd = false;
+    //       this.showMoreFunc = false;
+    //     }
+    //   });
+    // }
+
+    // this.functionParent = this.tmSv.functionParent;
+    // if (this.meetingID) {
+    //   //sau mấy cái này sẽ được truyền qua state
+    //   // this.showTabHistory = false;
+    //   // this.showTabComments = false;
+    //   // this.showTabMeetings = false;
+    //   // this.all = ['Dashboard', 'Công việc'];
+    //   this.all = [
+    //     { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
+    //     { name: 'AssignTo', textDefault: 'Công việc', isActive: true },
+    //   ];
+    // }
   }
   ngOnInit(): void {
     // var body = document.querySelectorAll('body.toolbar-enabled');
