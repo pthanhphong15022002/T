@@ -34,7 +34,7 @@ export class CreateGroupComponent implements OnInit {
             'ERM.Business.WP', 
             'ChatBusiness', 
             'MockSearchUsers', options).subscribe(resp=>{
-                debugger
+                
             //this.users = resp[0];
         })
     }

@@ -30,7 +30,7 @@ export class FileComponent extends UIComponent implements OnInit {
 
   onInit() {
     this.dialog.beforeClose.subscribe(res => {
-      debugger
+      
     })
   }
   

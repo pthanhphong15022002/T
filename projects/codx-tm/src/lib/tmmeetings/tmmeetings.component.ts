@@ -53,6 +53,10 @@ export class TMMeetingsComponent
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('template7') template7: TemplateRef<any>;
   @ViewChild('cardCenter') cardCenter!: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp!: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton!: TemplateRef<any>;
+  @ViewChild('footerNone') footerNone!: TemplateRef<any>;
+
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -155,6 +159,19 @@ export class TMMeetingsComponent
           template: this.itemViewList,
         },
       },
+      // {
+      //   type: ViewType.calendar,
+      //   active: false,
+      //   sameData: true,
+      //   model: {
+      //     eventModel: this.fields,
+      //     resourceModel: this.resourceField,
+      //     template: this.eventTemplate,
+      //     template3: this.cellTemplate,
+      //     template7: this.template7,
+      //     statusColorRef: 'CO004'
+      //   },
+      // },
       {
         type: ViewType.calendar,
         active: false,
@@ -162,10 +179,13 @@ export class TMMeetingsComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
+          // template4: this.resourceHeader,// schenmoi can
+          template6: this.mfButton, //header
           template3: this.cellTemplate,
-          template7: this.template7,
-          statusColorRef: 'CO004'
+          template7: this.footerNone, ///footer
+          template8: this.contentTmp, //content
+          statusColorRef: this.statusVll,
         },
       },
       {
@@ -339,6 +359,7 @@ export class TMMeetingsComponent
 
   getResourceID(data) {
     var resources = [];
+    this.resourceID =''
     resources = data.resources;
     var id = '';
     if (resources != null) {
@@ -429,26 +450,6 @@ export class TMMeetingsComponent
             false
           );
       });
-      // this.dialog.closed.subscribe((e) => {
-      //   if (e?.event == null)
-      //     this.view.dataService.delete(
-      //       [this.view.dataService.dataSelected],
-      //       false
-      //     );
-      //   if (e?.event && e?.event != null) {
-      //     var objectData = this.view.dataService.data;
-      //     var object = {};
-      //     for (var i = 0; i < objectData.length; i++) {
-      //       if (objectData[i][i] !== undefined) {
-      //         object[i] = objectData[i][i];
-      //         objectData[i] = object[i];
-      //       }
-      //     }
-      //     this.view.dataService.data = e?.event.concat(objectData);
-      //     this.meeting = objectData[0];
-      //     this.detectorRef.detectChanges();
-      //   }
-      // });
     });
   }
   edit(data) {
@@ -474,31 +475,6 @@ export class TMMeetingsComponent
               false
             );
         });
-        // this.dialog.closed.subscribe((e) => {
-        //     if (e?.event == null)
-        //       this.view.dataService.delete(
-        //         [this.view.dataService.dataSelected],
-        //         false
-        //       );
-        //     if (e?.event && e?.event != null) {
-        //         this.view.dataService.update( e?.event).subscribe();
-        //     }
-        //     this.detectorRef.detectChanges();
-        //   });
-        // this.dialog.closed.subscribe((e) => {
-        //   if (e?.event == null)
-        //     this.view.dataService.delete(
-        //       [this.view.dataService.dataSelected],
-        //       false
-        //     );
-        //   if (e?.event && e?.event != null) {
-        //     e?.event.forEach((obj) => {
-        //       this.view.dataService.update(obj).subscribe();
-        //     });
-        //     this.meeting = e?.event;
-        //   }
-        //   this.detectorRef.detectChanges();
-        //});
       });
   }
   copy(data) {
