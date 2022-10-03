@@ -46,6 +46,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   objectType: string = "";
   shareWith: string = "";
   permissions: any[] = [];
+  mssgNoti:string = "";
+
   @ViewChild('atmCreate') atmCreate: AttachmentComponent;
   @ViewChild('atmEdit') atmEdit: AttachmentComponent;
   @ViewChild('codxFileCreated') codxFileCreated: ImageGridComponent;
@@ -126,10 +128,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.cache.message('WP011').subscribe((mssg: any) => {
-      this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
-      this.dt.detectChanges();
-    });
     if (this.dialogData.status == this.STATUS.EDIT) {
       this.dataEdit = this.dialogData.post;
       this.message = this.dataEdit.content;
@@ -145,6 +143,11 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
       }
       this.getValueShare(this.SHARECONTROLS.EVERYONE);
     }
+    this.cache.message('WP011').subscribe((mssg: any) => {
+      this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
+      this.dt.detectChanges();
+    });
+    this.getMessageNoti("SYS009");
     this.dt.detectChanges();
   }
 
@@ -214,18 +217,19 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(e: any) {
+    if(!e) return;
     if (e.data) {
       this.message = e.data;
-    } else {
+    } 
+    else 
+    {
       this.message = "";
     }
     this.dt.detectChanges();
   }
 
   eventApply(event: any) {
-    if (!event) {
-      return;
-    }
+    if (!event) return;
     this.shareControl = event[0].objectType;
     this.objectType = event[0].objectType;
     this.getValueShare(this.shareControl, event);
@@ -233,7 +237,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
 
   publishPost() {
     if (!this.message && this.listFileUpload.length <= 0) {
-      this.notifySvr.notifyCode('E0315');
+      let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
+      this.notifySvr.notify(mssgStr);
       return;
     }
     var post = new Post();
@@ -258,23 +263,40 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
             (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
               if (res) {
                 (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
-                this.notifySvr.notifyCode('SYS006');
+                this.notifySvr.notifyCode('WP024');
                 this.dialogRef.close();
+              }
+              else 
+              {
+                this.notifySvr.notifyCode('WP013');
               }
             });
           }
           else {
             (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
-            this.notifySvr.notifyCode('SYS006');
+            this.notifySvr.notifyCode('WP024');
             this.dialogRef.close();
           }
+        }
+        else
+        {
+          this.notifySvr.notifyCode('WP013');
         }
       });
   }
 
+  getMessageNoti(mssgCode:string){
+    this.cache.message(mssgCode).subscribe((mssg:any) =>{
+      if(mssg && mssg?.defaultName){
+        this.mssgNoti = mssg.defaultName;
+        this.dt.detectChanges();
+      }
+    })
+  }
   async editPost() {
-    if (!this.message && this.dataEdit.files.length <= 0 && this.listFileUpload.length <= 0) {
-      this.notifySvr.notifyCode('E0315');
+    if (!this.message) {
+      let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
+      this.notifySvr.notify(mssgStr);
       return;
     }
     this.dataEdit.content = this.message;
@@ -316,7 +338,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
 
   sharePost() {
     if (!this.message && this.listFileUpload.length <= 0) {
-      this.notifySvr.notifyCode('E0315');
+      let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
+      this.notifySvr.notify(mssgStr);
       return;
     }
     let post = new Post();
@@ -377,7 +400,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   }
 
   getfileCount(event: any) {
-    if (event && event.data.length > 0) {
+    if (event && event?.data?.length > 0) {
       if (this.dialogData.status == this.STATUS.EDIT) {
         this.codxFileEdit.addFiles(event.data);
       }
@@ -442,6 +465,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   showCBB = false;
   tagWith: string = '';
   tags: any[] = [];
+  lstTagUser: any[] = [];
+  searchTagUser: string = "";
   saveAddUser(value: any) {
     let data = value.dataSelected;
     if (data && data.length > 0) {
@@ -449,12 +474,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
       this.lstTagUser = data;
       data.forEach((x: any) => {
         let p = new Permission();
-        p.objectType = 'U'
         p.objectID = x.UserID;
         p.objectName = x.UserName;
-        p.memberType = this.MEMBERTYPE.TAGS;
-        p.createdBy = this.user.userID;
-        p.createdOn = new Date();
         this.tags.push(p);
       });
       if (data.length > 1) {
@@ -473,15 +494,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     this.showCBB = !this.showCBB;
     this.dt.detectChanges();
   }
-
   tagUser() {
     this.showCBB = !this.showCBB;
   }
-  lstTagUser: any[] = [];
-  searchTagUser: string = "";
-  clickShowTag() {
 
-  }
-  getTagUser() {
-  }
 }
