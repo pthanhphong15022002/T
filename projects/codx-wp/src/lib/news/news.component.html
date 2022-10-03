@@ -1,22 +1,23 @@
 <div class="codx-news">
   <codx-views #codxViews [funcID]="funcID" idField="recID" [views]="views">
   </codx-views>
-</div>
-<div class="more-function">
-  <div class="d-flex flex-column">
-    <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
-    <span class="postnews mt-3">
-      <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
-      <div class="d-flex btn-postnews">
+  <div class="more-function">
+    <div class="d-flex flex-column">
+      <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+      <span class="postnews mt-3">
+        <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+        <div class="d-flex btn-postnews">
 
-        <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
-            class="icon-video_call fs-1"></i></a>
-        <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
-            class="icon-post_add fs-1"></i></a>
-      </div>
-    </span>
+          <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
+              class="icon-video_call fs-1"></i></a>
+          <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
+              class="icon-post_add fs-1"></i></a>
+        </div>
+      </span>
+    </div>
   </div>
 </div>
+
 <ng-template #panelLeftRef>
   <div class="fix-container rounded-4 position-relative">
     <div class="row" *ngIf="lstHotNew[0]">
@@ -29,7 +30,7 @@
       <div class="col-6 hot-left">
         <ng-container *ngIf="lstHotNew[0];else empty1">
           <div class="cursor-pointer">
-            <codx-img imageType="square" [cssClass]="'image-300 w-100'" [width]="480"
+            <codx-img imageType="square" [cssClass]="'image-300 w-100 pic-newshot'" [width]="480"
               (click)="clickViewDetail(lstHotNew[0])" [objectId]="lstHotNew[0].recID" [objectType]="entityName">
             </codx-img>
           </div>
