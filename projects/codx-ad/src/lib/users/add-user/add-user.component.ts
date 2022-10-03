@@ -104,6 +104,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
       this.adUser.phone = '';
       this.adUser.email = '';
+      this.adUser.employeeID = '';
+      this.adUser.buid = '';
+      this.adUser.userName = '';
       if (this.dataCopy?.chooseRoles) {
         this.viewChooseRole = this.dataCopy?.chooseRoles;
         this.viewChooseRoleTemp = JSON.parse(
@@ -220,6 +223,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var obj = {
       formType: this.formType,
       data: item,
+      userID: this.adUser.userID,
     };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,

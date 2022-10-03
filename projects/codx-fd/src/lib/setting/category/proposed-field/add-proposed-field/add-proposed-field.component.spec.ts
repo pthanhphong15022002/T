@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GiftgroupComponent } from './giftgroup.component';
+import { AddProposedFieldComponent } from './add-proposed-field.component';
 
-describe('GiftgroupComponent', () => {
-  let component: GiftgroupComponent;
-  let fixture: ComponentFixture<GiftgroupComponent>;
+describe('AddProposedFieldComponent', () => {
+  let component: AddProposedFieldComponent;
+  let fixture: ComponentFixture<AddProposedFieldComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GiftgroupComponent ]
+      declarations: [ AddProposedFieldComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GiftgroupComponent);
+    fixture = TestBed.createComponent(AddProposedFieldComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

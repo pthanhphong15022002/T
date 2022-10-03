@@ -48,7 +48,8 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -74,6 +75,9 @@ export class CodxTasksComponent
   @ViewChild('footerNone') footerNone!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
 
@@ -269,8 +273,13 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
+          template7: this.footerNone, ///footer
+          template4: this.resourceHeader,
+          template6: this.mfButton, //header
+          //  template: this.eventTemplate,
           template3: this.cellTemplate,
+          template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
         },
       },
@@ -283,10 +292,12 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template7: this.footerNone,
+          template7: this.footerNone, ///footer
           template4: this.resourceHeader,
-          template: this.eventTemplate,
+          template6: this.mfButton, //header
+          //  template: this.eventTemplate,
           template3: this.cellTemplate,
+          template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
         },
       },
@@ -310,7 +321,7 @@ export class CodxTasksComponent
         model: {
           panelLeftRef: this.treeView,
         },
-      }
+      },
     ];
 
     this.view.dataService.methodSave = 'AddTaskAsync';
@@ -779,8 +790,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -936,7 +947,7 @@ export class CodxTasksComponent
     // }
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(data) {
     this.api
@@ -1469,10 +1480,10 @@ export class CodxTasksComponent
 
   onActions(e: any) {
     switch (e.type) {
-      case "drop":
+      case 'drop':
         this.onDragDrop(e.data);
         break;
-      case "dbClick":
+      case 'dbClick':
         this.viewTask(e?.data);
         break;
     }
@@ -1481,7 +1492,7 @@ export class CodxTasksComponent
   viewTask(data) {
     if (data) {
       var isAssignTask = data?.category == '3';
-      var funcID = isAssignTask ? 'TMT0203' :'TMT0201'
+      var funcID = isAssignTask ? 'TMT0203' : 'TMT0201';
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;

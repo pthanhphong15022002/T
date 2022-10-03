@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BehaviorruleComponent } from './behaviorrule.component';
+import { CodxCommentHistoryComponent } from './codx-comment-history.component';
 
-describe('BehaviorruleComponent', () => {
-  let component: BehaviorruleComponent;
-  let fixture: ComponentFixture<BehaviorruleComponent>;
+describe('CodxCommentHistoryComponent', () => {
+  let component: CodxCommentHistoryComponent;
+  let fixture: ComponentFixture<CodxCommentHistoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BehaviorruleComponent ]
+      declarations: [ CodxCommentHistoryComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BehaviorruleComponent);
+    fixture = TestBed.createComponent(CodxCommentHistoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

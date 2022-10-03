@@ -549,11 +549,12 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-    debugger;
+    
     ScrollComponent.reinitialization();
     if (!$data && ($data == null || $data?.data == null)) {
       return;
     }
+    
     this.isSearch = false;
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
@@ -702,6 +703,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -760,6 +762,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
+        active: true,
         sameData: true,
         model: {
           template: this.templateMain,
