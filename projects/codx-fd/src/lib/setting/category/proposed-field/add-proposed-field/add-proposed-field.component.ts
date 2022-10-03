@@ -5,7 +5,13 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { CodxFormComponent, DialogData, DialogRef, UIComponent, NotificationsService } from 'codx-core';
+import {
+  CodxFormComponent,
+  DialogData,
+  DialogRef,
+  UIComponent,
+  NotificationsService,
+} from 'codx-core';
 
 @Component({
   selector: 'lib-add-proposed-field',
@@ -48,7 +54,11 @@ export class AddProposedFieldComponent extends UIComponent implements OnInit {
 
   onSave() {
     var formGroup = this.form.formGroup.controls;
-    if (formGroup.competenceID.status == 'VALID') {
+    if (
+      formGroup.industryID.status == 'VALID' &&
+      formGroup.industryName.status == 'VALID' &&
+      formGroup.owner.status == 'VALID'
+    ) {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
@@ -60,11 +70,11 @@ export class AddProposedFieldComponent extends UIComponent implements OnInit {
             else this.notification.notifyCode('SYS023');
           }
         });
-    } else this.notification.notify('Vui lòng kiểm tra lại thông tin nhập');
+    } else this.notification.notifyCode('SYS028', null);
   }
 
   beforeSave(option) {
-    debugger
+    debugger;
     option.methodName = 'AddEditIndustryAsync';
     this.dataUpdate.category = '1';
     this.dataUpdate.isGroup = false;
