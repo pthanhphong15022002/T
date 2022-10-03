@@ -23,7 +23,7 @@
     [listRoles]="listRoles"
     [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
-    (viewTask) = "viewTask($event)"
+    (viewTask)="viewTask($event)"
   >
   </share-tree-view>
 </ng-template>
@@ -36,7 +36,7 @@
     [listRoles]="listRoles"
     [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
-    (viewTask) = "viewTask($event)"
+    (viewTask)="viewTask($event)"
   >
   </share-view-list>
 </ng-template>
@@ -189,10 +189,12 @@
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
-<ng-template #footerNone>
-</ng-template>
+<ng-template #footerNone> </ng-template>
 <ng-template #eventTemplate let-data>
-  <div [style.color]="data.status | vll: vllStatus:'textColor' | async" (dblclick)="viewTask(data)">
+  <div
+    [style.color]="data.status | vll: vllStatus:'textColor' | async"
+    (dblclick)="viewTask(data)"
+  >
     <div>{{ data.taskName }}</div>
   </div>
 </ng-template>
@@ -329,6 +331,7 @@
 <codx-views
   #view
   [service]="service"
+  [funcID]="funcID"
   [entityName]="entityName"
   [idField]="idField"
   [assemblyName]="assemblyName"
