@@ -153,3 +153,9 @@ codx-home .e-listview .e-content {
     overflow: auto;
     margin-top: 5px;
 }
+.more-function {
+    position: fixed;
+    right: 30px;
+    bottom: 20px;
+    z-index: 99;
+}

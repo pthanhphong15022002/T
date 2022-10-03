@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupSearchComponent } from './popup-search.component';
+import { CodxCommentHistoryComponent } from './codx-comment-history.component';
 
-describe('PopupSearchComponent', () => {
-  let component: PopupSearchComponent;
-  let fixture: ComponentFixture<PopupSearchComponent>;
+describe('CodxCommentHistoryComponent', () => {
+  let component: CodxCommentHistoryComponent;
+  let fixture: ComponentFixture<CodxCommentHistoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupSearchComponent ]
+      declarations: [ CodxCommentHistoryComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupSearchComponent);
+    fixture = TestBed.createComponent(CodxCommentHistoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
