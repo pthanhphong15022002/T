@@ -1,4 +1,4 @@
-<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="functionList?.entityName"
+<codx-views [views]="views" #view [funcID]="funcID" [entityName]="functionList?.entityName"
     (buttonClick)="openFormCreate($event, true)" [button]="button" service="FD" assemblyName="ERM.Business.FD"
     className="GiftsBusiness" method="LoadDataGiftAsync" [predicate]="predicate" [dataValue]="dataValue"
     idField="recID">
@@ -6,26 +6,15 @@
 <ng-template #template let-data>
     <div class="container-listview category-gift">
         <div class="list-table" *ngIf="this.searchType == '0' || this.searchType == '1' ">
-            <!-- <codx-listview [itemTemplate]="itemGift" #listView funcId="" [pageSize]=20 service="FD"
-                assemblyName="ERM.Business.FD" className="GiftsBusiness" method="LoadDataGiftAsync"
-                [predicate]="predicate" [dataValue]="dataValue" type="listView" [entityName]="functionList?.entityName">
-            </codx-listview> -->
-            <codx-temp-full [typeMF]="'hover'" [dataItem]="data" [formModel]="view?.formModel"
-                (clickMF)="clickMF($event, data)" typeMF="hover" [titleTmp]="itemGift">
+            <codx-temp-full [typeMF]="'hover'" [dataItem]="data" [formModel]="view.formModel"
+                (clickMF)="clickMF($event, data)" typeMF="hover" [titleTmp]="itemGift" [imgOn]="data.modifiedOn">
             </codx-temp-full>
-            <div class="offcanvas-overlay"></div>
-        </div>
-        <div class="list-table" *ngIf="this.searchType == '2'">
         </div>
     </div>
 </ng-template>
 
 <ng-template #itemGift let-dataItem>
-    <!-- <div (mouseenter)="PopoverEmpEnter(empPopover, dataItem)"> -->
-    <div class="list-item d-flex align-items-start" #empPopover="ngbPopover" [ngbPopover]="moreFunction" placement="top"
-        container="body">
-        <!-- <div class="pic mr-3"> -->
-        <!-- <img alt="" class="" src="../../../assets/demos/svg/pic-quatang.png"> -->
+    <div class="list-item d-flex align-items-start">
         <div class="img">
             <codx-img [funcId]="funcID" aria-disabled="true" [objectType]="functionList?.formName" [width]="35"
                 [objectId]="dataItem?.giftID">
@@ -90,12 +79,10 @@
             <span class="text-warning ml-2 icon-20 icon-monetization_on"></span>
         </div>
     </div>
-    <!-- </div> -->
     <hr>
 </ng-template>
 
-<ng-template #formChange let-modal>
-    <!-- <form [formGroup]="onHandForm"> -->
+<!-- <ng-template #formChange let-modal>
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">
@@ -124,10 +111,8 @@
                 <label #NewOnhand>{{ 'Tồn kho mới' | lang:
                     'Gifts':'NewOnhand':'grvGifts': NewOnhand| async}}</label>
                 <codx-input type="number" min="0" class="form-control" placeholder="" formControlName='newOnhand'
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="changeHand($event)"
-                    [ngClass]="{'is-invalid': onHandForm.controls['newOnhand'].invalid}">
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="changeHand($event)">
                 </codx-input>
-
             </div>
         </div>
         <div class="modal-footer">
@@ -136,10 +121,9 @@
             </button>
         </div>
     </div>
-    <!-- </form> -->
-</ng-template>
+</ng-template> -->
 
-<ng-template #panelRightRef>
+<!-- <ng-template #panelRightRef>
     <div id="update_infor" class="offcanvas offcanvas-md offcanvas-right">
         <div class="offcanvas-header" kt-hidden-height="46">
             <div class="d-flex align-items-center justify-content-between header">
@@ -151,7 +135,6 @@
                         default="Chỉnh sửa">
                     </codx-label>
                 </h2>
-                <!-- Cập nhật thông tin -->
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary" id="dms_properties_close">
                     <span (click)="clickClosePopup()" class="icon-close icon-18"></span>
                 </a>
@@ -294,372 +277,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="extend-more w-360px pl-4">
-                            <div class="card-toolbar">
-                                <ul class="nav nav-tabs nav-tabs-line">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab" href="#tab_his">
-                                            <span class="nav-text">Lịch sử</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#tab_com">
-                                            <span class="nav-text">Comment</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#tab_att">
-                                            <span class="nav-text">Attachments</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tab-content">
-                                <div class="tab-pane pt-3 fade show active" id="tab_his" role="tabpanel">
-                                    <div class="tab_container">
-                                        <div class="his-group primary-group">
-                                            <span class="label label-sm label-primary label-inline mb-5">
-                                                Tạo
-                                                mới </span>
-                                            <div class="d-flex history-item pb-6 line-hor">
-                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
-                                                    <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
-                                                    <span class="icon-circle">
-                                                        <span class="icon-add icon-12"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div
-                                                            class="text-dark text-hover-primary font-weight-bold">
-                                                            Lê
-                                                            Thị
-                                                            Mùi</div>
-                                                        <div class="text-dark-75">2021/08/31 4:38</div>
-                                                    </div>
-                                                    <div class="task-name text-dark-75 mt-1">Tạo mới mẫu
-                                                        phiếu
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex history-item pb-6 line-hor">
-                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
-                                                    <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                                                    <span class="icon-circle">
-                                                        <span class="icon-create icon-12"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div
-                                                            class="text-dark text-hover-primary font-weight-bold">
-                                                            Hoàng
-                                                            Ngọc Châu Bảo</div>
-                                                        <div class="text-dark-75">2 giờ trước</div>
-                                                    </div>
-                                                    <div class="task-name text-dark-75 mt-1">Chỉnh sửa mẫu
-                                                        phiếu
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex history-item pb-6 line-hor">
-                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
-                                                    <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
-                                                    <span class="icon-circle">
-                                                        <span class="icon-mode_comment icon-12"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div
-                                                            class="text-dark text-hover-primary font-weight-bold">
-                                                            Bùi
-                                                            Thái
-                                                            Tú</div>
-                                                        <div class="text-dark-75">1 giờ trước</div>
-                                                    </div>
-                                                    <div class="task-name text-dark-75 mt-1">Thank you so
-                                                        much
-                                                        for letting
-                                                        me be
-                                                        a
-                                                        part
-                                                        of
-                                                        your party. The food was delicious, and everything
-                                                        was
-                                                        so perfect.
-                                                        Thank
-                                                        you
-                                                        for
-                                                        inviting me.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="his-group warning-group mt-3">
-                                            <span class="label label-sm label-warning label-inline mb-5">
-                                                Chờ
-                                                xét duyệt
-                                            </span>
-                                            <div class="d-flex history-item pb-6 line-hor">
-                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
-                                                    <img alt="Pic" src="../../../assets/demos/user/user5.jpg">
-                                                    <span class="icon-circle">
-                                                        <span class="icon-create icon-12"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div
-                                                            class="text-dark text-hover-primary font-weight-bold">
-                                                            Lê
-                                                            Thị
-                                                            Mùi</div>
-                                                        <div class="text-dark-75">2021/08/31 4:38</div>
-                                                    </div>
-                                                    <div class="task-name text-dark-75 mt-1">Update status
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex history-item pb-6 line-hor">
-                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
-                                                    <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                                                    <span class="icon-circle">
-                                                        <span class="icon-mode_comment icon-12"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div
-                                                            class="text-dark text-hover-primary font-weight-bold">
-                                                            Hoàng
-                                                            Ngọc Châu Bảo</div>
-                                                        <div class="text-dark-75">2 giờ trước</div>
-                                                    </div>
-                                                    <div class="task-name text-dark-75 mt-1">Hợp đồng chưa
-                                                        đúng,
-                                                        kiểm tra
-                                                        lại
-                                                        phụ
-                                                        lục hợp đồng</div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex history-item pb-6 line-hor">
-                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
-                                                    <img alt="Pic" src="../../../assets/demos/user/user2.jpg">
-                                                    <span class="icon-circle">
-                                                        <span class="icon-attach_file icon-12"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div
-                                                            class="text-dark text-hover-primary font-weight-bold">
-                                                            Bùi
-                                                            Thái
-                                                            Tú</div>
-                                                        <div class="text-dark-75">1 giờ trước</div>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="task-name text-dark-75 mt-1">
-                                                            Laboco_Contract.xsls</div>
-                                                        <span class="icon-download icon-18 ml-3"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="his-group success-group mt-3">
-                                            <span class="label label-sm label-success label-inline mb-5"> Đã
-                                                duyệt </span>
-                                            <div class="d-flex history-item pb-6 line-hor">
-                                                <div class="symbol symbol-40 symbol-circle mr-6 symbol-icon">
-                                                    <img alt="Pic" src="../../../assets/demos/user/user1.jpg">
-                                                    <span class="icon-circle">
-                                                        <span class="icon-check icon-12"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <div
-                                                            class="text-dark text-hover-primary font-weight-bold">
-                                                            Hoàng
-                                                            Ngọc Châu Bảo</div>
-                                                        <div class="text-dark-75">2 giờ trước</div>
-                                                    </div>
-                                                    <div class="task-name text-dark-75 mt-1">Ok duyệt nha!
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane pt-3 fade" id="tab_com" role="tabpanel">
-                                    <div class="tab_container">
-                                        <div class="tab_body">
-                                            <div class="d-flex flex-column py-3 flex-grow-1">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="symbol symbol-40 symbol-circle mr-3">
-                                                        <img alt="Pic"
-                                                            src="../../../assets/demos/user/user9.jpg">
-                                                    </div>
-                                                    <div class="d-flex flex-column flex-grow-1">
-                                                        <div class="text-dark font-weight-bold">
-                                                            Phạm Thị Mỹ
-                                                            Duyên
-                                                        </div>
-                                                        <span class="text-dark-75">Business Analyst</span>
-                                                    </div>
-                                                    <div class="text-dark-75">2 giờ trước</div>
-                                                </div>
-                                                <div class="mt-1 text-dark-75">Nhận xét đánh giá, đánh đánh
-                                                    giá
-                                                    giá,..
-                                                </div>
-                                                <div class="d-flex align-items-center group-action mt-1">
-                                                    <span class="btn-action d-flex align-items-center">
-                                                        <span
-                                                            class="icon-favorite_border icon-18 text-danger mr-1"></span>
-                                                        <span></span>
-                                                    </span>
-                                                    <span class="btn-action d-flex align-items-center ml-4">
-                                                        <span
-                                                            class="icon-chat_bubble_outline icon-18 text-info mr-1"></span>
-                                                        <span></span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-column py-3 flex-grow-1">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="symbol symbol-40 symbol-circle mr-3">
-                                                        <img alt="Pic"
-                                                            src="../../../assets/demos/user/user1.jpg">
-                                                    </div>
-                                                    <div class="d-flex flex-column flex-grow-1">
-                                                        <div class="text-dark font-weight-bold">
-                                                            Nguyễn Thanh
-                                                            Thức
-                                                        </div>
-                                                        <span class="text-dark-75">Business Analyst</span>
-                                                    </div>
-                                                    <div class="text-dark-75">2 giờ trước</div>
-                                                </div>
-                                                <div class="mt-1 text-dark-75">Bài viết rất hay, tuyệt vời!
-                                                </div>
-                                                <div class="d-flex align-items-center group-action mt-1">
-                                                    <span class="btn-action d-flex align-items-center">
-                                                        <span
-                                                            class="icon-favorite_border icon-18 text-danger mr-1"></span>
-                                                        <span>31</span>
-                                                    </span>
-                                                    <span class="btn-action d-flex align-items-center ml-4">
-                                                        <span
-                                                            class="icon-chat_bubble_outline icon-18 text-info mr-1"></span>
-                                                        <span>1</span>
-                                                    </span>
-                                                </div>
-                                                <div class="comment-level-2 ml-5 pl-2 border-left mt-4">
-                                                    <div class="d-flex align-items-start py-3 flex-grow-1">
-                                                        <div class="symbol symbol-30 symbol-circle mr-2">
-                                                            <img alt="Pic"
-                                                                src="../../../assets/demos/user/user2.jpg">
-                                                        </div>
-                                                        <div class="d-flex flex-column flex-grow-1">
-                                                            <div class="text-dark font-weight-bold">Trần
-                                                                Quốc
-                                                                Hoàn
-                                                            </div>
-                                                            <div class="text-dark-75 font-size-sm">You’re
-                                                                welcome!</div>
-                                                            <div class="d-flex align-items-center mt-1">
-                                                                <span
-                                                                    class="text-dark-75 text-hover-primary mr-3">Thích</span>
-                                                                <span
-                                                                    class="text-dark-75 text-hover-primary">Trả
-                                                                    lời</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="text-dark-75">2 giờ trước</div>
-                                                    </div>
-                                                    <div class="d-flex align-items-start py-3 flex-grow-1">
-                                                        <div class="symbol symbol-30 symbol-circle mr-2">
-                                                            <img alt="Pic"
-                                                                src="../../../assets/demos/user/user3.jpg">
-                                                        </div>
-                                                        <div class="d-flex flex-column flex-grow-1">
-                                                            <div class="text-dark font-weight-bold">Lê Thị
-                                                                Mơ
-                                                            </div>
-                                                            <div class="text-dark-75 font-size-sm">You’re
-                                                                welcome!</div>
-                                                            <div class="d-flex align-items-center mt-1">
-                                                                <span
-                                                                    class="text-dark-75 text-hover-primary mr-3">Thích</span>
-                                                                <span
-                                                                    class="text-dark-75 text-hover-primary">Trả
-                                                                    lời</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="text-dark-75">2 giờ trước</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tab_footer">
-                                            <form class="position-relative feed-box">
-                                                <textarea class="form-control border-0 p-0 pr-26 resize-none"
-                                                    rows="1" placeholder="Bình luận..."></textarea>
-                                                <div class="feed-icon">
-                                                    <span
-                                                        class="btn btn-icon btn-sm px-0 text-dark-75 text-hover-primary">
-                                                        <span class="icon-attach_file icon-18"></span>
-                                                    </span>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane pt-3 fade" id="tab_att" role="tabpanel">
-                                    <div class="tab_container">
-                                        <div class="tab_body">
-                                            <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
-                                                <img alt="" class="max-h-35px mr-2"
-                                                    src="../../../assets/demos/dms/pdf.svg">
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <span
-                                                        class="text-dark font-weight-bold">Taptindinhkem.pdf</span>
-                                                    <span class="text-dark-75">Bảng báo giá quà tặng của nhà
-                                                        cung cấp</span>
-                                                    <div class="d-flex mt-1 justify-content-end">
-                                                        <div class="text-dark-75 text-italic mr-2">LHThuong
-                                                        </div>
-                                                        <div class="text-dark-75">20/07/2021</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-start file-item flex-grow-1 mb-3">
-                                                <img alt="" class="max-h-35px mr-2"
-                                                    src="../../../assets/demos/dms/pdf.svg">
-                                                <div class="d-flex flex-column flex-grow-1">
-                                                    <span
-                                                        class="text-dark font-weight-bold">Taptindinhkem.pdf</span>
-                                                    <span class="text-dark-75">Bảng báo giá quà tặng của nhà
-                                                        cung cấp</span>
-                                                    <div class="d-flex mt-1 justify-content-end">
-                                                        <div class="text-dark-75 text-italic mr-2">LHThuong
-                                                        </div>
-                                                        <div class="text-dark-75">20/07/2021</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tab_footer">
-                                            <button type="button" class="btn btn-sm btn-outline-primary mb-4">
-                                                <i class="icon-cloud_upload icon-16 mr-1"></i>Upload file
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                 </div>
             </div>
             <div class="card-footer pt-4 footer">
@@ -669,9 +286,9 @@
             </div>
         </div>
     </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #moreFunction>
+<!-- <ng-template #moreFunction>
     <div class="flex" (mouseleave)="PopoverEmpLeave(empPopover)" #empPopover="ngbPopover" [ngbPopover]=""
         autoClose="outside">
         <a class="action-item d-flex align-items-center" placement="top" [ngbTooltip]="update">
@@ -699,39 +316,4 @@
             <ng-template #more><span class="tooltiptext">{{item.customName}}</span></ng-template>
         </a>
     </div>
-    <!-- <div class="action-menu">
-        <div class="action-content d-flex align-items-center">
-            <a class="action-item">
-                <div class="d-flex align-items-center btn-tooltip">
-                    <span class="icon-edit icon-18 text-primary"></span>
-                    <span class="tooltiptext">Edit</span>
-                </div>
-            </a>
-            <a class="action-item">
-                <div class="d-flex align-items-center btn-tooltip">
-                    <span class="icon-content_copy icon-18 text-warning"></span>
-                    <span class="tooltiptext">Copy</span>
-                </div>
-            </a>
-            <a class="action-item">
-                <div class="d-flex align-items-center btn-tooltip">
-                    <span class="icon-close icon-20 text-danger"></span>
-                    <span class="tooltiptext">Delete</span>
-                </div>
-            </a>
-            <div ngbDropdown class="dropdown">
-                <button ngbDropdownToggle class="btn btn-icon btn-white" type="button" id="dropdownMenuButton1"
-                    aria-expanded="false">
-                    <i class="icon-more_vert icon-18"></i>
-                </button>
-                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                    <li><a ngbDropdownItem href="#">Chỉnh sửa</a></li>
-                    <li><a ngbDropdownItem href="#">Xóa</a></li>
-                    <div class="separator mt-3 opacity-75"></div>
-                    <li><a ngbDropdownItem href="#">Xóa hết</a></li>
-                </ul>
-            </div>
-        </div>
-    </div> -->
-
-</ng-template>
+</ng-template> -->

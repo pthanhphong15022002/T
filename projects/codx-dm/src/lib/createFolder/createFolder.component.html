@@ -303,8 +303,13 @@
   </ng-template>
   <ng-template #footer>
     <div class="offcanvas-footer">
-      <button type="button" class="btn btn-primary" id="btnCreateFolder"
-        [disabled]="this.updateRight == false || this.propertiesFolder" (click)="onFolderSave()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        id="btnCreateFolder"
+        [disabled]="this.id ?(this.updateRight == false || this.propertiesFolder) : (this.createRight == false || this.propertiesFolder)"
+        (click)="onFolderSave()"
+      >
         {{ titleOK }}
       </button>
     </div>

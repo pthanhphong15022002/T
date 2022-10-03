@@ -114,6 +114,21 @@ textarea.e-input,
   background-color: #f1f1fa;
 }
 
+.user-mini-icon.w-20px.h-20px {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+img.w-20px.h-20px {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
+}
+
 .rounded {
   border-radius: 0.475rem !important;
 }
@@ -341,7 +356,7 @@ codx-views>.container-fluid.h-100 {
 }
 
 hr {
-  background-color: var(--gray-500);
+  background-color: var(--gray-300);
 }
 
 .is-invalid .ng-invalid,
@@ -576,4 +591,24 @@ lib-company-setting {
 
 .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
   font-family: 'Roboto';
+}
+
+
+
+codx-tmmeetings .toolbar {
+  margin-bottom: 0 !important;
+}
+
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
+}
+
+.user-mini-nav-custom {
+  height: 24px;
+  padding: 2px 8px 2px 2px !important;
+  border-radius: 20px;
+  margin-bottom: 3px;
+  background-color: #f3f3f3;
+  margin-right: 10px;
 }

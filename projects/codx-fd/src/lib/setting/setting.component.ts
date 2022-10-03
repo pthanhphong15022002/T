@@ -54,6 +54,7 @@ export class SettingComponent extends UIComponent implements OnInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
 
   @Output() scrollPosition: EventEmitter<number> = new EventEmitter<number>();
+  @ViewChild('elementId', { static: true }) ell: ElementRef;
 
   constructor(
     private injector: Injector,
@@ -62,7 +63,7 @@ export class SettingComponent extends UIComponent implements OnInit {
     private at: ActivatedRoute,
     private fdsv: CodxFdService,
     private settingSV: SettingService,
-    private el: ElementRef,
+    private el: ElementRef
   ) {
     super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
@@ -164,21 +165,15 @@ export class SettingComponent extends UIComponent implements OnInit {
   }
 
   LoadCategory(func) {
-    this.codxService.navigate('', '/', {
-      queryParams: { funcID: func.url },
-    });
+    this.codxService.navigate(func?.functionID);
   }
 
   LoadWallet(func) {
-    this.codxService.navigate('', '/fd/wallet', {
-      queryParams: { funcID: func.functionID },
-    });
+    this.codxService.navigate(func.functionID);
   }
 
   LoadDedicationRank(func) {
-    this.codxService.navigate('', '/fd/dedication-rank', {
-      queryParams: { funcID: func },
-    });
+    this.codxService.navigate(func.functionID);
   }
 
   backLocation() {
