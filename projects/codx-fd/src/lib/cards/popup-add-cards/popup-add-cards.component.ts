@@ -17,7 +17,6 @@ export class PopupAddCardsComponent implements OnInit {
   entityName = "FD_Cards"
   gridViewName:string = "";
   formName:string = "";
-
   lstPattern:any[] = [];
   parameter: any = null;
   givePoint:number = 0;
@@ -130,10 +129,7 @@ export class PopupAddCardsComponent implements OnInit {
             }
           })
           this.loadParameter(this.cardType);
-          if(this.cardType  == this.CARDTYPE_EMNUM.Commendation ||
-            this.cardType  == this.CARDTYPE_EMNUM.Congratulation || 
-            this.cardType  == this.CARDTYPE_EMNUM.Thankyou || 
-            this.cardType  == this.CARDTYPE_EMNUM.CommentForChange )
+          if(this.cardType  != this.CARDTYPE_EMNUM.Share && this.cardType  != this.CARDTYPE_EMNUM.Radio)
           {
             this.loadDataPattern(this.cardType);
           }
@@ -198,8 +194,6 @@ export class PopupAddCardsComponent implements OnInit {
         {
           this.lstPattern = res;
           this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault == true});
-          console.log(res);
-          console.log(this.patternSelected);
           this.dt.detectChanges();
         }
       });
@@ -332,29 +326,38 @@ export class PopupAddCardsComponent implements OnInit {
     })
   }
   Save() {
-    if (!this.userReciver && this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement 
-      && this.cardType != this.CARDTYPE_EMNUM.Share) 
+    if (!this.form.controls['receiver'].value) 
     {
       let mssg  = Util.stringFormat(this.mssgNoti, "Người nhận");
       this.notifySV.notify(mssg);
       return;
     }
-    else if (!this.refValue && this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement
-      && this.cardType != this.CARDTYPE_EMNUM.Share) 
-    {
-      if (!this.form.value["behavior"]) {
-        let mssg  = Util.stringFormat(this.mssgNoti, "Qui tắc ứng xử");
-        this.notifySV.notify(mssg);
-        return;
-      }
-    }
-    else if (!this.situation) 
+    else if (!this.form.controls['situation'].value) 
     {
       let mssg  = Util.stringFormat(this.mssgNoti, "Nội dung");
       this.notifySV.notify(mssg);
       return;
     }
-    else if(!this.myWallet)
+    if(this.parameter)
+    {
+        if (this.parameter.RuleSelected == '1') 
+        {
+          if (!this.form.controls["behavior"].value) {
+            let mssg  = Util.stringFormat(this.mssgNoti, "Qui tắc ứng xử");
+            this.notifySV.notify(mssg);
+            return;
+          }
+        }
+        else if (this.parameter.RuleSelected == '2') 
+        {
+          if (!this.form.controls["industry"].value) {
+            let mssg  = Util.stringFormat(this.mssgNoti, "Hành vi ứng xử");
+            this.notifySV.notify(mssg);
+            return;
+          }
+        }
+    }
+    if(!this.myWallet)
     {
       this.notifySV.notify("Bạn chưa tích hợp ví");
       return; 
@@ -372,9 +375,13 @@ export class PopupAddCardsComponent implements OnInit {
       card.entityPer = this.entityName;
       card.cardType = this.cardType;
       card.shareControl = this.shareControl;
-      card.listShare = this.lstShare;
       card.objectType = this.objectType;
-      card.pattern = this.patternSelected.patternID;
+      card.listShare = this.lstShare;
+      if(this.cardType != this.CARDTYPE_EMNUM.SuggestionImprovement || this.cardType != this.CARDTYPE_EMNUM.Share ){
+        if(this.patternSelected?.patternID){
+          card.pattern = this.patternSelected.patternID;
+        }
+      }
       if(this.gift){
         card.hasGifts = true;
       }
@@ -412,10 +419,8 @@ export class PopupAddCardsComponent implements OnInit {
         .execSv<any>("FD", "ERM.Business.FD", "CardsBusiness", "AddAsync", card)
         .subscribe((res:any[]) => {
           if (res && res[0] && res[1]) {
-            let cardID = res[1].recID;
             (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
             this.dialog.close();
-            // this.postFeedBack(cardID,this.shareControl);
           }
           else
           {
@@ -434,8 +439,6 @@ export class PopupAddCardsComponent implements OnInit {
         }
       })
   }
-
-
   openFormShare(content: any) {
     this.callfc.openForm(content, '', 420, window.innerHeight);
   }

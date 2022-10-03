@@ -51,6 +51,7 @@ export class PopRolesComponent implements OnInit {
   formType = '';
   isCheck = true;
   checkRoleIDNull = false;
+  userID: any;
 
   @ViewChild('form') form: CodxFormComponent;
 
@@ -66,9 +67,10 @@ export class PopRolesComponent implements OnInit {
     this.dialogSecond = dialog;
     this.data = dt?.data.data;
     this.formType = dt?.data.formType;
+    this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
   }
   ngOnInit(): void {
-    this.listChooseRole = this.data;
+    this.listChooseRole = JSON.parse(JSON.stringify(this.data));
     this.loadData();
   }
 
@@ -210,6 +212,7 @@ export class PopRolesComponent implements OnInit {
   }
   onCbx(event, item?: any) {
     if (event.data) {
+      var dataTemp = JSON.parse(JSON.stringify(item));
       item.recIDofRole = event.data;
       this.listRoles.forEach((element) => {
         if (element.recID == item.recIDofRole) {
@@ -217,6 +220,17 @@ export class PopRolesComponent implements OnInit {
           item.color = element.color;
         }
       });
+      var lstTemp = JSON.parse(JSON.stringify(this.listChooseRole));
+      lstTemp.forEach(res => {
+        if(res.functionID == dataTemp.functionID) {
+          res.roleID = item.recIDofRole;
+          res.recIDofRole = item.recIDofRole;
+          res.roleName = item.roleName;
+          res.color = item.color;
+          res.userID = this.userID;
+        }
+      })
+      this.listChooseRole = lstTemp;
     }
   }
   checkClickValueOfUserRoles(value?: any) {

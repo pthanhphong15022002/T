@@ -289,7 +289,15 @@ ejs-switch .form-control {
   padding-right: 18px;
 }
 
-.e-splitter.e-splitter-horizontal,
-.e-splitter.e-splitter-vertical {
-  border: 0;
+/* css chart */
+.e-panel {
+  cursor: auto !important;
+}
+.title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #737373;
+}
+#acc_chart_57724_1_border {
+  fill:"none";
 }

@@ -88,9 +88,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
     roleType: string;
     status: string;
     objectType: string;
+    objectID:any;
   };
   attendeesList = [];
-
+  checkLoopS=true;
+  checkLoopE=true;
+  checkLoop=true;
   grvBookingCar: any;
   strAttendees: string = '';
   vllDevices = [];
@@ -158,7 +161,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
         userName: people.userName,
         status: '1',
         objectType: 'AD_Users',
-        roleType: '2',
+        roleType: '1',
+        objectID:undefined,
       };
       this.curUser = this.tempAtender;
       
@@ -184,6 +188,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                 status: people.status,
                 objectType: 'AD_Users',
                 roleType: people.roleType,
+                objectID:undefined,
               };
               if (
                 this.tempAtender.userId == this.authService.userValue.userID
@@ -239,23 +244,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
       );
       return;
     }
-    if (
-      this.data.startDate &&
-      this.data.endDate
-    ) {
-      let hours = parseInt(
-        (
-          (this.data.endDate -
-            this.data.startDate) /
-          1000 /
-          60 /
-          60
-        ).toFixed()
-      );
+    if (this.data.startDate!=null && this.data.endDate!=null && this.data.startDate >= this.data.endDate) {
+      let hours = parseInt(((this.data.endDate -this.data.startDate)/1000/60/60).toFixed());
       if (!isNaN(hours) && hours > 0) {
-        this.data.hours= hours;
+        this.data.hours = hours;
       }
-    }
+    } else {
+      this.notificationsService.notifyCode('EP003');
+      return;
+    }    
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
@@ -267,16 +264,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.lstPeople.forEach((people) => {
       this.attendeesList.push(people);
     });
-    
-    // if (this.data.value.resourceID instanceof Object) {
-    //   this.data.resourceID= this.data.value.resourceID[0];
-    // }
-    // if (this.data.value.agencyName instanceof Object) {
-    //   this.data.agencyName= this.data.value.agencyName[0];
-    // }
-    // if (this.data.value.reasonID instanceof Object) {
-    //   this.data.reasonID= this.data.value.reasonID[0];
-    // }
+    this.attendeesList.push(this.driver);
     this.data.stopOn = this.data.endDate;
     this.data.bookingOn= this.data.startDate;
     this.data.category= '2';
@@ -296,15 +284,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
       });
     this.detectorRef.detectChanges();
   }
-  buttonClick(e: any) {
-    //console.log(e);
-  }
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.data['field']= event.data.value;        
+        this.data[event.field]= event.data.value;        
       } else {
-        this.data['field']= event.data.value;
+        this.data[event?.field]= event.data;
       }
     }
   }
@@ -336,19 +321,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
   driverChangeWithCar(carID: string) {
     this.codxEpService.getGetDriverByCar(carID).subscribe((res) => {
       if (res) {
-        var x = res;
-        let driverInfo: {
-          id: string;
-          text: string;
-          objectType: string;
-          objectName: string;
-        } = {
-          id: res.msgBodyData[0].resourceID,
-          text: res.msgBodyData[0].resourceName,
-          objectType: undefined,
-          objectName: undefined,
-        };
-        this.driver = driverInfo;
+        this.tempAtender = {
+          userId: res.msgBodyData[0].resourceID,
+          userName: res.msgBodyData[0].resourceName,
+          status: '1',
+          objectType: 'EP_Driver',
+          roleType: '2',
+          objectID: res.msgBodyData[0].recID,
+        };        
+        this.driver = this.tempAtender;
         this.detectorRef.detectChanges();
       }
     });
@@ -362,6 +343,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         status: '1',
         objectType: 'AD_Users',
         roleType: '3',
+        objectID:undefined,
       };
       if (this.tempAtender.userId != this.curUser.userId) {
         this.lstPeople.push(this.tempAtender);
@@ -373,17 +355,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  // valueCbxDriverChange(event) {
-  //   this.driver= event.data.dataSelected[0];
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
-  // changeTime(data) {
-  //   if (!data.field || !data.data) return;
-  //   this.data.patchValue({
-  //     [data['field']]: data.data.fromDate,
-  //   });
-  // }
   openPopupDevice(template: any) {
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
@@ -405,40 +376,41 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     let startTime =new Date(this.data.startDate);
     let endTime =new Date(this.data.endDate);
-    let crrTime = new Date();
-    if(startTime.getFullYear() < crrTime.getFullYear() || endTime.getFullYear() < crrTime.getFullYear() || endTime.getFullYear() < startTime.getFullYear() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }     
-    else if(startTime.getMonth() < crrTime.getMonth() || endTime.getMonth() < crrTime.getMonth() || endTime.getMonth() < startTime.getMonth() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }
-    else if(startTime.getDate() < crrTime.getDate() || endTime.getDate() < crrTime.getDate() || endTime.getDate() < startTime.getDate() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }
-    else if(startTime.getHours() < crrTime.getHours() || endTime.getHours() < crrTime.getHours() || endTime.getHours() < startTime.getHours() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
-    }
-    else if(startTime.getMinutes() <= crrTime.getMinutes() || endTime.getMinutes() <= crrTime.getMinutes() || endTime.getMinutes() <= startTime.getMinutes() ){
-      this.notificationsService.notifyCode('EP003');
-      return;
+    if(endTime <= startTime){
+      this.checkLoop=!this.checkLoop;
+      if(!this.checkLoop){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      } 
     }   
+   
   }
   startDateChange(evt:any){
     if (!evt.field || !evt.data) {
       return;  
-    } 
-    this.data.startDate= evt.data.fromDate;    
-    this.timeCheck()
+    }
+    this.data.startDate = evt.data.fromDate;    
+    if(new Date() >= new Date(this.data.startDate)){
+      this.checkLoopS=!this.checkLoopS;
+      if(!this.checkLoopS){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      }  
+    }
+    this.timeCheck();
   }
   endDateChange(evt:any){
     if (!evt.field || !evt.data) {
       return;  
     } 
     this.data.endDate= evt.data.fromDate; 
-    this.timeCheck()   
+    if(new Date() >= new Date(this.data.endDate)){      
+      this.checkLoopE=!this.checkLoopE;
+      if(!this.checkLoopE){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      } 
+    }
+    this.timeCheck();  
   }
 }

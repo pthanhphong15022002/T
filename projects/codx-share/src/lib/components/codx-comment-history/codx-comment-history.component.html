@@ -29,7 +29,7 @@
 </ng-container>
 <!-- COMMENT -->
 <ng-template #C>
-    <div class="position-relative pb-3 px-5 send-comt">
+    <div class="position-relative pb-5 send-comt">
         <ng-container *ngIf="type=='create'; else modView">
             <div class="d-flex align-items-center">
                 <div class="me-3">
@@ -358,18 +358,20 @@
                                 </th>
                             </thead>
                             <tbody>
-                                <tr class="my-2" *ngFor="let item of data.datas">
-                                    <td scope="col-4">
-                                        <codx-label [formModel]="formModel" [fiedName]="item.fieldName"
-                                            name="lblFieldName" [default]="item.fieldName"></codx-label>
-                                    </td>
-                                    <td scope="col-4">
-                                        {{item.oldValue}}
-                                    </td>
-                                    <td scope="col-4">
-                                        {{item.newValue}}
-                                    </td>
-                                </tr>
+                                <ng-container *ngIf="data.datas">
+                                    <tr class="my-2" *ngFor="let item of data.datas">
+                                        <td scope="col-4">
+                                            <codx-label [formModel]="formModel" [fiedName]="item.fieldName"
+                                                name="lblFieldName" [default]="item.fieldName"></codx-label>
+                                        </td>
+                                        <td scope="col-4">
+                                            {{item.oldValue}}
+                                        </td>
+                                        <td scope="col-4">
+                                            {{item.newValue}}
+                                        </td>
+                                    </tr>
+                                </ng-container>
                             </tbody>
                         </table>
                     </div>

@@ -64,7 +64,7 @@ export class PropertiesComponent implements OnInit {
   styleRating: string;
   historyFileName: string;
   fileEditing: FileUpload;
-  commenttext: string;
+  commenttext: string = "";
   shareContent: string;
   requestContent: string;
   requestTitle: string;
@@ -216,6 +216,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   txtValue($event, type) {
+    debugger;
     switch(type) {
       case "commenttext":
         this.commenttext = $event.data;
@@ -334,5 +335,11 @@ export class PropertiesComponent implements OnInit {
       return "icon-star text-warning icon-16 mr-1";
     else
       return "icon-star text-muted icon-16 mr-1";
+  }
+  getInformation(id:any)
+  {
+    // this.api.execSv("HR","HR","EmployeesBusiness","GetEmpUsers",id).subscribe(item=>{
+      
+    // })
   }
 }

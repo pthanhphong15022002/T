@@ -14,3 +14,13 @@
     width: 0px;
   }
 }
+.line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+.w-200px {
+  width: 200px;
+}

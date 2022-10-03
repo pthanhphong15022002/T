@@ -4,7 +4,6 @@ import {
   Injector,
   Optional,
   Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -93,7 +92,6 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   beforeSave(option: RequestOption) {
-    debugger;
     let itemData = this.dialogAddStationery.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
@@ -101,7 +99,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
-    this.data.resourceType='6';
+    this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
@@ -123,6 +121,7 @@ export class PopupAddStationeryComponent extends UIComponent {
               }
             });
         }
+        this.detectorRef.detectChanges();
         this.dialog.close();
       });
   }
@@ -146,7 +145,6 @@ export class PopupAddStationeryComponent extends UIComponent {
         this.dialogAddStationery.patchValue({ [event['field']]: event.data });
       }
     }
-    this.colorItem = event.data;
   }
 
   closeDialog(evt: any) {

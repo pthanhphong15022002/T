@@ -1,16 +1,124 @@
+<div class="page-content d-flex flex-row" *ngIf="meeting">
+  <div class="w-100">
+    <div class="row m-0 bg-body rounded-2 mb-3 p-3 meeting-details-header">
+      <div class="col-8">
+        <codx-temp-full
+          cardCss="card-template"
+          [titleTmp]="titleTmp"
+          [desc]="
+            convertHtmlAgency(
+              startDateMeeting,
+              getDate(startDateMeeting, endDateMeeting),
+              userName
+            )
+          "
+          [dataItem]="meeting"
+          [footer]="footer"
+        >
+        </codx-temp-full>
+        <div class="row">
+          <div class="d-flex">
+            <ng-container *ngFor="let item of tabControl; let i = index">
+              <a
+                [class]="
+                  'text-gray-800 text-hover-primary cursor-pointer  me-5' +
+                  ' ' +
+                  (item.isActive ? 'text-primary tab-active' : '')
+                "
+              >
+                <codx-label
+                  [name]="'lbl' + item.name"
+                  [formName]="'SYS'"
+                  [default]="item.textDefault"
+                  (click)="clickMenu(item)"
+                >
+                </codx-label>
+              </a>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex justify-content-end">
+          <codx-imgs
+            class=""
+            [objectId]="meeting.avataResource"
+            objectType="AD_Users"
+            [numberImages]="6"
+          >
+          </codx-imgs>
+        </div>
+
+        <!-- <div
+          class="d-flex justify-content-end"
+          style="padding-top: 40px; cursor: pointer"
+        >
+          <codx-label
+            class="text-gray-800 text-hover-primary cursor-pointer"
+            default="Xem công việc >>"
+            (click)="viewDetail(meeting)"
+          >
+          </codx-label>
+        </div> -->
+      </div>
+    </div>
+
+    <div
+      class="m-0 bg-body rounded-2 sprints-task-detail"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="{default: true}"
+      data-kt-scroll-height="auto"
+      data-kt-scroll-dependencies=".meeting-details-header, .header"
+      data-kt-scroll-wrappers=".page-content, .no-wrapper"
+      [attr.data-kt-scroll-offset]="offset"
+    >
+      <div class="m-0 bg-body rounded-2 py-3 px-5">
+        <ng-container *ngIf="name == 'MeetingContents'">
+          <ng-container *ngTemplateOutlet="templateMeeting"> </ng-container>
+        </ng-container>
+        <ng-container *ngIf="name == 'Comments'">
+          <div class="tab_container">
+            <codx-tree-history
+              [objectID]="meeting?.meetingID"
+              [objectType]="'CO_Meetings'"
+              [actionType]="'C'"
+              [addNew]="true"
+              [viewIcon]="false"
+              [viewVote]="true"
+              [funcID]="funcID"
+            >
+            </codx-tree-history>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="name == 'AssignTo'">
+          <div *ngIf="dataObjAssign">
+            <ng-container *ngTemplateOutlet="templateAssign"> </ng-container>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="name == 'Tasks'">
+          <div *ngIf="dataObjTasks">
+            <ng-container *ngTemplateOutlet="templateTasks"> </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
 <ng-template #titleTmp>
   <div class="d-flex flex-column">
     <div class="d-flex align-items-center mb-1">
       <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
         {{ meeting.meetingName }}
       </div>
-      <div class="badge badge-danger label-status" [style.border-color]="
-          (meeting?.meetingType | vll: 'CO002':'textColor' | async) + '30'
-        " [style.background-color]="
-          (meeting?.meetingType | vll: 'CO002':'textColor' | async) + '30'
-        " [style.color]="meeting?.meetingType | vll: 'CO002':'textColor' | async" style="border: none">
-        {{ meeting?.meetingType | vll: "CO002":"text" | async }}
-      </div>
+      <codx-vll
+        [name]="'CO002'"
+        [value]="meeting?.meetingType"
+        [showText]="true"
+        [showIcon]="true"
+        class="badge badge-light badge-md fs-7"
+      >
+      </codx-vll>
     </div>
   </div>
 </ng-template>
@@ -31,75 +139,39 @@
   </div>
 </ng-template>
 
-<div class="page-content d-flex flex-row" *ngIf="meeting">
-  <div class="w-100">
-    <div class="row m-0 bg-body rounded-2 mb-3 p-3">
-      <div class="col-8">
-        <codx-temp-full cardCss="card-template" [titleTmp]="titleTmp" [desc]="
-            convertHtmlAgency(
-              startDateMeeting,
-              getDate(startDateMeeting, endDateMeeting),
-              userName
-            )
-          " [dataItem]="meeting" [footer]="footer">
-        </codx-temp-full>
-        <div class="row">
-          <div class="d-flex col-4">
-            <ng-container *ngFor="let item of tabControl; let i = index">
-              <a [class]="
-                  'btn btn-sm btn-light-primary my-3 me-2' +
-                  ' ' +
-                  (item.isActive ? 'active' : '')
-                ">
-                <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
-                  (click)="clickMenu(item)">
-                </codx-label>
-              </a>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="d-flex justify-content-end">
-          <codx-imgs class="" [objectId]="meeting.avataResource" objectType="AD_Users" [numberImages]="6">
-          </codx-imgs>
-        </div>
-
-        <div class="d-flex justify-content-end" style="padding-top: 40px ; cursor: pointer;">
-          <codx-label class="text-gray-800 text-primary" default="Xem công việc >>" (click)="viewDetail(meeting)">
-          </codx-label>
-        </div>
-      </div>
-    </div>
-    <div class="m-0 bg-body rounded-2 py-3 px-5 h-100">
-      <ng-container *ngIf="name == 'Nội dung họp'">
-        <ng-container *ngTemplateOutlet="templateMeeting"> </ng-container>
-      </ng-container>
-      <ng-container *ngIf="name == 'Thảo luận'">
-        <div class="tab_container">
-          <codx-tree-history [objectID]="meeting.meetingID" [objectType]="'CO_Meetings'" [actionType]="'C'"
-            [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="funcID">
-          </codx-tree-history>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="name == 'Giao việc'">
-        <div *ngIf="dataObj">
-          <ng-container *ngTemplateOutlet="templateAssign"> </ng-container>
-        </div>
-      </ng-container>
-    </div>
-  </div>
-</div>
-
 <ng-template #templateMeeting>
   <div class="">
-    <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO" className="MeetingsBusiness"
-      method="UpdateContentMeetingAsync" [objectParentID]="meetingID" [data]="meeting.contents" [objectID]=""
-      [objectType]="'CO_Meetings'" [vllControlShare]="'TM003'" [vllRose]="'TM002'">
+    <codx-note
+      [showMenu]="true"
+      [showMF]="true"
+      service="CO"
+      assembly="ERM.Business.CO"
+      className="MeetingsBusiness"
+      method="UpdateContentMeetingAsync"
+      [objectParentID]="meetingID"
+      [data]="meeting.contents"
+      [objectID]=""
+      [objectType]="'CO_Meetings'"
+      [vllControlShare]="'TM003'"
+      [vllRose]="'TM002'"
+    >
     </codx-note>
   </div>
 </ng-template>
 
 <ng-template #templateAssign>
-  <codx-tasks-share [dataObj]="dataObj" [showButtonAdd]="false"></codx-tasks-share>
+  <codx-tasks-share
+    [funcID]="'TMT0203'"
+    [dataObj]="dataObjAssign"
+    [showButtonAdd]="false"
+  ></codx-tasks-share>
+</ng-template>
+
+<ng-template #templateTasks>
+  <codx-tasks-share
+    [funcID]="'TMT03011'"
+    [dataObj]="dataObjTasks"
+    [showButtonAdd]="false"
+    [showMoreFunc]="false"
+  ></codx-tasks-share>
 </ng-template>

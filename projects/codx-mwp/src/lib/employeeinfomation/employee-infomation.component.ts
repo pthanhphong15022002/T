@@ -16,7 +16,7 @@ import { EditSkillComponent } from './edit-skill/edit-skill.component';
   selector: 'lib-employee-infomation',
   templateUrl: './employee-infomation.component.html',
   styleUrls: ['./employee-infomation.component.css'],
-  // encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None
 
 })
 export class EmployeeInfomationComponent implements OnInit {
@@ -227,28 +227,28 @@ export class EmployeeInfomationComponent implements OnInit {
       }
     });
 
-    // this.codxMwpService.LoadData(employee.Employee.employeeID, "", "4").subscribe((response: any) => {
-    //   if (response) {
-    //     this.updateTraining(response);
-    //   }
-    // });
-    // this.codxMwpService.LoadData(employee.Employee.employeeID, "", "5").subscribe((response: any) => {
-    //   this.updateHobby(response);
-    // });
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "4").subscribe((response: any) => {
+      if (response) {
+        this.updateTraining(response);
+      }
+    });
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "5").subscribe((response: any) => {
+      this.updateHobby(response);
+    });
 
-    // this.codxMwpService.LoadData(employee.Employee.employeeID, "", "7").subscribe((response: any) => {
-    //   if (response) {
-    //     this.updateRelation(response);
-    //   }
-    // });
-    // this.codxMwpService.LoadData(employee.Employee.employeeID, "", "8").subscribe((response: any) => {
-    //   if (response) {
-    //     this.updateSkill(response);
-    //   }
-    // });
-    setTimeout(() => {
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "7").subscribe((response: any) => {
+      if (response) {
+        this.updateRelation(response);
+      }
+    });
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "8").subscribe((response: any) => {
+      if (response) {
+        this.updateSkill(response);
+      }
+    });
+    // setTimeout(() => {
      
-    }, 100);
+    // }, 100);
 
   }
   updateHobby(response) {

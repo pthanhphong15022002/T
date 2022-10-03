@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { rejects } from 'assert';
 import {
   ApiHttpService,
   AuthStore,
@@ -11,6 +12,7 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
+import { resolve } from 'path';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { tmpBG_TrackLogs } from './codx-es.model';
@@ -113,6 +115,7 @@ export class CodxEsService {
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,
+    data: any = null,
     gridViewSetup: any = null
   ) {
     const invalid = [];
@@ -166,6 +169,21 @@ export class CodxEsService {
       entityName,
       idField,
     ]);
+  }
+
+  setCacheFormModel(formModel: FormModel) {
+    this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+      this.cache.setGridView(formModel.gridViewName, gridView);
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((gridViewSetup) => {
+          this.cache.setGridViewSetup(
+            formModel.formName,
+            formModel.gridViewName,
+            gridViewSetup
+          );
+        });
+    });
   }
 
   getFormModel(functionID): Promise<FormModel> {
@@ -425,13 +443,13 @@ export class CodxEsService {
     );
   }
 
-  addEditAutoNumbers(data: FormGroup, isAdd: boolean): Observable<any> {
+  addEditAutoNumbers(data: any, isAdd: boolean): Observable<any> {
     return this.api.execSv(
       'SYS',
       'AD',
       'AutoNumbersBusiness',
       'SettingAutoNumberAsync',
-      [data.value, isAdd]
+      [data, isAdd]
     );
   }
 

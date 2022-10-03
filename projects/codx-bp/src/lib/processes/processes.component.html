@@ -1,5 +1,6 @@
-<codx-views #view service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings" [views]="views"
-  [button]="showButtonAdd ? button : null" className="MeetingsBusiness" method="GetListMeetingsAsync"
-  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID"
-  (onDragDrop)="onDragDrop($event)">
+<codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP" entityName="BP_Processes" className="ProcessesBusiness"
+  method="GetListProcessesAsync" [views]="views" [button]="showButtonAdd ? button : null" (buttonClick)="click($event)"
+  [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="processNo" (onDragDrop)="onDragDrop($event)">
 </codx-views>
+
+aaaa

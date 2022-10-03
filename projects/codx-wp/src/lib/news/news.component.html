@@ -1,20 +1,23 @@
-<codx-views #codxViews [funcID]="funcID" idField="recID" [views]="views">
-</codx-views>
-<div class="more-function">
-  <div class="d-flex flex-column">
-    <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
-    <span class="postnews mt-3">
-      <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
-      <div class="d-flex btn-postnews">
+<div class="codx-news">
+  <codx-views #codxViews [funcID]="funcID" idField="recID" [views]="views">
+  </codx-views>
+  <div class="more-function">
+    <div class="d-flex flex-column">
+      <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+      <span class="postnews mt-3">
+        <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+        <div class="d-flex btn-postnews">
 
-        <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
-            class="icon-video_call fs-1"></i></a>
-        <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
-            class="icon-post_add fs-1"></i></a>
-      </div>
-    </span>
+          <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
+              class="icon-video_call fs-1"></i></a>
+          <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
+              class="icon-post_add fs-1"></i></a>
+        </div>
+      </span>
+    </div>
   </div>
 </div>
+
 <ng-template #panelLeftRef>
   <div class="fix-container rounded-4 position-relative">
     <div class="row" *ngIf="lstHotNew[0]">
@@ -27,7 +30,7 @@
       <div class="col-6 hot-left">
         <ng-container *ngIf="lstHotNew[0];else empty1">
           <div class="cursor-pointer">
-            <codx-img imageType="square" [cssClass]="'image-300 w-100'" [width]="480"
+            <codx-img imageType="square" [cssClass]="'image-300 w-100 pic-newshot'" [width]="480"
               (click)="clickViewDetail(lstHotNew[0])" [objectId]="lstHotNew[0].recID" [objectType]="entityName">
             </codx-img>
           </div>
@@ -117,19 +120,23 @@
         </div>
       </div>
     </div>
-    <div class="row my-8" *ngIf="listSlider.length > 0; else emptySilder">
+    <div class="row my-8" *ngIf="lstVideo.length > 0; else emptySilder">
       <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
         [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
-        <ng-template ngbSlide *ngFor="let list of listSlider">
-          <div class="row">
-            <div *ngFor="let item of list" class="col-4">
-              <div (click)="clickViewDetail(item)" class="w-100 video cursor-pointer">
-                <codx-img [cssClass]="'image-200 w-100'" [width]="300" imageType="square" [objectId]="item.recID"
-                  objectType="WP_News">
-                </codx-img>
-                <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:200 }}</div>
-              </div>
-            </div>
+        <ng-template ngbSlide *ngFor="let list of lstVideo; let i = index">
+          <div class="d-flex" *ngIf="i < 6">
+            <ng-container *ngFor="let item of lstVideo;let idxChild = index;">
+              <ng-container *ngIf="idxChild >= (i * 3) && idxChild < (i + 1 * 3)">
+                <div class="mx-5">
+                  <div (click)="clickViewDetail(item)" class="w-100 video cursor-pointer">
+                    <codx-img [cssClass]="'image-200 w-100'" [width]="300" imageType="square" [objectId]="item.recID"
+                      objectType="WP_News">
+                    </codx-img>
+                    <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:200 }}</div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
           </div>
         </ng-template>
       </ngb-carousel>

@@ -29,7 +29,7 @@
   <div class="w-100px h-100px m-4">
     <codx-img
       [objectId]="data?.recID"
-      [objectType]="'EP_Resources'"
+      [objectType]="'EP_Stationery'"
       imageType="square"
       width="100"
     ></codx-img>
@@ -65,19 +65,15 @@
 </ng-template>
 
 <ng-template #color let-data>
-  <div class="d-flex justify-content-start">
-    <div *ngFor="let color of splitColor(data.color)">
-      <div
-        class="me-4"
-        [ngStyle]="{ 'background-color': color }"
-        style="width: 20px; height: 20px; border-radius: 25%"
-      ></div>
-    </div>
-  </div>
+  <div
+    class="border"
+    [ngStyle]="{ 'background-color': data?.color ? data.color : '#fff' }"
+    style="width: 50px; height: 50px; border-radius: 25%"
+  ></div>
 </ng-template>
 
 <ng-template #groupID let-data>
-  <div class="fw-bold">{{ data?.groupID }}</div>
+  <div class="fw-bold">{{ data?.groupName }}</div>
 </ng-template>
 
 <ng-template #note let-data>
@@ -105,7 +101,7 @@
   <div class="d-flex has-action-menu">
     <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
     <div class="ms-4">
-      <div class="fw-bold">{{ data.owner }}</div>
+      <div class="fw-bold">{{ data?.ownerName }}</div>
     </div>
     <codx-mfunc
       [dataItem]="data"
@@ -123,7 +119,7 @@
         <div class="d-flex align-items-center">
           <codx-img
             [objectId]="data?.recID"
-            [objectType]="'EP_Resources'"
+            [objectType]="'EP_Stationery'"
             imageType="square"
             width="50"
           ></codx-img>
@@ -138,13 +134,13 @@
           </div>
         </div>
       </div>
-      <div class="w-25 d-flex justify-content-start">
-        <span>Màu sắc: </span>
-        <div *ngFor="let color of splitColor(data?.color)">
+      <div class="w-25">
+        <div class="d-flex align-items-center">
+          <div class="me-4">Màu sắc:</div>
           <div
-            class="me-4"
-            [ngStyle]="{ 'background-color': color }"
-            style="width: 20px; height: 20px; border-radius: 25%"
+            class="border"
+            [ngStyle]="{ 'background-color': data?.color }"
+            style="width: 50px; height: 50px; border-radius: 25%"
           ></div>
         </div>
       </div>
@@ -162,22 +158,28 @@
           <span class="fw-bold">{{ data?.availableQty }}</span>
         </div>
       </div>
-      <div class="w-25">
+      <div class="w-25 has-action-menu">
         <div class="my-2">Người điều phối</div>
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
           <codx-img
             [objectId]="data?.owner"
-            [objectName]="data.ownerName"
+            [objectName]="data?.ownerName"
             objectType="AD_Users"
             imageType="square"
             [width]="40"
           >
           </codx-img>
-          <div>
-            <div>{{ data?.employeeName }}</div>
-            <div class="text-black-50">{{data?.positionName}}</div>
+          <div class="ms-2">
+            <div>{{ data?.ownerName}}</div>
+            <div class="text-black-50">{{ data?.position }}</div>
           </div>
         </div>
+        <codx-mfunc
+          [dataItem]="data"
+          [formModel]="formModel"
+          (clickMF)="clickMF($event, data)"
+          type="hover"
+        ></codx-mfunc>
       </div>
     </div>
   </div>
@@ -186,9 +188,9 @@
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="border w-250px h-100"
-    [imageSrc]="
-      data?.icon ? data?.icon : '../assets/media/svg/files/blank-image.svg'
-    "
+    [imageSrc]="data?.icon ? '' : '../assets/media/svg/files/blank-image.svg'"
+    [imageObjType]="'EP_Stationery'"
+    [imageId]="data?.recID"
     [title]="data?.resourceName"
     [rootData]="data"
     [footer]="cardItemFooter"

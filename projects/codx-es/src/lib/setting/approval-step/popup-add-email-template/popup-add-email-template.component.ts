@@ -11,6 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   NodeSelection,
   RichTextEditorComponent,
@@ -56,7 +57,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   dialog: DialogRef;
   formModel: FormModel;
   date: any;
-  email: any;
+  templateID: string = '';
+  // email: any;
   dialogETemplate: FormGroup;
   isAfterRender = false;
   showIsTemplate = true;
@@ -76,7 +78,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   lstTo = [];
   lstCc = [];
   lstBcc = [];
-  sendNow: boolean = false;
 
   methodEdit: boolean = false;
   dataSource: any = {};
@@ -100,33 +101,33 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.formGroup = data?.data.formGroup;
-    console.log(this.formGroup);
+    this.formGroup = data?.data?.formGroup;
+    // this.email = data?.data.dialogEmail;
+    // this.email = {
+    //   templateID: '8bd48f33-b31e-ed11-9449-00155d035517',
+    // };
+    this.templateID = data?.data?.templateID;
+    console.log(this.templateID);
 
-    this.email = data?.data.dialogEmail;
-    this.email = {
-      templateID: '8bd48f33-b31e-ed11-9449-00155d035517',
-    };
-    this.showIsPublish = data.data?.showIsPublish;
-    this.showIsTemplate = data.data?.showIsTemplate;
-    this.showSendLater = data.data.showSendLater;
+    this.showIsPublish = data.data?.showIsPublish ?? true;
+    this.showIsTemplate = data.data?.showIsTemplate ?? true;
+    this.showSendLater = data.data?.showSendLater ?? true;
 
-    // this.renderer.listen('window', 'click', (e: Event) => {
-    //   if (
-    //     this.dataView &&
-    //     e.target !== this.dataView?.nativeElement &&
-    //     this.textarea &&
-    //     this.isFocus == false
-    //   ) {
-    //     this.width = (this.textarea.nativeElement as HTMLElement).offsetWidth;
-    //     this.cr.detectChanges();
-    //   }
-    //   this.isFocus = false;
-    // });
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (this.isInside == false && this.show == true) {
+        this.show = false;
+      }
+      this.isInside = false;
+    });
+  }
+  ngAfterViewInit(): void {}
+
+  click() {
+    this.isInside = true;
   }
 
   staticWidth: number = 0;
-  ngAfterViewInit(): void {
+  AfterViewInit(): void {
     if (this.textarea && this.staticWidth != 0)
       this.staticWidth = (
         this.textarea.nativeElement as HTMLElement
@@ -178,11 +179,10 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                 this.dialogETemplate = res;
 
                 this.esService
-                  .getEmailTemplate(this.email.templateID)
+                  .getEmailTemplate(this.templateID)
                   .subscribe((res1) => {
                     if (res1 != null) {
                       this.data = res1[0];
-                      this.sendNow = res1?.sendLater ?? false;
                       this.dialogETemplate.patchValue(res1[0]);
                       this.dialogETemplate.addControl(
                         'recID',
@@ -194,7 +194,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                       // }
 
                       let lstUser = res1[1];
-                      if (lstUser.length > 0) {
+                      if (lstUser && lstUser.length > 0) {
                         lstUser.forEach((element) => {
                           switch (element.sendType) {
                             case '1':
@@ -239,7 +239,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
   onSaveWithTemplate(dialog: DialogRef) {
     if (this.dialogETemplate.value.isTemplate) {
-      this.callFunc.openForm(this.addTemplateName, 'Nhập tên', 400, 250);
+      this.callFunc.openForm(this.addTemplateName, '', 400, 250);
     } else {
       this.onSaveForm1(dialog);
     }
@@ -261,22 +261,25 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           console.log(res);
           if (res) {
             console.log(res);
-            let emailTemplates = this.formGroup.value.emailTemplates;
-            this.esService.lstTmpEmail.push(res);
-            let i = emailTemplates.findIndex(
-              (p) => p.emailType == res.templateType
-            );
-            if (i >= 0) {
-              emailTemplates[i].templateID = res.recID;
+            if (this.formGroup) {
+              let emailTemplates = this.formGroup.value.emailTemplates;
+              this.esService.lstTmpEmail.push(res);
+              let i = emailTemplates.findIndex(
+                (p) => p.emailType == res.templateType
+              );
+              if (i >= 0) {
+                emailTemplates[i].templateID = res.recID;
 
-              if (this.attachment.fileUploadList.length > 0) {
-                this.attachment.objectId = res.recID;
-                console.log(this.dmSV.fileUploadList);
-                this.attachment.saveFiles();
+                if (this.attachment.fileUploadList.length > 0) {
+                  this.attachment.objectId = res.recID;
+                  console.log(this.dmSV.fileUploadList);
+                  this.attachment.saveFiles();
+                }
+
+                this.formGroup.patchValue({ emailTemplates: emailTemplates });
               }
-
-              this.formGroup.patchValue({ emailTemplates: emailTemplates });
             }
+
             dialog1 && dialog1.close();
             this.dialog && this.dialog.close();
           }
@@ -288,21 +291,23 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           console.log(res);
           if (res) {
             console.log(res);
-            let emailTemplates = this.formGroup.value.emailTemplates;
-            this.esService.lstTmpEmail.push(res);
-            let i = emailTemplates.findIndex(
-              (p) => p.emailType == res.templateType
-            );
-            if (i >= 0) {
-              emailTemplates[i].templateID = res.recID;
+            if (this.formGroup) {
+              let emailTemplates = this.formGroup.value.emailTemplates;
+              this.esService.lstTmpEmail.push(res);
+              let i = emailTemplates.findIndex(
+                (p) => p.emailType == res.templateType
+              );
+              if (i >= 0) {
+                emailTemplates[i].templateID = res.recID;
 
-              if (this.attachment.fileUploadList.length > 0) {
-                this.attachment.objectId = res.recID;
-                console.log(this.dmSV.fileUploadList);
-                this.attachment.saveFiles();
+                if (this.attachment.fileUploadList.length > 0) {
+                  this.attachment.objectId = res.recID;
+                  console.log(this.dmSV.fileUploadList);
+                  this.attachment.saveFiles();
+                }
+
+                this.formGroup.patchValue({ emailTemplates: emailTemplates });
               }
-
-              this.formGroup.patchValue({ emailTemplates: emailTemplates });
             }
             dialog1 && dialog1.close();
             this.dialog && this.dialog.close();
@@ -317,19 +322,22 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
         });
-      } else if (event.field == 'sendLater') {
-        this.dialogETemplate.patchValue({
-          [event['field']]: !event.data,
-        });
-        this.sendNow = event?.data;
-      } else if (event.data instanceof Object) {
-        this.dialogETemplate.patchValue({
-          [event['field']]: event.data,
-        });
-      } else {
+      }
+      // else if (event.field == 'sendLater') {
+      //   this.dialogETemplate.patchValue({
+      //     [event['field']]: !event.data,
+      //   });
+      // }
+      // else if (event.data instanceof Object) {
+      //   this.dialogETemplate.patchValue({
+      //     [event['field']]: event.data,
+      //   });
+      // }
+      else {
         this.dialogETemplate.patchValue({ [event['field']]: event.data });
       }
     }
+    this.cr.detectChanges();
   }
 
   valueSentoChange(event, sendType) {
@@ -556,9 +564,10 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isFocus: boolean = false;
+  isInside: boolean = false;
 
   clickDataView(event = null) {
+    this.isInside = true;
     this.show = !this.show;
     // let crrWidth = (this.textarea.nativeElement as HTMLElement).offsetWidth;
     // console.log('width', crrWidth);
@@ -570,7 +579,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     //     5;
     // }
 
-    // this.isFocus = true;
+    // this.isInside = true;
     // this.width = (this.dataView.nativeElement as HTMLElement).offsetWidth + 5;
     this.cr.detectChanges();
   }

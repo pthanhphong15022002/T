@@ -41,7 +41,7 @@ export class CodxApprovalStepComponent
   gridViewSetup: any = {};
 
   process: any = [];
-  lstStep: any = [];
+  // lstStep: any = [];
   constructor(
     private esService: CodxEsService,
     private cr: ChangeDetectorRef,
@@ -75,8 +75,7 @@ export class CodxApprovalStepComponent
             if (gridModels.dataValue != null) {
               this.esService.getApprovalSteps(gridModels).subscribe((res) => {
                 if (res && res?.length >= 0) {
-                  this.lstStep = res;
-                  this.process = [];
+                  this.process = res;
                   this.cr.detectChanges();
                 }
               });
@@ -87,7 +86,6 @@ export class CodxApprovalStepComponent
         this.esService.getApprovalTrans(this.transID).subscribe((res) => {
           if (res) {
             this.process = res;
-            this.lstStep = [];
             this.cr.detectChanges();
           }
         });
@@ -109,5 +107,16 @@ export class CodxApprovalStepComponent
 
     res.setHours(hour2, minute2);
     return res;
+  }
+
+  getPercent(leadtime, duration) {
+    if (!leadtime) leadtime = 0;
+    if (!duration) duration = 0;
+    if (duration <= leadtime) {
+      if (leadtime != 0) return (duration / leadtime) * 100;
+      return 0;
+    } else {
+      return (leadtime / duration) * 100;
+    }
   }
 }

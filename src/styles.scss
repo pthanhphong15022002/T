@@ -114,6 +114,21 @@ textarea.e-input,
   background-color: #f1f1fa;
 }
 
+.user-mini-icon.w-20px.h-20px {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+img.w-20px.h-20px {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
+}
+
 .rounded {
   border-radius: 0.475rem !important;
 }
@@ -341,7 +356,7 @@ codx-views>.container-fluid.h-100 {
 }
 
 hr {
-  background-color: var(--gray-500);
+  background-color: var(--gray-300);
 }
 
 .is-invalid .ng-invalid,
@@ -546,4 +561,79 @@ codx-mfunc .icon-file_copy {
 
 codx-wrapper> :nth-child(2) {
   height: 100%;
+}
+
+.login-aside .e-input-group {
+  background-color: transparent;
+}
+
+.login-aside .e-input-group:not(.e-disabled) .e-input-group-icon:hover,
+.login-aside .e-input-group.e-control-wrapper:not(.e-disabled) .e-input-group-icon:hover {
+  background-color: transparent;
+}
+
+.system-settings {
+  max-width: 1100px;
+  display: flex;
+  margin: 0 auto;
+}
+
+
+lib-company-setting {
+  max-width: 1100px;
+  display: flex;
+  margin: 0 auto;
+}
+
+.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon).btn.pe-0 {
+  padding-right: 0 !important;
+}
+
+.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+  font-family: 'Roboto';
+}
+
+
+
+codx-tmmeetings .toolbar {
+  margin-bottom: 0 !important;
+}
+
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
+}
+
+.user-mini-nav-custom {
+  height: 24px;
+  padding: 2px 8px 2px 2px !important;
+  border-radius: 20px;
+  margin-bottom: 3px;
+  background-color: #f3f3f3;
+  margin-right: 10px;
+}
+
+codx-view-list-detail .nav-tabs .nav-link.active,
+codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
+  font-weight: 600;
+}
+
+codx-layout-add .codx-tab .tab-content {
+  width: 550px !important;
+}
+
+.e-more-popup-wrapper .e-more-event-header {
+  height: 35px;
+  margin: 12px 10px 5px 15px;
+}
+
+.e-more-event-date-header .e-header-day {
+  font-size: 16px !important;
+  font-weight: 600;
+}
+
+.e-more-popup-wrapper .e-header-date {
+  color: var(--gray-600);
+  font-size: 14px;
+  max-width: 100%;
 }
