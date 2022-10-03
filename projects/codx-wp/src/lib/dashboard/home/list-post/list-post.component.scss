@@ -274,7 +274,7 @@ ejs-listview .e-ul>li {
 
 .tmpshare {
     background-color: #fff;
-    right: -10px;
+    right: 0px;
     padding: 12px;
     z-index: 99;
     box-shadow: 2px 2px 6px #444;
@@ -282,18 +282,20 @@ ejs-listview .e-ul>li {
 
 .tmpshare-body{
     margin-top: 10px;
+    padding: 0px 8px;
     height: 200px;
     overflow-y: scroll;
 }
 .tmpTag {
     background-color: #fff;
-    right: -10px;
+    right: 0px;
     padding: 12px;
     z-index: 99;
     box-shadow: 2px 2px 6px #444;
 }
 .tmpTag-body{
     margin-top: 10px;
+    padding: 0px 8px;
     height: 200px;
     overflow-y: scroll;
 }

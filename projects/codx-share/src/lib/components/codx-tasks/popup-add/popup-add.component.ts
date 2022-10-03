@@ -180,7 +180,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     ///hoi lai thuong casi nafy ddang chay tam
-    //if(this.showAssignTo) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
+    if(this.showAssignTo) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
 
     this.cache.functionList(this.functionID).subscribe(f=>{
         if(f){

@@ -38,32 +38,36 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   { }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.objectID.previousValue != changes.objectID.currentValue ){
-      this.getDataAsync();
+      this.getDataAsync(this.objectID);
     }
   }
 
   ngOnInit(): void {
-    this.getDataAsync();
+      this.getDataAsync(this.objectID);
   }
 
-  getDataAsync(){
-    if(this.actionType){
-      this.GetCommentTrackLogByObjectIDAsync();
+  getDataAsync(objectID:string){
+    if(this.actionType && this.actionType == "C")
+    {
+      this.GetCommentTrackLogByObjectIDAsync(objectID);
     }
-    else{
-      this.getTrackLogAsync();
+    else
+    {
+      this.getTrackLogAsync(objectID);
     }
   }
-  getTrackLogAsync(){
-    this.api.execSv(this.service,this.assemply,this.className,"GetTrackLogsByObjectIDAsync",this.objectID).
+  getTrackLogAsync(objectID:string){
+    if(!objectID) return;
+    this.api.execSv(this.service,this.assemply,this.className,"GetTrackLogsByObjectIDAsync",[this.objectID]).
     subscribe((res:any[]) =>{
       if(res) {
-        this.root.listSubComment = res[0];
+        this.root.listSubComment = res;
       }
-    })
+    });
   }
 
-  GetCommentTrackLogByObjectIDAsync(){
+  GetCommentTrackLogByObjectIDAsync(objectID:string){
+    if(!objectID) return;
     this.api.execSv(this.service,this.assemply,this.className,"GetCommentTrackLogByObjectIDAsync",[this.objectID,this.actionType]).
     subscribe((res:any[]) =>{
       if(res) {
@@ -71,7 +75,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
         this.totalComment = res[1];
         this.totalCommentChange.emit(this.totalComment)
       }
-    })
+    });
   }
 
   replyTo(data) {
