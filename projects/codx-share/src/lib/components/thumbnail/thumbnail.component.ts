@@ -158,7 +158,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
       var id = file.recID;
       var that = this;
       if (this.checkDownloadRight(file)) {
-        debugger;
         this.fileService.downloadFile(id).subscribe(async res => {
           if (res) {
             fetch(res)

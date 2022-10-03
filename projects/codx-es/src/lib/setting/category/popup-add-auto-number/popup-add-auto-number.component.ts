@@ -167,7 +167,6 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   }
 
   setViewAutoNumber() {
-    debugger;
     let indexStrF = this.vllStringFormat.findIndex(
       (p) => p.value == this.dialogAutoNum.value.stringFormat
     );

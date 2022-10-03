@@ -268,7 +268,7 @@ export class CatagoryComponent implements OnInit {
   }
 
   getAlertRule() {
-    debugger;
+    
     var lstRoleID = [];
     if (this.setting) {
       this.setting.forEach((element) => {

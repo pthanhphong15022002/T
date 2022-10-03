@@ -641,7 +641,6 @@ export class RolesComponent implements OnInit {
         // });
         this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
           if (res != null) {
-            debugger;
             this.dmSV.fileEditing.next(this.fileEditing);
             this.notificationsService.notify(res.message);
           }

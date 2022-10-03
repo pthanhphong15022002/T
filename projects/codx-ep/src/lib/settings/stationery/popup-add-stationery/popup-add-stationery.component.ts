@@ -73,7 +73,6 @@ export class PopupAddStationeryComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
-    debugger;
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
