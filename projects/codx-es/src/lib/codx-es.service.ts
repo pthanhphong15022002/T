@@ -849,6 +849,16 @@ export class CodxEsService {
     );
   }
 
+  addImgsToPDF(pages, lstAddBefore) {
+    let data = [pages, lstAddBefore];
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'AddImgToPDFAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region ES_ApprovalTrans
@@ -993,6 +1003,8 @@ export class CodxEsService {
   }
 
   updateSignFileTrans(
+    pages,
+    lstImg,
     imgUrl,
     x,
     y,
@@ -1007,6 +1019,8 @@ export class CodxEsService {
     comment
   ) {
     let data = [
+      pages,
+      lstImg,
       imgUrl,
       x,
       y,

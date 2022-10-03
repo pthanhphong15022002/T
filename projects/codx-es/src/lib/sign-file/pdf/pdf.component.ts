@@ -86,7 +86,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   //page
   pageMax;
   pageStep;
-  pageViewMode = 'infinite-scroll';
   curPage = 1;
 
   //zoom
@@ -187,7 +186,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       this.areaControl = res.AreaControl == '1';
       this.isAwait = res.Await == '1';
       this.allowEdit = res.AllowEditAreas ? res.AllowEditAreas : true;
-      console.log('format', res);
 
       this.detectorRef.detectChanges();
     });
@@ -231,7 +229,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
     this.cache.valueList('ES015').subscribe((res) => {
       this.vllActions = res.datas;
-      console.log('actions', this.vllActions);
     });
 
     this.cache.valueList('ES024').subscribe((res) => {
@@ -239,6 +236,15 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         this.lstAnnotFontStyle.push(font.text);
       });
       this.curAnnotFontStyle = this.lstAnnotFontStyle[0];
+      this.detectorRef.detectChanges();
+    });
+
+    this.cache.valueList('ES025').subscribe((res) => {
+      console.log('size', res);
+      res?.datas?.forEach((size) => {
+        this.lstAnnotFontSize.push(size.value.replace('px', ''));
+      });
+      this.curAnnotFontSize = this.lstAnnotFontSize[0];
       this.detectorRef.detectChanges();
     });
 
@@ -270,9 +276,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           ])
           .subscribe((res) => {
             if (res) {
-              this.curSelectedArea.destroy();
-              this.tr.remove();
-
+              // this.lstAreas = this.lstAreas.filter((area) => {
+              //   return area.recID != this.curSelectedArea.id();
+              // });
               this.esService
                 .getSignAreas(
                   this.recID,
@@ -281,9 +287,13 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                   this.user.userID
                 )
                 .subscribe((res) => {
-                  this.lstAreas = res;
-                  this.detectorRef.detectChanges();
+                  if (res) {
+                    this.lstAreas = res;
+                    this.detectorRef.detectChanges();
+                  }
                 });
+              this.curSelectedArea.destroy();
+              this.tr.remove();
             }
           });
       });
@@ -292,8 +302,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //go to
   goToSelectedCA(ca, idx) {
-    console.log('ca', ca);
-
     this.lstCACollapseState[idx].open = !this.lstCACollapseState[idx].open;
     this.curPage = this.lstCA[idx].signedPosPage;
     if (!ca.isVerified) {
@@ -304,8 +312,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
 
   goToPage(e) {
-    console.log('change page', e);
     this.curPage = e.data;
+
     if (this.curPage < 1) {
       this.curPage = 1;
     } else if (this.curPage > this.pageMax) {
@@ -341,12 +349,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       this.curAnnotFontSize = area.fontSize;
       this.curAnnotFontStyle = area.fontStyle;
 
-      // let tr = this.lstLayer
-      //   .get(area.location.pageNumber + 1)
-      //   .children.find(
-      //     (trans) => trans.id() == 'transformer' + area.location.pageNumber
-      //   ) as unknown as Konva.Transformer;
-      // tr.visible(true);
       this.tr.draggable(!area.allowEditAreas ? false : area.isLock);
       this.tr.nodes([this.curSelectedArea]);
       this.curSelectedAnnotID = area.recID;
@@ -381,6 +383,32 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   //sign pdf
   signPDF(mode, comment): any {
     return new Promise<any>((resolve, rejects) => {
+      let lstAddBefore = [];
+      let lstPages = [];
+      this.tr.remove();
+      this.lstLayer.forEach((layer) => {
+        let page = Number(layer.attrs.id.replace('layer', ''));
+        if (page != this.pageMax) {
+          let areaInfo = [];
+          layer.children.forEach((child) => {
+            areaInfo.push({
+              page: page,
+              position: {
+                x: (child.x() / this.xScale) * 0.75,
+                y: (child.y() / this.yScale) * 0.75,
+                w: (child.width() / this.xScale) * 0.75,
+                h: (child.height() / this.yScale) * 0.75,
+              },
+              url: child.toDataURL().replace('data:image/png;base64,', ''),
+            });
+          });
+          if (areaInfo.length != 0) {
+            lstPages.push(page);
+            lstAddBefore.push(areaInfo);
+          }
+        }
+      });
+
       let layer = this.lstLayer.get(this.pageMax);
       let top = this.lstAreas
         ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
@@ -418,14 +446,15 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         width: width,
         height: height,
       });
-      console.log();
       this.esService
         .updateSignFileTrans(
+          lstPages,
+          lstAddBefore,
           imgUrl.replace('data:image/png;base64,', ''),
           x / this.xScale,
           y / this.yScale,
-          width,
-          height,
+          width / this.xScale,
+          height / this.yScale,
           this.pageMax,
           this.stepNo,
           this.isAwait,
@@ -439,12 +468,11 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         });
     });
   }
-  //before load pdf
-  loadingPdf(e: any) {}
+
   //loaded pdf
   loadedPdf(e: any) {
     this.pageMax = e.pagesCount;
-    console.log('page max', this.pageMax);
+    this.curPage = this.pageMax;
     let ngxService: NgxExtendedPdfViewerService =
       new NgxExtendedPdfViewerService();
     ngxService.addPageToRenderQueue(this.pageMax);
@@ -455,7 +483,19 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
       .subscribe((res) => {
         if (res) {
-          console.log('da update area', tmpArea);
+          this.esService
+            .getSignAreas(
+              this.recID,
+              this.fileInfo.fileID,
+              this.isApprover,
+              this.user.userID
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.lstAreas = res;
+                this.detectorRef.detectChanges();
+              }
+            });
         }
       });
   }
@@ -488,7 +528,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         left: x / this.xScale,
         width: w / this.xScale,
         height: h / this.yScale,
-        pageNumber: this.curPage - 1,
+        pageNumber: Number(konva?.parent?.id().replace('layer', '')) - 1,
       },
       stepNo: stepNo,
       fontStyle: type == 'text' ? konva.fontFamily() : '',
@@ -533,9 +573,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                   this.detectorRef.detectChanges();
                 }
               });
-            console.log('ket qua luu', this.lstAreas);
           }
         });
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -555,7 +595,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       let id = 'layer' + e.pageNumber.toString();
       virtual.id = id;
       virtual.style.zIndex = '2';
-      // virtual.style.border = '1px solid blue';
+      virtual.style.border = '1px solid blue';
       virtual.style.position = 'absolute';
       virtual.style.top = '0';
 
@@ -574,14 +614,22 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         });
         this.xScale = canvasBounds.width / 794;
         this.yScale = canvasBounds.height / 1123;
+
         //get layer da luu
         if (this.lstLayer.get(e.pageNumber)) {
-          let lstKonvaOnPage = this.lstLayer.get(e.pageNumber).children;
+          let layer = this.lstLayer.get(e.pageNumber);
+          let lstKonvaOnPage = layer.children;
+
           lstKonvaOnPage?.forEach((konva) => {
+            konva.position({
+              x: (konva.position().x * this.xScale) / konva.scaleX(),
+              y: (konva.position().y * this.yScale) / konva.scaleY(),
+            });
             konva.scale({ x: this.xScale, y: this.yScale });
             konva.draw();
+            layer.draw();
           });
-          stage.add(this.lstLayer.get(e.pageNumber));
+          stage.add(layer);
         } else {
           let layer = new Konva.Layer({
             id: id,
@@ -644,16 +692,16 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                   break;
                 }
                 case '8': {
-                  this.addArea(
-                    this.fileInfo.qr,
-                    'img',
-                    area.labelType,
-                    area.allowEditAreas,
-                    false,
-                    area.signer,
-                    area.stepNo,
-                    area
-                  );
+                  // this.addArea(
+                  //   this.fileInfo.qr,
+                  //   'img',
+                  //   area.labelType,
+                  //   area.allowEditAreas,
+                  //   false,
+                  //   area.signer,
+                  //   area.stepNo,
+                  //   area
+                  // );
                   break;
                 }
                 case '3':
@@ -685,6 +733,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         stage.on('mouseenter', (mouseover: any) => {
           if (this.needAddKonva) {
             this.tr.nodes([this.needAddKonva]);
+            this.tr.forceUpdate();
             stage.children[0].add(this.tr);
             stage.children[0].add(this.needAddKonva);
             this.needAddKonva.position(stage.getPointerPosition());
@@ -719,7 +768,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     break;
                   }
                 }
-                console.log('tha ra ', this.needAddKonva.parent?.attrs?.id);
               }
               this.needAddKonva = null;
             });
@@ -735,9 +783,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
             this.tr.remove();
             this.tr.nodes([]);
           } else {
-            console.log('click on', click.target);
             this.curSelectedArea = click.target;
             this.tr.nodes([click.target]);
+            this.tr.forceUpdate();
             layerChildren.add(this.tr);
           }
         });
@@ -749,7 +797,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
             return;
           }
           this.curSelectedArea = e.target;
-          console.log('dang chon', this.curSelectedArea);
 
           if (this.contextMenu) {
             this.contextMenu.style.display = 'initial';
@@ -771,8 +818,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           this.maxTopDiv = div;
         }
       });
-
-      console.log('max div', this.maxTopDiv);
     }
   }
   //create area
@@ -804,7 +849,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     newPos?: { x: number; y: number },
     newScale?: { x: number; y: number }
   ) {
-    console.log(event, ' event');
     switch (event) {
       case 'dragend': {
         tmpArea.location.top =
@@ -950,8 +994,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   //change
   chooseSignDate = true;
   changeAnnotPro(type, recID) {
-    console.log('dang chon ', this.curSelectedArea);
-    switch (type) {
+    switch (type.toString()) {
       case '6': {
         this.curSelectedArea.text(this.formAnnot.value.content);
         this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
@@ -980,7 +1023,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         let w = this.xScale;
         let h = this.yScale;
         let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
-        console.log(this.formAnnot.value.content);
 
         let tmpArea: tmpSignArea = {
           signer: tmpName.Signer,
@@ -1101,7 +1143,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       }
     } else {
       this.holding = 0;
-      console.log('vui long chon nguoi ki');
     }
   }
 
@@ -1129,14 +1170,11 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
   changeSignFile(e: any) {
     this.lstSigners = e.itemData.signers;
-    console.log('signers', this.lstSigners);
 
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
     this.curFileUrl = this.fileInfo.fileUrl;
     this.autoSignState = false;
-
-    console.log('change signfile event');
 
     this.getListCA();
     this.esService
@@ -1174,7 +1212,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
   changeSigner(e: any) {
     this.signerInfo = e.itemData;
-    console.log('change signer', this.signerInfo);
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;
     this.curSignerRecID = this.signerInfo.recID;
@@ -1256,7 +1293,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     lstUnsign.forEach((person, idx) => {
       let url = '';
       let labelType = '';
-      switch (person.signType) {
+      switch (person.stepType) {
         //chu ky
         case 'S1':
         case 'S2': {
@@ -1276,15 +1313,15 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           break;
         }
       }
+      let layer = this.lstLayer.get(this.pageMax);
+      layer = this.lstLayer.get(this.pageMax);
 
-      if (url != '' && labelType != '') {
+      if (layer && url != '' && labelType != '') {
         let recID = Guid.newGuid();
         const img = document.createElement('img') as HTMLImageElement;
         img.setAttribute('crossOrigin', 'anonymous');
         img.src = url;
         img.onload = () => {
-          console.log('url', url);
-
           let tmpName: tmpAreaName = {
             Signer: person.authorID,
             Type: 'img',
@@ -1337,7 +1374,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
             recID: recID,
           };
 
-          let layer = this.lstLayer.get(this.pageMax);
           layer?.add(imgArea);
           this.esService
             .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
@@ -1370,7 +1406,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                       this.detectorRef.detectChanges();
                     }
                   });
-                console.log('ket qua luu', this.lstAreas);
               }
             });
         };
@@ -1380,7 +1415,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //pop up
   openPopUpCAProps(ca) {
-    console.log('ca properties', ca);
     this.dialog = this.callfc.openForm(
       PopupCaPropsComponent,
       'Thuộc tính chữ ký',
@@ -1398,44 +1432,32 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //test func
   show(e: any) {
-    let layer = this.lstLayer.get(this.pageMax);
-    let top = this.lstAreas
-      ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-      ?.reduce((prev, curr) =>
-        prev.location.top < curr.location.top ? prev : curr
-      );
-
-    let left = this.lstAreas
-      ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-      ?.reduce((prev, curr) =>
-        prev.location.left < curr.location.left ? prev : curr
-      );
-    let bot = this.lstAreas
-      ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-      ?.reduce((prev, curr) =>
-        prev.location.top > curr.location.top ? prev : curr
-      );
-
-    let right = this.lstAreas
-      ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-      ?.reduce((prev, curr) =>
-        prev.location.left > curr.location.left ? prev : curr
-      );
-
-    let y = top?.location?.top * this.yScale;
-    let x = left?.location?.left * this.xScale;
-    let height = (+bot.location.top + 100) * this.yScale - y + 10;
-    let width = (+right.location.left + 200) * this.xScale - x + 10;
-
-    let imgUrl = layer.toDataURL({
-      quality: 1,
-      x: x,
-      y: y,
-
-      width: width,
-      height: height,
+    let lstAddBefore = [];
+    let lstPages = [];
+    this.tr.remove();
+    this.lstLayer.forEach((layer) => {
+      let page = Number(layer.attrs.id.replace('layer', ''));
+      if (page != this.pageMax) {
+        let areaInfo = [];
+        layer.children.forEach((child) => {
+          areaInfo.push({
+            page: page,
+            position: {
+              x: (child.x() / this.xScale) * 0.75,
+              y: (child.y() / this.yScale) * 0.75,
+              w: (child.width() / this.xScale) * 0.75,
+              h: (child.height() / this.yScale) * 0.75,
+            },
+            url: child.toDataURL().replace('data:image/png;base64,', ''),
+          });
+        });
+        if (areaInfo.length != 0) {
+          lstPages.push(page);
+          lstAddBefore.push(areaInfo);
+        }
+      }
     });
-    console.log(imgUrl);
+    this.esService.addImgsToPDF(lstPages, lstAddBefore).subscribe((res) => {});
   }
 }
 
