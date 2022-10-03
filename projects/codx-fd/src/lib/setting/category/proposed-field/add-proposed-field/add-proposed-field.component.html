@@ -4,40 +4,32 @@
         <div class="d-flex">
             <div class="flex-grow-1">
                 <div class="form-group">
-                    <codx-label formName="BS_Industries" name="lblIndustryID" default="Mã lĩnh vực"
-                        class="font-1rem font-w550">
+                    <codx-label [formModel]="form?.formModel" fiedName="IndustryID" class="font-1rem font-w550">
                     </codx-label>
-                    <span class="required"></span>
-                    <codx-input type="text" class="form-control" formControlName="industryID"
-                        [disabled]="isModeAdd ? false : true" placeholder="Mã lĩnh vực" (valueChange)="valueChange($event)"
-                        field="industryID" [crrValue]="dataUpdate.industryID">
+                    <codx-input class="form-control" [disabled]="isModeAdd ? false : true"
+                        (valueChange)="valueChange($event)" field="industryID" [formModel]="form?.formModel"
+                        [Group]="form?.formGroup">
                     </codx-input>
                 </div>
                 <div class="form-group">
-                    <codx-label formName="BS_Industries" name="lblIndustryName" default="Tên lĩnh vực"
-                        class="font-1rem font-w550">
+                    <codx-label fiedName="IndustryName" [formModel]="form?.formModel" class="font-1rem font-w550">
                     </codx-label>
-                    <span class="required"></span>
-                    <codx-input type="text" class="form-control" placeholder="Tên lĩnh vực" formControlName="industryName"
-                        [crrValue]="dataUpdate.industryName" (valueChange)="valueChange($event)"
-                        field="industryName">
+                    <codx-input class="form-control" [formModel]="form?.formModel" [Group]="form?.formGroup"
+                        (valueChange)="valueChange($event)" field="industryName">
                     </codx-input>
                 </div>
                 <div class="form-group mt-3">
-                    <codx-label formName="BS_Industries" name="lblNote" default="Ghi chú" class="font-1rem font-w550">
+                    <codx-label fiedName="Note" [formModel]="form?.formModel" class="font-1rem font-w550">
                     </codx-label>
-                    <codx-input type="textarea" class="form-control text-area" rows="3" formControlName="note"
-                        (valueChange)="valueChange($event)" field="note" [crrValue]="dataUpdate.note">
+                    <codx-input class="form-control text-area" rows="3" (valueChange)="valueChange($event)" field="note"
+                        [formModel]="form?.formModel" [Group]="form?.formGroup">
                     </codx-input>
                 </div>
                 <div class="form-group">
-                    <codx-label formName="BS_Industries" name="lblOwer" default="Người sở hữu" class="font-1rem font-w550">
+                    <codx-label fiedName="Owner" [formModel]="form?.formModel" class="font-1rem font-w550">
                     </codx-label>
-                    <span class="required"></span>
-                    <codx-input (valueChange)="valueChange($event)" id="edit-usergroups" type="combobox" name="combobox"
-                        [crrValue]="dataUpdate.owner" class=" form-control borderless p-0"
-                        style="border: none;" placeholder="Quy tắc ứng xử" ngDefaultControl refValue="Users"
-                        loadFull="false" field="owner" service="HR">
+                    <codx-input (valueChange)="valueChange($event)" class="form-control borderless p-0" field="owner"
+                        [formModel]="form?.formModel" [Group]="form?.formGroup">
                     </codx-input>
                 </div>
                 <!-- <div class="d-flex align-items-start user-card mt-5">
