@@ -192,7 +192,7 @@
 
 <ng-template #contentTmp let-data>
   <div>
-    <h2>{{ data.taskName }}</h2>
+    <h5>{{ data.taskName }}</h5>
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
@@ -226,9 +226,11 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
       <span class="ms-1 fw-bold">
-        <span #dueDate>{{
+        <span *ngIf="data.dueDate" class="text-gray-700">{{
+          data.dueDate | date: "dd/MM/yyyy"
+          }}</span>
+        <span #dueDate *ngIf="!data.dueDate">{{
           data?.dueDate
-            | date: "dd/MM/yyyy"
             | formatvalue: view.formModel:"dueDate":dueDate:"Tasks":"grvTasks"
             | async
         }}</span>
@@ -320,7 +322,7 @@
 </ng-template>
 
 <!-- content -->
-<ng-template #footerNone> </ng-template>
+<ng-template #footerNone></ng-template>
 
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
