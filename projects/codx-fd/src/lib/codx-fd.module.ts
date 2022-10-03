@@ -53,6 +53,7 @@ import { PolicyCardComponent } from './setting/feedback-message/policy-card/poli
 import { PolicyCoinComponent } from './setting/feedback-message/policy-coin/policy-coin.component';
 import { PolicyDedicationComponent } from './setting/feedback-message/policy-dedication/policy-dedication.component';
 import { DetailPolicyComponent } from './setting/feedback-message/detail-policy/detail-policy.component';
+import { AddGiftsComponent } from './setting/category/gifts/add-gifts/add-gifts.component';
 
 export const routes: Routes = [
   {
@@ -98,6 +99,24 @@ export const routes: Routes = [
         component: SettingComponent,
       },
       {
+        path: 'setting/cards/:funcID',
+        component: FeedbackMessageComponent,
+      },
+      {
+        path: 'detailpolicy',
+        component: DetailPolicyComponent,
+      },
+      {
+        path: 'setting/fedranges/:funcID',
+        component: DedicationrankComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
         path: 'setting/gifts/:funcID',
         component: GiftsComponent,
       },
@@ -116,18 +135,6 @@ export const routes: Routes = [
       {
         path: 'setting/industries/:funcID',
         component: ProposedfieldComponent,
-      },
-      {
-        path: 'setting/fedranges/:funcID',
-        component: DedicationrankComponent,
-      },
-      {
-        path: 'setting/cards/:funcID',
-        component: FeedbackMessageComponent,
-      },
-      {
-        path: 'detailpolicy',
-        component: DetailPolicyComponent,
       },
     ],
   },
@@ -162,6 +169,7 @@ const Component: Type<any>[] = [
   PolicyCoinComponent,
   PolicyDedicationComponent,
   DetailPolicyComponent,
+  AddGiftsComponent,
 ];
 
 @NgModule({

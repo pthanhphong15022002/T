@@ -15,3 +15,12 @@ codx-header>div>.d-flex.align-items-center.flex-grow-0 a {
     border: 0 !important;
     justify-content: center !important;
 }
+
+lib-catagory .card-body {
+    padding: 0 !important;
+}
+
+.category-title {
+    font-size: 14px;
+    margin-bottom: 12px;
+}

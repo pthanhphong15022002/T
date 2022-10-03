@@ -183,7 +183,7 @@ export class CatagoryComponent implements OnInit {
           // data['showIsPublish'] = null;
           // data['showSendLater'] = null;
 
-          // this.callfc.openForm(component, '', 800, screen.height, '', data);
+          this.callfc.openForm(component, '', 800, screen.height, '', data);
           break;
         default:
           break;
