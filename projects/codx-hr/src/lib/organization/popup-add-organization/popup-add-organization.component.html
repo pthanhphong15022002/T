@@ -1,0 +1,142 @@
+<codx-form
+  #form
+  headerText="{{ title }}"
+  [body]="body"
+  [formModel]="dialog?.formModel"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+>
+  <ng-template #body>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel!"
+            fiedName="orgUnitID"
+          ></codx-label>
+          <codx-input
+            [formModel]="form.formModel!"
+            [Group]="form.formGroup"
+            field="orgUnitID"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel!"
+            fiedName="orgUnitType"
+          ></codx-label>
+          <codx-input
+            [formModel]="form.formModel!"
+            [Group]="form.formGroup"
+            field="orgUnitType"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel!"
+          fiedName="orgUnitName"
+        ></codx-label>
+        <codx-input
+          [formModel]="form.formModel!"
+          [Group]="form.formGroup"
+          field="orgUnitName"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel!"
+          fiedName="parentID"
+        ></codx-label>
+        <codx-input
+          [formModel]="form.formModel!"
+          [Group]="form.formGroup"
+          field="parentID"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel!"
+          fiedName="manager"
+        ></codx-label>
+        <codx-input
+          [formModel]="form.formModel!"
+          [Group]="form.formGroup"
+          field="manager"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel!"
+          fiedName="manager2"
+        ></codx-label>
+        <codx-input
+          [formModel]="form.formModel!"
+          [Group]="form.formGroup"
+          field="manager2"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel!"
+            fiedName="phone"
+          ></codx-label>
+          <codx-input
+            [formModel]="form.formModel!"
+            [Group]="form.formGroup"
+            field="phone"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label
+            [formModel]="form.formModel!"
+            fiedName="email"
+          ></codx-label>
+          <codx-input
+            [formModel]="form.formModel!"
+            [Group]="form.formGroup"
+            field="email"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel!"
+          fiedName="street"
+        ></codx-label>
+        <codx-input
+          [formModel]="form.formModel!"
+          [Group]="form.formGroup"
+          field="street"
+        ></codx-input>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        Lưu
+      </button>
+    </div>
+  </ng-template>
+</codx-form>
