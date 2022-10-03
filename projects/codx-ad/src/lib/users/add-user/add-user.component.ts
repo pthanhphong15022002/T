@@ -104,6 +104,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
       this.adUser.phone = '';
       this.adUser.email = '';
+      this.adUser.employeeID = '';
+      this.adUser.buid = '';
+      this.adUser.userName = '';
       if (this.dataCopy?.chooseRoles) {
         this.viewChooseRole = this.dataCopy?.chooseRoles;
         this.viewChooseRoleTemp = JSON.parse(
@@ -122,7 +125,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
@@ -220,6 +223,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var obj = {
       formType: this.formType,
       data: item,
+      userID: this.adUser.userID,
     };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,
@@ -351,7 +355,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .updateFileDirectReload(res.update.userID)
               .subscribe((result) => {
                 if (result) {
-                  debugger;
                   this.loadData.emit();
                 }
                 this.dialog.close(res.update);

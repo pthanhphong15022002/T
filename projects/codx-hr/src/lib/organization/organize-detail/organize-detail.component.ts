@@ -2,15 +2,16 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ClickEventArgs } from '@syncfusion/ej2-angular-buttons';
 import {
   ConnectorModel,
   Diagram,
@@ -22,9 +23,7 @@ import {
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, FormModel } from 'codx-core';
-import { AnyNaptrRecord } from 'dns';
 import { map, Observable } from 'rxjs';
-import { json } from 'stream/consumers';
 @Component({
   selector: 'lib-organize-detail',
   templateUrl: './organize-detail.component.html',
@@ -45,6 +44,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   @Input() onlyDepartment?: boolean;
   @Input() formModel!: FormModel;
 
+  @Output() afterInit = new EventEmitter();
   data: any[] = [];
   imployeeInfo: any = {};
   employOrg: any = [];
@@ -103,19 +103,24 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
     this.loadOrgchart().subscribe((res) => {
       if (res) {
         this.data = res.Data as any[];
+        this.setDataOrg(this.data);
         //this.datasetting.dataManager = new DataManager(this.data as JSON[]);
-        var setting = this.newDataManager();
-        var dataManager = JSON.parse(JSON.stringify(this.data)) as JSON[];
-        dataManager = dataManager.filter((item: any) => {
-          if (item.departmentCode === this.orgUnitID) item.parentID = '';
-          return item;
-        });
-        setting.dataManager = new DataManager(dataManager as JSON[]);
-        this.datasetting = setting;
+        // var setting = this.newDataManager();
+        // var dataManager = JSON.parse(JSON.stringify(this.data)) as JSON[];
+        // dataManager = dataManager.filter((item: any) => {
+        //   if (item.departmentCode === this.orgUnitID) item.parentID = '';
+        //   return item;
+        // });
+        // setting.dataManager = new DataManager(dataManager as JSON[]);
+        // this.datasetting = setting;
         //this.diagram.refresh();
         this.changeDetectorRef.detectChanges();
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.afterInit.emit(this);
   }
 
   loadOrgchart(): Observable<any> {
@@ -151,10 +156,32 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
         var setting = this.newDataManager();
         setting.dataManager = new DataManager(this.data as JSON[]);
         this.datasetting = setting;
+        //this.setDataOrg(this.data);
         this.changeDetectorRef.detectChanges();
       });
     } else {
     }
+  }
+
+  setDataOrg(data: any[] = []) {
+    if (data.length > 0) {
+      this.data = data;
+      var setting = this.newDataManager();
+      var dataManager = JSON.parse(JSON.stringify(this.data)) as JSON[];
+      dataManager = dataManager.filter((item: any) => {
+        if (item.departmentCode === this.orgUnitID) item.parentID = '';
+        return item;
+      });
+      setting.dataManager = new DataManager(dataManager as JSON[]);
+      this.datasetting = setting;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  addItem(item: any) {
+    if (!item) return;
+    this.data.push(item);
+    this.setDataOrg(this.data);
   }
 
   mouseUp(dataNode: any, evt: any) {

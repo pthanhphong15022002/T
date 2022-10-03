@@ -1,0 +1,65 @@
+<codx-form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel"
+    [data]="dataUpdate" #form>
+    <ng-template #body>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <div class="form-group">
+                    <codx-label formName="BS_Industries" name="lblIndustryID" default="Mã lĩnh vực"
+                        class="font-1rem font-w550">
+                    </codx-label>
+                    <span class="required"></span>
+                    <codx-input type="text" class="form-control" formControlName="industryID"
+                        [disabled]="isModeAdd ? false : true" placeholder="Mã lĩnh vực" (valueChange)="valueChange($event)"
+                        field="industryID" [crrValue]="dataUpdate.industryID">
+                    </codx-input>
+                </div>
+                <div class="form-group">
+                    <codx-label formName="BS_Industries" name="lblIndustryName" default="Tên lĩnh vực"
+                        class="font-1rem font-w550">
+                    </codx-label>
+                    <span class="required"></span>
+                    <codx-input type="text" class="form-control" placeholder="Tên lĩnh vực" formControlName="industryName"
+                        [crrValue]="dataUpdate.industryName" (valueChange)="valueChange($event)"
+                        field="industryName">
+                    </codx-input>
+                </div>
+                <div class="form-group mt-3">
+                    <codx-label formName="BS_Industries" name="lblNote" default="Ghi chú" class="font-1rem font-w550">
+                    </codx-label>
+                    <codx-input type="textarea" class="form-control text-area" rows="3" formControlName="note"
+                        (valueChange)="valueChange($event)" field="note" [crrValue]="dataUpdate.note">
+                    </codx-input>
+                </div>
+                <div class="form-group">
+                    <codx-label formName="BS_Industries" name="lblOwer" default="Người sở hữu" class="font-1rem font-w550">
+                    </codx-label>
+                    <span class="required"></span>
+                    <codx-input (valueChange)="valueChange($event)" id="edit-usergroups" type="combobox" name="combobox"
+                        [crrValue]="dataUpdate.owner" class=" form-control borderless p-0"
+                        style="border: none;" placeholder="Quy tắc ứng xử" ngDefaultControl refValue="Users"
+                        loadFull="false" field="owner" service="HR">
+                    </codx-input>
+                </div>
+                <!-- <div class="d-flex align-items-start user-card mt-5">
+                    <div class="pic mr-3 upload-img">
+                        <codx-img [objectId]="ownInfo?.domainUser" [isAllowEdit]="true" [funcId]="formModel.functionID"
+                            *ngIf="ownInfo?.domainUser" objectType="AD_Users" #imageUpLoad [width]="90">
+                        </codx-img>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1">
+                        <div class="text-dark font-weight-bold font-size-h6">{{ownInfo?.employeeName}}</div>
+                        <div class="text-dark-75 font-weight-bold">{{ownInfo?.positionName}}</div>
+                        <div class="text-dark-50">{{ownInfo?.departmentName}}</div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+                <codx-label fiedName="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CompanyInforComponent } from './company-infor.component';
+import { AddProposedFieldComponent } from './add-proposed-field.component';
 
-describe('CompanyInforComponent', () => {
-  let component: CompanyInforComponent;
-  let fixture: ComponentFixture<CompanyInforComponent>;
+describe('AddProposedFieldComponent', () => {
+  let component: AddProposedFieldComponent;
+  let fixture: ComponentFixture<AddProposedFieldComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CompanyInforComponent ]
+      declarations: [ AddProposedFieldComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CompanyInforComponent);
+    fixture = TestBed.createComponent(AddProposedFieldComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

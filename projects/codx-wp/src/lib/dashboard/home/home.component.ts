@@ -1,7 +1,8 @@
 
 import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { LayoutService, ViewModel, ViewType } from 'codx-core';
+import { CallFuncService, DialogModel, LayoutService, ViewModel, ViewType } from 'codx-core';
+import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.component';
 @Component({
   selector: 'codx-home',
   templateUrl: './home.component.html',
@@ -10,9 +11,16 @@ import { LayoutService, ViewModel, ViewType } from 'codx-core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private callFC:CallFuncService
+  ) { }
 
   ngOnInit(): void {
   }
-  
+  clickShowPopupSearch()
+  {
+    let option = new DialogModel();
+    option.IsFull = true;
+    this.callFC.openForm(PopupSearchPostComponent,"",0,0,"",null,"",option);
+  }
 }
