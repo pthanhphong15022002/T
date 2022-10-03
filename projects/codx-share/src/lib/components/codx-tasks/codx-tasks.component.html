@@ -16,14 +16,14 @@
   </share-view-detail>
 </ng-template>
 
-<ng-template *ngIf="funcID == 'TMT0203'" #treeView>
+<ng-template #treeView>
   <share-tree-view
     [formModel]="view.formModel"
     [vllStatus]="vllStatus"
     [listRoles]="listRoles"
     [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
-    (viewTask) = "viewTask($event)"
+    (viewTask)="viewTask($event)"
   >
   </share-tree-view>
 </ng-template>
@@ -36,7 +36,7 @@
     [listRoles]="listRoles"
     [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
-    (viewTask) = "viewTask($event)"
+    (viewTask)="viewTask($event)"
   >
   </share-view-list>
 </ng-template>
@@ -189,13 +189,110 @@
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data.date)"></div>
 </ng-template>
-<ng-template #footerNone>
+
+<ng-template #contentTmp let-data>
+  <div>
+    <h5>{{ data.taskName }}</h5>
+  </div>
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <i class="icon-person me-1"></i>
+    <span class="ms-1 fw-bold">
+      {{ data?.userNameCreate }}
+    </span>
+  </div>
+  <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <div *ngIf="data?.priority">
+      <span
+        class="icon-14 me-1"
+        [class]="data?.priority | vll: vllPriority:'icon' | async"
+        [style.color]="data?.priority | vll: vllPriority:'textColor' | async"
+      >
+      </span>
+      <span class="text-gray-700">{{
+        data?.priority | vll: vllPriority:"text" | async
+      }}</span>
+    </div>
+    <div #priority *ngIf="!data?.priority">
+      {{
+        data?.priority
+          | formatvalue: view.formModel:"priority":priority:"Tasks":"grvTasks"
+          | async
+      }}
+    </div>
+  </div>
+
+  <div class="d-flex mt-1 flex-grow-1 mb-2">
+    <div class="d-flex me-6">
+      <i class="icon-calendar_today me-1"></i>
+      <span class="ms-1 fw-bold">
+        <span *ngIf="data.dueDate" class="text-gray-700">{{
+          data.dueDate | date: "dd/MM/yyyy"
+        }}</span>
+        <span #dueDate *ngIf="!data.dueDate">{{
+          data?.dueDate
+            | formatvalue: view.formModel:"dueDate":dueDate:"Tasks":"grvTasks"
+            | async
+        }}</span>
+      </span>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="mb-2 text-dark me-6"> <span>
+    <codx-label
+    default="Nội dung công việc :"
+    name="lblMemo"
+    [formModel]="view.formModel"
+    class="text-gray-600"
+  ></codx-label>
+  </span>
+   
+  <!-- </div> -->
+  <span class="ms-2 fw-bold">
+    <span class="text-gray-700" [innerHTML]="data?.memo"></span>
+    <span  #memo *ngIf="!data?.memo">{{
+      data?.memo
+        | formatvalue: view.formModel:"memo":memo:"Tasks":"grvTasks"
+        | async
+    }}</span>
+  </span>
+  </div>
+  <div class="d-flex mb-2">
+    <div class="d-flex text-dark me-6">
+      <codx-label
+        fiedName="Owner"
+        formName="Tasks"
+        gridViewName="grvTasks"
+        default="Người thực hiện"
+        class="text-gray-600 me-4"
+      >
+      </codx-label>
+      <div class="d-flex justify-content-end">
+        <codx-imgs
+          [objectId]="data?.owner"
+          objectType="AD_Users"
+          [numberImages]="4"
+          [width]="30"
+        >
+        </codx-imgs>
+      </div>
+    </div>
+  </div>
 </ng-template>
+
 <ng-template #eventTemplate let-data>
-  <div [style.color]="data.status | vll: vllStatus:'textColor' | async" (dblclick)="viewTask(data)">
+  <div
+    [style.color]="data.status | vll: vllStatus:'textColor' | async"
+    (dblclick)="viewTask(data)"
+  >
     <div>{{ data.taskName }}</div>
   </div>
 </ng-template>
+
+<!-- content -->
+<ng-template #footerNone></ng-template>
 
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
@@ -326,11 +423,24 @@
     </codx-temp-full>
   </div>
 </ng-template>
+
+<ng-template #mfButton let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+
 <codx-views
   #view
   [service]="service"
   [entityName]="entityName"
   [idField]="idField"
+  [funcID]="funcID"
   [assemblyName]="assemblyName"
   [className]="className"
   [method]="method"
@@ -341,7 +451,6 @@
   (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj"
   (selectedChange)="selectedChange($event)"
-  (onDragDrop)="onDragDrop($event)"
   (onActions)="onActions($event)"
   [selectedFirst]="true"
   [autoLoad]="true"

@@ -28,6 +28,7 @@ import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popu
 
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './dashboard/home/list-post/popup-save/popup-save.component';
+import { PopupSearchPostComponent } from './dashboard/home/list-post/popup-search/popup-search.component';
 import { MyTeamComponent } from './dashboard/home/my-team/my-team.component';
 import { PostComponent } from './dashboard/home/post/post.component';
 import { UpdateNotePinComponent } from './dashboard/home/update-note-pin/update-note-pin.component';
@@ -164,7 +165,8 @@ const Component: Type<any>[] =
     CompanyEditComponent,
     PopupTitleComponent,
     ViewTagComponent,
-    PopupSearchComponent
+    PopupSearchComponent,
+    PopupSearchPostComponent,
 
   ];
 

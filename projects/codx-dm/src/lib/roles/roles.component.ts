@@ -1,6 +1,4 @@
-import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
-import { Subject } from "rxjs";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
@@ -10,11 +8,6 @@ import { SystemDialogService } from 'projects/codx-share/src/lib/components/view
 import { FileInfo, FileUpload, HistoryFile, ItemInterval, Permission, SubFolder } from '@shared/models/file.model';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { threadId } from 'worker_threads';
-import { traceChildTaskBar } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
-import { AddUserComponent } from 'projects/codx-ad/src/lib/users/add-user/add-user.component';
-import { AddRoleComponent } from '../addrole/addrole.component';
 
 @Component({
   selector: 'roles',
@@ -24,11 +17,11 @@ import { AddRoleComponent } from '../addrole/addrole.component';
 })
 export class RolesComponent implements OnInit {
   @Input() formModel: any;
-  @Input('viewBase') viewBase: ViewsComponent;    
+  @Input('viewBase') viewBase: ViewsComponent;
   @Output() eventShow = new EventEmitter<boolean>();
   codxView: any;
   dialog: any;
-  titleDialog = 'Chia sẻ quyền'; 
+  titleDialog = 'Chia sẻ quyền';
   titleSave = 'Lưu';
   titleFunction = 'Chức năng';
   titleDescription = 'Mô tả';
@@ -112,7 +105,7 @@ export class RolesComponent implements OnInit {
   comment: string;
   mytitle = 0;;
   interval: ItemInterval[];
-  intervalCount = 0;  
+  intervalCount = 0;
   fileUploadList: FileUpload[];
   objectId = 'file';
   objectType = '';
@@ -123,7 +116,7 @@ export class RolesComponent implements OnInit {
   arrName = [];
   cate = 'cate';
   user: any;
-  isFileList = false;  
+  isFileList = false;
   fileEditing: FileUpload;
   fileEditingTemp: FileUpload;
   parentFolder: FileUpload;
@@ -183,7 +176,7 @@ export class RolesComponent implements OnInit {
   isShare: boolean;
   onRole = false;
   listPerm: Permission[];
- // permissions: Permission[];
+  // permissions: Permission[];
   toPermission: Permission[];
   byPermission: Permission[];
   ccPermission: Permission[];
@@ -229,65 +222,62 @@ export class RolesComponent implements OnInit {
   fieldUpdate = "";
   data: any;
   @ViewChild('fileNameCtrl') fileNameCtrl;
-  constructor(  
+  constructor(
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
-    private fileService: FileService,    
-    private folderService: FolderService,    
+    private fileService: FileService,
+    private folderService: FolderService,
     private api: ApiHttpService,
     public dmSV: CodxDMService,
     private modalService: NgbModal,
     private auth: AuthStore,
     private callfc: CallFuncService,
     private notificationsService: NotificationsService,
-   // private confirmationDialogService: ConfirmationDialogService,
+    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
-    ) {
-    
-   //   this.read = true;
-      this.data = data.data;
-      if (this.data[0] == "1")
-        this.modePermission = true;
-      else  
-        this.modePermission = false;
-      if(this.data[2])
-        this.codxView = this.data[2];
-      this.fileEditing =  JSON.parse(JSON.stringify(this.dmSV.dataFileEditing)); 
-      this.id = this.fileEditing.recID;
-      this.folderName = this.fileEditing.folderName
-      if (this.fileEditing.folderName != null) {
-        this.type = 'folder';
-      }
-      else 
-        this.type = 'file';
+  ) {
 
-      this.user = this.auth.get();
-      this.dialog = dialog;    
-      this.startDate = null;
-      this.endDate = null;        
+    //   this.read = true;
+    this.data = data.data;
+    if (this.data[0] == "1")
+      this.modePermission = true;
+    else
+      this.modePermission = false;
+    if (this.data[2])
+      this.codxView = this.data[2];
+    this.fileEditing = JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));
+    this.id = this.fileEditing.recID;
+    this.folderName = this.fileEditing.folderName
+    if (this.fileEditing.folderName != null) {
+      this.type = 'folder';
+    }
+    else
+      this.type = 'file';
+
+    this.user = this.auth.get();
+    this.dialog = dialog;
+    this.startDate = null;
+    this.endDate = null;
   }
 
-  ngOnInit(): void {      
+  ngOnInit(): void {
     this.changePermission(0);
     //this.getRoleShare();
   }
-  getData(recID:any)
-  {
+  getData(recID: any) {
     this.api
-    .execSv("DM", 'DM', 'FolderBussiness', 'GetFoldersByIDAsync', recID)
-    .subscribe((item) => {
-      
-    });
+      .execSv("DM", 'DM', 'FolderBussiness', 'GetFoldersByIDAsync', recID)
+      .subscribe((item) => {
+
+      });
   }
-  getRoleShare()
-  {
-    if(this.fileEditing?.permissions && this.fileEditing?.permissions.length>0)
-    {
-      
-      var item = this.fileEditing?.permissions.filter(x=>x.objectID == this.user?.userID);
+  getRoleShare() {
+    if (this.fileEditing?.permissions && this.fileEditing?.permissions.length > 0) {
+
+      var item = this.fileEditing?.permissions.filter(x => x.objectID == this.user?.userID);
       this.hasShare = item[0]?.assign;
     }
   }
@@ -302,25 +292,25 @@ export class RolesComponent implements OnInit {
       case 'checkSecurity':
         this.security = value;
         break;
-      case "full":        
-        this.full = value;        
+      case "full":
+        this.full = value;
         if (this.isSetFull) {
           this.create = value;
-          // if (this.readRight) 
+          // if (this.readRight)
           this.read = value;
-          //   if (this.deleteRight) 
+          //   if (this.deleteRight)
           this.delete = value;
-          //   if (this.updateRight)   
+          //   if (this.updateRight)
           this.update = value;
-          //   if (this.uploadRight)   
+          //   if (this.uploadRight)
           this.upload = value;
-          //   if (this.shareRight)   
+          //   if (this.shareRight)
           this.share = value;
-          //  if (this.downloadRight) 
+          //  if (this.downloadRight)
           this.download = value;
           this.assign = value;
         }
-        break;  
+        break;
       case "approval":
         this.approval = value;
         //    if (!this.approval)
@@ -346,16 +336,16 @@ export class RolesComponent implements OnInit {
         break;
       case "fromdate":
         if (value != null)
-          this.startDate = value.fromDate;      
+          this.startDate = value.fromDate;
         break;
       case "todate":
         if (value != null)
-          this.endDate = value.fromDate;      
+          this.endDate = value.fromDate;
         break;
-        default:
-          this.isSetFull = false;
-          this[ctrl]= value;
-          break;
+      default:
+        this.isSetFull = false;
+        this[ctrl] = value;
+        break;
     }
 
     if (ctrl != 'full' && ctrl != 'copyrightsControl' && ctrl != 'revision' && ctrl != 'physical' && ctrl != 'approval' && value == false)
@@ -364,42 +354,42 @@ export class RolesComponent implements OnInit {
     if (this.assign && this.create && this.read && this.delete && this.update && this.upload && this.share && this.download)
       this.full = true;
 
-     this.changeDetectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
   checkCurrentRightUpdate(owner = true) {
     if (!this.isSystem) {
-      if (this.user.administrator) 
+      if (this.user.administrator)
         return false;
-      else {                
+      else {
         return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
-      }      
+      }
     }
     else {
       return true;
       // if (owner) {
       //   if (this.objectType === "7")
       //     return true;
-      //   else // objectType == 1        
+      //   else // objectType == 1
       //   //  return !this.dmSV.parentAssign && !this.userID == this.user.userID
       //    return !this.fileEditing.assign && !this.user.administrator;
       // }
-      // else       
+      // else
       //   return true;
     }
   }
 
-  checkCurrentRightUpdate1() {  
+  checkCurrentRightUpdate1() {
     if (!this.fileEditing.permissions[this.currentPemission].isSystem) {
       return !this.fileEditing.permissions[this.currentPemission].assign;//this.fileEditing.assign;
     }
-    else {    
+    else {
       return true;
     }
   }
 
   onSaveEditingFile() {
-    if (this.fileEditing.fileName === "") {     
+    if (this.fileEditing.fileName === "") {
       return;
     }
 
@@ -417,11 +407,11 @@ export class RolesComponent implements OnInit {
             }
             this.dmSV.listFiles = files;
             this.dmSV.ChangeData.next(true);
-            this.changeDetectorRef.detectChanges();         
+            this.changeDetectorRef.detectChanges();
           }
         }
-        else {      
-          this.errorshow = true;          
+        else {
+          this.errorshow = true;
           this.changeDetectorRef.detectChanges();
         }
 
@@ -480,10 +470,10 @@ export class RolesComponent implements OnInit {
 
   changePermission(index) {
     // alert(index);
-    // save old permission   
+    // save old permission
     // alert(1);
-   // this.currentPemission = index;
-    
+    // this.currentPemission = index;
+
     let isSystem = false;
     let objectType = "";
     if (this.currentPemission > -1) {
@@ -503,11 +493,11 @@ export class RolesComponent implements OnInit {
         this.fileEditing.permissions[oldIndex].assign = this.assign;
       }
     }
-    
-    // load new permission  
-    if (this.fileEditing.permissions[index] != null) {    
+
+    // load new permission
+    if (this.fileEditing.permissions[index] != null) {
       this.full = this.fileEditing.permissions[index].create && this.fileEditing.permissions[index].read && this.fileEditing.permissions[index].update && this.fileEditing.permissions[index].delete && this.fileEditing.permissions[index].download && this.fileEditing.permissions[index].share && this.fileEditing.permissions[index].upload && this.fileEditing.permissions[index].assign;
-    //  this.isSetFull = true;
+      //  this.isSetFull = true;
       this.create = this.fileEditing.permissions[index].create;
       this.read = this.fileEditing.permissions[index].read;
       this.update = this.fileEditing.permissions[index].update;
@@ -540,58 +530,57 @@ export class RolesComponent implements OnInit {
       isSystem = false;
       this.isSystem = false;
       this.permissonActiveId = index;
-    }   
+    }
     this.changeDetectorRef.detectChanges();
   }
 
-  controlFocus(isFull){
+  controlFocus(isFull) {
     this.isSetFull = isFull;
-    this.changeDetectorRef.detectChanges();    
+    this.changeDetectorRef.detectChanges();
   }
 
 
   removeUserRight(index, list: Permission[] = null) {
     var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
+    config.type = 'YesNo';
     this.notificationsService
-    .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
-    .closed.subscribe((x) => {
-      if (x.event.status == 'Y'){
-        if (list == null) {
-          if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
-            this.fileEditing.permissions.splice(index, 1);//remove element from array  
-            this.currentPemission = 0;
-            if(this.userID.toLocaleLowerCase() != "admin")
-            {
-              var check = this.fileEditing.permissions.filter(x=>x.objectID == this.userID && x.objectType != "1" && x.objectType != "7");
-              var checkEveryOne = this.fileEditing.permissions.filter(x=>x.objectType == "9");
-              if(check.length == 0 && checkEveryOne.length == 0) this.fileEditing.assign = false;
+      .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y') {
+          if (list == null) {
+            if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
+              this.fileEditing.permissions.splice(index, 1);//remove element from array
+              this.currentPemission = 0;
+              if (this.userID.toLocaleLowerCase() != "admin") {
+                var check = this.fileEditing.permissions.filter(x => x.objectID == this.userID && x.objectType != "1" && x.objectType != "7");
+                var checkEveryOne = this.fileEditing.permissions.filter(x => x.objectType == "9");
+                if (check.length == 0 && checkEveryOne.length == 0) this.fileEditing.assign = false;
+              }
+              this.changePermission(0);
             }
-            this.changePermission(0);
           }
-        }
-        else {
-          if (list && list.length > 0) {
-            list.splice(index, 1);//remove element from array  
-            this.changeDetectorRef.detectChanges();
+          else {
+            if (list && list.length > 0) {
+              list.splice(index, 1);//remove element from array
+              this.changeDetectorRef.detectChanges();
+            }
           }
-        }
-    
-        if (this.type == "file") {
-          this.onSaveEditingFile();
-        }
-        else {
-          this.fileEditing.folderName = this.folderName;
-          this.fileEditing.folderId = this.dmSV.getFolderId();
-          this.fileEditing.recID = this.id;
-          this.folderService.updateFolder(this.fileEditing).subscribe(res => {
-            if(res)
-              this.codxView?.dataService.update(this.fileEditing).subscribe();
-          });
-        }
-      };
-    });
-  } 
+
+          if (this.type == "file") {
+            this.onSaveEditingFile();
+          }
+          else {
+            this.fileEditing.folderName = this.folderName;
+            this.fileEditing.folderId = this.dmSV.getFolderId();
+            this.fileEditing.recID = this.id;
+            this.folderService.updateFolder(this.fileEditing).subscribe(res => {
+              if (res)
+                this.codxView?.dataService.update(this.fileEditing).subscribe();
+            });
+          }
+        };
+      });
+  }
 
   allowSetRight() {
     // this.fileEditing.assign
@@ -603,12 +592,12 @@ export class RolesComponent implements OnInit {
 
   onSaveRight() {
     if (this.endDate != null && this.endDate < this.startDate) {
-    //  $('#endDateRole').addClass('form-control is-invalid');
+      //  $('#endDateRole').addClass('form-control is-invalid');
       this.changeDetectorRef.detectChanges();
       return;
     }
     // save current permisssion
-    if (this.currentPemission > -1 && this.fileEditing.permissions[this.currentPemission] != null && this.fileEditing.permissions[this.currentPemission].objectType!="7") {
+    if (this.currentPemission > -1 && this.fileEditing.permissions[this.currentPemission] != null && this.fileEditing.permissions[this.currentPemission].objectType != "7") {
       //  this.fileEditing.permissions[this.currentPemission].isSharing = this.modeSharing;
       this.fileEditing.permissions[this.currentPemission].full = this.full;
       this.fileEditing.permissions[this.currentPemission].create = this.create;
@@ -628,7 +617,7 @@ export class RolesComponent implements OnInit {
     if (this.modePermission) {
       if (this.type == "file") {
         this.fileService.updatePermisson(this.fileEditing).subscribe(async res => {
-          if (res != null) {            
+          if (res != null) {
             this.notificationsService.notify(res.message);
           }
         });
@@ -636,19 +625,18 @@ export class RolesComponent implements OnInit {
       }
       else {
         // this.fileEditing.folderName = this.folderName;
-        this.fileEditing.folderId = this.dmSV.getFolderId();       
+        this.fileEditing.folderId = this.dmSV.getFolderId();
         // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
         // });
         this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
           if (res != null) {
-            debugger;
             this.dmSV.fileEditing.next(this.fileEditing);
             this.notificationsService.notify(res.message);
           }
         });
       }
     }
-    
+
     this.dialog.close(this.fileEditing);
     //this.modal
     //modal.dismiss('Cross click');// modal.close();
@@ -657,8 +645,8 @@ export class RolesComponent implements OnInit {
   getObjectName(item, index) {
     // if (!item) return;
     // let perm = new Permission();
-    // //perm.objectType = this.cbxsv.objectType;//item.userID; 
-    // // perm.objectType = this.cbxsv.arrType[index];  
+    // //perm.objectType = this.cbxsv.objectType;//item.userID;
+    // // perm.objectType = this.cbxsv.arrType[index];
     // // var objectName = this.cbxsv.arrName[index];
     // // var objCbx = this.cbxsv.arrSetting;
     // var setting = null;
@@ -752,7 +740,7 @@ export class RolesComponent implements OnInit {
   }
 
   checkedValue(type) {
-    switch(type) {
+    switch (type) {
       case "full":
         return this.fileEditing.permissions[this.currentPemission].full;
       case "read":
@@ -797,18 +785,18 @@ export class RolesComponent implements OnInit {
       item.upload = false;
       item.assign = false;
 
-      if (item.objectType.toLowerCase() == '9') {      
+      if (item.objectType.toLowerCase() == '9') {
         item.download = true;
       }
 
-      if (item.objectType.toLowerCase() == '7') {       
+      if (item.objectType.toLowerCase() == '7') {
         item.download = true;
         item.full = true;
         item.share = true;
         item.update = true;
         item.create = true;
         item.delete = true;
-        item.upload = true;       
+        item.upload = true;
       }
 
       list.push(Object.assign({}, item));
@@ -818,16 +806,16 @@ export class RolesComponent implements OnInit {
     return list;
   }
 
-  onSaveRole($event) {  
-      
+  onSaveRole($event) {
+
     if ($event.data != undefined) {
       var data = $event.data;
-      for(var i=0; i<data.length; i++) {
+      for (var i = 0; i < data.length; i++) {
         var item = data[i];
-        var perm = new Permission;        
-       // if (this.startDate != undefined && this.startDate != null)
+        var perm = new Permission;
+        // if (this.startDate != undefined && this.startDate != null)
         perm.startDate = this.startDate;
-       // if (this.endDate != undefined && this.endDate != null)
+        // if (this.endDate != undefined && this.endDate != null)
         perm.endDate = this.endDate;
         perm.isSystem = false;
         perm.isActive = true;
@@ -838,14 +826,14 @@ export class RolesComponent implements OnInit {
         this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);
       }
       this.changePermission(this.currentPemission);
-   //   this.changePermission(this.currentPemission);
-     // this.changeDetectorRef.detectChanges();
+      //   this.changePermission(this.currentPemission);
+      // this.changeDetectorRef.detectChanges();
       // data.forEach(item => {
-        
+
       // });
     }
-    
-    // this.onRole = false;        
+
+    // this.onRole = false;
     // var data = $event;//this.cbxsv.dataSelcected;
     // if ($event.data)
     //   data = $event.data;
@@ -854,7 +842,7 @@ export class RolesComponent implements OnInit {
     // // $('#dms_request-permission').css('z-index', '9999');
     // //  alert(1);
     // // console.log(data);
-    // // let index = this.fileEditing.permission.findIndex(d => d.toString() === this.fileEditing.fileName.toString()); 
+    // // let index = this.fileEditing.permission.findIndex(d => d.toString() === this.fileEditing.fileName.toString());
     // let index = 0;
     // data.forEach(item => {
     //   let perm = this.getObjectName(item, index);
@@ -901,7 +889,7 @@ export class RolesComponent implements OnInit {
     // this.changeDetectorRef.detectChanges();
     // modal.dismiss('Cross click');//modal.close();
   }
-  
+
   // changeUser(e){
 
   // }
