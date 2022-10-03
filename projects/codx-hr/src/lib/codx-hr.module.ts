@@ -38,6 +38,7 @@ import { HRParametersComponent } from './hrparameters/hrparameters.component';
 import { OrgorganizationComponent } from './organization/organization.component';
 import { OrganizeDetailComponent } from './organization/organize-detail/organize-detail.component';
 import { FilterPipe } from './organization/pipes/filterObject.pipe';
+import { PopupAddOrganizationComponent } from './organization/popup-add-organization/popup-add-organization.component';
 import { OrgchartDetailComponent } from './positions/orgchart-detail/orgchart-detail.component';
 import { PopupAddPositionsComponent } from './positions/popup-add-positions/popup-add-positions.component';
 import { PositionsComponent } from './positions/positions.component';
@@ -178,6 +179,7 @@ const T_Component: Type<any>[] = [
   OrganizeDetailComponent,
   FilterPipe,
   OrgchartDetailComponent,
+  PopupAddOrganizationComponent,
 ];
 @NgModule({
   imports: [

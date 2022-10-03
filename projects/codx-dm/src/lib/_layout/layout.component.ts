@@ -1,15 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation, HostListener, Renderer2 } from '@angular/core';
-import { FileUpload } from '@shared/models/file.model';
+import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation, Injector, Renderer2 } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-import { AccumulationChartComponent, AccumulationTheme, IAccLoadedEventArgs, IAccPointRenderEventArgs, IAccTextRenderEventArgs } from '@syncfusion/ej2-angular-charts';
-import { AuthService, CacheService, CallFuncService, CodxService, DialogRef, ImageViewerComponent, LayoutInitService, LayoutService, PageTitleService, SidebarModel, UserModel } from 'codx-core';
+import { AuthService, DialogRef, ImageViewerComponent, LayoutService, SidebarModel, UserModel, LayoutBaseComponent, CallFuncService } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CodxDMService } from '../codx-dm.service';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
 
 import { Browser } from '@syncfusion/ej2-base';
+import { IAccPointRenderEventArgs } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'codx-layout',
@@ -17,15 +16,14 @@ import { Browser } from '@syncfusion/ej2-base';
   styleUrls: ['./layout.component.scss'],
   encapsulation:ViewEncapsulation.None
 })
-
-export class LayoutComponent implements OnInit, AfterViewInit {
+export class LayoutComponent extends LayoutBaseComponent implements AfterViewInit {
   // Public variables
-  contentContainerClasses = '';
-  headerCSSClasses?: string;
-  headerHTMLAttributes: any = {};
-  headerLeft: string = 'menu';
-  asideDisplay: boolean = false;
-  asideCSSClasses?: string;
+  override contentContainerClasses = '';
+  override headerCSSClasses?: string;
+  override headerHTMLAttributes: any = {};
+  override headerLeft: string = 'menu';
+  override asideDisplay: boolean = false;
+  override asideCSSClasses?: string;
   disableInput = false;
   module = 'DM';
   dialog: DialogRef;
@@ -33,7 +31,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   itemHdd: any;
   submenu: string;
  // totalUsed: string;
-
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
   public titleHddUsed = 'Đã sử dụng 0MB trong tổng số 50.00 GB';
@@ -43,10 +40,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   public totalHdd_small = 95;
   showtitle = true;
 
-  @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
-  @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
-  user: UserModel | null = null;
-
+  // @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
+  // @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
   public funcs$: Observable<any>;
 /*
 db.DM_FolderInfo.updateMany(
@@ -72,17 +67,15 @@ public layoutColor: string;
  
 
   constructor(
-    private layout: LayoutService,
-    private auth: AuthService,
-    public codxService: CodxService,
-    public cache: CacheService,
-    private callfc: CallFuncService,
+    private injector: Injector,
     public dmSV: CodxDMService,
     private folderService: FolderService,
     private fileService: FileService,
+    private callfc:CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,    
     private renderer: Renderer2
   ) {
+    super(injector);
     this.codxService.init('DM');
     this.fileService.getTotalHdd().subscribe(item => {
       //  totalUsed: any;
@@ -97,7 +90,7 @@ public layoutColor: string;
 
 
 
-  ngOnInit(): void {
+  onInit(): void {
     // build view by layout config settings
     this.asideDisplay = this.layout.getProp('aside.display') as boolean;
     this.asideCSSClasses = this.layout.getStringCSSClasses('aside');
@@ -281,7 +274,7 @@ public pointRender(args: IAccPointRenderEventArgs): void {
       return "progress-bar";
   }
 
-  ngAfterViewInit(): void {
+  onAfterViewInit(): void {
     if (this.codxHeader) {
       for (const key in this.headerHTMLAttributes) {
         if (this.headerHTMLAttributes.hasOwnProperty(key)) {
@@ -348,12 +341,13 @@ document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click'
     let data = {} as any;
     data.title = this.titleAddFolder;
     data.id =  null;
+    data.type = "add";
     this.callfc.openSide(CreateFolderComponent, data, option);
   }
 
-  public reloadAvatar(data: any): void {
-    this.imageViewer?.reloadImageWhenUpload();
-  }
+  // public reloadAvatar(data: any): void {
+  //   this.imageViewer?.reloadImageWhenUpload();
+  // }
 
   public contentResized(size: any) {
     // if(size){

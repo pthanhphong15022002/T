@@ -14,10 +14,10 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
+import { PopupAddQuotaComponent } from './popup-add-quota/popup-add-quota.component';
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
 
 @Component({
@@ -26,13 +26,16 @@ import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-st
   styleUrls: ['./stationery.component.scss'],
 })
 export class StationeryComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('base') viewBase: ViewsComponent;
+  @ViewChild('resourceID') resourceID: TemplateRef<any>;
+  @ViewChild('resourceName') resourceName: TemplateRef<any>;
   @ViewChild('productImg') productImg: TemplateRef<any>;
-  @ViewChild('product') product: TemplateRef<any>;
   @ViewChild('color') color: TemplateRef<any>;
-  @ViewChild('costPrice') costPrice: TemplateRef<any>;
-  @ViewChild('location') location: TemplateRef<any>;
+  @ViewChild('groupID') groupID: TemplateRef<any>;
+  @ViewChild('note') note: TemplateRef<any>;
+  @ViewChild('quantity') quantity: TemplateRef<any>;
   @ViewChild('owner') owner: TemplateRef<any>;
+  @ViewChild('columnsList') columnsList: TemplateRef<any>;
+  @ViewChild('templateListCard') templateListCard: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
@@ -85,53 +88,75 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
-
     this.epService.getFormModel(this.funcID).then((res) => {
       this.formModel = res;
     });
   }
 
   ngAfterViewInit(): void {
+    this.view.dataService.methodDelete = 'DeleteResourceAsync';
+
     this.buttons = {
       id: 'btnAdd',
     };
     this.columnsGrid = [
       {
-        headerText: '',
+        headerText: 'Mã vpp',
+        template: this.resourceID,
+      },
+      {
+        headerText: 'Tên vpp',
+        template: this.resourceName,
+      },
+      {
+        headerText: 'Hình ảnh',
         template: this.productImg,
       },
       {
-        headerText: 'Sản phẩm',
-        width: '20%',
-        template: this.product,
-      },
-      {
-        headerText: 'Màu',
+        headerText: 'Màu sắc',
         template: this.color,
       },
       {
-        headerText: 'Giá mua gần nhất',
-        template: this.costPrice,
+        headerText: 'Nhóm',
+        template: this.groupID,
       },
       {
-        headerText: 'Quản lý kho',
-        template: this.location,
+        headerText: 'Mô tả chi tiết',
+        template: this.note,
       },
       {
-        headerText: 'Quản lý kho',
-        width: '20%',
+        headerText: 'Số lượng tồn kho',
+        template: this.quantity,
+      },
+      {
+        headerText: 'Người quản lý',
         template: this.owner,
       },
     ];
 
     this.views = [
       {
-        type: ViewType.grid,
+        type: ViewType.card,
         sameData: true,
         active: true,
         model: {
+          template: this.templateListCard,
+        },
+      },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
           resources: this.columnsGrid,
+        },
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.columnsList,
         },
       },
     ];
@@ -170,6 +195,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       case 'EPS2301':
         break;
       case 'EPS2302':
+        this.addQuota(data);
         break;
       default:
         break;
@@ -177,12 +203,12 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew() {
-    this.viewBase.dataService.addNew().subscribe((res: any) => {
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      let dataSelected = this.viewBase.dataService.dataSelected;
+      let dataSelected = this.view.dataService.dataSelected;
       option.Width = '800px';
-      option.FormModel = this.viewBase?.formModel;
-      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.formModel;
+      option.DataService = this.view?.dataService;
       this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
         [dataSelected, true],
@@ -193,18 +219,19 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   edit(data?) {
     if (data) {
-      this.viewBase.dataService.dataSelected = data;
+      data.uMID = data.umid;
+      this.view.dataService.dataSelected = data;
     }
-    this.viewBase.dataService
-      .edit(this.viewBase.dataService.dataSelected)
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
       .subscribe((res) => {
         let option = new SidebarModel();
         option.Width = '800px';
-        option.FormModel = this.viewBase?.formModel;
-        option.DataService = this.viewBase?.dataService;
+        option.FormModel = this.formModel;
+        option.DataService = this.view?.dataService;
         this.dialog = this.callfc.openSide(
           PopupAddStationeryComponent,
-          [this.viewBase.dataService.dataSelected, false],
+          [this.view.dataService.dataSelected, false],
           option
         );
       });
@@ -212,22 +239,20 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   delete(data?) {
     if (data) {
-      this.viewBase.dataService.dataSelected = data;
+      this.view.dataService.dataSelected = data;
     }
-    this.viewBase.dataService
-      .delete([this.viewBase.dataService.dataSelected])
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
       .subscribe();
+  }
+
+  addQuota(data) {
+    this.callfc.openForm(PopupAddQuotaComponent, '', 500, 200, '', [data]);
   }
 
   closeEditForm(evt?: any) {
     if (evt) {
       this.dialog && this.dialog.close();
-    }
-  }
-
-  splitColor(color: string): any {
-    if (color) {
-      return color.split(';');
     }
   }
 }

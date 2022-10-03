@@ -19,10 +19,8 @@ import { PersonalsComponent } from './personals/personals.component';
 import { ImgComponent } from './personals/img/img.component';
 import { VideoComponent } from './personals/video/video.component';
 import { StorageComponent } from './personals/storage/storage.component';
-import { InfoLeftComponent } from './employeeinfomation/info-left/info-left.component';
 import { AddUpdateStorageComponent } from './personals/storage/add-update-storage/add-update-storage.component';
 import { NoteBooksComponent } from './personals/note-books/note-books.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AddUpdateNoteBookComponent } from './personals/note-books/add-update-note-book/add-update-note-book.component';
 import { PostsComponent } from './personals/posts/posts.component';
 import { PopupAddUpdate } from './personals/note-books/detail/popup-add-update/popup-add-update.component';
@@ -46,7 +44,6 @@ import {
   PolarSeriesService,
   CategoryService,
   RadarSeriesService,
-  ILoadedEventArgs,
   SplineSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -58,21 +55,11 @@ import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.c
 import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
 import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
-import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
+import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: LayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'employeeinfomation/:funcID',
-  //       component: EmployeeInfomationComponent,
-  //     },
-  //   ],
-  // },
   {
     path: '',
     component: LayoutComponent,
@@ -81,11 +68,6 @@ export const routes: Routes = [
         path: 'tasks/:funcID',
         component: TasksComponent,
       },
-      // {
-      //   path:'',
-      //   redirectTo:'personals/:funcID',
-      //   component: PersonalsComponent,
-      // },
     ],
   },
   {
@@ -100,12 +82,18 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutNoToolbarComponent,
+    component: NoSubAsideComponent,
     children: [
       {
         path: 'personals/:funcID',
         component: PersonalsComponent,
       },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoToolbarComponent,
+    children: [
       {
         path: 'employeeinfomation/:funcID',
         component: EmployeeInfomationComponent,
@@ -117,6 +105,7 @@ export const routes: Routes = [
 const Component: Type<any>[] = [
   LayoutComponent,
   LayoutNoToolbarComponent,
+  NoSubAsideComponent,
   EmployeeInfomationComponent,
   HomeComponent,
   PersonalsComponent,
@@ -124,7 +113,6 @@ const Component: Type<any>[] = [
   VideoComponent,
   StorageComponent,
   AddUpdateStorageComponent,
-  InfoLeftComponent,
   NoteBooksComponent,
   AddUpdateNoteBookComponent,
   PopupAddUpdate,
@@ -134,7 +122,7 @@ const Component: Type<any>[] = [
   EditHobbyComponent,
   EditExperenceComponent,
   EditRelationComponent,
-  TasksComponent
+  TasksComponent,
 ];
 
 @NgModule({
@@ -157,7 +145,7 @@ const Component: Type<any>[] = [
     NgbModule,
   ],
   exports: [RouterModule],
-  declarations: [Component, EditSkillComponent, PopAddSkillComponent, ],
+  declarations: [Component, EditSkillComponent, PopAddSkillComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,

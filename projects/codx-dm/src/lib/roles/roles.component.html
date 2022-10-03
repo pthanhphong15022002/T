@@ -7,7 +7,9 @@
                         <ng-container *ngFor="let perm of fileEditing?.permissions; index as i;">
                             <ng-container
                                 *ngIf="perm.isActive != false && ((modeSharing == null) || (!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
-                                <div (click)="changePermission(i)" [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null" class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
+                                <div (click)="changePermission(i)"
+                                    [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
+                                    class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
                                     <div class="d-flex align-items-center w-100">
                                         <div class="symbol symbol-30 symbol-circle me-3">
                                             <div
@@ -26,48 +28,29 @@
                                                     [imageWidth]="25" [title]="perm.objectName">
                                                 </codx-temp-full>
                                             </ng-template>
-
-                                            <!-- <ng-template #thenAvatar1>
-                                                <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" 
-                                                imgCss="w-30px cursor-pointer symbol symbol-30 symbol-circle mg-5"  [title]="perm.objectName" [descLine]="1">
-                                                </codx-temp-full>                                               
-                                            </ng-template>
-                                            <ng-template #elsethenAvatar1>
-                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" imgCss="w-20px me-3 cursor-pointer symbol symbol-30 symbol-circle mg-5" [imageWidth]="30" [title]="perm.objectName">
-                                                </codx-temp-full>                                                
-                                            </ng-template> -->
-
-                                            <!-- <ng-template #thenAvatar3>
-                                                <img class="symbol symbol-30 symbol-circle"
-                                                    src="../../../assets/demos/user/user-admin.svg">
-                                            </ng-template>
-                                            <ng-template #elsethenAvatar3>
-                                                <lv-image-viewer class="symbol symbol-30 symbol-circle"
-                                                    [objectId]="perm.objectID" objectType="AD_Users"> </lv-image-viewer>
-                                            </ng-template> -->
                                         </div>
                                     </div>
-                                    <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder">
-                                        <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer" (click)="removeUserRight(i)">
+                                    <ng-container
+                                        *ngIf="!this.checkItemRight(i) && !this.propertiesFolder && fileEditing?.assign">
+                                        <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
+                                            (click)="removeUserRight(i)">
                                             <i class="icon-close text-danger icon-16"></i>
                                         </div>
                                     </ng-container>
-                                    <div  
-                                    >
-                                   
-                                  </div>
+                                    <div>
+                                    </div>
                                 </div>
                             </ng-container>
                         </ng-container>
                     </div>
                 </div>
                 <div *ngIf="allowSetRight()" class="add-user" [ngClass]="!fileEditing?.assign?'dm-div-disable':null">
-                    <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false" 
+                    <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
                         (valueChange)="onSaveRole($event)">
                     </codx-input>
                 </div>
             </div>
-            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
                 <div class="role-right">
                     <table class="table">
                         <thead>
@@ -94,7 +77,7 @@
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="create"
                                         field="create" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'create')" ></codx-input>
+                                        (valueChange)="onSaveRightChanged($event, 'create')"></codx-input>
                                 </td>
                             </tr>
                             <tr>
@@ -171,9 +154,6 @@
                                 <codx-input class="form-control test-datetime" type="dateTime" style="width:100%"
                                     format="d" [crrValue]="startDate" [disabled]="this.checkCurrentRightUpdate()"
                                     (valueChange)="onSaveRightChanged($event, 'fromdate')"></codx-input>
-                                <!-- <lvInput [disabled]="this.checkCurrentRightUpdate() ? true : null" datatype="datetime"
-                                    dataformat="d" (valueChange)="changeDate($event, 'startDate')" [value]="startDate">
-                                </lvInput>     -->
                             </div>
                         </div>
                     </div>
@@ -183,10 +163,8 @@
                             <div class="col-12">
                                 <codx-input class="form-control test-datetime" type="dateTime" style="width:100%"
                                     format="d" [crrValue]="endDate" [disabled]="this.checkCurrentRightUpdate()"
-                                    (valueChange)="onSaveRightChanged($event, 'todate')"></codx-input>
-                                <!-- <lvInput [disabled]="this.checkCurrentRightUpdate()" datatype="datetime" dataformat="d"
-                                    (valueChange)="changeDate($event, 'endDate')" [value]="endDate">
-                                </lvInput>     -->
+                                    (valueChange)="onSaveRightChanged($event, 'todate')">
+                                </codx-input>
                             </div>
                         </div>
                     </div>

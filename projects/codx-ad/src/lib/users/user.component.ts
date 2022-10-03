@@ -36,7 +36,6 @@ import { CodxAdService } from '../codx-ad.service';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent extends UIComponent {
-  // @Input() formModel: any;
   views: Array<ViewModel> = [];
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
@@ -44,9 +43,6 @@ export class UserComponent extends UIComponent {
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
-
-  // @ViewChild('itemTemplate', { static: true }) itemTemplate: TemplateRef<any>;
-
   user: any;
   funcID: string;
   constructor(
@@ -95,6 +91,9 @@ export class UserComponent extends UIComponent {
         break;
       case 'SYS03':
         this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
         break;
       // case 'SYS02':
       //   this.delete(data);
@@ -147,9 +146,11 @@ export class UserComponent extends UIComponent {
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event) {
           e.event.modifiedOn = new Date();
           this.view.dataService.update(e.event).subscribe();
+          this.changeDetectorRef.detectChanges();
         }
       });
     });
@@ -169,6 +170,7 @@ export class UserComponent extends UIComponent {
   edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      // this.view.dataService.dataSelected.userID = data._uuid;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -182,12 +184,41 @@ export class UserComponent extends UIComponent {
         option.Width = 'Auto';
         this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
         this.dialog.closed.subscribe((x) => {
+          if (!x?.event) this.view.dataService.clear();
           if (x.event) {
             x.event.modifiedOn = new Date();
             this.view.dataService.update(x.event).subscribe();
+            this.changeDetectorRef.detectChanges();
           }
         });
       });
+  }
+
+  copy(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        // data.userID = this.view.dataService.dataSelected?.userID;
+        res['chooseRoles'] = data.chooseRoles;
+        var obj = {
+          formType: 'copy',
+          dataCopy: res,
+        };
+      }
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = 'Auto';
+      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      this.dialog.closed.subscribe((x) => {
+        if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
+    });
   }
 
   stop(data: any) {

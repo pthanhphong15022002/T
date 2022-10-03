@@ -28,7 +28,7 @@
                                     <div class="d-flex align-items-center badge badge-light me-4">
                                         <span class="me-2">
                                             <img class="h-12px w-12px"
-                                                src="assets/themes/sys/default/img/{{dataItem.shareIcon | async}}" />
+                                                src="assets/themes/sys/default/img/{{dataItem.shareIcon}}" />
                                         </span>
                                         <span class="fs-7 text-gray-600">
                                             {{dataItem.shareText}}
@@ -51,9 +51,10 @@
                                         class="icon-share"></span></button>
                             </div>
                             <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.VIDEO;else news">
-                                <app-view-file [category]="'video'" [ObjectID]="dataItem.recID"
+                                <wp-video 
+                                    [ObjectID]="dataItem.recID"
                                     [ObjectType]="'WP_News'">
-                                </app-view-file>
+                                </wp-video>
                             </ng-contianer>
                             <ng-template #news>
                                 <div class="py-3" [innerHTML]="dataItem?.subContent"></div>

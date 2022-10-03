@@ -41,7 +41,6 @@
               },
               "src/favicon.ico",
               "src/assets",
-
               {
                 "glob": "**/*",
                 "input": "node_modules/codx-core/assets/media",
@@ -62,8 +61,6 @@
               "node_modules/@ctrl/ngx-emoji-mart/picker.css",
               "./node_modules/codx-core/assets/sass/style.scss",
               "src/styles.scss"
-
-
             ],
             "scripts": [
               "node_modules/codemirror/lib/codemirror.js",

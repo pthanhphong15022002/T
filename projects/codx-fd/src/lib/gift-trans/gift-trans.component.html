@@ -1,4 +1,4 @@
-<codx-views #codxViews 
+<codx-views #view 
 [views]="views" 
 [idField]="'recID'" 
 [button]="buttonAdd" 
@@ -15,8 +15,9 @@
     <ng-container *ngIf="data.transType == '1'; else transType2">
         <codx-temp-full 
             [dataItem]="data"
+            cardCss="card-template border-bottom px-2 pt-4 pb-2" 
             [typeMF]="'hover'" 
-            [formModel]="codxViews.formModel"
+            [formModel]="view.formModel"
             (clickMF)="clickMF($event,data)"
             [imageId]="data.itemID"
             imageObjType="AD_Users"
@@ -32,8 +33,9 @@
     <ng-template #transType2>
         <codx-temp-full 
             [dataItem]="data"
+            cardCss="card-template border-bottom px-2 pt-4 pb-2" 
             [typeMF]="'hover'" 
-            [formModel]="codxViews.formModel"
+            [formModel]="view.formModel"
             (clickMF)="clickMF($event,data)"
             [imageId]="data.itemID"
             imageObjType="AD_Users"
@@ -50,5 +52,5 @@
 </ng-template>
 
 <ng-template #panelRightRef>
-    <fd-detail-gift [objectID]="selectedGiftID" [formModel]="codxViews.formModel"></fd-detail-gift>  
+    <fd-detail-gift [objectID]="selectedGiftID" [formModel]="view.formModel"></fd-detail-gift>  
 </ng-template>

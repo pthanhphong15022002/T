@@ -1,10 +1,10 @@
 <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" [orgView]="orgViews"
-  (sortChanged)="sortChanged($event)" [autoSort]="false" [autoSearch]="false" [selectedFirst]="false"
-  (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="addFile($event)"
-  (viewChanged)="changeView($event)" (viewChanging)="viewChanging($event)" (filterChange)="filterChange($event)"
-  [autoFilter]="false" (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)"
-  (searchChanged)="searchChange($event)"></codx-views>
+  [autoSort]="false" [autoSearch]="false" [selectedFirst]="false" (selectedChange)="onSelectionChanged($event)"
+  [button]="button" (buttonClick)="addFile($event)" (viewChanged)="changeView($event)"
+  (viewChanging)="viewChanging($event)" (filterChange)="filterChange($event)" [autoFilter]="false"
+  (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)">
+</codx-views>
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
   <ng-template #noContext>
@@ -13,9 +13,6 @@
     </div>
   </ng-template>
 
-  <!--
-    <div class="card-body p-0" (scroll)="onScroll($event)">
-  -->
   <ng-template #context>
     <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)"
       class="d-flex align-items-center px-3 py-1 home">
@@ -30,69 +27,9 @@
 </ng-template>
 
 <ng-template #templateRight>
-  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="copyAllData()">
-    <i class="icon-add"></i>
-    <span class="font-size-lg">Open File</span>
-  </button> -->
-  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile1()">
-    <i class="icon-add"></i>
-    <span class="font-size-lg">Open File</span>
-  </button>
-  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="saveFile1()">
-    <i class="icon-add"></i>
-    <span class="font-size-lg">save Files</span>
-  </button>  -->
-  <!-- <codx-attachment
-      #attachment1
-      [objectType]="'OD_Dispatches'"
-      [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'"
-      hideFolder="1"
-      hideUploadBtn="0"
-      hideDes="0"
-      type="inline"
-      hideImageUpload="0"
-      allowExtensions=".jpg,.png"
-      allowMultiFile="1"
-      idBrowse="btn1"
-
-      [formModel]="view.formModel"
-      [functionID]="'ODT3'"
-      (fileAdded)="fileAdded($event)"
-      (fileCount)="getfileCount($event)"
-      displayThumb="simple"
-    >
-  </codx-attachment> -->
-  <!-- <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="openFile2()">
-    <i class="icon-add"></i>
-    <span class="font-size-lg">Open File</span>
-  </button>
-  <button class="btn btn-outline-primary btn-pill btn-lg" id="kt_demo_panel_toggle" (click)="saveFile2()">
-    <i class="icon-add"></i>
-    <span class="font-size-lg">save Files</span>
-  </button>
-  <codx-attachment
-      #attachment2
-      [objectType]="'OD_Dispatches'"
-      [objectId]="'965e692f-8230-4ad1-b1be-ee68ce010b6f'"
-      hideFolder="1"
-      hideUploadBtn="0"
-      hideDes="0"
-      type="inline"
-      hideImageUpload="0"
-      allowExtensions=".jpg,.png"
-      allowMultiFile="1"
-      idBrowse="btn2"
-
-      [formModel]="view.formModel"
-      [functionID]="'ODT3'"
-      (fileAdded)="fileAdded($event)"
-      (fileCount)="getfileCount($event)"
-      displayThumb="simple"
-    >
-  </codx-attachment> -->
   <ng-container *ngTemplateOutlet="empty"></ng-container>
   <div *ngIf="isSearch && this.dmSV.loadedFile">
-    <h5 class="text-warning">
+    <!-- <h5 class="text-warning">
       <codx-label name="lblSearch1" [formModel]="view.formModel" default="Kết quả tìm kiếm:" class="fw-bold">
       </codx-label>
       {{ this.textSearch }}
@@ -101,10 +38,10 @@
         {{ this.totalSearch }}
         <codx-label name="lblSearch3" [formModel]="views" default="kết quả được tìm thấy" class="fw-bold"></codx-label>
       </div>
-    </h5>
+    </h5> -->
   </div>
   <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="w-100 scroll-y home" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="currView"></ng-container>
@@ -113,64 +50,67 @@
   </div>
 </ng-template>
 <ng-template #templateSearch>
-  <div *ngFor="let file of data" class="result-group">
-    <div class="d-flex align-items-start justify-content-between result-item border-bottom pb-5 mb-5">
-      <div class="d-flex flex-column">
-        <div class="d-flex align-items-center">
-          <codx-temp-full appDragDropFileFolder [dataDrapDrop]="file" (fileFolderDropped)="fileFolderDropped($event)"
-            [class]="classFile(file, 'float-start')" [imageWidth]="20" [imageSrc]="dmSV.getImage(file)"
-            imgCss="w-20px me-3 cursor-pointer" [title]="
-              file.folderName != undefined ? file.folderName : file.fileName
-            " cardCss="w-250px" [typeMF]="'hover'">
+  <div class="py-5">
+    <div *ngFor="let file of data" class="result-group px-3">
+      <div class="d-flex align-items-start justify-content-between result-item border-bottom pb-5 mb-5">
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center">
+            <codx-temp-full appDragDropFileFolder [dataDrapDrop]="file" (fileFolderDropped)="fileFolderDropped($event)"
+              [class]="classFile(file, 'float-start')" [imageWidth]="20" [imageSrc]="dmSV.getImage(file)"
+              imgCss="w-20px me-3 cursor-pointer" [title]="
+                file.folderName != undefined ? file.folderName : file.fileName
+              " cardCss="w-250px" [typeMF]="'hover'">
+            </codx-temp-full>
+          </div>
+          <div class="d-flex align-items-center text-primary font-size-md mt-1">
+            <span>{{ file.filePath }}</span>
+          </div>
+          <div class="text-dark-50 font-size-md mt-1">
+            <div class="text-dark" [innerHtml]="file.highlight"></div>
+          </div>
+          <div class="d-flex align-items-center font-size-md mt-1">
+            <div class="d-flex text-dark-75">
+              <span class="icon-query_builder icon-16"></span>&nbsp;
+              <span class="ml-2">{{ file.createdOn | date: "dd/MM/yyyy" }}</span>
+            </div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="d-flex text-dark-75">
+              {{ this.dmSV.getViews(file.history) }}&nbsp;
+              <codx-label fiedName="" formName="" gridViewName="" default="lượt xem">
+              </codx-label>
+            </div>
+            &nbsp;&nbsp;
+            <!-- <div class="icon-star icon-9 mx-3"></div> -->
+            <!-- <codx-label fiedName="" formName="" gridViewName="" default="đánh giá">&nbsp;
+                  </codx-label> -->
+            <div class="rating-group">
+              <div class="d-flex">
+                <span class="icon-star text-muted icon-16 mr-1"></span>
+                <span class="icon-star text-muted icon-16 mr-1"></span>
+                <span class="icon-star text-muted icon-16 mr-1"></span>
+                <span class="icon-star text-muted icon-16 mr-1"></span>
+                <span class="icon-star text-muted icon-16 mr-1"></span>
+              </div>
+              <div [style.width]="this.dmSV.getRating(file.views)" class="d-flex rating-percent">
+                <span class="icon-star text-warning icon-16 mr-1"></span>
+                <span class="icon-star text-warning icon-16 mr-1"></span>
+                <span class="icon-star text-warning icon-16 mr-1"></span>
+                <span class="icon-star text-warning icon-16 mr-1"></span>
+                <span class="icon-star text-warning icon-16 mr-1"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown ml-2">
+          <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, file)"
+            [formModel]="view.formModel" [typeMF]="'hover'" [title]=""
+            (changeDataMF)="dmSV.filterMoreFunction($event, file)" cardCss="w-150px">
           </codx-temp-full>
         </div>
-        <div class="d-flex align-items-center text-primary font-size-md mt-1">
-          <span>{{ file.filePath }}</span>
-        </div>
-        <div class="text-dark-50 font-size-md mt-1">
-          <div class="text-dark" [innerHtml]="file.highlight"></div>
-        </div>
-        <div class="d-flex align-items-center font-size-md mt-1">
-          <div class="d-flex text-dark-75">
-            <span class="icon-query_builder icon-16"></span>&nbsp;
-            <span class="ml-2">{{ file.createdOn | date: "dd/MM/yyyy" }}</span>
-          </div>
-          &nbsp;&nbsp;&nbsp;
-          <div class="d-flex text-dark-75">
-            {{ this.dmSV.getViews(file.history) }}&nbsp;
-            <codx-label fiedName="" formName="" gridViewName="" default="lượt xem">
-            </codx-label>
-          </div>
-          &nbsp;&nbsp;
-          <!-- <div class="icon-star icon-9 mx-3"></div> -->
-          <!-- <codx-label fiedName="" formName="" gridViewName="" default="đánh giá">&nbsp;
-                </codx-label> -->
-          <div class="rating-group">
-            <div class="d-flex">
-              <span class="icon-star text-muted icon-16 mr-1"></span>
-              <span class="icon-star text-muted icon-16 mr-1"></span>
-              <span class="icon-star text-muted icon-16 mr-1"></span>
-              <span class="icon-star text-muted icon-16 mr-1"></span>
-              <span class="icon-star text-muted icon-16 mr-1"></span>
-            </div>
-            <div [style.width]="this.dmSV.getRating(file.views)" class="d-flex rating-percent">
-              <span class="icon-star text-warning icon-16 mr-1"></span>
-              <span class="icon-star text-warning icon-16 mr-1"></span>
-              <span class="icon-star text-warning icon-16 mr-1"></span>
-              <span class="icon-star text-warning icon-16 mr-1"></span>
-              <span class="icon-star text-warning icon-16 mr-1"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="dropdown ml-2">
-        <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, file)"
-          [formModel]="view.formModel" [typeMF]="'hover'" [title]=""
-          (changeDataMF)="dmSV.filterMoreFunction($event, file)" cardCss="w-150px">
-        </codx-temp-full>
       </div>
     </div>
   </div>
+
 </ng-template>
 <ng-template #templateCard>
   <div class="d-flex flex-wrap dms-card p-5">
@@ -199,16 +139,16 @@
       <table class="table h-100 tb-dm">
         <thead class="border-top">
           <tr>
-            <th scope="col">
+            <th scope="col" class="w-30">
               <div class="fw-bold text-dark">{{ titleFileName }}</div>
             </th>
-            <th scope="col">
+            <th scope="col" class="w-20">
               <div class="fw-bold text-dark">{{ titleCreatedBy }}</div>
             </th>
-            <th scope="col">
+            <th scope="col" class="w-10">
               <div class="fw-bold text-dark">{{ titleCreatedOn }}</div>
             </th>
-            <th scope="col">
+            <th scope="col" class="w-10">
               <div class="fw-bold text-dark">{{ titleLength }}</div>
             </th>
             <th scope="col">
@@ -220,30 +160,28 @@
           <tr (dblclick)="dmSV.openItem(item)" class="border-top dms-list" *ngFor="let item of data" [title]="
               item.folderName != undefined ? item.folderName : item.fileName
             ">
-            <td>
+            <td class="w-30">
               <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item"
                 (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
                 [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3 cursor-pointer" [title]="
                   item.folderName != undefined ? item.folderName : item.fileName
-                " cardCss="w-250px" titleCss="dms-title">
+                " cardCss="w-250px" titleCss="dms-title pe-6">
               </codx-temp-full>
             </td>
-            <td>
+            <td class="w-20">
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
                 [imageWidth]="25" [subTitle]="item.userName">
               </codx-temp-full>
             </td>
-            <td>
-              <div class="d-flex align-items-center">
-                <div class="erm-date">
-                  {{ item.createdOn | date: "dd/MM/yyyy" }}
-                </div>
+            <td class="w-10">
+              <div class="erm-date">
+                {{ item.createdOn | date: "dd/MM/yyyy" }}
               </div>
             </td>
-            <td>
+            <td class="w-10">
               <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, item)"
                 [formModel]="view.formModel" [typeMF]="'hover'" [title]="dmSV.getSizeKB(item)"
-                (changeDataMF)="dmSV.filterMoreFunction($event, item)" cardCss="w-150px">
+                (changeDataMF)="dmSV.filterMoreFunction($event, item)" cardCss="d-flex justify-content-end">
               </codx-temp-full>
             </td>
             <td>

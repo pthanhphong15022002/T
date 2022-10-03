@@ -1,17 +1,18 @@
 import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, DialogRef, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, CRUDService, DialogRef, NotificationsService, RequestOption, ScrollComponent, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'lib-positions',
   templateUrl: './positions.component.html',
   styleUrls: ['./positions.component.css']
 })
-export class PositionsComponent  extends UIComponent {
+export class PositionsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   dialog!: DialogRef;
@@ -35,6 +36,10 @@ export class PositionsComponent  extends UIComponent {
   listEmployee = [];
   popoverDataSelected: any;
   orgUnitID: any;
+  dtService: CRUDService;
+  predicate = "";
+  dataValue: string = "";
+  isLoaded: boolean = false;
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -46,6 +51,12 @@ export class PositionsComponent  extends UIComponent {
     inject: Injector
   ) {
     super(inject);
+    var dataSv = new CRUDService(inject);
+    // dataSv.request.gridViewName = 'grvPositions';
+    // dataSv.request.entityName = 'HR_Positions';
+    // dataSv.request.formName = 'Positions';
+    //dataSv.request.pageSize = 15;
+    this.dtService = dataSv;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
@@ -74,17 +85,17 @@ export class PositionsComponent  extends UIComponent {
 
   ngAfterViewInit(): void {
     this.views = [
-      {
-        id: '1',
-        type: ViewType.treedetail,
-        active: false,
-        sameData: true,
-        model: {
-          resizable: true,
-          template: this.templateTree,
-          panelRightRef: this.templateDetail
-        }
-      },
+      // {
+      //   id: '1',
+      //   type: ViewType.treedetail,
+      //   active: false,
+      //   sameData: true,
+      //   model: {
+      //     resizable: true,
+      //     template: this.templateTree,
+      //     panelRightRef: this.templateDetail
+      //   }
+      // },
       {
         id: '2',
         type: ViewType.treedetail,
@@ -178,21 +189,21 @@ export class PositionsComponent  extends UIComponent {
     this.listEmployeeSearch = [];
     var stt = status.split(';');
     // this.popover["_elementRef"] = new ElementRef(el);
-    
+
     // if (p.isOpen()) {
     //   p.close();
     // }
     // this.posInfo = {};
-   
+
     this.codxHr.loadEmployByCountStatus(posID, stt)
       .subscribe(response => {
 
         this.listEmployee = response;
         this.listEmployeeSearch = response;
         this.countResource = response.length;
-        
+
         p.open();
-        this.popover = p;  
+        this.popover = p;
 
       });
     // this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
@@ -221,33 +232,22 @@ export class PositionsComponent  extends UIComponent {
     }
   }
 
-  async onSelectionChanged($event) {
-   // await this.setEmployeePredicate($event.dataItem.orgUnitID);
-    // this.employList.onChangeSearch();
-  }
-
-  setEmployeePredicate(orgUnitID): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this
-        .loadEOrgChartListChild(orgUnitID)
-        .pipe()
-        .subscribe((response) => {
-          if (response) {
-            var v = '';
-            var p = '';
-            for (let index = 0; index < response.length; index++) {
-              const element = response[index];
-              if (v != '') v = v + ';';
-              if (p != '') p = p + '||';
-              v = v + element;
-              p = p + 'OrgUnitID==@' + index.toString();
-            }
-            // this.employList.predicate = p;
-            // this.employList.dataValue = v;
-          }
-          resolve('');
+  onSelectionChanged(evt: any) {
+    ScrollComponent.reinitialization();
+    if (this.listview) {
+      if (!this.isLoaded)
+        this.listview.dataService.setPredicate(this.predicate, this.dataValue.split(';')).subscribe(res => {
         });
-    });
+      else
+        this.isLoaded = false;
+    } else {
+      this.isLoaded = true;
+      if (evt && evt.data) {
+        this.predicate = "PositionID=@0";
+        this.dataValue = evt.data.positionID;
+      }
+      this.changedt.detectChanges();
+    }
   }
 
   loadEOrgChartListChild(orgUnitID): Observable<any> {

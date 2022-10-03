@@ -77,6 +77,31 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   color: var(--text-primary) !important;
 }
 
+/** custom bootstrap  **/
+.e-multi-select-wrapper input[type=text] {
+  font-size: 13px;
+}
+
+input.e-input,
+textarea.e-input,
+.e-input-group,
+.e-input-group.e-control-wrapper {
+  font-size: 13px;
+}
+
+.popover-body {
+  padding: 1rem;
+}
+
+.extend-more .e-input-group .e-input-group-icon,
+.extend-more .e-input-group.e-control-wrapper .e-input-group-icon {
+  min-width: 22px;
+}
+
+.e-input-group .e-input-group-icon,
+.e-input-group.e-control-wrapper .e-input-group-icon {
+  min-width: 26px;
+}
 
 /***END Khong duoc xoa***/
 .user-mini-icon {
@@ -87,6 +112,21 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   text-align: center;
   border-radius: 50%;
   background-color: #f1f1fa;
+}
+
+.user-mini-icon.w-20px.h-20px {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+img.w-20px.h-20px {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
 }
 
 .rounded {
@@ -316,7 +356,7 @@ codx-views>.container-fluid.h-100 {
 }
 
 hr {
-  background-color: var(--gray-500);
+  background-color: var(--gray-300);
 }
 
 .is-invalid .ng-invalid,
@@ -495,4 +535,89 @@ codx-view-list-detail .codx-detail-footer {
 
 .codx-detail-footer .mh-200px {
   max-height: 178px !important;
+}
+
+codx-view-list-tree {
+  background-color: var(--white);
+}
+
+codx-mfunc .icon-file_copy {
+  font-size: 15px !important;
+}
+
+/***/
+
+.symbol.symbol-25px .symbol-label {
+  font-size: 11px;
+}
+
+// lib-positions {
+//   height: 100%;
+// }
+
+// codx-tmmeetings {
+//   height: 100%;
+// }
+
+codx-wrapper> :nth-child(2) {
+  height: 100%;
+}
+
+.login-aside .e-input-group {
+  background-color: transparent;
+}
+
+.login-aside .e-input-group:not(.e-disabled) .e-input-group-icon:hover,
+.login-aside .e-input-group.e-control-wrapper:not(.e-disabled) .e-input-group-icon:hover {
+  background-color: transparent;
+}
+
+.system-settings {
+  max-width: 1100px;
+  display: flex;
+  margin: 0 auto;
+}
+
+
+lib-company-setting {
+  max-width: 1100px;
+  display: flex;
+  margin: 0 auto;
+}
+
+.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon).btn.pe-0 {
+  padding-right: 0 !important;
+}
+
+.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+  font-family: 'Roboto';
+}
+
+
+
+codx-tmmeetings .toolbar {
+  margin-bottom: 0 !important;
+}
+
+.e-splitter.e-splitter-horizontal,
+.e-splitter.e-splitter-vertical {
+  border: 0;
+}
+
+.user-mini-nav-custom {
+  height: 24px;
+  padding: 2px 8px 2px 2px !important;
+  border-radius: 20px;
+  margin-bottom: 3px;
+  background-color: #f3f3f3;
+  margin-right: 10px;
+}
+
+codx-view-list-detail .nav-tabs .nav-link.active,
+codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
+  font-weight: 600;
+}
+
+codx-layout-add .codx-tab .tab-content {
+  width: 550px !important;
 }

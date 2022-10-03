@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxCommentsComponent } from './codx-comments.component';
+import { AddGiftsComponent } from './add-gifts.component';
 
-describe('CodxCommentsComponent', () => {
-  let component: CodxCommentsComponent;
-  let fixture: ComponentFixture<CodxCommentsComponent>;
+describe('AddGiftsComponent', () => {
+  let component: AddGiftsComponent;
+  let fixture: ComponentFixture<AddGiftsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxCommentsComponent ]
+      declarations: [ AddGiftsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxCommentsComponent);
+    fixture = TestBed.createComponent(AddGiftsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

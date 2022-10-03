@@ -4,16 +4,16 @@ import {
   Injector,
   Optional,
   Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import {
   DialogData,
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  RequestOption,
   UIComponent,
 } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -25,7 +25,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 })
 export class PopupAddStationeryComponent extends UIComponent {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
-  @ViewChild('popupColor') popupTemp: TemplateRef<any>;
+  @ViewChild('form') form: any;
   @Output() loadData = new EventEmitter();
   isAfterRender = false;
   dialogAddStationery: FormGroup;
@@ -37,16 +37,19 @@ export class PopupAddStationeryComponent extends UIComponent {
     {
       icon: 'icon-info',
       text: 'Thông tin chung',
+      subName: 'Thông tin chi tiết của VPP',
       name: 'tabGeneralInfo',
     },
     {
       icon: 'icon-person_add_alt_1',
       text: 'Định mức sử dụng',
-      name: 'tabPeopleInfo',
+      subName: 'Định mức khi đặt VPP',
+      name: 'tabQuotaInfo',
     },
     {
       icon: 'icon-tune',
       text: 'Thông tin khác',
+      subName: 'Thông tin tham chiếu',
       name: 'tabMoreInfo',
     },
   ];
@@ -85,17 +88,10 @@ export class PopupAddStationeryComponent extends UIComponent {
       .then((item) => {
         this.dialogAddStationery = item;
         this.isAfterRender = true;
-        if (this.data) {
-          this.dialogAddStationery.patchValue(this.data);
-          this.dialogAddStationery.addControl(
-            'code',
-            new FormControl(this.data.code)
-          );
-        }
       });
   }
 
-  beforeSave(option: any) {
+  beforeSave(option: RequestOption) {
     let itemData = this.dialogAddStationery.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
@@ -103,18 +99,8 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
-    // if (this.dialogAddStationery.invalid == true) {
-    //   return;
-    // }
-    this.dialogAddStationery.patchValue({
-      owner: this.dialogAddStationery.value.owner[0],
-    });
-    this.dialogAddStationery.patchValue({
-      groupID: '1',
-    });
-    this.dialogAddStationery.patchValue({
-      resourceType: '6',
-    });
+    this.data.resourceType = '6';
+    this.dialogAddStationery.patchValue(this.data);
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -135,18 +121,9 @@ export class PopupAddStationeryComponent extends UIComponent {
               }
             });
         }
+        this.detectorRef.detectChanges();
         this.dialog.close();
       });
-  }
-
-  checkedOnlineChange(event) {
-    this.dialogAddStationery.patchValue({
-      online: event.data instanceof Object ? event.data.checked : event.data,
-    });
-
-    if (!this.dialogAddStationery.value.online)
-      this.dialogAddStationery.patchValue({ onlineUrl: null });
-    this.detectorRef.detectChanges();
   }
 
   setdata(data: any) {
@@ -168,7 +145,6 @@ export class PopupAddStationeryComponent extends UIComponent {
         this.dialogAddStationery.patchValue({ [event['field']]: event.data });
       }
     }
-    this.colorItem = event.data;
   }
 
   closeDialog(evt: any) {
@@ -189,12 +165,6 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   buttonClick(e: any) {}
-
-  splitColor(color: string): any {
-    if (color) {
-      return color.split(';');
-    }
-  }
 
   fileCount(event) {}
 

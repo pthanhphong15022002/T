@@ -34,6 +34,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllStatus?: any;
   @Input() vllExtendStatus?: any;
   @Input() vllApproveStatus?: any;
+  @Input() showMoreFunc?: any;
+  
   dataTree?: any[];
   dataReferences?: any[];
   @Input() taskID: string;
@@ -47,7 +49,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() hoverPopover = new EventEmitter<any>();
   firstLoad = true;
   viewTags= '' ;
-  vllPriority = 'L0186' ;
+  vllPriority = 'TM005' ;
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,

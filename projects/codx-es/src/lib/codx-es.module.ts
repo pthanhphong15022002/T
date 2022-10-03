@@ -50,6 +50,7 @@ import { PopupCaPropsComponent } from './sign-file/popup-ca-props/popup-ca-props
 import { PdfComponent } from './sign-file/pdf/pdf.component';
 import { PopupAddSignatureComponent } from './setting/signature/popup-add-signature/popup-add-signature.component';
 import { PopupAddCategoryComponent } from './setting/category/popup-add-category/popup-add-category.component';
+import { ESTemplateComponent } from './templateHTML/template.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,10 @@ const routes: Routes = [
       {
         path: 'searching/:funcID',
         component: SearchingComponent,
+      },
+      {
+        path: 'template',
+        component: ESTemplateComponent,
       },
       {
         path: 'approvals/:funcID',
@@ -141,6 +146,7 @@ const routes: Routes = [
     SearchingComponent,
     PopupCaPropsComponent,
     PdfComponent,
+    ESTemplateComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

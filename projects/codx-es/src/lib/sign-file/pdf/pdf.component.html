@@ -42,7 +42,7 @@
             <ng-template #content>
               <ng-container>
                 <div
-                  class="ca-space d-flex align-items-start cursor-pointer px-2 pb-2"
+                  class="ca-space d-flex align-items-start cursor-pointer px-2 pb-3"
                   *ngFor="let ca of lstCA; let idx = index"
                 >
                   <div class="position-relative symbol me-3">
@@ -65,7 +65,7 @@
                       [name]="'lblCAMemo' + idx"
                       [formModel]=""
                       [default]="'Certified by ' + ca.signerName"
-                      class="fw-bold mb-2"
+                      class="fw-bold mb-2 text-hover-primary"
                       (click)="goToSelectedCA(ca, idx)"
                     ></codx-label>
                     <div
@@ -305,9 +305,11 @@
         [showPropertiesButton]="true"
         [customSidebar]="withoutSidebar"
         [customThumbnail]="ngxThumbnail"
-        [enableDragAndDrop]="true"
-        [pageViewMode]="'single'"
-        [handTool]="true"
+        [enableDragAndDrop]="false"
+        [handTool]="false"
+        [contextMenuAllowed]="false"
+        pageViewMode="vertical"
+        (textLayerRendered)="getTextLayerInfo($event)"
       >
       </ngx-extended-pdf-viewer>
       <ng-template #ngxThumbnail let-PAGE_NUMBER>
@@ -453,7 +455,7 @@
                       type="switch"
                       field="autoSignLastLine"
                       [disabled]="isDisable"
-                      [crrValue]="autoSignState"
+                      [(crrValue)]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
                     <!--end::Switch-->
@@ -494,8 +496,8 @@
                       *ngIf="
                         !this.isApprover ||
                         (this.isApprover &&
-                          (area.signer != this.curSignerID ||
-                            area.stepNo != this.stepNo))
+                          area.signer == this.curSignerID &&
+                          area.stepNo == this.stepNo)
                       "
                       (click)="goToSelectedAnnotation(area)"
                     >
@@ -528,7 +530,10 @@
                         "
                         [formGroup]="formAnnot"
                       >
-                        <!-- <div class="qr-switch" *ngIf="area.labelType == 8">
+                        <div
+                          class="qr-switch"
+                          *ngIf="!isApprover && area.labelType == 8"
+                        >
                           <codx-input
                             class="form-control me-2"
                             type="switch"
@@ -542,7 +547,7 @@
                             >
                             </codx-label>
                           </codx-input>
-                        </div> -->
+                        </div>
                         <div
                           class="text-content form-control my-2 ms-12"
                           *ngIf="area.labelType == 6"
@@ -778,17 +783,6 @@
 </ng-template>
 
 <ng-template #panelLeft> </ng-template>
-
-<!-- <div
-  id="virtualLayer"
-  style="display: flex; position: absolute"
-  [style.top.px]="vcTop"
-  [style.left.px]="vcLeft"
-  [style.width.px]="vcWidth"
-  [style.height.px]="vcHeight"
-  [style.z-index]="'1'"
-  [style.border]="'1px solid red'"
-></div> -->
 
 <div id="contextMenu" style="display: none; position: absolute">
   <div style="z-index: 2"><button id="delete-btn">Delete</button></div>

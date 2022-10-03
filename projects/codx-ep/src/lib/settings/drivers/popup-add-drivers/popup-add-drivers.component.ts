@@ -56,7 +56,7 @@ export class PopupAddDriversComponent
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogRef?.dataService?.dataSelected;
+    this.data =  dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;

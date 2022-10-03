@@ -1,4 +1,4 @@
-<div>
+<div class="treehis-main">
     <ng-container *ngIf="addNew">
         <div class="tree-footer">
             <codx-comment-history [type]="'create'" [funcID]="funcID" [actionType]="actionType" [objectID]="objectID"
@@ -6,7 +6,7 @@
             </codx-comment-history>
         </div>
     </ng-container>
-    <div class="tree-body ms-14">
+    <div class="tree-body">
         <ng-container *ngFor="let node of root.listSubComment">
             <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
         </ng-container>

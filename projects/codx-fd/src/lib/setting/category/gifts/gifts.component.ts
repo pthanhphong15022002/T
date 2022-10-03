@@ -1,7 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { Observable, Subject, Subscription } from "rxjs";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Observable, Subject, Subscription } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   Component,
   Input,
@@ -12,31 +12,44 @@ import {
   TemplateRef,
   Output,
   EventEmitter,
-} from "@angular/core";
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   FormControl,
-} from "@angular/forms";
-import { LayoutService } from "@shared/services/layout.service";
-import { ApiHttpService, NotificationsService, AuthStore, ImageViewerComponent, CodxListviewComponent, ViewsComponent, ButtonModel, ViewModel, ViewType, CacheService, UIComponent } from "codx-core";
+} from '@angular/forms';
+import { LayoutService } from '@shared/services/layout.service';
+import {
+  ApiHttpService,
+  NotificationsService,
+  AuthStore,
+  ImageViewerComponent,
+  CodxListviewComponent,
+  ViewsComponent,
+  ButtonModel,
+  ViewModel,
+  ViewType,
+  CacheService,
+  UIComponent,
+  SidebarModel,
+  DialogRef,
+} from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { AddGiftsComponent } from './add-gifts/add-gifts.component';
 
 @Component({
-  selector: "app-gifts",
-  templateUrl: "./gifts.component.html",
-  styleUrls: ["./gifts.component.scss"],
+  selector: 'app-gifts',
+  templateUrl: './gifts.component.html',
+  styleUrls: ['./gifts.component.scss'],
 })
 export class GiftsComponent extends UIComponent implements OnInit {
-
   @Input() functionObject;
   @ViewChild('listView') listView: CodxListviewComponent;
-  @ViewChild("subheader") subheader;
+  @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('template') panelLeftRef: TemplateRef<any>;
-  @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
@@ -46,14 +59,13 @@ export class GiftsComponent extends UIComponent implements OnInit {
   isAddMode = true;
   onHandForm: FormGroup;
   lstMoreFunction = [];
-  searchType: string = "0";
-  predicate = "Category=@0";
-  dataValue: string = "1";
-  private user;
+  searchType: string = '0';
+  predicate = 'Category=@0';
+  dataValue: string = '1';
+  user;
   pageSize: number;
   reload = false;
   giftIDCurrentHover: string;
-  private filterAdvSubscription: Subscription;
   funcID = '';
   views: Array<ViewModel> = [];
   showHeader: boolean = true;
@@ -62,43 +74,44 @@ export class GiftsComponent extends UIComponent implements OnInit {
   description: any;
   functionList: any;
   gridViewSetup: any;
+  button?: ButtonModel;
+  dialog!: DialogRef;
 
   popupFiled = 1;
 
-  constructor(private injector: Injector,
+  constructor(
+    private injector: Injector,
     private fb: FormBuilder,
     private notificationsService: NotificationsService,
     private modalService: NgbModal,
     private changedr: ChangeDetectorRef,
     private auth: AuthStore,
     private dt: ChangeDetectorRef,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     super(injector);
-      this.route.params.subscribe(param => {
-        if(param) this.funcID = param['funcID'];
-      })
-      this.cache.functionList(this.funcID).subscribe(res => {
-        if(res) this.functionList = res;
-      })
+    this.route.params.subscribe((param) => {
+      if (param) this.funcID = param['funcID'];
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.functionList = res;
+      }
+    });
   }
 
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
-
   onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
     this.initForm();
     this.initHandForm();
     this.user = this.auth?.get();
-    // this.loadSettingMoreFunction();
-    // this.mwpService.layoutcpn.next(new LayoutModel(true, '', false, true));
+    this.loadSettingMoreFunction();
     this.changedr.detectChanges();
   }
 
   ngAfterViewInit() {
-    // this.layoutService.listview = this.listView;
-
     this.views = [
       {
         id: '1',
@@ -107,20 +120,10 @@ export class GiftsComponent extends UIComponent implements OnInit {
         active: true,
         model: {
           template: this.panelLeftRef,
-        }
-      }
+        },
+      },
     ];
-    this.userPermission = this.viewbase.userPermission;
     this.changedr.detectChanges();
-
-    // this.mwpService.layoutChange.subscribe(res => {
-    //   if (res) {
-    //     if (res.isChange)
-    //       this.showHeader = res.asideDisplay;
-    //     else
-    //       this.showHeader = true;
-    //   }
-    // })
   }
 
   valueChange(event) {
@@ -138,17 +141,39 @@ export class GiftsComponent extends UIComponent implements OnInit {
       this.isAddMode = true;
       this.closeInfor();
       this.getGiftID();
-    }
-    else {
+    } else {
       this.isAddMode = false;
       this.addEditForm.patchValue(this.dataItem);
     }
-    // this.viewbase.currentView.openSidebarRight();
+  }
+
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    var obj = {
+      formType: 'edit',
+    };
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(AddGiftsComponent, obj, option);
+        // this.dialog.closed.subscribe((e) => {
+        //   if (e?.event == null)
+        //     this.view.dataService.delete(
+        //       [this.view.dataService.dataSelected],
+        //       false
+        //     );
+        // });
+      });
   }
 
   clickClosePopup() {
     this.closeInfor();
-    // this.viewbase.currentView.closeSidebarRight();
   }
 
   PopoverEmpEnter(p: any, dataItem) {
@@ -167,8 +192,8 @@ export class GiftsComponent extends UIComponent implements OnInit {
   clearInfor() {
     this.addEditForm.controls['giftName'].setValue('');
     this.addEditForm.controls['giftID'].setValue('');
-    this.addEditForm.controls['groupID'].setValue("");
-    this.addEditForm.controls['owner'].setValue("");
+    this.addEditForm.controls['groupID'].setValue('');
+    this.addEditForm.controls['owner'].setValue('');
     this.addEditForm.controls['memo'].setValue('');
     this.addEditForm.controls['description'].setValue('');
     this.addEditForm.controls['price'].setValue(0);
@@ -181,37 +206,44 @@ export class GiftsComponent extends UIComponent implements OnInit {
     const user = this.auth?.get();
     this.addEditForm = this.fb.group(
       {
-        giftName: ["", Validators.compose([Validators.required])],
-        giftID: ["", Validators.compose([Validators.required])],
-        image: ["", Validators.compose([])],
-        groupID: ["", Validators.compose([Validators.required])],
-        description: ["", Validators.compose([])],
-        memo: ["", Validators.compose([])],
+        giftName: ['', Validators.compose([Validators.required])],
+        giftID: ['', Validators.compose([Validators.required])],
+        image: ['', Validators.compose([])],
+        groupID: ['', Validators.compose([Validators.required])],
+        description: ['', Validators.compose([])],
+        memo: ['', Validators.compose([])],
         price: [0, Validators.compose([Validators.required])],
         onhand: [0, Validators.compose([Validators.required])],
         reservedQty: [0, Validators.compose([Validators.required])],
         availableQty: [0, Validators.compose([Validators.required])],
         owner: [user.userID, Validators.compose([Validators.required])],
-        orgUnitID: [user["buid"], Validators.compose([])],
+        orgUnitID: [user['buid'], Validators.compose([])],
       },
-      { updateOn: "blur" }
+      { updateOn: 'blur' }
     );
   }
+
   loadSettingMoreFunction() {
-    this.loadMoreFunction("FED204211").subscribe((res) => {
+    this.loadMoreFunction('FED204211', 'Gifts', 'grvGifts').subscribe((res) => {
       if (res?.length > 0) {
         this.lstMoreFunction = res;
       }
     });
   }
 
-  loadMoreFunction(functionID: string) {
-    return this.api.execSv<Array<any>>("SYS", "SYS", "MoreFunctionsBusiness", "GetWithPermAsync", [functionID]);
+  loadMoreFunction(functionID: string, formName: string, gridViewName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermAsync',
+      [functionID, formName, gridViewName]
+    );
   }
 
   clickMoreFuntion(funtionID, item, templateForm) {
     switch (funtionID) {
-      case "FED204211":
+      case 'FED204211':
         this.openFormChangeOnhand(templateForm, item);
         break;
       default:
@@ -220,17 +252,19 @@ export class GiftsComponent extends UIComponent implements OnInit {
   }
 
   getGiftID() {
-    this.getOneFieldAutonumber(this.funcID)
-      .subscribe((key) => {
-        this.addEditForm.patchValue({ giftID: key });
-      });
+    this.getOneFieldAutonumber(this.funcID).subscribe((key) => {
+      this.addEditForm.patchValue({ giftID: key });
+    });
   }
 
   getOneFieldAutonumber(functionID): Observable<any> {
     var subject = new Subject<any>();
-    this.api.call("AD", "AutoNumbersBusiness",
-      "CreateAutoNumberByFunction", [functionID, null])
-      .subscribe(item => {
+    this.api
+      .call('AD', 'AutoNumbersBusiness', 'CreateAutoNumberByFunction', [
+        functionID,
+        null,
+      ])
+      .subscribe((item) => {
         if (item && item.msgBodyData.length > 0)
           subject.next(item.msgBodyData[0][1]);
       });
@@ -248,23 +282,23 @@ export class GiftsComponent extends UIComponent implements OnInit {
     this.openInfor();
   }
   changeCombobox(data, field) {
-    if (field === "owner" && data[0]) {
+    if (field === 'owner' && data[0]) {
       this.addEditForm.patchValue({ owner: data[0] });
       this.addEditForm.patchValue({ orgUnitID: data.data.BUID });
     }
-    if (field === "groupID" && data[0]) {
+    if (field === 'groupID' && data[0]) {
       this.addEditForm.patchValue({ groupID: data[0] });
     }
   }
   deleteGift(item) {
-    this.notificationsService.alertCode("").subscribe((x: Dialog) => {
+    this.notificationsService.alertCode('').subscribe((x: Dialog) => {
       let that = this;
       x.close = function (e) {
         if (e) {
           var status = e?.event?.status;
-          if (status == "Y") {
+          if (status == 'Y') {
             that.api
-              .call("FD", "GiftsBusiness", "DeleteGiftAsync", [item.giftID])
+              .call('FD', 'GiftsBusiness', 'DeleteGiftAsync', [item.giftID])
               .subscribe((res) => {
                 if (res && res.msgBodyData[0]) {
                   if (res.msgBodyData[0][0] == true) {
@@ -274,11 +308,11 @@ export class GiftsComponent extends UIComponent implements OnInit {
                     that.notificationsService.notify(res.msgBodyData[0][1]);
                   }
                 }
-              })
+              });
           }
         }
-      }
-    })
+      };
+    });
   }
 
   PopoverEmpLeave(p: any) {
@@ -288,13 +322,13 @@ export class GiftsComponent extends UIComponent implements OnInit {
   initHandForm() {
     this.onHandForm = this.fb.group(
       {
-        giftID: ["", Validators.compose([Validators.required])],
-        giftName: ["", Validators.compose([Validators.required])],
-        memo: ["", Validators.compose([Validators.required])],
-        onhand: ["", Validators.compose([Validators.required])],
+        giftID: ['', Validators.compose([Validators.required])],
+        giftName: ['', Validators.compose([Validators.required])],
+        memo: ['', Validators.compose([Validators.required])],
+        onhand: ['', Validators.compose([Validators.required])],
         newOnhand: [0, Validators.compose([Validators.required])],
       },
-      { updateOn: "blur" }
+      { updateOn: 'blur' }
     );
   }
 
@@ -313,12 +347,12 @@ export class GiftsComponent extends UIComponent implements OnInit {
         onhand: [item.onhand == null ? 0 : item.onhand],
         newOnhand: [0, Validators.compose([Validators.required])],
       },
-      { updateOn: "blur" }
+      { updateOn: 'blur' }
     );
     this.modalService.open(form, {
-      ariaLabelledBy: "modal-basic-title",
+      ariaLabelledBy: 'modal-basic-title',
       centered: true,
-      size: "sm",
+      size: 'sm',
     });
     this.changedr.detectChanges();
   }
@@ -330,9 +364,9 @@ export class GiftsComponent extends UIComponent implements OnInit {
       return 0;
     }
     return this.api
-      .call("FD", "GiftsBusiness", "UpdateOnHandOfGiftsAsync", [
-        this.onHandForm.controls["giftID"].value,
-        this.onHandForm.controls["newOnhand"].value,
+      .call('FD', 'GiftsBusiness', 'UpdateOnHandOfGiftsAsync', [
+        this.onHandForm.controls['giftID'].value,
+        this.onHandForm.controls['newOnhand'].value,
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
@@ -350,11 +384,11 @@ export class GiftsComponent extends UIComponent implements OnInit {
   onSaveGift() {
     if (this.addEditForm.status == 'INVALID') {
       this.addEditForm.markAllAsTouched();
-      this.notificationsService.notify("Vui lòng kiểm tra lại thông tin nhập");
+      this.notificationsService.notify('Vui lòng kiểm tra lại thông tin nhập');
       return 0;
     } else {
       return this.api
-        .call("FD", "GiftsBusiness", "AddEditGiftAsync", [
+        .call('FD', 'GiftsBusiness', 'AddEditGiftAsync', [
           this.addEditForm.value,
           this.isAddMode,
         ])
@@ -378,7 +412,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
                     this.changedr.detectChanges();
                   }
                 });
-                this.clickClosePopup();
+              this.clickClosePopup();
             } else {
               this.notificationsService.notify(res.msgBodyData[0][1]);
             }
@@ -389,49 +423,36 @@ export class GiftsComponent extends UIComponent implements OnInit {
   extendShow2(): void {
     const body = document.getElementById('update_infor');
     if (body.childNodes.length == 0) return;
-    if (body.classList.contains("extend-show")) body.classList.remove("extend-show");
-    else body.classList.add("extend-show");
+    if (body.classList.contains('extend-show'))
+      body.classList.remove('extend-show');
+    else body.classList.add('extend-show');
   }
 
   showDescription(data) {
     this.description = data;
   }
 
-  lstElastisSearch: any;
-  // action(para: ActionArg): void {
-  //   switch (para.type) {
-  //     case ActionType.add:
-  //       this.openForm(null, true);
-  //       break;
-  //     case ActionType.advFilter:
-  //       this.listView.setSearchAdv(JSON.stringify(para.arg));
-  //       break;
-  //     case ActionType.quickSearch:
-  //       this.searchType = para.searchType;
-  //       if (para.searchType == "1") {
-  //         this.listView.SearchText = para.arg;
-  //         this.listView.onChangeSearch();
-  //         break;
-  //       } else if (para.searchType == "2") {
-  //         if (para?.arg == "") {
-  //           this.searchType = "0";
-  //           this.predicate = "Category=@0";
-  //           this.dataValue = "1";
-  //         } else {
-  //           this.lstElastisSearch = para.lstFTsearch;
-  //         }
-  //         this.dt.detectChanges();
-  //       }
-  //   }
-  // }
-  openTangqua() { }
+  openTangqua() {}
 
   convertDateTime(date) {
     var datetime = new Date(date);
     return datetime;
   }
 
-  clickMF(event: any, data: any) {
+  delete(data) {}
 
+  clickMF(e: any, data: any) {
+    if (e) {
+      switch (e.functionID) {
+        case 'SYS02':
+          this.delete(data);
+          break;
+        case 'SYS03':
+          this.edit(data);
+          break;
+        case 'FED204211':
+          break;
+      }
+    }
   }
 }

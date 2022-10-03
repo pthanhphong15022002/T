@@ -17,10 +17,11 @@
         imgCss="me-2"
         [typeMF]="'hover'" 
         (clickMF)="clickMF($event,data)"
-        [imageId]="data.createdBy"
+        [imageId]="data.sender"
         imageObjType="AD_Users"
         cardCss="card-template border-bottom px-2 py-3" 
         [title]="data.senderName"
+        [desc]="data.situation"
         [date]="data.createdOn"
         [status]="data.status"
         [statusVll]="'L1420'"
@@ -32,7 +33,7 @@
 </ng-template>
 
 <ng-template #panelRightRef>
-    <lib-view-detail-cards [cardID]="selectedID"></lib-view-detail-cards>
+    <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL"></lib-view-detail-cards>
 </ng-template>
 
 

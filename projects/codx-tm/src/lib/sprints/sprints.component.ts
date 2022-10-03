@@ -57,6 +57,7 @@ export class SprintsComponent extends UIComponent {
   valuelist = {};
   action = 'edit';
   listMoreFunc = [];
+  titleAction = '' ;
 
   constructor(
     inject: Injector,
@@ -113,7 +114,7 @@ export class SprintsComponent extends UIComponent {
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'add'],
+        [this.view.dataService.dataSelected, 'add',this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -139,7 +140,7 @@ export class SprintsComponent extends UIComponent {
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddSprintsComponent,
-          [this.view.dataService.dataSelected, 'edit'],
+          [this.view.dataService.dataSelected, 'edit',this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -161,7 +162,7 @@ export class SprintsComponent extends UIComponent {
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'copy'],
+        [this.view.dataService.dataSelected, 'copy',this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -195,6 +196,7 @@ export class SprintsComponent extends UIComponent {
   //#region More function
   clickMF(e: any, data: any) {
     this.itemSelected = data;
+    this.titleAction = e?.text ;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -222,6 +224,7 @@ export class SprintsComponent extends UIComponent {
     }
   }
   click(evt: ButtonModel) {
+    this.titleAction = evt?.text ;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -287,8 +290,7 @@ export class SprintsComponent extends UIComponent {
   }
 
   changeView(evt: any) {
-    console.log('evt: ', evt);
-    var t = this;
+   
   }
 
   requestEnded(evt: any) {

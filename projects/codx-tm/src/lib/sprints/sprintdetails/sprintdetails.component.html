@@ -62,7 +62,8 @@
       </div>
     </div>
     <div class="col-4" *ngIf="resources && resources != ''">
-      <codx-imgs style="float: right"
+      <codx-imgs
+        style="float: right"
         [objectId]="resources"
         objectType="AD_Users"
         [numberImages]="7"
@@ -73,16 +74,16 @@
         #popoverList="ngbPopover" placement="bottom left right" container="body" autoClose="outside"></codx-imgs> -->
     </div>
   </div>
-  <div class="page-content d-flex flex-row">
+  <div class="page-content d-flex flex-row" style="height : 100%">
     <div class="w-100">
       <div
         class="m-0 bg-body rounded-2 sprints-task-detail"
         data-kt-scroll="true"
         data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".page-content, .sprints-task-header"
-        data-kt-scroll-wrappers=".sprints-task-detail, .no-wrapper"
-        data-kt-scroll-offset="0px"
+        data-kt-scroll-dependencies=".sprints-task-header"
+        data-kt-scroll-wrappers=".page-content, .no-wrapper"
+        [attr.data-kt-scroll-offset]="offset"
       >
         <ng-container *ngIf="name == 'Dashboard'">
           <codx-sprintdetails-dashboard
@@ -90,22 +91,22 @@
             [resources]="resources"
           ></codx-sprintdetails-dashboard>
         </ng-container>
-        <ng-container *ngIf="name == 'Công việc'">
+        <ng-container *ngIf="name == 'AssignTo'">
           <codx-tasks-share
             *ngIf="dataObj"
             [dataObj]="dataObj"
             [showButtonAdd]="showButtonAdd"
+            [showMoreFunc]="showMoreFunc"
             [funcID]="funcID"
           >
           </codx-tasks-share>
         </ng-container>
-        <ng-container *ngIf="name == 'Lịch sử'">
+        <ng-container *ngIf="name == 'History'">
           <ng-container>
             <ng-container>
               <codx-tree-history
                 [objectID]="iterationID"
                 [objectType]="'TM_Sprints'"
-                [actionType]=""
                 [viewIcon]="true"
                 [funcID]="functionParent"
               >
@@ -113,7 +114,7 @@
             </ng-container>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="name == 'Bình luận'">
+        <ng-container *ngIf="name == 'Comments'">
           <ng-container>
             <codx-tree-history
               [objectID]="iterationID"
@@ -127,7 +128,7 @@
             </codx-tree-history>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="name == 'Họp định kì'">
+        <ng-container *ngIf="name == 'Meetings'">
           <codx-tmmeetings
             [dataObj]="dataObj"
             [showButtonAdd]="false"

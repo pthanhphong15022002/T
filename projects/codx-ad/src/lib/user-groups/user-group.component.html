@@ -1,8 +1,7 @@
-<div class="p-6 bg-body rounded-3">
+<div class="p-3 bg-body rounded-3">
   <codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
     method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true" [button]="button"
-    [moreFuncs]="moreFuncs" (buttonClick)="click($event)" (viewChanged)="changeView($event)"
-    (selectedChange)="selectedChange($event)">
+    (buttonClick)="click($event)" (viewChanged)="changeView($event)" (selectedChange)="selectedChange($event)">
   </codx-views>
 
   <ng-template #titleTmp let-data>
@@ -19,7 +18,7 @@
       <div class="d-flex justify-content-between align-items-center flex-wrap">
         <div class=" justify-content-start min-w-350px">
           <codx-temp-full cardCss="card-template " (clickMF)="clickMF($event,data)" [imageId]="data.userID"
-            imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)"
+            imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)" [typeMF]="'hover'"
             [formModel]="view.formModel" [dataItem]="data" [imgOn]="data?.modifiedOn">
           </codx-temp-full>
         </div>

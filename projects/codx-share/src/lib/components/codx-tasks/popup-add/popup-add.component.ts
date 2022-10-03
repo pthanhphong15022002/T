@@ -175,24 +175,41 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
     this.titleAction = dt?.data[3];
-    this.taskCopy = dt?.data[4];
+    this.functionID = dt?.data[4];
+    this.taskCopy = dt?.data[5];
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.functionID = this.dialog.formModel.funcID;
-    if (this.functionID == 'TMT0203') this.showAssignTo = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
-    this.cache.valueList(this.vllRole).subscribe((res) => {
-      if (res && res?.datas.length > 0) {
-        this.listRoles = res.datas;
-      }
-    });
-    this.cache
+    ///hoi lai thuong casi nafy ddang chay tam
+    if(this.showAssignTo) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
+
+    this.cache.functionList(this.functionID).subscribe(f=>{
+        if(f){
+          this.cache
       .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
+           f.formName,
+           f.gridViewName
       )
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
+        }
+      });
+        }
+    })
+   // this.functionID = this.dialog.formModel.funcID;
+    // this.cache
+    //   .gridViewSetup(
+    //     this.dialog.formModel.formName,
+    //     this.dialog.formModel.gridViewName
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.gridViewSetup = res;
+    //     }
+    //   });
+      this.cache.valueList(this.vllRole).subscribe((res) => {
+        if (res && res?.datas.length > 0) {
+          this.listRoles = res.datas;
         }
       });
   }

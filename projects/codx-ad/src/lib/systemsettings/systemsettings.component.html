@@ -1,12 +1,7 @@
-<div class="content d-flex flex-column flex-column-fluid p-0 mw-1100px" id="kt_content">
-  <div id="erm_content" class="w-100">
-    <codx-views #view entityName="AD_SystemSettings" service="SYS" assemblyName="ERM.Business.AD"
-      className="SystemSettingsBusiness" [method]="'GetOneAsync'" [views]="views" idField="recID">
-    </codx-views>
+<codx-views class="system-settings" #view entityName="AD_SystemSettings" service="SYS" assemblyName="ERM.Business.AD"
+  className="SystemSettingsBusiness" [method]="'GetOneAsync'" [views]="views" idField="recID">
+</codx-views>
 
-  </div>
-
-</div>
 <ng-template #paneleft let-data>
   <ejs-tab headerPlacement="Left">
     <e-tabitems>
@@ -14,7 +9,7 @@
         <ng-template #headerText>
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-20 me-2"></span>
+              <span class="icon-assignment icon-20 me-2"></span>
               <span class="fw-bold">
                 <codx-label name="Description" formName="SystemSetting" default="Thông tin chung">
                 </codx-label>
@@ -25,7 +20,7 @@
         <ng-template #content>
           <div class="w-100 bg-body rounded-3 p-9">
             <div class="form-group">
-              <codx-label class="text-dark" default="Thông tin chung">
+              <codx-label class="text-primary fs-4" default="Thông tin chung">
               </codx-label>
             </div>
             <div class="form-group">
@@ -33,176 +28,186 @@
               </codx-label>
             </div>
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" default="Ngôn ngữ hệ thống">
                 </codx-label>
                 <div>
-                  <codx-label fiedName="Language" default="Ngôn ngữ mặc định được chọn sử dụng cho toàn hệ thống">
+                  <codx-label class="fw-normal text-gray-500" fiedName="Language"
+                    default="Ngôn ngữ mặc định được chọn sử dụng cho toàn hệ thống">
                   </codx-label>
                 </div>
-
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="language" type="valuelist" field="language" placeholder=""
                   [crrValue]="systemSetting?.language" (valueChange)="valueList($event)" refValue="SYS020">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" default="Giao diện">
                 </codx-label>
                 <div>
-                  <codx-label default="Thiết lập theme mặc định toàn hệ thống">
+                  <codx-label class="fw-normal text-gray-500" default="Thiết lập theme mặc định toàn hệ thống">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="language" type="valuelist" field="language" placeholder=""
                   [crrValue]="systemSetting?.language" (valueChange)="valueList($event)">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group">
               <codx-label class="text-dark" default="Định dạng số lẻ">
               </codx-label>
             </div>
             <div class="form-group row mt-3">
-              <div class="col-9">
-                <codx-label class="text-dark" default="Tiền hạch toán">
+              <div class="col-8">
+                <codx-label class="text-dark fs-4 text-primary" default="Tiền hạch toán">
                 </codx-label>
                 <div>
-                  <codx-label default="kiểm soát chiều dài tối thiểu phải khi nhập PW">
+                  <codx-label class="fw-normal text-gray-500" default="Đồng tiền dùng để hạch toán trên hệ thống">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="dBaseCurr" type="valuelist" field="dBaseCurr" placeholder=""
                   [crrValue]="systemSetting?.dBaseCurr" (valueChange)="valueList($event)" refValue="SYS013">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="DSourceCurr" default="Tiền nguyên tệ" formName="SystemSetting"
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Thời hạn mật khẩu sẽ hết hạn sau {0} ngày">
+                  <codx-label class="fw-normal text-gray-500" default="Đồng tiền nguyên tệ trên hệ thống">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="dSourceCurr" type="valuelist" field="dSourceCurr" placeholder=""
                   [crrValue]="systemSetting?.dSourceCurr" (valueChange)="valueList($event)" refValue="SYS013">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="DSalesPrice" default="Đơn giá" formName="SystemSetting"
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Không cho phép sử dụng trùng mật khẩu {0} lần gần nhất">
+                  <codx-label class="fw-normal text-gray-500" default="Định nghĩa số lẻ của đơn giá">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="dSalesPrice" type="valuelist" field="dSalesPrice" placeholder=""
                   [crrValue]="systemSetting?.dSalesPrice" (valueChange)="valueList($event)" refValue="SYS013">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="DExchRate" default="Tỷ giá" formName="SystemSetting"
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Tự động khóa không cho phép đăng nhập khi sai mật khẩu {0} lần">
+                  <codx-label class="fw-normal text-gray-500" default="Tỷ giá">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="dExchRate" type="valuelist" field="dExchRate" placeholder=""
                   [crrValue]="systemSetting?.dExchRate" (valueChange)="valueList($event)" refValue="SYS013">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="DQuantity" default="Số lượng" formName="SystemSetting"
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Hệ thống sẽ bị khóa {0} phút sau khi bị khóa đăng nhập">
+                  <codx-label class="fw-normal text-gray-500" default="Số lượng">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="dQuantity" type="valuelist" field="dQuantity" placeholder=""
                   [crrValue]="systemSetting?.dQuantity" (valueChange)="valueList($event)" refValue="SYS013">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="DCatchWeight" default="Số lượng quy đổi"
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Hệ thống sẽ bị khóa {0} phút sau khi bị khóa đăng nhập">
+                  <codx-label class="fw-normal text-gray-500" default="Số lượng quy đổi">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="dCatchWeight" type="valuelist" field="dCatchWeight" placeholder=""
                   [crrValue]="systemSetting?.dCatchWeight" (valueChange)="valueList($event)" refValue="SYS013">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="DPercent2" default="Tỉ lệ %" formName="SystemSetting"
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Hệ thống sẽ bị khóa {0} phút sau khi bị khóa đăng nhập">
+                  <codx-label class="fw-normal text-gray-500" default="Tỉ lệ %">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="dPercent2" type="valuelist" field="dPercent2" placeholder=""
                   [crrValue]="systemSetting?.dPercent2" (valueChange)="valueList($event)" refValue="SYS013">
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="DFactor2" default="Hệ số" formName="SystemSetting"
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Hệ thống sẽ bị khóa {0} phút sau khi bị khóa đăng nhập">
+                  <codx-label class="fw-normal text-gray-500" default="Hệ số">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="dFactor2" type="valuelist" field="dFactor2" placeholder=""
                   [crrValue]="systemSetting?.dFactor2" (valueChange)="valueList($event)" refValue="SYS013">
                 </codx-input>
               </div>
             </div>
+
           </div>
 
         </ng-template>
@@ -212,7 +217,7 @@
 
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-20 me-2"></span>
+              <span class="icon-security icon-20 me-2"></span>
               <span class="fw-bold">
                 <codx-label name="Security" formName="SystemSetting" default="Chính sách bảo mật">
                 </codx-label>
@@ -227,34 +232,33 @@
               </codx-label>
             </div>
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="PWLength" default="Chiều dài tối thiểu của mật khẩu"
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Kiểm soát chiều dài tối thiểu của mật khẩu">
+                  <codx-label class="fw-normal text-gray-500" default="Kiểm soát chiều dài tối thiểu của mật khẩu">
                   </codx-label>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="pwLength" type="valuelist" field="pwLength" placeholder=""
                   [crrValue]="systemSetting?.pwLength" (valueChange)="valueList($event)" refValue="SYS014">
                 </codx-input>
               </div>
             </div>
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="PWLifeDays" default="Thời gian mật khẩu"
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Thời hạn mật khẩu sẽ hết hạn sau {0} ngày">
-                  </codx-label>
+                  <span class="fw-normal text-gray-500" [innerHTML]="pwLifeDays"></span>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="pwLifeDays" type="valuelist" field="pwLifeDays" placeholder=""
                   [crrValue]="systemSetting?.pwLifeDays" (valueChange)="valueList($event)" refValue="SYS015">
                 </codx-input>
@@ -262,17 +266,17 @@
             </div>
 
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="PWExpireWarning" default="Cảnh báo hết hạn mật khẩu"
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Chương trình cảnh báo hết hạn trước {0} ngày">
-                  </codx-label>
+                  <span class="fw-normal text-gray-500" [innerHTML]="pwExpireWarning"></span>
+
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="pwExpireWarning" type="valuelist" field="pwExpireWarning" placeholder=""
                   [crrValue]="systemSetting?.pwExpireWarning" (valueChange)="valueList($event)" refValue="SYS016">
                 </codx-input>
@@ -280,17 +284,17 @@
             </div>
 
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="PWDuplicate" default="Kiểm tra trùng mật khẩu"
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
-                  </codx-label>
+                  <span class="fw-normal text-gray-500" [innerHTML]="pwDuplicate"></span>
+
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="pwDuplicate" type="valuelist" field="pwDuplicate" placeholder=""
                   [crrValue]="systemSetting?.pwDuplicate" (valueChange)="valueList($event)" refValue="SYS017">
                 </codx-input>
@@ -298,17 +302,16 @@
             </div>
 
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="BlockSystem" default="Khóa đăng nhập" formName="SystemSetting"
                   gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
-                  </codx-label>
+                  <span class="fw-normal text-gray-500" [innerHTML]="blockSystem"></span>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="blockSystem" type="valuelist" field="blockSystem" placeholder=""
                   [crrValue]="systemSetting?.blockSystem" (valueChange)="valueList($event)" refValue="SYS018">
                 </codx-input>
@@ -316,17 +319,16 @@
             </div>
 
             <div class="form-group row mt-3">
-              <div class="col-9">
+              <div class="col-8">
                 <codx-label class="text-dark" fiedName="FreezeInMinutes" default="Khóa hệ thống"
                   formName="SystemSetting" gridViewName="grvSystemSetting">
                 </codx-label>
                 <div>
-                  <codx-label default="Không cho phép sử dụng mật khẩu {0} lần gần nhất">
-                  </codx-label>
+                  <span class="fw-normal text-gray-500" [innerHTML]="freezeInMinutes"></span>
                 </div>
 
               </div>
-              <div class="col-3">
+              <div class="col-4">
                 <codx-input name="freezeInMinutes" type="valuelist" field="freezeInMinutes" placeholder=""
                   [crrValue]="systemSetting?.freezeInMinutes" (valueChange)="valueList($event)" refValue="SYS019">
                 </codx-input>
@@ -340,7 +342,7 @@
         <ng-template #headerText class="">
           <div class="nav-item">
             <a class="nav-link text-dark text-hover-primary btn-light-primary d-flex  px-0">
-              <span class="icon-info icon-20 me-2"></span>
+              <span class="icon-assignment icon-20 me-2"></span>
               <span class="fw-bold">
                 <codx-label name="App" formName="SystemSetting" default="Cấu hình ứng dụng">
                 </codx-label>
@@ -357,10 +359,13 @@
                   <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" />
                   <div>
                     <div class="fw-bold" style="font-weight: bold; margin-left: 10px;">
-                      {{item.customName}}
+                      <codx-label formName="SystemSetting" gridViewName="grvSystemSetting" [default]="item.customName">
+
+                      </codx-label>
+
                     </div>
                     <div style="margin-left: 10px;">
-                      <codx-label name="App" formName="SystemSetting" default="Cu Phúc cute vô đối">
+                      <codx-label formName="SystemSetting" gridViewName="grvSystemSetting" [default]="item.description">
                       </codx-label>
                     </div>
                   </div>

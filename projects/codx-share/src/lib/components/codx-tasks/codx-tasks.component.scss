@@ -23,8 +23,7 @@ textarea.codx-textarea {
   outline: 0;
 }
 
-codx-mfunc span,
-.dropdown-menu span {
+codx-mfunc span {
   line-height: 20px;
 }
 
@@ -53,4 +52,8 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
   max-height: 300px;
   overflow: auto;
   margin-top: 10px;
+}
+
+codx-tasks {
+  height: 100%;
 }

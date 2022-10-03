@@ -1,33 +1,59 @@
 import { Observable, Subject } from 'rxjs';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, ElementRef, TemplateRef, ContentChild, Injector, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectorRef,
+  ViewChild,
+  ElementRef,
+  TemplateRef,
+  ContentChild,
+  Injector,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { LayoutService } from '@shared/services/layout.service';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, ButtonModel, CodxGridviewComponent, ImageViewerComponent, NotificationsService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  AuthStore,
+  ButtonModel,
+  CodxGridviewComponent,
+  ImageViewerComponent,
+  NotificationsService,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-giftgroup',
   templateUrl: './giftgroup.component.html',
-  styleUrls: ['./giftgroup.component.scss']
+  styleUrls: ['./giftgroup.component.scss'],
 })
-export class GiftgroupComponent implements OnInit {
-
-  funcID = 'FDS0121';
+export class GiftgroupComponent extends UIComponent implements OnInit {
+  funcID = '';
   views: Array<ViewModel> = [];
   dataItem: any;
   userPermission: any;
   showHeader: boolean = true;
   user: any;
   userName = '';
+  functionList: any;
+  button?: ButtonModel;
 
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('createdOn', { static: true }) createdOn: TemplateRef<any>;
   @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
-  @ViewChild("subheader") subheader;
+  @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
@@ -36,39 +62,55 @@ export class GiftgroupComponent implements OnInit {
   @ViewChild('gridView') gridView: CodxGridviewComponent;
 
   myModel = {
-    template: null
+    template: null,
   };
   constructor(
     private fb: FormBuilder,
-    private api: ApiHttpService,
     private notificationsService: NotificationsService,
     private changedr: ChangeDetectorRef,
     private layoutService: LayoutService,
     private mwpService: CodxMwpService,
     private authStore: AuthStore,
-    injector: Injector,
+    private route: ActivatedRoute,
+    injector: Injector
   ) {
+    super(injector);
     this.user = this.authStore.get();
+    this.route.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
   columnsGrid = [];
-  ngOnInit(): void {
+  onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
     this.initForm();
     this.columnsGrid = [
       // { field: 'noName', nameColumn: '', template: this.GiftIDCell, width: 40 },
       { field: 'giftID', headerText: 'Mã đơn', width: 50 },
       { field: 'giftName', headerText: 'Tên nhóm quà tặng', width: 150 },
       { field: 'memo', headerText: 'Mô tả', template: this.memo, width: 150 },
-      { field: 'createBy', headerText: 'Người tạo', template: this.itemCreateBy, width: 200 },
-      { field: 'createdOn', headerText: 'Ngày tạo', template: this.createdOn, width: 100 }
+      {
+        field: 'createBy',
+        headerText: 'Người tạo',
+        template: this.itemCreateBy,
+        width: 200,
+      },
+      {
+        field: 'createdOn',
+        headerText: 'Ngày tạo',
+        template: this.createdOn,
+        width: 100,
+      },
     ];
     // this.mwpService.layoutcpn.next(new LayoutModel(true, '', false, true));
     this.changedr.detectChanges();
   }
   ngAfterViewInit() {
-    //this.layoutService.tableview = this.tableView;
     this.views = [
       {
         id: '1',
@@ -76,33 +118,24 @@ export class GiftgroupComponent implements OnInit {
         active: true,
         model: {
           panelLeftRef: this.panelLeftRef,
-        }
-      }
+        },
+      },
     ];
     this.userPermission = this.viewbase.userPermission;
     this.changedr.detectChanges();
-
-    // this.mwpService.layoutChange.subscribe(res => {
-    //   if (res) {
-    //     if (res.isChange)
-    //       this.showHeader = res.asideDisplay;
-    //     else
-    //       this.showHeader = true;
-    //   }
-    // })
   }
   headerStyle = {
     textAlign: 'center',
     backgroundColor: '#F1F2F3',
     fontWeight: 'bold',
-    border: 'none'
-  }
+    border: 'none',
+  };
   columnStyle = {
     border: 'none',
     fontSize: '13px !important',
     fontWeight: 400,
-    lineHeight: 1.4
-  }
+    lineHeight: 1.4,
+  };
 
   addEditForm: FormGroup;
   isAddMode = true;
@@ -115,47 +148,28 @@ export class GiftgroupComponent implements OnInit {
     if (isAddMode == true) {
       this.isAddMode = true;
       this.initForm();
-    }
-    else {
+    } else {
       this.isAddMode = false;
       this.addEditForm.patchValue(dataItem);
     }
-    document.getElementById('canvas_nhomqua').classList.add('offcanvas-on')
+    document.getElementById('canvas_nhomqua').classList.add('offcanvas-on');
   }
   initForm() {
-    this.addEditForm = this.fb.group({
-      giftName: [
-        '',
-        Validators.compose([
-          Validators.required,
-
-        ]),
-      ],
-      stop: [
-        false,
-        Validators.compose([
-        ]),
-      ],
-      giftID: [
-        '',
-        Validators.compose([
-          Validators.required,
-
-        ]),
-      ],
-      memo: [
-        '',
-        Validators.compose([
-        ]),
-      ]
-    }, { updateOn: 'change' });
+    this.addEditForm = this.fb.group(
+      {
+        giftName: ['', Validators.compose([Validators.required])],
+        stop: [false, Validators.compose([])],
+        giftID: ['', Validators.compose([Validators.required])],
+        memo: ['', Validators.compose([])],
+      },
+      { updateOn: 'change' }
+    );
   }
   valueChange(e) {
     if (e) {
       var field = e.field;
       var dt = e.data;
-      if (field === "stop")
-        this.addEditForm.patchValue({ stop: dt.checked })
+      if (field === 'stop') this.addEditForm.patchValue({ stop: dt.checked });
       else {
         var obj = {};
         obj[field] = dt?.value ? dt.value : dt;
@@ -164,43 +178,43 @@ export class GiftgroupComponent implements OnInit {
     }
   }
   deleteGift(item) {
-    this.notificationsService.alertCode("").subscribe((x: Dialog) => {
+    this.notificationsService.alertCode('').subscribe((x: Dialog) => {
       let that = this;
       x.close = function (e) {
         if (e) {
           var status = e?.event?.status;
-          if (status == "Y") {
+          if (status == 'Y') {
             that.api
-              .call("FD", "GiftsBusiness", "DeleteGiftGroupAsync", [
-                item.giftID
+              .call('FD', 'GiftsBusiness', 'DeleteGiftGroupAsync', [
+                item.giftID,
               ])
               .subscribe((res) => {
                 if (res && res.msgBodyData[0]) {
                   if (res.msgBodyData[0][0] == true) {
-                    that.gridView.removeHandler(item, "giftID");
-                  }
-                  else {
+                    that.gridView.removeHandler(item, 'giftID');
+                  } else {
                     that.notificationsService.notify(res.msgBodyData[0][1]);
                   }
                 }
               });
           }
         }
-      }
-    })
+      };
+    });
   }
 
   close(e) {
     console.log(e);
   }
   onSaveForm() {
-    if (this.addEditForm.status == "INVALID") {
-      this.notificationsService.notify("Vui lòng kiểm tra lại thông tin nhập");
+    if (this.addEditForm.status == 'INVALID') {
+      this.notificationsService.notify('Vui lòng kiểm tra lại thông tin nhập');
       return 0;
     }
     return this.api
-      .call("FD", "GiftsBusiness", "AddEditGiftGroupAsync", [
-        this.addEditForm.value, this.isAddMode
+      .call('FD', 'GiftsBusiness', 'AddEditGiftGroupAsync', [
+        this.addEditForm.value,
+        this.isAddMode,
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
@@ -210,11 +224,10 @@ export class GiftgroupComponent implements OnInit {
             this.initForm();
             let data = res.msgBodyData[0][2];
             this.userName = this.user?.userName;
-            this.gridView.addHandler(data, this.isAddMode, "giftID");
+            this.gridView.addHandler(data, this.isAddMode, 'giftID');
             this.changedr.detectChanges();
             // this.gridView.loadData();
-          }
-          else {
+          } else {
             this.notificationsService.notify(res.msgBodyData[0][1]);
           }
         }
@@ -234,17 +247,19 @@ export class GiftgroupComponent implements OnInit {
   }
 
   getGiftGroupID() {
-    this.getOneFieldAutonumber(this.funcID)
-      .subscribe((key) => {
-        this.addEditForm.patchValue({ giftID: key });
-      });
+    this.getOneFieldAutonumber(this.funcID).subscribe((key) => {
+      this.addEditForm.patchValue({ giftID: key });
+    });
   }
 
   getOneFieldAutonumber(functionID): Observable<any> {
     var subject = new Subject<any>();
-    this.api.call("AD", "AutoNumbersBusiness",
-      "CreateAutoNumberByFunction", [functionID, null])
-      .subscribe(item => {
+    this.api
+      .call('AD', 'AutoNumbersBusiness', 'CreateAutoNumberByFunction', [
+        functionID,
+        null,
+      ])
+      .subscribe((item) => {
         if (item && item.msgBodyData.length > 0)
           subject.next(item.msgBodyData[0][1]);
       });
@@ -265,8 +280,7 @@ export class GiftgroupComponent implements OnInit {
       this.isAddMode = true;
       this.closeInfor();
       this.getGiftGroupID();
-    }
-    else {
+    } else {
       this.isAddMode = false;
       this.addEditForm.patchValue(this.dataItem);
     }

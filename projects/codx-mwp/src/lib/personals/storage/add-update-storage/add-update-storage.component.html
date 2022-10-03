@@ -1,4 +1,5 @@
-<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
+    [formModel]="dialog?.formModel">
     <ng-template popup add #body>
         <div class="form-group">
             <codx-label name="lblStorageTitle" [formName]="formModel.formName" default="Kho lưu trữ">
@@ -10,7 +11,7 @@
         <div class="form-group">
             <codx-label name="lblStorageMemo" [formName]="formModel.formName" default="Diễn giải"></codx-label>
             <codx-input format="ed2" type="textarea" rows="4" field="memo" [placeholder]="gridViewSetup.title"
-                class="test-textarea" ngDefaultControl [crrValue]="formType == 'edit' ? storage?.memo : empty"
+                class="test-textarea" ngDefaultControl [crrValue]="formType == 'edit' ? storage?.memo || '' : empty"
                 (valueChange)="valueChange($event)">
             </codx-input>
         </div>

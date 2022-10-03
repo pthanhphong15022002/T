@@ -93,6 +93,9 @@ export class UserGroupsComponent extends UIComponent {
       case 'SYS03':
         this.edit(data);
         break;
+      case 'SYS04':
+        this.copy(data);
+        break;
       case 'SYS02':
         this.delete(data);
         break;
@@ -108,15 +111,24 @@ export class UserGroupsComponent extends UIComponent {
   }
 
   openPopup(item: any) {
-    this.dialog = this.callfc.openForm(ViewUsersComponent, ' ', 300, 400, '', item);
-    this.dialog.closed.subscribe(e => {
-    })
+    this.dialog = this.callfc.openForm(
+      ViewUsersComponent,
+      ' ',
+      300,
+      400,
+      '',
+      item
+    );
+    this.dialog.closed.subscribe((e) => {});
   }
 
   convertHtmlAgency(buID: any) {
     var desc = '<div class="d-flex">';
     if (buID)
-      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' + buID + '</span></div>';
+      desc +=
+        '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +
+        buID +
+        '</span></div>';
 
     return desc + '</div>';
   }
@@ -126,36 +138,79 @@ export class UserGroupsComponent extends UIComponent {
       var obj = {
         userType: 'userGroup',
         formType: 'add',
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '800px';
+      this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
+      this.dialog.closed.subscribe((x) => {
+        if (!x?.event) this.view.dataService.clear();
+      });
+    });
+  }
+
+  copy(data) {
+    var oldID = '';
+    if (data) {
+      oldID = data._uuid;
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy().subscribe((res: any) => {
+      // data.userID = this.view.dataService.dataSelected?.userID;
+      if (res) {
+        res['chooseRoles'] = data.chooseRoles;
+        var obj = {
+          userType: 'userGroup',
+          formType: 'copy',
+          dataCopy: res,
+          oldID: oldID,
+        };
       }
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '800px';
       this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
+      this.dialog.closed.subscribe((x) => {
+        if (!x?.event) this.view.dataService.clear();
+      });
     });
   }
 
   edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      // this.view.dataService.dataSelected.userID = data._uuid;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
-      var obj = {
-        userType: 'userGroup',
-        formType: 'edit',
-      }
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfunc.openSide(AddUserGroupsComponent, obj, option);
-    });
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          userType: 'userGroup',
+          formType: 'edit',
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfunc.openSide(
+          AddUserGroupsComponent,
+          obj,
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (!x?.event) this.view.dataService.clear();
+        });
+      });
   }
 
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-    this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
-  };
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe();
+  }
 
   //#region Functions
   changeView(evt: any) {

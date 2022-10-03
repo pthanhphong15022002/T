@@ -332,7 +332,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.approveControl = '3';
               this.data.refDate = new Date();
 
-              this.autoNo = JSON.parse(JSON.stringify(this.data.refNo));
+              this.autoNo = JSON.parse(JSON.stringify(this.data?.refNo));
 
               this.formModelCustom.currentData = this.data;
               this.dialogSignFile.patchValue(this.data);
@@ -849,7 +849,7 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  saveCategoryTemplate() { }
+  saveCategoryTemplate() {}
   //#endregion
 
   //#region Change Tab

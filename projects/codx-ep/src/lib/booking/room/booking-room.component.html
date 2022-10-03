@@ -1,5 +1,5 @@
 <codx-views
-#base
+#view
 [funcID]="funcID"
 [service]="service"
 [assemblyName]="assemblyName"
@@ -13,13 +13,11 @@
 [idField]="idField"
 [className]="className"
 [method]="method"
-(requestEnded)="closeEditForm($event)"
 (selectedChange)="changeItemDetail($event)"
 [selectedFirst]="true"
 [autoLoad]="true"
 
 >
-</codx-views>
 
 <ng-template #chart>
   <room-dashboard></room-dashboard>
@@ -34,28 +32,29 @@
 </ng-template>
 
 <ng-template #resourceHeader let-data>
-  <div class="container">
-    <div class="row">
-      <div class="col-4">
-        <div>
-          <codx-img
-            [objectId]="data.resourceData.recID"
-            [objectType]="'EP_Rooms'"
-            [width]="50"
-          ></codx-img>
-        </div>
+  <div class="d-flex flex-row ms-5 align-items-center">
+    <codx-img [objectId]="data?.resourceData.recID" [imageType]="'square'" width="50" [objectType]="'EP_Rooms'"></codx-img>  
+    <div class="ms-2 d-flex flex-column">
+      <span class="fw-bold">{{data?.resourceData.resourceName}}</span>
+      <div class="d-flex flex-row">
+        <codx-label default="Phân loại:" [formModel]="formModel" name="lblRanking" class="text-gray-600"></codx-label>
+        <span class="fw-bold ms-1">{{ data?.resourceData.ranking| vll: "EP005" : 'text' | async}}</span>
       </div>
-      <div class="col-8">
+      <div class="d-flex flex-row">
         <div>
-          {{ data.resourceData.resourceName }} ({{ data.resourceData.events }})
+          <codx-label default="Diện tích:" name="lblArea" class="text-gray-600"></codx-label>
+          
+          <span class="fw-bold ms-1">{{data?.resourceData.area}} m2</span>
         </div>
-        <div>{{ data.resourceData.companyID }}</div>
-        <div class="row">
-          <span>{{ data.resourceData.location }}</span>
-        </div>
+        <!-- <span class="text-gray-600">&ensp;|&ensp;</span>
+        <div>
+          <codx-label default="Sức chứa:" name="lblCapacity" class="text-gray-600"></codx-label>
+          
+          <span class="fw-bold ms-1">{{data?.resourceData.capacity}} người</span>
+        </div> -->
       </div>
     </div>
-  </div>
+  </div> 
 </ng-template>
 <!-- <ng-template #resourceTootip let-data>
   <div class="template-wrap">
@@ -128,28 +127,20 @@
       {{ data.memo }}
     </span>
   </div>
-  
-  <div>
-    <div class="d-flex mb-2">
-      <div class="align-items-center d-flex text-dark me-6">
-        <codx-label
-          default="Thành viên: "
-          name="lblAttendees"
-          class="text-gray-600 me-4"
-        ></codx-label>
-        <div class="d-flex justify-content-end">
-          <codx-imgs
-            [objectId]="data.bookingAttendees"
-            objectType="AD_Users"
-            [numberImages]="7"
-            [width]="30"
-          >
-          </codx-imgs>
-        </div>
+  <div class="d-flex mb-2">
+    <div class="d-flex text-dark me-6">
+      <codx-label default="Người tham gia" class="text-gray-600 me-4"> </codx-label>
+      <div class="d-flex justify-content-end">
+        <codx-imgs
+          [objectId]="data?.bookingAttendees"
+          objectType="AD_Users"
+          [numberImages]="6"
+          [width]="30"
+        >
+        </codx-imgs>
       </div>
     </div>
   </div>
-
   <hr />
   <div *ngIf="data.bookingItems?.length>0">
     <div *ngFor="let item of data.bookingItems">  
@@ -192,30 +183,6 @@
     
   </div>
 </ng-template>
-<!-- 
-<ng-template #subTitleTmp let-data>
-  <div class="d-flex mt-1 flex-grow-1 mb-2">
-    <div class="d-flex me-6">
-      <i class="icon-calendar_today me-1"></i>
-      <span class="text-gray-600">
-        {{ data ? (data?.createdOn | date: "dd/MM/yyyy") : "dd/MM/yyyy" }}
-      </span>
-    </div>
-    <div class="d-flex me-6">
-      <i class="icon-access_time me-1"></i>
-      <span class="text-gray-600">
-        {{ data?.startDate | date: "shortTime" }}
-      </span>
-      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
-        "-"
-      }}</span>
-      <span class="text-gray-600">
-        {{ data?.endDate | date: "shortTime" }}
-      </span>
-    </div>
-  </div>
-</ng-template> -->
-
 <ng-template #subTitleTmp let-data>
   <div class="row">
     <div class="row">
@@ -286,3 +253,5 @@
   ></booking-room-view-detail>
 </ng-template>
 <ng-template #footerTmp let-data> </ng-template>
+
+</codx-views>

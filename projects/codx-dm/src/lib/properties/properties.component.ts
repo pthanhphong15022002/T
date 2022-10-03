@@ -41,7 +41,7 @@ export class PropertiesComponent implements OnInit {
   titleRating = 'Đánh giá';
   titleRatingDesc = 'Đánh giá tài liệu này ?';
   titleRatingDesc2 = 'Cho người khác biết suy nghĩ của bạn!';
-  titleSend = 'Gởi';
+  titleSend = 'Gửi';
   titleHistory = 'Lịch sử';
   readonly = false;
   currentRate = 1;
@@ -64,7 +64,7 @@ export class PropertiesComponent implements OnInit {
   styleRating: string;
   historyFileName: string;
   fileEditing: FileUpload;
-  commenttext: string;
+  commenttext: string = "";
   shareContent: string;
   requestContent: string;
   requestTitle: string;
@@ -131,29 +131,12 @@ export class PropertiesComponent implements OnInit {
         doc.setAttribute("style", "display: block");
         ext.classList.add("rotate-back");
       }
-        
-      // if (doc.classList.contains("w-400px"))
-      //   doc.classList.remove("w-400px");
-      // else
-      //   doc.classList.add("w-400px");
     }
-
-    // if (this.hideExtend)
-    //   document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 900px; z-index: 1000;");
-    // else
-    //   document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 550px; z-index: 1000;");
    
     this.changeDetectorRef.detectChanges();
-    // var body = $('#dms_properties');
-    // if (body.length == 0) return;
-    // if (body.hasClass('extend-show'))
-    //   body.removeClass('extend-show');
-    // else
-    //   body.addClass('extend-show');
   }
 
   setComment() {
-    var that = this;
     this.fileService.setViewFile(this.id, this.currentRate.toString(), this.commenttext).subscribe(async res => {
       if (res.status == 0) {
         this.currentRate = 1;
@@ -181,9 +164,9 @@ export class PropertiesComponent implements OnInit {
 
   getThumbnail(data) {
     if (data.hasThumbnail)
-      return `${environment.urlUpload}/${data.thumbnail}`;
+      return environment.urlUpload + "/" +data.thumbnail;
     else
-     return `../../../assets/codx/dms/{{getAvatar(data.extension)}}`;
+     return `../../../assets/codx/dms/`+this.getAvatar(data.extension);
   }
 
   getAvatar(filename: string) {
@@ -233,6 +216,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   txtValue($event, type) {
+    debugger;
     switch(type) {
       case "commenttext":
         this.commenttext = $event.data;
@@ -241,20 +225,15 @@ export class PropertiesComponent implements OnInit {
   }
 
   openProperties(id): void {
-   // var that = this;
     this.id = id;
     this.totalViews = 0;
     this.readonly = false;
     this.commenttext = '';
     this.requestTitle = "";
-    // this.contentRequest = "";
-    // this.contentShare = "";
-
     this.changeDetectorRef.detectChanges();
     this.fileService.getFile(id, false).subscribe(async res => {
       if (res != null) {
         this.fileEditing = res;
-        //  console.log(this.fileEditing);
         this.onUpdateTags();
         this.currentRate = 1;
         this.getRating(res.views);
@@ -271,13 +250,6 @@ export class PropertiesComponent implements OnInit {
         }
         
         this.changeDetectorRef.detectChanges();
-        // if (that.view == "1") {
-        //   $('.viewfile').css('z-index', '1000');
-        // }
-        // $('#dms_share').css('z-index', '9999');
-        // $('#dms_properties').css('z-index', '9999');
-        // $('#dms_request-permission').css('z-index', '9999');
-        // $('#dms_properties').addClass('offcanvas-on');
       }
     });
   }
@@ -340,45 +312,6 @@ export class PropertiesComponent implements OnInit {
   openRight(mode = 1, type = true) {
     this.dmSV.dataFileEditing = this.fileEditing;            
     this.callfc.openForm(RolesComponent, "", 950, 650, "", [""], "");
-    // if (this.fileEditing != null)
-    //   this.fileEditingOld = JSON.parse(JSON.stringify(this.fileEditing));
-    // if (mode == 2) {
-    //   // $('app-customdialog').css('z-index', '1000');
-    //   this.onSetPermision(type);
-    // }
-    // //  $('#dms_properties').css('z-index', '1000');    
-    // this.modeRequest = "";
-    // this.modeShare = "";
-    // var index = 0;
-    // var i = 0;
-    // this.currentPemission = -1;
-    // if (this.modeSharing) { //findIndex
-    //   index = this.fileEditing.permissions.findIndex(d => d.isSharing);
-    // }
-
-    // if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0 && index > -1) {
-    //   if (this.fileEditing.permissions[index].startDate != null && this.fileEditing.permissions[index].startDate != null)
-    //     this.startDate = this.formatDate(this.fileEditing.permissions[index].startDate.toString());
-    //   if (this.fileEditing.permissions[index].endDate != null && this.fileEditing.permissions[index].endDate != null)
-    //     this.endDate = this.formatDate(this.fileEditing.permissions[0].endDate.toString());
-    // }
-
-    // // modal-xs/modal-sm/modal-md/modal-lg/modal-xl   
-    // this.openDialogFolder(this.contentRight, "lg", "right");
-    // if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0)
-    //   this.changePermission(index);
-    // else {
-    //   this.full = false;
-    //   this.create = false;
-    //   this.read = false;
-    //   this.update = false;
-    //   this.delete = false;
-    //   this.download = false;
-    //   this.share = false;
-    //   this.upload = false;
-    //   this.assign = false;
-    // }
-    // this.changeDetectorRef.detectChanges();
   }
 
   getSizeByte(size: any) {
@@ -403,16 +336,10 @@ export class PropertiesComponent implements OnInit {
     else
       return "icon-star text-muted icon-16 mr-1";
   }
-
-  viewfile(history, content, id) {
-    // if (this.checkReadRight()) {
-    //  $('#dms_properties').css('z-index', '1');
-    // var obj = new objectPara();
-    // obj.fileID = id + "|" + history.recID;
-    // obj.fileName = history.fileName;
-    // obj.extension = history.extension;
-    // // obj.data = JSON.parse(this.data);
-    // this.systemDialogService.onOpenViewFileDialog.next(obj);
+  getInformation(id:any)
+  {
+    // this.api.execSv("HR","HR","EmployeesBusiness","GetEmpUsers",id).subscribe(item=>{
+      
+    // })
   }
-
 }

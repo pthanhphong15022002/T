@@ -9,6 +9,7 @@ import {
   Output,
   EventEmitter,
   Injector,
+  TemplateRef,
 } from '@angular/core';
 import {
   DialogData,
@@ -45,6 +46,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload?: ImageViewerComponent;
   @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
+  @ViewChild('firstComment') firstComment: TemplateRef<any>;
 
   title = '';
   dialog!: DialogRef;
@@ -73,6 +75,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   dataUG: any = new Array();
   comments: any;
   tmpPost: any;
+  dataCopy: any;
+  dataComment: any;
 
   constructor(
     private injector: Injector,
@@ -86,14 +90,27 @@ export class AddUserComponent extends UIComponent implements OnInit {
     super(injector);
     this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
+    this.dataCopy = dt?.data?.dataCopy;
     this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
+      this.adUser.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
         JSON.stringify(this.data?.chooseRoles)
       );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
+    } else if (this.formType == 'copy') {
+      this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
+      this.adUser.phone = '';
+      this.adUser.email = '';
+      if (this.dataCopy?.chooseRoles) {
+        this.viewChooseRole = this.dataCopy?.chooseRoles;
+        this.viewChooseRoleTemp = JSON.parse(
+          JSON.stringify(this.dataCopy?.chooseRoles)
+        );
+        this.countListViewChoose();
+      }
     } else this.adUser.buid = '';
     this.dialog = dialog;
     this.user = auth.get();
@@ -105,7 +122,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {
+  onInit(): void { }
+
+  ngAfterViewInit() {
+    this.formModel = this.form?.formModel;
     if (this.formType == 'edit') {
       this.title = 'Cập nhật người dùng';
       this.isAddMode = false;
@@ -113,18 +133,15 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .getUserGroupByID(this.adUser.userGroup)
         .subscribe((res) => {
           if (res) this.dataUG = res;
+          console.log('check this.dataUG', this.dataUG);
         });
-    } else this.title = this.form?.title;
+    } else this.title = 'Thêm người dùng';
     this.formGroupAdd = new FormGroup({
       userName: new FormControl('', Validators.required),
       buid: new FormControl('', Validators.required),
       email: new FormControl('', Validators.required),
       phone: new FormControl('', Validators.required),
     });
-  }
-
-  ngAfterViewInit() {
-    this.formModel = this.form?.formModel;
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
         if (this.dataAfterSave && this.dataAfterSave.userID) {
@@ -151,7 +168,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adService.notifyInvalid(this.formUser, this.formModel);
       return;
     } else {
-      if (this.checkValueChangeUG == true || this.adUser.userGroup) {
+      if (
+        this.checkValueChangeUG == true ||
+        (this.adUser.userGroup && this.dataUG && this.dataUG?.length > 0)
+      ) {
         this.dataUG.forEach((dt) => {
           var userID = '';
           var userName = '';
@@ -163,7 +183,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             userName = dt.UserName;
           }
           if (userID == this.adUser.userGroup) {
-            if (this.formType == 'add') {
+            if (this.formType == 'add' || this.formType == 'copy') {
               this.notification
                 .alertCode('AD003', null, "'" + userName + "'")
                 .subscribe((info) => {
@@ -192,7 +212,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   openPopupRoles(item: any) {
     this.countOpenPopRoles++;
-    if (this.formType == 'add') {
+    if (this.formType == 'add' || this.formType == 'copy') {
       if (this.countOpenPopRoles == 1) this.addUserTemp();
     }
     var option = new DialogModel();
@@ -272,9 +292,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var checkDifference =
       JSON.stringify(this.viewChooseRoleTemp) ===
       JSON.stringify(this.viewChooseRole);
-    if (this.formType == 'add') {
+    if (this.formType == 'add' || this.formType == 'copy') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
+      if (this.formType == 'copy') {
+        this.viewChooseRole.map((dt) => {
+          dt.userID = this.adUser.userID;
+        });
+      }
       data = [this.adUser, this.viewChooseRole, true, false];
     }
     if (this.formType == 'edit') {
@@ -304,11 +329,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
               if (result) {
+                debugger;
                 this.loadData.emit();
               }
-              this.dialog.close(res?.save);
+              this.dialog.close(res.save);
             });
           res.save.chooseRoles = res.save?.functions;
+          (this.dialog.dataService as CRUDService).update(res.save).subscribe();
           this.changeDetector.detectChanges();
         }
       });
@@ -330,10 +357,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
               });
           }
           res.update.chooseRoles = res.update.functions;
-          // (this.dialog.dataService as CRUDService)
-          //   .update(res.update)
-          //   .subscribe();
-          //this.dialog.close();
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+          this.dialog.close(res.update);
+
           this.changeDetector.detectChanges();
         }
       });
@@ -360,9 +388,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 if (res) {
                   res.chooseRoles = res?.functions;
                   this.dialog.close(res);
-                  /* (this.dialog.dataService as CRUDService)
+                  (this.dialog.dataService as CRUDService)
                     .update(res)
-                    .subscribe(); */
+                    .subscribe();
                   this.changeDetector.detectChanges();
                 }
               });
@@ -376,80 +404,18 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   getHTMLFirstPost(data) {
-    this.comments = `<div class="card border rounded-4 border">
-    <!--begin::Body-->
-    <div class="card-body d-flex">
-      <!--begin::Wrapper-->
-      <div class="d-flex flex-column w-350px me-4">
-        <a href="/" class="mb-2">
-          <img alt="Logo" class="h-15px " src="assets/themes/wp/default/img/WP.svg">
-        </a>
-        <h4 class="fw-bolder text-primary">Chào mừng thành viên mới</h4>
-        <div class="mb-4">Rất hân hạnh chào đón bạn đến với chúng tôi. Chúng tôi tin rằng với khả năng và nhiệt huyết
-          của mình, bạn sẽ là một nhân tố giúp công ty ngày càng phát triển hơn. </div>
-        <!--begin::user center-->
-        <div class="d-flex align-items-center flex-center  py-2 px-6">
-          <div class="symbol symbol-40px symbol-circle me-4">
-            <codx-img #image objectId="ADMIN"></codx-img>
-          </div>
-          <div class="d-flex flex-column w-100">
-            <div class="text-dark fw-bold fs-5">${data.userName}</div>
-            <div class="text-gray-400">${
-              data.positionName ? data.positionName : ''
-            }</div>
-          </div>
-        </div>
-        <!--end::user center-->
-      </div>
-      <!--begin::Wrapper-->
-      <!--begin::Illustration-->
-      <img src="/assets/themes/sys/default/img/Welcome.svg" class="position-absolute me-3  end-0 h-175px" alt="">
-      <!--end::Illustration-->
-    </div>
-    <!--end::Body-->
-  </div>`;
-
-    /*Init first post*/
-    // var permissions = [
-    //   {
-    //     memberType: '1',
-    //     objectType: '1',
-    //     objectID: 'ADMIN',
-    //     objectName: 'Lê Phạm Hoài Thương',
-    //     full: true,
-    //     read: true,
-    //     write: true,
-    //     update: true,
-    //     delete: true,
-    //     assign: true,
-    //     share: true,
-    //     upload: true,
-    //     download: true,
-    //     isActive: true,
-    //   },
-    //   {
-    //     memberType: '2',
-    //     objectType: '7',
-    //     read: true,
-    //     share: true,
-    //     isActive: true,
-    //   },
-    //   {
-    //     memberType: '2',
-    //     objectType: '9',
-    //     read: true,
-    //     share: true,
-    //     isActive: true,
-    //   },
-    // ];
+    this.dataComment = data;
+    var viewRef = this.firstComment.createEmbeddedView({ $implicit: '' });
+    viewRef.detectChanges();
+    let contentDialog = viewRef.rootNodes;
+    let html = contentDialog[1] as HTMLElement;
     this.tmpPost = {
-      content: this.comments,
+      content: html.innerHTML,
       approveControl: '0',
       category: '1',
       shareControl: '9',
       listTag: [],
     };
-    /*Init first post*/
   }
 
   reloadAvatar(data: any): void {
@@ -498,7 +464,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.adUser.employeeID = employeeID;
           this.adUser.userName = employee.employeeName;
           this.adUser.buid = employee.organizationID;
-          if (this.formType == 'add') {
+          this.adUser['positionName'] = employee.positionName;
+          if (this.formType == 'add' || this.formType == 'copy') {
             this.adUser.email = employee.email;
             this.adUser.phone = employee.phone;
           } else this.adUser['phone'] = this.adUser.mobile;

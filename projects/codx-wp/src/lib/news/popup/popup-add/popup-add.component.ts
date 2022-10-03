@@ -109,9 +109,7 @@ export class PopupAddComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.cache.message('WP017').subscribe((mssg: any) => {
-      if (mssg) this.messageImage = Util.stringFormat(mssg.defaultName);
-    })
+    this.getMessage("SYS009")
     this.setDataDefault();
   }
 
@@ -128,57 +126,48 @@ export class PopupAddComponent implements OnInit {
     this.objectType = "";
     this.initForm();
   }
+
+  mssgCodeNoty:any = null;
+  getMessage(mssCode:string){
+    this.cache.message(mssCode).subscribe((mssg: any) => {
+      if(mssg){
+        this.mssgCodeNoty = mssg;
+      }
+    });
+  }
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
   clickInsertNews() {
     if (!this.formGroup.controls['Category'].value) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = Util.stringFormat(mssg.defaultName, "Loại bài viết");
-          this.notifSV.notify(mssgCode);
-        }
-      });
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Loại bài viết");
+      this.notifSV.notify(mssgCode);
       return;
     }
     if (!this.formGroup.controls['Subject'].value) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = Util.stringFormat(mssg.defaultName, "Tiêu đề");
-          this.notifSV.notify(mssgCode);
-        }
-      });
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Tiêu đề");
+      this.notifSV.notify(mssgCode);
       return;
     }
     if (!this.formGroup.controls['SubContent'].value) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = Util.stringFormat(mssg.defaultName, "Mô tả");
-          this.notifSV.notify(mssgCode);
-        }
-      });
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Mô tả");
+      this.notifSV.notify(mssgCode);
       return;
     }
     if (!this.formGroup.controls['Contents'].value) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = Util.stringFormat(mssg.defaultName, "Nội dung");
-          this.notifSV.notify(mssgCode);
-        }
-      });
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Nội dung");
+      this.notifSV.notify(mssgCode);
       return;
     }
-    if (this.fileUpload.length == 0) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = "";
-          if (this.newsType == this.NEWSTYPE.POST)
-            mssgCode = Util.stringFormat(mssg.defaultName, "Hình ảnh");
-          else mssgCode = Util.stringFormat(mssg.defaultName, "Hình ảnh/Video");
-          this.notifSV.notify(mssgCode);
-        }
-      });
-      return;
+    if(!this.fileImage) 
+    {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Hình ảnh đính kèm");
+      this.notifSV.notify(mssgCode);
+    }
+    if(this.newsType == this.NEWSTYPE.VIDEO && !this.fileVideo) 
+    {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Video đính kèm");
+      this.notifSV.notify(mssgCode);
     }
     let tmpNews = new WP_News();
     tmpNews = this.formGroup.value;
@@ -186,6 +175,12 @@ export class PopupAddComponent implements OnInit {
     tmpNews.shareControl = this.shareControl;
     tmpNews.objectType = this.objectType;
     tmpNews.permissions = this.permissions;
+    this.fileUpload = [];
+    this.fileUpload.push(this.fileImage);
+    if(this.newsType == this.NEWSTYPE.VIDEO)
+    {
+      this.fileUpload.push(this.fileVideo);
+    }
     this.api
       .execSv(
         'WP',
@@ -199,12 +194,12 @@ export class PopupAddComponent implements OnInit {
           let data = res;
           if (this.fileUpload.length > 0) {
             this.codxATMImage.objectId = data.recID;
-            this.dmSV.fileUploadList = [...this.fileUpload];
+            this.dmSV.fileUploadList = this.fileUpload;
             (await this.codxATMImage.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
                   this.notifSV.notifyCode('SYS006');
-                  this.dialogRef.close();
+                  this.dialogRef.close(data);
                 }
               }
             );
@@ -215,52 +210,34 @@ export class PopupAddComponent implements OnInit {
 
   approPost() {
     if (!this.formGroup.controls['Category'].value) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = Util.stringFormat(mssg.defaultName, "Loại bài viết");
-          this.notifSV.notify(mssgCode);
-        }
-      });
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Loại bài viết");
+      this.notifSV.notify(mssgCode);
       return;
     }
     if (!this.formGroup.controls['Subject'].value) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = Util.stringFormat(mssg.defaultName, "Tiêu đề");
-          this.notifSV.notify(mssgCode);
-        }
-      });
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Tiêu đề");
+      this.notifSV.notify(mssgCode);
       return;
     }
     if (!this.formGroup.controls['SubContent'].value) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = Util.stringFormat(mssg.defaultName, "Mô tả");
-          this.notifSV.notify(mssgCode);
-        }
-      });
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Mô tả");
+      this.notifSV.notify(mssgCode);
       return;
     }
-    if(!this.formGroup.controls['Contents'].value && this.newsType == this.NEWSTYPE.POST){
-      this.cache.message("SYS009").subscribe((mssg:any) => {
-        if(mssg){
-          let mssgCode = Util.stringFormat(mssg.defaultName,"Nội dung");
-          this.notifSV.notify(mssgCode);
-        }
-      });
+    if (!this.formGroup.controls['Contents'].value) {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Nội dung");
+      this.notifSV.notify(mssgCode);
       return;
     }
-    if (this.fileUpload.length == 0) {
-      this.cache.message("SYS009").subscribe((mssg: any) => {
-        if (mssg) {
-          let mssgCode = "";
-          if (this.newsType == this.NEWSTYPE.POST)
-            mssgCode = Util.stringFormat(mssg.defaultName, "Hình ảnh");
-          else mssgCode = Util.stringFormat(mssg.defaultName, "Hình ảnh/Video");
-          this.notifSV.notify(mssgCode);
-        }
-      });
-      return;
+    if(!this.fileImage) 
+    {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Hình ảnh đính kèm");
+      this.notifSV.notify(mssgCode);
+    }
+    if(this.newsType == this.NEWSTYPE.VIDEO && !this.fileVideo) 
+    {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Video đính kèm");
+      this.notifSV.notify(mssgCode);
     }
     let tmpNews = new WP_News();
     tmpNews = this.formGroup.value;
@@ -268,6 +245,13 @@ export class PopupAddComponent implements OnInit {
     tmpNews.shareControl = this.shareControl;
     tmpNews.objectType = this.objectType;
     tmpNews.permissions = this.permissions;
+    this.fileUpload = [];
+    this.fileUpload.push(this.fileImage);
+    if(this.newsType == this.NEWSTYPE.VIDEO)
+    {
+      this.fileUpload.push(this.fileVideo);
+    }
+    
     this.api
       .execSv(
         'WP',
@@ -281,32 +265,18 @@ export class PopupAddComponent implements OnInit {
           let data = res;
           if (this.fileUpload.length > 0) {
             this.codxATMImage.objectId = data.recID;
-            this.codxATMImage.fileUploadList = [...this.fileUpload];
+            this.codxATMImage.fileUploadList = this.fileUpload;
             (await this.codxATMImage.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
                   this.notifSV.notifyCode('SYS006');
-                  this.dialogRef.close(res);
+                  this.dialogRef.close(data);
                 }
               }
             );
           }
         }
       });
-  }
-  insertWPComment(data: WP_News, approveControl: string) {
-    if (data.createPost) {
-      var post = new WP_Comments();
-      post.category = "4";
-      post.refID = data.recID;
-      post.refType = "WP_News";
-      post.content = data.subject;
-      post.shareControl = data.shareControl;
-      post.permissions = data.permissions;
-      post.approveControl = approveControl;
-      post.approveStatus = null;
-      this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post, null]).subscribe();
-    }
   }
   valueChange(event: any) {
     if (!event || !event.field || !event.data) {
@@ -447,22 +417,22 @@ export class PopupAddComponent implements OnInit {
     }
   }
 
-  addFiles(file: any) {
-    if (file && file.data.length > 0) {
-      file.data.map(f => {
+  addFiles(files: any) {
+    if (files && files.data.length > 0) {
+      files.data.map(f => {
         if (f.mimeType.indexOf("image") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
+          this.fileImage = f;
         }
         else if (f.mimeType.indexOf("video") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.VIDEO;
+          this.fileVideo = f;
         }
-        else {
-          f['referType'] = this.FILE_REFERTYPE.APPLICATION;
+        else{
+          this.notifSV.notify("Vui lòng chọn file hình ảnh hoặc video");
+          return;
         }
       });
-      this.fileUpload = [...file.data];
-      this.dmSV.fileUploadList = [...file.data]
-
       this.changedt.detectChanges();
     }
   }
@@ -502,6 +472,6 @@ export class PopupAddComponent implements OnInit {
     this.codxATMImage.uploadFile();
   }
   clickUploadVideo() {
-    this.codxATMVideo.uploadFile();
+    this.codxATMImage.uploadFile();
   }
 }

@@ -1,122 +1,62 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [subHeaderText]="subHeaderText"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialogRef"
-  [formModel]="formModel"
-  [data]="data"
-  *ngIf="isAfterRender"
->
-  <ng-template #body>
+<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+  [dialog]="dialogRef" [formModel]="formModel" [data]="data" *ngIf="isAfterRender">
+  
+  <ng-template #body>    
     <div class="form-group">
-      <codx-label
-        fiedName="ResourceName"
-        [formModel]="form.formModel"
-      >
+      <codx-label fiedName="ResourceName" [formModel]="form.formModel">
       </codx-label>
-      <codx-input
-        ControlName="resourceName"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      >
+      <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
       </codx-input>
     </div>
 
     <div class="row">
       <div class="form-group col-5">
-        <codx-label
-          fiedName="Ranking"
-          [formModel]="form.formModel"
-        >
+        <codx-label fiedName="Ranking" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          ControlName="ranking"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup">
+        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">
           >
         </codx-input>
       </div>
 
       <div class="form-group col-3">
-        <codx-label
-          fiedName="Area"
-          [formModel]="form.formModel"
-        >
+        <codx-label fiedName="Area" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          type="number"
-          [min]="0"
-          ControlName="area"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input type="number" [min]="0" ControlName="area" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
       <div class="form-group col-4">
-        <codx-label
-          fiedName="Capacity"
-          [formModel]="form.formModel"
-        >
+        <codx-label fiedName="Capacity" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          type="text"
-          [min]="0"
-          ControlName="capacity"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input type="text" [min]="0" ControlName="capacity" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
     </div>
 
     <div class="row">
       <div class="form-group col-4">
-        <codx-label
-          fiedName="Location"
-          [formModel]="form.formModel"
-        >
+        <codx-label fiedName="Location" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          ControlName="location"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input ControlName="location" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
 
       <div class="col-8 form-group">
-        <codx-label
-          fiedName="CompanyID"
-          [formModel]="form.formModel"
-        >
+        <codx-label fiedName="CompanyID" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          ControlName="companyID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input ControlName="companyID" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
     </div>
 
     <div class="form-group">
-      <codx-label
-        fiedName="Owner"
-        [formModel]="form.formModel"
-      >
+      <codx-label fiedName="Owner" [formModel]="form.formModel">
       </codx-label>
-        <codx-input
-          ControlName="owner"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-input>
+      <codx-input ControlName="owner" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
     </div>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
       <codx-label
         fiedName="Preparator"
         [formModel]="form.formModel"
@@ -128,35 +68,21 @@
           [Group]="form.formGroup"
         >
         </codx-input>
-    </div>
+    </div> -->
 
     <div class="row">
       <div class="form-group">
-        <codx-label
-          fiedName="Note"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-          ControlName="note"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
+        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
     </div>
     <div class=" form-group d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2">
-      <codx-label
-        fiedName="Equipments"
-        [formModel]="form.formModel"
-      ></codx-label>
+      <codx-label fiedName="Equipments" [formModel]="form.formModel"></codx-label>
 
       <span class="text-end align-items-end">
-        <button
-          type="button"
-          class="btn btn-clean btn-sm btn-icon btn-icon-md"
-          data-dismiss="modal"
-          (click)="openPopupDevice(popupDevice)"
-          >
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+          (click)="openPopupDevice(popupDevice)">
           <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
         </button>
       </span>
@@ -164,24 +90,18 @@
     <div class="form-group">
       <div class="col-12 d-flex justify-content-between">
         <div class="d-flex" *ngFor="let item of tmplstDevice">
-          <span
-            class="d-flex align-items-center me-2 mb-2"
-            [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
-          >
-            <span
-            class="me-1"
-            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']"
-          >
-            </span
-            >{{ item.text }}
+          <span class="d-flex align-items-center me-2 mb-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
+            <span class="me-1"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
+            </span>{{ item.text }}
           </span>
         </div>
       </div>
     </div>
-    
+
     <div class="form-group upload-img">
       <codx-img #imageUpLoad [width]="100" imageType="square" [objectType]="formModel?.entityName" aria-disabled="false"
-          [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="data?.recID">
+        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="data?.recID">
       </codx-img>
     </div>
 
@@ -190,11 +110,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-light-primary" (click)="onSaveForm()">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="form.formModel"
-        ></codx-label>
+        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
       </button>
     </div>
   </ng-template>
@@ -205,29 +121,16 @@
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
           <h2 id="modal-basic-title">
-            <codx-label
-              name="lblEquipment"
-              default="Thiết bị"
-              [formModel]="form.formModel"
-            ></codx-label>
+            <codx-label name="lblEquipment" default="Thiết bị" [formModel]="form.formModel"></codx-label>
           </h2>
-          <button
-            type="button"
-            class="btn btn-xs btn-icon btn-light btn-hover-primary"
-            aria-label="Close"
-            (click)="dialog.close()"
-          >
-            <span
-              class="icon-close icon-20 text-dark text-hover-primary"
-            ></span>
+          <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+            (click)="dialog.close()">
+            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
           </button>
         </div>
         <div class="text-dark-50">
-          <codx-label
-            name="lblChooseEquipments"
-            default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
-            [formModel]="form.formModel"
-          ></codx-label>
+          <codx-label name="lblChooseEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+            [formModel]="form.formModel"></codx-label>
         </div>
       </div>
     </div>
@@ -235,23 +138,19 @@
       <div class="py-2" *ngFor="let item of tmplstDevice">
         <div class="d-flex flex-stack">
           <div class="d-flex">
-            <span class="text-dark me-2 p-1" [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
+            <span class="text-dark me-2 p-1"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
             </span>
             <div class="d-flex flex-column justify-content-center">
               <span href="#" class="text-dark fw-bolder">{{
                 item.text
-              }}</span>
+                }}</span>
             </div>
           </div>
           <div class="d-flex justify-content-end">
             <div class="form-check form-check-solid form-switch">
-              <codx-input
-                class="form-check-input w-35px h-20px"
-                type="switch"
-                id="googleswitch"
-                [checked]="item.isSelected"
-                (valueChange)="checkedChange($event, item)"
-              ></codx-input>
+              <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
+                [checked]="item.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
               <label class="form-check-label" for="googleswitch"></label>
             </div>
           </div>
@@ -260,11 +159,7 @@
     </div>
     <div class="modal-footer" (click)="dialog.close()">
       <button type="button" class="btn btn-primary">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="form.formModel"
-        ></codx-label>
+        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
       </button>
     </div>
   </ng-template>

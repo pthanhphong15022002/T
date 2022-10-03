@@ -26,6 +26,9 @@ export class CardsComponent extends UIComponent {
   itemSelected: any = null;
   cardType = "";
   funcID:string = "";
+  selectedID:string = "";
+  grdViewSetup:any = null;
+  ratingVLL:string = "";
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
@@ -40,6 +43,24 @@ export class CardsComponent extends UIComponent {
 
 
   onInit(): void {
+    this.router.params.subscribe((param:any)=>{
+      if(param){
+        let funcID = param['funcID'];
+        if(funcID){
+          this.funcID = funcID;
+          this.cache.functionList(funcID).subscribe((func:any)=>{
+            if(func){
+              this.cache.gridViewSetup(func.formName,func.gridViewName)
+              .subscribe((grd:any)=>{
+                if(grd){
+                  this.ratingVLL = grd['Rating']['referedValue'];
+                }
+              });
+            }
+          });
+        }
+      }
+    });
   }
   ngAfterViewInit() {
     this.buttonAdd = {
@@ -59,7 +80,6 @@ export class CardsComponent extends UIComponent {
     ];
   }
 
-  selectedID:string = "";
   selectedItem(event: any) {
     if(!event || !event.data){
       this.selectedID = "";
@@ -74,7 +94,6 @@ export class CardsComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
-    this.funcID = this.router.snapshot.paramMap.get('funcID');
     this.callfc.openSide(PopupAddCardsComponent, this.funcID, option);
   }
 

@@ -10,6 +10,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
+    
       <div class="form-group">
         <codx-label
           fiedName="ResourceName"
@@ -90,8 +91,7 @@
           [formModel]="form.formModel"
         >
         </codx-label>
-        <codx-input 
-            
+        <codx-input             
           [disabled]="data?.category == 1 ? false :true"
           ControlName="companyID"
           [formModel]="form.formModel"
@@ -146,14 +146,6 @@
           [Group]="form.formGroup"
         >
         </codx-input>   
-        <!-- <codx-input
-          type="textarea" format="ed2" rows="3"
-          ControlName="note"
-          placeholder="Ghi chú"
-          [crrValue]="form.formGroup.value.note"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input> -->
       </div>
     </div>
     <div
@@ -195,10 +187,14 @@
       </div>
     </div>
     <div class="form-group upload-img">
-      <codx-img #imageUpLoad [width]="100" imageType="square" [objectType]="formModel?.entityName" aria-disabled="false"
-          [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="data?.recID">
+      <codx-img #imageUpLoad [width]="100" imageType="square" 
+        [objectType]="formModel?.entityName" aria-disabled="false"
+          [funcId]="formModel?.funcID" 
+          [isAllowEdit]="true" 
+          [objectId]="data?.recID">
       </codx-img>
     </div>
+      
   </ng-template>
 
   <ng-template #footer>
@@ -249,7 +245,7 @@
         <div class="d-flex flex-stack">
           <div class="d-flex">
             <span class="text-dark me-2 p-1" 
-              [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
             </span>
             <div class="d-flex flex-column justify-content-center">
               <span href="#" class="text-dark fw-bolder">{{

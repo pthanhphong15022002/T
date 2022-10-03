@@ -34,6 +34,7 @@ export class Device {
 })
 export class PopupAddBookingCarComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
+  @ViewChild('form') form: any;
 
   @Input() editResources: any;
   @Input() isAdd = true;
@@ -87,9 +88,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
     roleType: string;
     status: string;
     objectType: string;
+    objectID:any;
   };
   attendeesList = [];
-
+  checkLoopS=true;
+  checkLoopE=true;
+  checkLoop=true;
   grvBookingCar: any;
   strAttendees: string = '';
   vllDevices = [];
@@ -100,6 +104,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   driver: any;
   smallListPeople = [];
   editCarDevice = null;
+  tmpTitle='';
   tempArray = [];
   constructor(
     private injector: Injector,
@@ -111,58 +116,59 @@ export class PopupAddBookingCarComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogRef?.dataService?.dataSelected;
+    this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
+    this.tmpTitle = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
+    this.data.requester =this.authService?.userValue?.userName;
   }
   onInit(): void {
-    this.initForm();  
-    if (!this.isAdd) {
-      this.titleAction = 'Chỉnh sửa';
-    }      
+    this.initForm(); 
+      this.cacheService.valueList('EP012').subscribe((res) => {
+        this.vllDevices = res.datas;
+        this.vllDevices.forEach((item) => {
+          let device = new Device();
+          device.id = item.value;
+          device.text = item.text;
+          this.lstDeviceCar.push(device);
+        });
+
+        if (!this.isAdd && this.data?.equipments != null) {
+          this.data?.equipments.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = equip.isPicked;
+            this.lstDeviceCar.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
+          });
+        }
+        //this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
+      });
     if (this.isAdd) {
       this.data.attendees= 1;
       this.data.bookingOn = new Date();  
-
+      
       let people = this.authService.userValue;
       this.tempAtender = {
         userId: people.userID,
         userName: people.userName,
         status: '1',
         objectType: 'AD_Users',
-        roleType: '2',
+        roleType: '1',
+        objectID:undefined,
       };
       this.curUser = this.tempAtender;
       
       this.detectorRef.detectChanges();
     }
-    this.cacheService.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
-      this.vllDevices.forEach((item) => {
-        let device = new Device();
-        device.id = item.value;
-        device.text = item.text;
-        this.lstDeviceCar.push(device);
-      });
-
-      if (!this.isAdd && this.data?.equipments != null) {
-        this.data?.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceCar.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
-          });
-          this.tmplstDevice.push(tmpDevice);
-        });
-      }
-      //this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
-    });
+    
 
     if (!this.isAdd) {
       this.driverChangeWithCar(this.data?.resourceID);
@@ -182,6 +188,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                 status: people.status,
                 objectType: 'AD_Users',
                 roleType: people.roleType,
+                objectID:undefined,
               };
               if (
                 this.tempAtender.userId == this.authService.userValue.userID
@@ -203,16 +210,24 @@ export class PopupAddBookingCarComponent extends UIComponent {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.fGroupAddBookingCar = item;        
-        this.isAfterRender = true;        
-        console.log('this.fGroupAddBookingRoom',this.fGroupAddBookingCar);        
+        this.isAfterRender = true;              
       });   
       this.detectorRef.detectChanges();       
   }
   setTitle(e: any) {
-    this.title = this.titleAction + ' ' + e.toString().toLowerCase();
+    this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
   }
-
+  ngAfterViewInit(): void {
+        if (this.dialogRef) {
+      if (!this.isSaveSuccess) {
+        this.dialogRef.closed.subscribe((res: any) => {
+          console.log('Close without saving or save failed', res);
+          this.dialogRef.dataService.saveFailed.next(null);
+        });
+      }
+    }
+  }
   beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
@@ -222,30 +237,22 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
   onSaveForm() {
     this.fGroupAddBookingCar.patchValue(this.data);
-    if (this.data.invalid == true) {
+    if (this.fGroupAddBookingCar.invalid == true) {
       this.codxEpService.notifyInvalid(
         this.fGroupAddBookingCar,
         this.formModel
       );
       return;
     }
-    if (
-      this.data.value.startDate &&
-      this.data.value.endDate
-    ) {
-      let hours = parseInt(
-        (
-          (this.data.value.endDate -
-            this.data.value.startDate) /
-          1000 /
-          60 /
-          60
-        ).toFixed()
-      );
+    if (this.data.startDate!=null && this.data.endDate!=null && this.data.startDate >= this.data.endDate) {
+      let hours = parseInt(((this.data.endDate -this.data.startDate)/1000/60/60).toFixed());
       if (!isNaN(hours) && hours > 0) {
-        this.data.hours= hours;
+        this.data.hours = hours;
       }
-    }
+    } else {
+      this.notificationsService.notifyCode('EP003');
+      return;
+    }    
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
@@ -257,21 +264,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.lstPeople.forEach((people) => {
       this.attendeesList.push(people);
     });
-    
-    if (this.data.value.resourceID instanceof Object) {
-      this.data.resourceID= this.data.value.resourceID[0];
-    }
-    if (this.data.value.agencyName instanceof Object) {
-      this.data.agencyName= this.data.value.agencyName[0];
-    }
-    if (this.data.value.reasonID instanceof Object) {
-      this.data.reasonID= this.data.value.reasonID[0];
-    }
+    this.attendeesList.push(this.driver);
     this.data.stopOn = this.data.endDate;
     this.data.bookingOn= this.data.startDate;
     this.data.category= '2';
     this.data.status= '1';
     this.data.resourceType= '2';
+    this.data.equipments= this.lstEquipment,
 
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
@@ -285,15 +284,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
       });
     this.detectorRef.detectChanges();
   }
-  buttonClick(e: any) {
-    //console.log(e);
-  }
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.data['field']= event.data.value;        
+        this.data[event.field]= event.data.value;        
       } else {
-        this.data['field']= event.data.value;
+        this.data[event?.field]= event.data;
       }
     }
   }
@@ -301,8 +297,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
   valueCbxCarChange(event?) {
     if (event?.data != null && event?.data != '') {      
       this.tmplstDevice = [];
-      var cbxRoom = event.component.dataService.data;
-      cbxRoom.forEach((element) => {
+      var cbxCar = event.component.dataService.data;
+      cbxCar.forEach((element) => {
         if (element.ResourceID == event.data) {
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
@@ -325,19 +321,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
   driverChangeWithCar(carID: string) {
     this.codxEpService.getGetDriverByCar(carID).subscribe((res) => {
       if (res) {
-        var x = res;
-        let driverInfo: {
-          id: string;
-          text: string;
-          objectType: string;
-          objectName: string;
-        } = {
-          id: res.msgBodyData[0].resourceID,
-          text: res.msgBodyData[0].resourceName,
-          objectType: undefined,
-          objectName: undefined,
-        };
-        this.driver = driverInfo;
+        this.tempAtender = {
+          userId: res.msgBodyData[0].resourceID,
+          userName: res.msgBodyData[0].resourceName,
+          status: '1',
+          objectType: 'EP_Driver',
+          roleType: '2',
+          objectID: res.msgBodyData[0].recID,
+        };        
+        this.driver = this.tempAtender;
         this.detectorRef.detectChanges();
       }
     });
@@ -351,6 +343,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         status: '1',
         objectType: 'AD_Users',
         roleType: '3',
+        objectID:undefined,
       };
       if (this.tempAtender.userId != this.curUser.userId) {
         this.lstPeople.push(this.tempAtender);
@@ -362,17 +355,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  // valueCbxDriverChange(event) {
-  //   this.driver= event.data.dataSelected[0];
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
-  // changeTime(data) {
-  //   if (!data.field || !data.data) return;
-  //   this.data.patchValue({
-  //     [data['field']]: data.data.fromDate,
-  //   });
-  // }
   openPopupDevice(template: any) {
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
@@ -388,5 +370,47 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.initForm();
     this.closeEdit.emit(data);
   }
-
+  timeCheck(){
+    if(!this.data.startDate || !this.data.endDate){
+      return;
+    }
+    let startTime =new Date(this.data.startDate);
+    let endTime =new Date(this.data.endDate);
+    if(endTime <= startTime){
+      this.checkLoop=!this.checkLoop;
+      if(!this.checkLoop){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      } 
+    }   
+   
+  }
+  startDateChange(evt:any){
+    if (!evt.field || !evt.data) {
+      return;  
+    }
+    this.data.startDate = evt.data.fromDate;    
+    if(new Date() >= new Date(this.data.startDate)){
+      this.checkLoopS=!this.checkLoopS;
+      if(!this.checkLoopS){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      }  
+    }
+    this.timeCheck();
+  }
+  endDateChange(evt:any){
+    if (!evt.field || !evt.data) {
+      return;  
+    } 
+    this.data.endDate= evt.data.fromDate; 
+    if(new Date() >= new Date(this.data.endDate)){      
+      this.checkLoopE=!this.checkLoopE;
+      if(!this.checkLoopE){
+        this.notificationsService.notifyCode('EP003');
+        return;
+      } 
+    }
+    this.timeCheck();  
+  }
 }

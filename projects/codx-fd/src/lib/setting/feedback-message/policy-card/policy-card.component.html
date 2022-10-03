@@ -14,8 +14,8 @@
         </div>
         <div class="ml-4 d-flex justify-content-between">
             <span class="switch switch-sm">
-                <codx-input type="switch" class="test-check" field="HasPoints"
-                    (valueChange)="lvInputChangeSwitch($event, null)" [checked]="item.HasPoints === '1' ? true : false">
+                <codx-input type="switch" class="test-check" field="HasPoints" (valueChange)="valueChangeSwitch($event)"
+                    [checked]="item.HasPoints === '1' ? true : false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center"></span>
@@ -33,9 +33,8 @@
         </div>
         <div class="ml-4 d-flex align-items-center">
             <span class="switch switch-sm">
-                <codx-input type="switch" class="test-check" field="HasGifts"
-                    (valueChange)="lvInputChangeSwitch($event, null)" [checked]="item.HasGifts === '1' ? true:false"
-                    label="">
+                <codx-input type="switch" class="test-check" field="HasGifts" (valueChange)="valueChangeSwitch($event)"
+                    [checked]="item.HasGifts === '1' ? true:false" label="">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center"></span>
@@ -65,14 +64,13 @@
             <div class="d-flex align-items-center">
                 <span class="switch switch-sm ml-3">
                     <codx-input type="switch" class="test-check" field="ApprovalControl"
-                        (valueChange)="lvInputChangeSwitch($event, null)"
+                        (valueChange)="valueChangeSwitch($event)"
                         [checked]="item.ApprovalControl === '1' ? true : false"
                         [disabled]="this.typeCard == '7' ? true : false">
                     </codx-input>
                 </span>
                 <span class="w-30px h-20px d-flex justify-content-center">
-                    <span class="icon-edit_file text-hover-primary icon-20"
-                        (click)="openPopupCombobox(UserGroups)"></span>
+                    <span class="icon-edit-one text-hover-primary icon-20" (click)="openPopupCbb(UserGroups)"></span>
                 </span>
             </div>
         </div>
@@ -91,14 +89,12 @@
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
                 <codx-input type="switch" class="test-check" field="MaxSendControl"
-                    (valueChange)="lvInputChangeSwitch($event, null)"
-                    [checked]="item.MaxSendControl === '1' ? true : false">
+                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxSendControl === '1' ? true : false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class="icon-edit_file text-hover-primary icon-20" (click)="open(content, 0)"></span>
+                <span class="icon-edit-one text-hover-primary icon-20" (click)="open(content, 0)"></span>
             </span>
-
         </div>
     </div>
     <div class="d-flex align-items-start py-4 border-bottom border-light"
@@ -117,12 +113,11 @@
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
                 <codx-input type="switch" class="test-check" field="MaxReceiveControl"
-                    (valueChange)="lvInputChangeSwitch($event, null)"
-                    [checked]="item.MaxReceiveControl === '1' ? true : false">
+                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxReceiveControl === '1' ? true : false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class="icon-edit_file text-hover-primary icon-20" (click)="open(content, 1)"></span>
+                <span class="icon-edit-one text-hover-primary icon-20" (click)="open(content, 1)"></span>
             </span>
 
         </div>
@@ -141,12 +136,11 @@
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
                 <codx-input type="switch" class="test-check" field="MaxPointControl"
-                    (valueChange)="lvInputChangeSwitch($event, null)"
-                    [checked]="item.MaxPointControl === '1' ? true:false">
+                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxPointControl === '1' ? true:false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class="icon-edit_file text-hover-primary icon-20" (click)="open(content, 2)"></span>
+                <span class="icon-edit-one text-hover-primary icon-20" (click)="open(content, 2)"></span>
             </span>
 
         </div>
@@ -164,12 +158,12 @@
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
                 <codx-input type="switch" class="test-check" field="MaxPointPerOnceControl"
-                    (valueChange)="lvInputChangeSwitch($event, null)"
+                    (valueChange)="valueChangeSwitch($event)"
                     [checked]="item.MaxPointPerOnceControl === '1' ? true : false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
-                <span class="icon-edit_file text-hover-primary icon-20" (click)="open(content, 3)"></span>
+                <span class="icon-edit-one text-hover-primary icon-20" (click)="open(content, 3)"></span>
             </span>
         </div>
     </div>
@@ -208,7 +202,7 @@
         <div class="ml-4">
             <div class="lv-control">
                 <codx-input type="valuelist" class="control-vll w-250px" placeholder="" [refValue]="valueListNameCoin"
-                    field="PolicyControl" [crrValue]="item.PolicyControl" (valueChange)="changValuelist($event)">
+                    field="PolicyControl" [crrValue]="item.PolicyControl" (valueChange)="valueChangValueList($event)">
                 </codx-input>
             </div>
         </div>
@@ -218,8 +212,7 @@
 <ng-template #content let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{ modelForm.title }}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <i class="icon-close icon-20 text-dark text-hover-primary"></i>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
         </button>
     </div>
     <div class="modal-body">
@@ -228,8 +221,9 @@
                 <codx-label name="lblQuantity" [formModel]="formModel" [default]="'Số lượng'"></codx-label>
             </div>
             <div class="col-xl-9 col-md-9">
-                <codx-input type="number" min="1" class="form-control" name="quantity" [showSpinButton]="false"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="3">
+                <codx-input [crrValue]="modelForm.quantity" type="number" min="1" class="form-control"
+                    [showSpinButton]="false" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    placeholder="3" (valueChange)="valueChangeQuantity($event)">
                 </codx-input>
             </div>
         </div>
@@ -240,15 +234,17 @@
             </div>
             <div class="col-xl-9 col-md-9">
                 <div class="lv-control">
-                    <codx-input type="valuelist" class="control-vll w-338px" placeholder="" refValue="L1435" field="edit"
-                        [crrValue]="modelForm.cycle" (valueChange)="changValueListPopup($event,modelForm.type)">
+                    <codx-input type="valuelist" class="control-vll w-338px" placeholder="" refValue="L1435"
+                        field="edit" [crrValue]="modelForm.cycle"
+                        (valueChange)="changValueListPopup($event,modelForm.type)">
                     </codx-input>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="onSavePopup(modelForm.type)">
+        <button type="button" class="btn btn-primary" (click)="onSavePopup(modelForm.type)"
+            (click)="modal.close('Save click')">
             {{'Lưu' | lang:'PolicyCard':'lblSave' | async}}
         </button>
     </div>

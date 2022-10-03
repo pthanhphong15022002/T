@@ -16,7 +16,7 @@ import { EditSkillComponent } from './edit-skill/edit-skill.component';
   selector: 'lib-employee-infomation',
   templateUrl: './employee-infomation.component.html',
   styleUrls: ['./employee-infomation.component.css'],
-  // encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None
 
 })
 export class EmployeeInfomationComponent implements OnInit {
@@ -96,12 +96,14 @@ export class EmployeeInfomationComponent implements OnInit {
     private layout: LayoutService,
     private inject: Injector
   ) {
+    debugger
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
+    this.layout.setLogo(null);
     // this.layout.setUrl(this.codxMwpService.urlback);
-    this.cache.functionList(this.functionID).subscribe(f => {
-      if (f) this.layout.setLogo(f.smallIcon);
-    })
+    // this.cache.functionList(this.functionID).subscribe(f => {
+    //   if (f) this.layout.setLogo(null);
+    // })
     this.codxMwpService.getMoreFunction([this.functionID, null, null]).subscribe(res => {
       if (res) {
         this.defautFunc = res[0]
@@ -219,33 +221,34 @@ export class EmployeeInfomationComponent implements OnInit {
     this.loadEmployee(employee, e => {
 
     });
-    setTimeout(() => {
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "2").subscribe((response: any) => {
-        if (response) {
-          this.updateExperiences(response);
-        }
-      });
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "2").subscribe((response: any) => {
+      if (response) {
+        this.updateExperiences(response);
+      }
+    });
 
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "4").subscribe((response: any) => {
-        if (response) {
-          this.updateTraining(response);
-        }
-      });
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "5").subscribe((response: any) => {
-        this.updateHobby(response);
-      });
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "4").subscribe((response: any) => {
+      if (response) {
+        this.updateTraining(response);
+      }
+    });
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "5").subscribe((response: any) => {
+      this.updateHobby(response);
+    });
 
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "7").subscribe((response: any) => {
-        if (response) {
-          this.updateRelation(response);
-        }
-      });
-      this.codxMwpService.LoadData(employee.Employee.employeeID, "", "8").subscribe((response: any) => {
-        if (response) {
-          this.updateSkill(response);
-        }
-      });
-    }, 100);
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "7").subscribe((response: any) => {
+      if (response) {
+        this.updateRelation(response);
+      }
+    });
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "8").subscribe((response: any) => {
+      if (response) {
+        this.updateSkill(response);
+      }
+    });
+    // setTimeout(() => {
+     
+    // }, 100);
 
   }
   updateHobby(response) {
@@ -325,7 +328,7 @@ export class EmployeeInfomationComponent implements OnInit {
         active: true,
         sameData: false,
         model: {
-          panelLeftRef: this.panelLeftRef,
+          // panelLeftRef: this.panelLeftRef,
           panelRightRef: this.panelRightRef,
           widthLeft: '320px'
         }
@@ -458,9 +461,9 @@ export class EmployeeInfomationComponent implements OnInit {
   }
 
   editDataEdu(data) {
-    this.allowedu = true;
-    this.codxMwpService.EmployeeInfomation = this;
-    this.codxMwpService.educationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
+    // this.allowedu = true;
+    // this.codxMwpService.EmployeeInfomation = this;
+    // this.codxMwpService.educationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
   }
 
   addRelation() {

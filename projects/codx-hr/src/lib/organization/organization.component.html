@@ -7,13 +7,16 @@
   [selectedFirst]="true"
   (selectedChange)="onSelectionChanged($event)"
   [button]="button"
+  (buttonClick)="click($event)"
   (viewChanged)="changeView($event)"
+  [viewActiveType]="'15'"
 ></codx-views>
 <ng-template #templateDetail>
   <ng-container *ngIf="orgUnitID">
     <lib-organize-detail
       [orgUnitID]="orgUnitID"
       [formModel]="view.formModel"
+      (afterInit)="orgChartAfterView($event)"
     ></lib-organize-detail>
   </ng-container>
 </ng-template>

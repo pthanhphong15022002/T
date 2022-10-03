@@ -141,11 +141,6 @@
   opacity: 1;
 }
 
-/****** custom ad *****/
-codx-wrapper {
-  height: 100% !important;
-
-}
 
 .setting-right {
   /* background-color: $bg-color; */
@@ -222,4 +217,9 @@ codx-wrapper {
 .e-tab .e-tab-header .e-toolbar-item {
   height: 38px;
   min-height: 38px;
+}
+
+
+lib-company-setting .e-tab .e-tab-header.e-vertical:before {
+  display: none;
 }

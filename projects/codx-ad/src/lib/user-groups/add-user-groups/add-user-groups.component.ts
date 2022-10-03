@@ -51,7 +51,6 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   formType: any;
   formGroupAdd: FormGroup;
-  gridViewSetup: any = [];
   checkBtnAdd = false;
   saveSuccess = false;
   dataAfterSave: any;
@@ -59,9 +58,12 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   userType: any;
   isUserGroup = false;
   isPopupCbb = false;
-  dataUserCbb: any = [];
+  dataUserCbb: any = new Array();
   formUserGroup: FormGroup;
   lstUser: any;
+  dataUserCbbTemp: any;
+  dataCopy: any;
+  oldID: any;
 
   constructor(
     private injector: Injector,
@@ -73,11 +75,12 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     @Optional() dt?: DialogData
   ) {
     super(injector);
-    this.formType = dt?.data?.formType;
+    this.formType = JSON.parse(JSON.stringify(dt?.data?.formType));
     this.userType = dt?.data?.userType;
     this.data = dialog.dataService!.dataSelected;
     this.adUserGroup = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'edit') {
+      this.adUserGroup.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
       this.viewChooseRoleTemp = JSON.parse(
         JSON.stringify(this.data?.chooseRoles)
@@ -88,16 +91,30 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.dataUserCbb = res;
+            this.dataUserCbbTemp = JSON.parse(JSON.stringify(this.dataUserCbb));
           }
         });
+    } else if (this.formType == 'copy') {
+      this.dataCopy = dt?.data?.dataCopy;
+      this.oldID = JSON.parse(JSON.stringify(dt?.data?.oldID));
+      this.adUserGroup = JSON.parse(JSON.stringify(this.dataCopy));
+      this.adUserGroup.email = '';
+      if (this.dataCopy?.chooseRoles) {
+        this.viewChooseRole = this.dataCopy?.chooseRoles;
+        this.viewChooseRoleTemp = JSON.parse(
+          JSON.stringify(this.dataCopy?.chooseRoles)
+        );
+        this.countListViewChoose();
+      }
+      this.adService.getUserByUserGroup(this.oldID).subscribe((res: any) => {
+        if (res) {
+          this.dataUserCbb = res;
+          this.dataUserCbbTemp = JSON.parse(JSON.stringify(this.dataUserCbb));
+        }
+      });
     }
     this.dialog = dialog;
     this.user = auth.get();
-    this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
   }
 
   capitalizeWords(arr) {
@@ -106,20 +123,19 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {
+  onInit(): void {}
+
+  ngAfterViewInit() {
+    this.formModel = this.form?.formModel;
     if (this.formType == 'edit') {
       this.title = 'Cập nhật nhóm người dùng';
       this.isAddMode = false;
-    } else this.title = this.form?.title;
+    } else this.title = 'Thêm nhóm người dùng';
     this.adService.getListUser().subscribe((res) => {
       if (res) {
         this.lstUser = res;
       }
     });
-  }
-
-  ngAfterViewInit() {
-    this.formModel = this.form?.formModel;
     this.initForm();
   }
 
@@ -186,9 +202,14 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     var checkDifference =
       JSON.stringify(this.viewChooseRoleTemp) ===
       JSON.stringify(this.viewChooseRole);
-    if (this.formType == 'add') {
+    if (this.formType == 'add' || this.formType == 'copy') {
       this.isAddMode = true;
       op.methodName = 'AddUserAsync';
+      if (this.formType == 'copy') {
+        this.viewChooseRole.map((dt) => {
+          dt.userID = this.adUserGroup.userID;
+        });
+      }
       data = [this.adUserGroup, this.viewChooseRole, true, true, false];
     }
     if (this.formType == 'edit') {
@@ -210,11 +231,11 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
             (this.dialog.dataService as CRUDService)
               .update(res.save)
               .subscribe();
-            this.changeDetector.detectChanges();
           }
+          this.dialog.close();
+          this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
   }
 
   onUpdate() {
@@ -226,16 +247,16 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
+          this.dialog.close();
           this.changeDetector.detectChanges();
         }
       });
-    this.dialog.close();
   }
 
   onSave() {
     this.saveSuccess = true;
-    this.formUserGroup.patchValue(this.adUserGroup);
-    if (this.formUserGroup.invalid) {
+    if (this.formUserGroup) this.formUserGroup.patchValue(this.adUserGroup);
+    if (this.formUserGroup?.invalid) {
       this.adService.notifyInvalid(this.formUserGroup, this.formModel);
       return;
     } else {
@@ -244,8 +265,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   }
 
   saveUserRoles() {
-    var lstUser = [];
-    var checkDifference;
+    var lstUser: any = new Array();
+    var checkDifference = true;
     if (this.viewChooseRole) {
       checkDifference =
         JSON.stringify(this.viewChooseRoleTemp) ===
@@ -273,12 +294,15 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         lstUserName.push(userName);
       });
     }
-    if (countUserHaveGroup > 0 && this.formType == 'add') {
+    if (
+      countUserHaveGroup > 0 &&
+      (this.formType == 'add' || this.formType == 'copy')
+    ) {
       this.notification
         .alertCode('AD004', null, lstUserName.join(', '))
         .subscribe((x) => {
           if (x.event.status == 'Y') {
-            this.saveUser(lstUser, checkDifference, countUserHaveGroup);
+            this.saveUser(lstUser, checkDifference);
           } else {
             return;
           }
@@ -288,12 +312,12 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     }
   }
 
-  saveUser(lstUser, checkDifference, countUserHaveGroup = 0) {
-    var dataUserCbbTemp = this.dataUserCbb;
-    var checkDifferenceUserCbb;
+  saveUser(lstUser, checkDifference) {
+    var checkDifferenceUserCbb = true;
     if (this.dataUserCbb) {
       checkDifferenceUserCbb =
-        JSON.stringify(dataUserCbbTemp) === JSON.stringify(this.dataUserCbb);
+        JSON.stringify(this.dataUserCbbTemp) ===
+        JSON.stringify(this.dataUserCbb);
     }
     if (this.isAddMode) {
       if (this.dataUserCbb.length > 0) {
@@ -302,7 +326,15 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           .subscribe((x) => {
             if (x?.event.status == 'Y') {
               this.onAdd();
-              if (this.dataUserCbb.length > 0 && countUserHaveGroup > 0) {
+              if (
+                this.dataUserCbb.length > 0 &&
+                this.viewChooseRole.length > 0
+              ) {
+                if (this.formType == 'copy') {
+                  this.viewChooseRole.map((dt) => {
+                    dt.userID = this.adUserGroup.userID;
+                  });
+                }
                 this.adService
                   .updateUserRoles(
                     lstUser,
@@ -329,15 +361,17 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               ) {
                 this.adService
                   .updateUserRoles(
-                    lstUser,
+                    this.dataUserCbbTemp,
                     this.viewChooseRole,
                     true,
                     this.adUserGroup,
-                    this.dataUserCbb
+                    this.dataUserCbb,
+                    false
                   )
                   .subscribe();
               }
             } else this.onUpdate();
+            this.dialog.close();
           });
       } else this.onUpdate();
     }
@@ -411,16 +445,16 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     { icon: 'icon-playlist_add_check', text: 'Phân quyền', name: 'Roles' },
   ];
 
-  setTitle(e: any) {
-    this.title = 'Thêm ' + e;
-    this.changeDetector.detectChanges();
-  }
-
   checkOpenCbbPopup = 0;
   getDataUserInCbb(event) {
     this.checkOpenCbbPopup++;
     if (event?.dataSelected) {
-      if (this.checkOpenCbbPopup >= 2 || this.formType == 'add' || this.formType == 'edit') {
+      if (
+        this.checkOpenCbbPopup >= 2 ||
+        this.formType == 'add' ||
+        this.formType == 'edit' ||
+        this.formType == 'copy'
+      ) {
         if (this.dataUserCbb) {
           let i = 0;
           event?.dataSelected.forEach((dt) => {
@@ -444,7 +478,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     this.isPopupCbb = !this.isPopupCbb;
   }
 
-  deleteUserCbb(index) {
+  deleteUserCbb(index, item) {
     this.dataUserCbb.splice(index, 1);
     this.changeDetector.detectChanges();
   }
