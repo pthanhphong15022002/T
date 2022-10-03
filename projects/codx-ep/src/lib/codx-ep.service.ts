@@ -193,6 +193,15 @@ export class CodxEpService {
       [carID]
     );
   }
+  driverValidator(driverID: string,startDate:Date, endDate:Date,recID:any) {
+    return this.api.callSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'DriverValidatorAsync',
+      [driverID,startDate,endDate,recID]
+    );
+  }
 
   getBookingAttendees(recID: string) {
     return this.api.callSv(
