@@ -122,7 +122,7 @@ export class TaskDailyComponent implements OnInit {
     // let _preArray =this.predicate.split('&&').join(';');
     // this.src = `/${this._user.tenant}/report?reportID=${this.funcID}&predicates=${_preArray}&dataValues=${this.dataValue}`;
     // this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
-    // debugger
+    // 
     // //this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&parameters=${JSON.stringify(this.param)}`;
 
     this.views = [
@@ -238,7 +238,7 @@ export class TaskDailyComponent implements OnInit {
   fields: any = [];
   values: any = [];
   paramChange1(evt){
-    // debugger
+    // 
     // if (evt.isDateTime) {
     //   let idxs = 0;
     //   for (let i = 0; i < this.fields.length; i++) {

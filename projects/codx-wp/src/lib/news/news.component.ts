@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, DataRequest, ViewType, SidebarModel, DialogRef, DialogModel } from 'codx-core';
@@ -9,10 +9,15 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
   selector: 'lib-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 
 })
+
+
 export class NewsComponent implements OnInit {
+
+  @HostBinding('class') get class() {
+    return "bg-white"; 
+   }
   dialogRef: any;
   funcID = "WPT02P";
   entityName = 'WP_News';

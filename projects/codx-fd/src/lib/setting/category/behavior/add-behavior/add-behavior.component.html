@@ -1,0 +1,51 @@
+<codx-form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel"
+    [data]="dataUpdate" #form>
+    <ng-template #body>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <div class="form-group">
+                    <codx-label fiedName="CompetenceID" [formModel]="form?.formModel" class="font-w550 font-1rem">
+                    </codx-label>
+                    <codx-input class="form-control" [disabled]="isModeAdd ? false : true" [Group]="form.formGroup"
+                        [formModel]="form?.formModel" (valueChange)="valueChange($event)" field="competenceID">
+                    </codx-input>
+                </div>
+                <div class="form-group">
+                    <codx-label fiedName="ParentID" [formModel]="form?.formModel" class="font-w550 font-1rem">
+                    </codx-label>
+                    <codx-input (valueChange)="valueChange($event)" class="form-control borderless p-0"
+                        [Group]="form.formGroup" [formModel]="form?.formModel" field="parentID">
+                    </codx-input>
+                </div>
+                <div class="form-group mt-3">
+                    <codx-label fiedName="CompetenceName" [formModel]="form?.formModel" class="font-w550 font-1rem">
+                    </codx-label>
+                    <codx-input class="form-control test-textarea" rows="3" (valueChange)="valueChange($event)"
+                        [Group]="form.formGroup" [formModel]="form?.formModel" field="competenceName">
+                    </codx-input>
+                </div>
+                <div class="form-group mt-3">
+                    <codx-label fiedName="Memo" [formModel]="form?.formModel" class="font-w550 font-1rem">
+                    </codx-label>
+                    <codx-input class="form-control test-textarea" rows="3" (valueChange)="valueChange($event)"
+                        field="memo" [Group]="form.formGroup" [formModel]="form?.formModel">
+                    </codx-input>
+                </div>
+                <div class="form-group mt-3">
+                    <codx-input name="checkbox" class="test-check" field="stop" (valueChange)="valueChange($event)"
+                        [checked]="dataUpdate.stop" [Group]="form.formGroup" [formModel]="form?.formModel">
+                    </codx-input>
+                    <codx-label fiedName="Stop" [formModel]="form?.formModel" class="font-w550 font-1rem">
+                    </codx-label>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+                <codx-label fiedName="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

@@ -289,17 +289,15 @@ ejs-switch .form-control {
   padding-right: 18px;
 }
 
-.e-splitter.e-splitter-horizontal,
-.e-splitter.e-splitter-vertical {
-  border: 0;
+/* css chart */
+.e-panel {
+  cursor: auto !important;
 }
-
-.pic-file.h-140px {
-  height: 140px;
-  overflow: hidden;
+.title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #737373;
 }
-
-.pic-file.h-140px img.w-auto {
-  width: 100% !important;
-  height: auto !important;
+#acc_chart_57724_1_border {
+  fill:"none";
 }

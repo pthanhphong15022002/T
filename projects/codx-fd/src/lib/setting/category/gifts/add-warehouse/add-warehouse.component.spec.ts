@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupSearchComponent } from './popup-search.component';
+import { AddWarehouseComponent } from './add-warehouse.component';
 
-describe('PopupSearchComponent', () => {
-  let component: PopupSearchComponent;
-  let fixture: ComponentFixture<PopupSearchComponent>;
+describe('AddWarehouseComponent', () => {
+  let component: AddWarehouseComponent;
+  let fixture: ComponentFixture<AddWarehouseComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupSearchComponent ]
+      declarations: [ AddWarehouseComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupSearchComponent);
+    fixture = TestBed.createComponent(AddWarehouseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
