@@ -278,7 +278,6 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         ['FDParameters', this.typeCard, JSON.stringify(objectUpdate)]
       )
       .subscribe((res) => {
-        debugger;
         if (res && res.msgBodyData[0]) {
           if (res.msgBodyData[0] == true) {
             this.LoadData();

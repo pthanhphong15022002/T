@@ -73,7 +73,6 @@ export class PopupAddStationeryComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
-    debugger;
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
@@ -165,9 +164,9 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  buttonClick(e: any) {}
+  buttonClick(e: any) { }
 
-  fileCount(event) {}
+  fileCount(event) { }
 
-  fileAdded(event) {}
+  fileAdded(event) { }
 }

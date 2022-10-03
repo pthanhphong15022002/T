@@ -612,3 +612,8 @@ codx-tmmeetings .toolbar {
   background-color: #f3f3f3;
   margin-right: 10px;
 }
+
+codx-view-list-detail .nav-tabs .nav-link.active,
+codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
+  font-weight: 600;
+}

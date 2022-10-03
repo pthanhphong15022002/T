@@ -17,13 +17,13 @@
         >
         </codx-temp-full>
         <div class="row">
-          <div class="d-flex col-6">
+          <div class="d-flex ">
             <ng-container *ngFor="let item of tabControl; let i = index">
               <a
                 [class]="
-                  'btn btn-sm btn-light-primary my-3 me-2' +
+                  'text-gray-800 text-hover-primary cursor-pointer  me-5' +
                   ' ' +
-                  (item.isActive ? 'active' : '')
+                  (item.isActive ? 'text-primary tab-active' : '')
                 "
               >
                 <codx-label
@@ -49,7 +49,7 @@
           </codx-imgs>
         </div>
 
-        <div
+        <!-- <div
           class="d-flex justify-content-end"
           style="padding-top: 40px; cursor: pointer"
         >
@@ -59,7 +59,7 @@
             (click)="viewDetail(meeting)"
           >
           </codx-label>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -91,8 +91,13 @@
           </div>
         </ng-container>
         <ng-container *ngIf="name =='AssignTo'">
-          <div *ngIf="dataObj">
+          <div *ngIf="dataObjAssign">
             <ng-container *ngTemplateOutlet="templateAssign"> </ng-container>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="name =='Tasks'">
+          <div *ngIf="dataObjTasks">
+            <ng-container *ngTemplateOutlet="templateTasks"> </ng-container>
           </div>
         </ng-container>
       </div>
@@ -157,8 +162,18 @@
   <ng-template #templateAssign>
     <codx-tasks-share 
        [funcID]="'TMT0203'"   
-       [dataObj]="dataObj"
+       [dataObj]="dataObjAssign"
        [showButtonAdd]="false"
     ></codx-tasks-share>
   </ng-template>
+
+  <ng-template #templateTasks>
+    <codx-tasks-share 
+       [funcID]="'TMT03011'"
+       [dataObj]="dataObjTasks"
+       [showButtonAdd]="false"
+       [showMoreFunc]="false"
+    ></codx-tasks-share>
+  </ng-template>
+
 
