@@ -1,7 +1,8 @@
-<codx-views #view [funcID]="funcID" [views]="views" [button]="button" (buttonClick)="openFormAdd($event)"
-    idField="recID" entityName="AD_Roles" formName="Roles" gridViewName="grvRoles" service="SYS">
-</codx-views>
-
+<div class="codx-roles p-3 bg-body rounded-3 h-100">
+    <codx-views #view [funcID]="funcID" [views]="views" [button]="button" (buttonClick)="openFormAdd($event)"
+        idField="recID" entityName="AD_Roles" formName="Roles" gridViewName="grvRoles" service="SYS">
+    </codx-views>
+</div>
 <!-- <div class="adroles-group qtht border-top-erm">
     <div class="content-center">
         <codx-listview [itemTemplate]="template" [funcId]="funcID" service="SYS" #listRoles [predicate]=""
@@ -48,18 +49,18 @@
 
 <ng-template #templateListView let-data>
     <codx-temp-full (clickMF)="clickMF($event,data)" (click)="LinkDetail(data.recID, data.roleName, data.isSystem)"
-        [typeMF]="'hover'" cardCss="card-template border-bottom px-2 py-3" [formModel]="view.formModel"
+        [typeMF]="'hover'" cardCss="card-template border-bottom border-gray-200 p-3" [formModel]="view.formModel"
         [title]="data.roleName" [subTitle]="data.description" [baseHeaderRightTmp]="isSystem" [dataItem]="data"
         [imageId]="data.recID" imageWidth="35" imageObjType="AD_Roles">
     </codx-temp-full>
 </ng-template>
 
 <ng-template #isSystem let-data>
-    <span *ngIf="data.isSystem; else second" class="label label-xxs label-light-primary label-pill label-inline ms-2">
+    <span *ngIf="data.isSystem; else second" class="badge badge-light ms-2">
         <codx-label name="lblSystem" formName="AD_Roles" default="System"></codx-label>
     </span>
     <ng-template #second>
-        <span class="label label-xxs label-light-primary label-pill label-inline ms-2">
+        <span class="badge badge-light ms-2">
             <codx-label name="lblCustomize" formName="AD_Roles" default="Customize"></codx-label>
         </span>
     </ng-template>

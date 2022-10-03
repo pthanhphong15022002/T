@@ -34,7 +34,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
-  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
   @Input() data!: any;
@@ -50,6 +50,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
 
   vllDevices = [];
   views: Array<ViewModel> = [];
+  viewType = ViewType;
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
@@ -64,7 +65,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   str: string;
   dataSelected: any;
   devices: any;
-  carsEquipments=[];
+  carsEquipments = [];
   temp: string;
   columnGrids: any;
   constructor(
@@ -84,18 +85,17 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     //this.view.dataService.methodDelete = 'DeleteResourceAsync';
-    
+
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
-        device.text = item.text;       
+        device.text = item.text;
         this.carsEquipments.push(device);
         this.carsEquipments = JSON.parse(JSON.stringify(this.carsEquipments));
       });
     });
-    
   }
 
   // ngAfterViewInit(): void {
@@ -153,7 +153,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: '300',//gv['ResourceID'].width,
+              width: '300', //gv['ResourceID'].width,
               template: this.resourceNameCol,
             },
             {
@@ -169,16 +169,16 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               template: this.equipmentsCol,
               headerTextAlign: 'Center',
               textAlign: 'Center',
-            },          
+            },
             {
               headerText: gv['Note'].headerText,
               //width: gv['Note'].width,
               field: 'note',
-              headerTextAlign: 'Center',  
-              textAlign: 'Center',            
+              headerTextAlign: 'Center',
+              textAlign: 'Center',
             },
             {
-              headerText: 'Lái xe',//gv['Owner'].headerText,
+              headerText: 'Lái xe', //gv['Owner'].headerText,
               //width:gv['Owner'].width,
               width: 200,
               template: this.preparatorCol,
@@ -194,7 +194,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
           ];
           this.views = [
             {
-              sameData: true,              
+              sameData: true,
               type: ViewType.grid,
               active: true,
               model: {
@@ -206,16 +206,16 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     });
     this.detectorRef.detectChanges();
   }
-  openPopupDevice(template: any,lstEquipments? ) {    
-    this.carsEquipments.forEach(element => {
-      element.isSelected=false;
+  openPopupDevice(template: any, lstEquipments?) {
+    this.carsEquipments.forEach((element) => {
+      element.isSelected = false;
     });
-    this.carsEquipments.forEach(element => {
-      lstEquipments.forEach(item=>{
-        if(element.id==item.equipmentID){
-          element.isSelected=true;
+    this.carsEquipments.forEach((element) => {
+      lstEquipments.forEach((item) => {
+        if (element.id == item.equipmentID) {
+          element.isSelected = true;
         }
-      })
+      });
     });
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
@@ -282,17 +282,18 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.view.dataService.delete([obj], true).subscribe((res) => {
-        if (res) {          
-          this.api.execSv(
-            'DM',
-            'ERM.Business.DM',
-            'FileBussiness',
-            'DeleteByObjectIDAsync',
-            [obj.recID, 'EP_Rooms', true]
-          )
-          .subscribe();
-        this.detectorRef.detectChanges();
-      }
+        if (res) {
+          this.api
+            .execSv(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'DeleteByObjectIDAsync',
+              [obj.recID, 'EP_Rooms', true]
+            )
+            .subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
     }
   }

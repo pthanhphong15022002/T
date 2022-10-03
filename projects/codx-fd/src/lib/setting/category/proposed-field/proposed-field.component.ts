@@ -2,19 +2,21 @@ import { Observable, Subject } from 'rxjs';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, ElementRef, TemplateRef, ContentChild, Injector } from '@angular/core';
 import { LayoutService } from '@shared/services/layout.service';
-import { ApiHttpService, AuthStore, ButtonModel, CodxGridviewComponent, ImageViewerComponent, NotificationsService, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, ButtonModel, CodxGridviewComponent, DialogRef, ImageViewerComponent, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { ActivatedRoute } from '@angular/router';
+import { AddProposedFieldComponent } from './add-proposed-field/add-proposed-field.component';
 
 @Component({
-  selector: 'app-proposedfield',
-  templateUrl: './proposedfield.component.html',
-  styleUrls: ['./proposedfield.component.scss']
+  selector: 'app-proposed-field',
+  templateUrl: './proposed-field.component.html',
+  styleUrls: ['./proposed-field.component.scss']
 })
-export class ProposedfieldComponent implements OnInit {
+export class ProposedFieldComponent extends UIComponent implements OnInit {
 
-  funcID = 'FDS0125';
+  funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;
@@ -31,6 +33,8 @@ export class ProposedfieldComponent implements OnInit {
   industryIdUpdate = '';
   checkAddEdit = true;
   isAddMode = true;
+  button?: ButtonModel;
+  dialog: DialogRef;
 
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
@@ -41,141 +45,56 @@ export class ProposedfieldComponent implements OnInit {
   @ViewChild("subheader") subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
-  @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild("gridView") gridView: CodxGridviewComponent;
 
-  myModel = {
-    template: null
-  };
-  constructor(
+  constructor(private injector: Injector,
     private fb: FormBuilder,
-    private api: ApiHttpService,
     private notificationsService: NotificationsService,
     private changedr: ChangeDetectorRef,
-    private layoutService: LayoutService,
     private authStore: AuthStore,
-    private mwpService: CodxMwpService,
+    private route: ActivatedRoute,
   ) {
+    super(injector);
     this.user = this.authStore.get();
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
   }
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
   reload = false;
   columnsGrid = [];
   @ViewChild(ImageViewerComponent) imageViewer: ImageViewerComponent;
-  ngOnInit(): void {
-    this.initForm();
+  onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
     this.columnsGrid = [
-      { field: 'industryID', headerText: 'Mã lĩnh vực', width: 100 },
-      { field: 'industryName', headerText: 'Tên lĩnh vực', width: 200 },
-      { field: 'owners', headerText: 'Người sở hữu', template: this.itemOwner, width: 200 },
-      { field: 'note', headerText: 'Ghi chú', template: this.note, width: 150 },
-      { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy, width: 200 },
-      { field: 'createdOn', headerText: 'Ngày tạo', template: this.createdOn, width: 100 }
+      { field: 'industryID', headerText: 'Mã lĩnh vực'},
+      { field: 'industryName', headerText: 'Tên lĩnh vực'},
+      { field: 'owners', headerText: 'Người sở hữu', template: this.itemOwner},
+      { field: 'note', headerText: 'Ghi chú', template: this.note},
+      { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy},
+      { field: 'createdOn', headerText: 'Ngày tạo', template: this.createdOn}
     ];
-    // this.mwpService.layoutcpn.next(new LayoutModel(true, '', false, true));
     this.changedr.detectChanges();
   }
 
   ngAfterViewInit() {
     this.views = [
       {
-        id: '1',
-        type: ViewType.content,
-        active: true,
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
         model: {
-          panelLeftRef: this.panelLeftRef,
-        }
-      }
+          resources: this.columnsGrid,
+        },
+      },
     ];
-    this.userPermission = this.viewbase.userPermission;
-    this.changedr.detectChanges();
-
-    // this.mwpService.layoutChange.subscribe(res => {
-    //   if (res) {
-    //     if (res.isChange)
-    //       this.showHeader = res.asideDisplay;
-    //     else
-    //       this.showHeader = true;
-    //   }
-    // })
-  }
-
-  openFormCreate(e, isAddMode) {
-    if (isAddMode == true) {
-      this.isAddMode = true;
-      this.closeInfor();
-      this.getPropsedFieldID();
-    }
-    else {
-      this.isAddMode = false;
-      this.addEditForm.patchValue(this.dataItem);
-    }
-    // this.viewbase.currentView.openSidebarRight();
-  }
-
-  closeInfor() {
-    this.clearInfo();
-  }
-
-  clickClosePopup() {
-    this.closeInfor();
-    // this.viewbase.currentView.closeSidebarRight();
-  }
-
-  clearInfo() {
-    this.addEditForm.controls['industryID'].setValue('');
-    this.addEditForm.controls['industryName'].setValue('');
-    this.addEditForm.controls['note'].setValue('');
-    this.addEditForm.controls['owner'].setValue('');
-
-    this.changedr.detectChanges();
-  }
-
-  getPropsedFieldID() {
-    this.getOneFieldAutonumber(this.funcID)
-      .subscribe((key) => {
-        this.addEditForm.patchValue({ industryID: key });
-      });
-  }
-
-  getOneFieldAutonumber(functionID): Observable<any> {
-    var subject = new Subject<any>();
-    this.api.call("AD", "AutoNumbersBusiness",
-      "CreateAutoNumberByFunction", [functionID, null])
-      .subscribe(item => {
-        if (item && item.msgBodyData.length > 0)
-          subject.next(item.msgBodyData[0][1]);
-      });
-    return subject.asObservable();
-  }
-
-  headerStyle = {
-    textAlign: 'center',
-    backgroundColor: '#F1F2F3',
-    fontWeight: 'bold',
-    border: 'none'
-  }
-  columnStyle = {
-    border: 'none',
-    fontSize: '13px !important',
-    fontWeight: 400,
-    lineHeight: 1.4
   }
 
   addEditForm: FormGroup;
   valueTrue = true;
   ownInfo = null;
 
-  closeHanhviungxu(): void {
-    document.getElementById('#canvas_hanhviungxu').classList.remove('offcanvas-on');
-    this.initForm();
-  }
-  reloadChanged(e) {
-    this.reload = e;
-    this.changedr.detectChanges();
-  }
   changeOwnerByCombobox(employeeID) {
     this.api
       .call(
@@ -203,50 +122,7 @@ export class ProposedfieldComponent implements OnInit {
       this.addEditForm.patchValue({ owner: e[0] })
     }
   }
-  async openForm(dataItem, isAddMode) {
-    if (isAddMode == true) {
-      this.isAddMode = true;
-      this.initForm();
-      this.reload = true;
-      this.ownInfo = { domainUser: null };
-      this.changedr.detectChanges();
-    }
-    else {
-      this.isAddMode = false;
-      this.addEditForm.patchValue(dataItem);
-      this.changeOwnerByCombobox(dataItem.owner);
-      this.changedr.detectChanges();
-    }
-    document.getElementById('#canvas_hanhviungxu').classList.add('offcanvas-on');
-  }
-  initForm() {
-    this.addEditForm = this.fb.group({
-      industryID: [
-        '',
-        Validators.compose([
-          Validators.required,
 
-        ]),
-      ],
-      industryName: [
-        '',
-        Validators.compose([
-          Validators.required,
-        ]),
-      ],
-      note: [
-        '',
-        Validators.compose([
-        ]),
-      ],
-      owner: [
-        '',
-        Validators.compose([
-          Validators.required,
-        ]),
-      ]
-    }, { updateOn: 'blur' });
-  }
   valueChange(e) {
     if (e) {
       var field = e.field;
@@ -285,11 +161,6 @@ export class ProposedfieldComponent implements OnInit {
     })
   }
 
-  PopoverEmpEnter(p: any, dataItem) {
-    this.dataItem = dataItem;
-    p.open();
-  }
-
   onSaveForm() {
     var gridModel = {predicate: this.predicate, dataValue: this.dataValue, entityName: this.entityName}
     if (this.addEditForm.invalid == true) {
@@ -303,8 +174,6 @@ export class ProposedfieldComponent implements OnInit {
         .subscribe((res) => {
           if (res && res.msgBodyData[0]) {
             if (res.msgBodyData[0][0] == true) {
-              this.clickClosePopup();
-              this.initForm();
               let data = res.msgBodyData[0][3][0];
               this.ownDomain = res.msgBodyData[0][3][0]?.ownDomain;
               this.ownName = res.msgBodyData[0][3][0]?.ownName;
@@ -324,6 +193,75 @@ export class ProposedfieldComponent implements OnInit {
             }
           }
         });
+    }
+  }
+
+  add() {
+    var obj = {
+      isModeAdd: true,
+    };
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(AddProposedFieldComponent, obj, option);
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event) {
+          this.view.dataService.add(e.event, 1).subscribe();
+          this.changedr.detectChanges();
+        }
+      });
+    });
+  }
+
+  edit(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    var obj = {
+      isModeAdd: false,
+    };
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(AddProposedFieldComponent, obj, option);
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event) {
+            this.view.dataService.update(e.event).subscribe();
+            this.changedr.detectChanges();
+          }
+        });
+      });
+  }
+
+  delete(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (option: any) =>
+        this.beforeDelete(option, this.view.dataService.dataSelected)
+      )
+      .subscribe();
+  }
+
+  beforeDelete(op: any, data) {
+    op.methodName = 'DeleteCompetencesAsync';
+    op.data = data?.competenceID;
+    return true;
+  }
+
+  clickMF(e, data) {
+    if (e) {
+      switch (e.functionID) {
+        case 'SYS03':
+          this.edit(data);
+          break;
+        case 'SYS02':
+          this.delete(data);
+          break;
+      }
     }
   }
 }

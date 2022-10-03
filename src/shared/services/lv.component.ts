@@ -45,7 +45,7 @@ var lvFileClientAPI = {
         }
     },
     __post__: async (apiPath,data) => {
-        debugger
+        
         var url = lvFileClientAPI.serverApIHostUrl + "/" + apiPath;
         function checkHasFile() {
             var retData = {}

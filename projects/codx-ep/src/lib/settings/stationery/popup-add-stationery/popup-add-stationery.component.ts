@@ -4,7 +4,6 @@ import {
   Injector,
   Optional,
   Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -73,7 +72,6 @@ export class PopupAddStationeryComponent extends UIComponent {
     @Optional() dialog?: DialogRef
   ) {
     super(injector);
-    debugger;
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.dialog = dialog;
@@ -123,6 +121,7 @@ export class PopupAddStationeryComponent extends UIComponent {
               }
             });
         }
+        this.detectorRef.detectChanges();
         this.dialog.close();
       });
   }
@@ -146,7 +145,6 @@ export class PopupAddStationeryComponent extends UIComponent {
         this.dialogAddStationery.patchValue({ [event['field']]: event.data });
       }
     }
-    this.colorItem = event.data;
   }
 
   closeDialog(evt: any) {

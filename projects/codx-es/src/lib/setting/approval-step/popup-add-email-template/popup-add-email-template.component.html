@@ -22,8 +22,8 @@
   <ng-template #body>
     <div class="request-to">
       <div id="from">
-        <div class="d-flex justify-content-between border-bottom mb-2">
-          <div class="d-flex align-items-end flex-grow-1">
+        <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
+          <div class="d-flex align-items-top flex-grow-1">
             <div class="w-50px fw-bold">
               <codx-label
                 name="lblTitleFrom"
@@ -34,17 +34,17 @@
               </codx-label>
             </div>
             <div class="w-100 me-2">
-              <div class="d-flex align-items-center">
+              <div class="float-left align-items-center">
                 <ng-container *ngFor="let item of lstFrom">
                   <div
                     class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                     *ngIf="item.objectType == 'U'"
                   >
-                    <div class="me-3">
+                    <div class="me-2">
                       <codx-img
                         [objectId]="item.objetID"
                         objectType="AD_Users"
-                        width="25"
+                        width="20"
                       ></codx-img>
                     </div>
                     <div class="text-gray-600 flex-grow-1 me-2">
@@ -60,8 +60,9 @@
                     class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                     *ngIf="item.objectType != 'U'"
                   >
-                    <div class="me-3 user-mini-icon">
+                    <div class="me-2 user-mini-icon w-20px h-20px">
                       <img
+                        class="w-20px h-20px"
                         [src]="
                           './assets/themes/sys/default/img/' + item.icon ??
                           'share_default.svg'
@@ -84,15 +85,16 @@
               </div>
             </div>
           </div>
-
-          <span
-            class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
-            (click)="testdata(controlShare1)"
+          <span class="btn btn-icon btn-sm btn-light">
+            <i
+              class="icon-person_add_alt_1 icon-18"
+              (click)="testdata(controlShare1)"
+            ></i
           ></span>
         </div>
       </div>
-      <div class="d-flex justify-content-between border-bottom mb-2">
-        <div class="d-flex align-items-end flex-grow-1">
+      <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
+        <div class="d-flex align-items-top flex-grow-1">
           <div class="w-50px fw-bold">
             <codx-label
               default="Đến:"
@@ -103,17 +105,17 @@
             </codx-label>
           </div>
           <div class="w-100 me-2">
-            <div class="d-flex align-items-center">
+            <div class="float-left align-items-center">
               <ng-container *ngFor="let item of lstTo">
                 <div
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType == 'U'"
                 >
-                  <div class="me-3">
+                  <div class="me-2">
                     <codx-img
                       [objectId]="item.objetID"
                       objectType="AD_Users"
-                      width="25"
+                      width="20"
                     ></codx-img>
                   </div>
                   <div class="text-gray-600 flex-grow-1 me-2">
@@ -129,7 +131,7 @@
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType != 'U'"
                 >
-                  <div class="me-3 user-mini-icon">
+                  <div class="me-3 user-mini-icon w-20px h-20px">
                     <img
                       [src]="
                         './assets/themes/sys/default/img/' + item.icon ??
@@ -156,7 +158,7 @@
         </div>
         <div class="d-flex align-items-end">
           <span
-            class="btn btn-sm fw-bold align-items-end"
+            class="btn btn-sm fw-bold text-hover-primary"
             *ngIf="
               !showCC &&
               !showBCC &&
@@ -167,7 +169,7 @@
             >Cc</span
           >
           <span
-            class="btn btn-sm fw-bold"
+            class="btn btn-sm fw-bold text-hover-primary"
             *ngIf="
               !showCC &&
               !showBCC &&
@@ -177,29 +179,31 @@
             (click)="changeSendType('bcc')"
             >Bcc</span
           >
-          <span
-            class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
-            (click)="testdata(controlShare2)"
+          <span class="btn btn-icon btn-sm btn-light">
+            <i
+              class="icon-person_add_alt_1 icon-18"
+              (click)="testdata(controlShare2)"
+            ></i
           ></span>
         </div>
       </div>
       <div id="box_cc" *ngIf="showCC || lstCc.length > 0">
-        <div class="d-flex justify-content-between border-bottom mb-2">
-          <div class="d-flex align-items-end flex-grow-1">
+        <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
+          <div class="d-flex align-items-top flex-grow-1">
             <div class="w-50px fw-bold">Cc:</div>
           </div>
           <div class="w-100 me-2">
-            <div class="d-flex align-items-center">
+            <div class="float-left align-items-center">
               <ng-container *ngFor="let item of lstCc">
                 <div
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType == 'U'"
                 >
-                  <div class="me-3">
+                  <div class="me-2">
                     <codx-img
                       [objectId]="item.objetID"
                       objectType="AD_Users"
-                      width="25"
+                      width="20"
                     ></codx-img>
                   </div>
                   <div class="text-gray-600 flex-grow-1 me-2">
@@ -215,8 +219,9 @@
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType != 'U'"
                 >
-                  <div class="me-3 user-mini-icon">
+                  <div class="me-2 user-mini-icon w-20px h-20px">
                     <img
+                      class="w-20px h-20px"
                       [src]="
                         './assets/themes/sys/default/img/' + item.icon ??
                         'share_default.svg'
@@ -244,30 +249,32 @@
               (click)="changeSendType('bcc')"
               >Bcc</span
             >
-            <span
-              class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
-              (click)="testdata(controlShare3)"
+            <span class="btn btn-icon btn-sm btn-light">
+              <i
+                class="icon-person_add_alt_1 icon-18"
+                (click)="testdata(controlShare3)"
+              ></i
             ></span>
           </div>
         </div>
       </div>
       <div id="box_bcc" *ngIf="showBCC || lstBcc.length > 0">
-        <div class="d-flex justify-content-between border-bottom mb-2">
-          <div class="d-flex align-items-end flex-grow-1">
+        <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
+          <div class="d-flex align-items-top flex-grow-1">
             <div class="w-50px fw-bold">Bcc:</div>
           </div>
           <div class="w-100 me-2">
-            <div class="d-flex align-items-center">
+            <div class="float-left align-items-center">
               <ng-container *ngFor="let item of lstBcc">
                 <div
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType == 'U'"
                 >
-                  <div class="me-3">
+                  <div class="me-2">
                     <codx-img
                       [objectId]="item.objetID"
                       objectType="AD_Users"
-                      width="25"
+                      width="20"
                     ></codx-img>
                   </div>
                   <div class="text-gray-600 flex-grow-1 me-2">
@@ -283,9 +290,9 @@
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType != 'U'"
                 >
-                  <div class="me-3 user-mini-icon">
+                  <div class="me-2 user-mini-icon w-20px h-20px">
                     <img
-                      class="svg-icon w-20px"
+                      class="svg-icon w-20px h-20px"
                       [src]="
                         './assets/themes/sys/default/img/' +
                         (item.icon ?? 'share_default.svg')
@@ -315,9 +322,11 @@
               (click)="changeSendType('cc')"
               >Cc</span
             >
-            <span
-              class="icon-person_add_alt_1 text-primary text-hover-dark icon-22"
-              (click)="testdata(controlShare4)"
+            <span class="btn btn-icon btn-sm btn-light">
+              <i
+                class="icon-person_add_alt_1 icon-18"
+                (click)="testdata(controlShare4)"
+              ></i
             ></span>
           </div>
         </div>
@@ -437,7 +446,7 @@
 
     <div
       #textarea
-      class="request-box d-flex justify-content-between mt-4 h-250px"
+      class="request-box d-flex justify-content-between mt-3 h-150px"
       (click)="click()"
     >
       <div class="message w-100" (click)="getPosition()">
@@ -447,7 +456,7 @@
           field="message"
           format="ed"
           [crrValue]="dialogETemplate.value.message"
-          height="250"
+          height="150"
           (valueChange)="valueChange($event)"
           (keyup)="keyUp($event)"
         ></codx-input>
@@ -967,8 +976,8 @@
     </div>
   </ng-template> -->
   <ng-template #footer>
-    <div class="d-flex flex-column mt-4 mb-8">
-      <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex align-items-center">
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center me-3" *ngIf="showIsTemplate">
             <label class="ms-2 me-2">
@@ -1025,7 +1034,12 @@
             "
           >
             <label class="mt-1 me-2">
-              <codx-label [formModel]="formModel" fiedName="SendTime">
+              <codx-label
+                default="Gửi vào lúc"
+                formName="EmailTemplates"
+                gridViewName="grvEmailTemplates"
+                fiedName="SendTime"
+              >
               </codx-label>
             </label>
             <div class="w-150px">
@@ -1035,17 +1049,18 @@
                 field="sendTime"
                 [crrValue]="dialogETemplate.value.sendTime"
                 (valueChange)="valueChange($event)"
+                [disabled]="dialogETemplate.value.sendLater == false"
               ></codx-input>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="d-flex justify-content-end">
-      <a class="btn btn-primary fw-bold" (click)="onSaveWithTemplate(null)">
-        <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
-        </codx-label>
-      </a>
+      <div class="d-flex justify-content-end">
+        <a class="btn btn-primary fw-bold" (click)="onSaveWithTemplate(null)">
+          <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
+          </codx-label>
+        </a>
+      </div>
     </div>
   </ng-template>
 
@@ -1144,8 +1159,8 @@
 <ng-template #template let-data>
   <div class="e-list-wrapper e-list-avatar">
     <span class="e-list-content">{{ data.name }}</span>
-  </div></ng-template
->
+  </div>
+</ng-template>
 
 <ng-template #headerSearch>
   <div class="mb-1 mx-3">

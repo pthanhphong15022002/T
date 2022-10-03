@@ -1,4 +1,4 @@
-<div class="p-3 bg-body rounded-3">
+<div class="p-3 bg-body rounded-3 h-100">
   <codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
     method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true" [button]="button"
     (buttonClick)="click($event)" (viewChanged)="changeView($event)" (selectedChange)="selectedChange($event)">

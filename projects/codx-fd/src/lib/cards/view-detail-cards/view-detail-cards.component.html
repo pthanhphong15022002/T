@@ -1,7 +1,7 @@
 
 <ng-container *ngIf="data">
     <div class="w-100 d-flex flex-column" id="erm_content">
-        <div class="container p-2 vh-100">
+        <div class="container p-2">
             <div class="d-flex">
                 <div class="row h-500px min-h-500px me-4 d-flex justify-content-center text-center p-6" 
                     [style.background]="data.backgroundColor">
@@ -136,72 +136,76 @@
                     </ng-container>
                 </ng-container>
             </div>
-            <div class="mt-6 clear">
-                <ng-container *ngIf="data.hasGift">
+            <ng-container *ngIf="data.hasGift">
+                <div class="mt-6 clear">
                     <div class="text-primary fw-bolder">
                         <codx-label formName="" name="lblGift" default="Quà tặng"></codx-label>
                     </div>
-                    <div class="mt-9 group-gifts" *ngIf="data.gifts">
-                        <div class="d-flex">
-                            <div class="">
-                                <codx-img
-                                    [objectId]="data.gifts.giftID"
-                                    objectType="FD_Gifts"
-                                    [width]="200"
-                                    imageType="square">
-                                </codx-img>
+                    <ng-container *ngIf="data.gifts">
+                        <div class="mt-9 group-gifts">
+                            <div class="d-flex ps-2">
+                                <div class="">
+                                    <codx-img
+                                        [objectId]="data.gifts.giftID"
+                                        objectType="FD_Gifts"
+                                        [width]="200"
+                                        imageType="square">
+                                    </codx-img>
+                                </div>
+                                <div class="ms-6">
+                                    <div class="fw-bolder">{{data.gifts.giftName}}</div>
+                                    <div class="mt-2">
+                                        <span class="font-weight-normal text-dark-50">
+                                            <codx-label formName=""name="lblPrice" default="Giá:"></codx-label>
+                                        </span>
+                                        <span class="ms-1">{{data.gifts.price}}</span>
+                                        <span class="ms-1">
+                                            <codx-label formName="" name="lblCoin" default="xu"></codx-label>
+                                        </span> 
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="font-weight-normal">
+                                            <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
+                                        </span>
+                                        <span>{{data.gifts.memo}}</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="font-weight-normal text-dark-50 mr-1">
+                                            <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
+                                        </span>
+                                        <span>{{data.gifts.quantity}}</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="p-2 b rounded-pill"
+                                            [style.color]="data.gifts.status | vll:'L1428':'color' | async"
+                                            [style.background-color]="(data.gifts.status | vll:'L1428':'color' | async) + '30'">
+                                            {{data.gifts.status |vll:"L1428":"text" | async}}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="ms-6">
-                                <div class="fw-bolder">{{data.gifts.giftName}}</div>
-                                <div class="mt-2">
-                                    <span class="font-weight-normal text-dark-50">
-                                        <codx-label formName=""name="lblPrice" default="Giá:"></codx-label>
-                                    </span>
-                                    <span class="ms-1">{{data.gifts.price}}</span>
-                                    <span class="ms-1">
-                                        <codx-label formName="" name="lblCoin" default="xu"></codx-label>
-                                    </span> 
-                                </div>
-                                <div class="mt-2">
-                                    <span class="font-weight-normal">
-                                        <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
-                                    </span>
-                                    <span>{{data.gifts.memo}}</span>
-                                </div>
-                                <div class="mt-2">
-                                    <span class="font-weight-normal text-dark-50 mr-1">
-                                        <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
-                                    </span>
-                                    <span>{{data.gifts.quantity}}</span>
-                                </div>
-                                <div class="mt-2">
-                                    <span class="p-2 b rounded-pill"
-                                        [style.color]="data.gifts.status | vll:'L1428':'color' | async"
-                                        [style.background-color]="(data.gifts.status | vll:'L1428':'color' | async) + '30'">
-                                        {{data.gifts.status |vll:"L1428":"text" | async}}
-                                    </span>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </ng-container>
-            </div>
-            <div class="mt-6 clear" *ngIf="data.point">
-                <div class="text-primary fw-bolder mb-2">
-                    <codx-label formName="" name="lblGiftCoins1" default="Tặng xu"></codx-label>
+                    </ng-container>
                 </div>
-                <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                        <div class="w-20px ml-4">
-                            <img alt="Pic" src=".../../../assets/demos/svg/dollar.png">
-                        </div>
-                        <div class="ms-5 fw-bolder">
-                            <codx-label formName="" name="lblGiftCoins2" default="Tặng xu"></codx-label>
-                        </div>
+            </ng-container>
+            <ng-container *ngIf="data.hasPoint">
+                <div class="mt-6 mb-4">
+                    <div class="text-primary fw-bolder mb-2">
+                        <codx-label formName="" name="lblGiftCoins1" default="Tặng xu"></codx-label>
                     </div>
-                    <div class="ms-3">{{data.point}}</div>
+                    <ng-container *ngIf="data.point">
+                        <div class="ps-2">
+                            <span class="w-20px ml-4">
+                                <img alt="Pic" src=".../../../assets/demos/svg/dollar.png">
+                            </span>
+                            <span class="ms-5 fw-bolder">
+                                <codx-label formName="" name="lblGiftCoins2" default="Xu tặng:"></codx-label>
+                            </span>
+                            <span class="ms-3">{{data.point}}</span>
+                        </div>
+                    </ng-container>
                 </div>
-            </div>
+            </ng-container>
         </div>
     </div>
 </ng-container>

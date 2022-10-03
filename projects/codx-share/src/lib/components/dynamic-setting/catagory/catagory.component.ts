@@ -183,7 +183,7 @@ export class CatagoryComponent implements OnInit {
           // data['showIsPublish'] = null;
           // data['showSendLater'] = null;
 
-          // this.callfc.openForm(component, '', 800, screen.height, '', data);
+          this.callfc.openForm(component, '', 800, screen.height, '', data);
           break;
         default:
           break;
@@ -268,7 +268,7 @@ export class CatagoryComponent implements OnInit {
   }
 
   getAlertRule() {
-    debugger;
+
     var lstRoleID = [];
     if (this.setting) {
       this.setting.forEach((element) => {

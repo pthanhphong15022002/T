@@ -1,0 +1,29 @@
+<codx-form [headerText]="header" [dialog]="dialog" [formModel]="formModel" [body]="body" [footer]="footer"
+    [data]="dataUpdate">
+    <ng-template #body>
+        <div class="title">
+            {{dataUpdate.giftName}}
+        </div>
+        <br>
+        <div [innerHTML]="dataUpdate.memo"></div>
+        <div class="form-group mt-3">
+            <codx-label name="lblCurrentOnhand" [formModel]="formModel" default="Tồn kho hiện tại"></codx-label>
+            <codx-input type="number" class="form-control" placeholder="" formControlName='onhand'
+                [crrValue]="dataUpdate.onhand">
+            </codx-input>
+        </div>
+        <div class="form-group mt-3">
+            <codx-label name="lblOldOnhand" [formModel]="formModel" default="Tồn kho mới"></codx-label>
+            <codx-input type="number" min="0" class="form-control" placeholder="" field="onhand" [crrValue]="dataUpdate.onhand"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="changeHand($event)">
+            </codx-input>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+                <codx-label name="lblSave" [formModel]="formModel" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

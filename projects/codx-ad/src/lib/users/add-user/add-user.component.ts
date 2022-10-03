@@ -104,6 +104,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
       this.adUser.phone = '';
       this.adUser.email = '';
+      this.adUser.employeeID = '';
+      this.adUser.buid = '';
+      this.adUser.userName = '';
       if (this.dataCopy?.chooseRoles) {
         this.viewChooseRole = this.dataCopy?.chooseRoles;
         this.viewChooseRoleTemp = JSON.parse(
@@ -122,7 +125,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
@@ -133,6 +136,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .getUserGroupByID(this.adUser.userGroup)
         .subscribe((res) => {
           if (res) this.dataUG = res;
+          console.log('check this.dataUG', this.dataUG);
         });
     } else this.title = 'Thêm người dùng';
     this.formGroupAdd = new FormGroup({
@@ -167,7 +171,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adService.notifyInvalid(this.formUser, this.formModel);
       return;
     } else {
-      if (this.checkValueChangeUG == true || this.adUser.userGroup) {
+      if (
+        this.checkValueChangeUG == true ||
+        (this.adUser.userGroup && this.dataUG && this.dataUG?.length > 0)
+      ) {
         this.dataUG.forEach((dt) => {
           var userID = '';
           var userName = '';
@@ -216,6 +223,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var obj = {
       formType: this.formType,
       data: item,
+      userID: this.adUser.userID,
     };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,
@@ -325,15 +333,15 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
               if (result) {
+                debugger;
                 this.loadData.emit();
-                this.dialog.close(res.save);
               }
+              this.dialog.close(res.save);
             });
           res.save.chooseRoles = res.save?.functions;
           (this.dialog.dataService as CRUDService).update(res.save).subscribe();
           this.changeDetector.detectChanges();
         }
-        this.dialog.close(res.save);
       });
   }
 
@@ -347,19 +355,19 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .updateFileDirectReload(res.update.userID)
               .subscribe((result) => {
                 if (result) {
-                  debugger;
                   this.loadData.emit();
-                  this.dialog.close(res.update);
                 }
+                this.dialog.close(res.update);
               });
           }
           res.update.chooseRoles = res.update.functions;
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
+          this.dialog.close(res.update);
+
           this.changeDetector.detectChanges();
         }
-        this.dialog.close(res.update);
       });
   }
 

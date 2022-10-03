@@ -25,7 +25,7 @@ export class FolderService implements OnDestroy {
         private api: ApiHttpService
     ) {
         this.options.pageLoading = false;
-        this.options.pageSize = 1;
+        this.options.pageSize = 20;
         this.options.funcID = "";        
     }
 
@@ -56,6 +56,7 @@ export class FolderService implements OnDestroy {
     getFolders(parentId: string): Observable<any> {
         this.options.entityName = "DM_FolderInfo";
         this.options.pageLoading = false;
+
       //  if (folderType)
         //return this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", [this.options, parentId]);
         //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);

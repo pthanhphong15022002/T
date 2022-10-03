@@ -1,11 +1,10 @@
+import { AddBehaviorRuleComponent } from './setting/category/behavior-rule/add-behavior-rule/add-behavior-rule.component';
+import { AddProposedFieldComponent } from './setting/category/proposed-field/add-proposed-field/add-proposed-field.component';
+import { AddGiftGroupComponent } from './setting/category/gift-group/add-gift-group/add-gift-group.component';
 import { LayoutNoAsideComponent } from './../../../codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { BehaviorComponent } from './setting/category/behavior/behavior.component';
-import { BehaviorruleComponent } from './setting/category/behaviorrule/behaviorrule.component';
-import { GiftgroupComponent } from './setting/category/giftgroup/giftgroup.component';
 import { GiftsComponent } from './setting/category/gifts/gifts.component';
-import { ProposedfieldComponent } from './setting/category/proposedfield/proposedfield.component';
 import { CategoryComponent } from './setting/category/category.component';
-import { DedicationrankComponent } from './setting/dedicationrank/dedicationrank.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -53,6 +52,13 @@ import { PolicyCardComponent } from './setting/feedback-message/policy-card/poli
 import { PolicyCoinComponent } from './setting/feedback-message/policy-coin/policy-coin.component';
 import { PolicyDedicationComponent } from './setting/feedback-message/policy-dedication/policy-dedication.component';
 import { DetailPolicyComponent } from './setting/feedback-message/detail-policy/detail-policy.component';
+import { AddGiftsComponent } from './setting/category/gifts/add-gifts/add-gifts.component';
+import { AddWarehouseComponent } from './setting/category/gifts/add-warehouse/add-warehouse.component';
+import { AddBehaviorComponent } from './setting/category/behavior/add-behavior/add-behavior.component';
+import { DedicationRankComponent } from './setting/dedication-rank/dedication-rank.component';
+import { GiftGroupComponent } from './setting/category/gift-group/gift-group.component';
+import { BehaviorRuleComponent } from './setting/category/behavior-rule/behavior-rule.component';
+import { ProposedFieldComponent } from './setting/category/proposed-field/proposed-field.component';
 
 export const routes: Routes = [
   {
@@ -98,16 +104,34 @@ export const routes: Routes = [
         component: SettingComponent,
       },
       {
+        path: 'setting/cards/:funcID',
+        component: FeedbackMessageComponent,
+      },
+      {
+        path: 'detailpolicy',
+        component: DetailPolicyComponent,
+      },
+      {
+        path: 'setting/fedranges/:funcID',
+        component: DedicationRankComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
         path: 'setting/gifts/:funcID',
         component: GiftsComponent,
       },
       {
         path: 'setting/giftgroups/:funcID',
-        component: GiftgroupComponent,
+        component: GiftGroupComponent,
       },
       {
         path: 'setting/behaviorgroups/:funcID',
-        component: BehaviorruleComponent,
+        component: BehaviorRuleComponent,
       },
       {
         path: 'setting/behaviors/:funcID',
@@ -115,19 +139,7 @@ export const routes: Routes = [
       },
       {
         path: 'setting/industries/:funcID',
-        component: ProposedfieldComponent,
-      },
-      {
-        path: 'setting/fedranges/:funcID',
-        component: DedicationrankComponent,
-      },
-      {
-        path: 'setting/cards/:funcID',
-        component: FeedbackMessageComponent,
-      },
-      {
-        path: 'detailpolicy',
-        component: DetailPolicyComponent,
+        component: ProposedFieldComponent,
       },
     ],
   },
@@ -147,12 +159,12 @@ const Component: Type<any>[] = [
   PopupAddCardsComponent,
   GiftTransComponent,
   SettingComponent,
-  DedicationrankComponent,
+  DedicationRankComponent,
   CategoryComponent,
-  ProposedfieldComponent,
+  ProposedFieldComponent,
   GiftsComponent,
-  GiftgroupComponent,
-  BehaviorruleComponent,
+  GiftGroupComponent,
+  BehaviorRuleComponent,
   BehaviorComponent,
   PopupAddGiftComponent,
   FeedbackMessageComponent,
@@ -162,6 +174,12 @@ const Component: Type<any>[] = [
   PolicyCoinComponent,
   PolicyDedicationComponent,
   DetailPolicyComponent,
+  AddGiftsComponent,
+  AddWarehouseComponent,
+  AddGiftGroupComponent,
+  AddProposedFieldComponent,
+  AddBehaviorRuleComponent,
+  AddBehaviorComponent,
 ];
 
 @NgModule({
