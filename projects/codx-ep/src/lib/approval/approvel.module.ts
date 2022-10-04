@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { ApprovalRoomsComponent } from './room/approval-room.component';
 
-
 const routes: Routes = [
   {
     path: '',
