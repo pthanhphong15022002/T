@@ -93,7 +93,8 @@ export class PopupUpdateProgressComponent implements OnInit {
    this.tmSv.updateProgressTask(this.funcID,this.task.taskID,this.task.modifiedOn,this.task.percentage,this.comment).subscribe(res=>{
     if(res && res.length > 0){
       this.dialog.close(res) ;
-      this.notiService.notify("Cập nhật tiến độ thành công !")
+      this.notiService.notifyCode('SYS007');
+     // this.notiService.notify("Cập nhật tiến độ thành công !")
     }
    })
   }
