@@ -141,4 +141,7 @@ export class PopupSearchPostComponent implements OnInit {
   {
 
   }
+  valueChange(event:any){
+    
+  }
 }
