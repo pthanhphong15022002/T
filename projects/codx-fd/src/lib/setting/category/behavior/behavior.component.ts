@@ -29,6 +29,7 @@ import {
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { AddBehaviorComponent } from './add-behavior/add-behavior.component';
+import { CodxFdService } from '../../../codx-fd.service';
 
 @Component({
   selector: 'app-behavior',
@@ -54,8 +55,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
   button?: ButtonModel;
   dialog: DialogRef;
   functionList: any;
-  gridViewSetup: any;
-
+  formModel: any;
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
@@ -84,60 +84,67 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
+
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
     });
-    this.cache
-      .gridViewSetup(
-        this.functionList?.formName,
-        this.functionList?.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) this.gridViewSetup = res;
-      });
   }
   columnsGrid = [];
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
-    this.columnsGrid = [
-      {
-        field: 'parentName',
-        headerText: 'Quy tắc',
-        template: this.parentNameR,
-      },
-      {
-        field: 'competenceID',
-        headerText: this.gridViewSetup?.CompetenceID?.headerText,
-      },
-      {
-        field: 'competenceName',
-        headerText: 'Mô tả',
-        template: this.competenceName,
-      },
-      { field: 'memo', headerText: 'Ghi chú', template: this.memo },
-      {
-        field: 'createName',
-        headerText: 'Người tạo',
-        template: this.itemCreateBy,
-      },
-      { field: 'createdOn', headerText: 'Ngày tạo', template: this.createdOn },
-    ];
     this.changedr.detectChanges();
   }
-  ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnsGrid,
-        },
-      },
-    ];
-    this.changedr.detectChanges();
+
+  onLoading(e: any) {
+    if (this.view.formModel) {
+      var formModel = this.view.formModel;
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.columnsGrid = [
+              {
+                field: 'parentName',
+                headerText: 'Quy tắc',
+                template: this.parentNameR,
+              },
+              {
+                field: 'competenceID',
+                headerText: res.CompetenceID.headerText,
+              },
+              {
+                field: 'competenceName',
+                headerText: res.CompetenceName.headerText,
+                template: this.competenceName,
+              },
+              { field: 'memo', headerText: 'Ghi chú', template: this.memo },
+              {
+                field: 'createName',
+                headerText: 'Người tạo',
+                template: this.itemCreateBy,
+              },
+              {
+                field: 'createdOn',
+                headerText: res.CreatedOn.headerText,
+                template: this.createdOn,
+              },
+            ];
+            this.views = [
+              {
+                type: ViewType.grid,
+                sameData: true,
+                active: false,
+                model: {
+                  resources: this.columnsGrid,
+                },
+              },
+            ];
+            this.changedr.detectChanges();
+          }
+        });
+    }
   }
 
   valueChange(e) {

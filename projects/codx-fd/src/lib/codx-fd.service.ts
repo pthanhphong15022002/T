@@ -42,6 +42,22 @@ export class CodxFdService {
     return list.reduce((a, v) => ({ ...a, [v[fieldName]]: v[fieldValue] }), {});
   }
 
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
+        var formModel = new FormModel();
+        if (funcList) {
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
+        }
+        resolve(formModel);
+      });
+    });
+  }
+  
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,

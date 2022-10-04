@@ -87,7 +87,6 @@ export class AddProposedFieldComponent extends UIComponent implements OnInit {
   }
 
   beforeSave(option) {
-    debugger;
     option.methodName = 'AddEditIndustryAsync';
     this.dataUpdate.category = '1';
     this.dataUpdate.isGroup = false;

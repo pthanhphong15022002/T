@@ -1,8 +1,31 @@
 import { Observable, Subject } from 'rxjs';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, ElementRef, TemplateRef, ContentChild, Injector } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectorRef,
+  ViewChild,
+  ElementRef,
+  TemplateRef,
+  ContentChild,
+  Injector,
+} from '@angular/core';
 import { LayoutService } from '@shared/services/layout.service';
-import { ApiHttpService, AuthStore, ButtonModel, CodxGridviewComponent, DialogRef, ImageViewerComponent, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  ButtonModel,
+  CodxGridviewComponent,
+  DialogRef,
+  ImageViewerComponent,
+  NotificationsService,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
@@ -12,10 +35,9 @@ import { AddProposedFieldComponent } from './add-proposed-field/add-proposed-fie
 @Component({
   selector: 'app-proposed-field',
   templateUrl: './proposed-field.component.html',
-  styleUrls: ['./proposed-field.component.scss']
+  styleUrls: ['./proposed-field.component.scss'],
 })
 export class ProposedFieldComponent extends UIComponent implements OnInit {
-
   funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
@@ -43,23 +65,24 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('note', { static: true }) note: TemplateRef<any>;
   @ViewChild('createdOn', { static: true }) createdOn: TemplateRef<any>;
-  @ViewChild("subheader") subheader;
+  @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
-  @ViewChild("gridView") gridView: CodxGridviewComponent;
+  @ViewChild('gridView') gridView: CodxGridviewComponent;
 
-  constructor(private injector: Injector,
+  constructor(
+    private injector: Injector,
     private fb: FormBuilder,
     private notificationsService: NotificationsService,
     private changedr: ChangeDetectorRef,
     private authStore: AuthStore,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     super(injector);
     this.user = this.authStore.get();
-    this.route.params.subscribe(params => {
-      if(params) this.funcID = params['funcID'];
-    })
+    this.route.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
   }
   reload = false;
   columnsGrid = [];
@@ -68,28 +91,57 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
     this.button = {
       id: 'btnAdd',
     };
-    this.columnsGrid = [
-      { field: 'industryID', headerText: 'Mã lĩnh vực'},
-      { field: 'industryName', headerText: 'Tên lĩnh vực'},
-      { field: 'owners', headerText: 'Người sở hữu', template: this.itemOwner},
-      { field: 'note', headerText: 'Ghi chú', template: this.note},
-      { field: 'createName', headerText: 'Người tạo', template: this.itemCreateBy},
-      { field: 'createdOn', headerText: 'Ngày tạo', template: this.createdOn}
-    ];
     this.changedr.detectChanges();
   }
 
-  ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnsGrid,
+  onLoading(e) {
+    if (this.view.formModel) {
+      var formModel = this.view.formModel;
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.columnsGrid = [
+              { field: 'industryID', headerText: res.IndustryID.headerText },
+              {
+                field: 'industryName',
+                headerText: res.IndustryName.headerText,
+              },
+              {
+                field: 'owner',
+                headerText: res.Owner.headerText,
+                template: this.itemOwner,
+              },
+              {
+                field: 'note',
+                headerText: res.Note.headerText,
+                template: this.note,
+              },
+              {
+                field: 'createName',
+                headerText: 'Người tạo',
+                template: this.itemCreateBy,
+              },
+              {
+                field: 'createdOn',
+                headerText: res.CreatedOn.headerText,
+                template: this.createdOn,
+              },
+            ];
+          }
+        });
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: false,
+          model: {
+            resources: this.columnsGrid,
+          },
         },
-      },
-    ];
+      ];
+      this.changedr.detectChanges();
+    }
   }
 
   addEditForm: FormGroup;
@@ -99,9 +151,9 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
   changeOwnerByCombobox(employeeID) {
     this.api
       .call(
-        "ERM.Business.HR",
-        "EmployeesBusiness",
-        "GetListEmployeesByUserIDAsync",
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
         [JSON.stringify([employeeID])]
       )
       .subscribe((res) => {
@@ -110,26 +162,12 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
         this.changedr.detectChanges();
       });
   }
-  changeCombobox(e) {
-    // this.cbx.valueChange.subscribe((value) => {
-    //   if (value.fieldSelect === "owner") {
-    //     if (value.value !== this.addEditForm.value.owner) {
-    //       this.changeOwnerByCombobox(value.value);
-    //       this.addEditForm.patchValue({ owner: value.value })
-    //     }
-    //   }
-    // });
-    if (e) {
-      this.addEditForm.patchValue({ owner: e[0] })
-    }
-  }
 
   valueChange(e) {
     if (e) {
       var field = e.field;
       var dt = e.data;
-      if (field === "stop")
-        this.addEditForm.patchValue({ stop: dt.checked })
+      if (field === 'stop') this.addEditForm.patchValue({ stop: dt.checked });
       else {
         var obj = {};
         obj[field] = dt?.value ? dt.value : dt;
@@ -138,39 +176,45 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
     }
   }
   deleteProposedField(item) {
-    this.notificationsService.alertCode("").subscribe((x: Dialog) => {
+    this.notificationsService.alertCode('').subscribe((x: Dialog) => {
       let that = this;
       x.close = function (e) {
         if (e) {
           var status = e?.event?.status;
-          if (status == "Y") {
+          if (status == 'Y') {
             that.api
-              .call("BS", "IndustriesBusiness", "DeleteIndustryAsync", [
-                item.industryID
+              .call('BS', 'IndustriesBusiness', 'DeleteIndustryAsync', [
+                item.industryID,
               ])
               .subscribe((res) => {
                 if (res && res.msgBodyData[0]) {
                   if (res.msgBodyData[0][0] == true) {
-                    that.gridView.removeHandler(item, "industryID");
+                    that.gridView.removeHandler(item, 'industryID');
                     that.changedr.detectChanges();
                   }
                 }
               });
           }
         }
-      }
-    })
+      };
+    });
   }
 
   onSaveForm() {
-    var gridModel = {predicate: this.predicate, dataValue: this.dataValue, entityName: this.entityName}
+    var gridModel = {
+      predicate: this.predicate,
+      dataValue: this.dataValue,
+      entityName: this.entityName,
+    };
     if (this.addEditForm.invalid == true) {
-      this.notificationsService.notify("Vui lòng kiểm tra lại thông tin nhập");
+      this.notificationsService.notify('Vui lòng kiểm tra lại thông tin nhập');
       return 0;
     } else {
       return this.api
-        .call("BS", "IndustriesBusiness", "AddEditIndustryAsync", [
-          this.addEditForm.value, this.isAddMode, gridModel
+        .call('BS', 'IndustriesBusiness', 'AddEditIndustryAsync', [
+          this.addEditForm.value,
+          this.isAddMode,
+          gridModel,
         ])
         .subscribe((res) => {
           if (res && res.msgBodyData[0]) {
@@ -180,16 +224,15 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
               this.ownName = res.msgBodyData[0][3][0]?.ownName;
               this.ownPosition = res.msgBodyData[0][3][0]?.ownPosition;
               this.userName = this.user?.userName;
-              if(this.isAddMode == false) {
+              if (this.isAddMode == false) {
                 this.checkAddEdit = false;
                 this.industryIdUpdate = data?.industryID;
                 this.changedr.detectChanges();
               }
-              this.gridView.addHandler(data, this.isAddMode, "industryID");  
+              this.gridView.addHandler(data, this.isAddMode, 'industryID');
               console.log('check gridView', this.gridView);
               this.changedr.detectChanges();
-            }
-            else {
+            } else {
               this.notificationsService.notify(res.msgBodyData[0][1]);
             }
           }
@@ -208,7 +251,11 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddProposedFieldComponent, obj, option);
+      this.dialog = this.callfc.openSide(
+        AddProposedFieldComponent,
+        obj,
+        option
+      );
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
           this.view.dataService.add(e.event, 0).subscribe();
@@ -231,7 +278,11 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(AddProposedFieldComponent, obj, option);
+        this.dialog = this.callfc.openSide(
+          AddProposedFieldComponent,
+          obj,
+          option
+        );
         this.dialog.closed.subscribe((e) => {
           if (e?.event) {
             this.view.dataService.update(e.event).subscribe();
@@ -252,7 +303,7 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
 
   beforeDelete(op: any, data) {
     op.methodName = 'DeleteIndustryAsync';
-    op.data = data?.competenceID;
+    op.data = data?.industryID;
     return true;
   }
 
