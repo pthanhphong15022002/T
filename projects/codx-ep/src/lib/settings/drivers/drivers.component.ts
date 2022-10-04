@@ -56,8 +56,10 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   dialog!: DialogRef;
   formModel: FormModel;
   columnGrids: any;
-  // fGroupAddDriver: FormGroup;
-  // dialogRef: DialogRef;
+  grvDrivers:any;
+  funcIDName:any;
+  popupTitle='';
+
   isAfterRender = false;
 
   constructor(
@@ -70,6 +72,11 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       if (res) {
         this.formModel = res;
         this.isAfterRender = true;
+        this.cache.functionList(this.funcID).subscribe(res => {
+          if (res) {            
+            this.funcIDName = res.customName.toString().toLowerCase();
+          }
+        });
       }
     });
     
@@ -90,72 +97,20 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     });
     
   }
-
-  // ngAfterViewInit(): void {
-  //   this.buttons = {
-  //     id: 'btnAdd',
-  //   };
-  //   this.codxEpService.getFormModel(this.funcID).then((fModel) => {
-  //     this.cache
-  //       .gridViewSetup(fModel.formName, fModel.gridViewName)
-  //       .subscribe((gv) => {
-  //         console.log(gv);
-  //       });
-
-  //     this.columnsGrid = [
-  //       {
-  //         field: 'resourceID',
-  //         headerText: 'Mã lái xe', //gv['resourceID'].headerText,
-  //       },
-  //       {
-  //         field: 'icon',
-  //         headerText: 'Ảnh đại diện',
-  //         template: this.avatar,
-  //       },
-  //       {
-  //         field: 'resourceName',
-  //         headerText: 'Tên lái xe',
-  //       },
-  //       // {
-  //       //   headerText: 'Tình trạng',
-  //       //   template: this.statusCol,
-  //       // // },
-  //       // {
-  //       //   headerText: 'Xếp hạng',
-  //       //   template: this.rankingCol,
-  //       // },
-  //       {
-  //         headerText: 'Nguồn',
-  //         template: this.categoryCol,
-  //       },
-  //       {
-  //         headerText: 'Người điều phối',
-  //         width: '20%',
-  //         template: this.owner,
-  //       },
-  //     ];
-
-  //     this.views = [
-  //       {
-  //         sameData: true,
-  //         type: ViewType.grid,
-  //         active: true,
-  //         model: {
-  //           resources: this.columnsGrid,
-  //         },
-  //       },
-  //     ];
-  //     this.detectorRef.detectChanges();
-  //   });
-  // }
   ngAfterViewInit(): void {
     this.buttons = {
       id: 'btnAdd',
-    };
-    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+    };     
+        
+    this.detectorRef.detectChanges();
+  }
+  onLoading(evt: any) {
+    let formModel = this.view.formModel;
+    if (formModel) {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
+          this.grvDrivers=gv;
           this.columnGrids = [
             {
               field: 'resourceName',
@@ -202,19 +157,16 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
           this.views = [
             {
               sameData: true,
-              id: '1',
-              text: 'Danh mục lái xe',
               type: ViewType.grid,
               active: true,
               model: {
                 resources: this.columnGrids,
               },
-            },
+            },            
           ];
           this.detectorRef.detectChanges();
         });
-    });
-    this.detectorRef.detectChanges();
+    }
   }
   openPopupDevice(template: any,lstEquipments? ) {    
     this.carsEquipments.forEach(element => {
@@ -230,8 +182,22 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
   }
-  click(event: ButtonModel) {
-    switch (event.id) {
+  clickMF(event, data) {
+    console.log(event);
+    this.popupTitle=event?.text + " " + this.funcIDName;      
+    switch (event?.functionID) {
+      case 'SYS03':        
+        this.edit(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+
+    }
+  }
+  click(evt: ButtonModel) {
+    this.popupTitle=evt?.text + " " + this.funcIDName;  
+    switch (evt.id) {
       case 'btnAdd':
         this.addNew();
         break;
@@ -253,7 +219,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddDriversComponent,
-        [this.dataSelected, true],
+        [this.dataSelected, true,this.popupTitle],
         option
       );
     });
@@ -265,39 +231,20 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          this.dataSelected = this.view.dataService.dataSelected;
+          this.dataSelected = this.view?.dataService?.dataSelected;
           let option = new SidebarModel();
           option.Width = '550px';
           option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddDriversComponent,
-            [this.view.dataService.dataSelected, false],
+            [this.view.dataService.dataSelected, false,this.popupTitle],
             option
           );
         });
     }
   }
 
-  // delete(obj?) {
-  //   if (obj) {
-  //     this.view.dataService.delete([obj], true).subscribe((res) => {
-  //       console.log(res);
-  //     });
-  //   }
-  // }
-
-  // delete(data?: any) {
-  //   this.view.dataService.methodDelete = 'DeleteResourceAsync';
-  //   this.view.dataService.dataSelected = data;
-  //   this.view.dataService
-  //     .delete([this.view.dataService.dataSelected], true)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.codxEpService.deleteFile(data.recID, this.formModel.entityName, true);
-  //       }
-  //     });
-  // }
   delete(obj?) {
     this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
@@ -309,7 +256,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
             'ERM.Business.DM',
             'FileBussiness',
             'DeleteByObjectIDAsync',
-            [obj.recID, 'EP_Driver', true]
+            [obj.recID, 'EP_Drivers', true]
           )
           .subscribe();
         this.detectorRef.detectChanges();
@@ -317,18 +264,5 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
-
-  clickMF(event, data) {
-    console.log(event);
-    switch (event?.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-    }
-  }
-
   
 }

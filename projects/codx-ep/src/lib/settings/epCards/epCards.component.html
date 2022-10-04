@@ -13,8 +13,7 @@
   [className]="className"
   [method]="method"
   (buttonClick)="click($event)"
-  (selectedChange)="onSelect($event)"
-  (requestEnded)="closeDialog($event)"
+  (onLoading)="onLoading($event)" 
 >
   <ng-template #avatarCol let-data>
     <div class="h-50px m-4">
