@@ -98,7 +98,8 @@ import { PopupAddCalendarComponent } from './components/setting-calendar/popup-a
 import { PopupAddDayoffsComponent } from './components/setting-calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupAddEventComponent } from './components/setting-calendar/popup-add-event/popup-add-event.component';
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
-
+import { DocumentEditorAllModule , DocumentEditorContainerAllModule } from '@syncfusion/ej2-angular-documenteditor';
+import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -167,7 +168,7 @@ const T_Component: Type<any>[] = [
   PopupAddEventComponent,
   PopupEditCalendarComponent,
   FileComponent,
-  InfoLeftComponent
+  InfoLeftComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -191,6 +192,9 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     BoldReportDesignerModule,
     BoldReportViewerModule,
     ReactiveFormsModule,
+    DocumentEditorAllModule,
+    DocumentEditorContainerAllModule,
+    SpreadsheetAllModule
   ],
   exports: [T_Component, T_Pipe],
 })
