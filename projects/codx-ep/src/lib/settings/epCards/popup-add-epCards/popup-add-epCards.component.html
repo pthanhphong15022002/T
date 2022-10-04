@@ -1,12 +1,12 @@
 <codx-form
-  #form
+#form  
   [headerText]="headerText"
   [subHeaderText]="subHeaderText"
   [body]="body"
   [footer]="footer"
   [dialog]="dialogRef"
   [formModel]="formModel"
-  [formControl]="fGroupAddEpCards"
+  [data]="data"
   *ngIf="isAfterRender"
 >
   <ng-template #body>
@@ -14,25 +14,25 @@
       <div class="col-6 form-group">
         <codx-label
           fiedName="ResourceID"
-          [formModel]="dialogRef.formModel"
+          [formModel]="form.formModel"
           default="Mã số thẻ"
         >
         </codx-label>
         <codx-input
           ControlName="resourceID"
           [formModel]="form.formModel"
-          [Group]="fGroupAddEpCards"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
 
       <div class="col-6 form-group">
-        <codx-label fiedName="Status" [formModel]="dialogRef.formModel">
+        <codx-label fiedName="Status" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="status"
           [formModel]="form.formModel"
-          [Group]="fGroupAddEpCards"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -42,14 +42,14 @@
       <div class="col-12 form-group">
         <codx-label
           fiedName="ResourceName"
-          [formModel]="dialogRef.formModel"
+          [formModel]="form.formModel"
           default="Tên thẻ xe"
         >
         </codx-label>
         <codx-input
           ControlName="resourceName"
           [formModel]="form.formModel"
-          [Group]="fGroupAddEpCards"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -57,12 +57,12 @@
 
     <div class="row">
       <div class="form-group">
-        <codx-label fiedName="Owner" [formModel]="dialogRef.formModel">
+        <codx-label fiedName="Owner" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="owner"
           [formModel]="form.formModel"
-          [Group]="fGroupAddEpCards"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -72,12 +72,12 @@
       <div class="form-group">
         <codx-label
           fiedName="Note"
-          [formModel]="dialogRef.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           ControlName="note"
           [formModel]="form.formModel"
-          [Group]="fGroupAddEpCards"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -104,7 +104,7 @@
         <codx-label
           name="lblSave"
           default="Lưu"
-          [formModel]="dialogRef.formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>

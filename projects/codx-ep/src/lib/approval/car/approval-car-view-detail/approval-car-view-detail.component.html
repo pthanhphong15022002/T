@@ -75,52 +75,14 @@
       <codx-label default="Thời gian:" name="lblBookingOn" class="fw-bold me-1"></codx-label>
       <div class=" ms-1 text-gray-600">
         <span>
-          {{ itemDetail?.startDate | date: "dd/MM/yyyy" }}
-          {{ itemDetail?.startDate | date: "shortTime" }}
+          {{ itemDetail?.startDate}}
         </span>
         <span> - </span>
         <span>
-          {{ itemDetail?.endDate | date: "dd/MM/yyyy" }}
-          {{ itemDetail?.endDate | date: "shortTime" }}
+          {{ itemDetail?.endDate}}          
         </span>
       </div>
     </div>
-
-    <!-- <div class="d-flex mt-1 flex-grow-1 mb-2">
-      <div class="d-flex me-6">
-        <codx-label
-          field="CreatedOn"
-          [formModel]="formModel"
-          default="Ngày"
-          class="fw-bold me-1"
-        >
-        </codx-label>
-        <span class="text-gray-600">
-          :
-          {{
-            itemDetail
-              ? (itemDetail?.createdOn | date: "dd/MM/yyyy")
-              : "dd/MM/yyyy"
-          }}
-        </span>
-      </div>
-      <div class="d-flex me-6">
-        <codx-label default="Thời gian" class="fw-bold me-1"></codx-label>
-        <span class="text-gray-600">
-          :
-          {{ itemDetail?.startDate | date: "shortTime" }}
-        </span>
-        <span
-          *ngIf="itemDetail?.startDate && itemDetail?.endDate"
-          class="ms-1 me-1"
-          >{{ "-" }}</span
-        >
-        <span class="text-gray-600">
-          {{ itemDetail?.endDate | date: "shortTime" }}
-        </span>
-      </div>
-    </div> -->
-
     <div class="d-flex mb-2">
       <div class="d-flex text-dark">
         <codx-label
@@ -183,25 +145,6 @@
       </span>
     </div>
 
-    <!-- <div class="d-flex mb-2 flex-column">
-      <codx-label default="Người đi" class="fw-bold me-4 row text-primary"></codx-label>
-      <div class="d-flex text-dark me-6">        
-        <div class="d-flex justify-content-end">
-          <codx-imgs
-            [objectId]="itemDetail?.bookingAttendees"
-            objectType="AD_Users"
-            [numberImages]="6"
-            [width]="30"
-          >
-          </codx-imgs>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <ng-container *ngIf="files">
-      <codx-thumbnail [files]="files" displayThumb="simple" [hideDelete]="'0'">
-      </codx-thumbnail>
-    </ng-container> -->
   </ng-template>
 
   <ng-template #body>
@@ -342,7 +285,7 @@
       <div class="d-flex mt-2">
         <span class="icon-schedule icon-16 text-gray-600"></span>
         <span class="ms-2 text-dark">{{
-          data?.dueDate | date: "dd/MM/yyyy"
+          data?.dueDate 
         }}</span>
       </div>
     </div>

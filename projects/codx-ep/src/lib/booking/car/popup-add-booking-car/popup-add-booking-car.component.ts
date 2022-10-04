@@ -196,13 +196,16 @@ export class PopupAddBookingCarComponent extends UIComponent {
               this.lstPeople.push(this.tempAtender);
             }
           });
+          if(this.driver!=null){
+            this.driverCheck=true;
+          }
+          else{
+            this.driverCheck=false;
+          }
           this.detectorRef.detectChanges();
         }
-      });  
-      // this.driverValidator(this.driver.userID,this.data.startDate,this.data.endDate,this.data.recID);
-      // this.detectorRef.detectChanges();      
-    }
-    
+      });        
+    }    
   }
 
   initForm() {
@@ -292,6 +295,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       var cbxCar = event.component.dataService.data;
       cbxCar.forEach((element) => {
         if (element.ResourceID == event.data) {
+          this.useCard=element.UseCard;
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
             tmpDevice.id = item.EquipmentID;
@@ -338,6 +342,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         if (res && res.msgBodyData[0]!=null) {
           this.driverCheck= res.msgBodyData[0];
           if(!res.msgBodyData[0]){
+            this.driver=null;
             this.notificationsService.notifyCode('E0011');//Tài xế ko săn sàng
           }
         }      
