@@ -64,6 +64,7 @@ import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.
 import { ViewWorkComponent } from './tmmeetings/view-work/view-work.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { PopupStatusMeetingComponent } from './tmmeetings/popup-status-meeting/popup-status-meeting.component';
+import { CoreModule } from '@core/core.module';
 
 export const routes: Routes = [
   {
@@ -143,7 +144,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutNoAsideToolbarFluidComponent,
-    children: [   
+    children: [
       {
         path: 'meetingdetails/:funcID',
         component: MeetingDetailComponent,
@@ -240,6 +241,7 @@ const T_Component: Type<any>[] = [
     InlineSVGModule.forRoot(),
     HttpClientModule,
     CodxCoreModule,
+    CoreModule,
     RouterModule.forChild(routes),
     CodxShareModule,
     ChartAllModule,
