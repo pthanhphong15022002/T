@@ -98,11 +98,17 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   valueChange(event: any) {
     if (event?.field && event?.component) {
-      if (event?.field == 'userID') {
+      if (event?.field == 'email') {
+        let user = event?.data?.dataSelected[0]?.dataSelected;
+        this.data.userID = user?.UserID;
+        this.data.fullName = user?.UserName;
         this.data[event['field']] = event?.data.value[0];
-        this.data.fullName = event?.data.dataSelected[0].text;
 
-        this.form?.formGroup.patchValue({ fullName: this.data.fullName });
+        this.form?.formGroup.patchValue({
+          fullName: this.data?.fullName,
+          userID: this.data?.userID,
+          email: this.data?.email,
+        });
       } else if (event?.field == 'signatureType') {
         if (event?.data == '2') {
           this.data.supplier = '1';
@@ -130,11 +136,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.dialogSignature.patchValue(this.data);
 
     if (this.dialogSignature.invalid == true) {
-      this.esService.notifyInvalid(
-        this.dialogSignature,
-        this.formModel,
-        this.data
-      );
+      this.esService.notifyInvalid(this.dialogSignature, this.formModel);
       return;
     }
 

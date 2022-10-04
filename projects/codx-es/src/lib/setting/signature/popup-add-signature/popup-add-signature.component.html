@@ -34,7 +34,7 @@
     <div class="form-group">
       <codx-label fiedName="Email" [formModel]="dialog.formModel"> </codx-label>
       <div class="d-flex">
-        <div class="w-100 me-2">
+        <!-- <div class="w-100 me-2">
           <codx-input
             type="text"
             field="email"
@@ -42,15 +42,16 @@
             [formModel]="dialog.formModel"
           >
           </codx-input>
-        </div>
+        </div> -->
 
         <codx-input
+          [ngClass]="'w-100'"
           type="Combobox"
-          [refValue]="'Users'"
+          [refValue]="'UserEmails'"
           refType="P"
-          field="userID"
-          [crrValue]="data.userID"
-          [showInput]="false"
+          field="email"
+          [crrValue]="data.email"
+          [showInput]="true"
           [multiple]="false"
           (valueChange)="valueChange($event)"
         >
