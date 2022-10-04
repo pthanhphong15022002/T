@@ -98,6 +98,8 @@ import { PopupAddCalendarComponent } from './components/setting-calendar/popup-a
 import { PopupAddDayoffsComponent } from './components/setting-calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupAddEventComponent } from './components/setting-calendar/popup-add-event/popup-add-event.component';
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
+import { ActiviesApprovalListComponent } from './layout/drawers/activies-approval-list/activies-approval-list.component';
+import { ActiviesSliderComponent } from './layout/drawers/activies-approval-list/activies-slider/activies-slider.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -167,7 +169,9 @@ const T_Component: Type<any>[] = [
   PopupAddEventComponent,
   PopupEditCalendarComponent,
   FileComponent,
-  InfoLeftComponent
+  InfoLeftComponent,
+  ActiviesApprovalListComponent,
+  ActiviesSliderComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

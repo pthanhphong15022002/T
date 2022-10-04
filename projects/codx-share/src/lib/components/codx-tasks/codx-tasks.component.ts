@@ -150,6 +150,9 @@ export class CodxTasksComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -213,8 +216,6 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.funcID == 'TMT0203') this.isAssignTask = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     //chay code chet cho nhanh, muon dong thi bat len
     // this.cache.functionList(this.funcID).subscribe(f => {
@@ -495,10 +496,10 @@ export class CodxTasksComponent
           false
         );
       if (e?.event && e?.event != null && e?.event[1] != null) {
-        if(e.event[0]){
-            this.itemSelected = data;
-            this.detail.taskID = this.itemSelected.taskID;
-            this.detail.getTaskDetail();
+        if (e.event[0]) {
+          this.itemSelected = data;
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
         }
         //cai này cần dùng khi TMT0202
         // let listTask = e?.event[1];
