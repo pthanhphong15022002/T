@@ -38,7 +38,8 @@ export class PopupSignatureComponent extends UIComponent {
   isAddSignature2 = false;
   isAddStamp = false;
 
-  headerText = 'Chọn chữ kí';
+  //headerText = 'Chọn chữ kí';
+  headerText = '';
 
   dialog: DialogRef;
   dialogSignature: FormGroup;

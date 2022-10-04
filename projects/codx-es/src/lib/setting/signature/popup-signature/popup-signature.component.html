@@ -6,11 +6,7 @@
 >
   <ng-template popup add #body>
     <div class="card-body card-scroll mx-5 mx-xl-18 pb-15">
-      <div class="text-center mb-6">
-        <!-- <h1 class="">
-          <codx-label name="lblChooseSignature" default="Chọn chữ ký" [formModel]="dialog.formModel"></codx-label>
-        </h1> -->
-      </div>
+      <div class="text-center mb-6"></div>
       <ul class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6">
         <li class="nav-item m-0">
           <a
@@ -24,7 +20,6 @@
               <span class="icon-text_format icon-24 m-auto mb-1"></span>
               <span class="fs-6 fw-bold">
                 <codx-label
-                  default="Họ & tên"
                   fiedName="FullName"
                   [formModel]="dialog.formModel"
                 ></codx-label>
@@ -55,7 +50,6 @@
               <span class="icon-looks_one icon-24 m-auto mb-1"></span>
               <span class="fs-6 fw-bold">
                 <codx-label
-                  default="Chữ ký"
                   fiedName="Signature1"
                   [formModel]="dialog.formModel"
                 ></codx-label>
@@ -75,7 +69,6 @@
               <span class="icon-looks_two icon-24 m-auto mb-1"></span>
               <span class="fs-6 fw-bold">
                 <codx-label
-                  default="Ký nháy"
                   fiedName="Signature2"
                   [formModel]="dialog.formModel"
                 ></codx-label>
@@ -95,7 +88,6 @@
               <span class="icon-filter_tilt_shift icon-24 m-auto mb-1"></span>
               <span class="fs-6 fw-bold">
                 <codx-label
-                  default="Con dấu"
                   fiedName="Stamp"
                   [formModel]="dialog.formModel"
                 ></codx-label>
@@ -150,28 +142,6 @@
                   </codx-input>
                 </span>
               </span>
-              <!-- <label
-                class="btn btn-outline border d-flex flex-stack active p-3 mb-3"
-              >
-                <span class="d-flex align-items-center me-2">
-                  <span class="d-flex flex-column">
-                    <span class="text-dark fw-bolder d-block font-yuji fs-4"
-                      >Phạm Hữu Thời</span
-                    >
-                  </span>
-                </span>
-                <span class="me-3">
-                  <codx-input
-                    type="radio"
-                    name="radio"
-                    label="1"
-                    [checked]="false"
-                    labelPosition="After"
-                    [disabled]="true"
-                    value="radio"
-                  ></codx-input>
-                </span>
-              </label> -->
             </div>
           </div>
         </div>
@@ -193,27 +163,11 @@
           id="pane_3"
           [ngClass]="currentTab == 3 ? 'active show' : 'd-none'"
         >
-          <!-- <codx-attachment
-            #attSignature1
-            idBrowse="attSignature1"
-            [objectType]="dialog.formModel.entityName"
-            [objectId]="data.recID + '1'"
-            hideBtnSave="1"
-            hideFolder="1"
-            hideUploadBtn="0"
-            [functionID]="dialog.formModel.funcID"
-            (fileAdded)="fileAdded($event, 3)"
-            type="inline"
-            hideImageUpload="0"
-            (fileCount)="fileCount($event, attSignature1, 3)"
-            allowMultiFile="0"
-          >
-          </codx-attachment> -->
           <div class="m-auto text-center">
             <codx-img
               #imgSignature1
-              class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-              [width]="100"
+              class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
+              [width]="200"
               [funcId]="'ESS21'"
               [objectId]="data.recID + '1'"
               [objectType]="'ES_Signatures'"
@@ -235,27 +189,11 @@
           id="pane_4"
           [ngClass]="currentTab == 4 ? 'active show' : 'd-none'"
         >
-          <!-- <codx-attachment
-            #attSignature2
-            idBrowse="attSignature2"
-            [objectType]="dialog.formModel.entityName"
-            [objectId]="data.recID + '2'"
-            hideBtnSave="1"
-            hideFolder="1"
-            hideUploadBtn="0"
-            [functionID]="dialog.formModel.funcID"
-            (fileAdded)="fileAdded($event, 4)"
-            type="inline"
-            hideImageUpload="0"
-            (fileCount)="fileCount($event, attSignature2, 4)"
-            allowMultiFile="0"
-          >
-          </codx-attachment> -->
           <div class="m-auto text-center">
             <codx-img
               #imgSignature2
-              class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-              [width]="100"
+              class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
+              [width]="200"
               [funcId]="'ESS21'"
               [objectId]="data.recID + '2'"
               [objectType]="'ES_Signatures'"
@@ -277,27 +215,11 @@
           id="pane_5"
           [ngClass]="currentTab == 5 ? 'active show' : 'd-none'"
         >
-          <!-- <codx-attachment
-            #attStamp
-            idBrowse="attStamp"
-            [objectType]="dialog.formModel.entityName"
-            [objectId]="data.recID + 's'"
-            hideBtnSave="1"
-            hideFolder="1"
-            hideUploadBtn="0"
-            [functionID]="dialog.formModel.funcID"
-            (fileAdded)="fileAdded($event, 5)"
-            type="inline"
-            hideImageUpload="0"
-            (fileCount)="fileCount($event, attStamp, 5)"
-            allowMultiFile="0"
-          >
-          </codx-attachment> -->
           <div class="m-auto text-center">
             <codx-img
               #imgStamp
-              class="border border-gray-300 border-dashed rounded symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-              [width]="100"
+              class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
+              [width]="200"
               [funcId]="'ESS21'"
               [objectId]="data.recID + 's'"
               [objectType]="'ES_Signatures'"

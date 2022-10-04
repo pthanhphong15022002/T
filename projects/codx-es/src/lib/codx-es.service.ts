@@ -142,7 +142,7 @@ export class CodxEsService {
               );
             } else {
               this.notificationsService.notifyCode(
-                'E0001',
+                'SYS028',
                 0,
                 '"' + gridViewSetup[fieldName].headerText + '"'
               );
@@ -151,7 +151,7 @@ export class CodxEsService {
         });
     } else {
       this.notificationsService.notifyCode(
-        'E0001',
+        'SYS028',
         0,
         '"' + gridViewSetup[fieldName].headerText + '"'
       );

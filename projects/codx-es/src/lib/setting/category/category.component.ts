@@ -60,6 +60,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   className = 'CategoriesBusiness';
   method = 'GetListAsync';
 
+  funcList: any = {};
+
   dataSelected: any;
   dialog!: DialogRef;
 
@@ -72,6 +74,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     private esService: CodxEsService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cacheSv.functionList(this.funcID).subscribe((func) => {
+      this.funcList = func;
+    });
   }
 
   ngOnInit(): void {}
@@ -179,13 +184,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.add();
+        this.add(evt);
         break;
       case 'btnEdit':
-        this.edit();
+        this.edit(evt);
         break;
       case 'btnDelete':
-        this.delete();
+        this.delete(evt);
         break;
       case 'btnEmail':
         let data = {
@@ -218,15 +223,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddCategoryComponent,
-        { data: this.viewBase.dataService.dataSelected, isAdd: true },
+        {
+          data: this.viewBase.dataService.dataSelected,
+          isAdd: true,
+          headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+        },
         option
       );
     });
   }
 
   edit(evt?) {
-    if (evt) {
-      this.viewBase.dataService.dataSelected = evt;
+    if (evt?.data) {
+      this.viewBase.dataService.dataSelected = evt?.data;
 
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
@@ -238,7 +247,11 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           option.FormModel = this.viewBase?.formModel;
           this.dialog = this.callfunc.openSide(
             PopupAddCategoryComponent,
-            { data: evt, isAdd: false },
+            {
+              data: evt?.data,
+              isAdd: false,
+              headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+            },
             option
           );
         });
@@ -247,8 +260,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
   delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
+    if (evt?.data) {
+      deleteItem = evt?.data;
     }
     this.viewBase.dataService.delete([deleteItem], true).subscribe((res) => {
       console.log(res);
@@ -260,12 +273,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event, data) {
+    event.data = data;
     switch (event?.functionID) {
       case 'SYS03':
-        this.edit(data);
+        this.edit(event);
         break;
       case 'SYS02':
-        this.delete(data);
+        this.delete(event);
         break;
     }
   }
