@@ -115,7 +115,7 @@ export class ApprovalCarsComponent extends UIComponent {
           resourceModel: this.resourceField,
           //template:this.cardTemplate,
           template4: this.resourceHeader,
-          template5: this.resourceTootip,
+          //template5: this.resourceTootip,
           template6: this.mfButton,//header          
           template8: this.contentTmp,//content
           statusColorRef: 'vl003',

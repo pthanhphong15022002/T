@@ -31,7 +31,7 @@ export class AddUpdateNoteBookComponent implements OnInit {
   memo: any;
   formAdd: FormGroup;
   readOnly = false;
-  dialog: any;
+  dialog: DialogRef;
   formType = '';
   formModel: any;
   data: any;
@@ -95,7 +95,6 @@ export class AddUpdateNoteBookComponent implements OnInit {
   }
 
   addNoteBooks() {
-    console.log("check dialog noteBook", this.dialog);
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), -1)
       .subscribe((res) => {

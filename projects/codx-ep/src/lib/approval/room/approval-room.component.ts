@@ -134,7 +134,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           resourceModel:this.resourceField,//resource
           //template2:this.titleTmp,
           template4: this.resourceHeader,
-          template5: this.resourceTootip,//tooltip
+          //template5: this.resourceTootip,//tooltip
           template6: this.mfButton,//header          
           template8: this.contentTmp,//content
           //template7: this.footerButton,//footer

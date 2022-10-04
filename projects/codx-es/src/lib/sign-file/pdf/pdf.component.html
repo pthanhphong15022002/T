@@ -298,7 +298,6 @@
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false"
-        (pdfLoadingStarts)="loadingPdf($event)"
         (pdfLoaded)="loadedPdf($event)"
         (pageRendered)="pageRendered($event)"
         [showBookmarkButton]="false"
@@ -685,13 +684,7 @@
                           <button
                             type="button"
                             class="btn btn-sm btn-primary"
-                            (click)="
-                              changeAnnotPro(
-                                area.labelType,
-                                area.recID,
-                                area.createdOn
-                              )
-                            "
+                            (click)="changeAnnotPro(area.labelType, area.recID)"
                           >
                             <codx-label
                               name="lblSave"
@@ -773,9 +766,10 @@
 <ng-template #pageInput>
   <codx-input
     type="number"
+    id="pageNumber"
     [min]="1"
     [max]="pageMax"
-    [crrValue]="curPage"
+    [(crrValue)]="curPage"
     (valueChange)="goToPage($event)"
     [showSpinButton]="false"
   >

@@ -123,6 +123,7 @@ export class RoleEditComponent extends UIComponent implements OnInit, OnDestroy 
     // }
 
     this.redirectPagePermissions();
+    this.dialog.close();
 
   }
   //TEMP

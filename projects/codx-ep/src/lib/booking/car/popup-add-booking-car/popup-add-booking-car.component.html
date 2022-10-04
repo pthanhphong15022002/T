@@ -54,21 +54,21 @@
 
       <div class="row form-group d-flex flex-row justify-content-start align-items-center">
         <div class="col-1">
-          <codx-input #checkbox class="test-switch" type="switch" field="repeat" [disabled]="false"
-            [checked]="data?.repeat" (valueChange)="valueChange($event)">
+          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true"
+            [checked]="driverCheck" (valueChange)="valueChange($event)" >
           </codx-input>
         </div>
-        <div class="col-4">
-          <codx-label fiedName="Repeat" default="Đã điều tài xế" [formModel]="form.formModel"></codx-label>
+        <div class="col-5">
+          <codx-label name="lblDriverStatus" default="Đã điều tài xế" [formModel]="form.formModel"></codx-label>
         </div>
 
         <div class="col-1">
-          <codx-input #checkbox class="test-switch" type="switch" field="useCard" [disabled]="false"
-            [checked]="data?.repeat" (valueChange)="valueChange($event)">
+          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true"
+            [checked]="useCard" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
-        <div class="col-4">
-          <codx-label fiedName="UseCard" [formModel]="form.formModel"></codx-label>
+        <div class="col-5">
+          <codx-label name="lblUseCard" default="Có sử dụng thẻ" [formModel]="form.formModel"></codx-label>
         </div>
       </div>
 
@@ -153,20 +153,20 @@
         <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
           <div class="" *ngIf="driver != null">
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [objectId]="driver.objectID" [width]="30" [objectType]="driver.objectType"></codx-img>
+              <codx-img [objectId]="driver.objectID" width="30" [objectType]="driver.objectType"></codx-img>
               <span class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
             </div>
           </div>
           <div class="" *ngIf="curUser != null">
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [objectId]="curUser.userId" [width]="30" objectType="AD_Users"></codx-img>
+              <codx-img [objectId]="curUser.userID" [width]="30" objectType="AD_Users"></codx-img>
               <span
                 class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
             </div>
           </div>
           <div class="" *ngIf="lstPeople?.length >= 1">
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [objectId]="lstPeople[0].userId" [width]="30" objectType="AD_Users"></codx-img>
+              <codx-img [objectId]="lstPeople[0].userID" [width]="30" objectType="AD_Users"></codx-img>
               <span
                 class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
             </div>
@@ -218,7 +218,7 @@
 
     <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
       <div class="symbol symbol-30px symbol-circle me-4">
-        <codx-img [objectId]="curUser.userId" [width]="30" objectType="AD_Users"></codx-img>
+        <codx-img [objectId]="curUser.userID" [width]="30" objectType="AD_Users"></codx-img>
         <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">R</span>
       </div>
 
@@ -238,7 +238,7 @@
     <div *ngIf="lstPeople!=null">
       <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [objectId]="item.userId" [width]="30" objectType="AD_Users"></codx-img>
+          <codx-img [objectId]="item.userID" [width]="30" objectType="AD_Users"></codx-img>
           <span class="symbol-badge badge badge-sm badge-circle bg-secondary top-100 start-100 text-white fs-8">O</span>
         </div>
 

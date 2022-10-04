@@ -34,10 +34,12 @@ import {
   UIComponent,
   SidebarModel,
   DialogRef,
+  DialogModel,
 } from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { AddGiftsComponent } from './add-gifts/add-gifts.component';
+import { AddWarehouseComponent } from './add-warehouse/add-warehouse.component';
 
 @Component({
   selector: 'app-gifts',
@@ -76,15 +78,16 @@ export class GiftsComponent extends UIComponent implements OnInit {
   gridViewSetup: any;
   button?: ButtonModel;
   dialog!: DialogRef;
+  viewType = ViewType;
 
   popupFiled = 1;
 
   constructor(
     private injector: Injector,
     private fb: FormBuilder,
-    private notificationsService: NotificationsService,
     private modalService: NgbModal,
     private changedr: ChangeDetectorRef,
+    private notificationsService: NotificationsService,
     private auth: AuthStore,
     private dt: ChangeDetectorRef,
     private route: ActivatedRoute
@@ -104,8 +107,6 @@ export class GiftsComponent extends UIComponent implements OnInit {
     this.button = {
       id: 'btnAdd',
     };
-    this.initForm();
-    this.initHandForm();
     this.user = this.auth?.get();
     this.loadSettingMoreFunction();
     this.changedr.detectChanges();
@@ -136,15 +137,29 @@ export class GiftsComponent extends UIComponent implements OnInit {
     }
   }
 
-  openFormCreate(e, isAddMode) {
-    if (isAddMode == true) {
-      this.isAddMode = true;
-      this.closeInfor();
-      this.getGiftID();
-    } else {
-      this.isAddMode = false;
-      this.addEditForm.patchValue(this.dataItem);
-    }
+  giftID: any;
+  add() {
+    var obj = {
+      formType: 'add',
+    };
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(AddGiftsComponent, obj, option);
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event) {
+          this.view.dataService.add(e.event, 1).subscribe();
+          this.changedr.detectChanges();
+        }
+        // if (e?.event.file) {
+        //   e.event.data.modifiedOn = new Date();
+        //   this.view.dataService.update(e.event.data).subscribe();
+        //   this.changedr.detectChanges();
+        // }
+      });
+    });
   }
 
   edit(data?) {
@@ -162,65 +177,17 @@ export class GiftsComponent extends UIComponent implements OnInit {
         option.FormModel = this.view?.currentView?.formModel;
         option.Width = '550px';
         this.dialog = this.callfc.openSide(AddGiftsComponent, obj, option);
-        // this.dialog.closed.subscribe((e) => {
-        //   if (e?.event == null)
-        //     this.view.dataService.delete(
-        //       [this.view.dataService.dataSelected],
-        //       false
-        //     );
-        // });
+        this.dialog.closed.subscribe((e: any) => {
+          if (e?.event) e.event.modifiedOn = new Date();
+          this.view.dataService.update(e.event).subscribe();
+          this.changedr.detectChanges();
+        });
       });
-  }
-
-  clickClosePopup() {
-    this.closeInfor();
   }
 
   PopoverEmpEnter(p: any, dataItem) {
     this.dataItem = dataItem;
     p.open();
-  }
-
-  openInfor(): void {
-    const doc = document.getElementById('update_infor');
-    doc.classList.add('offcanvas-on');
-  }
-  closeInfor(): void {
-    this.clearInfor();
-  }
-
-  clearInfor() {
-    this.addEditForm.controls['giftName'].setValue('');
-    this.addEditForm.controls['giftID'].setValue('');
-    this.addEditForm.controls['groupID'].setValue('');
-    this.addEditForm.controls['owner'].setValue('');
-    this.addEditForm.controls['memo'].setValue('');
-    this.addEditForm.controls['description'].setValue('');
-    this.addEditForm.controls['price'].setValue(0);
-    this.addEditForm.controls['onhand'].setValue(0);
-    this.addEditForm.controls['reservedQty'].setValue(0);
-    this.addEditForm.controls['availableQty'].setValue(0);
-    this.changedr.detectChanges();
-  }
-  initForm() {
-    const user = this.auth?.get();
-    this.addEditForm = this.fb.group(
-      {
-        giftName: ['', Validators.compose([Validators.required])],
-        giftID: ['', Validators.compose([Validators.required])],
-        image: ['', Validators.compose([])],
-        groupID: ['', Validators.compose([Validators.required])],
-        description: ['', Validators.compose([])],
-        memo: ['', Validators.compose([])],
-        price: [0, Validators.compose([Validators.required])],
-        onhand: [0, Validators.compose([Validators.required])],
-        reservedQty: [0, Validators.compose([Validators.required])],
-        availableQty: [0, Validators.compose([Validators.required])],
-        owner: [user.userID, Validators.compose([Validators.required])],
-        orgUnitID: [user['buid'], Validators.compose([])],
-      },
-      { updateOn: 'blur' }
-    );
   }
 
   loadSettingMoreFunction() {
@@ -241,95 +208,8 @@ export class GiftsComponent extends UIComponent implements OnInit {
     );
   }
 
-  clickMoreFuntion(funtionID, item, templateForm) {
-    switch (funtionID) {
-      case 'FED204211':
-        this.openFormChangeOnhand(templateForm, item);
-        break;
-      default:
-        break;
-    }
-  }
-
-  getGiftID() {
-    this.getOneFieldAutonumber(this.funcID).subscribe((key) => {
-      this.addEditForm.patchValue({ giftID: key });
-    });
-  }
-
-  getOneFieldAutonumber(functionID): Observable<any> {
-    var subject = new Subject<any>();
-    this.api
-      .call('AD', 'AutoNumbersBusiness', 'CreateAutoNumberByFunction', [
-        functionID,
-        null,
-      ])
-      .subscribe((item) => {
-        if (item && item.msgBodyData.length > 0)
-          subject.next(item.msgBodyData[0][1]);
-      });
-    return subject.asObservable();
-  }
-
-  openForm(data, isAddMode) {
-    if (isAddMode == true) {
-      this.isAddMode = true;
-      this.initForm();
-    } else {
-      this.isAddMode = false;
-      this.addEditForm.patchValue(data);
-    }
-    this.openInfor();
-  }
-  changeCombobox(data, field) {
-    if (field === 'owner' && data[0]) {
-      this.addEditForm.patchValue({ owner: data[0] });
-      this.addEditForm.patchValue({ orgUnitID: data.data.BUID });
-    }
-    if (field === 'groupID' && data[0]) {
-      this.addEditForm.patchValue({ groupID: data[0] });
-    }
-  }
-  deleteGift(item) {
-    this.notificationsService.alertCode('').subscribe((x: Dialog) => {
-      let that = this;
-      x.close = function (e) {
-        if (e) {
-          var status = e?.event?.status;
-          if (status == 'Y') {
-            that.api
-              .call('FD', 'GiftsBusiness', 'DeleteGiftAsync', [item.giftID])
-              .subscribe((res) => {
-                if (res && res.msgBodyData[0]) {
-                  if (res.msgBodyData[0][0] == true) {
-                    // that.listView.removeHandler(item, "giftID");
-                    that.changedr.detectChanges();
-                  } else {
-                    that.notificationsService.notify(res.msgBodyData[0][1]);
-                  }
-                }
-              });
-          }
-        }
-      };
-    });
-  }
-
   PopoverEmpLeave(p: any) {
     p.close();
-  }
-
-  initHandForm() {
-    this.onHandForm = this.fb.group(
-      {
-        giftID: ['', Validators.compose([Validators.required])],
-        giftName: ['', Validators.compose([Validators.required])],
-        memo: ['', Validators.compose([Validators.required])],
-        onhand: ['', Validators.compose([Validators.required])],
-        newOnhand: [0, Validators.compose([Validators.required])],
-      },
-      { updateOn: 'blur' }
-    );
   }
 
   changeHand(e) {
@@ -338,27 +218,10 @@ export class GiftsComponent extends UIComponent implements OnInit {
     }
   }
 
-  openFormChangeOnhand(form, item) {
-    this.onHandForm = this.fb.group(
-      {
-        giftID: [item.giftID],
-        giftName: [item.giftName],
-        memo: [item.memo],
-        onhand: [item.onhand == null ? 0 : item.onhand],
-        newOnhand: [0, Validators.compose([Validators.required])],
-      },
-      { updateOn: 'blur' }
-    );
-    this.modalService.open(form, {
-      ariaLabelledBy: 'modal-basic-title',
-      centered: true,
-      size: 'sm',
-    });
-    this.changedr.detectChanges();
-  }
   changeEditor(data) {
     this.addEditForm.patchValue({ description: data.data });
   }
+
   onChangeOnHandOfGift() {
     if (this.onHandForm.invalid == true) {
       return 0;
@@ -381,45 +244,6 @@ export class GiftsComponent extends UIComponent implements OnInit {
       });
   }
 
-  onSaveGift() {
-    if (this.addEditForm.status == 'INVALID') {
-      this.addEditForm.markAllAsTouched();
-      this.notificationsService.notify('Vui lòng kiểm tra lại thông tin nhập');
-      return 0;
-    } else {
-      return this.api
-        .call('FD', 'GiftsBusiness', 'AddEditGiftAsync', [
-          this.addEditForm.value,
-          this.isAddMode,
-        ])
-        .subscribe((res) => {
-          if (res && res.msgBodyData[0]) {
-            if (res.msgBodyData[0][0] == true) {
-              this.closeInfor();
-              let data = res.msgBodyData[0][2];
-              this.imageUpload
-                .updateFileDirectReload(data.giftID)
-                .subscribe((result) => {
-                  if (result) {
-                    this.initForm();
-                    this.loadData.emit();
-
-                    // this.listView.addHandler(data, this.isAddMode, "giftID");
-                    this.changedr.detectChanges();
-                  } else {
-                    this.initForm();
-                    // this.listView.addHandler(data, this.isAddMode, "giftID");
-                    this.changedr.detectChanges();
-                  }
-                });
-              this.clickClosePopup();
-            } else {
-              this.notificationsService.notify(res.msgBodyData[0][1]);
-            }
-          }
-        });
-    }
-  }
   extendShow2(): void {
     const body = document.getElementById('update_infor');
     if (body.childNodes.length == 0) return;
@@ -432,14 +256,55 @@ export class GiftsComponent extends UIComponent implements OnInit {
     this.description = data;
   }
 
-  openTangqua() {}
-
   convertDateTime(date) {
     var datetime = new Date(date);
     return datetime;
   }
 
-  delete(data) {}
+  delete(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (option: any) =>
+        this.beforeDelete(option, this.view.dataService.dataSelected)
+      )
+      .subscribe();
+  }
+
+  beforeDelete(op: any, data) {
+    op.methodName = 'DeleteGiftAsync';
+    op.data = data?.giftID;
+    return true;
+  }
+
+  openFormWarehouse(data) {
+    var obj = {
+      data: data,
+    };
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new DialogModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        this.dialog = this.callfc.openForm(
+          AddWarehouseComponent,
+          '',
+          600,
+          400,
+          '',
+          obj,
+          '',
+          option
+        );
+        this.dialog.closed.subscribe((e: any) => {
+          if (e?.event) {
+            this.view.dataService.update(e.event).subscribe();
+            this.changedr.detectChanges();
+          }
+        });
+      });
+  }
 
   clickMF(e: any, data: any) {
     if (e) {
@@ -451,6 +316,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
           this.edit(data);
           break;
         case 'FED204211':
+          this.openFormWarehouse(data);
           break;
       }
     }
