@@ -240,24 +240,21 @@
 
   <hr />
 
-  <div class="mb-2 text-dark me-6"> <span>
-    <codx-label
-    default="Nội dung công việc :"
-    name="lblMemo"
-    [formModel]="view.formModel"
-    class="text-gray-600"
-  ></codx-label>
-  </span>
-   
-  <!-- </div> -->
-  <span class="ms-2 fw-bold">
-    <span class="text-gray-700" [innerHTML]="data?.memo"></span>
-    <span  #memo *ngIf="!data?.memo">{{
-      data?.memo
-        | formatvalue: view.formModel:"memo":memo:"Tasks":"grvTasks"
-        | async
-    }}</span>
-  </span>
+  <div class="mb-2 text-dark me-6">
+    <span>
+      <codx-label
+        default="Nội dung công việc :"
+        name="lblMemo"
+        [formModel]="view.formModel"
+        class="text-gray-600"
+      ></codx-label>
+    </span>
+
+    <span class="ms-2 fw-bold">
+      <span class="text-gray-700 cut-size-long cursor-pointer">
+        <ng-container [ngTemplateOutlet]="tempHtml"></ng-container>
+      </span>
+    </span>
   </div>
   <div class="d-flex mb-2">
     <div class="d-flex text-dark me-6">
@@ -280,6 +277,51 @@
       </div>
     </div>
   </div>
+
+  <ng-template #tempHtml>
+    <ng-container *ngIf="data?.category == '2'">
+      <span
+        [innerHTML]="data?.memo2"
+        (mouseenter)="popoverMemo2.open()"
+        (mouseover)="popoverMemo2.close()"
+        [ngbPopover]="tooltipMemo2"
+        popoverClass="empPopoverClass"
+        #popoverMemo2="ngbPopover"
+        placement="left bottom top right"
+        container="body"
+      ></span>
+      <span #memo2 *ngIf="!data?.memo2"
+        >{{ data?
+        <div class="memo2"></div>
+        | formatvalue: view.formModel:"memo2":memo2:"Tasks":"grvTasks" | async
+        }}</span
+      >
+    </ng-container>
+    <ng-container *ngIf="data?.category != '2'">
+      <span
+        [innerHTML]="data?.memo"
+        (mouseenter)="popoverMemo.open()"
+        (mouseover)="popoverMemo.close()"
+        [ngbPopover]="tooltipMemo"
+        popoverClass="empPopoverClass"
+        #popoverMemo="ngbPopover"
+        placement="left bottom top right"
+        container="body"
+      ></span>
+      <span #memo *ngIf="!data?.memo">{{
+        data?.memo
+          | formatvalue: view.formModel:"memo":memo:"Tasks":"grvTasks"
+          | async
+      }}</span>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #tooltipMemo> 
+    <div  [innerHTML]="data?.memo"> </div>
+  </ng-template>
+  <ng-template #tooltipMemo2> 
+    <div  [innerHTML]="data?.memo2"> </div>
+  </ng-template>
 </ng-template>
 
 <ng-template #eventTemplate let-data>

@@ -37,7 +37,7 @@ export class RoomsComponent extends UIComponent {
   views: Array<ViewModel> = [];
   viewType = ViewType; 
   buttons: ButtonModel;
-  moreFuncs: Array<ButtonModel> = [];
+  //moreFuncs: Array<ButtonModel> = [];
   devices: any;
   dataSelected: any;
   columnGrids: any;
@@ -63,6 +63,7 @@ export class RoomsComponent extends UIComponent {
   funcIDName:any;
   afterViewInit = false;
   popupTitle='';
+  grvRooms:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService
@@ -100,11 +101,17 @@ export class RoomsComponent extends UIComponent {
   ngAfterViewInit(): void {
     this.buttons = {
       id: 'btnAdd',
-    };    
-    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+    };     
+        
+    this.detectorRef.detectChanges();
+  }
+  onLoading(evt: any) {
+    let formModel = this.view.formModel;
+    if (formModel) {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
+          this.grvRooms=gv;
           this.columnGrids = [
             {
               field: 'resourceName',
@@ -160,8 +167,7 @@ export class RoomsComponent extends UIComponent {
           ];
           this.detectorRef.detectChanges();
         });
-    });
-    this.detectorRef.detectChanges();
+    }
   }
   openPopupDevice(template: any,lstEquipments? ) {    
     this.roomEquipments.forEach(element => {
@@ -208,20 +214,6 @@ export class RoomsComponent extends UIComponent {
   }
 
   addNew() {
-  //   this.view.dataService.addNew().subscribe((res: any) => {
-  //   this.dataSelected = this.view.dataService.dataSelected;
-  //   let option = new SidebarModel();
-  //   option.DataService = this.view?.dataService;
-  //   option.FormModel = this.view?.formModel;
-  //   option.Width = '550px';
-  //   this.dialog = this.callfc.openSide(PopupAddRoomsComponent, this.dataSelected, option);
-  //   this.dialog.closed.subscribe((e) => {
-  //     if (e?.event) {
-  //       e.event.modifiedOn = new Date();
-  //       this.view.dataService.update(e.event).subscribe();
-  //     }
-  //   });
-  // });
     this.view.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
@@ -275,33 +267,4 @@ export class RoomsComponent extends UIComponent {
       });
     }
   }
-
-  // delete(data?) {
-  //   this.view.dataService.delete([data], true, (opt) => {
-  //       opt.service = 'EP';
-  //       opt.assemblyName = 'ERM.Business.EP';
-  //       opt.className = 'ResourcesBusiness';
-  //       opt.methodName = 'DeleteResourceAsync';
-  //       opt.data = data?.recID;
-  //       return true;
-  //     })
-  //     .subscribe((res: any) => {
-  //       if (res) {          
-  //         this.api
-  //           .execSv(
-  //             'DM',
-  //             'ERM.Business.DM',
-  //             'FileBussiness',
-  //             'DeleteByObjectIDAsync',
-  //             [res.recID, 'EP_Rooms', true]
-  //           )
-  //           .subscribe();
-  //         this.detectorRef.detectChanges();
-  //       }
-  //     });
-  // }
-
-  // closeDialog(evt?) {
-  //   this.dialog && this.dialog.close();
-  // }
 }
