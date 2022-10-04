@@ -98,6 +98,8 @@ import { PopupAddCalendarComponent } from './components/setting-calendar/popup-a
 import { PopupAddDayoffsComponent } from './components/setting-calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupAddEventComponent } from './components/setting-calendar/popup-add-event/popup-add-event.component';
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
+import { ActiviesApprovalListComponent } from './layout/drawers/activies-approval-list/activies-approval-list.component';
+import { ActiviesSliderComponent } from './layout/drawers/activies-approval-list/activies-slider/activies-slider.component';
 import { DocumentEditorAllModule , DocumentEditorContainerAllModule } from '@syncfusion/ej2-angular-documenteditor';
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 const T_Component: Type<any>[] = [
@@ -169,6 +171,8 @@ const T_Component: Type<any>[] = [
   PopupEditCalendarComponent,
   FileComponent,
   InfoLeftComponent,
+  ActiviesApprovalListComponent,
+  ActiviesSliderComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

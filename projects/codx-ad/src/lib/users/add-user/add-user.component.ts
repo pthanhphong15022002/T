@@ -36,6 +36,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AnyRecordWithTtl } from 'dns';
 import { AD_Roles } from '../../models/AD_Roles.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
+import { ContentTmp } from '../../models/contentTmp.model';
 
 @Component({
   selector: 'lib-add-user',
@@ -55,7 +56,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   readOnly = false;
   isAddMode = true;
   user: any;
-  adUser = new AD_User();
+  adUser: any = {};
   adRoles: AD_Roles = new AD_Roles();
   adUserRoles: AD_UserRoles = new AD_UserRoles();
   countListViewChooseRoleApp: Number = 0;
@@ -64,7 +65,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   viewChooseRoleTemp: tmpformChooseRole[] = [];
   formModel: FormModel;
   formType: any;
-  formGroupAdd: FormGroup;
   gridViewSetup: any = [];
   checkBtnAdd = false;
   saveSuccess = false;
@@ -77,6 +77,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   tmpPost: any;
   dataCopy: any;
   dataComment: any;
+  contentTmp: ContentTmp = new ContentTmp();
 
   constructor(
     private injector: Injector,
@@ -104,6 +105,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
       this.adUser.phone = '';
       this.adUser.email = '';
+      this.adUser.employeeID = '';
+      this.adUser.buid = '';
+      this.adUser.userName = '';
       if (this.dataCopy?.chooseRoles) {
         this.viewChooseRole = this.dataCopy?.chooseRoles;
         this.viewChooseRoleTemp = JSON.parse(
@@ -111,7 +115,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         );
         this.countListViewChoose();
       }
-    } else this.adUser.buid = '';
+    } else this.adUser.buid = null;
     this.dialog = dialog;
     this.user = auth.get();
 
@@ -133,15 +137,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .getUserGroupByID(this.adUser.userGroup)
         .subscribe((res) => {
           if (res) this.dataUG = res;
-          console.log('check this.dataUG', this.dataUG);
         });
     } else this.title = 'Thêm người dùng';
-    this.formGroupAdd = new FormGroup({
-      userName: new FormControl('', Validators.required),
-      buid: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.required),
-      phone: new FormControl('', Validators.required),
-    });
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
         if (this.dataAfterSave && this.dataAfterSave.userID) {
@@ -149,25 +146,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
         }
       }
     });
-    this.initForm();
-  }
-
-  initForm() {
-    this.adService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((dt) => {
-        if (dt) {
-          this.formUser = dt;
-        }
-      });
   }
 
   openPopup(item: any) {
-    this.formUser.patchValue(this.adUser);
-    if (this.formUser.invalid) {
-      this.adService.notifyInvalid(this.formUser, this.formModel);
-      return;
-    } else {
+    var formGroup = this.form.formGroup.controls;
+    if (
+      formGroup.userID.status == 'VALID' &&
+      formGroup.userName.status == 'VALID' &&
+      formGroup.buid.status == 'VALID' &&
+      formGroup.email.status == 'VALID'
+    ) {
       if (
         this.checkValueChangeUG == true ||
         (this.adUser.userGroup && this.dataUG && this.dataUG?.length > 0)
@@ -207,7 +195,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
           }
         });
       } else this.openPopupRoles(item);
-    }
+    } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
   openPopupRoles(item: any) {
@@ -220,6 +208,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var obj = {
       formType: this.formType,
       data: item,
+      userID: this.adUser.userID,
     };
     this.dialogRole = this.callfc.openForm(
       PopRolesComponent,
@@ -254,11 +243,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   addUserTemp() {
     this.checkBtnAdd = true;
-    this.formUser.patchValue(this.adUser);
-    if (this.formUser.invalid) {
-      this.adService.notifyInvalid(this.formUser, this.formModel);
-      return;
-    } else {
+    var formGroup = this.form.formGroup.controls;
+    if (
+      formGroup.userID.status == 'VALID' &&
+      formGroup.userName.status == 'VALID' &&
+      formGroup.buid.status == 'VALID' &&
+      formGroup.email.status == 'VALID'
+    ) {
       this.dialog.dataService
         .save((opt: any) => this.beforeSaveTemp(opt), 0)
         .subscribe((res) => {
@@ -273,7 +264,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
             this.dataAfterSave = res.save;
           }
         });
-    }
+    } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
   countListViewChoose() {
@@ -329,7 +320,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
               if (result) {
-                debugger;
                 this.loadData.emit();
               }
               this.dialog.close(res.save);
@@ -360,8 +350,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-          this.dialog.close(res.update);
-
           this.changeDetector.detectChanges();
         }
       });
@@ -369,11 +357,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    this.formUser.patchValue(this.adUser);
-    if (this.formUser.invalid) {
-      this.adService.notifyInvalid(this.formUser, this.formModel);
-      return;
-    } else {
+    var formGroup = this.form.formGroup.controls;
+    if (
+      formGroup.userID.status == 'VALID' &&
+      formGroup.userName.status == 'VALID' &&
+      formGroup.buid.status == 'VALID' &&
+      formGroup.email.status == 'VALID'
+    ) {
       if (this.isAddMode) {
         if (this.checkBtnAdd == false) {
           this.onAdd();
@@ -400,7 +390,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.getHTMLFirstPost(this.adUser);
         this.adService.createFirstPost(this.tmpPost).subscribe();
       } else this.onUpdate();
-    }
+    } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
   getHTMLFirstPost(data) {
@@ -410,11 +400,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     let contentDialog = viewRef.rootNodes;
     let html = contentDialog[1] as HTMLElement;
     this.tmpPost = {
-      content: html.innerHTML,
+      contentTmp: html.innerHTML,
       approveControl: '0',
       category: '1',
       shareControl: '9',
       listTag: [],
+      isContentTmp: true,
     };
   }
 

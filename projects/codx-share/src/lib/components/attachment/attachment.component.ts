@@ -79,7 +79,7 @@ export class AttachmentComponent implements OnInit {
   titleUpload = 'Tải lên';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
- 
+
   urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
@@ -94,11 +94,11 @@ export class AttachmentComponent implements OnInit {
   maxFileSizeUploadMB = 0;
   referType: string;
   folderID: string;
-  infoHDD = 
-  {
-    totalHdd : 0,
-    totalUsed : 0
-  }
+  infoHDD =
+    {
+      totalHdd: 0,
+      totalUsed: 0
+    }
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
@@ -161,7 +161,7 @@ export class AttachmentComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    
+
     this.user = this.auth.get();
     this.dialog = dialog;
     if (data?.data != null) {
@@ -212,11 +212,11 @@ export class AttachmentComponent implements OnInit {
           if (
             document
               .getElementsByName('UploadFiles')
-              [i].getAttribute('idbutton') == null
+            [i].getAttribute('idbutton') == null
           ) {
             document
               .getElementsByName('UploadFiles')
-              [i].setAttribute('idbutton', this.idBrowse);
+            [i].setAttribute('idbutton', this.idBrowse);
             break;
           }
         }
@@ -322,7 +322,7 @@ export class AttachmentComponent implements OnInit {
     if (status === 'File uploaded successfully') {
       this.uploadObj.remove(
         this.filesDetails[
-          this.filesList.indexOf(args.currentTarget.parentElement)
+        this.filesList.indexOf(args.currentTarget.parentElement)
         ]
       );
     } else {
@@ -398,14 +398,13 @@ export class AttachmentComponent implements OnInit {
       if (item == true) this.openPopup();
     });
     this.fileService.getTotalHdd().subscribe(item => {
-      if(item)
-      {
+      if (item) {
         this.infoHDD.totalHdd = item?.totalHdd;
         this.infoHDD.totalUsed = item?.totalUsed
       }
       //  totalUsed: any;
       // totalHdd: any;
-      // this.getHDDInformaton(item);      
+      // this.getHDDInformaton(item);
     })
   }
 
@@ -459,7 +458,7 @@ export class AttachmentComponent implements OnInit {
         pathFolder,
         pathID
       )
-      .subscribe((item) => {});
+      .subscribe((item) => { });
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async (res) => {
@@ -750,7 +749,6 @@ export class AttachmentComponent implements OnInit {
   }
 
   async onMultiFileSave() {
-    //if(this.infoHDD.totalUsed >= this.infoHDD.totalHdd) return this.notificationsService.notifyCode("DM053");
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
@@ -767,7 +765,7 @@ export class AttachmentComponent implements OnInit {
           false
         );
     }
-    if(toltalUsed > remainingStorage) return this.notificationsService.notifyCode("DM053");
+    if (toltalUsed > remainingStorage) return this.notificationsService.notifyCode("DM053");
     this.atSV.fileListAdded = [];
     if (total > 1) {
       var done = this.fileService
@@ -1111,7 +1109,7 @@ export class AttachmentComponent implements OnInit {
     try {
       //  var item = await isAllowAddFileAsync();
       var uploadFile = fileItem.item.rawFile;
-      var appName = environment.appName ; // Tam thoi de hard
+      var appName = environment.appName; // Tam thoi de hard
       fileItem = await this.serviceAddFile(fileItem);
       if (isAddFile) this.addFile(fileItem);
 
@@ -1279,7 +1277,7 @@ export class AttachmentComponent implements OnInit {
       });
   }
 
-  closeFileDialog(form): void {}
+  closeFileDialog(form): void { }
 
   arrayBufferToBase64(buffer) {
     var binary = '';
@@ -2869,12 +2867,10 @@ export class AttachmentComponent implements OnInit {
   handleDeleteCount(e: any) {
     this.fileCount.emit(e);
   }
-  handleView(e:any)
-  {
+  handleView(e: any) {
     this.viewFile.emit(e);
   }
-  handleDelete(e:any)
-  {
+  handleDelete(e: any) {
     this.fileDelete.emit(e);
   }
 }

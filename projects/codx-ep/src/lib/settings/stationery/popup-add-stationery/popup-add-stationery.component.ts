@@ -4,7 +4,6 @@ import {
   Injector,
   Optional,
   Output,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -60,6 +59,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   colorItem: any;
   listColor = [];
   formModel: FormModel;
+  quota;
   headerText: Object = [
     { text: 'Thông tin chung', iconCss: 'icon-info' },
     { text: 'Định mức sử dụng', iconCss: 'icon-person_add' },
@@ -81,19 +81,24 @@ export class PopupAddStationeryComponent extends UIComponent {
 
   onInit(): void {
     this.initForm();
+    this.epService
+      .getQuotaByResourceID(this.data.resourceID)
+      .subscribe((res) => {
+        this.quota = res;
+      });
   }
 
   initForm() {
     this.epService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
+      .then((item: any) => {
         this.dialogAddStationery = item;
         this.isAfterRender = true;
       });
   }
 
   beforeSave(option: RequestOption) {
-    let itemData = this.dialogAddStationery.value;
+    let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
@@ -110,53 +115,35 @@ export class PopupAddStationeryComponent extends UIComponent {
             .updateFileDirectReload(res.save.recID)
             .subscribe((result) => {
               if (result) {
+                this.data.icon = result[0].fileName;
+                this.epService.update(this.data, this.isAdd).subscribe();
                 this.loadData.emit();
               }
             });
         } else {
           this.imageUpload
             .updateFileDirectReload(res.update.recID)
-            .subscribe((result) => {
+            .subscribe((result: any) => {
               if (result) {
+                this.data.icon = result[0].fileName;
+                this.epService.update(this.data, this.isAdd).subscribe();
                 this.loadData.emit();
               }
             });
         }
+        this.detectorRef.detectChanges();
         this.dialog.close();
       });
-  }
-
-  setdata(data: any) {
-    if (this.isAdd) {
-      this.isAdd = true;
-      this.initForm();
-    } else {
-      this.dialogAddStationery.patchValue(data);
-    }
   }
 
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.dialogAddStationery.patchValue({
-          [event['field']]: event.data.value,
-        });
+        this.data[event.field] = event.data.value;
       } else {
-        this.dialogAddStationery.patchValue({ [event['field']]: event.data });
+        this.data[event?.field] = event.data;
       }
     }
-  }
-
-  closeDialog(evt: any) {
-    if (this.color != null) {
-      let i = this.listColor.indexOf(this.color);
-      if (i != -1) {
-        this.listColor[i] = this.colorItem;
-      }
-    } else {
-      this.listColor.push(this.colorItem);
-    }
-    this.detectorRef.detectChanges();
   }
 
   setTitle(e: any) {
@@ -165,8 +152,4 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   buttonClick(e: any) {}
-
-  fileCount(event) {}
-
-  fileAdded(event) {}
 }

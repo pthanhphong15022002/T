@@ -314,180 +314,6 @@
           data-kt-scroll-wrappers=".stepper-body"
           data-kt-scroll-offset="0px"
         >
-          <!-- <div class="tab-content">
-            <div
-              class="tab-pane fade"
-              id="pane_1"
-              [ngClass]="currentTab == 0 ? 'active show' : ''"
-            >
-              <div class="text-center">
-                <codx-attachment
-                  #attachment
-                  objectType="ES_SignFiles"
-                  hideImageUpload="0"
-                  [objectId]="data.recID"
-                  hideBtnSave="1"
-                  hideFolder="1"
-                  hideUploadBtn="0"
-                  [functionID]="formModel.funcID"
-                  type="inline"
-                >
-                </codx-attachment>
-              </div>
-              <div
-                class="d-flex align-items-center"
-                *ngIf="lstDataFile.length > 0"
-              >
-                <div class="text-center"></div>
-                <button
-                  type="button"
-                  class="btn btn-primary me-3"
-                  (click)="popup($event, 0)"
-                >
-                  <i class="icon-cloud_upload fs-5"></i>
-                  <codx-label
-                    name=""
-                    [formModel]="formModel"
-                    class=""
-                    default="Thêm mới"
-                  ></codx-label>
-                </button>
-              </div>
-            </div>
-            <div
-              class="tab-pane fade"
-              id="pane_2"
-              [ngClass]="currentTab == 1 ? 'active show' : ''"
-            >
-              <div class="w-100 form-content mw-500px mx-auto">
-                <div class="form-group">
-                  <codx-label fiedName="Title" [formModel]="formModel">
-                  </codx-label>
-                  <codx-input
-                    type="text"
-                    name="text"
-                    field="title"
-                    [crrValue]="data?.title"
-                    (valueChange)="valueChange($event)"
-                  >
-                  </codx-input>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <codx-label fiedName="CategoryID" [formModel]="formModel">
-                      </codx-label>
-                      <codx-input
-                        type="combobox"
-                        [refValue]="cbxName['CategoryID']"
-                        field="categoryID"
-                        (valueChange)="valueChange($event)"
-                        [crrValue]="data?.categoryID"
-                      >
-                      </codx-input>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <codx-label fiedName="Priority" [formModel]="formModel">
-                      </codx-label>
-                      <codx-input
-                        type="valuelist"
-                        field="priority"
-                        (valueChange)="valueChange($event)"
-                        [refValue]="cbxName['Priority']"
-                        [crrValue]="data?.priority"
-                      >
-                      </codx-input>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <codx-label fiedName="RefNo" [formModel]="formModel">
-                      </codx-label>
-                      <codx-input
-                        type="text"
-                        name="text"
-                        field="refNo"
-                        [disabled]="true"
-                        [crrValue]="data.refNo"
-                      >
-                      </codx-input>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <codx-label fiedName="RefDate" [formModel]="formModel">
-                      </codx-label>
-                      <codx-input
-                        type="datetime"
-                        format="d"
-                        field="refDate"
-                        [disabled]="oSignFile"
-                        [crrValue]="data.refDate"
-                        (valueChange)="valueChange($event)"
-                      >
-                      </codx-input>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <codx-label fiedName="Owner" [formModel]="formModel">
-                  </codx-label>
-                  <codx-input
-                    type="combobox"
-                    name="combobox"
-                    ngDefaultControl
-                    [refValue]="cbxName['Owner']"
-                    field="owner"
-                    (valueChange)="valueChange($event)"
-                    [crrValue]="data?.owner"
-                  >
-                  </codx-input>
-                </div>
-                <div class="form-group">
-                  <codx-label fiedName="OrgUnitID" [formModel]="formModel">
-                  </codx-label>
-                  <codx-input
-                    type="combobox"
-                    name="combobox"
-                    ngDefaultControl
-                    [refValue]="cbxName['OrgUnitID']"
-                    field="orgUnitID"
-                    (valueChange)="valueChange($event)"
-                    [crrValue]="data?.orgUnitID"
-                  >
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-            <div
-              class="tab-pane fade"
-              id="pane_3"
-              [ngClass]="currentTab == 2 ? 'active show' : ''"
-            >
-              <app-approval-steps
-                #stepAppr
-                *ngIf="currentTab == 2"
-                #viewApprovalStep
-                [transId]="
-                  data.approveControl == '1'
-                    ? data.recID
-                    : data.processID
-                "
-                (addEditItem)="openFormAdd($event)"
-              >
-              </app-approval-steps>
-            </div>
-            <div
-              class="tab-pane fade"
-              id="pane_4"
-              [ngClass]="currentTab == 3 ? 'active show' : ''"
-            ></div>
-          </div> -->
-
           <div class="tab-content">
             <div
               class="tab-pane fade"
@@ -559,14 +385,6 @@
                         (valueChange)="valueChange($event)"
                       >
                       </codx-input>
-                      <!-- <codx-input
-                        type="combobox"
-                        [refValue]="'FileCategories'"
-                        field="123"
-                        (valueChange)="valueChange($event)"
-                        [crrValue]="data?.categoryID"
-                      >
-                      </codx-input> -->
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -710,9 +528,10 @@
             class="btn btn-primary"
             (click)="continue(currentTab)"
             [ngClass]="
-              attachment?.fileUploadList?.length <= 0 &&
-              currentTab == 0 &&
-              data.files?.length <= 0
+              (attachment?.fileUploadList?.length <= 0 &&
+                currentTab == 0 &&
+                data.files?.length <= 0) ||
+              disableContinue == true
                 ? 'disabled'
                 : ''
             "

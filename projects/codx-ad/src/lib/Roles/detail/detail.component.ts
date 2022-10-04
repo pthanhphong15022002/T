@@ -29,8 +29,7 @@ declare var $: any;
 })
 export class RoleDetailComponent
   extends UIComponent
-  implements OnDestroy, OnChanges
-{
+  implements OnDestroy, OnChanges {
   // dataPermissions: any;
   // dataAdvances: any;
   dataMoreFuntions: any;
@@ -85,7 +84,7 @@ export class RoleDetailComponent
     this.tenant = this.tenantStore.get()?.tenant;
     this.roleName = this.tempService.roleName;
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void { }
   onInit(): void {
     var rid = this.at.snapshot.queryParams.recID;
     if (rid) {

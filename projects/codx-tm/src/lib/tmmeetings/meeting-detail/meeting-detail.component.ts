@@ -24,6 +24,7 @@ import {
   PageTitleService,
   ApiHttpService,
 } from 'codx-core';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-meeting-detail',
@@ -55,6 +56,7 @@ export class MeetingDetailComponent extends UIComponent {
     { name: 'MeetingContents', textDefault: 'Nội dung họp', isActive: false },
     { name: 'Comments', textDefault: 'Thảo luận', isActive: true },
     { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+    { name: 'Tasks', textDefault: 'Công việc', isActive: false },
   ];
   startDateMeeting: any;
   endDateMeeting: any;
@@ -73,9 +75,9 @@ export class MeetingDetailComponent extends UIComponent {
   // assemblyName = 'ERM.Business.TM';
   // className = 'TaskBusiness';
   // method = 'GetListTaskAssignByByMeetingAsync';
-  dataObj: any;
-  offset = '0px'
- 
+  dataObjAssign: any;
+  dataObjTasks: any;
+  offset = '0px';
 
   constructor(
     private injector: Injector,
@@ -91,12 +93,15 @@ export class MeetingDetailComponent extends UIComponent {
     super(injector);
     this.getQueryParams();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.cache.functionList(this.funcID).subscribe(f=>this.pageTitle.setSubTitle(f?.customName))
+    this.cache
+      .functionList(this.funcID)
+      .subscribe((f) => this.pageTitle.setSubTitle(f?.customName));
     this.cache.functionList(this.functionParent).subscribe((f) => {
       if (f) this.layout.setUrl(f.url);
     });
     this.layout.setLogo(null); //null tạo icon back
     this.urlDetail = 'tm/sprintdetails/TMT03011';
+
     this.loadData();
   }
 
@@ -106,14 +111,7 @@ export class MeetingDetailComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     if (this.tabControl.length == 0) {
-      this.tabControl = this.all ;
-      // this.all.forEach((res, index) => {
-      //   var tabModel = new TabControl();
-      //   tabModel.name = tabModel.textDefault = res;
-      //   if (index == 1) tabModel.isActive = true;
-      //   else tabModel.isActive = false;
-      //   this.tabControl.push(tabModel);
-      // });
+      this.tabControl = this.all;
     } else {
       this.active = this.tabControl.findIndex(
         (x: TabControl) => x.isActive == true
@@ -148,6 +146,17 @@ export class MeetingDetailComponent extends UIComponent {
                 }
               });
           }
+
+          this.dataObjTasks = {
+            projectID: this.meeting?.refID ? this.meeting?.refID : '',
+            resources: this.meeting.avataResource,
+            fromDate: this.meeting.fromDate
+              ? moment(new Date(this.meeting.fromDate))
+              : '',
+            endDate: this.meeting.toDate
+              ? moment(new Date(this.meeting.toDate))
+              : '',
+          };
         }
       });
     }
@@ -166,8 +175,8 @@ export class MeetingDetailComponent extends UIComponent {
     this.name = item.name;
     if (this.name == 'AssignTo') {
       this.getListRecID(this.meetingID);
-      this.offset ="65px"
-    }else    this.offset ="0px"
+      this.offset = '65px';
+    } else this.offset = '0px';
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;
@@ -260,7 +269,7 @@ export class MeetingDetailComponent extends UIComponent {
         }
         var listRecID =
           this.listRecID.length > 0 ? this.listRecID.join(';') : '';
-        this.dataObj = { listRecID: listRecID };
+        this.dataObjAssign = { listRecID: listRecID };
       }
     });
   }

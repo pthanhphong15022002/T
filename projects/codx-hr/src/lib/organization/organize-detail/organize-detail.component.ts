@@ -2,15 +2,16 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ClickEventArgs } from '@syncfusion/ej2-angular-buttons';
 import {
   ConnectorModel,
   Diagram,
@@ -22,9 +23,8 @@ import {
 } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, FormModel } from 'codx-core';
-import { AnyNaptrRecord } from 'dns';
 import { map, Observable } from 'rxjs';
-import { json } from 'stream/consumers';
+import { CodxHrService } from '../../codx-hr.service';
 @Component({
   selector: 'lib-organize-detail',
   templateUrl: './organize-detail.component.html',
@@ -44,8 +44,9 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   @Input() parentID: string = '';
   @Input() onlyDepartment?: boolean;
   @Input() formModel!: FormModel;
+  @Input() data: any[] = [];
 
-  data: any[] = [];
+  @Output() afterInit = new EventEmitter();
   imployeeInfo: any = {};
   employOrg: any = [];
   employees: any = [];
@@ -68,6 +69,7 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   @ViewChild('p') public popover: NgbPopover;
   constructor(
     private api: ApiHttpService,
+    private hrservice: CodxHrService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -100,61 +102,96 @@ export class OrganizeDetailComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.loadOrgchart().subscribe((res) => {
-      if (res) {
-        this.data = res.Data as any[];
-        //this.datasetting.dataManager = new DataManager(this.data as JSON[]);
-        var setting = this.newDataManager();
-        var dataManager = JSON.parse(JSON.stringify(this.data)) as JSON[];
-        dataManager = dataManager.filter((item: any) => {
-          if (item.departmentCode === this.orgUnitID) item.parentID = '';
-          return item;
-        });
-        setting.dataManager = new DataManager(dataManager as JSON[]);
-        this.datasetting = setting;
-        //this.diagram.refresh();
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+    if (this.data && this.data.length == 0) {
+      // this.hrservice
+      //   .loadOrgchart(
+      //     this.orgUnitID,
+      //     this.parentID,
+      //     this.numberLV,
+      //     this.onlyDepartment
+      //   )
+      //   .subscribe((res) => {
+      //     if (res) {
+      //       this.data = res.Data as any[];
+      //       this.setDataOrg(this.data);
+      //       this.changeDetectorRef.detectChanges();
+      //     }
+      //   });
+    } else {
+      this.setDataOrg(this.data);
+    }
   }
 
-  loadOrgchart(): Observable<any> {
-    return this.api
-      .callSv(
-        'HR',
-        'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
-        'GetDataDiagramAsync',
-        [
-          this.orgUnitID,
-          this.numberLV,
-          this.parentID,
-          this.onlyDepartment,
-          true,
-        ]
-      )
-      .pipe(
-        map((data) => {
-          if (data.error) return;
-          return data.msgBodyData[0];
-        })
-      );
+  ngAfterViewInit() {
+    this.afterInit.emit(this);
   }
+
+  // loadOrgchart(): Observable<any> {
+  //   return this.api
+  //     .callSv(
+  //       'HR',
+  //       'ERM.Business.HR',
+  //       'OrganizationUnitsBusiness',
+  //       'GetDataDiagramAsync',
+  //       [
+  //         this.orgUnitID,
+  //         this.numberLV,
+  //         this.parentID,
+  //         this.onlyDepartment,
+  //         true,
+  //       ]
+  //     )
+  //     .pipe(
+  //       map((data) => {
+  //         if (data.error) return;
+  //         return data.msgBodyData[0];
+  //       })
+  //     );
+  // }
 
   loadDataChild(dataNode: any, node: any) {
     this.parentID = dataNode.departmentCode;
     var exist = this.checkExistParent(this.parentID);
     if (!exist) {
-      this.loadOrgchart().subscribe((res) => {
-        var arrDt = res.Data as any[];
-        this.data = [...this.data, ...arrDt];
-        var setting = this.newDataManager();
-        setting.dataManager = new DataManager(this.data as JSON[]);
-        this.datasetting = setting;
-        this.changeDetectorRef.detectChanges();
-      });
+      this.hrservice
+        .loadOrgchart(
+          this.orgUnitID,
+          this.parentID,
+          this.numberLV,
+          this.onlyDepartment
+        )
+        .subscribe((res) => {
+          var arrDt = res.Data as any[];
+          this.data = [...this.data, ...arrDt];
+          var setting = this.newDataManager();
+          setting.dataManager = new DataManager(this.data as JSON[]);
+          this.datasetting = setting;
+          //this.setDataOrg(this.data);
+          this.changeDetectorRef.detectChanges();
+        });
     } else {
     }
+  }
+
+  setDataOrg(data: any[] = []) {
+    if (data.length > 0) {
+      this.data = data;
+      var setting = this.newDataManager();
+      var dataManager = JSON.parse(JSON.stringify(this.data)) as JSON[];
+      dataManager = dataManager.filter((item: any) => {
+        if (item.departmentCode === this.orgUnitID) item.parentID = '';
+        return item;
+      });
+      setting.dataManager = new DataManager(dataManager as JSON[]);
+      this.datasetting = setting;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  addItem(item: any) {
+    if (!item) return;
+    this.data.push(item);
+    this.setDataOrg(this.data);
   }
 
   mouseUp(dataNode: any, evt: any) {

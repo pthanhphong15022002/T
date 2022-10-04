@@ -11,7 +11,8 @@
   (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
   [idField]="idField"
-  [className]="className"
+  [className]="className"  
+  (onLoading)="onLoading($event)" 
   [method]="method"
 >
 
@@ -37,7 +38,7 @@
         <h2 id="modal-basic-title">
           <codx-label
             name="lblEquipment"
-            default="Thiết bị"
+            [default]="grvDrivers?.Equipments?.headerText"
             [formModel]="dialog.formModel"
           ></codx-label>
         </h2>
@@ -94,7 +95,7 @@
     <div (click)="openPopupDevice(popupDevice, data?.carEquipments)" class="btn d-flex justify-content-center align-items-center">    
       <i class="icon-devices"></i>
       <span class=" ms-1 fw-bold">{{data?.equipmentQty}}</span>
-      <codx-label default="thiết bị" class=" ms-1 fw-bold" name="lblDevice"></codx-label>
+      <codx-label [default]="grvDrivers?.Equipments?.headerText" class=" ms-1 fw-bold" name="lblDevice"></codx-label>
     </div>  
   
 </ng-template>  
@@ -105,11 +106,13 @@
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data?.carName}}</span>
       <div class="d-flex flex-row">
-        <codx-label default="Phân loại:" name="lblCategory" class="text-gray-600"></codx-label>
+        <codx-label [default]="grvDrivers?.Ranking?.headerText" name="lblCategory" class="text-gray-600"></codx-label>
+        <span>:</span>
         <span class="fw-bold ms-1">{{ data.carRanking| vll: "EP005" : 'text' | async}}</span>
       </div>
       <div class="d-flex flex-row">
-        <codx-label default="Chỗ ngồi:" name="lblCategory" class="text-gray-600"></codx-label>
+        <codx-label [default]="grvDrivers?.Capacity?.headerText" name="lblCategory" class="text-gray-600"></codx-label>
+        <span>:</span>
         <span class="fw-bold ms-1">{{ data.carCapacity}}</span>
       </div>
     </div>

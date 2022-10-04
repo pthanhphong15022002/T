@@ -41,8 +41,8 @@ export class CodxTabsComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'AssignTo', textDefault: 'Công việc', isActive: false },
-    { name: 'References', textDefault: 'Tham chiếu', isActive: false },
-    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
   constructor(
     injector: Injector,

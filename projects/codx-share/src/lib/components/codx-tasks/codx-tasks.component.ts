@@ -75,7 +75,8 @@ export class CodxTasksComponent
   @ViewChild('footerNone') footerNone!: TemplateRef<any>;
   @ViewChild('detail') detail: ViewDetailComponent;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
-  // @ViewChild('treeView') treeView!: TreeViewComponent;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
@@ -149,6 +150,9 @@ export class CodxTasksComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -212,8 +216,6 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.funcID == 'TMT0203') this.isAssignTask = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     //chay code chet cho nhanh, muon dong thi bat len
     // this.cache.functionList(this.funcID).subscribe(f => {
@@ -239,7 +241,6 @@ export class CodxTasksComponent
     this.viewMode = this.dataObj?.viewMode;
     this.views = [
       {
-        id: '1',
         type: ViewType.list,
         active: false,
         sameData: true,
@@ -248,7 +249,6 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '2',
         type: ViewType.listdetail,
         active: false,
         sameData: true,
@@ -258,7 +258,6 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '6',
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -269,20 +268,23 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '7',
         type: ViewType.calendar,
         active: false,
         sameData: true,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
+          template7: this.footerNone, ///footer
+          template4: this.resourceHeader,
+          template6: this.mfButton, //header
+          //  template: this.eventTemplate,
           template3: this.cellTemplate,
+          template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
         },
       },
       {
-        id: '8',
         type: ViewType.schedule,
         active: false,
         sameData: false,
@@ -291,10 +293,12 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template7: this.footerNone,
+          template7: this.footerNone, ///footer
           template4: this.resourceHeader,
-          template: this.eventTemplate,
+          template6: this.mfButton, //header
+          //  template: this.eventTemplate,
           template3: this.cellTemplate,
+          template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
         },
       },
@@ -316,22 +320,10 @@ export class CodxTasksComponent
         //   dataObj: null,
         // },
         model: {
-          // template: this.treeView,
           panelLeftRef: this.treeView,
         },
       },
     ];
-
-    // var viewDefaultID = '2';
-    // if (this.viewMode && this.viewMode.trim() != '') {
-    //   viewDefaultID = this.viewMode;
-    // }
-    // this.viewsActive.forEach((obj) => {
-    //   if (obj.id == viewDefaultID) {
-    //     obj.active = true;
-    //   }
-    // });
-    // this.views = this.viewsActive;
 
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
@@ -504,6 +496,11 @@ export class CodxTasksComponent
           false
         );
       if (e?.event && e?.event != null && e?.event[1] != null) {
+        if (e.event[0]) {
+          this.itemSelected = data;
+          this.detail.taskID = this.itemSelected.taskID;
+          this.detail.getTaskDetail();
+        }
         //cai này cần dùng khi TMT0202
         // let listTask = e?.event[1];
         // let newTasks = [];
@@ -958,16 +955,14 @@ export class CodxTasksComponent
 
   requestEnded(evt: any) {}
 
-  onDragDrop(e: any) {
-    if (e.type == 'drop') {
-      this.api
-        .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', e.data)
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.update(e.data);
-          }
-        });
-    }
+  onDragDrop(data) {
+    this.api
+      .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.update(data);
+        }
+      });
   }
 
   //update Status of Tasks
@@ -1490,30 +1485,27 @@ export class CodxTasksComponent
   }
 
   onActions(e: any) {
-    if (e.type === 'dbClick') {
-      this.viewTask(e?.data);
-      // let option = new SidebarModel();
-      // option.DataService = this.view?.dataService;
-      // option.FormModel = this.view?.formModel;
-      // option.Width = '800px';
-      // this.callfc.openSide(
-      //   PopupAddComponent,
-      //   [e?.data, 'view', this.isAssignTask],
-      //   option
-      // );
+    switch (e.type) {
+      case 'drop':
+        this.onDragDrop(e.data);
+        break;
+      case 'dbClick':
+        this.viewTask(e?.data);
+        break;
     }
   }
 
   viewTask(data) {
     if (data) {
       var isAssignTask = data?.category == '3';
+      var funcID = isAssignTask ? 'TMT0203' : 'TMT0201';
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask, this.funcID],
+        [data, 'view', isAssignTask, funcID],
         option
       );
     }

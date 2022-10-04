@@ -54,3 +54,17 @@ codx-view-list-card {
 codx-view-kanban .e-card .border {
   border: 0 !important;
 }
+
+.e-appointment {
+  height: auto !important;
+}
+
+.size-content-schedule {
+  display: -webkit-box;
+  max-width: 100%;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-right: 10px;
+  font-weight: 600;
+}

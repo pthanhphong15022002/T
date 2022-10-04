@@ -7,17 +7,81 @@
   [selectedFirst]="true"
   (selectedChange)="onSelectionChanged($event)"
   [button]="button"
-  (viewChanged)="changeView($event)" 
-  [viewActiveType]="'15'"
+  (buttonClick)="click($event)"
+  (viewChanged)="changeView($event)"
 ></codx-views>
+
+<ng-template #templateRight>
+  <ng-container *ngTemplateOutlet="currView"></ng-container>
+</ng-template>
+
 <ng-template #templateDetail>
   <ng-container *ngIf="orgUnitID">
     <lib-organize-detail
       [orgUnitID]="orgUnitID"
+      [data]="dataDetail"
       [formModel]="view.formModel"
+      [numberLV]="numberLV"
+      (afterInit)="orgChartAfterView($event)"
     ></lib-organize-detail>
   </ng-container>
 </ng-template>
+
+<ng-template #templateCard>
+  <div class="d-flex flex-wrap p-5 card-organization">
+    <ng-container *ngFor="let data of dataCard; let i = index">
+      <codx-card-center
+        imageObjType="HR_Employee"
+        cardCss="border w-250px h-100"
+        class="m-1"
+        [formModel]="view.formModel"
+        [imageId]="data.employeeID"
+        [dataItem]="data"
+        [imageObjName]="data.employeeName"
+        title="<span>{{
+          data.employeeName
+            ? data.employeeName
+            : setupEmp['EmployeeName']?.headerText || 'EmployeeName'
+        }}</span>"
+        subTitle="<span>{{
+          data.positionName
+            ? data.positionName
+            : setupEmp['PositionName']?.headerText || 'PositionName'
+        }}</span>"
+        desc="<span>{{
+          data.birthday
+            ? (data.birthday
+              | formatvalue: formModelEmployee:'birthday':null
+              | async)
+            : setupEmp['Birthday']?.headerText || 'Birthday'
+        }}</span>"
+        [footer]="footer"
+        [typeMF]="'hover'"
+        (clickMF)="clickMF($event, data)"
+      >
+        <ng-template #footer let-data>
+          <div class="d-flex align-items-top mt-2">
+            <span class="icon-email icon-16 me-2"> </span>
+            <span class="text-dark fw-bold">
+              <span #email>{{
+                data.email | formatvalue: view.formModel:"email":email | async
+              }}</span>
+            </span>
+          </div>
+          <div class="d-flex align-items-center">
+            <span class="icon-phone_android icon-16 me-2"></span>
+            <span class="text-dark fw-bold">
+              <span #phone>{{
+                data.phone | formatvalue: view.formModel:"phone":phone | async
+              }}</span>
+            </span>
+          </div>
+        </ng-template>
+      </codx-card-center>
+    </ng-container>
+  </div>
+</ng-template>
+
 <ng-template #templateTree let-data>
   <span>{{ data.orgUnitName }}</span>
 </ng-template>

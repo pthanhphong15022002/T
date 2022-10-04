@@ -612,3 +612,28 @@ codx-tmmeetings .toolbar {
   background-color: #f3f3f3;
   margin-right: 10px;
 }
+
+codx-view-list-detail .nav-tabs .nav-link.active,
+codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
+  font-weight: 600;
+}
+
+codx-layout-add .codx-tab .tab-content {
+  width: 550px !important;
+}
+
+.e-more-popup-wrapper .e-more-event-header {
+  height: 35px;
+  margin: 12px 10px 5px 15px;
+}
+
+.e-more-event-date-header .e-header-day {
+  font-size: 16px !important;
+  font-weight: 600;
+}
+
+.e-more-popup-wrapper .e-header-date {
+  color: var(--gray-600);
+  font-size: 14px;
+  max-width: 100%;
+}

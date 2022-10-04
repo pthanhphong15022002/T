@@ -5,7 +5,7 @@
   [body]="body"
   [footer]="footer"
   [data]="data"
-  [formModel]="dialog.formModel"
+  [formModel]="formModel"
   [dialog]="dialog"
 >
   <ng-template #body>
@@ -14,7 +14,7 @@
         <codx-label
           [name]="'lblTitleAddSignature'"
           default="THÔNG TIN CHỮ KÝ SỐ"
-          [formModel]="dialog.formModel"
+          [formModel]="formModel"
         >
         </codx-label>
       </div>
@@ -158,12 +158,6 @@
             class="border border-gray-300 rounded mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
-              <!-- <codx-img
-                [objectId]="data.signature2 == null ? '' : data.recID + '2'"
-                imageType="square"
-                [width]="50"
-                [recId]="data.signature2"
-              ></codx-img> -->
               <codx-img
                 #imgSignature2
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
@@ -192,12 +186,6 @@
             class="border border-gray-300 rounded mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
-              <!-- <codx-img
-                [objectId]="data.stamp == null ? '' : data.recID + 's'"
-                imageType="square"
-                [width]="50"
-                [recId]="data.stamp"
-              ></codx-img> -->
               <codx-img
                 #imgStamp
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"

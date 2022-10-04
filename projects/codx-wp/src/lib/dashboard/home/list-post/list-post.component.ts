@@ -174,7 +174,7 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
   removePost(data: any) {
     if (!data) return;
     (this.listview.dataService as CRUDService).
-      delete([data], true, (op: any) => this.beforDelete(op, data)).
+      delete([data], true, (op: any) => this.beforDelete(op, data),'','WP022','','WP023').
       subscribe((res) => {
         if (res) {
           if (data.files) {
