@@ -56,8 +56,9 @@ export class PopupAddEpCardsComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogRef?.dataService?.dataSelected;
+    this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
+    this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
   }
@@ -68,51 +69,33 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.initForm();
   }
 
-  initForm() {
-    if (this.isAdd) {
-      this.headerText = 'Thêm mới thẻ xe';
-      this.subHeaderText = 'Tạo thẻ xe';
-    } else {
-      this.headerText = 'Sửa thông tin xe';
-      this.subHeaderText = 'Chỉnh sửa thẻ xe';
-      this.avatarID = this.data.recID;
-    }
+  initForm() {    
     this.codxEpService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(
+        this.formModel.formName,
+        this.formModel.gridViewName
+      )
       .then((item) => {
-        this.fGroupAddEpCards = item;
-        if (this.data) {
-          this.data.resourceType='7';
-          this.fGroupAddEpCards.patchValue(this.data);
-        }
-        //patch thêm value
+        this.fGroupAddEpCards = item;        
         this.isAfterRender = true;
-      });
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((res) => {
-        this.gviewEpCards = res;
       });
   }
 
-  beforeSave(option: RequestOption) {
-    let itemData = this.fGroupAddEpCards.value;
+  
+  beforeSave(option: any) {
+    let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
 
   onSaveForm() {
-    // if (this.fGroupAddEpCards.invalid == true) {
-    //   this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
-    //   return;
-    // }
-    //patch thêm value
-    if (this.fGroupAddEpCards.value.owner instanceof Object) {
-      this.fGroupAddEpCards.patchValue({
-        owner: this.fGroupAddEpCards.value.owner[0],
-      });
+    this.fGroupAddEpCards.patchValue(this.data);
+    if (this.fGroupAddEpCards.invalid == true) {
+      this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
+      return;
     }
+    this.data.resourceType='7';
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
@@ -129,37 +112,5 @@ export class PopupAddEpCardsComponent extends UIComponent {
         }
         return;
       });
-  }
-
-  fileCount(event) {
-    this.fGroupAddEpCards.value.icon = event.data[0].data;
-  }
-  fileAdded(event) {}
-
-  popupUploadFile() {
-    this.attachment.uploadFile();
-  }
-
-  closeFormEdit(data) {
-    this.initForm();
-    this.closeEdit.emit(data);
-  }
-  // dataValid() {
-  //   var data = this.fGroupAddEpCards.value;
-  //   var result = true;
-  //   var requiredControlName = ['resourceName', 'owner', 'code'];
-  //   requiredControlName.forEach((item) => {
-  //     var x = data[item];
-  //     if (!data[item]) {
-  //       let fieldName = item.charAt(0).toUpperCase() + item.slice(1);
-  //       this.notificationsService.notifyCode(
-  //         'E0001',
-  //         0,
-  //         '"' + this.gviewEpCards[fieldName].headerText + '"'
-  //       );
-  //       result = false;
-  //     }
-  //   });
-  //   return result;
-  // }
+  }  
 }
