@@ -170,7 +170,6 @@ export class UserComponent extends UIComponent {
   edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
-      // this.view.dataService.dataSelected.userID = data._uuid;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)

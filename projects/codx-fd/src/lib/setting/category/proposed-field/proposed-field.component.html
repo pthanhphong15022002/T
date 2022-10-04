@@ -1,4 +1,4 @@
-<codx-views [views]="views" #view [funcID]="funcID" [entityName]="'BS_Industries'" (buttonClick)="add()"
+<codx-views [views]="views" #view [funcID]="funcID" [entityName]="'BS_Industries'" (buttonClick)="add($event)"
     [button]="button" service="BS" assemblyName="ERM.Business.BS" className="IndustriesBusiness"
     method="LoadDataIndustryAsync" [predicate]="predicate" [dataValue]="dataValue" entityName="BS_Industries">
 </codx-views>
@@ -58,7 +58,7 @@
 
 <ng-template #createdOn let-item>
     <div class="d-flex has-action-menu">
-        <span>{{ item.createdOn | date: "dd/MM/yyy" }}</span>
+        <span>{{ item.createdOn | fmDT }}</span>
         <codx-mfunc [dataItem]="item" [formModel]="view?.formModel" (clickMF)="clickMF($event, item)" type="hover">
         </codx-mfunc>
     </div>

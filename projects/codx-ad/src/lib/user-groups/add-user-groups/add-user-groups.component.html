@@ -3,33 +3,33 @@
 </codx-layout-add>
 
 <ng-template #tabDescription>
-    <div class="form-group">
+    <div class="form-group" *ngIf="form?.formGroup">
         <div class="form-group row mt-3">
             <codx-label fiedName="UserID" [formModel]="form?.formModel">
             </codx-label>
-            <codx-input field="userID" type="text" [disabled]="formType == 'edit' ? true : false"
-                [crrValue]="adUserGroup.userID">
+            <codx-input field="userID" [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup"
+                [formModel]="form.formModel">
             </codx-input>
         </div>
         <div class="form-group mt-3">
             <codx-label fiedName="UserName" [formModel]="form?.formModel">
             </codx-label>
-            <codx-input type="text" field="userName" [crrValue]="adUserGroup.userName"
+            <codx-input field="userName" [Group]="form.formGroup" [formModel]="form.formModel"
                 (valueChange)="valueChangeU($event)">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
             <codx-label fiedName="lblDescription" [formModel]="form?.formModel">
             </codx-label>
-            <codx-input type="text" field="description" [crrValue]="adUserGroup.description"
+            <codx-input field="description" [Group]="form.formGroup" [formModel]="form.formModel"
                 (valueChange)="valueBU($event)">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
             <codx-label fiedName="Email" [formModel]="form?.formModel">
             </codx-label>
-            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)"
-                [disabled]="formType == 'edit' ? true : false">
+            <codx-input field="email" [Group]="form.formGroup" [formModel]="form.formModel"
+                (valueChange)="valueChangeM($event)" [disabled]="formType == 'edit' ? true : false">
             </codx-input>
         </div>
         <div class="d-flex justify-content-between algin-items-center mt-3">

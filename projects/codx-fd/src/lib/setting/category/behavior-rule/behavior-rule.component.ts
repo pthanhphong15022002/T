@@ -45,6 +45,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
   isOpen = false;
   button?: ButtonModel;
   dialog: DialogRef;
+  headerText = '';
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -129,9 +130,11 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
     this.changedr.detectChanges();
   }
 
-  add() {
+  add(e) {
+    this.headerText = e?.text;
     var obj = {
       isModeAdd: true,
+      headerText: this.headerText,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -141,7 +144,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openSide(AddBehaviorRuleComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
-          this.view.dataService.add(e.event, 1).subscribe();
+          this.view.dataService.add(e.event, 0).subscribe();
           this.changedr.detectChanges();
         }
       });
@@ -152,6 +155,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
     if (data) this.view.dataService.dataSelected = data;
     var obj = {
       isModeAdd: false,
+      headerText: this.headerText,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -190,6 +194,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
   }
 
   clickMF(e, data) {
+    this.headerText = e?.text;
     if (e) {
       switch (e.functionID) {
         case 'SYS03':
