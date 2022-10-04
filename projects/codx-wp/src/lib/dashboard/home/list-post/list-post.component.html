@@ -20,23 +20,12 @@
   data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
   <div id="newfeed">
     <ng-container *ngIf="module == 'WP' ; else FD">
-        <codx-listview
-          [predicates]="predicateWP"
-          [dataValues]="dataValueWP"
-          #listview
-          [funcId]="formModel.funcID"
-          [service]="service"
-          [assemblyName]="assemblyName"
-          class="h-100"
-          [className]="className"
-          [method]="method"
-          entityName="WP_Comments"
-          [itemTemplate]="tmpPortal"
-          [itemTemplateLoading]="templateloading"
-          [emptyTemplate]="empty"
-          [formModel]="formModel">
-        </codx-listview>
-    </ng-container>  
+      <codx-listview [predicates]="predicateWP" [dataValues]="dataValueWP" #listview [funcId]="formModel.funcID"
+        [service]="service" [assemblyName]="assemblyName" class="h-100" [className]="className" [method]="method"
+        entityName="WP_Comments" [itemTemplate]="tmpPortal" [itemTemplateLoading]="templateloading"
+        [emptyTemplate]="empty" [formModel]="formModel">
+      </codx-listview>
+    </ng-container>
     <ng-template #FD>
       <codx-listview [emptyTemplate]="empty" [predicates]="predicateFD" [dataValues]="dataValueFD"
         [itemTemplate]="tmpPortal" #listview [funcId]="formModel.funcID" [service]="service"
@@ -60,9 +49,7 @@
           </ng-container>
           <ng-container *ngIf="item.tagName">
             <div class="position-relative">
-              <span class="ms-2" 
-                (click)="showListTag(item)" 
-                [innerHTML]="item.tagName">
+              <span class="ms-2" (click)="showListTag(item)" [innerHTML]="item.tagName">
               </span>
               <ng-container *ngIf="item.isShowTag">
                 <div class="position-absolute tmpTag">
@@ -71,16 +58,12 @@
                     </codx-label>
                     <span class="ms-4" (click)="closeListTag(item)">
                       <i class="icon-close"></i>
-                  </span>
+                    </span>
                   </div>
                   <div class="tmpTag-body">
                     <ng-container *ngFor="let tag of lstUserTag">
-                      <div class="d-flex align-items-center mb-2" >
-                        <codx-img 
-                          class="me-2" 
-                          [width]="30" 
-                          [imageType]="'circle'" 
-                          [objectId]="tag.objectID"
+                      <div class="d-flex align-items-center mb-2">
+                        <codx-img class="me-2" [width]="30" [imageType]="'circle'" [objectId]="tag.objectID"
                           objectType="AD_Users">
                         </codx-img>
                         <span class="fw-bolder">
@@ -111,8 +94,7 @@
 
           <ng-container *ngIf="item.shareName">
             <div class="position-relative">
-              <span (click)="showListShare(item)" class="mx-2"
-                [innerHTML]="item.shareName">
+              <span (click)="showListShare(item)" class="mx-2" [innerHTML]="item.shareName">
               </span>
               <ng-container *ngIf="item.isShowShare">
                 <ng-container *ngIf="
@@ -128,15 +110,12 @@
                       <codx-label [formModel]="formModel" name="lblShare" default="Danh sách người được chia sẻ">
                       </codx-label>
                       <span class="ms-4" (click)="closeListShare(item)">
-                          <i class="icon-close"></i>
+                        <i class="icon-close"></i>
                       </span>
                     </div>
                     <div class="tmpshare-body">
                       <div class="d-flex align-items-center mb-2" *ngFor="let share of lstUserShare">
-                        <codx-img class="me-2" 
-                          [width]="30" 
-                          [imageType]="'circle'" 
-                          [objectId]="share.objectID"
+                        <codx-img class="me-2" [width]="30" [imageType]="'circle'" [objectId]="share.objectID"
                           objectType="AD_Users">
                         </codx-img>
                         <span class="fw-bolder">
@@ -157,71 +136,35 @@
       <ng-template #defaultMoreFunc>
         <div class="more">
           <div ngbDropdown class="dropdown">
-            <a
-              href="javascript:void(0)"
-              class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-              ngbDropdownToggle
-              id="dropdownMenuButton1"
-              aria-expanded="false"
-            >
+            <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
+              id="dropdownMenuButton1" aria-expanded="false">
               <i class="fas fa-ellipsis-h"></i>
             </a>
             <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
               <li *ngIf="item.write">
-                <a
-                  (click)="openEditModal(item)"
-                  ngbDropdownItem
-                  href="javascript:void(0)"
-                >
+                <a (click)="openEditModal(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-edit icon-16 me-2 icon-editPost"></span>
-                  <codx-label
-                    [formModel]="formModel"
-                    name="lblEdit_comments"
-                    default="Chỉnh sửa"
-                  >
+                  <codx-label [formModel]="formModel" name="lblEdit_comments" default="Chỉnh sửa">
                   </codx-label>
                 </a>
               </li>
               <li *ngIf="item.delete">
-                <a
-                  (click)="removePost(item)"
-                  ngbDropdownItem
-                  href="javascript:void(0)"
-                >
+                <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-close icon-16 me-2 icon-removePost"></span>
-                  <codx-label
-                    [formModel]="formModel"
-                    name="lblDelete_comments"
-                    default="Xóa"
-                  ></codx-label>
+                  <codx-label [formModel]="formModel" name="lblDelete_comments" default="Xóa"></codx-label>
                 </a>
               </li>
               <li *ngIf="item.share">
-                <a
-                  (click)="openModalShare(item)"
-                  ngbDropdownItem
-                  href="javascript:void(0)"
-                >
+                <a (click)="openModalShare(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-share icon-16 me-2"></span>
-                  <codx-label
-                    [formModel]="formModel"
-                    name="lblShare_comments"
-                    default="Chia sẻ"
-                  ></codx-label>
+                  <codx-label [formModel]="formModel" name="lblShare_comments" default="Chia sẻ"></codx-label>
                 </a>
               </li>
               <li>
-                <a
-                  (click)="openModalDownload(item)"
-                  ngbDropdownItem
-                  href="javascript:void(0)"
-                >
+                <a (click)="openModalDownload(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-save icon-save_alt icon-16 me-2"></span>
-                  <codx-label
-                    [formModel]="formModel"
-                    name="lblSave_comments"
-                    default="Thêm vào kho lưu trữ"
-                  ></codx-label>
+                  <codx-label [formModel]="formModel" name="lblSave_comments" default="Thêm vào kho lưu trữ">
+                  </codx-label>
                 </a>
               </li>
             </ul>
@@ -232,7 +175,7 @@
     <ng-container *ngIf="item.category == CATEGORY.SHARE; else shareTemplate">
       <ng-container *ngIf="item.isContentTmp;else noContentTemp">
         <ng-container *ngTemplateOutlet="item.contentTmp; context:{ $implicit:item }"></ng-container>
-      </ng-container>  
+      </ng-container>
       <ng-template #noContentTemp>
         <div class="my-3">
           <div [innerHTML]="item.content"></div>
@@ -242,19 +185,14 @@
         <div [innerHTML]="item.content"></div>
       </div> -->
       <div class="mt-2">
-        <codx-file 
-          [objectID]="item.recID" 
-          objectType="WP_Comments" 
-          (viewDetail)="clickViewDetail($event)">
+        <codx-file [objectID]="item.recID" objectType="WP_Comments" (viewDetail)="clickViewDetail($event)">
         </codx-file>
       </div>
       <ng-container *ngIf="item.refType == 'WP_News'; else tmpSharePost">
         <ng-container *ngIf="item.wPNews ;else postShareDeleted">
-          <div class="post mt-3" >
+          <div class="post mt-3">
             <div (click)="naviagteWPNew(item.wPNews)">
-              <codx-file
-                [objectID]="item.refID"
-                [objectType]="'WP_News'">
+              <codx-file [objectID]="item.refID" [objectType]="'WP_News'">
               </codx-file>
             </div>
             <div class="p-2">
@@ -292,15 +230,45 @@
             </div>
           </div>
         </ng-container>
-        
+
       </ng-template>
 
       <!-- end share -->
     </ng-container>
     <ng-template #shareTemplate>
       <ng-container *ngIf="item.isContentTmp;else noContentShareTemp">
-        <ng-container *ngTemplateOutlet="item.contentTmp; context:{ $implicit:item }"></ng-container>
-      </ng-container>  
+        <ng-container #contentTmp>
+          <div *ngIf="item.contentTmp">
+            <div *ngFor="let data of item.contentTmp">
+              <div class="card border rounded-4 border">
+                <div class="card-body d-flex">
+                  <div class="d-flex flex-column w-350px me-4">
+                    <a href="/" class="mb-2">
+                      <img alt="Logo" class="h-15px " src="assets/themes/wp/default/img/WP.svg">
+                    </a>
+                    <h4 class="fw-bolder text-primary">{{data.header}}</h4>
+                    <div class="mb-4">{{data.subHeader}}</div>
+                    <div class="d-flex align-items-center flex-center  py-2 px-6">
+                      <div class="symbol symbol-40px symbol-circle me-4">
+                        <codx-img #image [objectType]="data.entityName" [funcId]="data.funcID" [objectId]="data.userID"
+                          [objectType]="'AD_Users'"></codx-img>
+                      </div>
+                      <div class="d-flex flex-column w-100">
+                        <div class="text-dark fw-bold fs-5">{{data.userName}}</div>
+                        <div class="text-gray-400">
+                          <span *ngIf="data.positionName">{{data.positionName}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <img src="/assets/themes/sys/default/img/Welcome.svg" class="position-absolute me-3  end-0 h-175px"
+                    alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
       <ng-template #noContentShareTemp>
         <div class="my-3">
           <div [innerHTML]="item.content"></div>
@@ -320,7 +288,7 @@
   <ng-container *ngIf="item.isFeedBack; else WPComment">
     <ng-container *ngIf="item.card">
       <div class="d-flex flex-column flex-grow-1 justify-content-center align-items-center pt-5">
-        <div class="card-img w-300px h-450px" [style.background]="item.card.backgroundColor" 
+        <div class="card-img w-300px h-450px" [style.background]="item.card.backgroundColor"
           style="background-size: 100% auto">
           <div class="card-body text-center">
             <div color="bg-transparent" class="text-center">
@@ -330,21 +298,14 @@
             </div>
             <div class="d-flex justify-content-center align-items-center">
               <div>
-                <codx-img 
-                  [width]="40" 
-                  [objectId]="item.card.senderID" 
-                  objectType="AD_Users">
+                <codx-img [width]="40" [objectId]="item.card.senderID" objectType="AD_Users">
                 </codx-img>
               </div>
               <div class="w-50px text-center ion-justify-content-between">
-                <img class="icon-mail ion-margin-top-8"
-                     src="/assets/themes/fd/default/img/img_SendCard.svg"/>
+                <img class="icon-mail ion-margin-top-8" src="/assets/themes/fd/default/img/img_SendCard.svg" />
               </div>
               <div>
-                <codx-img 
-                  [width]="40" 
-                  [objectId]="item.card.receiverID" 
-                  objectType="AD_Users">
+                <codx-img [width]="40" [objectId]="item.card.receiverID" objectType="AD_Users">
                 </codx-img>
               </div>
             </div>
@@ -355,21 +316,23 @@
               <ng-container *ngIf="item.card.rating">
                 <div class="symbol symbol-30 me-2">
                   <ng-container *ngIf="item.card.cardType == '2'">
-                    <img class="w-100" src="/assets/themes/fd/default/img/{{item.card.rating | vll:'L1419' : 'icon' | async}}" />
+                    <img class="w-100"
+                      src="/assets/themes/fd/default/img/{{item.card.rating | vll:'L1419' : 'icon' | async}}" />
                   </ng-container>
                   <ng-template>
-                    <img class="w-100" src="/assets/themes/fd/default/img/{{item.card.rating | vll:'L1424': 'icon'| async}}" />
+                    <img class="w-100"
+                      src="/assets/themes/fd/default/img/{{item.card.rating | vll:'L1424': 'icon'| async}}" />
                   </ng-template>
                 </div>
               </ng-container>
               <ng-container *ngIf="item.card.hasGift">
                 <div class="">
-                  <img src="/assets/themes/fd/default/img/img_HasGifts.svg"/>
+                  <img src="/assets/themes/fd/default/img/img_HasGifts.svg" />
                 </div>
               </ng-container>
               <ng-container *ngIf="item.card.hasPoint">
-                <div class="ms-2" >
-                  <img src="/assets/themes/fd/default/img/img_HasCoins.svg"/>
+                <div class="ms-2">
+                  <img src="/assets/themes/fd/default/img/img_HasCoins.svg" />
                 </div>
               </ng-container>
             </div>
@@ -382,16 +345,13 @@
     <div class="pic-feed mb-2">
       <ng-container *ngIf="item.files; else get">
         <div>
-          <codx-file [files]="item.files" 
-            (evtGetFiles)="getFiles($event, item)" 
-            (viewDetail)="clickViewDetail($event)">
+          <codx-file [files]="item.files" (evtGetFiles)="getFiles($event, item)" (viewDetail)="clickViewDetail($event)">
           </codx-file>
         </div>
       </ng-container>
       <ng-template #get>
         <div class="pic-feed-img">
-          <codx-file [objectID]="item.recID" 
-            (evtGetFiles)="getFiles($event, item)"
+          <codx-file [objectID]="item.recID" (evtGetFiles)="getFiles($event, item)"
             (viewDetail)="clickViewDetail($event)">
           </codx-file>
         </div>

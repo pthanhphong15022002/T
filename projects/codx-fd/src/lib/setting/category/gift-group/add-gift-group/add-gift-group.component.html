@@ -1,0 +1,43 @@
+<codx-form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [data]="dataUpdate"
+    [formModel]="formModel" #form>
+    <ng-template #body>
+        <div class="form-group">
+            <div class="font-w500 font-1rem">
+                <codx-label fiedName="GiftID" [formModel]="form.formModel" default="Mã quà tặng">
+                </codx-label>
+            </div>
+            <codx-input class="form-control" [disabled]="" (valueChange)="valueChange($event)" field="giftID"
+                [Group]="form.formGroup" [formModel]="form.formModel">
+            </codx-input>
+        </div>
+        <div class="form-group">
+            <codx-label fiedName="GiftName" [formModel]="form.formModel" default="Tên nhóm quà"
+                class="font-w500 font-1rem">
+            </codx-label>
+            <codx-input class="form-control" [Group]="form.formGroup" [formModel]="form.formModel"
+                (valueChange)="valueChange($event)" field="giftName">
+            </codx-input>
+        </div>
+        <div class="form-group mt-3">
+            <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả" class="font-w500 font-1rem">
+            </codx-label>
+            <codx-input class="form-control test-textarea" rows="3" [Group]="form.formGroup"
+                [formModel]="form.formModel" (valueChange)="valueChange($event)" field="memo">
+            </codx-input>
+        </div>
+        <div class="form-group mt-3">
+            <codx-input class="test-check" field="stop" (valueChange)="valueChange($event)" [Group]="form.formGroup"
+                [formModel]="form.formModel" [checked]="dataUpdate.stop == true || dataUpdate.stop == '1'">
+            </codx-input>
+            <codx-label fiedName="Stop" [formModel]="form.formModel" default="Ngưng sử dụng">
+            </codx-label>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+                <codx-label fiedName="Save" [formModel]="formModel" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

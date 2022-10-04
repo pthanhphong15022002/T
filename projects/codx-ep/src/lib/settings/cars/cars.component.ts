@@ -59,7 +59,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   columnsGrid: any;
   grView: any;
   formModel: FormModel;
-  //fGroupAddDriver: FormGroup;
+  funcIDName:any;
   dialogRef: DialogRef;
   isAfterRender = false;
   str: string;
@@ -68,6 +68,8 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   carsEquipments = [];
   temp: string;
   columnGrids: any;
+  grvCars:any;
+  popupTitle='';
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -80,6 +82,11 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       if (res) {
         this.formModel = res;
         this.isAfterRender = true;
+        this.cache.functionList(this.funcID).subscribe(res => {
+          if (res) {            
+            this.funcIDName = res.customName.toString().toLowerCase();
+          }
+        });
       }
     });
   }
@@ -97,58 +104,20 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       });
     });
   }
-
-  // ngAfterViewInit(): void {
-  //   this.buttons = {
-  //     id: 'btnAdd',
-  //   };
-  //   this.columnGrids = [
-  //     // {
-  //     //   field: 'resourceID',
-  //     //   headerText: 'Mã xe',
-  //     // },
-  //     // {
-  //     //   field: 'icon',
-  //     //   headerText: 'Ảnh đại diện',
-  //     //   template: this.avatar,
-  //     // },
-  //     // {
-  //     //   field: 'resourceName',
-  //     //   headerText: 'Tên xe',
-  //     // },
-  //     // {
-  //     //   field: 'capacity',
-  //     //   headerText: 'Số chỗ',
-  //     // },
-  //     // {
-  //     //   headerText: 'Người điều phối',
-  //     //   width: '20%',
-  //     //   template: this.owner,
-  //     // },
-  //   ];
-  //   this.views = [
-  //     {
-  //       sameData: true,
-  //       id: '1',
-  //       text: 'Danh mục xe',
-  //       type: ViewType.grid,
-  //       active: true,
-  //       model: {
-  //         resources: this.columnGrids,
-  //       },
-  //     },
-  //   ];
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
   ngAfterViewInit(): void {
     this.buttons = {
       id: 'btnAdd',
-    };
-    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+    };     
+        
+    this.detectorRef.detectChanges();
+  }
+  onLoading(evt: any) {
+    let formModel = this.view.formModel;
+    if (formModel) {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
+          this.grvCars=gv;
           this.columnGrids = [
             {
               field: 'resourceName',
@@ -200,11 +169,11 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               model: {
                 resources: this.columnGrids,
               },
-            },
+            },            
           ];
+          this.detectorRef.detectChanges();
         });
-    });
-    this.detectorRef.detectChanges();
+    }
   }
   openPopupDevice(template: any, lstEquipments?) {
     this.carsEquipments.forEach((element) => {
@@ -220,8 +189,23 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
   }
-  click(event: ButtonModel) {
-    switch (event.id) {
+  
+  clickMF(event, data) {
+    console.log(event);
+    this.popupTitle=event?.text + " " + this.funcIDName;      
+    switch (event?.functionID) {
+      case 'SYS03':        
+        this.edit(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+
+    }
+  }
+  click(evt: ButtonModel) {
+    this.popupTitle=evt?.text + " " + this.funcIDName;  
+    switch (evt.id) {
       case 'btnAdd':
         this.addNew();
         break;
@@ -239,11 +223,11 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.view.dataService;
+      option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddCarsComponent,
-        [this.dataSelected, true],
+        [this.dataSelected, true,this.popupTitle],
         option
       );
     });
@@ -255,65 +239,37 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          this.dataSelected = this.view.dataService.dataSelected;
+          this.dataSelected = this.view?.dataService?.dataSelected;
           let option = new SidebarModel();
           option.Width = '550px';
-          option.DataService = this.view.dataService;
+          option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddCarsComponent,
-            [this.view.dataService.dataSelected, false],
+            [this.view.dataService.dataSelected, false,this.popupTitle],
             option
           );
         });
     }
   }
 
-  // delete(obj?) {
-  //   this.view.dataService.methodDelete = 'DeleteResourceAsync';
-  //   if (obj) {
-  //     this.view.dataService.delete([obj], true).subscribe((res) => {
-  //       console.log(res);
-  //     });
-  //   }
-  // }
-
   delete(obj?) {
     this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.view.dataService.delete([obj], true).subscribe((res) => {
-        if (res) {
+        if (res) {          
           this.api
-            .execSv(
-              'DM',
-              'ERM.Business.DM',
-              'FileBussiness',
-              'DeleteByObjectIDAsync',
-              [obj.recID, 'EP_Rooms', true]
-            )
-            .subscribe();
-          this.detectorRef.detectChanges();
-        }
+          .execSv(
+            'DM',
+            'ERM.Business.DM',
+            'FileBussiness',
+            'DeleteByObjectIDAsync',
+            [obj.recID, 'EP_Cars', true]
+          )
+          .subscribe();
+        this.detectorRef.detectChanges();
+      }
       });
     }
   }
-  onSelect(obj: any) {
-    console.log(obj);
-  }
-
-  clickMF(event, data) {
-    console.log(event);
-    switch (event?.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-    }
-  }
-
-  // closeDialog(evt?) {
-  //   this.dialog && this.dialog.close();
-  // }
 }

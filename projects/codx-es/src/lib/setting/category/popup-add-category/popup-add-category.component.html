@@ -12,15 +12,6 @@
   <ng-template #subHeader>
     <div class="d-flex">
       <div class="symbol symbol-circle symbol-30px symbol-vllicon">
-        <!-- <codx-input
-          class=""
-          type="vllicon"
-          refValue="L1470"
-          field="icon"
-          [crrValue]="dialogCategory.value.icon"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input> -->
         <codx-input
           class=""
           type="vllicon"
@@ -77,7 +68,8 @@
           <codx-input
             type="text"
             field="categoryID"
-            [crrValue]="data.categoryID"
+            [formModel]="formModel"
+            [Group]="form.formGroup"
             disabled="true"
           >
           </codx-input>
@@ -155,6 +147,7 @@
             type="text"
             name="text"
             [crrValue]="viewAutoNumber"
+            [formModel]="formModel"
             disabled="true"
           >
           </codx-input>

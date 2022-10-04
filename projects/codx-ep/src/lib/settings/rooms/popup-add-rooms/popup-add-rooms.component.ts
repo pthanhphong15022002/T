@@ -32,6 +32,7 @@ export class PopupAddRoomsComponent extends UIComponent {
   @Input() editResources: any;
   @Input() isAdd = true;
   @Output() closeEdit = new EventEmitter();
+  @Output() loadData = new EventEmitter();
   dialogRef: any;
   cacheGridViewSetup: any;
   CbxName: any;
@@ -61,8 +62,7 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.isAdd = dialogData?.data[1];
     this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.formModel = this.dialogRef.formModel;
-    
+    this.formModel = this.dialogRef.formModel;    
   }
 
   onInit(): void {
@@ -88,12 +88,6 @@ export class PopupAddRoomsComponent extends UIComponent {
   }
 
   initForm() {
-    // if (this.isAdd) {
-    //   this.headerText = 'Thêm mới phòng';
-    // } else {
-    //   this.headerText = 'Sửa thông tin phòng';
-    // }
-
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
@@ -107,11 +101,6 @@ export class PopupAddRoomsComponent extends UIComponent {
     if (index != -1) {
       this.tmplstDevice[index].isSelected = event.data;
     }
-  }
-  setTitle(e: any) {
-    //this.title = this.titleAction + ' ' + e;
-    this.detectorRef.detectChanges();
-    console.log(e);
   }
   openPopupDevice(template: any) {
     var dialog = this.callfc.openForm(template, '', 550, 430);
@@ -146,7 +135,7 @@ export class PopupAddRoomsComponent extends UIComponent {
             .updateFileDirectReload(objectID)
             .subscribe((result) => {
               if (result) {
-                //this.loadData.emit();
+                this.loadData.emit();
               }
             });
           this.dialogRef.close();
@@ -161,9 +150,4 @@ export class PopupAddRoomsComponent extends UIComponent {
     option.data = [itemData, this.isAdd];
     return true;
   }
-
-  // closeFormEdit(data) {
-  //   this.initForm();
-  //   this.closeEdit.emit(data);
-  // }
 }

@@ -1,192 +1,64 @@
-<codx-views [views]="views" #viewbase [funcID]="funcID" [entityName]="'BS_Competences'"
-    (buttonClick)="openFormCreate($event, true)" [button]="button"></codx-views>
-
-<ng-template #panelLeft>
-    <div class="list-table table-action-menu">
-        <codx-gridview #gridView [columnsGrid]="columnsGrid" [itemTemplate]="itemTemplate" service="BS"
-            assemblyName="ERM.Business.BS" className="CompetencesBusiness" method="LoadDataCompetencesAsync"
-            [predicate]="predicate" [dataValue]="dataValue"
-            [entityName]="entityName" [pageSize]="15" [height]="'520'" [headerStyle]="headerStyle"
-            [columnStyle]="columnStyle">
-        </codx-gridview>
-    </div>
-</ng-template>
-
-<ng-template #panelRightRef>
-    <!-- offcanvas cập nhật thông tin -->
-    <div id="canvas_hanhviungxu" class="offcanvas offcanvas-md offcanvas-right">
-        <div class="offcanvas-header" kt-hidden-height="46">
-            <div class="d-flex align-items-center justify-content-between header">
-                <h2 class="m-0">
-                    <codx-label *ngIf="isAddMode" name="lblTitleAddBehaviors" formName="BS_Competences"
-                        default="Thêm mới">
-                    </codx-label>
-                    <codx-label *ngIf="!isAddMode" name="lblTitleEditBehaviors" formName="BS_Competences"
-                        default="Chỉnh sửa">
-                    </codx-label>
-                </h2>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span (click)="clickClosePopup()" class="icon-close icon-18"></span>
-                </a>
-            </div>
-        </div>
-        <div class="offcanvas-content content">
-            <form>
-                <div class="offcanvas-wrapper">
-                    <div class="d-flex">
-                        <div class="flex-grow-1">
-                            <div class="form-group">
-                                <codx-label name="lblCompetenceID" formName="BS_Competences" default="Mã hành vi"
-                                    class="font-w550 font-1rem">
-                                </codx-label>
-                                <span class="requied"></span>
-                                <codx-input type="text" class="form-control" [disabled]="isAddMode ? false : true"
-                                    placeholder="ITEM20210206001" formControlName="competenceID"
-                                    [crrValue]="addEditForm.controls['competenceID'].value"
-                                    (valueChange)="valueChange($event)" field="competenceID">
-                                </codx-input>
-                            </div>
-                            <div class="form-group">
-                                <codx-label name="lblParentID" formName="BS_Competences" default="Quy tắc ứng xử"
-                                    class="font-w550 font-1rem">
-                                </codx-label>
-                                <codx-input (valueChange)="changeCombobox($event)" id="edit-usergroups" type="combobox"
-                                    name="combobox" [crrValue]="addEditForm.controls['parentID'].value"
-                                    class=" form-control borderless p-0" style="border: none;"
-                                    placeholder="Quy tắc ứng xử" ngDefaultControl refValue="Behaviors_Grp"
-                                    loadFull="false" field="" service="BS">
-                                </codx-input>
-                            </div>
-                            <div class="form-group mt-3">
-                                <codx-label name="lblCompetenceName" formName="BS_Competences" default="Mô tả"
-                                    class="font-w550 font-1rem">
-                                </codx-label>
-                                <codx-input type="textarea" class="form-control test-textarea" rows="3"
-                                    formControlName="competenceName" (valueChange)="valueChange($event)"
-                                    [crrValue]="addEditForm.controls['competenceName'].value" field="competenceName">
-                                </codx-input>
-                            </div>
-                            <div class="form-group mt-3">
-                                <codx-label name="lblMemo" formName="BS_Competences" default="Ghi chú"
-                                    class="font-w550 font-1rem">
-                                </codx-label>
-                                <codx-input type="textarea" class="form-control test-textarea" rows="3"
-                                    formControlName="memo" (valueChange)="valueChange($event)" field="memo"
-                                    [crrValue]="addEditForm.controls['memo'].value">
-                                </codx-input>
-                            </div>
-                            <div class="form-group mt-3">
-                                <codx-input type="checkbox" name="checkbox" class="test-check" ngDefaultControl
-                                    field="stop" (valueChange)="valueChange($event)"
-                                    [checked]="addEditForm.controls['stop'].value" label="">
-                                </codx-input>
-                                <codx-label name="lblStop" formName="BS_Competences" default="Ngưng sử dụng"
-                                    class="font-w550 font-1rem">
-                                </codx-label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="card-footer pt-4 footer">
-            <button type="button" class="btn btn-primary" (click)="onSaveForm()">
-                <codx-label name="lblBtnAdd" formName="BS_Competences" default="Lưu">
-                </codx-label>
-            </button>
-        </div>
-        <div class="offcanvas-overlay"></div>
-    </div>
-</ng-template>
-<ng-template #itemTemplate>
-    <div>
-        <td class="td-action-menu">
-            <!-- <div class="dropdown">
-               <button class="btn btn-icon btn-xs" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <span class="icon-more_vert icon-20"></span>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item">
-                        <div class="d-flex align-items-center">
-                            <span class="icon-create icon-18"></span>
-                            <span class="ml-3">Chỉnh sửa</span>
-                        </div>
-                    </a>
-                    <a class="dropdown-item">
-                        <div class="d-flex align-items-center">
-                            <span class="icon-delete icon-18"></span>
-                            <span class="ml-3">Xóa</span>
-                        </div>
-                    </a>
-                </div>
-            </div> -->
-        </td>
-        <td>R2021001</td>
-        <td>Điện tử</td>
-        <td>
-            <div class="text-dark-50">Chủ động lắng nghe phản hồi cụ thể và
-                giải quyết kịp
-                thời
-                nhu cầu của khách
-                hàng, các đối tác, nhà cung cấp và các bên liên quan để đạt được mục đích và
-                mong đợi giữa các bên
-            </div>
-        </td>
-        <td>
-            <div class="d-flex align-items-center">
-                <div class="symbol symbol-24 symbol-circle mr-3">
-                    <img alt="Pic" src="../../../assets/demos/user/user7.jpg">
-                </div>
-                <div class="text-dark font-size-lg">Lê Thị Bảo Ngọc</div>
-            </div>
-        </td>
-        <td>
-            <div class="erm-date">27/7/2021</div>
-        </td>
-    </div>
-</ng-template>
+<codx-views
+  [views]="views"
+  #view
+  [funcID]="funcID"
+  [entityName]="'BS_Competences'"
+  (buttonClick)="add($event)"
+  [button]="button"
+  service="BS"
+  assemblyName="ERM.Business.BS"
+  className="CompetencesBusiness"
+  method="LoadDataCompetencesAsync"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [entityName]="entityName"
+  (onLoading)="onLoading($event)"
+>
+</codx-views>
 <ng-template #itemCreateBy let-dataItem>
-    <div (mouseenter)="PopoverEmpEnter(empPopover, dataItem)">
-        <div class="d-flex align-items-center" #itemCreateBy #empPopover="ngbPopover" [ngbPopover]="moreFunction"
-            placement="top" container="body">
-            <div class="h-30 w-30"></div>
-            <codx-img class="symbol symbol-30px symbol-circle me-4" [objectId]="dataItem.createdBy"
-                objectType="AD_Users">
-            </codx-img>
-            <div *ngIf="dataItem.createName == null; else other" class="text-dark font-size-lg">{{userName}}</div>
-            <ng-template #other>
-                <span>{{dataItem.createName}}</span>
-            </ng-template>
-        </div>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <div class="h-30 w-30"></div>
+    <codx-img
+      class="symbol symbol-30px symbol-circle me-4"
+      [objectId]="dataItem.createdBy"
+      objectType="AD_Users"
+    >
+    </codx-img>
+    <div
+      *ngIf="dataItem.createName == null; else other"
+      class="text-dark font-size-lg"
+    >
+      {{ userName }}
     </div>
+    <ng-template #other>
+      <span>{{ dataItem.createName }}</span>
+    </ng-template>
+  </div>
 </ng-template>
-<ng-template #moreFunction>
-    <div class="flex">
-        <a class="action-item d-flex align-items-center">
-            <span class="icon-edit icon-18 ml-2 mr-2 active" (click)="openFormCreate(dataItem, false)"></span>
-        </a>
-        <a class="action-item d-flex align-items-center" (click)="deleteBehavior(dataItem)">
-            <span class="icon-close icon-18 text-danger mx-2"></span>
-        </a>
-    </div>
-</ng-template>
-
 <ng-template #createdOn let-item>
-    <span>{{item.createdOn | date: 'dd/MM/yyy'}}</span>
+  <div class="d-flex has-action-menu">
+    <span>{{ item.createdOn | fmDT }}</span>
+    <codx-mfunc
+      [dataItem]="item"
+      [formModel]="view?.formModel"
+      (clickMF)="clickMF($event, item)"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
 </ng-template>
 
 <ng-template #memo let-item>
-    <span [innerHTML]="item.memo"></span>
+  <span [innerHTML]="item.memo"></span>
 </ng-template>
 
 <ng-template #competenceName let-item>
-    <span [innerHTML]="item.competenceName"></span>
+  <span [innerHTML]="item.competenceName"></span>
 </ng-template>
 
 <ng-template #parentNameR let-item>
-    <span *ngIf="item.parentName == null;else other">{{parentName}}</span>
-    <ng-template #other>
-        <span>{{item.parentName}}</span>
-    </ng-template>
+  <span *ngIf="item.parentName == null; else other">{{ parentName }}</span>
+  <ng-template #other>
+    <span>{{ item.parentName }}</span>
+  </ng-template>
 </ng-template>

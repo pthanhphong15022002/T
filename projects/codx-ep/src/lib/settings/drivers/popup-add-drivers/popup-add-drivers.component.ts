@@ -57,7 +57,8 @@ export class PopupAddDriversComponent
   ) {
     super(injector);
     this.data =  dialogData?.data[0];
-    this.isAdd = dialogData?.data[1];
+    this.isAdd = dialogData?.data[1];    
+    this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
   }
@@ -69,11 +70,6 @@ export class PopupAddDriversComponent
   ngAfterViewInit(): void {}
 
   initForm() {
-    if (this.isAdd) {
-      this.headerText = 'Thêm mới lái xe';
-    } else {
-      this.headerText = 'Sửa thông tin lái xe';
-    }
     this.codxEpService
       .getFormGroup(
         this.formModel.formName,

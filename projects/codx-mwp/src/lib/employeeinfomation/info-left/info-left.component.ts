@@ -36,9 +36,9 @@ export class InfoLeftComponent implements OnInit {
     private auth: AuthStore
   ) {
     this.user = this.auth.get();
-    // this.codxMwpService.infoLeftComponent = this;
+    this.codxMwpService.infoLeftComponent = this;
     this.routeActive.queryParams.subscribe((params) => {
-      debugger
+
       if (params.employeeID || this.user.userID) {
         this.codxMwpService
           .LoadData(params.employeeID, this.user.userID, '0')

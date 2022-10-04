@@ -67,17 +67,12 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   onInit(): void {
-    // hidden button tree
-    // setTimeout(() => {
-    //   $("#btnTreeView").hide();
-    // }, 2000);
     this.button = {
       id: 'btnAdd',
     };
   }
 
   ngOnDestroy(): void {
-    // show buton tree
     var btnTreeView = $('#btnTreeView');
     btnTreeView.show();
   }
@@ -99,42 +94,11 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     if (!this.isLoad) return;
   }
 
-  // action(para: ActionArg): void {
-  //   switch (para.type) {
-  //     case ActionType.add: // open popup
-  //       $("#kt_demo_panel.edit-" + this.modelPage.formName).addClass(
-  //         "offcanvas-on"
-  //       );
-  //       break;
-  //     case ActionType.quickSearch: // search data
-  //       if (this.listRoles) {
-  //         this.listRoles.SearchText = para.arg;
-  //         this.listRoles.onChangeSearch();
-  //       }
-  //       break;
-  //   }
-  // }
-
   LinkDetail(recID, roleName, isSystem) {
-    // if (roleType == '1' || roleType == '2') return;
     this.tempService.roleName = roleName;
     this.tempService.isSystem = isSystem;
     this.codxService.navigate('', this.urlDetailRoles, { recID: recID });
-    //TEMP
-    // this.router.navigate([`${this.tenant}/ad/roledetail/${recID}`]);
-    //TEMP
   }
-
-  // openEdit(id, isnew) {
-  //   this.tempService.isNew = isnew;
-  //   this.tempService.id = id;
-  //   this.tempService.appendRecID(id);
-  //   if (this.tempService.isNew) {
-  //     this.tempService.changeDatasaveas("2"); //Sao chép
-  //   } else this.tempService.changeDatasaveas("0"); //Chỉnh sửa
-
-  //   this.tempService.id = "";
-  // }
 
   openFormEdit(data) {
     var obj = [
@@ -210,10 +174,10 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
 
   clickMF(e, item) {
     switch (e.functionID) {
-      case 'edit':
+      case 'SYS03':
         this.openFormEdit(item);
         break;
-      case 'delete':
+      case 'SYS02':
         break;
     }
   }
