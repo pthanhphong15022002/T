@@ -242,25 +242,24 @@
       >
       </codx-label>
     </span>
-
-    <!-- </div> -->
     <span class="ms-2 fw-bold">
-      <span
-        class="text-gray-700 cursor-pointer"
-        [innerHTML]="data?.memo"
-        (mouseenter)="popoverMemo.open()"
-        (mouseover)="popoverMemo.close()"
-        [ngbPopover]="tooltipMemo"
-        popoverClass="empPopoverClass"
-        #popoverMemo="ngbPopover"
-        placement="left bottom top right"
-        container="body"
-      ></span>
-      <span #memo *ngIf="!data?.memo">{{
-        data?.memo
-          | formatvalue: view.formModel:"memo":memo:"Meetings":"grvMeetings"
-          | async
-      }}</span>
+      <span class="text-gray-700 size-content-schedule cursor-pointer">
+        <span
+          [innerHTML]="data?.memo"
+          (mouseenter)="popoverMemo.open()"
+          (mouseover)="popoverMemo.close()"
+          [ngbPopover]="tooltipMemo"
+          popoverClass="empPopoverClass"
+          #popoverMemo="ngbPopover"
+          placement="left bottom top right"
+          container="body"
+        ></span>
+        <span #memo *ngIf="!data?.memo">{{
+          data?.memo
+            | formatvalue: view.formModel:"memo":memo:"Meetings":"grvMeetings"
+            | async
+        }}</span>
+      </span>
     </span>
   </div>
   <div class="d-flex mb-2">
