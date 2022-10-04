@@ -1,47 +1,41 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
-    [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]">
+    [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" [data]="adUserGroup">
 </codx-layout-add>
 
 <ng-template #tabDescription>
-    <div class="form-group">
+    <div class="form-group" *ngIf="form?.formGroup">
         <div class="form-group row mt-3">
-            <codx-label fiedName="UserID" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-                default="Mã nhóm người dùng">
+            <codx-label fiedName="UserID" [formModel]="form?.formModel">
             </codx-label>
-            <codx-input field="userID" type="text" [disabled]="formType == 'edit' ? true : false"
-                [crrValue]="adUserGroup.userID">
+            <codx-input field="userID" [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup"
+                [formModel]="form.formModel">
             </codx-input>
         </div>
-
         <div class="form-group mt-3">
-            <codx-label fiedName="UserName" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-                default="Tên nhóm người dùng">
+            <codx-label fiedName="UserName" [formModel]="form?.formModel">
             </codx-label>
-            <codx-input type="text" field="userName" [crrValue]="adUserGroup.userName"
+            <codx-input field="userName" [Group]="form.formGroup" [formModel]="form.formModel"
                 (valueChange)="valueChangeU($event)">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
-            <codx-label fiedName="lblDescription" [formName]="formModel?.formName"
-                [gridViewName]="formModel?.gridViewName" default="Mô tả">
+            <codx-label fiedName="lblDescription" [formModel]="form?.formModel">
             </codx-label>
-            <codx-input type="text" field="description" [crrValue]="adUserGroup.description"
+            <codx-input field="description" [Group]="form.formGroup" [formModel]="form.formModel"
                 (valueChange)="valueBU($event)">
             </codx-input>
         </div>
         <div class="form-group row mt-3">
-            <codx-label fiedName="Email" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-                default="Email nhóm">
+            <codx-label fiedName="Email" [formModel]="form?.formModel">
             </codx-label>
-            <codx-input field="email" type="text" [crrValue]="adUserGroup.email" (valueChange)="valueChangeM($event)"
-                [disabled]="formType == 'edit' ? true : false">
+            <codx-input field="email" [Group]="form.formGroup" [formModel]="form.formModel"
+                (valueChange)="valueChangeM($event)" [disabled]="formType == 'edit' ? true : false">
             </codx-input>
         </div>
         <div class="d-flex justify-content-between algin-items-center mt-3">
             <div class="d-flex algin-items-center">
                 <span class="icon-person icon-18 me-1"></span>
-                <codx-label class="fw-bold" fiedName="lblUsers" [formName]="formModel?.formName"
-                    [gridViewName]="formModel?.gridViewName" default="Danh sách người dùng">
+                <codx-label class="fw-bold" fiedName="Users" [formModel]="form?.formModel">
                 </codx-label>
             </div>
             <button class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupCbb()">
@@ -76,14 +70,18 @@
 </ng-template>
 <ng-template #tabRoles>
     <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-sm btn-primary" (click)="openPopup(viewChooseRole)">Chỉnh sửa
-            quyền</button>
+        <button type="button" class="btn btn-sm btn-primary" (click)="openPopup(viewChooseRole)">
+            <codx-label fiedName="titleUserRoles" [formModel]="form?.formModel" default="Chỉnh sửa
+            quyền">
+            </codx-label>
+        </button>
     </div>
     <div class="scroll-y usergroups-main mt-4">
         <div class="py-3" *ngIf="countListViewChooseRoleApp > 0">
             <div class="d-flex flex-column align-items-start mb-5">
                 <span class="fw-bold text-primary fs-6">
-                    <codx-label name="titleUserRoles" formName="UserRoles" default="Ứng dụng được phần quyền ">
+                    <codx-label fiedName="titleUserRoles" [formModel]="form?.formModel"
+                        default="Ứng dụng được phần quyền ">
                     </codx-label>
                     <span class="ms-1 text-primary">({{countListViewChooseRoleApp}})</span>
                 </span>
@@ -115,7 +113,8 @@
         <div class="py-3" *ngIf="countListViewChooseRoleService > 0">
             <div class="d-flex flex-column align-items-start mb-5">
                 <span class="fw-bold text-primary fs-6">
-                    <codx-label name="titleUserRoles" formName="UserRoles" default="Dịch vụ nhân viên được phân quyền">
+                    <codx-label fiedName="titleUserRoles" [formModel]="form?.formModel"
+                        default="Dịch vụ nhân viên được phân quyền">
                     </codx-label><span class="ms-1 text-primary">({{countListViewChooseRoleService}})</span>
                 </span>
             </div>

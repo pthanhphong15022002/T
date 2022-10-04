@@ -72,55 +72,65 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.formModel.entityName = 'AD_AutoNumbers';
     this.formModel.formName = 'AutoNumbers';
     this.formModel.gridViewName = 'grvAutoNumbers';
+    this.dialog.formModel = this.formModel;
 
+    this.esService.setCacheFormModel(this.formModel);
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((fg) => {
         console.log(fg);
-
         if (fg) {
           this.dialogAutoNum = fg;
           this.esService.getAutoNumber(this.autoNoCode).subscribe((res) => {
             if (res != null) {
               this.data = res;
-              this.formModel.currentData = this.data;
               if (res.autoNoCode != null) {
                 this.isAdd = false;
+                this.formModel.currentData = this.data;
                 this.dialogAutoNum.patchValue(res);
                 this.isAfterRender = true;
                 this.setViewAutoNumber();
               } else {
                 this.isAdd = true;
                 res.autoNoCode = this.autoNoCode;
+                this.formModel.currentData = this.data;
                 this.dialogAutoNum.patchValue(res);
                 this.isAfterRender = true;
               }
               this.esService.isSetupAutoNumber.subscribe((res) => {
                 if (res != null) {
+                  this.formModel.currentData = this.data;
                   this.dialogAutoNum.patchValue(res.value);
                   this.isAfterRender = true;
                 }
               });
               this.setViewAutoNumber();
-              console.log(this.dialogAutoNum.value);
+              console.log(this.data);
             }
           });
         }
       });
+    this.getVll();
+  }
 
-    this.esService
-      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) {
-          this.cbxName = res;
-          console.log('cbxName', this.cbxName);
-          this.cache.valueList('L0088').subscribe((vllDFormat) => {
-            this.vllDateFormat = vllDFormat.datas;
-          });
+  getVll() {
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((gv) => {
+        if (gv) {
+          this.cache
+            .valueList(gv['DateFormat']?.referedValue ?? 'L0088')
+            .subscribe((vllDFormat) => {
+              this.vllDateFormat = vllDFormat.datas;
+              this.setViewAutoNumber();
+            });
 
-          this.cache.valueList('L0089').subscribe((vllSFormat) => {
-            this.vllStringFormat = vllSFormat.datas;
-          });
+          this.cache
+            .valueList(gv['StringFormat']?.referedValue ?? 'L0089')
+            .subscribe((vllSFormat) => {
+              this.vllStringFormat = vllSFormat.datas;
+              this.setViewAutoNumber();
+            });
         }
       });
   }
@@ -128,30 +138,34 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   valueChange(event: any, field: string = '') {
     if (!field) field = event?.field;
     if (field && event.component) {
-      if (event?.data === Object(event?.data))
-        this.dialogAutoNum.patchValue({ [event['field']]: event.data.value });
-      else this.dialogAutoNum.patchValue({ [event['field']]: event.data });
+      this.data[field] = event.data;
       this.setViewAutoNumber();
+      this.cr.detectChanges();
     }
   }
 
   onSaveForm() {
     if (this.dialogAutoNum.invalid == true) {
-      this.esService.notifyInvalid(this.dialogAutoNum, this.formModel);
+      this.esService.notifyInvalid(
+        this.dialogAutoNum,
+        this.formModel,
+        this.data
+      );
       return;
     }
 
     if (this.isAdd) {
-      this.dialogAutoNum.value.lastNumber = 0;
-      this.dialogAutoNum.value.step = 1;
-      this.dialogAutoNum.value.description = 'description';
+      this.data.lastNumber = 0;
+      this.data.step = 1;
+      this.data.description = 'description';
     }
 
     if (this.isAdd) {
       this.esService
-        .addEditAutoNumbers(this.dialogAutoNum, this.isAdd)
+        .addEditAutoNumbers(this.data, this.isAdd)
         .subscribe((res) => {
           if (res) {
+            this.dialogAutoNum.patchValue(this.data);
             this.esService.setupAutoNumber.next(this.dialogAutoNum);
             if (this.isAdd) {
               this.esService.getAutoNoCode(res.recID);
@@ -160,6 +174,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           }
         });
     } else {
+      this.dialogAutoNum.patchValue(this.data);
       this.esService.setupAutoNumber.next(this.dialogAutoNum);
       this.dialog && this.dialog.close();
       this.cr.detectChanges();
@@ -167,60 +182,55 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   }
 
   setViewAutoNumber() {
-    let indexStrF = this.vllStringFormat.findIndex(
-      (p) => p.value == this.dialogAutoNum.value.stringFormat
-    );
-    let indexDF = this.vllDateFormat.findIndex(
-      (p) => p.value == this.dialogAutoNum.value.dateFormat
-    );
-    let stringFormat = '';
-    let dateFormat = '';
-    if (indexStrF >= 0) {
-      stringFormat = this.vllStringFormat[indexStrF].text;
-      stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
-    }
-
-    // replace chuỗi và dấu phân cách
-    stringFormat = stringFormat
-      .replace(
-        /-/g,
-        this.dialogAutoNum.value.separator == null
-          ? ''
-          : this.dialogAutoNum.value.separator
-      )
-      .replace(
-        'Chuỗi',
-        this.dialogAutoNum.value.fixedString == null
-          ? ''
-          : this.dialogAutoNum.value.fixedString
+    if (this.vllStringFormat && this.vllDateFormat && this.data) {
+      let indexStrF = this.vllStringFormat.findIndex(
+        (p) => p.value == this.data?.stringFormat
       );
-
-    //replace ngày
-    if (indexDF >= 0) {
-      dateFormat =
-        this.vllDateFormat[indexDF].text == 'None'
-          ? ''
-          : this.vllDateFormat[indexDF].text;
-    }
-    stringFormat = stringFormat.replace('Ngày', dateFormat);
-
-    //replace số và set chiều dài
-    let lengthNumber =
-      this.dialogAutoNum.value.maxLength - stringFormat.length + 2;
-    if (lengthNumber < 0) {
-      stringFormat = stringFormat.replace('Số', '');
-      stringFormat = stringFormat.substring(
-        0,
-        this.dialogAutoNum.value.maxLength
+      let indexDF = this.vllDateFormat.findIndex(
+        (p) => p.value == this.data?.dateFormat
       );
-    } else if (lengthNumber == 0) {
-      stringFormat = stringFormat.replace('Số', '');
+      let stringFormat = '';
+      let dateFormat = '';
+      if (indexStrF >= 0) {
+        stringFormat = this.vllStringFormat[indexStrF].text;
+        stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
+      }
+
+      // replace chuỗi và dấu phân cách
+      stringFormat = stringFormat
+        .replace(/-/g, this.data?.separator == null ? '' : this.data?.separator)
+        .replace(
+          'Chuỗi',
+          this.data?.fixedString == null ? '' : this.data?.fixedString
+        );
+
+      //replace ngày
+      if (indexDF >= 0) {
+        dateFormat =
+          this.vllDateFormat[indexDF].text == 'None'
+            ? ''
+            : this.vllDateFormat[indexDF].text;
+      }
+      stringFormat = stringFormat.replace('Ngày', dateFormat);
+
+      //replace số và set chiều dài
+      let lengthNumber = this.data?.maxLength - stringFormat.length + 2;
+      if (lengthNumber < 0) {
+        stringFormat = stringFormat.replace('Số', '');
+        stringFormat = stringFormat.substring(0, this.data?.maxLength);
+      } else if (lengthNumber == 0) {
+        stringFormat = stringFormat.replace('Số', '');
+      } else {
+        let strNumber = '#'.repeat(lengthNumber);
+        stringFormat = stringFormat.replace('Số', strNumber);
+      }
+      this.viewAutoNumber = stringFormat;
+      console.log(this.viewAutoNumber);
+
+      this.cr.detectChanges();
     } else {
-      let strNumber = '#'.repeat(lengthNumber);
-      stringFormat = stringFormat.replace('Số', strNumber);
+      this.getVll();
     }
-    this.viewAutoNumber = stringFormat;
-    this.cr.detectChanges();
   }
 
   prarseInt(data) {

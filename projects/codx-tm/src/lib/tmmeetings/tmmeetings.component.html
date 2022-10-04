@@ -232,24 +232,34 @@
 
   <hr />
 
-  <div class=" mb-2 text-dark me-6">
+  <div class="mb-2 text-dark me-6">
     <span>
       <codx-label
         default="Nội dung cuộc họp :"
         name="lblMemo"
         [formModel]="view.formModel"
         class="text-gray-600"
-      ></codx-label>
+      >
+      </codx-label>
     </span>
-
-    <!-- </div> -->
     <span class="ms-2 fw-bold">
-      <span class="text-gray-700" [innerHTML]="data?.memo"></span>
-      <span #memo *ngIf="!data?.memo">{{
-        data?.memo
-          | formatvalue: view.formModel:"memo":memo:"Meetings":"grvMeetings"
-          | async
-      }}</span>
+      <span class="text-gray-700 size-content-schedule cursor-pointer">
+        <span
+          [innerHTML]="data?.memo"
+          (mouseenter)="popoverMemo.open()"
+          (mouseover)="popoverMemo.close()"
+          [ngbPopover]="tooltipMemo"
+          popoverClass="empPopoverClass"
+          #popoverMemo="ngbPopover"
+          placement="left bottom top right"
+          container="body"
+        ></span>
+        <span #memo *ngIf="!data?.memo">{{
+          data?.memo
+            | formatvalue: view.formModel:"memo":memo:"Meetings":"grvMeetings"
+            | async
+        }}</span>
+      </span>
     </span>
   </div>
   <div class="d-flex mb-2">
@@ -271,6 +281,10 @@
       </div>
     </div>
   </div>
+
+  <ng-template #tooltipMemo>
+    <div [innerHTML]="data?.memo"></div>
+  </ng-template>
 </ng-template>
 
 <ng-template #mfButton let-data>
@@ -280,7 +294,8 @@
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
-    ></codx-mfunc>
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 

@@ -50,8 +50,11 @@ export class BehaviorComponent extends UIComponent implements OnInit {
   dataValue = '1;false';
   entityName = 'BS_Competences';
   parentName = '';
+  headerText = '';
   button?: ButtonModel;
   dialog: DialogRef;
+  functionList: any;
+  gridViewSetup: any;
 
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
@@ -81,6 +84,17 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
+    this.cache
+      .gridViewSetup(
+        this.functionList?.formName,
+        this.functionList?.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) this.gridViewSetup = res;
+      });
   }
   columnsGrid = [];
   onInit(): void {
@@ -93,7 +107,10 @@ export class BehaviorComponent extends UIComponent implements OnInit {
         headerText: 'Quy tắc',
         template: this.parentNameR,
       },
-      { field: 'competenceID', headerText: 'Mã hành vi' },
+      {
+        field: 'competenceID',
+        headerText: this.gridViewSetup?.CompetenceID?.headerText,
+      },
       {
         field: 'competenceName',
         headerText: 'Mô tả',
@@ -136,9 +153,11 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     }
   }
 
-  add() {
+  add(e) {
+    this.headerText = e?.text;
     var obj = {
       isModeAdd: true,
+      headerText: this.headerText,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -148,7 +167,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openSide(AddBehaviorComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
-          this.view.dataService.add(e.event, 1).subscribe();
+          this.view.dataService.add(e.event, 0).subscribe();
           this.changedr.detectChanges();
         }
       });
@@ -159,6 +178,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     if (data) this.view.dataService.dataSelected = data;
     var obj = {
       isModeAdd: false,
+      headerText: this.headerText,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -193,6 +213,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
   }
 
   clickMF(e, data) {
+    this.headerText = e?.text;
     if (e) {
       switch (e.functionID) {
         case 'SYS03':

@@ -13,6 +13,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { CodxFdService } from 'projects/codx-fd/src/public-api';
 
 @Component({
   selector: 'lib-add-behavior-rule',
@@ -20,7 +21,8 @@ import {
   styleUrls: ['./add-behavior-rule.component.scss'],
 })
 export class AddBehaviorRuleComponent extends UIComponent implements OnInit {
-  header = 'Thêm bộ hành vi ứng xử';
+  header = '';
+  title = '';
   formModel: any;
   dialog: DialogRef;
   dataUpdate: any;
@@ -33,6 +35,7 @@ export class AddBehaviorRuleComponent extends UIComponent implements OnInit {
     private injector: Injector,
     private notification: NotificationsService,
     private authStore: AuthStore,
+    private fdSV: CodxFdService,
     @Optional() dt: DialogData,
     @Optional() dialog: DialogRef
   ) {
@@ -44,17 +47,25 @@ export class AddBehaviorRuleComponent extends UIComponent implements OnInit {
     );
     this.formModel = dialog.formModel;
     this.isModeAdd = dt.data?.isModeAdd;
+    this.cache.functionList(this.formModel.funcID).subscribe((res) => {
+      if (res) {
+        this.header =
+          this.title +
+          ' ' +
+          res?.customName.charAt(0).toLocaleLowerCase() +
+          res?.customName.slice(1);
+      }
+    });
   }
 
   onInit(): void {
-    if (!this.isModeAdd) this.header = 'Cập nhật bộ hành vi ứng xử';
   }
 
   onSave() {
     var formGroup = this.form.formGroup.controls;
     if (formGroup.competenceID.status == 'VALID') {
       this.dialog.dataService
-        .save((option: any) => this.beforeSave(option))
+        .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
           if (this.isModeAdd) {
             if (res && res.save[3][0]) this.dialog.close(res.save[3][0]);
@@ -64,7 +75,7 @@ export class AddBehaviorRuleComponent extends UIComponent implements OnInit {
             else this.notification.notifyCode('SYS023');
           }
         });
-    } else this.notification.notify('Vui lòng kiểm tra lại thông tin nhập');
+    } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
   beforeSave(option) {

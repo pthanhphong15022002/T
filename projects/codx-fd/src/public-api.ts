@@ -3,5 +3,4 @@
  */
 
 export * from './lib/codx-fd.service';
-export * from './lib/codx-fd.component';
 export * from './lib/codx-fd.module';

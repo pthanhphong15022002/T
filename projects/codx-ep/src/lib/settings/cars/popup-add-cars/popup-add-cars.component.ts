@@ -65,6 +65,7 @@ export class PopupAddCarsComponent extends UIComponent {
     super(injector);
     this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
+    this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
   }
@@ -92,11 +93,6 @@ export class PopupAddCarsComponent extends UIComponent {
     });    
   }
   initForm() {
-    if (this.isAdd) {
-      this.headerText = 'Thêm mới xe';      
-    } else {
-      this.headerText = 'Sửa thông tin xe';      
-    }
     this.codxEpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
@@ -165,7 +161,6 @@ export class PopupAddCarsComponent extends UIComponent {
       this.fGroupAddCar.patchValue({companyID:null});
     }    
     this.fGroupAddCar.patchValue({
-      ranking:'1',
       equipments: this.lstEquipment,
     });
 

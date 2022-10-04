@@ -35,6 +35,7 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
   isAddMode = true;
   button?: ButtonModel;
   dialog: DialogRef;
+  headerText = '';
 
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
@@ -196,9 +197,11 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
     }
   }
 
-  add() {
+  add(e: any) {
+    this.headerText = e?.text;
     var obj = {
       isModeAdd: true,
+      headerText: this.headerText,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -208,7 +211,7 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openSide(AddProposedFieldComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
-          this.view.dataService.add(e.event, 1).subscribe();
+          this.view.dataService.add(e.event, 0).subscribe();
           this.changedr.detectChanges();
         }
       });
@@ -219,6 +222,7 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
     if (data) this.view.dataService.dataSelected = data;
     var obj = {
       isModeAdd: false,
+      headerText: this.headerText,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -247,12 +251,13 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
   }
 
   beforeDelete(op: any, data) {
-    op.methodName = 'DeleteCompetencesAsync';
+    op.methodName = 'DeleteIndustryAsync';
     op.data = data?.competenceID;
     return true;
   }
 
   clickMF(e, data) {
+    this.headerText = e?.text;
     if (e) {
       switch (e.functionID) {
         case 'SYS03':
