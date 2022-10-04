@@ -9,10 +9,10 @@
   [views]="views"
   [button]="buttons"
   (buttonClick)="click($event)"
-  [moreFuncs]="moreFuncs"
   [idField]="idField"
   [className]="className"
-  [method]="method"  
+  [method]="method" 
+  (onLoading)="onLoading($event)" 
   [viewActiveType]="viewType.grid"
 >
 
@@ -22,19 +22,20 @@
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data?.resourceName}}</span>
       <div class="d-flex flex-row">
-        <codx-label default="Phân loại:" [formModel]="formModel" name="lblRanking" class="text-gray-600"></codx-label>
+        <codx-label [default]="grvRooms?.Ranking?.headerText" [formModel]="formModel" name="lblRanking" class="text-gray-600"></codx-label>
+        <span>:</span>
         <span class="fw-bold ms-1">{{ data?.ranking| vll: "EP005" : 'text' | async}}</span>
       </div>
       <div class="d-flex flex-row">
         <div>
-          <codx-label default="Diện tích:" name="lblArea" class="text-gray-600"></codx-label>
-          
+          <codx-label [default]="grvRooms?.Area?.headerText" name="lblArea" class="text-gray-600"></codx-label>
+          <span>:</span>
           <span class="fw-bold ms-1">{{data?.area}} m2</span>
         </div>
         <span class="text-gray-600">&ensp;|&ensp;</span>
         <div>
-          <codx-label default="Sức chứa:" name="lblCapacity" class="text-gray-600"></codx-label>
-          
+          <codx-label [default]="grvRooms?.Capacity?.headerText" name="lblCapacity" class="text-gray-600"></codx-label>
+          <span>:</span>
           <span class="fw-bold ms-1">{{data?.capacity}} người</span>
         </div>
       </div>
@@ -55,7 +56,7 @@
         <h2 id="modal-basic-title">
           <codx-label
             name="lblEquipment"
-            default="Thiết bị"
+            [default]="grvRooms.Equipments.headerText"
             [formModel]="dialog.formModel"
           ></codx-label>
         </h2>
@@ -111,7 +112,7 @@
     <div (click)="openPopupDevice(popupDevice, data?.equipments)" class="btn d-flex justify-content-center align-items-center">    
       <i class="icon-devices"></i>
       <span class=" ms-1 fw-bold">{{data?.equipmentQty}}</span>
-      <codx-label default="thiết bị" class=" ms-1 fw-bold" name="lblDevice"></codx-label>
+      <codx-label [default]="grvRooms.Equipments.headerText" class=" ms-1 fw-bold" name="lblDevice"></codx-label>
     </div>  
   
 </ng-template>  
@@ -120,13 +121,7 @@
     <codx-img [objectId]="data?.owner" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data?.ownerName }}</div>
-    </div>      
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
+    </div>
   </div>
 </ng-template>
 

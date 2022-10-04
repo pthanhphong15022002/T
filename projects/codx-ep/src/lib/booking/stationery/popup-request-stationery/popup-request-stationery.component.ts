@@ -18,6 +18,7 @@ import {
   NotificationsService,
   UserModel,
   AuthStore,
+  ResourceModel,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -87,6 +88,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   onInit(): void {
     this.user = this.auth.get();
+
+    // this.epService.getStationeryGroup().subscribe((res) => {
+    //   console.log(res);
+    // });
+
     this.initForm();
   }
 
@@ -151,7 +157,15 @@ export class PopupRequestStationeryComponent extends UIComponent {
           if (tmpResource.quantity <= tmpResource.availableQty) {
             item.quantity = item.quantity + 1;
           } else {
-            this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3');
+            this.api
+              .exec<any>(
+                'EP',
+                'ResourceQuotaBusiness',
+                'GetQuotaByResourceIDAsync',
+                item.resourceID
+              )
+              .subscribe((res: any) => {});
+            this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3'); //Test
           }
         }
       });
@@ -180,5 +194,5 @@ export class PopupRequestStationeryComponent extends UIComponent {
     return item.recID;
   }
 
-  valueChange(){}
+  valueChange() {}
 }

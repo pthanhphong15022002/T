@@ -495,6 +495,11 @@ export class CodxTasksComponent
           false
         );
       if (e?.event && e?.event != null && e?.event[1] != null) {
+        if(e.event[0]){
+            this.itemSelected = data;
+            this.detail.taskID = this.itemSelected.taskID;
+            this.detail.getTaskDetail();
+        }
         //cai này cần dùng khi TMT0202
         // let listTask = e?.event[1];
         // let newTasks = [];

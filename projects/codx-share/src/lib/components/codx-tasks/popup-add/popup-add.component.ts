@@ -54,7 +54,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   functionID: string;
   view = '';
   action = '';
-  title = 'Tạo mới công việc';
+  title = '';
   contentTodoEdit = '';
   recIDTodoDelete = '';
   indexEditTodo = -1;

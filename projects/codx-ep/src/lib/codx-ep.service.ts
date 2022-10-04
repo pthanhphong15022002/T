@@ -193,6 +193,20 @@ export class CodxEpService {
       [carID]
     );
   }
+  driverValidator(
+    driverID: string,
+    startDate: Date,
+    endDate: Date,
+    recID: any
+  ) {
+    return this.api.callSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'DriverValidatorAsync',
+      [driverID, startDate, endDate, recID]
+    );
+  }
 
   getBookingAttendees(recID: string) {
     return this.api.callSv(
@@ -204,13 +218,23 @@ export class CodxEpService {
     );
   }
 
-  getCompanyName(companyID: string) {
+  update(model: any, isAdd: boolean) {
     return this.api.callSv(
-      'HR',
-      'ERM.Business.HR',
-      'OrganizationUnitsBusiness',
-      'GetOrgUnitNameAsync',
-      companyID
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'AddEditItemAsync',
+      [model, isAdd]
+    );
+  }
+
+  getQuotaByResourceID(resourceID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourceQuotaBusiness',
+      'GetQuotaByResourceIDAsync',
+      [resourceID]
     );
   }
 
@@ -298,20 +322,18 @@ export class CodxEpService {
     );
   }
 
-  release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
+  release(booking: any, entityName: string, funcID: string): Observable<any> {
     return this.api.execSv(
-      'ES',
+      'EP',
       'ERM.Business.CM',
       'DataBusiness',
       'ReleaseAsync',
       [
-        oSignFile?.recID,
-        oSignFile.approveControl == '1'
-          ? oSignFile?.recID
-          : oSignFile?.processID,
+        booking?.recID,
+        '3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3',
         entityName,
         funcID,
-        '<div>' + oSignFile.title + '</div>',
+        '<div>' + booking.title + '</div>',
       ]
     );
   }

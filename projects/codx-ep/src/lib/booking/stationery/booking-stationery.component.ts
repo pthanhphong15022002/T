@@ -1,3 +1,4 @@
+import { CodxEpService } from 'projects/codx-ep/src/public-api';
 import { DialogModel, UIComponent } from 'codx-core';
 import {
   AfterViewInit,
@@ -34,7 +35,6 @@ export class BookingStationeryComponent
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   button: ButtonModel;
-  moreFunc: Array<ButtonModel> = [];
   dataSelected: any;
   columnsGrid: any;
   dialog!: DialogRef;
@@ -62,24 +62,6 @@ export class BookingStationeryComponent
   }
 
   ngAfterViewInit(): void {
-    this.moreFunc = [
-      {
-        id: 'btnAdd',
-        icon: 'icon-shopping_cart',
-        text: 'Yêu cầu VPP',
-      },
-      {
-        id: 'btnAddNew',
-        icon: 'icon-playlist_add_check',
-        text: 'Danh sách yêu cầu',
-      },
-      {
-        id: 'btnDelete',
-        icon: 'icon-list-checkbox',
-        text: 'Xóa',
-      },
-    ];
-
     this.views = [
       {
         type: ViewType.listdetail,

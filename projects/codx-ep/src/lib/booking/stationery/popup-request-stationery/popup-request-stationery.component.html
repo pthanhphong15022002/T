@@ -129,8 +129,10 @@
   <codx-card-img
     cardCss="border w-200px h-100"
     [imageSrc]="
-      data?.icon ? data?.icon : '../assets/media/svg/files/blank-image.svg'
+      data?.icon ? '' : '../assets/media/svg/files/blank-image.svg'
     "
+    [imageObjType]="'EP_Stationery'"
+    [imageId]="data?.recID"
     [title]="data?.resourceName"
     [subTitle]="data?.resourceName"
     [content]="data?.costPrice | currency: 'VND':'symbol':'3.0'"
