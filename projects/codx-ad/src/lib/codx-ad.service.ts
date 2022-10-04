@@ -52,13 +52,12 @@ export class CodxAdService {
             if (element.fieldName == 'owner') {
               model[element.fieldName].push(user.userID);
             } else if (element.fieldName == 'bUID') {
-              model[element.fieldName].push(user['buid']);
+              model[element.fieldName].push(null);
+              model['buid'] = model[element.fieldName];
             } else if (element.fieldName == 'createdOn') {
               model[element.fieldName].push(new Date());
             } else if (element.fieldName == 'stop') {
               model[element.fieldName].push(false);
-            } else if (element.fieldName == 'orgUnitID') {
-              model[element.fieldName].push(user['buid']);
             } else if (
               element.dataType == 'Decimal' ||
               element.dataType == 'Int'
@@ -81,6 +80,9 @@ export class CodxAdService {
             }
             if (element.fieldName == 'email') {
               modelValidator.push(Validators.email);
+            }
+            if (element.fieldName == 'buid') {
+              modelValidator.push(Validators.required);
             }
             if (modelValidator.length > 0) {
               model[element.fieldName].push(modelValidator);
@@ -132,19 +134,20 @@ export class CodxAdService {
         .gridViewSetup(formModel.formName, formModel.gridViewName)
         .subscribe((res) => {
           if (res) {
+            if (fieldName == 'Buid') fieldName = 'BUID';
             gridViewSetup = res;
             this.notificationsService.notifyCode(
-              'E0005',
+              'SYS028',
               0,
-              '"' + gridViewSetup[fieldName].headerText + '"'
+              '"' + gridViewSetup[fieldName]?.headerText + '"'
             );
           }
         });
     } else {
       this.notificationsService.notifyCode(
-        'E0005',
+        'SYS028',
         0,
-        '"' + gridViewSetup[fieldName].headerText + '"'
+        '"' + gridViewSetup[fieldName]?.headerText + '"'
       );
     }
   }
@@ -247,7 +250,14 @@ export class CodxAdService {
     );
   }
 
-  updateUserRoles(lstURoles, NewURoles, isDelete, adUserGroup, dataUserCbb, formAdd = true) {
+  updateUserRoles(
+    lstURoles,
+    NewURoles,
+    isDelete,
+    adUserGroup,
+    dataUserCbb,
+    formAdd = true
+  ) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',

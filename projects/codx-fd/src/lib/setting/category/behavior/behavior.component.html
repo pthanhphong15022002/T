@@ -1,39 +1,64 @@
-<codx-views [views]="views" #view [funcID]="funcID" [entityName]="'BS_Competences'" (buttonClick)="add()"
-    [button]="button" service="BS" assemblyName="ERM.Business.BS" className="CompetencesBusiness"
-    method="LoadDataCompetencesAsync" [predicate]="predicate" [dataValue]="dataValue" [entityName]="entityName">
+<codx-views
+  [views]="views"
+  #view
+  [funcID]="funcID"
+  [entityName]="'BS_Competences'"
+  (buttonClick)="add($event)"
+  [button]="button"
+  service="BS"
+  assemblyName="ERM.Business.BS"
+  className="CompetencesBusiness"
+  method="LoadDataCompetencesAsync"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [entityName]="entityName"
+  (onLoading)="onLoading($event)"
+>
 </codx-views>
 <ng-template #itemCreateBy let-dataItem>
-    <div class="d-flex align-items-center" #itemCreateBy>
-        <div class="h-30 w-30"></div>
-        <codx-img class="symbol symbol-30px symbol-circle me-4" [objectId]="dataItem.createdBy" objectType="AD_Users">
-        </codx-img>
-        <div *ngIf="dataItem.createName == null; else other" class="text-dark font-size-lg">
-            {{ userName }}
-        </div>
-        <ng-template #other>
-            <span>{{ dataItem.createName }}</span>
-        </ng-template>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <div class="h-30 w-30"></div>
+    <codx-img
+      class="symbol symbol-30px symbol-circle me-4"
+      [objectId]="dataItem.createdBy"
+      objectType="AD_Users"
+    >
+    </codx-img>
+    <div
+      *ngIf="dataItem.createName == null; else other"
+      class="text-dark font-size-lg"
+    >
+      {{ userName }}
     </div>
+    <ng-template #other>
+      <span>{{ dataItem.createName }}</span>
+    </ng-template>
+  </div>
 </ng-template>
 <ng-template #createdOn let-item>
-    <div class="d-flex has-action-menu">
-        <span>{{ item.createdOn | date: "dd/MM/yyy" }}</span>
-        <codx-mfunc [dataItem]="item" [formModel]="view?.formModel" (clickMF)="clickMF($event, item)" type="hover">
-        </codx-mfunc>
-    </div>
+  <div class="d-flex has-action-menu">
+    <span>{{ item.createdOn | fmDT }}</span>
+    <codx-mfunc
+      [dataItem]="item"
+      [formModel]="view?.formModel"
+      (clickMF)="clickMF($event, item)"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
 </ng-template>
 
 <ng-template #memo let-item>
-    <span [innerHTML]="item.memo"></span>
+  <span [innerHTML]="item.memo"></span>
 </ng-template>
 
 <ng-template #competenceName let-item>
-    <span [innerHTML]="item.competenceName"></span>
+  <span [innerHTML]="item.competenceName"></span>
 </ng-template>
 
 <ng-template #parentNameR let-item>
-    <span *ngIf="item.parentName == null; else other">{{ parentName }}</span>
-    <ng-template #other>
-        <span>{{ item.parentName }}</span>
-    </ng-template>
+  <span *ngIf="item.parentName == null; else other">{{ parentName }}</span>
+  <ng-template #other>
+    <span>{{ item.parentName }}</span>
+  </ng-template>
 </ng-template>

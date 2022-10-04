@@ -1,0 +1,69 @@
+<codx-form 
+  [subHeader]="subheader"
+  [body]="body" 
+  (onScroll)="onScroll($event)" 
+  [headerText]="'Yêu cầu xét duyệt'" 
+  [dialog]="dialog">
+</codx-form>
+<ng-template #subheader>
+  <div class="d-flex justify-content-end w-100">
+    <div class="rounded-pill p-2">
+      <span>
+        <i class="icon-filter_alt"></i>
+      </span>
+      <span class="mx-1">
+        <codx-label [formModel]="dialog.formModel" name="" default="Loại xét duyệt"></codx-label>
+      </span>
+      <span><i class="fas fa-ellipsis-h"></i></span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #body>
+  <div class="p-2">
+    <ng-container *ngFor="let item of lstApproval">
+        <div class="d-flex p-4 my-2">
+          <div class="">
+            <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+          </div>
+          <div class="ms-4">
+            <div class="fw-bolder">{{item.textValue}}</div>
+            <div>{{item.title}}</div>
+            <div>
+              <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+            </div>
+            <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
+              <div>
+                <button type="button" class="btn btn-outline-success min-w-90px">
+                  <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
+                </button>
+                <button type="button" class="btn btn-outline-danger min-w-90px ms-4">
+                  <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
+                </button>
+              </div>
+              <div>
+                <codx-label [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+    </ng-container>
+  </div>
+</ng-template>
+<ng-template #itemNoti let-item>
+  <div class="row p-4 my-2">
+    <div class="col-1">
+      <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+    </div>
+    <div class="col-10">
+      <div [innerHTML]="item.textValue">        
+      </div>
+      <div>
+        <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+      </div>
+    </div>
+    <div class="col-1" *ngIf="!item.isRead">
+      <span class="dots"></span>
+    </div>
+  </div>
+</ng-template>
