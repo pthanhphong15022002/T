@@ -10,19 +10,24 @@ import {
   AuthStore,
   ButtonModel,
   DataRequest,
+  DialogModel,
   DialogRef,
   FormModel,
+  LayoutInitService,
   NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
+
 import { map, Observable, of } from 'rxjs';
 import { CodxTMService } from '../codx-tm.service';
 import { TM_Sprints } from '../models/TM_Sprints.model';
+import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popup-tabs-views-details.component';
 import { PopupAddSprintsComponent } from './popup-add-sprints/popup-add-sprints.component';
 import { PopupShareSprintsComponent } from './popup-share-sprints/popup-share-sprints.component';
 
@@ -57,7 +62,10 @@ export class SprintsComponent extends UIComponent {
   valuelist = {};
   action = 'edit';
   listMoreFunc = [];
-  titleAction = '' ;
+  titleAction = '';
+  heightWin: any;
+  widthWin: any;
+  toolbarCls: string;
 
   constructor(
     inject: Injector,
@@ -79,6 +87,8 @@ export class SprintsComponent extends UIComponent {
     this.cache.moreFunction('Sprints', 'grvSprints').subscribe((res) => {
       if (res) this.listMoreFunc = res;
     });
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   //#region Init
@@ -86,6 +96,10 @@ export class SprintsComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
+
+    let body = document.body;
+    if (body.classList.contains('toolbar-fixed'))
+      this.toolbarCls = 'toolbar-fixed';
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -114,15 +128,15 @@ export class SprintsComponent extends UIComponent {
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'add',this.titleAction],
+        [this.view.dataService.dataSelected, 'add', this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
         if (e?.event == null)
-        this.view.dataService.delete(
-          [this.view.dataService.dataSelected],
-          false
-        );
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
       });
     });
   }
@@ -140,17 +154,17 @@ export class SprintsComponent extends UIComponent {
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddSprintsComponent,
-          [this.view.dataService.dataSelected, 'edit',this.titleAction],
+          [this.view.dataService.dataSelected, 'edit', this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
           if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
         });
-      });  
+      });
   }
 
   copy(data) {
@@ -162,15 +176,15 @@ export class SprintsComponent extends UIComponent {
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'copy',this.titleAction],
+        [this.view.dataService.dataSelected, 'copy', this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
         if (e?.event == null)
-        this.view.dataService.delete(
-          [this.view.dataService.dataSelected],
-          false
-        );
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
       });
     });
   }
@@ -196,7 +210,7 @@ export class SprintsComponent extends UIComponent {
   //#region More function
   clickMF(e: any, data: any) {
     this.itemSelected = data;
-    this.titleAction = e?.text ;
+    this.titleAction = e?.text;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -224,7 +238,7 @@ export class SprintsComponent extends UIComponent {
     }
   }
   click(evt: ButtonModel) {
-    this.titleAction = evt?.text ;
+    this.titleAction = evt?.text;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -289,9 +303,7 @@ export class SprintsComponent extends UIComponent {
     // this.codxService.navigate('', this.urlView,null,state);
   }
 
-  changeView(evt: any) {
-   
-  }
+  changeView(evt: any) {}
 
   requestEnded(evt: any) {
     // if (evt) {
@@ -324,6 +336,27 @@ export class SprintsComponent extends UIComponent {
         iterationID: data.iterationID,
       });
     }
+
+
+    // var obj = {
+    //   iterationID: data.iterationID,
+    //   meetingID: null,
+    // };
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    // this.dialog = this.callfc.openForm(
+    //   PopupTabsViewsDetailsComponent,
+    //   '',
+    //   this.widthWin,
+    //   this.heightWin,
+    //   '',
+    //   obj,
+    //   '',
+    //   dialogModel
+    // );
+    // this.dialog.beforeClose.subscribe((res) => {
+    //   if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
+    // });
   }
   //#end
 
@@ -341,33 +374,33 @@ export class SprintsComponent extends UIComponent {
     }
   }
 
- /// placeholder
+  /// placeholder
   placeholder(
     value: string,
     formModel: FormModel,
     field: string
   ): Observable<string> {
-   //if (value) {
-      return of(`<span class="cut-size-long">${value}</span>`);
-   }
-    // else {
-    //   return this.cache
-    //     .gridViewSetup(formModel.formName, formModel.gridViewName)
-    //     .pipe(
-    //       map((datas) => {
-    //         if (datas && datas[field]) {
-    //           var gvSetup = datas[field];
-    //           if (gvSetup) {
-    //             if (!value) {
-    //               var headerText = gvSetup.headerText as string;
-    //               return `<div style="height : 40px;"><span class="opacity-50">${headerText}</span></div>`;
-    //             }
-    //           }
-    //         }
+    //if (value) {
+    return of(`<span class="cut-size-long">${value}</span>`);
+  }
+  // else {
+  //   return this.cache
+  //     .gridViewSetup(formModel.formName, formModel.gridViewName)
+  //     .pipe(
+  //       map((datas) => {
+  //         if (datas && datas[field]) {
+  //           var gvSetup = datas[field];
+  //           if (gvSetup) {
+  //             if (!value) {
+  //               var headerText = gvSetup.headerText as string;
+  //               return `<div style="height : 40px;"><span class="opacity-50">${headerText}</span></div>`;
+  //             }
+  //           }
+  //         }
 
-    //         return `<span class="opacity-50">${field}</span>`;
-    //       })
-    //     );
-    // }
-   //}
+  //         return `<span class="opacity-50">${field}</span>`;
+  //       })
+  //     );
+  // }
+  //}
 }
