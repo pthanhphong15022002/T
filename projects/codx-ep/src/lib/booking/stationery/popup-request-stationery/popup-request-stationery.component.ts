@@ -22,7 +22,6 @@ import {
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { tempResources } from '../../../models/EP_Resources.models';
 @Component({
   selector: 'popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
@@ -137,6 +136,33 @@ export class PopupRequestStationeryComponent extends UIComponent {
     console.log(this.dialogAddBookingStationery);
   }
 
+  approve() {
+    //Gửi duyệt
+    this.epService
+      .release(this.data, this.formModel.entityName, this.formModel.funcID)
+      .subscribe((res) => {
+        if (res?.msgCodeError == null && res?.rowCount) {
+          //this.dialogSignFile.patchValue({ approveStatus: '3' });
+          this.data.approveStatus = '3';
+          this.epService
+            .editBooking(this.data, false, null, null, null)
+            .subscribe((result) => {
+              if (res) {
+                this.notificationsService.notifyCode('EP007');
+                this.dialog &&
+                  this.dialog.close({
+                    data: this.data,
+                    approved: true,
+                  });
+              }
+            });
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
+      });
+    this.dialog.close();
+  }
+
   close() {
     this.dialog && this.dialog.close();
   }
@@ -145,43 +171,43 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   //#region cart
 
-  addCart(event, data: tempResources) {
-    let tmpResource = new tempResources();
-    tmpResource = { ...data };
+  addCart(event, data) {
+    // let tmpResource = new tempResources();
+    // tmpResource = { ...data };
 
-    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
+    // let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
-    if (isPresent) {
-      this.cart.filter((item: tempResources) => {
-        if (item.recID == tmpResource.recID) {
-          if (tmpResource.quantity <= tmpResource.availableQty) {
-            item.quantity = item.quantity + 1;
-          } else {
-            this.api
-              .exec<any>(
-                'EP',
-                'ResourceQuotaBusiness',
-                'GetQuotaByResourceIDAsync',
-                item.resourceID
-              )
-              .subscribe((res: any) => {});
-            this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3'); //Test
-          }
-        }
-      });
-    } else {
-      this.cartQty = this.cartQty + 1;
-      tmpResource.quantity = 1;
-      if (tmpResource.quantity <= tmpResource.availableQty) {
-        this.cart.push(tmpResource);
-        this.cache.message('EP001').subscribe((mssg) => {
-          this.notificationsService.notify(mssg.defaultName, '1');
-        });
-      } else {
-        this.notificationsService.notify('Hết hàng', '3');
-      }
-    }
-    console.log(this.cart);
+    // if (isPresent) {
+    //   this.cart.filter((item: tempResources) => {
+    //     if (item.recID == tmpResource.recID) {
+    //       if (tmpResource.quantity <= tmpResource.availableQty) {
+    //         item.quantity = item.quantity + 1;
+    //       } else {
+    //         this.api
+    //           .exec<any>(
+    //             'EP',
+    //             'ResourceQuotaBusiness',
+    //             'GetQuotaByResourceIDAsync',
+    //             item.resourceID
+    //           )
+    //           .subscribe((res: any) => {});
+    //         this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3'); //Test
+    //       }
+    //     }
+    //   });
+    // } else {
+    //   this.cartQty = this.cartQty + 1;
+    //   tmpResource.quantity = 1;
+    //   if (tmpResource.quantity <= tmpResource.availableQty) {
+    //     this.cart.push(tmpResource);
+    //     this.cache.message('EP001').subscribe((mssg) => {
+    //       this.notificationsService.notify(mssg.defaultName, '1');
+    //     });
+    //   } else {
+    //     this.notificationsService.notify('Hết hàng', '3');
+    //   }
+    // }
+    // console.log(this.cart);
     this.detectorRef.detectChanges();
   }
 
