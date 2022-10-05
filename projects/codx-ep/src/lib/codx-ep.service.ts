@@ -328,18 +328,12 @@ export class CodxEpService {
   //#endregion
 
   //#region EP_ApprovalTrans
-
-  getTask(recID: string): Observable<any> {
-    return this.api.execSv(
-      'TM',
-      'ERM.Business.TM',
-      'TaskBusiness',
-      'GetListTaskTreeByRefIDAsync',
-      recID
-    );
-  }
-
-  release(booking: any, entityName: string, funcID: string): Observable<any> {
+  release(
+    booking: any,
+    processID: string,
+    entityName: string,
+    funcID: string
+  ): Observable<any> {
     return this.api.execSv(
       'EP',
       'ERM.Business.CM',
@@ -347,11 +341,31 @@ export class CodxEpService {
       'ReleaseAsync',
       [
         booking?.recID,
-        '3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3',
+        processID,
         entityName,
         funcID,
         '<div>' + booking.title + '</div>',
       ]
+    );
+  }
+
+  approve(data: any, entity: string, status: string) {
+    return this.api.execSv(
+      'CM',
+      'ERM.Business.CM',
+      'DataBusiness',
+      'ApproveAsync',
+      [data?.recID, entity, status]
+    );
+  }
+
+  getCategoryByEntityName(entityName: string) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'CategoriesBusiness',
+      'GetCategoryByEntityNameAsync',
+      [entityName]
     );
   }
 
