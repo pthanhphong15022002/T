@@ -39,6 +39,8 @@ export class WalletComponent extends UIComponent implements OnInit {
     'ResetMyKudosControl',
   ];
   listParameter;
+  funcID: any;
+  functionList: any;
 
   constructor(
     private at: ActivatedRoute,
@@ -48,10 +50,17 @@ export class WalletComponent extends UIComponent implements OnInit {
     private authStore: AuthStore,
     private settingSV: SettingService,
     private notification: NotificationsService,
+    private route: ActivatedRoute,
     injector: Injector
   ) {
     super(injector);
     this.tenant = this.authStore.get();
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
+    this.cache.functionList(this.funcID).subscribe(res => {
+      if(res) this.functionList = res;
+    })
   }
   onInit(): void {
     this.LoadData();
