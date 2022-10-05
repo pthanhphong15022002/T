@@ -251,7 +251,7 @@
     </span>
 
     <span class="ms-2 fw-bold">
-      <span class="text-gray-700 cut-size-long cursor-pointer">
+      <span class="text-gray-700 size-content-schedule cursor-pointer">
         <ng-container [ngTemplateOutlet]="tempHtml"></ng-container>
       </span>
     </span>
@@ -290,13 +290,13 @@
         placement="left bottom top right"
         container="body"
       ></span>
-      <span #memo2 *ngIf="!data?.memo2"
-        >{{ data?
-        <div class="memo2"></div>
-        | formatvalue: view.formModel:"memo2":memo2:"Tasks":"grvTasks" | async
-        }}</span
-      >
+      <span #memo2 *ngIf="!data?.memo2">{{
+        data?.memo2
+          | formatvalue: view.formModel:"memo2":memo2:"Tasks":"grvTasks"
+          | async
+      }}</span>
     </ng-container>
+
     <ng-container *ngIf="data?.category != '2'">
       <span
         [innerHTML]="data?.memo"
@@ -316,11 +316,11 @@
     </ng-container>
   </ng-template>
 
-  <ng-template #tooltipMemo> 
-    <div  [innerHTML]="data?.memo"> </div>
+  <ng-template #tooltipMemo>
+    <div [innerHTML]="data?.memo"></div>
   </ng-template>
-  <ng-template #tooltipMemo2> 
-    <div  [innerHTML]="data?.memo2"> </div>
+  <ng-template #tooltipMemo2>
+    <div [innerHTML]="data?.memo2"></div>
   </ng-template>
 </ng-template>
 

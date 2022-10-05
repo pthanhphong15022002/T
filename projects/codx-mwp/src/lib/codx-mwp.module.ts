@@ -60,16 +60,16 @@ import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: LayoutComponent,
-  //   // children: [
-  //   //   {
-  //   //     path: 'tasks/:funcID',
-  //   //     component: TasksComponent,
-  //   //   },
-  //   // ],
-  // },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'tasks/:funcID',
+        component: TasksComponent,
+      },
+    ],
+  },
   {
     path: '',
     component: LayoutNoAsideComponent,
@@ -88,10 +88,10 @@ export const routes: Routes = [
         path: 'personals/:funcID',
         component: PersonalsComponent,
       },
-      {
-        path: 'tasks/:funcID',
-        component: TasksComponent,
-      },
+      // {
+      //   path: 'tasks/:funcID',
+      //   component: TasksComponent,
+      // },
     ],
   },
   {

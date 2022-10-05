@@ -4,7 +4,6 @@ import { AddGiftGroupComponent } from './setting/category/gift-group/add-gift-gr
 import { LayoutNoAsideComponent } from './../../../codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { BehaviorComponent } from './setting/category/behavior/behavior.component';
 import { GiftsComponent } from './setting/category/gifts/gifts.component';
-import { CategoryComponent } from './setting/category/category.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -59,6 +58,7 @@ import { DedicationRankComponent } from './setting/dedication-rank/dedication-ra
 import { GiftGroupComponent } from './setting/category/gift-group/gift-group.component';
 import { BehaviorRuleComponent } from './setting/category/behavior-rule/behavior-rule.component';
 import { ProposedFieldComponent } from './setting/category/proposed-field/proposed-field.component';
+import { WalletComponent } from './setting/wallet/wallet.component';
 
 export const routes: Routes = [
   {
@@ -160,7 +160,6 @@ const Component: Type<any>[] = [
   GiftTransComponent,
   SettingComponent,
   DedicationRankComponent,
-  CategoryComponent,
   ProposedFieldComponent,
   GiftsComponent,
   GiftGroupComponent,
@@ -180,6 +179,7 @@ const Component: Type<any>[] = [
   AddProposedFieldComponent,
   AddBehaviorRuleComponent,
   AddBehaviorComponent,
+  WalletComponent,
 ];
 
 @NgModule({

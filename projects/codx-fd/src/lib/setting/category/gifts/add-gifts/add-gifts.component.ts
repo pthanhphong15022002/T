@@ -16,6 +16,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { CodxFdService } from 'projects/codx-fd/src/public-api';
 
 @Component({
   selector: 'lib-add-gifts',
@@ -27,7 +28,8 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   dataUpdate: any;
   formType: any;
-  header = 'Thêm quà tặng';
+  header = '';
+  title = '';
   isAddMode = true;
   predicate = 'Category=@0';
 
@@ -38,6 +40,7 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private notification: NotificationsService,
+    private fdSV: CodxFdService,
     private change: ChangeDetectorRef,
     @Optional() dt: DialogRef,
     @Optional() data: DialogData
@@ -49,13 +52,25 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
     );
     this.formModel = this.dialog?.formModel;
     this.formType = data.data?.formType;
+    this.title = data.data?.headerText;
+    this.cache.functionList(this.formModel.funcID).subscribe((res) => {
+      if (res) {
+        this.header =
+          this.title +
+          ' ' +
+          res?.customName.charAt(0).toLocaleLowerCase() +
+          res?.customName.slice(1);
+      }
+    });
   }
 
   onInit(): void {
     if (this.formType == 'edit') {
       this.isAddMode = false;
-      this.header = 'Cập nhật quà tặng';
-    } else this.dataUpdate.owner = null;
+    } else {
+      this.dataUpdate.owner = null;
+      this.dataUpdate.price = null;
+    }
     if (!this.dataUpdate.owner) this.dataUpdate.owner = null;
   }
 
@@ -70,7 +85,7 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
       formGroup.price.status == 'VALID'
     ) {
       this.dialog.dataService
-        .save((option: any) => this.beforeSave(option, this.isAddMode), 1)
+        .save((option: any) => this.beforeSave(option, this.isAddMode), 0)
         .subscribe((res) => {
           if (res.save) {
             let data = res.save[2];
@@ -80,10 +95,9 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
                 if (result) {
                   this.loadData.emit();
                 }
-                // var obj = {data: data, file: result};
-                // this.dialog.close(obj);
+                var obj = { data: data, file: result };
+                this.dialog.close(obj);
               });
-            this.dialog.close(data);
           } else if (res.update) {
             let data = res.update[2];
             this.imageUpload
@@ -92,17 +106,13 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
                 if (result) {
                   this.loadData.emit();
                 }
-                // var obj = { data: data, file: result };
-                // this.dialog.close(obj);
+                var obj = { data: data, file: result };
+                this.dialog.close(obj);
               });
-            this.dialog.close(data);
           }
           this.change.detectChanges();
         });
-    } else {
-      this.notification.notify('Vui lòng kiểm tra lại thông tin nhập');
-      return null;
-    }
+    } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
   beforeSave(op: any, isAdd) {

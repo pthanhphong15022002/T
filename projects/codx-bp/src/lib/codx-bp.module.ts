@@ -8,6 +8,7 @@ import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
 import { PopAddProcessesComponent } from './processes/pop-add-processes/pop-add-processes.component';
+import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
 
 export const routes: Routes = [
   {
@@ -33,6 +34,7 @@ export const routes: Routes = [
     LayoutComponent,
     ProcessesComponent,
     PopAddProcessesComponent,
+    ViewListProcessesComponent,
 
   ],
   imports: [

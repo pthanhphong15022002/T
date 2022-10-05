@@ -14,7 +14,6 @@ export class NotifyDrawerSliderComponent implements OnInit {
   pageSize:number = 20;
   dataService:CRUDService = null;
   user:any = null;
-  @ViewChild("itemNoti") itemNoti: TemplateRef<any>;
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,

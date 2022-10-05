@@ -1019,6 +1019,17 @@ export class CodxEsService {
     );
   }
 
+  addQRToPdf(content) {
+    let data = [content];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GenerateQRCodeAsync',
+      data
+    );
+  }
+
   updateSignFileTrans(
     pages,
     lstImg,
