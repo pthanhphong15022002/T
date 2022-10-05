@@ -115,7 +115,6 @@ export class CodxEsService {
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,
-    data: any = null,
     gridViewSetup: any = null
   ) {
     const invalid = [];

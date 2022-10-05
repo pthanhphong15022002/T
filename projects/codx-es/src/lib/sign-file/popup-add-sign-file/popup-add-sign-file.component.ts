@@ -671,26 +671,18 @@ export class PopupAddSignFileComponent implements OnInit {
 
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
     if (this.stepAppr?.isEdited) {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notify
-        .alert(
-          'Thông báo',
-          'Quy trình của bạn sẽ được cập nhật lại theo quy trình mẫu?',
-          config
-        )
-        .closed.subscribe((x) => {
-          if (x.event.status == 'Y') {
-            if (this.processID != '') {
-              this.dialogSignFile.patchValue({
-                processID: this.processID,
-                approveControl: '2',
-              });
-              this.data.processID = this.processID;
-              this.data.approveControl = '2';
-            }
+      this.notify.alertCode('ES002').subscribe((x) => {
+        if (x.event.status == 'Y') {
+          if (this.processID != '') {
+            this.dialogSignFile.patchValue({
+              processID: this.processID,
+              approveControl: '2',
+            });
+            this.data.processID = this.processID;
+            this.data.approveControl = '2';
           }
-        });
+        }
+      });
     } else {
       if (this.processID != '') {
         this.dialogSignFile.patchValue({
@@ -772,7 +764,7 @@ export class PopupAddSignFileComponent implements OnInit {
           }
         });
     } else {
-      this.notify.notify('Nhập tên mẫu trước khi lưu!');
+      this.notify.notifyCode('SYS028');
     }
   }
 
@@ -901,11 +893,11 @@ export class PopupAddSignFileComponent implements OnInit {
 
   //#region Open form
   openFormAdd(event) {
-    this.callfuncService.openForm(this.content, 'Quy trình mẫu', 700, 1000);
+    this.callfuncService.openForm(this.content, '', 700, 1000);
   }
 
   openPopup(content) {
-    this.callfuncService.openForm(content, 'Quy trình mẫu', 400, 250);
+    this.callfuncService.openForm(content, '', 400, 250);
   }
 
   extendShowPlan() {
@@ -913,36 +905,32 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   openTemplateName(dialog1) {
-    this.callfuncService.openForm(dialog1, 'Nhập tên', 400, 250);
+    this.callfuncService.openForm(dialog1, '', 400, 250);
   }
 
   //#endregion
 
   //#region Method close form
 
-  clickIsSave(isSave, dialogClose: DialogRef) {
+  clickIsSave(isSave) {
     if (this.isAddNew) {
       if (isSave) {
         this.onSaveSignFile();
-        dialogClose && dialogClose.close();
         this.dialog && this.dialog.close(this.dialogSignFile.value);
       } else if (this.isSaved) {
         this.esService
           .deleteSignFile(this.dialogSignFile.value.recID)
           .subscribe((res) => {
             if (res) {
-              dialogClose && dialogClose.close();
               this.dialog && this.dialog.close();
             }
           });
       }
 
-      dialogClose && dialogClose.close();
       this.dialog && this.dialog.close();
     } else {
       this.esService.editSignFile(this.data).subscribe((res) => {
         if (res) {
-          dialogClose && dialogClose.close();
           this.dialog && this.dialog.close(this.data);
         }
       });
@@ -955,41 +943,15 @@ export class PopupAddSignFileComponent implements OnInit {
     this.dialog && this.dialog.close();
   }
 
-  close(dialogClose) {
-    if (this.isAddNew == false) {
-      if (this.data?.updateColumn != null) {
-        this.isEdit = true;
-      }
-    }
-    if (
-      this.processTab == 0 ||
-      (this.isAddNew == false && this.isEdit == false) ||
-      (this.isAddNew == true && this.dialogSignFile.invalid)
-    ) {
-      this.dialog && this.dialog.close();
-    } else if (this.processTab > 0) {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notify
-        .alert(
-          'Thông báo',
-          'Quy trình của bạn sẽ được cập nhật lại theo quy trình mẫu?',
-          config
-        )
-        .closed.subscribe((x) => {
-          if (x.event.status == 'Y') {
-            if (this.processID != '') {
-              this.dialogSignFile.patchValue({
-                processID: this.processID,
-                approveControl: '2',
-              });
-              this.data.processID = this.processID;
-              this.data.approveControl = '2';
-            }
-          }
-        });
-
-      this.callfuncService.openForm(dialogClose, '', 500, 250);
+  close() {
+    if (this.isAddNew == true) {
+      this.notify.alertCode('ES002').subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.clickIsSave(true);
+        } else {
+          this.clickIsSave(false);
+        }
+      });
     }
   }
 
@@ -1024,7 +986,7 @@ export class PopupAddSignFileComponent implements OnInit {
           this.data.approveStatus = '3';
           this.esService.editSignFile(this.data).subscribe((result) => {
             if (res) {
-              this.notify.notifyCode('Gửi duyệt thành công!');
+              this.notify.notifyCode('ES007');
               this.dialog &&
                 this.dialog.close({
                   data: this.data,

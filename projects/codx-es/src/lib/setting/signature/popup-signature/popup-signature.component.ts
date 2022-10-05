@@ -13,6 +13,7 @@ import {
   CodxService,
   DialogData,
   DialogRef,
+  ImageViewerComponent,
   UIComponent,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
@@ -24,9 +25,9 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   styleUrls: ['./popup-signature.component.scss'],
 })
 export class PopupSignatureComponent extends UIComponent {
-  @ViewChild('attSignature1') attSignature1: AttachmentComponent;
-  @ViewChild('attSignature2') attSignature2: AttachmentComponent;
-  @ViewChild('attStamp') attStamp: AttachmentComponent;
+  @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
+  @ViewChild('imgSignature2') imgSignature2: ImageViewerComponent;
+  @ViewChild('imgStamp') imgStamp: ImageViewerComponent;
 
   currentTab: number = 1;
   dataFile: any = null;
@@ -49,6 +50,7 @@ export class PopupSignatureComponent extends UIComponent {
   vllFontStyle;
   selectedFont;
   selectedFontIndex = 0;
+  sMssg: string = '';
 
   constructor(
     private inject: Injector,
@@ -65,6 +67,12 @@ export class PopupSignatureComponent extends UIComponent {
     // this.data = dialog.DataService?.dataSelected;
     this.data = data?.data.data;
     console.log('dialog add signature', this.dialog);
+
+    this.cache.message('ES008').subscribe((mssg) => {
+      if (mssg) {
+        this.sMssg = mssg?.customName ?? mssg?.defaultName;
+      }
+    });
   }
 
   onInit(): void {
@@ -75,35 +83,43 @@ export class PopupSignatureComponent extends UIComponent {
     });
   }
 
-  async onSaveForm() {
-    if (this.attSignature1.fileUploadList.length == 1) {
-      (await this.attSignature1.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          this.data.signature1 = (res as any).data.recID;
-          this.dialog.close();
-        }
-      });
-    }
+  onSaveForm() {
+    if (this.imgSignature1?.imageUpload) {
+      this.imgSignature1
+        .updateFileDirectReload(this.data.recID + '1')
+        .subscribe((img) => {
+          if (img && this.data.signature1 == null) {
+            this.data.signature1 = (img[0] as any).recID;
 
-    if (this.attSignature2.fileUploadList.length == 1) {
-      (await this.attSignature2.saveFilesObservable()).subscribe(
-        (res1: any) => {
-          if (res1) {
-            this.data.signature2 = (res1 as any).data.recID;
-            this.dialog.close();
+            this.dialog && this.dialog.close(this.data);
           }
-        }
-      );
+        });
     }
 
-    if (this.attStamp.fileUploadList.length == 1) {
-      (await this.attStamp.saveFilesObservable()).subscribe((res2) => {
-        if (res2) {
-          this.data.stamp = (res2 as any).data.recID;
-          this.dialog.close();
-        }
-      });
+    if (this.imgSignature2?.imageUpload) {
+      this.imgSignature2
+        .updateFileDirectReload(this.data.recID + '2')
+        .subscribe((img) => {
+          if (img && this.data.signature2 == null) {
+            this.data.signature2 = (img[0] as any).recID;
+
+            this.dialog && this.dialog.close(this.data);
+          }
+        });
     }
+
+    if (this.imgStamp?.imageUpload) {
+      this.imgStamp
+        .updateFileDirectReload(this.data.recID + 's')
+        .subscribe((img) => {
+          if (img && this.data.stamp == null) {
+            this.data.stamp = (img[0] as any).recID;
+
+            this.dialog && this.dialog.close(this.data);
+          }
+        });
+    }
+    this.dialog && this.dialog.close(this.data);
   }
 
   onSavePopup() {}

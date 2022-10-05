@@ -357,11 +357,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   openPopupApproval() {
     if (this.form?.formGroup.invalid == true) {
-      this.esService.notifyInvalid(
-        this.dialogCategory,
-        this.formModel,
-        this.data
-      );
+      this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
     }
     if (this.isAdd) {

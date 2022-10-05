@@ -43,6 +43,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('color', { static: true }) color: TemplateRef<any>;
   @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
   @ViewChild('parentID', { static: true }) parentID: TemplateRef<any>;
+  @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
 
   columnsGrid;
 
@@ -156,6 +157,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: this.process,
               width: 220,
             },
+            { field: '', headerText: '', width: 20, template: this.itemAction },
           ];
 
           this.views = [
