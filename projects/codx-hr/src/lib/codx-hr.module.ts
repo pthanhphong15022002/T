@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
@@ -191,6 +192,7 @@ const T_Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
+    CoreModule,
     CodxShareModule,
     ChartAllModule,
     DiagramAllModule,

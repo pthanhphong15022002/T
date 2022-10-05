@@ -112,10 +112,15 @@ export const routes: Routes = [
     ],
   },
   {
-    path: '**',
+    path:'wp/portal/wp', // lỗi url back từ logo CODX
     redirectTo: 'portal/WP',
-    pathMatch: 'full'
-  }
+    pathMatch: "full"
+  },
+  {
+    path:"",
+    redirectTo:"portal/WP",
+    pathMatch:"full"
+  },
  
   // {
   //   path: 'news',

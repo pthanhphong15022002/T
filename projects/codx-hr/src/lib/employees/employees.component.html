@@ -1,6 +1,15 @@
-<codx-views #view funcID="HRT03" service="HR" entityName="HR_Employees" [views]="views" [button]="button"
-  (buttonClick)="click($event)" idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-  method="GetModelFormEmployAsync" [formModel]="view.formModel" [selectedFirst]="true" [itemSelected]="itemSelected"
+<codx-views #view 
+  service="HR" 
+  entityName="HR_Employees" 
+  [views]="views" 
+  [button]="button"
+  (buttonClick)="click($event)" 
+  idField="employeeID" 
+  assemblyName="ERM.Business.HR" 
+  className="EmployeesBusiness"
+  method="GetModelFormEmployAsync" 
+  [selectedFirst]="true" 
+  [itemSelected]="itemSelected"
   [viewActiveType]="'1'">
 </codx-views>
 
@@ -23,19 +32,19 @@
 <ng-template #cardTemp let-data>
   <ng-container>
     <div (dblclick)="doubleClick(data)">
-      <codx-card-center cardCss="border w-250px h-200" [formModel]="view.formModel" [imageId]="data.employeeID"
-        [imageObjType]="view.formModel.entityName" [imgOn]="data?.modifiedOn" [imageObjName]="data.employeeName"
-        [title]="
-          placeholder(data.employeeName, view.formModel, 'EmployeeName') | async
-        " [subTitle]="
-          placeholder(data.positionName, view.formModel, 'PositionID') | async
-        " [dataItem]="data" [desc]="
-          placeholder(
-            data.birthday | date: 'dd/MM/yyyy',
-            view.formModel,
-            'Birthday'
-          ) | async
-        " [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
+      <codx-card-center cardCss="border w-250px h-200" 
+        [formModel]="view.formModel" 
+        [imageId]="data.employeeID"
+        [imageObjType]="view.formModel.entityName" 
+        [imgOn]="data?.modifiedOn" 
+        [imageObjName]="data.employeeName"
+        [title]="placeholder(data.employeeName, view.formModel, 'EmployeeName') | async" 
+        [subTitle]="placeholder(data.positionName, view.formModel, 'PositionID') | async" 
+        [dataItem]="data" 
+        [desc]="placeholder(data.birthday | fmDT,view.formModel,'Birthday') | async" 
+        [footer]="footer" 
+        [typeMF]="'hover'" 
+        (clickMF)="clickMF($event, data)">
       </codx-card-center>
     </div>
   </ng-container>
@@ -163,13 +172,8 @@
         <span class="text-gray-600 me-1">
           <codx-label name="lblBirthday" formName="Employees" default="Ngày sinh: "></codx-label>
         </span>
-
         <span class="text-dark fw-bold">
-          <span #birthday>{{
-            data.birthday
-            | formatvalue: view.formModel:"birthday":birthday
-            | async
-            }}</span>
+          <span #birthday>{{data.birthday | fmDT | formatvalue: view.formModel:"birthday":birthday| async}}</span>
         </span>
       </div>
       <div class="align-items-center fs-7">
@@ -178,11 +182,7 @@
         </span>
 
         <span class="text-dark fw-bold">
-          <span #birthPlace>{{
-            data.provinceName
-            | formatvalue: view.formModel:"birthPlace":birthPlace
-            | async
-            }}</span>
+          <span #birthPlace>{{data.provinceName | formatvalue: view.formModel:"birthPlace":birthPlace | async}}</span>
         </span>
       </div>
       <div class="align-items-center fs-7">
@@ -217,11 +217,7 @@
           </codx-label>
         </span>
         <span class="text-gray-800">
-          <span #joinedOn>{{
-            data.joinedOn
-            | formatvalue: view.formModel:"joinedOn":joinedOn
-            | async
-            }}</span>
+          <span #joinedOn>{{data.joinedOn | fmDT | formatvalue: view.formModel:"joinedOn":joinedOn| async}}</span>
         </span>
       </div>
       <div class="align-items-center fs-7">
