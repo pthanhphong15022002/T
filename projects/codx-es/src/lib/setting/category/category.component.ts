@@ -43,6 +43,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('color', { static: true }) color: TemplateRef<any>;
   @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
   @ViewChild('parentID', { static: true }) parentID: TemplateRef<any>;
+  @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
 
   columnsGrid;
 
@@ -60,6 +61,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   className = 'CategoriesBusiness';
   method = 'GetListAsync';
 
+  funcList: any = {};
+
   dataSelected: any;
   dialog!: DialogRef;
 
@@ -72,6 +75,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     private esService: CodxEsService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cacheSv.functionList(this.funcID).subscribe((func) => {
+      this.funcList = func;
+    });
   }
 
   ngOnInit(): void {}
@@ -151,6 +157,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: this.process,
               width: 220,
             },
+            { field: '', headerText: '', width: 20, template: this.itemAction },
           ];
 
           this.views = [
@@ -179,19 +186,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.add();
+        this.add(evt);
         break;
       case 'btnEdit':
-        this.edit();
+        this.edit(evt);
         break;
       case 'btnDelete':
-        this.delete();
+        this.delete(evt);
         break;
       case 'btnEmail':
         let data = {
           dialog: this.dialog,
           formGroup: null,
-          templateID: '3438d42e-da1c-4892-a28a-a7fd54a164bb',
+          templateID: '2cbb5174-ab13-ed11-9441-00155d035517',
           showIsTemplate: true,
           showIsPublish: true,
           showSendLater: true,
@@ -218,15 +225,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       option.FormModel = this.viewBase?.formModel;
       this.dialog = this.callfunc.openSide(
         PopupAddCategoryComponent,
-        { data: this.viewBase.dataService.dataSelected, isAdd: true },
+        {
+          data: this.viewBase.dataService.dataSelected,
+          isAdd: true,
+          headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+        },
         option
       );
     });
   }
 
   edit(evt?) {
-    if (evt) {
-      this.viewBase.dataService.dataSelected = evt;
+    if (evt?.data) {
+      this.viewBase.dataService.dataSelected = evt?.data;
 
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
@@ -238,7 +249,11 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           option.FormModel = this.viewBase?.formModel;
           this.dialog = this.callfunc.openSide(
             PopupAddCategoryComponent,
-            { data: evt, isAdd: false },
+            {
+              data: evt?.data,
+              isAdd: false,
+              headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+            },
             option
           );
         });
@@ -247,8 +262,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
   delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
+    if (evt?.data) {
+      deleteItem = evt?.data;
     }
     this.viewBase.dataService.delete([deleteItem], true).subscribe((res) => {
       console.log(res);
@@ -260,12 +275,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event, data) {
+    event.data = data;
     switch (event?.functionID) {
       case 'SYS03':
-        this.edit(data);
+        this.edit(event);
         break;
       case 'SYS02':
-        this.delete(data);
+        this.delete(event);
         break;
     }
   }

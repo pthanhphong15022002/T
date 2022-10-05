@@ -71,6 +71,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -147,7 +153,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
          resourceModel: this.resourceField,
          //template:this.cardTemplate,
          template4: this.resourceHeader,
-         template5: this.resourceTootip,
+         //template5: this.resourceTootip,
          template6: this.mfButton,//header          
          template8: this.contentTmp,//content
          statusColorRef: 'vl003',
@@ -269,8 +275,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         this.delete(data);
         break;
     }
-  }
-  
+  }  
 
   onSelect(obj: any) {
     console.log(obj);

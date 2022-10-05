@@ -43,7 +43,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   listTodo: TaskGoal[] = [];
   listTaskResources: tmpTaskResource[] = [];
   dataReferences = [];
-  vllRefType = 'TM018'
+  vllRefType = 'TM018';
   todoAddText: any;
   disableAddToDo = true;
   grvSetup: any;
@@ -62,14 +62,14 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   taskParent: any;
   refID = '';
   refType = 'TM_Tasks';
-  taskName = "";
+  taskName = '';
   dueDate: Date;
   taskType = '1';
   vllPriority = 'TM005';
   changTimeCount = 2;
   loadingAll = false;
   gridViewSetup: any;
-  formModel: any
+  formModel: any;
 
   constructor(
     private authStore: AuthStore,
@@ -115,7 +115,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.setDefault();
   }
@@ -259,7 +259,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeVLL(e) { }
+  changeVLL(e) {}
 
   async saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {
@@ -341,23 +341,60 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
           var taskParent = res[1][0];
-          if (this.taskParent?.confirmControl == "1") this.tmSv.sendAlertMail(taskParent?.recID, "TM_0008", this.functionID).subscribe()
+          if (taskParent?.confirmControl == '1')
+            this.tmSv
+              .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)
+              .subscribe();
 
           //lưu his giao việc
-          var objectType = this.formModel.entityName
-          var objectID = this.task.refID
-          var objectName = this.user.userName;
-          var dataObj = { objectType: objectType, objectID: objectID, objectName: objectName }
+          var objectType = this.formModel.entityName;
+          var objectID = this.task.refID;
 
-          var tmpHistorry = {
-            objectType: objectType,
-            objectID: objectID,
-            actionType: "T",
-            functionID: this.formModel.funcID,
-            sendToObjects: [dataObj]
-          }
+          // var objectName = this.user.userName;
+          // var dataObj = {
+          //   objectType: objectType,
+          //   objectID: taskParent.assignTo,
+          //   objectName: objectName,
+          // };
 
-          this.api.execSv<any>("BG", "ERM.Business.BG", "TrackLogsBusiness", "InsertAsync", tmpHistorry).subscribe();
+          this.api
+            .execSv<any>(
+              'SYS',
+              'AD',
+              'UsersBusiness',
+              'LoadUserListByIDAsync',
+              JSON.stringify(taskParent.assignTo.split(';'))
+            )
+            .subscribe((users) => {
+              if (users?.length > 0) {
+                var dataObj = [];
+                users.forEach((user) => {
+                  dataObj.push({
+                    objectType: objectType,
+                    objectID: user.userID,
+                    objectName: user.userName,
+                  });
+                });
+
+                var tmpHistorry = {
+                  objectType: objectType,
+                  objectID: objectID,
+                  actionType: 'T',
+                  functionID: this.formModel.funcID,
+                  sendToObjects: dataObj,
+                };
+
+                this.api
+                  .execSv<any>(
+                    'BG',
+                    'ERM.Business.BG',
+                    'TrackLogsBusiness',
+                    'InsertAsync',
+                    tmpHistorry
+                  )
+                  .subscribe();
+              }
+            });
 
           // if (!isContinue) {
           //   this.closePanel();

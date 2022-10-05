@@ -73,11 +73,13 @@
                       *ngIf="lstCACollapseState[idx]?.open"
                     >
                       <codx-label
-                        [name]="'lblCAMoreInfo' + idx"
+                        [name]="'lblCAMoreInfo'"
                         [formModel]=""
-                        [default]="'Signing Time: ' + ca.signedDate"
+                        [default]="'Signing Time: '"
                         class="fw-bold mb-2"
-                      ></codx-label>
+                      >
+                        {{ ca.signedDate }}</codx-label
+                      >
                       <div *ngIf="!ca.isVerified">
                         <ng-container
                           [ngTemplateOutlet]="failReasons"
@@ -98,35 +100,36 @@
                       </button>
                       <div class="ca_Details">
                         <codx-label
-                          [name]="'lblCADetails' + idx"
+                          [name]="'lblCADetails'"
                           [formModel]=""
                           [default]="'Signature Detail'"
                           class="text-header d-block fw-bold"
                         ></codx-label>
 
                         <codx-label
-                          [name]="'lblCADetails_Contact' + idx"
+                          [name]="'lblCADetails_Contact'"
                           [formModel]=""
-                          [default]="
-                            'Contact Information: ' +
-                            ca.certificate_IssuedBy.commonName
-                          "
+                          [default]="'Contact Information: '"
                           class="text-header"
-                        ></codx-label>
+                        >
+                          {{ ca.certificate_IssuedBy.commonName }}
+                        </codx-label>
 
                         <codx-label
-                          [name]="'lblCADetails_Location' + idx"
+                          [name]="'lblCADetails_Location'"
                           [formModel]=""
-                          [default]="'Location: ' + ca.signedLocation"
+                          [default]="'Location: '"
                           class="text-header"
-                        ></codx-label>
+                          >{{ +ca.signedLocation }}</codx-label
+                        >
 
                         <codx-label
-                          [name]="'lblCADetails_Reason' + idx"
+                          [name]="'lblCADetails_Reason'"
                           [formModel]=""
-                          [default]="'Reason: ' + ca.signedComment"
+                          [default]="'Reason: '"
                           class="text-header"
-                        ></codx-label>
+                          >{{ ca.signedComment }}</codx-label
+                        >
                       </div>
                     </div>
                   </div>
@@ -184,27 +187,23 @@
                 prefixIcon="icon-skip_previous icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="firstPage"
               >
-                <!-- (click)="pdfviewerControl?.navigation?.goToFirstPage()" -->
               </e-item>
               <e-item
                 prefixIcon="icon-navigate_before icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="previous"
               >
-                <!-- (click)="this.pdfviewerControl?.navigation?.goToPreviousPage()" -->
               </e-item>
               <e-item [template]="pageInput" type="Input"></e-item>
               <e-item
                 prefixIcon="icon-navigate_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="next"
               >
-                <!-- (click)="pdfviewerControl?.navigation?.goToNextPage()" -->
               </e-item>
               <e-item
                 prefixIcon="icon-skip_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="lastPage"
               >
               </e-item>
-              <!-- (click)="pdfviewerControl?.navigation?.goToLastPage()" -->
 
               <e-item
                 id="viewThumbnail"
@@ -298,7 +297,6 @@
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false"
-        (pdfLoadingStarts)="loadingPdf($event)"
         (pdfLoaded)="loadedPdf($event)"
         (pageRendered)="pageRendered($event)"
         [showBookmarkButton]="false"
@@ -320,9 +318,7 @@
             data-page-number="PAGE_NUMBER"
             (click)="goToPage(PAGE_NUMBER)"
           >
-            <div class="image-container d-flex mb-2">
-              <!-- image is automatically inserted here -->
-            </div>
+            <div class="image-container d-flex mb-2"></div>
           </div>
         </a>
       </ng-template>
@@ -623,7 +619,6 @@
                               (click)="changeFontWeight(1)"
                             >
                               <span class="icon-format_bold"></span>
-                              <!-- <codx-label name="lblSave" default="B" [formModel]=""></codx-label> -->
                             </button>
                             <button
                               type="button"
@@ -636,7 +631,6 @@
                               (click)="changeFontWeight(2)"
                             >
                               <span class="icon-format_italic"></span>
-                              <!-- <codx-label name="lblSave" default="I" [formModel]=""></codx-label> -->
                             </button>
                             <button
                               type="button"
@@ -649,7 +643,6 @@
                               (click)="changeFontWeight(3)"
                             >
                               <span class="icon-format_underlined"></span>
-                              <!-- <codx-label name="lblSave" default="U" [formModel]=""></codx-label> -->
                             </button>
                           </div>
                         </div>
@@ -685,13 +678,7 @@
                           <button
                             type="button"
                             class="btn btn-sm btn-primary"
-                            (click)="
-                              changeAnnotPro(
-                                area.labelType,
-                                area.recID,
-                                area.createdOn
-                              )
-                            "
+                            (click)="changeAnnotPro(area.labelType, area.recID)"
                           >
                             <codx-label
                               name="lblSave"
@@ -773,9 +760,10 @@
 <ng-template #pageInput>
   <codx-input
     type="number"
+    id="pageNumber"
     [min]="1"
     [max]="pageMax"
-    [crrValue]="curPage"
+    [(crrValue)]="curPage"
     (valueChange)="goToPage($event)"
     [showSpinButton]="false"
   >
@@ -785,5 +773,14 @@
 <ng-template #panelLeft> </ng-template>
 
 <div id="contextMenu" style="display: none; position: absolute">
-  <div style="z-index: 2"><button id="delete-btn">Delete</button></div>
+  <div style="z-index: 2">
+    <button id="delete-btn">
+      <codx-label
+        name="lblAreaDeleteBtn"
+        [formModel]=""
+        [default]="'Delete'"
+        class="text-header d-block"
+      ></codx-label>
+    </button>
+  </div>
 </div>

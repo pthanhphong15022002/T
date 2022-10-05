@@ -1,0 +1,86 @@
+<codx-form
+  headerText="{{ title }}"
+  #form
+  [body]="body"
+  [footer]="footer"
+  [data]="master"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group">
+          <div class="form-group mt-3">
+            <codx-label fiedName="groupName" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input
+              field="groupName"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group mt-3">
+            <codx-label
+              fiedName="note"
+              [formModel]="form.formModel"
+              default="Ghi chú"
+            >
+            </codx-label>
+            <codx-input
+              field="note"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mt-4">
+            <div class="d-flex align-items-center">
+              <span class="icon-person icon-16 me-2 text-primary"></span>
+              <div class="fw-bold fs-6 text-primary">
+                <codx-label
+                  fiedName="assign"
+                  [formModel]="form.formModel"
+                  default="Phân công cho"
+                >
+                </codx-label>
+              </div>
+            </div>
+            <codx-input
+              type="Share"
+              refValue="AD003"
+              field="groupmember"
+              [dataShared]="[]"
+              multiple="false"
+              [showInput]="false"
+              (valueChange)="eventApply($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-between">
+      <div class="d-flex">
+        <codx-input
+          field="stop"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+        <codx-label
+          fiedName="stop"
+          [formModel]="form.formModel"
+          default="Ngưng sử dụng"
+        >
+        </codx-label>
+      </div>
+      <div class="d-flex">
+        <button type="button" class="btn btn-primary" (click)="onSave()">
+          Lưu
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

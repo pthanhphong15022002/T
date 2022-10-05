@@ -1,3 +1,5 @@
+import { AddApproversComponent } from './approvers/add/add.component';
+import { ApproversComponent } from './approvers/approvers.component';
 import { UserComponent } from './users/user.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
@@ -38,8 +40,6 @@ import { AsideroledetailComponent } from './Roles/asideroledetail/asideroledetai
 import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
-import { LayoutNoAsideToolbarFluidComponent } from './../../../codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
-
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
@@ -56,7 +56,12 @@ export const routes: Routes = [
 
       {
         path: 'groupusers/:funcID',
-        component: UserGroupsComponent,
+        component: UserComponent,
+      },
+
+      {
+        path: 'approvers/:funcID',
+        component: ApproversComponent,
       },
       {
         path: 'roles/:funcID',
@@ -101,7 +106,8 @@ const T_Component: Type<any>[] = [
   AddUserGroupsComponent,
   SystemsettingsComponent,
   NoSubAsideComponent,
-
+  ApproversComponent,
+  AddApproversComponent
 ];
 @NgModule({
   imports: [

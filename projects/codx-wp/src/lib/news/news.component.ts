@@ -9,7 +9,7 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
   selector: 'lib-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss'],
-
+  encapsulation: ViewEncapsulation.None, // e gắn tạm để tạm thời kg mất css nha chị Vân
 })
 
 

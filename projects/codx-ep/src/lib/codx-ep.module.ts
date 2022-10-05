@@ -20,7 +20,6 @@ import { ApprovalCarsComponent } from './approval/car/approval-car.component';
 import { ApprovalRoomsComponent } from './approval/room/approval-room.component';
 import { ApprovalStationeryComponent } from './approval/stationery/approval-stationery.component';
 import { TabsComponent } from './approval/tabs/tabs.component';
-import { ViewDetailComponent } from './approval/view-detail/view-detail.component';
 import { BookingCarComponent } from './booking/car/booking-car.component';
 import { CarDashboardComponent } from './booking/car/dashboard/dashboard.component';
 import { PopupAddBookingCarComponent } from './booking/car/popup-add-booking-car/popup-add-booking-car.component';
@@ -44,6 +43,7 @@ import { ApprovalRoomViewDetailComponent } from './approval/room/approval-room-v
 import { ApprovalCarViewDetailComponent } from './approval/car/approval-car-view-detail/approval-car-view-detail.component';
 import { BookingRoomViewDetailComponent } from './booking/room/view-detail/booking-room-view-detail.component';
 import { BookingCarViewDetailComponent } from './booking/car/view-detail/booking-car-view-detail.component';
+import { ApprovalStationeryViewDetailComponent } from './approval/stationery/approval-stationery-view-detail/approval-stationery-view-detail.component';
 
 const routes: Route[] = [
   {
@@ -147,10 +147,10 @@ const Components: Type<any>[] = [
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,
-  ViewDetailComponent,
   TabsComponent,
   ApprovalRoomViewDetailComponent,
   ApprovalCarViewDetailComponent,
+  ApprovalStationeryViewDetailComponent,
   BookingRoomViewDetailComponent,
   BookingCarViewDetailComponent,
 ];

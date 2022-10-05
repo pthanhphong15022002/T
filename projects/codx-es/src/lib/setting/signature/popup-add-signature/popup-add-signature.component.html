@@ -5,7 +5,7 @@
   [body]="body"
   [footer]="footer"
   [data]="data"
-  [formModel]="dialog.formModel"
+  [formModel]="formModel"
   [dialog]="dialog"
 >
   <ng-template #body>
@@ -14,7 +14,7 @@
         <codx-label
           [name]="'lblTitleAddSignature'"
           default="THÔNG TIN CHỮ KÝ SỐ"
-          [formModel]="dialog.formModel"
+          [formModel]="formModel"
         >
         </codx-label>
       </div>
@@ -34,7 +34,7 @@
     <div class="form-group">
       <codx-label fiedName="Email" [formModel]="dialog.formModel"> </codx-label>
       <div class="d-flex">
-        <div class="w-100 me-2">
+        <!-- <div class="w-100 me-2">
           <codx-input
             type="text"
             field="email"
@@ -42,15 +42,16 @@
             [formModel]="dialog.formModel"
           >
           </codx-input>
-        </div>
+        </div> -->
 
         <codx-input
+          [ngClass]="'w-100'"
           type="Combobox"
-          [refValue]="'Users'"
+          [refValue]="'UserEmails'"
           refType="P"
-          field="userID"
-          [crrValue]="data.userID"
-          [showInput]="false"
+          field="email"
+          [crrValue]="data.email"
+          [showInput]="true"
           [multiple]="false"
           (valueChange)="valueChange($event)"
         >
@@ -125,13 +126,6 @@
             class="border border-gray-300 rounded mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
-              <!-- <codx-img
-                  [objectId]="data.signature1 == null ? '' : data.recID + '1'"
-                  imageType="square"
-                  [width]="50"
-                  [recId]="data.signature1"
-                ></codx-img> -->
-
               <codx-img
                 #imgSignature1
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
@@ -158,12 +152,6 @@
             class="border border-gray-300 rounded mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
-              <!-- <codx-img
-                [objectId]="data.signature2 == null ? '' : data.recID + '2'"
-                imageType="square"
-                [width]="50"
-                [recId]="data.signature2"
-              ></codx-img> -->
               <codx-img
                 #imgSignature2
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
@@ -192,12 +180,6 @@
             class="border border-gray-300 rounded mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
-              <!-- <codx-img
-                [objectId]="data.stamp == null ? '' : data.recID + 's'"
-                imageType="square"
-                [width]="50"
-                [recId]="data.stamp"
-              ></codx-img> -->
               <codx-img
                 #imgStamp
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
@@ -326,7 +308,7 @@
           format="d"
           [formModel]="dialog.formModel"
           [Group]="form.formGroup"
-          [disabled]="data.signatureType == '1' ? true : false"
+          [disabled]="data.signatureType == '1' ? false : true"
         >
         </codx-input>
       </div>
@@ -338,7 +320,7 @@
           field="password"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
-          [disabled]="data.signatureType == '1' ? true : false"
+          [disabled]="data.signatureType == '1' ? false : true"
         >
         </codx-input>
       </div>

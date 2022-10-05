@@ -3,7 +3,6 @@
   [formModel]="formModel"
   [dataItem]="itemDetail"
   [header]="header"
-  [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
   (clickMF)="openFormFuncID($event)"
@@ -75,52 +74,14 @@
       <codx-label default="Thời gian:" name="lblBookingOn" class="fw-bold me-1"></codx-label>
       <div class=" ms-1 text-gray-600">
         <span>
-          {{ itemDetail?.startDate | date: "dd/MM/yyyy" }}
-          {{ itemDetail?.startDate | date: "shortTime" }}
+          {{ itemDetail?.startDate | fmDT:'dmy':true}}
         </span>
         <span> - </span>
         <span>
-          {{ itemDetail?.endDate | date: "dd/MM/yyyy" }}
-          {{ itemDetail?.endDate | date: "shortTime" }}
+          {{ itemDetail?.endDate | fmDT:'dmy':true}}          
         </span>
       </div>
     </div>
-
-    <!-- <div class="d-flex mt-1 flex-grow-1 mb-2">
-      <div class="d-flex me-6">
-        <codx-label
-          field="CreatedOn"
-          [formModel]="formModel"
-          default="Ngày"
-          class="fw-bold me-1"
-        >
-        </codx-label>
-        <span class="text-gray-600">
-          :
-          {{
-            itemDetail
-              ? (itemDetail?.createdOn | date: "dd/MM/yyyy")
-              : "dd/MM/yyyy"
-          }}
-        </span>
-      </div>
-      <div class="d-flex me-6">
-        <codx-label default="Thời gian" class="fw-bold me-1"></codx-label>
-        <span class="text-gray-600">
-          :
-          {{ itemDetail?.startDate | date: "shortTime" }}
-        </span>
-        <span
-          *ngIf="itemDetail?.startDate && itemDetail?.endDate"
-          class="ms-1 me-1"
-          >{{ "-" }}</span
-        >
-        <span class="text-gray-600">
-          {{ itemDetail?.endDate | date: "shortTime" }}
-        </span>
-      </div>
-    </div> -->
-
     <div class="d-flex mb-2">
       <div class="d-flex text-dark">
         <codx-label
@@ -183,80 +144,7 @@
       </span>
     </div>
 
-    <!-- <div class="d-flex mb-2 flex-column">
-      <codx-label default="Người đi" class="fw-bold me-4 row text-primary"></codx-label>
-      <div class="d-flex text-dark me-6">        
-        <div class="d-flex justify-content-end">
-          <codx-imgs
-            [objectId]="itemDetail?.bookingAttendees"
-            objectType="AD_Users"
-            [numberImages]="6"
-            [width]="30"
-          >
-          </codx-imgs>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- <ng-container *ngIf="files">
-      <codx-thumbnail [files]="files" displayThumb="simple" [hideDelete]="'0'">
-      </codx-thumbnail>
-    </ng-container> -->
   </ng-template>
-
-  <ng-template #body>
-    <!-- <div class="tab-horizone h-od-tab h-100">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-        <li [ngbNavItem]="1">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i
-                class="icon-info me-2"
-                [ngClass]="{ 'text-primary': active === 1 }"
-              ></i
-              ><span>Nội dung</span>
-            </div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngTemplateOutlet="defaulEmpt">
-              <span>{{itemDetail.memo}}</span>
-            </ng-container>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="2">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i
-                class="icon-layers me-2"
-                [ngClass]="{ 'text-primary': active === 2 }"
-              ></i
-              ><span>Văn phòng phẩm</span>
-            </div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container
-              *ngIf="
-                data?.tasks && data?.tasks[0] && data?.tasks[0].length > 0;
-                else defaulEmpt
-              "
-            >
-              <codx-treeview
-                #treeAdd
-                id="treeAdd"
-                [data]="data?.tasks[0]"
-                [showSearch]="false"
-                [itemTemplate]="templateorg"
-                [autoLoad]="false"
-                [isOutput]="true"
-                [isLoadChild]="false"
-              ></codx-treeview>
-            </ng-container>
-          </ng-template>
-        </li>
-      </ul>
-      <div [ngbNavOutlet]="nav" class="pt-5"></div>
-    </div>-->
-  </ng-template> 
 
   <ng-template #footer>
     <approval-tabs></approval-tabs>
@@ -342,7 +230,7 @@
       <div class="d-flex mt-2">
         <span class="icon-schedule icon-16 text-gray-600"></span>
         <span class="ms-2 text-dark">{{
-          data?.dueDate | date: "dd/MM/yyyy"
+          data?.dueDate | fmDT:'dmy':true
         }}</span>
       </div>
     </div>

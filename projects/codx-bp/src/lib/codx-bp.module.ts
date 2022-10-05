@@ -7,6 +7,8 @@ import { CodxBpComponent } from './codx-bp.component';
 import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
+import { PopAddProcessesComponent } from './processes/pop-add-processes/pop-add-processes.component';
+import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
 
 export const routes: Routes = [
   {
@@ -18,7 +20,7 @@ export const routes: Routes = [
         component: TesthtmlComponent,
       },
       {
-        path: 'testhtml',
+        path: 'processes/:funcID',
         component: ProcessesComponent,
       }
     ]
@@ -31,6 +33,8 @@ export const routes: Routes = [
     TesthtmlComponent,
     LayoutComponent,
     ProcessesComponent,
+    PopAddProcessesComponent,
+    ViewListProcessesComponent,
 
   ],
   imports: [

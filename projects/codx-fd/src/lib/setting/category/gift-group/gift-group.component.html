@@ -1,0 +1,29 @@
+<codx-views [views]="views" #view [funcID]="funcID" [entityName]="'FD_Gifts'" (buttonClick)="add($event)" [button]="button"
+    idField="giftID" service="FD" assemblyName="ERM.Business.FD" className="GiftsBusiness"
+    method="LoadDataGiftGroupAsync" [predicate]="'Category=@0'" [dataValue]="'0'" entityName="FD_Gifts">
+</codx-views>
+
+<ng-template #itemCreateBy let-dataItem>
+    <div class="d-flex align-items-center" #itemCreateBy>
+        <div class="h-30 w-30">
+            <codx-img class="symbol symbol-30px symbol-circle me-4" [objectType]="'AD_Users'"
+                [objectId]="dataItem?.createdBy" [width]="30">
+            </codx-img>
+        </div>
+        <div *ngIf="dataItem.createdName" class="text-dark">
+            {{ dataItem.createdName }}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #memo let-item>
+    <span [innerHTML]="item.memo"></span>
+</ng-template>
+
+<ng-template #createdOn let-item>
+    <div class="d-flex has-action-menu">
+        <span>{{ item.createdOn | date: "dd/MM/yyy" }}</span>
+        <codx-mfunc [dataItem]="item" [formModel]="view?.formModel" (clickMF)="clickMF($event, item)" type="hover">
+        </codx-mfunc>
+    </div>
+</ng-template>

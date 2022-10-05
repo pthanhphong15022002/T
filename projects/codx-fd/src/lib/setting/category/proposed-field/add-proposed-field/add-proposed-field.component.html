@@ -1,0 +1,57 @@
+<codx-form [headerText]="header" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="formModel"
+    [data]="dataUpdate" #form>
+    <ng-template #body>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <div class="form-group">
+                    <codx-label [formModel]="form?.formModel" fiedName="IndustryID" class="font-1rem font-w550">
+                    </codx-label>
+                    <codx-input class="form-control" [disabled]="isModeAdd ? false : true"
+                        (valueChange)="valueChange($event)" field="industryID" [formModel]="form?.formModel"
+                        [Group]="form?.formGroup">
+                    </codx-input>
+                </div>
+                <div class="form-group">
+                    <codx-label fiedName="IndustryName" [formModel]="form?.formModel" class="font-1rem font-w550">
+                    </codx-label>
+                    <codx-input class="form-control" [formModel]="form?.formModel" [Group]="form?.formGroup"
+                        (valueChange)="valueChange($event)" field="industryName">
+                    </codx-input>
+                </div>
+                <div class="form-group mt-3">
+                    <codx-label fiedName="Note" [formModel]="form?.formModel" class="font-1rem font-w550">
+                    </codx-label>
+                    <codx-input class="form-control text-area" rows="3" (valueChange)="valueChange($event)" field="note"
+                        [formModel]="form?.formModel" [Group]="form?.formGroup">
+                    </codx-input>
+                </div>
+                <div class="form-group">
+                    <codx-label fiedName="Owner" [formModel]="form?.formModel" class="font-1rem font-w550">
+                    </codx-label>
+                    <codx-input (valueChange)="valueChange($event)" class="form-control borderless p-0" field="owner"
+                        [formModel]="form?.formModel" [Group]="form?.formGroup">
+                    </codx-input>
+                </div>
+                <!-- <div class="d-flex align-items-start user-card mt-5">
+                    <div class="pic mr-3 upload-img">
+                        <codx-img [objectId]="ownInfo?.domainUser" [isAllowEdit]="true" [funcId]="formModel.functionID"
+                            *ngIf="ownInfo?.domainUser" objectType="AD_Users" #imageUpLoad [width]="90">
+                        </codx-img>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1">
+                        <div class="text-dark font-weight-bold font-size-h6">{{ownInfo?.employeeName}}</div>
+                        <div class="text-dark-75 font-weight-bold">{{ownInfo?.positionName}}</div>
+                        <div class="text-dark-50">{{ownInfo?.departmentName}}</div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+                <codx-label fiedName="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</codx-form>

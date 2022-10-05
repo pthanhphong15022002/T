@@ -80,6 +80,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.data = dialog?.dataService?.dataSelected;
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
+    this.headerText = data?.data?.headerText;
   }
 
   ngAfterViewInit(): void {
@@ -301,11 +302,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   onSaveForm(isClose: boolean) {
-    this.dialogCategory.patchValue(this.data);
-    console.log('result data:', this.data);
-    console.log('result formGroup: ', this.form.formGroup);
-    if (this.dialogCategory.invalid == true) {
-      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
+    if (this.form?.formGroup.invalid == true) {
+      this.esService.notifyInvalid(
+        this.dialogCategory,
+        this.formModel,
+        this.data
+      );
       return;
     }
 
@@ -331,26 +333,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   updateAutonumber() {
     this.esService.isSetupAutoNumber.subscribe((res) => {
       if (res != null) {
-        this.esService.addEditAutoNumbers(res, true).subscribe((res) => {});
+        this.esService
+          .addEditAutoNumbers(res.value, true)
+          .subscribe((res) => {});
       }
     });
-  }
-
-  updateApprovalStep(isAddNew) {
-    if (!isAddNew) {
-      this.esService.editApprovalStep().subscribe((res) => {
-        console.log('result edit appp', res);
-      });
-
-      this.esService.deleteApprovalStep().subscribe((res) => {
-        console.log('result delete aaappppp', res);
-      });
-    } else {
-      //Them moi
-      this.esService.addNewApprovalStep().subscribe((res) => {
-        console.log('result add new appp', res);
-      });
-    }
   }
 
   openAutoNumPopup() {
@@ -369,9 +356,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   openPopupApproval() {
-    this.dialogCategory.patchValue(this.data);
-    if (this.dialogCategory.invalid == true) {
-      this.esService.notifyInvalid(this.dialogCategory, this.formModel);
+    if (this.form?.formGroup.invalid == true) {
+      this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
     }
     if (this.isAdd) {
@@ -426,14 +412,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.cache.valueList('L0089').subscribe((vllSFormat) => {
         vllStringFormat = vllSFormat.datas;
         let indexStrF = vllStringFormat.findIndex(
-          (p) => p.value == modelAutoNumber.stringFormat.toString()
+          (p) => p.value == modelAutoNumber?.stringFormat
         );
         let indexDF = vllDateFormat.findIndex(
-          (p) => p.value == modelAutoNumber.dateFormat?.toString()
+          (p) => p.value == modelAutoNumber?.dateFormat
         );
         let stringFormat = '';
         let dateFormat = '';
-        if (indexStrF >= -1) {
+        if (indexStrF >= 0) {
           stringFormat = vllStringFormat[indexStrF].text;
           stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
         }
@@ -441,14 +427,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         // replace chuỗi và dấu phân cách
         stringFormat = stringFormat
           .replace(
-            'Chuỗi',
-            modelAutoNumber.fixedString == null
-              ? ''
-              : modelAutoNumber.fixedString
+            /-/g,
+            modelAutoNumber?.separator == null ? '' : modelAutoNumber?.separator
           )
           .replace(
-            /-/g,
-            modelAutoNumber.separator == null ? '' : modelAutoNumber.separator
+            'Chuỗi',
+            modelAutoNumber?.fixedString == null
+              ? ''
+              : modelAutoNumber?.fixedString
           );
 
         //replace ngày
@@ -461,10 +447,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         stringFormat = stringFormat.replace('Ngày', dateFormat);
 
         //replace số và set chiều dài
-        let lengthNumber = modelAutoNumber.maxLength - stringFormat.length + 2;
+        let lengthNumber = modelAutoNumber?.maxLength - stringFormat.length + 2;
         if (lengthNumber < 0) {
           stringFormat = stringFormat.replace('Số', '');
-          stringFormat = stringFormat.substring(0, modelAutoNumber.maxLength);
+          stringFormat = stringFormat.substring(0, modelAutoNumber?.maxLength);
         } else if (lengthNumber == 0) {
           stringFormat = stringFormat.replace('Số', '');
         } else {
@@ -472,6 +458,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           stringFormat = stringFormat.replace('Số', strNumber);
         }
         this.viewAutoNumber = stringFormat;
+        this.cr.detectChanges();
       });
     });
   }

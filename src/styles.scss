@@ -618,6 +618,36 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
   font-weight: 600;
 }
 
-codx-layout-add .codx-tab .tab-content {
-  width: 550px !important;
+// codx-layout-add .codx-tab .tab-content {
+//   width: 550px !important;
+// }
+
+.e-more-popup-wrapper .e-more-event-header {
+  height: 35px;
+  margin: 12px 10px 5px 15px;
+}
+
+.e-more-event-date-header .e-header-day {
+  font-size: 16px !important;
+  font-weight: 600;
+}
+
+.e-more-popup-wrapper .e-header-date {
+  color: var(--gray-600);
+  font-size: 14px;
+  max-width: 100%;
+}
+
+.btn.btn-md:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+  padding: 0.327rem calc(0.85rem + 1px) !important;
+}
+
+.row-group {
+  padding-right: calc(-0.5 * var(--bs-gutter-x));
+  padding-left: calc(-0.5 * var(--bs-gutter-x));
+}
+
+.codx-tab .tab-content {
+  min-width: 545px !important;
+  width: 545px !important;
 }
