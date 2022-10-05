@@ -7,12 +7,11 @@ import {
   Input,
   IterableDiffers,
   QueryList,
-  TemplateRef,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { AuthStore, LangPipe, ScrollComponent, UIComponent } from 'codx-core';
+import { AuthStore, ScrollComponent, UIComponent } from 'codx-core';
 import Konva from 'konva';
 import { CodxEsService } from '../../codx-es.service';
 import { PopupCaPropsComponent } from '../popup-ca-props/popup-ca-props.component';
@@ -22,10 +21,8 @@ import {
   NgxExtendedPdfViewerComponent,
   NgxExtendedPdfViewerService,
   pdfDefaultOptions,
-  PdfThumbnailDrawnEvent,
   TextLayerRenderedEvent,
 } from 'ngx-extended-pdf-viewer';
-import { Stage } from 'konva/lib/Stage';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -56,9 +53,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
   @ViewChild('ngxPdfView') ngxPdfView: NgxExtendedPdfViewerComponent;
-
-  // @ViewChild('panelLeft') panelLeft: TemplateRef<any>;
-  // @ViewChild('itemTmpl') itemTmpl: TemplateRef<any>;
 
   //core
   dialog: import('codx-core').DialogRef;
@@ -339,6 +333,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     this.tr.draggable(
       this.isDisable ? false : area.allowEditAreas ? true : area.isLock
     );
+    this.tr.forceUpdate();
     this.tr.nodes([this.curSelectedArea]);
     layerChildren.add(this.tr);
     if (this.curSelectedAnnotID != area.recID) {
@@ -391,16 +386,19 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         if (page != this.pageMax) {
           let areaInfo = [];
           layer.children.forEach((child) => {
-            areaInfo.push({
-              page: page,
-              position: {
-                x: (child.x() / this.xScale) * 0.75,
-                y: (child.y() / this.yScale) * 0.75,
-                w: (child.width() / this.xScale) * 0.75,
-                h: (child.height() / this.yScale) * 0.75,
-              },
-              url: child.toDataURL().replace('data:image/png;base64,', ''),
-            });
+            let name: tmpAreaName = JSON.parse(child.name());
+            if (name.LabelType != '8') {
+              areaInfo.push({
+                page: page,
+                position: {
+                  x: (child.x() / this.xScale) * 0.75,
+                  y: (child.y() / this.yScale) * 0.75,
+                  w: (child.width() / this.xScale) * 0.75,
+                  h: (child.height() / this.yScale) * 0.75,
+                },
+                url: child.toDataURL().replace('data:image/png;base64,', ''),
+              });
+            }
           });
           if (areaInfo.length != 0) {
             lstPages.push(page);
@@ -951,7 +949,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           let imgArea = new Konva.Image({
             image: img,
             width: 200,
-            height: 100,
+            height: tmpName.LabelType == '8' ? 200 : 100,
             id: recID,
             name: JSON.stringify(tmpName),
             draggable: true,
@@ -1060,16 +1058,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     this.renderQRAllPage = !this.renderQRAllPage;
   }
   changeAnnotationItem(type: number) {
-    let isSigned = this.lstLayer.get(this.curPage).find((child) => {
-      if (child == Konva.Text || child == Konva.Image) {
-        let tmpInfo: tmpAreaName = JSON.parse(child?.attrs?.name);
-        return tmpInfo?.Signer == this.curSignerID && [1, 2].includes(type)
-          ? true
-          : false;
-      }
-      return false;
-    });
-    if (!this.isDisable && this.signerInfo && isSigned?.length == 0) {
+    if (!this.isDisable && this.signerInfo) {
       this.holding = type;
       switch (type) {
         case 1:
@@ -1091,7 +1080,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
             : this.vllActions[type - 1].text;
           break;
         case 5:
-          let selected = document.getElementsByClassName('date-Type');
+          let selected = document.getElementsByClassName('date-Type').item(0);
+          console.log('selected', selected);
 
           this.url = this.datePipe.transform(new Date(), 'M/d/yy, h:mm a');
           break;
@@ -1432,32 +1422,10 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //test func
   show(e: any) {
-    let lstAddBefore = [];
-    let lstPages = [];
-    this.tr.remove();
-    this.lstLayer.forEach((layer) => {
-      let page = Number(layer.attrs.id.replace('layer', ''));
-      if (page != this.pageMax) {
-        let areaInfo = [];
-        layer.children.forEach((child) => {
-          areaInfo.push({
-            page: page,
-            position: {
-              x: (child.x() / this.xScale) * 0.75,
-              y: (child.y() / this.yScale) * 0.75,
-              w: (child.width() / this.xScale) * 0.75,
-              h: (child.height() / this.yScale) * 0.75,
-            },
-            url: child.toDataURL().replace('data:image/png;base64,', ''),
-          });
-        });
-        if (areaInfo.length != 0) {
-          lstPages.push(page);
-          lstAddBefore.push(areaInfo);
-        }
-      }
+    let content = 'Công ty TNHH MTV PyAudio';
+    this.esService.addQRToPdf(content).subscribe((res) => {
+      console.log('qr', res);
     });
-    this.esService.addImgsToPDF(lstPages, lstAddBefore).subscribe((res) => {});
   }
 }
 
