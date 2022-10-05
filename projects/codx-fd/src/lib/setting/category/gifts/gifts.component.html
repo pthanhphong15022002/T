@@ -1,4 +1,4 @@
-<codx-views [views]="views" #view [funcID]="funcID" [entityName]="functionList?.entityName" (buttonClick)="add()"
+<codx-views [views]="views" #view [funcID]="funcID" [entityName]="functionList?.entityName" (buttonClick)="add($event)"
     [button]="button" service="FD" assemblyName="ERM.Business.FD" className="GiftsBusiness" method="LoadDataGiftAsync"
     [predicate]="predicate" [dataValue]="dataValue" idField="recID" [viewActiveType]="viewType.list">
 </codx-views>

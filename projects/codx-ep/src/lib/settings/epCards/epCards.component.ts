@@ -24,7 +24,6 @@ import { PopupAddEpCardsComponent } from './popup-add-epCards/popup-add-epCards.
   styleUrls: ['epCards.component.scss'],
 })
 export class EpCardsComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('avatarCol') avatarCol: TemplateRef<any>; 
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
   funcID: string;
@@ -35,7 +34,10 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   dialog!: DialogRef;
   columnGrids: any;
   dataSelected: any;
+  funcIDName:any;
+  grvEpCards:any;
   isAfterRender = false;
+  popupTitle='';
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -55,29 +57,33 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       if (res) {
         this.formModel = res;
         this.isAfterRender = true;
+        this.cache.functionList(this.funcID).subscribe(res => {
+          if (res) {            
+            this.funcIDName = res.customName.toString().toLowerCase();
+          }
+        });
       }
     });
   }
 
   onInit(): void {
-    this.viewBase.dataService.methodDelete = 'DeleteResourceAsync';
+    //this.view.dataService.methodDelete = 'DeleteResourceAsync';
   }
 
   ngAfterViewInit(): void {
     this.buttons = {
       id: 'btnAdd',
-    };
-    this.moreFuncs = [
-      {
-        id: 'btnViewHistory',
-        icon: 'icon-list-checkbox',
-        text: 'Lịch sử sử dụng thẻ',
-      },
-    ];
-    this.codxEpService.getFormModel(this.funcID).then((formModel) => {
+    };     
+        
+    this.detectorRef.detectChanges();
+  }
+  onLoading(evt: any) {
+    let formModel = this.view.formModel;
+    if (formModel) {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
+          this.grvEpCards=gv;
           this.columnGrids = [
             {
               field: 'resourceID',
@@ -117,22 +123,21 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           this.views = [
             {
               sameData: true,
-              id: '1',
-              text: 'Danh mục thẻ xe',
               type: ViewType.grid,
               active: true,
               model: {
                 resources: this.columnGrids,
               },
-            },
+            },            
           ];
           this.detectorRef.detectChanges();
         });
-    });
-    this.detectorRef.detectChanges();
+    }
   }
+  
   clickMF(event, data) {
-    console.log(event);       
+    console.log(event);
+    this.popupTitle=event?.text + " " + this.funcIDName;      
     switch (event?.functionID) {
       case 'SYS03':        
         this.edit(data);
@@ -144,6 +149,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     }
   }
   click(evt: ButtonModel) {
+    this.popupTitle=evt?.text + " " + this.funcIDName;  
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -154,22 +160,19 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       case 'btnDelete':
         this.delete();
         break;
-      case 'btnViewHistory':
-        this.viewHistory();
-        break;
     }
   }
 
   addNew() {
-    this.viewBase.dataService.addNew().subscribe((res) => {      
-      this.dataSelected = this.viewBase.dataService.dataSelected;
+    this.view.dataService.addNew().subscribe((res) => {
+      this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.viewBase?.dataService;
+      option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddEpCardsComponent,
-        [this.dataSelected, true],
+        [this.dataSelected, true,this.popupTitle],
         option
       );
     });
@@ -177,18 +180,18 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
 
   edit(obj?) {
     if (obj) {
-      this.viewBase.dataService.dataSelected = obj;
-      this.viewBase.dataService
-        .edit(this.viewBase.dataService.dataSelected)
+      this.view.dataService.dataSelected = obj;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          this.dataSelected = this.viewBase.dataService.dataSelected;
+          this.dataSelected = this.view?.dataService?.dataSelected;
           let option = new SidebarModel();
           option.Width = '550px';
-          option.DataService = this.viewBase?.dataService;
+          option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddEpCardsComponent,
-            [this.viewBase.dataService.dataSelected, false],
+            [this.view.dataService.dataSelected, false,this.popupTitle],
             option
           );
         });
@@ -196,22 +199,22 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   }
 
   delete(obj?) {
+    this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
-      this.viewBase.dataService.delete([obj], true).subscribe((res) => {
-        console.log(res);
+      this.view.dataService.delete([obj], true).subscribe((res) => {
+        if (res) {          
+          // this.api
+          // .execSv(
+          //   'DM',
+          //   'ERM.Business.DM',
+          //   'FileBussiness',
+          //   'DeleteByObjectIDAsync',
+          //   [obj.recID, 'EP_EPCards', true]
+          // )
+          // .subscribe();
+        this.detectorRef.detectChanges();
+      }
       });
     }
-  }
-
-  viewHistory() {
-    
-  }
-
-  onSelect(obj: any) {
-    console.log(obj);
-  }
-
-  closeDialog(evt?) {
-    this.dialog && this.dialog.close();
   }
 }

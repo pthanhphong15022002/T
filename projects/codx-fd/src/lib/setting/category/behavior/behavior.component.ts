@@ -29,6 +29,7 @@ import {
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { AddBehaviorComponent } from './add-behavior/add-behavior.component';
+import { CodxFdService } from '../../../codx-fd.service';
 
 @Component({
   selector: 'app-behavior',
@@ -50,9 +51,11 @@ export class BehaviorComponent extends UIComponent implements OnInit {
   dataValue = '1;false';
   entityName = 'BS_Competences';
   parentName = '';
+  headerText = '';
   button?: ButtonModel;
   dialog: DialogRef;
-
+  functionList: any;
+  formModel: any;
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
@@ -81,46 +84,67 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
+
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
   columnsGrid = [];
   onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
-    this.columnsGrid = [
-      {
-        field: 'parentName',
-        headerText: 'Quy tắc',
-        template: this.parentNameR,
-      },
-      { field: 'competenceID', headerText: 'Mã hành vi' },
-      {
-        field: 'competenceName',
-        headerText: 'Mô tả',
-        template: this.competenceName,
-      },
-      { field: 'memo', headerText: 'Ghi chú', template: this.memo },
-      {
-        field: 'createName',
-        headerText: 'Người tạo',
-        template: this.itemCreateBy,
-      },
-      { field: 'createdOn', headerText: 'Ngày tạo', template: this.createdOn },
-    ];
     this.changedr.detectChanges();
   }
-  ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnsGrid,
-        },
-      },
-    ];
-    this.changedr.detectChanges();
+
+  onLoading(e: any) {
+    if (this.view.formModel) {
+      var formModel = this.view.formModel;
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.columnsGrid = [
+              {
+                field: 'parentName',
+                headerText: 'Quy tắc',
+                template: this.parentNameR,
+              },
+              {
+                field: 'competenceID',
+                headerText: res.CompetenceID.headerText,
+              },
+              {
+                field: 'competenceName',
+                headerText: res.CompetenceName.headerText,
+                template: this.competenceName,
+              },
+              { field: 'memo', headerText: 'Ghi chú', template: this.memo },
+              {
+                field: 'createName',
+                headerText: 'Người tạo',
+                template: this.itemCreateBy,
+              },
+              {
+                field: 'createdOn',
+                headerText: res.CreatedOn.headerText,
+                template: this.createdOn,
+              },
+            ];
+            this.views = [
+              {
+                type: ViewType.grid,
+                sameData: true,
+                active: false,
+                model: {
+                  resources: this.columnsGrid,
+                },
+              },
+            ];
+            this.changedr.detectChanges();
+          }
+        });
+    }
   }
 
   valueChange(e) {
@@ -136,9 +160,11 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     }
   }
 
-  add() {
+  add(e) {
+    this.headerText = e?.text;
     var obj = {
       isModeAdd: true,
+      headerText: this.headerText,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -148,7 +174,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openSide(AddBehaviorComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
-          this.view.dataService.add(e.event, 1).subscribe();
+          this.view.dataService.add(e.event, 0).subscribe();
           this.changedr.detectChanges();
         }
       });
@@ -159,6 +185,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
     if (data) this.view.dataService.dataSelected = data;
     var obj = {
       isModeAdd: false,
+      headerText: this.headerText,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -193,6 +220,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
   }
 
   clickMF(e, data) {
+    this.headerText = e?.text;
     if (e) {
       switch (e.functionID) {
         case 'SYS03':

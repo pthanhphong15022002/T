@@ -3,7 +3,7 @@
   #view
   [funcID]="funcID"
   [entityName]="'BS_Industries'"
-  (buttonClick)="add()"
+  (buttonClick)="add($event)"
   [button]="button"
   service="BS"
   assemblyName="ERM.Business.BS"
@@ -12,7 +12,9 @@
   [predicate]="predicate"
   [dataValue]="dataValue"
   entityName="BS_Industries"
-></codx-views>
+  (onLoading)="onLoading($event)"
+>
+</codx-views>
 <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
     <div class="w-30 h-30">
@@ -91,9 +93,14 @@
 </ng-template>
 
 <ng-template #createdOn let-item>
-    <div class="d-flex has-action-menu">
-        <span>{{ item.createdOn | date: "dd/MM/yyy" }}</span>
-        <codx-mfunc [dataItem]="item" [formModel]="view?.formModel" (clickMF)="clickMF($event, item)" type="hover">
-        </codx-mfunc>
-    </div>
+  <div class="d-flex has-action-menu">
+    <span>{{ item.createdOn | fmDT }}</span>
+    <codx-mfunc
+      [dataItem]="item"
+      [formModel]="view?.formModel"
+      (clickMF)="clickMF($event, item)"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
 </ng-template>

@@ -13,6 +13,7 @@
   [idField]="idField"
   [className]="className"
   [method]="method"  
+  (onLoading)="onLoading($event)" 
   [viewActiveType]="viewType.grid"
 >
 
@@ -22,11 +23,13 @@
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data.resourceName}} - {{data.code}}</span>
       <div class="d-flex flex-row">
-        <codx-label default="Phân loại:" name="lblCategory" class="text-gray-600"></codx-label>
+        <codx-label [default]="grvCars?.Ranking?.headerText" name="lblCategory" class="text-gray-600"></codx-label>
+        <span>:</span>
         <span class="fw-bold ms-1">{{ data.ranking| vll: "EP005" : 'text' | async}}</span>
       </div>
       <div class="d-flex flex-row">
-        <codx-label default="Chỗ ngồi:" name="lblCategory" class="text-gray-600"></codx-label>
+        <codx-label [default]="grvCars?.Capacity?.headerText" name="lblCategory" class="text-gray-600"></codx-label>
+        <span>:</span>
         <span class="fw-bold ms-1">{{ data.capacity}}</span>
       </div>
     </div>
@@ -46,7 +49,7 @@
         <h2 id="modal-basic-title">
           <codx-label
             name="lblEquipment"
-            default="Thiết bị"
+            [default]="grvCars?.Equipments?.headerText"
             [formModel]="dialog.formModel"
           ></codx-label>
         </h2>
@@ -102,7 +105,7 @@
     <div (click)="openPopupDevice(popupDevice, data?.equipments)" class="btn d-flex justify-content-center align-items-center">    
       <i class="icon-devices"></i>
       <span class=" ms-1 fw-bold">{{data?.equipmentQty}}</span>
-      <codx-label default="thiết bị" class=" ms-1 fw-bold" name="lblDevice"></codx-label>
+      <codx-label [default]="grvCars?.Equipments?.headerText" class=" ms-1 fw-bold" name="lblDevice"></codx-label>
     </div>  
   
 </ng-template>  
@@ -126,13 +129,7 @@
     <codx-img [objectId]="data.driverRecID" [imageType]="'square'" [width]="50" [objectType]="'EP_Drivers'"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data.driverName }}</div>
-    </div>      
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
+    </div>   
   </div>
 </ng-template>
 

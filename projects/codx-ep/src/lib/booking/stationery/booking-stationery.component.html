@@ -11,7 +11,6 @@
   [dataValue]="datavalue"
   [button]="button"
   (buttonClick)="click($event)"
-  [moreFuncs]="moreFunc"
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
@@ -75,6 +74,6 @@
         {{ "4" | vll: "VL003":"text" | async }}
       </div>
     </div>
-    <div>{{ data?.createdOn | date: "shortDate" }}</div>
+    <div>{{ data?.createdOn | fmDT }}</div>
   </div>
 </ng-template>

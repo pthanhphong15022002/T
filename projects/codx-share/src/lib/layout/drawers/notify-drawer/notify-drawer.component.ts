@@ -13,7 +13,7 @@ import { NotifyDrawerSliderComponent } from './notify-drawer-slider/notify-drawe
 export class NotifyDrawerComponent implements OnInit {
   @HostBinding('class') get class() {
      return "d-flex align-items-center " + this.codxService.toolbarButtonMarginClass; 
-    }
+  }
 
   constructor(
     public codxService:CodxService,
