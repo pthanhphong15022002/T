@@ -26,8 +26,8 @@
           <codx-input [disabled]="!adUser.employeeID ? false : true" field="employeeID" (valueChange)="valueEmp($event)"
             [Group]="form.formGroup" [formModel]="form.formModel" *ngIf="formType == 'edit'">
           </codx-input>
-          <codx-input field="employeeID" (valueChange)="valueEmp($event)" *ngIf="formType == 'add' || formType == 'copy'"
-            [Group]="form.formGroup" [formModel]="form.formModel">
+          <codx-input field="employeeID" (valueChange)="valueEmp($event)"
+            *ngIf="formType == 'add' || formType == 'copy'" [Group]="form.formGroup" [formModel]="form.formModel">
           </codx-input>
         </div>
       </div>
@@ -42,7 +42,8 @@
     <div class="form-group">
       <codx-label fiedName="UserGroup" [formModel]="form?.formModel">
       </codx-label>
-      <codx-input field="userGroup" (valueChange)="valueUG($event)" [Group]="form.formGroup" [formModel]="form.formModel">
+      <codx-input field="userGroup" (valueChange)="valueUG($event)" [Group]="form.formGroup"
+        [formModel]="form.formModel">
       </codx-input>
     </div>
     <div class="form-group">
@@ -71,7 +72,7 @@
       </div>
     </div>
   </ng-container>
-  
+
 </ng-template>
 <ng-template #tabRoles>
   <div class="form-group mt-3">
@@ -84,7 +85,7 @@
     </div>
     <div class="" *ngIf="countListViewChooseRoleApp > 0">
       <div class="d-flex align-items-center mb-3">
-        <codx-label class="me-1" fiedName="titleUserRoles" [formModel]="form?.formModel"
+        <codx-label class="me-1 text-primary fs-6" fiedName="titleUserRoles" [formModel]="form?.formModel"
           default="Ứng dụng được phần quyền">
         </codx-label>
         <span class="fw-bold">({{countListViewChooseRoleApp}})</span>
@@ -108,13 +109,11 @@
     <div class="form-group" *ngIf="countListViewChooseRoleService > 0">
       <div class="row">
         <div class="col-12">
-          <div class="d-flex flex-column align-items-start">
-            <span class="fw-bold">
-              <codx-label fiedName="titleUserRoles" [formModel]="form?.formModel"
-                default="Dịch vụ nhân viên được phân quyền">
-              </codx-label>({{countListViewChooseRoleService}})
-            </span>
-            <hr>
+          <div class="d-flex align-items-center mb-3 mt-3">
+            <codx-label class="me-1 text-primary fs-6" fiedName="titleUserRoles" [formModel]="form?.formModel"
+              default="Dịch vụ nhân viên được phân quyền">
+            </codx-label>
+            <span class="fw-bold">({{countListViewChooseRoleService}})</span>
           </div>
         </div>
         <div class="col-12 " *ngFor="let item of viewChooseRole; let i = index">
