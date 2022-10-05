@@ -19,6 +19,7 @@ import { RolesComponent } from '../roles/roles.component';
   styleUrls: ['./editFile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class EditFileComponent implements OnInit {
   @Input() formModel: any;
   @Input('viewBase') viewBase: ViewsComponent;    
@@ -258,10 +259,15 @@ export class EditFileComponent implements OnInit {
   }
 
   ngOnInit(): void {   
+    
+
    
   }
 
+  
+
   onSaveEditingFile() {
+    debugger;
     if (this.fileEditing.fileName === "") {
       // $('#fileName').addClass('form-control is-invalid');
       // $('#fileName').focus();
@@ -479,6 +485,7 @@ export class EditFileComponent implements OnInit {
   }
 
   txtValue($event, type) {
+    debugger;
     if ($event.data != null) {
       switch(type) {
         case 'tag':
@@ -515,6 +522,7 @@ export class EditFileComponent implements OnInit {
           this.fileEditing.author = $event.data;
           break;
         case 'publishdate':
+          debugger;
             this.fileEditing.publishDate = $event.data.fromDate;
             break;
         case 'publisher':
@@ -531,12 +539,13 @@ export class EditFileComponent implements OnInit {
           break;
       }
     }
+    debugger;
     this.changeDetectorRef.detectChanges();  
   }
 
   checkFileName() {
    // const fs = require('fs');
-    
+   
     if (this.fileEditing.fileName === "")
       return "1";
     else if (this.fileEditing.fileName.indexOf(".") === -1)
