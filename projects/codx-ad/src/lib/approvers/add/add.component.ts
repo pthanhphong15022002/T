@@ -1,6 +1,6 @@
-import { GroupMembers } from '../../models/UserGroups.model';
+import { GroupMembers, UserGroup } from '../../models/UserGroups.model';
 import { Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, CallFuncService, CodxService, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, CallFuncService, CodxService, DialogRef, FormModel, NotificationsService, RequestOption } from 'codx-core';
 
 @Component({
   selector: 'lib-add',
@@ -32,21 +32,20 @@ export class AddApproversComponent implements OnInit {
 
   //#region event
   eventApply(e) {
-    console.log('data: ', e);
-    // if (!this.dialog.dataService.hasSaved) {
-    //   this.dialog.dataService.save().subscribe(res => {
-    //     if (res && !res.error) {
-    //       this.dialog.dataService.hasSaved = true;
-    //       this.saveMember(e.data);
-    //     }
-    //   })
-    // } else
-    this.saveMember(e.data);
+    if (!this.dialog.dataService.hasSaved) {
+      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt)).subscribe(res => {
+        if (res && !res.error) {
+          this.dialog.dataService.hasSaved = true;
+          this.saveMember(e.data);
+        }
+      })
+    } else
+      this.saveMember(e.data);
   }
 
 
   onSave() {
-    this.dialog.dataService.save().subcribe(res => {
+    this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt)).subcribe(res => {
       if (res && !res.error) {
         this.dialog.dataService.hasSaved = false;
         this.dialog.close();
@@ -63,11 +62,21 @@ export class AddApproversComponent implements OnInit {
       member.groupID = this.master.groupID;
       member.memberID = e.id;
       member.memberType = e.objectType;
+      member.memberName = e.text
       groupMembers.push(member);
     });
-    this.api.execSv<any>("SYS", "AD", "GroupMembersBusiness", "AddAsync", JSON.stringify(groupMembers)).subscribe(res => {
+    this.api.execSv<any>("SYS", "AD", "GroupMembersBusiness", "AddAsync", groupMembers).subscribe(res => {
 
     })
+  }
+
+  beforeSave(opt: RequestOption) {
+    opt.service = "SYS";
+    opt.assemblyName = "AD";
+    opt.className = "UserGroupsBusiness";
+    opt.methodName = "AddAsync";
+    opt.data = this.dialog.dataService.dataSelected;
+    return true;
   }
   //#endregion
 }
