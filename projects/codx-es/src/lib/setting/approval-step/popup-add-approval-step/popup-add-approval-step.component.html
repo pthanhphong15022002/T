@@ -1,5 +1,3 @@
-<!-- <codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
-  [formControl]="dialogApprovalStep" *ngIf="isAfterRender"> -->
 <codx-layout-add
   *ngIf="type == '0' && isAfterRender"
   [title]="header1"
@@ -114,8 +112,8 @@
           *ngIf="item.roleType?.length == 1"
           [imageId]="item.approver"
           [subTitle]=""
-          [title]="item.approverName"
-          [subTitle]="item.positionName ?? 'Vị trí công việc'"
+          [title]="item.name"
+          [subTitle]="item.position ?? 'Vị trí công việc'"
           [imageObjType]="'AD_Users'"
           [imageWidth]="35"
           [titleLine]="3"
@@ -139,7 +137,7 @@
           [subTitle]="item.approver | vll: 'ES014':'text' | async"
           [title]="item.approver | vll: 'ES014':'text' | async"
           [subTitle]="
-            item.positionName ?? (item.approver | vll: 'ES014':'text' | async)
+            item.position ?? (item.approver | vll: 'ES014':'text' | async)
           "
           [titleLine]="3"
           [formModel]="formModel"

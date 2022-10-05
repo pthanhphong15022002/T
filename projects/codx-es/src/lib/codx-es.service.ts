@@ -15,7 +15,7 @@ import {
 import { resolve } from 'path';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { tmpBG_TrackLogs } from './codx-es.model';
+import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
 
 export class GridModels {
   pageSize: number;
@@ -698,6 +698,18 @@ export class CodxEsService {
       'EmailTemplatesBusiness',
       'GetEmailDefaultAsync',
       []
+    );
+  }
+
+  getDetailApprover(approver: Approvers): Observable<Approvers[]> {
+    let lstAprrover = [approver];
+
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'HRBusiness',
+      'GetInfoApproverAsync',
+      [lstAprrover]
     );
   }
 

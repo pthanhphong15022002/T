@@ -21,6 +21,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
@@ -291,11 +292,16 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             if (lstID[i].toString() != '' && index == -1) {
               let appr = new Approvers();
               appr.roleType = element.objectType;
-              appr.approverName = lstUserName[i];
+              appr.name = lstUserName[i];
               appr.approver = lstID[i];
-              appr.position = dataSelected[i]?.PositionID;
-              appr.positionName = dataSelected[i]?.PositionName;
-              this.lstApprover.push(appr);
+              this.esService.getDetailApprover(appr).subscribe((oRes) => {
+                if (oRes?.length > 0) {
+                  appr.position = oRes[0].position;
+                  appr.phone = oRes[0].phone;
+                  appr.email = oRes[0].email;
+                  this.lstApprover.push(appr);
+                }
+              });
             }
           }
         } else {
@@ -305,7 +311,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           if (i == -1) {
             let appr = new Approvers();
             appr.roleType = element?.objectType;
-            appr.approverName = element?.objectName;
+            appr.name = element?.objectName;
             appr.approver = element?.objectType;
             appr.icon = element?.icon;
             this.lstApprover.push(appr);
@@ -318,19 +324,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       console.log(this.lstStep);
     }
   }
-}
-export class Approvers {
-  recID: string;
-  roleType: string;
-  approver: string;
-  approverName: string;
-  position: string;
-  positionName: string;
-  leadTime: any;
-  comment: string;
-  icon: string = null;
-  createdOn: any;
-  delete: boolean = true;
 }
 
 export class Files {
