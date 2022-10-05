@@ -637,7 +637,10 @@
           ></codx-label>
         </a>
         <div class="btn-group">
-          <button class="btn btn-outline-primary me-2">
+          <button
+            class="btn btn-outline-primary me-2"
+            (click)="onSaveForm(true)"
+          >
             <codx-label
               name="lblApprove"
               default="Gửi duyệt"
