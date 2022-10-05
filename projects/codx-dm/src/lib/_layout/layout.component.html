@@ -25,9 +25,9 @@
             {{ titleHddUsed }}
 
           </div>
-          <ng-template #tolTemplate>
+          <!-- <ng-template #tolTemplate>
             {{ titleHddUsed }}
-          </ng-template>
+          </ng-template> -->
           <ng-template #elseT>
            <!--  aaaaaaa -->
            <!-- <p style="font-size: 18 px ; color: white;" container="body" [ngbTooltip]="tolTemplate" contentType="template">Trống {{ titleHddUsed_small }} %</p> -->
@@ -38,7 +38,7 @@
                 <e-panel [sizeX]="3" [sizeY]="0" [row]="0" [col]="5" >
                   
                   <ng-template #content>
-                    <ejs-accumulationchart style="height:60px; width: 60px;"  [legendSettings]="pielegendSettings" [tooltip]="pieTooltipSetting" [enableAnimation]= 'animation' (pointRender)='pointRender($event)'>
+                    <ejs-accumulationchart style="height:60px; width: 60px;"  [legendSettings]="pielegendSettings" [tooltip]="pieTooltipSetting" [enableAnimation]= 'animation'>
                       
                       <e-accumulation-annotations>
                         <e-accumulation-annotation content='<div style=" font-size:10px; font-weight:200">{{titleHddUsed_small}}%</div>' region='Series'  x='50%' y='50%' >

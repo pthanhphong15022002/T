@@ -44,7 +44,43 @@ import { Layout2Component } from './_layout2/layout2.component';
 import { Layout3Component } from './_layout3/layout3.component';
 
 export const routes: Routes = [
-  
+
+  {
+    path:"portal",
+    component:DashboardComponent,
+    children:
+    [
+      {
+        path:":funcID",
+        component:HomeComponent
+      },
+      
+    ],
+  },
+  {
+    path:"news",
+    component:Layout2Component,
+    children:
+    [
+      {
+        path: ':funcID/tag/:tagName',
+        component: ViewTagComponent
+      },
+      {
+        path:":funcID/:category",
+        component: NewsComponent
+      },
+      {
+        path:":funcID/:category/:recID",
+        component: ViewDetailComponent
+      },
+      {
+        path:':funcID',
+        redirectTo: 'WPT02P/home',
+        pathMatch: 'full'
+      }
+    ]
+  },
   {
     path: 'companyinfo',
     component: Layout3Component,
@@ -53,51 +89,6 @@ export const routes: Routes = [
         path: ':funcID',
         component: CompanyInforComponent
       },
-      {
-        path: '**',
-        redirectTo: 'companyinfo/WPT01P',
-        pathMatch: 'full'
-      }
-    ]
-  },
-  {
-    path: 'orgchartportal',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: ':funcID',
-        component: OrgorganizationComponent,
-      },
-      {
-        path: '**',
-        redirectTo: 'orgchartportal/WPT04',
-        pathMatch: 'full'
-      }
-    ],
-  },
-  {
-    path: 'news',
-    component: Layout2Component,
-    children: [
-      {
-        path: ':funcID/tag/:tagName',
-        component: ViewTagComponent
-      },
-      {
-        path: ':funcID/:category',
-        component: NewsComponent
-      },
-      
-      {
-        path: ':funcID/:category/:recID',
-        component: ViewDetailComponent
-      },
-      
-      {
-        path: '**',
-        redirectTo: 'WPT02P/home',
-        pathMatch: 'full'
-      }
     ]
   },
   {
@@ -108,33 +99,89 @@ export const routes: Routes = [
         path:':funcID',
         component: ApproveComponent,     
       },
-      {
-        path: '**',
-        redirectTo: 'approvals/WPT0211',
-        pathMatch: 'full'
-      }
     ]
   },
   {
-    path: 'portal',
-    component: DashboardComponent,
+    path: 'orgchartportal',
+    component: LayoutNoAsideComponent,
     children: [
       {
         path: ':funcID',
-        component: HomeComponent
-      },
-      {
-        path: '**',
-        redirectTo: 'portal/WP',
-        pathMatch: 'full'
+        component: OrgorganizationComponent,
       }
     ],
   },
   {
-    path: '',
+    path:'wp/portal/wp', // lỗi url back từ logo CODX
     redirectTo: 'portal/WP',
-    pathMatch: 'full'
-  }
+    pathMatch: "full"
+  },
+  {
+    path:"",
+    redirectTo:"portal/WP",
+    pathMatch:"full"
+  },
+ 
+  // {
+  //   path: 'news',
+  //   component: Layout2Component,
+  //   children: [
+  //     {
+  //       path: ':funcID/tag/:tagName',
+  //       component: ViewTagComponent
+  //     },
+  //     {
+  //       path: ':funcID/:category',
+  //       component: NewsComponent
+  //     },
+      
+  //     {
+  //       path: ':funcID/:category/:recID',
+  //       component: ViewDetailComponent
+  //     },
+      
+  //     {
+  //       path: '**',
+  //       redirectTo: 'WPT02P/home',
+  //       pathMatch: 'full'
+  //     }
+  //   ]
+  // },
+  // {
+  //   path:'approvals',
+  //   component: Layout3Component,
+  //   children:[
+  //     {
+  //       path:':funcID',
+  //       component: ApproveComponent,     
+  //     },
+  //     {
+  //       path: '**',
+  //       redirectTo: 'approvals/WPT0211',
+  //       pathMatch: 'full'
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: 'portal',
+  //   component: DashboardComponent,
+  //   children: [
+  //     {
+  //       path: ':funcID',
+  //       component: HomeComponent
+  //     },
+  //     {
+  //       path: '**',
+  //       redirectTo: 'portal/WP',
+  //       pathMatch: 'full'
+  //     }
+  //   ],
+  // },
+  // {
+  //   path: '',
+  //   redirectTo: 'portal/WP',
+  //   pathMatch: 'full'
+  // }
 ];
 
 const Component: Type<any>[] =

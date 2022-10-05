@@ -45,7 +45,7 @@ export class EmployeesComponent implements OnInit {
   dataValue = '90';
   predicate = 'Status<@0';
   functionID: string;
-  employee: HR_Employees = new HR_Employees;
+  employee: HR_Employees = new HR_Employees();
   itemSelected: any;
   formModel: FormModel;
 
@@ -200,14 +200,15 @@ export class EmployeesComponent implements OnInit {
               false
             );
           if (e?.event && e?.event != null) {
-            this.view.dataService.update(e.event.update.InfoPersonal).subscribe();
+            this.view.dataService
+              .update(e.event.update.InfoPersonal)
+              .subscribe();
             // this.view.dataService.update(e.event.update.Employees).subscribe();
             // e?.event.update.forEach((obj) => {
             //   this.view.dataService.update(obj).subscribe();
             // });
             this.changedt.detectChanges();
           }
-  
         });
       });
     // this.changedt.detectChanges();
@@ -404,11 +405,7 @@ export class EmployeesComponent implements OnInit {
     }
   }
 
-  placeholder(
-    value: string,
-    formModel: FormModel,
-    field: string
-  ): Observable<string> {
+  placeholder(value: string,formModel: FormModel,field: string): Observable<string> {
     if (value) {
       return of(`<span>${value}</span>`);
     } else {
@@ -425,7 +422,6 @@ export class EmployeesComponent implements OnInit {
                 }
               }
             }
-
             return `<span class="opacity-50">${field}</span>`;
           })
         );

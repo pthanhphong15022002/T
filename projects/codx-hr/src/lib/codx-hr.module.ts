@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
@@ -39,9 +40,9 @@ import { OrgorganizationComponent } from './organization/organization.component'
 import { OrganizeDetailComponent } from './organization/organize-detail/organize-detail.component';
 import { FilterPipe } from './organization/pipes/filterObject.pipe';
 import { PopupAddOrganizationComponent } from './organization/popup-add-organization/popup-add-organization.component';
-import { OrgchartDetailComponent } from './positions/orgchart-detail/orgchart-detail.component';
-import { PopupAddPositionsComponent } from './positions/popup-add-positions/popup-add-positions.component';
-import { PositionsComponent } from './positions/positions.component';
+import { OrgchartDetailComponent } from './reportingline/orgchart-detail/orgchart-detail.component';
+import { PopupAddPositionsComponent } from './reportingline/popup-add-positions/popup-add-positions.component';
+import { ReportinglineComponent } from './reportingline/reportingline.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 
@@ -91,7 +92,7 @@ export const routes: Routes = [
           },
           {
             path: 'reportingline/:funcID',
-            component: PositionsComponent,
+            component: ReportinglineComponent,
           },
           // {
           //   path: 'employeeinfomation/:funcID',
@@ -158,7 +159,7 @@ const T_Component: Type<any>[] = [
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,
-  PositionsComponent,
+  ReportinglineComponent,
   PopupAddPositionsComponent,
   EmployeesLeaveComponent,
   HRParametersComponent,
@@ -180,6 +181,7 @@ const T_Component: Type<any>[] = [
   FilterPipe,
   OrgchartDetailComponent,
   PopupAddOrganizationComponent,
+  PopupAddPositionsComponent,
 ];
 @NgModule({
   imports: [
@@ -190,6 +192,7 @@ const T_Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
+    CoreModule,
     CodxShareModule,
     ChartAllModule,
     DiagramAllModule,

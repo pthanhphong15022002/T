@@ -138,28 +138,28 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   approve() {
     //Gửi duyệt
-    this.epService
-      .release(this.data, this.formModel.entityName, this.formModel.funcID)
-      .subscribe((res) => {
-        if (res?.msgCodeError == null && res?.rowCount) {
-          //this.dialogSignFile.patchValue({ approveStatus: '3' });
-          this.data.approveStatus = '3';
-          this.epService
-            .editBooking(this.data, false, null, null, null)
-            .subscribe((result) => {
-              if (res) {
-                this.notificationsService.notifyCode('EP007');
-                this.dialog &&
-                  this.dialog.close({
-                    data: this.data,
-                    approved: true,
-                  });
-              }
-            });
-        } else {
-          this.notificationsService.notifyCode(res?.msgCodeError);
-        }
-      });
+    // this.epService
+    //   .release(this.data, this.formModel.entityName, this.formModel.funcID)
+    //   .subscribe((res) => {
+    //     if (res?.msgCodeError == null && res?.rowCount) {
+    //       //this.dialogSignFile.patchValue({ approveStatus: '3' });
+    //       this.data.approveStatus = '3';
+    //       this.epService
+    //         .updateBooking(this.data, false, null, null, null)
+    //         .subscribe((result) => {
+    //           if (res) {
+    //             this.notificationsService.notifyCode('EP007');
+    //             this.dialog &&
+    //               this.dialog.close({
+    //                 data: this.data,
+    //                 approved: true,
+    //               });
+    //           }
+    //         });
+    //     } else {
+    //       this.notificationsService.notifyCode(res?.msgCodeError);
+    //     }
+    //   });
     this.dialog.close();
   }
 

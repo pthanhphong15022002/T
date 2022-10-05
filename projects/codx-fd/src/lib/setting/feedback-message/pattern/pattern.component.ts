@@ -246,7 +246,4 @@ export class PatternComponent extends UIComponent implements OnInit {
       });
     this.change.detectChanges();
   }
-  closeCreate(): void {
-    $('#create_card').removeClass('offcanvas-on');
-  }
 }

@@ -275,7 +275,6 @@ export class CodxTasksComponent
           eventModel: this.fields,
           resourceModel: this.resourceField,
           // template: this.eventTemplate,
-          template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
           //  template: this.eventTemplate,

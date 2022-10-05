@@ -36,28 +36,21 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   @Input() vllShare = 'ES014';
   dataEdit: any;
 
-  tmplstDevice;
-  lstDeviceRoom;
   isAfterRender = false;
   isAdd = true;
   formModel: FormModel;
   dialogApprovalStep: FormGroup;
-  vllEmail = [];
 
   lstApproveMode: any;
-  cbxName;
-  time: any;
   currentApproveMode: string;
 
   dialog: DialogRef;
-  tmpData: any;
   lstStep;
   isSaved = false;
   header1 = 'Thiết lập quy trình duyệt';
   subHeaderText = 'Qui trình duyệt';
 
-  showPlan = true;
-
+  data: any = {};
   lstApprover: any = [];
 
   headerText1;
@@ -85,10 +78,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     console.log(e);
   }
 
-  extendShowPlan() {
-    this.showPlan = !this.showPlan;
-  }
-
   buttonClick(e: any) {
     console.log(e);
   }
@@ -110,6 +99,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.lstStep = data?.data.lstStep;
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
+    this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
     this.type = data?.data.type ?? '1';
   }
@@ -124,65 +114,46 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    console.log(this.dataEdit);
+
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
         this.dialog.formModel = this.formModel;
       }
 
-      this.cbxName = {};
-      this.cache
-        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-        .subscribe((gv) => {
-          if (gv) {
-            for (const key in gv) {
-              if (Object.prototype.hasOwnProperty.call(gv, key)) {
-                const element = gv[key];
-                if (element.referedValue != null) {
-                  this.cbxName[key] = element.referedValue;
-                }
-              }
-            }
-            console.log('cbxName', this.cbxName);
-
-            if (this.cbxName) {
-              this.cache.valueList('ES016').subscribe((vllMode) => {
-                if (vllMode) {
-                  this.lstApproveMode = vllMode.datas;
-                }
-              });
-            }
-          }
-        });
-
       this.initForm();
     });
   }
 
   initForm() {
-    let dataDefault = null;
-
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogApprovalStep = item;
-        this.dialogApprovalStep.addControl('id', new FormControl(null));
-        this.dialogApprovalStep.addControl('recID', new FormControl(null));
 
-        console.log(this.dialogApprovalStep.value);
-        console.log('dataDefault', dataDefault);
         if (this.isAdd) {
           this.esService
             .getDataDefault('EST04', this.formModel.entityName, 'recID')
             .subscribe((res: any) => {
               if (res) {
+                this.data = res.data;
+                this.data.stepNo = this.stepNo;
+                this.data.transID = this.transId;
                 this.dialogApprovalStep.patchValue(res.data);
                 this.dialogApprovalStep.patchValue({ stepNo: this.stepNo });
                 this.dialogApprovalStep.patchValue({ transID: this.transId });
-                this.esService.getNewDefaultEmail().subscribe((res) => {
-                  this.dialogApprovalStep.patchValue({ emailTemplates: res });
+                this.esService.getNewDefaultEmail().subscribe((emailTmp) => {
+                  this.data.emailTemplates = emailTmp;
+                  this.dialogApprovalStep.patchValue({
+                    emailTemplates: emailTmp,
+                  });
                 });
                 this.currentApproveMode = '1';
+                this.formModel.currentData = this.data;
+
+                console.log(this.dialogApprovalStep.value);
+
                 this.isAfterRender = true;
               }
             });
@@ -192,6 +163,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             JSON.stringify(this.dialogApprovalStep.value.approvers)
           );
           this.currentApproveMode = this.dataEdit?.approveMode;
+          this.formModel.currentData = this.data;
+          console.log(this.dialogApprovalStep.value);
           this.isAfterRender = true;
 
           if (!this.dialogApprovalStep.value.emailTemplates) {
@@ -204,29 +177,26 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   MFClick(event, data) {
+    //delete
     if (event?.functionID == 'SYS02') {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notifySvr
-        .alert(
-          'Thông báo',
-          'Hệ thống sẽ thu hồi quyền đã chia sẻ của người này bạn có muốn xác nhận hay không ?',
-          config
-        )
-        .closed.subscribe((x) => {
-          if (x.event.status == 'Y') {
-            let i = this.lstApprover.indexOf(data);
+      this.notifySvr.alertCode('SYS030').subscribe((x) => {
+        if (x.event.status == 'Y') {
+          let i = this.lstApprover.indexOf(data);
 
-            if (i != -1) {
-              this.lstApprover.splice(i, 1);
-            }
+          if (i != -1) {
+            this.lstApprover.splice(i, 1);
           }
-        });
+        }
+      });
     }
   }
 
   onSaveForm() {
     this.isSaved = true;
+
+    console.log(this.dialogApprovalStep.value);
+    console.log(this.data);
+
     if (this.dialogApprovalStep.invalid == true) {
       this.esService.notifyInvalid(this.dialogApprovalStep, this.formModel);
       return;
@@ -237,7 +207,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.notifySvr.notifyCode(
-              'E0001',
+              'SYS028',
               0,
               '"' + res['Approvers'].headerText + '"'
             );
@@ -249,14 +219,16 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       approveMode: this.currentApproveMode,
       approvers: this.lstApprover,
     });
+    this.data.approveMode = this.currentApproveMode;
+    this.data.approvers = this.lstApprover;
     if (this.isAdd) {
-      this.lstStep.push(this.dialogApprovalStep.value);
-      this.dialog && this.dialog.close(this.dialogApprovalStep.value);
+      this.lstStep.push(this.data);
+      this.dialog && this.dialog.close(this.data);
     } else {
       let i = this.lstStep.indexOf(this.dataEdit);
       if (i != -1) {
-        this.lstStep[i] = this.dialogApprovalStep.value;
-        this.dialog && this.dialog.close(this.dialogApprovalStep.value);
+        this.lstStep[i] = this.data;
+        this.dialog && this.dialog.close(this.data);
       }
     }
   }
@@ -284,20 +256,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  valueChange(event) {
-    if (event?.field && event.component) {
-      if (event.data === Object(event.data)) {
-        this.dialogApprovalStep.patchValue({
-          [event['field']]: event.data,
-        });
-      } else {
-        this.dialogApprovalStep.patchValue({ [event['field']]: event.data });
-      }
-    }
-
-    this.cr.detectChanges();
-  }
-
   valueModeChange(event, item) {
     if (event?.component) {
       this.currentApproveMode = item?.value;
@@ -305,10 +263,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   valueEmailChange(event, eTemplate) {
-    let index = this.dialogApprovalStep.value.emailTemplates.indexOf(eTemplate);
+    let index = this.data?.emailTemplates.indexOf(eTemplate);
     if (index >= 0) {
-      this.dialogApprovalStep.value.emailTemplates[index][event.field] =
-        event.data ? '1' : '0';
+      this.data.emailTemplates[index][event.field] = event.data ? '1' : '0';
       this.dialogApprovalStep.patchValue({
         emailTemplates: this.dialogApprovalStep.value.emailTemplates,
       });

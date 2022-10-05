@@ -59,8 +59,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   Stamp: any = null;
   dialog: any;
   data: any = null;
-  headerText = 'Thêm mới chữ ký số';
-  subHeaderText = 'Tạo & upload file văn bản';
+  headerText = '';
+  subHeaderText = '';
 
   constructor(
     private cr: ChangeDetectorRef,
@@ -75,7 +75,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.data = dialog?.dataService?.dataSelected;
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
-    if (!this.isAdd) this.headerText = 'Chỉnh sửa chữ ký số';
+    this.headerText = data?.data?.headerText;
   }
 
   ngAfterViewInit(): void {
@@ -98,14 +98,21 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   valueChange(event: any) {
     if (event?.field && event?.component) {
-      if (event?.field == 'userID') {
+      if (event?.field == 'email') {
+        let user = event?.data?.dataSelected[0]?.dataSelected;
+        this.data.userID = user?.UserID;
+        this.data.fullName = user?.UserName;
         this.data[event['field']] = event?.data.value[0];
-        this.data.fullName = event?.data.dataSelected[0].text;
 
-        this.form?.formGroup.patchValue({ fullName: this.data.fullName });
+        this.form?.formGroup.patchValue({
+          fullName: this.data?.fullName,
+          userID: this.data?.userID,
+          email: this.data?.email,
+        });
       } else if (event?.field == 'signatureType') {
         if (event?.data == '2') {
           this.data.supplier = '1';
+          this.form?.formGroup.patchValue({ supplier: '1' });
         }
       } else if (event?.data === Object(event?.data))
         this.data[event['field']] = event?.data.value[0];
@@ -129,25 +136,10 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   onSaveForm() {
     this.dialogSignature.patchValue(this.data);
 
-    if (this.dialogSignature.invalid == true) {
-      this.esService.notifyInvalid(
-        this.dialogSignature,
-        this.formModel,
-        this.data
-      );
+    if (this.form?.formGroup?.invalid == true) {
+      this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
     }
-
-    // if (this.attachment.fileUploadList.length > 0) {
-    //   this.attachment.objectId = this.data.recID;
-    //   (await this.attachment.saveFilesObservable()).subscribe((files: any) => {
-    //     if (files?.status == 0) {
-    //       console.log(files);
-    //     }
-    //   });
-    // }
-    console.log(this.imgSignature1);
-    console.log(this.imgSignature2);
 
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
@@ -160,9 +152,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
           if (res.update) {
             result = res.update;
-            // (this.dialog.dataService as CRUDService)
-            //   .update(res.update)
-            //   .subscribe();
           }
           if (
             this.imgSignature1.imageUpload ||
@@ -212,8 +201,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                   }
                   this.dialog && this.dialog.close(result);
                 });
-
-            // this.dialog && this.dialog.close(result);
           } else {
             this.dialog && this.dialog.close(result);
           }

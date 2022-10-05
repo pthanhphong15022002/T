@@ -3,7 +3,7 @@
 
 <ng-template #body>
   <div class="list-group">
-    <h3 class="list-header mb-6">{{ title }}</h3>
+    <h3 class="list-header mb-7">{{ title }}</h3>
     <div class="list-content">
       <ng-container *ngIf="groupSetting && groupSetting.length > 0; else noGroup">
         <ng-container *ngFor="let item of groupSetting">
@@ -40,7 +40,7 @@
   <ng-template #template let-data let-collapse="collapse" let-isGroup="isGroup">
     <div class="list-item" [ngClass]="collapse ? ' d-none' : ''" [attr.data-group]="data.refLineID">
       <div class="d-flex justify-content-between">
-        <div class="w40px min-w-40px">
+        <div class="w-40px min-w-40px">
           <ng-container *ngIf="data.icon && data.icon.includes('.svg'); else icon">
             <span [inlineSVG]="'./assets/themes/sys/default/img/' + data.icon" class="svg-icon"></span>
           </ng-container>
