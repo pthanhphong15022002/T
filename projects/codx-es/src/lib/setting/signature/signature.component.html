@@ -47,13 +47,6 @@
   <div class="text-center">
     <div>
       <div class="m-auto text-center">
-        <!-- <codx-img
-          [objectId]="data?.recID + '1'"
-          imageType="square"
-          [width]="80"
-          [recId]="data?.signature1"
-        ></codx-img> -->
-
         <codx-img
           class="border border-gray-300 rounded symbol square me-2 image-inpt-wrapper fullImage Signature1 p-1"
           [width]="60"
@@ -76,12 +69,6 @@
   <div class="text-center">
     <div>
       <div class="m-auto text-center">
-        <!-- <codx-img
-          [objectId]="data?.recID + '2'"
-          imageType="square"
-          [width]="80"
-          [recId]="data?.signature2"
-        ></codx-img> -->
         <codx-img
           class="border border-gray-300 rounded symbol square me-2 image-inpt-wrapper fullImage ignature2 p-1"
           [width]="60"
@@ -104,12 +91,6 @@
   <div class="text-center">
     <div>
       <div class="m-auto">
-        <!-- <codx-img
-          [objectId]="data?.recID + 's'"
-          imageType="square"
-          [width]="80"
-          [recId]="data?.stamp"
-        ></codx-img> -->
         <codx-img
           class="border border-gray-300 rounded symbol square me-2 image-inpt-wrapper fullImage imageStamp p-1"
           [width]="60"
@@ -144,4 +125,14 @@
       </codx-mfunc>
     </div>
   </div>
+</ng-template>
+
+<ng-template #itemAction let-data>
+  <codx-mfunc
+    [formModel]="viewBase.formModel"
+    (clickMF)="clickMF($event, data)"
+    [dataItem]="data"
+    [type]="'hover'"
+  >
+  </codx-mfunc>
 </ng-template>

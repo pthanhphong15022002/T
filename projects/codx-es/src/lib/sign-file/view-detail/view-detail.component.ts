@@ -120,17 +120,6 @@ export class ViewDetailComponent implements OnInit {
     }
 
     if (this.itemDetail && this.itemDetail !== null) {
-      // this.esService
-      //   .getFiles(
-      //     this.formModel.funcID,
-      //     this.itemDetail?.recID,
-      //     this.formModel.entityName
-      //   )
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       this.files = res;
-      //     }
-      //   });
       if (this.itemDetail?.files?.length > 0) {
         this.esService
           .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
