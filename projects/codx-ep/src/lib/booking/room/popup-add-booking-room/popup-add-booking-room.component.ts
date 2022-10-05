@@ -68,6 +68,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   peopleAttend = [];
   tempArray = [];
 
+  returnData:any;
   checkLoopS = true;
   checkLoopE = true;
   checkLoop = true;
@@ -417,12 +418,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe(async (res) => {
         if (res.save || res.update) {
-          this.attObjectID =
-            res.save != null ? res.save.recID : res.update.recID;
-          this.attQuantity =
-            res.save != null ? res.save.attachments : res.update.attachments;
-          if (this.attObjectID && this.attQuantity > 0) {
-            this.attachment.objectId = this.attObjectID;
+          if(!res.save){
+            this.returnData=res.update;
+          }
+          else{
+            this.returnData=res.save;
+          }          
+          if (this.returnData.recID && this.returnData.attachments> 0) {
+            this.attachment.objectId = this.returnData.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
                 if (item2?.status == 0) {
@@ -431,19 +434,17 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               }
             );
           }
-          // this.codxEpService
-          //   .release(
-          //     this.attObjectID,
-          //     this.formModel.entityName,
-          //     this.formModel.funcID
-          //   )
-          //   .subscribe((res) => {
-          //     if (res?.msgCodeError == null && res?.rowCount) {
-          //       this.notificationsService.notifyCode('ES007');
-          //     } else {
-          //       this.notificationsService.notifyCode(res?.msgCodeError);
-          //     }
-          //   });
+          debugger;
+          this.codxEpService
+            .release(this.returnData, 'EP_Bookings', this.formModel.funcID)
+            .subscribe((res) => {
+              debugger;
+              if (res?.msgCodeError == null && res?.rowCount) {
+                this.notificationsService.notifyCode('ES007');
+              } else {
+                this.notificationsService.notifyCode(res?.msgCodeError);
+              }
+            });
           this.dialogRef && this.dialogRef.close();
         } else {
           this.notificationsService.notifyCode('E0011');

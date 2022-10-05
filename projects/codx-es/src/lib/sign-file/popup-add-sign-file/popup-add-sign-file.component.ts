@@ -952,6 +952,8 @@ export class PopupAddSignFileComponent implements OnInit {
           this.clickIsSave(false);
         }
       });
+    } else {
+      this.dialog && this.dialog.close();
     }
   }
 
