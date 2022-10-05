@@ -6,13 +6,13 @@
                     <span class="icon-24 text-white"></span>
                     <span class="ms-3 text-white font-size-h3"></span>
                 </div>                  
-                <div *ngIf="data != null && !data.isDelete" class="d-flex align-items-center text-white ">
-                    <div *ngIf="data.download" class="d-flex align-items-center text-white cursor-pointer" (click)="download()">
-                        <span  class="fa-solid fa-lg fa-arrow-down mx-2 text-white "
+                <div *ngIf="data != null && !data.isDelete" class="d-flex align-items-center ">
+                    <div *ngIf="data.download" class="d-flex align-items-center cursor-pointer" (click)="download()">
+                        <span  class="fa-solid fa-lg fa-arrow-down mx-2 "
                        ></span><span class="me-3">Tải về</span>
                     </div>
-                    <div class="d-flex align-items-center text-white" (click)="print()">
-                        <span class="fa-solid fa-lg fa-print mx-2 text-white cursor-pointer" ></span><span class="me-3">In</span>
+                    <div class="d-flex align-items-center cursor-pointer" (click)="print()">
+                        <span class="fa-solid fa-lg fa-print mx-2 " ></span><span class="me-3">In</span>
                         <div class="view-more ms-2"></div>
                     </div>
                    
@@ -31,9 +31,12 @@
                     </ng-container>
                 </ng-container>
                 <ng-template #formword><ejs-documenteditorcontainer #documenteditor_default   [enableToolbar]="false"  [restrictEditing]="true" [height]="'100%'" style="display:block" > </ejs-documenteditorcontainer></ng-template>
-                <ng-template #forexcel><ejs-spreadsheet #spreadsheet (created)='viewFile("")'  [openUrl]="openUrl" [allowOpen]='true' [allowEditing]="false" > </ejs-spreadsheet></ng-template>
-                <ng-template #formtxt></ng-template>
-                <iframe [src]="urlTxt" width="200" height="200" frameborder="0" id="frame"></iframe>
+                <ng-template #forexcel><ejs-spreadsheet #spreadsheet  [openUrl]="openUrl" [allowOpen]='true' [showRibbon]="false" [allowEditing]="false" > </ejs-spreadsheet></ng-template>
+                <ng-template #formtxt><iframe [src]="urlTxt" width="100%" height="100%" frameborder="0" id="frame"></iframe></ng-template>
+                <img *ngIf="linkViewImage != ''" src="{{linkViewImage}}" />
+                <video *ngIf="isVideo" preload="auto" controls class="viewfileiframe" autoplay width="100">
+                    <source src="{{srcVideo}}" type="video/mp4" />
+                </video>
                 
                 <!-- <form id="frmFile" *ngIf="!isVideo && !linkViewImage" #viewfileform target="my_frame"
                     [action]="src | safe: 'resourceUrl'" enctype="multipart/form-data" method="post">
@@ -51,7 +54,7 @@
                     <source src="{{srcVideo}}" type="video/mp4" />
                 </video> -->
                 <!-- <ejs-pdfviewer #pdfviewer *ngIf="isPdf" id="pdfViewer" [serviceUrl]='service' [documentPath]='document' style="height:640px;display:block"></ejs-pdfviewer> -->
-                <!-- <img *ngIf="linkViewImage != ''" src="{{linkViewImage}}" /> -->
+                <!--  -->
             </div>
             <div id="output"></div>
         </div>

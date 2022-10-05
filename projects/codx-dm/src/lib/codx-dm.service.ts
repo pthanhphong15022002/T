@@ -1309,6 +1309,7 @@ export class CodxDMService {
         break;
 
       case "DMT0213":  // chinh sua file
+        debugger;
         this.callfc.openForm(EditFileComponent, "", 800, 800, "", ["", data], "");
         break;
 

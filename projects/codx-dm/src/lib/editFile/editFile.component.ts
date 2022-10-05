@@ -479,6 +479,7 @@ export class EditFileComponent implements OnInit {
   }
 
   txtValue($event, type) {
+    debugger;
     if ($event.data != null) {
       switch(type) {
         case 'tag':
