@@ -205,6 +205,7 @@ export class EditFileComponent implements OnInit {
   titlemessage = 'Thông báo';
   copymessage = 'Bạn có muốn lưu lên không ?';
   renamemessage = 'Bạn có muốn lưu với tên {0} không ?';
+  editfilemessage = 'Cần điền đầy đủ thông tin trước khi lưu';
   //objectType="";
   indexSub: number;
   subItemLevel: string;
@@ -271,8 +272,16 @@ export class EditFileComponent implements OnInit {
     if (this.fileEditing.fileName === "") {
       // $('#fileName').addClass('form-control is-invalid');
       // $('#fileName').focus();
-      return;
+      
+      
     }
+    if(this.license == true){
+      if(this.fileEditing.author == "" || this.fileEditing.publisher == "" || this.fileEditing.publishYear == null || this.fileEditing.copyRights == "" || this.fileEditing.publishDate == null){
+        this.notificationsService.notify(this.editfilemessage);
+        return;
+      }
+    }
+    
 
     if (this.id !=undefined &&  this.id != "") {
       // update file
@@ -362,6 +371,7 @@ export class EditFileComponent implements OnInit {
   }
   
   checkInputFile() {
+    debugger;
     return this.fileEditing.fileName === ""  ? true : false;
   } 
 
@@ -464,11 +474,13 @@ export class EditFileComponent implements OnInit {
 
   hideLicence() {
     //this.dmSV.hideShowBoxLicense.next(!this.license);
+    debugger ; 
     this.license = !this.license;
     this.changeDetectorRef.detectChanges();
   }
 
   hideInfo() {
+    debugger ;
     this.information = !this.information;
     this.changeDetectorRef.detectChanges();
    // this.dmSV.hideShowBoxInfo.next(!this.information);
@@ -492,38 +504,63 @@ export class EditFileComponent implements OnInit {
           this.fileEditing.tags = $event.data;
           break;  
         case 'filename':
+          if ($event.data.length > 0)
           this.fileEditing.fileName = $event.data;
+          else
+          this.fileEditing.fileName = "";
+          
           break;
         case 'title':
+          if ($event.data.length > 0)
           this.fileEditing.title = $event.data;
+          else
+          this.fileEditing.title = "";
           break;
         case 'subject':
+          if ($event.data.length > 0)
             this.fileEditing.subject = $event.data;
+            else
+          this.fileEditing.subject = "";
             break;
         case 'relation':
+          if ($event.data.length > 0)
             this.fileEditing.relation = $event.data;
+            else
+          this.fileEditing.relation  = "";
             break;
         case 'category':
-          if ($event.data.length > 0)
-            this.fileEditing.category = $event.data[0];
-          else
-            this.fileEditing.category = "";
+            this.fileEditing.category = $event.data;
           break;
         case 'language':
+          if ($event.data.length > 0)
             this.fileEditing.language = $event.data;
+            else
+            this.fileEditing.language = "";
             break;
         case 'source':
+          if ($event.data.length > 0)
             this.fileEditing.source = $event.data;
+            else
+            this.fileEditing.source = "";
             break;
         case 'excerpts':
+          if ($event.data.length > 0)
             this.fileEditing.excerpts = $event.data;
+            else
+            this.fileEditing.excerpts= "";
             break;
         case 'authur':
+          if ($event.data.length > 0)
           this.fileEditing.author = $event.data;
+          else
+            this.fileEditing.author= "";
           break;
         case 'publishdate':
           debugger;
+          if ($event.data != null)
             this.fileEditing.publishDate = $event.data.fromDate;
+            else
+            this.fileEditing.publishDate = null;  
             break;
         case 'publisher':
           if ($event.data.length > 0)
@@ -532,10 +569,17 @@ export class EditFileComponent implements OnInit {
             this.fileEditing.publisher = "";         
           break;
         case 'publishyear':
+          debugger;
+          if ($event.data != null)
           this.fileEditing.publishYear = $event.data.fromDate;
+          else
+            this.fileEditing.publisher = null;  
           break;
         case 'copyrights':
+          if ($event.data.length > 0)
           this.fileEditing.copyRights = $event.data;
+          else
+            this.fileEditing.copyRights = "";  
           break;
       }
     }

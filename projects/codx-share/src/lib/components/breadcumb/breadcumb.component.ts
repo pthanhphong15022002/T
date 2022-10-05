@@ -58,7 +58,7 @@ export class BreadcumbComponent implements OnInit {
   }
 
   getBreadCumList() {
-    debugger;
+    //debugger;
     if (!this.notTree)
       return this.breadcumbTree;
     else
