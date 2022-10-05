@@ -145,7 +145,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
           //this.dialogSignFile.patchValue({ approveStatus: '3' });
           this.data.approveStatus = '3';
           this.epService
-            .editBooking(this.data, false, null, null, null)
+            .updateBooking(this.data, false, null, null, null)
             .subscribe((result) => {
               if (res) {
                 this.notificationsService.notifyCode('EP007');
