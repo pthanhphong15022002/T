@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
-import { AlertConfirmInputConfig, CallFuncService, NotificationsService } from 'codx-core';
+import { AlertConfirmInputConfig, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { RolesComponent } from 'projects/codx-dm/src/lib/roles/roles.component';
@@ -181,7 +181,9 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   openFile(id) {
     //var data = JSON.parse(file);
     this.fileService.getFile(id).subscribe(data => {
-      this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", data, "");
+      var option = new DialogModel();
+      option.IsFull = true;
+      this.callfc.openForm(ViewFileDialogComponent, data.fileName, null, null, "", data, "", option);
       this.viewFile.emit(true);
     });
 

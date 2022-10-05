@@ -75,22 +75,22 @@
         </codx-label>
         <span class="text-gray-600">
           :
-          {{itemDetail?.createdOn}}
+          {{itemDetail?.bookingOn | fmDT}}
         </span>
       </div>
       <div class="d-flex me-6">
         <codx-label default="Thời gian" class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.startDate}}
+          {{ itemDetail?.startHour}}
         </span>
         <span
-          *ngIf="itemDetail?.startDate && itemDetail?.endDate"
+          *ngIf="itemDetail?.startHour && itemDetail?.endHour"
           class="ms-1 me-1"
           >{{ "-" }}</span
         >
         <span class="text-gray-600">
-          {{ itemDetail?.endDate }}
+          {{ itemDetail?.endHour}}
         </span>
       </div>
     </div>
@@ -303,7 +303,7 @@
       <div class="d-flex mt-2">
         <span class="icon-schedule icon-16 text-gray-600"></span>
         <span class="ms-2 text-dark">{{
-          data?.dueDate 
+          data?.dueDate | fmDT:'dmy':true
         }}</span>
       </div>
     </div>

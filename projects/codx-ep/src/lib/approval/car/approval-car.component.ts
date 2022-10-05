@@ -33,6 +33,15 @@ export class ApprovalCarsComponent extends UIComponent {
   predicate = 'ResourceType=@0';
   datavalue = '2';
   idField = 'recID';
+  
+  // [entityName]="'ES_ApprovalTrans'"
+  // [method]="'LoadDataAsync'"
+  // [assemblyName]="'CM'"
+  // [service]="'ES'"
+  // [className]="'DataBusiness'"
+  // [selectedFirst]="true"
+  // idField="recID"
+
   modelResource?: ResourceModel;
   request?: ResourceModel;
   itemDetail;
@@ -59,7 +68,7 @@ export class ApprovalCarsComponent extends UIComponent {
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
-    this.request.method = 'GetListBookingAsync';
+    this.request.method = 'GetListApprovalAsync';
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '2';
     this.request.idField = 'recID';

@@ -115,7 +115,6 @@ export class CodxEsService {
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,
-    data: any = null,
     gridViewSetup: any = null
   ) {
     const invalid = [];
@@ -142,7 +141,7 @@ export class CodxEsService {
               );
             } else {
               this.notificationsService.notifyCode(
-                'E0001',
+                'SYS028',
                 0,
                 '"' + gridViewSetup[fieldName].headerText + '"'
               );
@@ -151,7 +150,7 @@ export class CodxEsService {
         });
     } else {
       this.notificationsService.notifyCode(
-        'E0001',
+        'SYS028',
         0,
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
@@ -808,6 +807,17 @@ export class CodxEsService {
     );
   }
 
+  getListCAByBytes(fileUrl) {
+    let data = [fileUrl];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetCAInPDFByBytesAsync',
+      data
+    );
+  }
+
   getListSFByID(lstID: string[]): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -1016,6 +1026,17 @@ export class CodxEsService {
       'ERM.Business.ES',
       'SignFilesBusiness',
       'ToPDFAsync',
+      data
+    );
+  }
+
+  addQRToPdf(content) {
+    let data = [content];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GenerateQRCodeAsync',
       data
     );
   }

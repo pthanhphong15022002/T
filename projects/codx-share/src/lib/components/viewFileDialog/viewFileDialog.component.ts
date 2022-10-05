@@ -1,8 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, Input, ElementRef, ViewChild, Optional } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { DataItem } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
+import { DocumentEditorContainerComponent , ToolbarService , PrintService } from '@syncfusion/ej2-angular-documenteditor';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
+import { SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
 import { Sorting } from '@syncfusion/ej2-pivotview';
 import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
@@ -15,12 +18,16 @@ import { SystemDialogService } from './systemDialog.service';
   selector: 'codx-viewfiledialog',
   templateUrl: './viewFileDialog.component.html',
   styleUrls: ['./viewFileDialog.component.scss'],
+  providers:[ToolbarService , PrintService]
 
 })
+
 export class ViewFileDialogComponent implements OnInit {
   @ViewChild('contentViewFileDialog') contentViewFileDialog;  
-  // @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;  
-  src: string = "about:blank";
+  @ViewChild('documenteditor_default') public container: DocumentEditorContainerComponent;
+  // @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;
+  @ViewChild('spreadsheet') public spreadsheetObj: SpreadsheetComponent;
+  src: string = null;
   isVideo: boolean = false;
   isPdf: boolean = false;
   linkViewImage: string = "";
@@ -34,6 +41,9 @@ export class ViewFileDialogComponent implements OnInit {
   titleDialog = "";
   formModel: any;
   pathVideo: string;
+  openUrl: string;
+  urlTxt:any;
+  public urlSafe: any;
   @Input() id: string;
   @Input() ext: string;
   @Input('viewBase') viewBase: ViewsComponent;
@@ -50,6 +60,7 @@ export class ViewFileDialogComponent implements OnInit {
     private notificationsService: NotificationsService,
     private callfc: CallFuncService,    
     private elementRef: ElementRef,
+    private sanitizer: DomSanitizer,
     //private modalService: NgbModal,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
@@ -64,7 +75,6 @@ export class ViewFileDialogComponent implements OnInit {
     }      
     else
       this.data = data;
-
     this.id = this.data.recID;
     // this.fileService.getFile(this.id).subscribe(item => {
     //   if (item != null) {
@@ -260,15 +270,52 @@ export class ViewFileDialogComponent implements OnInit {
     //   this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
     //     this.src = `${environment.librOfficeUrl}?WOPISrc=${item}`;  
     //   });
-    // }   
-
-    this.src = `${environment.librOfficeUrl}?WOPISrc=${environment.apiUrl}/api/dm/files/${id}`;
-   // if ( this.srcVideo == "" && this.linkViewImage == "") {
-      setTimeout(() => {
-        (        
-            document.getElementById("frmFile") as HTMLFormElement).submit();
-            //$("#viewfiledalog").find("form")[0]["submit"]();
-      }, 100);
+    // } 
+    //https://view.officeapps.live.com/op/embed.aspx?src=http://writing.engr.psu.edu/workbooks/formal_report_template.doc  
+    
+    //this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(`https://docs.google.com/gview?embedded=true&url=${environment.urlUpload}`+"/"+this.data?.pathDisk);
+    var file = environment.urlUpload+"/"+this.data?.pathDisk;
+    if(this.data?.extension.includes("doc"))
+    {
+      let http: XMLHttpRequest = new XMLHttpRequest();
+      let content = { fileUrl:  file};
+      let baseurl: string = environment.apiUrl+'/api/documenteditor/import';
+      baseurl += "?sk="+ btoa(this.auth.userValue.userID+"|"+this.auth.userValue.securityKey);
+      http.withCredentials = true;
+      http.open('Post', baseurl, true);
+      http.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+      http.onreadystatechange = () => {
+        if (http.readyState === 4) {
+          if (http.status === 200 || http.status === 304) {
+            //open the SFDT text in Document Editor
+            this.container.documentEditor.open(http.responseText);
+          }
+        }
+      };
+      http.send(JSON.stringify(content));
+    }
+    else if(this.data?.extension.includes("xls"))
+    {
+      let that = this;
+      fetch(file) // fetch the remote url
+      .then((response) => {
+        response.blob().then((fileBlob) => {
+       // convert the excel file to blob
+        let files = new File([fileBlob], this.data?.fileName); //convert the blob into file
+        that.spreadsheetObj.open({ file: files }); // open the file into Spreadsheet
+        })
+      })
+    }
+    else if(this.data?.extension.includes("txt"))
+    {
+      this.urlTxt = this.sanitizer.bypassSecurityTrustResourceUrl(file);
+    }
+    // if ( this.srcVideo == "" && this.linkViewImage == "") {
+      // setTimeout(() => {
+      //   (        
+      //       document.getElementById("frmFile") as HTMLFormElement).submit();
+      //       //$("#viewfiledalog").find("form")[0]["submit"]();
+      // }, 100);
    // }
   }
 
@@ -305,7 +352,9 @@ export class ViewFileDialogComponent implements OnInit {
 
   ngOnInit(): void {
     //if (this.systemDialogService.onOpenViewFileDialog.observers.length == 0) {
-
+    let baseurlExcel: string = environment.apiUrl+'/api/documenteditor/openexcel';
+    baseurlExcel += "?sk="+ btoa(this.auth.userValue.userID+"|"+this.auth.userValue.securityKey);
+    this.openUrl = baseurlExcel;
     this.dmSV.isChangeDataViewFile.subscribe(item => {
       if (item) {
         this.data = item;
@@ -329,7 +378,6 @@ export class ViewFileDialogComponent implements OnInit {
     this.srcVideo = "";
     this.linkViewImage = "";
     
-    this.changeDetectorRef.detectChanges();
     if (this.ext == ".mp4") {
       this.isVideo = true;
       this.srcVideo = `${environment.urlFile}/${this.data.pathDisk}`;
@@ -391,6 +439,6 @@ export class ViewFileDialogComponent implements OnInit {
 
     };
     window.addEventListener("message", window["librOfficeMessage"], false);
-  }
 
+  }
 }

@@ -254,4 +254,9 @@ export class UserComponent extends UIComponent {
     //this.tableView.addHandler(dataItem, false, "taskGroupID");
   }
   //#endregion
+
+  changeDataMF(e: any) {
+    var dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+    dl[0].disabled = true;
+  }
 }

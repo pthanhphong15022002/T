@@ -82,7 +82,7 @@
         <codx-label default="Thời gian" class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.startDate | date: "shortTime" }}
+          {{ itemDetail?.startDate | fmDT:'dmy':true }}
         </span>
         <span
           *ngIf="itemDetail?.startDate && itemDetail?.endDate"
@@ -90,7 +90,7 @@
           >{{ "-" }}</span
         >
         <span class="text-gray-600">
-          {{ itemDetail?.endDate | date: "shortTime" }}
+          {{ itemDetail?.endDate | fmDT:'dmy':true }}
         </span>
       </div>
     </div>
@@ -304,7 +304,7 @@
       <div class="d-flex mt-2">
         <span class="icon-schedule icon-16 text-gray-600"></span>
         <span class="ms-2 text-dark">{{
-          data?.dueDate 
+          data?.dueDate | fmDT:'dmy':true
         }}</span>
       </div>
     </div>

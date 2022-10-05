@@ -3,7 +3,6 @@
   [formModel]="formModel"
   [dataItem]="itemDetail"
   [header]="header"
-  [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
   (clickMF)="openFormFuncID($event)"
@@ -75,11 +74,11 @@
       <codx-label default="Thời gian:" name="lblBookingOn" class="fw-bold me-1"></codx-label>
       <div class=" ms-1 text-gray-600">
         <span>
-          {{ itemDetail?.startDate}}
+          {{ itemDetail?.startDate | fmDT:'dmy':true}}
         </span>
         <span> - </span>
         <span>
-          {{ itemDetail?.endDate}}          
+          {{ itemDetail?.endDate | fmDT:'dmy':true}}          
         </span>
       </div>
     </div>
@@ -146,60 +145,6 @@
     </div>
 
   </ng-template>
-
-  <ng-template #body>
-    <!-- <div class="tab-horizone h-od-tab h-100">
-      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-        <li [ngbNavItem]="1">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i
-                class="icon-info me-2"
-                [ngClass]="{ 'text-primary': active === 1 }"
-              ></i
-              ><span>Nội dung</span>
-            </div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container *ngTemplateOutlet="defaulEmpt">
-              <span>{{itemDetail.memo}}</span>
-            </ng-container>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="2">
-          <a ngbNavLink>
-            <div class="d-flex align-item-center">
-              <i
-                class="icon-layers me-2"
-                [ngClass]="{ 'text-primary': active === 2 }"
-              ></i
-              ><span>Văn phòng phẩm</span>
-            </div>
-          </a>
-          <ng-template ngbNavContent>
-            <ng-container
-              *ngIf="
-                data?.tasks && data?.tasks[0] && data?.tasks[0].length > 0;
-                else defaulEmpt
-              "
-            >
-              <codx-treeview
-                #treeAdd
-                id="treeAdd"
-                [data]="data?.tasks[0]"
-                [showSearch]="false"
-                [itemTemplate]="templateorg"
-                [autoLoad]="false"
-                [isOutput]="true"
-                [isLoadChild]="false"
-              ></codx-treeview>
-            </ng-container>
-          </ng-template>
-        </li>
-      </ul>
-      <div [ngbNavOutlet]="nav" class="pt-5"></div>
-    </div>-->
-  </ng-template> 
 
   <ng-template #footer>
     <approval-tabs></approval-tabs>
@@ -285,7 +230,7 @@
       <div class="d-flex mt-2">
         <span class="icon-schedule icon-16 text-gray-600"></span>
         <span class="ms-2 text-dark">{{
-          data?.dueDate 
+          data?.dueDate | fmDT:'dmy':true
         }}</span>
       </div>
     </div>

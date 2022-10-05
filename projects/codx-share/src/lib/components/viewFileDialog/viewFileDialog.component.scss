@@ -9,8 +9,8 @@ view-file,
 }
 
 .viewfile {
-    background-color: #000c;
     opacity: 1;
+    height: 35px;
 }
 div.viewfile-content {
     z-index: 9;
@@ -72,16 +72,15 @@ ngb-modal-window {
 // }
 
 #dm_viewFile{
-    height: calc(100vh - 112px) !important;
-    overflow: auto;
-    margin-top: 10px;
+    height: calc(100% - 35px) !important;
+    //overflow: auto;
     // iframe{
     //     height: calc(100vh - 120px)!important;
     // }
 }
     
  #viewfiledalog{
-     height: calc(100vh - 150px);
+     height: 100%;
      display: flex;
      align-items: center;
      justify-content: center;
