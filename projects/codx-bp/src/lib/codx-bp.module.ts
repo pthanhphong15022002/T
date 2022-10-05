@@ -26,7 +26,7 @@ export const routes: Routes = [
       },
       {
         path: 'processstep/:funcID',
-        component: ProcessesComponent,
+        component: ProcessStepComponent,
       }
     ]
   }
