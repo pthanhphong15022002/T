@@ -807,6 +807,17 @@ export class CodxEsService {
     );
   }
 
+  getListCAByBytes(fileUrl) {
+    let data = [fileUrl];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetCAInPDFByBytesAsync',
+      data
+    );
+  }
+
   getListSFByID(lstID: string[]): Observable<any> {
     return this.api.execSv(
       'ES',

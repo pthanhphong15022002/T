@@ -96,7 +96,7 @@ export class SettingCalendarComponent
       PopupAddCalendarComponent,
       'Tạo lịch làm việc',
       500,
-      400,
+      null,
       '',
       [this.formModel, this.calendarID]
     );
