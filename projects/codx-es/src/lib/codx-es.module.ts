@@ -47,10 +47,10 @@ import {
   NgxExtendedPdfViewerService,
 } from 'ngx-extended-pdf-viewer';
 import { PopupCaPropsComponent } from './sign-file/popup-ca-props/popup-ca-props.component';
-import { PdfComponent } from './sign-file/pdf/pdf.component';
 import { PopupAddSignatureComponent } from './setting/signature/popup-add-signature/popup-add-signature.component';
 import { PopupAddCategoryComponent } from './setting/category/popup-add-category/popup-add-category.component';
 import { ESTemplateComponent } from './templateHTML/template.component';
+import { PdfComponent } from './sign-file/pdf/pdf.component';
 
 const routes: Routes = [
   {
