@@ -171,17 +171,19 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
     } else this.getParam();
-
+  
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
     this.titleAction = dt?.data[3];
-     this.functionID = dt?.data[4];
+    this.functionID = dt?.data[4];
     this.taskCopy = dt?.data[5];
     this.dialog = dialog;
     this.user = this.authStore.get();
   
-    if(this.showAssignTo) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
-
+    // if(this.functionID!='TMT0203' && this.functionID!='TMT0201'&& this.functionID!='TMT0202'){
+    //   if(this.showAssignTo ) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
+    // }
+    
     this.cache.functionList(this.functionID).subscribe(f=>{
         if(f){
           this.cache

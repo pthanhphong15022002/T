@@ -68,7 +68,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   peopleAttend = [];
   tempArray = [];
 
-  returnData:any;
+  returnData: any;
   checkLoopS = true;
   checkLoopE = true;
   checkLoop = true;
@@ -365,7 +365,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     return true;
   }
 
-  onSaveForm() {
+  approve() {}
+
+  onSaveForm(approval: boolean = false) {
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -418,13 +420,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       .save((opt: any) => this.beforeSave(opt))
       .subscribe(async (res) => {
         if (res.save || res.update) {
-          if(!res.save){
-            this.returnData=res.update;
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
           }
-          else{
-            this.returnData=res.save;
-          }          
-          if (this.returnData.recID && this.returnData.attachments> 0) {
+          if (this.returnData.recID && this.returnData.attachments > 0) {
             this.attachment.objectId = this.returnData.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
@@ -434,23 +435,32 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               }
             );
           }
-          debugger;
-          this.codxEpService
-            .release(this.returnData, 'EP_Bookings', this.formModel.funcID)
-            .subscribe((res) => {
-              debugger;
-              if (res?.msgCodeError == null && res?.rowCount) {
-                this.notificationsService.notifyCode('ES007');
-              } else {
-                this.notificationsService.notifyCode(res?.msgCodeError);
-              }
-            });
-          this.dialogRef && this.dialogRef.close();
+          if (approval) {
+            this.codxEpService
+              .getCategoryByEntityName(this.formModel.entityName)
+              .subscribe((res: any) => {
+                this.codxEpService
+                  .release(
+                    this.returnData,
+                    res.processID,
+                    'EP_Bookings',
+                    this.formModel.funcID
+                  )
+                  .subscribe((res) => {
+                    if (res?.msgCodeError == null && res?.rowCount) {
+                      this.notificationsService.notifyCode('ES007');
+                    } else {
+                      this.notificationsService.notifyCode(res?.msgCodeError);
+                    }
+                  });
+              });
+          }
         } else {
           this.notificationsService.notifyCode('E0011');
           return;
         }
       });
+    this.dialogRef && this.dialogRef.close();
   }
 
   UpdateAttendeesList() {
