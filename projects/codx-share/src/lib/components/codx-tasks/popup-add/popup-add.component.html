@@ -89,7 +89,7 @@
       (param?.PlanControl != '0' || param?.PlanControl == null) && showPlan
     ">
     <div class="form-group row extend-more">
-      <div class="col-5 pe-0">
+      <div class="col-5">
         <div>
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
@@ -240,7 +240,7 @@
           </div>
         </div>
         <div class="ms-3" *ngIf="!readOnly">
-          <a class="btn btn-icon btn-sm btn-light-danger" (click)="onDeleteUser(item)">
+          <a class="text-dark text-hover-danger cursor-pointer" (click)="onDeleteUser(item)">
             <div class="d-flex align-item-center">
               <span class="icon-close icon-18"></span>
             </div>
