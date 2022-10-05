@@ -685,6 +685,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'ODT210': {
         this.odService.bookMark(datas.recID).subscribe((item) => {
           if (item.status == 0) {
+            this.view.dataService.onAction.next({ type: 'update', data: item.data });
             this.view.dataService.update(item.data).subscribe(item=>{
               //this.view.dataService.setDataSelected(datas);
             });

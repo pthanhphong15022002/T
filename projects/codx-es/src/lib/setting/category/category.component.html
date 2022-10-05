@@ -147,3 +147,13 @@
   >
   </codx-temp-full>
 </ng-template>
+
+<ng-template #itemAction let-data>
+  <codx-mfunc
+    [formModel]="viewBase.formModel"
+    (clickMF)="clickMF($event, data)"
+    [dataItem]="data"
+    [type]="'hover'"
+  >
+  </codx-mfunc>
+</ng-template>

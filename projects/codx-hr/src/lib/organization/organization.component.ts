@@ -73,36 +73,36 @@ export class OrgorganizationComponent extends UIComponent {
     }
   }
 
-  ngAfterViewInit(): void {
-    // this.views = [
-    //   {
-    //     id: '1',
-    //     type: ViewType.tree_orgchart,
-    //     sameData: true,
-    //     active: true,
-    //     model: {
-    //       resizable: true,
-    //       template: this.templateTree,
-    //       panelRightRef: this.templateRight,
-    //       template2: this.templateOrgchart,
-    //     },
-    //   },
-    //   {
-    //     id: '1',
-    //     type: ViewType.tree_card,
-    //     sameData: true,
-    //     active: false,
-    //     model: {
-    //       resizable: true,
-    //       template: this.templateTree,
-    //       panelRightRef: this.templateRight,
-    //       template2: this.templateCard,
-    //     },
-    //   },
-    // ];
-    this.view.dataService.parentIdField = 'ParentID';
-    this.detectorRef.detectChanges();
-  }
+  // ngAfterViewInit(): void {
+  //   this.views = [
+  //     {
+  //       id: '1',
+  //       type: ViewType.tree_orgchart,
+  //       sameData: true,
+  //       active: true,
+  //       model: {
+  //         resizable: true,
+  //         template: this.templateTree,
+  //         panelRightRef: this.templateRight,
+  //         template2: this.templateOrgchart,
+  //       },
+  //     },
+  //     {
+  //       id: '1',
+  //       type: ViewType.tree_card,
+  //       sameData: true,
+  //       active: false,
+  //       model: {
+  //         resizable: true,
+  //         template: this.templateTree,
+  //         panelRightRef: this.templateRight,
+  //         template2: this.templateCard,
+  //       },
+  //     },
+  //   ];
+  //   this.view.dataService.parentIdField = 'ParentID';
+  //   this.detectorRef.detectChanges();
+  // }
 
   orgChartAfterView(evt: any) {
     this.detailComponent = evt;

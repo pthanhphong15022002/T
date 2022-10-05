@@ -100,7 +100,8 @@ import { PopupAddEventComponent } from './components/setting-calendar/popup-add-
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
 import { ActiviesApprovalListComponent } from './layout/drawers/activies-approval-list/activies-approval-list.component';
 import { ActiviesSliderComponent } from './layout/drawers/activies-approval-list/activies-slider/activies-slider.component';
-
+import { DocumentEditorAllModule , DocumentEditorContainerAllModule } from '@syncfusion/ej2-angular-documenteditor';
+import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -195,6 +196,9 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     BoldReportDesignerModule,
     BoldReportViewerModule,
     ReactiveFormsModule,
+    DocumentEditorAllModule,
+    DocumentEditorContainerAllModule,
+    SpreadsheetAllModule
   ],
   exports: [T_Component, T_Pipe],
 })

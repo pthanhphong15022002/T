@@ -1,18 +1,25 @@
-import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, CRUDService, DialogRef, NotificationsService, RequestOption, ScrollComponent, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 
 @Component({
-  selector: 'lib-positions',
-  templateUrl: './positions.component.html',
-  styleUrls: ['./positions.component.css']
+  selector: 'lib-reportingline',
+  templateUrl: './reportingline.component.html',
+  styleUrls: ['./reportingline.component.css']
 })
-export class PositionsComponent extends UIComponent {
+export class ReportinglineComponent extends UIComponent {
+
+  @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('p') public popover: NgbPopover;
+  @ViewChild('templateTree') templateTree: TemplateRef<any>;
+  @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
+  @ViewChild("listview") listview: CodxListviewComponent;
+  @Input() showMoreFunc = true;
+
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   dialog!: DialogRef;
@@ -23,12 +30,6 @@ export class PositionsComponent extends UIComponent {
   itemSelected: any;
   countResource = 0;
   listEmployeeSearch = [];
-
-  @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
-  @ViewChild('p') public popover: NgbPopover;
-  @ViewChild('templateTree') templateTree: TemplateRef<any>;
-  @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
-  @ViewChild("listview") listview: CodxListviewComponent;
   popoverCrr: any;
   allRoles: any;
   lstRoles: any;
@@ -40,6 +41,7 @@ export class PositionsComponent extends UIComponent {
   predicate = "";
   dataValue: string = "";
   isLoaded: boolean = false;
+  positionID: any;
 
   constructor(
     private changedt: ChangeDetectorRef,
@@ -104,7 +106,7 @@ export class PositionsComponent extends UIComponent {
         model: {
           resizable: true,
           template: this.templateTree,
-          panelRightRef: this.panelRightRef,
+          panelRightRef: this.itemViewList,
         }
       },
     ];
@@ -168,8 +170,9 @@ export class PositionsComponent extends UIComponent {
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'Delete';
-
-    opt.data = itemSelected.employeeID;
+    opt.className = 'PositionsBusiness';
+    opt.assemblyName = 'ERM.Business.HR';
+    opt.data = itemSelected.positionID;
     return true;
   }
 
@@ -177,42 +180,27 @@ export class PositionsComponent extends UIComponent {
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
       this.beforeDel(opt)).subscribe((res) => {
-        if (res[0]) {
+        if (res) {
           this.itemSelected = this.view.dataService.data[0];
+          this.changedt.detectChanges();
         }
       }
       );
+
   }
 
   loadEmployByCountStatus(p, posID, status) {
     this.listEmployee = [];
     this.listEmployeeSearch = [];
     var stt = status.split(';');
-    // this.popover["_elementRef"] = new ElementRef(el);
-
-    // if (p.isOpen()) {
-    //   p.close();
-    // }
-    // this.posInfo = {};
-
     this.codxHr.loadEmployByCountStatus(posID, stt)
       .subscribe(response => {
-
         this.listEmployee = response;
         this.listEmployeeSearch = response;
         this.countResource = response.length;
-
         p.open();
         this.popover = p;
-
       });
-    // this.codxHr.loadEmployByCountStatus(posID, stt).pipe()
-    //   .subscribe(response => {
-
-    //     this.employees = response || [];
-    //     this.popover.open();
-
-    //   });
   }
 
   selectedChange(evt: any) {
