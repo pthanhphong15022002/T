@@ -3,36 +3,36 @@
 </codx-layout-add>
 
 <ng-template #tabDescription>
-    <div class="form-group" *ngIf="form?.formGroup">
-        <div class="form-group row mt-3">
+    <div class="mb-5" *ngIf="form?.formGroup">
+        <div class="form-group mt-3">
             <codx-label fiedName="UserID" [formModel]="form?.formModel">
             </codx-label>
             <codx-input field="userID" [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup"
                 [formModel]="form.formModel">
             </codx-input>
         </div>
-        <div class="form-group mt-3">
+        <div class="form-group">
             <codx-label fiedName="UserName" [formModel]="form?.formModel">
             </codx-label>
             <codx-input field="userName" [Group]="form.formGroup" [formModel]="form.formModel"
                 (valueChange)="valueChangeU($event)">
             </codx-input>
         </div>
-        <div class="form-group row mt-3">
+        <div class="form-group">
             <codx-label fiedName="lblDescription" [formModel]="form?.formModel">
             </codx-label>
             <codx-input field="description" [Group]="form.formGroup" [formModel]="form.formModel"
                 (valueChange)="valueBU($event)">
             </codx-input>
         </div>
-        <div class="form-group row mt-3">
+        <div class="form-group">
             <codx-label fiedName="Email" [formModel]="form?.formModel">
             </codx-label>
             <codx-input field="email" [Group]="form.formGroup" [formModel]="form.formModel"
                 (valueChange)="valueChangeM($event)" [disabled]="formType == 'edit' ? true : false">
             </codx-input>
         </div>
-        <div class="d-flex justify-content-between algin-items-center mt-3">
+        <div class="d-flex justify-content-between algin-items-center">
             <div class="d-flex algin-items-center">
                 <span class="icon-person icon-18 me-1"></span>
                 <codx-label class="fw-bold" fiedName="Users" [formModel]="form?.formModel">
@@ -49,15 +49,14 @@
     </ng-container>
     <div class="float-left" #listUserCbb *ngIf="dataUserCbb.length > 0">
         <div class="d-flex" *ngFor="let item of dataUserCbb; index as i">
-            <div
-                class="d-flex justify-content-between user-mini-nav rounded rounded-4 bg-gray-200 align-items-center me-3 mb-2">
+            <div class="d-flex user-mini-nav rounded rounded-4 bg-gray-200 align-items-center me-1 mb-1">
                 <div class="me-2">
                     <codx-img #imageUpload [width]="20" [funcId]="formModel?.funcID" [objectId]="item.userID"
                         [objectType]="formModel?.entityName" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="false">
                     </codx-img>
                 </div>
-                <div class="text-dark me-3 text-nowrap">
+                <div class="text-dark me-2 text-nowrap">
                     <span>{{item.userName}}</span>
                 </div>
                 <div class="text-hover-danger mt-1 me-1">
