@@ -1,5 +1,5 @@
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [dialog]="dialog"></codx-form>
-<ng-template #body><div class="sprint-css">
+<ng-template #body>
     <div class="row m-0 bg-body mb-3 p-3 sprints-task-header">
       <div class="col-8">
         <div class="d-flex align-items-center">
@@ -91,11 +91,11 @@
           </ng-container>
           <ng-container *ngIf="name == 'Tasks'">
             <codx-tasks-share
-              *ngIf="dataObj"
-              [dataObj]="dataObj"
+              *ngIf="dataObjTasks"
+              [dataObj]="dataObjTasks"
               [showButtonAdd]="showButtonAdd"
               [showMoreFunc]="showMoreFunc"
-              [funcID]="funcID"
+              [funcID]="'TMT03011'"
             >
             </codx-tasks-share>
           </ng-container>
@@ -128,12 +128,13 @@
           </ng-container>
           <ng-container *ngIf="name == 'Meetings'">
             <codx-tmmeetings
-              [dataObj]="dataObj"
+              [funcID] ="'TMT0501'"
+              [dataObj]="dataObjMeetings"
               [showButtonAdd]="false"
             ></codx-tmmeetings>
           </ng-container>
         </div>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 </ng-template>

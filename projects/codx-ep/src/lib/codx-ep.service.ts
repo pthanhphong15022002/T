@@ -175,7 +175,7 @@ export class CodxEpService {
   }
 
   getStationeryGroup(model: any) {
-    return this.api.callSv(
+    return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
@@ -218,6 +218,16 @@ export class CodxEpService {
     );
   }
 
+  getQuotaByResourceID(resourceID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourceQuotaBusiness',
+      'GetQuotaByResourceIDAsync',
+      [resourceID]
+    );
+  }
+
   update(model: any, isAdd: boolean) {
     return this.api.callSv(
       'EP',
@@ -228,13 +238,19 @@ export class CodxEpService {
     );
   }
 
-  getQuotaByResourceID(resourceID: string) {
+  editBooking(
+    data: any,
+    isAdd: boolean,
+    attendees: any,
+    items: any,
+    order: any
+  ) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
-      'ResourceQuotaBusiness',
-      'GetQuotaByResourceIDAsync',
-      [resourceID]
+      'BookingsBusiness',
+      'AddEditItemAsync',
+      [data, isAdd, attendees, items, order]
     );
   }
 
