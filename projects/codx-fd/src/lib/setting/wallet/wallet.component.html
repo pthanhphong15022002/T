@@ -9,34 +9,41 @@
                                 <li class="menu-item" (click)="redirectPage('notificationFedback')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-near_me icon-20 mr-2"></i>
-                                        <codx-label fiedName="FeedbackMessage"  default='Thông điệp phản hồi'>
-                                    </codx-label>
+                                        <codx-label fiedName="FeedbackMessage" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Thông điệp phản hồi'>
+                                        </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemCategory')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-format_list_bulleted icon-20 mr-2"></i>
-                                        <codx-label fiedName="Category" [formModel]=""
-                                        default='Danh mục'>
-                                    </codx-label>
+                                        <codx-label fiedName="Category" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Danh mục'>
+                                        </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item menu-item-active">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-account_balance_wallet icon-20 mr-2"></i>
-                                        Ví nhân viên
+                                        <codx-label name="lblWallet" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
+                                        </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemRankDedication')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-credit_card icon-20 mr-2"></i>
-                                        Hạng cống hiến
+                                        <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Hạng cống hiến'>
+                                        </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemStatiscal')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-bar_chart icon-20 mr-2"></i>
-                                        Thống kê
+                                        <codx-label name="lblStatistical" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Thống kê'>
+                                        </codx-label>
                                     </a>
                                 </li>
                             </ul>
@@ -70,7 +77,7 @@
                                         <codx-Input type="select" name="select" class="control-vll" placeholder=""
                                             ngDefaultControl refValue="L1475" field="ActivedOn" [value]="item.ActivedOn"
                                             (valueChange)="changValueListPopup($event)">
-                                        </codx-Input> 
+                                        </codx-Input>
                                         <span
                                             class="w-20px min-w-20px h-20px ml-3 d-flex justify-content-center"></span>
                                     </div>
@@ -232,7 +239,7 @@
                                         <div class="d-flex align-items-center ml-4">
                                             <codx-input type="text" class="form-control w-50px" disabled
                                                 [(ngModel)]="item.DefaultCoCoins" placeholder="">
-                                                </codx-input>
+                                            </codx-input>
                                             <span class="icon-edit_file text-hover-primary icon-20 ml-3"
                                                 (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'DefaultCoCoins')"></span>
                                         </div>
@@ -277,7 +284,8 @@
                                                 |async}}
                                             </div>
                                             <div class="text-dark-50">
-                                                {{'Chương trình tự động refresh lại quỹ cho về số quy định theo chu kỳ đã thiết lập' | lang: 'SettingWallet':'lblAutoRefreshSetting'
+                                                {{'Chương trình tự động refresh lại quỹ cho về số quy định theo chu kỳ
+                                                đã thiết lập' | lang: 'SettingWallet':'lblAutoRefreshSetting'
                                                 |async}}
                                             </div>
                                         </div>
@@ -339,7 +347,7 @@
                                         <div class="d-flex align-items-center ml-4">
                                             <cdox-input type="text" class="form-control w-50px" disabled
                                                 [(ngModel)]="item.DefaultMyKudos" placeholder="">
-                                                </cdox-input>
+                                            </cdox-input>
                                             <span class="icon-edit_file text-hover-primary icon-20 ml-3"
                                                 (click)="openFormChangeCoin(changeCoin, 'DefaultMyKudos')"></span>
                                         </div>
@@ -352,7 +360,8 @@
                                                 'SettingWallet':'lblRefreshBalanceDedicate' |async}}
                                             </div>
                                             <div class="text-dark-50">
-                                                {{'Chương trình tự động refresh lại điểm cống hiến về số quy định theo chu kỳ đã thiết lập' | lang: 'SettingWallet':'lblResetMyKudos'
+                                                {{'Chương trình tự động refresh lại điểm cống hiến về số quy định theo
+                                                chu kỳ đã thiết lập' | lang: 'SettingWallet':'lblResetMyKudos'
                                                 |async}}
                                             </div>
                                         </div>
@@ -422,7 +431,7 @@
                 <div class="col-9">
                     <cdox-input type="number" class="form-control" [(ngModel)]="item.MaxCoinsForEGift"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="10">
-                        </cdox-input>
+                    </cdox-input>
                 </div>
             </div>
             <div class="form-group row mt-3">
@@ -453,9 +462,9 @@
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
-                    <codx-input type="switch" name="checkbox" class="" ngDefaultControl [field]="item.recID"
-                        (valueChange)="onSaveStatusPolicy($event, null)" [checked]="item.actived" label="">
-                    </codx-input>
+                <codx-input type="switch" name="checkbox" class="" ngDefaultControl [field]="item.recID"
+                    (valueChange)="onSaveStatusPolicy($event, null)" [checked]="item.actived" label="">
+                </codx-input>
             </span>
             <span class="w-20px h-20px ml-3 d-flex justify-content-center">
                 <span class="icon-keyboard_arrow_right icon-20" style="cursor: pointer;"
@@ -485,7 +494,7 @@
                 <div class="col-9">
                     <codx-input type="number" class="form-control" [(ngModel)]="objectUpdateCoin[this.fieldUpdateCoin]"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="10">
-                        </codx-input>
+                    </codx-input>
                 </div>
             </div>
         </div>
