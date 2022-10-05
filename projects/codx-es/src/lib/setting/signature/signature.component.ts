@@ -50,7 +50,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   @ViewChild('imageStamp', { static: true }) imageStamp;
   @ViewChild('imageSignature1', { static: true }) imageSignature1;
   @ViewChild('imageSignature2', { static: true }) imageSignature2;
+  @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
+
   isAfterRender = false;
+  itemSelected: any = {};
 
   devices: any;
   editform: FormGroup;
@@ -58,6 +61,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   columnsGrid;
   dataSelected: any;
   dialog!: DialogRef;
+  funcList: any = {};
 
   constructor(
     private callfunc: CallFuncService,
@@ -68,6 +72,9 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     private esService: CodxEsService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cacheSv.functionList(this.funcID).subscribe((func) => {
+      this.funcList = func;
+    });
   }
 
   views: Array<ViewModel> = [];
@@ -164,6 +171,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               template: this.oTPControl,
               width: 150,
             },
+            { field: '', headerText: '', width: 20, template: this.itemAction },
           ];
           this.views = [
             {
@@ -191,13 +199,13 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.addNew();
+        this.addNew(evt);
         break;
       case 'btnEdit':
-        this.edit();
+        this.edit(evt);
         break;
       case 'btnDelete':
-        this.delete();
+        this.delete(evt);
         break;
     }
   }
@@ -210,7 +218,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       option.Width = '550px';
       let dialogAdd = this.callfunc.openSide(
         PopupAddSignatureComponent,
-        { isAdd: true },
+        {
+          isAdd: true,
+          headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+        },
         option
       );
       dialogAdd.closed.subscribe((x) => {
@@ -230,7 +241,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      this.viewBase.dataService.dataSelected = evt;
+      this.viewBase.dataService.dataSelected = evt?.data;
 
       this.viewBase.dataService
         .edit(this.viewBase.dataService.dataSelected)
@@ -243,7 +254,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
           let dialogEdit = this.callfunc.openSide(
             PopupAddSignatureComponent,
-            [evt, false],
+            {
+              isAdd: false,
+              headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+            },
             option
           );
           dialogEdit.closed.subscribe((x) => {
@@ -260,8 +274,8 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
   delete(evt?) {
     let deleteItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
+    if (evt?.data) {
+      deleteItem = evt?.data;
     }
     this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
       console.log(res);
@@ -273,12 +287,13 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event: any, data) {
+    event.data = data;
     switch (event?.functionID) {
       case 'SYS03':
-        this.edit(data);
+        this.edit(event);
         break;
       case 'SYS02':
-        this.delete(data);
+        this.delete(event);
         break;
     }
   }

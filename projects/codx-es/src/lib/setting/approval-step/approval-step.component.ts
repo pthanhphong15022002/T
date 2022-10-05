@@ -127,6 +127,8 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
         this.esService.getApprovalSteps(gridModels).subscribe((res) => {
           if (res && res?.length >= 0) {
             this.lstStep = res;
+            console.log(this.lstStep);
+
             this.currentStepNo = this.lstStep.length + 1;
             this.lstOldData = [...res];
             this.cr.detectChanges();
@@ -209,34 +211,26 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   delete(approvalStep) {
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notifySvr
-      .alert(
-        'Thông báo',
-        'Hệ thống sẽ thu hồi quyền đã chia sẻ của người này bạn có muốn xác nhận hay không ?',
-        config
-      )
-      .closed.subscribe((x) => {
-        if (x.event.status == 'Y') {
-          let i = this.lstStep.indexOf(approvalStep);
+    this.notifySvr.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        let i = this.lstStep.indexOf(approvalStep);
 
-          if (i != -1) {
-            this.lstStep.splice(i, 1);
-            this.isEdited = true;
-          }
-          if (approvalStep.recID && approvalStep.recID != null) {
-            this.lstDeleteStep.push(approvalStep);
-          }
-          for (let i = 0; i < this.lstStep.length; i++) {
-            this.lstStep[i].stepNo = i + 1;
-          }
-
-          if (this.lstStep.length == 0) {
-            this.isDeleteAll = true;
-          }
+        if (i != -1) {
+          this.lstStep.splice(i, 1);
+          this.isEdited = true;
         }
-      });
+        if (approvalStep.recID && approvalStep.recID != null) {
+          this.lstDeleteStep.push(approvalStep);
+        }
+        for (let i = 0; i < this.lstStep.length; i++) {
+          this.lstStep[i].stepNo = i + 1;
+        }
+
+        if (this.lstStep.length == 0) {
+          this.isDeleteAll = true;
+        }
+      }
+    });
   }
 
   openPopupAddAppStep(data) {
@@ -265,21 +259,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   updateApprovalStep(isAddNew) {
-    // if (!isAddNew) {
-    //   this.esService.editApprovalStep().subscribe((res) => {
-    //     console.log('result edit appp', res);
-    //   });
-
-    //   this.esService.deleteApprovalStep().subscribe((res) => {
-    //     console.log('result delete aaappppp', res);
-    //   });
-    // } else {
-    //   //Them moi
-    //   this.esService.addNewApprovalStep().subscribe((res) => {
-    //     console.log('result add new appp', res);
-    //   });
-    // }
-
     this.esService.editApprovalStep().subscribe((res) => {
       console.log('result edit appp', res);
       if (res) {

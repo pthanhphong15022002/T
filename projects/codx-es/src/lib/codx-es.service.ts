@@ -115,7 +115,6 @@ export class CodxEsService {
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,
-    data: any = null,
     gridViewSetup: any = null
   ) {
     const invalid = [];
@@ -142,7 +141,7 @@ export class CodxEsService {
               );
             } else {
               this.notificationsService.notifyCode(
-                'E0001',
+                'SYS028',
                 0,
                 '"' + gridViewSetup[fieldName].headerText + '"'
               );
@@ -151,7 +150,7 @@ export class CodxEsService {
         });
     } else {
       this.notificationsService.notifyCode(
-        'E0001',
+        'SYS028',
         0,
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
