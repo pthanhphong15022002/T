@@ -75,11 +75,11 @@
       <codx-label default="Thời gian:" name="lblBookingOn" class="fw-bold me-1"></codx-label>
       <div class=" ms-1 text-gray-600">
         <span>          
-          {{ itemDetail?.startDate }}
+          {{ itemDetail?.startDate | fmDT:'dmy':true }}
         </span>
         <span> - </span>
         <span>
-          {{ itemDetail?.endDate}}
+          {{ itemDetail?.endDate | fmDT:'dmy':true}}
         </span>
       </div>
     </div>
@@ -304,7 +304,7 @@
       <div class="d-flex mt-2">
         <span class="icon-schedule icon-16 text-gray-600"></span>
         <span class="ms-2 text-dark">{{
-          data?.dueDate 
+          data?.dueDate | fmDT:'dmy':true
         }}</span>
       </div>
     </div>

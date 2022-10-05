@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output } from '@angular/core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { CodxHrService } from '../../codx-hr.service';
 import { HR_Positions } from '../../model/HR_Positions.module';
 
 @Component({
@@ -16,11 +17,14 @@ export class PopupAddPositionsComponent implements OnInit {
   action = '';
   position: HR_Positions = new HR_Positions();
   data: any;
+  @Output() Savechange = new EventEmitter();
 
   constructor(
     private detectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private authStore: AuthStore,
+    private api: ApiHttpService,
+    private reportingLine: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
   ) {
@@ -105,19 +109,43 @@ export class PopupAddPositionsComponent implements OnInit {
   }
 
   OnSaveForm() {
-    // this.dialog.dataService
+    //   this.dialog.dataService
     //   .save((option: any) => this.beforeSave(option))
     //   .subscribe((res) => {
-    //     if (res.save) {
-    //       this.dialog.close();
-    //     }
+    //     this.dialog.close(res)
     //   });
+    // this.detectorRef.detectChanges();
 
-      this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe();
-    this.detectorRef.detectChanges();
-    this.dialog.close();
+    this.api.exec("ERM.Business.HR", "PositionsBusiness", "UpdateAsync", [this.data, this.isNew]).subscribe(res => {
+      if (res) {
+        if (res) {
+          if (this.isNew) {
+            this.reportingLine.reportingLineComponent.addPosition(res);
+          }
+          else {
+            this.reportingLine.positionsComponent.updatePosition(res);
+          }
+          // if (continune) {
+          //   if (this.isNew) {
+          //     this.dataBind = {};
+          //     this.api.exec('ERM.Business.HR', 'PositionsBusiness', 'GetAsync', "")
+          //       .subscribe((o: any) => {
+          //         if (!o) return;
+
+          //         this.dataBind = o;
+          //         this.detectorRef.detectChanges();
+          //       });
+          //   }
+          //   return;
+          // }
+          this.Savechange.emit(res);
+          this.dialog.close(res);
+        }
+        else {
+          this.notiService.notify("Error");
+        }
+      }
+    });
   }
 
   addPosition() {

@@ -43,6 +43,9 @@ export class HomeComponent extends UIComponent {
   //  @ViewChild('attachment2') attachment2: AttachmentComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('view') codxview!: any;
+  
+
+
   currView?: TemplateRef<any>;
   path: string;
   button?: ButtonModel;
@@ -68,6 +71,12 @@ export class HomeComponent extends UIComponent {
   predicates: any;
   values: any;
   searchAdvance: boolean;
+
+  //icon Sort
+  itemSelected: any;
+
+
+
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
@@ -669,6 +678,7 @@ export class HomeComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.views = [
+      
       {
         id: '1',
         icon: 'icon-appstore',
@@ -703,7 +713,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        active: true,
+        //active: false,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -718,6 +728,7 @@ export class HomeComponent extends UIComponent {
         text: 'List',
         type: ViewType.treedetail,
         sameData: true,
+        //active: false,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
@@ -762,7 +773,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        active: true,
+        //active: true,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -776,6 +787,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-format_list_bulleted',
         text: 'List',
         type: ViewType.treedetail,
+        //active: false,
         sameData: true,
         model: {
           template: this.templateMain,

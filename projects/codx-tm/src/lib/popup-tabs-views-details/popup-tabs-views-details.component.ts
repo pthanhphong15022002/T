@@ -26,7 +26,8 @@ export class PopupTabsViewsDetailsComponent
   iterationID: any;
   functionParent: any;
   meetingID: any;
-  dataObj: any;
+  dataObjTasks: any;
+  dataObjMeetings: any;
   user: any;
   funcID: any;
   tabControl: TabModelSprints[] = [];
@@ -59,8 +60,8 @@ export class PopupTabsViewsDetailsComponent
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.iterationID = dt?.data.iterationID;
-    this.meetingID = dt?.data.meetingID;
+    this.iterationID = dt?.data?.iterationID;
+    this.meetingID = dt?.data?.meetingID;
     this.dialog = dialog;
   }
 
@@ -80,7 +81,7 @@ export class PopupTabsViewsDetailsComponent
           this.nameObj = res.iterationName;
           this.projectID = res?.projectID;
           this.resources = res.resources;
-          this.dataObj = {
+          this.dataObjTasks = {
             projectID: this.projectID ? this.projectID : '',
             resources: this.resources ? this.resources : '',
             iterationID: this.iterationID ? this.iterationID : '',
@@ -113,7 +114,7 @@ export class PopupTabsViewsDetailsComponent
             resourceTaskControl.length > 0
               ? resourceTaskControl.join(';')
               : ''),
-            (this.dataObj = {
+            (this.dataObjMeetings = {
               projectID: this.projectID ? this.projectID : '',
               resources: this.resources,
               fromDate: res.fromDate ? moment(new Date(res.fromDate)) : '',

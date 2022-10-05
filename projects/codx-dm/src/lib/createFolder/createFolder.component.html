@@ -255,11 +255,11 @@
                         <td [innerHtml]="sub.description"></td>
                         <td>
                           <div class="action-menu d-flex align-items-center cursor-pointer">
-                            <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onDeleteSub(i)">
-                              <i class="icon-close text-primary icon-18"></i>
-                            </div>
                             <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onEditSub(i)">
                               <i class="icon-edit text-primary icon-18"></i>
+                            </div>
+                            <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="onDeleteSub(i)">
+                              <i class="icon-close text-primary icon-18 text-danger"></i>
                             </div>
                           </div>
                           <!-- <div ngbDropdown class="view-more ms-2">

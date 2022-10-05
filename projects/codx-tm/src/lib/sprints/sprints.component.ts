@@ -341,10 +341,11 @@ export class SprintsComponent extends UIComponent {
     // var obj = {
     //   iterationID: data.iterationID,
     //   meetingID: null,
+    //   viewMode : data?.viewMode
     // };
     // let dialogModel = new DialogModel();
-    // dialogModel.IsFull = true;
-    // this.dialog = this.callfc.openForm(
+    //  dialogModel.IsFull = true;
+    //  var dialog = this.callfc.openForm(
     //   PopupTabsViewsDetailsComponent,
     //   '',
     //   this.widthWin,
@@ -354,7 +355,7 @@ export class SprintsComponent extends UIComponent {
     //   '',
     //   dialogModel
     // );
-    // this.dialog.beforeClose.subscribe((res) => {
+    // dialog.beforeClose.subscribe((res) => {
     //   if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
     // });
   }
