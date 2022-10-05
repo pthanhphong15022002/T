@@ -71,6 +71,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -269,8 +275,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         this.delete(data);
         break;
     }
-  }
-  
+  }  
 
   onSelect(obj: any) {
     console.log(obj);

@@ -320,7 +320,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           let option = new SidebarModel();
           option.Width = '800px';
           option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
+          option.FormModel = this.formModel;
           this.dialog = this.callFuncService.openSide(
             PopupAddBookingRoomComponent,
             [this.view.dataService.dataSelected, false,this.popupTitle],
