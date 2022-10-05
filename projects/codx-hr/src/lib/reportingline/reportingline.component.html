@@ -1,19 +1,19 @@
-<codx-views #view [autoLoad]="true" idField="positionID" [views]="views" [selectedFirst]="true"
-    (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="click($event)" [formModel]="view.formModel"
-    [itemSelected]="itemSelected" [viewActiveType]="'15'">
+<codx-views #view [autoLoad]="true" idField="positionID" entityName="HR_Positions" [views]="views"
+    [selectedFirst]="true" (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="click($event)"
+    [formModel]="view.formModel" [itemSelected]="itemSelected" [viewActiveType]="'15'">
 </codx-views>
 
 <ng-template #templateTree let-data>
     {{data.positionName}}
 </ng-template>
 
-<ng-template #templateDetail let-data>
+<ng-template #templateDetail>
     <ng-container *ngIf="orgUnitID">
         <lib-orgchart-detail [orgUnitID]="orgUnitID" [formModel]="view.formModel"></lib-orgchart-detail>
     </ng-container>
 </ng-template>
 
-<ng-template #panelRightRef>
+<ng-template #itemViewList>
     <div class="d-flex flex-row panelmain" style="width: 100%;" *ngIf="dataValue">
         <div class="d-flex flex-column flex-column-fluid pr-1" data-kt-scroll="true"
             data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
@@ -23,6 +23,9 @@
                 entityName="HR_Positions" [predicate]="predicate" [dataService]="dtService" [selectFirst]="false"
                 [dataValue]="dataValue" (clickMF)="clickMF($event)" [typeMF]="'hover'" [formModel]="view.formModel">
             </codx-listview>
+            <!-- <positions-listview 
+                [dataValue]="dataValue" [formModel]="view.formModel">
+            </positions-listview> -->
         </div>
     </div>
 </ng-template>
@@ -146,8 +149,12 @@
             </div>
         </div>
     </div>
-
-    <!-- <div class="px-5">
+    <div class="w-10px min-w-10px" *ngIf="showMoreFunc">
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" [dataItem]="data"
+            type="hover">
+        </codx-mfunc>
+    </div>
+<!-- <div class="px-5">
         <div class="d-flex justify-content-between align-items-center border-bottom px-2 py-3">
             <div class="justify-content-start">
                 <codx-temp-full cardCss="card-template"

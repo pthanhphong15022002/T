@@ -18,7 +18,8 @@ export class CodxHrService {
   title = new BehaviorSubject<string>(null);
   layoutcpn = new BehaviorSubject<LayoutModel>(null);
   layoutChange = this.layoutcpn.asObservable();
-
+  reportingLineComponent: any;
+  positionsComponent: any;
   orgchart: any;
 
   constructor(private api: ApiHttpService) {}

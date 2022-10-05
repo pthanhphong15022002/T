@@ -272,7 +272,7 @@
           </a>
         </ng-container>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
-          <i class="icon-close icon-18" (click)="close(templateClose)"></i>
+          <i class="icon-close icon-18" (click)="close()"></i>
         </div>
       </div>
     </div>
@@ -624,74 +624,6 @@
           </codx-label>
         </a>
       </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #templateClose let-dialogClose>
-  <div class="card-alert alert alert-dismissible d-flex flex-column">
-    <button
-      type="button"
-      class="position-absolute top-0 end-0 m-2 btn btn-icon"
-      (click)="closeDialogTmp(dialogClose)"
-    >
-      <span class="icon-close icon-18"></span>
-    </button>
-    <div class="d-flex flex-stack my-7">
-      <div class="d-flex">
-        <span class="icon-help_outline me-5 icon-56 text-primary"></span>
-        <div class="d-flex flex-column">
-          <div class="text-dark fs-5 fw-bold mb-4">
-            <codx-label
-              *ngIf="isAddNew"
-              name="lblCloseAddNewForm"
-              [formModel]="formModelCustom"
-              default="Bạn có muốn lưu quy trình đã thiết lập"
-            ></codx-label>
-            <codx-label
-              *ngIf="!isAddNew"
-              name="lblCloseEditForm"
-              [formModel]="formModelCustom"
-              default="Bạn có muốn lưu quy trình đã đã chỉnh sửa"
-            ></codx-label>
-          </div>
-          <span class="mb-4" *ngIf="!isAddNew"
-            >Chương trình sẽ thực hiện ghi đè file trùng tên hiện có trên hệ
-            thống. Quá trình này không thể khôi phục lại như trước khi ghi đè,
-            bạn có muốn thực hiện không?</span
-          >
-        </div>
-      </div>
-    </div>
-    <div class="d-flex justify-content-end">
-      <a class="btn btn-primary me-2" (click)="clickIsSave(true, dialogClose)">
-        <codx-label name="lblSave" default="Lưu" [formModel]="formModelCustom">
-        </codx-label>
-      </a>
-      <a
-        *ngIf="isAddNew"
-        class="btn btn-light-primary me-2"
-        (click)="clickIsSave(false, dialogClose)"
-      >
-        <codx-label
-          name="lblExit"
-          default="Thoát"
-          [formModel]="formModelCustom"
-        >
-        </codx-label>
-      </a>
-      <a
-        *ngIf="!isAddNew"
-        class="btn btn-light-primary me-2"
-        (click)="clickNotSave(dialogClose)"
-      >
-        <codx-label
-          name="lblExit"
-          default="Thoát"
-          [formModel]="formModelCustom"
-        >
-        </codx-label>
-      </a>
     </div>
   </div>
 </ng-template>

@@ -193,6 +193,7 @@ export class CodxEpService {
       [carID]
     );
   }
+
   driverValidator(
     driverID: string,
     startDate: Date,
@@ -228,7 +229,7 @@ export class CodxEpService {
     );
   }
 
-  update(model: any, isAdd: boolean) {
+  updateResource(model: any, isAdd: boolean) {
     return this.api.callSv(
       'EP',
       'ERM.Business.EP',
@@ -238,7 +239,7 @@ export class CodxEpService {
     );
   }
 
-  editBooking(
+  updateBooking(
     data: any,
     isAdd: boolean,
     attendees: any,

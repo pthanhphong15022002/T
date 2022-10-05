@@ -14,9 +14,12 @@ export class InputTypePipe implements PipeTransform {
     else {
       if (controlType.toLowerCase() == 'textbox') {
         type = 'text';
-        if (dataType == 'Decimal' || dataType == 'Short' || dataType == 'Int') {
+        if (
+          dataType &&
+          (dataType == 'Decimal' || dataType == 'Short' || dataType == 'Int')
+        ) {
           type = 'number';
-        } else if (dataFormat.toLowerCase().includes('ed')) {
+        } else if (dataFormat && dataFormat.toLowerCase().includes('ed')) {
           type = 'textarea';
         }
       } else if (controlType.toLowerCase() == 'maskbox') {

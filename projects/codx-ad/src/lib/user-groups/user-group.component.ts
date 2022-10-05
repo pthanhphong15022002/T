@@ -56,18 +56,6 @@ export class UserGroupsComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-    this.moreFuncs = [
-      {
-        id: 'edit',
-        icon: 'icon-list-checkbox',
-        text: 'Sửa',
-      },
-      {
-        id: 'btnMF2',
-        icon: 'icon-list-checkbox',
-        text: 'more 2',
-      },
-    ];
   }
 
   ngAfterViewInit(): void {
@@ -119,7 +107,7 @@ export class UserGroupsComponent extends UIComponent {
       '',
       item
     );
-    this.dialog.closed.subscribe((e) => {});
+    this.dialog.closed.subscribe((e) => { });
   }
 
   convertHtmlAgency(buID: any) {
