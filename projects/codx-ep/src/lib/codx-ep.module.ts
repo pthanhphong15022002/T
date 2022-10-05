@@ -43,6 +43,7 @@ import { ApprovalRoomViewDetailComponent } from './approval/room/approval-room-v
 import { ApprovalCarViewDetailComponent } from './approval/car/approval-car-view-detail/approval-car-view-detail.component';
 import { BookingRoomViewDetailComponent } from './booking/room/view-detail/booking-room-view-detail.component';
 import { BookingCarViewDetailComponent } from './booking/car/view-detail/booking-car-view-detail.component';
+import { ApprovalStationeryViewDetailComponent } from './approval/stationery/approval-stationery-view-detail/approval-stationery-view-detail.component';
 
 const routes: Route[] = [
   {
@@ -63,10 +64,7 @@ const routes: Route[] = [
       },
       {
         path: 'approverooms/:funcID',
-        loadChildren: () =>
-          import('projects/codx-ep/src/lib/approval/approvel.module').then(
-            (m) => m.ApprovelModule
-          ),
+        component: ApprovalRoomsComponent,
       },
       {
         path: 'approvecars/:funcID',
@@ -152,6 +150,7 @@ const Components: Type<any>[] = [
   TabsComponent,
   ApprovalRoomViewDetailComponent,
   ApprovalCarViewDetailComponent,
+  ApprovalStationeryViewDetailComponent,
   BookingRoomViewDetailComponent,
   BookingCarViewDetailComponent,
 ];
