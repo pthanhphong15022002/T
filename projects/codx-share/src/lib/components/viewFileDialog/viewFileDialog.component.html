@@ -1,27 +1,41 @@
-<codx-form headerText="{{fullName}}" [body]="body" [dialog]="dialog">
+<codx-form headerText="{{fullName}}" [body]="body" [dialog]="dialog" [bodyCss]="'p-0 h-100'">
     <ng-template #body>
-        <div class="viewfile abc">
-            <div class="viewfile-toolbar d-flex align-items-center justify-content-between">
+        <div class="viewfile">
+            <div class="viewfile-toolbar h-100 d-flex align-items-center justify-content-between ">
                 <div class="d-flex align-items-center">
                     <span class="icon-24 text-white"></span>
                     <span class="ms-3 text-white font-size-h3"></span>
                 </div>                  
-                <div *ngIf="data != null && !data.isDelete" class="d-flex align-items-center">
-                    <span class="icon-print icon-24 text-white" (click)="print()"></span>
-                    <span *ngIf="data.download" class="icon-download icon-24 ms-4 text-white"
-                        (click)="download()"></span>
-                    <div class="view-more ms-2"></div>
-                    <!-- <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, data)"
-                    [formModel]="formModel" [typeMF]="'hover'"
-                    (changeDataMF)="dmSV.filterMoreFunction($event, data, true)" cardCss="w-20px">
-                    </codx-temp-full>                         -->
+                <div *ngIf="data != null && !data.isDelete" class="d-flex align-items-center text-white ">
+                    <div *ngIf="data.download" class="d-flex align-items-center text-white cursor-pointer" (click)="download()">
+                        <span  class="fa-solid fa-lg fa-arrow-down mx-2 text-white "
+                       ></span><span class="me-3">Tải về</span>
+                    </div>
+                    <div class="d-flex align-items-center text-white" (click)="print()">
+                        <span class="fa-solid fa-lg fa-print mx-2 text-white cursor-pointer" ></span><span class="me-3">In</span>
+                        <div class="view-more ms-2"></div>
+                    </div>
+                   
                 </div>
             </div>
         </div>
         <div id="dm_viewFile">           
             <div (click)="activeDialog()" class="viewfile-content" id="viewfiledalog">
+                <ng-container *ngIf="!isVideo && !linkViewImage">
+                    <ng-container  [ngSwitch]="data?.extension">
+                        <ng-container *ngSwitchCase="'.doc'"> <ng-container *ngTemplateOutlet="formword"></ng-container></ng-container>
+                        <ng-container *ngSwitchCase="'.docx'"> <ng-container *ngTemplateOutlet="formword"></ng-container></ng-container>
+                        <ng-container *ngSwitchCase="'.txt'"> <ng-container *ngTemplateOutlet="formtxt"></ng-container></ng-container>
+                        <ng-container *ngSwitchCase="'.xlsx'"> <ng-container *ngTemplateOutlet="forexcel"></ng-container></ng-container>
+                        <ng-container *ngSwitchCase="'.xls'"> <ng-container *ngTemplateOutlet="forexcel"></ng-container></ng-container>
+                    </ng-container>
+                </ng-container>
+                <ng-template #formword><ejs-documenteditorcontainer #documenteditor_default   [enableToolbar]="false"  [restrictEditing]="true" [height]="'100%'" style="display:block" > </ejs-documenteditorcontainer></ng-template>
+                <ng-template #forexcel><ejs-spreadsheet #spreadsheet (created)='viewFile("")'  [openUrl]="openUrl" [allowOpen]='true' [allowEditing]="false" > </ejs-spreadsheet></ng-template>
+                <ng-template #formtxt></ng-template>
+                <iframe [src]="urlTxt" width="200" height="200" frameborder="0" id="frame"></iframe>
                 
-                <form id="frmFile" *ngIf="!isVideo && !linkViewImage" #viewfileform target="my_frame"
+                <!-- <form id="frmFile" *ngIf="!isVideo && !linkViewImage" #viewfileform target="my_frame"
                     [action]="src | safe: 'resourceUrl'" enctype="multipart/form-data" method="post">
                     <input name="access_token" id="access_token" value="{{access_token}}" type="hidden" />
                     <input name="tenant" id="tenant" value="{{tenant}}" type="hidden" />
@@ -29,29 +43,18 @@
                         value="UIMode=classic;TextRuler=false;PresentationStatusbar=false;SpreadsheetSidebar=false"
                         type="hidden" />
                 </form>
+                
                 <iframe *ngIf="!isVideo && linkViewImage == ''" #viewfileframe class="viewfileiframe" frameBorder="0"
                     name="my_frame" style="width: 100%; height: calc(100vh - 80px)!important;">
                 </iframe>
                 <video *ngIf="isVideo" preload="auto" controls class="viewfileiframe" autoplay width="100">
                     <source src="{{srcVideo}}" type="video/mp4" />
-                </video>
+                </video> -->
                 <!-- <ejs-pdfviewer #pdfviewer *ngIf="isPdf" id="pdfViewer" [serviceUrl]='service' [documentPath]='document' style="height:640px;display:block"></ejs-pdfviewer> -->
-                <img *ngIf="linkViewImage != ''" src="{{linkViewImage}}" />
+                <!-- <img *ngIf="linkViewImage != ''" src="{{linkViewImage}}" /> -->
             </div>
             <div id="output"></div>
         </div>
         
     </ng-template>
-    <!-- <ng-template #footer>
-      <div class="card-footer pt-4">
-        <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary" (click)="selectFolderPath(dialog)">Select</button>
-        </div>
-      </div> 
-    </ng-template> -->
 </codx-form>
-<!-- 
-<ng-template #contentViewFileDialog let-dialog>
-  
-
-</ng-template> -->

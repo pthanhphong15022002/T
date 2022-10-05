@@ -18,7 +18,8 @@ export class CodxHrService {
   title = new BehaviorSubject<string>(null);
   layoutcpn = new BehaviorSubject<LayoutModel>(null);
   layoutChange = this.layoutcpn.asObservable();
-
+  reportingLineComponent: any;
+  positionsComponent: any;
   orgchart: any;
 
   constructor(private api: ApiHttpService) {}
@@ -78,6 +79,29 @@ export class CodxHrService {
           return of(undefined);
         }),
         finalize(() => null)
+      );
+  }
+
+  loadOrgchart(
+    orgUnitID,
+    parentID = '',
+    numberLV = '1',
+    onlyDepartment = false
+  ): Observable<any> {
+    if (!orgUnitID && !parentID) return of(null);
+    return this.api
+      .callSv(
+        'HR',
+        'ERM.Business.HR',
+        'OrganizationUnitsBusiness',
+        'GetDataDiagramAsync',
+        [orgUnitID, numberLV, parentID, onlyDepartment]
+      )
+      .pipe(
+        map((data) => {
+          if (data.error) return;
+          return data.msgBodyData[0];
+        })
       );
   }
 

@@ -3,4 +3,13 @@
   [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="processNo" (onDragDrop)="onDragDrop($event)">
 </codx-views>
 
-aaaa
+<!-- view-list -->
+<ng-template #itemViewList let-data>
+  <lib-view-list-processes
+    [formModel]="view.formModel"
+    [data]="data"
+    (clickMoreFunction)="receiveMF($event)"
+  >
+  </lib-view-list-processes>
+</ng-template>
+<!-- view-list -->

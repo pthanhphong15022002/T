@@ -10,6 +10,7 @@ import {
 import { FormGroup } from '@angular/forms';
 import {
   AuthStore,
+  CodxFormComponent,
   CRUDService,
   DialogData,
   DialogModel,
@@ -33,7 +34,7 @@ import { PopRolesComponent } from '../../users/pop-roles/pop-roles.component';
   styleUrls: ['./add-user-groups.component.css'],
 })
 export class AddUserGroupsComponent extends UIComponent implements OnInit {
-  @ViewChild('form') form: any;
+  @ViewChild('form') form: CodxFormComponent;
 
   title = '';
   dialog!: DialogRef;
@@ -136,25 +137,15 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
         this.lstUser = res;
       }
     });
-    this.initForm();
-  }
-
-  initForm() {
-    this.adService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) {
-          this.formUserGroup = res;
-        }
-      });
   }
 
   openPopup(item: any) {
-    this.formUserGroup.patchValue(this.adUserGroup);
-    if (this.formUserGroup.invalid) {
-      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
-      return;
-    } else {
+    var formGroup = this.form.formGroup.controls;
+    if (
+      formGroup.userID.status == 'VALID' &&
+      formGroup.userName.status == 'VALID' &&
+      formGroup.email.status == 'VALID'
+    ) {
       var option = new DialogModel();
       option.FormModel = this.form.formModel;
       var obj = {
@@ -183,7 +174,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
           this.changeDetector.detectChanges();
         }
       });
-    }
+    } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
   countListViewChoose() {
@@ -255,13 +246,14 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.saveSuccess = true;
-    if (this.formUserGroup) this.formUserGroup.patchValue(this.adUserGroup);
-    if (this.formUserGroup?.invalid) {
-      this.adService.notifyInvalid(this.formUserGroup, this.formModel);
-      return;
-    } else {
+    var formGroup = this.form.formGroup.controls;
+    if (
+      formGroup.userID.status == 'VALID' &&
+      formGroup.userName.status == 'VALID' &&
+      formGroup.email.status == 'VALID'
+    )
       this.saveUserRoles();
-    }
+    else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
   saveUserRoles() {

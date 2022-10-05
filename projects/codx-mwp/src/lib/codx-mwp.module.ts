@@ -88,6 +88,10 @@ export const routes: Routes = [
         path: 'personals/:funcID',
         component: PersonalsComponent,
       },
+      // {
+      //   path: 'tasks/:funcID',
+      //   component: TasksComponent,
+      // },
     ],
   },
   {

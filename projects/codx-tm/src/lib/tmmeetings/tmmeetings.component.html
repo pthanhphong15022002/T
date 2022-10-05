@@ -1,13 +1,30 @@
-<codx-views #view [funcID]="funcID" service="CO" assemblyName="ERM.Business.CO" entityName="CO_Meetings" [views]="views"
-  [button]="showButtonAdd ? button : null" className="MeetingsBusiness" method="GetListMeetingsAsync"
-  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="meetingID"
-  (onDragDrop)="onDragDrop($event)">
+<codx-views
+  #view
+  [funcID]="funcID"
+  service="CO"
+  assemblyName="ERM.Business.CO"
+  entityName="CO_Meetings"
+  [views]="views"
+  [button]="showButtonAdd ? button : null"
+  className="MeetingsBusiness"
+  method="GetListMeetingsAsync"
+  (buttonClick)="click($event)"
+  [dataObj]="dataObj"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  idField="meetingID"
+  (onDragDrop)="onDragDrop($event)"
+>
 </codx-views>
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-  <lib-view-list-meet [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)"
-    [itemSelected]="itemSelected">
+  <lib-view-list-meet
+    [formModel]="view.formModel"
+    [data]="data"
+    (clickMoreFunction)="receiveMF($event)"
+    [itemSelected]="itemSelected"
+  >
   </lib-view-list-meet>
 </ng-template>
 <!-- view-list -->
@@ -15,9 +32,18 @@
 <!-- cardCenter -->
 <ng-template #cardCenter let-data>
   <div (dblclick)="doubleClick(data)">
-    <codx-card-center cardCss="border w-250px h-100 px-3 py-3 position-relative" [formModel]="view.formModel"
-      [headerTmp]="headerTmp" [title]="getDate(data)" titleCss="fs-5 mb-2 fw-bold" [subTitle]="data.meetingName"
-      [dataItem]="data" [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
+    <codx-card-center
+      cardCss="border w-250px h-100 px-3 py-3 position-relative"
+      [formModel]="view.formModel"
+      [headerTmp]="headerTmp"
+      [title]="getDate(data)"
+      titleCss="fs-5 mb-2 fw-bold"
+      [subTitle]="data.meetingName"
+      [dataItem]="data"
+      [footer]="footer"
+      [typeMF]="'hover'"
+      (clickMF)="clickMF($event, data)"
+    >
     </codx-card-center>
   </div>
 </ng-template>
@@ -25,9 +51,12 @@
 <ng-template #headerTmp let-data>
   <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-top">
-      <div style="width: 5px" [style.background-color]="
+      <div
+        style="width: 5px"
+        [style.background-color]="
           data.status | vll: statusVll:'textColor' | async
-        "></div>
+        "
+      ></div>
       <div [innerHtml]="convertHtmlAgency(data)"></div>
     </div>
     <div *ngIf="data?.isOnline">
@@ -38,20 +67,33 @@
 
 <ng-template #footer let-data>
   <div class="d-flex justify-content-center h-60px">
-    <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [width]="30" [numberImages]="3">
+    <codx-imgs
+      [objectId]="getResourceID(data)"
+      objectType="AD_Users"
+      [width]="30"
+      [numberImages]="3"
+    >
     </codx-imgs>
   </div>
   <div class="footer-bottom">
     <div class="d-flex align-items-center justify-content-between">
       <div *ngIf="data.tags">
-        <codx-tag [entityName]="view.formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data?.tags">
+        <codx-tag
+          [entityName]="view.formModel.entityName"
+          [disabled]="true"
+          [isEdit]="false"
+          [value]="data?.tags"
+        >
         </codx-tag>
       </div>
       <div *ngIf="!data.tags"></div>
       <div class="position-relative" *ngIf="data.attachments > 0">
         <span class="icon-attach_file icon-18"> </span>
-        <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
-          {{ data.attachments }}</span>
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
+        >
+          {{ data.attachments }}</span
+        >
       </div>
     </div>
   </div>
@@ -80,32 +122,62 @@
 
 <!-- kanban -->
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2" (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
-    [title]="data?.meetingName" [status]="data.status" [statusVll]="statusVll" [icoStatus2]="data?.isOnline"
-    [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-24'" [date]="data.startDate"
-    [rootData]="data" [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
+  <codx-card-img
+    cardCss="border h-100"
+    imageObjType="AD_Users"
+    (clickMF)="clickMF($event, data)"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [title]="data?.meetingName"
+    [status]="data.status"
+    [statusVll]="statusVll"
+    [icoStatus2]="data?.isOnline"
+    [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-24'"
+    [date]="data.startDate"
+    [rootData]="data"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="cardImgFooter"
+    [dataItem]="data"
+  >
   </codx-card-img>
 </ng-template>
 
 <!-- tách riêng để dễ fix sau này -->
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div *ngIf="setting?.resources" class="d-flex justify-content-center h-60px">
-    <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [width]="30" [numberImages]="3">
+    <codx-imgs
+      [objectId]="getResourceID(data)"
+      objectType="AD_Users"
+      [width]="30"
+      [numberImages]="3"
+    >
     </codx-imgs>
   </div>
-  <div *ngIf="!setting?.resources" class="d-flex justify-content-center h-60px"></div>
+  <div
+    *ngIf="!setting?.resources"
+    class="d-flex justify-content-center h-60px"
+  ></div>
   <div class="footer-bottom">
     <div class="d-flex align-items-center justify-content-between">
       <div *ngIf="data.tags && setting?.tags">
-        <codx-tag [entityName]="view.formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data?.tags">
+        <codx-tag
+          [entityName]="view.formModel.entityName"
+          [disabled]="true"
+          [isEdit]="false"
+          [value]="data?.tags"
+        >
         </codx-tag>
       </div>
       <div *ngIf="!data.tags"></div>
       <div class="position-relative" *ngIf="data.attachments > 0">
         <span class="icon-attach_file icon-18"> </span>
-        <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
-          {{ data.attachments }}</span>
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
+        >
+          {{ data.attachments }}</span
+        >
       </div>
     </div>
   </div>
@@ -120,14 +192,14 @@
   <div>
     <h5 #meetingName>
       {{
-      data.meetingName
-      | formatvalue
-      : view.formModel
-      : "meetingName"
-      : meetingName
-      : "Meetings"
-      : "grvMeetings"
-      | async
+        data.meetingName
+          | formatvalue
+            : view.formModel
+            : "meetingName"
+            : meetingName
+            : "Meetings"
+            : "grvMeetings"
+          | async
       }}
     </h5>
   </div>
@@ -138,55 +210,91 @@
       <span class="ms-1 fw-bold">
         <span *ngIf="data.startDate" class="text-gray-700">{{
           data.startDate | date: "dd/MM/yyyy"
-          }}</span>
-        <span *ngIf="data.startDate" class="fw-bold p-2" [innerHtml]="'( ' + getDate(data) + ')'"></span>
+        }}</span>
+        <span
+          *ngIf="data.startDate"
+          class="fw-bold p-2"
+          [innerHtml]="'( ' + getDate(data) + ')'"
+        ></span>
         <span #startDate *ngIf="!data.startDate">{{
           data?.startDate
-          | formatvalue
-          : view.formModel
-          : "startDate"
-          : startDate
-          : "Meetings"
-          : "grvMeetings"
-          | async
-          }}</span>
+            | formatvalue
+              : view.formModel
+              : "startDate"
+              : startDate
+              : "Meetings"
+              : "grvMeetings"
+            | async
+        }}</span>
       </span>
     </div>
   </div>
 
   <hr />
 
-  <div class=" mb-2 text-dark me-6">
+  <div class="mb-2 text-dark me-6">
     <span>
-      <codx-label default="Nội dung cuộc họp :" name="lblMemo" [formModel]="view.formModel" class="text-gray-600">
+      <codx-label
+        default="Nội dung cuộc họp :"
+        name="lblMemo"
+        [formModel]="view.formModel"
+        class="text-gray-600"
+      >
       </codx-label>
     </span>
-
-    <!-- </div> -->
     <span class="ms-2 fw-bold">
-      <span class="text-gray-700" [innerHTML]="data?.memo"></span>
-      <span #memo *ngIf="!data?.memo">{{
-        data?.memo
-        | formatvalue: view.formModel:"memo":memo:"Meetings":"grvMeetings"
-        | async
+      <span class="text-gray-700 size-content-schedule cursor-pointer">
+        <span
+          [innerHTML]="data?.memo"
+          (mouseenter)="popoverMemo.open()"
+          (mouseover)="popoverMemo.close()"
+          [ngbPopover]="tooltipMemo"
+          popoverClass="empPopoverClass"
+          #popoverMemo="ngbPopover"
+          placement="left bottom top right"
+          container="body"
+        ></span>
+        <span #memo *ngIf="!data?.memo">{{
+          data?.memo
+            | formatvalue: view.formModel:"memo":memo:"Meetings":"grvMeetings"
+            | async
         }}</span>
+      </span>
     </span>
   </div>
   <div class="d-flex mb-2">
     <div class="d-flex text-dark me-6">
-      <codx-label name="lblResources" default="Người tham gia : " class="text-gray-600 me-4">
+      <codx-label
+        name="lblResources"
+        default="Người tham gia : "
+        class="text-gray-600 me-4"
+      >
       </codx-label>
       <div class="d-flex justify-content-end">
-        <codx-imgs [objectId]="getResourceID(data)" objectType="AD_Users" [width]="30" [numberImages]="3">
+        <codx-imgs
+          [objectId]="getResourceID(data)"
+          objectType="AD_Users"
+          [width]="30"
+          [numberImages]="3"
+        >
         </codx-imgs>
       </div>
     </div>
   </div>
+
+  <ng-template #tooltipMemo>
+    <div [innerHTML]="data?.memo"></div>
+  </ng-template>
 </ng-template>
 
 <ng-template #mfButton let-data>
   <div class="mt-2 me-2">
-    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" type="hover">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    >
     </codx-mfunc>
   </div>
 </ng-template>

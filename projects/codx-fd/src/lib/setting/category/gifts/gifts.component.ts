@@ -79,6 +79,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
   button?: ButtonModel;
   dialog!: DialogRef;
   viewType = ViewType;
+  headerText = '';
 
   popupFiled = 1;
 
@@ -138,9 +139,11 @@ export class GiftsComponent extends UIComponent implements OnInit {
   }
 
   giftID: any;
-  add() {
+  add(e: any) {
+    this.headerText = e?.text;
     var obj = {
       formType: 'add',
+      headerText: this.headerText,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -149,15 +152,15 @@ export class GiftsComponent extends UIComponent implements OnInit {
       option.Width = '550px';
       this.dialog = this.callfc.openSide(AddGiftsComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
-        if (e?.event) {
-          this.view.dataService.add(e.event, 1).subscribe();
+        if (e?.event?.data) {
+          this.view.dataService.add(e.event?.data, 0).subscribe();
           this.changedr.detectChanges();
         }
-        // if (e?.event.file) {
-        //   e.event.data.modifiedOn = new Date();
-        //   this.view.dataService.update(e.event.data).subscribe();
-        //   this.changedr.detectChanges();
-        // }
+        if (e?.event?.file) {
+          e.event.data.modifiedOn = new Date();
+          this.view.dataService.update(e.event?.data).subscribe();
+          this.changedr.detectChanges();
+        }
       });
     });
   }
@@ -168,6 +171,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
     }
     var obj = {
       formType: 'edit',
+      headerText: this.headerText,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -178,8 +182,8 @@ export class GiftsComponent extends UIComponent implements OnInit {
         option.Width = '550px';
         this.dialog = this.callfc.openSide(AddGiftsComponent, obj, option);
         this.dialog.closed.subscribe((e: any) => {
-          if (e?.event) e.event.modifiedOn = new Date();
-          this.view.dataService.update(e.event).subscribe();
+          if (e?.event?.data) e.event.data.modifiedOn = new Date();
+          this.view.dataService.update(e.event?.data).subscribe();
           this.changedr.detectChanges();
         });
       });
@@ -307,6 +311,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
   }
 
   clickMF(e: any, data: any) {
+    this.headerText = e?.text;
     if (e) {
       switch (e.functionID) {
         case 'SYS02':

@@ -52,6 +52,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
   functionList: any;
   button?: ButtonModel;
   dialog: DialogRef;
+  headerText = '';
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -128,32 +129,12 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
     ];
     this.changedr.detectChanges();
   }
-  headerStyle = {
-    textAlign: 'center',
-    backgroundColor: '#F1F2F3',
-    fontWeight: 'bold',
-    border: 'none',
-  };
 
-  columnStyle = {
-    border: 'none',
-    fontSize: '13px !important',
-    fontWeight: 400,
-    lineHeight: 1.4,
-  };
-
-  PopoverEmpEnter(p: any, dataItem) {
-    this.dataItem = dataItem;
-    p.open();
-  }
-
-  PopoverEmpLeave(p: any) {
-    p.close();
-  }
-
-  add() {
+  add(e) {
+    this.headerText = e?.text;
     var obj = {
       isModeAdd: true,
+      headerText: this.headerText,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -163,7 +144,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openSide(AddGiftGroupComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
-          this.view.dataService.add(e.event, 1).subscribe();
+          this.view.dataService.add(e.event, 0).subscribe();
           this.changedr.detectChanges();
         }
       });
@@ -174,6 +155,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
     if (data) this.view.dataService.dataSelected = data;
     var obj = {
       isModeAdd: false,
+      headerText: this.headerText,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -208,6 +190,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
   }
 
   clickMF(e, data) {
+    this.headerText = e?.text;
     if (e) {
       switch (e.functionID) {
         case 'SYS03':

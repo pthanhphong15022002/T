@@ -45,6 +45,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
   isOpen = false;
   button?: ButtonModel;
   dialog: DialogRef;
+  headerText = '';
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -94,44 +95,63 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
     this.button = {
       id: 'btnAdd',
     };
-    this.columnsGrid = [
-      { field: 'competenceID', headerText: 'Mã quy tắc' },
-      {
-        field: 'competenceName',
-        headerText: 'Mô tả',
-        template: this.competenceName,
-      },
-      { field: 'memo', headerText: 'Ghi chú', template: this.memo },
-      {
-        field: 'createName',
-        headerText: 'Người tạo',
-        template: this.itemCreateBy,
-      },
-      {
-        field: 'createdOn',
-        headerText: 'Ngày tạo',
-        template: this.createdOn,
-      },
-    ];
-    this.changedr.detectChanges();
-  }
-  ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnsGrid,
-        },
-      },
-    ];
     this.changedr.detectChanges();
   }
 
-  add() {
+  onLoading(e) {
+    if (this.view.formModel) {
+      var formModel = this.view.formModel;
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.columnsGrid = [
+              {
+                field: 'competenceID',
+                headerText: res['CompetenceID'].headerText,
+              },
+              {
+                field: 'competenceName',
+                headerText: 'Mô tả',
+                template: this.competenceName,
+              },
+              {
+                field: 'memo',
+                headerText: res['Memo'].headerText,
+                template: this.memo,
+              },
+              {
+                field: 'createName',
+                headerText: 'Người tạo',
+                template: this.itemCreateBy,
+              },
+              {
+                field: 'createdOn',
+                headerText: res['CreatedOn'].headerText,
+                template: this.createdOn,
+              },
+            ];
+          }
+        });
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: false,
+          model: {
+            resources: this.columnsGrid,
+          },
+        },
+      ];
+      this.changedr.detectChanges();
+    }
+  }
+
+  add(e) {
+    this.headerText = e?.text;
     var obj = {
       isModeAdd: true,
+      headerText: this.headerText,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -141,7 +161,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openSide(AddBehaviorRuleComponent, obj, option);
       this.dialog.closed.subscribe((e) => {
         if (e?.event) {
-          this.view.dataService.add(e.event, 1).subscribe();
+          this.view.dataService.add(e.event, 0).subscribe();
           this.changedr.detectChanges();
         }
       });
@@ -152,6 +172,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
     if (data) this.view.dataService.dataSelected = data;
     var obj = {
       isModeAdd: false,
+      headerText: this.headerText,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -190,6 +211,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
   }
 
   clickMF(e, data) {
+    this.headerText = e?.text;
     if (e) {
       switch (e.functionID) {
         case 'SYS03':
