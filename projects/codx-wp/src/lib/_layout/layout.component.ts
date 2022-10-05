@@ -21,12 +21,15 @@ export class LayoutComponent extends LayoutBaseComponent {
   ) {
     super(inject);
     
+    
+  }
+
+  onInit(): void 
+  {
     this.cache.valueList('L1492').subscribe((value) => {
       this.valueList = value.datas;
     });
   }
-
-  onInit(): void {}
 
   onAfterViewInit(): void {}
 
