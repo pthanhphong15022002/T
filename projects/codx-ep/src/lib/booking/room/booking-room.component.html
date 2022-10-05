@@ -97,19 +97,19 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
       <span class=" ms-1 fw-bold">
-        {{ data?.createdOn}}
+        {{ data?.bookingOn | fmDT:'dmy'}}
       </span>
     </div>
     <div class="d-flex me-6">
       <i class="icon-access_time me-1"></i>
       <span class=" ms-1 fw-bold">
-        {{ data?.startDate }}
+        {{ data?.startHour}}
       </span>
-      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+      <span *ngIf="data?.startHour && data?.endHour" class="ms-1 me-1">{{
         "-"
       }}</span>
       <span class=" fw-bold">
-        {{ data?.endDate }}
+        {{ data?.endHour}}
       </span>
     </div>
   </div>
@@ -192,19 +192,19 @@
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today me-1"></i>
         <span class="text-gray-600">
-          {{ data?.createdOn}}
+          {{ data?.bookingOn | fmDT}}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
         <span class="text-gray-600">
-          {{ data?.startDate}}
+          {{ data?.startHour}}
         </span>
-        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+        <span *ngIf="data?.startHour && data?.endHour" class="ms-1 me-1">{{
           "-"
         }}</span>
         <span class="text-gray-600">
-          {{ data?.endDate }}
+          {{ data?.endHour}}
         </span>
       </div>
     </div>
@@ -224,7 +224,7 @@
   "
   [status]="data?.status"
   [statusVll]="'VL003'"
-  [date]="data?.createdOn"
+  [date]="data?.createdOn | fmDT"
   [imageId]="data?.createdBy"
   imageObjType="AD_Users"
   

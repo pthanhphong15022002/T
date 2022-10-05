@@ -17,7 +17,6 @@ import { CodxEpService } from '../../../codx-ep.service';
 export class ApprovalCarViewDetailComponent extends UIComponent implements OnChanges {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
-  @ViewChild('attachment') attachment;
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -29,29 +28,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   id: string;
   itemDetailDataStt: any;
   itemDetailStt: any;
-  active = 1;
-  files = [
-    {
-      id: '6322a7433821591f25a3ff77',
-      recID: '41894ed5-34ad-11ed-945f-00155d035517',
-      fileID: '6322a7436e021f501d602bf6',
-      fileName: 'Tuyên dương học sinh giỏi.pdf',
-      eSign: true,
-      comment: '.pdf',
-      createdOn: '2022-09-14T21:17:07.028-07:00',
-      areas: [],
-      createdBy: 'ADMIN',
-      modifiedOn: null,
-      modifiedBy: null,
-      write: true,
-      delete: true,
-      share: true,
-      assign: true,
-      includeTables: null,
-      updateColumns: '',
-      unbounds: null,
-    },
-  ];
+  active = 1;  
 
   constructor(
     private injector: Injector,
