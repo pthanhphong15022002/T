@@ -552,7 +552,7 @@
       <lib-pdf
         [recID]="data.recID"
         [isApprover]="false"
-        [isEditable]="data?.approveStatus == '1' ? false : true"
+        [isEditable]="data?.approveStatus == '1' ? true : false"
         (isAreaControl)="setValueAreaControl($event)"
       >
       </lib-pdf>
