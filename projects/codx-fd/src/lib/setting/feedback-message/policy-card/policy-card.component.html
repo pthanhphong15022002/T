@@ -14,7 +14,7 @@
         <div class="ml-4 d-flex justify-content-between">
             <span class="switch switch-sm">
                 <codx-input type="switch" class="test-check" field="HasPoints" (valueChange)="valueChangeSwitch($event)"
-                    [checked]="item.fieldValue === '1' ? true : false">
+                    [checked]="quantity.HasPoints === '1' ? true : false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center"></span>
@@ -32,7 +32,7 @@
         <div class="ml-4 d-flex align-items-center">
             <span class="switch switch-sm">
                 <codx-input type="switch" class="test-check" field="HasGifts" (valueChange)="valueChangeSwitch($event)"
-                    [checked]="item.fieldValue === '1' ? true:false" label="">
+                    [checked]="quantity.HasGifts === '1' ? true:false" label="">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center"></span>
@@ -60,7 +60,7 @@
                 <span class="switch switch-sm ml-3">
                     <codx-input type="switch" class="test-check" field="ApprovalControl"
                         (valueChange)="valueChangeSwitch($event)"
-                        [checked]="item.fieldValue === '1' ? true : false"
+                        [checked]="quantity.ApprovalControl === '1' ? true : false"
                         [disabled]="this.typeCard == '7' ? true : false">
                     </codx-input>
                 </span>
@@ -77,14 +77,14 @@
             </div>
             <div class="text-gray-500">
                 {{'Số lượng' | lang:'PolicyCard':'lblQuantity' | async}}
-                {{item.MaxSends}} {{'phiếu' | lang:'PolicyCard':'lblCoin' | async}}
-                {{item?.MaxSendPeriod|vll:"L1435":"text"|async}}
+                {{quantity?.MaxSends}} {{'phiếu' | lang:'PolicyCard':'lblCoin' | async}}
+                {{quantity?.MaxSendPeriod|vll:"L1435":"text"|async}}
             </div>
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
                 <codx-input type="switch" class="test-check" field="MaxSendControl"
-                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxSendControl === '1' ? true : false">
+                    (valueChange)="valueChangeSwitch($event)" [checked]="quantity.MaxSendControl == '1' ? true : false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
@@ -93,22 +93,21 @@
         </div>
     </div>
     <div class="d-flex align-items-start py-4 border-bottom border-light"
-        *ngIf="item.hasOwnProperty('MaxReceiveControl')">
+        *ngIf="item.fieldName == 'MaxReceiveControl'">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark fw-bold fs-6">
-                <codx-label name="lblLimitedVouchers" [formModel]="formModel" [default]="'Giới hạn phiếu nhận'">
-                </codx-label>
+                {{item.tilte}}
             </div>
             <div class="text-gray-500">
                 {{'Số lượng' | lang:'PolicyCard':'lblQuantity' | async}}
-                {{item.MaxReceives}} {{'phiếu' | lang:'PolicyCard':'lblCoin' | async}}
-                {{item?.MaxReceivePeriod|vll:"L1435":"text"|async}}
+                {{quantity?.MaxReceives}} {{'phiếu' | lang:'PolicyCard':'lblCoin' | async}}
+                {{quantity?.MaxReceivePeriod|vll:"L1435":"text"|async}}
             </div>
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
                 <codx-input type="switch" class="test-check" field="MaxReceiveControl"
-                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxReceiveControl === '1' ? true : false">
+                    (valueChange)="valueChangeSwitch($event)" [checked]="quantity.MaxReceiveControl === '1' ? true : false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
@@ -118,20 +117,20 @@
         </div>
     </div>
     <div class="d-flex align-items-start py-4 border-bottom border-light"
-        *ngIf="item.hasOwnProperty('MaxPointControl')">
+        *ngIf="item.fieldName == 'MaxPointControl'">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark fw-bold fs-6">
-                <codx-label name="lblCoinLimit" [formModel]="formModel" [default]="'Giới hạn xu cho'"></codx-label>
+                {{item.tilte}}
             </div>
             <div class="text-gray-500">
                 {{'Số lượng' | lang:'PolicyCard':'lblQuantity' | async}}
-                {{item.MaxPoints}} {{'xu' | lang:'PolicyCard':'lblCoin' | async}}
-                {{item?.MaxPointPeriod|vll:"L1435":"text"|async}}</div>
+                {{quantity.MaxPoints}} {{'xu' | lang:'PolicyCard':'lblCoin' | async}}
+                {{quantity?.MaxPointPeriod|vll:"L1435":"text"|async}}</div>
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
                 <codx-input type="switch" class="test-check" field="MaxPointControl"
-                    (valueChange)="valueChangeSwitch($event)" [checked]="item.MaxPointControl === '1' ? true:false">
+                    (valueChange)="valueChangeSwitch($event)" [checked]="quantity.MaxPointControl === '1' ? true:false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
@@ -140,21 +139,20 @@
 
         </div>
     </div>
-    <div class="d-flex align-items-start py-4" *ngIf="item.hasOwnProperty('MaxPointPerOnceControl')">
+    <div class="d-flex align-items-start py-4" *ngIf="item.fieldName == 'MaxPointPerOnceControl'">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark fw-bold fs-6">
-                <codx-label name="lblCoinVotesLimit" [formModel]="formModel" [default]="'Giới hạn xu cho/phiếu'">
-                </codx-label>
+                {{item.tilte}}
             </div>
             <div class="text-gray-500">{{'Số lượng' | lang:'PolicyCard':'lblQuantity' | async}}
-                {{item.MaxPointPerOnce}} {{'xu mỗi phiếu' | lang:'PolicyCard':'lblCoinVotes' | async}}
+                {{quantity.MaxPointPerOnce}} {{'xu mỗi phiếu' | lang:'PolicyCard':'lblCoinVotes' | async}}
             </div>
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
                 <codx-input type="switch" class="test-check" field="MaxPointPerOnceControl"
                     (valueChange)="valueChangeSwitch($event)"
-                    [checked]="item.MaxPointPerOnceControl === '1' ? true : false">
+                    [checked]="quantity.MaxPointPerOnceControl === '1' ? true : false">
                 </codx-input>
             </span>
             <span class="w-30px h-20px d-flex justify-content-center">
@@ -162,42 +160,37 @@
             </span>
         </div>
     </div>
-    <div class="d-flex align-items-start py-4 border-bottom border-light" *ngIf="item.hasOwnProperty('RuleSelected')">
+    <div class="d-flex align-items-start py-4 border-bottom border-light" *ngIf="item.fieldName == 'RuleSelected'">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark fw-bold fs-6">
-                <codx-label name="lblInputRulesBehavior" [formModel]="formModel"
-                    [default]="'Kiểm soát nhập quy tắc/ hành vi ứng xử'"></codx-label>
+                {{item.tilte}}
             </div>
             <div class="text-gray-500">
-                <codx-label name="lblInputRulesBehaviorBallot" [formModel]="formModel"
-                    [default]="'Kiểm soát bắt buộc nhập liệu và chọn quy tắc/hành vi ứng xử trên phiếu'"></codx-label>
+                {{item.description}}
             </div>
         </div>
         <div class="ml-4">
             <div class="lv-control">
                 <codx-input type="valuelist" class="control-vll w-250px" placeholder="" refValue="L1439" field="edit"
-                    [crrValue]="item.RuleSelected" (valueChange)="changeValueListRuleSelected($event)">
+                    [crrValue]="quantity.RuleSelected" (valueChange)="changeValueListRuleSelected($event)">
                 </codx-input>
             </div>
         </div>
     </div>
     <div class="d-flex align-items-start py-4 border-bottom border-light"
-        *ngIf="item.hasOwnProperty('PolicyControl') && item?.PolicyControl!==''">
+        *ngIf="item.fieldName == 'PolicyControl' && quantity?.PolicyControl!==''">
         <div class="d-flex flex-column flex-grow-1">
             <div class="text-dark font-weight-bold">
-                <codx-label name="lblApplyCoinPoint" [formModel]="formModel"
-                    [default]="'Áp dụng chính sách tính xu/điểm'">
-                </codx-label>
+                {{item.tilte}}
             </div>
             <div class="text-gray-500">
-                <codx-label name="lblApplyCoinPoint2" [formModel]="formModel"
-                    [default]="'Kiểm soát áp dụng các loại chính sách tính xu/điểm'"></codx-label>
+                {{item.description}}
             </div>
         </div>
         <div class="ml-4">
             <div class="lv-control">
                 <codx-input type="valuelist" class="control-vll w-250px" placeholder="" [refValue]="valueListNameCoin"
-                    field="PolicyControl" [crrValue]="item.PolicyControl" (valueChange)="valueChangValueList($event)">
+                    field="PolicyControl" [crrValue]="quantity.PolicyControl" (valueChange)="valueChangValueList($event)">
                 </codx-input>
             </div>
         </div>
