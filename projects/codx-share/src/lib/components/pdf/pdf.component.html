@@ -22,7 +22,7 @@
               ></codx-label>
             </ng-template>
             <ng-template #content>
-              <div #thumbnailTab id="thumbnailTab" *ngIf="!isDisable"></div>
+              <div #thumbnailTab id="thumbnailTab" *ngIf="!isEditable"></div>
               <div id="sidebarContent">
                 <div id="thumbnailView" style="width: 100%; height: 100%"></div>
                 <div id="outlineView" class="d-none"></div>
@@ -340,7 +340,7 @@
         heightAdjustMode="Fill"
       >
         <e-tabitems>
-          <e-tabitem *ngIf="!isDisable">
+          <e-tabitem *ngIf="!isEditable">
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight0"
@@ -427,7 +427,7 @@
                       type="switch"
                       labelPosition="After"
                       field=""
-                      [disabled]="isDisable"
+                      [disabled]="isEditable"
                       [crrValue]="needSuggest"
                       (valueChange)="changeSuggestState($event)"
                     >
@@ -450,7 +450,7 @@
                     <codx-input
                       type="switch"
                       field="autoSignLastLine"
-                      [disabled]="isDisable"
+                      [disabled]="isEditable"
                       [(crrValue)]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>

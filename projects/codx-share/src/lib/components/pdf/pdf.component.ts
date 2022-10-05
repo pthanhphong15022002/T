@@ -13,8 +13,6 @@ import {
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthStore, ScrollComponent, UIComponent } from 'codx-core';
 import Konva from 'konva';
-import { CodxEsService } from '../../codx-es.service';
-import { PopupCaPropsComponent } from '../popup-ca-props/popup-ca-props.component';
 import { qr } from './model/mode';
 import { tmpAreaName, tmpSignArea } from './model/tmpSignArea.model';
 import {
@@ -23,6 +21,8 @@ import {
   pdfDefaultOptions,
   TextLayerRenderedEvent,
 } from 'ngx-extended-pdf-viewer';
+import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
+import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -45,10 +45,11 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
 
   //Input
-  @Input() recID = '12f65ad5-325b-11ed-a524-d89ef34bb550';
-  @Input() isDisable = false;
+  @Input() recID = '';
+  @Input() isEditable = false;
   @Input() isApprover;
   @Input() stepNo = -1;
+
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -189,7 +190,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
         this.recID,
         this.user?.userID,
         this.isApprover,
-        this.isDisable,
+        this.isEditable,
       ])
       .subscribe((res: any) => {
         console.table('sf', res);
@@ -250,7 +251,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     });
     this.tr = new Konva.Transformer({
       rotateEnabled: false,
-      resizeEnabled: !this.isDisable,
+      resizeEnabled: !this.isEditable,
     });
     this.detectorRef.detectChanges();
   }
@@ -328,10 +329,10 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     let layerChildren = this.lstLayer.get(area.location.pageNumber + 1);
 
     this.tr.resizeEnabled(
-      this.isDisable ? false : area.allowEditAreas ? true : area.isLock
+      this.isEditable ? false : area.allowEditAreas ? true : area.isLock
     );
     this.tr.draggable(
-      this.isDisable ? false : area.allowEditAreas ? true : area.isLock
+      this.isEditable ? false : area.allowEditAreas ? true : area.isLock
     );
     this.tr.forceUpdate();
     this.tr.nodes([this.curSelectedArea]);
@@ -658,8 +659,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     ).signature,
                     'img',
                     area.labelType,
-                    this.isDisable
-                      ? !this.isDisable
+                    this.isEditable
+                      ? !this.isEditable
                       : area.allowEditAreas
                       ? area.allowEditAreas
                       : !area.isLock,
@@ -677,8 +678,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     ).stamp,
                     'img',
                     area.labelType,
-                    this.isDisable
-                      ? !this.isDisable
+                    this.isEditable
+                      ? !this.isEditable
                       : area.allowEditAreas
                       ? area.allowEditAreas
                       : !area.isLock,
@@ -1058,7 +1059,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     this.renderQRAllPage = !this.renderQRAllPage;
   }
   changeAnnotationItem(type: number) {
-    if (!this.isDisable && this.signerInfo) {
+    if (!this.isEditable && this.signerInfo) {
       this.holding = type;
       switch (type) {
         case 1:
