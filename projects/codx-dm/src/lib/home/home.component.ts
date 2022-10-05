@@ -713,7 +713,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        active: false,
+        //active: false,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -728,7 +728,7 @@ export class HomeComponent extends UIComponent {
         text: 'List',
         type: ViewType.treedetail,
         sameData: true,
-        active: false,
+        //active: false,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
@@ -758,7 +758,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-appstore',
         text: 'Card',
         type: ViewType.treedetail,
-        active: false,
+        active: true,
         sameData: true,
         /*  toolbarTemplate: this.templateSearch,*/
         model: {
@@ -773,7 +773,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        active: true,
+        //active: true,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -787,7 +787,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-format_list_bulleted',
         text: 'List',
         type: ViewType.treedetail,
-        active: false,
+        //active: false,
         sameData: true,
         model: {
           template: this.templateMain,
