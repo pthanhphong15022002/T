@@ -16,6 +16,8 @@ import {
   ImageViewerComponent,
   AuthService,
   UIComponent,
+  CRUDService,
+  NotificationsService,
 } from 'codx-core';
 import { Device } from '../../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -43,7 +45,7 @@ export class PopupAddRoomsComponent extends UIComponent {
 
   tmplstDevice = [];
   lstDeviceRoom = [];
-
+  returnData:any;
   formModel: FormModel;
   headerText = '';
   subHeaderText = '';
@@ -54,6 +56,7 @@ export class PopupAddRoomsComponent extends UIComponent {
     private injector: Injector,
     private authService: AuthService,
     private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -127,19 +130,35 @@ export class PopupAddRoomsComponent extends UIComponent {
       linkType: '0',
     });    
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt), 1)
+      .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res) {
-          let objectID = res.save.recID != null ? res.save.recID:res.update.recID;
-          this.imageUpload
-            .updateFileDirectReload(objectID)
+        if (res) {          
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if(this.imageUpload)
+          {
+            this.imageUpload
+            .updateFileDirectReload(this.returnData.recID)
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
+                //xử lí nếu upload ảnh thất bại
+                //...
               }
             });
+          }          
+          if(this.isAdd){
+            (this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
+          }
+          else{
+            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
+          }          
           this.dialogRef.close();
         }
+        this.notificationsService.notifyCode('E0011');
         return;
       });
   }

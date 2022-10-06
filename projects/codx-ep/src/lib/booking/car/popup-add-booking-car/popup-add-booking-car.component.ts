@@ -468,7 +468,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.timeCheck();
   }
   openPopupCbb() {
-    this.isPopupCbb = !this.isPopupCbb;
+    this.isPopupCbb = true;
   }
 
   valueCbxUserChange(event) {
@@ -491,6 +491,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       if (this.lstPeople.length > 0) {
         this.data.attendees = this.lstPeople.length + 1;
       }
+      this.isPopupCbb = false;
       this.detectorRef.detectChanges();
     }
   }

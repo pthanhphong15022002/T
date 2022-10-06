@@ -62,92 +62,21 @@
         </div>
       </div>
       <div>
-        <div class="feed-icon">
-          <span
-            class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
-            (click)="uploadFile()"
-          >
-            <span class="icon-attach_file icon-18"></span>
-          </span>
-          <span
-            class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
-            (click)="showComments()"
-          >
-            <span class="icon-chat_bubble_outline icon-18"></span>
+        <div class="d-flex">
+          <span class="d-flex align-items-center position-relative me-4">
+            <span class="icon-mode_comment icon-20 text-gray-400"></span>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+              data?.comments ? data?.comments :'0'  }}</span>
+              </span>
+     
+          <span class="d-flex align-items-center position-relative me-4">
+            <span class="icon-attach_file icon-20 text-gray-400"></span>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+              data?.attachments ?data?.attachments :'0'  }}</span>
           </span>
         </div>
-        <codx-attachment
-          #attachment
-          [objectId]="data.recID"
-          [objectType]="data.referType"
-          [hideFolder]="'1'"
-          [hideUploadBtn]="'1'"
-          [hideDes]="'1'"
-          [type]="'inline'"
-          allowExtensions=".jpg,.png"
-          [allowMultiFile]="'1'"
-          [hideImageUpload]="'1'"
-          [hideBtnSave]="'1'"
-          [hideImageThumb]="'1'"
-          [showMessage]="'0'"
-          (fileCount)="selectedFiles($event)"
-        >
-        </codx-attachment>
-        <!-- <ng-container *ngIf="lstFile">
-          <div class="row px-4 ms-10 justify-content-between">
-            <ng-container *ngFor="let item of lstFile">
-              <div class="col-5 my-2">
-                <div class="w-100 position-relative">
-                  <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
-                    <ng-container *ngIf="item.recID; else imageSrc">
-                      <codx-img
-                        [recId]="item.recID"
-                        [objectId]="item.objectID"
-                        [width]="100"
-                        cssClass="pic"
-                        imageType="square"
-                      >
-                      </codx-img>
-                    </ng-container>
-                    <ng-template #imageSrc>
-                      <img
-                        [src]="item.data || item.thumbnail"
-                        alt=""
-                        class="image"
-                      />
-                    </ng-template>
-                  </ng-container>
-                  <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
-                    <video #video controls class="w-100 rounded min-h-250px">
-                      <source
-                        [src]="item.srcVideo || item.data"
-                        type="video/mp4"
-                      />
-                    </video>
-                  </ng-container>
-                  <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
-                    <codx-temp-full
-                      imageSrc="{{ item.extension | avtFile }}"
-                      imgCss="w-20px me-3 cursor-pointer"
-                      title="{{ item.fileName }}"
-                      [descLine]="1"
-                    >
-                    </codx-temp-full>
-                  </ng-container>
-                  <div class="remove-file">
-                    <a
-                      href="javascript:void(0)"
-                      class="h-100"
-                      (click)="removeFile(item)"
-                    >
-                      <i class="icon-close icon-18 text-danger"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-        </ng-container> -->
       </div>
     </div>
   </div>

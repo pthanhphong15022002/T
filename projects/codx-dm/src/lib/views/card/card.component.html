@@ -1,6 +1,6 @@
 <codx-card-img (dblclick)="dmSV.openItem(data)" cardCss="border w-200px h-100 card-folder-center" [imageSrc]="dmSV.getImage(data)"
   imgCss="card-img-center h-100px" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
-  [formModel]="formModel" (clickMF)="dmSV.clickMF($event, data)"
+  [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)"
   [typeMF]="'hover'" [footer]="cardImgFooter" 
   (changeDataMF)="dmSV.filterMoreFunction($event, data)">
 </codx-card-img>

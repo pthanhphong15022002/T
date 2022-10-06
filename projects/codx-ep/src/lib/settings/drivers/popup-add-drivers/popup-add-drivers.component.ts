@@ -11,10 +11,12 @@ import {
 import { FormGroup } from '@angular/forms';
 
 import {
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  NotificationsService,
   UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -38,6 +40,7 @@ export class PopupAddDriversComponent
   @Input() data: any;
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
+  @Output() loadData = new EventEmitter();
 
   headerText = '';
   subHeaderText = '';
@@ -48,10 +51,11 @@ export class PopupAddDriversComponent
 
   CbxName: any;
   isAfterRender = false;
-
+  returnData:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -124,17 +128,33 @@ export class PopupAddDriversComponent
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res) {
-          let objectID= res.save.recID !=null? res.save.recID:res.update.recID;
-          this.imageUpload
-            .updateFileDirectReload(objectID)
+        if (res) {          
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if(this.imageUpload)
+          {
+            this.imageUpload
+            .updateFileDirectReload(this.returnData.recID)
             .subscribe((result) => {
               if (result) {
-                //this.loadData.emit();
+                this.loadData.emit();
+                //xử lí nếu upload ảnh thất bại
+                //...
               }
             });
+          }          
+          if(this.isAdd){
+            (this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
+          }
+          else{
+            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
+          }          
           this.dialogRef.close();
         }
+        this.notificationsService.notifyCode('E0011');
         return;
       }); 
   }

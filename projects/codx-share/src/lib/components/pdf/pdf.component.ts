@@ -6,7 +6,9 @@ import {
   Injector,
   Input,
   IterableDiffers,
+  OnChanges,
   QueryList,
+  SimpleChanges,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -29,7 +31,7 @@ import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-
   styleUrls: ['./pdf.component.scss'],
   providers: [NgxExtendedPdfViewerService],
 })
-export class PdfComponent extends UIComponent implements AfterViewInit {
+export class PdfComponent extends UIComponent implements AfterViewInit , OnChanges {
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -46,7 +48,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //Input
   @Input() recID = '';
-  @Input() isEditable;
+  @Input() isEditable = true;
   @Input() hasPermission = false;
   @Input() isApprover;
   @Input() stepNo = -1;
@@ -274,7 +276,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       this.detectorRef.detectChanges();
     }
   }
-
+  ngOnChanges(changes: SimpleChanges): void {
+    if ((changes['inputUrl'] && (changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue))) {
+      this.curFileUrl = changes['inputUrl']?.currentValue ;
+   
+    }
+  }
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
     if (this.isEditable) {
@@ -499,6 +506,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //loaded pdf
   loadedPdf(e: any) {
+    debugger;
     this.pageMax = e.pagesCount;
     this.curPage = this.pageMax;
     let ngxService: NgxExtendedPdfViewerService =
@@ -612,6 +620,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
+    debugger;
     if (this.isEditable) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
@@ -1198,7 +1207,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
   changeSignFile(e: any) {
     this.lstSigners = e.itemData.signers;
-
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
     this.curFileUrl = this.fileInfo.fileUrl;
