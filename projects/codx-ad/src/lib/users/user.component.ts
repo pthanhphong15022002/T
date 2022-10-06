@@ -256,10 +256,7 @@ export class UserComponent extends UIComponent {
   //#endregion
 
   changeDataMF(e: any) {
-    var dl = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'SYS02'
-    );
+    var dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
     dl[0].disabled = true;
   }
 }

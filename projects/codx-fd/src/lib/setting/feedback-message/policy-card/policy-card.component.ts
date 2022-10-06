@@ -20,7 +20,7 @@ import { CodxFdService } from '../../../codx-fd.service';
 export class PolicyCardComponent extends UIComponent implements OnInit {
   action: any;
   data: any = {};
-  quality: any;
+  quantity: any;
   closeResult = '';
   valueListNameCoin: string = '';
   objectUpdate: any = {};
@@ -74,7 +74,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     }
   }
   valueChangValueList(data) {
-    this.data[data.field] = data.data;
+    this.quantity[data.field] = data.data;
     this.handleLock(data.data);
     let objectUpdate = {};
     objectUpdate[data.field] = data.data;
@@ -118,7 +118,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     if (e) {
       var field = e.field;
       this.objectUpdate[field] = e.data;
-      this.data[field] = !this.data[field];
+      this.quantity[field] = !this.quantity[field];
       this.handleSaveParameter();
     }
   }
@@ -214,7 +214,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     });
   }
   changeValueListRuleSelected(selected) {
-    this.data.RuleSelected = selected.data;
+    this.quantity.RuleSelected = selected.data;
     this.objectUpdate['RuleSelected'] = selected.data;
     this.handleSaveParameter();
   }
@@ -301,13 +301,12 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res && res.length > 0) {
           this.data = res[0];
-          this.quality = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
-          debugger;
+          this.quantity = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
           if (Object.keys(this.data).length == 0) {
             this.isShowPolicyCard = false;
           }
           this.handleLock(this.data.PolicyControl);
-          this.setValueListName(this.data);
+          this.setValueListName(this.quantity);
           this.change.detectChanges();
         }
       });

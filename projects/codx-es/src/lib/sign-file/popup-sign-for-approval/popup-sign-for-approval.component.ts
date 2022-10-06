@@ -16,9 +16,9 @@ import {
   AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { PdfComponent } from 'projects/codx-share/src/lib/components/pdf/pdf.component';
 import { threadId } from 'worker_threads';
 import { CodxEsService } from '../../codx-es.service';
-import { PdfComponent } from '../pdf/pdf.component';
 import { PopupADRComponent } from '../popup-adr/popup-adr.component';
 
 @Component({

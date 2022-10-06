@@ -10,6 +10,7 @@
         #leftToolbar
         [class.d-none]="hideThumbnail"
         heightAdjustMode="Fill"
+        (selected)="changeLeftTab($event)"
       >
         <e-tabitems>
           <e-tabitem>
@@ -22,7 +23,7 @@
               ></codx-label>
             </ng-template>
             <ng-template #content>
-              <div #thumbnailTab id="thumbnailTab" *ngIf="!isDisable"></div>
+              <div #thumbnailTab id="thumbnailTab"></div>
               <div id="sidebarContent">
                 <div id="thumbnailView" style="width: 100%; height: 100%"></div>
                 <div id="outlineView" class="d-none"></div>
@@ -205,12 +206,12 @@
               >
               </e-item>
 
-              <e-item
+              <!-- <e-item
                 id="viewThumbnail"
                 prefixIcon="icon-article icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 (click)="show($event)"
               >
-              </e-item>
+              </e-item> -->
             </e-items>
           </ejs-toolbar>
         </div>
@@ -273,6 +274,7 @@
               >
               </e-item>
               <e-item
+                *ngIf="isEditable"
                 [prefixIcon]="
                   !hideActions
                     ? 'btn btn-icon btn-light btn-sm border-0 btn-active-primary icon-arrow_forward'
@@ -330,6 +332,7 @@
       </ng-template>
     </div>
     <div
+      *ngIf="isEditable"
       class="actions flex-column flex-lg-row-auto main-right"
       [class.hideCol]="hideActions"
     >
@@ -340,7 +343,7 @@
         heightAdjustMode="Fill"
       >
         <e-tabitems>
-          <e-tabitem *ngIf="!isDisable">
+          <e-tabitem *ngIf="isEditable">
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight0"
@@ -427,7 +430,7 @@
                       type="switch"
                       labelPosition="After"
                       field=""
-                      [disabled]="isDisable"
+                      [disabled]="isEditable"
                       [crrValue]="needSuggest"
                       (valueChange)="changeSuggestState($event)"
                     >
@@ -450,7 +453,7 @@
                     <codx-input
                       type="switch"
                       field="autoSignLastLine"
-                      [disabled]="isDisable"
+                      [disabled]="isEditable"
                       [(crrValue)]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
@@ -736,7 +739,7 @@
     class="footer-left"
     [showText]="true"
     name="ES002"
-    [value]="data.signType"
+    [value]="data.stepType"
   ></codx-vll>
 </ng-template>
 

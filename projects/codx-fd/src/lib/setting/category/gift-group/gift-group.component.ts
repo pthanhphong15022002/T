@@ -97,37 +97,57 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
     this.button = {
       id: 'btnAdd',
     };
-    this.columnsGrid = [
-      { field: 'giftID', headerText: 'Mã đơn', width: 50 },
-      { field: 'giftName', headerText: 'Tên nhóm quà tặng', width: 150 },
-      { field: 'memo', headerText: 'Mô tả', template: this.memo, width: 150 },
-      {
-        field: 'createBy',
-        headerText: 'Người tạo',
-        template: this.itemCreateBy,
-        width: 200,
-      },
-      {
-        field: 'createdOn',
-        headerText: 'Ngày tạo',
-        template: this.createdOn,
-        width: 100,
-      },
-    ];
     this.changedr.detectChanges();
   }
-  ngAfterViewInit() {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnsGrid,
+  ngAfterViewInit() {}
+
+  onLoading(e) {
+    if (this.view.formModel) {
+      var formModel = this.view.formModel;
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.columnsGrid = [
+              { field: 'giftID', headerText: 'Mã đơn', width: 50 },
+              {
+                field: 'giftName',
+                headerText: res.GiftName.headerText,
+                width: 150,
+              },
+              {
+                field: 'memo',
+                headerText: res.Memo.headerText,
+                template: this.memo,
+                width: 150,
+              },
+              {
+                field: 'createBy',
+                headerText: res.CreatedBy.headerText,
+                template: this.itemCreateBy,
+                width: 200,
+              },
+              {
+                field: 'createdOn',
+                headerText: res.CreatedOn.headerText,
+                template: this.createdOn,
+                width: 100,
+              },
+            ];
+          }
+        });
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: false,
+          model: {
+            resources: this.columnsGrid,
+          },
         },
-      },
-    ];
-    this.changedr.detectChanges();
+      ];
+      this.changedr.detectChanges();
+    }
   }
 
   add(e) {

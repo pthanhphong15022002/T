@@ -54,9 +54,9 @@
                         </div>
                     </div>
                     <div class="" style="margin-left: 20px;">
-                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox" field="checkboxUpdateNotePin"
+                        <codx-input #checkBoxNote id="checkBoxNote" type="radio" field="checkboxUpdateNotePin"
                             labelPosition="After" [disabled]="false" class="test-check"
-                            (valueChange)="valueChange($event, item)"></codx-input>
+                            (valueChange)="valueChange($event, item)" name="group" [crrValue]="item.memo"></codx-input>
                     </div>
                 </div>
             </div>
