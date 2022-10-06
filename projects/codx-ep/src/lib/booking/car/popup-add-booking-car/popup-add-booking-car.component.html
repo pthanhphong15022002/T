@@ -1,7 +1,6 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
   [footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd" (setTitle)="setTitle($event)"
-  [tabContent]="[tabGeneralInfo, tabPeopleInfo,tabMoreInfo]" [data]="data">
-
+  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
       <div class="form-group">
@@ -9,18 +8,15 @@
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
           </codx-label>
           <span class="label-status text-primary">{{
-            data?.status
-            | vll: "VL003":"text"
-            | async
+            data?.status | vll: "VL003":"text" | async
             }}</span>
         </div>
         <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="valueCbxCarChange($event)">
         </codx-input>
         <div class="row">
-          <div *ngIf="tmplstDevice!=null && tmplstDevice?.length>0" class="d-flex flex-row justify-content-between">
+          <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
             <div class="d-flex justify-content-start">
-
               <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
                 <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
                   <span class="me-1 ps-2" [ngClass]="[
@@ -39,10 +35,8 @@
                   <!-- <i class="icon-panorama_fish_eye"></i> -->
                 </li>
               </div>
-
-
             </div>
-            <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice!=null">
+            <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
               <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
                 (click)="openPopupDevice(popupDevice)">
                 <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
@@ -54,8 +48,8 @@
 
       <div class="row form-group d-flex flex-row justify-content-start align-items-center">
         <div class="col-1">
-          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true"
-            [checked]="driverCheck" (valueChange)="valueChange($event)" >
+          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
         <div class="col-5">
@@ -63,8 +57,8 @@
         </div>
 
         <div class="col-1">
-          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true"
-            [checked]="useCard" (valueChange)="valueChange($event)">
+          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="useCard"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
         <div class="col-5">
@@ -105,8 +99,7 @@
       </div>
 
       <div class="form-group">
-        <codx-label fiedName="Title" [formModel]="form.formModel">
-        </codx-label>
+        <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
         <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
       </div>
 
@@ -144,17 +137,22 @@
           </codx-label>
           <div class="d-flex flex-row text-end align-items-end">
             <span class="mx-2"> </span>
-            <codx-input type="Combobox" name="combobox" [refValue]="'MultiUsers'" [multiple]="true" [showInput]="false"
-              refType="P" field="popup" (valueChange)="valueCbxUserChange($event)">
-            </codx-input>
+            <button class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupCbb()">
+              <span class="icon-group_add icon-18"></span>
+            </button> 
           </div>
         </div>
-
+        <ng-container *ngIf="isPopupCbb">
+          <codx-combobox-popup [comboboxName]="'Users'" [field]="'cbbUser'" [multiple]="true" [width]="700" [height]="600"
+              [value]="cbbData" [formModel]="formModel" (clickSave)="valueCbxUserChange($event)">
+          </codx-combobox-popup>
+        </ng-container>
         <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
           <div class="" *ngIf="driver != null">
             <div class="symbol symbol-30px symbol-circle">
               <codx-img [objectId]="driver.objectID" width="30" [objectType]="driver.objectType"></codx-img>
-              <span class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
+              <span
+                class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
             </div>
           </div>
           <div class="" *ngIf="curUser != null">
@@ -205,13 +203,14 @@
         <div class="text-dark fw-bold fs-6 fw-bolder">
           {{ driver.userName }}
         </div>
-        <span class="text-muted fw-bold">{{'2'| vll: "EP010":"text"| async}}</span>
+        <span class="text-muted fw-bold">{{
+          "2" | vll: "EP010":"text" | async
+          }}</span>
       </div>
 
       <!-- <div class="d-flex flex-column justify-content-end align-items-end">
       <span class="badge badge-light-success fs-7 fw-bold mb-1"
-        >Bắt buộc</span
-      >
+        >Bắt buộc</span>
       <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
     </div> -->
     </div>
@@ -226,7 +225,9 @@
         <div class="text-dark fw-bold fs-6 fw-bolder">
           {{ curUser.userName }}
         </div>
-        <span class="text-muted fw-bold">{{curUser.roleType| vll: "EP010":"text"| async}}</span>
+        <span class="text-muted fw-bold">{{
+          curUser.roleType | vll: "EP010":"text" | async
+          }}</span>
       </div>
 
       <!-- <div class="d-flex flex-column justify-content-end align-items-end">
@@ -235,7 +236,7 @@
     </div> -->
     </div>
 
-    <div *ngIf="lstPeople!=null">
+    <div *ngIf="lstPeople != null">
       <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
         <div class="symbol symbol-30px symbol-circle me-4">
           <codx-img [objectId]="item.userID" [width]="30" objectType="AD_Users"></codx-img>
@@ -246,7 +247,9 @@
           <div class="text-dark fw-bold fw-bold">
             {{ item.userName }}
           </div>
-          <span class="text-muted fw-bold">{{item.roleType| vll: "EP010":"text"| async}}</span>
+          <span class="text-muted fw-bold">{{
+            item.roleType | vll: "EP010":"text" | async
+            }}</span>
         </div>
 
         <!-- <div class="d-flex flex-column justify-content-end align-items-end">
@@ -306,7 +309,14 @@
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()">Lưu</button>
+      <div class="btn-group">
+        <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
+          <codx-label name="lblApprove" default="Gửi duyệt"  [formModel]="formModel"></codx-label>
+        </button>
+        <button class="btn btn-primary" (click)="onSaveForm()">
+          <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+        </button>
+      </div>
     </div>
   </ng-template>
   <ng-template #popupDevice let-dialog>
@@ -332,17 +342,17 @@
         <div class="d-flex flex-stack">
           <div class="d-flex">
             <span class="text-dark me-2 p-1" [ngClass]="[
-              item.isSelected ? 'text-primary' : 'text-muted',
-              item.id == '1'
-                ? 'icon-wifi'
-                : item.id == '2'
-                ? 'icon-personal_video'
-                : item.id == '3'
-                ? 'icon-mic_none'
-                : item.id == '4'
-                ? 'icon-switch_video'
-                : ' icon-thermostat'
-            ]">
+                item.isSelected ? 'text-primary' : 'text-muted',
+                item.id == '1'
+                  ? 'icon-wifi'
+                  : item.id == '2'
+                  ? 'icon-personal_video'
+                  : item.id == '3'
+                  ? 'icon-mic_none'
+                  : item.id == '4'
+                  ? 'icon-switch_video'
+                  : ' icon-thermostat'
+              ]">
             </span>
             <div class="d-flex flex-column justify-content-center">
               <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
@@ -364,5 +374,4 @@
       </button>
     </div>
   </ng-template>
-
 </codx-layout-add>

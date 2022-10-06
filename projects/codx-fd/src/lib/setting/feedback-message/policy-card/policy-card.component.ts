@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataRequest, NotificationsService, UIComponent } from 'codx-core';
+import { CodxFdService } from '../../../codx-fd.service';
 
 @Component({
   selector: 'app-policy-card',
@@ -18,7 +19,8 @@ import { DataRequest, NotificationsService, UIComponent } from 'codx-core';
 })
 export class PolicyCardComponent extends UIComponent implements OnInit {
   action: any;
-  item: any = {};
+  data: any = {};
+  quantity: any;
   closeResult = '';
   valueListNameCoin: string = '';
   objectUpdate: any = {};
@@ -36,6 +38,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     private change: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private settingSV: SettingService,
+    private fdSV: CodxFdService,
     injector: Injector
   ) {
     super(injector);
@@ -53,12 +56,12 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.LoadData();
-    this.LoadDataForChangeVLL();
+    // this.LoadDataForChangeVLL();
   }
 
   changeCombobox(data) {
     if (data.data[0].recID || data.data[0].RecID) {
-      this.item.Approvers = data.data[0].recID || data.data[0].RecID;
+      this.data.Approvers = data.data[0].recID || data.data[0].RecID;
       this.objectUpdate['Approvers'] = data.data[0].recID || data.data[0].RecID;
       if (data.data.length > 1) {
         for (let i = 1; i < data.data.length; i++) {
@@ -71,7 +74,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     }
   }
   valueChangValueList(data) {
-    this.item[data.field] = data.data;
+    this.quantity[data.field] = data.data;
     this.handleLock(data.data);
     let objectUpdate = {};
     objectUpdate[data.field] = data.data;
@@ -87,7 +90,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       });
       return;
     }
-    switch (this.item.PolicyControl) {
+    switch (this.data.PolicyControl) {
       case '1':
         this.isLockCoin = false;
         this.isLockDedicate = false;
@@ -115,7 +118,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     if (e) {
       var field = e.field;
       this.objectUpdate[field] = e.data;
-      this.item[field] = !this.item[field];
+      this.quantity[field] = !this.quantity[field];
       this.handleSaveParameter();
     }
   }
@@ -136,7 +139,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res && res.msgBodyData.length > 0) {
           if (res.msgBodyData[0] === true) {
-            this.item[this.fieldUpdate] = objectUpdate[this.fieldUpdate];
+            this.data[this.fieldUpdate] = objectUpdate[this.fieldUpdate];
             this.change.detectChanges();
           }
         }
@@ -150,11 +153,11 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
 
   openPopupCbb(content) {
     // this.cbxsv.dataSelcected = [];
-    var split = this.item.Approvers.split(';');
+    var split = this.data.Approvers.split(';');
     if (split.length > 1) {
       this.api
         .call('ERM.Business.AD', 'UsersBusiness', 'GetListUsersGroupAsync', [
-          this.item.Approvers,
+          this.data.Approvers,
         ])
         .subscribe((res) => {
           if (res && res.msgBodyData[0]) {
@@ -167,7 +170,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     } else {
       this.api
         .call('ERM.Business.AD', 'UsersBusiness', 'GetListUsersGroupAsync', [
-          this.item.Approvers,
+          this.data.Approvers,
         ])
         .subscribe((res) => {
           if (res && res.msgBodyData[0]) {
@@ -190,19 +193,19 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     this.modelForm.title = arrayTitle[typeContent];
     this.modelForm.type = typeContent;
     if (typeContent == 0) {
-      this.modelForm.quantity = this.item.MaxSends;
-      this.modelForm.cycle = this.item.MaxSendPeriod;
+      this.modelForm.quantity = this.data.MaxSends;
+      this.modelForm.cycle = this.data.MaxSendPeriod;
     }
     if (typeContent == 1) {
-      this.modelForm.quantity = this.item.MaxReceives;
-      this.modelForm.cycle = this.item.MaxReceivePeriod;
+      this.modelForm.quantity = this.data.MaxReceives;
+      this.modelForm.cycle = this.data.MaxReceivePeriod;
     }
     if (typeContent == 2) {
-      this.modelForm.quantity = this.item.MaxPoints;
-      this.modelForm.cycle = this.item.MaxPointPeriod;
+      this.modelForm.quantity = this.data.MaxPoints;
+      this.modelForm.cycle = this.data.MaxPointPeriod;
     }
     if (typeContent == 3) {
-      this.modelForm.quantity = this.item.MaxPointPerOnce;
+      this.modelForm.quantity = this.data.MaxPointPerOnce;
     }
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -211,7 +214,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     });
   }
   changeValueListRuleSelected(selected) {
-    this.item.RuleSelected = selected.data;
+    this.quantity.RuleSelected = selected.data;
     this.objectUpdate['RuleSelected'] = selected.data;
     this.handleSaveParameter();
   }
@@ -242,28 +245,28 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       return null;
     }
     if (typeContent == 0) {
-      this.item.MaxSends = this.modelForm.quantity;
+      this.data.MaxSends = this.modelForm.quantity;
       objectUpdate = {
         MaxSends: this.modelForm.quantity,
         MaxSendPeriod: this.MaxSendPeriod,
       };
     }
     if (typeContent == 1) {
-      this.item.MaxReceives = this.modelForm.quantity;
+      this.data.MaxReceives = this.modelForm.quantity;
       objectUpdate = {
         MaxReceives: this.modelForm.quantity,
         MaxReceivePeriod: this.MaxReceivePeriod,
       };
     }
     if (typeContent == 2) {
-      this.item.MaxPoints = this.modelForm.quantity;
+      this.data.MaxPoints = this.modelForm.quantity;
       objectUpdate = {
         MaxPoints: this.modelForm.quantity,
         MaxPointPeriod: this.MaxPointPeriod,
       };
     }
     if (typeContent == 3) {
-      this.item.MaxPointPerOnce = this.modelForm.quantity;
+      this.data.MaxPointPerOnce = this.modelForm.quantity;
       objectUpdate = {
         MaxPointPerOnce: this.modelForm.quantity,
       };
@@ -297,30 +300,31 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       )
       .subscribe((res: any) => {
         if (res && res.length > 0) {
-          this.item = JSON.parse(res[0].dataValue);
-          if (Object.keys(this.item).length == 0) {
+          this.data = res[0];
+          this.quantity = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
+          if (Object.keys(this.data).length == 0) {
             this.isShowPolicyCard = false;
           }
-          this.handleLock(this.item.PolicyControl);
-          this.setValueListName(this.item);
+          this.handleLock(this.data.PolicyControl);
+          this.setValueListName(this.quantity);
           this.change.detectChanges();
         }
       });
   }
-  LoadDataForChangeVLL() {
-    this.settingSV.getParameter().subscribe((res) => {
-      if (res) {
-        this.setValueListName(res[0]);
-      }
-    });
-  }
+  // LoadDataForChangeVLL() {
+  //   this.settingSV.getParameter().subscribe((res) => {
+  //     if (res) {
+  //       this.setValueListName(res[0]);
+  //     }
+  //   });
+  // }
   setValueListName(list) {
     if (!list) return;
-    var item;
-    if (list?.dataValue) item = JSON.parse(list.dataValue);
-    else item = list;
-    const isActiveCoins = item.hasOwnProperty('ActiveCoins');
-    const isActiveMyKudos = item.hasOwnProperty('ActiveMyKudos');
+    var data;
+    if (list?.dataValue) data = JSON.parse(list.dataValue);
+    else data = list;
+    const isActiveCoins = data.hasOwnProperty('ActiveCoins');
+    const isActiveMyKudos = data.hasOwnProperty('ActiveMyKudos');
     if (isActiveCoins && isActiveMyKudos) {
       this.valueListNameCoin = 'L1434';
       return;

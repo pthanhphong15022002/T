@@ -17,7 +17,9 @@
           <div class="d-flex flex-column">
             <div class="fw-bolder d-flex align-items-center fs-5">
               {{ _user.userName }}
-              <span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">Online</span>
+              <span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">
+                <codx-label fiedName="IsOnline" [formModel]="formModel" default="Online"></codx-label>
+              </span>
             </div>
             <a class="fw-bold text-muted text-hover-primary fs-7 cursor-pointer" href="mailto:{{ _user.email}}">
               {{ _user.email }}
@@ -34,20 +36,22 @@
       <div class="menu-item px-5">
         <a [routerLink]="['/user/profile-overview']" [queryParams]="{funcID: 'POR004',type:'U', id:'admin' }"
           class="menu-link px-5">
-          My Profile
+          <codx-label fiedName="lblMyProfile" [formModel]="formModel" default="My Profile"></codx-label>
         </a>
       </div>
 
       <div class="menu-item px-5">
         <a (click)="this.codxService.navigate(null, 'changepassword')" class="menu-link px-5">
-          Thay đổi mật khẩu
+          <codx-label fiedName="lblChangePass" [formModel]="formModel" default="Thay đổi mật khẩu"></codx-label>
         </a>
       </div>
 
       <div class="separator my-2"></div>
 
       <div class="px-5">
-        <span>Change theme</span>
+        <span>
+          <codx-label fiedName="lblChangeTheme" [formModel]="formModel" default="Change theme"></codx-label>
+        </span>
         <div class="mt-3 d-flex">
           <div class="theme-color">
             <div class="symbol-list d-flex flex-wrap mb-4">
@@ -67,7 +71,7 @@
         data-kt-menu-flip="bottom">
         <a class="menu-link px-5 cursor-pointer">
           <span class="menu-title position-relative">
-            Language
+            <codx-label fiedName="lblLanguage" [formModel]="formModel" default="Language"></codx-label>
             <span class="
                 fs-8
                 rounded
@@ -100,12 +104,14 @@
 
       <div class="menu-item px-5 my-1">
         <span (click)="clearCache()" class="menu-link px-5">
-          Cleart cache
+          <codx-label fiedName="lblClearCache" [formModel]="formModel" default="Clear cache"></codx-label>
         </span>
       </div>
 
       <div class="menu-item px-5">
-        <a (click)="logout()" class="menu-link px-5 cursor-pointer"> Sign Out </a>
+        <a (click)="logout()" class="menu-link px-5 cursor-pointer">
+          <codx-label fiedName="lblSignOut" [formModel]="formModel" default="Sign Out"></codx-label>
+        </a>
       </div>
     </ng-container>
   </div>

@@ -42,7 +42,7 @@ export class ViewFileDialogComponent implements OnInit {
   formModel: any;
   pathVideo: string;
   openUrl: string;
-  urlTxt:string;
+  urlTxt:any;
   public urlSafe: any;
   @Input() id: string;
   @Input() ext: string;
@@ -75,7 +75,6 @@ export class ViewFileDialogComponent implements OnInit {
     }      
     else
       this.data = data;
-    debugger;
     this.id = this.data.recID;
     // this.fileService.getFile(this.id).subscribe(item => {
     //   if (item != null) {
@@ -309,7 +308,7 @@ export class ViewFileDialogComponent implements OnInit {
     }
     else if(this.data?.extension.includes("txt"))
     {
-      this.urlTxt = file;
+      this.urlTxt = this.sanitizer.bypassSecurityTrustResourceUrl(file);
     }
     // if ( this.srcVideo == "" && this.linkViewImage == "") {
       // setTimeout(() => {

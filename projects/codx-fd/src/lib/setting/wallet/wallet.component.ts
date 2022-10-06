@@ -11,6 +11,7 @@ import {
 import { Location } from '@angular/common';
 import { AuthStore, NotificationsService, UIComponent } from 'codx-core';
 import { SettingService } from '../setting.service';
+import { CodxFdService } from '../../codx-fd.service';
 
 @Component({
   selector: 'app-wallet',
@@ -20,7 +21,8 @@ import { SettingService } from '../setting.service';
 export class WalletComponent extends UIComponent implements OnInit {
   titlePage = '';
   datafuntion = null;
-  item = null;
+  data: any = {};
+  quantity: any;
   tenant: any;
   objectUpdateCoin = {};
   fieldUpdateCoin = '';
@@ -39,6 +41,8 @@ export class WalletComponent extends UIComponent implements OnInit {
     'ResetMyKudosControl',
   ];
   listParameter;
+  funcID: any;
+  functionList: any;
 
   constructor(
     private at: ActivatedRoute,
@@ -48,10 +52,18 @@ export class WalletComponent extends UIComponent implements OnInit {
     private authStore: AuthStore,
     private settingSV: SettingService,
     private notification: NotificationsService,
+    private route: ActivatedRoute,
+    private fdSV: CodxFdService,
     injector: Injector
   ) {
     super(injector);
     this.tenant = this.authStore.get();
+    this.route.params.subscribe(params => {
+      if(params) this.funcID = params['funcID'];
+    })
+    this.cache.functionList(this.funcID).subscribe(res => {
+      if(res) this.functionList = res;
+    })
   }
   onInit(): void {
     this.LoadData();
@@ -79,6 +91,9 @@ export class WalletComponent extends UIComponent implements OnInit {
       }
     });
   }
+  getItems(category) {
+    return this.policyList.filter((item) => item.category === category);
+  }
   backLocation() {
     this.location.back();
   }
@@ -94,14 +109,14 @@ export class WalletComponent extends UIComponent implements OnInit {
     // });
   }
   changValueListPopup(e) {
-    this.item[e.field] = e.data.value;
-    this.objectUpdateCoin[e.field] = this.item[e.field];
+    this.data[e.field] = e.data.value;
+    this.objectUpdateCoin[e.field] = this.data[e.field];
     this.fieldUpdateCoin = e.field;
     this.handleSaveParameter();
   }
   valueChange(e, element) {
-    this.item[e.field] = e.data; //this.item[e.field] === '0' ? '1' : '0';
-    this.objectUpdateCoin[e.field] = this.item[e.field] === true ? '1' : '0';
+    this.data[e.field] = e.data; //this.data[e.field] === '0' ? '1' : '0';
+    this.objectUpdateCoin[e.field] = this.data[e.field] === true ? '1' : '0';
     this.fieldUpdateCoin = e.field;
 
     if (e.field == 'ActiveCoCoins') {
@@ -110,9 +125,9 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.handleSaveParameter();
   }
   onSavePopupCombobx() {
-    this.objectUpdateCoin['MaxCoinsForEGift'] = this.item.MaxCoinsForEGift;
+    this.objectUpdateCoin['MaxCoinsForEGift'] = this.data.MaxCoinsForEGift;
     this.objectUpdateCoin['MaxCoinsForEGiftPeriod'] =
-      this.item.MaxCoinsForEGiftPeriod;
+      this.data.MaxCoinsForEGiftPeriod;
 
     this.onSaveCMParameter(this.objectUpdateCoin);
     this.modalService.dismissAll();
@@ -127,20 +142,20 @@ export class WalletComponent extends UIComponent implements OnInit {
   LoadData() {
     this.api
       .call(
-        'ERM.Business.FED',
+        'ERM.Business.FD',
         'WalletsBusiness',
         'GetDataForSettingWalletAsync',
-        []
       )
       .subscribe((res) => {
-        if (res && res.msgBodyData.length > 0) {
-          this.item = res.msgBodyData[0].parameter;
-          for (const property in this.item) {
+        if (res && res.msgBodyData[0].length > 0) {
+          this.data = res.msgBodyData[0][0];
+          this.quantity = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
+          for (const property in this.data) {
             if (this.lstHandleStringToBool.includes(property)) {
-              this.item[property] = this.item[property] == '1' ? true : false;
+              this.data[property] = this.data[property] == '1' ? true : false;
             }
           }
-          if (this.item['ActiveCoCoins'] == true) {
+          if (this.quantity.ActiveCoCoins == true) {
             this.disableGroupFund = false;
           } else {
             this.disableGroupFund = true;
@@ -175,9 +190,9 @@ export class WalletComponent extends UIComponent implements OnInit {
       )
       .subscribe((res) => {
         var index = this.policyList.findIndex((p) => p.recID == data.field);
-        var item = this.policyList.find((p) => p.recID == data.field);
-        item.actived = data.data;
-        this.policyList[index] = item;
+        var data = this.policyList.find((p) => p.recID == data.field);
+        data.actived = data.data;
+        this.policyList[index] = data;
         this.changedr.detectChanges();
       });
   }
@@ -189,7 +204,7 @@ export class WalletComponent extends UIComponent implements OnInit {
   openFormChangeCoin(content, typeContent) {
     this.fieldUpdateCoin = typeContent;
     this.objectUpdateCoin[this.fieldUpdateCoin] =
-      this.item[this.fieldUpdateCoin];
+      this.data[this.fieldUpdateCoin];
     this.changedr.detectChanges();
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -199,8 +214,8 @@ export class WalletComponent extends UIComponent implements OnInit {
   }
 
   policyList = [];
-  getItems(category) {
-    return this.policyList.filter((item) => item.category === category);
+  getdatas(category) {
+    return this.policyList.filter((data) => data.category === category);
   }
   handleSaveParameter() {
     this.onSaveCMParameter(this.objectUpdateCoin);
@@ -221,10 +236,10 @@ export class WalletComponent extends UIComponent implements OnInit {
           if (res.msgBodyData[0] === true) {
             for (const property in objectUpdate) {
               if (this.lstHandleStringToBool.includes(property)) {
-                this.item[property] =
+                this.data[property] =
                   objectUpdate[property] == '1' ? true : false;
               } else {
-                this.item[property] = objectUpdate[property];
+                this.data[property] = objectUpdate[property];
               }
             }
             this.changedr.detectChanges();

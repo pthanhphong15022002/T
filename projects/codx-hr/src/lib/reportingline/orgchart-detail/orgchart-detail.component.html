@@ -3,7 +3,7 @@
         #p="ngbPopover" triggers="manual">
         <ejs-diagram #diagram width="100%" height="500px" [getConnectorDefaults]="connDefaults"
             [getNodeDefaults]="nodeDefaults" [layout]="layout" [tool]="tool" [snapSettings]="snapSettings"
-            [dataSourceSettings]="datasetting" (click)="orgClick($event)">
+            [dataSourceSettings]="datasetting" >
             <ng-template #nodeTemplate let-node>
                 <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
                     [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">

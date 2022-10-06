@@ -18,13 +18,13 @@
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="w-100 bg-body rounded-3 p-9">
-            <div class="form-group">
-              <codx-label class="text-primary fs-4" default="Thông tin chung">
+          <div class="w-100 bg-body h-100 rounded-3 p-7">
+            <!-- <div class="form-group">
+              <codx-label class="" default="Thông tin chung">
               </codx-label>
-            </div>
-            <div class="form-group">
-              <codx-label class="text-dark" default="Hiển thị">
+            </div> -->
+            <div class="mb-7">
+              <codx-label class="fw-bold text-primary fs-4" default="Hiển thị">
               </codx-label>
             </div>
             <div class="form-group row mt-3">
@@ -226,9 +226,9 @@
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="w-100 bg-body rounded-3 p-9">
-            <div class="form-group">
-              <codx-label default="Chính sách bảo mật">
+          <div class="w-100 bg-body h-100 rounded-3 p-7">
+            <div class="mb-7">
+              <codx-label class="text-primary fs-4 fw-bold" default="Chính sách bảo mật">
               </codx-label>
             </div>
             <div class="form-group row mt-3">
@@ -248,6 +248,7 @@
                 </codx-input>
               </div>
             </div>
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
               <div class="col-8">
                 <codx-label class="text-dark" fiedName="PWLifeDays" default="Thời gian mật khẩu"
@@ -264,7 +265,7 @@
                 </codx-input>
               </div>
             </div>
-
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
               <div class="col-8">
                 <codx-label class="text-dark" fiedName="PWExpireWarning" default="Cảnh báo hết hạn mật khẩu"
@@ -282,7 +283,7 @@
                 </codx-input>
               </div>
             </div>
-
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
               <div class="col-8">
                 <codx-label class="text-dark" fiedName="PWDuplicate" default="Kiểm tra trùng mật khẩu"
@@ -300,7 +301,7 @@
                 </codx-input>
               </div>
             </div>
-
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
               <div class="col-8">
                 <codx-label class="text-dark" fiedName="BlockSystem" default="Khóa đăng nhập" formName="SystemSetting"
@@ -317,7 +318,7 @@
                 </codx-input>
               </div>
             </div>
-
+            <hr class="bg-gray-300" />
             <div class="form-group row mt-3">
               <div class="col-8">
                 <codx-label class="text-dark" fiedName="FreezeInMinutes" default="Khóa hệ thống"
@@ -326,7 +327,6 @@
                 <div>
                   <span class="fw-normal text-gray-500" [innerHTML]="freezeInMinutes"></span>
                 </div>
-
               </div>
               <div class="col-4">
                 <codx-input name="freezeInMinutes" type="valuelist" field="freezeInMinutes" placeholder=""
@@ -351,23 +351,24 @@
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="w-100 bg-body rounded-3 p-9">
+          <div class="w-100 h-100 bg-body rounded-3 p-7">
+            <div class="mb-4">
+              <codx-label class="fw-bold text-primary fs-4" default="Cấu hình ứng dụng">
+              </codx-label>
+            </div>
             <ng-container *ngFor="let item of functionList">
-
-              <div class="d-flex justify-content-between align-items-center flex-wrap  pt-4 pb-2">
+              <div class="d-flex justify-content-between align-items-center flex-wrap pt-4 pb-2">
                 <div class="d-flex flex-wrap">
-                  <img class="w-40px" src="../../../{{ item.smallIcon}}" alt="" />
-                  <div>
-                    <div class="fw-bold" style="font-weight: bold; margin-left: 10px;">
-                      <codx-label formName="SystemSetting" gridViewName="grvSystemSetting" [default]="item.customName">
-
-                      </codx-label>
-
-                    </div>
-                    <div style="margin-left: 10px;">
-                      <codx-label formName="SystemSetting" gridViewName="grvSystemSetting" [default]="item.description">
-                      </codx-label>
-                    </div>
+                  <div class="me-4 w-40px">
+                    <img class="w-40px h-40px" src="../../../{{ item.smallIcon}}" alt="" />
+                  </div>
+                  <div class="d-flex flex-column">
+                    <codx-label class="fw-bold" formName="SystemSetting" gridViewName="grvSystemSetting"
+                      [default]="item.customName">
+                    </codx-label>
+                    <codx-label class="text-gray-500" formName="SystemSetting" gridViewName="grvSystemSetting"
+                      [default]="item.description">
+                    </codx-label>
                   </div>
                 </div>
                 <div class="d-flex flex-column justify-content-end">

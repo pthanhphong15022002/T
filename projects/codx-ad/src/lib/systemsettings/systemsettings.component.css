@@ -44,3 +44,7 @@
 lib-systemsettings .e-tab .e-tab-header.e-vertical:before {
     display: none;
 }
+
+.e-tab .e-tab-header.e-vertical:before {
+    box-shadow: none;
+}
