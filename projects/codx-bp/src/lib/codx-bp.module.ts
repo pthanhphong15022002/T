@@ -9,6 +9,8 @@ import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
 import { PopAddProcessesComponent } from './processes/pop-add-processes/pop-add-processes.component';
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
+import { ProcessstepsComponent } from './processsteps/processsteps.component';
+import { PopAddProcessstepsComponent } from './processsteps/pop-add-processsteps/pop-add-processsteps.component';
 
 export const routes: Routes = [
   {
@@ -16,12 +18,12 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'testhtml',
-        component: TesthtmlComponent,
-      },
-      {
         path: 'processes/:funcID',
         component: ProcessesComponent,
+      },
+      {
+        path: 'processstep/:funcID',
+        component: ProcessstepsComponent,
       }
     ]
   }
@@ -35,6 +37,8 @@ export const routes: Routes = [
     ProcessesComponent,
     PopAddProcessesComponent,
     ViewListProcessesComponent,
+    ProcessstepsComponent,
+    PopAddProcessstepsComponent,
 
   ],
   imports: [
