@@ -11,6 +11,8 @@ import { PopAddProcessesComponent } from './processes/pop-add-processes/pop-add-
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
 import { ProcessstepsComponent } from './processsteps/processsteps.component';
 import { PopAddProcessstepsComponent } from './processsteps/pop-add-processsteps/pop-add-processsteps.component';
+import { PopupAddProcessStepComponent } from './processstep/popup-add-processstep/popup-add-processstep.component';
+import { ProcessStepComponent } from './processstep/processstep.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +27,10 @@ export const routes: Routes = [
         path: 'processstep/:funcID',
         component: ProcessstepsComponent,
       },
+      {
+        path: 'processstepTH/:funcID',
+        component: ProcessStepComponent,
+      },
     ],
   },
 ];
@@ -38,6 +44,9 @@ export const routes: Routes = [
     ViewListProcessesComponent,
     ProcessstepsComponent,
     PopAddProcessstepsComponent,
+    ProcessStepComponent,
+    PopupAddProcessStepComponent,
+
   ],
   imports: [
     RouterModule.forChild(routes),

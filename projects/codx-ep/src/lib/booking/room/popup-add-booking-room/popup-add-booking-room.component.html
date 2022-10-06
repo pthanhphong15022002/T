@@ -312,7 +312,10 @@
           <span class="text-gray-800 text-hover-primary fw-bolder lh-0">{{
             item.text
             }}</span>
-          <span class="text-gray-400 d-block fs-6">Đơn vị tính : {{ item.umid }}
+          <span class="text-gray-400 d-block fs-6">
+            <codx-label name="lblUMID" default="Đơn vị tính"></codx-label> 
+            : 
+            {{ item.umid }}
           </span>
         </div>
       </div>
