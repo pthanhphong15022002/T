@@ -302,7 +302,7 @@ export class CodxTasksComponent
         },
       },
       {
-        id: '16',
+        // id: '16',
         type: ViewType.content,
         active: false,
         sameData: false,
@@ -1532,7 +1532,7 @@ export class CodxTasksComponent
     IdField: 'owner',
     TextField: 'userName',
     Title: 'Resources',
-  };
+  }; 
 
   viewChange(evt: any) {
     let fied = this.gridView?.dateControl || 'DueDate';

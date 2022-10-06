@@ -34,7 +34,7 @@ implements OnInit, AfterViewInit {
   service = 'BP';
   entityName = 'BP_ProcessStepsBusiness';
   idField = 'recID';
-  assemblyName = 'ERM.Business.TM';
+  assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
   method = 'GetProcessStepsAsync'; //chua viet
   constructor(
@@ -48,31 +48,42 @@ implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+     
   }
-
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
+      items:[
+        {
+          id: 'edit',
+          icon: 'icon-list-checkbox',
+          text: 'Sửa',
+        },
+        {
+          id: 'btnMF2',
+          icon: 'icon-list-checkbox',
+          text: 'more 2',
+        },
+      ]
     };
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+
   }
   ngAfterViewInit(): void {
     this.views = [
       {
-        type: ViewType.list,
+        type: ViewType.content,
         active: false,
         sameData: true,
         model: {
           template: this.itemViewList,
-        },
-      },
-      {
-        type: ViewType.listdetail,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.panelRight,
         },
       },
       {
@@ -100,6 +111,10 @@ implements OnInit, AfterViewInit {
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
+  }
+
+  changeDataMF(e,data){
+
   }
 
 

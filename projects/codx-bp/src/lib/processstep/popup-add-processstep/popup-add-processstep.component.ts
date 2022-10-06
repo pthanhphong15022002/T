@@ -13,14 +13,18 @@ export class PopupAddProcessStepComponent implements OnInit {
   readOnly = false;
   dialog: DialogRef;
   showLabelAttachment = false;
-  constructor() {}
   funcID: any;
-  ngOnInit(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef): void {
+  
+  constructor(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
     this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.titleActon = dt?.data[1] ;
     this.funcID = this.dialog.formModel.funcID;
 
     this.dialog = dialog ;
+  }
+  
+  ngOnInit(): void {
+   
   }
 
   saveData(data) {}
