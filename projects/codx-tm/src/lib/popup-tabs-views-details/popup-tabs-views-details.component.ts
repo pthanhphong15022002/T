@@ -23,7 +23,7 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
   dialog: DialogRef;
   active = 1;
   iterationID: any;
-  data :any
+  data: any;
   functionParent: any;
   meetingID: any;
   dataObj: any;
@@ -53,47 +53,51 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
   showButtonAdd = true;
   showMoreFunc = true;
   offset = '0px';
-  listRecID = []
+  listRecID = [];
 
   constructor(
     private tmSv: CodxTMService,
-    private activedRouter : ActivatedRoute,
+    private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data =  dt?.data?.data ;
-    this.dataObj = dt?.data?.dataObj ;
+    this.data = dt?.data?.data;
+    this.dataObj = dt?.data?.dataObj;
     this.functionParent = this.activedRouter.snapshot.params['funcID'];
 
-    if(this.data?.iterationID){
+    if (this.data?.iterationID) {
       // this.projectCategory = this.data?.projectCategory;
-      this.createdByName = this.data?.createdByName ;
-      this.nameObj = this.data?.iterationName ;
-      this.projectID = this.data?.projectID ;
-      this.resources = this.data?.resources ;
-      this.iterationID = this.data?.iterationID
+      this.createdByName = this.data?.createdByName;
+      this.nameObj = this.data?.iterationName;
+      this.projectID = this.data?.projectID;
+      this.resources = this.data?.resources;
+      this.iterationID = this.data?.iterationID;
     }
 
-    if(this.data?.meetingID){
-      this.createdByName = this.data?.userName ;
-      this.nameObj = this.data?.meetingName ;
-      this.projectID = this.data?.refID ;
-      this.resources = this.dataObj?.resources ;
-      this.meetingID = this.data?.meetingID
-      this.name = "Comments"
-       this.all = [
-        { name: 'MeetingContents', textDefault: 'Nội dung họp', isActive: false },
+    if (this.data?.meetingID) {
+      this.getListRecID(this.meetingID);
+      this.createdByName = this.data?.userName;
+      this.nameObj = this.data?.meetingName;
+      this.projectID = this.data?.refID;
+      this.resources = this.dataObj?.resources;
+      this.meetingID = this.data?.meetingID;
+      this.name = 'Comments';
+      this.all = [
+        {
+          name: 'MeetingContents',
+          textDefault: 'Nội dung họp',
+          isActive: false,
+        },
         { name: 'Comments', textDefault: 'Thảo luận', isActive: true },
         { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
         { name: 'Tasks', textDefault: 'Công việc', isActive: false },
       ];
-   
-      this.showButtonAdd = false ;
+
+      this.showButtonAdd = false;
       this.showMoreFunc = false;
-      this.getListRecID(this.meetingID)
     }
-    
+
     this.dialog = dialog;
   }
 
@@ -115,6 +119,13 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
         (x: TabModelSprints) => x.isActive == true
       );
     }
+    if (
+      this.name == 'Tasks' ||
+      this.name == 'AssignTo' ||
+      this.name == 'Meetings'
+    )
+      this.offset = '65px';
+    else this.offset = '0px';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -128,7 +139,11 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
     });
     // var body = document.querySelectorAll('body.toolbar-enabled');
     // if(body && body.length > 0)
-    if (this.name == 'Tasks'|| this.name == 'AssignTo' || this.name == 'Meetings')
+    if (
+      this.name == 'Tasks' ||
+      this.name == 'AssignTo' ||
+      this.name == 'Meetings'
+    )
       this.offset = '65px';
     else this.offset = '0px';
     item.isActive = true;

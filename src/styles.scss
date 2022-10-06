@@ -649,7 +649,13 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .codx-tab .tab-content {
   min-width: 545px !important;
-  width: 545px !important;
+  // width: 545px !important;
+}
+
+.e-sidebar {
+  .codx-tab .tab-content {
+    width: 545px !important;
+  }
 }
 
 .e-appointment {

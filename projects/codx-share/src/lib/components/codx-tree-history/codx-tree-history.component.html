@@ -13,7 +13,7 @@
     </div>
 </div>
 <ng-template #NodeHistory let-item>
-    <div class="c1" [attr.dt]="setDicData(item)">
+    <div class="c1 task-his mb-3" [attr.dt]="setDicData(item)">
         <codx-comment-history [data]="item" [actionType]="item.actionType" [type]="'view'"
             (evtDelete)="deleteComment($event)" (evtReply)="replyTo($event)" [viewIcon]="viewIcon"
             [allowVotes]="viewVote">
@@ -32,4 +32,5 @@
             </codx-comment-history>
         </ng-container>
     </div>
+
 </ng-template>
