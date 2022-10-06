@@ -13,6 +13,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CRUDService,
   DialogData,
   DialogRef,
   ImageViewerComponent,
@@ -140,21 +141,29 @@ export class PopupAddSprintsComponent implements OnInit {
 
   saveMaster(isAdd: boolean) {
     //comnet tạm
-    this.imageAvatar
-      .updateFileDirectReload(this.master.iterationID)
-      .subscribe((up) => {
-        this.dialog.dataService
-          .save(
-            (option: any) => this.beforeSave(option, isAdd),
-            !isAdd ? null : this.master.iterationType == '1' ? 0 : 1
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.attachment?.clearData();
-              this.dialog.close();
-            }
-          });
+    // this.imageAvatar
+    //   .updateFileDirectReload(this.master.iterationID)
+    //   .subscribe((up) => {
+    this.dialog.dataService
+      .save(
+        (option: any) => this.beforeSave(option, isAdd),
+        !isAdd ? null : this.master.iterationType == '1' ? 0 : 1
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.attachment?.clearData();
+          var dt = isAdd ? res.save : res.update;
+          if (this.imageAvatar) {
+            this.imageAvatar
+              .updateFileDirectReload(this.master.iterationID)
+              .subscribe((up) => {
+                (this.dialog.dataService as CRUDService).update(dt).subscribe();
+                this.dialog.close();
+              });
+          } else this.dialog.close();
+        }
       });
+    // });
   }
 
   //#endregion
