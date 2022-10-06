@@ -24,7 +24,7 @@ export class OrgchartDetailComponent implements OnInit {
   };
   employOrg: any = [];
   employees: any = [];
-  count = 0; 
+  count = 0;
   @ViewChild('p') public popover: NgbPopover;
 
 
@@ -47,7 +47,8 @@ export class OrgchartDetailComponent implements OnInit {
       this.popover.close();
     }
 
-    var headcounts = $(el[0]).data('headcounts');
+    //var headcounts = $(el[0]).data('headcounts');
+    var headcounts =1;
     this.api
       .execSv(
         'HR',
@@ -63,7 +64,7 @@ export class OrgchartDetailComponent implements OnInit {
             this.employees = res[0];
             this.count = res[1];
 
-            var obj: any = {};          
+            var obj: any = {};
 
             this.changeDetectorRef.detectChanges();
 
@@ -74,29 +75,29 @@ export class OrgchartDetailComponent implements OnInit {
   }
 
   orgClick($event) {
-    var ele = $($event.target).closest('.ec');
-    if (ele.length > 0) {
-      // $event.preventDefault();
-      // var node = $($event.target).closest(".node");
-      // if ($(ele).find("span").hasClass("icon-do_disturb_on")) {
-      //   this.collapseNode(node);
-      // } else {
-      //   var child = $(ele).closest("li").find("ul");
-      //   if (child.length == 0) {
-      //     this.loadChild($(node).data("id"), node);
-      //   } else {
-      //     this.oc.showChildren(node);
-      //   }
-      //   $(node).find(".ec").find("span").removeClass("icon-do_disturb_on");
-      //   $(node).find(".ec").find("span").removeClass("icon-add_circle_outline");
-      //   $(node).find(".ec").find("span").addClass("icon-do_disturb_on");
-      // }
-    } else {
-      ele = $($event.target).closest('.counter');
-      if (ele.length > 0) {
-        this.loadEmploy(ele);
-      }
-    }
+    // var ele = $($event.target).closest('.ec');
+    // if (ele.length > 0) {
+    //   // $event.preventDefault();
+    //   // var node = $($event.target).closest(".node");
+    //   // if ($(ele).find("span").hasClass("icon-do_disturb_on")) {
+    //   //   this.collapseNode(node);
+    //   // } else {
+    //   //   var child = $(ele).closest("li").find("ul");
+    //   //   if (child.length == 0) {
+    //   //     this.loadChild($(node).data("id"), node);
+    //   //   } else {
+    //   //     this.oc.showChildren(node);
+    //   //   }
+    //   //   $(node).find(".ec").find("span").removeClass("icon-do_disturb_on");
+    //   //   $(node).find(".ec").find("span").removeClass("icon-add_circle_outline");
+    //   //   $(node).find(".ec").find("span").addClass("icon-do_disturb_on");
+    //   // }
+    // } else {
+    //   ele = $($event.target).closest('.counter');
+    //   if (ele.length > 0) {
+    //     this.loadEmploy(ele);
+    //   }
+    // }
   }
 
   public connDefaults(
@@ -114,5 +115,5 @@ export class OrgchartDetailComponent implements OnInit {
   public nodeDefaults(obj: NodeModel): NodeModel {
     return obj;
   }
-    
+
 }

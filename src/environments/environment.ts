@@ -6,6 +6,7 @@ export const environment = {
   appVersion: 'v101lv',
   TNDATA_KEY: 'tnf649fc9a5f55',
   shopping: '',
+  reportUrl: '',
   apiUrl: '',
   pdfUrl: '',
   librOfficeUrl: '',
