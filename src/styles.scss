@@ -501,8 +501,12 @@ codx-view-list-detail .codx-detail-footer {
 
 .nav-link {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.75rem;
   color: var(--gray-800);
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: transparent !important;
 }
 
 .codx-tab .tab-content .e-toolbar-wrapper {
@@ -649,5 +653,16 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .codx-tab .tab-content {
   min-width: 545px !important;
-  width: 545px !important;
+  // width: 545px !important;
+}
+
+.e-sidebar {
+  .codx-tab .tab-content {
+    width: 545px !important;
+  }
+}
+
+.e-appointment {
+  text-align: left !important;
+  padding-left: 7px !important;
 }

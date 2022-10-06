@@ -9,34 +9,41 @@
                                 <li class="menu-item" (click)="redirectPage('notificationFedback')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-near_me icon-20 mr-2"></i>
-                                        <codx-label fiedName="FeedbackMessage"  default='Thông điệp phản hồi'>
-                                    </codx-label>
+                                        <codx-label fiedName="FeedbackMessage" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Thông điệp phản hồi'>
+                                        </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemCategory')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-format_list_bulleted icon-20 mr-2"></i>
-                                        <codx-label fiedName="Category" [formModel]=""
-                                        default='Danh mục'>
-                                    </codx-label>
+                                        <codx-label fiedName="Category" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Danh mục'>
+                                        </codx-label>
                                     </a>
                                 </li>
-                                <li class="menu-item menu-item-active">
+                                <li class="menu-item">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-account_balance_wallet icon-20 mr-2"></i>
-                                        Ví nhân viên
+                                        <codx-label name="lblWallet" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
+                                        </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemRankDedication')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-credit_card icon-20 mr-2"></i>
-                                        Hạng cống hiến
+                                        <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Hạng cống hiến'>
+                                        </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemStatiscal')">
                                     <a class="menu-link d-flex align-items-center">
                                         <i class="icon-bar_chart icon-20 mr-2"></i>
-                                        Thống kê
+                                        <codx-label name="lblStatistical" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Thống kê'>
+                                        </codx-label>
                                     </a>
                                 </li>
                             </ul>
@@ -48,55 +55,57 @@
                                 <div class="d-flex justify-content-between mb-6">
                                     <span class="icon-arrow_back icon-22 mr-3 text-hover-primary"
                                         (click)="backLocation()"></span>
-                                    <div class="font-size-h3 font-weight-bold text-dark mb-1 flex-grow-1">
-                                        {{'Cấu hình ví nhân viên' | lang: 'SettingWallet':'lblSettingWallet' |
-                                        async}}
+                                    <div class="fs-3 fw-bold text-dark mb-1 flex-grow-1">
+                                        <codx-label fiedName="SettingWallet" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Cấu hình ví nhân viên'>
+                                        </codx-label>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                    *ngIf="item && item.hasOwnProperty('ActivedOn')">
+                                    *ngIf="data && data.fieldName == 'ActivedOn'">
                                     <div class="d-flex flex-column flex-grow-1">
-                                        <div class="text-dark font-weight-bold font-size-h6">
-                                            {{'Thời điểm kích hoạt ví' | lang:
-                                            'SettingWallet':'lblTimeActive' |async}}
+                                        <div class="text-dark fw-bold fs-h6">
+                                            {{data.title}}
                                         </div>
-                                        <div class="text-dark-50">
-                                            {{'Ví sẽ được kích hoạt khi là nhân viên chính thức' | lang:
-                                            'SettingWallet':'lblTimeActive2'
-                                            |async}}
+                                        <div class="text-gray-500">
+                                            {{data.description}}
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center ml-4">
                                         <codx-Input type="select" name="select" class="control-vll" placeholder=""
-                                            ngDefaultControl refValue="L1475" field="ActivedOn" [value]="item.ActivedOn"
+                                            ngDefaultControl refValue="L1475" field="ActivedOn" [value]="data.ActivedOn"
                                             (valueChange)="changValueListPopup($event)">
-                                        </codx-Input> 
+                                        </codx-Input>
                                         <span
                                             class="w-20px min-w-20px h-20px ml-3 d-flex justify-content-center"></span>
                                     </div>
                                 </div>
-                                <div class="font-size-h4 font-weight-bold text-dark mb-6 mt-6">
-                                    {{'Quản lý ví' | lang: 'SettingWallet':'lblManageWallet' | async}}
+                                <div class="fs-4 fw-bold text-dark mb-6 mt-6">
+                                    <codx-label fiedName="ManageWallet" [formName]="functionList?.formName"
+                                        [gridViewName]="functionList?.gridViewName" default='Quản lý ví'>
+                                    </codx-label>
                                 </div>
                                 <div class="list-setting ml-10">
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('DefaultCoins')">
+                                        *ngIf="data && data.fieldName == 'DefaultCoins'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
-                                                {{'Số dư xu khi khởi tạo ví' | lang:
-                                                'SettingWallet':'lblBalanceInitialization' | async}}
+                                            <div class="text-dark fw-bold fs-6">
+                                                {{data.title}}
                                             </div>
-                                            <div class="text-dark-50">
-                                                {{'Chương trình tự động thêm ' | lang:
-                                                'SettingWallet':'lblAutoAddCoin' | async}}
-                                                {{item.DefaultCoins}}
-                                                {{' xu vào ví người dùng mới' | lang:
-                                                'SettingWallet':'lblAutoAddCoin2' | async}}
+                                            <div class="text-gray-500">
+                                                <codx-label fiedName="AutoAddCoin" [formName]="functionList?.formName"
+                                                    [gridViewName]="functionList?.gridViewName"
+                                                    default='Chương trình tự động thêm'>
+                                                </codx-label>
+                                                {{quantity.DefaultCoins}}
+                                                <codx-label fiedName="AutoAddCoin2" [formName]="functionList?.formName"
+                                                    [gridViewName]="functionList?.gridViewName"
+                                                    default=' xu vào ví người dùng mới'>
+                                                </codx-label>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
-                                            <codx-input type="text" class="form-control w-50px" disabled
-                                                [(ngModel)]="item.DefaultCoins" placeholder="">
+                                            <codx-input type="text" class="form-control w-50px" placeholder="">
                                             </codx-input>
                                             <span class="icon-edit_file text-hover-primary icon-20 ml-3"
                                                 (click)="openFormChangeCoin(changeCoin, 'DefaultCoins')"></span>
@@ -104,52 +113,55 @@
                                     </div>
 
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('MaxCoinsForEGiftControl')">
+                                        *ngIf="data && data.fieldName == 'MaxCoinsForEGiftControl'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
-                                                {{'Giới hạn số xu đổi E-voucher' | lang:
-                                                'SettingWallet':'lblLimitConvertCoin' | async}}
+                                            <div class="text-dark fw-bold fs-6">
+                                                {{data.title}}
                                             </div>
-                                            <div class="text-dark-50">
-                                                {{'Giới hạn dùng' | lang: 'SettingWallet':'lblLimitCoinToVoucher' |
-                                                async}}
-                                                {{item.MaxCoinsForEGift}}
-                                                {{'xu đổi E-voucher' | lang: 'SettingWallet':'lblCoinToVoucher' |
-                                                async}}
-                                                {{item?.MaxCoinsForEGiftPeriod|vll:"L1436":"text"|async}}
+                                            <div class="text-gray-500">
+                                                <codx-label fiedName="LimitCoinToVoucher"
+                                                    [formName]="functionList?.formName"
+                                                    [gridViewName]="functionList?.gridViewName" default='Giới hạn dùng'>
+                                                </codx-label>
+                                                {{quantity.MaxCoinsForEGift}}
+                                                <codx-label fiedName="CoinToVoucher" [formName]="functionList?.formName"
+                                                    [gridViewName]="functionList?.gridViewName"
+                                                    default=' xu đổi E-voucher'>
+                                                </codx-label>
+                                                {{quantity?.MaxCoinsForEGiftPeriod|vll:"L1436":"text"|async}}
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <span class="switch switch-sm ml-3">
-                                                <label>
-                                                    <codx-input type="switch" name="checkbox" class="" ngDefaultControl
-                                                        field="MaxCoinsForEGiftControl"
-                                                        (valueChange)="valueChange($event, null)"
-                                                        [checked]="item.MaxCoinsForEGiftControl" label="">
-                                                    </codx-input>
-
-                                                    <span></span>
-                                                </label>
+                                                <codx-input type="switch" name="checkbox" class="" ngDefaultControl
+                                                    field="MaxCoinsForEGiftControl"
+                                                    (valueChange)="valueChange($event, null)"
+                                                    [checked]="quantity.MaxCoinsForEGiftControl" label="">
+                                                </codx-input>
                                             </span>
                                             <span class="icon-edit_file text-hover-primary icon-20 w-20px h-20px ml-3"
                                                 (click)="open(content, 2)"></span>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('HasPoints')">
+                                        *ngIf="data && data.feildName == 'HasPoints'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">Chính sách cộng xu
-                                                theo ngày lễ/kỷ niệm</div>
-                                            <div class="text-dark-50">Chương trình tự động cộng xu khi vào ví người
-                                                dùng vào những ngày lễ/kỷ niệm như thiết lập
+                                            <div class="text-dark fw-bold fs-6">
+                                                <codx-label fiedName="" [formName]="functionList?.formName"
+                                                    [gridViewName]="functionList?.gridViewName" default='Chính sách cộng xu
+                                                theo ngày lễ/kỷ niệm'>
+                                                </codx-label>
+                                            </div>
+                                            <div class="text-gray-500">
+                                                <codx-label fiedName="" [formName]="functionList?.formName"
+                                                    [gridViewName]="functionList?.gridViewName" default='Chương trình tự động cộng xu khi vào ví người
+                                                dùng vào những ngày lễ/kỷ niệm như thiết lập'>
+                                                </codx-label>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <span class="switch switch-sm ml-3">
-                                                <label>
-                                                    <input type="checkbox" checked="checked" name="select" />
-                                                    <span></span>
-                                                </label>
+                                                <input type="checkbox" checked="checked" name="select" />
                                             </span>
                                             <span class="w-20px h-20px ml-3 d-flex justify-content-center">
                                                 <span class="icon-keyboard_arrow_right icon-20"></span>
@@ -158,18 +170,18 @@
                                     </div>
                                     <div *ngFor=" let item of getItems('1') ;let last = last">
                                         <ng-container
-                                            *ngTemplateOutlet="PolicyItem ;context: {item:item,isLast:last  }">
+                                            *ngTemplateOutlet="PolicyItem ;context: {data:item,isLast:last  }">
                                         </ng-container>
                                     </div>
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('PolicyCoins')">
+                                        *ngIf="data && data.fieldName == 'PolicyCoins'">
                                         <div class="d-flex flex-column flex-grow-1">
                                             <!-- Memo -->
-                                            <div class="text-dark font-weight-bold font-size-h6">
+                                            <div class="text-dark fw-bold fs-6">
                                                 {{listParameter?.PolicyCoins?.memo}}
                                             </div>
                                             <!-- Description -->
-                                            <div class="text-dark-50">
+                                            <div class="text-gray-500">
                                                 {{listParameter?.PolicyCoins?.description}}
                                             </div>
                                         </div>
@@ -181,90 +193,87 @@
                                 </div>
                                 <hr />
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <div class="font-size-h4 font-weight-bold text-dark mb-6 mt-6">
-                                        {{'Quản lý quỹ cho' | lang: 'SettingWallet':'lblFundManager' |async}}
+                                    <div class="fs-4 fw-bold text-dark mb-6 mt-6">
+                                        <codx-label fiedName="FundManager" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Quản lý quỹ cho'>
+                                        </codx-label>
                                     </div>
                                 </div>
                                 <div class="list-setting ml-10">
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('ActiveCoCoins')">
+                                        *ngIf="data && data.fieldName == 'ActiveCoCoins'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
-                                                {{'Sử dụng quỹ cho' | lang:
-                                                'SettingWallet':'lblFundBalanceInit' |async}}
+                                            <div class="text-dark fw-bold fs-6">
+                                                {{data.title}}
                                             </div>
-                                            <div class="text-dark-50">
-                                                {{'Chương trình kích hoạt quỹ cho' | lang:
-                                                'SettingWallet':'lblAutoAddCointToNewUser' |async}}
+                                            <div class="text-gray-500">
+                                                {{data.description}}
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <!-- <input type="text" class="form-control w-50px"
-                                                    [(ngModel)]="item.DefaultCoCoins" placeholder="" /> -->
+                                                    [(ngModel)]="data.DefaultCoCoins" placeholder="" /> -->
 
                                             <span class="switch switch-sm ml-3">
-                                                <label>
-                                                    <codx-input type="switch" name="checkbox" class="" ngDefaultControl
-                                                        field="ActiveCoCoins" (valueChange)="valueChange($event, null)"
-                                                        [checked]="item.ActiveCoCoins" label="">
-                                                    </codx-input>
-                                                    <!-- [checked]="item.ActiveCoCoins == '1' ? true : false" -->
-                                                </label>
+                                                <codx-input type="switch" name="checkbox" class="" ngDefaultControl
+                                                    field="ActiveCoCoins" (valueChange)="valueChange($event, null)"
+                                                    [checked]="quantity.ActiveCoCoins" label="">
+                                                </codx-input>
+                                                <!-- [checked]="data.ActiveCoCoins == '1' ? true : false" -->
                                             </span>
                                             <span class="w-20px h-20px ml-3 d-flex justify-content-center"></span>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('DefaultCoCoins')">
+                                        *ngIf="data && data.fieldName == 'DefaultCoCoins'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
-                                                {{'Số dư quỹ cho khi khởi tạo ví' | lang:
-                                                'SettingWallet':'lblFundBalanceInit' |async}}
+                                            <div class="text-dark fw-bold fs-6">
+                                                {{data.title}}
                                             </div>
-                                            <div class="text-dark-50">
-                                                {{'Chương trình tự động thêm ' | lang:
-                                                'SettingWallet':'lblAutoAddCointToNewUser' |async}}
-                                                {{item.DefaultCoCoins}}
-                                                {{' xu vào quỹ cho người dùng mới' | lang:
-                                                'SettingWallet':'lblAutoAddCointToNewUser2' |async}}
+                                            <div class="text-gray-500">
+                                                <codx-label fiedName="AutoAddCointToNewUser"
+                                                    [formName]="functionList?.formName"
+                                                    [gridViewName]="functionList?.gridViewName"
+                                                    default='Chương trình tự động thêm '>
+                                                </codx-label>
+                                                {{quantity.DefaultCoCoins}}
+                                                <codx-label fiedName="AutoAddCointToNewUser2"
+                                                    [formName]="functionList?.formName"
+                                                    [gridViewName]="functionList?.gridViewName"
+                                                    default='xu vào quỹ cho người dùng mới'>
+                                                </codx-label>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <codx-input type="text" class="form-control w-50px" disabled
-                                                [(ngModel)]="item.DefaultCoCoins" placeholder="">
-                                                </codx-input>
+                                                [(ngModel)]="quantity.DefaultCoCoins" placeholder="">
+                                            </codx-input>
                                             <span class="icon-edit_file text-hover-primary icon-20 ml-3"
                                                 (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'DefaultCoCoins')"></span>
                                         </div>
                                     </div>
 
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('ExchangeRateCoinsControl')">
+                                        *ngIf="data && data.fieldName == 'ExchangeRateCoinsControl'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
-                                                {{'Tỷ lệ quy đổi 1 xu ví nhân viên thành xu quỹ cho' | lang:
-                                                'SettingWallet':'lblRateExchangeCoin' | async}}
-                                            </div>
-                                            <div class="text-dark-50">
+                                            {{data.title}}
+                                            <div class="text-gray-500">
                                                 {{'Cho phép đổi 1 xu từ ví nhân viên sang '| lang:
                                                 'SettingWallet':'lblAcceptExchangeCoin' |
                                                 async}}
-                                                {{item.ExchangeRateCoins}}
+                                                {{data.ExchangeRateCoins}}
                                                 {{' xu quỹ cho để tặng trên phiếu phản hồi'| lang:
                                                 'SettingWallet2':'lblAcceptExchangeCoin' | async}}
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <span class="switch switch-sm ml-3">
-                                                <label>
                                                     <codx-input type="switch" name="checkbox" class="" ngDefaultControl
                                                         field="ExchangeRateCoinsControl"
                                                         (valueChange)=" valueChange($event, null)"
-                                                        [checked]="item.ExchangeRateCoinsControl"
+                                                        [checked]="quantity.ExchangeRateCoinsControl"
                                                         [disabled]="disableGroupFund" label="">
                                                     </codx-input>
-                                                    <span></span>
-                                                </label>
                                             </span>
                                             <span class="icon-edit_file text-hover-primary icon-20 w-20px h-20px ml-3"
                                                 (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'ExchangeRateCoins')"></span>
@@ -272,37 +281,34 @@
                                     </div>
                                     <div class="d-flex align-items-start py-4" *ngIf="scheduledTasks_CoCoin">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
+                                            <div class="text-dark fw-bold fs-6">
                                                 {{'Refresh số dư quỹ cho' | lang: 'SettingWallet':'lblRefreshGive'
                                                 |async}}
                                             </div>
-                                            <div class="text-dark-50">
+                                            <div class="text-gray-500">
                                                 {{'Chương trình tự động refresh lại quỹ cho về số quy định theo chu kỳ đã thiết lập' | lang: 'SettingWallet':'lblAutoRefreshSetting'
                                                 |async}}
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <span class="switch switch-sm ml-3">
-                                                <label>
                                                     <codx-input type="switch" name="checkbox" class="" ngDefaultControl
                                                         field="ResetCoCoinsControl"
                                                         (valueChange)="valueChangePolicyCoin('4')"
                                                         [checked]="!scheduledTasks_CoCoin?.stop" label="">
                                                     </codx-input>
-                                                    <span></span>
-                                                </label>
                                             </span>
                                             <span class="icon-edit_file text-hover-primary icon-20 w-20px h-20px ml-3"
                                                 (click)="openPopupSettingCycleRun('4')"></span>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('PolicyCoCoins')">
+                                        *ngIf="data && data.fieldName == 'PolicyCoCoins'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
+                                            <div class="text-dark fw-bold fs-6">
                                                 {{listParameter?.PolicyCoCoins?.memo}}
                                             </div>
-                                            <div class="text-dark-50">
+                                            <div class="text-gray-500">
                                                 {{listParameter?.PolicyCoCoins?.description}}
 
                                             </div>
@@ -315,31 +321,29 @@
                                 </div>
                                 <hr />
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <div class="font-size-h4 font-weight-bold text-dark mb-6 mt-6">
+                                    <div class="fs-4 fw-bold text-dark mb-6 mt-6">
                                         {{'Quản lý điểm cống hiến' | lang: 'SettingWallet':'lblManagePointDedicate'
                                         |async}}
                                     </div>
                                 </div>
                                 <div class="list-setting ml-10">
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('DefaultMyKudos')">
+                                        *ngIf="data && data.fieldName == 'DefaultMyKudos'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
-                                                {{'Số dư điểm cống hiến khi khởi tạo ví' | lang:
-                                                'SettingWallet':'lblDedicationPointInit' |async}}
+                                            <div class="text-dark fw-bold fs-6">
+                                                {{data.title}}
                                             </div>
-                                            <div class="text-dark-50">
+                                            <div class="text-gray-500">
                                                 {{'Chương trình tự động thêm ' | lang:
                                                 'SettingWallet':'lblProgramAutoAddPoint' |async}}
-                                                {{item.DefaultMyKudos}}
+                                                {{quantity.DefaultMyKudos}}
                                                 {{' điểm cống hiến người dùng mới' | lang:
                                                 'SettingWallet':'lblProgramAutoAddPoint2' |async}}
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
-                                            <cdox-input type="text" class="form-control w-50px" disabled
-                                                [(ngModel)]="item.DefaultMyKudos" placeholder="">
-                                                </cdox-input>
+                                            <cdox-input type="text" class="form-control w-50px" placeholder="">
+                                            </cdox-input>
                                             <span class="icon-edit_file text-hover-primary icon-20 ml-3"
                                                 (click)="openFormChangeCoin(changeCoin, 'DefaultMyKudos')"></span>
                                         </div>
@@ -347,25 +351,22 @@
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
                                         *ngIf="scheduledTasks_KuDos">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
+                                            <div class="text-dark fw-bold fs-6">
                                                 {{'Refresh số dư điểm cống hiến' | lang:
                                                 'SettingWallet':'lblRefreshBalanceDedicate' |async}}
                                             </div>
-                                            <div class="text-dark-50">
+                                            <div class="text-gray-500">
                                                 {{'Chương trình tự động refresh lại điểm cống hiến về số quy định theo chu kỳ đã thiết lập' | lang: 'SettingWallet':'lblResetMyKudos'
                                                 |async}}
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <span class="switch switch-sm ml-3">
-                                                <label>
                                                     <codx-input type="switch" name="checkbox" class="" ngDefaultControl
                                                         field="scheduledTasks_KuDos?.recID"
                                                         (valueChange)="valueChangePolicyCoin('5')"
                                                         [checked]="!scheduledTasks_KuDos?.stop" label="">
                                                     </codx-input>
-                                                    <span></span>
-                                                </label>
                                             </span>
                                             <span class="icon-edit_file text-hover-primary icon-20 w-20px h-20px ml-3"
                                                 (click)="openPopupSettingCycleRun('5')"></span>
@@ -374,12 +375,12 @@
                                 </div>
                                 <div class="list-setting ml-10">
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
-                                        *ngIf="item && item.hasOwnProperty('PolicyKudos')">
+                                        *ngIf="data && data.fieldName == 'PolicyKudos'">
                                         <div class="d-flex flex-column flex-grow-1">
-                                            <div class="text-dark font-weight-bold font-size-h6">
+                                            <div class="text-dark fw-bold fs-6">
                                                 {{listParameter?.PolicyKudos?.memo}}
                                             </div>
-                                            <div class="text-dark-50">
+                                            <div class="text-gray-500">
                                                 {{listParameter?.PolicyKudos?.description}}
                                             </div>
                                         </div>
@@ -388,9 +389,9 @@
                                                 (click)="redirectPageDetailWallet('5')"></span>
                                         </div>
                                     </div>
-                                    <div *ngFor=" let item of getItems('2') ;let last = last">
+                                    <div *ngFor=" let data of getItems('2') ;let last = last">
                                         <ng-container
-                                            *ngTemplateOutlet="PolicyItem ;context: {item:item,isLast:last  }">
+                                            *ngTemplateOutlet="PolicyItem ;context: {data:data,isLast:last  }">
                                         </ng-container>
                                     </div>
                                 </div>
@@ -399,8 +400,6 @@
                     </div>
                 </div>
             </div>
-            <!--modal Cap nhat so luong  -->
-
         </div>
     </div>
 </div>
@@ -420,9 +419,9 @@
                     {{'Số lượng' | lang: 'SettingWallet':'lblQuanlity' |async}}
                 </label>
                 <div class="col-9">
-                    <cdox-input type="number" class="form-control" [(ngModel)]="item.MaxCoinsForEGift"
+                    <cdox-input type="number" class="form-control" [(ngModel)]="data.MaxCoinsForEGift"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="10">
-                        </cdox-input>
+                    </cdox-input>
                 </div>
             </div>
             <div class="form-group row mt-3">
@@ -431,7 +430,7 @@
                 </label>
                 <div class="col-9">
                     <codx-input type="select" name="select" class="control-vll" placeholder="" ngDefaultControl
-                        refValue="L1436" field="MaxCoinsForEGiftPeriod" [value]="item.MaxCoinsForEGiftPeriod"
+                        refValue="L1436" field="MaxCoinsForEGiftPeriod" [value]="data.MaxCoinsForEGiftPeriod"
                         (valueChange)="changValueListPopup($event)">
                     </codx-input>
                 </div>
@@ -444,22 +443,22 @@
         </div>
     </div>
 </ng-template>
-<ng-template #PolicyItem let-item="item">
+<ng-template #PolicyItem let-data="data">
     <div class="d-flex align-items-start py-4">
         <div class="d-flex flex-column flex-grow-1">
-            <div class="text-dark font-weight-bold font-size-h6">{{item.policyName}}
+            <div class="text-dark fw-bold fs-6">{{data.policyName}}
             </div>
-            <div class="text-dark-50">{{item.memo}}</div>
+            <div class="text-gray-500">{{data.memo}}</div>
         </div>
         <div class="d-flex align-items-center ml-4">
             <span class="switch switch-sm ml-3">
-                    <codx-input type="switch" name="checkbox" class="" ngDefaultControl [field]="item.recID"
-                        (valueChange)="onSaveStatusPolicy($event, null)" [checked]="item.actived" label="">
-                    </codx-input>
+                <codx-input type="switch" name="checkbox" class="" ngDefaultControl [field]="data.recID"
+                    (valueChange)="onSaveStatusPolicy($event, null)" [checked]="data.actived" label="">
+                </codx-input>
             </span>
             <span class="w-20px h-20px ml-3 d-flex justify-content-center">
                 <span class="icon-keyboard_arrow_right icon-20" style="cursor: pointer;"
-                    (click)="item.actived && LoadDetailPolicy(item.category,item.recID)"></span>
+                    (click)="data.actived && LoadDetailPolicy(data.category,data.recID)"></span>
             </span>
         </div>
     </div>
@@ -485,7 +484,7 @@
                 <div class="col-9">
                     <codx-input type="number" class="form-control" [(ngModel)]="objectUpdateCoin[this.fieldUpdateCoin]"
                         onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="10">
-                        </codx-input>
+                    </codx-input>
                 </div>
             </div>
         </div>

@@ -1,50 +1,44 @@
 <codx-form [body]="body" headerText="" [dialog]="dialogRef">
 </codx-form>
 <ng-template #body>
-    <div class="card-body">
-        <div class="tab-horizone mt-2">
-            <ul class="nav nav-tabs nav-tabs-line">
-                <li class="nav-item" (click)="getUserVote(defaultVote)">
-                    <a class="nav-link" data-toggle="tab">
-                        <div class="flex">
-                            <div class="" style="margin-left: 5px">
-                                <span class="nav-text d-block h-20px">
-                                    <codx-label formName="Comments" name="lblTotal" default="Tất cả"></codx-label>
-                                </span>
-                            </div>
-                            <div class="" style="margin-left: 5px">
-                                <span class="nav-text d-block h-20px">{{data.totalVote}}</span>
-                            </div>
+    <div class="tab-horizone">
+        <ul class="nav nav-tabs nav-tabs-line">
+            <li class="nav-item" (click)="getUserVote(defaultVote)">
+                <a class="nav-link" data-toggle="tab">
+                    <div class="flex align-items-center">
+                        <div class="me-2">
+                            <span class="nav-text d-block h-20px">
+                                <codx-label formName="Comments" name="lblTotal" default="Tất cả"></codx-label>
+                            </span>
                         </div>
-                    </a>
-                </li>
+                        <span class="nav-text d-block">({{data.totalVote}})</span>
+                    </div>
+                </a>
+            </li>
 
-                <li *ngFor="let vote of lstVote" class="nav-item" (click)="getUserVote(vote.voteType)">
-                    <a class="nav-link" data-toggle="tab">
-                        <div class="flex">
-                            <div class="">
-                                <img class="h-20px w-20px"
-                                    src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}">
-                            </div>
-                            <div class="" style="margin-left: 5px">
-                                <span class="nav-text d-block h-20px">
-                                    <span>
-                                        {{vote.voteType | vll:'L1480':'text' | async}}
-                                    </span>
-                                </span>
-                            </div>
-                            <div class="" style="margin-left: 5px">
-                                <span class="nav-text d-block h-20px">{{vote.countVote}}</span>
-                            </div>
+            <li *ngFor="let vote of lstVote" class="nav-item" (click)="getUserVote(vote.voteType)">
+                <a class="nav-link" data-toggle="tab">
+                    <div class="flex">
+                        <div class="me-2">
+                            <img class="h-20px w-20px"
+                                src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}">
                         </div>
-                    </a>
-                </li>
-            </ul>
-            <div class="mt-2">
-                <div class="tab-pane">
-                    <div *ngFor="let item of lstUserVoted" class="d-flex align-items-center user-card py-4">
-                        <div class="me-4">
-                            <codx-img [width]="40" [objectId]="item.createdBy" objectType="AD_Users">
+                        <div class="me-2">
+                            <span class="nav-text d-block h-20px">
+                                {{vote.voteType | vll:'L1480':'text' | async}}
+                            </span>
+                        </div>
+                        <span class="nav-text d-block">({{vote.countVote}})</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <div class="mt-2">
+            <div class="tab-pane">
+                <div *ngFor="let item of lstUserVoted">
+                    <div class="d-flex align-items-center user-card mt-4">
+                        <div class="me-3">
+                            <codx-img [width]="30" [objectId]="item.createdBy" objectType="AD_Users">
                             </codx-img>
                         </div>
                         <div class="d-flex flex-column flex-grow-1">
@@ -52,11 +46,13 @@
                             <div class="text-dark-75 fw-bold">{{item.positionName}}</div>
                             <div class="text-gray-400">{{item.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div>
                         </div>
-                        <div class="ms-6" style="margin-right: 45px">
-                            <img src="/assets/themes/wp/default/img/{{(item.voteType|vll:'L1480':'icon'|async)}}"
-                                alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
+                        <div class="ms-6">
+                            <img class="w-30px"
+                                src="/assets/themes/wp/default/img/{{(item.voteType|vll:'L1480':'icon'|async)}}"
+                                alt="Kiwi standing on oval">
                         </div>
                     </div>
+                    <hr class="bg-gray-300" />
                 </div>
             </div>
         </div>

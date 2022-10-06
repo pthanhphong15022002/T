@@ -37,25 +37,25 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { SharedModule } from '@shared/shared.module';
 import { QuickLinksInnerComponent } from './layout/dropdown-inner/quick-links-inner/quick-links-inner.component';
 import { UserInnerComponent } from './layout/dropdown-inner/user-inner/user-inner.component';
-import { CodxReportComponent } from './components/codx-report/codx-report.component';
-import { CodxReportDesignerComponent } from './components/codx-report/codx-report-designer/codx-report-designer.component';
-import {
-  BoldReportDesignerModule,
-  BoldReportsModule,
-  BoldReportViewerModule,
-} from '@boldreports/angular-reporting-components';
+// import { CodxReportComponent } from './components/codx-report/codx-report.component';
+// import { CodxReportDesignerComponent } from './components/codx-report/codx-report-designer/codx-report-designer.component';
+// import {
+//   BoldReportDesignerModule,
+//   BoldReportsModule,
+//   BoldReportViewerModule,
+// } from '@boldreports/angular-reporting-components';
 
 // Report viewer
-import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
+//import '@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min';
 // Report Designer
-import '@boldreports/javascript-reporting-controls/Scripts/bold.report-designer.min';
+//import '@boldreports/javascript-reporting-controls/Scripts/bold.report-designer.min';
 
 // data-visualization
-import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.bulletgraph.min';
-import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.chart.min';
-import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
-import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
-import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
+//import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.bulletgraph.min';
+//import '@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.chart.min';
+//import '@boldreports/global/l10n/ej.localetexts.vi-VN.min.js';
+//import '@boldreports/global/i18n/ej.culture.vi-VN.min.js';
+// import { CodxReportViewerComponent } from './components/codx-report/codx-report-viewer/codx-report-viewer.component';
 import { NoteDrawerComponent } from './layout/drawers/note-drawer/note-drawer.component';
 //import { DynamicSettingParamaterComponent } from './components/dynamic-setting-paramater/dynamic-setting-paramater.component';
 import { CodxApprovalComponent } from './components/codx-approval/codx-approval.component';
@@ -100,8 +100,14 @@ import { PopupAddEventComponent } from './components/setting-calendar/popup-add-
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
 import { ActiviesApprovalListComponent } from './layout/drawers/activies-approval-list/activies-approval-list.component';
 import { ActiviesSliderComponent } from './layout/drawers/activies-approval-list/activies-slider/activies-slider.component';
-import { DocumentEditorAllModule , DocumentEditorContainerAllModule } from '@syncfusion/ej2-angular-documenteditor';
+import {
+  DocumentEditorAllModule,
+  DocumentEditorContainerAllModule,
+} from '@syncfusion/ej2-angular-documenteditor';
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { PdfComponent } from './components/pdf/pdf.component';
+import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -129,9 +135,9 @@ const T_Component: Type<any>[] = [
   LayoutNoAsideToolbarFluidComponent,
   QuickLinksInnerComponent,
   UserInnerComponent,
-  CodxReportComponent,
-  CodxReportViewerComponent,
-  CodxReportDesignerComponent,
+  // CodxReportComponent,
+  // CodxReportViewerComponent,
+  // CodxReportDesignerComponent,
   NoteDrawerComponent,
   CodxApprovalComponent,
   CodxCommentsComponent,
@@ -173,6 +179,9 @@ const T_Component: Type<any>[] = [
   InfoLeftComponent,
   ActiviesApprovalListComponent,
   ActiviesSliderComponent,
+
+  //pdf
+  PdfComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -192,13 +201,17 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     UploaderModule,
     PickerModule,
     ChartAllModule,
-    BoldReportsModule,
-    BoldReportDesignerModule,
-    BoldReportViewerModule,
+    // BoldReportsModule,
+    // BoldReportDesignerModule,
+    // BoldReportViewerModule,
     ReactiveFormsModule,
     DocumentEditorAllModule,
     DocumentEditorContainerAllModule,
-    SpreadsheetAllModule
+    SpreadsheetAllModule,
+
+    //pdf
+    ListViewAllModule,
+    NgxExtendedPdfViewerModule,
   ],
   exports: [T_Component, T_Pipe],
 })

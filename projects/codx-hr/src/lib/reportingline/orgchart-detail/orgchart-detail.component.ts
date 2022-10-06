@@ -24,7 +24,7 @@ export class OrgchartDetailComponent implements OnInit {
   };
   employOrg: any = [];
   employees: any = [];
-  count = 0; 
+  count = 0;
   @ViewChild('p') public popover: NgbPopover;
 
 
@@ -62,7 +62,7 @@ export class OrgchartDetailComponent implements OnInit {
             this.employees = res[0];
             this.count = res[1];
 
-            var obj: any = {};          
+            var obj: any = {};
 
             this.changeDetectorRef.detectChanges();
 
@@ -87,5 +87,5 @@ export class OrgchartDetailComponent implements OnInit {
   public nodeDefaults(obj: NodeModel): NodeModel {
     return obj;
   }
-    
+
 }

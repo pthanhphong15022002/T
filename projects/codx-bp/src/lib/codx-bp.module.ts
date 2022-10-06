@@ -24,11 +24,10 @@ export const routes: Routes = [
       {
         path: 'processstep/:funcID',
         component: ProcessstepsComponent,
-      }
-    ]
-  }
-]
-
+      },
+    ],
+  },
+];
 @NgModule({
   declarations: [
     CodxBpComponent,
@@ -39,17 +38,14 @@ export const routes: Routes = [
     ViewListProcessesComponent,
     ProcessstepsComponent,
     PopAddProcessstepsComponent,
-
   ],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    CodxShareModule
+    CodxShareModule,
   ],
-  exports: [
-    CodxBpComponent
-  ]
+  exports: [CodxBpComponent],
 })
-export class CodxBpModule { }
+export class CodxBpModule {}

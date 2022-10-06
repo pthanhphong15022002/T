@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
@@ -39,6 +40,7 @@ import { OrgorganizationComponent } from './organization/organization.component'
 import { OrganizeDetailComponent } from './organization/organize-detail/organize-detail.component';
 import { FilterPipe } from './organization/pipes/filterObject.pipe';
 import { PopupAddOrganizationComponent } from './organization/popup-add-organization/popup-add-organization.component';
+import { TimeAgoPipe } from './pipe/time-ago.pipe';
 import { OrgchartDetailComponent } from './reportingline/orgchart-detail/orgchart-detail.component';
 import { PopupAddPositionsComponent } from './reportingline/popup-add-positions/popup-add-positions.component';
 import { ReportinglineComponent } from './reportingline/reportingline.component';
@@ -181,6 +183,7 @@ const T_Component: Type<any>[] = [
   OrgchartDetailComponent,
   PopupAddOrganizationComponent,
   PopupAddPositionsComponent,
+  TimeAgoPipe
 ];
 @NgModule({
   imports: [
@@ -191,6 +194,7 @@ const T_Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
+    CoreModule,
     CodxShareModule,
     ChartAllModule,
     DiagramAllModule,

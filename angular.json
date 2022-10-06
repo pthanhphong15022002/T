@@ -62,23 +62,14 @@
               "./node_modules/codx-core/assets/sass/style.scss",
               "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/codemirror/lib/codemirror.js",
-              "node_modules/codemirror/addon/hint/show-hint.js",
-              "node_modules/codemirror/addon/hint/sql-hint.js",
-              "node_modules/codemirror/mode/vb/vb.js"
-            ],
+            "scripts": [],
             "allowedCommonJsDependencies": [
               "crypto-js",
               "object-path",
               "clipboard.js",
               "jquery",
               "moment",
-              "jquery.orgchart.js",
-              "@boldreports/javascript-reporting-controls/Scripts/bold.report-viewer.min",
-              "@boldreports/javascript-reporting-controls/Scripts/bold.report-designer.min",
-              "@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.bulletgraph.min",
-              "@boldreports/javascript-reporting-controls/Scripts/data-visualization/ej.chart.min"
+              "jquery.orgchart.js"
             ]
           },
           "configurations": {

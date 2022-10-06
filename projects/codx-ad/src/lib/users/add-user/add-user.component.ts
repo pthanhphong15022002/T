@@ -96,13 +96,15 @@ export class AddUserComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.adUser.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
-      this.viewChooseRoleTemp = JSON.parse(
-        JSON.stringify(this.data?.chooseRoles)
-      );
+      if (this.data?.chooseRoles)
+        this.viewChooseRoleTemp = JSON.parse(
+          JSON.stringify(this.data?.chooseRoles)
+        );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     } else if (this.formType == 'copy') {
-      this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
+      if (this.dataCopy)
+        this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
       this.adUser.phone = '';
       this.adUser.email = '';
       this.adUser.employeeID = '';
