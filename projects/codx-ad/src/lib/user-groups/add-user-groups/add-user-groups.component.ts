@@ -83,9 +83,10 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.adUserGroup.userID = this.data._uuid;
       this.viewChooseRole = this.data?.chooseRoles;
-      this.viewChooseRoleTemp = JSON.parse(
-        JSON.stringify(this.data?.chooseRoles)
-      );
+      if (this.data?.chooseRoles)
+        this.viewChooseRoleTemp = JSON.parse(
+          JSON.stringify(this.data?.chooseRoles)
+        );
       this.countListViewChoose();
       this.adService
         .getUserByUserGroup(this.adUserGroup.userID)
@@ -98,7 +99,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     } else if (this.formType == 'copy') {
       this.dataCopy = dt?.data?.dataCopy;
       this.oldID = JSON.parse(JSON.stringify(dt?.data?.oldID));
-      this.adUserGroup = JSON.parse(JSON.stringify(this.dataCopy));
+      if (this.dataCopy)
+        this.adUserGroup = JSON.parse(JSON.stringify(this.dataCopy));
       this.adUserGroup.email = '';
       if (this.dataCopy?.chooseRoles) {
         this.viewChooseRole = this.dataCopy?.chooseRoles;
