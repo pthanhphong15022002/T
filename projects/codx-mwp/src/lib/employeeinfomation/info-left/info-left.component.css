@@ -5,7 +5,7 @@
 .edit-btn-float {
     position: fixed;
     bottom: 10px !important;
-    right: -36px;
+    right: 0;
     cursor: pointer;
     z-index: 100;
     display: -webkit-inline-box;
@@ -14,8 +14,8 @@
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
+    width: 46px;
+    height: 46px;
     padding: 0;
     margin: 0;
     font-size: 24px;
@@ -30,7 +30,7 @@
 
 .edit-btn-float span {
     color: #fff;
-    font-size: 24px !important;
+    font-size: 20px !important;
 }
 
 .edit-btn-float[data-title]:hover:before {

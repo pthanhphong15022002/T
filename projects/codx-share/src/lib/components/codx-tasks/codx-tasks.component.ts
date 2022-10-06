@@ -48,8 +48,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -83,6 +82,10 @@ export class CodxTasksComponent
 
   button?: ButtonModel = {
     id: 'btnAdd',
+    items: [{
+      id: 'avc',
+      text: 'xxyz'
+    }]
   };
 
   model?: DataRequest;
@@ -339,7 +342,7 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-       option.zIndex = 5000;
+      option.zIndex = 5000;
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       var dialog = this.callfc.openSide(
@@ -796,8 +799,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -954,7 +957,7 @@ export class CodxTasksComponent
     // }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(data) {
     this.api
