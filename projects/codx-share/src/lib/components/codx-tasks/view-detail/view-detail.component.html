@@ -139,7 +139,7 @@
             </div>
           </div>
         </div>
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column mb-3">
           <div class="task-info">
             <div class="float-left">
               <div
@@ -461,20 +461,22 @@
             </div>
           </div>
         </div>
-        <div class="mt-3" *ngIf="viewTags != ''">
-          <codx-tag
-            [entityName]="formModel.entityName"
-            [disabled]="true"
-            [isEdit]="false"
-            [value]="viewTags"
-          >
-          </codx-tag>
+        <div class="min-h-5px">
+          <div *ngIf="viewTags != ''">
+            <codx-tag
+              [entityName]="formModel.entityName"
+              [disabled]="true"
+              [isEdit]="false"
+              [value]="viewTags"
+            >
+            </codx-tag>
+          </div>
         </div>
       </div>
     </ng-template>
     <ng-template #body>
       <ng-container *ngIf="!taskExtends">
-        <div class="mt-3 mb-3 text-primary fw-bold">
+        <div class="mt-2 mb-3 text-primary fw-bold">
           <codx-label
             fiedName="AssignTo"
             formName="Tasks"
@@ -659,8 +661,10 @@
             </codx-vll>
           </div>
           <span>
-            <span class="text-gray-700">{{
-              item.dueDate | date: "dd/MM/yyyy"
+            <span #dueDate>{{
+              item.dueDate
+                | formatvalue: formModel:"dueDate":dueDate:"Tasks":"grvTasks"
+                | async
             }}</span>
           </span>
         </div>

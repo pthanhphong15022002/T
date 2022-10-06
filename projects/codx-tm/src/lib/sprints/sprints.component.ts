@@ -328,36 +328,47 @@ export class SprintsComponent extends UIComponent {
 
   //#region doubeclick carrd
   doubleClick(data) {
-    if (this.listMoreFunc.length > 0) {
-      this.listMoreFunc.forEach((obj) => {
-        if (obj.functionID == 'TMT03012') this.urlView = obj.url;
-      });
-      this.codxService.navigate('', this.urlView, {
-        iterationID: data.iterationID,
-      });
-    }
+    // if (this.listMoreFunc.length > 0) {
+    //   this.listMoreFunc.forEach((obj) => {
+    //     if (obj.functionID == 'TMT03012') this.urlView = obj.url;
+    //   });
+    //   this.codxService.navigate('', this.urlView, {
+    //     iterationID: data.iterationID,
+    //   });
+    // }
 
 
-    // var obj = {
-    //   iterationID: data.iterationID,
-    //   meetingID: null,
-    //   viewMode : data?.viewMode
-    // };
-    // let dialogModel = new DialogModel();
-    //  dialogModel.IsFull = true;
-    //  var dialog = this.callfc.openForm(
-    //   PopupTabsViewsDetailsComponent,
-    //   '',
-    //   this.widthWin,
-    //   this.heightWin,
-    //   '',
-    //   obj,
-    //   '',
-    //   dialogModel
-    // );
-    // dialog.beforeClose.subscribe((res) => {
-    //   if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
-    // });
+    this.tmSv.getSprintsDetails(data.iterationID).subscribe((res) => {
+      if (res) {
+        var dataView = res ;
+        var dataObj = {
+          projectID: dataView.projectID ? dataView.projectID : '',
+          resources: dataView.resources ? dataView.resources : '',
+          iterationID: dataView.iterationID ,
+          viewMode: dataView.viewMode ? dataView.viewMode : '',
+        };
+        var obj = {
+          data : dataView,
+          dataObj : dataObj,
+        };
+
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        var dialog = this.callfc.openForm(
+         PopupTabsViewsDetailsComponent,
+         '',
+         this.widthWin,
+         this.heightWin,
+         '',
+         obj,
+         '',
+         dialogModel
+       );
+       dialog.beforeClose.subscribe((res) => {
+         if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
+       });
+      }
+    });
   }
   //#end
 
@@ -384,24 +395,4 @@ export class SprintsComponent extends UIComponent {
     //if (value) {
     return of(`<span class="cut-size-long">${value}</span>`);
   }
-  // else {
-  //   return this.cache
-  //     .gridViewSetup(formModel.formName, formModel.gridViewName)
-  //     .pipe(
-  //       map((datas) => {
-  //         if (datas && datas[field]) {
-  //           var gvSetup = datas[field];
-  //           if (gvSetup) {
-  //             if (!value) {
-  //               var headerText = gvSetup.headerText as string;
-  //               return `<div style="height : 40px;"><span class="opacity-50">${headerText}</span></div>`;
-  //             }
-  //           }
-  //         }
-
-  //         return `<span class="opacity-50">${field}</span>`;
-  //       })
-  //     );
-  // }
-  //}
 }
