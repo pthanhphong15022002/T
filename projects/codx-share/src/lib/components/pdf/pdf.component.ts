@@ -131,16 +131,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   curAnnotFontStyle;
 
   //size
-  lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23, 31, 33, 43];
-  curAnnotFontSize = 31;
+  lstAnnotFontSize = [];
+  curAnnotFontSize;
 
   //date
-  lstAnnotDateFormat = [
-    'M/d/yy, h:mm a',
-    'M/d/yy',
-    'EEEE, MMMM d, y, h:mm:ss a zzzz',
-  ];
-  curAnnotDateFormat = 'M/d/yy, h:mm a';
+  lstAnnotDateFormat = [];
+  curAnnotDateFormat;
 
   //style
   isBold = false;
@@ -175,8 +171,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   hideActions: boolean = false;
 
   onInit() {
-    console.log('editable', this.isEditable);
-
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
         this.signPerRow = res.SignPerRow;
@@ -239,11 +233,18 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       });
 
       this.cache.valueList('ES025').subscribe((res) => {
-        console.log('size', res);
         res?.datas?.forEach((size) => {
-          this.lstAnnotFontSize.push(size.value.replace('px', ''));
+          this.lstAnnotFontSize.push(Number(size.value.replace('px', '')));
         });
         this.curAnnotFontSize = this.lstAnnotFontSize[0];
+        this.detectorRef.detectChanges();
+      });
+
+      this.cache.valueList('L0052').subscribe((res) => {
+        res?.datas?.forEach((dateType) => {
+          this.lstAnnotDateFormat.push(dateType.value);
+        });
+        this.curAnnotDateFormat = this.lstAnnotDateFormat[0];
         this.detectorRef.detectChanges();
       });
 
@@ -763,31 +764,43 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                 if (this.needAddKonva) {
                   let attrs = this.needAddKonva.attrs;
                   let name: tmpAreaName = JSON.parse(attrs.name);
-                  this.holding = 0;
-                  switch (name.Type) {
-                    case 'text': {
-                      this.saveNewToDB(
-                        attrs.text,
-                        name.Type,
-                        name.LabelType,
-                        name.Signer,
-                        this.stepNo,
-                        this.needAddKonva
-                      );
 
-                      break;
+                  let signed = stage?.children[0]?.children.find((child) => {
+                    let childName: tmpAreaName = JSON.parse(child?.attrs?.name);
+                    return (
+                      ['1', '2', '8'].includes(childName.LabelType) &&
+                      childName.Signer == name.Signer
+                    );
+                  });
+                  this.holding = 0;
+                  if (!signed) {
+                    switch (name.Type) {
+                      case 'text': {
+                        this.saveNewToDB(
+                          attrs.text,
+                          name.Type,
+                          name.LabelType,
+                          name.Signer,
+                          this.stepNo,
+                          this.needAddKonva
+                        );
+
+                        break;
+                      }
+                      case 'img': {
+                        this.saveNewToDB(
+                          '',
+                          name.Type,
+                          name.LabelType,
+                          name.Signer,
+                          this.stepNo,
+                          this.needAddKonva
+                        );
+                        break;
+                      }
                     }
-                    case 'img': {
-                      this.saveNewToDB(
-                        '',
-                        name.Type,
-                        name.LabelType,
-                        name.Signer,
-                        this.stepNo,
-                        this.needAddKonva
-                      );
-                      break;
-                    }
+                  } else {
+                    this.needAddKonva.remove();
                   }
                 }
                 this.needAddKonva = null;
