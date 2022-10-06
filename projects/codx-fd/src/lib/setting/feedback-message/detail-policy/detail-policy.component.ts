@@ -82,23 +82,10 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
     });
   }
 
-  // openCreate(): void {
-  //   $('#create_card').addClass('offcanvas-on');
-  // }
-  // closeCreate(): void {
-  //   $('#create_card').removeClass('offcanvas-on');
-  // }
-
   valueChange(e, ele) {
     this.value = e.data;
   }
 
-  update(recID, itemType) {
-    this.ngOnInit();
-  }
-  backLocation() {
-    // this.location.back();
-  }
   open(content, id, value) {
     this.id = id;
     this.value = value;
@@ -122,7 +109,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
         if (res && res.msgBodyData[0]) {
           var data = res.msgBodyData[0];
           for (let i = 0; i < this.lstPolicyLine.length; i++) {
-            if (this.lstPolicyLine[i].recID == data.recID)
+            if (this.lstPolicyLine[i].id == data.itemSelect)
               this.lstPolicyLine[i].value = data.value;
           }
           this.changedr.detectChanges();
