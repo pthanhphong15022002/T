@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, NotificationsService, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DataRequest, DialogRef, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
+import { PopupAddProcessStepComponent } from './popup-add-processstep/popup-add-processstep.component';
 
 @Component({
   selector: 'lib-processstep',
@@ -33,7 +34,7 @@ implements OnInit, AfterViewInit {
   service = 'BP';
   entityName = 'BP_ProcessStepsBusiness';
   idField = 'recID';
-  assemblyName = 'ERM.Business.TM';
+  assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
   method = 'GetProcessStepsAsync'; //chua viet
   constructor(
@@ -47,31 +48,42 @@ implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+     
   }
-
 
   onInit(): void {
     this.button = {
       id: 'btnAdd',
+      items:[
+        {
+          id: 'edit',
+          icon: 'icon-list-checkbox',
+          text: 'Sửa',
+        },
+        {
+          id: 'btnMF2',
+          icon: 'icon-list-checkbox',
+          text: 'more 2',
+        },
+      ]
     };
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+
   }
   ngAfterViewInit(): void {
     this.views = [
       {
-        type: ViewType.list,
+        type: ViewType.content,
         active: false,
         sameData: true,
         model: {
           template: this.itemViewList,
-        },
-      },
-      {
-        type: ViewType.listdetail,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-          panelRightRef: this.panelRight,
         },
       },
       {
@@ -100,6 +112,11 @@ implements OnInit, AfterViewInit {
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
   }
+
+  changeDataMF(e,data){
+
+  }
+
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
@@ -131,7 +148,24 @@ implements OnInit, AfterViewInit {
 
   //#region CRUD
 add(){
-
+ this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddProcessStepComponent,
+        [this.view.dataService.dataSelected,'add', this.titleAction],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+      });
+    });
 };
 edit(data){
   
