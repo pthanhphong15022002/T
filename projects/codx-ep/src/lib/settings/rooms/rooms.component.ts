@@ -116,18 +116,19 @@ export class RoomsComponent extends UIComponent {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: '350',//gv['ResourceID'].width,
+              width: 350,//gv['ResourceID'].width,
               template: this.resourceNameCol,
             },
             {
               headerText: gv['Location'].headerText,
-              width: gv['Location'].width,
+              width: 200,//gv['Location'].width,
               field: 'location',
               template: this.locationCol,
+              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Equipments'].headerText,
-              width: gv['Equipments'].width,
+              width: 100,//gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
               headerTextAlign: 'Center',
@@ -135,25 +136,24 @@ export class RoomsComponent extends UIComponent {
             },          
             {
               headerText: gv['Note'].headerText,
-              width: gv['Note'].width,
+              width: 200,//gv['Note'].width,
               field: 'note',
-              headerTextAlign: 'Center',  
-              textAlign: 'Center',            
+              headerTextAlign: 'Center',           
             },
             {
               headerText: gv['Owner'].headerText,
-              width:gv['Owner'].width,
-              //width: 200,
+              //width:gv['Owner'].width,
+              width: 200,
               template: this.ownerCol,
               headerTextAlign: 'Center',
             },
-            {
-              headerText: 'Người chuẩn bị',//gv['Owner'].headerText,
-              width:gv['Owner'].width,
-              //width: 200,
-              template: this.preparatorCol,
-              headerTextAlign: 'Center',
-            },
+            // {
+            //   headerText: 'Người chuẩn bị',//gv['Owner'].headerText,
+            //   width:gv['Owner'].width,
+            //   //width: 200,
+            //   template: this.preparatorCol,
+            //   headerTextAlign: 'Center',
+            // },
           ];
           this.views = [
             {

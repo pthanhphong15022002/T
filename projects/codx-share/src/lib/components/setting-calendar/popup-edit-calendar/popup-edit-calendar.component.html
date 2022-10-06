@@ -6,12 +6,8 @@
           <thead>
             <tr>
               <th scope="col" class="w-20 min-w-200px"></th>
-              <th
-                scope="col"
-                class="w-10 text-center"
-                *ngFor="let item of vlls"
-              >
-                {{ item.text }}
+              <th scope="col" class="w-10 text-center" *ngFor="let day of days">
+                {{ day?.text }}
               </th>
             </tr>
           </thead>
@@ -33,6 +29,7 @@
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
+                      (click)="editShift($event, '1')"
                     >
                       <span class="icon-more_vert icon-18 hoverIcon"></span>
                     </button>
@@ -55,7 +52,7 @@
                   class="test-check"
                   type="checkbox"
                   field="stweekday"
-                  [checked]="item.checked || true"
+                  [checked]="item.checked"
                   (valueChange)="weekdayChange($event, item)"
                 >
                 </codx-input>
@@ -76,6 +73,7 @@
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
+                      (click)="editShift($event, '2')"
                     >
                       <span class="icon-more_vert icon-18 hoverIcon"></span>
                     </button>
@@ -214,7 +212,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of calendateDate">
+            <tr *ngFor="let item of calendarDate">
               <td>
                 <div class="text-dark" [innerHTML]="item.note"></div>
               </td>
