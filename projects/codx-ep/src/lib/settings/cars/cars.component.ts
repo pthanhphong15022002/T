@@ -122,18 +122,19 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: '300', //gv['ResourceID'].width,
+              width: 250, //gv['ResourceID'].width,
               template: this.resourceNameCol,
             },
             {
               headerText: gv['Category'].headerText,
-              //width: gv['Location'].width,
+              width: 200,//gv['Location'].width,
               field: 'category',
               template: this.locationCol,
+              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Equipments'].headerText,
-              //width: gv['Equipments'].width,
+              width: 200,//gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
               headerTextAlign: 'Center',
@@ -141,10 +142,9 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['Note'].headerText,
-              //width: gv['Note'].width,
+              width: 200,//gv['Note'].width,
               field: 'note',
               headerTextAlign: 'Center',
-              textAlign: 'Center',
             },
             {
               headerText: 'Lái xe', //gv['Owner'].headerText,
