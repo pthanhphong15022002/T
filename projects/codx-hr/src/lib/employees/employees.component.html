@@ -78,13 +78,13 @@
 </ng-template>
 
 <ng-template #itemAction let-data>
-  <codx-mfunc 
-    [formModel]="view.formModel" 
-    [itemSelected]="itemSelected" 
-    (clickMF)="clickMF($event, data)"
-    [dataItem]="data" 
-    [typeMF]="'hover'">
-  </codx-mfunc>
+    <codx-mfunc 
+      [formModel]="view.formModel" 
+      [itemSelected]="itemSelected" 
+      (clickMF)="clickMF($event, data)"
+      [dataItem]="data" 
+      [typeMF]="'hover'">
+    </codx-mfunc>
 </ng-template>
 
 <ng-template #itemEmployee let-data>
