@@ -109,19 +109,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
 
-    console.log(this.formModelCustom);
-
     this.user = this.auth.get();
-    // if (!this.user.employee || this.user.employee == null) {
-    //   this.user.employee = null;
-    //   this.esService.getEmployee(this.user?.userID).subscribe((emp) => {
-    //     console.log('employee', emp);
-
-    //     if (emp) {
-    //       this.user.employee = emp;
-    //     }
-    //   });
-    // }
 
     if (this.oSignFile) {
       this.currentTab = 1;
@@ -141,6 +129,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.oSignFile) {
+      this.data.permissions;
       this.esService.getFormModel('EST011').then((formModel) => {
         this.formModelCustom = formModel;
 
@@ -198,106 +187,11 @@ export class PopupAddSignFileComponent implements OnInit {
       });
     } else {
       this.initForm1();
-      this.esService
-        .getComboboxName(
-          this.formModelCustom.formName,
-          this.formModelCustom.gridViewName
-        )
-        .then((res) => {
-          if (res) this.cbxName = res;
-        });
     }
   }
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
-  }
-
-  initForm() {
-    this.esService.getEmployee(this.user?.userID).subscribe((emp) => {
-      console.log('employee', emp);
-
-      if (emp) {
-        this.user.employee = emp;
-      }
-
-      this.esService
-        .getFormGroup(
-          this.formModelCustom.formName,
-          this.formModelCustom.gridViewName
-        )
-        .then((res) => {
-          if (res) {
-            this.dialogSignFile = res;
-            this.dialogSignFile.addControl('recID', new FormControl(null));
-            this.dialogSignFile.addControl('id', new FormControl(null));
-            this.dialogSignFile.addControl('icon', new FormControl(null));
-            this.dialogSignFile.addControl('color', new FormControl(null));
-            this.dialogSignFile.addControl('categoryName', new FormControl(''));
-            this.dialogSignFile.addControl(
-              'approveControl',
-              new FormControl(null)
-            );
-            if (this.oSignFile) {
-              this.dialogSignFile.patchValue(this.data);
-              this.dialogSignFile.patchValue({
-                approveStatus: '1',
-                approveControl: '3',
-                employeeID: this.user.employee?.employeeID,
-                orgUnitID: this.user.employee?.orgUnitID,
-                deptID: this.user.employee?.departmentID,
-                divisionID: this.user.employee?.divisionID,
-                companyID: this.user.employee?.companyID,
-              });
-
-              this.isAfterRender = true;
-              this.cr.detectChanges();
-              this.updateNodeStatus(0, 1);
-            } else {
-              this.dialogSignFile.patchValue(this.data);
-              if (this.isAddNew) {
-                this.dialogSignFile.patchValue({
-                  approveControl: '3',
-                  priority: '1',
-                  approveStatus: '1',
-                  categoryID: null,
-                  employeeID: this.user.employee?.employeeID,
-                  orgUnitID: this.user.employee?.orgUnitID,
-                  deptID: this.user.employee?.departmentID,
-                  divisionID: this.user.employee?.divisionID,
-                  companyID: this.user.employee?.companyID,
-                  refDate: new Date(),
-                });
-                this.codxService
-                  .getAutoNumber(
-                    this.formModelCustom.funcID,
-                    this.formModelCustom.entityName,
-                    'CategoryID'
-                  )
-                  .subscribe((dt: any) => {
-                    this.autoNo = dt;
-                    this.dialogSignFile.patchValue({
-                      refNo: dt,
-                    });
-                    this.isAfterRender = true;
-                  });
-              } else {
-                this.esService
-                  .getDetailSignFile(this.data?.recID)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.dialogSignFile.patchValue(res);
-
-                      console.log('main, edit', this.dialogSignFile.value);
-                      this.isAfterRender = true;
-                      this.cr.detectChanges();
-                    }
-                  });
-              }
-            }
-          }
-        });
-    });
   }
 
   initForm1() {
@@ -410,53 +304,6 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   fileAdded(event) {
-    let lstESign = ['.doc', '.pdf', '.xlsx'];
-    let files = [];
-    if (event) {
-      if (event?.length > 0) {
-        event.forEach((element) => {
-          let file = new File();
-          file.fileID = element.data.recID;
-          file.fileName = element.data.fileName;
-          file.createdOn = element.data.createdOn;
-          file.createdBy = element.data.createdBy;
-          file.comment = element.data.extension;
-
-          let index = lstESign.indexOf(file.comment);
-          if (index >= 0) {
-            file.eSign = true;
-          }
-
-          files.push(file);
-        });
-      } else {
-        let file = new File();
-        file.fileID = event.data.recID;
-        file.fileName = event.data.fileName;
-        file.createdOn = event.data.createdOn;
-        file.createdBy = event.data.createdBy;
-        file.comment = event.data.extension;
-        let index = lstESign.indexOf(file.comment);
-        if (index >= 0) {
-          file.eSign = true;
-        }
-
-        files.push(file);
-      }
-
-      this.data.files = files;
-      //this.dialogSignFile.patchValue({ files: files });
-      console.log(this.dialogSignFile.value);
-
-      this.esService.editSignFile(this.data).subscribe((res) => {
-        console.log('cập nhật file', res);
-        this.data = res;
-        //this.dialogSignFile.patchValue(res);
-      });
-    }
-  }
-
-  fileAdded1(event) {
     this.isEdit = true;
     let lstESign = ['.doc', '.pdf', '.xlsx'];
     let files = [];
@@ -493,7 +340,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
 
       this.data.files = files;
-      //this.dialogSignFile.patchValue({ files: files });
+      this.dialogSignFile.patchValue({ files: files });
       console.log(this.dialogSignFile.value);
     }
   }
@@ -529,6 +376,8 @@ export class PopupAddSignFileComponent implements OnInit {
           [event['field']]: event.data?.fromDate,
         });
         this.data[event['field']] = event.data?.fromDate;
+      } else if (event.field == 'templateName') {
+        this.templateName = event.data;
       } else if (event.field == 'owner') {
         this.esService.getEmployee(event.data).subscribe((emp) => {
           console.log('employee', emp);
@@ -609,32 +458,18 @@ export class PopupAddSignFileComponent implements OnInit {
   onSaveSignFile() {
     //this.dialogSignFile.patchValue(this.data);
     if (this.dialogSignFile.invalid == true) {
-      this.esService.notifyInvalid(
-        this.dialogSignFile,
-        this.formModelCustom,
-        this.data
-      );
+      this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
     }
 
     if (!this.isSaved && this.isAddNew) {
       this.esService.addNewSignFile(this.data).subscribe(async (res) => {
-        console.log('ADD NEW SIGNFILE: ', res);
-        console.log('...', this.dialogSignFile.value);
         if (res != null) {
+          console.log('ADD NEW SIGNFILE: ', res);
+          this.data = res;
           this.isSaved = true;
-          //this.dialogSignFile.patchValue(res);
-          // this.data = res;
           if (this.attachment.fileUploadList.length > 0) {
             this.attachment.objectId = res.recID;
-            // this.attachment
-            //   .addFileObservable(this.attachment.fileUploadList[0])
-            //   .subscribe((file) => {
-            //     if (file) {
-            //       this.fileAdded(file);
-            //       console.log(this.attachment.fileUploadList);
-            //     }
-            //   });
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
                 if (item2?.status == 0) {
@@ -654,7 +489,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.editSignFile(this.data).subscribe((res) => {
         if (res) {
           //this.dialogSignFile.patchValue(res);
-          // this.data = res;
+          this.data = res;
           console.log('EDIT SIGNFILE: ', res);
           console.log('...', this.dialogSignFile.value);
 
@@ -804,7 +639,7 @@ export class PopupAddSignFileComponent implements OnInit {
               (item2: any) => {
                 if (item2?.status == 0) {
                   this.disableContinue = false;
-                  this.fileAdded1(item2);
+                  this.fileAdded(item2);
                 }
               }
             );
@@ -944,7 +779,12 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   close() {
-    if (this.isAddNew == true) {
+    if (
+      this.processTab == 0 ||
+      (this.isAddNew == true && this.dialogSignFile.invalid)
+    ) {
+      this.dialog && this.dialog.close();
+    } else if (this.processTab > 0 && this.isAddNew == true) {
       this.notify.alertCode('ES002').subscribe((x) => {
         if (x.event.status == 'Y') {
           this.clickIsSave(true);
@@ -983,11 +823,15 @@ export class PopupAddSignFileComponent implements OnInit {
         this.formModelCustom.funcID
       )
       .subscribe((res) => {
-        if (res?.msgCodeError == null && res?.rowCount) {
+        console.log(res);
+
+        debugger;
+
+        if (res?.msgCodeError == null && res?.rowCount > 0) {
           this.dialogSignFile.patchValue({ approveStatus: '3' });
           this.data.approveStatus = '3';
           this.esService.editSignFile(this.data).subscribe((result) => {
-            if (res) {
+            if (result) {
               this.notify.notifyCode('ES007');
               this.dialog &&
                 this.dialog.close({

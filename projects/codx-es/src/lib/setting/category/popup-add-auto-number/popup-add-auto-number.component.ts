@@ -146,11 +146,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {
     if (this.dialogAutoNum.invalid == true) {
-      this.esService.notifyInvalid(
-        this.dialogAutoNum,
-        this.formModel,
-        this.data
-      );
+      this.esService.notifyInvalid(this.dialogAutoNum, this.formModel);
       return;
     }
 

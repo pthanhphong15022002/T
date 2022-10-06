@@ -112,11 +112,8 @@ export class CodxEsService {
     private http: HttpClient
   ) {}
 
-  notifyInvalid(
-    formGroup: FormGroup,
-    formModel: FormModel,
-    gridViewSetup: any = null
-  ) {
+  notifyInvalid(formGroup: FormGroup, formModel: FormModel) {
+    let gridViewSetup;
     const invalid = [];
     const controls = formGroup.controls;
     for (const name in controls) {
@@ -127,34 +124,26 @@ export class CodxEsService {
     }
     let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
 
-    if (gridViewSetup == null) {
-      this.cache
-        .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .subscribe((res) => {
-          if (res) {
-            gridViewSetup = res;
-            if (fieldName == 'Email' && formGroup.value.email != null) {
-              this.notificationsService.notifyCode(
-                'E0003',
-                0,
-                '"' + gridViewSetup[fieldName].headerText + '"'
-              );
-            } else {
-              this.notificationsService.notifyCode(
-                'SYS028',
-                0,
-                '"' + gridViewSetup[fieldName].headerText + '"'
-              );
-            }
+    this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          gridViewSetup = res;
+          if (fieldName == 'Email' && formGroup.value.email != null) {
+            this.notificationsService.notifyCode(
+              'E0003',
+              0,
+              '"' + gridViewSetup[fieldName]?.headerText ?? fieldName + '"'
+            );
+          } else {
+            this.notificationsService.notifyCode(
+              'SYS028',
+              0,
+              '"' + gridViewSetup[fieldName]?.headerText ?? fieldName + '"'
+            );
           }
-        });
-    } else {
-      this.notificationsService.notifyCode(
-        'SYS028',
-        0,
-        '"' + gridViewSetup[fieldName].headerText + '"'
-      );
-    }
+        }
+      });
   }
 
   //#region Get from FunctionList
@@ -260,9 +249,9 @@ export class CodxEsService {
               }
 
               let modelValidator = [];
-              // if (element.isRequire) {
-              //   modelValidator.push(Validators.required);
-              // }
+              if (element.isRequire) {
+                modelValidator.push(Validators.required);
+              }
               if (element.fieldName == 'email') {
                 modelValidator.push(Validators.email);
               }
@@ -1090,6 +1079,17 @@ export class CodxEsService {
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateApprovalTransStatusAsync',
+      data
+    );
+  }
+
+  approveAsync(transID, status, reasonID, comment) {
+    let data = [transID, status, reasonID, comment];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ApproveAsync',
       data
     );
   }

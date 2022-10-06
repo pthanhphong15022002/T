@@ -492,7 +492,29 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
           comment
         )
         .subscribe((status) => {
-          resolve(status);
+          if (status) {
+            let approveStt = '5';
+
+            switch (mode) {
+              case '1': {
+                approveStt = '5';
+                break;
+              }
+              case '2': {
+                approveStt = '4';
+                break;
+              }
+              case '3': {
+                approveStt = '2';
+                break;
+              }
+            }
+            this.esService
+              .approveAsync(this.recID, approveStt, '', '')
+              .subscribe((res2) => {
+                resolve(status);
+              });
+          }
         });
     });
   }
@@ -964,7 +986,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
       case 'img': {
         let img = document.createElement('img') as HTMLImageElement;
-        img.setAttribute('crossOrigin', 'anonymous');
+        // img.setAttribute('crossOrigin', 'anonymous');
 
         img.src = url;
         img.onload = () => {
