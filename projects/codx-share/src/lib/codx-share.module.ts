@@ -109,6 +109,7 @@ import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfComponent } from './components/pdf/pdf.component';
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
+import { PopupEditShiftComponent } from './components/setting-calendar/popup-edit-shift/popup-edit-shift.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -176,6 +177,7 @@ const T_Component: Type<any>[] = [
   PopupAddDayoffsComponent,
   PopupAddEventComponent,
   PopupEditCalendarComponent,
+  PopupEditShiftComponent,
   FileComponent,
   InfoLeftComponent,
   ActiviesApprovalListComponent,
