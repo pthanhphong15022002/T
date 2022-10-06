@@ -67,8 +67,8 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   showTabComments = true;
   showTabMeetings = true;
   showButtonAdd = true;
-  showMoreFunc = true ;
-   offset = "0px";
+  showMoreFunc = true;
+  offset = "0px";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -163,15 +163,15 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // var body = document.querySelectorAll('body.toolbar-enabled');
     // if(body && body.length > 0)
-    if(this.name =='AssignTo' || this.name =='Meetings')
-    this.offset ="65px";else this.offset ="0px"
+    if (this.name == 'AssignTo' || this.name == 'Meetings')
+      this.offset = "65px"; else this.offset = "0px"
     this.loadTabView();
   }
-  ngAfterViewInit(): void { 
-    
+  ngAfterViewInit(): void {
+
   }
   loadTabView() {
-  
+
     if (this.tabControl.length == 0) {
       this.tabControl = this.all;
     } else {
@@ -192,8 +192,8 @@ export class SprintDetailsComponent implements OnInit, AfterViewInit {
     });
     // var body = document.querySelectorAll('body.toolbar-enabled');
     // if(body && body.length > 0)
-    if(this.name =='AssignTo' || this.name =='Meetings')
-    this.offset ="65px";else this.offset = "0px" ;
+    if (this.name == 'AssignTo' || this.name == 'Meetings')
+      this.offset = "65px"; else this.offset = "0px";
     item.isActive = true;
     this.changeDetectorRef.detectChanges();
   }
