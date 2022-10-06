@@ -26,7 +26,6 @@ import { utils } from 'xlsx';
   selector: 'popup-add-report',
   templateUrl: './popup-add-report.component.html',
   styleUrls: ['./popup-add-report.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class PopupAddReportComponent implements OnInit, AfterViewInit {
   @ViewChild('tabInfo') tabInfo: TemplateRef<any>;
@@ -91,56 +90,70 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+   }
 
   ngAfterViewInit(): void {
     this.tabContent = [this.tabInfo, this.tabParam, this.tabSignature];
     this.tabTitle = [this.menuInfo, this.menuParam, this.menuSignature];
     if (this.reportID) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.SYS',
-          'ReportListBusiness',
-          'GetByReportIDAsync',
-          this.reportID
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.data = res;
-            this.recID = this.data.recID;
-            // this.api
-            //   .execSv(
-            //     'DM',
-            //     'ERM.Business.DM',
-            //     'FileBussiness',
-            //     'GetListFileByIDAsync',
-            //     JSON.stringify([this.recID])
-            //   )
-            //   .subscribe((res) => {
-            //     console.log(res);
+     this.getReport();
+     this.getReportParams();
 
-
-            //   });
-          } else {
-            this.setDefaut();
-          }
-        });
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.SYS',
-          'ReportParametersBusiness',
-          'GetReportParamAsync',
-          this.reportID
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.parameters = res.parameters;
-          }
-        });
     } else this.setDefaut();
   }
+
+  getReport(){
+    this.api
+    .execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'ReportListBusiness',
+      'GetByReportIDAsync',
+      this.reportID
+    )
+    .subscribe((res: any) => {
+      if (res) {
+        this.data = res;
+        this.recID = this.data.recID;
+      } else {
+        this.setDefaut();
+      }
+    });
+  }
+
+  getReportParams(){
+    this.api
+    .execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'ReportParametersBusiness',
+      'GetReportParamAsync',
+      this.reportID
+    )
+    .subscribe((res: any) => {
+      if (res) {
+        this.parameters = res.parameters;
+      }
+    });
+  }
+  setReportParams(){
+   this.api
+        .execSv(
+          'rpttm',
+          'Codx.RptBusiness.CM',
+          'LVReportHelper',
+          'GetReportParamsAsync',
+          this.reportID
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.getReportParams();
+          }
+        });
+  }
+
   setDefaut() {
     this.recID = Util.uid();
     this.data = {};

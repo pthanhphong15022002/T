@@ -82,12 +82,12 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
     });
   }
 
-  openCreate(): void {
-    $('#create_card').addClass('offcanvas-on');
-  }
-  closeCreate(): void {
-    $('#create_card').removeClass('offcanvas-on');
-  }
+  // openCreate(): void {
+  //   $('#create_card').addClass('offcanvas-on');
+  // }
+  // closeCreate(): void {
+  //   $('#create_card').removeClass('offcanvas-on');
+  // }
 
   valueChange(e, ele) {
     this.value = e.data;
