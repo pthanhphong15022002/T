@@ -1,36 +1,184 @@
-<codx-form #form headerText="{{ title }}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"
-  [formModel]="dialog?.formModel" [data]="master">
+<codx-form
+  #form
+  headerText="{{ title }}"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog?.formModel"
+  [data]="master"
+>
   <ng-template #body>
-   
+    <div class="card-form">
+      <div class="form-group">
+        <codx-label name="StepType" [formModel]="form.formModel" default="Công đoạn"></codx-label>
+        <codx-input
+        field="stepType"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        [disabled]="readOnly"
+        (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="StepName"
+          [formModel]="form.formModel"
+          default="Tên công đoạn"
+        ></codx-label>
+        <codx-input
+          field="stepName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [disabled]="readOnly"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label name="" default="Mô tả"></codx-label>
+        <codx-input type="textarea" field="textarea" placeholder="textarea">
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <label class="codx-label">Quản lý qui trình</label>
+        <codx-input
+          type="text"
+          [disabled]="readOnly"
+          class="test-textbox"
+          placeholder="textbox"
+          value="123"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label name="" default="Nhóm qui trình"></codx-label>
+        <codx-input
+          service="SYS"
+          type="combobox"
+          name="combobox"
+          ngDefaultControl
+          refValue="Users"
+          [loadFull]="true"
+          field="userID"
+          inputmode="text"
+        >
+        </codx-input>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <codx-label name="" default="Nhóm qui trình"></codx-label>
+            <codx-input
+              service="SYS"
+              type="combobox"
+              name="combobox"
+              ngDefaultControl
+              refValue="Users"
+              [loadFull]="true"
+              field="userID"
+              inputmode="text"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <codx-label name="" default="Ngày hiệu lực"></codx-label>
+              <codx-input
+                type="datetime"
+                class="test-datetime"
+                field="datetime"
+                placeholder="datetime"
+                dataformat="d"
+              >
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <codx-label name="" default="Ngày hết hạn"></codx-label>
+              <codx-input
+                type="datetime"
+                class="test-datetime"
+                field="datetime"
+                placeholder="datetime"
+                dataformat="d"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <ng-container>
-      <div class="d-flex align-items-center justify-content-between mt-4" *ngIf="showLabelAttachment"
-        style="float: left; clear: left">
+      <div
+        class="d-flex align-items-center justify-content-between mt-4"
+        *ngIf="showLabelAttachment"
+        style="float: left; clear: left"
+      >
         <div class="d-flex align-items-center mb-2">
           <span class="icon-attach_file icon-18 me-2 text-primary"></span>
           <div class="fw-bold text-primary">
-            <codx-label fiedName="Attachments" [formModel]="form.formModel" default="Tài liệu đính kèm">
+            <codx-label
+              fiedName="Attachments"
+              [formModel]="form.formModel"
+              default="Tài liệu đính kèm"
+            >
             </codx-label>
           </div>
         </div>
       </div>
       <div>
-        <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="master?.iterationID"
-          hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
-          allowMultiFile="1" [formModel]="dialog.formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)"
-          (fileCount)="getfileCount($event)" displayThumb="full">
+        <codx-attachment
+          #attachment
+          [objectType]="dialog.formModel.entityName"
+          [objectId]="master?.iterationID"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          [formModel]="dialog.formModel"
+          [functionID]="funcID"
+          (fileAdded)="fileAdded($event)"
+          (fileCount)="getfileCount($event)"
+          displayThumb="full"
+        >
         </codx-attachment>
       </div>
     </ng-container>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between mt-4">
-      <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly" (click)="addFile($event)">
-        <i class="icon-cloud_upload fs-5"></i><span>
-          <codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label>
+      <button
+        type="button"
+        class="btn btn-light-primary me-3"
+        [disabled]="readOnly"
+        (click)="addFile($event)"
+      >
+        <i class="icon-cloud_upload fs-5"></i
+        ><span>
+          <codx-label
+            name="UploadFile"
+            formName="Tasks"
+            default="Upload File"
+          ></codx-label>
         </span>
       </button>
-      <button type="button" class="btn btn-primary" (click)="saveData(master.iterationID)">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveData(master.iterationID)"
+      >
         <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
       </button>
     </div>
