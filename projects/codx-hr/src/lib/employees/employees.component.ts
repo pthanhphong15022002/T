@@ -84,8 +84,11 @@ export class EmployeesComponent implements OnInit {
     this.button = {
       id: 'btnAdd',
     };
+    
+  }
+
+  ngAfterViewInit(): void {
     this.columnsGrid = [
-      { field: '', headerText: '', width: 20, template: this.itemAction },
       {
         field: 'employeeID',
         headerText: 'Nhân viên',
@@ -110,10 +113,12 @@ export class EmployeesComponent implements OnInit {
         width: 200,
         template: this.itemStatusName,
       },
+      { field: '', 
+        headerText: '', 
+        width: 50, 
+        template: this.itemAction
+      },
     ];
-  }
-
-  ngAfterViewInit(): void {
     this.views = [
       {
         id: '1',

@@ -16,9 +16,17 @@
 <ng-template #panelLeftRef>
   <div class="content d-flex flex-column flex-column-fluid paneltree">
     <div class="contact-orgchat">
-      <codx-treeview id="chartOrg" #chartOrg [pageSize]="10" [itemTemplate]="templateTree" funcId="HRS0201"
-        entityName="HR_OrganizationUnits" service="HR" type="treeView" textField="orgUnitName"
-        gridViewName="grvOrganizationUnits" formName="OrganizationUnits" [enableCheck]="false" idField="orgUnitID"
+      <codx-treeview id="chartOrg" #chartOrg 
+        [pageSize]="10" 
+        [itemTemplate]="templateTree" 
+        funcId="HRS0201"
+        entityName="HR_OrganizationUnits" 
+        service="HR" type="treeView" 
+        textField="orgUnitName"
+        gridViewName="grvOrganizationUnits" 
+        formName="OrganizationUnits" 
+        [enableCheck]="false" 
+        idField="orgUnitID"
         (onSelectionChanged)="onSelectionChanged($event)">
       </codx-treeview>
     </div>
@@ -70,11 +78,13 @@
 </ng-template>
 
 <ng-template #itemAction let-data>
-  <div class="action-menu">
-    <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event, data)"
-      [dataItem]="data" [typeMF]="'hover'">
+    <codx-mfunc 
+      [formModel]="view.formModel" 
+      [itemSelected]="itemSelected" 
+      (clickMF)="clickMF($event, data)"
+      [dataItem]="data" 
+      [typeMF]="'hover'">
     </codx-mfunc>
-  </div>
 </ng-template>
 
 <ng-template #itemEmployee let-data>
@@ -91,7 +101,7 @@
             </div>
             <div class="badge badge-success badge-sm badge-inline flex-wrap" *ngIf="data.gender"
               [style.background]="data.genderColor">
-              {{ data.gender | vll: "L0068":"text" | async }}
+              {{ data.gender | vll: "HR001":"text" | async }}
             </div>
           </div>
 
@@ -227,8 +237,7 @@
           <codx-label name="lblSenioritydate" formName="Employees" default="Thâm niên: ">
           </codx-label>
         </span>
-        <span *ngIf="!data?.senioritydate"></span>
-        <span *ngIf="data?.senioritydate">{{ senioritydate(data) }}</span>
+        <span>{{data.senioritydate | timeAgo}}</span>
       </div>
     </div>
   </div>

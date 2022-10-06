@@ -29,6 +29,14 @@
     padding: 0;
 }
 
+.pw-feed {
+    width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    margin-top: 15px;
+}
+
 .personal-container app-list-post .e-listview .e-list-item {
     border: 0 !important;
 }
@@ -114,6 +122,10 @@
     width: 228px !important;
 }
 
+.h-228px {
+    height: 228px !important;
+}
+
 .h-140px {
     height: 140px !important;
 }
@@ -129,4 +141,8 @@ codx-card-img .card-icon-nowrap {
 
 .pw-storgae .home-img {
     height: calc(100vh - 300px) !important;
+}
+
+.pw-feed ejs-listview {
+    background-color: transparent;
 }

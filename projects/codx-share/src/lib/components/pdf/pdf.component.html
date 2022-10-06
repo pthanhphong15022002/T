@@ -264,13 +264,11 @@
           <ejs-toolbar class="border-start">
             <e-items>
               <e-item
-                [disabled]="!hasPermission"
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="print"
               >
               </e-item>
               <e-item
-                [disabled]="!hasPermission"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
@@ -741,7 +739,7 @@
     class="footer-left"
     [showText]="true"
     name="ES002"
-    [value]="data.signType"
+    [value]="data.stepType"
   ></codx-vll>
 </ng-template>
 

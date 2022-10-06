@@ -16,6 +16,7 @@ import {
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  NotificationsService,
   RequestOption,
   UIComponent,
 } from 'codx-core';
@@ -39,6 +40,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Output() loadData = new EventEmitter();
+  returnData:any;
   headerText = '';
   subHeaderText = '';
   fGroupAddEpCards: FormGroup;
@@ -48,10 +50,10 @@ export class PopupAddEpCardsComponent extends UIComponent {
   isAfterRender = false;
   gviewEpCards: any;
   avatarID: any = null;
-  notificationsService: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -99,17 +101,33 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res) {
-          let objectID = res.save.recID != null ? res.save.recID:res.update.recID;
-          this.imageUpload
-            .updateFileDirectReload(objectID)
+        if (res) {          
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if(this.imageUpload)
+          {
+            this.imageUpload
+            .updateFileDirectReload(this.returnData.recID)
             .subscribe((result) => {
               if (result) {
-                //this.loadData.emit();
+                this.loadData.emit();
+                //xử lí nếu upload ảnh thất bại
+                //...
               }
             });
+          }          
+          if(this.isAdd){
+            (this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
+          }
+          else{
+            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
+          }          
           this.dialogRef.close();
         }
+        this.notificationsService.notifyCode('E0011');
         return;
       });
   }  

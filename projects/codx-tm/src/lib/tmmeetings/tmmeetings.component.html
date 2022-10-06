@@ -13,17 +13,18 @@
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
   idField="meetingID"
-  (onDragDrop)="onDragDrop($event)"
+  (onActions)="onActions($event)"
 >
 </codx-views>
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-  <lib-view-list-meet
+    <lib-view-list-meet
     [formModel]="view.formModel"
     [data]="data"
     (clickMoreFunction)="receiveMF($event)"
     [itemSelected]="itemSelected"
+    (viewDetail)="viewDetail($event)"
   >
   </lib-view-list-meet>
 </ng-template>
@@ -112,12 +113,12 @@
   </div>
 </ng-template> -->
 
-<!-- <ng-template #eventTemplate let-data>
-  <div class="text-start p-2" [style.color]="data.status | vll: statusVll:'textColor' | async">
-    <div class="fw-bold p-2" [innerHtml]="getDate(data)"></div>
+<ng-template #eventTemplate let-data>
+  <div (dblclick)="viewDetail(data)" class="text-start  " [style.color]="data.status | vll: statusVll:'textColor' | async">
+    <div class="fw-bold " [innerHtml]="getDate(data)"></div>
     <div class="fw-bolder">{{ data.meetingName }}</div>
   </div>
-</ng-template> -->
+</ng-template>
 <!-- calendar -->
 
 <!-- kanban -->
@@ -132,6 +133,7 @@
     [title]="data?.meetingName"
     [status]="data.status"
     [statusVll]="statusVll"
+    [showBgColorVll]="true"
     [icoStatus2]="data?.isOnline"
     [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-24'"
     [date]="data.startDate"
@@ -208,24 +210,20 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
       <span class="ms-1 fw-bold">
-        <span *ngIf="data.startDate" class="text-gray-700">{{
-          data.startDate | date: "dd/MM/yyyy"
+        <span #startDate class="text-gray-700">{{
+          data.startDate  | formatvalue
+          : view.formModel
+          : "startDate"
+          : startDate
+          : "Meetings"
+          : "grvMeetings"
+        | async
         }}</span>
         <span
           *ngIf="data.startDate"
           class="fw-bold p-2"
           [innerHtml]="'( ' + getDate(data) + ')'"
         ></span>
-        <span #startDate *ngIf="!data.startDate">{{
-          data?.startDate
-            | formatvalue
-              : view.formModel
-              : "startDate"
-              : startDate
-              : "Meetings"
-              : "grvMeetings"
-            | async
-        }}</span>
       </span>
     </div>
   </div>

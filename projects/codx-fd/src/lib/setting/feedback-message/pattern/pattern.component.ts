@@ -184,7 +184,7 @@ export class PatternComponent extends UIComponent implements OnInit {
         }
       });
     });
-    this.change.detectChanges();  
+    this.change.detectChanges();
   }
 
   openFormEdit(item = null, i = null, elm = null) {

@@ -24,6 +24,7 @@
         [iconCss]="data.sharedByOther ? 'icon-share' : ' '"
         [iconColorCss]="'blue'"
         [imageId]="data.iterationID"
+        [imageObjName]="data.iterationName"
         [imageObjType]="view.formModel.entityName"
         [imageWidth]="55"
         [title]="placeholder(data.iterationName,view.formModel, 'IterationName') | async"

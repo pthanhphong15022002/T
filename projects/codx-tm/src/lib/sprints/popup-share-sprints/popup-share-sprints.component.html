@@ -3,11 +3,11 @@
     <div class="card-body align-items-center justify-content-between">
         <!-- <input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiếm" /> -->
     </div>
-    <div style="height:300px">
+    <div class="list-shared">
         <ng-container *ngFor="let item of listUserDetail">
-            <div class="d-flex align-items-center user-hover mb-2">
+            <div class="d-flex align-items-center justify-content-between user-hover mb-3">
                 <div class="d-flex align-items-center w-100">
-                    <span class="me-2">
+                    <span class="me-3">
                         <codx-img [width]="30" [objectId]="item?.userID" objectType="AD_Users">
                         </codx-img>
                     </span>
@@ -15,7 +15,7 @@
                         {{item?.userName}}
                     </span>
                 </div>
-                <div class="ms-6">
+                <div class="ms-3">
                     <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
                         <span class="icon-close icon-18 text-gray-500 text-hover-danger"></span>
                     </a>
@@ -27,7 +27,6 @@
                     </button> -->
 
                 </div>
-
             </div>
         </ng-container>
     </div>

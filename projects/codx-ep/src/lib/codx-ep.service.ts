@@ -327,7 +327,7 @@ export class CodxEpService {
   }
   //#endregion
 
-  //#region EP_ApprovalTrans
+  //#region Approval
   release(
     booking: any,
     processID: string,
