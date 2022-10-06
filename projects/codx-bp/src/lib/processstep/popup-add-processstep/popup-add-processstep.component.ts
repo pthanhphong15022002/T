@@ -6,10 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./popup-add-processstep.component.css']
 })
 export class PopupAddProcessStepComponent implements OnInit {
+  title='' 
+  readOnly = false
+  constructor() {
 
-  constructor() { }
+   }
 
   ngOnInit(): void {
   }
+
+  //#region Func
+  
+  //endregion
 
 }
