@@ -233,6 +233,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             ref.createdOn = res.createdOn;
             ref.memo = res.taskName;
             ref.createdBy = res.createdBy;
+            ref.attachments =res.attachments ;
+            ref.comments =res.comments ;
             var taskParent = res ;
             this.api
               .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
@@ -272,6 +274,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                   ref.createdOn = x.createdOn;
                   ref.memo = x.title;
                   ref.createdBy = x.createdBy;
+                  ref.attachments =x.attachments ;
+                  ref.comments =x.comments ;
                   this.dataReferences.push(ref);
                   if (listUser.findIndex((p) => p == ref.createdBy) == -1)
                     listUser.push(ref.createdBy);
@@ -298,6 +302,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                   ref.createdOn = x.createdOn;
                   ref.memo = x.title;
                   ref.createdBy = x.createdBy;
+                  ref.attachments =x.attachments ;
+                  ref.comments =x.comments ;
                   this.dataReferences.push(ref);
                   if (listUser.findIndex((p) => p == ref.createdBy) == -1)
                     listUser.push(ref.createdBy);
@@ -323,6 +329,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                 ref.createdOn = result.createdOn;
                 ref.memo = result.taskName;
                 ref.createdBy = result.createdBy;
+                ref.attachments =result.attachments ;
+                ref.comments =result.comments ;
 
                 this.api
                   .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
