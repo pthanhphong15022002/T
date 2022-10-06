@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, NotificationsService, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DataRequest, DialogRef, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
+import { PopupAddProcessStepComponent } from './popup-add-processstep/popup-add-processstep.component';
 
 @Component({
   selector: 'lib-processstep',
@@ -101,6 +102,7 @@ implements OnInit, AfterViewInit {
     this.clickMF(e.e, e.data);
   }
 
+
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     this.titleAction = e.text;
@@ -131,7 +133,24 @@ implements OnInit, AfterViewInit {
 
   //#region CRUD
 add(){
-
+ this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddProcessStepComponent,
+        [this.view.dataService.dataSelected,'add', this.titleAction],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+      });
+    });
 };
 edit(data){
   
