@@ -27,10 +27,10 @@ export const routes: Routes = [
         path: 'processstep/:funcID',
         component: ProcessstepsComponent,
       },
-      {
-        path: 'processstep/:funcID',
-        component: ProcessStepComponent,
-      },
+      // {
+      //   path: 'processstep/:funcID',
+      //   component: ProcessStepComponent,
+      // },
     ],
   },
 ];
