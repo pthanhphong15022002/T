@@ -153,4 +153,7 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  close(){
+    this.dialog.close() ;
+  }
 }

@@ -302,12 +302,11 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         if (res && res.length > 0) {
           this.data = res[0];
           this.quantity = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
-          debugger;
           if (Object.keys(this.data).length == 0) {
             this.isShowPolicyCard = false;
           }
           this.handleLock(this.data.PolicyControl);
-          this.setValueListName(this.data);
+          this.setValueListName(this.quantity);
           this.change.detectChanges();
         }
       });

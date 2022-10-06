@@ -141,6 +141,10 @@ export const routes: Routes = [
         path: 'setting/industries/:funcID',
         component: ProposedFieldComponent,
       },
+      {
+        path: 'setting/wallets/:funcID',
+        component: WalletComponent,
+      },
     ],
   },
 ];
