@@ -501,8 +501,12 @@ codx-view-list-detail .codx-detail-footer {
 
 .nav-link {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.75rem;
   color: var(--gray-800);
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: transparent !important;
 }
 
 .codx-tab .tab-content .e-toolbar-wrapper {
