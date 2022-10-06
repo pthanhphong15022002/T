@@ -1,5 +1,5 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
-  [footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd" (setTitle)="setTitle($event)"
+  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
@@ -137,8 +137,8 @@
           </codx-label>
           <div class="d-flex flex-row text-end align-items-end">
             <span class="mx-2"> </span>
-            <button class="btn btn-sm btn-icon btn-light-primary" (click)="openPopupCbb()">
-              <span class="icon-group_add icon-18"></span>
+            <button class="btn btn-sm btn-icon " (click)="openPopupCbb()">
+              <span class="icon-group_add icon-18 text-primary"></span>
             </button> 
           </div>
         </div>
@@ -187,9 +187,9 @@
         <codx-label name="lblPeopleInfo" default="Người đi cùng"> </codx-label>
       </div>
       <div class="d-flex flex-row text-end align-items-end">
-        <codx-input type="combobox" name="combobox" [refValue]="'MultiUsers'" [multiple]="true" [showInput]="false"
-          refType="P" (valueChange)="valueCbxUserChange($event)">
-        </codx-input>
+        <button class="btn btn-sm btn-icon " (click)="openPopupCbb()">
+          <span class="icon-group_add icon-18 text-primary"></span>
+        </button> 
       </div>
     </div>
     <div class="d-flex align-items-center mb-4" *ngIf="driver != null">

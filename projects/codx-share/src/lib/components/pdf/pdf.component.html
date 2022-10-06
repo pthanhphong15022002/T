@@ -286,32 +286,32 @@
           </ejs-toolbar>
         </div>
       </div>
-
-      <ngx-extended-pdf-viewer
-        #ngxPdfView
-        *ngIf="curFileUrl ? true : false"
-        [(src)]="curFileUrl"
-        [(zoom)]="zoomValue"
-        [zoomLevels]="zoomValue"
-        [(page)]="curPage"
-        [customToolbar]="pdfToolbar"
-        [showHandToolButton]="false"
-        [showUnverifiedSignatures]="true"
-        [sidebarVisible]="!hideThumbnail"
-        [showSidebarButton]="false"
-        (pdfLoaded)="loadedPdf($event)"
-        (pageRendered)="pageRendered($event)"
-        [showBookmarkButton]="false"
-        [showPropertiesButton]="true"
-        [customSidebar]="withoutSidebar"
-        [customThumbnail]="ngxThumbnail"
-        [enableDragAndDrop]="false"
-        [handTool]="false"
-        [contextMenuAllowed]="false"
-        pageViewMode="vertical"
-        (textLayerRendered)="getTextLayerInfo($event)"
-      >
-      </ngx-extended-pdf-viewer>
+      <ng-container *ngIf="curFileUrl">
+        <ngx-extended-pdf-viewer
+          #ngxPdfView
+          [(src)]="curFileUrl"
+          [(zoom)]="zoomValue"
+          [zoomLevels]="zoomValue"
+          [(page)]="curPage"
+          [customToolbar]="pdfToolbar"
+          [showHandToolButton]="false"
+          [showUnverifiedSignatures]="true"
+          [sidebarVisible]="!hideThumbnail"
+          [showSidebarButton]="false"
+          (pdfLoaded)="loadedPdf($event)"
+          (pageRendered)="pageRendered($event)"
+          [showBookmarkButton]="false"
+          [showPropertiesButton]="true"
+          [customSidebar]="withoutSidebar"
+          [customThumbnail]="ngxThumbnail"
+          [enableDragAndDrop]="false"
+          [handTool]="false"
+          [contextMenuAllowed]="false"
+          pageViewMode="vertical"
+        >
+        </ngx-extended-pdf-viewer>
+      </ng-container>
+     
       <ng-template #ngxThumbnail let-PAGE_NUMBER>
         <a class="pdf-viewer-template">
           <div
@@ -743,22 +743,7 @@
   ></codx-vll>
 </ng-template>
 
-<ng-template #itemTmpl let-data>
-  <codx-temp-full
-    [title]="
-      (data.labelType | vll: 'ES004':'text' | async) +
-      ' - ' +
-      getAreaOwnerName(data.signer)
-    "
-    [resourceObjType]="'AD_Users'"
-    [icoCss]="
-      'w-40px h-40px symbol fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
-      (data.labelType | vll: 'ES004':'icon' | async)
-    "
-    [subTitle]="'Trang ' + data.location?.pageNumber + 1"
-  >
-  </codx-temp-full>
-</ng-template>
+
 
 <ng-template #pageInput>
   <codx-input

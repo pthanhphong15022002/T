@@ -189,6 +189,11 @@ export class EmployeeInfomationComponent implements OnInit {
     };
   }
 
+  scrollToElement(idElement:any): void {
+    if(!idElement) return;
+    let element = document.getElementById(idElement);
+    element.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+  }
   getQueryParams() {
     this.routeActive.queryParams.subscribe((params) => {
       if (params) {

@@ -1,5 +1,5 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
-  [footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd" (setTitle)="setTitle($event)"
+  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
@@ -121,8 +121,8 @@
 
             </div>
             <div class="mx-2">
-              <button class="btn btn-sm btn-icon btn-light-primary" (click)="openUserPopup()">
-                <span class="icon-group_add icon-18"></span>
+              <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
+                <span class="icon-group_add text-primary icon-18"></span>
               </button>
             </div>
           </div>
@@ -205,8 +205,8 @@
             </button>
           </div>
           <div class="mx-2">
-            <button class="btn btn-sm btn-icon btn-light-primary" (click)="openUserPopup()">
-              <span class="icon-group_add icon-18"></span>
+            <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
+              <span class="icon-group_add text-primary icon-18"></span>
             </button>
           </div>
         </div>
@@ -312,7 +312,10 @@
           <span class="text-gray-800 text-hover-primary fw-bolder lh-0">{{
             item.text
             }}</span>
-          <span class="text-gray-400 d-block fs-6">Đơn vị tính : {{ item.umid }}
+          <span class="text-gray-400 d-block fs-6">
+            <codx-label name="lblUMID" default="Đơn vị tính"></codx-label> 
+            : 
+            {{ item.umid }}
           </span>
         </div>
       </div>

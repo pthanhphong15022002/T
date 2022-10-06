@@ -36,7 +36,7 @@
             <div [class]="
                 'btn btn-sm btn-white me-1' +
                 ' ' +
-                (item.isActive ? 'text-primary fw-bold' : '')
+                (item.isActive ? 'btn-light fw-bold' : '')
               ">
               <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
                 (click)="clickMenu(item)">

@@ -921,15 +921,15 @@ export class CodxDMService {
     if (data?.folderName && !data?.extension)
       return '../../../assets/codx/dms/folder.svg';
     else {
-      //return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      if (data.hasThumbnail == null || data.hasThumbnail == false) {
-        return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
-      } else if (data.thumbnail.indexOf('../../../') > -1)
-        return data.thumbnail;
-      else {
-        return environment.urlUpload + "/" + data.thumbnail;
-        //return this.checkUrl(url, data);
-      }
+      return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+      // if (data.hasThumbnail == null || data.hasThumbnail == false) {
+      //   return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+      // } else if (data.thumbnail.indexOf('../../../') > -1)
+      //   return data.thumbnail;
+      // else {
+      //   return environment.urlUpload + "/" + data.thumbnail;
+      //   //return this.checkUrl(url, data);
+      // }
     }
   }
 
@@ -1309,7 +1309,6 @@ export class CodxDMService {
         break;
 
       case "DMT0213":  // chinh sua file
-        debugger;
         this.callfc.openForm(EditFileComponent, "", 800, 800, "", ["", data], "");
         break;
 
