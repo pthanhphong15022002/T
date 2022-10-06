@@ -724,6 +724,22 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     break;
                   }
                   case '8': {
+                    if (!area.isLock) {
+                      this.addArea(
+                        qr,
+                        'img',
+                        area.labelType,
+                        this.isEditable
+                          ? !this.isEditable
+                          : area.allowEditAreas
+                          ? area.allowEditAreas
+                          : !area.isLock,
+                        false,
+                        area.signer,
+                        area.stepNo,
+                        area
+                      );
+                    }
                     break;
                   }
                   case '3':
@@ -766,11 +782,17 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                   let name: tmpAreaName = JSON.parse(attrs.name);
 
                   let signed = stage?.children[0]?.children.find((child) => {
-                    let childName: tmpAreaName = JSON.parse(child?.attrs?.name);
-                    return (
-                      ['1', '2', '8'].includes(childName.LabelType) &&
-                      childName.Signer == name.Signer
-                    );
+                    if (child != this.tr) {
+                      let childName: tmpAreaName = JSON.parse(
+                        child?.attrs?.name
+                      );
+                      return (
+                        childName.LabelType == name.LabelType &&
+                        ['1', '2', '8'].includes(childName.LabelType) &&
+                        childName.Signer == name.Signer
+                      );
+                    }
+                    return null;
                   });
                   this.holding = 0;
                   if (!signed) {
@@ -801,6 +823,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     }
                   } else {
                     this.needAddKonva.remove();
+                    this.tr.remove();
                   }
                 }
                 this.needAddKonva = null;
@@ -818,8 +841,19 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
               this.tr.nodes([]);
             } else {
               this.curSelectedArea = click.target;
-              this.tr.nodes([click.target]);
+
+              this.tr.resizeEnabled(
+                this.isEditable == false
+                  ? false
+                  : this.curSelectedArea.draggable()
+              );
+              this.tr.draggable(
+                this.isEditable == false
+                  ? false
+                  : this.curSelectedArea.draggable()
+              );
               this.tr.forceUpdate();
+              this.tr.nodes([this.curSelectedArea]);
               layerChildren.add(this.tr);
             }
           });
