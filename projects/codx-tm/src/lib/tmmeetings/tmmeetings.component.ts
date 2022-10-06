@@ -228,7 +228,7 @@ export class TMMeetingsComponent
   }
   //#end region
 
-  //#region schedule
+  //#region schedule 
 
   fields = {
     id: 'meetingID',

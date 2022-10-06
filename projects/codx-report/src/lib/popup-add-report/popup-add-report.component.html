@@ -78,7 +78,7 @@
     <h2><codx-label name="lblReportParams" default="Tham số báo cáo"  ></codx-label></h2>
     <h6 class="text-muted"><codx-label name="lblReportParamSetting" default="Thiết lập tham số báo cáo"  ></codx-label></h6>
     <div class="mt-5 overflow-x-auto">
-      <ejs-grid [dataSource]='parameters' height='350'>
+      <ejs-grid [dataSource]='parameters' height='550' [editSettings]="editSettings" (actionBegin)="actionBegin($event)" (actionComplete)="cellSave($event)">
         <e-columns>
           <e-column field='controlIndex' headerText='Index' width='80' textAlign='Center'></e-column>
           <e-column field='controlName' headerText='Control' width='120' textAlign='Center'></e-column>
@@ -136,7 +136,7 @@
       </ejs-grid>
     </div>
     <div class="mt-5">
-      <button class="btn btn-primary" (click)="setReportParams()">Get Parameters</button>
+      <button class="btn btn-primary" (click)="setReportParams()"><codx-label name="lblGetParams" default="Lấy tham số báo cáo"></codx-label></button>
     </div>
   </div>
 </ng-template>
