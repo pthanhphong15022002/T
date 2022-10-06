@@ -325,14 +325,14 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4" id="Stationery">
       <div class="d-flex flex-row text-end align-items-end"> 
-        <button class="btn btn-outline-secondary me-2 d-flex flex-row align-items-center" (click)="openStationeryPopup()">
-          <span class="icon-layers icon-18 me-2"></span>
-          <codx-label name="lblChooseStationery" class="fw-bold text-gray-900" default="Chọn văn phòng phẩm"></codx-label>
+        <button class="btn btn-sm btn-outline btn-outline-secondary me-2 d-flex flex-row align-items-center" (click)="openStationeryPopup()">
+          <span class="icon-layers icon-18 me-2 text-gray-800"></span>
+          <codx-label name="lblChooseStationery" class="fw-bold text-gray-800" default="Chọn văn phòng phẩm"></codx-label>
         </button>       
         
         <ng-container *ngIf="isPopupStationeryCbb">
           <codx-combobox-popup [comboboxName]="'EP_Stationery'" [multiple]="true" [width]="700"
-            [height]="600" [value]="" (clickSave)="valueCbxStationeryChange($event)">
+            [height]="600" [value]="" (close)="closePopUpCbb()" (clickSave)="valueCbxStationeryChange($event)">
           </codx-combobox-popup>
         </ng-container>
       </div>

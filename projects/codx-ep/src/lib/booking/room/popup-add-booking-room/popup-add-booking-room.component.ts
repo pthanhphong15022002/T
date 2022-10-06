@@ -620,7 +620,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
   valueStartTimeChange(event: any) {
-    if (event?.field == 'startTime' && event?.data) {
+    if (event?.data) {
       this.startTime = event.data.fromDate;
       this.isFullDay = false;
       this.beginHour = parseInt(this.startTime.split(':')[0]);
@@ -657,7 +657,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
   valueEndTimeChange(event: any) {
-    if (event?.field == 'endTime' && event?.data) {
+    if (event?.data) {
       this.endTime = event.data.toDate;
       this.isFullDay = false;
       this.endHour = parseInt(this.endTime.split(':')[0]);
@@ -708,6 +708,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.attachments = event.data.length;
   }
   fileCount(event: any) {}
+  closePopUpCbb(){
+    this.isPopupStationeryCbb = false;
+    this.isPopupUserCbb = false;
+    this.isPopupOptionalUserCbb = false;
+  }
   openStationeryPopup() {
     this.isPopupStationeryCbb = true;
   }
