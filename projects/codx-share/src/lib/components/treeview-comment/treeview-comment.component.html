@@ -121,35 +121,31 @@
                 <ul class="nav nav-tabs nav-tabs-line">
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab">
-                            <div class="flex">
-                                <div class="" style="margin-left: 5px">
+                            <div class="flex align-items-center">
+                                <div class="me-2">
                                     <span class="nav-text d-block h-20px">
                                         <codx-label formName="Comments" name="lblTotal" default="Tất cả"></codx-label>
                                     </span>
                                 </div>
-                                <div class="" style="margin-left: 5px">
-                                    <span class="nav-text d-block h-20px">{{dataComment.totalVote}}</span>
-                                </div>
+                                <span class="nav-text d-block">({{dataComment.totalVote}})</span>
                             </div>
                         </a>
                     </li>
                     <li *ngFor="let vote of votes" class="nav-item"
                         (click)="getUserVotes(dataComment.recID,vote.voteType)">
                         <a class="nav-link" data-toggle="tab">
-                            <div class="flex">
-                                <div class="">
+                            <div class="flex align-items-center">
+                                <div class="me-2">
                                     <img class="h-20px w-20px"
                                         src="assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}">
                                 </div>
-                                <div class="" style="margin-left: 5px">
+                                <div class="me-2">
                                     <span class="nav-text d-block h-20px">
                                         <codx-label formName="Comments" name="lblLike"
                                             [default]="vote.voteType | vll:'L1480':'text' | async"></codx-label>
                                     </span>
                                 </div>
-                                <div class="" style="margin-left: 5px">
-                                    <span class="nav-text d-block h-20px">{{vote.countVote}}</span>
-                                </div>
+                                <span class="nav-text d-block">({{vote.countVote}})</span>
                             </div>
                         </a>
                     </li>
