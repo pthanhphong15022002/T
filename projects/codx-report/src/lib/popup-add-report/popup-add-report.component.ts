@@ -73,7 +73,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   parameters: any = [];
   signatures: any = [];
   fields: any = {};
-  editSettings = { allowEditing: true, allowAdding: true, allowDeleting: true , newRowPosition: 'Top' };
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -141,9 +140,11 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   setReportParams(){
+  let serviceName = this.data.service;
+  if (!this.data.service) serviceName = 'rpt' + this.moduleName;
    this.api
         .execSv(
-          'rptsys',
+          serviceName,
           'Codx.RptBusiness.CM',
           'LVReportHelper',
           'GetReportParamsAsync',
@@ -181,6 +182,30 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     });
   }
 
+  editParam(evt: any){
+    debugger
+  }
+
+  deleteParam(evt: any){
+    if(evt && evt.recID){
+      this.notiService.alertCode("Xóa tham số?").subscribe((res:any)=>{
+        if(res.event.status == 'Y'){
+          this.api.execSv(
+            'SYS',
+            'ERM.Business.SYS',
+            'ReportParametersBusiness',
+            'DeleteReportParamAsync',
+            evt.recID
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              this.getReportParams();
+            }
+          });
+        }
+      })
+    }
+  }
   oldParamData: any;
   actionBegin(evt:any){
     if(evt.requestType == "beginEdit"){

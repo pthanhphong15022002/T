@@ -56,7 +56,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.LoadData();
-    this.LoadDataForChangeVLL();
+    // this.LoadDataForChangeVLL();
   }
 
   changeCombobox(data) {
@@ -311,13 +311,13 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         }
       });
   }
-  LoadDataForChangeVLL() {
-    this.settingSV.getParameter().subscribe((res) => {
-      if (res) {
-        this.setValueListName(res[0]);
-      }
-    });
-  }
+  // LoadDataForChangeVLL() {
+  //   this.settingSV.getParameter().subscribe((res) => {
+  //     if (res) {
+  //       this.setValueListName(res[0]);
+  //     }
+  //   });
+  // }
   setValueListName(list) {
     if (!list) return;
     var data;

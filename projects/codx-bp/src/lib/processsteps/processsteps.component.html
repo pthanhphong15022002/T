@@ -1,0 +1,7 @@
+<codx-views #view service="BP" assemblyName="ERM.Business.BP" entityName="BP_ProcessSteps"
+  className="ProcessStepsBusiness" method="GetListProcessStepsAsync" [views]="views" [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="processID"
+  (onDragDrop)="onDragDrop($event)">
+</codx-views>
+
+<ng-template #itemViewList></ng-template>
