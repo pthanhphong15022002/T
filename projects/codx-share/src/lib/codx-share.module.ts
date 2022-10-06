@@ -100,6 +100,7 @@ import { PopupAddEventComponent } from './components/setting-calendar/popup-add-
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
 import { ActiviesApprovalListComponent } from './layout/drawers/activies-approval-list/activies-approval-list.component';
 import { ActiviesSliderComponent } from './layout/drawers/activies-approval-list/activies-slider/activies-slider.component';
+import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import {
   DocumentEditorAllModule,
   DocumentEditorContainerAllModule,
@@ -208,7 +209,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     DocumentEditorAllModule,
     DocumentEditorContainerAllModule,
     SpreadsheetAllModule,
-
+    DialogModule,
     //pdf
     ListViewAllModule,
     NgxExtendedPdfViewerModule,
