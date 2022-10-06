@@ -105,20 +105,21 @@
                     item.shareControl == 'D' ||
                     item.shareControl == 'O'
                   ">
-                  <div class="position-absolute tmpshare">
-                    <div class="d-flex justify-content-between fw-bold">
-                      <codx-label [formModel]="formModel" name="lblShare" default="Danh sách người được chia sẻ">
+                  <div class="position-absolute tmpshare w-250px">
+                    <div class="d-flex justify-content-between">
+                      <codx-label class="fw-bold text-dark" [formModel]="formModel" name="lblShare"
+                        default="Danh sách người được chia sẻ">
                       </codx-label>
-                      <span class="ms-4" (click)="closeListShare(item)">
+                      <span class="ms-2" (click)="closeListShare(item)">
                         <i class="icon-close"></i>
                       </span>
                     </div>
                     <div class="tmpshare-body">
-                      <div class="d-flex align-items-center mb-2" *ngFor="let share of lstUserShare">
-                        <codx-img class="me-2" [width]="30" [imageType]="'circle'" [objectId]="share.objectID"
+                      <div class="d-flex align-items-center mb-3" *ngFor="let share of lstUserShare">
+                        <codx-img class="me-3" [width]="25" [imageType]="'circle'" [objectId]="share.objectID"
                           objectType="AD_Users">
                         </codx-img>
-                        <span class="fw-bolder">
+                        <span class="fw-bold">
                           {{ share.objectName }}
                         </span>
                       </div>

@@ -21,7 +21,11 @@
                         field="employeeID">
                     </codx-input> -->
 
-          <codx-input class="form-control" type="text" [crrValue]="employee?.employeeID" field="employeeID"
+          <codx-input class="form-control" 
+            [disabled]="true"
+            type="text" 
+            [crrValue]="employee?.employeeID" 
+            field="employeeID"
             (valueChange)="dataChange($event, 'employeeID')">
           </codx-input>
         </div>
@@ -85,9 +89,9 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="Email" default="Email"></codx-label>
-          <codx-input class="form-control" type="text" field="email" (valueChange)="dataChange($event, 'email')"
-            [crrValue]="employee?.email" placeholder="Email">
+          <codx-label fiedName="Email" default="Email cá nhân"></codx-label>
+          <codx-input class="form-control" type="text" field="personalEmail" (valueChange)="dataChange($event, 'personalEmail')"
+            [crrValue]="employee?.personalEmail" placeholder="Email cá nhân">
           </codx-input>
         </div>
       </div>
