@@ -3,9 +3,9 @@
   <ng-template popup adde #body>
     <div class="form-group">
       <div class="image-input image-input-outline mb-3" id="kt_user_add_avatar">
-        <codx-img #imageAvatar [width]="50" [objectId]="master ? master.iterationID : ''"
+        <codx-img #imageAvatar  [objectId]="master ? master.iterationID : ''"
           [objectName]="master ? master.iterationName : ''" objectType="TM_Sprints" [funcId]="funcID" isAllowEdit="true"
-          [updateDirect]="isUploadImg" [width]="70" [disabled]="readOnly" [height]="70">
+           [width]="70" [disabled]="readOnly" [height]="70" [isAllowEdit]="true">
         </codx-img>
       </div>
     </div>
