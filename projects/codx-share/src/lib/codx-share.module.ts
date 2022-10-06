@@ -110,6 +110,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfComponent } from './components/pdf/pdf.component';
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 import { PopupEditShiftComponent } from './components/setting-calendar/popup-edit-shift/popup-edit-shift.component';
+import { CodxPopupViewsComponent } from './components/codx-popup-views/codx-popup-views.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -182,7 +183,7 @@ const T_Component: Type<any>[] = [
   InfoLeftComponent,
   ActiviesApprovalListComponent,
   ActiviesSliderComponent,
-
+  CodxPopupViewsComponent,
   //pdf
   PdfComponent,
 ];
@@ -190,7 +191,7 @@ const T_Component: Type<any>[] = [
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe, AttachmentComponent],
+  declarations: [T_Component, T_Pipe, AttachmentComponent, ],
   imports: [
     CommonModule,
     NgbModule,
