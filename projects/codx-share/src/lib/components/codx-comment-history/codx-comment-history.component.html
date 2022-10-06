@@ -29,11 +29,11 @@
 </ng-container>
 <!-- COMMENT -->
 <ng-template #C>
-    <div class="position-relative pb-5 send-comt">
+    <div class="position-relative pb-4 mt-4 send-comt">
         <ng-container *ngIf="type=='create'; else modView">
             <div class="d-flex align-items-center">
                 <div class="me-3">
-                    <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="35"></codx-img>
+                    <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="30"></codx-img>
                 </div>
                 <div class="position-relative cmt feed-box cmt-cmt c3 w-100" (keyup.enter)="sendComments()">
                     <codx-input type="text" placeholder="Trả lời" [crrValue]="message"
@@ -67,7 +67,7 @@
                                         </codx-img>
                                     </ng-container>
                                     <ng-template #imageSrc>
-                                        <img [src]="item.data || item.avatar" alt="" class="image">
+                                        <img [src]="item.data || item.avatar" alt="" class="image-comment">
                                     </ng-template>
                                 </ng-container>
                                 <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
@@ -95,8 +95,8 @@
     <ng-template #modView>
         <ng-container *ngIf="data">
             <div class="d-flex">
-                <div class="me-2" *ngIf="viewIcon">
-                    <img class="iconHistory" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
+                <div class="me-3" *ngIf="viewIcon">
+                    <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
                 </div>
                 <div class="d-flex w-100">
                     <div class="me-3">
@@ -230,17 +230,17 @@
 <!-- END COMMENT -->
 <!-- NEW -->
 <ng-template #N>
-    <div class="row mt-4">
-        <div class="col-1">
-            <img class="iconHistory" src="assets/themes/sys/default/img/History_New.svg" alt="">
+    <div class="d-flex align-items-top mt-4">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_New.svg" alt="">
         </div>
-        <div class="col-11 d-flex">
-            <div class="me-2">
+        <div class="w-100 d-flex align-items-top">
+            <div class="me-3">
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="w-100" [innerHTML]="data.description"></div>
-                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                <div class="text-gray-400 flex-grow-1 fs-7" data-toggle="tooltip">
                     {{data.createdOn | timefrom}}
                 </div>
             </div>
@@ -251,12 +251,12 @@
 <!-- END NEW -->
 <!-- MAIL -->
 <ng-template #E>
-    <div class="row mt-4">
-        <div class="col-1">
-            <img class="iconHistory" src="assets/themes/sys/default/img/History_Email.svg" alt="">
+    <div class="d-flex align-items-top mt-4">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Email.svg" alt="">
         </div>
-        <div class="col-11 d-flex">
-            <div class="me-2">
+        <div class="w-100 d-flex align-items-top">
+            <div class="me-3">
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
             <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -264,7 +264,40 @@
                     <span [innerHTML]="data.description"></span>
                     <span class="ms-2">
                         <span *ngFor="let item of data.sendToObject">
-                            <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="25">
+                            <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30">
+                            </codx-img>
+                        </span>
+                    </span>
+                </div>
+                <div class="text-gray-400 flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
+                </div>
+                <!-- <div>
+                    <button class="btn btn-seen">
+                        <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END MAIL -->
+<!-- TASK -->
+<ng-template #T>
+    <div class="d-flex align-items-top mt-4">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Tasks.svg" alt="">
+        </div>
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
+                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+            </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="w-100">
+                    <span [innerHTML]="data.description"></span>
+                    <span class="ms-3">
+                        <span *ngFor="let item of data.sendToObject">
+                            <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30">
                             </codx-img>
                         </span>
                     </span>
@@ -281,101 +314,56 @@
         </div>
     </div>
 </ng-template>
-<!-- END MAIL -->
-<!-- TASK -->
-<ng-template #T>
-    <div class="row mt-4">
-        <div class="col-1">
-            <img class="iconHistory" src="assets/themes/sys/default/img/History_Tasks.svg" alt="">
-        </div>
-        <div class="col-11 d-flex">
-            <div class="me-2">
-                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
-            </div>
-            <div class="">
-                <div>
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <div class="w-100">
-                                <span [innerHTML]="data.description"></span>
-                                <span class="ms-2">
-                                    <span *ngFor="let item of data.sendToObject">
-                                        <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="25">
-                                        </codx-img>
-                                    </span>
-                                </span>
-                            </div>
-                            <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                                {{data.createdOn | timefrom}}
-                            </div>
-                        </div>
-                        <!-- <div>
-                            <button class="btn btn-seen">
-                                <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
-                            </button>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</ng-template>
 <!-- END TASK -->
 <!-- UPDATE -->
 <ng-template #U>
-    <div class="row mt-4">
-        <div class="col-1">
-            <img class="iconHistory" src="assets/themes/sys/default/img/History_CommentOnUpdate.svg" alt="">
+    <div class="d-flex align-items-top mt-4">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_CommentOnUpdate.svg" alt="">
         </div>
-        <div class="col-11 d-flex">
-            <div class="me-2">
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
                 <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="">
-                <div>
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <div class="w-100" [innerHTML]="data.description"></div>
-                            <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                                {{data.createdOn | timefrom}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row p-4">
-                        <table class="table w-100">
-                            <thead class="border-bottom bg-light">
-                                <th scope="col-4">
-                                    <codx-label formName="System" name="lblFieldName" [default]="'Trường thông tin'">
-                                    </codx-label>
-                                </th>
-                                <th scope="col-4">
-                                    <codx-label formName="System" name="lblOldValue" [default]="'Giá trị cũ'">
-                                    </codx-label>
-                                </th>
-                                <th scope="col-4">
-                                    <codx-label formName="System" name="lblNewValue" [default]="'Giá trị mới'">
-                                    </codx-label>
-                                </th>
-                            </thead>
-                            <tbody>
-                                <ng-container *ngIf="data.datas">
-                                    <tr class="my-2" *ngFor="let item of data.datas">
-                                        <td scope="col-4">
-                                            <codx-label [formModel]="formModel" [fiedName]="item.fieldName"
-                                                name="lblFieldName" [default]="item.fieldName"></codx-label>
-                                        </td>
-                                        <td scope="col-4">
-                                            {{item.oldValue}}
-                                        </td>
-                                        <td scope="col-4">
-                                            {{item.newValue}}
-                                        </td>
-                                    </tr>
-                                </ng-container>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="w-100" [innerHTML]="data.description"></div>
+                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
                 </div>
+            </div>
+            <div class="row p-4">
+                <table class="table w-100">
+                    <thead class="border-bottom bg-light">
+                        <th scope="col-4">
+                            <codx-label formName="System" name="lblFieldName" [default]="'Trường thông tin'">
+                            </codx-label>
+                        </th>
+                        <th scope="col-4">
+                            <codx-label formName="System" name="lblOldValue" [default]="'Giá trị cũ'">
+                            </codx-label>
+                        </th>
+                        <th scope="col-4">
+                            <codx-label formName="System" name="lblNewValue" [default]="'Giá trị mới'">
+                            </codx-label>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="data.datas">
+                            <tr class="my-2" *ngFor="let item of data.datas">
+                                <td scope="col-4">
+                                    <codx-label [formModel]="formModel" [fiedName]="item.fieldName" name="lblFieldName"
+                                        [default]="item.fieldName"></codx-label>
+                                </td>
+                                <td scope="col-4">
+                                    {{item.oldValue}}
+                                </td>
+                                <td scope="col-4">
+                                    {{item.newValue}}
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -384,21 +372,19 @@
 <!-- END UPDATE -->
 <!-- ATTACHMENT -->
 <ng-template #A>
-    <div class="row mt-4">
-        <div class="col-1">
-            <img class="iconHistory" src="assets/themes/sys/default/img/History_Attachments.svg" alt="">
+    <div class="d-flex align-items-top mt-4">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Attachments.svg" alt="">
         </div>
-        <div class="col-11 d-flex">
-            <div class="me-2">
-                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
+                <codx-img class="w-30px" [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="">
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <div>
-                        <div class="w-100" [innerHTML]="data.description"></div>
-                        <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                            {{data.createdOn | timefrom}}
-                        </div>
+            <div class="d-flex flex-column">
+                <div class="d-flex flex-column flex-wrap">
+                    <div class="w-100" [innerHTML]="data.description"></div>
+                    <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                        {{data.createdOn | timefrom}}
                     </div>
                 </div>
                 <ng-container *ngIf="lstFile">
@@ -439,24 +425,18 @@
 <!-- END ATTACHMENT -->
 <!-- SHARE -->
 <ng-template #S>
-    <div class="row mt-4">
-        <div class="col-1">
-            <img class="iconHistory" src="assets/themes/sys/default/img/History_Share.svg" alt="">
+    <div class="d-flex align-items-top mt-4">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Share.svg" alt="">
         </div>
-        <div class="col-11 d-flex">
-            <div class="me-2">
-                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
+                <codx-img class="w-30px" [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="">
-                <div>
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                        <div>
-                            <div class="w-100" [innerHTML]="data.description"></div>
-                            <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                                {{data.createdOn | timefrom}}
-                            </div>
-                        </div>
-                    </div>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="w-100" [innerHTML]="data.description"></div>
+                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
                 </div>
             </div>
         </div>
@@ -465,15 +445,15 @@
 <!-- END SHARE -->
 <!-- DELETED -->
 <ng-template #D>
-    <div class="row mt-4">
-        <div class="col-1">
-            <img class="iconHistory" src="assets/themes/sys/default/img/History_Delete.svg" alt="">
+    <div class="d-flex align-items-top mt-4">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Delete.svg" alt="">
         </div>
-        <div class="col-11 d-flex">
-            <div class="me-2">
-                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
+                <codx-img class="w-30px" [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex flex-column flex-wrap">
                 <div class="w-100" [innerHTML]="data.description"></div>
                 <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
                     {{data.createdOn | timefrom}}
@@ -490,24 +470,24 @@
 <!-- END DELETED -->
 <!-- C1 -->
 <ng-template #C1>
-    <div class="row mt-4">
-        <div class="col-1">
-            <img class="iconHistory" src="assets/themes/sys/default/img/History_Delete.svg" alt="">
+    <div class="d-flex align-items-top mt-4">
+        <div class="me-3">
+            <img class="w-30px iconHistory" src="assets/themes/sys/default/img/History_Delete.svg" alt="">
         </div>
-        <div class="col-11 d-flex">
-            <div class="me-2">
-                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
-            </div>
-            <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <div>
+        <div class="d-flex justify-content-between align-items-top w-100">
+            <div class="d-flex align-items-top w-100">
+                <div class="me-3">
+                    <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+                </div>
+                <div class="d-flex flex-column flex-wrap">
                     <div class="w-100" [innerHTML]="data.description"></div>
                     <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
                         {{data.createdOn | timefrom}}
                     </div>
                 </div>
             </div>
-            <div class="comment">
-                <div [innerHTML]="data.comment"></div>
+            <div class="d-flex flex-column ms-3">
+                <span class="comment text-nowrap" [innerHTML]="data.comment"></span>
             </div>
         </div>
     </div>

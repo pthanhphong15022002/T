@@ -51,7 +51,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-
   defaultRecource: any = {
     resourceName: '',
     ranking: '1',
@@ -68,7 +67,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   };
   dialog!: DialogRef;
   model: DataRequest;
-  formModel: FormModel;
+  formModel: FormModel;  
+  grvStationery:any;
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -93,73 +93,83 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     });
   }
 
+  onLoading(evt: any) {
+    let formModel = this.view.formModel;
+    if (formModel) {
+      this.cache
+        .gridViewSetup(formModel?.formName, formModel?.gridViewName)
+        .subscribe((gv) => {
+          this.grvStationery=gv;
+          this.columnsGrid = [  
+            {
+              headerText: gv['ResourceID'].headerText,
+              template: this.resourceID,
+            },
+            {
+              headerText: gv['ResourceName'].headerText,
+              template: this.resourceName,
+            },
+            {
+              headerText: gv['Icon'].headerText,
+              template: this.productImg,
+            },
+            {
+              headerText: gv['Color'].headerText,
+              template: this.color,
+            },
+            {
+              headerText: gv['GroupID'].headerText,
+              template: this.groupID,
+            },
+            {
+              headerText: gv['Note'].headerText,
+              template: this.note,
+            },
+            {
+              headerText: "Số lượng",//gv['Quantity'].headerText,
+              template: this.quantity,
+            },
+            {
+              headerText: gv['Owner'].headerText,
+              template: this.owner,
+            },
+          ];
+          this.views = [            
+            {
+              type: ViewType.grid,
+              sameData: true,
+              active: false,
+              model: {
+                resources: this.columnsGrid,
+              },
+            },
+            {
+              type: ViewType.card,
+              sameData: true,
+              active: true,
+              model: {
+                template: this.templateListCard,
+              },
+            },
+            {
+              type: ViewType.list,
+              sameData: true,
+              active: false,
+              model: {
+                template: this.columnsList,
+              },
+            },
+          ];
+          this.detectorRef.detectChanges();
+        });
+    }
+  }
   ngAfterViewInit(): void {
     this.view.dataService.methodDelete = 'DeleteResourceAsync';
 
     this.buttons = {
       id: 'btnAdd',
-    };
-    this.columnsGrid = [
-      {
-        headerText: 'Mã vpp',
-        template: this.resourceID,
-      },
-      {
-        headerText: 'Tên vpp',
-        template: this.resourceName,
-      },
-      {
-        headerText: 'Hình ảnh',
-        template: this.productImg,
-      },
-      {
-        headerText: 'Màu sắc',
-        template: this.color,
-      },
-      {
-        headerText: 'Nhóm',
-        template: this.groupID,
-      },
-      {
-        headerText: 'Mô tả chi tiết',
-        template: this.note,
-      },
-      {
-        headerText: 'Số lượng tồn kho',
-        template: this.quantity,
-      },
-      {
-        headerText: 'Người quản lý',
-        template: this.owner,
-      },
-    ];
-
-    this.views = [
-      {
-        type: ViewType.card,
-        sameData: true,
-        active: true,
-        model: {
-          template: this.templateListCard,
-        },
-      },
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: false,
-        model: {
-          resources: this.columnsGrid,
-        },
-      },
-      {
-        type: ViewType.list,
-        sameData: true,
-        active: false,
-        model: {
-          template: this.columnsList,
-        },
-      },
-    ];
+    };   
 
     this.moreFunc = [
       {

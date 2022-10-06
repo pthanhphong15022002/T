@@ -56,7 +56,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.LoadData();
-    this.LoadDataForChangeVLL();
+    // this.LoadDataForChangeVLL();
   }
 
   changeCombobox(data) {
@@ -90,7 +90,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       });
       return;
     }
-    switch (this.data.PolicyControl) {
+    switch (this.quantity.PolicyControl) {
       case '1':
         this.isLockCoin = false;
         this.isLockDedicate = false;
@@ -140,6 +140,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         if (res && res.msgBodyData.length > 0) {
           if (res.msgBodyData[0] === true) {
             this.data[this.fieldUpdate] = objectUpdate[this.fieldUpdate];
+            this.settingSV.dataUpdate.next(objectUpdate);
             this.change.detectChanges();
           }
         }
@@ -289,6 +290,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
         }
       });
   }
+  dataFull: any;
   LoadData() {
     this.api
       .execSv(
@@ -301,23 +303,24 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res && res.length > 0) {
           this.data = res[0];
+          this.dataFull = JSON.parse(res[1][0].dataValue);
           this.quantity = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
           if (Object.keys(this.data).length == 0) {
             this.isShowPolicyCard = false;
           }
           this.handleLock(this.data.PolicyControl);
-          this.setValueListName(this.quantity);
+          this.setValueListName(this.dataFull);
           this.change.detectChanges();
         }
       });
   }
-  LoadDataForChangeVLL() {
-    this.settingSV.getParameter().subscribe((res) => {
-      if (res) {
-        this.setValueListName(res[0]);
-      }
-    });
-  }
+  // LoadDataForChangeVLL() {
+  //   this.settingSV.getParameter().subscribe((res) => {
+  //     if (res) {
+  //       this.setValueListName(res[0]);
+  //     }
+  //   });
+  // }
   setValueListName(list) {
     if (!list) return;
     var data;

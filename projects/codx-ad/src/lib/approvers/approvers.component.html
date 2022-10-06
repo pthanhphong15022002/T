@@ -17,8 +17,7 @@
   <codx-temp-full
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     (clickMF)="moreFunction($event, data)"
-    (click)="clickItem(data)"
-    [imageId]="data.userID"
+    [imageId]="data.groupID"
     imageObjType="AD_UserGroups"
     [title]="data.groupName"
     [subTitle]="data.note"
@@ -28,4 +27,35 @@
     [typeMF]="'hover'"
     [dataItem]="data"
   ></codx-temp-full>
+</ng-template>
+
+<ng-template #item2 let-data>
+  <div class="tm-viewlist">
+    <div class="d-flex flex-row align-items-top p-3 border-bottom">
+      <div class="w-100 min-w-200px ps-3">
+        <div>{{ data?.groupName }}</div>
+        <div>{{ data?.note }}</div>
+      </div>
+      <div class="w-150px min-w-150px">
+        <codx-imgs
+          [isToolTip]="false"
+          [width]="30"
+          [objectId]="data.memberIDs"
+          [objectType]="data.memberType == 'U' ? 'AD_Users' : 'HR_Positions'"
+          [numberImages]="4"
+        >
+        </codx-imgs>
+      </div>
+    </div>
+    <div class="w-10px min-w-10px">
+      <codx-mfunc
+        [formModel]="view.formModel"
+        (clickMF)="moreFunction($event, data)"
+        [isBookMark]="false"
+        [dataItem]="data"
+        type="hover"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
 </ng-template>

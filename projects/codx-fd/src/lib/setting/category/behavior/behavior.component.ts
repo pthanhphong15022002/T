@@ -107,7 +107,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
             this.columnsGrid = [
               {
                 field: 'parentName',
-                headerText: 'Quy tắc',
+                headerText: res.ParentID.headerText,
                 template: this.parentNameR,
               },
               {
@@ -119,10 +119,14 @@ export class BehaviorComponent extends UIComponent implements OnInit {
                 headerText: res.CompetenceName.headerText,
                 template: this.competenceName,
               },
-              { field: 'memo', headerText: 'Ghi chú', template: this.memo },
+              {
+                field: 'memo',
+                headerText: res.Memo.headerText,
+                template: this.memo,
+              },
               {
                 field: 'createName',
-                headerText: 'Người tạo',
+                headerText: res.CreatedBy.headerText,
                 template: this.itemCreateBy,
               },
               {

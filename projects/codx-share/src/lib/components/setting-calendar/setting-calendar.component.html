@@ -2,11 +2,9 @@
   <div class="me-1">
     <codx-input
       class="form-control"
-      ngDefaultControl
       type="combobox"
-      placeholder="Lịch làm việc"
       [refValue]="'Calendars'"
-      [crrValue]="'this.calendarID'"
+      [crrValue]="this.calendarID"
       [multiple]="false"
       (valueChange)="changeCombobox($event)"
     >

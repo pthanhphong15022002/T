@@ -108,26 +108,26 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
             this.columnsGrid = [
               {
                 field: 'competenceID',
-                headerText: res['CompetenceID'].headerText,
+                headerText: res.CompetenceID.headerText,
               },
               {
                 field: 'competenceName',
-                headerText: 'Mô tả',
+                headerText: res.CompetenceName.headerText,
                 template: this.competenceName,
               },
               {
                 field: 'memo',
-                headerText: res['Memo'].headerText,
+                headerText: res.Memo.headerText,
                 template: this.memo,
               },
               {
                 field: 'createName',
-                headerText: 'Người tạo',
+                headerText: res.CreatedBy.headerText,
                 template: this.itemCreateBy,
               },
               {
                 field: 'createdOn',
-                headerText: res['CreatedOn'].headerText,
+                headerText: res.CreatedOn.headerText,
                 template: this.createdOn,
               },
             ];

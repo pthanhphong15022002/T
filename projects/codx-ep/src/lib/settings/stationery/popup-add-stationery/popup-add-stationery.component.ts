@@ -1,3 +1,4 @@
+import { NotificationsService } from 'codx-core';
 import {
   Component,
   EventEmitter,
@@ -9,6 +10,7 @@ import {
 import { FormGroup } from '@angular/forms';
 
 import {
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -30,6 +32,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   isAfterRender = false;
   dialogAddStationery: FormGroup;
   color: any;
+  returnData;
   columnGrid;
   title: string = '';
   titleAction: string = 'Thêm mới';
@@ -69,6 +72,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private epService: CodxEpService,
+    private notificationsService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -110,29 +114,40 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res.save) {
-          this.imageUpload
-            .updateFileDirectReload(res.save.recID)
-            .subscribe((result) => {
-              if (result) {
-                this.data.icon = result[0].fileName;
-                this.epService.updateResource(this.data, this.isAdd).subscribe();
-                this.loadData.emit();
-              }
-            });
-        } else {
-          this.imageUpload
-            .updateFileDirectReload(res.update.recID)
-            .subscribe((result: any) => {
-              if (result) {
-                this.data.icon = result[0].fileName;
-                this.epService.updateResource(this.data, this.isAdd).subscribe();
-                this.loadData.emit();
-              }
-            });
+        if (res) {
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if (this.imageUpload) {
+            this.imageUpload
+              .updateFileDirectReload(this.returnData.recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.data.icon = result[0].fileName;
+                  this.epService
+                    .updateResource(this.data, this.isAdd)
+                    .subscribe();
+                  this.loadData.emit();
+                  //xử lí nếu upload ảnh thất bại
+                  //...
+                }
+              });
+          }
+          if (this.isAdd) {
+            (this.dialog.dataService as CRUDService)
+              .add(this.returnData, 0)
+              .subscribe();
+          } else {
+            (this.dialog.dataService as CRUDService)
+              .update(this.returnData)
+              .subscribe();
+          }
+          this.dialog.close();
         }
-        this.detectorRef.detectChanges();
-        this.dialog.close();
+        this.notificationsService.notifyCode('E0011');
+        return;
       });
   }
 

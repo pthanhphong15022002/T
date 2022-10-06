@@ -451,6 +451,7 @@ export class CalendarNotesComponent
       var obj = {
         data: this.WP_Notes,
         itemUpdate: data,
+        maxPinNotes: this.maxPinNotes,
       };
       this.callfc.openForm(
         UpdateNotePinComponent,

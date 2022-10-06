@@ -25,7 +25,7 @@ export class UpdateNotePinComponent implements OnInit {
   type: any;
   itemUpdate: Notes = new Notes();
   header = 'Cập nhật ghi chú ghim';
-  dialog: any;
+  dialog: DialogRef;
   readOnly = false;
   checkEditIsPin = false;
   data: any = [];
@@ -34,6 +34,7 @@ export class UpdateNotePinComponent implements OnInit {
   messageParam: any;
   predicate = 'IsPin=@0 && TransID=null';
   dataValue = 'true';
+  maxPinNotes = 0;
 
   constructor(
     private api: ApiHttpService,
@@ -48,23 +49,32 @@ export class UpdateNotePinComponent implements OnInit {
     this.itemUpdate = data.data?.itemUpdate;
     this.data = data.data?.data;
     this.typeUpdate = data.data?.typeUpdate;
-    
+    this.maxPinNotes = data.data?.maxPinNotes;
   }
 
   ngOnInit(): void {
     this.cache.message('WP003').subscribe((res) => {
-      if(res) {
-        this.messageParam = res.description;
+      if (res && res.description) {
+        var mess = res.description;
+        this.messageParam = mess.replace('{0}', this.maxPinNotes);
       }
     });
-   }
+  }
+
+  ngAfterViewInit() {
+    this.dialog.closed.subscribe(x => {
+      if(!x.event) {
+        this.noteService.dataUpdate.next(null);
+      }
+    })
+  }
 
   valueChange(e, item = null) {
     if (e) {
       var field = e.field;
       var dt = e.data;
       if (field == 'checkboxUpdateNotePin') {
-        if (dt == true || dt == '1') {
+        if (dt == true || dt == '1' || dt) {
           this.checkEditIsPin = true;
           this.dataOld = item;
         }
