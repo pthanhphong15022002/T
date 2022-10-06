@@ -26,7 +26,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('titleTmp') titleTmp?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
-  
+
   @ViewChild('subTitle') subTitle?: TemplateRef<any>;
 
   views: Array<ViewModel> | any = [];
@@ -52,12 +52,12 @@ export class ApprovalRoomsComponent extends UIComponent {
   resourceField;
   dataSelected: any;
   dialog!: DialogRef;
-  tempReasonName='';
-  
+  tempReasonName = '';
+
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,
-    ) {
+    private codxEpService: CodxEpService
+  ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.codxEpService.getFormModel(this.funcID).then((res) => {
@@ -68,14 +68,14 @@ export class ApprovalRoomsComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.request=new ResourceModel();
-    this.request.assemblyName='EP';
-    this.request.className='BookingsBusiness';
-    this.request.service='EP';
-    this.request.method='GetListBookingAsync';
-    this.request.predicate='ResourceType=@0';
-    this.request.dataValue='1';
-    this.request.idField='recID';
+    this.request = new ResourceModel();
+    this.request.assemblyName = 'EP';
+    this.request.className = 'BookingsBusiness';
+    this.request.service = 'EP';
+    this.request.method = 'GetListApprovalAsync';
+    this.request.predicate = 'ResourceType=@0';
+    this.request.dataValue = '1';
+    this.request.idField = 'recID';
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -85,8 +85,6 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '1';
 
-    
-    
     this.fields = {
       id: 'bookingNo',
       subject: { name: 'title' },
@@ -121,24 +119,24 @@ export class ApprovalRoomsComponent extends UIComponent {
         },
       },
       {
-        sameData:false,
-        type:ViewType.schedule,
-        active:true,
-        request2:this.modelResource,
-        request:this.request,
+        sameData: false,
+        type: ViewType.schedule,
+        active: true,
+        request2: this.modelResource,
+        request: this.request,
         //toolbarTemplate:this.footerButton,
-        showSearchBar:false,
-        model:{
+        showSearchBar: false,
+        model: {
           //panelLeftRef:this.panelLeft,
-          eventModel:this.fields,
-          resourceModel:this.resourceField,//resource
+          eventModel: this.fields,
+          resourceModel: this.resourceField, //resource
           //template2:this.titleTmp,
           template4: this.resourceHeader,
           //template5: this.resourceTootip,//tooltip
-          template6: this.mfButton,//header          
-          template8: this.contentTmp,//content
+          template6: this.mfButton, //header
+          template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
-          statusColorRef:'vl003'
+          statusColorRef: 'vl003',
         },
       },
     ];
@@ -153,7 +151,6 @@ export class ApprovalRoomsComponent extends UIComponent {
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          
           this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
@@ -211,7 +208,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         break;
     }
   }
- 
+
   closeAddForm(event) {}
 
   changeItemDetail(event) {

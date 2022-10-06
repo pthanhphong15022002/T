@@ -6,7 +6,8 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import { ActivatedRoute } from '@angular/router';
+import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
 import moment from 'moment';
 import { CodxTMService } from '../codx-tm.service';
 import { TabModelSprints } from '../models/TM_Sprints.model';
@@ -16,22 +17,21 @@ import { TabModelSprints } from '../models/TM_Sprints.model';
   templateUrl: './popup-tabs-views-details.component.html',
   styleUrls: ['./popup-tabs-views-details.component.scss'],
 })
-export class PopupTabsViewsDetailsComponent
-  implements OnInit, AfterViewInit
-{
+export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
   title = 'Danh sách công việc';
-  data: any;
+  createdByName: any;
   dialog: DialogRef;
   active = 1;
   iterationID: any;
+  data :any
   functionParent: any;
   meetingID: any;
-  dataObjTasks: any;
-  dataObjMeetings: any;
+  dataObj: any;
+  dataObjAssign: any;
   user: any;
   funcID: any;
   tabControl: TabModelSprints[] = [];
-  name = 'AssignTo';
+  name = 'Tasks';
   projectID: any;
   resources: any;
   searchField = '';
@@ -50,18 +50,50 @@ export class PopupTabsViewsDetailsComponent
   ];
   nameObj: any;
   projectCategory: string = '2'; //set cứng đợi bảng PM_Projects hoàn thiện xong join projectID
-  createdByName: any;
   showButtonAdd = true;
   showMoreFunc = true;
   offset = '0px';
+  listRecID = []
+
   constructor(
     private tmSv: CodxTMService,
+    private activedRouter : ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.iterationID = dt?.data?.iterationID;
-    this.meetingID = dt?.data?.meetingID;
+    this.data =  dt?.data?.data ;
+    this.dataObj = dt?.data?.dataObj ;
+    this.functionParent = this.activedRouter.snapshot.params['funcID'];
+
+    if(this.data?.iterationID){
+      // this.projectCategory = this.data?.projectCategory;
+      this.createdByName = this.data?.createdByName ;
+      this.nameObj = this.data?.iterationName ;
+      this.projectID = this.data?.projectID ;
+      this.resources = this.data?.resources ;
+      this.iterationID = this.data?.iterationID
+    }
+
+    if(this.data?.meetingID){
+      this.createdByName = this.data?.userName ;
+      this.nameObj = this.data?.meetingName ;
+      this.projectID = this.data?.refID ;
+      this.resources = this.dataObj?.resources ;
+      this.meetingID = this.data?.meetingID
+      this.name = "Comments"
+       this.all = [
+        { name: 'MeetingContents', textDefault: 'Nội dung họp', isActive: false },
+        { name: 'Comments', textDefault: 'Thảo luận', isActive: true },
+        { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+        { name: 'Tasks', textDefault: 'Công việc', isActive: false },
+      ];
+   
+      this.showButtonAdd = false ;
+      this.showMoreFunc = false;
+      this.getListRecID(this.meetingID)
+    }
+    
     this.dialog = dialog;
   }
 
@@ -72,73 +104,6 @@ export class PopupTabsViewsDetailsComponent
     let body = document.body;
     if (body.classList.contains('toolbar-fixed')) {
       body.classList.remove('toolbar-fixed');
-    }
-    if (this.iterationID && this.iterationID != '') {
-      this.tmSv.getSprintsDetails(this.iterationID).subscribe((res) => {
-        if (res) {
-          this.data = res;
-          this.createdByName = res.createdByName;
-          this.nameObj = res.iterationName;
-          this.projectID = res?.projectID;
-          this.resources = res.resources;
-          this.dataObjTasks = {
-            projectID: this.projectID ? this.projectID : '',
-            resources: this.resources ? this.resources : '',
-            iterationID: this.iterationID ? this.iterationID : '',
-            viewMode: res.viewMode ? res.viewMode : '',
-          };
-
-          // if (this.resources != null) {
-          //   this.getListUserByResource(this.resources);
-          // }
-        }
-      });
-    }
-
-    //hủy sửa lại theo Thương
-    if (this.meetingID) {
-      this.tmSv.getMeetingID(this.meetingID).subscribe((res) => {
-        if (res) {
-          this.data = res;
-          this.createdByName = res.userName;
-          this.nameObj = res.meetingName;
-          this.projectID = res.refID; // ở meeting là refID
-          var resourceTaskControl = [];
-          var arrayResource = res?.resources;
-          if (arrayResource && arrayResource.length > 0) {
-            arrayResource.forEach((data) => {
-              if (data.taskControl) resourceTaskControl.push(data.resourceID);
-            });
-          }
-          (this.resources =
-            resourceTaskControl.length > 0
-              ? resourceTaskControl.join(';')
-              : ''),
-            (this.dataObjMeetings = {
-              projectID: this.projectID ? this.projectID : '',
-              resources: this.resources,
-              fromDate: res.fromDate ? moment(new Date(res.fromDate)) : '',
-              endDate: res.toDate ? moment(new Date(res.toDate)) : '',
-            });
-
-          this.showButtonAdd = false;
-          this.showMoreFunc = false;
-        }
-      });
-    }
-
-    this.functionParent = this.tmSv.functionParent;
-    if (this.meetingID) {
-      this.all = [
-        {
-          name: 'MeetingContents',
-          textDefault: 'Nội dung họp',
-          isActive: false,
-        },
-        { name: 'Comments', textDefault: 'Thảo luận', isActive: true },
-        { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-        { name: 'Tasks', textDefault: 'Công việc', isActive: false },
-      ];
     }
   }
 
@@ -163,10 +128,32 @@ export class PopupTabsViewsDetailsComponent
     });
     // var body = document.querySelectorAll('body.toolbar-enabled');
     // if(body && body.length > 0)
-    if (this.name == 'AssignTo' || this.name == 'Meetings')
+    if (this.name == 'Tasks'|| this.name == 'AssignTo' || this.name == 'Meetings')
       this.offset = '65px';
     else this.offset = '0px';
     item.isActive = true;
     this.changeDetectorRef.detectChanges();
+  }
+
+  //#region get List recID - chaỵ lại vì khi giao việc nó không cap nhật lúc đó
+  getListRecID(meetingID) {
+    this.tmSv.getCOMeetingByID(meetingID).subscribe((res) => {
+      if (res) {
+        this.listRecID.push(res.recID);
+        if (res.contents) {
+          var contents = res.contents;
+          contents.forEach((data) => {
+            // if(data.recID !='')
+            this.listRecID.push(data.recID);
+          });
+        }
+        var listRecID =
+          this.listRecID.length > 0 ? this.listRecID.join(';') : '';
+        this.dataObjAssign = { listRecID: listRecID };
+      }
+    });
+  }
+  close(){
+    this.dialog.close() ;
   }
 }

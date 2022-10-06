@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation, Injector, Renderer2 } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
-import { AuthService, DialogRef, ImageViewerComponent, LayoutService, SidebarModel, UserModel, LayoutBaseComponent, CallFuncService } from 'codx-core';
+import { AuthService, DialogRef, ImageViewerComponent, LayoutService, SidebarModel, UserModel, LayoutBaseComponent, CallFuncService, CacheService, Util } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { Observable } from 'rxjs';
 import { CodxDMService } from '../codx-dm.service';
@@ -30,6 +30,8 @@ export class LayoutComponent extends LayoutBaseComponent implements AfterViewIni
   percentUsed: any;
   itemHdd: any;
   submenu: string;
+  msDM062:any;
+  msDM063:any;
  // totalUsed: string;
   public titleAddFolder = 'Tạo thư mục';
   public titleStorage = 'Dung lượng lưu trữ';
@@ -39,10 +41,14 @@ export class LayoutComponent extends LayoutBaseComponent implements AfterViewIni
   public totalUsed_small = 95;
   public totalHdd_small = 95;
   showtitle = true;
+  public mssgTotalUsed;
+  public mssgTotalHdd;
 
   // @ViewChild('codxHeader', { static: true }) codxHeader!: ElementRef;
   // @ViewChild("imageViewer", { static: false }) imageViewer?: ImageViewerComponent;
   public funcs$: Observable<any>;
+
+
 /*
 db.DM_FolderInfo.updateMany(
    { FolderType: "4" },
@@ -73,7 +79,8 @@ public layoutColor: string;
     private fileService: FileService,
     private callfc:CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,    
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cache: CacheService
   ) {
     super(injector);
     this.codxService.init('DM');
@@ -125,7 +132,7 @@ public layoutColor: string;
       this.getHDDInformaton(item);
       document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',(item));        
     });
-    
+   
 
   }
 
@@ -172,9 +179,12 @@ public layoutColor: string;
   }
   
   getHDDInformaton(item: any) {
+    debugger;
     
     if (item != null) {
-      debugger;
+      
+      
+
       this.itemHdd = item;
       this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
       this.titleHddUsed_small  = this.percentUsed.toFixed(1);
@@ -185,29 +195,58 @@ public layoutColor: string;
       //console.log(this.percentUsed);
       this.titleHddUsed = item.messageHddUsed;
       this.changeDetectorRef.detectChanges();
+      
+      
+      this.cache.message('DM062').subscribe((item1) => {
+        debugger;
+        if(item1 != null){
+          this.msDM062 = item1;
+          this.mssgTotalUsed = Util.stringFormat(item1.defaultName,this.titleHddUsed_small);
+        }
+        
+      });
+      this.cache.message('DM063').subscribe((item2) => {
+        if(item2 != null){
+          this.msDM063 = item2;
+          this.mssgTotalHdd = Util.stringFormat(item2.defaultName,this.titleHddHdd_small);
+        }
+        
+      });
+      debugger;
+      if(this.msDM062 != null && this.msDM063 != null){
+var msUsed =  Util.stringFormat(this.msDM062.defaultName, this.titleHddUsed_small, "%");
+      var msHdd =  Util.stringFormat(this.msDM063.defaultName, this.titleHddHdd_small, "%");
 
       this.data = [
-        { Product : "Đã dùng : "+this.titleHddUsed_small+"%", Percentage : this.titleHddUsed_small, TextMapping : "Đã dùng : "+this.titleHddUsed_small+"%"},
-        { Product : "Trống : "+this.titleHddHdd_small+"%", Percentage : this.titleHddHdd_small, TextMapping : "Trống : "+this.titleHddHdd_small+"%"}
+        /* {  Product : msUsed, Percentage : this.titleHddUsed_small, TextMapping :msUsed},
+        {  Product : msHdd, Percentage : this.titleHddUsed_small, TextMapping :msUsed} */
+        { Product : msUsed, Percentage : this.titleHddUsed_small, TextMapping : msUsed},
+        { Product : msHdd, Percentage : this.titleHddHdd_small, TextMapping : msHdd}
       ];
+      }
+      
+
+      
     }
+    debugger;
    
   }
 
+  
+
    //Pie Chart
    
-   public data: Object[] = [
-    { Product : "Đã dùng : "+this.titleHddUsed_small+"%", Percentage : this.titleHddUsed_small, TextMapping : "Đã dùng : "+this.titleHddUsed_small+"%"},
-    { Product : "Trống : "+this.titleHddHdd_small+"%", Percentage : this.titleHddHdd_small, TextMapping : "Trống : "+this.titleHddHdd_small+"%"}
-  ];
+   public data: Object[] = [];
+   /* dataManager: DataManager = new DataManager({
+    url: 'https://ej2services.syncfusion.com/production/web-services/api/Orders',
+  }); */
 
   public animation: Object = {
     enable: true
   };
   public border: Object = { width:3 };
   public pieTooltipSetting: Object = { enable: true, format: '${point.x}' };
-  public palettes: string[] = ["#00bcd4", "#f5f9fa", "#FEC200", "#CA765A", "#2485FA", "#F57D7D", "#C152D2",
-    "#8854D9", "#3D4EB8", "#00BCD7", "#4472c4", "#ed7d31", "#ffc000", "#70ad47", "#5b9bd5", "#c1c1c1", "#6f6fe2", "#e269ae", "#9e480e", "#997300"];
+  public palettes: string[] = ["#00bcd4", "#f5f9fa", "#FEC200"];
     
   public pielegendSettings: Object = {
     visible: false,
@@ -218,48 +257,7 @@ public layoutColor: string;
     connectorStyle: { length: '5px', type:'Curve'}
   };
   
-public pointRender(args: IAccPointRenderEventArgs): void {
-  let selectedTheme: string = location.hash.split('/')[1];
-  selectedTheme = selectedTheme ? selectedTheme : 'Material';
-  if (selectedTheme.indexOf('dark') > -1 )
-  {
-    if(selectedTheme.indexOf('material') > -1 )
-    {
-      args.border.color = '#303030' ;
-      this.layoutColor= '#303030' ;
-    }
-    else if(selectedTheme.indexOf('bootstrap5') > -1 )
-    {
-      args.border.color = '#343a40' ;
-      this.layoutColor= '#343a40' ;
-    }
-    else if(selectedTheme.indexOf('bootstrap') > -1 )
-    {
-      args.border.color = '#1A1A1A' ;
-      this.layoutColor= '#1A1A1A' ;
-    }
-    else if(selectedTheme.indexOf('tailwind') > -1 )
-    {
-      args.border.color = '#1F2937' ;
-      this.layoutColor= '#1F2937' ;
-    }
-    else if(selectedTheme.indexOf('fluent') > -1 )
-    {
-      args.border.color = '#252423' ;
-      this.layoutColor= '#252423' ;
-    }
-    else if(selectedTheme.indexOf('fabric') > -1 )
-    {
-      args.border.color = '#201f1f' ;
-      this.layoutColor= '#201f1f' ;
-    }
-    else
-    {
-      args.border.color = '#222222' ;
-      this.layoutColor= '#222222' ;
-    }
-  }
-};
+
 
   
 

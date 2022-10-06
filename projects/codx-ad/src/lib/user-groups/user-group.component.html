@@ -1,45 +1,94 @@
 <div class="p-3 bg-body rounded-3 h-100">
-  <codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
-    method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true" [button]="button"
-    (buttonClick)="click($event)" (viewChanged)="changeView($event)" (selectedChange)="selectedChange($event)">
+  <codx-views
+    #view
+    entityName="AD_Users"
+    service="SYS"
+    assemblyName="ERM.Business.AD"
+    className="UsersBusiness"
+    method="GetListUserAsync"
+    [views]="views"
+    idField="userID"
+    [selectedFirst]="true"
+    [button]="button"
+    (buttonClick)="click($event)"
+    (viewChanged)="changeView($event)"
+    (selectedChange)="selectedChange($event)"
+  >
   </codx-views>
 
   <ng-template #titleTmp let-data>
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center mb-1">
-        <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2"> {{data.userName}}</div>
+        <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
+          {{ data.userName }}
+        </div>
       </div>
     </div>
   </ng-template>
 
-
   <ng-template #itemTemplate let-data>
-    <div class="p-3 border-bottom" style="margin-bottom:1px;">
+    <div class="p-3 border-bottom" style="margin-bottom: 1px">
       <div class="d-flex justify-content-between align-items-center flex-wrap">
-        <div class=" justify-content-start min-w-350px">
-          <codx-temp-full cardCss="card-template " (clickMF)="clickMF($event,data)" [imageId]="data.userID"
-            imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)" [typeMF]="'hover'"
-            [formModel]="view.formModel" [dataItem]="data" [imgOn]="data?.modifiedOn">
+        <div class="justify-content-start min-w-350px">
+          <codx-temp-full
+            cardCss="card-template "
+            (clickMF)="clickMF($event, data)"
+            [imageId]="data.userID"
+            imageObjType="AD_Users"
+            [titleTmp]="titleTmp"
+            [desc]="convertHtmlAgency(data.buName)"
+            [typeMF]="'hover'"
+            [formModel]="view.formModel"
+            [dataItem]="data"
+            [imgOn]="data?.modifiedOn"
+          >
           </codx-temp-full>
         </div>
         <div class="d-flex flex-wrap">
           <div class="flex">
-            <div class="" *ngIf="data.chooseRoles && data.chooseRoles.length <= 5">
-              <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+            <div
+              class=""
+              *ngIf="data.chooseRoles && data.chooseRoles.length <= 5"
+            >
+              <ng-container
+                class="container"
+                *ngFor="let item of data.chooseRoles; index as num"
+              >
                 <a class="me-2">
-                  <img class="w-30px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+                  <img
+                    class="w-30px"
+                    src="../../../{{ item.smallIcon }}"
+                    alt=""
+                    (click)="openPopup(data)"
+                  />
                 </a>
               </ng-container>
             </div>
-            <div class="" *ngIf="data.chooseRoles && data.chooseRoles.length > 5">
-              <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+            <div
+              class=""
+              *ngIf="data.chooseRoles && data.chooseRoles.length > 5"
+            >
+              <ng-container
+                class="container"
+                *ngFor="let item of data.chooseRoles; index as num"
+              >
                 <a *ngIf="num < 4" class="symbol-label fs-4 me-2">
-                  <img class="w-30px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+                  <img
+                    class="w-30px"
+                    src="../../../{{ item.smallIcon }}"
+                    alt=""
+                    (click)="openPopup(data)"
+                  />
                 </a>
                 <a *ngIf="num == 4" class="symbol-label fs-4 me-2">
-                  <img class="w-30px" src="../../../{{ item.smallIcon}}" alt="" (click)="openPopup(data)" />
+                  <img
+                    class="w-30px"
+                    src="../../../{{ item.smallIcon }}"
+                    alt=""
+                    (click)="openPopup(data)"
+                  />
                   <span class="symbol-label fs-4">
-                    +{{data.chooseRoles.length-4}}
+                    +{{ data.chooseRoles.length - 4 }}
                   </span>
                 </a>
               </ng-container>

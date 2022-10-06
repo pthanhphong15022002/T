@@ -59,13 +59,16 @@
         </ng-container>
         <span class="text-gray-600">  
           :                
-          {{ itemDetail?.code }} - {{ itemDetail?.resourceName }}
+          {{ itemDetail?.resourceName }} <span *ngIf="itemDetail?.code!=null"> - {{ itemDetail?.code }}</span>
         </span>
       </div>
       <div class="d-flex mb-2 text-dark me-6">   
         <codx-label default="Tài xế:" name="lblDriver" class="fw-bold me-1"></codx-label>
-        <span class=" ms-1 text-gray-600">                   
-          Không có tài xế
+        <span *ngIf="itemDetail?.driverName !=null">
+          <codx-label [default]="itemDetail?.driverName" class=" ms-1 text-gray-600" name="lblDriver"></codx-label>        
+        </span>
+        <span *ngIf="itemDetail?.driverName ==null">
+          <codx-label default="Không có tài xế" class=" ms-1 text-gray-600" name="lblDriver"></codx-label>        
         </span>
     </div>
     </div>   
@@ -73,13 +76,13 @@
 
     <div class="d-flex mb-2 text-dark me-6">   
       <codx-label default="Thời gian:" name="lblBookingOn" class="fw-bold me-1"></codx-label>
-      <div class=" ms-1 text-gray-600">
+      <div class=" ms-1 text-gray-600" >
         <span>          
-          {{ itemDetail?.startDate }}
+          {{ itemDetail?.startDate | fmDT:'dmy':true }}
         </span>
         <span> - </span>
         <span>
-          {{ itemDetail?.endDate}}
+          {{ itemDetail?.endDate | fmDT:'dmy':true}}
         </span>
       </div>
     </div>
@@ -117,9 +120,13 @@
     
     <div class="d-flex mb-2 text-dark me-6">   
       <codx-label default="Sử dụng thẻ:" name="lblCard" class="fw-bold me-1"></codx-label>
-      <span class="badge badge-light-danger">            
-        Không dùng thẻ
+      
+      <span *ngIf="!!itemDetail?.useCard">
+        <codx-label default="Dùng thẻ" class="badge badge-light-success" name="lblUseCard"></codx-label>        
       </span>
+      <span *ngIf="!itemDetail?.useCard">
+        <codx-label default="Không dùng thẻ" class="badge badge-light-danger" name="lblUseCard"></codx-label>        
+      </span>      
     </div>
 
     <div class=" mb-2 ">
@@ -304,7 +311,7 @@
       <div class="d-flex mt-2">
         <span class="icon-schedule icon-16 text-gray-600"></span>
         <span class="ms-2 text-dark">{{
-          data?.dueDate 
+          data?.dueDate | fmDT:'dmy':true
         }}</span>
       </div>
     </div>

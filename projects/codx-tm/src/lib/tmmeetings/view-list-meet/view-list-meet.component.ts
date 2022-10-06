@@ -13,6 +13,8 @@ export class ViewListMeetComponent implements OnInit {
   @Input() formModel?: FormModel;
 
   @Output() clickMoreFunction = new EventEmitter<any>();
+  @Output() viewDetail = new EventEmitter<any>();
+
   month: any;
   day: any;
   startTime: any;
@@ -90,6 +92,9 @@ export class ViewListMeetComponent implements OnInit {
     this.data.resources = this.data.resources.filter((val) =>
     val.resourceName.toLowerCase().includes(e.toLowerCase())
   );
+  }
+  dbClick(data){
+    this.viewDetail.emit(data) ;
   }
 }
 

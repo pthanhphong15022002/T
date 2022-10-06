@@ -9,6 +9,8 @@ import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
 import { PopAddProcessesComponent } from './processes/pop-add-processes/pop-add-processes.component';
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
+import { ProcessStepComponent } from './processstep/processstep.component';
+import { PopupAddProcessStepComponent } from './processstep/popup-add-processstep/popup-add-processstep.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +24,10 @@ export const routes: Routes = [
       {
         path: 'processes/:funcID',
         component: ProcessesComponent,
+      },
+      {
+        path: 'processstep/:funcID',
+        component: ProcessStepComponent,
       }
     ]
   }
@@ -35,6 +41,8 @@ export const routes: Routes = [
     ProcessesComponent,
     PopAddProcessesComponent,
     ViewListProcessesComponent,
+    ProcessStepComponent,
+    PopupAddProcessStepComponent,
 
   ],
   imports: [

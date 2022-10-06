@@ -96,7 +96,6 @@ export class EmployeeInfomationComponent implements OnInit {
     private layout: LayoutService,
     private inject: Injector
   ) {
-    debugger
     this.user = this.auth.get();
     this.functionID = this.routeActive.snapshot.params['funcID'];
     this.layout.setLogo(null);

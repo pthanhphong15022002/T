@@ -100,8 +100,14 @@ import { PopupAddEventComponent } from './components/setting-calendar/popup-add-
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
 import { ActiviesApprovalListComponent } from './layout/drawers/activies-approval-list/activies-approval-list.component';
 import { ActiviesSliderComponent } from './layout/drawers/activies-approval-list/activies-slider/activies-slider.component';
-import { DocumentEditorAllModule , DocumentEditorContainerAllModule } from '@syncfusion/ej2-angular-documenteditor';
+import {
+  DocumentEditorAllModule,
+  DocumentEditorContainerAllModule,
+} from '@syncfusion/ej2-angular-documenteditor';
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { PdfComponent } from './components/pdf/pdf.component';
+import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -173,6 +179,9 @@ const T_Component: Type<any>[] = [
   InfoLeftComponent,
   ActiviesApprovalListComponent,
   ActiviesSliderComponent,
+
+  //pdf
+  PdfComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -198,7 +207,11 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     ReactiveFormsModule,
     DocumentEditorAllModule,
     DocumentEditorContainerAllModule,
-    SpreadsheetAllModule
+    SpreadsheetAllModule,
+
+    //pdf
+    ListViewAllModule,
+    NgxExtendedPdfViewerModule,
   ],
   exports: [T_Component, T_Pipe],
 })

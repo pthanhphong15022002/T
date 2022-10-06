@@ -31,10 +31,20 @@ export class ProcessesComponent
   implements OnInit, AfterViewInit
 {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('itemProcessName', { static: true })
+  itemProcessName: TemplateRef<any>;
+  @ViewChild('itemOwner', { static: true })
+  itemOwner: TemplateRef<any>;
+  @ViewChild('itemVersionNo', { static: true })
+  itemVersionNo: TemplateRef<any>;
+  @ViewChild('itemActivedOn', { static: true }) itemActivedOn: TemplateRef<any>;
+  @ViewChild('itemMemo', { static: true })
+  itemMemo: TemplateRef<any>;
   @Input() showButtonAdd = true;
   @Input() dataObj?: any;
   dialog!: DialogRef;
   titleAction = '';
+  columnsGrid = [];
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -58,15 +68,25 @@ export class ProcessesComponent
     this.button = {
       id: 'btnAdd',
     };
+    this.columnsGrid = [
+      { headerTemplate: this.itemProcessName, width: 300 },
+      { headerTemplate: this.itemOwner, width: 300 },
+      { headerTemplate: this.itemVersionNo, width: 150 },
+      { headerTemplate: this.itemActivedOn, width: 200 },
+      { headerTemplate: this.itemMemo, width: 300 },
+      { field: '', headerText: '', width: 30 },
+
+    ];
   }
 
   ngAfterViewInit(): void {
     this.views = [
       {
-        type: ViewType.list,
+        type: ViewType.grid,
         active: false,
         sameData: true,
         model: {
+          resources: this.columnsGrid,
           template: this.itemViewList,
         },
       },
@@ -203,6 +223,14 @@ export class ProcessesComponent
 
   onDragDrop(e: any) {
     console.log(e);
+  }
+
+  convertHtmlAgency(position: any) {
+    var desc = '<div class="d-flex">';
+    if (position)
+      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' + position + '</span></div>';
+
+    return desc + '</div>';
   }
   //#endregion
 }

@@ -1,4 +1,4 @@
-<div class="d-flex flex-row align-items-center p-2 border-bottom">
+<div class="d-flex flex-row align-items-center p-2 border-bottom" (dblclick)="dbClick(data)">
   <td class="w-15">
     <div class="badge badge-danger me-2 label-status a" [style.background-color]="
     (data.status | vll: 'CO004':'textColor' | async) +

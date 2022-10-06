@@ -116,7 +116,7 @@ export class PopupAddStationeryComponent extends UIComponent {
             .subscribe((result) => {
               if (result) {
                 this.data.icon = result[0].fileName;
-                this.epService.update(this.data, this.isAdd).subscribe();
+                this.epService.updateResource(this.data, this.isAdd).subscribe();
                 this.loadData.emit();
               }
             });
@@ -126,7 +126,7 @@ export class PopupAddStationeryComponent extends UIComponent {
             .subscribe((result: any) => {
               if (result) {
                 this.data.icon = result[0].fileName;
-                this.epService.update(this.data, this.isAdd).subscribe();
+                this.epService.updateResource(this.data, this.isAdd).subscribe();
                 this.loadData.emit();
               }
             });
