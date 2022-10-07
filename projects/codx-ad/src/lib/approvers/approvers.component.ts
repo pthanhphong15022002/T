@@ -12,6 +12,14 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> = [];
   button: ButtonModel = { id: 'btnAdd' };
   func: any;
+
+  //Start Tooltip
+  resources: Array<any> = [];
+  resourcesCount: number = 0;
+  resouscesSearch: Array<any> = [];
+  popoverCrr: any;
+  //End tooltip
+
   @ViewChild('item2') itemTemplate: TemplateRef<any>;
   constructor(injector: Injector) {
     super(injector);
@@ -60,6 +68,32 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  popoverEmpList(e, data) {
+    if (this.popoverCrr) {
+      if (this.popoverCrr.isOpen()) this.popoverCrr.close();
+    }
+    this.resources = data.members;
+    console.log(this.resources);
+    this.resourcesCount = data.members.length;
+    e.open();
+  }
+
+
+  searchName(e) {
+    var resouscesSearch = [];
+    if (e.trim() == '') {
+      this.resouscesSearch = this.resources;
+      return;
+    }
+
+    this.resources.forEach((res) => {
+      var name = res.resourceName;
+      if (name.toLowerCase().includes(e.toLowerCase())) {
+        resouscesSearch.push(res);
+      }
+    });
+    this.resouscesSearch = resouscesSearch;
+  }
   //#endregion
 
   //#region method
