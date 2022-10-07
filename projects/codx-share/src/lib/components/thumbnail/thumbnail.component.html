@@ -167,3 +167,6 @@
     </div>
   </ng-container>
 </div>
+<ng-container *ngIf="visible">
+  <lib-dialogthumb [dataFile]="dataFile" (dialogClosed)="dialogClosed()"></lib-dialogthumb>
+</ng-container>

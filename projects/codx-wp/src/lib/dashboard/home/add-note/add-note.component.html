@@ -27,7 +27,7 @@
             <div *ngIf="type == 'text'">
                 <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
                     [crrValue]="empty || ''" placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)"
-                    ngDefaultControl field="memo">
+                    ngDefaultControl field="memo" rows="4">
                 </codx-input>
             </div>
             <div *ngIf="type == 'check' || type =='list'">
@@ -56,7 +56,7 @@
         <div *ngIf="formType == 'edit'">
             <div *ngIf="note?.noteType == 'text'">
                 <codx-input type="textarea" field="memo" placeholder="text" format="ed2" [class]="'border-0'"
-                    (valueChange)="valueChange($event)" [crrValue]="note?.memo || ''" class="test-textarea">
+                    (valueChange)="valueChange($event)" [crrValue]="note?.memo || ''" class="test-textarea" rows="4">
                 </codx-input>
             </div>
             <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
@@ -165,11 +165,9 @@
 
 <ng-template #edit>
     <ng-container *ngIf="note">
-        <div class="row my-3">
-            <div>
-                <codx-file #codxFileEdit [objectID]="note.recID" [edit]='true' (addFile)="addFile($event)"
-                    (removeFile)="removeFile($event)" (evtGetFiles)="evtGetFiles($event)"></codx-file>
-            </div>
+        <div class="my-3">
+            <codx-file #codxFileEdit [objectID]="note.recID" [edit]='true' (addFile)="addFile($event)"
+                (removeFile)="removeFile($event)" (evtGetFiles)="evtGetFiles($event)"></codx-file>
             <div class="d-none">
                 <codx-attachment #attachmentEdit [objectType]="functionList?.entityName" hideFolder="1"
                     hideUploadBtn="1" hideDes="1" type="inline" [showMessage]="0" allowExtensions=".jpg,.png"

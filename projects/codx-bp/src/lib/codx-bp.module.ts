@@ -9,24 +9,38 @@ import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
 import { PopAddProcessesComponent } from './processes/pop-add-processes/pop-add-processes.component';
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
-
+import { ProcessstepsComponent } from './processsteps/processsteps.component';
+import { PopAddProcessstepsComponent } from './processsteps/pop-add-processsteps/pop-add-processsteps.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CodxCoreModule } from 'codx-core';
+import { CoreModule } from '@core/core.module';
+import { HttpClientModule } from '@angular/common/http';
+import { InlineSVGModule } from 'ng-inline-svg';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { CommonModule } from '@angular/common';
+import { PopupAddProcessStepComponent } from './processstep/popup-add-processstep/popup-add-processstep.component';
+import { ProcessStepComponent } from './processstep/processstep.component';
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
       {
-        path: 'testhtml',
-        component: TesthtmlComponent,
-      },
-      {
         path: 'processes/:funcID',
         component: ProcessesComponent,
-      }
-    ]
-  }
-]
-
+      },
+      {
+        path: 'processstep/:funcID',
+        component: ProcessstepsComponent,
+      },
+      {
+        path: 'processstepTH/:funcID',
+        component: ProcessStepComponent,
+      },
+    ],
+  },
+];
 @NgModule({
   declarations: [
     CodxBpComponent,
@@ -35,6 +49,10 @@ export const routes: Routes = [
     ProcessesComponent,
     PopAddProcessesComponent,
     ViewListProcessesComponent,
+    ProcessstepsComponent,
+    PopAddProcessstepsComponent,
+    ProcessStepComponent,
+    PopupAddProcessStepComponent,
 
   ],
   imports: [
@@ -42,10 +60,16 @@ export const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    CodxShareModule
+    CodxShareModule,
+    NgbModule,
+    CoreModule,
+    HttpClientModule,
+    InlineSVGModule.forRoot(),
+    OverlayModule,
+    TabModule,
+    CommonModule,
+
   ],
-  exports: [
-    CodxBpComponent
-  ]
+  exports: [CodxBpComponent],
 })
-export class CodxBpModule { }
+export class CodxBpModule {}

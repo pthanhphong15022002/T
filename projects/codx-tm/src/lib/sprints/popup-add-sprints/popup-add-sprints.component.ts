@@ -13,6 +13,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CRUDService,
   DialogData,
   DialogRef,
   ImageViewerComponent,
@@ -50,10 +51,9 @@ export class PopupAddSprintsComponent implements OnInit {
   imageUpload: UploadFile = new UploadFile();
   showLabelAttachment = false;
   isHaveFile = false;
-  titleAction = '' ;
-  customName ='' ;
+  titleAction = '';
+  customName = '';
 
-  
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
@@ -71,11 +71,11 @@ export class PopupAddSprintsComponent implements OnInit {
   ) {
     this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.action = dt?.data[1];
-    this.titleAction = dt?.data[2] ;
+    this.titleAction = dt?.data[2];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
-  
+
     if (this.funcID == 'TMT0301') this.master.iterationType == '1';
     else if (this.funcID == 'TMT0302') this.master.iterationType == '0';
     this.sprintDefaut = this.dialog.dataService.data[0];
@@ -97,8 +97,12 @@ export class PopupAddSprintsComponent implements OnInit {
   ngOnInit(): void {
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
-        this.customName = f?.customName ;
-        this.title = this.titleAction + " " + this.customName.charAt(0).toLocaleLowerCase() + this.customName.slice(1);
+        this.customName = f?.customName;
+        this.title =
+          this.titleAction +
+          ' ' +
+          this.customName.charAt(0).toLocaleLowerCase() +
+          this.customName.slice(1);
       }
     });
 
@@ -148,7 +152,15 @@ export class PopupAddSprintsComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.attachment?.clearData();
-          this.dialog.close();
+          var dt = isAdd ? res.save : res.update;
+          if (this.imageAvatar) {
+            this.imageAvatar
+              .updateFileDirectReload(this.master.iterationID)
+              .subscribe((up) => {
+                (this.dialog.dataService as CRUDService).update(dt).subscribe();
+                this.dialog.close();
+              });
+          } else this.dialog.close();
         }
       });
     // });

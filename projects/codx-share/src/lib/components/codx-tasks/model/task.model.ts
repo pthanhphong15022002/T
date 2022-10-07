@@ -308,6 +308,8 @@ export class tmpReferences {
   createdBy :string ;
   createByName: string ;
   createdOn :Date ;
+  attachments: number;
+  comments: number
 }
 
 

@@ -137,7 +137,26 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
         break;
     }
   }
-
+  approve(data:any){
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(
+            'EP_Bookings',            
+            data?.recID,
+            '5',//Status : 5 - Duyệt
+          )
+          .subscribe((res) => {
+            var x= res;
+            // if (res?.msgCodeError == null && res?.rowCount) {
+            //   this.notificationsService.notifyCode('ES007');
+            // } else {
+            //   this.notificationsService.notifyCode(res?.msgCodeError);
+            // }
+          });
+      });
+  }
   changeDataMF(event, data: any) {}
 
   clickChangeItemDetailDataStatus(stt) {

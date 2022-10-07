@@ -206,12 +206,12 @@
               >
               </e-item>
 
-              <!-- <e-item
+              <e-item
                 id="viewThumbnail"
                 prefixIcon="icon-article icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 (click)="show($event)"
               >
-              </e-item> -->
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
@@ -264,13 +264,11 @@
           <ejs-toolbar class="border-start">
             <e-items>
               <e-item
-                [disabled]="!hasPermission"
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="print"
               >
               </e-item>
               <e-item
-                [disabled]="!hasPermission"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
@@ -288,10 +286,9 @@
           </ejs-toolbar>
         </div>
       </div>
-
       <ngx-extended-pdf-viewer
+        *ngIf="curFileUrl"
         #ngxPdfView
-        *ngIf="curFileUrl ? true : false"
         [(src)]="curFileUrl"
         [(zoom)]="zoomValue"
         [zoomLevels]="zoomValue"
@@ -311,9 +308,9 @@
         [handTool]="false"
         [contextMenuAllowed]="false"
         pageViewMode="vertical"
-        (textLayerRendered)="getTextLayerInfo($event)"
       >
       </ngx-extended-pdf-viewer>
+
       <ng-template #ngxThumbnail let-PAGE_NUMBER>
         <a class="pdf-viewer-template">
           <div
@@ -741,25 +738,8 @@
     class="footer-left"
     [showText]="true"
     name="ES002"
-    [value]="data.signType"
+    [value]="data.stepType"
   ></codx-vll>
-</ng-template>
-
-<ng-template #itemTmpl let-data>
-  <codx-temp-full
-    [title]="
-      (data.labelType | vll: 'ES004':'text' | async) +
-      ' - ' +
-      getAreaOwnerName(data.signer)
-    "
-    [resourceObjType]="'AD_Users'"
-    [icoCss]="
-      'w-40px h-40px symbol fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
-      (data.labelType | vll: 'ES004':'icon' | async)
-    "
-    [subTitle]="'Trang ' + data.location?.pageNumber + 1"
-  >
-  </codx-temp-full>
 </ng-template>
 
 <ng-template #pageInput>

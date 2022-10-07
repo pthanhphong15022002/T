@@ -14,6 +14,7 @@ import { PopupAddEventComponent } from '../popup-add-event/popup-add-event.compo
 import { BS_CalendarWeekdays } from '../models/BS_CalendarWeekdays.model';
 import { BS_DaysOff } from '../models/BS_DaysOff.model';
 import { BS_CalendarDate } from '../models/BS_CalendarDate.model';
+import { PopupEditShiftComponent } from '../popup-edit-shift/popup-edit-shift.component';
 
 declare var _;
 
@@ -31,10 +32,10 @@ export class PopupEditCalendarComponent extends UIComponent {
   funcID: string;
   data: any;
   dayOffId: string;
-  calendateDate: any;
+  calendarDate: any;
   dayOff: any;
   dayoff = [];
-  vlls: any;
+  days: any;
   param: any;
   evtCDDate: any;
   formModel: FormModel;
@@ -60,7 +61,7 @@ export class PopupEditCalendarComponent extends UIComponent {
   onInit(): void {
     this.getParams();
     this.cache.valueList('L0012').subscribe((res) => {
-      this.vlls = res.datas;
+      this.days = res.datas;
     });
     this.api
       .execSv<any>(
@@ -72,9 +73,10 @@ export class PopupEditCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.dayOff = res[0];
-          this.handleWeekDay(res[1]);
-          this.calendateDate = res[2];
+          debugger;
+          this.handleWeekDay(res[0]);
+          this.dayOff = res[1];
+          this.calendarDate = res[2];
         }
       });
   }
@@ -118,17 +120,18 @@ export class PopupEditCalendarComponent extends UIComponent {
       });
   }
 
-  handleWeekDay(dayOff) {
-    this.stShift.startTime = dayOff.stShift.startTimeSt;
-    this.stShift.endTime = dayOff.stShift.endTimeSt;
+  handleWeekDay(weekday) {
+    debugger;
+    this.stShift.startTime = weekday.stShift.startTimeSt;
+    this.stShift.endTime = weekday.stShift.endTimeSt;
     this.stShift.data = [];
-    this.ndShift.startTime = dayOff.ndShift.startTimeNd;
-    this.ndShift.endTime = dayOff.ndShift.endTimeNd;
+    this.ndShift.startTime = weekday.ndShift.startTimeNd;
+    this.ndShift.endTime = weekday.ndShift.endTimeNd;
     this.ndShift.data = [];
-    this.vlls.forEach((e, i) => {
-      let y = (i + 1).toString();
-      let stCheck = _.some(dayOff.stShift.data, { weekday: y });
-      let ndCheck = _.some(dayOff.ndShift.data, { weekday: y });
+    this.days.forEach((e, i) => {
+      let y = i.toString();
+      let stCheck = _.some(weekday.stShift.data, { weekday: y });
+      let ndCheck = _.some(weekday.ndShift.data, { weekday: y });
       this.stShift.data.push({
         weekday: y,
         checked: stCheck,
@@ -224,13 +227,29 @@ export class PopupEditCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.calendateDate = _.filter(this.calendateDate, function (o) {
+          this.calendarDate = _.filter(this.calendarDate, function (o) {
             return o.recID != item.recID;
           });
           this.notiService.notifyCode('E0408');
         }
       });
   }
+
+  editShift(event, shiftType: string = '1') {
+    let startTime, endTime;
+    if (shiftType === '1') {
+      startTime = this.stShift.startTime;
+      endTime = this.stShift.endTime;
+    } else {
+      startTime = this.ndShift.startTime;
+      endTime = this.ndShift.endTime;
+    }
+    this.callfc.openForm(PopupEditShiftComponent, '', 550, 200, '', [
+      startTime,
+      endTime,
+    ]);
+  }
+
   weekdayChange(e, item) {
     let model = new BS_CalendarWeekdays();
     model.wKTemplateID = this.calendarID;

@@ -97,7 +97,6 @@ export class AddNoteComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
-    private modalService: NgbModal,
     private callfc: CallFuncService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
@@ -128,6 +127,8 @@ export class AddNoteComponent implements OnInit {
       this.note = JSON.parse(JSON.stringify(dt.data?.dataUpdate));
       this.type = this.note?.noteType;
       this.listFileUpload = this.note?.files;
+      if (this.note?.files)
+        this.listFileUploadTemp = JSON.parse(JSON.stringify(this.note?.files));
       var dtt = {
         status: this.type == 'check' ? 0 : null,
         listNote: '',
@@ -383,6 +384,7 @@ export class AddNoteComponent implements OnInit {
       data: this.data,
       itemUpdate: data,
       typeUpdate: typeUpdate,
+      maxPinNotes: this.maxPinNotes,
     };
     this.callfc.openForm(
       UpdateNotePinComponent,
@@ -393,7 +395,7 @@ export class AddNoteComponent implements OnInit {
       obj
     );
     this.noteService.dataUpdate.subscribe((res) => {
-      this.countNotePin--;
+      if (res && res?.length) this.countNotePin--;
     });
   }
 
@@ -422,6 +424,7 @@ export class AddNoteComponent implements OnInit {
     } else this.onCreateNote();
   }
 
+  listFileUploadTemp: any = [];
   onEdit() {
     var date = new Date(this.currentDate);
     this.note.createdOn = new Date(
@@ -449,7 +452,10 @@ export class AddNoteComponent implements OnInit {
               this.deleteFileByRecID(x.recID, true);
             });
           }
-          if (this.listFileUpload?.length > 0) {
+          var checkDifferentFile =
+            JSON.stringify(this.listFileUploadTemp) ===
+            JSON.stringify(this.listFileUpload);
+          if (this.listFileUpload?.length > 0 && !checkDifferentFile) {
             this.listFileUpload?.forEach((dt) => {
               dt.objectID = this.note.recID;
             });
@@ -457,7 +463,6 @@ export class AddNoteComponent implements OnInit {
             (await this.attachmentEdit.saveFilesObservable()).subscribe(
               (res: any) => {
                 if (res) {
-                  this.notificationsService.notifyCode('SYS006');
                 }
               }
             );

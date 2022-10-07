@@ -327,7 +327,7 @@ export class CodxEpService {
   }
   //#endregion
 
-  //#region EP_ApprovalTrans
+  //#region Approval
   release(
     booking: any,
     processID: string,
@@ -349,13 +349,13 @@ export class CodxEpService {
     );
   }
 
-  approve(data: any, entity: string, status: string) {
+  approve( entity: string, recID: string, status: string) {
     return this.api.execSv(
       'CM',
       'ERM.Business.CM',
       'DataBusiness',
       'ApproveAsync',
-      [data?.recID, entity, status]
+      [entity, recID, status]
     );
   }
 

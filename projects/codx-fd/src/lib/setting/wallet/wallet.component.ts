@@ -11,6 +11,7 @@ import {
 import { Location } from '@angular/common';
 import { AuthStore, NotificationsService, UIComponent } from 'codx-core';
 import { SettingService } from '../setting.service';
+import { CodxFdService } from '../../codx-fd.service';
 
 @Component({
   selector: 'app-wallet',
@@ -20,7 +21,8 @@ import { SettingService } from '../setting.service';
 export class WalletComponent extends UIComponent implements OnInit {
   titlePage = '';
   datafuntion = null;
-  item = null;
+  data: any = {};
+  quantity: any;
   tenant: any;
   objectUpdateCoin = {};
   fieldUpdateCoin = '';
@@ -29,15 +31,6 @@ export class WalletComponent extends UIComponent implements OnInit {
   scheduledTasks;
   scheduledTasks_CoCoin;
   scheduledTasks_KuDos;
-  lstHandleStringToBool = [
-    'ActiveCoins',
-    'MaxCoinsForEGiftControl',
-    'ActiveCoCoins',
-    'ExchangeRateCoinsControl',
-    'ResetCoCoinsControl',
-    'ActiveMyKudos',
-    'ResetMyKudosControl',
-  ];
   listParameter;
   funcID: any;
   functionList: any;
@@ -51,16 +44,17 @@ export class WalletComponent extends UIComponent implements OnInit {
     private settingSV: SettingService,
     private notification: NotificationsService,
     private route: ActivatedRoute,
+    private fdSV: CodxFdService,
     injector: Injector
   ) {
     super(injector);
     this.tenant = this.authStore.get();
-    this.route.params.subscribe(params => {
-      if(params) this.funcID = params['funcID'];
-    })
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if(res) this.functionList = res;
-    })
+    this.route.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
   onInit(): void {
     this.LoadData();
@@ -68,13 +62,12 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.LoadDataPolicies('1');
     this.getSettingRunPolicyCoCoin();
     this.getSettingRunPolicyKuDos();
-    this.getInfoCMParameter();
-    this.at.queryParams.subscribe((params) => {
+    this.at.params.subscribe((params) => {
       if (params && params.funcID) {
         this.api
           .call('ERM.Business.SYS', 'FunctionListBusiness', 'GetAsync', [
             '',
-            params.funcID.substring(0, 6),
+            params.funcID,
           ])
           .subscribe((res) => {
             //this.ngxLoader.stop();
@@ -87,6 +80,9 @@ export class WalletComponent extends UIComponent implements OnInit {
           });
       }
     });
+  }
+  getItems(category) {
+    return this.policyList.filter((item) => item.category === category);
   }
   backLocation() {
     this.location.back();
@@ -103,28 +99,30 @@ export class WalletComponent extends UIComponent implements OnInit {
     // });
   }
   changValueListPopup(e) {
-    this.item[e.field] = e.data.value;
-    this.objectUpdateCoin[e.field] = this.item[e.field];
+    this.objectUpdateCoin[e.field] = e.data;
     this.fieldUpdateCoin = e.field;
-    this.handleSaveParameter();
   }
-  valueChange(e, element) {
-    this.item[e.field] = e.data; //this.item[e.field] === '0' ? '1' : '0';
-    this.objectUpdateCoin[e.field] = this.item[e.field] === true ? '1' : '0';
-    this.fieldUpdateCoin = e.field;
-
-    if (e.field == 'ActiveCoCoins') {
-      this.disableGroupFund = !e.data;
+  valueChangeVoucher(e) {
+    if (e) {
+      this.objectUpdateCoin[e.field] = e.data;
     }
-    this.handleSaveParameter();
+  }
+  valueChange(e) {
+    if (e) {
+      var dt = e.data == true ? '1' : '0';
+      this.objectUpdateCoin[e.field] = dt;
+      this.fieldUpdateCoin = e.field;
+      if (e.field == 'ActiveCoCoins') {
+        this.disableGroupFund = !e.data;
+      }
+      this.handleSaveParameter();
+    }
   }
   onSavePopupCombobx() {
-    this.objectUpdateCoin['MaxCoinsForEGift'] = this.item.MaxCoinsForEGift;
-    this.objectUpdateCoin['MaxCoinsForEGiftPeriod'] =
-      this.item.MaxCoinsForEGiftPeriod;
-
+    // this.objectUpdateCoin['MaxCoinsForEGift'] = this.quantity.MaxCoinsForEGift;
+    // this.objectUpdateCoin['MaxCoinsForEGiftPeriod'] =
+    //   this.quantity.MaxCoinsForEGiftPeriod;
     this.onSaveCMParameter(this.objectUpdateCoin);
-    this.modalService.dismissAll();
   }
   emptyObjectUpdate() {
     this.objectUpdateCoin = {};
@@ -133,23 +131,41 @@ export class WalletComponent extends UIComponent implements OnInit {
   // handleTrueFalse(value) {
   //   return value == '1' ? true : false;
   // }
+  title: any;
+  description: any;
+  field: any;
   LoadData() {
     this.api
       .call(
-        'ERM.Business.FED',
+        'ERM.Business.FD',
         'WalletsBusiness',
-        'GetDataForSettingWalletAsync',
-        []
+        'GetDataForSettingWalletAsync'
       )
       .subscribe((res) => {
-        if (res && res.msgBodyData.length > 0) {
-          this.item = res.msgBodyData[0].parameter;
-          for (const property in this.item) {
-            if (this.lstHandleStringToBool.includes(property)) {
-              this.item[property] = this.item[property] == '1' ? true : false;
-            }
-          }
-          if (this.item['ActiveCoCoins'] == true) {
+        if (res && res.msgBodyData[0].length > 0) {
+          this.data = res.msgBodyData[0][0];
+          this.quantity = this.fdSV.convertListToObject(
+            this.data,
+            'fieldName',
+            'fieldValue'
+          );
+          this.title = this.fdSV.convertListToObject(
+            this.data,
+            'fieldName',
+            'title'
+          );
+          this.description = this.fdSV.convertListToObject(
+            this.data,
+            'fieldName',
+            'description'
+          );
+          this.field = this.fdSV.convertListToObject(
+            this.data,
+            'fieldName',
+            'fieldValue'
+          );
+          console.log("quantity", this.quantity)
+          if (this.quantity.ActiveCoCoins == true) {
             this.disableGroupFund = false;
           } else {
             this.disableGroupFund = true;
@@ -164,7 +180,6 @@ export class WalletComponent extends UIComponent implements OnInit {
       centered: true,
       size: 'sm',
     });
-
     this.changedr.detectChanges();
   }
   redirectPageDetailWallet(applyFor: string) {
@@ -173,20 +188,20 @@ export class WalletComponent extends UIComponent implements OnInit {
     //   funcID: 'FED20431',
     // });
   }
-  onSaveStatusPolicy(data, value) {
+  onSaveStatusPolicy(data) {
     this.api
       .execSv<any>(
-        'FED',
-        'ERM.Business.FED',
+        'FD',
+        'ERM.Business.FD',
         'WalletsBusiness',
         'OnSavePolicySettingWalletAsync',
         [data.field]
       )
       .subscribe((res) => {
         var index = this.policyList.findIndex((p) => p.recID == data.field);
-        var item = this.policyList.find((p) => p.recID == data.field);
-        item.actived = data.data;
-        this.policyList[index] = item;
+        var data = this.policyList.find((p) => p.recID == data.field);
+        data.actived = data.data;
+        this.policyList[index] = data;
         this.changedr.detectChanges();
       });
   }
@@ -198,7 +213,7 @@ export class WalletComponent extends UIComponent implements OnInit {
   openFormChangeCoin(content, typeContent) {
     this.fieldUpdateCoin = typeContent;
     this.objectUpdateCoin[this.fieldUpdateCoin] =
-      this.item[this.fieldUpdateCoin];
+      this.quantity[this.fieldUpdateCoin];
     this.changedr.detectChanges();
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -207,59 +222,48 @@ export class WalletComponent extends UIComponent implements OnInit {
     });
   }
 
+  valueChangeCoin(e) {
+    if (e) {
+      this.objectUpdateCoin[e.field] = e.data;
+    }
+  }
+
   policyList = [];
-  getItems(category) {
-    return this.policyList.filter((item) => item.category === category);
+  getdatas(category) {
+    return this.policyList.filter((data) => data.category === category);
   }
   handleSaveParameter() {
     this.onSaveCMParameter(this.objectUpdateCoin);
-
-    this.modalService.dismissAll();
   }
   onSaveCMParameter(objectUpdate) {
     this.api
       .callSv(
         'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
         'SaveParamsOfPolicyAsync',
-        ['FED_Parameters', null, JSON.stringify(objectUpdate)]
+        ['FDParameters', null, JSON.stringify(objectUpdate)]
       )
       .subscribe((res) => {
         if (res && res.msgBodyData.length > 0) {
           if (res.msgBodyData[0] === true) {
             for (const property in objectUpdate) {
-              if (this.lstHandleStringToBool.includes(property)) {
-                this.item[property] =
-                  objectUpdate[property] == '1' ? true : false;
-              } else {
-                this.item[property] = objectUpdate[property];
-              }
+              this.quantity[property] = objectUpdate[property];
             }
             this.changedr.detectChanges();
             this.objectUpdateCoin = {};
           }
         }
       });
+    this.modalService.dismissAll();
   }
-  getInfoCMParameter() {
-    let predicate =
-      'FormName=@0 && TransType=null && (FieldName = @1 or FieldName = @2  or FieldName = @3)';
-    let dataValue = 'FED_Parameters;PolicyCoins;PolicyCoCoins;PolicyKudos';
-    this.settingSV
-      .getParameterByPredicate(predicate, dataValue)
-      .subscribe((result) => {
-        if (result?.length > 0) {
-          this.listParameter
-        }
-      });
-  }
+
   LoadDataPolicies(category) {
     let applyFor = '1';
     let cardType = null;
     this.api
       .call(
-        'ERM.Business.FED',
+        'ERM.Business.FD',
         'SettingsBusiness',
         'GetDataForPolicyCoinDedicationAsync',
         [cardType, category, applyFor]

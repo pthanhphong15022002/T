@@ -117,7 +117,7 @@
 <ng-template #templateCard>
   <div class="d-flex flex-wrap dms-card p-5">
     <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-      *ngFor="let item of data" [class]="classFile(item, 'pe-6 pb-6')" [data]="item" [formModel]="view.formModel">
+      *ngFor="let item of data" [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel">
     </card>
   </div>
 </ng-template>
@@ -237,3 +237,6 @@
 <codx-attachment #attachment hideFolder="1" hideUploadBtn="1" hideDes="0" type="inline" hideImageUpload="1"
   hideImageThumb="1" allowMultiFile="1" idBrowse="btn2" [formModel]="view.formModel" displayThumb="simple">
 </codx-attachment>
+<ng-container *ngIf="visible">
+  <lib-dialogthumb [dataFile]="dataFile" (dialogClosed)="dialogClosed()"></lib-dialogthumb>
+</ng-container>

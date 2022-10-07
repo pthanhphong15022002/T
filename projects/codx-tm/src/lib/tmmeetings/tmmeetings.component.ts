@@ -14,6 +14,7 @@ import {
   AuthStore,
   ButtonModel,
   DataRequest,
+  DialogModel,
   DialogRef,
   FormModel,
   RequestOption,
@@ -29,6 +30,8 @@ import { MeetingDetailComponent } from './meeting-detail/meeting-detail.componen
 import { APICONSTANT } from '@shared/constant/api-const';
 import { PopupStatusMeetingComponent } from './popup-status-meeting/popup-status-meeting.component';
 import { Observable, of } from 'rxjs';
+import moment from 'moment';
+import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popup-tabs-views-details.component';
 @Component({
   selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
@@ -39,7 +42,7 @@ export class TMMeetingsComponent
   implements OnInit, AfterViewInit
 {
   @Input() meeting = new CO_Meetings();
-
+  @Input() funcID: string;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   @Input() projectID?: any; //view meeting to sprint_details
@@ -56,7 +59,6 @@ export class TMMeetingsComponent
   @ViewChild('contentTmp') contentTmp!: TemplateRef<any>;
   @ViewChild('mfButton') mfButton!: TemplateRef<any>;
   @ViewChild('footerNone') footerNone!: TemplateRef<any>;
-
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -76,7 +78,7 @@ export class TMMeetingsComponent
   eventStatus: any;
   itemSelected: any;
   user: any;
-  funcID: string;
+
   gridView: any;
   param: any;
   resources: CO_Resources[] = [];
@@ -92,6 +94,7 @@ export class TMMeetingsComponent
   listMoreFunc = [];
   titleAction = '';
   statusVll = 'CO004';
+  toolbarCls: string;
 
   constructor(
     inject: Injector,
@@ -102,7 +105,8 @@ export class TMMeetingsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
@@ -125,6 +129,10 @@ export class TMMeetingsComponent
       id: 'btnAdd',
     };
 
+    let body = document.body;
+    if (body.classList.contains('toolbar-fixed'))
+      this.toolbarCls = 'toolbar-fixed';
+  
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'CO';
     this.modelResource.className = 'MeetingsBusiness';
@@ -179,7 +187,7 @@ export class TMMeetingsComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          // template: this.eventTemplate,
+          template: this.eventTemplate,
           // template4: this.resourceHeader,// schenmoi can
           template6: this.mfButton, //header
           template3: this.cellTemplate,
@@ -193,7 +201,6 @@ export class TMMeetingsComponent
         active: true,
         sameData: true,
         model: {
-          // panelLeftRef: this.panelLeftRef,
           template: this.cardCenter,
         },
       },
@@ -221,7 +228,7 @@ export class TMMeetingsComponent
   }
   //#end region
 
-  //#region schedule
+  //#region schedule 
 
   fields = {
     id: 'meetingID',
@@ -336,14 +343,15 @@ export class TMMeetingsComponent
       let month = date1.getMonth() + 1;
       let myDay = this.addZero(date1.getDate());
       let year = date1.getFullYear();
-      let day1 = date1.getDay() ==0? "Chủ nhật":  'Thứ ' +(date1.getDay()+1);
-      
+      let day1 =
+        date1.getDay() == 0 ? 'Chủ nhật' : 'Thứ ' + (date1.getDay() + 1);
+
       day +=
         '<div class="fs-2hx fw-bold text-gray-800 me-2 lh-1">' +
         myDay +
         '</div>';
       toDay +=
-        '<div class="text-dark fw-bold">' +      
+        '<div class="text-dark fw-bold">' +
         day1 +
         '</div>' +
         '<div class="fw-lighter">' +
@@ -359,7 +367,7 @@ export class TMMeetingsComponent
 
   getResourceID(data) {
     var resources = [];
-    this.resourceID =''
+    this.resourceID = '';
     resources = data.resources;
     var id = '';
     if (resources != null) {
@@ -415,7 +423,8 @@ export class TMMeetingsComponent
         this.delete(data);
         break;
       case 'TMT05011':
-        this.viewDetail(e.data, data);
+        // this.viewDetail(e.data, data);
+        this.viewDetail(data);
         break;
       case 'TMT05013':
         this.updateStatusMeeting(e.data, data);
@@ -520,9 +529,50 @@ export class TMMeetingsComponent
     return true;
   }
 
-  viewDetail(func, data) {
-    this.codxService.navigate('', func.url, {
-      meetingID: data.meetingID,
+// viewDetail(func, meeting) {
+  //   // this.codxService.navigate('', func.url, {
+  //   //   meetingID: data.meetingID,
+  //   // })};
+
+ viewDetail(meeting) {
+    this.tmService.getMeetingID(meeting.meetingID).subscribe((data) => {
+      var resourceTaskControl = [];
+      var arrayResource = data?.resources;
+      if (arrayResource && arrayResource.length > 0) {
+        arrayResource.forEach((res) => {
+          if (res.taskControl) resourceTaskControl.push(res.resourceID);
+        });
+      }
+      var resources =
+        resourceTaskControl.length > 0 ? resourceTaskControl.join(';') : '';
+      var dataObj = {
+        projectID: this.projectID ? this.projectID : '',
+        resources: resources,
+        fromDate: data.fromDate ? moment(new Date(data.fromDate)) : '',
+        endDate: data.toDate ? moment(new Date(data.toDate)) : '',
+      };
+
+      var obj = {
+        data: data,
+        dataObj: dataObj,
+      };
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+    
+      var dialog = this.callfc.openForm(
+        PopupTabsViewsDetailsComponent,
+        '',
+        0,
+        0,
+        '',
+        obj,
+        '',
+        dialogModel
+      );
+      dialog.beforeClose.subscribe((res) => {
+        if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
+      });
     });
   }
 
@@ -552,16 +602,16 @@ export class TMMeetingsComponent
   //#region end
 
   //#region double click  view detail
-
   doubleClick(data) {
-    if (this.listMoreFunc.length > 0) {
-      this.listMoreFunc.forEach((obj) => {
-        if (obj.functionID == 'TMT05011') this.urlView = obj.url;
-      });
-      this.codxService.navigate('', this.urlView, {
-        meetingID: data.meetingID,
-      });
-    }
+    this.viewDetail(data);
+    // if (this.listMoreFunc.length > 0) {
+    //   this.listMoreFunc.forEach((obj) => {
+    //     if (obj.functionID == 'TMT05011') this.urlView = obj.url;
+    //   });
+    //   this.codxService.navigate('', this.urlView, {
+    //     meetingID: data.meetingID,
+    //   });
+    // } 
   }
   //end region
 
@@ -579,29 +629,30 @@ export class TMMeetingsComponent
     }
   }
 
-  onDragDrop(e: any) {
-    if (e.type == 'drop') {
+  onDragDrop(data: any) {
       this.api
         .execSv<any>(
           'CO',
           'CO',
           'MeetingsBusiness',
           'UpdateMeetingsAsync',
-          e.data
+          data
         )
         .subscribe((res) => {
           if (res) {
-            this.view.dataService.update(e.data);
+            this.view.dataService.update(data);
           }
         });
-    }
   }
 
-  // hoverMeetingName(
-  //   value: string,
-  //   formModel: FormModel,
-  //   field: string
-  //   ): Observable<string> {
-  //       return of(`<span class="cut-size-long">${value}</span>`);
-  //    }
+  onActions(e: any) {
+    switch (e.type) {
+      case 'drop':
+        this.onDragDrop(e.data);
+        break;
+      case 'dbClick':
+        this.viewDetail(e?.data);
+        break;
+    }
+  }
 }

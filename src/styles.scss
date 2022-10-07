@@ -457,6 +457,10 @@ a:link {
   cursor: pointer;
 }
 
+.red {
+  border: 1px red solid;
+}
+
 .aqua {
   border: 1px aqua solid;
 }
@@ -499,10 +503,15 @@ codx-view-list-detail .codx-detail-footer {
   margin: 0;
 }
 
+
 .nav-link {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.75rem;
   color: var(--gray-800);
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: transparent !important;
 }
 
 .codx-tab .tab-content .e-toolbar-wrapper {
@@ -649,10 +658,67 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .codx-tab .tab-content {
   min-width: 545px !important;
-  width: 545px !important;
+  // width: 545px !important;
+}
+
+.e-sidebar {
+  .codx-tab .tab-content {
+    width: 545px !important;
+  }
 }
 
 .e-appointment {
   text-align: left !important;
   padding-left: 7px !important;
+}
+
+.container-md {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+codx-toolbar-button {
+  display: flex;
+}
+
+codx-toolbar-button>span.btn {
+  border-radius: 3px 0 0 3px !important;
+}
+
+codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
+  border-radius: 0 3px 3px 0 !important;
+}
+
+.codx-search .btn-icon-clear {
+  margin-right: 20px;
+}
+
+.text-max-100px {
+  max-width: 90px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.breadcrum-box .breadcumb-extend {
+  max-width: 350px;
+  overflow: auto;
+}
+
+.breadcrum-box .breadcumb-extend {
+  max-width: 350px;
+  overflow: auto;
+}
+
+
+.breadcrum-box div::-webkit-scrollbar {
+  height: 2px;
+}
+
+.dms-footer-r {
+  text-align: left;
+}
+
+.task-tree .menu-nav {
+  margin-bottom: 0;
 }
