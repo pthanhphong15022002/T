@@ -1,15 +1,105 @@
-<codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP" entityName="BP_Processes" className="ProcessesBusiness"
-  method="GetListProcessesAsync" [views]="views" [button]="showButtonAdd ? button : null" (buttonClick)="click($event)"
-  [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="processNo" (onDragDrop)="onDragDrop($event)">
+<codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP" entityName="BP_Processes"
+  className="ProcessesBusiness" method="GetListProcessesAsync" [views]="views" [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="processNo"
+  (onDragDrop)="onDragDrop($event)">
 </codx-views>
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-  <lib-view-list-processes
-    [formModel]="view.formModel"
-    [data]="data"
-    (clickMoreFunction)="receiveMF($event)"
-  >
-  </lib-view-list-processes>
+  <tr>
+    <td class="rowphoto">
+      <div class="padding">
+        <div class="d-flex flex-column w-100 p-3">
+          <div class="fw-bold lh-base">{{data.processName}}</div>
+          <div class="d-flex flex-wrap justify-content-between">
+              <div class="d-flex align-items-center">
+                  <div class=" d-flex me-3">
+                      <span class="icon-server text-dark icon-16 me-1"></span>
+                      <span class="">4</span>
+                  </div>
+                  <div class=" d-flex me-3">
+                      <span class="icon-format_list_numbered text-danger icon-16 me-1"></span>
+                      <span class="">4</span>
+                  </div>
+                  <div class="d-flex me-3">
+                      <span class="icon-attach_file text-primary icon-16 me-1"></span>
+                      <span class=" ">{{data.attachments}}</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+    </td>
+    <td class="rowphoto" placement="left">
+      <div class="padding justify-content-start" style="margin-top: 10px;">
+        <codx-temp-full cardCss="card-template" [imageId]="data.userID" imageObjType="AD_Users" [titleTmp]="titleTmp"
+          [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data">
+        </codx-temp-full>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        {{ data.VersionNo }}
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        {{data.activedOn | date: "dd/MM/yyyy"}}
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding" >
+        <div [innerHTML]="data.memo"></div>
+
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
+          [dataItem]="data">
+        </codx-mfunc>
+      </div>
+    </td>
+  </tr>
 </ng-template>
 <!-- view-list -->
+
+<ng-template #titleTmp let-data>
+  <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2"> {{data.userName}}</div>
+
+</ng-template>
+
+<ng-template #itemProcessName let-data>
+  <div class="padding">
+    <codx-label fiedName="ProcessName" formName="Processes" gridViewName="grvProcesses" default="Tên qui trình">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemOwner let-data>
+  <div class="padding">
+    <codx-label fiedName="Owner" formName="Processes" gridViewName="grvProcesses" default="Chủ qui trình">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemVersionNo let-data>
+  <div class="padding">
+    <codx-label fiedName="VersionNo" formName="Processes" gridViewName="grvProcesses" default="Phiên bản">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemActivedOn let-data>
+  <div class="padding">
+    <codx-label fiedName="ActivedOn" formName="Processes" gridViewName="grvProcesses" default="Ngày hiệu lực">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemMemo let-data>
+  <div class="padding">
+    <codx-label fiedName="Memo" formName="Processes" gridViewName="grvProcesses" default="Mô tả">
+    </codx-label>
+  </div>
+</ng-template>
