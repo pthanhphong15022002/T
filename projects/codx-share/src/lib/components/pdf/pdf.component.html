@@ -286,8 +286,8 @@
           </ejs-toolbar>
         </div>
       </div>
-      <ng-container *ngIf="curFileUrl">
         <ngx-extended-pdf-viewer
+          *ngIf="curFileUrl"
           #ngxPdfView
           [(src)]="curFileUrl"
           [(zoom)]="zoomValue"
@@ -310,7 +310,6 @@
           pageViewMode="vertical"
         >
         </ngx-extended-pdf-viewer>
-      </ng-container>
      
       <ng-template #ngxThumbnail let-PAGE_NUMBER>
         <a class="pdf-viewer-template">
