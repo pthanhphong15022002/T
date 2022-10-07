@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxAlertComponent } from './codx-alert.component';
+import { DetailPolicyCoinsComponent } from './detail-policy-coins.component';
 
-describe('CodxAlertComponent', () => {
-  let component: CodxAlertComponent;
-  let fixture: ComponentFixture<CodxAlertComponent>;
+describe('DetailPolicyCoinsComponent', () => {
+  let component: DetailPolicyCoinsComponent;
+  let fixture: ComponentFixture<DetailPolicyCoinsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxAlertComponent ]
+      declarations: [ DetailPolicyCoinsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxAlertComponent);
+    fixture = TestBed.createComponent(DetailPolicyCoinsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -12,7 +12,7 @@ export class PopAddProcessstepsComponent implements OnInit {
 
   data: any;
   dialog: any;
-  title = ' Bước công việc';
+  title = '';
   titleAction = '';
   gridViewSetup: any;
   constructor(
@@ -21,9 +21,10 @@ export class PopAddProcessstepsComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+    this.processSteps = this.data;
     this.dialog = dialog;
     this.titleAction = dt.data[1];
-    this.title = this.titleAction + this.title;
+    this.title = this.titleAction;
     this.cache
     .gridViewSetup(
       this.dialog.formModel.formName,
@@ -40,14 +41,15 @@ export class PopAddProcessstepsComponent implements OnInit {
   }
 
   //#region method
-  onSave(){
 
+
+  onSave(){
   }
   //#endregion
 
   //#region event
   valueChange(e){
-
+    this.processSteps[e.field] = e.data;
   }
   addFile(e) {}
 

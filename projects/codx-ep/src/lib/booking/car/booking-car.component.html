@@ -133,20 +133,7 @@
   </div>  
 </ng-template>
 
-<ng-template #resourceTootip let-data>
-  <div class="template-wrap">
-    <div class="res-text">Code: {{ data.resourceData.recCode }}</div>
-    <div class="res-text">Name: {{ data.resourceData.resourceName }}</div>
-    <div class="res-text">Bookings: {{ data.resourceData.events }}</div>
-  </div>
-</ng-template>
 
-<ng-template #footerButton let-data>
-  <div class="d-flex justify-content-between">
-    <button class="btn btn-light-primary" (click)="edit(data)">Sửa</button>
-    <button class="btn btn-light-danger" (click)="delete(data)">Xóa</button>
-  </div>
-</ng-template>
 <ng-template #mfButton let-data>
   <div class="mt-2 me-2">
     <codx-mfunc

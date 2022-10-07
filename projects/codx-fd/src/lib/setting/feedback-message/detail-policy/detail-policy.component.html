@@ -54,7 +54,7 @@
                                     <span class="icon-arrow_back icon-22 mr-5 text-hover-primary"
                                         onclick="history.back()"></span>
                                     <div class="d-flex flex-column flex-grow-1">
-                                        <div class="font-size-h3 font-weight-bold text-dark mb-1">
+                                        <div class="fs-3 fw-bold text-dark mb-1">
                                             {{policy?.policyName}}</div>
                                         <div class="text-dark-50">{{policy?.memo}}</div>
                                     </div>
@@ -74,7 +74,7 @@
                                         <tbody>
                                             <tr *ngFor="let item of lstPolicyLine">
                                                 <td>{{item.name}}</td>
-                                                <td class="w-50px font-size-lg font-weight-bold">
+                                                <td class="w-50px font-size-lg fw-bold">
                                                     <div class="d-flex" #ele>
                                                         <span class="mr-1 oparator"
                                                             [style.color]="item.value < 0 ? 'red' : 'green'">
