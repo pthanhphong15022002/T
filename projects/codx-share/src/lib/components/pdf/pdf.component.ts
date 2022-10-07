@@ -512,7 +512,29 @@ export class PdfComponent
           comment
         )
         .subscribe((status) => {
-          resolve(status);
+          if (status) {
+            let approveStt = '5';
+
+            switch (mode) {
+              case '1': {
+                approveStt = '5';
+                break;
+              }
+              case '2': {
+                approveStt = '4';
+                break;
+              }
+              case '3': {
+                approveStt = '2';
+                break;
+              }
+            }
+            this.esService
+              .approveAsync(this.recID, approveStt, '', '')
+              .subscribe((res2) => {
+                resolve(status);
+              });
+          }
         });
     });
   }
@@ -568,7 +590,7 @@ export class PdfComponent
       labelType: labelType,
       labelValue: url,
       isLock: false,
-      allowEditAreas: this.allowEdit,
+      allowEditAreas: this.allowEdit == '0' ? false : true,
       signDate: false,
       dateFormat: '1',
       location: {
@@ -1030,7 +1052,7 @@ export class PdfComponent
 
       case 'img': {
         let img = document.createElement('img') as HTMLImageElement;
-        img.setAttribute('crossOrigin', 'anonymous');
+        // img.setAttribute('crossOrigin', 'anonymous');
 
         img.src = url;
         img.onload = () => {
@@ -1162,7 +1184,9 @@ export class PdfComponent
     this.renderQRAllPage = !this.renderQRAllPage;
   }
   changeAnnotationItem(type: number) {
-    if (this.isEditable && this.signerInfo) {
+    if (!this.signerInfo) {
+    }
+    if (this.isEditable) {
       this.holding = type;
       switch (type) {
         case 1:
