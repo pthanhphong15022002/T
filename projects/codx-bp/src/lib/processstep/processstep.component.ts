@@ -20,6 +20,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
+import { PopupSendEmailComponent } from '../processsteps/popup-send-email/popup-send-email.component';
 import { PopupAddProcessStepComponent } from './popup-add-processstep/popup-add-processstep.component';
 
 @Component({
@@ -171,10 +172,13 @@ export class ProcessStepComponent
     switch (evt.id) {
       case 'btnAdd':
       case 'T':
-      case 'E':
       case 'Q':
         this.add();
         break;
+        case 'E':
+        this.sendMail() ;
+        break;
+
     }
   }
 
@@ -233,4 +237,23 @@ export class ProcessStepComponent
 
   delete(data) {}
   //endregion
+
+  sendMail(){
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    this.dialog = this.callfc.openSide(
+      PopupSendEmailComponent,
+      [this.view.dataService.dataSelected, 'add', this.titleAction,this.idForm],
+      option
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event == null)
+        this.view.dataService.delete(
+          [this.view.dataService.dataSelected],
+          false
+        );
+    });
+  }
 }
