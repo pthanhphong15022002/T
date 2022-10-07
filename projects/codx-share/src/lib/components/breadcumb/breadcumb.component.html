@@ -2,59 +2,59 @@
     <div *ngIf="breadcumb.length <= max; then thenBlockList  else thenBlockListElse">
     </div>
     <ng-template #thenBlockList>
-        <div class="d-flex align-items-center">
+        <div class="breadcumb-item d-flex align-items-center breadcumb-full">
             <ng-container *ngFor="let item of getBreadCumList(); let i = index">
                 <ng-container *ngIf="i >= start">
-                    <span *ngIf="i > 0" class="icon-keyboard_arrow_right icon-20"></span>
+                    <span *ngIf="i > 0" class="icon-keyboard_arrow_right text-gray-700 icon-18"></span>
                     <div *ngIf="link; then jump1 else nojump1"></div>
                     <ng-template #jump1>
-                        <a class="cursor-pointer text text-dark" (click)="onJump(i)">
-                            <span class="text-dark-50">{{item.toString()}}</span>
+                        <a class="cursor-pointer" (click)="onJump(i)">
+                            <span class="text-gray-700 text-nowrap t456">{{item.toString()}}</span>
                         </a>
                     </ng-template>
                     <ng-template #nojump1>
-                        <span class="text-dark-50">{{item.toString()}}</span>
+                        <span class="text-gray-700 text-nowrap t123">{{item.toString()}}</span>
                     </ng-template>
                 </ng-container>
             </ng-container>
         </div>
     </ng-template>
     <ng-template #thenBlockListElse>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center breadcumb-extend">
             <ng-container *ngFor="let item of getBreadCumList(); let i = index">
                 <ng-container *ngIf="i >= start && i < 2">
-                    <span *ngIf="start > 0 || i > start" class="icon-keyboard_arrow_right icon-20"></span>
-                    <!-- <span class="text-dark-50">{{item.toString()}}</span> icon-edit , icon-close 
+                    <span *ngIf="start > 0 || i > start" class="icon-keyboard_arrow_right text-gray-600 icon-18"></span>
+                    <!-- <span class="text-gray-500">{{item.toString()}}</span> icon-edit , icon-close 
  -->
                     <div *ngIf="link; then jump2 else nojump2"></div>
                     <ng-template #jump2>
-                        <a class="cursor-pointer text text-dark" (click)="onJump(i)">
-                            <span class="text-dark-50">{{item.toString()}}</span>
+                        <a class="cursor-pointer" (click)="onJump(i)">
+                            <span class="text-gray-600 text-nowrap">{{item.toString()}}</span>
                         </a>
                     </ng-template>
                     <ng-template #nojump2>
-                        <span class="text-dark-50">{{item.toString()}}</span>
+                        <span class="text-gray-600 text-nowrap">{{item.toString()}}</span>
                     </ng-template>
                 </ng-container>
             </ng-container>
-            <span class="icon-keyboard_arrow_right icon-20"></span>
+            <span class="icon-keyboard_arrow_right icon-18"></span>
             <div class="dropdown">
                 <button class="btn btn-icon btn-md" type="button" #dropdownMenuButton id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span (mouseenter)="hover(dropdownMenuButton)" class="icon-more_horiz icon-16"></span>  <!--  -->
+                    <span (mouseenter)="hover(dropdownMenuButton)" class="icon-more_horiz icon-16"></span> <!--  -->
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <ng-container *ngFor="let item of getBreadCumList(); let i = index">
                         <ng-container *ngIf="i >= 2 && i < breadcumb.length - end">
                             <!-- <span class="icon-keyboard_arrow_right icon-20"></span>
-                            <span class="text-dark-50">{{item.toString()}}</span> -->
+                            <span class="text-gray-500">{{item.toString()}}</span> -->
                             <a class="dropdown-item">
                                 <div class="d-flex align-items-center">
                                     <span class="icon-folder_open icon-16"></span>
                                     <!-- <span class="ms-3">{{item.toString()}}</span> -->
                                     <div *ngIf="link; then jump4 else nojump4"></div>
                                     <ng-template #jump4>
-                                        <a class="cursor-pointer text text-dark" (click)="onJump(i)">
+                                        <a class="cursor-pointer text-dark" (click)="onJump(i)">
                                             <span class="ms-3">{{item.toString()}}</span>
                                         </a>
                                     </ng-template>
@@ -69,16 +69,16 @@
             </div>
             <ng-container *ngFor="let item of getBreadCumList(); let i = index">
                 <ng-container *ngIf="i >= breadcumb.length - end">
-                    <span class="icon-keyboard_arrow_right icon-20"></span>
-                    <!-- <span class="text-dark-50">{{item.toString()}}</span> -->
+                    <span class="icon-keyboard_arrow_right icon-18"></span>
+                    <!-- <span class="text-gray-500">{{item.toString()}}</span> -->
                     <div *ngIf="link; then jump3 else nojump3"></div>
                     <ng-template #jump3>
-                        <a class="cursor-pointer text text-dark" (click)="onJump(i)">
-                            <span class="text-dark-50">{{item.toString()}}</span>
+                        <a class="cursor-pointer text-dark" (click)="onJump(i)">
+                            <span class="text-gray-600 text-nowrap text-max text2">{{item.toString()}}</span>
                         </a>
                     </ng-template>
                     <ng-template #nojump3>
-                        <span class="text-dark-50">{{item.toString()}}</span>
+                        <span class="text-gray-600 text-nowrap text-max">{{item.toString()}}</span>
                     </ng-template>
                 </ng-container>
             </ng-container>

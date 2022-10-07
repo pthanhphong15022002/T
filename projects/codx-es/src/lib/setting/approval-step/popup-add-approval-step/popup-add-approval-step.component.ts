@@ -21,6 +21,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
@@ -54,27 +55,24 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   lstApprover: any = [];
 
   headerText1;
-  type = null;
 
   title = '';
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
-    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabInfo2' },
+    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabQuery' },
     {
       icon: 'icon-email',
       text: 'Email/thông báo',
-      name: 'tabInfo3',
+      name: 'tabEmail',
     },
     {
       icon: 'icon-tune',
       text: 'Thông tin khác',
-      name: 'tabInfo4',
+      name: 'tabAnother',
     },
   ];
 
   setTitle(e: any) {
-    // this.title = 'Thêm ' + e;
-    // this.cr.detectChanges();
     console.log(e);
   }
 
@@ -86,8 +84,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     private esService: CodxEsService,
     private cr: ChangeDetectorRef,
     private notifySvr: NotificationsService,
-    private api: ApiHttpService,
-    private cfService: CallFuncService,
     private cache: CacheService,
     private callfc: CallFuncService,
     @Optional() data?: DialogData,
@@ -101,7 +97,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.dataEdit = data?.data.dataEdit;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
-    this.type = data?.data.type ?? '1';
   }
 
   ngAfterViewInit(): void {
@@ -245,7 +240,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showSendLater: true,
       };
 
-      this.cfService.openForm(
+      this.callfc.openForm(
         PopupAddEmailTemplateComponent,
         '',
         800,
@@ -291,11 +286,16 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             if (lstID[i].toString() != '' && index == -1) {
               let appr = new Approvers();
               appr.roleType = element.objectType;
-              appr.approverName = lstUserName[i];
+              appr.name = lstUserName[i];
               appr.approver = lstID[i];
-              appr.position = dataSelected[i]?.PositionID;
-              appr.positionName = dataSelected[i]?.PositionName;
-              this.lstApprover.push(appr);
+              this.esService.getDetailApprover(appr).subscribe((oRes) => {
+                if (oRes?.length > 0) {
+                  appr.position = oRes[0].position;
+                  appr.phone = oRes[0].phone;
+                  appr.email = oRes[0].email;
+                  this.lstApprover.push(appr);
+                }
+              });
             }
           }
         } else {
@@ -305,7 +305,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           if (i == -1) {
             let appr = new Approvers();
             appr.roleType = element?.objectType;
-            appr.approverName = element?.objectName;
+            appr.name = element?.objectName;
             appr.approver = element?.objectType;
             appr.icon = element?.icon;
             this.lstApprover.push(appr);
@@ -318,19 +318,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       console.log(this.lstStep);
     }
   }
-}
-export class Approvers {
-  recID: string;
-  roleType: string;
-  approver: string;
-  approverName: string;
-  position: string;
-  positionName: string;
-  leadTime: any;
-  comment: string;
-  icon: string = null;
-  createdOn: any;
-  delete: boolean = true;
 }
 
 export class Files {

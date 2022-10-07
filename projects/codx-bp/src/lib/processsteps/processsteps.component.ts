@@ -49,9 +49,9 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         },
       },
     ];
-    this.view.dataService.methodSave = 'AddProcessStepsAsync';
-    this.view.dataService.methodUpdate = 'UpdateProcessStepsAsync';
-    this.view.dataService.methodDelete = 'DeleteProcessStepsAsync';
+    this.view.dataService.methodSave = 'AddProcessStepAsync';
+    this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
+    this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
     this.dt.detectChanges();
   }
 
@@ -140,9 +140,9 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteProcessesAsync';
+    opt.methodName = 'DeleteProcessStepAsync';
 
-    opt.data = itemSelected.processNo;
+    opt.data = itemSelected.processID;
     return true;
   }
   //#endregion

@@ -51,6 +51,20 @@
             default="Làm lại"
           ></codx-label>
         </button>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
+          [disabled]="!canOpenSubPopup"
+          (click)="clickUSB()"
+        >
+          <codx-label
+            name="lblDeny"
+            [formModel]="formModel"
+            default="USB"
+          ></codx-label>
+        </button>
+
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close()"></i>
         </div>
@@ -60,7 +74,8 @@
       <lib-pdf
         #pdfView
         [isApprover]="isApprover"
-        [recID]="recID"
+        [transRecID]="transRecID"
+        [recID]="sfRecID"
         [stepNo]="stepNo"
         [isEditable]="canOpenSubPopup"
         (isActiveToSign)="changeActiveOpenPopup($event)"
@@ -172,7 +187,7 @@
         hideImageUpload="0"
         hideImageThumb="1"
         [functionID]="funcID"
-        [objectId]="recID"
+        [objectId]="sfRecID"
         [allowMultiFile]="1"
         [idBrowse]="'add'"
       >
@@ -279,7 +294,7 @@
           hideImageUpload="0"
           hideImageThumb="1"
           [functionID]="funcID"
-          [objectId]="recID"
+          [objectId]="sfRecID"
           [allowMultiFile]="1"
           [idBrowse]="'add'"
         >

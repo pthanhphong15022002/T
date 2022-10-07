@@ -3,11 +3,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Ho
 import { Subject } from "rxjs";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
-import { NgbRatingModule} from '@ng-bootstrap/ng-bootstrap'; 
-imports: [NgbRatingModule ];
+import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+imports: [NgbRatingModule];
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
 import { FileInfo, FileUpload, HistoryFile, ItemInterval, Permission, SubFolder, View } from '@shared/models/file.model';
 import { FolderInfo } from '@shared/models/folder.model';
@@ -24,7 +24,7 @@ import { environment } from 'src/environments/environment';
 })
 export class PropertiesComponent implements OnInit {
   @Input() formModel: any;
-  @Input('viewBase') viewBase: ViewsComponent;    
+  @Input('viewBase') viewBase: ViewsComponent;
   @Output() eventShow = new EventEmitter<boolean>();
   dialog: any;
   titleDialog = 'Thông tin tài liệu';
@@ -33,16 +33,17 @@ export class PropertiesComponent implements OnInit {
   titleFiletype = 'Loại tập tin';
   titleFilesize = 'Kích cỡ file'
   titleCreator = 'Người tạo';
-  titleVersion= 'Phiên bản';
+  titleVersion = 'Phiên bản';
   titleLanguage = 'Ngôn ngữ';
-  titleAuthor= 'Tác giả';
-  titlePublisher= 'Nhà xuất bản';
+  titleAuthor = 'Tác giả';
+  titlePublisher = 'Nhà xuất bản';
   titleCopyrights = 'Bản quyền';
   titleRating = 'Đánh giá';
   titleRatingDesc = 'Đánh giá tài liệu này ?';
   titleRatingDesc2 = 'Cho người khác biết suy nghĩ của bạn!';
   titleSend = 'Gửi';
   titleHistory = 'Lịch sử';
+  namelanguage = '';
   readonly = false;
   currentRate = 1;
   selected = 0;
@@ -69,70 +70,78 @@ export class PropertiesComponent implements OnInit {
   requestContent: string;
   requestTitle: string;
   data: any;
-  constructor(  
+  vlL1473: any;
+  vlL14733: any;
+  constructor(
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
-    private fileService: FileService,    
+    private fileService: FileService,
     private api: ApiHttpService,
     public dmSV: CodxDMService,
     private callfc: CallFuncService,
     private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
-   // private confirmationDialogService: ConfirmationDialogService,
+    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
+    private cache: CacheService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
-    ) {
-      this.dialog = dialog;
-      this.data = data.data;
-      this.totalRating = 0;      
-      //this.fileEditing = this.data[1];   
-   
-      //this.fileEditing =  JSON.parse(JSON.stringify(this.data));  
-      // this.data = data.data;
-      // //this.fileEditing = this.data[1];   
-      // this.fileEditing =  JSON.parse(JSON.stringify( this.data[1]));   
-      // this.user = this.auth.get();
-      // this.dialog = dialog;     
-      // this.id = this.fileEditing.recID;
-      // this.dmSV.isFileEditing.subscribe(item => {
-      //   if (item != undefined) {
-      //     this.fileEditing = item;
-      //     this.changeDetectorRef.detectChanges();
-      //   }          
-      // });
+  ) {
+    this.dialog = dialog;
+    this.data = data.data;
+    this.totalRating = 0;
+    //this.fileEditing = this.data[1];   
+
+    //this.fileEditing =  JSON.parse(JSON.stringify(this.data));  
+    // this.data = data.data;
+    // //this.fileEditing = this.data[1];   
+    // this.fileEditing =  JSON.parse(JSON.stringify( this.data[1]));   
+    // this.user = this.auth.get();
+    // this.dialog = dialog;     
+    // this.id = this.fileEditing.recID;
+    // this.dmSV.isFileEditing.subscribe(item => {
+    //   if (item != undefined) {
+    //     this.fileEditing = item;
+    //     this.changeDetectorRef.detectChanges();
+    //   }          
+    // });
     //  this.changeDetectorRef.detectChanges();
-   // this.dmSV.confirmationDialogService = confirmationDialogService;
+    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
-  ngOnInit(): void {   
-    this.openProperties(this.data.recID);    
-  //  document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 460px; z-index: 1000;");
+  ngOnInit(): void {
+    this.cache.valueList("L1473").subscribe(item => {
+      if (item && item.datas) {
+        this.vlL1473 = item.datas;
+      }
+      this.openProperties(this.data.recID);
+    });
+
+    //  document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 460px; z-index: 1000;");
     this.changeDetectorRef.detectChanges();
   }
-  
+
 
   extendShow(): void {
     this.hideExtend = !this.hideExtend;
     var doc = document.getElementsByClassName('extend-more')[0];
     var ext = document.getElementsByClassName('ext_button')[0];
     if (doc != null) {
-      if (this.hideExtend)
-      {
+      if (this.hideExtend) {
         document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 550px; z-index: 1000;");
         doc.setAttribute("style", "display: none");
         ext.classList.remove("rotate-back");
-      }        
+      }
       else {
         document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 900px; z-index: 1000;");
         doc.setAttribute("style", "display: block");
         ext.classList.add("rotate-back");
       }
     }
-   
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -164,9 +173,9 @@ export class PropertiesComponent implements OnInit {
 
   getThumbnail(data) {
     if (data.hasThumbnail)
-      return environment.urlUpload + "/" +data.thumbnail;
+      return environment.urlUpload + "/" + data.thumbnail;
     else
-     return `../../../assets/codx/dms/`+this.getAvatar(data.extension);
+      return `../../../assets/codx/dms/` + this.getAvatar(data.extension);
   }
 
   getAvatar(filename: string) {
@@ -217,10 +226,10 @@ export class PropertiesComponent implements OnInit {
 
   txtValue($event, type) {
     debugger;
-    switch(type) {
+    switch (type) {
       case "commenttext":
         this.commenttext = $event.data;
-        break;     
+        break;
     }
   }
 
@@ -230,10 +239,41 @@ export class PropertiesComponent implements OnInit {
     this.readonly = false;
     this.commenttext = '';
     this.requestTitle = "";
-    this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.detectChanges();
     this.fileService.getFile(id, false).subscribe(async res => {
       if (res != null) {
         this.fileEditing = res;
+
+        if (this.fileEditing.version != null) {
+          this.fileEditing.version = this.fileEditing.version.replace('Ver ', 'V');
+        }
+        if (this.fileEditing.language) {
+          if (this.vlL1473 && this.vlL1473 && this.vlL1473.length) {
+            var lang = this.vlL1473.filter(x => x.value === this.fileEditing.language);
+            if (lang && lang[0]) {
+              this.fileEditing.language /* this.namelanguage */ = lang[0].text;
+            }
+          }
+        }
+        debugger;
+        /*  if(this.fileEditing.publisher)
+         {
+           this.cache.valueList("L1473").subscribe(item=>{
+             if(item && item.datas) 
+             {
+               this.vlL14733 = item.datas;
+               var langk = item.datas.filter(x=>x.value == this.fileEditing.publisher);
+               if(langk && langk[0])
+               {
+                 this.fileEditing.publisher = langk[0].text;
+               }
+               
+             }
+           
+           })
+         } */
+        debugger;
+
         this.onUpdateTags();
         this.currentRate = 1;
         this.getRating(res.views);
@@ -248,7 +288,7 @@ export class PropertiesComponent implements OnInit {
           this.dmSV.listFiles = files;
           this.dmSV.ChangeData.next(true);
         }
-        
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -310,8 +350,9 @@ export class PropertiesComponent implements OnInit {
   }
 
   openRight(mode = 1, type = true) {
-    this.dmSV.dataFileEditing = this.fileEditing;            
-    this.callfc.openForm(RolesComponent, "", 950, 650, "", [""], "");
+    debugger;
+    this.dmSV.dataFileEditing = this.fileEditing;
+    this.callfc.openForm(RolesComponent, "", 950, 650, "", [], "");
   }
 
   getSizeByte(size: any) {
@@ -336,10 +377,9 @@ export class PropertiesComponent implements OnInit {
     else
       return "icon-star text-muted icon-16 mr-1";
   }
-  getInformation(id:any)
-  {
+  getInformation(id: any) {
     // this.api.execSv("HR","HR","EmployeesBusiness","GetEmpUsers",id).subscribe(item=>{
-      
+
     // })
   }
 }

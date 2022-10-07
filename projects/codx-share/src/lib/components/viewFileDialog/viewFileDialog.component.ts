@@ -88,7 +88,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
       this.dataFile = changes['dataFile']?.currentValue;
       this.data = changes['dataFile']?.currentValue;
       this.getData();
-      this.changeDetectorRef.detectChanges();
+      // this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -413,7 +413,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
       //this.document = this.id;
     //  this.service = `${environment.apiUrl}/api/dm/files/${this.id}`;
       // this.pdfviewer.load(this.id, '');
-      this.changeDetectorRef.detectChanges();
+      //this.changeDetectorRef.detectChanges();
       // this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
       //   this.document = item;
       // });
