@@ -79,3 +79,19 @@ export class tmpBG_TrackLogs {
   functionID: string;
   sendToObjects: string;
 }
+
+export class Approvers {
+  recID: string;
+  roleType: string;
+  approver: string;
+  name: string;
+  position: string;
+  email: string;
+  phone: string;
+  leadTime: any;
+  allowEditAreas: boolean;
+  comment: string;
+  icon: string = null;
+  createdOn: any;
+  delete: boolean = true;
+}

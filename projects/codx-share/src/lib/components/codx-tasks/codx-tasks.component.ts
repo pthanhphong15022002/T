@@ -48,8 +48,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -82,7 +81,11 @@ export class CodxTasksComponent
   viewsActive: Array<ViewModel> = [];
 
   button?: ButtonModel = {
-    id: 'btnAdd',
+    id: 'btnAdd'
+    // items: [{
+    //   id: 'avc',
+    //   text: 'xxyz'
+    // }]
   };
 
   model?: DataRequest;
@@ -274,10 +277,10 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          // template: this.eventTemplate,
+          template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
-          //  template: this.eventTemplate,
+          template: this.eventTemplate,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
@@ -295,14 +298,14 @@ export class CodxTasksComponent
           template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
-          //  template: this.eventTemplate,
+          template: this.eventTemplate,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
         },
       },
       {
-        id: '16',
+        // id: '16',
         type: ViewType.content,
         active: false,
         sameData: false,
@@ -339,9 +342,10 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
+      option.zIndex = 5000;
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
-      this.dialog = this.callfc.openSide(
+      var dialog = this.callfc.openSide(
         PopupAddComponent,
         [
           this.view.dataService.dataSelected,
@@ -352,7 +356,7 @@ export class CodxTasksComponent
         ],
         option
       );
-      this.dialog.closed.subscribe((e) => {
+      dialog.closed.subscribe((e) => {
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -795,8 +799,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -884,11 +888,11 @@ export class CodxTasksComponent
   //#endregion
   //#region Event
   changeView(evt: any) {
-    let idx = -1;
+    // let idx = -1;
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    idx = this.viewsActive.findIndex((x) => x.id === '8');
+    // idx = this.viewsActive.findIndex((x) => x.id === '8');
     if (this.funcID != 'TMT0201') {
       if (this.funcID == 'TMT0203') {
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
@@ -899,27 +903,28 @@ export class CodxTasksComponent
 
         this.dataObj = null;
       }
-      if (idx > -1) return;
-      var schedule = {
-        id: '8',
-        type: ViewType.schedule,
-        active: false,
-        sameData: false,
-        request: this.requestSchedule,
-        request2: this.modelResource,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-          template4: this.resourceHeader,
-          template: this.eventTemplate,
-          template3: this.cellTemplate,
-          statusColorRef: this.vllStatus,
-        },
-      };
-      this.viewsActive.push(schedule);
-    } else {
-      if (idx > -1) this.viewsActive.splice(idx, 1);
     }
+    //   if (idx > -1) return;
+    //   var schedule = {
+    //     id: '8',
+    //     type: ViewType.schedule,
+    //     active: false,
+    //     sameData: false,
+    //     request: this.requestSchedule,
+    //     request2: this.modelResource,
+    //     model: {
+    //       eventModel: this.fields,
+    //       resourceModel: this.resourceField,
+    //       template4: this.resourceHeader,
+    //       template: this.eventTemplate,
+    //       template3: this.cellTemplate,
+    //       statusColorRef: this.vllStatus,
+    //     },
+    //   };
+    //   this.viewsActive.push(schedule);
+    // } else {
+    //   if (idx > -1) this.viewsActive.splice(idx, 1);
+    // }
 
     // idx = this.viewsActive.findIndex((x) => x.id === '16');
     // if (this.funcID == 'TMT0203') {
@@ -952,7 +957,7 @@ export class CodxTasksComponent
     // }
   }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(data) {
     this.api
@@ -1530,7 +1535,7 @@ export class CodxTasksComponent
     IdField: 'owner',
     TextField: 'userName',
     Title: 'Resources',
-  };
+  }; 
 
   viewChange(evt: any) {
     let fied = this.gridView?.dateControl || 'DueDate';

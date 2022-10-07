@@ -289,7 +289,6 @@ if(this.fileEditing.type == null)
   
 
   onSaveEditingFile() {
-    debugger;
     if (this.fileEditing.fileName === "") {
       // $('#fileName').addClass('form-control is-invalid');
       // $('#fileName').focus();
@@ -511,7 +510,7 @@ if(this.fileEditing.type == null)
   getListPermission() {
     this.listPerm = this.fileEditing.permissions;//this.fileEditing.permissions.filter(x => x.isSharing == this.modeSharing);
   }
-
+  
   onSetPermision(sharing: boolean) {
     this.modeSharing = sharing;
     this.getListPermission();
@@ -519,7 +518,6 @@ if(this.fileEditing.type == null)
   }
 
   txtValue($event, type) {
-    debugger;
     if ($event.data != null) {
       switch(type) {
         case 'tag':
@@ -605,7 +603,6 @@ if(this.fileEditing.type == null)
           break;
       }
     }
-    debugger;
     this.changeDetectorRef.detectChanges();  
   }
 

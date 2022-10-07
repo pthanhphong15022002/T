@@ -126,6 +126,7 @@
         <codx-view-assign
           [dataTree]="dataTree"
           [vllStatus]="vllStatus"
+          [formModel]="formModel"
         ></codx-view-assign>
       </div>
       <div class="container" *ngIf="dataTree.length == 0">
@@ -149,6 +150,7 @@
         [funcID]="funcID"
         [dataReferences]="dataReferences"
         [vllRefType]="vllRefType"
+        [formModel]="formModel"
       ></codx-references>
     </ng-container>
   </ng-container>

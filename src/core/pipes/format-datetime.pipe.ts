@@ -48,8 +48,7 @@ export class FormatDatetimePipe implements PipeTransform {
 
     var interval = seconds / 31536000;
 
-    if (interval > 1) {
-      
+    if (interval > 1) {  
       return moment(date).format('DD/MM/YYYY HH:mm');
     }
     interval = seconds / 2592000;

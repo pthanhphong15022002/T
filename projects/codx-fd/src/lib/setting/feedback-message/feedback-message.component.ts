@@ -129,12 +129,12 @@ export class FeedbackMessageComponent extends UIComponent implements OnInit {
     this.isLockCoin = data.isLockCoin;
     this.isLockDedicate = data.isLockDedicate;
   }
-  openCreate(): void {
-    $('#create_card').addClass('offcanvas-on');
-  }
-  closeCreate(): void {
-    $('#create_card').removeClass('offcanvas-on');
-  }
+  // openCreate(): void {
+  //   $('#create_card').addClass('offcanvas-on');
+  // }
+  // closeCreate(): void {
+  //   $('#create_card').removeClass('offcanvas-on');
+  // }
 
   backLocation() {
     // this.location.back();

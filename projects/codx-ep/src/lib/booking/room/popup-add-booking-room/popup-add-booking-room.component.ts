@@ -25,6 +25,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 import { Equipments } from '../../../models/equipments.model';
+import { APICONSTANT } from '@shared/constant/api-const';
 
 export class Device {
   id;
@@ -61,13 +62,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     optional: boolean;
     modifiedOn: string;
   };
-  dataUserCbb: any = new Array();
+  isPopupStationeryCbb=false;
   attendeesList = [];
   tmpAttendeesList = [];
   grvBookingRoom: any;
   peopleAttend = [];
   tempArray = [];
-
+  calendarID:any;
   returnData: any;
   checkLoopS = true;
   checkLoopE = true;
@@ -90,6 +91,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   startTime: any = null;
   endTime: any = null;
   tmpStartDate: any;
+  bookingOnValid = true;
   tmpEndDate: any;
   isFullDay = false;
   resource!: any;
@@ -97,7 +99,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   beginMinute = 0;
   endHour = 24;
   endMinute = 59;
-  isPopupCbb = true;
+  isPopupUserCbb = false;  
+  isPopupOptionalUserCbb = false;
   tempDate = new Date();
   lstDevices = [];
   tmplstDevice = [];
@@ -139,7 +142,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   funcID: string;
   isAdd = false;
   range: any;
-  isSaveSuccess = false;
+  saveAndApprove = false;
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
@@ -237,7 +240,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.curUser = this.tempAtender;
       this.changeDetectorRef.detectChanges();
     }
-
     if (!this.isAdd) {
       this.apiHttpService
         .callSv(
@@ -307,6 +309,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
+    this.api.callSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPParameters'
+    )
+    .subscribe((res) => {
+      this.calendarID =JSON.parse(res.msgBodyData[0].dataValue)?.CalendarID;
+    });
   }
 
   initForm() {
@@ -365,7 +377,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     return true;
   }
 
-  onSaveForm() {
+  approve() {}
+
+  onSaveForm(approval: boolean = false) {
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -405,10 +419,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     });
     this.data.equipments = this.lstEquipment;
     this.data.category = '1';
-    this.data.status = '1';
     this.data.resourceType = '1';
     this.data.requester = this.curUser.userName;
-
+    if(approval){
+      this.data.status = '3';
+    }
+    else{      
+      this.data.status = '1';
+    }
     this.attendeesList.forEach((item) => {
       this.tmpAttendeesList.push(item);
     });
@@ -433,119 +451,37 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               }
             );
           }
-          debugger;
-          this.codxEpService
-            .getCategoryByEntityName(this.formModel.entityName)
-            .subscribe((res: any) => {
-              this.codxEpService
-                .release(
-                  this.returnData,
-                  res.processID,
-                  'EP_Bookings',
-                  this.formModel.funcID
-                )
-                .subscribe((res) => {
-                  debugger;
-                  if (res?.msgCodeError == null && res?.rowCount) {
-                    this.notificationsService.notifyCode('ES007');
-                  } else {
-                    this.notificationsService.notifyCode(res?.msgCodeError);
-                  }
-                });
-            });
-
-          this.dialogRef && this.dialogRef.close();
+          if (approval) {
+            this.codxEpService
+              .getCategoryByEntityName(this.formModel.entityName)
+              .subscribe((res: any) => {
+                this.codxEpService
+                  .release(
+                    this.returnData,
+                    res.processID,
+                    'EP_Bookings',
+                    this.formModel.funcID
+                  )
+                  .subscribe((res) => {
+                    if (res?.msgCodeError == null && res?.rowCount) {
+                      this.notificationsService.notifyCode('ES007');
+                    } else {
+                      this.notificationsService.notifyCode(res?.msgCodeError);
+                    }
+                  });
+              });
+          }
         } else {
           this.notificationsService.notifyCode('E0011');
           return;
         }
       });
+    this.dialogRef && this.dialogRef.close();
   }
 
-  UpdateAttendeesList() {
-    this.attendeesList = [];
-    if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
-      this.lstUser.forEach((item) => {
-        this.attendeesList.push(item);
-      });
-      this.lstUserOptional.forEach((item) => {
-        this.attendeesList.push(item);
-      });
-    } else if (this.lstUser.length > 0 && this.lstUserOptional.length == 0) {
-      this.lstUser.forEach((item) => {
-        this.attendeesList.push(item);
-      });
-    } else if (this.lstUserOptional.length > 0 && this.lstUser.length == 0) {
-      this.lstUserOptional.forEach((item) => {
-        this.attendeesList.push(item);
-      });
-    }
-    this.attendeesList.forEach((item) => {
-      if (item.userId == this.curUser.userId) {
-        this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
-      }
-    });
-    this.form.data.attendees = this.attendeesList.length + 1;
-    this.changeDetectorRef.detectChanges();
-  }
-  valueCbxUserChange(event?) {
-    this.lstUser = [];
-    this.attendeesList = [];
-    event.data.dataSelected.forEach((people) => {
-      this.tempAtender = {
-        userId: people.dataSelected.UserID,
-        userName: people.dataSelected.UserName,
-        status: '1',
-        objectType: 'AD_Users',
-        roleType: '3',
-        optional: false,
-        modifiedOn: this.setStatusTime(new Date()),
-      };
-
-      this.lstUser.push(this.tempAtender);
-    });
-
-    if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
-      for (let i = 0; i < this.lstUser.length; ++i) {
-        for (let j = 0; j < this.lstUserOptional.length; ++j) {
-          if (this.lstUser[i].userId == this.lstUserOptional[j].userId) {
-            this.lstUserOptional.splice(j, 1);
-          }
-        }
-      }
-    }
-    this.UpdateAttendeesList();
-    this.changeDetectorRef.detectChanges();
-  }
-  valueCbxUserOptionalChange(event?) {
-    this.lstUserOptional = [];
-    this.attendeesList = [];
-    event.data.dataSelected.forEach((people) => {
-      this.tempAtender = {
-        userId: people.id,
-        userName: people.text,
-        status: '1',
-        objectType: 'AD_Users',
-        roleType: '3',
-        optional: true,
-        modifiedOn: this.setStatusTime(new Date()),
-      };
-
-      this.lstUserOptional.push(this.tempAtender);
-    });
-    for (let i = 0; i < this.lstUserOptional.length; ++i) {
-      for (let j = 0; j < this.lstUser.length; ++j) {
-        if (this.lstUserOptional[i].userId == this.lstUser[j].userId) {
-          this.lstUser.splice(j, 1);
-        }
-      }
-    }
-    this.UpdateAttendeesList();
-    this.changeDetectorRef.detectChanges();
-  }
   valueCbxStationeryChange(event?) {
     this.lstStationery = [];
-    event.data.dataSelected.forEach((item) => {
+    event.dataSelected.forEach((item) => {
       let tempStationery: {
         id: string;
         quantity: number;
@@ -554,16 +490,18 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         umid: string;
         objectID: string;
       } = {
-        id: item.id,
+        id: item.ResourceID,
         quantity: this.data.attendees,
-        text: item.text,
-        umid: item.dataSelected.UMID,
+        text: item.ResourceName,
+        umid: item.UMID,
         objectType: 'EP_Stationery',
-        objectID: item.dataSelected.RecID,
+        objectID: item.RecID,
       };
       this.lstStationery.push(tempStationery);
     });
-    this.changeDetectorRef.detectChanges();
+      
+    this.isPopupStationeryCbb = false;
+    this.changeDetectorRef.detectChanges();  
   }
 
   valueQuantityChange(event?) {
@@ -584,20 +522,25 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
     this.changeDetectorRef.detectChanges();
   }
-  valueAllDayChange(event) {
-    //đợi CalID để gán thời gian
-    if (event?.field == 'day') {
-      this.isFullDay = event.data;
-      if (this.isFullDay) {
-        this.startTime = '08:00';
-        this.endTime = '18:00';
-        this.data.hours = 24;
-      } else {
-        this.endTime = null;
-        this.startTime = null;
-      }
+  valueAllDayChange(event) {    
+    if (event?.data == true) { 
+      this.api.exec<any>(APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.CalendarWeekdays, 'GetDayShiftAsync', [this.calendarID]).subscribe(res=>{
+              
+        let today= new Date(this.data.bookingOn).getDay().toString();
+        res.forEach(day => {
+          if(day?.weekday==today && day?.shiftType=="1"){
+            let tmpstartTime= day?.startTime.split(":");
+            this.startTime=tmpstartTime[0]+":"+tmpstartTime[1];
+          }
+          else if(day?.weekday==today && day?.shiftType=="2"){
+            let tmpEndTime= day?.endTime.split(":");
+            this.endTime=tmpEndTime[0]+":"+tmpEndTime[1];
+          }          
+        });
+      });
+  
+      this.changeDetectorRef.detectChanges();
     }
-    this.changeDetectorRef.detectChanges();
   }
   valueCbxRoomChange(event?) {
     if (event?.data != null && event?.data != '') {
@@ -639,7 +582,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 420);
+    var dialog = this.callfc.openForm(template, '', );
     this.changeDetectorRef.detectChanges();
   }
 
@@ -661,9 +604,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.checkLoop = !this.checkLoop;
       if (!this.checkLoop) {
         this.notificationsService.notifyCode('EP003');
+        this.bookingOnValid=true;
         return;
       }
     }
+    else{
+      this.bookingOnValid=false;
+    }
+    
   }
   valueAttendeesChange(event: any) {
     if (event?.data) {
@@ -672,7 +620,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
   valueStartTimeChange(event: any) {
-    if (event?.field == 'startTime') {
+    if (event?.data) {
       this.startTime = event.data.fromDate;
       this.isFullDay = false;
       this.beginHour = parseInt(this.startTime.split(':')[0]);
@@ -709,7 +657,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
   valueEndTimeChange(event: any) {
-    if (event?.field == 'endTime') {
+    if (event?.data) {
       this.endTime = event.data.toDate;
       this.isFullDay = false;
       this.endHour = parseInt(this.endTime.split(':')[0]);
@@ -760,31 +708,111 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.attachments = event.data.length;
   }
   fileCount(event: any) {}
-  openPopupCbb() {
-    this.isPopupCbb = !this.isPopupCbb;
+  closePopUpCbb(){
+    this.isPopupStationeryCbb = false;
+    this.isPopupUserCbb = false;
+    this.isPopupOptionalUserCbb = false;
   }
-  checkOpenCbbPopup = 0;
+  openStationeryPopup() {
+    this.isPopupStationeryCbb = true;
+  }
+  openUserPopup() {
+    this.isPopupUserCbb = true;
+  }
+  openOptionalUserPopup() {
+    this.isPopupOptionalUserCbb = true;
+  }
 
-  getDataUserInCbb(event) {
-    this.checkOpenCbbPopup++;
+  UpdateAttendeesList() {
+    this.attendeesList = [];
+    if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
+      this.lstUser.forEach((item) => {
+        this.attendeesList.push(item);
+      });
+      this.lstUserOptional.forEach((item) => {
+        this.attendeesList.push(item);
+      });
+    } else if (this.lstUser.length > 0 && this.lstUserOptional.length == 0) {
+      this.lstUser.forEach((item) => {
+        this.attendeesList.push(item);
+      });
+    } else if (this.lstUserOptional.length > 0 && this.lstUser.length == 0) {
+      this.lstUserOptional.forEach((item) => {
+        this.attendeesList.push(item);
+      });
+    }
+    this.attendeesList.forEach((item) => {
+      if (item.userId == this.curUser.userId) {
+        this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
+      }
+    });
+    this.form.data.attendees = this.attendeesList.length + 1;
+    this.changeDetectorRef.detectChanges();
+  }
+  cbbDataOptionalUser:any;
+  valueCbxUserOptionalChange(event) {
+    this.cbbDataUser=event;  
     if (event?.dataSelected) {
-      if (this.checkOpenCbbPopup >= 2) {
-        if (this.dataUserCbb) {
-          let i = 0;
-          event?.dataSelected.forEach((dt) => {
-            this.dataUserCbb.forEach((x) => {
-              if (dt.UserID == x.userID) {
-                event?.dataSelected.splice(i, 1);
-              }
-            });
-            i++;
-          });
+      this.lstUserOptional = [];
+      this.attendeesList = [];
+      event.dataSelected.forEach((people) => {
+        this.tempAtender = {
+          userId: people.UserID,
+          userName: people.UserName,
+          status: '1',
+          objectType: 'AD_Users',
+          roleType: '3',
+          optional: true,
+          modifiedOn: this.setStatusTime(new Date()),
+        };
+
+        this.lstUserOptional.push(this.tempAtender);
+      });
+      for (let i = 0; i < this.lstUserOptional.length; ++i) {
+        for (let j = 0; j < this.lstUser.length; ++j) {
+          if (this.lstUserOptional[i].userId == this.lstUser[j].userId) {
+            this.lstUser.splice(j, 1);
+          }
         }
       }
-      event?.dataSelected.forEach((e: any) => {
-        this.dataUserCbb.push({ userID: e.UserID, userName: e.UserName });
+      this.UpdateAttendeesList();
+      this.detectorRef.detectChanges();
+      this.isPopupOptionalUserCbb = false;
+    }
+  }
+  
+  cbbDataUser:any;
+  valueCbxUserChange(event) {
+    this.cbbDataUser=event;  
+    if (event?.dataSelected) {
+      this.lstUser = [];
+      this.attendeesList = [];
+      event.dataSelected.forEach((people) => {
+        this.tempAtender = {
+          userId: people.UserID,
+          userName: people.UserName,
+          status: '1',
+          objectType: 'AD_Users',
+          roleType: '3',
+          optional: false,
+          modifiedOn: this.setStatusTime(new Date()),
+        };
+  
+        this.lstUser.push(this.tempAtender);
       });
-      this.changeDetectorRef.detectChanges();
+  
+      if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
+        for (let i = 0; i < this.lstUser.length; ++i) {
+          for (let j = 0; j < this.lstUserOptional.length; ++j) {
+            if (this.lstUser[i].userId == this.lstUserOptional[j].userId) {
+              this.lstUserOptional.splice(j, 1);
+            }
+          }
+        }
+      }
+      this.UpdateAttendeesList();
+      this.detectorRef.detectChanges();
+      this.isPopupUserCbb = false;
     }
   }
 }

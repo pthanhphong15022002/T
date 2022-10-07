@@ -331,7 +331,7 @@
         <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
         <span class="">{{ "(" + countResource + ")" }}</span>
     </div>
-    <div>
+    <div class="mb-1">
         <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
     </div>
     <div class="d-flex align-items-start user-card py-3" *ngFor="let item of listTaskResourceSearch">

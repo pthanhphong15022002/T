@@ -8,5 +8,5 @@ export abstract class AppConfig {
   urlThumbnail: string;
   urlFile: string;
   appName: string;
-
+  reportUrl: string;
 }

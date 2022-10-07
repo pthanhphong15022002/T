@@ -14,6 +14,7 @@ import { BackgroundImagePipe } from './pipes/background-image.pipe';
 import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
 import { AvatarCardPipe } from './pipes/AvatarCard.pipe';
 import { DisplayNameCardPipe } from './pipes/display-name-card.pipe';
+import { TimeAgoPipe } from '../../projects/codx-hr/src/lib/pipe/time-ago.pipe';
 // import { MessagePipe } from './pipes/message.pipe';
 
 @NgModule({
@@ -27,7 +28,7 @@ import { DisplayNameCardPipe } from './pipes/display-name-card.pipe';
     FunctionPipe,
     BackgroundImagePipe,
     AvatarCardPipe,
-    DisplayNameCardPipe  
+    DisplayNameCardPipe,
   ],
   imports: [CommonModule, FormsModule],
   providers: [
@@ -45,7 +46,7 @@ import { DisplayNameCardPipe } from './pipes/display-name-card.pipe';
     FunctionPipe,
     BackgroundImagePipe,
     AvatarCardPipe,
-    DisplayNameCardPipe
+    DisplayNameCardPipe,
   ],
 })
 export class CoreModule {}

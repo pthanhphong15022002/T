@@ -1,0 +1,42 @@
+<codx-form
+  #form
+  [headerText]="title"
+  [subHeaderText]="subHeader"
+  [body]="body"
+  [dialog]="dialog"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div class="d-flex justify-content-between">
+      <div class="row">
+        <div class="form-group col-6">
+          <codx-label name="lblStartTime" default="Bắt đầu"></codx-label>
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="startTime"
+            [crrValue]="dialogEditShift.value?.startTime"
+            format="t"
+            (valueChange)="valueStartTimeChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group col-6">
+          <codx-label name="lblEndTime" default="Kết thúc"></codx-label>
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="endTime"
+            [crrValue]="dialogEditShift.value?.endTime"
+            format="t"
+            (valueChange)="valueEndTimeChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+      <button class="btn btn-primary" (click)="onSaveForm()">Lưu</button>
+    </div>
+  </ng-template>
+</codx-form>

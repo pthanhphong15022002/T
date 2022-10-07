@@ -16,6 +16,7 @@ import {
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  NotificationsService,
   RequestOption,
   UIComponent,
 } from 'codx-core';
@@ -54,11 +55,12 @@ export class PopupAddCarsComponent extends UIComponent {
   lstDeviceCar = [];
   tmplstDevice = [];
   avatarID: any = null;
-  notificationsService: any;
+  returnData:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
     private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -165,21 +167,37 @@ export class PopupAddCarsComponent extends UIComponent {
     });
 
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
-        if (res) {
-          let objectID= res.save.recID !=null? res.save.recID:res.update.recID;
-          this.imageUpload
-            .updateFileDirectReload(objectID)
-            .subscribe((result) => {
-              if (result) {
-                //this.loadData.emit();
-              }
-            });
-          this.dialogRef.close();
+    .save((opt: any) => this.beforeSave(opt))
+    .subscribe((res) => {
+      if (res) {          
+        if (!res.save) {
+          this.returnData = res.update;
+        } else {
+          this.returnData = res.save;
         }
-        return;
-      });
+        if(this.imageUpload)
+        {
+          this.imageUpload
+          .updateFileDirectReload(this.returnData.recID)
+          .subscribe((result) => {
+            if (result) {
+              this.loadData.emit();
+              //xử lí nếu upload ảnh thất bại
+              //...
+            }
+          });
+        }          
+        if(this.isAdd){
+          (this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
+        }
+        else{
+          (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
+        }          
+        this.dialogRef.close();
+      }
+      this.notificationsService.notifyCode('E0011');
+      return;
+    });
   }
   changeCategory(event:any){
     if(event?.data && event?.data!='1'){

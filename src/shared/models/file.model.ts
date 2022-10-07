@@ -10,6 +10,7 @@ export class DialogAttachmentType {
     hideBtnSave: any;
     hideUploadBtn: any;
     hideFolder: any;
+    isDM:any;
 }
 
 export class DataReturn {
