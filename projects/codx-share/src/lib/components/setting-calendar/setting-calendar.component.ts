@@ -24,12 +24,12 @@ export class SettingCalendarComponent
   extends UIComponent
   implements AfterViewInit
 {
-  @Input() funcID: string = 'TMS021';
+  funcID: string;
   @ViewChild('schedule') schedule: CodxScheduleComponent;
   viewPreset: string = 'weekAndDay';
   calendarID: string;
   calendarName: string;
-  currentView: 'Month';
+  currentView = 'Month';
   scheduleObj;
   model = new DataRequest();
   dayWeek = [];
@@ -43,6 +43,7 @@ export class SettingCalendarComponent
   }
 
   onInit(): void {
+    this.funcID = this.router.snapshot.params['funcID'];
     this.getParams('TMParameters', 'CalendarID');
   }
 
@@ -86,7 +87,7 @@ export class SettingCalendarComponent
 
   changeCombobox(event) {
     event.data == ''
-      ? this.calendarID == 'STD'
+      ? (this.calendarID = 'STD')
       : (this.calendarID = event.data);
     this.detectorRef.detectChanges();
   }
@@ -96,7 +97,7 @@ export class SettingCalendarComponent
       PopupAddCalendarComponent,
       'Tạo lịch làm việc',
       500,
-      null,
+      360,
       '',
       [this.formModel, this.calendarID]
     );

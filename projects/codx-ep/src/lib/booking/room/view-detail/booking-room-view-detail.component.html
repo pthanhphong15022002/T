@@ -6,7 +6,7 @@
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="openFormFuncID($event)"
+  (clickMF)="clickMF($event,itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
 
@@ -141,7 +141,7 @@
                 class="icon-info me-2"
                 [ngClass]="{ 'text-primary': active === 1 }"
               ></i
-              ><span>Nội dung</span>
+              ><span><codx-label default="Nội dung" name="lblMemo"></codx-label></span>
             </div>
           </a>
           <ng-template ngbNavContent>
@@ -164,7 +164,7 @@
                 class="icon-layers me-2"
                 [ngClass]="{ 'text-primary': active === 2 }"
               ></i
-              ><span>Văn phòng phẩm</span>
+              ><span><codx-label default="Văn phòng phẩm" name="lblStationery"></codx-label></span>
             </div>
           </a>
           <ng-template ngbNavContent>

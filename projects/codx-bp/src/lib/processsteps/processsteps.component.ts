@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { PopAddProcessstepsComponent } from './pop-add-processsteps/pop-add-processsteps.component';
+import { PopAddPhaseComponent } from './popup-add-phase/pop-add-phase.component';
+import { PopAddProcessstepsComponent } from './popup-add-processsteps/pop-add-processsteps.component';
 
 @Component({
   selector: 'lib-processsteps',
@@ -21,6 +22,8 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   funcID: any;
   titleAction = '';
   itemSelected: any;
+  idForm ='A'
+
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -35,6 +38,50 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   onInit(): void {
     this.button = {
       id: 'btnAdd',
+      //setcung tam đoi thuong
+      // P;Phase;A;Activity;T;Task;E;Email;E;Calendar;Q;QuEstionarie;I;Interview;C;Check list
+      items: [
+        {
+          id: 'P',
+          icon: 'icon-list-checkbox',
+          text: 'Phase',
+        },
+        {
+          id: 'A',
+          icon: 'icon-list-checkbox',
+          text: 'Activity',
+        },
+        {
+          id: 'T',
+          icon: 'icon-add_task',
+          text: 'Tasks',
+        },
+        {
+          id: 'E',
+          icon: 'icon-email',
+          text: 'Email',
+        },
+        {
+          id: 'E',
+          icon: 'icon-calendar_today',
+          text: 'Calendar',
+        },
+        {
+          id: 'Q',
+          icon: 'icon-question_answer',
+          text: 'Questionarie',
+        },
+        {
+          id: 'I',
+          icon: 'icon-list-checkbox',
+          text: 'Interview',
+        },
+        {
+          id: 'C',
+          icon: 'icon-list-checkbox',
+          text: 'Check list',
+        },
+      ],
     };
   }
 
@@ -49,32 +96,55 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         },
       },
     ];
-    this.view.dataService.methodSave = 'AddProcessStepsAsync';
-    this.view.dataService.methodUpdate = 'UpdateProcessStepsAsync';
-    this.view.dataService.methodDelete = 'DeleteProcessStepsAsync';
+    this.view.dataService.methodSave = 'AddProcessStepAsync';
+    this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
+    this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
     this.dt.detectChanges();
   }
 
-  //#region CRUD
+
+
+  //#region CRUD bước công việc
   add() {
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
-      this.dialog = this.callfc.openSide(
-        PopAddProcessstepsComponent,
-        ['add', this.titleAction],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
+    if(this.idForm === 'A'){
+      this.view.dataService.addNew().subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfc.openSide(
+          PopAddProcessstepsComponent,
+          ['add', this.titleAction, this.idForm],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+        });
       });
-    });
+    }else if(this.idForm === 'P'){
+      this.view.dataService.addNew().subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfc.openSide(
+          PopAddPhaseComponent,
+          ['add', this.titleAction, this.idForm],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+        });
+      });
+    }
   }
 
   edit(data) {
@@ -90,7 +160,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopAddProcessstepsComponent,
-          ['edit', this.titleAction],
+          ['edit', this.titleAction, this.idForm],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -112,7 +182,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
         PopAddProcessstepsComponent,
-        ['copy', this.titleAction],
+        ['copy', this.titleAction, this.idForm],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -140,9 +210,9 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteProcessesAsync';
+    opt.methodName = 'DeleteProcessStepAsync';
 
-    opt.data = itemSelected.processNo;
+    opt.data = itemSelected.processID;
     return true;
   }
   //#endregion
@@ -151,8 +221,16 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   //#region event
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
+    this.idForm =evt.id
     switch (evt.id) {
       case 'btnAdd':
+      case 'A':
+        this.add();
+        break;
+      case 'P':
+        this.add();
+        break;
+      case 'Q':
         this.add();
         break;
     }

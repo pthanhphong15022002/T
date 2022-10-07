@@ -26,17 +26,16 @@
         <span>:</span>
         <span class="fw-bold ms-1">{{ data?.ranking| vll: "EP005" : 'text' | async}}</span>
       </div>
-      <div class="d-flex flex-row">
+      <div class="d-flex flex-column">
         <div>
           <codx-label [default]="grvRooms?.Area?.headerText" name="lblArea" class="text-gray-600"></codx-label>
           <span>:</span>
-          <span class="fw-bold ms-1">{{data?.area}} m2</span>
+          <span class="fw-bold ms-1">{{data?.area}}</span>
         </div>
-        <span class="text-gray-600">&ensp;|&ensp;</span>
         <div>
           <codx-label [default]="grvRooms?.Capacity?.headerText" name="lblCapacity" class="text-gray-600"></codx-label>
           <span>:</span>
-          <span class="fw-bold ms-1">{{data?.capacity}} người</span>
+          <span class="fw-bold ms-1">{{data?.capacity}}</span>
         </div>
       </div>
     </div>

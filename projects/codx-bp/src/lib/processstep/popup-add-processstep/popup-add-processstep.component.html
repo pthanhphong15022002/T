@@ -11,9 +11,10 @@
   <ng-template #body>
     <div class="card-form">
       <div class="form-group">
-        <codx-label name="StepType" [formModel]="form.formModel" default="Công đoạn"></codx-label>
+        <codx-label fiedName="ParentID" [formModel]="form.formModel" default="Công đoạn">
+        </codx-label>
         <codx-input
-        field="stepType"
+        field="parentID"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         [disabled]="readOnly"

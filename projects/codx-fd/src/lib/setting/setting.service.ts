@@ -1,3 +1,4 @@
+import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 
@@ -5,6 +6,9 @@ import { ApiHttpService } from 'codx-core';
   providedIn: 'root',
 })
 export class SettingService {
+
+  dataUpdate = new BehaviorSubject<any>(null);
+
   constructor(private api: ApiHttpService) {}
 
   getParameter() {
@@ -17,13 +21,13 @@ export class SettingService {
     );
   }
 
-  getParameterByPredicate(predicate, dataValue) {
+  getSettingByPredicate(predicate, dataValue) {
     return this.api.execSv<Array<any>>(
       'SYS',
       'ERM.Business.SYS',
-      'SettingValuesBusiness',
+      'SettingsBusiness',
       'GetByPredicate',
-      ['FormName=@0 && TransType=null', 'FDParameters']
+      [predicate, dataValue]
     );
   }
 }

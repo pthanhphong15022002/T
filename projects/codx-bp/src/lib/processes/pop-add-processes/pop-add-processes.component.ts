@@ -1,6 +1,6 @@
 import { BP_Processes } from './../../models/BP_Processes.model';
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef, CacheService } from 'codx-core';
+import { DialogData, DialogRef, CacheService, CallFuncService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -14,12 +14,19 @@ export class PopAddProcessesComponent implements OnInit {
 
   data: any;
   dialog: any;
-  title = ' quy trình mới';
+  title = '';
   titleAction = '';
   action: any;
   gridViewSetup: any;
+  listCombobox = {};
+  listName = '';
+  fieldValue = '';
+  funcID: any;
+  showLabelAttachment = false;
+
   constructor(
     private cache: CacheService,
+    private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -28,6 +35,7 @@ export class PopAddProcessesComponent implements OnInit {
     this.process = this.data;
     this.titleAction = dt.data[1];
     this.action = dt.data[0];
+    this.funcID = this.dialog.formModel.funcID;
 
     this.cache
       .gridViewSetup(
@@ -39,7 +47,7 @@ export class PopAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    this.title = this.titleAction + this.title;
+    this.title = this.titleAction;
   }
 
   ngOnInit(): void {}
@@ -107,6 +115,20 @@ export class PopAddProcessesComponent implements OnInit {
   }
 
   addFile(e) {}
+  getfileCount(e) {}
+  fileAdded(e) {}
+  openShare(share: any, isOpen) {
+    if (isOpen == true) {
+      // this.listCombobox = {
+      //   U: 'Users',
+      // };
+      this.listName = 'Users';
+      this.fieldValue = 'owner';
+      this.callfc.openForm(share, '', 420, window.innerHeight);
+    }
+  }
 
+  valueCbx(e, fieldValue) {
+  }
   //#endregion event
 }

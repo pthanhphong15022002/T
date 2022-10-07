@@ -31,7 +31,10 @@ import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-
   styleUrls: ['./pdf.component.scss'],
   providers: [NgxExtendedPdfViewerService],
 })
-export class PdfComponent extends UIComponent implements AfterViewInit , OnChanges {
+export class PdfComponent
+  extends UIComponent
+  implements AfterViewInit, OnChanges
+{
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -53,6 +56,8 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
   @Input() isApprover;
   @Input() stepNo = -1;
   @Input() inputUrl = null;
+  @Input() transRecID = null;
+
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -133,16 +138,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
   curAnnotFontStyle;
 
   //size
-  lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23, 31, 33, 43];
-  curAnnotFontSize = 31;
+  lstAnnotFontSize = [];
+  curAnnotFontSize;
 
   //date
-  lstAnnotDateFormat = [
-    'M/d/yy, h:mm a',
-    'M/d/yy',
-    'EEEE, MMMM d, y, h:mm:ss a zzzz',
-  ];
-  curAnnotDateFormat = 'M/d/yy, h:mm a';
+  lstAnnotDateFormat = [];
+  curAnnotDateFormat;
 
   //style
   isBold = false;
@@ -177,16 +178,18 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
   hideActions: boolean = false;
 
   onInit() {
-    console.log('editable', this.isEditable);
+    console.log('input url', this.inputUrl);
 
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
+        console.log('allow', res);
+
         this.signPerRow = res.SignPerRow;
         this.align = res.Align;
         this.direction = res.Direction;
         this.areaControl = res.AreaControl == '1';
         this.isAwait = res.Await == '1';
-        this.allowEdit = res.AllowEditAreas ? res.AllowEditAreas : true;
+        this.allowEdit = res.AllowEditAreas == '0' ? false : true;
 
         this.detectorRef.detectChanges();
       });
@@ -225,7 +228,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;
           }
-          this.detectorRef.detectChanges();
+          //this.detectorRef.detectChanges();
         });
 
       this.cache.valueList('ES015').subscribe((res) => {
@@ -241,11 +244,18 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
       });
 
       this.cache.valueList('ES025').subscribe((res) => {
-        console.log('size', res);
         res?.datas?.forEach((size) => {
-          this.lstAnnotFontSize.push(size.value.replace('px', ''));
+          this.lstAnnotFontSize.push(Number(size.value.replace('px', '')));
         });
         this.curAnnotFontSize = this.lstAnnotFontSize[0];
+        this.detectorRef.detectChanges();
+      });
+
+      this.cache.valueList('L0052').subscribe((res) => {
+        res?.datas?.forEach((dateType) => {
+          this.lstAnnotDateFormat.push(dateType.value);
+        });
+        this.curAnnotDateFormat = this.lstAnnotDateFormat[0];
         this.detectorRef.detectChanges();
       });
 
@@ -270,18 +280,24 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
             ? false
             : true,
       });
-      this.detectorRef.detectChanges();
+      //this.detectorRef.detectChanges();
     } else {
       this.curFileUrl = this.inputUrl;
       this.detectorRef.detectChanges();
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if ((changes['inputUrl'] && (changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue))) {
-      this.curFileUrl = changes['inputUrl']?.currentValue ;
-   
+    if (
+      changes['inputUrl'] &&
+      changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue
+    ) {
+      console.log('changes', changes);
+
+      this.curFileUrl = changes['inputUrl']?.currentValue;
+      this.detectorRef.detectChanges();
     }
   }
+
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
     if (this.isEditable) {
@@ -414,99 +430,125 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
 
   //sign pdf
   signPDF(mode, comment): any {
-    return new Promise<any>((resolve, rejects) => {
-      let lstAddBefore = [];
-      let lstPages = [];
-      this.tr.remove();
-      this.lstLayer.forEach((layer) => {
-        let page = Number(layer.attrs.id.replace('layer', ''));
-        if (page != this.pageMax) {
-          let areaInfo = [];
-          layer.children.forEach((child) => {
-            let name: tmpAreaName = JSON.parse(child.name());
-            if (name.LabelType != '8') {
-              areaInfo.push({
-                page: page,
-                position: {
-                  x: (child.x() / this.xScale) * 0.75,
-                  y: (child.y() / this.yScale) * 0.75,
-                  w: (child.width() / this.xScale) * 0.75,
-                  h: (child.height() / this.yScale) * 0.75,
-                },
-                url: child.toDataURL().replace('data:image/png;base64,', ''),
-              });
+    if (this.transRecID) {
+      return new Promise<any>((resolve, rejects) => {
+        let lstAddBefore = [];
+        let lstPages = [];
+        this.tr.remove();
+        this.lstLayer.forEach((layer) => {
+          let page = Number(layer.attrs.id.replace('layer', ''));
+          if (page != this.pageMax) {
+            let areaInfo = [];
+            layer.children.forEach((child) => {
+              let name: tmpAreaName = JSON.parse(child.name());
+              if (name.LabelType != '8') {
+                areaInfo.push({
+                  page: page,
+                  position: {
+                    x: (child.x() / this.xScale) * 0.75,
+                    y: (child.y() / this.yScale) * 0.75,
+                    w: (child.width() / this.xScale) * 0.75,
+                    h: (child.height() / this.yScale) * 0.75,
+                  },
+                  url: child.toDataURL().replace('data:image/png;base64,', ''),
+                });
+              }
+            });
+            if (areaInfo.length != 0) {
+              lstPages.push(page);
+              lstAddBefore.push(areaInfo);
             }
-          });
-          if (areaInfo.length != 0) {
-            lstPages.push(page);
-            lstAddBefore.push(areaInfo);
+          }
+        });
+
+        let layer = this.lstLayer.get(this.pageMax);
+        let top = this.lstAreas
+          ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
+          ?.reduce((prev, curr) =>
+            prev.location.top < curr.location.top ? prev : curr
+          );
+
+        let left = this.lstAreas
+          ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
+          ?.reduce((prev, curr) =>
+            prev.location.left < curr.location.left ? prev : curr
+          );
+        let bot = this.lstAreas
+          ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
+          ?.reduce((prev, curr) =>
+            prev.location.top > curr.location.top ? prev : curr
+          );
+
+        let right = this.lstAreas
+          ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
+          ?.reduce((prev, curr) =>
+            prev.location.left > curr.location.left ? prev : curr
+          );
+
+        let y = top?.location?.top * this.yScale;
+        let x = left?.location?.left * this.xScale;
+        let height = (+bot.location.top + 100) * this.yScale - y + 10;
+        let width = (+right.location.left + 200) * this.xScale - x + 10;
+
+        let imgUrl = layer.toDataURL({
+          quality: 1,
+          x: x,
+          y: y,
+
+          width: width,
+          height: height,
+        });
+
+        let approveStt = '5';
+
+        switch (mode) {
+          case '1': {
+            approveStt = '5';
+            break;
+          }
+          case '2': {
+            approveStt = '4';
+            break;
+          }
+          case '3': {
+            approveStt = '2';
+            break;
           }
         }
+        this.esService
+          .approveAsync(this.transRecID, approveStt, '', '')
+          .subscribe((returnModel: any) => {
+            console.log('returnModel', returnModel);
+
+            if (!returnModel?.msgCodeError) {
+              this.esService
+                .updateSignFileTrans(
+                  lstPages,
+                  lstAddBefore,
+                  imgUrl.replace('data:image/png;base64,', ''),
+                  x / this.xScale,
+                  y / this.yScale,
+                  width / this.xScale,
+                  height / this.yScale,
+                  this.pageMax,
+                  this.stepNo,
+                  this.isAwait,
+                  this.user.userID,
+                  this.recID,
+                  mode,
+                  comment
+                )
+                .subscribe((status) => {
+                  resolve(status);
+                });
+            }
+          });
       });
-
-      let layer = this.lstLayer.get(this.pageMax);
-      let top = this.lstAreas
-        ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-        ?.reduce((prev, curr) =>
-          prev.location.top < curr.location.top ? prev : curr
-        );
-
-      let left = this.lstAreas
-        ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-        ?.reduce((prev, curr) =>
-          prev.location.left < curr.location.left ? prev : curr
-        );
-      let bot = this.lstAreas
-        ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-        ?.reduce((prev, curr) =>
-          prev.location.top > curr.location.top ? prev : curr
-        );
-
-      let right = this.lstAreas
-        ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-        ?.reduce((prev, curr) =>
-          prev.location.left > curr.location.left ? prev : curr
-        );
-
-      let y = top?.location?.top * this.yScale;
-      let x = left?.location?.left * this.xScale;
-      let height = (+bot.location.top + 100) * this.yScale - y + 10;
-      let width = (+right.location.left + 200) * this.xScale - x + 10;
-
-      let imgUrl = layer.toDataURL({
-        quality: 1,
-        x: x,
-        y: y,
-
-        width: width,
-        height: height,
-      });
-      this.esService
-        .updateSignFileTrans(
-          lstPages,
-          lstAddBefore,
-          imgUrl.replace('data:image/png;base64,', ''),
-          x / this.xScale,
-          y / this.yScale,
-          width / this.xScale,
-          height / this.yScale,
-          this.pageMax,
-          this.stepNo,
-          this.isAwait,
-          this.user.userID,
-          this.recID,
-          mode,
-          comment
-        )
-        .subscribe((status) => {
-          resolve(status);
-        });
-    });
+    }
   }
 
   //loaded pdf
   loadedPdf(e: any) {
-    debugger;
     this.pageMax = e.pagesCount;
     this.curPage = this.pageMax;
     let ngxService: NgxExtendedPdfViewerService =
@@ -556,7 +598,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
       labelType: labelType,
       labelValue: url,
       isLock: false,
-      allowEditAreas: this.allowEdit,
+      allowEditAreas: this.allowEdit == '0' ? false : true,
       signDate: false,
       dateFormat: '1',
       location: {
@@ -620,7 +662,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
-    debugger;
     if (this.isEditable) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
@@ -732,6 +773,22 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
                     break;
                   }
                   case '8': {
+                    if (!area.isLock) {
+                      this.addArea(
+                        qr,
+                        'img',
+                        area.labelType,
+                        this.isEditable
+                          ? !this.isEditable
+                          : area.allowEditAreas
+                          ? area.allowEditAreas
+                          : !area.isLock,
+                        false,
+                        area.signer,
+                        area.stepNo,
+                        area
+                      );
+                    }
                     break;
                   }
                   case '3':
@@ -772,31 +829,50 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
                 if (this.needAddKonva) {
                   let attrs = this.needAddKonva.attrs;
                   let name: tmpAreaName = JSON.parse(attrs.name);
-                  this.holding = 0;
-                  switch (name.Type) {
-                    case 'text': {
-                      this.saveNewToDB(
-                        attrs.text,
-                        name.Type,
-                        name.LabelType,
-                        name.Signer,
-                        this.stepNo,
-                        this.needAddKonva
-                      );
 
-                      break;
-                    }
-                    case 'img': {
-                      this.saveNewToDB(
-                        '',
-                        name.Type,
-                        name.LabelType,
-                        name.Signer,
-                        this.stepNo,
-                        this.needAddKonva
+                  let signed = stage?.children[0]?.children.find((child) => {
+                    if (child != this.tr) {
+                      let childName: tmpAreaName = JSON.parse(
+                        child?.attrs?.name
                       );
-                      break;
+                      return (
+                        childName.LabelType == name.LabelType &&
+                        ['1', '2', '8'].includes(childName.LabelType) &&
+                        childName.Signer == name.Signer
+                      );
                     }
+                    return null;
+                  });
+                  this.holding = 0;
+                  if (!signed) {
+                    switch (name.Type) {
+                      case 'text': {
+                        this.saveNewToDB(
+                          attrs.text,
+                          name.Type,
+                          name.LabelType,
+                          name.Signer,
+                          this.stepNo,
+                          this.needAddKonva
+                        );
+
+                        break;
+                      }
+                      case 'img': {
+                        this.saveNewToDB(
+                          '',
+                          name.Type,
+                          name.LabelType,
+                          name.Signer,
+                          this.stepNo,
+                          this.needAddKonva
+                        );
+                        break;
+                      }
+                    }
+                  } else {
+                    this.needAddKonva.remove();
+                    this.tr.remove();
                   }
                 }
                 this.needAddKonva = null;
@@ -814,8 +890,19 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
               this.tr.nodes([]);
             } else {
               this.curSelectedArea = click.target;
-              this.tr.nodes([click.target]);
+
+              this.tr.resizeEnabled(
+                this.isEditable == false
+                  ? false
+                  : this.curSelectedArea.draggable()
+              );
+              this.tr.draggable(
+                this.isEditable == false
+                  ? false
+                  : this.curSelectedArea.draggable()
+              );
               this.tr.forceUpdate();
+              this.tr.nodes([this.curSelectedArea]);
               layerChildren.add(this.tr);
             }
           });
@@ -974,7 +1061,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
       case 'img': {
         let img = document.createElement('img') as HTMLImageElement;
         img.setAttribute('crossOrigin', 'anonymous');
-
+        img.referrerPolicy = 'noreferrer';
         img.src = url;
         img.onload = () => {
           let imgW = 200;
@@ -1031,6 +1118,13 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
 
       this.esService.getListCAByBytes(this.curFileUrl).subscribe((res) => {
         this.lstCA = res;
+        this.lstCA?.forEach((ca) => {
+          this.lstCACollapseState.push({
+            open: false,
+            verifiedFailed: false,
+            detail: false,
+          });
+        });
         this.gotLstCA = true;
         this.detectorRef.detectChanges();
       });
@@ -1105,7 +1199,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
     this.renderQRAllPage = !this.renderQRAllPage;
   }
   changeAnnotationItem(type: number) {
-    if (this.isEditable && this.signerInfo) {
+    if (!this.signerInfo) {
+    }
+    if (this.isEditable) {
       this.holding = type;
       switch (type) {
         case 1:
@@ -1467,7 +1563,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
   }
 
   //test func
-  show(e: any) {}
+  show(e: any) {
+    console.log('data', this.transRecID);
+  }
 }
 
 //create new guid
