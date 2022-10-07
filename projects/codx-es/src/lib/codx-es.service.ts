@@ -15,7 +15,7 @@ import {
 import { resolve } from 'path';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { tmpBG_TrackLogs } from './codx-es.model';
+import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
 
 export class GridModels {
   pageSize: number;
@@ -112,11 +112,8 @@ export class CodxEsService {
     private http: HttpClient
   ) {}
 
-  notifyInvalid(
-    formGroup: FormGroup,
-    formModel: FormModel,
-    gridViewSetup: any = null
-  ) {
+  notifyInvalid(formGroup: FormGroup, formModel: FormModel) {
+    let gridViewSetup;
     const invalid = [];
     const controls = formGroup.controls;
     for (const name in controls) {
@@ -127,34 +124,28 @@ export class CodxEsService {
     }
     let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
 
-    if (gridViewSetup == null) {
-      this.cache
-        .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .subscribe((res) => {
-          if (res) {
-            gridViewSetup = res;
-            if (fieldName == 'Email' && formGroup.value.email != null) {
-              this.notificationsService.notifyCode(
-                'E0003',
-                0,
-                '"' + gridViewSetup[fieldName].headerText + '"'
-              );
-            } else {
-              this.notificationsService.notifyCode(
-                'SYS028',
-                0,
-                '"' + gridViewSetup[fieldName].headerText + '"'
-              );
-            }
+    this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          gridViewSetup = res;
+          let headerText = gridViewSetup[fieldName]?.headerText ?? fieldName;
+
+          if (fieldName == 'Email' && formGroup.value.email != null) {
+            this.notificationsService.notifyCode(
+              'E0003',
+              0,
+              '"' + headerText + '"'
+            );
+          } else {
+            this.notificationsService.notifyCode(
+              'SYS028',
+              0,
+              '"' + headerText + '"'
+            );
           }
-        });
-    } else {
-      this.notificationsService.notifyCode(
-        'SYS028',
-        0,
-        '"' + gridViewSetup[fieldName].headerText + '"'
-      );
-    }
+        }
+      });
   }
 
   //#region Get from FunctionList
@@ -260,9 +251,9 @@ export class CodxEsService {
               }
 
               let modelValidator = [];
-              // if (element.isRequire) {
-              //   modelValidator.push(Validators.required);
-              // }
+              if (element.isRequire) {
+                modelValidator.push(Validators.required);
+              }
               if (element.fieldName == 'email') {
                 modelValidator.push(Validators.email);
               }
@@ -422,15 +413,9 @@ export class CodxEsService {
   //#endregion
 
   //#region AD_AutoNumbers
-  public setupAutoNumber = new BehaviorSubject<any>(null);
-  isSetupAutoNumber = this.setupAutoNumber.asObservable();
 
   public setupChange = new BehaviorSubject<any>(null);
   isSetupChange = this.setupChange.asObservable();
-
-  getAutoNoCode(autoNo) {
-    this.autoNoCode.next(autoNo);
-  }
 
   getAutoNumber(autoNoCode): Observable<any> {
     return this.api.execSv(
@@ -582,6 +567,16 @@ export class CodxEsService {
       [categoryID, '', null]
     );
   }
+
+  getCategoryByCateID(categoryID: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDAsync',
+      [categoryID]
+    );
+  }
   //#endregion
 
   //#region ES_ApprovalSteps
@@ -641,20 +636,42 @@ export class CodxEsService {
     }
   }
 
-  editApprovalStep(): Observable<any> {
-    let lstDataEdit = null;
-    this.approvalStep.subscribe((res) => {
-      lstDataEdit = res;
-    });
+  editApprovalStep(lstEdit: any = null): Observable<any> {
+    let lstDataEdit = lstEdit;
+
     if (lstDataEdit == null) {
-      return EMPTY;
-    } else {
+      this.approvalStep.subscribe((res) => {
+        lstDataEdit = res;
+      });
+    }
+    if (lstDataEdit == null) return EMPTY;
+    else {
       return this.api.execSv(
         'ES',
         'ES',
         'ApprovalStepsBusiness',
         'UpdateApprovalStepsAsync',
         [lstDataEdit]
+      );
+    }
+  }
+
+  deleteApprovalStep(lstDelete: any = null): Observable<any> {
+    let lstData = lstDelete;
+    if (lstData == null) {
+      this.lstDelete.subscribe((res) => {
+        lstData = res;
+      });
+    }
+    if (lstData == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'DeleteListApprovalStepAsync',
+        [lstData]
       );
     }
   }
@@ -673,24 +690,6 @@ export class CodxEsService {
     );
   }
 
-  deleteApprovalStep(): Observable<any> {
-    let lstData = null;
-    this.lstDelete.subscribe((res) => {
-      lstData = res;
-    });
-    if (lstData == null) {
-      return EMPTY;
-    } else {
-      return this.api.execSv(
-        'ES',
-        'ES',
-        'ApprovalStepsBusiness',
-        'DeleteListApprovalStepAsync',
-        [lstData]
-      );
-    }
-  }
-
   getNewDefaultEmail() {
     return this.api.execSv(
       'SYS',
@@ -698,6 +697,18 @@ export class CodxEsService {
       'EmailTemplatesBusiness',
       'GetEmailDefaultAsync',
       []
+    );
+  }
+
+  getDetailApprover(approver: Approvers): Observable<Approvers[]> {
+    let lstAprrover = [approver];
+
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'HRBusiness',
+      'GetInfoApproverAsync',
+      [lstAprrover]
     );
   }
 
@@ -1078,6 +1089,17 @@ export class CodxEsService {
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateApprovalTransStatusAsync',
+      data
+    );
+  }
+
+  approveAsync(transID, status, reasonID, comment) {
+    let data = [transID, status, reasonID, comment];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ApproveAsync',
       data
     );
   }

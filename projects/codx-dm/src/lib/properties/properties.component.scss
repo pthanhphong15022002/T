@@ -320,3 +320,8 @@ div.offcanvas {
 .history-item.line-hor:last-child:before {
     display: none;
 }
+
+.pic-file.h-140px {
+    height: 140px;
+    overflow: hidden;
+}

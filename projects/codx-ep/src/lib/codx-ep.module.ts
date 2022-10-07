@@ -44,6 +44,7 @@ import { ApprovalCarViewDetailComponent } from './approval/car/approval-car-view
 import { BookingRoomViewDetailComponent } from './booking/room/view-detail/booking-room-view-detail.component';
 import { BookingCarViewDetailComponent } from './booking/car/view-detail/booking-car-view-detail.component';
 import { ApprovalStationeryViewDetailComponent } from './approval/stationery/approval-stationery-view-detail/approval-stationery-view-detail.component';
+import { HistoryCardsComponent } from './settings/historyCards/historyCards.component';
 
 const routes: Route[] = [
   {
@@ -116,6 +117,10 @@ const routes: Route[] = [
       {
         path: 'epcards/:funcID',
         component: EpCardsComponent,
+      },
+      {
+        path: 'historycards/:funcID',
+        component: HistoryCardsComponent,
       },
     ],
   },
