@@ -68,15 +68,15 @@ export class PopupSendEmailComponent implements OnInit {
 
   }
 
-  openFormUploadFile(){
-
-  }
-
   sendMail(){
 
   }
 
   click(){
-    
+
+  }
+
+  addFile(e){
+
   }
 }

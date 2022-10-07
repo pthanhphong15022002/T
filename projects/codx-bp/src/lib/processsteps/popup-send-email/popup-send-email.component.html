@@ -10,6 +10,112 @@
 
 <ng-template #body>
   <div class="request-to">
+    <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
+        <div class="d-flex align-items-top flex-grow-1">
+          <div class="w-50px fw-bold">
+            <codx-label
+              default="Đến:"
+              name="lblTitleTo"
+              formName="EmailTemplates"
+              gridViewName="grvEmailTemplates"
+            >
+            </codx-label>
+          </div>
+          <div class="w-100 me-2">
+            <div class="float-left align-items-center">
+              <ng-container *ngFor="let item of lstTo">
+                <div
+                  class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                  *ngIf="item.objectType == 'U'"
+                >
+                  <div class="me-2">
+                    <codx-img
+                      [objectId]="item.objetID"
+                      objectType="AD_Users"
+                      width="20"
+                    ></codx-img>
+                  </div>
+                  <div class="text-gray-600 flex-grow-1 me-2">
+                    {{ item.text }}
+                  </div>
+                  <a
+                    class="text-hover-danger d-flex align-items-center"
+                    (click)="deleteUser(item, 2)"
+                    ><span class="icon-close icon-16"></span
+                  ></a>
+                </div>
+                <div
+                  class="d-flex justify-content-between user-mini-nav-custom align-items-center"
+                  *ngIf="item.objectType != 'U'"
+                >
+                  <div class="me-3 user-mini-icon w-20px h-20px">
+                    <img
+                      [src]="
+                        './assets/themes/sys/default/img/' + item.icon ??
+                        'share_default.svg'
+                      "
+                    />
+                  </div>
+                  <div class="text-gray-600 flex-grow-1 me-2">
+                    {{
+                      item.text != null
+                        ? item.text
+                        : (item.objetID | vll: vllShare:"text" | async)
+                    }}
+                  </div>
+                  <a
+                    class="text-hover-danger d-flex align-items-center"
+                    (click)="deleteUser(item, 2)"
+                    ><span class="icon-close icon-16"></span
+                  ></a>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-end">
+          <span
+            class="btn btn-sm fw-bold text-hover-primary"
+            *ngIf="
+              !showCC &&
+              !showBCC &&
+              !(showBCC || lstBcc.length > 0) &&
+              !(showCC || lstCc.length > 0)
+            "
+            (click)="changeSendType('cc')"
+            >Cc</span
+          >
+          <span
+            class="btn btn-sm fw-bold text-hover-primary"
+            *ngIf="
+              !showCC &&
+              !showBCC &&
+              !(showCC || lstCc.length > 0) &&
+              !(showBCC || lstBcc.length > 0)
+            " 
+            (click)="changeSendType('bcc')"
+            >
+            <codx-label name="lblBcc" default='Bcc'></codx-label>
+            </span>
+  
+            <codx-input
+            type="Share"
+            [refValue]="vllShare"
+            field="AssignTo"
+            [dataShared]="[]"
+            multiple="true"
+            [showInput]="false"
+            (valueChange)="eventApply($event)"
+          >
+          </codx-input>
+          <!-- <span class="btn btn-icon btn-sm btn-light">
+            <i
+              class="icon-person_add_alt_1 icon-18"
+              (click)="testdata(controlShare2)"
+            ></i
+          ></span> -->
+        </div>
+      </div>
     <div id="from">
       <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
         <div class="d-flex align-items-top flex-grow-1">
@@ -91,266 +197,6 @@
           ></span> -->
       </div>
     </div>
-    <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
-      <div class="d-flex align-items-top flex-grow-1">
-        <div class="w-50px fw-bold">
-          <codx-label
-            default="Đến:"
-            name="lblTitleTo"
-            formName="EmailTemplates"
-            gridViewName="grvEmailTemplates"
-          >
-          </codx-label>
-        </div>
-        <div class="w-100 me-2">
-          <div class="float-left align-items-center">
-            <ng-container *ngFor="let item of lstTo">
-              <div
-                class="d-flex justify-content-between user-mini-nav-custom align-items-center"
-                *ngIf="item.objectType == 'U'"
-              >
-                <div class="me-2">
-                  <codx-img
-                    [objectId]="item.objetID"
-                    objectType="AD_Users"
-                    width="20"
-                  ></codx-img>
-                </div>
-                <div class="text-gray-600 flex-grow-1 me-2">
-                  {{ item.text }}
-                </div>
-                <a
-                  class="text-hover-danger d-flex align-items-center"
-                  (click)="deleteUser(item, 2)"
-                  ><span class="icon-close icon-16"></span
-                ></a>
-              </div>
-              <div
-                class="d-flex justify-content-between user-mini-nav-custom align-items-center"
-                *ngIf="item.objectType != 'U'"
-              >
-                <div class="me-3 user-mini-icon w-20px h-20px">
-                  <img
-                    [src]="
-                      './assets/themes/sys/default/img/' + item.icon ??
-                      'share_default.svg'
-                    "
-                  />
-                </div>
-                <div class="text-gray-600 flex-grow-1 me-2">
-                  {{
-                    item.text != null
-                      ? item.text
-                      : (item.objetID | vll: vllShare:"text" | async)
-                  }}
-                </div>
-                <a
-                  class="text-hover-danger d-flex align-items-center"
-                  (click)="deleteUser(item, 2)"
-                  ><span class="icon-close icon-16"></span
-                ></a>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex align-items-end">
-        <span
-          class="btn btn-sm fw-bold text-hover-primary"
-          *ngIf="
-            !showCC &&
-            !showBCC &&
-            !(showBCC || lstBcc.length > 0) &&
-            !(showCC || lstCc.length > 0)
-          "
-          (click)="changeSendType('cc')"
-          >Cc</span
-        >
-        <span
-          class="btn btn-sm fw-bold text-hover-primary"
-          *ngIf="
-            !showCC &&
-            !showBCC &&
-            !(showCC || lstCc.length > 0) &&
-            !(showBCC || lstBcc.length > 0)
-          " 
-          (click)="changeSendType('bcc')"
-          >
-          <codx-label name="lblBcc" default='Bcc'></codx-label>
-          </span>
-
-          <codx-input
-          type="Share"
-          [refValue]="vllShare"
-          field="AssignTo"
-          [dataShared]="[]"
-          multiple="true"
-          [showInput]="false"
-          (valueChange)="eventApply($event)"
-        >
-        </codx-input>
-        <!-- <span class="btn btn-icon btn-sm btn-light">
-          <i
-            class="icon-person_add_alt_1 icon-18"
-            (click)="testdata(controlShare2)"
-          ></i
-        ></span> -->
-      </div>
-    </div>
-    <div id="box_cc" *ngIf="showCC || lstCc.length > 0">
-      <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
-        <div class="d-flex align-items-top flex-grow-1">
-          <div class="w-50px fw-bold">Cc:</div>
-        </div>
-        <div class="w-100 me-2">
-          <div class="float-left align-items-center">
-            <ng-container *ngFor="let item of lstCc">
-              <div
-                class="d-flex justify-content-between user-mini-nav-custom align-items-center"
-                *ngIf="item.objectType == 'U'"
-              >
-                <div class="me-2">
-                  <codx-img
-                    [objectId]="item.objetID"
-                    objectType="AD_Users"
-                    width="20"
-                  ></codx-img>
-                </div>
-                <div class="text-gray-600 flex-grow-1 me-2">
-                  {{ item.text }}
-                </div>
-                <a
-                  class="text-hover-danger d-flex align-items-center"
-                  (click)="deleteUser(item, 3)"
-                  ><span class="icon-close icon-16"></span
-                ></a>
-              </div>
-              <div
-                class="d-flex justify-content-between user-mini-nav-custom align-items-center"
-                *ngIf="item.objectType != 'U'"
-              >
-                <div class="me-2 user-mini-icon w-20px h-20px">
-                  <img
-                    class="w-20px h-20px"
-                    [src]="
-                      './assets/themes/sys/default/img/' + item.icon ??
-                      'share_default.svg'
-                    "
-                  />
-                </div>
-                <div class="text-gray-600 flex-grow-1 me-2">
-                  {{
-                    item.text ?? (item.objetID | vll: vllShare:"text" | async)
-                  }}
-                </div>
-                <a
-                  class="text-hover-danger d-flex align-items-center"
-                  (click)="deleteUser(item, 3)"
-                  ><span class="icon-close icon-16"></span
-                ></a>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-        <div class="d-flex align-items-end">
-          <span
-            class="btn btn-sm fw-bold"
-            *ngIf="!showBCC && !(showBCC || lstBcc.length > 0)"
-            (click)="changeSendType('bcc')"
-            >Bcc</span
-          >
-         
-          <codx-input
-          type="Share"
-          [refValue]="vllShare"
-          field="AssignTo"
-          [dataShared]="[]"
-          multiple="true"
-          [showInput]="false"
-          (valueChange)="eventApply($event)"
-        >
-        </codx-input>
-
-        </div>
-      </div>
-    </div>
-    <div id="box_bcc" *ngIf="showBCC || lstBcc.length > 0">
-      <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
-        <div class="d-flex align-items-top flex-grow-1">
-          <div class="w-50px fw-bold">Bcc:</div>
-        </div>
-        <div class="w-100 me-2">
-          <div class="float-left align-items-center">
-            <ng-container *ngFor="let item of lstBcc">
-              <div
-                class="d-flex justify-content-between user-mini-nav-custom align-items-center"
-                *ngIf="item.objectType == 'U'"
-              >
-                <div class="me-2">
-                  <codx-img
-                    [objectId]="item.objetID"
-                    objectType="AD_Users"
-                    width="20"
-                  ></codx-img>
-                </div>
-                <div class="text-gray-600 flex-grow-1 me-2">
-                  {{ item.text }}
-                </div>
-                <a
-                  class="text-hover-danger d-flex align-items-center"
-                  (click)="deleteUser(item, 4)"
-                  ><span class="icon-close icon-16"></span
-                ></a>
-              </div>
-              <div
-                class="d-flex justify-content-between user-mini-nav-custom align-items-center"
-                *ngIf="item.objectType != 'U'"
-              >
-                <div class="me-2 user-mini-icon w-20px h-20px">
-                  <img
-                    class="svg-icon w-20px h-20px"
-                    [src]="
-                      './assets/themes/sys/default/img/' +
-                      (item.icon ?? 'share_default.svg')
-                    "
-                  />
-                </div>
-                <div class="text-gray-600 flex-grow-1 me-2">
-                  {{
-                    item.text != null
-                      ? item.text
-                      : (item.objetID | vll: vllShare:"text" | async)
-                  }}
-                </div>
-                <a
-                  class="text-hover-danger d-flex align-items-center"
-                  (click)="deleteUser(item, 4)"
-                  ><span class="icon-close icon-16"></span
-                ></a>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-        <div class="d-flex align-items-end">
-          <span
-            class="btn btn-sm fw-bold"
-            *ngIf="!showCC && !(showCC || lstCc.length > 0)"
-            (click)="changeSendType('cc')"
-            >Cc</span
-          >
-            <codx-input
-          type="Share"
-          [refValue]="vllShare"
-          field="AssignTo"
-          [dataShared]="[]"
-          multiple="true"
-          [showInput]="false"
-          (valueChange)="eventApply($event)"
-        >
-        </codx-input>
-        </div>
-      </div>
-    </div>
   </div>
   <div class="d-flex justify-content-between border-bottom mt-4">
     <div class="w-100">
@@ -363,6 +209,8 @@
       >
       </codx-input>
     </div>
+
+    <!-- set cứng chờ control -->
     <div ngbDropdown class="dropdown">
       <button
         ngbDropdownToggle
@@ -413,20 +261,6 @@
   </div>
   <div class="d-flex justify-content-between align-items-end mt-4">
     <div>
-      <div
-        class="d-flex align-items-center cursor-pointer mb-2"
-        (click)="openFormUploadFile()"
-      >
-        <span class="icon-attach_email icon-18 me-2 text-primary"></span>
-        <span class="text-primary fw-bold">
-          <codx-label
-            default="Đính kèm file"
-            name="lblAttachment"
-            formName="EmailTemplates"
-            gridViewName="grvEmailTemplates"
-          ></codx-label>
-        </span>
-      </div>
       <div>
         <codx-attachment
           #attachment
@@ -435,7 +269,7 @@
           hideFolder="1"
           hideUploadBtn="1"
           hideDes="1"
-          [functionID]="'EST04'"
+          [functionID]="dialog.formModel.funcID"
           (fileAdded)="fileAdded($event)"
           (fileCount)="getfileCount($event)"
           [objectId]="objectID"
@@ -485,14 +319,26 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <div class="d-flex align-items-center">
-     
-    </div>
-    <div class="d-flex justify-content-end">
-      <a class="btn btn-primary fw-bold" (click)="sendMail()">
-        <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
-        </codx-label>
-      </a>
-    </div>
+    <button
+        type="button"
+        class="btn btn-light-primary me-3"
+        (click)="addFile($event)"
+      >
+        <i class="icon-cloud_upload fs-5"></i
+        ><span>
+          <codx-label
+            name="UploadFile"
+            formName="Tasks"
+            default="Upload File"
+          ></codx-label>
+        </span>
+      </button>
+      <button
+      type="button"
+      class="btn btn-primary"
+      (click)="sendMail()"
+    >
+      <codx-label name="Send" [formModel]="formModel" default="Gửi"></codx-label>
+    </button>
   </div>
 </ng-template>
