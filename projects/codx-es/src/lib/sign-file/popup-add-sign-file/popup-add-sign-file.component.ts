@@ -510,14 +510,6 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  processIDChange(event) {
-    if (event?.field && event?.component && event?.data != '') {
-      if (event?.field == 'processID') {
-        this.processID = event?.data;
-      }
-    }
-  }
-
   //#region Methods Save
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -568,11 +560,20 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cr.detectChanges();
   }
 
+  processIDChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      if (event?.field == 'processID') {
+        this.processID = event?.data;
+      }
+    }
+  }
+
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
     if (this.processID != '') {
       if (!this.isAddNew || this.isSaved) {
         this.notify.alertCode('ES002').subscribe((x) => {
           if (x.event.status == 'Y') {
+            this.esService.deleteStepByTransID(this.data.recID).subscribe();
             this.dialogSignFile.patchValue({
               processID: this.processID,
               approveControl: '2',
@@ -586,6 +587,7 @@ export class PopupAddSignFileComponent implements OnInit {
           }
         });
       } else {
+        this.esService.deleteStepByTransID(this.data.recID).subscribe();
         this.dialogSignFile.patchValue({
           processID: this.processID,
           approveControl: '2',
