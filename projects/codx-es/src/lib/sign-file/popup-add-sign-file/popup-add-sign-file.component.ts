@@ -41,7 +41,6 @@ export class PopupAddSignFileComponent implements OnInit {
   @ViewChild('view') view: ViewsComponent;
   @ViewChild('status') status: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('stepAppr') stepAppr: ApprovalStepComponent;
   @ViewChild('content') content;
   @ViewChild('viewApprovalStep') viewApprovalStep: ApprovalStepComponent;
 
@@ -84,6 +83,7 @@ export class PopupAddSignFileComponent implements OnInit {
   disableContinue: boolean = false;
 
   isAfterSaveProcess: boolean = false;
+  mssgDelete: string = '';
 
   option: SidebarModel;
   oSignFile: ES_SignFile;
@@ -205,6 +205,10 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    if (this.processTab >= 3) {
+      this.mssgDelete = 'ES003';
+      this.viewApprovalStep?.updateMssgDelete('ES003');
+    }
     ScrollComponent.reinitialization();
   }
 
@@ -367,39 +371,75 @@ export class PopupAddSignFileComponent implements OnInit {
     if (event?.field && event?.component && event?.data != '') {
       this.isEdit = true;
       if (event.field == 'categoryID' && this.data.categoryID != event.data) {
-        if ((!this.isAddNew || this.isSaved) && this.processTab > 3) {
+        if ((!this.isAddNew || this.isSaved) && this.processTab >= 3) {
           this.notify.alertCode('ES001').subscribe((x) => {
             if (x.event.status == 'Y') {
-              console.log(this.data);
+              this.esService
+                .getAutoNumberByCategory(event.data)
+                .subscribe((autoNum) => {
+                  if (autoNum != null) {
+                    this.data.refNo = autoNum;
+                  } else if (this.autoNo) {
+                    this.data.refNo = this.autoNo;
+                  }
+                  this.dialogSignFile.patchValue({
+                    approveControl: '3',
+                  });
+                  this.data.approveControl = '3';
+
+                  this.esService
+                    .deleteStepByTransID(this.data.recID)
+                    .subscribe();
+                  this.dialogSignFile.patchValue({ refNo: this.data.refNo });
+                  let category = event.component?.itemsSelected[0];
+                  this.dialogSignFile.patchValue({
+                    icon: category?.Icon,
+                    color: category?.Color,
+                    processID: category?.RecID,
+                    categoryName: category?.CategoryName,
+                  });
+                  this.data.icon = category?.Icon;
+                  this.data.color = category?.Color;
+                  this.data.processID = category?.RecID;
+                  this.data.categoryName = category?.CategoryName;
+                  this.cr.detectChanges();
+                });
             } else {
               console.log(this.data);
-
               return;
             }
           });
-        }
-        this.esService
-          .getAutoNumberByCategory(event.data)
-          .subscribe((autoNum) => {
-            if (autoNum != null) {
-              this.data.refNo = autoNum;
-            } else if (this.autoNo) {
-              this.data.refNo = this.autoNo;
-            }
-            this.dialogSignFile.patchValue({ refNo: this.data.refNo });
-            let category = event.component?.itemsSelected[0];
-            this.dialogSignFile.patchValue({
-              icon: category?.Icon,
-              color: category?.Color,
-              processID: category?.RecID,
-              categoryName: category?.CategoryName,
+        } else {
+          this.esService
+            .getAutoNumberByCategory(event.data)
+            .subscribe((autoNum) => {
+              if (autoNum != null) {
+                this.data.refNo = autoNum;
+              } else if (this.autoNo) {
+                this.data.refNo = this.autoNo;
+              }
+
+              this.dialogSignFile.patchValue({
+                approveControl: '3',
+              });
+              this.data.approveControl = '3';
+
+              this.esService.deleteStepByTransID(this.data.recID).subscribe();
+              this.dialogSignFile.patchValue({ refNo: this.data.refNo });
+              let category = event.component?.itemsSelected[0];
+              this.dialogSignFile.patchValue({
+                icon: category?.Icon,
+                color: category?.Color,
+                processID: category?.RecID,
+                categoryName: category?.CategoryName,
+              });
+              this.data.icon = category?.Icon;
+              this.data.color = category?.Color;
+              this.data.processID = category?.RecID;
+              this.data.categoryName = category?.CategoryName;
+              this.cr.detectChanges();
             });
-            this.data.icon = category?.Icon;
-            this.data.color = category?.Color;
-            this.data.processID = category?.RecID;
-            this.data.categoryName = category?.CategoryName;
-            this.cr.detectChanges();
-          });
+        }
       } else if (event?.field == 'refDate') {
         this.dialogSignFile.patchValue({
           [event['field']]: event.data?.fromDate,
@@ -470,14 +510,6 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  processIDChange(event) {
-    if (event?.field && event?.component && event?.data != '') {
-      if (event?.field == 'processID') {
-        this.processID = event?.data;
-      }
-    }
-  }
-
   //#region Methods Save
   onSaveSignFile() {
     if (this.dialogSignFile.invalid == true) {
@@ -528,42 +560,43 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cr.detectChanges();
   }
 
+  processIDChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      if (event?.field == 'processID') {
+        this.processID = event?.data;
+      }
+    }
+  }
+
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
     if (this.processID != '') {
       if (!this.isAddNew || this.isSaved) {
         this.notify.alertCode('ES002').subscribe((x) => {
           if (x.event.status == 'Y') {
+            this.esService.deleteStepByTransID(this.data.recID).subscribe();
+            this.dialogSignFile.patchValue({
+              processID: this.processID,
+              approveControl: '2',
+            });
+            this.data.processID = this.processID;
+            this.data.approveControl = '2';
+            dialogTmp && dialogTmp.close();
           } else {
             this.processID == '';
             return;
           }
         });
+      } else {
+        this.esService.deleteStepByTransID(this.data.recID).subscribe();
+        this.dialogSignFile.patchValue({
+          processID: this.processID,
+          approveControl: '2',
+        });
+        this.data.processID = this.processID;
+        this.data.approveControl = '2';
+        dialogTmp && dialogTmp.close();
       }
-
-      this.dialogSignFile.patchValue({
-        processID: this.processID,
-        approveControl: '2',
-      });
-      this.data.processID = this.processID;
-      this.data.approveControl = '2';
-      dialogTmp && dialogTmp.close();
     }
-
-    // else {
-    //   if (this.processID != '') {
-    //     this.dialogSignFile.patchValue({
-    //       processID: this.processID,
-    //       approveControl: '2',
-    //     });
-    //     this.data.processID = this.processID;
-    //     this.data.approveControl = '2';
-    //   }
-    // }
-
-    // if (this.processTab >= 2) {
-    //   this.onSaveSignFile();
-    // }
-    // dialogTmp && dialogTmp.close();
   }
 
   saveProcessStep() {
@@ -614,7 +647,6 @@ export class PopupAddSignFileComponent implements OnInit {
         console.log('result delete step ', res);
       });
     }
-    if (this.stepAppr?.isEdited == true) this.stepAppr.isEdited = false;
   }
 
   saveTemplate(dialogTemplateName) {
@@ -684,28 +716,23 @@ export class PopupAddSignFileComponent implements OnInit {
         }
         break;
       case 1:
-        if (this.isAddNew) {
-          this.newNode = newNode;
-          this.oldNode = oldNode;
-          this.onSaveSignFile();
-        } else {
-          this.updateNodeStatus(oldNode, newNode);
-          this.processTab == 1 && this.processTab++;
-          this.currentTab++;
-        }
+        // if (this.isAddNew) {
+        this.newNode = newNode;
+        this.oldNode = oldNode;
+        this.onSaveSignFile();
+        // } else {
+        //   this.updateNodeStatus(oldNode, newNode);
+        //   this.processTab == 1 && this.processTab++;
+        //   this.currentTab++;
+        // }
         break;
 
       case 2:
-        // setTimeout(() => {
-        //   this.updateNodeStatus(oldNode, newNode);
-
-        //   this.currentTab++;
-        //   this.processTab == 2 && this.processTab++;
-        // }, 800);
         this.updateNodeStatus(oldNode, newNode);
 
         this.currentTab++;
         this.processTab == 2 && this.processTab++;
+        this.viewApprovalStep.updateMssgDelete('ES003');
         break;
       case 3:
         if (this.esService.getApprovalStep) break;

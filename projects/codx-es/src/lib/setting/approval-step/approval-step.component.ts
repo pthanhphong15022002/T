@@ -36,6 +36,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() transId = '';
   @Input() type = '0'; //0: có nút lưu; 1: không có nút lưu
   @Input() recID = '';
+  @Input() mssgDelete = '';
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -240,8 +241,16 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
     this.openPopupAddAppStep(data);
   }
 
+  updateMssgDelete(mssgCode) {
+    this.mssgDelete = mssgCode;
+  }
+
   delete(approvalStep) {
-    this.notifySvr.alertCode('SYS030').subscribe((x) => {
+    let mssgCode = 'SYS030';
+    if (this.type == '1' && this.mssgDelete != '') {
+      mssgCode = this.mssgDelete;
+    }
+    this.notifySvr.alertCode(mssgCode).subscribe((x) => {
       if (x.event?.status == 'Y') {
         let i = this.lstStep.indexOf(approvalStep);
 
