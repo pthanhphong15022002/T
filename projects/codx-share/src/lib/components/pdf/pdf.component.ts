@@ -1061,7 +1061,7 @@ export class PdfComponent
       case 'img': {
         let img = document.createElement('img') as HTMLImageElement;
         img.setAttribute('crossOrigin', 'anonymous');
-
+        img.referrerPolicy = 'noreferrer';
         img.src = url;
         img.onload = () => {
           let imgW = 200;
