@@ -1,5 +1,5 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
-  [footer]="footer" [dialog]="dialogRef" [openMore]="!isAdd" (setTitle)="setTitle($event)"
+  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
@@ -121,8 +121,8 @@
 
             </div>
             <div class="mx-2">
-              <button class="btn btn-sm btn-icon btn-light-primary" (click)="openUserPopup()">
-                <span class="icon-group_add icon-18"></span>
+              <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
+                <span class="icon-group_add text-primary icon-18"></span>
               </button>
             </div>
           </div>
@@ -205,8 +205,8 @@
             </button>
           </div>
           <div class="mx-2">
-            <button class="btn btn-sm btn-icon btn-light-primary" (click)="openUserPopup()">
-              <span class="icon-group_add icon-18"></span>
+            <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
+              <span class="icon-group_add text-primary icon-18"></span>
             </button>
           </div>
         </div>
@@ -229,7 +229,7 @@
         </div>
 
         <div class="d-flex flex-column justify-content-center align-items-center">
-          <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
+          <!-- <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>đợi value list -->
           <!-- <span class="text-muted text-center"> {{curUser?.modifiedOn}} </span> -->
         </div>
       </div>
@@ -253,10 +253,10 @@
 
         <div class="d-flex flex-column justify-content-center align-items-center">
           <div *ngIf="!item.optional">
-            <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>
+            <!-- <span class="badge badge-light-success fs-7 fw-bold mb-1">Bắt buộc</span>đợi value list  -->
           </div>
           <div *ngIf="item.optional">
-            <span class="badge badge-light-danger badge- fs-7 fw-bold mb-1">Tùy chọn</span>
+            <!-- <span class="badge badge-light-danger badge- fs-7 fw-bold mb-1">Tùy chọn</span>đợi value list  -->
           </div>
           <!-- <span class="text-muted text-center"> {{item.modifiedOn}} </span> -->
         </div>

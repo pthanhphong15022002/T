@@ -81,11 +81,11 @@ export class CodxTasksComponent
   viewsActive: Array<ViewModel> = [];
 
   button?: ButtonModel = {
-    id: 'btnAdd',
-    items: [{
-      id: 'avc',
-      text: 'xxyz'
-    }]
+    id: 'btnAdd'
+    // items: [{
+    //   id: 'avc',
+    //   text: 'xxyz'
+    // }]
   };
 
   model?: DataRequest;

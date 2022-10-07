@@ -1,3 +1,4 @@
+import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 
@@ -5,6 +6,9 @@ import { ApiHttpService } from 'codx-core';
   providedIn: 'root',
 })
 export class SettingService {
+
+  dataUpdate = new BehaviorSubject<any>(null);
+
   constructor(private api: ApiHttpService) {}
 
   getParameter() {

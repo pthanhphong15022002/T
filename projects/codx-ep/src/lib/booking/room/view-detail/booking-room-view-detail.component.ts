@@ -6,8 +6,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
+import { CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
+import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
 
 @Component({
   selector: 'booking-room-view-detail',
@@ -31,10 +32,12 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   itemDetailStt: any;
   active = 1;
   files = [];
+  dialog!: DialogRef;
 
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService
+    private codxEpService: CodxEpService,
+    private callFuncService: CallFuncService,
   ) {
     super(injector);
   }
@@ -65,10 +68,9 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           'ERM.Business.DM',
           'FileBussiness',
           'GetFilesForOutsideAsync',
-          [this.funcID, this.itemDetail.recID, 'EP_Bookings']
+          [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
         ).subscribe((res:[])=>{
           if(res){
-            console.log(res);
             this.files=res;
           }
         });
@@ -95,6 +97,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       case 'EPT40301':
         {
           alert('Duyệt');
+          //this.approve(value)
         }
         break;
       case 'EPT40102':
@@ -137,7 +140,45 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
         break;
     }
   }
+  clickMF(event, data) {
+    //this.popupTitle=event?.text + " " + this.funcIDName;
+    switch (event?.functionID) {     
 
+      case 'SYS02': //Xoa
+        this.delete(data);
+        break;
+
+      case 'SYS03': //Sua.
+        this.edit(data);
+        break;
+    }
+  }
+  edit(evt?) {
+    if (evt) {
+      this.itemDetailTemplate.dataService
+        .edit(this.itemDetailTemplate.dataService.dataSelected)
+        .subscribe((res) => {          
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          this.dialog = this.callFuncService.openSide(
+            PopupAddBookingRoomComponent,
+            [evt, false],
+            option
+          );
+        });
+    }
+  }
+  delete(evt?) {
+    let deleteItem = this.itemDetailTemplate.dataService.dataSelected;
+    if (evt) {
+      deleteItem = evt;
+    }
+    this.itemDetailTemplate.dataService.delete([deleteItem]).subscribe((res) => {
+    });
+  }  
+  
   changeDataMF(event, data: any) {}
 
   clickChangeItemDetailDataStatus(stt) {

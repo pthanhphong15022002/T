@@ -92,13 +92,13 @@ export class EmployeesComponent implements OnInit {
       {
         field: 'employeeID',
         headerText: 'Nhân viên',
-        width: 300,
+        width: 250,
         template: this.itemEmployee,
       },
       {
         field: 'email',
         headerText: 'Liên hệ',
-        width: 300,
+        width: 250,
         template: this.itemContact,
       },
       {

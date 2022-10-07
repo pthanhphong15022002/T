@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {
   Component,
   Injector,
@@ -32,7 +33,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     private esService: CodxEsService,
     private notify: NotificationsService,
     private authStore: AuthStore,
-
+    private http: HttpClient,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -149,6 +150,17 @@ export class PopupSignForApprovalComponent extends UIComponent {
           });
       }
     });
+  }
+  clickUSB() {
+    this.http
+      .post('http://localhost:8015/api/es/test', {})
+      .subscribe((data) => {
+        this.http
+          .post('http://localhost:6543/DigitalSignature/Sign', data)
+          .subscribe((o) => {
+            console.log(o);
+          });
+      });
   }
 
   openTempPopup(mode) {

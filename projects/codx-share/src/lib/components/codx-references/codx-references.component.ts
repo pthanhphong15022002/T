@@ -28,6 +28,7 @@ export class CodxReferencesComponent implements OnInit {
   // @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
   @Input() vllRefType = 'TM018';
+  @Input() formModel?: FormModel
   @ViewChild('attachment') attachment: AttachmentComponent;
   message: string = '';
   REFERTYPE = {

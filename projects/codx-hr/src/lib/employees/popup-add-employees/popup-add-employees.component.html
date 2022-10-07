@@ -135,9 +135,16 @@
         <div class="form-group">
           <codx-label fiedName="PositionID" default="Chức danh công việc">
           </codx-label>
-          <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.positionID"
-            field="positionID" refValue="Positions" service="HR" [virtual]="{itemHeight:100}"
-            placeholder="Chức danh công việc" [popupSettings]="{ width: '300px' }" loadFull="true"
+          <codx-input type="combobox"
+           class="form-control borderless p-0"
+            [crrValue]="employee?.positionID"
+            field="positionID" 
+            refValue="Positions" 
+            service="HR" 
+            [virtual]="{itemHeight:100}"
+            placeholder="Chức danh công việc" 
+            [popupSettings]="{ width: '300px' }" 
+            loadFull="true"
             (valueChange)="dataChange($event, 'positionID')">
           </codx-input>
         </div>
@@ -192,8 +199,15 @@
         <div class="form-group">
           <codx-label fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
           </codx-label>
-          <codx-input type="datetime" class="test-datetime" field="hiredOn" format="d" placeholder="datetime"
-            [crrValue]="employee?.hiredOn" (valueChange)="changeTime($event)">
+          <codx-input 
+            type="datetime" 
+            [disabled]="true"
+            class="test-datetime" 
+            field="hiredOn" 
+            format="d" 
+            placeholder="datetime"
+            [crrValue]="employee?.hiredOn" 
+            (valueChange)="changeTime($event)">
           </codx-input>
         </div>
       </div>

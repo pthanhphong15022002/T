@@ -110,6 +110,8 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfComponent } from './components/pdf/pdf.component';
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 import { DialogthumbComponent } from './components/thumbnail/dialogthumb/dialogthumb.component';
+import { PopupEditShiftComponent } from './components/setting-calendar/popup-edit-shift/popup-edit-shift.component';
+import { CodxPopupViewsComponent } from './components/codx-popup-views/codx-popup-views.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -177,12 +179,13 @@ const T_Component: Type<any>[] = [
   PopupAddDayoffsComponent,
   PopupAddEventComponent,
   PopupEditCalendarComponent,
+  PopupEditShiftComponent,
   FileComponent,
   InfoLeftComponent,
   ActiviesApprovalListComponent,
   ActiviesSliderComponent,
   DialogthumbComponent,
-
+  CodxPopupViewsComponent,
   //pdf
   PdfComponent,
 ];

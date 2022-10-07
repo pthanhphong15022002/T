@@ -35,7 +35,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllExtendStatus?: any;
   @Input() vllApproveStatus?: any;
   @Input() showMoreFunc?: any;
-  
+
   dataTree?: any[];
   dataReferences?: any[];
   @Input() taskID: string;
@@ -48,23 +48,26 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() hoverPopover = new EventEmitter<any>();
   firstLoad = true;
-  viewTags= '' ;
-  vllPriority = 'TM005' ;
+  viewTags = '';
+  vllPriority = 'TM005';
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {
-  }
+  ) {}
   //#endregion
   //#region Init
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['taskID'] && changes['taskID'].currentValue && !this.firstLoad) {
+    if (
+      changes['taskID'] &&
+      changes['taskID'].currentValue &&
+      !this.firstLoad
+    ) {
       if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
@@ -73,25 +76,22 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#region
   //#region Method
-  getChangeData(){
-    
-  }
+  getChangeData() {}
   getTaskDetail() {
-    this.viewTags ='' ;
-    this.dataTree = [] ;
-    this.dataReferences =[] ;
+    this.viewTags = '';
+    this.dataTree = [];
+    this.dataReferences = [];
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetTaskDetailsByTaskIDAsync', this.id)
       .subscribe((res) => {
-        if(res){
+        if (res) {
           this.itemSelected = res;
-          this.viewTags  = this.itemSelected?.tags
+          this.viewTags = this.itemSelected?.tags;
           this.loadTreeView();
           this.loadDataReferences();
-        }   
+        }
       });
   }
-
 
   popoverEmpList(p: any, task) {
     this.listTaskResousceSearch = [];
@@ -148,12 +148,17 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         }
         //danh cho taskExtend
         if (
-          (x.functionID == 'SYS02' || x.functionID == 'SYS03' || x.functionID == 'SYS04') &&
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
           this.taskExtends
         ) {
           x.disabled = true;
         }
-        if ((x.functionID == 'TMT04011' || x.functionID == 'TMT04012') && this.taskExtends.status != '3') {
+        if (
+          (x.functionID == 'TMT04011' || x.functionID == 'TMT04012') &&
+          this.taskExtends.status != '3'
+        ) {
           x.disabled = true;
         }
         //tắt duyệt xác nhận
@@ -165,7 +170,9 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         }
         //tắt duyệt đánh giá
         if (
-          (x.functionID == 'TMT04021' || x.functionID == 'TMT04022' || x.functionID == 'TMT04023') &&
+          (x.functionID == 'TMT04021' ||
+            x.functionID == 'TMT04022' ||
+            x.functionID == 'TMT04023') &&
           data.approveStatus != '3'
         ) {
           x.disabled = true;
@@ -209,8 +216,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#endregion
 
-   //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
-   loadDataReferences() {
+  //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
+  loadDataReferences() {
     if (this.itemSelected.category == '1') {
       this.dataReferences = [];
       return;
@@ -227,125 +234,120 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         )
         .subscribe((res) => {
           if (res) {
-            var ref = new tmpReferences();
-            ref.recIDReferences = res.recID;
-            ref.refType = 'TM_Tasks';
-            ref.createdOn = res.createdOn;
-            ref.memo = res.taskName;
-            ref.createdBy = res.createdBy;
-            ref.attachments =res.attachments ;
-            ref.comments =res.comments ;
-            var taskParent = res ;
-            this.api
-              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                res.createdBy,
-              ])
-              .subscribe((user) => {
-                if (user) {
-                  ref.createByName = user.userName;
-                  this.dataReferences.push(ref);
-                  this.getReferencesByCategory3(taskParent) ;
-                }
-              });
+            // var ref = new tmpReferences();
+            // ref.recIDReferences = res.recID;
+            // ref.refType = 'TM_Tasks';
+            // ref.createdOn = res.createdOn;
+            // ref.memo = res.taskName;
+            // ref.createdBy = res.createdBy;
+            // ref.attachments =res.attachments ;
+            // ref.comments =res.comments ;
+            var taskParent = res;
+            // this.api
+            //   .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+            //     res.createdBy,
+            //   ])
+            //   .subscribe((user) => {
+            //     if (user) {
+            //       ref.createByName = user.userName;
+            //       this.dataReferences.push(ref);
+            this.getReferencesByCategory3(taskParent);
+            // }
+            // });
           }
         });
-    } else if(this.itemSelected.category == '3') {
-      this.getReferencesByCategory3(this.itemSelected) ;
+    } else if (this.itemSelected.category == '3') {
+      this.getReferencesByCategory3(this.itemSelected);
     }
   }
 
-  getReferencesByCategory3(task){
+  getReferencesByCategory3(task) {
     var listUser = [];
-      switch (task.refType) {
-        case 'OD_Dispatches':
-          this.api
-            .exec<any>(
-              'OD',
-              'DispatchesBusiness',
-              'GetListByIDAsync',
-              task.refID
-            )
-            .subscribe((item) => {
-              if (item) {
-                item.forEach((x) => {
-                  var ref = new tmpReferences();
-                  ref.recIDReferences = x.recID;
-                  ref.refType = 'OD_Dispatches';
-                  ref.createdOn = x.createdOn;
-                  ref.memo = x.title;
-                  ref.createdBy = x.createdBy;
-                  ref.attachments =x.attachments ;
-                  ref.comments =x.comments ;
-                  this.dataReferences.push(ref);
-                  if (listUser.findIndex((p) => p == ref.createdBy) == -1)
-                    listUser.push(ref.createdBy);
-                  this.getUserByListCreateBy(listUser);
-                });
-              }
-            });
-          break;
-        case 'ES_SignFiles':
-          this.api
-            .execSv<any>(
-              'ES',
-              'ERM.Business.ES',
-              'SignFilesBusiness',
-              'GetLstSignFileByIDAsync',
-              JSON.stringify(task.refID.split(';'))
-            )
-            .subscribe((result) => {
-              if (result) {
-                result.forEach((x) => {
-                  var ref = new tmpReferences();
-                  ref.recIDReferences = x.recID;
-                  ref.refType = 'ES_SignFiles';
-                  ref.createdOn = x.createdOn;
-                  ref.memo = x.title;
-                  ref.createdBy = x.createdBy;
-                  ref.attachments =x.attachments ;
-                  ref.comments =x.comments ;
-                  this.dataReferences.push(ref);
-                  if (listUser.findIndex((p) => p == ref.createdBy) == -1)
-                    listUser.push(ref.createdBy);
-                  this.getUserByListCreateBy(listUser);
-                });
-              }
-            });
-          break;
-        case 'TM_Tasks':
-          this.api
-            .execSv<any>(
-              'TM',
-              'TM',
-              'TaskBusiness',
-              'GetTaskByRefIDAsync',
-              task.refID
-            )
-            .subscribe((result) => {
-              if (result) {
+    switch (task.refType) {
+      case 'OD_Dispatches':
+        this.api
+          .exec<any>('OD', 'DispatchesBusiness', 'GetListByIDAsync', task.refID)
+          .subscribe((item) => {
+            if (item) {
+              item.forEach((x) => {
                 var ref = new tmpReferences();
-                ref.recIDReferences = result.recID;
-                ref.refType = 'TM_Tasks';
-                ref.createdOn = result.createdOn;
-                ref.memo = result.taskName;
-                ref.createdBy = result.createdBy;
-                ref.attachments =result.attachments ;
-                ref.comments =result.comments ;
+                ref.recIDReferences = x.recID;
+                ref.refType = 'OD_Dispatches';
+                ref.createdOn = x.createdOn;
+                ref.memo = x.title;
+                ref.createdBy = x.createdBy;
+                ref.attachments = x.attachments;
+                ref.comments = x.comments;
+                this.dataReferences.push(ref);
+                if (listUser.findIndex((p) => p == ref.createdBy) == -1)
+                  listUser.push(ref.createdBy);
+                this.getUserByListCreateBy(listUser);
+              });
+            }
+          });
+        break;
+      case 'ES_SignFiles':
+        this.api
+          .execSv<any>(
+            'ES',
+            'ERM.Business.ES',
+            'SignFilesBusiness',
+            'GetLstSignFileByIDAsync',
+            JSON.stringify(task.refID.split(';'))
+          )
+          .subscribe((result) => {
+            if (result) {
+              result.forEach((x) => {
+                var ref = new tmpReferences();
+                ref.recIDReferences = x.recID;
+                ref.refType = 'ES_SignFiles';
+                ref.createdOn = x.createdOn;
+                ref.memo = x.title;
+                ref.createdBy = x.createdBy;
+                ref.attachments = x.attachments;
+                ref.comments = x.comments;
+                this.dataReferences.push(ref);
+                if (listUser.findIndex((p) => p == ref.createdBy) == -1)
+                  listUser.push(ref.createdBy);
+                this.getUserByListCreateBy(listUser);
+              });
+            }
+          });
+        break;
+      case 'TM_Tasks':
+        this.api
+          .execSv<any>(
+            'TM',
+            'TM',
+            'TaskBusiness',
+            'GetTaskByRefIDAsync',
+            task.refID
+          )
+          .subscribe((result) => {
+            if (result) {
+              var ref = new tmpReferences();
+              ref.recIDReferences = result.recID;
+              ref.refType = 'TM_Tasks';
+              ref.createdOn = result.createdOn;
+              ref.memo = result.taskName;
+              ref.createdBy = result.createdBy;
+              ref.attachments = result.attachments;
+              ref.comments = result.comments;
 
-                this.api
-                  .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                    ref.createdBy,
-                  ])
-                  .subscribe((user) => {
-                    if (user) {
-                      ref.createByName = user.userName;
-                      this.dataReferences.push(ref);
-                    }
-                  });
-              }
-            });
-          break;
-      }
+              this.api
+                .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                  ref.createdBy,
+                ])
+                .subscribe((user) => {
+                  if (user) {
+                    ref.createByName = user.userName;
+                    this.dataReferences.push(ref);
+                  }
+                });
+            }
+          });
+        break;
+    }
   }
 
   getUserByListCreateBy(listUser) {

@@ -1,0 +1,30 @@
+<codx-form
+  headerText="{{ title }}"
+  subHeaderText=""
+  [body]="body"
+  [dialog]="dialog"
+>
+</codx-form>
+<ng-template #body>
+  <div
+    class="d-flex align-items-center justify-content-between mt-4"
+    *ngIf="showLabelAttachment"
+  >
+    <codx-attachment
+      #attachment
+      [objectType]="objectType"
+      [objectId]="objectID"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="1"
+    
+      [functionID]="funcID"
+      displayThumb="full"
+    >
+    </codx-attachment>
+  </div>
+</ng-template>
