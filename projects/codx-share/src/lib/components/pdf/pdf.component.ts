@@ -1060,7 +1060,7 @@ export class PdfComponent
 
       case 'img': {
         let img = document.createElement('img') as HTMLImageElement;
-        // img.setAttribute('crossOrigin', 'anonymous');
+        img.setAttribute('crossOrigin', 'anonymous');
 
         img.src = url;
         img.onload = () => {
