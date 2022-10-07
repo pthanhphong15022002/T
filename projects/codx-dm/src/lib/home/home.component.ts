@@ -695,7 +695,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -709,7 +709,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -723,7 +723,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -737,7 +737,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: true,
+          resizable: false,
         }
       },
     ];
@@ -754,7 +754,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -769,7 +769,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -783,7 +783,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -797,7 +797,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: true,
+          resizable: false,
         }
       }];
   
@@ -969,7 +969,7 @@ export class HomeComponent extends UIComponent {
             template: this.templateMain,
             panelRightRef: this.templateRight,
             template2: this.templateSearch,
-            resizable: true,
+            resizable: false,
           },
         })
 
