@@ -2,15 +2,15 @@
     <ng-template #body>
         <div class="offcanvas-wrapper">
             <div class="d-flex justify-content-between">
-                <div class="d-flex align-items-center flex-grow-1 breadcrum-box me-2">
+                <div class="d-flex align-items-center w-100 breadcrum-box me-2">
                     <codx-breadcumb end="1" start="0" max="3"></codx-breadcumb>
-                    <span class="icon-keyboard_arrow_right icon-20"></span>
-                    <span class="text-dark-75 font-weight-bold">{{fullName}}</span>
+                    <span class="icon-keyboard_arrow_right icon-18"></span>
+                    <span class="text-dark text-max-100px">{{fullName}}</span>
                 </div>
 
                 <a *ngIf="this.type == 'file'" (click)="copyPath()" matTooltip="copy link" alt="copy link"
                     class="btn btn-icon btn-md btn-light-primary">
-                    <span class="icon-file_copy icon-20"></span>
+                    <span class="icon-file_copy text-gray-600 icon-20"></span>
                 </a>
             </div>
             <div class="request-to mt-4">

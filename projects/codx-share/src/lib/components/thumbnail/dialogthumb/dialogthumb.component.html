@@ -1,0 +1,12 @@
+<ejs-dialog  id="component-dialog" #Dialog (close)="afterClose($event)"  [animationSettings]='animationSettings'
+[showCloseIcon]='true'   [width]="'100%'" [height]="'100%'">
+<ng-template #header>
+  <div class="d-flex justify-content-between algin-items-center p-5">
+    <span>{{ dataFile?.fileName}}</span>
+    <i class="fa-solid fa-xmark cursor-pointer" (click)="dlgBtnClick(Dialog)"></i>
+  </div>
+</ng-template>
+<ng-template #content>
+  <codx-viewfiledialog [dataFile]="dataFile"></codx-viewfiledialog>
+</ng-template>
+</ejs-dialog>

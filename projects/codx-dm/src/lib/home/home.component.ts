@@ -26,6 +26,7 @@ import { FileService } from '@shared/services/file.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { AnimationSettingsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
 
 @Component({
   selector: 'home',
@@ -43,8 +44,8 @@ export class HomeComponent extends UIComponent {
   //  @ViewChild('attachment2') attachment2: AttachmentComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('view') codxview!: any;
-
-
+  @ViewChild('Dialog') public Dialog: DialogComponent;
+  animationSettings: AnimationSettingsModel = { effect: 'None' };
 
   currView?: TemplateRef<any>;
   path: string;
@@ -74,8 +75,9 @@ export class HomeComponent extends UIComponent {
 
   //icon Sort
   itemSelected: any;
+  dataFile: any;
 
-
+  visible: boolean = false;
 
   //loadedFile: boolean;
   //loadedFolder: boolean;
@@ -243,7 +245,7 @@ export class HomeComponent extends UIComponent {
       if (res) {
         var tree = this.codxview.currentView.currentComponent.treeView;
         if (tree) {
-          debugger;
+
           //this.dmSV.folderId.next("");
           //this.dmSV.folderID = "";
           tree.removeNodeTree(res);
@@ -498,7 +500,7 @@ export class HomeComponent extends UIComponent {
     // data.objectType = 'WP_Notes';
     // data.objectId = '628c326c590addf224627f42';
     data.functionID = this.codxview?.formModel?.funcID;
-
+    data.isDM = true;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
@@ -589,7 +591,10 @@ export class HomeComponent extends UIComponent {
           this.dmSV.breadcumbLink = breadcumbLink;
           this.dmSV.breadcumb.next(breadcumb);
         }
-
+        debugger;
+        if (breadcumb.length == 0) {
+          id = ""
+        }
         this.dmSV.folderName = item.folderName;
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.level = item.level;
@@ -602,19 +607,19 @@ export class HomeComponent extends UIComponent {
         var items = item.items;
 
         if (items == undefined || items.length <= 0) {
+
           this.folderService.options.srtColumns = this.sortColumn;
           this.folderService.options.srtDirections = this.sortDirection;
           this.folderService.options.funcID = this.view.funcID;
           this.folderService.getFolders(id).subscribe(async (res) => {
             if (res != null) {
-              var data = res[0];
-              this.listFolders = data;
-              this.data = [...this.data, ...data];
-              this.dmSV.listFolder = data;
+              this.listFolders = res[0];
+              this.data = [... this.listFolders, ...this.dmSV.listFiles];
+              this.dmSV.listFolder = res[0];
               var tree = this.codxview.currentView.currentComponent.treeView;
               item.items = [];
               if (tree != undefined)
-                tree.addChildNodes(item, data);
+                tree.addChildNodes(item, res[0]);
               this.changeDetectorRef.detectChanges();
               this._beginDrapDrop();
             }
@@ -626,8 +631,6 @@ export class HomeComponent extends UIComponent {
           this.dmSV.loadedFolder = true;
           this.changeDetectorRef.detectChanges();
         }
-        this.folderService.options.srtColumns = this.sortColumn;
-        this.folderService.options.srtDirections = this.sortDirection;
         this.fileService.options.page = 1;
         this.fileService.options.funcID = this.view.funcID;
         this.fileService.GetFiles(id).subscribe(async res => {
@@ -643,7 +646,7 @@ export class HomeComponent extends UIComponent {
             this.data = [...this.dmSV.listFolder, ...res[0]];
           }
           else
-            this.data = [...this.dmSV.listFiles, ...this.dmSV.listFolder];
+            this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles,];
 
           this.dmSV.loadedFile = true;
           this.changeDetectorRef.detectChanges();
@@ -683,7 +686,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -697,7 +700,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -711,7 +714,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -720,12 +723,12 @@ export class HomeComponent extends UIComponent {
         text: 'List',
         type: ViewType.treedetail,
         sameData: true,
-        //active: false,
+        active: false,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: true,
+          resizable: false,
         }
       },
     ];
@@ -742,7 +745,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -757,7 +760,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -765,13 +768,13 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        //active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -779,13 +782,13 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-format_list_bulleted',
         text: 'List',
         type: ViewType.treedetail,
-        //active: false,
+        active: false,
         sameData: true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: true,
+          resizable: false,
         }
       }];
 
@@ -957,7 +960,7 @@ export class HomeComponent extends UIComponent {
             template: this.templateMain,
             panelRightRef: this.templateRight,
             template2: this.templateSearch,
-            resizable: true,
+            resizable: false,
           },
         })
 
@@ -1195,8 +1198,7 @@ export class HomeComponent extends UIComponent {
             this.data = this.dmSV.listFolder;
         }
         else
-          this.data = [...this.dmSV.listFiles, ...this.dmSV.listFolder];
-
+          this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
         this.dmSV.loadedFile = true;
         this.changeDetectorRef.detectChanges();
         ScrollComponent.reinitialization();
@@ -1217,5 +1219,16 @@ export class HomeComponent extends UIComponent {
       }
       this.dmSV.loadedFolder = true;
     });
+  }
+  public dlgBtnClick = (): void => {
+    this.Dialog.hide();
+  }
+  viewFile(e: any) {
+    this.dataFile = e;
+    this.visible = true;
+  }
+  dialogClosed() {
+    this.visible = false;
+    this.changeDetectorRef.detectChanges();
   }
 }

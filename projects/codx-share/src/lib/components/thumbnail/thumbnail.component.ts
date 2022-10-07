@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
+import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
@@ -8,12 +9,14 @@ import { environment } from 'src/environments/environment';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
+
 @Component({
   selector: 'codx-thumbnail',
   templateUrl: './thumbnail.component.html',
   styleUrls: ['./thumbnail.component.scss']
 })
 export class ThumbnailComponent implements OnInit, OnChanges {
+ 
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
@@ -32,9 +35,14 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   titleUpdateUnBookmark = "UnBookmark";
   titlePermission = "Permission";
   dataDelete = [];
+  dataFile:any;
   // files: any;
   title = 'Thông báo';
   titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
+  animationSettings: AnimationSettingsModel = { effect: 'None' };
+  target: string = '.control-section';
+  fileName:any
+  visible: boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -43,11 +51,14 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     public dmSV: CodxDMService,
     private notificationsService: NotificationsService,
   ) {
-
+    // this.dialog.close = function (e) {
+    //   this.dialog.destroy();
+    // };
   }
   ngOnInit(): void {
     // this.files = JSON.parse(this.data);
     // this.changeDetectorRef.detectChanges();
+    //this.Dialog.hide();
     this.dmSV.isFileEditing.subscribe(item => {
       if (item != undefined) {
         if (this.files.length > 0) {
@@ -183,33 +194,16 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     this.fileService.getFile(id).subscribe(data => {
       var option = new DialogModel();
       option.IsFull = true;
-      this.callfc.openForm(ViewFileDialogComponent, data.fileName, null, null, "", data, "", option);
+      this.fileName = data.fileName;
+      this.dataFile = data;
+      this.visible = true;
       this.viewFile.emit(true);
     });
-
-    //if (this.checkReadRight() ) {
-    // var obj = new objectPara();
-    // obj.fileID = data.recID;
-    // obj.fileName = data.fileName;
-    // obj.extension = data.extension;
-    // obj.data = JSON.parse(this.data);
-    // this.changeDetectorRef.detectChanges();
-    // this.systemDialogService.onOpenViewFileDialog.next(obj);
-    // this.fileService.getFile(obj.fileID, true).subscribe(item => {
-    //   if (item) {
-    //     this.changeDetectorRef.detectChanges();
-    //     this.systemDialogService.onOpenViewFileDialog.next(obj);
-    //   }
-    // })
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // changes.prop contains the old and the new value...
-    //   this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
   }
-
-
   properties() {
 
   }
@@ -271,5 +265,9 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                 </div> `;
     return html;
   }
-
+  dialogClosed(){
+    this.visible = false;
+    this.changeDetectorRef.detectChanges();
+  }
+ 
 }

@@ -1,14 +1,12 @@
-<!-- <codx-form [dialog]="dialog" [headerText]="header1" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
-  [formControl]="dialogApprovalStep" *ngIf="isAfterRender"> -->
 <codx-layout-add
-  *ngIf="type == '0' && isAfterRender"
+  *ngIf="isAfterRender"
   [title]="header1"
   [tabInfo]="tabInfo"
   [formModel]="dialog.formModel"
   [subHeader]="subHeader"
   [dialog]="dialog"
   [openMore]="true"
-  [tabContent]="[tabInfo0, tabInfo1, tabInfo2, tabInfo3]"
+  [tabContent]="[tabInfo0, tabQuery, tabEmail, tabAnother]"
   (setTitle)="setTitle($event)"
   (buttonClick)="buttonClick($event)"
   [footer]="footer"
@@ -114,8 +112,8 @@
           *ngIf="item.roleType?.length == 1"
           [imageId]="item.approver"
           [subTitle]=""
-          [title]="item.approverName"
-          [subTitle]="item.positionName ?? 'Vị trí công việc'"
+          [title]="item.name"
+          [subTitle]="item.position ?? 'Vị trí công việc'"
           [imageObjType]="'AD_Users'"
           [imageWidth]="35"
           [titleLine]="3"
@@ -139,7 +137,7 @@
           [subTitle]="item.approver | vll: 'ES014':'text' | async"
           [title]="item.approver | vll: 'ES014':'text' | async"
           [subTitle]="
-            item.positionName ?? (item.approver | vll: 'ES014':'text' | async)
+            item.position ?? (item.approver | vll: 'ES014':'text' | async)
           "
           [titleLine]="3"
           [formModel]="formModel"
@@ -221,17 +219,12 @@
     </div>
   </div>
 </ng-template>
-<ng-template #tabInfo1>
-  <!-- <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bolder text-gray-800 d-block mb-2">
-      <codx-label fiedName="Approvers" [formModel]="formModel"> </codx-label>
-    </h4>
-  </div> -->
+<ng-template #tabQuery>
   <div class="w-100">
     <codx-query-builder></codx-query-builder>
   </div>
 </ng-template>
-<ng-template #tabInfo2>
+<ng-template #tabEmail>
   <ng-container *ngFor="let item of data.emailTemplates">
     <div
       class="d-flex justify-content-between align-items-center"
@@ -323,7 +316,7 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #tabInfo3>
+<ng-template #tabAnother>
   <div class="row">
     <div class="form-group col-7">
       <codx-label fiedName="OverdueControl" [formModel]="formModel">

@@ -100,6 +100,7 @@ import { PopupAddEventComponent } from './components/setting-calendar/popup-add-
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
 import { ActiviesApprovalListComponent } from './layout/drawers/activies-approval-list/activies-approval-list.component';
 import { ActiviesSliderComponent } from './layout/drawers/activies-approval-list/activies-slider/activies-slider.component';
+import { DialogModule } from '@syncfusion/ej2-angular-popups';
 import {
   DocumentEditorAllModule,
   DocumentEditorContainerAllModule,
@@ -108,6 +109,9 @@ import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfComponent } from './components/pdf/pdf.component';
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
+import { DialogthumbComponent } from './components/thumbnail/dialogthumb/dialogthumb.component';
+import { PopupEditShiftComponent } from './components/setting-calendar/popup-edit-shift/popup-edit-shift.component';
+import { CodxPopupViewsComponent } from './components/codx-popup-views/codx-popup-views.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -175,11 +179,13 @@ const T_Component: Type<any>[] = [
   PopupAddDayoffsComponent,
   PopupAddEventComponent,
   PopupEditCalendarComponent,
+  PopupEditShiftComponent,
   FileComponent,
   InfoLeftComponent,
   ActiviesApprovalListComponent,
   ActiviesSliderComponent,
-
+  DialogthumbComponent,
+  CodxPopupViewsComponent,
   //pdf
   PdfComponent,
 ];
@@ -187,7 +193,7 @@ const T_Component: Type<any>[] = [
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe, AttachmentComponent],
+  declarations: [T_Component, T_Pipe, AttachmentComponent, DialogthumbComponent],
   imports: [
     CommonModule,
     NgbModule,
@@ -208,7 +214,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     DocumentEditorAllModule,
     DocumentEditorContainerAllModule,
     SpreadsheetAllModule,
-
+    DialogModule,
     //pdf
     ListViewAllModule,
     NgxExtendedPdfViewerModule,

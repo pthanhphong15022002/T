@@ -47,9 +47,9 @@
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
               <ng-container *ngFor="let item of moreFunc">
                 <codx-button ngbDropdownItem>
-                  <a href="{{ '#' + item.functionID }}">{{
+                  <span (click)="scrollToElement(item.functionID)" >{{
                     item.defaultName
-                    }}</a>
+                    }}</span>
                 </codx-button>
               </ng-container>
             </div>
@@ -505,7 +505,7 @@
             </div>
 
             <!-- kỹ năng -->
-            <div id="MWP00203" class="d-block">
+            <div id="MWP00203" #MWP00203 class="d-block">
               <div class="user-profile overview">
                 <div class="d-flex justify-content-between mb-2 mt-6">
                   <div class="fw-bold fs-4 text-primary">
@@ -577,19 +577,30 @@
                     </codx-label>
                   </div>
                   <div class="user-process process-v swiper-wrapper">
-                    <ng-template swiperSlide *ngIf="editMode">
+                    <ng-container swiperSlide *ngIf="editMode">
                       <ng-container>
-                        <div class="process-item swiper-slide" (click)="editDataEdu(null)">
-                          <div class="line"></div>
+                        <!-- <div class="process-item swiper-slide" (click)="editDataEdu(null)">
+                          <span class="icon-add icon-18"></span>
                           <span class="yeartoyear btn btn-sm add-process">
                             <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
                             </codx-label>
                           </span>
-                        </div>
-                      </ng-container>
-                    </ng-template>
+                        </div> -->
 
-                    <ng-template swiperSlide *ngFor="let item of trainingPersonal">
+                        <div class="col-xl-4 col-lg-4 col-md-4 mb-4" >
+                          <div class="d-flex">
+                            <div class="d-flex align-items-center user-item add-process">
+                              <span class="icon-add icon-18"></span>
+                              <a class="text-primary" (click)="editDataEdu(null)">
+                                <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
+                                </codx-label>
+                              </a>
+                            </div>
+                          </div>
+                        </div>                      </ng-container>
+                    </ng-container>
+
+                    <ng-container swiperSlide *ngFor="let item of trainingPersonal">
                       <ng-container>
                         <div class="process-item swiper-slide">
                           <div class="line"></div>
@@ -623,7 +634,7 @@
                           </div>
                         </div>
                       </ng-container>
-                    </ng-template>
+                    </ng-container>
                   </div>
                 </div>
               </div>
