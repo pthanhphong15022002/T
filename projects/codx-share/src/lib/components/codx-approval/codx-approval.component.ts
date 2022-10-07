@@ -223,11 +223,12 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           this.funcID,
           {
             funcID: 'EST021',
-            recID: data.transID,
+            sfRecID: data.transID,
             title: data.htmlView,
             status: data.status,
             stepType: data.stepType,
             stepNo: data.stepNo,
+            transRecID: data.recID,
           },
           '',
           dialogModel

@@ -695,7 +695,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -709,7 +709,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -717,13 +717,13 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        //active: false,
+        active: false,
         sameData: true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -732,12 +732,12 @@ export class HomeComponent extends UIComponent {
         text: 'List',
         type: ViewType.treedetail,
         sameData: true,
-        //active: false,
+        active: false,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: true,
+          resizable: false,
         }
       },
     ];
@@ -754,7 +754,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -769,7 +769,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -777,13 +777,13 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        //active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -791,13 +791,13 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-format_list_bulleted',
         text: 'List',
         type: ViewType.treedetail,
-        //active: false,
+        active: false,
         sameData: true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: true,
+          resizable: false,
         }
       }];
   
@@ -969,7 +969,7 @@ export class HomeComponent extends UIComponent {
             template: this.templateMain,
             panelRightRef: this.templateRight,
             template2: this.templateSearch,
-            resizable: true,
+            resizable: false,
           },
         })
 

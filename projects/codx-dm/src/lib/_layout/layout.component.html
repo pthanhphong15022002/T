@@ -17,11 +17,12 @@
       </ng-template>
       <ng-template #footer>
         <div class="menu-item progress-line">
+          <div class="mt-2 mx-6 text-light fw-normal fs-7" *ngIf="showtitle; else elseT">
           <div class="progress mx-6 mt-2" style="height: 6px">
             <div role="progressbar" attr.aria-valuenow="{{percentUsed}}" aria-valuemin="0" aria-valuemax="100"
               class="progress-bar" attr.style="width: {{percentUsed}}%"></div>
           </div>
-          <div class="mt-2 mx-6 text-light fw-normal fs-7" *ngIf="showtitle; else elseT">
+          
             {{ titleHddUsed }}
 
           </div>
@@ -35,11 +36,8 @@
            <div class="control-section">
             <ejs-dashboardlayout [columns]="8" [cellSpacing]='cellSpacing' [cellAspectRatio]='cellAspectRatio'>
               <e-panels >
-                <e-panel [sizeX]="3" [sizeY]="0" [row]="0" [col]="5" >
-                  
-                  <ng-template #content>
-                    <ejs-accumulationchart style="height:60px; width: 60px;"  [legendSettings]="pielegendSettings" [tooltip]="pieTooltipSetting" [enableAnimation]= 'animation'>
-                      
+                <e-panel [sizeX]="3" [sizeY]="0" [row]="0" [col]="5">
+                    <ejs-accumulationchart style="height:60px; width: 60px;" [legendSettings]="pielegendSettings" [tooltip]="pieTooltipSetting" [enableAnimation]= 'animation'>
                       <e-accumulation-annotations>
                         <e-accumulation-annotation content='<div style=" font-size:10px; font-weight:200">{{titleHddUsed_small}}%</div>' region='Series'  x='50%' y='50%' >
                         </e-accumulation-annotation>
@@ -49,11 +47,10 @@
                         </e-accumulation-series>
                       </e-accumulation-series-collection>
                     </ejs-accumulationchart>
-                  </ng-template>
                 </e-panel>
               </e-panels>
             </ejs-dashboardlayout>
-        </div>
+          </div>
         
          
           
