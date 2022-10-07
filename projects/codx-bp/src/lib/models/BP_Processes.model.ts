@@ -13,10 +13,12 @@ export class BP_Processes {
 export class BP_ProcessSteps {
   parentID: string;
   stepName: string;
+  stepName2: string;
   memo: string;
   duration: string;
   location: string;
   owners: string;
+  stepType: string;
 }
 
 // Thông tin Email để gửi

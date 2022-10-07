@@ -10,7 +10,7 @@ import { ProcessesComponent } from './processes/processes.component';
 import { PopAddProcessesComponent } from './processes/pop-add-processes/pop-add-processes.component';
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
 import { ProcessstepsComponent } from './processsteps/processsteps.component';
-import { PopAddProcessstepsComponent } from './processsteps/pop-add-processsteps/pop-add-processsteps.component';
+import { PopAddProcessstepsComponent } from './processsteps/popup-add-processsteps/pop-add-processsteps.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
@@ -21,7 +21,9 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { PopupAddProcessStepComponent } from './processstep/popup-add-processstep/popup-add-processstep.component';
 import { ProcessStepComponent } from './processstep/processstep.component';
+import { PopAddPhaseComponent } from './processsteps/popup-add-phase/pop-add-phase.component';
 import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -54,6 +56,7 @@ export const routes: Routes = [
     PopAddProcessstepsComponent,
     ProcessStepComponent,
     PopupAddProcessStepComponent,
+    PopAddPhaseComponent,
     PopupSendEmailComponent,
 
   ],
