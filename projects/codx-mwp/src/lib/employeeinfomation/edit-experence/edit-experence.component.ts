@@ -8,7 +8,7 @@ import { CodxMwpService } from '../../codx-mwp.service';
   styleUrls: ['./edit-experence.component.css']
 })
 export class EditExperenceComponent implements OnInit {
-  title = "Thêm mới";
+  title = "";
   dataBind: any = {};
   dialog: any;
   data: any;

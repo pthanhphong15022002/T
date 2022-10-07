@@ -174,7 +174,9 @@
 
     <ng-template #footer>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
+            <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
+                <codx-label name="Save" formName="Positions" default="Lưu"></codx-label>
+            </button>
         </div>
     </ng-template>
 </codx-form>

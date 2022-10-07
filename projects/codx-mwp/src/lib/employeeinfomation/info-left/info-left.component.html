@@ -61,9 +61,6 @@
       default="Ngày vào làm:"
     >
     </codx-label>
-    <!-- <span class="text-dark">{{
-      dataEmployee.employeeInfo?.joinedOn | date: "dd/MM/yyyy"
-      }}</span> -->
     <span #joinedOn>{{
       dataEmployee.employeeInfo?.joinedOn
         | formatvalue: formModel:"joinedOn":joinedOn
@@ -167,7 +164,7 @@
         </codx-label>
       </span>
       <span
-        >{{ dataEmployee.employeeInfo?.birthday | date: "dd/MM/yyyy" }},
+        >{{ dataEmployee.employeeInfo?.birthday | fmDT }},
       </span>
 
       <span class="text-gray-600 me-1">
