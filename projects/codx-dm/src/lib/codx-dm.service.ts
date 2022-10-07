@@ -828,6 +828,7 @@ export class CodxDMService {
             //   break;
             case 'DMT0209': //properties
             case 'DMT0222': //properties file
+            //debugger;
               if (!data.read) e[i].isblur = true; // duoc view
               break;
             // case "DMT0224": // in folder

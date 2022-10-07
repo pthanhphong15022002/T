@@ -214,7 +214,7 @@ public layoutColor: string;
       });
       debugger;
       if(this.msDM062 != null && this.msDM063 != null){
-var msUsed =  Util.stringFormat(this.msDM062.defaultName, this.titleHddUsed_small, "%");
+      var msUsed =  Util.stringFormat(this.msDM062.defaultName, this.titleHddUsed_small, "%");
       var msHdd =  Util.stringFormat(this.msDM063.defaultName, this.titleHddHdd_small, "%");
 
       this.data = [
@@ -222,6 +222,7 @@ var msUsed =  Util.stringFormat(this.msDM062.defaultName, this.titleHddUsed_smal
         {  Product : msHdd, Percentage : this.titleHddUsed_small, TextMapping :msUsed} */
         { Product : msUsed, Percentage : this.titleHddUsed_small, TextMapping : msUsed},
         { Product : msHdd, Percentage : this.titleHddHdd_small, TextMapping : msHdd}
+        
       ];
       }
       

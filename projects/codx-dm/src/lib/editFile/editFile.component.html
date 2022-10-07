@@ -33,7 +33,7 @@
                 </div> -->
             </div>
             <div class="d-flex mb-2">
-                <codx-tag entityName="DM_FileInfo" [isEdit]="true" [value]="''" (valueChange)="txtValue($event, 'tag')">
+                <codx-tag entityName="DM_FileInfo" [isEdit]="true" [value]="fileEditing.tags" (valueChange)="txtValue($event, 'tag')">
                 </codx-tag>
 
                 <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="fileEditing.tags"

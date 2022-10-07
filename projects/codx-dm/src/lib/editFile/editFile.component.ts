@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Ho
 import { Subject } from "rxjs";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
 import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
@@ -226,7 +226,10 @@ export class EditFileComponent implements OnInit {
   fieldUpdate = "";
   data: any;
   @ViewChild('fileNameCtrl') fileNameCtrl;
+  
+  /* vlL1473 : any; */
   constructor(  
+    /* private cache: CacheService, */
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
     private fileService: FileService,    
@@ -260,8 +263,26 @@ export class EditFileComponent implements OnInit {
   }
 
   ngOnInit(): void {   
-    
-
+    debugger;
+if(this.fileEditing.type == null)
+{
+  this.fileEditing.type = this.fileEditing.extension.replace('.', '');
+}
+/* if(this.fileEditing.language)
+        {
+          this.cache.valueList("L1473").subscribe(item=>{
+            if(item && item.datas) 
+            {
+              this.vlL1473 = item.datas;
+              var lang = item.datas.filter(x=>x.value === this.fileEditing.language);
+              if(lang && lang[0])
+              {
+                // this.fileEditing.language // this.fileEditing.type = lang[0].text;
+              }
+              
+            }
+          })
+        } */
    
   }
 
@@ -423,6 +444,7 @@ export class EditFileComponent implements OnInit {
   }  
 
   openRight(mode = 1, type = true) {
+    debugger;
     this.dmSV.dataFileEditing = this.fileEditing;
     this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "").closed.subscribe(item => {
       if (item) {
