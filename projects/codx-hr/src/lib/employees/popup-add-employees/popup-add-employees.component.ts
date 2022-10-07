@@ -200,7 +200,25 @@ export class PopupAddEmployeesComponent implements OnInit {
       } else {
         this.employee[field] = e.data.join(';');
       }
+      if(e.component && e.component?.itemsSelected){
+        switch(field){
+          case "positionID":
+            this.getDataFromPositionID(e.component.itemsSelected);
+            break;
+          default:
+            break;
+        }
+      }
     }
+  }
+  getDataFromPositionID(dataSelected:any){
+    if(!dataSelected) return;
+    dataSelected.map((e:any) => {
+      console.log(e);
+      this.employee["organizationID"] = e.OrgUnitID;
+      this.employee["departmentID"] = e.DepartmentID;
+      this.detectorRef.detectChanges();
+    });
   }
   changeTime(data) {
     if (!data.field || !data.data) return;

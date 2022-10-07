@@ -34,6 +34,7 @@ import { ShareComponent } from './share/share.component';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.directive';
 import { DragDropFileFolderDirective } from './directives/drag-drop-file-folder.directive';
+import { DialogModule } from '@syncfusion/ej2-angular-popups';
 //import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 
@@ -116,6 +117,7 @@ const T_Component: Type<any>[] = [
     NgbModule,
     CoreModule,
     UploaderModule,
+    DialogModule
     //TooltipModule,
    // InfiniteScrollModule
   ],

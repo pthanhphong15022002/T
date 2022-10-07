@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ViewModel, ViewType, ApiHttpService, DialogModel, ViewsComponent, CallFuncService, ButtonModel } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
-import { CodxReportComponent } from 'projects/codx-share/src/lib/components/codx-report/codx-report.component';
+// import { CodxReportComponent } from 'projects/codx-share/src/lib/components/codx-report/codx-report.component';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -29,7 +29,7 @@ export class TaskDailyComponent implements OnInit {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('iframe', {static: false}) iframe: ElementRef;
   @ViewChild('contentFrame', { read: ViewContainerRef}) contentFrame: ViewContainerRef;
-  compRef: ComponentRef<CodxReportComponent>;
+  // compRef: ComponentRef<CodxReportComponent>;
   doc:any;
   user: any;
   funcID: any;
@@ -122,7 +122,7 @@ export class TaskDailyComponent implements OnInit {
     // let _preArray =this.predicate.split('&&').join(';');
     // this.src = `/${this._user.tenant}/report?reportID=${this.funcID}&predicates=${_preArray}&dataValues=${this.dataValue}`;
     // this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
-    // 
+    //
     // //this.src=`http://localhost:4203/r?token=${this._user.token}&reportID=${this.reportUUID}&parameters=${JSON.stringify(this.param)}`;
 
     this.views = [
@@ -238,7 +238,8 @@ export class TaskDailyComponent implements OnInit {
   fields: any = [];
   values: any = [];
   paramChange1(evt){
-    // 
+    debugger
+    //
     // if (evt.isDateTime) {
     //   let idxs = 0;
     //   for (let i = 0; i < this.fields.length; i++) {
@@ -368,14 +369,14 @@ export class TaskDailyComponent implements OnInit {
     this.createComponent();
   }
   createComponent() {
-    //const compFactory = this.resolver.resolveComponentFactory(CodxReportComponent);
-    this.compRef = this.vcRef.createComponent(CodxReportComponent);
-    this.compRef.location.nativeElement.id = 'reportComp';
-    (<CodxReportComponent>this.compRef.instance).reportUUID = this.reportUUID;
-    (<CodxReportComponent>this.compRef.instance).parameters = this.param;
-    (<CodxReportComponent>this.compRef.instance).showToolbar = true;
-    (<CodxReportComponent>this.compRef.instance).print = this.print;
-    this.doc.body.appendChild(this.compRef.location.nativeElement);
+    // //const compFactory = this.resolver.resolveComponentFactory(CodxReportComponent);
+    // this.compRef = this.vcRef.createComponent(CodxReportComponent);
+    // this.compRef.location.nativeElement.id = 'reportComp';
+    // (<CodxReportComponent>this.compRef.instance).reportUUID = this.reportUUID;
+    // (<CodxReportComponent>this.compRef.instance).parameters = this.param;
+    // (<CodxReportComponent>this.compRef.instance).showToolbar = true;
+    // (<CodxReportComponent>this.compRef.instance).print = this.print;
+    // this.doc.body.appendChild(this.compRef.location.nativeElement);
     }
   click(event: any){
     switch(event.id){

@@ -119,7 +119,7 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
               },
               {
                 field: 'createName',
-                headerText: 'Người tạo',
+                headerText: res.CreatedBy.headerText,
                 template: this.itemCreateBy,
               },
               {

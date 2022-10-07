@@ -9,3 +9,12 @@ export class BP_Processes {
   expiredOn: Date;
   attachments: number;
 }
+
+export class BP_ProcessSteps {
+  parentID: string;
+  stepName: string;
+  memo: string;
+  duration: string;
+  location: string;
+  owners: string;
+}

@@ -267,7 +267,6 @@ export class EditFileComponent implements OnInit {
   
 
   onSaveEditingFile() {
-    debugger;
     if (this.fileEditing.fileName === "") {
       // $('#fileName').addClass('form-control is-invalid');
       // $('#fileName').focus();
@@ -477,7 +476,7 @@ export class EditFileComponent implements OnInit {
   getListPermission() {
     this.listPerm = this.fileEditing.permissions;//this.fileEditing.permissions.filter(x => x.isSharing == this.modeSharing);
   }
-
+  
   onSetPermision(sharing: boolean) {
     this.modeSharing = sharing;
     this.getListPermission();
@@ -485,7 +484,6 @@ export class EditFileComponent implements OnInit {
   }
 
   txtValue($event, type) {
-    debugger;
     if ($event.data != null) {
       switch(type) {
         case 'tag':
@@ -504,10 +502,7 @@ export class EditFileComponent implements OnInit {
             this.fileEditing.relation = $event.data;
             break;
         case 'category':
-          if ($event.data.length > 0)
-            this.fileEditing.category = $event.data[0];
-          else
-            this.fileEditing.category = "";
+            this.fileEditing.category = $event.data;
           break;
         case 'language':
             this.fileEditing.language = $event.data;
@@ -522,7 +517,6 @@ export class EditFileComponent implements OnInit {
           this.fileEditing.author = $event.data;
           break;
         case 'publishdate':
-          debugger;
             this.fileEditing.publishDate = $event.data.fromDate;
             break;
         case 'publisher':
@@ -539,7 +533,6 @@ export class EditFileComponent implements OnInit {
           break;
       }
     }
-    debugger;
     this.changeDetectorRef.detectChanges();  
   }
 

@@ -24,6 +24,7 @@ export class AppConfigService extends AppConfig {
       environment.urlThumbnail = res.urlThumbnail;
       environment.urlFile = res.urlFile;
       environment.appName = res.appName;
+      environment.reportUrl = res.reportUrl;
     }));
   }
 }

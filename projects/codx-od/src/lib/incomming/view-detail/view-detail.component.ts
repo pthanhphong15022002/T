@@ -163,6 +163,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
   }
   getGridViewSetup(funcID: any) {
+  
     this.cache.functionList(funcID).subscribe((fuc) => {
       this.formModel = {
         entityName: fuc?.entityName,

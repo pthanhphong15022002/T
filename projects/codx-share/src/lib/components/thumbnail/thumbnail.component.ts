@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
+import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
 import { AlertConfirmInputConfig, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
@@ -8,12 +9,14 @@ import { environment } from 'src/environments/environment';
 import { objectPara } from '../viewFileDialog/alertRule.model';
 import { SystemDialogService } from '../viewFileDialog/systemDialog.service';
 import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
+
 @Component({
   selector: 'codx-thumbnail',
   templateUrl: './thumbnail.component.html',
   styleUrls: ['./thumbnail.component.scss']
 })
 export class ThumbnailComponent implements OnInit, OnChanges {
+  @ViewChild('Dialog') public Dialog: DialogComponent;
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
@@ -32,9 +35,13 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   titleUpdateUnBookmark = "UnBookmark";
   titlePermission = "Permission";
   dataDelete = [];
+  dataFile:any;
   // files: any;
   title = 'Thông báo';
   titleDeleteConfirm = 'Bạn có chắc chắn muốn xóa ?';
+  animationSettings: AnimationSettingsModel = { effect: 'None' };
+  target: string = '.control-section';
+  fileName:any
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -48,6 +55,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     // this.files = JSON.parse(this.data);
     // this.changeDetectorRef.detectChanges();
+    this.Dialog.hide();
     this.dmSV.isFileEditing.subscribe(item => {
       if (item != undefined) {
         if (this.files.length > 0) {
@@ -183,7 +191,10 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     this.fileService.getFile(id).subscribe(data => {
       var option = new DialogModel();
       option.IsFull = true;
-      this.callfc.openForm(ViewFileDialogComponent, data.fileName, null, null, "", data, "", option);
+      this.fileName = data.fileName;
+      this.Dialog.show(true);
+      this.dataFile = data;
+      //this.callfc.openForm(ViewFileDialogComponent, data.fileName, null, null, "", data, "", option);
       this.viewFile.emit(true);
     });
 
@@ -271,5 +282,9 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                 </div> `;
     return html;
   }
+  public dlgBtnClick = (): void => {
+    this.Dialog.hide();
+  }
 
+  public dlgButtons: ButtonPropsModel[] = [{ click: this.dlgBtnClick.bind(this), buttonModel: { content: 'Learn More', isPrimary: true } }];
 }

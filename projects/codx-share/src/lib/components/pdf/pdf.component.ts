@@ -6,7 +6,9 @@ import {
   Injector,
   Input,
   IterableDiffers,
+  OnChanges,
   QueryList,
+  SimpleChanges,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -29,7 +31,7 @@ import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-
   styleUrls: ['./pdf.component.scss'],
   providers: [NgxExtendedPdfViewerService],
 })
-export class PdfComponent extends UIComponent implements AfterViewInit {
+export class PdfComponent extends UIComponent implements AfterViewInit , OnChanges {
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -46,7 +48,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //Input
   @Input() recID = '';
-  @Input() isEditable;
+  @Input() isEditable = true;
   @Input() hasPermission = false;
   @Input() isApprover;
   @Input() stepNo = -1;
@@ -131,16 +133,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   curAnnotFontStyle;
 
   //size
-  lstAnnotFontSize = [10, 11, 12, 13, 15, 17, 19, 23, 31, 33, 43];
-  curAnnotFontSize = 31;
+  lstAnnotFontSize = [];
+  curAnnotFontSize;
 
   //date
-  lstAnnotDateFormat = [
-    'M/d/yy, h:mm a',
-    'M/d/yy',
-    'EEEE, MMMM d, y, h:mm:ss a zzzz',
-  ];
-  curAnnotDateFormat = 'M/d/yy, h:mm a';
+  lstAnnotDateFormat = [];
+  curAnnotDateFormat;
 
   //style
   isBold = false;
@@ -175,8 +173,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   hideActions: boolean = false;
 
   onInit() {
-    console.log('editable', this.isEditable);
-
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
         this.signPerRow = res.SignPerRow;
@@ -239,11 +235,18 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       });
 
       this.cache.valueList('ES025').subscribe((res) => {
-        console.log('size', res);
         res?.datas?.forEach((size) => {
-          this.lstAnnotFontSize.push(size.value.replace('px', ''));
+          this.lstAnnotFontSize.push(Number(size.value.replace('px', '')));
         });
         this.curAnnotFontSize = this.lstAnnotFontSize[0];
+        this.detectorRef.detectChanges();
+      });
+
+      this.cache.valueList('L0052').subscribe((res) => {
+        res?.datas?.forEach((dateType) => {
+          this.lstAnnotDateFormat.push(dateType.value);
+        });
+        this.curAnnotDateFormat = this.lstAnnotDateFormat[0];
         this.detectorRef.detectChanges();
       });
 
@@ -274,7 +277,12 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       this.detectorRef.detectChanges();
     }
   }
-
+  ngOnChanges(changes: SimpleChanges): void {
+    if ((changes['inputUrl'] && (changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue))) {
+      this.curFileUrl = changes['inputUrl']?.currentValue ;
+   
+    }
+  }
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
     if (this.isEditable) {
@@ -521,6 +529,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
 
   //loaded pdf
   loadedPdf(e: any) {
+    debugger;
     this.pageMax = e.pagesCount;
     this.curPage = this.pageMax;
     let ngxService: NgxExtendedPdfViewerService =
@@ -634,6 +643,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
+    debugger;
     if (this.isEditable) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
@@ -745,6 +755,22 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                     break;
                   }
                   case '8': {
+                    if (!area.isLock) {
+                      this.addArea(
+                        qr,
+                        'img',
+                        area.labelType,
+                        this.isEditable
+                          ? !this.isEditable
+                          : area.allowEditAreas
+                          ? area.allowEditAreas
+                          : !area.isLock,
+                        false,
+                        area.signer,
+                        area.stepNo,
+                        area
+                      );
+                    }
                     break;
                   }
                   case '3':
@@ -785,31 +811,50 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
                 if (this.needAddKonva) {
                   let attrs = this.needAddKonva.attrs;
                   let name: tmpAreaName = JSON.parse(attrs.name);
-                  this.holding = 0;
-                  switch (name.Type) {
-                    case 'text': {
-                      this.saveNewToDB(
-                        attrs.text,
-                        name.Type,
-                        name.LabelType,
-                        name.Signer,
-                        this.stepNo,
-                        this.needAddKonva
-                      );
 
-                      break;
-                    }
-                    case 'img': {
-                      this.saveNewToDB(
-                        '',
-                        name.Type,
-                        name.LabelType,
-                        name.Signer,
-                        this.stepNo,
-                        this.needAddKonva
+                  let signed = stage?.children[0]?.children.find((child) => {
+                    if (child != this.tr) {
+                      let childName: tmpAreaName = JSON.parse(
+                        child?.attrs?.name
                       );
-                      break;
+                      return (
+                        childName.LabelType == name.LabelType &&
+                        ['1', '2', '8'].includes(childName.LabelType) &&
+                        childName.Signer == name.Signer
+                      );
                     }
+                    return null;
+                  });
+                  this.holding = 0;
+                  if (!signed) {
+                    switch (name.Type) {
+                      case 'text': {
+                        this.saveNewToDB(
+                          attrs.text,
+                          name.Type,
+                          name.LabelType,
+                          name.Signer,
+                          this.stepNo,
+                          this.needAddKonva
+                        );
+
+                        break;
+                      }
+                      case 'img': {
+                        this.saveNewToDB(
+                          '',
+                          name.Type,
+                          name.LabelType,
+                          name.Signer,
+                          this.stepNo,
+                          this.needAddKonva
+                        );
+                        break;
+                      }
+                    }
+                  } else {
+                    this.needAddKonva.remove();
+                    this.tr.remove();
                   }
                 }
                 this.needAddKonva = null;
@@ -827,8 +872,19 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
               this.tr.nodes([]);
             } else {
               this.curSelectedArea = click.target;
-              this.tr.nodes([click.target]);
+
+              this.tr.resizeEnabled(
+                this.isEditable == false
+                  ? false
+                  : this.curSelectedArea.draggable()
+              );
+              this.tr.draggable(
+                this.isEditable == false
+                  ? false
+                  : this.curSelectedArea.draggable()
+              );
               this.tr.forceUpdate();
+              this.tr.nodes([this.curSelectedArea]);
               layerChildren.add(this.tr);
             }
           });
@@ -1222,7 +1278,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
   }
   changeSignFile(e: any) {
     this.lstSigners = e.itemData.signers;
-
     this.fileInfo = e.itemData;
     this.curFileID = this.fileInfo.fileID;
     this.curFileUrl = this.fileInfo.fileUrl;

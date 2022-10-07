@@ -228,7 +228,7 @@ export class TMMeetingsComponent
   }
   //#end region
 
-  //#region schedule
+  //#region schedule 
 
   fields = {
     id: 'meetingID',
@@ -629,29 +629,30 @@ export class TMMeetingsComponent
     }
   }
 
-  onDragDrop(e: any) {
-    if (e.type == 'drop') {
+  onDragDrop(data: any) {
       this.api
         .execSv<any>(
           'CO',
           'CO',
           'MeetingsBusiness',
           'UpdateMeetingsAsync',
-          e.data
+          data
         )
         .subscribe((res) => {
           if (res) {
-            this.view.dataService.update(e.data);
+            this.view.dataService.update(data);
           }
         });
-    }
   }
 
-  // hoverMeetingName(
-  //   value: string,
-  //   formModel: FormModel,
-  //   field: string
-  //   ): Observable<string> {
-  //       return of(`<span class="cut-size-long">${value}</span>`);
-  //    }
+  onActions(e: any) {
+    switch (e.type) {
+      case 'drop':
+        this.onDragDrop(e.data);
+        break;
+      case 'dbClick':
+        this.viewDetail(e?.data);
+        break;
+    }
+  }
 }

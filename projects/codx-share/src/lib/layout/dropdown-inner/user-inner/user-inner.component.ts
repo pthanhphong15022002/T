@@ -1,5 +1,20 @@
-import { Component, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { UserModel, AuthService, TenantStore, NotificationsService, CodxService } from 'codx-core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  UserModel,
+  AuthService,
+  TenantStore,
+  NotificationsService,
+  CodxService,
+  CacheService,
+} from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 
 @Component({
@@ -22,19 +37,32 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   langs = languages;
   themes = themeDatas;
   private unsubscribe: Subscription[] = [];
+  functionList: any;
+  formModel: any;
 
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
     private tenantStore: TenantStore,
     private notifyService: NotificationsService,
-  ) { }
+    private cache: CacheService
+  ) {
+    this.cache.functionList('ADS05').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
+  }
 
   ngOnInit(): void {
     this.user$ = this.auth.userSubject.asObservable();
     this.tenant = this.tenantStore.get()?.tenant;
     this.setLanguage(this.auth.userValue?.language?.toLowerCase());
-    this.selectTheme('default');//(this.auth.userValue.theme.toLowerCase());
+    this.selectTheme('default'); //(this.auth.userValue.theme.toLowerCase());
+    if (this.functionList) {
+      this.formModel = {
+        formName: this.functionList?.formName,
+        gridViewName: this.functionList?.gridViewName,
+      };
+    }
   }
 
   logout() {
@@ -84,7 +112,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       .pipe()
       .subscribe((data) => {
         if (data) {
-          if (!data.isError) this.notifyService.notifyCode("SYS017");
+          if (!data.isError) this.notifyService.notifyCode('SYS017');
           else this.notifyService.notify(data.error);
         }
       });
@@ -115,7 +143,7 @@ const languages: LanguageFlag[] = [
     name: 'Việt Nam',
     flag: './assets/media/flags/vietnam.svg',
     enable: true,
-  }
+  },
 ];
 
 const langDefault = languages[0];
@@ -144,7 +172,7 @@ const themeDatas: ThemeFlag[] = [
     id: 'pink',
     name: 'Pink',
     color: '#f70f8f',
-  }
+  },
 ];
 
 const themeDefault = themeDatas[0];

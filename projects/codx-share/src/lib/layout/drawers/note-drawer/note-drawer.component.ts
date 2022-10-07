@@ -260,6 +260,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       var obj = {
         data: this.lstView.dataService.data,
         itemUpdate: data,
+        maxPinNotes: this.maxPinNotes,
       };
       this.callfc.openForm(
         UpdateNotePinComponent,
