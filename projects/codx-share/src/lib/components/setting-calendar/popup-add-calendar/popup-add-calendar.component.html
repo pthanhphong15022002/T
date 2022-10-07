@@ -5,41 +5,45 @@
   [dialog]="dialog"
 >
   <ng-template #body>
-    <div class="form-group">
-      <codx-label
-        name="lblCalendarName"
-        formName="Calendars"
-        default="Tên lịch làm việc"
-      ></codx-label>
-      <codx-input
-        type="text"
-        field="calendarName"
-        placeholder="Lịch làm việc"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-    </div>
-    <div class="form-group">
-      <codx-label
-        name="lblDescription"
-        formName="Description"
-        default="Diễn giải"
-      >
-      </codx-label>
-      <codx-input
-        type="textarea"
-        field="description"
-        placeholder="Diễn giải"
-        format="ed3"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
+    <div class="form-popup my-6">
+      <div class="form-group">
+        <codx-label
+          name="lblCalendarName"
+          formName="Calendars"
+          default="Tên lịch làm việc"
+        ></codx-label>
+        <codx-input
+          type="text"
+          field="calendarName"
+          placeholder="Lịch làm việc"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="lblDescription"
+          formName="Description"
+          default="Diễn giải"
+        >
+        </codx-label>
+        <codx-input
+          type="textarea"
+          field="description"
+          placeholder="Diễn giải"
+          format="ed3"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
   </ng-template>
 
   <ng-template #footer>
-    <button type="button" class="btn btn-primary" (click)="saveCalendar()">
-      Lưu
-    </button>
+    <div class="mb-4 me-1">
+      <button type="button" class="btn btn-primary" (click)="saveCalendar()">
+        Lưu
+      </button>
+    </div>
   </ng-template>
 </codx-form>
