@@ -59,6 +59,8 @@ import { GiftGroupComponent } from './setting/category/gift-group/gift-group.com
 import { BehaviorRuleComponent } from './setting/category/behavior-rule/behavior-rule.component';
 import { ProposedFieldComponent } from './setting/category/proposed-field/proposed-field.component';
 import { WalletComponent } from './setting/wallet/wallet.component';
+import { DetailPolicyCoinsComponent } from './setting/detail-policy-coins/detail-policy-coins.component';
+import { SettingCycleComponent } from './setting/setting-cycle/setting-cycle.component';
 
 export const routes: Routes = [
   {
@@ -114,6 +116,10 @@ export const routes: Routes = [
       {
         path: 'setting/fedranges/:funcID',
         component: DedicationRankComponent,
+      },
+      {
+        path: 'detail-policy-coin',
+        component: DetailPolicyCoinsComponent,
       },
     ],
   },
@@ -184,6 +190,8 @@ const Component: Type<any>[] = [
   AddBehaviorRuleComponent,
   AddBehaviorComponent,
   WalletComponent,
+  DetailPolicyCoinsComponent,
+  SettingCycleComponent,
 ];
 
 @NgModule({

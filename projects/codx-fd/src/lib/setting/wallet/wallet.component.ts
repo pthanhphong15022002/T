@@ -62,24 +62,20 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.LoadDataPolicies('1');
     this.getSettingRunPolicyCoCoin();
     this.getSettingRunPolicyKuDos();
-    this.at.params.subscribe((params) => {
-      if (params && params.funcID) {
-        this.api
-          .call('ERM.Business.SYS', 'FunctionListBusiness', 'GetAsync', [
-            '',
-            params.funcID,
-          ])
-          .subscribe((res) => {
-            //this.ngxLoader.stop();
-            if (res && res.msgBodyData[0]) {
-              var data = res.msgBodyData[0] as [];
-              this.datafuntion = data;
-              this.titlePage = data['customName'];
-              this.changedr.detectChanges();
-            }
-          });
-      }
-    });
+    this.api
+      .call('ERM.Business.SYS', 'FunctionListBusiness', 'GetAsync', [
+        '',
+        this.funcID,
+      ])
+      .subscribe((res) => {
+        //this.ngxLoader.stop();
+        if (res && res.msgBodyData[0]) {
+          var data = res.msgBodyData[0] as [];
+          this.datafuntion = data;
+          this.titlePage = data['customName'];
+          this.changedr.detectChanges();
+        }
+      });
   }
   getItems(category) {
     return this.policyList.filter((item) => item.category === category);
@@ -88,15 +84,13 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.location.back();
   }
   LoadDetailPolicy(category, recID) {
-    // this.router.navigate(['/' + this.tenant + '/fed/detailpolicy'], {
-    //   queryParams: {
-    //     type: 'wallet',
-    //     cardtype: null,
-    //     category: category,
-    //     funcID: 'FED20431',
-    //     recID: recID,
-    //   },
-    // });
+    this.codxService.navigate('', 'fd/detailpolicy', {
+      type: 'wallet',
+      cardtype: null,
+      category: category,
+      funcID: this.funcID,
+      recID: recID,
+    });
   }
   changValueListPopup(e) {
     this.objectUpdateCoin[e.field] = e.data;
@@ -164,7 +158,7 @@ export class WalletComponent extends UIComponent implements OnInit {
             'fieldName',
             'fieldValue'
           );
-          console.log("quantity", this.quantity)
+          console.log('quantity', this.quantity);
           if (this.quantity.ActiveCoCoins == true) {
             this.disableGroupFund = false;
           } else {
@@ -183,10 +177,10 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.changedr.detectChanges();
   }
   redirectPageDetailWallet(applyFor: string) {
-    // this.mainService.navigatePageUrl('fed/detail-policy-coin', {
-    //   applyFor: applyFor,
-    //   funcID: 'FED20431',
-    // });
+    this.codxService.navigate('', 'fd/detail-policy-coin', {
+      applyFor: applyFor,
+      funcID: this.funcID,
+    });
   }
   onSaveStatusPolicy(data) {
     this.api

@@ -21,13 +21,13 @@ export class SettingService {
     );
   }
 
-  getParameterByPredicate(predicate, dataValue) {
+  getSettingByPredicate(predicate, dataValue) {
     return this.api.execSv<Array<any>>(
       'SYS',
       'ERM.Business.SYS',
-      'SettingValuesBusiness',
+      'SettingsBusiness',
       'GetByPredicate',
-      ['FormName=@0 && TransType=null', 'FDParameters']
+      [predicate, dataValue]
     );
   }
 }
