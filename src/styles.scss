@@ -714,3 +714,15 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
 .breadcrum-box div::-webkit-scrollbar {
   height: 2px;
 }
+
+.dms-footer-r {
+  text-align: left;
+}
+
+.task-tree .menu-nav {
+  margin-bottom: 0;
+}
+
+.task-tree .item-selected {
+  color: var(--text-primary) !important;
+}

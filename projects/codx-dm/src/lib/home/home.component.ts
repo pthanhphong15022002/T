@@ -192,7 +192,7 @@ export class HomeComponent extends UIComponent {
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {
-      id: 'btnUpload',            
+      id: 'btnUpload',
       text: 'Tải lên'
     };
 
@@ -244,9 +244,8 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isNodeDeleted.subscribe(res => {
       if (res) {
         var tree = this.codxview.currentView.currentComponent.treeView;
-        if (tree)
-        {
-          
+        if (tree) {
+
           //this.dmSV.folderId.next("");
           //this.dmSV.folderID = "";
           tree.removeNodeTree(res);
@@ -255,24 +254,20 @@ export class HomeComponent extends UIComponent {
           breadcumb.push(this.dmSV.menuActive.getValue());
           tree.textField = "folderName";
           var list = tree.arrBreadCumb;
-          if(list && list.length > 0)
-          {
-            var index = list.findIndex(x=>x.id == res);
-            if(index>=0)
-            {
-              list = list.slice(index+1);
-              if(list.length >0)
-              {
-                  this.dmSV.folderId.next(list[0].id);
-                  this.dmSV.folderID = list[0].id;
-                  for (var i = list.length - 1; i >= 0; i--) {
-                    breadcumb.push(list[i].text);
-                    breadcumbLink.push(list[i].id);
-                  }
-                  
+          if (list && list.length > 0) {
+            var index = list.findIndex(x => x.id == res);
+            if (index >= 0) {
+              list = list.slice(index + 1);
+              if (list.length > 0) {
+                this.dmSV.folderId.next(list[0].id);
+                this.dmSV.folderID = list[0].id;
+                for (var i = list.length - 1; i >= 0; i--) {
+                  breadcumb.push(list[i].text);
+                  breadcumbLink.push(list[i].id);
+                }
+
               }
-              else
-              {
+              else {
                 this.dmSV.folderId.next("");
                 this.dmSV.folderID = "";
               }
@@ -304,9 +299,9 @@ export class HomeComponent extends UIComponent {
     this.dmSV.isRefreshTree.subscribe(res => {
       if (res) {
         var ele = document.getElementsByClassName('collapse');
-        for(var i = 0; i < ele.length; i++) {
+        for (var i = 0; i < ele.length; i++) {
           // Only if there is only single class
-          if(ele[i].className.includes('show')) {
+          if (ele[i].className.includes('show')) {
             ele[i].classList.remove('show');
             ele[i].classList.add('hide');
           }
@@ -314,8 +309,7 @@ export class HomeComponent extends UIComponent {
         ele = document.getElementsByClassName('item-selected');
         if (ele.length > 0) ele[0].classList.remove('item-selected');
         ele = document.getElementsByClassName('icon-arrow_drop_down');
-        if (ele.length > 0) 
-        {
+        if (ele.length > 0) {
           ele[0].classList.add('icon-arrow_right');
           ele[0].classList.remove('icon-arrow_drop_down');
         }
@@ -340,7 +334,7 @@ export class HomeComponent extends UIComponent {
           this.dmSV.loadedFile = true;
           this.changeDetectorRef.detectChanges();
         });
-         
+
         //this.data = this.view.dataService.data
       }
     });
@@ -370,13 +364,13 @@ export class HomeComponent extends UIComponent {
           tree.setNodeTree(item);
         this.changeDetectorRef.detectChanges();
         this.data = [];
-        var a = {data:item};
+        var a = { data: item };
         // var breadcumb = [];
         // var breadcumbLink = [];
         // tree.textField = "folderName";
         // var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(item?.recID);
-        // 
-        
+        //
+
         // breadcumbLink.push(this.dmSV.idMenuActive);
         // for (var i = list.length - 1; i >= 0; i--) {
         //   breadcumb.push(list[i].text);
@@ -402,7 +396,7 @@ export class HomeComponent extends UIComponent {
         this.changeDetectorRef.detectChanges();
       }
     });
-    
+
   }
 
   classFile(item, className) {
@@ -560,27 +554,25 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-    
+
     ScrollComponent.reinitialization();
     if (!$data && ($data == null || $data?.data == null)) {
       return;
     }
-    
+
     this.isSearch = false;
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
     let item = $data.data;
     if (item?.read) {
-      if(item.extension)
-      {
+      if (item.extension) {
         var dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         this.fileService.getFile(id).subscribe(data => {
-          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data,  this.view?.currentView?.formModel], "",dialogModel);
-      });
+          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data, this.view?.currentView?.formModel], "", dialogModel);
+        });
       }
-      else
-      {
+      else {
         var breadcumb = [];
         var breadcumbLink = [];
         this.dmSV.page = 1;
@@ -600,8 +592,7 @@ export class HomeComponent extends UIComponent {
           this.dmSV.breadcumb.next(breadcumb);
         }
         debugger;
-        if(breadcumb.length == 0) 
-        {
+        if (breadcumb.length == 0) {
           id = ""
         }
         this.dmSV.folderName = item.folderName;
@@ -614,9 +605,9 @@ export class HomeComponent extends UIComponent {
         this.dmSV.folderId.next(id);
         this.dmSV.folderID = id;
         var items = item.items;
-      
+
         if (items == undefined || items.length <= 0) {
-         
+
           this.folderService.options.srtColumns = this.sortColumn;
           this.folderService.options.srtDirections = this.sortDirection;
           this.folderService.options.funcID = this.view.funcID;
@@ -628,7 +619,7 @@ export class HomeComponent extends UIComponent {
               var tree = this.codxview.currentView.currentComponent.treeView;
               item.items = [];
               if (tree != undefined)
-               tree.addChildNodes(item, res[0]);
+                tree.addChildNodes(item, res[0]);
               this.changeDetectorRef.detectChanges();
               this._beginDrapDrop();
             }
@@ -655,13 +646,13 @@ export class HomeComponent extends UIComponent {
             this.data = [...this.dmSV.listFolder, ...res[0]];
           }
           else
-            this.data = [...this.dmSV.listFolder ,...this.dmSV.listFiles, ];
+            this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles,];
 
           this.dmSV.loadedFile = true;
           this.changeDetectorRef.detectChanges();
         });
       }
-      
+
     } else {
       if (item?.read)
         this.notificationsService.notify(this.titleAccessDenied);
@@ -682,12 +673,12 @@ export class HomeComponent extends UIComponent {
 
   ngAfterViewInit(): void {
     this.views = [
-      
+
       {
         id: '1',
         icon: 'icon-appstore',
         text: 'Card',
-        type: ViewType.treedetail,
+        type: ViewType.tree_card,
         active: true,
         sameData: true,
         /*  toolbarTemplate: this.templateSearch,*/
@@ -703,7 +694,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-search',
         text: 'Search',
         hide: true,
-        type: ViewType.treedetail,
+        type: ViewType.tree_list,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -716,8 +707,8 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-apps',
         text: 'Small Card',
-        type: ViewType.treedetail,
-        active: false,
+        type: ViewType.tree_smallcard,
+        //active: false,
         sameData: true,
         model: {
           template: this.templateMain,
@@ -800,12 +791,12 @@ export class HomeComponent extends UIComponent {
           resizable: false,
         }
       }];
-  
+
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
     this.changeDetectorRef.detectChanges();
-   
+
     //   console.log(this.button);
   }
 
@@ -818,7 +809,7 @@ export class HomeComponent extends UIComponent {
   viewChanging(event) {
     this.dmSV.page = 1;
     this.getDataFile("");
-   }
+  }
   ngOnDestroy() {
     console.log('detroy');
     //   this.atSV.openForm.unsubscribe();
@@ -1176,11 +1167,10 @@ export class HomeComponent extends UIComponent {
           breadcumb.push(this.dmSV.titleRequestBy);
           break;
       }
-    
+
     }
   }
-  getDataFile(id:any)
-  {
+  getDataFile(id: any) {
     this.fileService.options.funcID = this.view.funcID;
     this.dmSV.listFiles = [];
     this.dmSV.loadedFile = false;
@@ -1208,14 +1198,13 @@ export class HomeComponent extends UIComponent {
             this.data = this.dmSV.listFolder;
         }
         else
-          this.data = [...this.dmSV.listFolder,...this.dmSV.listFiles];
+          this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
         this.dmSV.loadedFile = true;
         this.changeDetectorRef.detectChanges();
         ScrollComponent.reinitialization();
       });
   }
-  getDataFolder(id:any)
-  {
+  getDataFolder(id: any) {
     this.folderService.options.srtColumns = this.sortColumn;
     this.folderService.options.srtDirections = this.sortDirection;
     this.folderService.options.funcID = this.view.funcID;
@@ -1234,12 +1223,11 @@ export class HomeComponent extends UIComponent {
   public dlgBtnClick = (): void => {
     this.Dialog.hide();
   }
-  viewFile(e:any)
-  {
+  viewFile(e: any) {
     this.dataFile = e;
     this.visible = true;
   }
-  dialogClosed(){
+  dialogClosed() {
     this.visible = false;
     this.changeDetectorRef.detectChanges();
   }

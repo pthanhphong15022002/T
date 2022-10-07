@@ -157,7 +157,7 @@ export class PopupEditCalendarComponent extends UIComponent {
         PopupAddEventComponent,
         'Chỉnh sửa Lễ/Tết/Sự kiện',
         550,
-        null,
+        550,
         '',
         [this.evtData, false]
       );
@@ -166,7 +166,7 @@ export class PopupEditCalendarComponent extends UIComponent {
         PopupAddEventComponent,
         'Thêm Lễ/Tết/Sự kiện',
         550,
-        null,
+        550,
         '',
         [this.evtData, true]
       );
@@ -200,8 +200,8 @@ export class PopupEditCalendarComponent extends UIComponent {
       this.callfc.openForm(
         PopupAddDayoffsComponent,
         'Thêm ngày nghỉ',
-        800,
-        null,
+        550,
+        420,
         '',
         [this.evtCDDate, true]
       );
@@ -209,8 +209,8 @@ export class PopupEditCalendarComponent extends UIComponent {
       this.callfc.openForm(
         PopupAddDayoffsComponent,
         'Chỉnh sửa ngày nghỉ',
-        800,
-        null,
+        550,
+        420,
         '',
         [this.evtCDDate, false]
       );

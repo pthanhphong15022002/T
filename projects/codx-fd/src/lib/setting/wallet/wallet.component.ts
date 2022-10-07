@@ -31,15 +31,6 @@ export class WalletComponent extends UIComponent implements OnInit {
   scheduledTasks;
   scheduledTasks_CoCoin;
   scheduledTasks_KuDos;
-  lstHandleStringToBool = [
-    'ActiveCoins',
-    'MaxCoinsForEGiftControl',
-    'ActiveCoCoins',
-    'ExchangeRateCoinsControl',
-    'ResetCoCoinsControl',
-    'ActiveMyKudos',
-    'ResetMyKudosControl',
-  ];
   listParameter;
   funcID: any;
   functionList: any;
@@ -58,12 +49,12 @@ export class WalletComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.tenant = this.authStore.get();
-    this.route.params.subscribe(params => {
-      if(params) this.funcID = params['funcID'];
-    })
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if(res) this.functionList = res;
-    })
+    this.route.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
   onInit(): void {
     this.LoadData();
@@ -108,30 +99,34 @@ export class WalletComponent extends UIComponent implements OnInit {
     // });
   }
   changValueListPopup(e) {
-    this.data[e.field] = e.data.value;
-    this.objectUpdateCoin[e.field] = this.data[e.field];
+    this.objectUpdateCoin[e.field] = e.data;
     this.fieldUpdateCoin = e.field;
-    this.handleSaveParameter();
   }
-  valueChange(e, element) {
-    this.data[e.field] = e.data; //this.data[e.field] === '0' ? '1' : '0';
-    this.objectUpdateCoin[e.field] = this.data[e.field] === true ? '1' : '0';
-    this.fieldUpdateCoin = e.field;
-
-    if (e.field == 'ActiveCoCoins') {
-      this.disableGroupFund = !e.data;
+  valueChangeVoucher(e) {
+    if (e) {
+      this.objectUpdateCoin[e.field] = e.data;
     }
-    this.handleSaveParameter();
+  }
+  valueChange(e) {
+    if (e) {
+      var dt = e.data == true ? '1' : '0';
+      this.objectUpdateCoin[e.field] = dt;
+      this.fieldUpdateCoin = e.field;
+      if (e.field == 'ActiveCoCoins') {
+        this.disableGroupFund = !e.data;
+      }
+      this.handleSaveParameter();
+    }
   }
   onSavePopupCombobx() {
-    this.objectUpdateCoin['MaxCoinsForEGift'] = this.data.MaxCoinsForEGift;
-    this.objectUpdateCoin['MaxCoinsForEGiftPeriod'] =
-      this.data.MaxCoinsForEGiftPeriod;
-
+    // this.objectUpdateCoin['MaxCoinsForEGift'] = this.quantity.MaxCoinsForEGift;
+    // this.objectUpdateCoin['MaxCoinsForEGiftPeriod'] =
+    //   this.quantity.MaxCoinsForEGiftPeriod;
     this.onSaveCMParameter(this.objectUpdateCoin);
   }
   emptyObjectUpdate() {
     this.objectUpdateCoin = {};
+    this.modalService.dismissAll();
   }
   // handleTrueFalse(value) {
   //   return value == '1' ? true : false;
@@ -144,20 +139,32 @@ export class WalletComponent extends UIComponent implements OnInit {
       .call(
         'ERM.Business.FD',
         'WalletsBusiness',
-        'GetDataForSettingWalletAsync',
+        'GetDataForSettingWalletAsync'
       )
       .subscribe((res) => {
         if (res && res.msgBodyData[0].length > 0) {
           this.data = res.msgBodyData[0][0];
-          this.quantity = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
-          this.title = this.fdSV.convertListToObject(this.data, 'fieldName', 'title');
-          this.description = this.fdSV.convertListToObject(this.data, 'fieldName', 'description');
-          this.field = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
-          for (const property in this.data) {
-            if (this.lstHandleStringToBool.includes(property)) {
-              this.data[property] = this.data[property] == '1' ? true : false;
-            }
-          }
+          this.quantity = this.fdSV.convertListToObject(
+            this.data,
+            'fieldName',
+            'fieldValue'
+          );
+          this.title = this.fdSV.convertListToObject(
+            this.data,
+            'fieldName',
+            'title'
+          );
+          this.description = this.fdSV.convertListToObject(
+            this.data,
+            'fieldName',
+            'description'
+          );
+          this.field = this.fdSV.convertListToObject(
+            this.data,
+            'fieldName',
+            'fieldValue'
+          );
+          console.log("quantity", this.quantity)
           if (this.quantity.ActiveCoCoins == true) {
             this.disableGroupFund = false;
           } else {
@@ -181,11 +188,11 @@ export class WalletComponent extends UIComponent implements OnInit {
     //   funcID: 'FED20431',
     // });
   }
-  onSaveStatusPolicy(data, value) {
+  onSaveStatusPolicy(data) {
     this.api
       .execSv<any>(
-        'FED',
-        'ERM.Business.FED',
+        'FD',
+        'ERM.Business.FD',
         'WalletsBusiness',
         'OnSavePolicySettingWalletAsync',
         [data.field]
@@ -206,7 +213,7 @@ export class WalletComponent extends UIComponent implements OnInit {
   openFormChangeCoin(content, typeContent) {
     this.fieldUpdateCoin = typeContent;
     this.objectUpdateCoin[this.fieldUpdateCoin] =
-      this.data[this.fieldUpdateCoin];
+      this.quantity[this.fieldUpdateCoin];
     this.changedr.detectChanges();
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -215,40 +222,40 @@ export class WalletComponent extends UIComponent implements OnInit {
     });
   }
 
+  valueChangeCoin(e) {
+    if (e) {
+      this.objectUpdateCoin[e.field] = e.data;
+    }
+  }
+
   policyList = [];
   getdatas(category) {
     return this.policyList.filter((data) => data.category === category);
   }
   handleSaveParameter() {
     this.onSaveCMParameter(this.objectUpdateCoin);
-
-    this.modalService.dismissAll();
   }
   onSaveCMParameter(objectUpdate) {
     this.api
       .callSv(
         'SYS',
-        'ERM.Business.CM',
-        'ParametersBusiness',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
         'SaveParamsOfPolicyAsync',
-        ['FED_Parameters', null, JSON.stringify(objectUpdate)]
+        ['FDParameters', null, JSON.stringify(objectUpdate)]
       )
       .subscribe((res) => {
         if (res && res.msgBodyData.length > 0) {
           if (res.msgBodyData[0] === true) {
             for (const property in objectUpdate) {
-              if (this.lstHandleStringToBool.includes(property)) {
-                this.data[property] =
-                  objectUpdate[property] == '1' ? true : false;
-              } else {
-                this.data[property] = objectUpdate[property];
-              }
+              this.quantity[property] = objectUpdate[property];
             }
             this.changedr.detectChanges();
             this.objectUpdateCoin = {};
           }
         }
       });
+    this.modalService.dismissAll();
   }
 
   LoadDataPolicies(category) {
@@ -256,7 +263,7 @@ export class WalletComponent extends UIComponent implements OnInit {
     let cardType = null;
     this.api
       .call(
-        'ERM.Business.FED',
+        'ERM.Business.FD',
         'SettingsBusiness',
         'GetDataForPolicyCoinDedicationAsync',
         [cardType, category, applyFor]
