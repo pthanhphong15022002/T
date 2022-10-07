@@ -506,7 +506,7 @@ export class HomeComponent extends UIComponent {
     // data.objectType = 'WP_Notes';
     // data.objectId = '628c326c590addf224627f42';
     data.functionID = this.codxview?.formModel?.funcID;
-
+    data.isDM = true;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;

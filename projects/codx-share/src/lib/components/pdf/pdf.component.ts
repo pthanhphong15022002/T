@@ -31,7 +31,7 @@ import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-
   styleUrls: ['./pdf.component.scss'],
   providers: [NgxExtendedPdfViewerService],
 })
-export class PdfComponent extends UIComponent implements AfterViewInit , OnChanges {
+export class PdfComponent extends UIComponent implements AfterViewInit  {
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -225,7 +225,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;
           }
-          this.detectorRef.detectChanges();
+          //this.detectorRef.detectChanges();
         });
 
       this.cache.valueList('ES015').subscribe((res) => {
@@ -270,18 +270,13 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
             ? false
             : true,
       });
-      this.detectorRef.detectChanges();
+      //this.detectorRef.detectChanges();
     } else {
       this.curFileUrl = this.inputUrl;
-      this.detectorRef.detectChanges();
+     // this.detectorRef.detectChanges();
     }
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if ((changes['inputUrl'] && (changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue))) {
-      this.curFileUrl = changes['inputUrl']?.currentValue ;
-   
-    }
-  }
+
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
     if (this.isEditable) {
@@ -620,7 +615,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
-    debugger;
     if (this.isEditable) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')

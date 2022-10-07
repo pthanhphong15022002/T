@@ -163,7 +163,7 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "RenameFileAsync", [id, fileName]);
     }
 
-    addMultiFileObservable(list: FileUpload[]): Observable<DataReturn[] | null> {
+    addMultiFileObservable(list: FileUpload[] , isDM: boolean = false): Observable<DataReturn[] | null> {
         //var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);
         // return this.api
@@ -185,7 +185,7 @@ export class FileService implements OnDestroy {
         // );
 
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", data).pipe(
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM]).pipe(
             map(data => {
                 return data;                
             }),
@@ -196,11 +196,11 @@ export class FileService implements OnDestroy {
         );
     }
 
-    addMultiFile(list: FileUpload[]): Observable<DataReturn[]> {
+    addMultiFile(list: FileUpload[] , isDM: boolean = false): Observable<DataReturn[]> {
         //var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", data);
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM]);
     }
 
     UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean): Observable<any> {
@@ -246,14 +246,14 @@ export class FileService implements OnDestroy {
     }
 
     //Observable<any>
-    addFile(file: FileUpload): Observable<any> {
+    addFile(file: FileUpload , isDM : boolean = false): Observable<any> {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);        
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", file);
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM]);
     }
 
-    addFileObservable(file: FileUpload): Observable<any> {
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", file).pipe(
+    addFileObservable(file: FileUpload, isDM:boolean = false): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM]).pipe(
             map(data => {
                 return data;                
             }),
