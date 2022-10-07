@@ -77,7 +77,7 @@ export class HomeComponent extends UIComponent {
   itemSelected: any;
   dataFile: any;
 
-  fileName = "";
+  visible: boolean = false;
 
   //loadedFile: boolean;
   //loadedFolder: boolean;
@@ -1237,6 +1237,10 @@ export class HomeComponent extends UIComponent {
   viewFile(e:any)
   {
     this.dataFile = e;
-    this.Dialog.show();
+    this.visible = true;
+  }
+  dialogClosed(){
+    this.visible = false;
+    this.changeDetectorRef.detectChanges();
   }
 }
