@@ -71,13 +71,12 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.LoadDataPolicies('1');
     this.getSettingRunPolicyCoCoin();
     this.getSettingRunPolicyKuDos();
-    this.getInfoCMParameter();
-    this.at.queryParams.subscribe((params) => {
+    this.at.params.subscribe((params) => {
       if (params && params.funcID) {
         this.api
           .call('ERM.Business.SYS', 'FunctionListBusiness', 'GetAsync', [
             '',
-            params.funcID.substring(0, 6),
+            params.funcID,
           ])
           .subscribe((res) => {
             //this.ngxLoader.stop();
@@ -130,15 +129,16 @@ export class WalletComponent extends UIComponent implements OnInit {
       this.data.MaxCoinsForEGiftPeriod;
 
     this.onSaveCMParameter(this.objectUpdateCoin);
-    this.modalService.dismissAll();
   }
   emptyObjectUpdate() {
     this.objectUpdateCoin = {};
-    this.modalService.dismissAll();
   }
   // handleTrueFalse(value) {
   //   return value == '1' ? true : false;
   // }
+  title: any;
+  description: any;
+  field: any;
   LoadData() {
     this.api
       .call(
@@ -150,6 +150,9 @@ export class WalletComponent extends UIComponent implements OnInit {
         if (res && res.msgBodyData[0].length > 0) {
           this.data = res.msgBodyData[0][0];
           this.quantity = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
+          this.title = this.fdSV.convertListToObject(this.data, 'fieldName', 'title');
+          this.description = this.fdSV.convertListToObject(this.data, 'fieldName', 'description');
+          this.field = this.fdSV.convertListToObject(this.data, 'fieldName', 'fieldValue');
           for (const property in this.data) {
             if (this.lstHandleStringToBool.includes(property)) {
               this.data[property] = this.data[property] == '1' ? true : false;
@@ -170,7 +173,6 @@ export class WalletComponent extends UIComponent implements OnInit {
       centered: true,
       size: 'sm',
     });
-
     this.changedr.detectChanges();
   }
   redirectPageDetailWallet(applyFor: string) {
@@ -248,18 +250,7 @@ export class WalletComponent extends UIComponent implements OnInit {
         }
       });
   }
-  getInfoCMParameter() {
-    let predicate =
-      'FormName=@0 && TransType=null && (FieldName = @1 or FieldName = @2  or FieldName = @3)';
-    let dataValue = 'FED_Parameters;PolicyCoins;PolicyCoCoins;PolicyKudos';
-    this.settingSV
-      .getParameterByPredicate(predicate, dataValue)
-      .subscribe((result) => {
-        if (result?.length > 0) {
-          this.listParameter
-        }
-      });
-  }
+
   LoadDataPolicies(category) {
     let applyFor = '1';
     let cardType = null;

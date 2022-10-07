@@ -499,6 +499,7 @@ codx-view-list-detail .codx-detail-footer {
   margin: 0;
 }
 
+
 .nav-link {
   display: block;
   padding: 0.45rem 0.75rem;
@@ -670,4 +671,20 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 .container-md {
   max-width: 800px;
   margin: 0 auto;
+}
+
+codx-toolbar-button {
+  display: flex;
+}
+
+codx-toolbar-button>span.btn {
+  border-radius: 3px 0 0 3px !important;
+}
+
+codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
+  border-radius: 0 3px 3px 0 !important;
+}
+
+.codx-search .btn-icon-clear {
+  margin-right: 20px;
 }

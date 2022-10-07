@@ -12,6 +12,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { Thickness } from '@syncfusion/ej2-charts';
 import {
+  CacheService,
   CallFuncService,
   CodxFormComponent,
   CodxService,
@@ -24,6 +25,7 @@ import {
   RequestOption,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupSignatureComponent } from '../popup-signature/popup-signature.component';
 
@@ -61,12 +63,14 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   data: any = null;
   headerText = '';
   subHeaderText = '';
+  grvSetup: any = {};
 
   constructor(
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private notification: NotificationsService,
     private cfService: CallFuncService,
+    private cache: CacheService,
     private codxService: CodxService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
@@ -86,6 +90,17 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         });
       }
     }
+
+    this.cache
+      .gridViewSetup(
+        this.form?.formModel?.formName,
+        this.form?.formModel?.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.grvSetup = res;
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -108,6 +123,16 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           fullName: this.data?.fullName,
           userID: this.data?.userID,
           email: this.data?.email,
+        });
+
+        let approver = new Approvers();
+        approver.roleType = 'U';
+        approver.approver = this.data.userID;
+        this.esService.getDetailApprover(approver).subscribe((detail) => {
+          if (detail?.length > 0) {
+            this.data.position = detail[0]?.position;
+            this.form?.formGroup?.patchValue({ position: this.data?.position });
+          }
         });
       } else if (event?.field == 'signatureType') {
         if (event?.data == '2') {
@@ -216,7 +241,11 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   openPopup(content) {
     if (this.data.fullName == '' || this.data.fullName == null) {
-      this.notification.notify('Tên người dùng không được bỏ trống!');
+      this.notification.notifyCode(
+        'SYS028',
+        0,
+        '"' + this.grvSetup['FullName'].headerText + '"'
+      );
       return;
     }
     let data = {
@@ -224,14 +253,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
       model: this.dialogSignature,
       data: this.data,
     };
-    this.cfService.openForm(
-      PopupSignatureComponent,
-      'Thêm mới ghi chú',
-      800,
-      600,
-      '',
-      data
-    );
+    this.cfService.openForm(PopupSignatureComponent, '', 800, 600, '', data);
 
     this.cr.detectChanges();
   }

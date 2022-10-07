@@ -222,7 +222,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   closeAddForm(event) {}
 
-
   changeValueDate(evt: any) {}
 
   valueChange(evt: any, a?: any, type?: any) {}
@@ -246,30 +245,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   clickMF(event, data) {
     this.popupTitle=event?.text + " " + this.funcIDName;
-    switch (event?.functionID) {
-      case 'EPT40101': //duyet
-        this.edit(data);
-        break;
-
-      case 'EPT40102': //ki
-        //this.delete(data);
-        break;
-
-      case 'EPT40103': //dong thuan
-        //this.delete(data);
-        break;
-
-      case 'EPT40104': //dong dau
-        //this.delete(data);
-        break;
-
-      case 'EPT40105': //tu choi
-        //this.delete(data);
-        break;
-
-      case 'EPT40106': //lam lai
-        //this.delete(data);
-        break;
+    switch (event?.functionID) {     
 
       case 'SYS02': //Xoa
         this.delete(data);

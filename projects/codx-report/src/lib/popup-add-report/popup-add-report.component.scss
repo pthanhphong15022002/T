@@ -1,3 +1,11 @@
-codx-layout-add .codx-tab .tab-content {
-  width: 100% !important;
+.onhover {
+  display: none;
+  width: 35px;
+  border-radius: 50px !important;
+  margin-left: 10px;
+  height: 20px;
+}
+
+tr:hover .onhover{
+  display: inline-block;
 }

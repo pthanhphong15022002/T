@@ -19,7 +19,8 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
-
+import { PopupAddProcessStepComponent } from './processstep/popup-add-processstep/popup-add-processstep.component';
+import { ProcessStepComponent } from './processstep/processstep.component';
 export const routes: Routes = [
   {
     path: '',
@@ -32,6 +33,10 @@ export const routes: Routes = [
       {
         path: 'processstep/:funcID',
         component: ProcessstepsComponent,
+      },
+      {
+        path: 'processstepTH/:funcID',
+        component: ProcessStepComponent,
       },
     ],
   },
@@ -46,6 +51,9 @@ export const routes: Routes = [
     ViewListProcessesComponent,
     ProcessstepsComponent,
     PopAddProcessstepsComponent,
+    ProcessStepComponent,
+    PopupAddProcessStepComponent,
+
   ],
   imports: [
     RouterModule.forChild(routes),
