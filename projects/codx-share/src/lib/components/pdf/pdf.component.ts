@@ -1118,6 +1118,13 @@ export class PdfComponent
 
       this.esService.getListCAByBytes(this.curFileUrl).subscribe((res) => {
         this.lstCA = res;
+        this.lstCA?.forEach((ca) => {
+          this.lstCACollapseState.push({
+            open: false,
+            verifiedFailed: false,
+            detail: false,
+          });
+        });
         this.gotLstCA = true;
         this.detectorRef.detectChanges();
       });
