@@ -20,3 +20,15 @@ export class BP_ProcessSteps {
   owners: string;
   stepType: string;
 }
+
+// Thông tin Email để gửi
+export class tmpInforSentEMail
+{
+    subject : string
+    content : string
+    from : string
+    to : string
+    tenant : string
+    saveTemplate :boolean
+}
+

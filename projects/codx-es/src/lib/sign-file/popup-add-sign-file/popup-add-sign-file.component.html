@@ -470,13 +470,14 @@
               [ngClass]="currentTab == 2 ? 'active show' : ''"
             >
               <app-approval-steps
-                #stepAppr
-                *ngIf="currentTab == 2"
                 #viewApprovalStep
+                *ngIf="currentTab == 2"
                 [transId]="
                   data.approveControl == '1' ? data.recID : data.processID
                 "
                 [recID]="data.recID"
+                [type]="'1'"
+                [mssgDelete]="mssgDelete"
                 (addEditItem)="dataStepChange($event)"
               >
               </app-approval-steps>

@@ -33,7 +33,7 @@
                 </div> -->
             </div>
             <div class="d-flex mb-2">
-                <codx-tag entityName="DM_FileInfo" [isEdit]="true" [value]="''" (valueChange)="txtValue($event, 'tag')">
+                <codx-tag entityName="DM_FileInfo" [isEdit]="true" [value]="fileEditing.tags" (valueChange)="txtValue($event, 'tag')">
                 </codx-tag>
 
                 <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="fileEditing.tags"
@@ -161,7 +161,7 @@
                     </div>
                     <div class="col-10">
                         <codx-input placeholder="{{titleExcerpts}}..." class="form-control test-datetime"
-                            type="textarea" format="ed2" style="width:100%" [crrValue]="fileEditing.excerpts"
+                            type="textarea" format="ed3" style="width:100%" height="100px" [crrValue]="fileEditing.excerpts"
                             (valueChange)="txtValue($event, 'excerpts')"></codx-input>
                         <!-- <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
                         [(ngModel)]="fileEditing.excerpts"></textarea> -->

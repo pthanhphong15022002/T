@@ -52,16 +52,12 @@ export class PopupSignForApprovalComponent extends UIComponent {
   dialog;
   data;
   user;
-  // data = {
-  //   funcID: 'EST021',
-  //   recID: 'fda05e5c-24e7-11ed-a51b-d89ef34bb550',
-  // };
 
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
-  recID = '';
-  // recID = '';
+  sfRecID = '';
+  transRecID = null;
   funcID;
   cbxName;
 
@@ -74,7 +70,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.stepNo = this.data?.stepNo;
     console.log('step no', this.stepNo);
 
-    this.recID = this.data.recID;
+    this.sfRecID = this.data.sfRecID;
+    this.transRecID = this.data.transRecID;
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
@@ -112,7 +109,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
       500,
       this.funcID,
       {
-        signfileID: this.recID,
+        signfileID: this.sfRecID,
         mode: mode,
         title: title,
         subTitle: subTitle,
