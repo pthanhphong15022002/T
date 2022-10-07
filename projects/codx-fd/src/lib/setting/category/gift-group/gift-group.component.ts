@@ -109,7 +109,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             this.columnsGrid = [
-              { field: 'giftID', headerText: 'Mã đơn', width: 50 },
+              { field: 'giftID', headerText: res.GiftID.headerText, width: 50 },
               {
                 field: 'giftName',
                 headerText: res.GiftName.headerText,
