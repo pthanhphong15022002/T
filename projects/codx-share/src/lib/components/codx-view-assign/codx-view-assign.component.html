@@ -1,6 +1,6 @@
 <codx-treeview #treeView [itemTemplate]="templateTreeView" [data]="dataTree" [entityName]="'TM_Tasks'" [service]="'TM'"
   [enableCheck]="true" idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true"
-  [isLoadChild]="false">
+  [isLoadChild]="false" (selectionChange)="selectionChange($event)">
 </codx-treeview>
 
 <!-- temptree -->
@@ -10,7 +10,7 @@
       <div class="d-flex align-items-start justify-content-between mb-3">
         <div class="d-flex align-items-start">
           <span *ngIf="data?.items.length > 0">
-            <div class="icon-16 icon-add_box me-2 align-items-start pt-3"></div>
+            <div id="{{data.taskID}}" class="icon-16 icon-add_box me-2 align-items-start pt-3"></div>
           </span>
           <div class="d-flex align-items-top w-100">
             <div class="me-3">

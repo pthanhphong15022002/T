@@ -10,11 +10,27 @@ import { FormModel } from 'codx-core';
 export class CodxViewAssignComponent implements OnInit {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
-  @Input() vllStatus = "TMT004" ;
-  dialog :any
-  constructor() { }
+  @Input() vllStatus = 'TMT004';
+  dialog: any;
+  isClose =true ;
+  isShow =false ;
+  constructor() {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  selectionChange(parent) {
+    var id = parent?.data.taskID;
+    var element = document.getElementById(id);
+    if (element) {
+      this.isClose = element.classList.contains('icon-add_box');
+      this.isShow = element.classList.contains('icon-indeterminate_check_box');
+      if (this.isClose) {
+        element.classList.remove('icon-add_box');
+        element.classList.add('icon-indeterminate_check_box');
+      } else if (this.isShow) {
+        element.classList.remove('icon-indeterminate_check_box');
+        element.classList.add('icon-add_box');
+      }
+    }
   }
-
 }
