@@ -123,14 +123,14 @@
             <codx-label
               name="lblTitleFrom"
               default="Từ:"
-              formName="EmailTemplates"
-              gridViewName="grvEmailTemplates"
+              [formName]="formModel?.formName"
             >
             </codx-label>
           </div>
           <div class="w-100 me-2">
             <div class="float-left align-items-center">
-              <ng-container *ngFor="let item of lstFrom">
+                <codx-img [objectId]="user.userID" [objectType]="'AD_Users'" [objectName]="user.userName" > </codx-img>
+              <!-- <ng-container *ngFor="let item of lstFrom">
                 <div
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType == 'U'"
@@ -175,11 +175,11 @@
                     ><span class="icon-close icon-16"></span
                   ></a>
                 </div>
-              </ng-container>
+              </ng-container> -->
             </div>
           </div>
         </div>
-        <codx-input
+        <!-- <codx-input
           type="Share"
           [refValue]="vllShare"
           field="AssignTo"
@@ -188,23 +188,19 @@
           [showInput]="false"
           (valueChange)="eventApply($event)"
         >
-        </codx-input>
-        <!-- <span class="btn btn-icon btn-sm btn-light">
-            <i
-              class="icon-person_add_alt_1 icon-18"
-              (click)="testdata(controlShare1)"
-            ></i
-          ></span> -->
+        </codx-input> -->
       </div>
     </div>
   </div>
   <div class="d-flex justify-content-between border-bottom mt-4">
     <div class="w-100">
+      <codx-label name="'lblTopic" [default]="'Chủ đề :'"></codx-label>
       <codx-input
         type="text"
         class="borderless"
         placeholder="Chủ đề"
         ControlName="subject"
+        [formName]="formModel?.formName"
         [Group]="form.formGroup"
       >
       </codx-input>
@@ -290,7 +286,7 @@
           <codx-label
             default="Chọn trường dữ liệu"
             name="lblChooseField"
-            [formModel]="formModel"
+            [formName]="formModel?.formName"
           ></codx-label>
         </span>
         <span class="icon-keyboard_arrow_down icon-16 ms-2"></span>
@@ -328,7 +324,7 @@
         ><span>
           <codx-label
             name="UploadFile"
-            formName="Tasks"
+           
             default="Upload File"
           ></codx-label>
         </span>

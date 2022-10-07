@@ -77,6 +77,6 @@ export class PopupSendEmailComponent implements OnInit {
   }
 
   addFile(e){
-
+    this.attachment.uploadFile();
   }
 }
