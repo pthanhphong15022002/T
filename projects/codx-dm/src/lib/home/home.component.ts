@@ -77,7 +77,7 @@ export class HomeComponent extends UIComponent {
   itemSelected: any;
   dataFile: any;
 
-  fileName = "";
+  visible: boolean = false;
 
   //loadedFile: boolean;
   //loadedFolder: boolean;
@@ -506,7 +506,7 @@ export class HomeComponent extends UIComponent {
     // data.objectType = 'WP_Notes';
     // data.objectId = '628c326c590addf224627f42';
     data.functionID = this.codxview?.formModel?.funcID;
-
+    data.isDM = true;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
@@ -1237,6 +1237,10 @@ export class HomeComponent extends UIComponent {
   viewFile(e:any)
   {
     this.dataFile = e;
-    this.Dialog.show();
+    this.visible = true;
+  }
+  dialogClosed(){
+    this.visible = false;
+    this.changeDetectorRef.detectChanges();
   }
 }

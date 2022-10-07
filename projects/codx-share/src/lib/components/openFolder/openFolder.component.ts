@@ -47,6 +47,7 @@ export class OpenFolderComponent implements OnInit {
   fileUploadList: FileUpload[];
   remotePermission: Permission[];
   dialog: any;
+  isDM= false;
   @Input() objectType: string;
   @Input() objectId: string;
   @Input() folderType: string;
@@ -309,7 +310,7 @@ export class OpenFolderComponent implements OnInit {
     }
     this.atSV.fileListAdded = [];
     if (total > 1) {
-      var done = this.fileService.addMultiFile(this.fileUploadList).toPromise().then(res => {
+      var done = this.fileService.addMultiFile(this.fileUploadList,false).toPromise().then(res => {
         if (res != null) {
           var newlist = res.filter(x => x.status == 6);
           var newlistNot = res.filter(x => x.status == -1);
@@ -397,7 +398,7 @@ export class OpenFolderComponent implements OnInit {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem).toPromise();
+    var done = this.fileService.addFile(fileItem,this.isDM).toPromise();
     if (done) {
       done.then(item => {
         if (item.status == 0) {

@@ -228,7 +228,7 @@ export class PdfComponent
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;
           }
-          this.detectorRef.detectChanges();
+          //this.detectorRef.detectChanges();
         });
 
       this.cache.valueList('ES015').subscribe((res) => {
@@ -280,7 +280,7 @@ export class PdfComponent
             ? false
             : true,
       });
-      this.detectorRef.detectChanges();
+      //this.detectorRef.detectChanges();
     } else {
       this.curFileUrl = this.inputUrl;
       this.detectorRef.detectChanges();
@@ -297,6 +297,7 @@ export class PdfComponent
       this.detectorRef.detectChanges();
     }
   }
+
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
     if (this.isEditable) {
