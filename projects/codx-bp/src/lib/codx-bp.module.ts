@@ -21,6 +21,7 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { PopupAddProcessStepComponent } from './processstep/popup-add-processstep/popup-add-processstep.component';
 import { ProcessStepComponent } from './processstep/processstep.component';
+import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
 export const routes: Routes = [
   {
     path: '',
@@ -53,6 +54,7 @@ export const routes: Routes = [
     PopAddProcessstepsComponent,
     ProcessStepComponent,
     PopupAddProcessStepComponent,
+    PopupSendEmailComponent,
 
   ],
   imports: [
