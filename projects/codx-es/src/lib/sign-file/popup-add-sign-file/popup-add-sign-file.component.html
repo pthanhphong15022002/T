@@ -476,7 +476,8 @@
                 [transId]="
                   data.approveControl == '1' ? data.recID : data.processID
                 "
-                (addEditItem)="openFormAdd($event)"
+                [recID]="data.recID"
+                (addEditItem)="dataStepChange($event)"
               >
               </app-approval-steps>
             </div>
@@ -598,9 +599,9 @@
         </label>
         <codx-input
           type="combobox"
-          field="recID"
+          field="processID"
           refValue="ProcessTemplate"
-          [crrValue]="'002ba6f2-37f0-11ed-97b6-509a4c39550b'"
+          [crrValue]="processID"
           (valueChange)="processIDChange($event)"
         >
         </codx-input>
