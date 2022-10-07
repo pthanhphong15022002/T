@@ -31,7 +31,10 @@ import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-
   styleUrls: ['./pdf.component.scss'],
   providers: [NgxExtendedPdfViewerService],
 })
-export class PdfComponent extends UIComponent implements AfterViewInit , OnChanges {
+export class PdfComponent
+  extends UIComponent
+  implements AfterViewInit, OnChanges
+{
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -173,14 +176,18 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
   hideActions: boolean = false;
 
   onInit() {
+    console.log('input url', this.inputUrl);
+
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
+        console.log('allow', res);
+
         this.signPerRow = res.SignPerRow;
         this.align = res.Align;
         this.direction = res.Direction;
         this.areaControl = res.AreaControl == '1';
         this.isAwait = res.Await == '1';
-        this.allowEdit = res.AllowEditAreas ? res.AllowEditAreas : true;
+        this.allowEdit = res.AllowEditAreas == '0' ? false : true;
 
         this.detectorRef.detectChanges();
       });
@@ -278,9 +285,14 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if ((changes['inputUrl'] && (changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue))) {
-      this.curFileUrl = changes['inputUrl']?.currentValue ;
-   
+    if (
+      changes['inputUrl'] &&
+      changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue
+    ) {
+      console.log('changes', changes);
+
+      this.curFileUrl = changes['inputUrl']?.currentValue;
+      this.detectorRef.detectChanges();
     }
   }
   ngAfterViewInit() {
@@ -507,7 +519,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
 
   //loaded pdf
   loadedPdf(e: any) {
-    debugger;
     this.pageMax = e.pagesCount;
     this.curPage = this.pageMax;
     let ngxService: NgxExtendedPdfViewerService =
@@ -621,7 +632,6 @@ export class PdfComponent extends UIComponent implements AfterViewInit , OnChang
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
-    debugger;
     if (this.isEditable) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
