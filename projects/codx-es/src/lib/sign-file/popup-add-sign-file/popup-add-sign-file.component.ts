@@ -387,9 +387,9 @@ export class PopupAddSignFileComponent implements OnInit {
                   });
                   this.data.approveControl = '3';
 
-                  // this.esService
-                  //   .deleteStepByTransID(this.data.transID)
-                  //   .subscribe();
+                  this.esService
+                    .deleteStepByTransID(this.data.recID)
+                    .subscribe();
                   this.dialogSignFile.patchValue({ refNo: this.data.refNo });
                   let category = event.component?.itemsSelected[0];
                   this.dialogSignFile.patchValue({
@@ -424,7 +424,7 @@ export class PopupAddSignFileComponent implements OnInit {
               });
               this.data.approveControl = '3';
 
-              //this.esService.deleteStepByTransID(this.data.recID).subscribe();
+              this.esService.deleteStepByTransID(this.data.recID).subscribe();
               this.dialogSignFile.patchValue({ refNo: this.data.refNo });
               let category = event.component?.itemsSelected[0];
               this.dialogSignFile.patchValue({
@@ -785,7 +785,6 @@ export class PopupAddSignFileComponent implements OnInit {
       if (this.data.approveControl != '1') {
         this.data.approveControl = '1';
         this.dialogSignFile.patchValue({ approveControl: '1' });
-        this.esService.deleteStepByTransID(this.data.recID).subscribe();
         this.onSaveSignFile();
       }
     }
