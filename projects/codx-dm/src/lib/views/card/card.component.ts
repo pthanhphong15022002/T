@@ -65,7 +65,7 @@ export class CardComponent implements OnInit {
   }
   dbView()
   {
-    if(this.data?.recID)
+    if(this.data?.recID && this.data?.fileName != null)
     {
       this.fileService.getFile(this.data?.recID).subscribe((data) => {
         this.viewFile.emit(data);
