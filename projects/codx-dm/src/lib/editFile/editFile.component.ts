@@ -41,6 +41,7 @@ export class EditFileComponent implements OnInit {
   titleCate = 'Phân loại';
   titleLanguage = 'Ngôn ngữ';
   titleExcerpts = 'Trích lục';
+  titleRevisionNote = 'Mô tả';
   titleRelation = 'Mối quan hệ';
   titleSource = 'Nguồn';
   titleCopyright  = 'Bản quyền';
@@ -568,6 +569,12 @@ if(this.fileEditing.type == null)
             this.fileEditing.excerpts = $event.data;
             else
             this.fileEditing.excerpts= "";
+            break;
+            case 'revisionNote':
+          if ($event.data.length > 0)
+            this.fileEditing.revisionNote = $event.data;
+            else
+            this.fileEditing.revisionNote= "";
             break;
         case 'authur':
           if ($event.data.length > 0)

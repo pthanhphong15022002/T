@@ -44,6 +44,7 @@ export class PropertiesComponent implements OnInit {
   titleSend = 'Gửi';
   titleHistory = 'Lịch sử';
   namelanguage = '';
+  messerror = 'Không có dữ liệu';
   readonly = false;
   currentRate = 1;
   selected = 0;

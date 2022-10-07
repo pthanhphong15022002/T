@@ -80,6 +80,7 @@ export class AttachmentComponent implements OnInit {
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
 
+  description = '';
   urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
@@ -585,6 +586,7 @@ export class AttachmentComponent implements OnInit {
 
   changeValueAgencyText(event: any) {
     //this.disEdit.agencyName = this.dispatch.AgencyName = event.data
+    this.data.description = event.data.description;
   }
   //fetch () : Observable<any[]>
   saveFilesObservable(): Promise<Observable<any[]>> {

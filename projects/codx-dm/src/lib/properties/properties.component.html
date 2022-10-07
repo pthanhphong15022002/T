@@ -83,7 +83,7 @@
                                 </span>
                             </ng-container>
                             <ng-template #elseVersion>
-                                <span class="">Không có dữ liệu</span>
+                                <span class="">{{messerror}}</span>
                             </ng-template>
                         </div>
                         <div *ngIf="fileEditing" class="d-flex my-3">
@@ -92,7 +92,7 @@
                                 <span class="">{{fileEditing.language}}</span>
                             </ng-container>
                             <ng-template #elselanguage>
-                                <span class="">Không có dữ liệu</span>
+                                <span class="">{{messerror}}</span>
                             </ng-template>
                             <!-- <span class="">{{fileEditing.language ? fileEditing.language : "Không có dữ liệu"}}</span> -->
                         </div>
@@ -107,7 +107,7 @@
                                     <span class="">{{fileEditing.publisher}}</span>
                                 </ng-container>
                                 <ng-template #elsepublisher>
-                                    <span class="">Không có dữ liệu</span>
+                                    <span class="">{{messerror}}</span>
                                 </ng-template>
                                 <!-- <span class="">{{fileEditing.publisher ? fileEditing.publisher : "Không có dữ liệu"}}</span> -->
                             </div>
