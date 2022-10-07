@@ -164,31 +164,29 @@
               </td>
               <td class="text-center">
                 <div class="d-flex align-items-center">
-                  <div class="dropdown ms-2">
+                  <div ngbDropdown class="d-inline-block">
                     <button
-                      class="btn btn-icon btn-xs"
                       type="button"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
+                      class="btn btn-icon align-items-start"
+                      id="dropdownBasic1"
+                      ngbDropdownToggle
                       (click)="toggleMoreFunc(item.recID)"
                     >
                       <span class="icon-more_vert icon-18"></span>
                     </button>
-                    <div *ngIf="dayOffId == item.recID">
-                      <a class="dropdown-item" (click)="openDayOffs(item)">
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button ngbDropdownItem (click)="openDayOffs(item)">
                         <div class="d-flex align-items-center">
                           <span class="icon-edit icon-16"></span>
                           <span class="ms-3">Chỉnh sửa</span>
                         </div>
-                      </a>
-                      <a class="dropdown-item" (click)="removeDayOff(item)">
+                      </button>
+                      <button ngbDropdownItem (click)="removeDayOff(item)">
                         <div class="d-flex align-items-center">
-                          <span class="icon-delete icon-16"></span>
+                          <span class="icon-edit icon-16"></span>
                           <span class="ms-3">Xóa</span>
                         </div>
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -236,17 +234,22 @@
                 <div class="d-flex align-items-center">
                   <div class="dropdown ms-2">
                     <button
+                      mdbDropdownToggle
                       class="btn btn-icon btn-xs"
                       type="button"
-                      id="dropdownMenuButton"
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
+                      id="dropdownMenuButton"
                       (click)="toggleMoreFunc(item.recID)"
                     >
                       <span class="icon-more_vert icon-18"></span>
                     </button>
-                    <div *ngIf="dayOffId == item.recID">
+                    <div
+                      mdbDropdownMenu
+                      aria-labelledby="dropdownMenuButton"
+                      class="dropdown-menu"
+                    >
                       <a class="dropdown-item" (click)="openCalendarDate(item)">
                         <div class="d-flex align-items-center">
                           <span class="icon-edit icon-16"></span>
