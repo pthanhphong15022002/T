@@ -128,6 +128,7 @@ export class CodxDMService {
   moveable = false;
   itemRight: ItemRight;
   path: string;
+  
   // public confirmationDialogService: ConfirmationDialogService;
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
@@ -506,27 +507,7 @@ export class CodxDMService {
       var dialogModel = new DialogModel();
       dialogModel.IsFull = true;
 
-      this.fileService.getFile(data.recID).subscribe((data) => {
-        this.callfc.openForm(
-          ViewFileDialogComponent,
-          data.fileName,
-          1000,
-          800,
-          '',
-          data,
-          '',
-          dialogModel
-        );
-        var files = this.listFiles;
-        if (files != null) {
-          let index = files.findIndex((d) => d.recID.toString() === data.recID);
-          if (index != -1) {
-            files[index] = data;
-          }
-          this.listFiles = files;
-          this.ChangeData.next(true);
-        }
-      });
+     
     }
   }
 
