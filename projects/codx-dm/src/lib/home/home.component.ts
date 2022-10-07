@@ -77,7 +77,7 @@ export class HomeComponent extends UIComponent {
   itemSelected: any;
   dataFile: any;
 
-  fileName = "";
+  visible: boolean = false;
 
   //loadedFile: boolean;
   //loadedFolder: boolean;
@@ -506,7 +506,7 @@ export class HomeComponent extends UIComponent {
     // data.objectType = 'WP_Notes';
     // data.objectId = '628c326c590addf224627f42';
     data.functionID = this.codxview?.formModel?.funcID;
-
+    data.isDM = true;
     let option = new SidebarModel();
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
@@ -695,7 +695,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -709,7 +709,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -717,13 +717,13 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        //active: false,
+        active: false,
         sameData: true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -732,12 +732,12 @@ export class HomeComponent extends UIComponent {
         text: 'List',
         type: ViewType.treedetail,
         sameData: true,
-        //active: false,
+        active: false,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: true,
+          resizable: false,
         }
       },
     ];
@@ -754,7 +754,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSearch,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -769,7 +769,7 @@ export class HomeComponent extends UIComponent {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -777,13 +777,13 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-apps',
         text: 'Small Card',
         type: ViewType.treedetail,
-        //active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateSmallCard,
-          resizable: true,
+          resizable: false,
         },
       },
       {
@@ -791,13 +791,13 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-format_list_bulleted',
         text: 'List',
         type: ViewType.treedetail,
-        //active: false,
+        active: false,
         sameData: true,
         model: {
           template: this.templateMain,
           panelRightRef: this.templateRight,
           template2: this.templateList,
-          resizable: true,
+          resizable: false,
         }
       }];
   
@@ -969,7 +969,7 @@ export class HomeComponent extends UIComponent {
             template: this.templateMain,
             panelRightRef: this.templateRight,
             template2: this.templateSearch,
-            resizable: true,
+            resizable: false,
           },
         })
 
@@ -1237,6 +1237,10 @@ export class HomeComponent extends UIComponent {
   viewFile(e:any)
   {
     this.dataFile = e;
-    this.Dialog.show();
+    this.visible = true;
+  }
+  dialogClosed(){
+    this.visible = false;
+    this.changeDetectorRef.detectChanges();
   }
 }

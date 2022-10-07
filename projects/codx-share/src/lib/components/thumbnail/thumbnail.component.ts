@@ -16,7 +16,7 @@ import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.compon
   styleUrls: ['./thumbnail.component.scss']
 })
 export class ThumbnailComponent implements OnInit, OnChanges {
-  @ViewChild('Dialog') public Dialog: DialogComponent;
+ 
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
@@ -42,6 +42,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   animationSettings: AnimationSettingsModel = { effect: 'None' };
   target: string = '.control-section';
   fileName:any
+  visible: boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -50,12 +51,14 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     public dmSV: CodxDMService,
     private notificationsService: NotificationsService,
   ) {
-
+    // this.dialog.close = function (e) {
+    //   this.dialog.destroy();
+    // };
   }
   ngOnInit(): void {
     // this.files = JSON.parse(this.data);
     // this.changeDetectorRef.detectChanges();
-    this.Dialog.hide();
+    //this.Dialog.hide();
     this.dmSV.isFileEditing.subscribe(item => {
       if (item != undefined) {
         if (this.files.length > 0) {
@@ -192,35 +195,15 @@ export class ThumbnailComponent implements OnInit, OnChanges {
       var option = new DialogModel();
       option.IsFull = true;
       this.fileName = data.fileName;
-      this.Dialog.show(true);
       this.dataFile = data;
-      //this.callfc.openForm(ViewFileDialogComponent, data.fileName, null, null, "", data, "", option);
+      this.visible = true;
       this.viewFile.emit(true);
     });
-
-    //if (this.checkReadRight() ) {
-    // var obj = new objectPara();
-    // obj.fileID = data.recID;
-    // obj.fileName = data.fileName;
-    // obj.extension = data.extension;
-    // obj.data = JSON.parse(this.data);
-    // this.changeDetectorRef.detectChanges();
-    // this.systemDialogService.onOpenViewFileDialog.next(obj);
-    // this.fileService.getFile(obj.fileID, true).subscribe(item => {
-    //   if (item) {
-    //     this.changeDetectorRef.detectChanges();
-    //     this.systemDialogService.onOpenViewFileDialog.next(obj);
-    //   }
-    // })
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // changes.prop contains the old and the new value...
-    //   this.files = JSON.parse(this.data);
     this.changeDetectorRef.detectChanges();
   }
-
-
   properties() {
 
   }
@@ -282,9 +265,9 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                 </div> `;
     return html;
   }
-  public dlgBtnClick = (): void => {
-    this.Dialog.hide();
+  dialogClosed(){
+    this.visible = false;
+    this.changeDetectorRef.detectChanges();
   }
-
-  public dlgButtons: ButtonPropsModel[] = [{ click: this.dlgBtnClick.bind(this), buttonModel: { content: 'Learn More', isPrimary: true } }];
+ 
 }

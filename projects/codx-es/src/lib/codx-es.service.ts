@@ -676,6 +676,16 @@ export class CodxEsService {
     }
   }
 
+  deleteStepByTransID(transID: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteByTransIDAsync',
+      [transID]
+    );
+  }
+
   updateTransID(newTransID): Observable<any> {
     let oldTransID = '00000000-0000-0000-0000-000000000000';
     this.transID.subscribe((res) => {

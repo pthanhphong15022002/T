@@ -8,7 +8,8 @@
   <div class="d-flex flex-row align-datas-top p-3 border-bottom" (dblclick)="dbClick(item)">
     <div class="w-30px min-w-30px">
       <span *ngIf="item?.isAssign">
-        <span class="icon-18 icon-add_box me-2 align-datas-start"></span>
+        <span id="{{item.taskID}}" class="icon-18 icon-add_box me-2 align-datas-start"></span>
+        <!-- <span  class="icon-18 icon-add_circle me-2 align-datas-start"></span> -->
       </span>
     </div>
     <div class="w-250px">
