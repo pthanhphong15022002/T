@@ -94,6 +94,7 @@ export class AttachmentComponent implements OnInit {
   maxFileSizeUploadMB = 0;
   referType: string;
   folderID: string;
+  isDM: false;
   infoHDD =
     {
       totalHdd: 0,
@@ -173,6 +174,8 @@ export class AttachmentComponent implements OnInit {
       this.popup = data?.data.popup;
       this.hideBtnSave = data?.data.hideBtnSave;
       this.folderID = data?.data.folderID;
+      if(data?.data.isDM && data?.data.isDM == true)
+        this.isDM = data?.data.isDM;
     }
 
     this.fileUploadList = [];
@@ -769,7 +772,7 @@ export class AttachmentComponent implements OnInit {
     this.atSV.fileListAdded = [];
     if (total > 1) {
       var done = this.fileService
-        .addMultiFile(this.fileUploadList)
+        .addMultiFile(this.fileUploadList,this.isDM)
         .toPromise()
         .then((res) => {
           if (res != null) {
@@ -863,7 +866,7 @@ export class AttachmentComponent implements OnInit {
                           this.fileUploadList[i].reWrite = true;
                         }
                         this.fileService
-                          .addMultiFile(this.fileUploadList)
+                          .addMultiFile(this.fileUploadList,this.isDM)
                           .toPromise()
                           .then((result) => {
                             var mess = '';
@@ -1012,7 +1015,7 @@ export class AttachmentComponent implements OnInit {
         }
 
         if (isAddFile)
-          return this.fileService.addFileObservable(fileItem).pipe(
+          return this.fileService.addFileObservable(fileItem,this.isDM).pipe(
             map((item) => {
               if (item.status == 0) {
                 if (this.showMessage == '1')
@@ -1198,7 +1201,7 @@ export class AttachmentComponent implements OnInit {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem).toPromise();
+    var done = this.fileService.addFile(fileItem,this.isDM).toPromise();
     if (done) {
       done
         .then((item) => {

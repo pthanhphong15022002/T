@@ -1,6 +1,6 @@
 import { BP_Processes } from './../../models/BP_Processes.model';
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef, CacheService } from 'codx-core';
+import { DialogData, DialogRef, CacheService, CallFuncService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -18,8 +18,12 @@ export class PopAddProcessesComponent implements OnInit {
   titleAction = '';
   action: any;
   gridViewSetup: any;
+  listCombobox = {};
+  listName = '';
+  fieldValue = '';
   constructor(
     private cache: CacheService,
+    private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -108,5 +112,18 @@ export class PopAddProcessesComponent implements OnInit {
 
   addFile(e) {}
 
+  openShare(share: any, isOpen) {
+    if (isOpen == true) {
+      // this.listCombobox = {
+      //   U: 'Users',
+      // };
+      this.listName = 'Users';
+      this.fieldValue = 'owner';
+      this.callfc.openForm(share, '', 420, window.innerHeight);
+    }
+  }
+
+  valueCbx(e, fieldValue) {
+  }
   //#endregion event
 }
