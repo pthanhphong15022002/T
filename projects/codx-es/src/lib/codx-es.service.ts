@@ -129,17 +129,19 @@ export class CodxEsService {
       .subscribe((res) => {
         if (res) {
           gridViewSetup = res;
+          let headerText = gridViewSetup[fieldName]?.headerText ?? fieldName;
+
           if (fieldName == 'Email' && formGroup.value.email != null) {
             this.notificationsService.notifyCode(
               'E0003',
               0,
-              '"' + gridViewSetup[fieldName]?.headerText ?? fieldName + '"'
+              '"' + headerText + '"'
             );
           } else {
             this.notificationsService.notifyCode(
               'SYS028',
               0,
-              '"' + gridViewSetup[fieldName]?.headerText ?? fieldName + '"'
+              '"' + headerText + '"'
             );
           }
         }
@@ -411,15 +413,9 @@ export class CodxEsService {
   //#endregion
 
   //#region AD_AutoNumbers
-  public setupAutoNumber = new BehaviorSubject<any>(null);
-  isSetupAutoNumber = this.setupAutoNumber.asObservable();
 
   public setupChange = new BehaviorSubject<any>(null);
   isSetupChange = this.setupChange.asObservable();
-
-  getAutoNoCode(autoNo) {
-    this.autoNoCode.next(autoNo);
-  }
 
   getAutoNumber(autoNoCode): Observable<any> {
     return this.api.execSv(
@@ -571,6 +567,16 @@ export class CodxEsService {
       [categoryID, '', null]
     );
   }
+
+  getCategoryByCateID(categoryID: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDAsync',
+      [categoryID]
+    );
+  }
   //#endregion
 
   //#region ES_ApprovalSteps
@@ -630,20 +636,42 @@ export class CodxEsService {
     }
   }
 
-  editApprovalStep(): Observable<any> {
-    let lstDataEdit = null;
-    this.approvalStep.subscribe((res) => {
-      lstDataEdit = res;
-    });
+  editApprovalStep(lstEdit: any = null): Observable<any> {
+    let lstDataEdit = lstEdit;
+
     if (lstDataEdit == null) {
-      return EMPTY;
-    } else {
+      this.approvalStep.subscribe((res) => {
+        lstDataEdit = res;
+      });
+    }
+    if (lstDataEdit == null) return EMPTY;
+    else {
       return this.api.execSv(
         'ES',
         'ES',
         'ApprovalStepsBusiness',
         'UpdateApprovalStepsAsync',
         [lstDataEdit]
+      );
+    }
+  }
+
+  deleteApprovalStep(lstDelete: any = null): Observable<any> {
+    let lstData = lstDelete;
+    if (lstData == null) {
+      this.lstDelete.subscribe((res) => {
+        lstData = res;
+      });
+    }
+    if (lstData == null) {
+      return EMPTY;
+    } else {
+      return this.api.execSv(
+        'ES',
+        'ES',
+        'ApprovalStepsBusiness',
+        'DeleteListApprovalStepAsync',
+        [lstData]
       );
     }
   }
@@ -660,24 +688,6 @@ export class CodxEsService {
       'UpdateCategoryIDAsync',
       [oldTransID, newTransID]
     );
-  }
-
-  deleteApprovalStep(): Observable<any> {
-    let lstData = null;
-    this.lstDelete.subscribe((res) => {
-      lstData = res;
-    });
-    if (lstData == null) {
-      return EMPTY;
-    } else {
-      return this.api.execSv(
-        'ES',
-        'ES',
-        'ApprovalStepsBusiness',
-        'DeleteListApprovalStepAsync',
-        [lstData]
-      );
-    }
   }
 
   getNewDefaultEmail() {

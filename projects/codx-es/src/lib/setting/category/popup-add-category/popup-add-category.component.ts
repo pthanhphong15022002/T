@@ -53,12 +53,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   isClose = true;
   transID: String = '';
 
-  headerText = 'Thêm mới Phân loại tài liệu';
-  subHeaderText = 'Tạo & upload file văn bản';
+  headerText = '';
+  subHeaderText = '';
   dialog: DialogRef;
   data: any;
-
-  lstStep = [];
 
   autoNumber: any;
 
@@ -84,19 +82,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.esService.isSetupAutoNumber.subscribe((res) => {
-      if (res != null) {
-        this.autoNumber = res.value;
-        this.setViewAutoNumber(res.value);
-      }
-    });
-
-    this.esService.isSetupApprovalStep.subscribe((res) => {
-      this.lstStep = res;
-    });
-
     this.dialog.closed.subscribe((res) => {
-      this.esService.setupAutoNumber.next(null);
       this.esService.setLstDeleteStep(null);
       this.esService.setApprovalStep(null);
       if (this.isSaved) {
@@ -126,8 +112,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((grv) => {
         if (grv) this.grvSetup = grv;
-
-        console.log(this.grvSetup);
       });
 
     if (this.isAdd) {
@@ -165,12 +149,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           gridModels.entityName = fmApprovalStep.entityName;
           gridModels.gridViewName = fmApprovalStep.gridViewName;
           gridModels.pageSize = 20;
-
-          this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-            if (res && res?.length >= 0) {
-              this.lstStep = res;
-            }
-          });
         }
       });
 
@@ -233,12 +211,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                 gridModels.entityName = fmApprovalStep.entityName;
                 gridModels.gridViewName = fmApprovalStep.gridViewName;
                 gridModels.pageSize = 20;
-
-                this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-                  if (res && res?.length >= 0) {
-                    this.lstStep = res;
-                  }
-                });
               }
             });
 
@@ -289,15 +261,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   beforeSave(option: RequestOption) {
     let itemData = this.data;
-    // let itemData = this.dialogCategory.value;
 
-    let countStep = this.lstStep?.length ?? 0;
     if (this.isAdd && this.isSaved == false) {
       option.methodName = 'AddNewAsync';
     } else {
       option.methodName = 'EditCategoryAsync';
     }
-    option.data = [itemData, countStep];
+    option.data = [itemData];
     return true;
   }
 
@@ -313,7 +283,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res.update || res.save) {
           this.isSaved = true;
-          this.updateAutonumber();
           if (res.update) {
             (this.dialog.dataService as CRUDService)
               .update(res.update)
@@ -326,18 +295,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
   }
 
-  updateAutonumber() {
-    this.esService.isSetupAutoNumber.subscribe((res) => {
-      if (res != null) {
-        this.esService
-          .addEditAutoNumbers(res.value, true)
-          .subscribe((res) => {});
-      }
-    });
-  }
-
   openAutoNumPopup() {
-    this.cfService.openForm(
+    if (this.data.categoryID == '' || this.data.categoryID == null) {
+      let headerText = this.grvSetup['CategoryID']?.headerText ?? 'CategoryID';
+      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+      return;
+    }
+    let popupAutoNum = this.cfService.openForm(
       PopupAddAutoNumberComponent,
       '',
       550,
@@ -345,10 +309,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       '',
       {
         formModel: this.dialog.formModel,
-        // autoNoCode: this.dialogCategory.value.categoryID,
         autoNoCode: this.data.categoryID,
       }
     );
+    popupAutoNum.closed.subscribe((res) => {
+      if (res?.event) {
+        this.setViewAutoNumber(res.event);
+      }
+    });
   }
 
   openPopupApproval() {
@@ -396,7 +364,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   closePopup() {
-    this.esService.setupAutoNumber.next(null);
     this.dialog && this.dialog.close();
   }
 

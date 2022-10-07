@@ -55,27 +55,24 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   lstApprover: any = [];
 
   headerText1;
-  type = null;
 
   title = '';
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
-    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabInfo2' },
+    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabQuery' },
     {
       icon: 'icon-email',
       text: 'Email/thông báo',
-      name: 'tabInfo3',
+      name: 'tabEmail',
     },
     {
       icon: 'icon-tune',
       text: 'Thông tin khác',
-      name: 'tabInfo4',
+      name: 'tabAnother',
     },
   ];
 
   setTitle(e: any) {
-    // this.title = 'Thêm ' + e;
-    // this.cr.detectChanges();
     console.log(e);
   }
 
@@ -87,8 +84,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     private esService: CodxEsService,
     private cr: ChangeDetectorRef,
     private notifySvr: NotificationsService,
-    private api: ApiHttpService,
-    private cfService: CallFuncService,
     private cache: CacheService,
     private callfc: CallFuncService,
     @Optional() data?: DialogData,
@@ -102,7 +97,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.dataEdit = data?.data.dataEdit;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
-    this.type = data?.data.type ?? '1';
   }
 
   ngAfterViewInit(): void {
@@ -246,7 +240,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showSendLater: true,
       };
 
-      this.cfService.openForm(
+      this.callfc.openForm(
         PopupAddEmailTemplateComponent,
         '',
         800,

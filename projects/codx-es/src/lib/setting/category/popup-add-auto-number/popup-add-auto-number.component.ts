@@ -97,13 +97,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
                 this.dialogAutoNum.patchValue(res);
                 this.isAfterRender = true;
               }
-              this.esService.isSetupAutoNumber.subscribe((res) => {
-                if (res != null) {
-                  this.formModel.currentData = this.data;
-                  this.dialogAutoNum.patchValue(res.value);
-                  this.isAfterRender = true;
-                }
-              });
+
               this.setViewAutoNumber();
               console.log(this.data);
             }
@@ -156,25 +150,14 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       this.data.description = 'description';
     }
 
-    if (this.isAdd) {
-      this.esService
-        .addEditAutoNumbers(this.data, this.isAdd)
-        .subscribe((res) => {
-          if (res) {
-            this.dialogAutoNum.patchValue(this.data);
-            this.esService.setupAutoNumber.next(this.dialogAutoNum);
-            if (this.isAdd) {
-              this.esService.getAutoNoCode(res.recID);
-            }
-            this.dialog && this.dialog.close();
-          }
-        });
-    } else {
-      this.dialogAutoNum.patchValue(this.data);
-      this.esService.setupAutoNumber.next(this.dialogAutoNum);
-      this.dialog && this.dialog.close();
-      this.cr.detectChanges();
-    }
+    this.esService
+      .addEditAutoNumbers(this.data, this.isAdd)
+      .subscribe((res) => {
+        if (res) {
+          this.dialogAutoNum.patchValue(this.data);
+          this.dialog && this.dialog.close(res);
+        }
+      });
   }
 
   setViewAutoNumber() {

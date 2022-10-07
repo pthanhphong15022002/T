@@ -570,7 +570,7 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
       labelType: labelType,
       labelValue: url,
       isLock: false,
-      allowEditAreas: this.allowEdit,
+      allowEditAreas: this.allowEdit == '0' ? false : true,
       signDate: false,
       dateFormat: '1',
       location: {
@@ -1118,7 +1118,9 @@ export class PdfComponent extends UIComponent implements AfterViewInit {
     this.renderQRAllPage = !this.renderQRAllPage;
   }
   changeAnnotationItem(type: number) {
-    if (this.isEditable && this.signerInfo) {
+    if (!this.signerInfo) {
+    }
+    if (this.isEditable) {
       this.holding = type;
       switch (type) {
         case 1:
