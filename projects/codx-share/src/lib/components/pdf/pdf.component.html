@@ -406,7 +406,7 @@
                   <div
                     class="card-item me-6 mb-6"
                     #actions
-                    *ngFor="let action of actionsButton; let index = index"
+                    *ngFor="let action of vllActions; let index = index"
                     [class.active]="holding == index + 1"
                     (click)="changeAnnotationItem(index + 1)"
                   >
@@ -528,6 +528,22 @@
                         "
                         [formGroup]="formAnnot"
                       >
+                        <div
+                          class="signature-change"
+                          *ngIf="area.labelType == 1"
+                        >
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-primary"
+                            (click)="changeSignatureImg(area)"
+                          >
+                            <codx-label
+                              name="lblChangeSignature"
+                              default="Đổi hình chữ ký"
+                              [formModel]=""
+                            ></codx-label>
+                          </button>
+                        </div>
                         <div
                           class="qr-switch"
                           *ngIf="!isApprover && area.labelType == 8"
@@ -676,11 +692,19 @@
                             [formModel]=""
                           ></codx-label>
                         </div>
+
                         <div class="btn-apply d-flex justify-content-end">
                           <button
                             type="button"
                             class="btn btn-sm btn-primary"
-                            (click)="changeAnnotPro(area.labelType, area.recID)"
+                            (click)="
+                              changeAnnotPro(
+                                area.labelType,
+                                area.recID,
+                                area.allowEdit,
+                                area.isLock
+                              )
+                            "
                           >
                             <codx-label
                               name="lblSave"

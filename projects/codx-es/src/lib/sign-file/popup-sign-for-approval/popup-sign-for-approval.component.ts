@@ -133,7 +133,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
               };
               this.notify.notifyCode('RS002');
               this.canOpenSubPopup = false;
-              //this.pdfView.reload();
               this.dialog && this.dialog.close(result);
             } else {
               this.canOpenSubPopup = false;
@@ -148,6 +147,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
       }
     });
   }
+
   clickUSB() {
     this.http
       .post('http://localhost:8015/api/es/test', {})
