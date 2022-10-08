@@ -6,7 +6,7 @@
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="openFormFuncID($event)"
+  (clickMF)="openFormFuncID($event,itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
 
@@ -75,14 +75,14 @@
         </codx-label>
         <span class="text-gray-600">
           :
-          {{itemDetail?.createdOn}}
+          {{itemDetail?.createdOn | fmDT}}
         </span>
       </div>
       <div class="d-flex me-6">
         <codx-label default="Thời gian" class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.startDate | fmDT:'dmy':true }}
+          {{ itemDetail?.startHour}}
         </span>
         <span
           *ngIf="itemDetail?.startDate && itemDetail?.endDate"
@@ -90,7 +90,7 @@
           >{{ "-" }}</span
         >
         <span class="text-gray-600">
-          {{ itemDetail?.endDate | fmDT:'dmy':true }}
+          {{ itemDetail?.endHour }}
         </span>
       </div>
     </div>
@@ -142,7 +142,9 @@
                 class="icon-info me-2"
                 [ngClass]="{ 'text-primary': active === 1 }"
               ></i
-              ><span>Nội dung</span>
+              ><span>
+                <codx-label default="Nội dung" name="lblMemo"></codx-label>
+              </span>
             </div>
           </a>
           <ng-template ngbNavContent>
@@ -165,7 +167,7 @@
                 class="icon-layers me-2"
                 [ngClass]="{ 'text-primary': active === 2 }"
               ></i
-              ><span>Văn phòng phẩm</span>
+              ><span><codx-label default="Văn phòng phẩm" name="lblStationery"></codx-label></span>
             </div>
           </a>
           <ng-template ngbNavContent>

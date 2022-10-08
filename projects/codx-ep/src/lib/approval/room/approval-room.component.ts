@@ -37,7 +37,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_Bookings';
   className = 'BookingsBusiness';
-  method = 'GetListBookingAsync';
+  method = 'GetListApprovalAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
   datavalue = '1';

@@ -96,7 +96,8 @@
         <ng-container *ngIf="data">
             <div class="d-flex">
                 <div class="me-3" *ngIf="viewIcon">
-                    <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
+                    <img class="iconHistory w-30px" 
+                    src="assets/themes/sys/default/img/History_Comments.svg" alt="">
                 </div>
                 <div class="d-flex w-100">
                     <div class="me-3">
@@ -140,8 +141,8 @@
                         <ng-container *ngIf="data.totalVote > 0">
                             <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
                                 <div *ngFor="let vote of data.votes">
-                                    <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
-                                        alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
+                                    <img src="/assets/themes/wp/default/img/{{ dVll[vote.voteType]?.icon }}"
+                                        style="width: 15px; height: 15x;">
                                 </div>
                                 <div>
                                     <span class="ms-2">{{data.totalVote}}</span>
@@ -188,16 +189,16 @@
                                                 <div
                                                     class="d-flex align-items-center justify-content-center text-hover-primary">
                                                     <span class="fw-bold ms-2"
-                                                        [style.color]="data.myVoteType | vll:'L1480':'textColor' | async">
-                                                        {{data.myVoteType | vll:'L1480':'text' | async}}
+                                                        [style.color]="dVll[data.myVoteType]?.textColor">
+                                                        {{dVll[data.myVoteType]?.text}}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="d-flex mod icon-like">
-                                                <ng-container *ngFor="let item of lstData">
+                                                <ng-container *ngFor="let item of vllIcon">
                                                     <a class="mod-icon" (click)="votePost(data, item.value)">
-                                                        <img src="/assets/themes/wp/default/img/{{item.icon}}"
-                                                            alt="Kiwi standing on oval"></a>
+                                                        <img src="/assets/themes/wp/default/img/{{item.icon}}">
+                                                    </a>
                                                 </ng-container>
                                             </div>
                                             <ng-template #noVote>

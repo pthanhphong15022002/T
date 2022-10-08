@@ -45,11 +45,25 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   ngOnInit(): void {
       this.getDataAsync(this.objectID);
   }
-
+  vllIcon:any = [];
+  dVll:any = {};
+  getValueIcon(){
+    this.cache.valueList("L1480").subscribe((res) => {
+      if (res) {
+        this.vllIcon = res.datas as any[];
+        if(this.vllIcon.length > 0){
+          this.vllIcon.forEach(element => {
+            this.dVll[element.value + ""] = element;
+          });
+        }
+      }
+    });
+  }
   getDataAsync(objectID:string){
     if(this.actionType && this.actionType == "C")
     {
       this.GetCommentTrackLogByObjectIDAsync(objectID);
+      this.getValueIcon();
     }
     else
     {

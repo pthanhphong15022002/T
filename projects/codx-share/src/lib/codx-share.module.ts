@@ -71,7 +71,6 @@ import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner
 import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 import { CodxImportAddTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-template.component';
 import { CodxImportAddMappingComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping.component';
-import { CodxAlertComponent } from './components/codx-alert/codx-alert.component';
 import { SettingNotifyDrawerComponent } from './layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
 import { PopupAddNotifyComponent } from './layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
 import { PopupUpdateStatusComponent } from './components/codx-tasks/popup-update-status/popup-update-status.component';
@@ -109,6 +108,7 @@ import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfComponent } from './components/pdf/pdf.component';
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
+import { CodxCommentTempComponent } from './components/codx-comment-temp/codx-comment-temp.component';
 import { DialogthumbComponent } from './components/thumbnail/dialogthumb/dialogthumb.component';
 import { PopupEditShiftComponent } from './components/setting-calendar/popup-edit-shift/popup-edit-shift.component';
 import { CodxPopupViewsComponent } from './components/codx-popup-views/codx-popup-views.component';
@@ -158,7 +158,6 @@ const T_Component: Type<any>[] = [
   CodxImportAddTemplateComponent,
   CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
-  CodxAlertComponent,
   SettingNotifyDrawerComponent,
   PopupAddNotifyComponent,
   PopupUpdateStatusComponent,
@@ -186,6 +185,7 @@ const T_Component: Type<any>[] = [
   ActiviesSliderComponent,
   DialogthumbComponent,
   CodxPopupViewsComponent,
+  CodxCommentTempComponent,
   //pdf
   PdfComponent,
 ];

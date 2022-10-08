@@ -1,0 +1,129 @@
+<div class="d-flex flex-row flex-column-fluid page page-detail">
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <div id="erm_content" class="d-flex flex-column-fluid setting2">
+            <div class="container">
+                <div class="d-flex">
+                    <div class="aside-detail flex-row-auto w-300px">
+                        <div class="aside-menu mr-6 mt-5">
+                            <ul class="menu-nav">
+                                <li class="menu-item" (click)="redirectPage('notificationFeedback', 1)">
+                                    <a class="menu-link d-flex align-items-center">
+                                        <i class="icon-near_me icon-20 mr-2"></i>
+                                        <codx-label name="lblFeedbackMessage" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Thông điệp phản hồi'>
+                                        </codx-label>
+                                    </a>
+                                </li>
+                                <li class="menu-item" (click)="redirectPage('itemCategory', 2)">
+                                    <a class="menu-link d-flex align-items-center">
+                                        <i class="icon-format_list_bulleted icon-20 mr-2"></i>
+                                        <codx-label name="lblCategory" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Danh mục'>
+                                        </codx-label>
+                                    </a>
+                                </li>
+                                <li class="menu-item menu-item-active">
+                                    <a class="menu-link d-flex align-items-center">
+                                        <i class="icon-account_balance_wallet icon-20 mr-2"></i>
+                                        <codx-label name="lblWallet" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
+                                        </codx-label>
+                                    </a>
+                                </li>
+                                <li class="menu-item" (click)="redirectPage('itemRankDedication', 3)">
+                                    <a class="menu-link d-flex align-items-center">
+                                        <i class="icon-credit_card icon-20 mr-2"></i>
+                                        <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Hạng cống hiến'>
+                                        </codx-label>
+                                    </a>
+                                </li>
+                                <li class="menu-item" (click)="redirectPage('itemStatistical', 4)">
+                                    <a class="menu-link d-flex align-items-center">
+                                        <i class="icon-bar_chart icon-20 mr-2"></i>
+                                        <codx-label name="lblStatistical" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Thống kê'>
+                                        </codx-label>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1">
+                        <div class="list-group">
+                            <div class="list-content">
+                                <div class="d-flex justify-content-between mb-6">
+                                    <span class="icon-arrow_back icon-22 mr-3 text-hover-primary"
+                                        (click)="backLocation()"></span>
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <div class="fs-3 fw-bold text-gray-500 mb-3">
+                                            {{listParameter?.memo}}
+                                        </div>
+                                        <div class="text-gray-500"> {{listParameter?.description}}</div>
+                                    </div>
+                                    <button class="btn btn-outline-primary" (click)="runPolicy()"> <span
+                                            class="icon-refresh"></span>
+                                        <codx-label name="RunPolicy" [formName]="functionList?.formName"
+                                            [gridViewName]="functionList?.gridViewName" default='Chạy chính
+                                        sách'>
+                                        </codx-label>
+                                    </button>
+                                </div>
+                                <div class="d-flex align-items-start py-4 border-bottom border-light">
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <div class="text-dark fw-bold fs-6">
+                                            {{scheduledTasks?.taskName}}
+                                        </div>
+                                        <div class="text-gray-500">
+                                            <!-- {{settingCycle.messageSC003|message:[settingCycle.dayNameRun,settingCycle.monthNameRun]}} -->
+                                            <!-- {{messageSC003|mssg}} -->
+                                            {{messageSC003}}
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center ml-4">
+                                        <span class="switch switch-sm ml-3">
+                                            <codx-input type="switch" class="test-check" field="stop"
+                                                (valueChange)=" valueChange($event)" [checked]="!scheduledTasks?.stop">
+                                            </codx-input>
+                                        </span>
+                                        <span class="icon-edit-one text-hover-primary icon-20"
+                                            (click)="openPopup()"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-start py-4"
+                                    *ngFor="let item of listPolicyByPredicate$|async">
+                                    <div class="d-flex flex-column flex-grow-1">
+                                        <div class="text-dark fw-bold fs-6">{{item.policyName}}
+                                        </div>
+                                        <div class="text-gray-500">{{item.memo}}</div>
+                                    </div>
+                                    <div class="d-flex align-items-center ml-4">
+                                        <span class="switch switch-sm ml-3">
+                                            <codx-input type="switch" class="test-check" [field]="item.recID"
+                                                (valueChange)="onSaveStatusPolicy($event, null)"
+                                                [checked]="item.actived">
+                                            </codx-input>
+                                        </span>
+                                        <span class="w-20px h-20px ml-3 d-flex justify-content-center">
+                                            <span class="icon-keyboard_arrow_right icon-20" style="cursor: pointer;"
+                                                (click)="item.actived && LoadDetailPolicy(item.category,item.recID)"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <ng-template #popupSettingCycle let-dialog>
+    <codx-form [dialog]="dialog" [body]="body" [headerText]="headerSettingCycle">
+        <ng-template #body>
+            <app-setting-cycle #settingCycle [applyFor]="'3'" [scheduledTasks]="scheduledTasks"
+                (onSaveModel)="saveSettingCycleRun()">
+            </app-setting-cycle>
+        </ng-template>
+    </codx-form>
+</ng-template> -->

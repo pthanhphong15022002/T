@@ -113,7 +113,10 @@
       </codx-input> -->
     </div>
   </div>
-  
+  <div class="form-group">    
+    <codx-label fiedName="Icon" [formModel]="form.formModel">
+    </codx-label>
+  </div>
   <div class="form-group upload-img">
     <codx-img #imageUpLoad [width]="100" [objectType]="formModel?.entityName" imageType="square" aria-disabled="false" [isAllowEdit]="true"
         [funcId]="formModel?.funcID" [objectId]="data?.recID">
