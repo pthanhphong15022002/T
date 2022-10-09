@@ -19,7 +19,6 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
 import { PopupAddPhaseComponent } from './processsteps/popup-add-phase/popup-add-phase.component';
-import { ProcessStepComponent } from 'projects/codx-es/src/lib/setting/category/process-step/process-step.component';
 import { PopupAddProcessStepsComponent } from './processsteps/popup-add-processsteps/popup-add-processsteps.component';
 import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
 
@@ -49,7 +48,6 @@ export const routes: Routes = [
     ViewListProcessesComponent,
     ProcessStepsComponent,
     PopupAddProcessStepsComponent,
-    ProcessStepComponent,
     PopupAddPhaseComponent,
     PopupSendEmailComponent,
   ],
