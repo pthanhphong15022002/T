@@ -14,6 +14,8 @@ export class PopupVoteComponent implements OnInit {
   lstUserVoted:any[] = [];
   defaultVote:string = "0";
   dialogRef:DialogRef;
+  vllL1480:any = [];
+  dVll: any = {};
   constructor(
     private api: ApiHttpService,
     private cache:CacheService,
@@ -32,6 +34,16 @@ export class PopupVoteComponent implements OnInit {
 
 
   getListVote(){
+    this.cache.valueList("L1480").subscribe((res) => {
+      if (res) {
+        this.vllL1480 = res.datas as any[];
+        if(this.vllL1480.length > 0){
+          this.vllL1480.forEach(element => {
+            this.dVll[element.value + ""] = element;
+          });
+        }
+      }
+    });
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",[this.data.recID])
     .subscribe((res:any[]) => {
       if(res)

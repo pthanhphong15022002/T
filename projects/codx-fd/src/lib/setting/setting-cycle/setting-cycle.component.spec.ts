@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupVoteComponent } from './popup-vote.component';
+import { SettingCycleComponent } from './setting-cycle.component';
 
-describe('PopupVoteComponent', () => {
-  let component: PopupVoteComponent;
-  let fixture: ComponentFixture<PopupVoteComponent>;
+describe('SettingCycleComponent', () => {
+  let component: SettingCycleComponent;
+  let fixture: ComponentFixture<SettingCycleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupVoteComponent ]
+      declarations: [ SettingCycleComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupVoteComponent);
+    fixture = TestBed.createComponent(SettingCycleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
