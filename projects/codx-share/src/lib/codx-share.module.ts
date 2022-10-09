@@ -71,7 +71,6 @@ import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner
 import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 import { CodxImportAddTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-template.component';
 import { CodxImportAddMappingComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping.component';
-import { CodxAlertComponent } from './components/codx-alert/codx-alert.component';
 import { SettingNotifyDrawerComponent } from './layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
 import { PopupAddNotifyComponent } from './layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
 import { PopupUpdateStatusComponent } from './components/codx-tasks/popup-update-status/popup-update-status.component';
@@ -158,7 +157,6 @@ const T_Component: Type<any>[] = [
   CodxImportAddTemplateComponent,
   CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
-  CodxAlertComponent,
   SettingNotifyDrawerComponent,
   PopupAddNotifyComponent,
   PopupUpdateStatusComponent,
