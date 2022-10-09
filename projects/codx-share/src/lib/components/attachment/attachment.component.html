@@ -185,7 +185,7 @@
                     </div>
                     <div *ngIf="hideImageUpload == '0'" class="overflow-auto mh-200px">
                         <div *ngFor="let file of sortBy();  index as i;"
-                            class="d-flex align-items-center mb-3 has-action-menu">
+                            class="d-flex align-items-center mb-3 has-action-menu-at">
                             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
                             <ng-template #simple>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
@@ -226,14 +226,14 @@
                                     </div>
                                 </div>
                             </ng-template>
-                            <div class="action-menu d-flex align-items-center">
+                            <div class="action-menu-at d-flex align-items-center">
 
                                 <a class="action-item d-flex align-items-center" (click)="editfile(file, true, i)">
-                                    <i class="icon-edit text-primary icon-18"></i>
+                                    <i class="icon-edit text-primary icon-14"></i>
                                 </a>
                                 <a class="action-item d-flex align-items-center"
                                     (click)="onDeleteUploaded(file.fileName)">
-                                    <i class="icon-close text-danger icon-18"></i>
+                                    <i class="icon-close text-danger icon-14"></i>
                                 </a>
                             </div>
                         </div>

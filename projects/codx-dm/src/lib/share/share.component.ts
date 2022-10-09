@@ -221,8 +221,6 @@ export class ShareComponent implements OnInit {
   }
 
   onShare() {
-    debugger;
-
     if (this.shareContent === '') {
       //$('#shareContent').addClass('form-control is-invalid');
       this.errorshow = true;

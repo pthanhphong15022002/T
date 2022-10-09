@@ -71,7 +71,7 @@ export class AttachmentComponent implements OnInit {
   breadcumb: string[];
   breadcumbLink = [];
   codeMaxFileSize = 'DM057';
-  codetitle = 'DM059';
+  codetitle = 'DM061';
   codetitle2 = 'DM058';
   titleDialog = 'Thêm tài liệu';
   title = 'Đã thêm tài liệu thành công';
@@ -384,15 +384,9 @@ export class AttachmentComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     });
 
-    this.cache.message(this.codetitle).subscribe((item) => {
-      if (item != null) {
-        this.title = item.defaultName;
-      }
-    });
-
     this.cache.message(this.codetitle2).subscribe((item) => {
       if (item != null) {
-        this.title2 = item.defaultName;
+        this.title2 = item.customName;
       }
     });
 
@@ -646,7 +640,7 @@ export class AttachmentComponent implements OnInit {
               this.atSV.fileList.next(this.fileUploadList);
               this.atSV.fileListAdded = addList;
               if (this.showMessage == '1')
-                this.notificationsService.notify(this.title);
+                this.notificationsService.notifyCode("DM061",0,this.fileUploadList.length);
               //this.closePopup();
               this.fileUploadList = [];
               return this.atSV.fileListAdded;
@@ -776,7 +770,6 @@ export class AttachmentComponent implements OnInit {
         .toPromise()
         .then((res) => {
           if (res != null) {
-            debugger;
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);

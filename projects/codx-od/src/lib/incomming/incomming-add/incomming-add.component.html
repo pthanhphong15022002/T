@@ -77,7 +77,7 @@
         ></codx-label>
       </ng-container>
     </div>
-    <div class="align-items-start" style="display: flex" [hidden]="showAgency">
+    <div class="align-items-center justify-content-center" style="display: flex" [hidden]="showAgency">
       <codx-input
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -96,10 +96,10 @@
       >
       </codx-input> -->
       <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')"
-        >Add</span
+        >Thêm</span
       >
     </div>
-    <div class="align-items-start" style="display:flex" [hidden]="!showAgency">
+    <div class="align-items-center justify-content-center" style="display:flex" [hidden]="!showAgency">
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="departmentName"  style="width:100%"
       (valueChange)="changeValueDept($event)">
     </codx-input>
