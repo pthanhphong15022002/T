@@ -347,7 +347,6 @@ export class HomeComponent extends UIComponent {
     // });
 
     this.dmSV.isChangeData.subscribe((item) => {
-      debugger;
       if (item) {
         this.data = [];
         this.changeDetectorRef.detectChanges();
@@ -359,7 +358,6 @@ export class HomeComponent extends UIComponent {
       }
     });
     this.dmSV.isAddFolder.subscribe((item) => {
-      debugger;
       if (item) {
         var tree = this.codxview.currentView.currentComponent.treeView;
         if (tree)
@@ -582,7 +580,6 @@ export class HomeComponent extends UIComponent {
           this.dmSV.breadcumbLink = breadcumbLink;
           this.dmSV.breadcumb.next(breadcumb);
         }
-        debugger;
         if (breadcumb.length == 0) {
           id = ""
         }
@@ -935,7 +932,6 @@ export class HomeComponent extends UIComponent {
         // item.active = true;
       }
     });
-    debugger;
     this.fileService.searchFileAdv(this.view.funcID,this.textSearchAll, this.predicates, this.values, this.dmSV.page, this.dmSV.pageSize, this.searchAdvance).subscribe(item => {
       if (item != null) {
         this.view.viewChange({
