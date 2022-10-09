@@ -30,7 +30,7 @@
           <div *ngIf="(!data.isSystem) then createBy2 else nocreateBy2">
           </div>
           <ng-template #createBy2>
-            <span class="text-dark-50">{{data.userName}}</span>
+            <span class="text-dark-50">{{formModel?.funcID !="DMT06"? data.userName:data?.requestPermissionName}}</span>
           </ng-template>
           <ng-template #nocreateBy2>
             <span class="text-dark-50"></span>

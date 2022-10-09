@@ -221,6 +221,8 @@ export class ShareComponent implements OnInit {
   }
 
   onShare() {
+    debugger;
+
     if (this.shareContent === '') {
       //$('#shareContent').addClass('form-control is-invalid');
       this.errorshow = true;
@@ -234,6 +236,7 @@ export class ShareComponent implements OnInit {
       return;
     }
 
+    if(!this.checkBeforeSave()) return;
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
     this.fileEditing.byPermission = this.byPermission;
@@ -313,7 +316,23 @@ export class ShareComponent implements OnInit {
     //return true;
     this.dialog.close();
   }  
-
+  checkBeforeSave()
+  {
+    var checkEvery = this.fileEditing.permissions.filter(x=>x.objectType == "9");
+    if(checkEvery.length >0 && checkEvery[0].assign && checkEvery[0].read) return true;
+    if(this.byPermission && this.byPermission.length >0)
+    {
+      for(var i = 0 ; i< this.byPermission.length ; i++)
+      {
+        var check = this.fileEditing.permissions.filter(x=>x.objectID == this.byPermission[i].objectID);
+        if(check.length==0 || !check[0].assign) {
+          this.notificationsService.notifyCode("OD015",0,this.byPermission[i].objectName);
+          return false 
+        }
+      }
+    }
+    return true;
+  }
   copyPath() {
     this.copyToClipboard(this.getPath())
       .then(() => console.log('text copied !'))

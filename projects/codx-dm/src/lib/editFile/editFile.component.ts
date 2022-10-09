@@ -25,7 +25,7 @@ export class EditFileComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;    
   @Output() eventShow = new EventEmitter<boolean>();
   dialog: any;
-  titleDialog = 'Cập nhật file';
+  titleDialog = 'Cập nhật tài liệu';
   titleRolesDialog = 'Cập nhật quyền';
   titleFileNameRequire = 'Tên tài liệu không để trống';
   titleFileNameInvalid = 'Tên tài liệu không hợp lệ';

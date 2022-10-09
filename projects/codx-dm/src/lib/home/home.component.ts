@@ -265,7 +265,7 @@ export class HomeComponent extends UIComponent {
                   breadcumb.push(list[i].text);
                   breadcumbLink.push(list[i].id);
                 }
-
+                this.setFocus(list[0].id);
               }
               else {
                 this.dmSV.folderId.next("");
@@ -347,6 +347,7 @@ export class HomeComponent extends UIComponent {
     // });
 
     this.dmSV.isChangeData.subscribe((item) => {
+      debugger;
       if (item) {
         this.data = [];
         this.changeDetectorRef.detectChanges();
@@ -358,33 +359,16 @@ export class HomeComponent extends UIComponent {
       }
     });
     this.dmSV.isAddFolder.subscribe((item) => {
+      debugger;
       if (item) {
         var tree = this.codxview.currentView.currentComponent.treeView;
         if (tree)
           tree.setNodeTree(item);
         this.changeDetectorRef.detectChanges();
         this.data = [];
-        var a = { data: item };
-        // var breadcumb = [];
-        // var breadcumbLink = [];
-        // tree.textField = "folderName";
-        // var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(item?.recID);
-        //
-
-        // breadcumbLink.push(this.dmSV.idMenuActive);
-        // for (var i = list.length - 1; i >= 0; i--) {
-        //   breadcumb.push(list[i].text);
-        //   breadcumbLink.push(list[i].id);
-        // }
-        // this.dmSV.breadcumbLink = breadcumbLink;
-        // this.dmSV.breadcumb.next(breadcumb);
-        // this.dmSV.folderId.next(item?.recID);
-        // this.dmSV.folderID = item?.recID;
-        var ele = document.getElementsByClassName('item-selected');
-        if (ele.length > 0) ele[0].classList.remove('item-selected');
-        var ele2 = document.getElementsByClassName(item?.recID);
-        if (ele2.length > 0) ele2[0].classList.add('item-selected');
-        this.onSelectionChanged(a);
+        var obj = { data: item };
+        this.setFocus(item?.recID);
+        this.onSelectionChanged(obj);
       }
       this._beginDrapDrop();
     });
@@ -396,9 +380,16 @@ export class HomeComponent extends UIComponent {
         this.changeDetectorRef.detectChanges();
       }
     });
-
+      
   }
 
+  setFocus(id:any)
+  {
+    var ele = document.getElementsByClassName('item-selected');
+    if (ele.length > 0) ele[0].classList.remove('item-selected');
+    var ele2 = document.getElementsByClassName(id);
+    if (ele2.length > 0) ele2[0].classList.add('item-selected');
+  }
   classFile(item, className) {
     if (item.folderName != null)
       return className;
@@ -796,7 +787,11 @@ export class HomeComponent extends UIComponent {
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
     this.changeDetectorRef.detectChanges();
-
+    if(this.view.funcID == "DMT06")
+    {
+      this.titleCreatedBy = "Người yêu cầu";
+      this.titleCreatedOn = "Ngày yêu cầu"
+    }
     //   console.log(this.button);
   }
 
@@ -807,8 +802,11 @@ export class HomeComponent extends UIComponent {
     //  this.changeDetectorRef.detectChanges();
   }
   viewChanging(event) {
-    this.dmSV.page = 1;
-    this.getDataFile("");
+    if(event.text != "Search")
+    {
+      this.dmSV.page = 1;
+      this.getDataFile("");
+    }
   }
   ngOnDestroy() {
     console.log('detroy');
@@ -880,14 +878,6 @@ export class HomeComponent extends UIComponent {
     this.interval.push(Object.assign({}, interval));
   }
 
-  onScrollDown($event) {
-    // alert(1);
-  }
-
-  onScrollUp($event) {
-    //   alert(2);
-  }
-
   sortChanged($event) {
     this.sortColumn = $event.field;
     this.sortDirection = $event.dir;
@@ -915,7 +905,6 @@ export class HomeComponent extends UIComponent {
         if (res != null) {
           this.dmSV.listFiles = res[0];
           if (this.sortDirection == null || this.sortDirection == "asc") {
-            //  this.data = [...this.dmSV.listFolder, ...res[0]];
             if (res[0] != null)
               this.data = [...this.dmSV.listFolder, ...res[0]];
             else
@@ -928,7 +917,6 @@ export class HomeComponent extends UIComponent {
         this.dmSV.loadedFile = true;
         this.changeDetectorRef.detectChanges();
       });
-    //  console.log($event);
   }
 
   getTotalPage(total) {
@@ -947,7 +935,8 @@ export class HomeComponent extends UIComponent {
         // item.active = true;
       }
     });
-    this.fileService.searchFileAdv(this.textSearchAll, this.predicates, this.values, this.dmSV.page, this.dmSV.pageSize, this.searchAdvance).subscribe(item => {
+    debugger;
+    this.fileService.searchFileAdv(this.view.funcID,this.textSearchAll, this.predicates, this.values, this.dmSV.page, this.dmSV.pageSize, this.searchAdvance).subscribe(item => {
       if (item != null) {
         this.view.viewChange({
           id: '1',
@@ -955,7 +944,6 @@ export class HomeComponent extends UIComponent {
           text: 'Search',
           type: ViewType.treedetail,
           sameData: true,
-          /*  toolbarTemplate: this.templateSearch,*/
           model: {
             template: this.templateMain,
             panelRightRef: this.templateRight,
@@ -965,7 +953,6 @@ export class HomeComponent extends UIComponent {
         })
 
         this.dmSV.loadedFile = true;
-        // this.dmSV.listFiles = item.data;
         this.totalSearch = item.total;
         this.dmSV.listFiles = [...this.dmSV.listFiles, ...item.data];
         this.data = [...this.data, ...this.dmSV.listFiles];
@@ -987,8 +974,6 @@ export class HomeComponent extends UIComponent {
       this.isSearch = true;
       this.view.orgView = this.orgViews;
       this.dmSV.page = 1;
-      // if (this.codxview.currentView.viewModel.model != null)
-      //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
       this.dmSV.listFiles = [];
       this.dmSV.listFolder = [];
       if ($event != undefined) {
@@ -1007,22 +992,6 @@ export class HomeComponent extends UIComponent {
         this.values = values;
         this.searchAdvance = true;
         this.search();
-        // this.fileService.searchFileAdv(text, predicates, values, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
-        //   if (item != null) {
-        //     this.dmSV.loadedFile = true;
-        //     this.dmSV.listFiles = item.data;
-        //     this.totalSearch = item.total;
-        //     this.data = [...this.data, ...this.dmSV.listFiles];
-        //     this.getTotalPage(item.total);
-        //     this.changeDetectorRef.detectChanges();
-        //   }
-        //   else {
-        //     this.dmSV.loadedFile = true;
-        //     this.totalSearch = 0;
-        //     this.dmSV.totalPage = 0;
-        //     this.changeDetectorRef.detectChanges();
-        //   }
-        // });
       }
     }
     catch (ex) {
@@ -1079,7 +1048,6 @@ export class HomeComponent extends UIComponent {
   }
 
   requestEnded(e: any) {
-    debugger;
     this.isSearch = false;
     if (e.type === "read") {
       this.data = [];
@@ -1142,6 +1110,7 @@ export class HomeComponent extends UIComponent {
         this.dmSV.parentUpdate = true;
         this.dmSV.disableInput.next(false);
         this.dmSV.disableUpload.next(false);
+        
       }
 
       this.changeDetectorRef.detectChanges();
@@ -1155,7 +1124,13 @@ export class HomeComponent extends UIComponent {
       breadcumb.push(this.view.function.customName);
       this.dmSV.menuActive.next(this.view.function.customName);
       this.dmSV.breadcumb.next(breadcumb);
-
+      if(this.view.funcID == "DMT01")
+      {
+        this.dmSV.page =1;
+        this.data = [];
+        this.dmSV.listFiles = [];
+        this.getDataFile("");
+      }
       switch (this.view.funcID) {
         case "DMT05":
           breadcumb.push(this.dmSV.titleShareBy);

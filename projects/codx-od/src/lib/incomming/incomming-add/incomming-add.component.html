@@ -13,10 +13,7 @@
 <ng-template #subHeader>
   <div class="d-flex align-items-center">
     <div
-      *ngIf="
-        this.dispatch?.status == '1' || this.dispatch?.status == '2';
-        else elseSelected
-      "
+      *ngIf="this.dispatch?.status == '1' || this.dispatch?.status == '2'; else elseSelected"
     >
       <span
         class="btn btn-sm btn-primary btn-pill"
