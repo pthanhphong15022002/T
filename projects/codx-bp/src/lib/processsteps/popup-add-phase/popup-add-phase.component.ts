@@ -3,11 +3,11 @@ import { CacheService, DialogData, DialogRef } from 'codx-core';
 import { BP_ProcessSteps } from '../../models/BP_Processes.model';
 
 @Component({
-  selector: 'lib-pop-add-phase',
-  templateUrl: './pop-add-phase.component.html',
-  styleUrls: ['./pop-add-phase.component.css'],
+  selector: 'lib-popup-add-phase',
+  templateUrl: './popup-add-phase.component.html',
+  styleUrls: ['./popup-add-phase.component.css'],
 })
-export class PopAddPhaseComponent implements OnInit {
+export class PopupAddPhaseComponent implements OnInit {
   @Input() processSteps = new BP_ProcessSteps();
 
   dialog: any;

@@ -1,19 +1,29 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { PopAddPhaseComponent } from './popup-add-phase/pop-add-phase.component';
-import { PopAddProcessstepsComponent } from './popup-add-processsteps/pop-add-processsteps.component';
+import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopupAddPhaseComponent } from './popup-add-phase/popup-add-phase.component';
+import { PopupAddProcessStepsComponent } from './popup-add-processsteps/popup-add-processsteps.component';
+
 
 @Component({
   selector: 'lib-processsteps',
   templateUrl: './processsteps.component.html',
   styleUrls: ['./processsteps.component.css']
 })
-export class ProcessstepsComponent extends UIComponent implements OnInit {
+export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('panelRight') panelRight?: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
   @Input() showButtonAdd = true;
   @Input() dataObj?: any;
+
+  model?: DataRequest;
+  request: ResourceModel;
+  resourceKanban?: ResourceModel;
+  modelResource: ResourceModel;
+  resource: ResourceModel;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -23,6 +33,13 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   titleAction = '';
   itemSelected: any;
   idForm ='A'
+
+  service = 'BP';
+  entityName = 'BP_ProcessSteps';
+  idField = 'recID';
+  assemblyName = 'ERM.Business.BP';
+  className = 'ProcessStepsBusiness';
+  method = 'GetProcessStepsAsync'; //chua viet
 
   constructor(
     inject: Injector,
@@ -88,14 +105,31 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [
       {
-        type: ViewType.list,
+        type: ViewType.content,
         active: false,
         sameData: true,
         model: {
           template: this.itemViewList,
         },
       },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
+        },
+      },
     ];
+    
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
@@ -111,9 +145,9 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '550px';
         this.dialog = this.callfc.openSide(
-          PopAddProcessstepsComponent,
+          PopupAddProcessStepsComponent,
           ['add', this.titleAction, this.idForm],
           option
         );
@@ -130,9 +164,9 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '550px';
         this.dialog = this.callfc.openSide(
-          PopAddPhaseComponent,
+          PopupAddPhaseComponent,
           ['add', this.titleAction, this.idForm],
           option
         );
@@ -157,9 +191,9 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '550px';
         this.dialog = this.callfc.openSide(
-          PopAddProcessstepsComponent,
+          PopupAddProcessStepsComponent,
           ['edit', this.titleAction, this.idForm],
           option
         );
@@ -181,7 +215,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
-        PopAddProcessstepsComponent,
+        PopupAddProcessStepsComponent,
         ['copy', this.titleAction, this.idForm],
         option
       );
