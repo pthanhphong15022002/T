@@ -82,7 +82,7 @@ export class EditHobbyComponent implements OnInit {
 
   editHobby(item) {
     this.editItemCurren = item
-    this.editItem = $.extend({}, item);
+    // this.editItem = $.extend({}, item); 
     this.editItem.color = (this.editItem.color || "#ffffff");
   }
 
