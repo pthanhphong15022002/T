@@ -145,7 +145,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
-          ['add', this.titleAction, this.stepType],
+          [this.view.dataService.dataSelected,'add', this.titleAction, this.stepType],
           option
         );
         this.dialog.closed.subscribe((e) => {

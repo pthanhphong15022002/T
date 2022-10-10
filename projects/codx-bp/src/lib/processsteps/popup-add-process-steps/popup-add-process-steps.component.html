@@ -10,7 +10,7 @@
 >
   <ng-template #body>
     <div class="card-form">
-      <div class="form-group">
+      <div class="form-group" *ngIf="stepType == 'P'">
         <div>
           <codx-label
             fiedName="StepName"
@@ -38,7 +38,7 @@
           field="duration"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChangeEstimate($event,stepType)"
+          (valueChange)="valueChangeEstimate($event, stepType)"
         >
         </codx-input>
       </div>
@@ -71,7 +71,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="stepType != 'C' && stepType != 'C'">
         <codx-label
           name="Memo"
           [formModel]="form.formModel"
@@ -86,22 +86,74 @@
         </codx-input>
       </div>
       <div class="form-group row" *ngIf="stepType != 'P'">
-        <div class="col-4 form-group" >
+        <div class="col-4 form-group">
           <codx-label
             fiedName="Duration"
             [formModel]="form.formModel"
-            default="Thời (==giờ)"
+            default="Thời (=giờ)"
           >
           </codx-label>
           <codx-input
             field="duration"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeEstimate($event,stepType)"
+            (valueChange)="valueChangeEstimate($event, stepType)"
           >
           </codx-input>
         </div>
-        <div class="col-8 form-group" >
+        <div class="col-4 form-group" *ngIf="stepType == 'C'">
+          <codx-label
+            fiedName="Reminder"
+            [formModel]="form.formModel"
+            default="Nhắc nhở"
+          >
+          </codx-label>
+          <codx-input
+            field="reminder"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChangeEstimate($event, stepType)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-4 form-group row" *ngIf="stepType == 'C'">
+          <div class="d-flex align-items-center col-6 mt-5">
+            <codx-input
+              type="switch"
+              class="test-check"
+              [checked]="isAlert"
+              (valueChange)="valueChangeSwitch($event)"
+            >
+            </codx-input>
+            <span>
+              <codx-label
+                name="lblAlert"
+                [formModel]="form.formModel"
+                default="Alert"
+              >
+              </codx-label>
+            </span>
+          </div>
+          <div class="d-flex align-items-center col-6 mt-5">
+            <codx-input
+              type="switch"
+              class="test-check"
+              [checked]="isEmail"
+              (valueChange)="valueChangeSwitch($event)"
+            >
+            </codx-input>
+            <span>
+              <codx-label
+                name="lblEmail"
+                [formModel]="form.formModel"
+                default="Email"
+              >
+              </codx-label>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-8 form-group" *ngIf="stepType != 'C'">
           <codx-label
             fiedName="Location"
             [formModel]="form.formModel"
@@ -112,30 +164,79 @@
             field="location"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeEstimate($event,stepType)"
+            (valueChange)="valueChangeEstimate($event, stepType)"
           >
           </codx-input>
         </div>
       </div>
-      <ng-container >
+      <div class="form-group" *ngIf="stepType == 'C'">
+        <codx-label
+          fiedName="Location"
+          [formModel]="form.formModel"
+          default="Địa điểm"
+        >
+        </codx-label>
+        <codx-input
+          field="location"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChangeEstimate($event, stepType)"
+        >
+        </codx-input>
+      </div>
+      <ng-container>
         <div class="d-flex align-items-center justify-content-between mt-4">
           <div class="d-flex align-items-center mb-3">
             <span class="icon-person icon-18 me-2 text-primary"></span>
             <div class="fw-bold text-primary mt-1">
-              <codx-label fiedName="Owners" [formModel]="form.formModel" default="Phân công cho">
+              <codx-label
+                fiedName="Owners"
+                [formModel]="form.formModel"
+                default="Phân công cho"
+              >
               </codx-label>
             </div>
           </div>
-          <codx-input type="Share" [refValue]="vllShare" field="Owners" [dataShared]="[]" multiple="true"
-            [showInput]="false" (valueChange)="eventApply($event)" [disabled]="readOnly"></codx-input>
+          <codx-input
+            type="Share"
+            [refValue]="vllShare"
+            field="Owners"
+            [dataShared]="[]"
+            multiple="true"
+            [showInput]="false"
+            (valueChange)="eventApply($event)"
+            [disabled]="readOnly"
+          ></codx-input>
         </div>
         <div class="">
           <ng-container *ngIf="listUser.length > 0">
-            <codx-imgs class="flex symbol-40px" [objectId]="listUser.join(';')" objectType="AD_Users" [numberImages]="5">
+            <codx-imgs
+              class="flex symbol-40px"
+              [objectId]="listUser.join(';')"
+              objectType="AD_Users"
+              [numberImages]="5"
+            >
             </codx-imgs>
           </ng-container>
         </div>
       </ng-container>
+
+      <div class="form-group" *ngIf="stepType == 'C'">
+        <codx-label
+          fiedName="Note"
+          [formModel]="form.formModel"
+          default="Ghi chú"
+        >
+        </codx-label>
+        <codx-input
+          field="note"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+
       <ng-container>
         <div
           class="d-flex align-items-center justify-content-between mt-4"
@@ -175,6 +276,8 @@
           </codx-attachment>
         </div>
       </ng-container>
+
+      
     </div>
   </ng-template>
   <ng-template #footer>

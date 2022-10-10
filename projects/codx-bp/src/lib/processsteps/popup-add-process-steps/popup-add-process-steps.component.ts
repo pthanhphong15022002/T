@@ -31,6 +31,8 @@ export class PopupAddProcessStepsComponent implements OnInit {
   action = '';
   vllShare = 'TM003';
   listUser = [];
+  isAlert =true ;
+  isEmail = true;
 
   constructor(
     private bpService: CodxBpService,
@@ -44,7 +46,8 @@ export class PopupAddProcessStepsComponent implements OnInit {
     );
     this.titleActon = dt?.data[2];
     this.action = dt?.data[1];
-    this.stepType = dt?.data[3];
+    // this.stepType = dt?.data[3];
+    this.stepType ='T';//thêm để test
     this.dialog = dialog;
 
     this.funcID = this.dialog.formModel.funcID;
@@ -90,6 +93,11 @@ export class PopupAddProcessStepsComponent implements OnInit {
   addFile(e) {
     this.attachment.uploadFile();
   }
+
+  valueChangeSwitch(e){
+
+  }
+
   fileAdded(e) {}
   getfileCount(e) {}
 

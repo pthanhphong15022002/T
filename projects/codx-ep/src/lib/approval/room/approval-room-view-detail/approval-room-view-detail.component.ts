@@ -6,7 +6,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
+import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -34,7 +34,8 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
 
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService
+    private codxEpService: CodxEpService,    
+    private notificationsService: NotificationsService,
   ) {
     super(injector);
   }
@@ -94,36 +95,15 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40201':
       case 'EPT40301':
         {
-          alert('Duyệt');
+          //alert('Duyệt');
           this.approve(datas,"5")
         }
-        break;
-      case 'EPT40102':
-      case 'EPT40201':
-      case 'EPT40301':
-        {
-          alert('Ký');
-        }
-        break;
-      case 'EPT40103':
-      case 'EPT40203':
-      case 'EPT40303':
-        {
-          alert('Đồng thuận');
-        }
-        break;
-      case 'EPT40104':
-      case 'EPT40204':
-      case 'EPT40304':
-        {
-          alert('Đóng dấu');
-        }
-        break;
+        break;      
       case 'EPT40105':
       case 'EPT40205':
       case 'EPT40305':
         {
-          alert('Từ chối');
+          //alert('Từ chối');
           this.approve(datas,"4")
         }
         break;
@@ -131,7 +111,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40206':
       case 'EPT40306':
         {
-          alert('Làm lại');
+          //alert('Làm lại');
           this.approve(datas,"2")
         }
         break;
@@ -145,18 +125,25 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
-          .approve(
-            'EP_Bookings',            
-            data?.recID,//ApprovelTrans.RecID
-            status,//Status : 5 - Duyệt
+          .approve(            
+            data?.approvalTransRecID,//ApprovelTrans.RecID
+            status,
           )
-          .subscribe((res) => {
+          .subscribe((res:any) => {
             var x= res;
-            // if (res?.msgCodeError == null && res?.rowCount) {
-            //   this.notificationsService.notifyCode('ES007');
-            // } else {
-            //   this.notificationsService.notifyCode(res?.msgCodeError);
-            // }
+            if (res?.msgCodeError == null && res?.rowCount) {
+              if(status=="5"){
+                this.notificationsService.notifyCode('ES007');//đã duyệt
+              }
+              if(status=="4"){
+                this.notificationsService.notifyCode('ES007');//bị hủy
+              }
+              if(status=="2"){
+                this.notificationsService.notifyCode('ES007');//làm lại
+              }  
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
           });
       });
   }
