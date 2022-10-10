@@ -17,7 +17,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 export class ApprovalRoomViewDetailComponent extends UIComponent implements OnChanges {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
-  @ViewChild('attachment') attachment;
+  @ViewChild('attachment') attachment;  
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -80,7 +80,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
     this.active = 1;
   }
 
-  openFormFuncID(value, datas: any = null) {
+  clickMF(value, datas: any = null) {
     
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
