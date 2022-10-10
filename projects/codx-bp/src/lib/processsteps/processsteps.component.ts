@@ -1,14 +1,33 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild, Injector, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  Injector,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogRef,
+  RequestOption,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
   selector: 'lib-processsteps',
   templateUrl: './processsteps.component.html',
-  styleUrls: ['./processsteps.component.css']
+  styleUrls: ['./processsteps.component.css'],
 })
-export class ProcessstepsComponent extends UIComponent implements OnInit {
+export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -30,8 +49,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   funcID: any;
   titleAction = '';
   itemSelected: any;
-  stepType ='A'
-
+  stepType :any;
   service = 'BP';
   entityName = 'BP_ProcessSteps';
   idField = 'recID';
@@ -43,7 +61,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
     inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,
+    private activedRouter: ActivatedRoute
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -121,7 +139,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         },
       },
     ];
-    
+
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
     this.resourceKanban.assemblyName = 'SYS';
@@ -134,35 +152,36 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-
-
   //#region CRUD bước công việc
   add() {
-      this.view.dataService.addNew().subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupAddProcessStepsComponent,
-          [this.view.dataService.dataSelected,'add', this.titleAction, this.stepType],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddProcessStepsComponent,
+        [
+          this.view.dataService.dataSelected,
+          'add',
+          this.titleAction,
+          this.stepType,
+        ],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
       });
+    });
   }
 
-  edit(data) {
-  }
+  edit(data) {}
 
-  copy(data) {
-  }
+  copy(data) {}
 
   delete(data) {
     this.view.dataService.dataSelected = data;
@@ -186,11 +205,11 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-
   //#region event
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    this.stepType =evt.id ;
+    if ((evt.id == 'btnAdd')) this.stepType = 'P';
+    else this.stepType = evt.id;
     this.add();
     // switch (evt.id) {
     //   case 'btnAdd':
@@ -213,21 +232,20 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
       case 'SYS01':
         this.add();
         break;
-      // case 'SYS03':
-      //   this.edit(data);
-      //   break;
-      // case 'SYS04':
-      //   this.copy(data);
-      //   break;
-      // case 'SYS02':
-      //   this.delete(data);
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
     }
   }
 
   onDragDrop(e: any) {
     console.log(e);
   }
-
 
   //#endregion
 }
