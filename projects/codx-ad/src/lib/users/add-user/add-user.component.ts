@@ -77,7 +77,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   tmpPost: any;
   dataCopy: any;
   dataComment: any;
-  contentComment: any;
+  titleComment: any;
+  descriptionComment: any;
 
   constructor(
     private injector: Injector,
@@ -126,10 +127,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.gridViewSetup = res;
       }
     });
-    this.cache.message('WP028').subscribe(res => {
-      debugger
-      if(res) this.contentComment = res.DefaultName;
-    })
+    this.cache.message('WP028').subscribe((res) => {
+      if (res) {
+        this.titleComment = res.description;
+        this.descriptionComment = res.defaultName;
+      }
+    });
   }
 
   onInit(): void {}
