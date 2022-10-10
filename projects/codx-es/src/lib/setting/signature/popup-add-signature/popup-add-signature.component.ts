@@ -135,6 +135,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           }
         });
       } else if (event?.field == 'signatureType') {
+        console.log(this.data);
+
         if (event?.data == '2') {
           this.data.supplier = '1';
           this.form?.formGroup.patchValue({ supplier: '1' });

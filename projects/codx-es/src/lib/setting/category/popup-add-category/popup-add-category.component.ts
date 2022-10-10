@@ -276,6 +276,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
     }
+    // if (this.viewAutoNumber == '') {
+    //   let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
+    //   this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+    //   return;
+    // }
 
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
