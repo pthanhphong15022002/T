@@ -40,6 +40,7 @@ import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { AddGiftsComponent } from './add-gifts/add-gifts.component';
 import { AddWarehouseComponent } from './add-warehouse/add-warehouse.component';
+import { CodxFdService } from '../../../codx-fd.service';
 
 @Component({
   selector: 'app-gifts',
@@ -85,13 +86,12 @@ export class GiftsComponent extends UIComponent implements OnInit {
 
   constructor(
     private injector: Injector,
-    private fb: FormBuilder,
     private modalService: NgbModal,
     private changedr: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private auth: AuthStore,
-    private dt: ChangeDetectorRef,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private fdSV: CodxFdService
   ) {
     super(injector);
     this.route.params.subscribe((param) => {
@@ -271,7 +271,12 @@ export class GiftsComponent extends UIComponent implements OnInit {
       .delete([this.view.dataService.dataSelected], true, (option: any) =>
         this.beforeDelete(option, this.view.dataService.dataSelected)
       )
-      .subscribe();
+      .subscribe((res: any) => {
+        if (res)
+          this.fdSV
+            .deleteFile(res.giftID, this.functionList.entityName)
+            .subscribe();
+      });
   }
 
   beforeDelete(op: any, data) {

@@ -7,7 +7,7 @@ import 'moment/src/locale/vi';
 })
 export class DatetimePipe implements PipeTransform {
 
-  transform(value: string, type: string = "dmy", showtime: boolean = false,textIfNull = "dd/MM/yyyy") {
+  transform(value: any, type: string = "dmy", showtime: boolean = false,textIfNull = "dd/MM/yyyy") {
     if(!value){
       return textIfNull;
     }

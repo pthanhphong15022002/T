@@ -3,9 +3,9 @@
         <ng-container *ngIf="dataComment.totalVote > 0">
             <div class="flex align-items-center">
                 <div *ngFor="let votedType of dataComment.listVoteType">
-                    <a>
-                        <img src="assets/themes/wp/default/img/{{votedType | vll:'L1480':'icon' | async}}"
-                            alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
+                    <a *ngIf="dVll[votedType]?.icon">
+                        <img src="assets/themes/wp/default/img/{{dVll[votedType]?.icon}}"
+                         style="width: 15px; height: 15x;">
                     </a>
                 </div>
             </div>
@@ -34,17 +34,18 @@
             <div class="d-flex mod icon-like">
                 <ng-container *ngFor="let item of vllL1480">
                     <a class="mod-icon" (click)="votePost(dataComment, item.value)">
-                        <img src="assets/themes/wp/default/img/{{item.icon}}" alt="Kiwi standing on oval"></a>
+                        <img src="assets/themes/wp/default/img/{{item.icon}}"></a>
                 </ng-container>
             </div>
             <ng-template #myVoted>
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <img src="assets/themes/wp/default/img/{{(dataComment.myVotedType | vll:'L1480':'icon' | async)}}"
-                        alt="Kiwi standing on oval" style="width: 18px; height: 18px">
+                    <img *ngIf="dVll[dataComment.myVotedType]?.icon" 
+                        src="assets/themes/wp/default/img/{{dVll[dataComment.myVotedType]?.icon}}"
+                        style="width: 18px; height: 18px">
                     <div>
                         <span class="fw-bold ms-2"
-                            [style.color]="dataComment.myVotedType | vll:'L1480':'textColor' | async">
-                            {{dataComment.myVotedType | vll:'L1480':'text' | async}}
+                        [style.color]="dVll[dataComment.myVotedType]?.textColor">
+                        {{dVll[dataComment.myVotedType]?.text}}
                         </span>
                     </div>
                 </div>
@@ -62,7 +63,7 @@
     </div>
 </div>
 <div class="isHiden border-top" [class.isShow]="dataComment.isShowComment">
-    <codx-comments [funcID]="funcID" [objectType]="objectType" [new]="true" [formModel]="formModel"
+    <codx-comments [funcID]="funcID" [dVll]="dVll" [objectType]="objectType" [new]="true" [formModel]="formModel"
         (evtSendComment)="sendComment($event)" [parentID]="dataComment.recID" [refID]="dataComment.recID">
     </codx-comments>
     <ng-container *ngFor="let cm of lstComment">
@@ -71,7 +72,7 @@
 </div>
 <ng-template #cmt let-data>
     <div class="c1" [attr.dt]="setDicData(data)" id="{{data.recID}}">
-        <codx-comments [funcID]="funcID" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
+        <codx-comments [funcID]="funcID"  [dVll]="dVll" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
             [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)">
         </codx-comments>
@@ -79,7 +80,7 @@
             <ng-container *ngTemplateOutlet="subCmt context: { $implicit: item }"></ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
-            <codx-comments [funcID]="funcID" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
+            <codx-comments [funcID]="funcID"  [dVll]="dVll" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
                 (evtSendComment)="sendComment($event,data)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"
                 [formModel]="formModel">
             </codx-comments>
@@ -89,7 +90,7 @@
 <ng-template #subCmt let-data>
     <div class="c2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
         <div>
-            <codx-comments [funcID]="funcID" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
+            <codx-comments [funcID]="funcID"  [dVll]="dVll" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
                 [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
                 (evtReplyTo)="replyTo($event)">
             </codx-comments>
@@ -105,7 +106,7 @@
             <ng-container *ngTemplateOutlet="cmt context: { $implicit: item }"></ng-container>
         </div>
         <ng-container *ngIf="data.showReply">
-            <codx-comments [funcID]="funcID" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
+            <codx-comments [funcID]="funcID"  [dVll]="dVll" [objectType]="objectType" (evtDeleteComment)="deleteComment($event)"
                 (evtSendComment)="sendComment($event,data)" [new]="true" [parentID]="data.parentID" [refID]="data.recID"
                 [formModel]="formModel">
             </codx-comments>
@@ -137,7 +138,7 @@
                             <div class="flex align-items-center">
                                 <div class="me-2">
                                     <img class="h-20px w-20px"
-                                        src="assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}">
+                                    src="assets/themes/wp/default/img/{{dVll[vote.voteType]?.icon}}">
                                 </div>
                                 <div class="me-2">
                                     <span class="nav-text d-block h-20px">
@@ -160,11 +161,10 @@
                             <div class="d-flex flex-column flex-grow-1">
                                 <div class="text-dark fw-bold">{{item.createdName}}</div>
                                 <div class="text-gray-800 fw-bold">{{item.positionName}}</div>
-                                <div class="text-gray-400">{{item.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div>
+                                <div class="text-gray-400">{{item.createdOn | fmDT}}</div>
                             </div>
                             <div class="ms-6" style="margin-right: 45px">
-                                <img src="assets/themes/wp/default/img/{{(item.voteType|vll:'L1480':'icon'|async)}}"
-                                    alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
+                                <img src="assets/themes/wp/default/img/{{dVll[item.voteType]?.icon}}" style="width: 15px; height: 15x;">
                             </div>
                         </div>
                     </div>
