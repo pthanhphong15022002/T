@@ -111,6 +111,11 @@ import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 import { DialogthumbComponent } from './components/thumbnail/dialogthumb/dialogthumb.component';
 import { PopupEditShiftComponent } from './components/setting-calendar/popup-edit-shift/popup-edit-shift.component';
 import { CodxPopupViewsComponent } from './components/codx-popup-views/codx-popup-views.component';
+import { CodxDashboardComponent } from './components/codx-dashboard/codx-dashboard.component';
+import { PopupAddPanelComponent } from './components/codx-dashboard/popup-add-panel/popup-add-panel.component';
+import { PopupAddChartComponent } from './components/codx-dashboard/popup-add-chart/popup-add-chart.component';
+import { DashboardLayoutAllModule } from '@syncfusion/ej2-angular-layouts';
+import { LayoutPanelComponent } from './components/codx-dashboard/layout-panel/layout-panel.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -186,6 +191,10 @@ const T_Component: Type<any>[] = [
   CodxPopupViewsComponent,
   //pdf
   PdfComponent,
+  CodxDashboardComponent,
+  PopupAddPanelComponent,
+  PopupAddChartComponent,
+  LayoutPanelComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -216,6 +225,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     //pdf
     ListViewAllModule,
     NgxExtendedPdfViewerModule,
+    DashboardLayoutAllModule,
   ],
   exports: [T_Component, T_Pipe],
 })
