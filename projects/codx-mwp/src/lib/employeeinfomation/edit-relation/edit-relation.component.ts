@@ -10,7 +10,7 @@ import { CodxMwpService } from '../../codx-mwp.service';
   styleUrls: ['./edit-relation.component.css']
 })
 export class EditRelationComponent implements OnInit {
-  title = "Thêm mới";
+  title = "";
   dataBind: any = {};
   dialog: any;
   data: any;

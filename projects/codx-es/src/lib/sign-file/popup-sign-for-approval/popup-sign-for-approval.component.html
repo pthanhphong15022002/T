@@ -74,7 +74,8 @@
       <lib-pdf
         #pdfView
         [isApprover]="isApprover"
-        [recID]="recID"
+        [transRecID]="transRecID"
+        [recID]="sfRecID"
         [stepNo]="stepNo"
         [isEditable]="canOpenSubPopup"
         (isActiveToSign)="changeActiveOpenPopup($event)"
@@ -186,7 +187,7 @@
         hideImageUpload="0"
         hideImageThumb="1"
         [functionID]="funcID"
-        [objectId]="recID"
+        [objectId]="sfRecID"
         [allowMultiFile]="1"
         [idBrowse]="'add'"
       >
@@ -293,7 +294,7 @@
           hideImageUpload="0"
           hideImageThumb="1"
           [functionID]="funcID"
-          [objectId]="recID"
+          [objectId]="sfRecID"
           [allowMultiFile]="1"
           [idBrowse]="'add'"
         >

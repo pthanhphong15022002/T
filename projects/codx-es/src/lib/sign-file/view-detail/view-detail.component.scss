@@ -21,7 +21,8 @@
 // .active {
 //   color: blue !important;
 // }
-// .e-device .e-dlg-content, .e-device .e-dlg-content * {
+// .e-device .e-dlg-content,
+// .e-device .e-dlg-content * {
 //   font-size: inherit;
 // }
 
@@ -33,7 +34,7 @@
 //   float: left;
 // }
 // codx-detail-tmp {
-//   // overflow: hidden !important;
+//   overflow: hidden !important;
 // }
 // codx-view-list-detail .codx-detail-main {
 //   padding-bottom: 0;
@@ -44,6 +45,26 @@
 // .e-splitter.e-splitter-vertical .e-pane.e-pane-horizontal {
 //   overflow: hidden !important;
 // }
+// // .codx-detail-body {
+// //   height: calc(100% - 240px) !important;
+// // }
+// .h-od-tab .tab-content {
+//   height: calc(100% - 30px) !important;
+//   overflow: auto;
+// }
+codx-view-list-detail .codx-detail-main {
+  overflow: hidden !important;
+  height: 100%;
+}
 .codx-detail-body {
-  height: calc(100% - 240px) !important;
+  height: 68%;
+}
+.h-od-tab .tab-content {
+  height: calc(100% - 30px) !important;
+  overflow: auto;
+  margin-right: -18px;
+  padding-right: 20px;
+}
+.float-left > div {
+  float: left;
 }

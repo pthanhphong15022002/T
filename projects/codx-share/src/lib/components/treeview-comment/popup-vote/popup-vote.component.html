@@ -21,11 +21,11 @@
                     <div class="flex">
                         <div class="me-2">
                             <img class="h-20px w-20px"
-                                src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}">
+                                src="/assets/themes/wp/default/img/{{dVll[vote.voteType]?.icon}}">
                         </div>
                         <div class="me-2">
                             <span class="nav-text d-block h-20px">
-                                {{vote.voteType | vll:'L1480':'text' | async}}
+                                {{dVll[vote.voteType]?.text}}
                             </span>
                         </div>
                         <span class="nav-text d-block">({{vote.countVote}})</span>
@@ -44,12 +44,11 @@
                         <div class="d-flex flex-column flex-grow-1">
                             <div class="text-dark fw-bold">{{item.createdName}}</div>
                             <div class="text-dark-75 fw-bold">{{item.positionName}}</div>
-                            <div class="text-gray-400">{{item.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div>
+                            <div class="text-gray-400">{{item.createdOn | fmDT}}</div>
                         </div>
                         <div class="ms-6">
                             <img class="w-30px"
-                                src="/assets/themes/wp/default/img/{{(item.voteType|vll:'L1480':'icon'|async)}}"
-                                alt="Kiwi standing on oval">
+                                src="/assets/themes/wp/default/img/{{dVll[item.voteType]?.icon}}">
                         </div>
                     </div>
                     <hr class="bg-gray-300" />

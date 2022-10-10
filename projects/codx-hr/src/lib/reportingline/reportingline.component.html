@@ -14,7 +14,22 @@
 </ng-template>
 
 <ng-template #itemViewList>
-    <div class="d-flex flex-row panelmain" style="width: 100%;" *ngIf="dataValue">
+    <div class="hover-scroll-overlay-y" 
+        data-kt-scroll="true" 
+        data-kt-scroll-activate="true"
+        data-kt-scroll-height="auto" 
+        data-kt-scroll-dependencies=".pw-profile, .pw-menu"
+        data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #reportingline-body, .pw-content" 
+        data-kt-scroll-offset="0">
+        <div id="reportingline-body">
+            <codx-listview #listview [itemTemplate]="itemTemplate" [funcID]="view.formModel.funcID" service="HR"
+                className="PositionsBusiness" method="GetModelFormPositionsAsync" assemblyName="ERM.Business.HR"
+                entityName="HR_Positions" [predicate]="predicate" [dataService]="dtService" [selectFirst]="false"
+                [dataValue]="dataValue" (clickMF)="clickMF($event)" [typeMF]="'hover'" [formModel]="view.formModel">
+            </codx-listview>
+        </div>
+    </div>    
+    <!-- <div class="d-flex flex-row panelmain" style="width: 100%;" *ngIf="dataValue">
         <div class="d-flex flex-column flex-column-fluid pr-1" data-kt-scroll="true"
             data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
             data-kt-scroll-wrappers=".panelmain, .wrapper" data-kt-scroll-offset="0">
@@ -23,11 +38,8 @@
                 entityName="HR_Positions" [predicate]="predicate" [dataService]="dtService" [selectFirst]="false"
                 [dataValue]="dataValue" (clickMF)="clickMF($event)" [typeMF]="'hover'" [formModel]="view.formModel">
             </codx-listview>
-            <!-- <positions-listview 
-                [dataValue]="dataValue" [formModel]="view.formModel">
-            </positions-listview> -->
         </div>
-    </div>
+    </div> -->
 </ng-template>
 
 <ng-template #itemTemplate let-data>

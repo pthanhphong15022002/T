@@ -95,6 +95,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40301':
         {
           alert('Duyệt');
+          this.approve(value,"5")
         }
         break;
       case 'EPT40102':
@@ -123,6 +124,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40305':
         {
           alert('Từ chối');
+          this.approve(value,"4")
         }
         break;
       case 'EPT40106':
@@ -130,6 +132,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40306':
         {
           alert('Làm lại');
+          this.approve(value,"2")
         }
         break;
       default:
@@ -137,15 +140,15 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
         break;
     }
   }
-  approve(data:any){
+  approve(data:any, status:string){
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
           .approve(
             'EP_Bookings',            
-            data?.recID,
-            '5',//Status : 5 - Duyệt
+            data?.recID,//ApprovelTrans.RecID
+            status,//Status : 5 - Duyệt
           )
           .subscribe((res) => {
             var x= res;

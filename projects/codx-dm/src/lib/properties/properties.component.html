@@ -1,7 +1,7 @@
-<codx-form headerText="{{titleDialog}}" [subHeader]="header" [body]="body" [dialog]="dialog">
+<codx-form headerText="{{titleDialog}}" [subHeader]="header" [body]="body" [dialog]="dialog" class="dialog-property">
     <ng-template #header>
         <div class="offcanvas-header w-100">
-            <div class="btn-extand d-flex align-items-center me-4"
+            <div class="btn-extand d-flex align-items-center"
                 [ngClass]="!hideExtend?'justify-content-end':'justify-content-end'">
                 <ng-container *ngIf="!hideExtend">
                     <span [style.marginLeft]="'52%'">Thông tin mở rộng</span>
@@ -18,68 +18,54 @@
         <div class="offcanvas-content offcanvas-extend fixed-extend">
             <div class="d-flex">
                 <div class="flex-grow-1 extend-main">
-                    <div class="dms-info">
-                        <div class="d-flex align-items-center">
-                            <div *ngIf="fileEditing && fileEditing.extension">
-                                <img alt="{{fileEditing.fileName}}" class="mh-25px me-2"
-                                    src="../../../assets/codx/dms/{{getAvatar(fileEditing.extension)}}">
-                            </div>
-                            <div class="d-flex flex-column flex-grow-1">
-                                <div *ngIf="fileEditing" class="text-gray-600 fw-bold">
-                                    {{fileEditing.fileName}}
+                    <div class="h-100 extend-content">
+                        <div class="dms-info">
+                            <div class="d-flex align-items-center">
+                                <div *ngIf="fileEditing && fileEditing.extension">
+                                    <img alt="{{fileEditing.fileName}}" class="mh-25px me-2"
+                                        src="../../../assets/codx/dms/{{getAvatar(fileEditing.extension)}}">
+                                </div>
+                                <div class="d-flex flex-column flex-grow-1">
+                                    <div *ngIf="fileEditing" class="text-gray-600 fw-bold">
+                                        {{fileEditing.fileName}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div *ngIf="fileEditing">
-                            {{fileEditing.description}}
-                        </div>
-                        <div *ngIf="fileEditing" class="mt-3 pic-file h-140px d-flex justify-content-center">
-                            <div *ngIf="fileEditing.thumbnail" class="w-100">
-                                <img alt="" class="w-100" [src]="getThumbnail(fileEditing)">
+                            <div *ngIf="fileEditing">
+                                {{fileEditing.description}}
                             </div>
-                            <!-- <img alt="" class="w-100 me-2" src="../../../assets/demos/dms/demo1.png"> -->
-                        </div>
-                        <div class="dms-btn d-flex justify-content-between mt-4">
-                            <div class="d-flex">
-                                <ng-container *ngIf="fileEditing">
-                                    <codx-tag entityName="DM_FileInfo" [isEdit]="false" [disabled]="true"
-                                        [value]="fileEditing.tags">
-                                    </codx-tag>
-                                    <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="listTag"> </tags> -->
-                                    <!-- <tags [editMode]='false' [entityName]="'TM_Task'" [(value)]="fileEditing.tags">
+                            <div *ngIf="fileEditing" class="mt-3 pic-file h-140px d-flex justify-content-center">
+                                <div *ngIf="fileEditing.thumbnail" class="w-100">
+                                    <img alt="" class="w-100" [src]="getThumbnail(fileEditing)">
+                                </div>
+                                <!-- <img alt="" class="w-100 me-2" src="../../../assets/demos/dms/demo1.png"> -->
+                            </div>
+                            <div class="dms-btn d-flex justify-content-between mt-4">
+                                <div class="d-flex">
+                                    <ng-container *ngIf="fileEditing">
+                                        <codx-tag entityName="DM_FileInfo" [isEdit]="false" [disabled]="true"
+                                            [value]="fileEditing.tags">
+                                        </codx-tag>
+                                        <!-- <tags [editMode]='true' [entityName]="'TM_Task'" [(value)]="listTag"> </tags> -->
+                                        <!-- <tags [editMode]='false' [entityName]="'TM_Task'" [(value)]="fileEditing.tags">
                                     </tags> -->
-                                    <!-- <a *ngFor="let tag of listTag"
+                                        <!-- <a *ngFor="let tag of listTag"
                                         class="btn btn-xs btn-primary btn-pill me-2">{{tag}}</a> -->
-                                </ng-container>
-                            </div>
-                            <div class="d-flex">
-                                <a (click)="openRight(2, false)" class="btn btn-sm btn-outline-primary">{{titleShare}}</a>
-                                <!-- <a (click)="openRight(2, true)"
+                                    </ng-container>
+                                </div>
+                                <div class="d-flex">
+                                    
+                                    <a (click)="openRight(2, false)"
+                                        class="btn btn-sm btn-outline-primary">{{titleShare}}</a>
+                                    <!-- <a (click)="openRight(2, true)"
                                     class="btn btn-xs btn-outline-primary fw-bold btn-pill">Chia sẻ</a> -->
+                                </div>
                             </div>
-                        </div>
-                        <div *ngIf="fileEditing" class="d-flex my-3">
-                            <span class="text-gray-600 me-2 w-100px">{{titleFiletype}}:</span>
-                            <span class=""><!-- {{fileEditing.type}} --> {{fileEditing.extension}}</span>
-                        </div>
-                        <div *ngIf="fileEditing" class="d-flex my-3">
-                            <span class="text-gray-600 me-2 w-100px">{{titleFilesize}}:</span>
-                            <span class="">{{getSizeKB(fileEditing.fileSize)}} KB
-                                ({{getSizeByte(fileEditing.fileSize)}} bytes)</span>
-                        </div>
-                        <div *ngIf="fileEditing && fileEditing.createdOn" class="d-flex mb-1 my-3">
-                            <span class="text-gray-600 me-2 w-100px">{{titleCreator}}:</span>
-                            <span class="">{{fileEditing.userName}}</span>
-                            <span class="icon-access_time icon-16 ms-5 me-1"></span>
-                            <span class="">{{fileEditing.createdOn | date:
-                                'dd/MM/yyyy'}}</span>
-                        </div>
-                        <div *ngIf="fileEditing" class="d-flex mb-1 my-3">
-                            <span class="text-gray-600 me-2 w-100px">{{titleVersion}}:</span>
-                            <ng-container *ngIf="fileEditing.version , else elseVersion">
-                                <span class="">{{fileEditing.version}}</span>
-                                <span *ngIf="fileEditing.comment != ''" class="icon-comment icon-18 text-warning ms-2"
-                                    title="{{fileEditing.comment}}">
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                <span class="text-gray-600 me-2 w-100px">{{titleFiletype}}:</span>
+                                <span class="">
+                                    <!-- {{fileEditing.type}} --> {{fileEditing.extension}}
                                 </span>
                             </ng-container>
                             <ng-template #elseVersion>
@@ -111,145 +97,154 @@
                                 </ng-template>
                                 <!-- <span class="">{{fileEditing.publisher ? fileEditing.publisher : "Không có dữ liệu"}}</span> -->
                             </div>
-                            
-                        <div *ngIf="fileEditing" class="d-flex my-3">
-                            <span class="text-gray-600 me-2 w-100px">{{titleCopyrights}}:</span>
-                            <span class="">{{fileEditing.copyRights ? fileEditing.copyRights : "Không có dữ liệu"}}</span>
-                        </div>
-                    </div>
-                    <div *ngIf="fileEditing" class="card-rating mt-6">
-                        <div class="fw-bold text-gray-600 mb-4">{{titleRating}}</div>
-                        <div class="d-flex">
-                            <div class="d-flex flex-column me-20 text-center">
-                                <div class="fw-bolder text-warning mb-2" [style.fontSize]="'40px'">{{totalRating}}</div>
-                                <div class="rating-group">
-                                    <div class="d-flex">
-                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                                        <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                                    </div>
-                                    <div [style.width]="styleRating" class="d-flex rating-percent">
-                                        <span class="icon-star text-warning icon-16 me-1"></span>
-                                        <span class="icon-star text-warning icon-16 me-1"></span>
-                                        <span class="icon-star text-warning icon-16 me-1"></span>
-                                        <span class="icon-star text-warning icon-16 me-1"></span>
-                                        <span class="icon-star text-warning icon-16 me-1"></span>
-                                    </div>
-                                </div>
-                                <div class="text-gray-600 fs-7 mt-2">{{totalViews}} {{titleRating}}</div>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <div class="d-flex mb-1">
-                                    <span class="me-1 text-gray-600">5</span>
-                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
-                                    <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating5"
-                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <div class="text-gray-500 fs-7">{{rating5}}</div>
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <span class="me-1 text-gray-600">4</span>
-                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
-                                    <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating4"
-                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <div class="text-gray-500 fs-7">{{rating4}}</div>
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <span class="me-1 text-gray-600">3</span>
-                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
-                                    <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating3"
-                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <div class="text-gray-500 fs-7">{{rating3}}</div>
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <span class="me-1 text-gray-600">2</span>
-                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
-                                    <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating2"
-                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <div class="text-gray-500 fs-7">{{rating2}}</div>
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <span class="me-1 text-gray-600">1</span>
-                                    <span class="icon-star text-gray-600 icon-16 me-3"></span>
-                                    <div class="progress progress-xs w-150px mt-2 me-2">
-                                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating1"
-                                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <div class="text-gray-500 fs-7">{{rating1}}</div>
-                                </div>
+
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <span class="text-gray-600 me-2 w-100px">{{titleCopyrights}}:</span>
+                                <span class="">{{fileEditing.copyRights ? fileEditing.copyRights : "Không có dữ liệu"}}</span>
                             </div>
                         </div>
-                        <div class="d-flex flex-column py-3 flex-grow-1 border-top my-rating mt-3">
-                            <div class="d-flex align-items-center">
-                                <div class="font-size-lg fw-bold flex-grow-1">{{titleRatingDesc}}</div>
-                                <div class="d-flex">
-                                    <!-- <ngb-rating [max]="5" [(rate)]="currentRate" [readonly]="false"></ngb-rating> -->
-                                    <ngb-rating [(rate)]="currentRate" max="5" (rateChange)="readonly=false"
-                                        (hover)="hovered=$event" (leave)="hovered=0" [readonly]="readonly">
-                                        <ng-template let-fill="fill" let-index="index">
-                                            <span class="star" [class.filled]="fill === 100"
-                                                [class.bad]="index < 0">&#9733;</span>
-                                        </ng-template>
-                                    </ngb-rating>
-                                </div>
-                            </div>
-                            <div class="text-gray-500 fs-7">{{titleRatingDesc2}}</div>
-                            <div class="d-flex align-items-center mt-4">
-                                <div class="comment-box flex-grow-1">
-                                    <codx-input placeholder="Nhận xét của bạn..." class="form-control test-datetime"
-                                        type="textarea" format="ed2" style="width:100%" [crrValue]="commenttext"
-                                        (valueChange)="txtValue($event, 'commenttext')" ></codx-input>
-                                </div>
-                                <span (click)="setComment()" class="btn btn-primary ms-3 min-w-60px">{{titleSend}}</span>
-                            </div>
-                        </div>
-                        <ng-container *ngIf="fileEditing.views">
-                            <ng-container *ngFor="let view of fileEditing.views; let i = index">
-                                <div *ngIf="view.rating > 0"
-                                    class="d-flex flex-column py-3 w-100 border-bottom user-rating">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="me-3">
-                                            <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users"
-                                                imgCss="w-30px me-3" [imageWidth]="30" [title]="view.userName"
-                                                [subTitle]="view.positionName">
-                                            </codx-temp-full>
+                        <div *ngIf="fileEditing" class="card-rating mt-6">
+                            <div class="fw-bold text-gray-600 mb-4">{{titleRating}}</div>
+                            <div class="d-flex">
+                                <div class="d-flex flex-column me-20 text-center">
+                                    <div class="fw-bolder text-warning mb-2" [style.fontSize]="'40px'">{{totalRating}}
+                                    </div>
+                                    <div class="rating-group">
+                                        <div class="d-flex">
+                                            <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                                            <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                                            <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                                            <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                                            <span class="icon-star text-gray-500 icon-16 me-1"></span>
                                         </div>
-                                        <div class="d-flex flex-column">
-                                            <div class="task-date text-gray-600 d-flex flex-column align-items-center">
-                                                <div class="text-gray-500 fs-7 mb-1">
-                                                    <span class="text-gray-600 me-2">{{view.viewDate |
-                                                        timefrom}}</span>
-                                                </div>
-                                                <div class="d-flex user-rated">
-                                                    <span [ngClass]="setClassRating(1, view.rating)"></span>
-                                                    <span [ngClass]="setClassRating(2, view.rating)"></span>
-                                                    <span [ngClass]="setClassRating(3, view.rating)"></span>
-                                                    <span [ngClass]="setClassRating(4, view.rating)"></span>
-                                                    <span [ngClass]="setClassRating(5, view.rating)"></span>
+                                        <div [style.width]="styleRating" class="d-flex rating-percent">
+                                            <span class="icon-star text-warning icon-16 me-1"></span>
+                                            <span class="icon-star text-warning icon-16 me-1"></span>
+                                            <span class="icon-star text-warning icon-16 me-1"></span>
+                                            <span class="icon-star text-warning icon-16 me-1"></span>
+                                            <span class="icon-star text-warning icon-16 me-1"></span>
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-600 fs-7 mt-2">{{totalViews}} {{titleRating}}</div>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex mb-1">
+                                        <span class="me-1 text-gray-600">5</span>
+                                        <span class="icon-star text-gray-600 icon-16 me-3"></span>
+                                        <div class="progress progress-xs w-150px mt-2 me-2">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                [style.width]="rating5" aria-valuenow="50" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="text-gray-500 fs-7">{{rating5}}</div>
+                                    </div>
+                                    <div class="d-flex mb-1">
+                                        <span class="me-1 text-gray-600">4</span>
+                                        <span class="icon-star text-gray-600 icon-16 me-3"></span>
+                                        <div class="progress progress-xs w-150px mt-2 me-2">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                [style.width]="rating4" aria-valuenow="50" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="text-gray-500 fs-7">{{rating4}}</div>
+                                    </div>
+                                    <div class="d-flex mb-1">
+                                        <span class="me-1 text-gray-600">3</span>
+                                        <span class="icon-star text-gray-600 icon-16 me-3"></span>
+                                        <div class="progress progress-xs w-150px mt-2 me-2">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                [style.width]="rating3" aria-valuenow="50" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="text-gray-500 fs-7">{{rating3}}</div>
+                                    </div>
+                                    <div class="d-flex mb-1">
+                                        <span class="me-1 text-gray-600">2</span>
+                                        <span class="icon-star text-gray-600 icon-16 me-3"></span>
+                                        <div class="progress progress-xs w-150px mt-2 me-2">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                [style.width]="rating2" aria-valuenow="50" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="text-gray-500 fs-7">{{rating2}}</div>
+                                    </div>
+                                    <div class="d-flex mb-1">
+                                        <span class="me-1 text-gray-600">1</span>
+                                        <span class="icon-star text-gray-600 icon-16 me-3"></span>
+                                        <div class="progress progress-xs w-150px mt-2 me-2">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                [style.width]="rating1" aria-valuenow="50" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="text-gray-500 fs-7">{{rating1}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column py-3 flex-grow-1 border-top my-rating mt-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="font-size-lg fw-bold flex-grow-1">{{titleRatingDesc}}</div>
+                                    <div class="d-flex">
+                                        <!-- <ngb-rating [max]="5" [(rate)]="currentRate" [readonly]="false"></ngb-rating> -->
+                                        <ngb-rating [(rate)]="currentRate" max="5" (rateChange)="readonly=false"
+                                            (hover)="hovered=$event" (leave)="hovered=0" [readonly]="readonly">
+                                            <ng-template let-fill="fill" let-index="index">
+                                                <span class="star" [class.filled]="fill === 100"
+                                                    [class.bad]="index < 0">&#9733;</span>
+                                            </ng-template>
+                                        </ngb-rating>
+                                    </div>
+                                </div>
+                                <div class="text-gray-500 fs-7">{{titleRatingDesc2}}</div>
+                                <div class="d-flex align-items-center mt-4">
+                                    <div class="comment-box flex-grow-1">
+                                        <codx-input placeholder="Nhận xét của bạn..." class="form-control test-datetime"
+                                            type="textarea" format="ed2" style="width:100%" [crrValue]="commenttext"
+                                            (valueChange)="txtValue($event, 'commenttext')"></codx-input>
+                                    </div>
+                                    <span (click)="setComment()"
+                                        class="btn btn-primary ms-3 min-w-60px">{{titleSend}}</span>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="fileEditing.views">
+                                <ng-container *ngFor="let view of fileEditing.views; let i = index">
+                                    <div *ngIf="view.rating > 0"
+                                        class="d-flex flex-column py-3 w-100 border-bottom user-rating">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-3">
+                                                <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users"
+                                                    imgCss="w-30px me-3" [imageWidth]="30" [title]="view.userName"
+                                                    [subTitle]="view.positionName">
+                                                </codx-temp-full>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <div
+                                                    class="task-date text-gray-600 d-flex flex-column align-items-center">
+                                                    <div class="text-gray-500 fs-7 mb-1">
+                                                        <span class="text-gray-600 me-2">{{view.viewDate |
+                                                            timefrom}}</span>
+                                                    </div>
+                                                    <div class="d-flex user-rated">
+                                                        <span [ngClass]="setClassRating(1, view.rating)"></span>
+                                                        <span [ngClass]="setClassRating(2, view.rating)"></span>
+                                                        <span [ngClass]="setClassRating(3, view.rating)"></span>
+                                                        <span [ngClass]="setClassRating(4, view.rating)"></span>
+                                                        <span [ngClass]="setClassRating(5, view.rating)"></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="rating-comment mt-1">
+                                            {{view.comment}}
+                                        </div>
                                     </div>
-                                    <div class="rating-comment mt-1">
-                                        {{view.comment}}
-                                    </div>
-                                </div>
+                                </ng-container>
                             </ng-container>
-                        </ng-container>
+                        </div>
                     </div>
                 </div>
                 <div [ngStyle]="{'display': hideExtend ? 'none' : 'block'}" [attr.disabled]="hideExtend ? true : null"
                     *ngIf="fileEditing != null"
-                    class="extend-more pl-3 w-350px min-w-350px dm-tab-properties pe-2 ms-5 border-left px-2">
+                    class="extend-more pl-5 w-350px min-w-350px dm-tab-properties ms-3 border-left">
                     <ejs-tab>
                         <e-tabitems>
                             <e-tabitem>
@@ -257,7 +252,7 @@
                                     <div>{{titleVersion}}</div>
                                 </ng-template>
                                 <ng-template #content>
-                                    <div class="pt-5">
+                                    <div class="pt-5 extend-more-content pe-3">
                                         <ng-container
                                             *ngIf="(fileEditing.history && fileEditing.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let his of fileEditing.history; let i = index">
@@ -288,7 +283,7 @@
                                     <div>{{titleHistory}}</div>
                                 </ng-template>
                                 <ng-template #content>
-                                    <div class="pt-5">
+                                    <div class="pt-5 extend-more-content pe-3">
                                         <ng-container
                                             *ngIf="(fileEditing?.history && fileEditing?.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let history of fileEditing.history; let i = index"

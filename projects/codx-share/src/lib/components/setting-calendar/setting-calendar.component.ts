@@ -40,11 +40,13 @@ export class SettingCalendarComponent
     private settingCalendar: SettingCalendarService
   ) {
     super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
   onInit(): void {
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.getParams('TMParameters', 'CalendarID');
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      this.getParams(res.module + 'Parameters', 'CalendarID');
+    });
   }
 
   ngAfterViewInit(): void {
@@ -56,9 +58,10 @@ export class SettingCalendarComponent
       if (res) {
         let dataValue = res[0].dataValue;
         let json = JSON.parse(dataValue);
-        if ((json.CalendarID = '')) {
+        if (json.CalendarID && json.Calendar == '') {
           this.calendarID = 'STD';
-          this.calendarName = 'Lịch làm việc chuẩn';
+        } else {
+          this.calendarID = json.CalendarID;
         }
         this.getDayWeek(this.calendarID);
         this.getDaysOff(this.calendarID);
@@ -67,8 +70,8 @@ export class SettingCalendarComponent
     });
   }
 
-  getDayWeek(id) {
-    this.settingCalendar.getDayWeek(id).subscribe((res) => {
+  getDayWeek(calendarID: string) {
+    this.settingCalendar.getDayWeek(calendarID).subscribe((res) => {
       if (res) {
         this.dayWeek = res;
         this.detectorRef.detectChanges();
@@ -76,8 +79,8 @@ export class SettingCalendarComponent
     });
   }
 
-  getDaysOff(id) {
-    this.settingCalendar.getDaysOff(id).subscribe((res) => {
+  getDaysOff(calendarID: string) {
+    this.settingCalendar.getDaysOff(calendarID).subscribe((res) => {
       if (res) {
         this.daysOff = res;
         this.detectorRef.detectChanges();
@@ -97,7 +100,7 @@ export class SettingCalendarComponent
       PopupAddCalendarComponent,
       'Tạo lịch làm việc',
       500,
-      null,
+      360,
       '',
       [this.formModel, this.calendarID]
     );

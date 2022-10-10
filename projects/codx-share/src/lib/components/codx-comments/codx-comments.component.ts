@@ -24,6 +24,7 @@ export class CodxCommentsComponent implements OnInit {
   @Input() objectType:string = "";
   @Input() formModel:any;
   @Input() new:boolean = false;
+  @Input() dVll: any = {};
   @Output() evtReplyTo = new EventEmitter;
   @Output() evtSendComment = new EventEmitter;
   @Output() evtDeleteComment = new EventEmitter;
@@ -38,6 +39,7 @@ export class CodxCommentsComponent implements OnInit {
   checkVoted = false
   lstData: any;
   edit:boolean = false;
+
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",

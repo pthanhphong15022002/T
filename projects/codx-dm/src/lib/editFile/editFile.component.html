@@ -169,13 +169,13 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-2 d-flex align-items-center pt-1">
-                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleRevisionNote}}">
+                        <codx-label fiedName="" formName="" gridViewName="" default="{{titleDescription}}">
                         </codx-label>
                     </div>
                     <div class="col-10">
-                        <codx-input placeholder="{{titleRevisionNote}}..." class="form-control test-datetime"
-                            type="textarea" format="ed3" style="width:100%" height="100px" [crrValue]="fileEditing.revisionNote"
-                            (valueChange)="txtValue($event, 'revisionNote')"></codx-input>
+                        <codx-input placeholder="{{titleDescription}}..." class="form-control test-datetime"
+                            type="text" format="ed3" style="width:100%" height="100px" [crrValue]="fileEditing.description"
+                            (valueChange)="txtValue($event, 'description')"></codx-input>
                         <!-- <textarea name="excerpts" class="form-control" rows="2" (change)="doTrichluc($event)"
                         [(ngModel)]="fileEditing.excerpts"></textarea> -->
                     </div>
