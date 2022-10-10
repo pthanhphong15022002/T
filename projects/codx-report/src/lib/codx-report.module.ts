@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { CodxReportViewerComponent } from './codx-report-viewer/codx-report-viewer.component';
 import { CodxReportComponent } from './codx-report.component';
 import { PopupAddReportComponent } from './popup-add-report/popup-add-report.component';
+import { PopupEditParamComponent } from './popup-edit-param/popup-edit-param.component';
 import { PopupParametersComponent } from './popup-parameters/popup-parameters.component';
 import { CodxReportIframeComponent } from './report-iframe/report-iframe.component';
 import { LayoutComponent } from './_layout/layout.component';
@@ -43,7 +44,8 @@ const routes: Routes = [
     CodxReportViewerComponent,
     PopupParametersComponent,
     PopupAddReportComponent,
-    CodxReportIframeComponent
+    CodxReportIframeComponent,
+    PopupEditParamComponent
   ],
   imports: [
     RouterModule.forChild(routes),
