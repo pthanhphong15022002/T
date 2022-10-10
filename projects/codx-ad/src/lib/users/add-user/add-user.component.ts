@@ -74,11 +74,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   formUser: FormGroup;
   checkValueChangeUG = false;
   dataUG: any = new Array();
-  comments: any;
   tmpPost: any;
   dataCopy: any;
   dataComment: any;
-  contentTmp: ContentTmp = new ContentTmp();
+  contentComment: any;
 
   constructor(
     private injector: Injector,
@@ -127,6 +126,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.gridViewSetup = res;
       }
     });
+    this.cache.message('WP028').subscribe(res => {
+      debugger
+      if(res) this.contentComment = res.DefaultName;
+    })
   }
 
   onInit(): void {}
