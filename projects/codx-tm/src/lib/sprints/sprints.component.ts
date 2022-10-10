@@ -353,7 +353,7 @@ export class SprintsComponent extends UIComponent {
 
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
-        dialogModel.zIndex = 900;
+        // dialogModel.zIndex = 900;
         var dialog = this.callfc.openForm(
           PopupTabsViewsDetailsComponent,
           '',
