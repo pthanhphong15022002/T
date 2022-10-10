@@ -775,3 +775,7 @@ codx-dynamic-form codx-view-grid {
   background-color: var(--bg-body);
 
 }
+
+.e-schedule-toolbar.e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
+  margin-left: 2px;
+}
