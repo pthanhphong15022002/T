@@ -4,11 +4,11 @@ import { DialogData, DialogRef, CacheService, CallFuncService } from 'codx-core'
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
-  selector: 'lib-pop-add-processes',
-  templateUrl: './pop-add-processes.component.html',
-  styleUrls: ['./pop-add-processes.component.css'],
+  selector: 'lib-popup-add-processes',
+  templateUrl: './popup-add-processes.component.html',
+  styleUrls: ['./popup-add-processes.component.css'],
 })
-export class PopAddProcessesComponent implements OnInit {
+export class PopupAddProcessesComponent implements OnInit {
   @Input() process = new BP_Processes();
   @ViewChild('attachment') attachment: AttachmentComponent;
 

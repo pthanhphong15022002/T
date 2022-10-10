@@ -349,13 +349,13 @@ export class CodxEpService {
     );
   }
 
-  approve( entity: string, recID: string, status: string) {
+  approve(recID: string,status: string) {
     return this.api.execSv(
-      'CM',
-      'ERM.Business.CM',
-      'DataBusiness',
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
       'ApproveAsync',
-      [entity, recID, status]
+      [recID, status,'', '', '']
     );
   }
 

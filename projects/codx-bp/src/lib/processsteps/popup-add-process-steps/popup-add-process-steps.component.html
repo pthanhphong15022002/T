@@ -1,0 +1,305 @@
+<codx-form
+  #form
+  [headerText]="title"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog?.formModel"
+  [data]="processSteps"
+>
+  <ng-template #body>
+    <div class="card-form">
+      <div class="form-group" *ngIf="stepType == 'P'">
+        <div>
+          <codx-label
+            fiedName="StepName"
+            [formModel]="form.formModel"
+            default="Tên công đoạn"
+          >
+          </codx-label>
+        </div>
+        <codx-input
+          field="stepName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="col-md-4 form-group" *ngIf="stepType == 'P'">
+        <codx-label
+          fiedName="Duration"
+          [formModel]="form.formModel"
+          default="Thời gian chuẩn"
+        >
+        </codx-label>
+        <codx-input
+          field="duration"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChangeEstimate($event, stepType)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="stepType != 'P'">
+        <codx-label
+          fiedName="ParentID"
+          [formModel]="form.formModel"
+          default="Công đoạn"
+        >
+        </codx-label>
+        <codx-input
+          field="parentID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="stepType != 'P'">
+        <codx-label
+          name="StepName2"
+          [formModel]="form.formModel"
+          default="Tên bước công đoạn"
+        ></codx-label>
+        <codx-input
+          field="stepName2"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="stepType != 'CA' && stepType != 'C'">
+        <codx-label
+          name="Memo"
+          [formModel]="form.formModel"
+          default="Mô tả"
+        ></codx-label>
+        <codx-input
+          field="memo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group row" *ngIf="stepType != 'P'">
+        <div class="col-4 form-group">
+          <codx-label
+            fiedName="Duration"
+            [formModel]="form.formModel"
+            default="Thời (=giờ)"
+          >
+          </codx-label>
+          <codx-input
+            field="duration"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChangeEstimate($event, stepType)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-4 form-group" *ngIf="stepType == 'C'">
+          <codx-label
+            fiedName="Reminder"
+            [formModel]="form.formModel"
+            default="Nhắc nhở"
+          >
+          </codx-label>
+          <codx-input
+            field="reminder"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChangeEstimate($event, stepType)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-4 form-group row" *ngIf="stepType == 'C'">
+          <div class="d-flex align-items-center col-6 mt-5">
+            <codx-input
+              type="switch"
+              class="test-check"
+              [checked]="isAlert"
+              (valueChange)="valueChangeSwitch($event)"
+            >
+            </codx-input>
+            <span>
+              <codx-label
+                name="lblAlert"
+                [formModel]="form.formModel"
+                default="Alert"
+              >
+              </codx-label>
+            </span>
+          </div>
+          <div class="d-flex align-items-center col-6 mt-5">
+            <codx-input
+              type="switch"
+              class="test-check"
+              [checked]="isEmail"
+              (valueChange)="valueChangeSwitch($event)"
+            >
+            </codx-input>
+            <span>
+              <codx-label
+                name="lblEmail"
+                [formModel]="form.formModel"
+                default="Email"
+              >
+              </codx-label>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-8 form-group" *ngIf="stepType != 'C'">
+          <codx-label
+            fiedName="Location"
+            [formModel]="form.formModel"
+            default="Địa điểm"
+          >
+          </codx-label>
+          <codx-input
+            field="location"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChangeEstimate($event, stepType)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="stepType == 'C'">
+        <codx-label
+          fiedName="Location"
+          [formModel]="form.formModel"
+          default="Địa điểm"
+        >
+        </codx-label>
+        <codx-input
+          field="location"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChangeEstimate($event, stepType)"
+        >
+        </codx-input>
+      </div>
+      <ng-container>
+        <div class="d-flex align-items-center justify-content-between mt-4">
+          <div class="d-flex align-items-center mb-3">
+            <span class="icon-person icon-18 me-2 text-primary"></span>
+            <div class="fw-bold text-primary mt-1">
+              <codx-label
+                fiedName="Owners"
+                [formModel]="form.formModel"
+                default="Phân công cho"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <codx-input
+            type="Share"
+            [refValue]="vllShare"
+            field="Owners"
+            [dataShared]="[]"
+            multiple="true"
+            [showInput]="false"
+            (valueChange)="eventApply($event)"
+            [disabled]="readOnly"
+          ></codx-input>
+        </div>
+        <div class="">
+          <ng-container *ngIf="listUser.length > 0">
+            <codx-imgs
+              class="flex symbol-40px"
+              [objectId]="listUser.join(';')"
+              objectType="AD_Users"
+              [numberImages]="5"
+            >
+            </codx-imgs>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <div class="form-group" *ngIf="stepType == 'C'">
+        <codx-label
+          fiedName="Note"
+          [formModel]="form.formModel"
+          default="Ghi chú"
+        >
+        </codx-label>
+        <codx-input
+          field="note"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+
+      <ng-container>
+        <div
+          class="d-flex align-items-center justify-content-between mt-4"
+          *ngIf="showLabelAttachment"
+          style="float: left; clear: left"
+        >
+          <div class="d-flex align-items-center mb-2">
+            <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+            <div class="fw-bold text-primary">
+              <codx-label
+                fiedName="Attachments"
+                [formModel]="form.formModel"
+                default="Tài liệu đính kèm"
+              >
+              </codx-label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <codx-attachment
+            #attachment
+            [objectType]="dialog.formModel.entityName"
+            [objectId]="processSteps?.recID"
+            hideFolder="1"
+            hideImageUpload="0"
+            hideImageThumb="0"
+            hideUploadBtn="1"
+            hideDes="1"
+            type="inline"
+            allowMultiFile="1"
+            [formModel]="dialog.formModel"
+            [functionID]="funcID"
+            (fileAdded)="fileAdded($event)"
+            (fileCount)="getfileCount($event)"
+            displayThumb="full"
+          >
+          </codx-attachment>
+        </div>
+      </ng-container>
+
+      
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <!-- <div class="d-flex justify-content-between mt-4" > -->
+      <button style="float:left" *ngIf="stepType !='P'"
+        type="button"
+        class="btn btn-light-primary me-3"
+        [disabled]="readOnly"
+        (click)="addFile($event)"
+      >
+        <i class="icon-cloud_upload fs-5"></i
+        ><span>
+          <codx-label
+            name="UploadFile"
+            formName="Tasks"
+            default="Upload File"
+          ></codx-label>
+        </span>
+      </button>
+      <button  type="button" class="btn btn-primary" (click)="saveData()">
+        <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
+      </button>
+    <!-- </div> -->
+  </ng-template>
+</codx-form>

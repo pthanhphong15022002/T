@@ -1,202 +1,32 @@
 <codx-views
   [views]="views"
-  #viewbase
+  #view
   [funcID]="funcID"
   [entityName]="'BS_RangeLines'"
-  (buttonClick)="openFormCreate($event, true)"
-  [buttons]="button"
+  (buttonClick)="add($event)"
+  [button]="button"
+  service="BS"
+  assemblyName="ERM.Business.BS"
+  className="RangeLinesBusiness"
+  method="LoadDataRangeLinesAsync"
+  [predicate]="'RangeID=@0'"
+  [dataValue]="'KUDOS'"
+  entityName="BS_RangeLines"
+  (onLoading)="onLoading($event)"
 ></codx-views>
 
-<ng-template #panelLeft>
-  <div class="list-table">
-    <codx-gridview
-      [columnsGrid]="columnsGrid"
-      [itemTemplate]=""
-      service="BS"
-      assemblyName="ERM.Business.BS"
-      className="RangeLinesBusiness"
-      method="LoadDataRangeLinesAsync"
-      [predicate]="'RangeID=@0'"
-      [dataValue]="'KUDOS'"
-      type="tableview"
-      entityName="BS_RangeLines"
-      [pageSize]="15"
-      [height]="'520'"
-      [headerStyle]="headerStyle"
-      [columnStyle]="columnStyle"
-      #gridView
-    >
-    </codx-gridview>
-  </div>
-</ng-template>
-
-<ng-template #panelRightRef>
-  <!-- offcanvas cập nhật thông tin -->
-  <div id="canvas_hangconghien" class="offcanvas offcanvas-md offcanvas-right">
-    <div class="offcanvas-header" kt-hidden-height="46">
-      <div class="d-flex align-items-center justify-content-between header">
-        <h2 class="m-0">
-          <codx-label
-            name="lblTitleRangeLines"
-            formName="BS_RangeLines"
-            default="Hạng cống hiến"
-          >
-          </codx-label>
-        </h2>
-        <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-          <span (click)="clickClosePopup()" class="icon-close icon-18"></span>
-        </a>
-      </div>
-    </div>
-    <div class="offcanvas-content content">
-      <form>
-        <div class="offcanvas-wrapper">
-          <div class="d-flex">
-            <div class="flex-grow-1">
-              <div class="form-group">
-                <codx-label
-                  name="lblBreakName"
-                  formName="BS_RangeLines"
-                  default="Tên hạng"
-                  class="font-1rem font-w550"
-                >
-                </codx-label>
-                <span class="required"></span>
-                <codx-input
-                  type="text"
-                  class="form-control"
-                  placeholder="Standard"
-                  formControlName="breakName"
-                  (valueChange)="valueChange($event)"
-                  [crrValue]="addEditForm.controls['breakName'].value"
-                  field="breakName"
-                >
-                </codx-input>
-              </div>
-              <div class="form-group row">
-                <div class="col-6">
-                  <codx-label
-                    name="lblBreakValue"
-                    formName="BS_RangeLines"
-                    default="Điểm tính hạng"
-                    class="font-1rem font-w550"
-                  >
-                  </codx-label>
-                  <span class="required"></span>
-                  <codx-input
-                    type="number"
-                    class="form-control"
-                    placeholder="0"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    formControlName="breakValue"
-                    (valueChange)="valueChange($event)"
-                    [crrValue]="addEditForm.controls['breakValue'].value"
-                    field="breakValue"
-                  >
-                  </codx-input>
-                </div>
-                <div class="col-6">
-                  <codx-label
-                    name="lblColor"
-                    formName="BS_RangeLines"
-                    default="Màu đại diện"
-                    class="font-1rem font-w550"
-                  >
-                  </codx-label>
-                  <span class="required"></span>
-                  <div class="input-group" #group1>
-                    <!-- <codx-input #elm [ele]="group1" type="colorpicker"
-                                            class="form-control text-white color-large" field="color"
-                                            (valueChange)="valueChangeColor($event, elm)"
-                                            [crrValue]="addEditForm.controls['color'].value" dataformat="hex">
-                                        </codx-input> -->
-                    <codx-input
-                      type="text"
-                      class=""
-                      field="color"
-                      (valueChange)="valueChange($event)"
-                      [crrValue]="addEditForm.controls['color'].value"
-                    >
-                    </codx-input>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group mt-3">
-                <codx-label
-                  name="lblNote"
-                  formName="BS_RangeLines"
-                  default="Ghi chú"
-                  class="font-1rem font-w550"
-                >
-                </codx-label>
-                <codx-input
-                  type="textarea"
-                  class="form-control test-textarea"
-                  rows="3"
-                  formControlName="note"
-                  (valueChange)="valueChange($event)"
-                  [crrValue]="addEditForm.controls['note'].value"
-                  field="note"
-                >
-                </codx-input>
-              </div>
-              <div class="form-group mt-3">
-                <codx-label
-                  name="lblImage"
-                  formName="BS_RangeLines"
-                  default="Biểu tượng đại diện"
-                  class="font-1rem font-w550"
-                >
-                </codx-label>
-                <div class="upload-img">
-                  <codx-img
-                    #imageUpload
-                    [objectId]="this.addEditForm.controls['recID'].value"
-                    [objectName]="this.addEditForm.controls['breakName'].value"
-                    [funcId]="funcID"
-                    objectType="BS_RangeLines"
-                    [isAllowEdit]="true"
-                    [width]="30"
-                  >
-                  </codx-img>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer pt-4 footer">
-          <button type="button" class="btn btn-primary" (click)="onSaveForm()">
-            <codx-label name="lblBtnAdd" formName="BS_RangeLines" default="Lưu">
-            </codx-label>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <div class="offcanvas-overlay"></div>
-</ng-template>
-
 <ng-template #itemCreateBy let-dataItem>
-  <div (mouseenter)="PopoverEmpEnter(empPopover, dataItem)">
-    <div
-      class="d-flex align-items-center"
-      #itemCreateBy
-      #empPopover="ngbPopover"
-      [ngbPopover]="moreFunction"
-      placement="top"
-      container="body"
-    >
-      <div class="w-30 h-30">
-        <codx-img
-          class="symbol symbol-30px symbol-circle me-4"
-          [objectId]="dataItem.createdBy"
-          objectType="AD_Users"
-          [width]="30"
-        >
-        </codx-img>
-      </div>
-      <div class="text-dark font-size-lg">{{ dataItem.createdName }}</div>
+  <div class="d-flex align-items-center" #itemCreateBy>
+    <div class="w-30 h-30">
+      <codx-img
+        class="symbol symbol-30px symbol-circle me-4"
+        [objectId]="dataItem.createdBy"
+        objectType="AD_Users"
+        [width]="30"
+      >
+      </codx-img>
     </div>
+    <div class="text-dark font-size-lg">{{ dataItem.createdName }}</div>
   </div>
 </ng-template>
 
@@ -210,7 +40,7 @@
       class="symbol symbol-30px symbol-circle me-4"
       [objectId]="dataItem.recID"
       [objectName]="dataItem.breakName"
-      funcId="FED2044"
+      [funcId]="funcID"
       aria-disabled="true"
       objectType="BS_RangeLines"
       [width]="30"
@@ -220,7 +50,7 @@
 </ng-template>
 
 <ng-template #moreFunction>
-  <div class="flex">
+  <!-- <div class="flex">
     <a class="action-item d-flex align-items-center">
       <span
         class="icon-edit icon-18 ml-2 mr-2 active"
@@ -233,5 +63,18 @@
     >
       <span class="icon-close icon-18 text-danger mx-2"></span>
     </a>
+  </div> -->
+</ng-template>
+
+<ng-template #createdOn let-item>
+  <div class="d-flex has-action-menu">
+    <span>{{ item.createdOn | fmDT }}</span>
+    <codx-mfunc
+      [dataItem]="item"
+      [formModel]="view?.formModel"
+      (clickMF)="clickMF($event, item)"
+      type="hover"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>

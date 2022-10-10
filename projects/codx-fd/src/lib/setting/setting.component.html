@@ -196,11 +196,10 @@
                                         </div>
                                     </div>
                                     <div class="w-150px">
-                                        <codx-input type="select" name="select" class="cotrol-vll" placeholder=""
-                                            ngDefaultControl refValue="L1440" field="SumaryCards"
-                                            (valueChange)="valueChange($event, null)" [value]="parameter?.SumaryCards">
+                                        <codx-input type="valuelist" class="cotrol-vll" placeholder="" refValue="L1440"
+                                            field="SumaryCards" (valueChange)="valueChange($event)"
+                                            [crrValue]="parameter?.SumaryCards">
                                         </codx-input>
-
                                     </div>
                                 </div>
                                 <hr />
@@ -222,14 +221,12 @@
                                         </div>
                                     </div>
                                     <div class="w-150px">
-                                        <codx-input type="select" name="select" class="cotrol-vll" placeholder=""
-                                            ngDefaultControl refValue="L1440" field="ListRanking"
-                                            (valueChange)="valueChange($event, null)" [value]="parameter?.ListRanking">
+                                        <codx-input type="valuelist" class="cotrol-vll" placeholder="" refValue="L1440"
+                                            field="ListRanking" (valueChange)="valueChange($event)"
+                                            [crrValue]="parameter?.ListRanking">
                                         </codx-input>
-
                                     </div>
                                 </div>
-
                                 <hr />
                                 <div class="d-flex justify-content-between list-item">
                                     <span class="icon-settings icon-20 me-3"></span>
@@ -248,9 +245,10 @@
                                         </div>
                                     </div>
                                     <div class="w-150px d-flex align-items-center ml-4">
-                                        <input type="number" min="1" class="form-control" disabled
-                                            [value]="parameter?.SelectTopEmp" name="number" placeholder="" />
-                                        <span class="icon-edit_file text-hover-primary icon-20 ml-2"
+                                        <codx-input type="number" min="1" class="form-control" disabled="true"
+                                            [crrValue]="parameter?.SelectTopEmp" name="number" placeholder="">
+                                        </codx-input>
+                                        <span class="icon-edit-one text-hover-primary icon-20"
                                             (click)="open(content, 'SelectTopEmp')"></span>
                                     </div>
                                 </div>
@@ -273,9 +271,10 @@
                                     </div>
                                 </div>
                                 <div class="w-150px d-flex align-items-center ml-4">
-                                    <input type="number" min="1" class="form-control" disabled
-                                        [value]="parameter?.SelectTopByCard" name="number" placeholder="" />
-                                    <span class="icon-edit_file text-hover-primary icon-20 ml-2"
+                                    <codx-input type="number" min="1" class="form-control" disabled="true"
+                                        [crrValue]="parameter?.SelectTopByCard" name="number" placeholder="">
+                                    </codx-input>
+                                    <span class="icon-edit-one text-hover-primary icon-20"
                                         (click)="open(content, 'SelectTopByCard')"></span>
                                 </div>
                             </div>
@@ -297,9 +296,10 @@
                                     </div>
                                 </div>
                                 <div class="w-150px d-flex align-items-center ml-4">
-                                    <input type="number" min="1" class="form-control" disabled
-                                        [value]="parameter?.SelectTopBehaviors" name="number" placeholder="" />
-                                    <span class="icon-edit_file text-hover-primary icon-20 ml-2"
+                                    <codx-input type="number" min="1" class="form-control" disabled="true"
+                                        [crrValue]="parameter?.SelectTopBehaviors" name="number" placeholder="">
+                                    </codx-input>
+                                    <span class="icon-edit-one text-hover-primary icon-20"
                                         (click)="open(content, 'SelectTopBehaviors')"></span>
                                 </div>
                             </div>

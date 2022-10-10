@@ -15,6 +15,8 @@ export class CodxCommentTempComponent implements OnInit {
   className:string = "TrackLogsBusiness";
   entityName:string = "BG_TrackLogs"
   lstData:any[] = [];
+  dVll:any = {};
+
   countData:number = 0;
   @ViewChild("tmpListItem") tmpListItem:TemplateRef<any>;
   constructor(

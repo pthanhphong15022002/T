@@ -23,10 +23,10 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() formModel:FormModel;
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
-  @Input()  dVll: any = {};
-  @Input() vllIcon: any = [];
   @Input() viewIcon:boolean = true;
   @Input()  allowVotes:boolean = true;
+  @Input()  dVll: any = {};
+  @Input() vllIcon: any = [];
   @Output() evtReply = new EventEmitter;
   @Output() evtDelete = new EventEmitter;
   @Output() evtSend = new EventEmitter;

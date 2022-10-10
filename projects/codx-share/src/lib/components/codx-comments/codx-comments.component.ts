@@ -39,7 +39,6 @@ export class CodxCommentsComponent implements OnInit {
   checkVoted = false
   lstData: any;
   edit:boolean = false;
-
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",

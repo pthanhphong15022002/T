@@ -55,7 +55,7 @@
                 <codx-label fiedName="Description" [formModel]="formModel" default="Mô tả khác">
                 </codx-label>
             </div>
-            <codx-input dataformat="ed" class="w-490px test-textarea" [Group]="form.formGroup"
+            <codx-input class="w-490px test-textarea" [Group]="form.formGroup"
                 [formModel]="form.formModel" (valueChange)="valueChange($event)" field="description">
             </codx-input>
         </div>
@@ -73,7 +73,7 @@
         </div>
         <div class="d-flex align-items-start pic-grif">
             <div class="pic-edit mr-5 upload-img" style="border: none;">
-                <codx-img funcId="FDS0122" #imageUpLoad aria-disabled="true" objectType="FD_Gifts" [isAllowEdit]="true"
+                <codx-img [funcId]="form.formModel.funcID" #imageUpLoad aria-disabled="true" [objectType]="formModel.entityName" [isAllowEdit]="true"
                     [width]="90" [objectId]="dataUpdate.giftID">
                 </codx-img>
             </div>

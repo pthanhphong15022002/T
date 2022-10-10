@@ -56,7 +56,7 @@ export class TreeviewCommentComponent implements OnInit {
   votes: any;
   lstUserVote: any;
   dataSelected: any[];
-  vllL1480:any = [];
+  vllL1480:any = null;
   dVll: any = {};
   constructor(
     private dt: ChangeDetectorRef,

@@ -4,23 +4,26 @@ import {
   Injector,
   Optional,
   ViewChild,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import {
   AuthStore,
-  CodxFormComponent,
   DialogData,
   DialogRef,
   NotificationsService,
   UIComponent,
+  CodxFormComponent,
+  ImageViewerComponent,
 } from 'codx-core';
-import { CodxFdService } from 'projects/codx-fd/src/public-api';
+import { CodxFdService } from '../../../codx-fd.service';
 
 @Component({
-  selector: 'lib-add-gift-group',
-  templateUrl: './add-gift-group.component.html',
-  styleUrls: ['./add-gift-group.component.scss'],
+  selector: 'lib-add-dedication-rank',
+  templateUrl: './add-dedication-rank.component.html',
+  styleUrls: ['./add-dedication-rank.component.scss'],
 })
-export class AddGiftGroupComponent extends UIComponent implements OnInit {
+export class AddDedicationRankComponent extends UIComponent implements OnInit {
   header = '';
   title = '';
   dialog: DialogRef;
@@ -30,6 +33,9 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
   user: any;
 
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
+
+  @Output() loadData = new EventEmitter();
 
   constructor(
     private injector: Injector,
@@ -45,6 +51,7 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
     this.dataUpdate = JSON.parse(
       JSON.stringify(dialog.dataService.dataSelected)
     );
+    console.log('check color', this.dataUpdate);
     this.formModel = dialog.formModel;
     this.isModeAdd = dt.data?.isModeAdd;
     this.title = dt.data?.headerText;
@@ -70,27 +77,47 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
   onSave() {
     var formGroup = this.form.formGroup.controls;
     if (
-      formGroup.giftID.status == 'VALID' &&
-      formGroup.giftName.status == 'VALID' &&
-      formGroup.memo.status == 'VALID'
+      formGroup.breakName.status == 'VALID' &&
+      formGroup.breakValue.status == 'VALID' &&
+      this.dataUpdate.color
     ) {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
           if (this.isModeAdd) {
-            if (res && res.save[2]) this.dialog.close(res.save[2]);
-            else this.notification.notifyCode('SYS023');
+            if (res.save) {
+              if (this.user.userName)
+                res.save['createdName'] = this.user.userName;
+              this.imageUpload
+                .updateFileDirectReload(res.save.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    this.loadData.emit();
+                  }
+                  var obj = { data: res.save, file: result };
+                  this.dialog.close(obj);
+                });
+            } else this.notification.notifyCode('SYS023');
           } else {
-            if (res && res.update[2]) this.dialog.close(res.update[2]);
-            else this.notification.notifyCode('SYS007');
+            if (res && res.update) {
+              this.imageUpload
+                .updateFileDirectReload(res.update.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    this.loadData.emit();
+                  }
+                  var obj = { data: res.update, file: result };
+                  this.dialog.close(obj);
+                });
+            } else this.notification.notifyCode('SYS007');
           }
         });
     } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
   beforeSave(option) {
-    option.methodName = 'AddEditGiftGroupAsync';
-    if (this.user.userName) this.dataUpdate.createdName = this.user.userName;
+    option.methodName = 'AddEditRangeLineAsync';
+    this.dataUpdate.rangeID = 'KUDOS';
     option.data = [this.dataUpdate, this.isModeAdd];
     return true;
   }

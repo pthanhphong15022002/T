@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, CRUDService, DialogRef, NotificationsService, RequestOption, ScrollComponent, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
@@ -9,7 +9,8 @@ import { catchError, map, finalize, Observable, of } from 'rxjs';
 @Component({
   selector: 'lib-reportingline',
   templateUrl: './reportingline.component.html',
-  styleUrls: ['./reportingline.component.css']
+  styleUrls: ['./reportingline.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ReportinglineComponent extends UIComponent {
 

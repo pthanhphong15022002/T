@@ -51,6 +51,7 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
       JSON.stringify(this.dialog.dataService.dataSelected)
     );
     this.formModel = this.dialog?.formModel;
+    if(!this.dialog?.formModel.entityName) this.formModel.entityName = this.dialog?.formModel.entityPer;
     this.formType = data.data?.formType;
     this.title = data.data?.headerText;
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {

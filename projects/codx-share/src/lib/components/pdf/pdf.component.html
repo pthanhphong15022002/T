@@ -264,11 +264,13 @@
           <ejs-toolbar class="border-start">
             <e-items>
               <e-item
+                *ngIf="isEditable"
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="print"
               >
               </e-item>
               <e-item
+                *ngIf="isEditable"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
@@ -406,7 +408,7 @@
                   <div
                     class="card-item me-6 mb-6"
                     #actions
-                    *ngFor="let action of actionsButton; let index = index"
+                    *ngFor="let action of vllActions; let index = index"
                     [class.active]="holding == index + 1"
                     (click)="changeAnnotationItem(index + 1)"
                   >
