@@ -126,7 +126,6 @@ export class SettingCycleComponent extends UIComponent implements OnInit {
       var main = JSON.parse(JSON.stringify(this.messageSC003Temp));
       mess = mess.replace('{0}', dayNameRun);
       main = mess.replace('{1}', monthNameRun);
-      // this.messageSC003 = this.main;
     }
     return main;
   }
@@ -141,6 +140,7 @@ export class SettingCycleComponent extends UIComponent implements OnInit {
       .subscribe((result) => {
         if (result) {
           this.notification.notifyCode('SYS019');
+          this.dialog.close(this.messageSC003);
         }
       });
   }
