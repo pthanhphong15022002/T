@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
 import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
 import { ProcessstepsComponent } from './processsteps/processsteps.component';
+import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
 
 export const routes: Routes = [
   {
@@ -45,9 +46,9 @@ export const routes: Routes = [
     PopupAddProcessesComponent,
     ViewListProcessesComponent,
     ProcessstepsComponent,
-    // PopupAddProcessStepsComponent,
-    // PopupAddPhaseComponent,
+    PopupAddProcessStepsComponent,
     PopupSendEmailComponent,
+    PopupAddProcessStepsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
