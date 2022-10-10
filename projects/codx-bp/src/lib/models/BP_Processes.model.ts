@@ -39,6 +39,20 @@ export class BP_ProcessSteps {
   modifiedBy : string ;
 }
 
+export class BP_ProcessOwners {
+  id : string ;
+  recID : string ;
+  parentID: string;
+  stepID : string ;
+  objectType: string ;
+  objectID :string ;
+  rACID :string ;
+  note :string ;
+  createdOn : Date ;
+  createdBy : string ;
+  modifiedOn : Date ;
+  modifiedBy : string ;
+}
 // Thông tin Email để gửi
 export class tmpInforSentEMail
 {
