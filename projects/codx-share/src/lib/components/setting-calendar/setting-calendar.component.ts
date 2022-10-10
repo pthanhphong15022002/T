@@ -5,6 +5,7 @@ import {
   Input,
   AfterViewInit,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   CodxScheduleComponent,
@@ -19,11 +20,11 @@ import { PopupEditCalendarComponent } from './popup-edit-calendar/popup-edit-cal
   selector: 'setting-calendar',
   templateUrl: './setting-calendar.component.html',
   styleUrls: ['./setting-calendar.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class SettingCalendarComponent
   extends UIComponent
-  implements AfterViewInit
-{
+  implements AfterViewInit {
   funcID: string;
   @ViewChild('schedule') schedule: CodxScheduleComponent;
   viewPreset: string = 'weekAndDay';
@@ -97,7 +98,7 @@ export class SettingCalendarComponent
       PopupAddCalendarComponent,
       'Tạo lịch làm việc',
       500,
-      null,
+      360,
       '',
       [this.formModel, this.calendarID]
     );

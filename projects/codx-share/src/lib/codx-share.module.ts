@@ -71,7 +71,6 @@ import { ChatInnerComponent } from './layout/drawers/messenger-drawer/chat-inner
 import { CodxReferencesComponent } from './components/codx-references/codx-references.component';
 import { CodxImportAddTemplateComponent } from './components/codx-import/codx-import-add-template/codx-import-add-template.component';
 import { CodxImportAddMappingComponent } from './components/codx-import/codx-import-add-template/codx-import-add-mapping/codx-import-add-mapping.component';
-import { CodxAlertComponent } from './components/codx-alert/codx-alert.component';
 import { SettingNotifyDrawerComponent } from './layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
 import { PopupAddNotifyComponent } from './layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
 import { PopupUpdateStatusComponent } from './components/codx-tasks/popup-update-status/popup-update-status.component';
@@ -112,6 +111,13 @@ import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 import { DialogthumbComponent } from './components/thumbnail/dialogthumb/dialogthumb.component';
 import { PopupEditShiftComponent } from './components/setting-calendar/popup-edit-shift/popup-edit-shift.component';
 import { CodxPopupViewsComponent } from './components/codx-popup-views/codx-popup-views.component';
+import { CodxUserTempComponent } from './components/codx-user-temp/codx-user-temp.component';
+import { CodxCommentTempComponent } from './components/codx-comment-temp/codx-comment-temp.component';
+import { CodxDashboardComponent } from './components/codx-dashboard/codx-dashboard.component';
+import { PopupAddPanelComponent } from './components/codx-dashboard/popup-add-panel/popup-add-panel.component';
+import { PopupAddChartComponent } from './components/codx-dashboard/popup-add-chart/popup-add-chart.component';
+import { DashboardLayoutAllModule } from '@syncfusion/ej2-angular-layouts';
+import { LayoutPanelComponent } from './components/codx-dashboard/layout-panel/layout-panel.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -158,7 +164,6 @@ const T_Component: Type<any>[] = [
   CodxImportAddTemplateComponent,
   CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
-  CodxAlertComponent,
   SettingNotifyDrawerComponent,
   PopupAddNotifyComponent,
   PopupUpdateStatusComponent,
@@ -186,8 +191,14 @@ const T_Component: Type<any>[] = [
   ActiviesSliderComponent,
   DialogthumbComponent,
   CodxPopupViewsComponent,
+  CodxCommentTempComponent,
+  CodxUserTempComponent,
   //pdf
   PdfComponent,
+  CodxDashboardComponent,
+  PopupAddPanelComponent,
+  PopupAddChartComponent,
+  LayoutPanelComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -218,6 +229,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     //pdf
     ListViewAllModule,
     NgxExtendedPdfViewerModule,
+    DashboardLayoutAllModule,
   ],
   exports: [T_Component, T_Pipe],
 })

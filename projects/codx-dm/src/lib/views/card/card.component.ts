@@ -63,5 +63,14 @@ export class CardComponent implements OnInit {
     }
     else this.dmSV.clickMF(e, data)
   }
-
+  dbView()
+  {
+    if(this.data?.recID && this.data?.fileName != null)
+    {
+      this.fileService.getFile(this.data?.recID).subscribe((data) => {
+        this.viewFile.emit(data);
+      });
+    }
+    this.dmSV.openItem(this.data);
+  }
 }

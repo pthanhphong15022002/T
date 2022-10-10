@@ -164,12 +164,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.funcID = this.formModel.funcID;
     if (this.isAdd) {
       this.data.bookingOn = null;
-    } else {
-      this.data.attendees = 1;
-    }
+    } 
+    this.data.attendees = 1;
   }
 
-  onInit(): void {
+  onInit(): void {    
     this.initForm();
     this.cacheService.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
@@ -480,6 +479,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   valueCbxStationeryChange(event?) {
+    if(event==null){
+      this.isPopupStationeryCbb = false;
+      return;
+    }
     this.lstStationery = [];
     event.dataSelected.forEach((item) => {
       let tempStationery: {
@@ -500,7 +503,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.lstStationery.push(tempStationery);
     });
       
-    this.isPopupStationeryCbb = false;
+    
     this.changeDetectorRef.detectChanges();  
   }
 
@@ -615,7 +618,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
   valueAttendeesChange(event: any) {
     if (event?.data) {
-      this.fGroupAddBookingRoom.patchValue({ attendees: event.data });
+      this.data.attendees= event.data;
       this.detectorRef.detectChanges();
     }
   }
@@ -746,11 +749,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
       }
     });
-    this.form.data.attendees = this.attendeesList.length + 1;
+    this.data.attendees = this.attendeesList.length + 1;
     this.changeDetectorRef.detectChanges();
   }
   cbbDataOptionalUser:any;
-  valueCbxUserOptionalChange(event) {
+  valueCbxUserOptionalChange(event) {    
+    if(event==null){
+      this.isPopupOptionalUserCbb = false;
+      return;
+    }
     this.cbbDataUser=event;  
     if (event?.dataSelected) {
       this.lstUserOptional = [];
@@ -765,7 +772,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           optional: true,
           modifiedOn: this.setStatusTime(new Date()),
         };
-
         this.lstUserOptional.push(this.tempAtender);
       });
       for (let i = 0; i < this.lstUserOptional.length; ++i) {
@@ -783,6 +789,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   
   cbbDataUser:any;
   valueCbxUserChange(event) {
+    if(event==null){
+      this.isPopupUserCbb = false;
+      return;
+    }
     this.cbbDataUser=event;  
     if (event?.dataSelected) {
       this.lstUser = [];

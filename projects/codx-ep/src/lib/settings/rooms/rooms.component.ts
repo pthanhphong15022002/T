@@ -116,7 +116,7 @@ export class RoomsComponent extends UIComponent {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: 350,//gv['ResourceID'].width,
+              width: 200,//gv['ResourceID'].width,
               template: this.resourceNameCol,
             },
             {
@@ -128,7 +128,7 @@ export class RoomsComponent extends UIComponent {
             },
             {
               headerText: gv['Equipments'].headerText,
-              width: 100,//gv['Equipments'].width,
+              width: 150,//gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
               headerTextAlign: 'Center',
@@ -136,7 +136,7 @@ export class RoomsComponent extends UIComponent {
             },          
             {
               headerText: gv['Note'].headerText,
-              width: 200,//gv['Note'].width,
+              width: 250,//gv['Note'].width,
               field: 'note',
               headerTextAlign: 'Center',           
             },

@@ -11,10 +11,10 @@ export class ViewListComponent implements OnInit {
   popoverList: any;
   popoverDetail: any;
   item: any;
-  dialog : any
+  dialog: any
   @Input() data?: any
   @Input() formModel?: FormModel;
-  @Input() vllStatus?:any;
+  @Input() vllStatus?: any;
   @Input() listRoles?: any;
   @Input() showMoreFunc?: any;
 
@@ -22,8 +22,8 @@ export class ViewListComponent implements OnInit {
   listTaskResousce = [];
   countResource = 0;
   popoverCrr: any;
-  vllPriority ="TM005" ;
-  
+  vllPriority = "TM005";
+
 
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() viewTask = new EventEmitter<any>();
@@ -32,7 +32,7 @@ export class ViewListComponent implements OnInit {
 
   constructor(
     private api: ApiHttpService,
-    private callfc : CallFuncService ,
+    private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef,
   ) { }
@@ -41,11 +41,11 @@ export class ViewListComponent implements OnInit {
   }
 
   clickMF(e: any, dt?: any) {
-    this.clickMoreFunction.emit({e:e,data:dt})
+    this.clickMoreFunction.emit({ e: e, data: dt })
   }
 
-  dbClick(data){
-    this.viewTask.emit(data) ;
+  dbClick(data) {
+    this.viewTask.emit(data);
   }
 
   changeDataMF(e, data) {
@@ -103,6 +103,7 @@ export class ViewListComponent implements OnInit {
         }
       });
   }
+
   searchName(e) {
     var listTaskResousceSearch = [];
     if (e.trim() == '') {

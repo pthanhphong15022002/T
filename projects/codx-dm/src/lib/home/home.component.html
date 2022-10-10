@@ -117,22 +117,22 @@
 <ng-template #templateCard>
   <div class="d-flex flex-wrap dms-card p-5">
     <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-      *ngFor="let item of data" [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel">
+      *ngFor="let item of data" [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item"
+      [formModel]="view.formModel">
     </card>
   </div>
 </ng-template>
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-sm p-5">
-    <codx-temp-full   (dblclick)="dmSV.openItem(item)" appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-      *ngFor="let item of data" [class]="classFile(item, 'float-start')" [imageSrc]="dmSV.getImage(item)"
-      (clickMF)="dmSV.clickMF($event, item)"
-      imgCss="card-item img-folder me-3" 
+    <codx-temp-full (dblclick)="dmSV.openItem(item)" appDragDropFileFolder [dataDrapDrop]="item"
+      (fileFolderDropped)="fileFolderDropped($event)" *ngFor="let item of data" [class]="classFile(item, 'float-start')"
+      [imageSrc]="dmSV.getImage(item)" (clickMF)="dmSV.clickMF($event, item)" imgCss="card-item img-folder me-3"
       [title]="item.folderName != undefined ? item.folderName : item.fileName"
       (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
       [bookmark]="dmSV.showBookmark(item)" subTitle="{{ item.createdOn | date: 'dd/MM/yyyy' }} | {{ item.userName }}"
       cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3">
     </codx-temp-full>
-    
+
   </div>
 </ng-template>
 <ng-template #templateList>
@@ -187,8 +187,8 @@
               </codx-temp-full>
             </td>
             <td>
-              
-              <span>{{item.revisionNote}}</span>
+
+              <span>{{item.description}}</span><!-- item.revisionNote -->
             </td>
           </tr>
         </tbody>

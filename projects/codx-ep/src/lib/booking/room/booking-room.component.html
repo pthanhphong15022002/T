@@ -44,7 +44,7 @@
         <div>
           <codx-label default="Diện tích:" name="lblArea" class="text-gray-600"></codx-label>
           
-          <span class="fw-bold ms-1">{{data?.resourceData.area}} m2</span>
+          <span class="fw-bold ms-1">{{data?.resourceData.area}}</span>
         </div>
         <!-- <span class="text-gray-600">&ensp;|&ensp;</span>
         <div>
@@ -56,13 +56,6 @@
     </div>
   </div> 
 </ng-template>
-<!-- <ng-template #resourceTootip let-data>
-  <div class="template-wrap">
-    <div class="res-text">Code: {{ data.resourceData.recCode }}</div>
-    <div class="res-text">Name: {{ data.resourceData.resourceName }}</div>
-    <div class="res-text">Bookings: {{ data.resourceData.events }}</div>
-  </div>
-</ng-template> -->
 
 <ng-template #mfButton let-data>
   <div class="mt-2 me-2">
@@ -77,7 +70,7 @@
 
 <ng-template #contentTmp let-data>
   <div>
-    <h2>{{ data.title }}</h2>
+    <span class="border-start fw-bold border-4 border-danger fs-3 ps-2">{{ data.title }}</span>
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
@@ -250,6 +243,9 @@
     [formModel]="formModel"
     [view]="views"
     (uploaded)="getDetailBooking($event)"
+    (edit)="edit($event)"
+    (delete)="delete($event)"
+    (setPopupTitle)="setPopupTitle($event)"
   ></booking-room-view-detail>
 </ng-template>
 <ng-template #footerTmp let-data> </ng-template>

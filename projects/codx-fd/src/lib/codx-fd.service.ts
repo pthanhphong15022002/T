@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiHttpService, TenantStore, CacheService, FormModel, NotificationsService } from 'codx-core';
+import {
+  ApiHttpService,
+  TenantStore,
+  CacheService,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -21,7 +27,7 @@ export class CodxFdService {
     private router: Router,
     private tenantStore: TenantStore,
     private notificationsService: NotificationsService,
-    private cache: CacheService,
+    private cache: CacheService
   ) {}
   appendTitle(title) {
     this.title.next(title);
@@ -57,7 +63,7 @@ export class CodxFdService {
       });
     });
   }
-  
+
   notifyInvalid(
     formGroup: FormGroup,
     formModel: FormModel,
@@ -110,5 +116,15 @@ export class CodxFdService {
         '"' + gridViewSetup[fieldName]?.headerText + '"'
       );
     }
+  }
+
+  deleteFile(item, objectType) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'DeleteByObjectIDAsync',
+      [item.recID, objectType, true]
+    );
   }
 }

@@ -83,7 +83,7 @@ export const routes: Routes = [
   },
   {
     path: 'companyinfo',
-    component: Layout3Component,
+    component: LayoutComponent,
     children: [
       {
         path: ':funcID',
@@ -112,7 +112,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path:'wp/portal/wp', // lỗi url back từ logo CODX
+    path:'wp/portal/wp',
     redirectTo: 'portal/WP',
     pathMatch: "full"
   },

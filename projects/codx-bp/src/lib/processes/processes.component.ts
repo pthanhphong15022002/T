@@ -19,7 +19,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { PopAddProcessesComponent } from './pop-add-processes/pop-add-processes.component';
+import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
+
 
 @Component({
   selector: 'lib-processes',
@@ -38,6 +39,8 @@ export class ProcessesComponent
   @ViewChild('itemVersionNo', { static: true })
   itemVersionNo: TemplateRef<any>;
   @ViewChild('itemActivedOn', { static: true }) itemActivedOn: TemplateRef<any>;
+  @ViewChild('templateListCard', { static: true }) templateListCard: TemplateRef<any>;
+
   @ViewChild('itemMemo', { static: true })
   itemMemo: TemplateRef<any>;
   @Input() showButtonAdd = true;
@@ -83,11 +86,19 @@ export class ProcessesComponent
     this.views = [
       {
         type: ViewType.grid,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           resources: this.columnsGrid,
           template: this.itemViewList,
+        },
+      },
+      {
+        type: ViewType.card,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateListCard,
         },
       },
     ];
@@ -105,7 +116,7 @@ export class ProcessesComponent
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
-        PopAddProcessesComponent,
+        PopupAddProcessesComponent,
         ['add', this.titleAction],
         option
       );
@@ -131,7 +142,7 @@ export class ProcessesComponent
         option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
-          PopAddProcessesComponent,
+          PopupAddProcessesComponent,
           ['edit', this.titleAction],
           option
         );
@@ -153,7 +164,7 @@ export class ProcessesComponent
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
-        PopAddProcessesComponent,
+        PopupAddProcessesComponent,
         ['copy', this.titleAction],
         option
       );

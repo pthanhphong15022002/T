@@ -13,6 +13,7 @@ export const environment = {
   urlTenant: '',
   urlThumbnail: 'http://172.16.1.210:8011',
   urlFile: 'http://172.16.1.210:8011',
+  reportUrl: '',
   appName: 'hps-file-test', // Tam thoi de hard
   StoreNames: {
     FormLabels: 'FormLabels',

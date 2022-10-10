@@ -9,9 +9,15 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Location } from '@angular/common';
-import { AuthStore, NotificationsService, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  DialogModel,
+  NotificationsService,
+  UIComponent,
+} from 'codx-core';
 import { SettingService } from '../setting.service';
 import { CodxFdService } from '../../codx-fd.service';
+import { SettingCycleComponent } from '../setting-cycle/setting-cycle.component';
 
 @Component({
   selector: 'app-wallet',
@@ -31,7 +37,6 @@ export class WalletComponent extends UIComponent implements OnInit {
   scheduledTasks;
   scheduledTasks_CoCoin;
   scheduledTasks_KuDos;
-  listParameter;
   funcID: any;
   functionList: any;
 
@@ -62,24 +67,20 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.LoadDataPolicies('1');
     this.getSettingRunPolicyCoCoin();
     this.getSettingRunPolicyKuDos();
-    this.at.params.subscribe((params) => {
-      if (params && params.funcID) {
-        this.api
-          .call('ERM.Business.SYS', 'FunctionListBusiness', 'GetAsync', [
-            '',
-            params.funcID,
-          ])
-          .subscribe((res) => {
-            //this.ngxLoader.stop();
-            if (res && res.msgBodyData[0]) {
-              var data = res.msgBodyData[0] as [];
-              this.datafuntion = data;
-              this.titlePage = data['customName'];
-              this.changedr.detectChanges();
-            }
-          });
-      }
-    });
+    this.api
+      .call('ERM.Business.SYS', 'FunctionListBusiness', 'GetAsync', [
+        '',
+        this.funcID,
+      ])
+      .subscribe((res) => {
+        //this.ngxLoader.stop();
+        if (res && res.msgBodyData[0]) {
+          var data = res.msgBodyData[0] as [];
+          this.datafuntion = data;
+          this.titlePage = data['customName'];
+          this.changedr.detectChanges();
+        }
+      });
   }
   getItems(category) {
     return this.policyList.filter((item) => item.category === category);
@@ -88,15 +89,13 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.location.back();
   }
   LoadDetailPolicy(category, recID) {
-    // this.router.navigate(['/' + this.tenant + '/fed/detailpolicy'], {
-    //   queryParams: {
-    //     type: 'wallet',
-    //     cardtype: null,
-    //     category: category,
-    //     funcID: 'FED20431',
-    //     recID: recID,
-    //   },
-    // });
+    this.codxService.navigate('', 'fd/detailpolicy', {
+      type: 'wallet',
+      cardtype: null,
+      category: category,
+      funcID: this.funcID,
+      recID: recID,
+    });
   }
   changValueListPopup(e) {
     this.objectUpdateCoin[e.field] = e.data;
@@ -164,7 +163,6 @@ export class WalletComponent extends UIComponent implements OnInit {
             'fieldName',
             'fieldValue'
           );
-          console.log("quantity", this.quantity)
           if (this.quantity.ActiveCoCoins == true) {
             this.disableGroupFund = false;
           } else {
@@ -183,28 +181,39 @@ export class WalletComponent extends UIComponent implements OnInit {
     this.changedr.detectChanges();
   }
   redirectPageDetailWallet(applyFor: string) {
-    // this.mainService.navigatePageUrl('fed/detail-policy-coin', {
-    //   applyFor: applyFor,
-    //   funcID: 'FED20431',
-    // });
+    this.codxService.navigate('', 'fd/detail-policy-coin', {
+      applyFor: applyFor,
+      funcID: this.funcID,
+    });
   }
-  onSaveStatusPolicy(data) {
+  onSaveStatusPolicy(e, item) {
     this.api
       .execSv<any>(
         'FD',
         'ERM.Business.FD',
         'WalletsBusiness',
         'OnSavePolicySettingWalletAsync',
-        [data.field]
+        [e.field]
       )
       .subscribe((res) => {
-        var index = this.policyList.findIndex((p) => p.recID == data.field);
-        var data = this.policyList.find((p) => p.recID == data.field);
-        data.actived = data.data;
-        this.policyList[index] = data;
-        this.changedr.detectChanges();
+        if (res) {
+          var index = this.policyList.findIndex((p) => p.recID == e.field);
+          var data = this.policyList.find((p) => p.recID == e.field);
+          this.policyList[index] = data;
+          this.refreshActive(item);
+        }
       });
   }
+
+  refreshActive(item) {
+    var dt = JSON.parse(JSON.stringify(this.policyList));
+    dt.forEach((obj) => {
+      if (obj.recID == item.recID) obj.actived = !item.actived;
+    });
+    this.policyList = dt;
+    this.changedr.detectChanges();
+  }
+
   redirectPage(page) {
     // this.router.navigate(['/' + this.tenant + '/fed/setting'], {
     //   queryParams: { funcID: 'FED204', page: page },
@@ -279,7 +288,22 @@ export class WalletComponent extends UIComponent implements OnInit {
       applyFor == '4' ? this.scheduledTasks_CoCoin : this.scheduledTasks_KuDos;
     this.applyFor = applyFor;
     this.changedr.markForCheck();
-    // this.settingCycle.openPopup();
+    var obj = {
+      scheduledTasks: this.scheduledTasks,
+    };
+    let option = new DialogModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    this.callfc.openForm(
+      SettingCycleComponent,
+      '',
+      600,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
   }
   saveSettingCycleRun() {
     this.api
@@ -288,7 +312,6 @@ export class WalletComponent extends UIComponent implements OnInit {
       ])
       .subscribe((result) => {
         if (result) {
-          this.notification.notifyCode('E0408');
         }
       });
   }
@@ -313,11 +336,13 @@ export class WalletComponent extends UIComponent implements OnInit {
   }
   valueChangePolicyCoin(applyFor) {
     if (applyFor == '4') {
-      this.scheduledTasks_CoCoin.stop = !this.scheduledTasks_CoCoin.stop;
-      this.scheduledTasks = this.scheduledTasks_CoCoin;
+      var coCoin = JSON.parse(JSON.stringify(this.scheduledTasks_CoCoin));
+      coCoin.stop = !coCoin.stop;
+      this.scheduledTasks = coCoin;
     } else {
-      this.scheduledTasks_KuDos.stop = !this.scheduledTasks_KuDos.stop;
-      this.scheduledTasks = this.scheduledTasks_KuDos;
+      var kudos = JSON.parse(JSON.stringify(this.scheduledTasks_KuDos));
+      kudos.stop = !kudos.stop;
+      this.scheduledTasks = kudos;
     }
     this.saveSettingCycleRun();
   }

@@ -6,7 +6,7 @@
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="clickMF($event,itemDetail)"
+  (clickMF)="childClickMF($event,itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
 
@@ -141,7 +141,7 @@
                 class="icon-info me-2"
                 [ngClass]="{ 'text-primary': active === 1 }"
               ></i
-              ><span>Nội dung</span>
+              ><span><codx-label default="Nội dung" name="lblMemo"></codx-label></span>
             </div>
           </a>
           <ng-template ngbNavContent>
@@ -164,11 +164,11 @@
                 class="icon-layers me-2"
                 [ngClass]="{ 'text-primary': active === 2 }"
               ></i
-              ><span>Văn phòng phẩm</span>
+              ><span><codx-label default="Văn phòng phẩm" name="lblStationery"></codx-label></span>
             </div>
           </a>
           <ng-template ngbNavContent>
-            <div *ngIf="itemDetail.bookingItems?.length>0">
+            <div *ngIf="itemDetail?.bookingItems?.length>0">
               <div *ngFor="let item of itemDetail?.bookingItems">  
                 <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-50">
                   <div class="d-flex flex-row">
@@ -208,7 +208,7 @@
               
             </div>
 
-            <div *ngIf="itemDetail?.bookingItems ==null">
+            <div *ngIf="itemDetail?.bookingItems == null || itemDetail?.bookingItems?.length==0">
               <ng-container *ngTemplateOutlet="defaulEmpt">
               </ng-container>
             </div>
