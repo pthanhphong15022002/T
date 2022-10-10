@@ -15,6 +15,8 @@ export class PopupVoteComponent implements OnInit {
   lstUserVoted:any[] = [];
   defaultVote:string = "0";
   dialogRef:DialogRef;
+  vllL1480:any = [];
+  dVll: any = {};
   constructor(
     private api: ApiHttpService,
     private cache:CacheService,
