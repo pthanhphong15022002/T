@@ -38,8 +38,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   title: string = "";
   lstRecevier = [];
   isClick: boolean = false;
-
-  // default owner
   shareIcon: string = "";
   shareText: string = "";
   shareControl: string = "";
@@ -140,6 +138,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     else {
       if (this.dialogData.status == this.STATUS.SHARE) {
         this.dataShare = this.dialogData.post;
+        this.entityName = this.dialogData.refType;
       }
       this.getValueShare(this.SHARECONTROLS.EVERYONE);
     }
@@ -261,8 +260,12 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
             this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
             (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
-              if (res) {
-                (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+              if (res) 
+              {
+                if(this.dialogRef?.dataService)
+                {
+                  this.dialogRef.dataService.add(result, 0).subscribe();
+                }
                 this.notifySvr.notifyCode('WP024');
                 this.dialogRef.close();
               }
@@ -272,8 +275,12 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
               }
             });
           }
-          else {
-            (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+          else 
+          {
+            if(this.dialogRef?.dataService)
+            {
+              this.dialogRef.dataService.add(result, 0).subscribe();
+            }
             this.notifySvr.notifyCode('WP024');
             this.dialogRef.close();
           }
@@ -284,7 +291,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
-
   getMessageNoti(mssgCode:string){
     this.cache.message(mssgCode).subscribe((mssg:any) =>{
       if(mssg && mssg?.defaultName){
@@ -334,8 +340,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     });
 
   }
-
-
   sharePost() {
     if (!this.message && this.listFileUpload.length <= 0) {
       let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
@@ -361,17 +365,32 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
             result.files = [...this.listFileUpload];
             (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
               if (res) {
-                (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+                if(this.dialogRef?.dataService){
+                  this.dialogRef.dataService.add(result, 0).subscribe();
+                }
                 this.notifySvr.notifyCode('WP020');
+                this.dialogRef.close();
+              }
+              else 
+              {
+                this.notifySvr.notifyCode('WP013');
                 this.dialogRef.close();
               }
             });
           }
           else {
-            (this.dialogRef.dataService as CRUDService).add(result, 0).subscribe();
+            if(this.dialogRef?.dataService)
+            {
+              this.dialogRef.dataService.add(result, 0).subscribe();
+            }
             this.notifySvr.notifyCode('WP020');
             this.dialogRef.close();
           }
+        }
+        else
+        {
+          this.notifySvr.notifyCode('WP013');
+          this.dialogRef.close();
         }
       });
   }

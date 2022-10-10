@@ -111,6 +111,8 @@ import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
 import { DialogthumbComponent } from './components/thumbnail/dialogthumb/dialogthumb.component';
 import { PopupEditShiftComponent } from './components/setting-calendar/popup-edit-shift/popup-edit-shift.component';
 import { CodxPopupViewsComponent } from './components/codx-popup-views/codx-popup-views.component';
+import { CodxUserTempComponent } from './components/codx-user-temp/codx-user-temp.component';
+import { CodxCommentTempComponent } from './components/codx-comment-temp/codx-comment-temp.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -184,6 +186,8 @@ const T_Component: Type<any>[] = [
   ActiviesSliderComponent,
   DialogthumbComponent,
   CodxPopupViewsComponent,
+  CodxCommentTempComponent,
+  CodxUserTempComponent,
   //pdf
   PdfComponent,
 ];

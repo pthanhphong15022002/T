@@ -51,6 +51,8 @@ export class Post {
   shortConent: string;
   createdBy:string;
   createdName:string;
+  subject:string;
+  subContent:string ;
 
   constructor(){
     this.createdOn = new Date();
