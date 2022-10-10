@@ -1,14 +1,29 @@
-import { Component, OnInit, Injector, Optional, ViewChild } from '@angular/core';
-import { AuthStore, DialogData, DialogRef, NotificationsService, UIComponent, CodxFormComponent } from 'codx-core';
+import {
+  Component,
+  OnInit,
+  Injector,
+  Optional,
+  ViewChild,
+  EventEmitter,
+  Output,
+} from '@angular/core';
+import {
+  AuthStore,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  UIComponent,
+  CodxFormComponent,
+  ImageViewerComponent,
+} from 'codx-core';
 import { CodxFdService } from '../../../codx-fd.service';
 
 @Component({
   selector: 'lib-add-dedication-rank',
   templateUrl: './add-dedication-rank.component.html',
-  styleUrls: ['./add-dedication-rank.component.scss']
+  styleUrls: ['./add-dedication-rank.component.scss'],
 })
 export class AddDedicationRankComponent extends UIComponent implements OnInit {
-
   header = '';
   title = '';
   dialog: DialogRef;
@@ -18,19 +33,25 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
   user: any;
 
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
 
-  constructor(private injector: Injector,
+  @Output() loadData = new EventEmitter();
+
+  constructor(
+    private injector: Injector,
     private notification: NotificationsService,
     private authStore: AuthStore,
     private fdSV: CodxFdService,
     @Optional() dt: DialogData,
-    @Optional() dialog: DialogRef) {
+    @Optional() dialog: DialogRef
+  ) {
     super(injector);
     this.user = this.authStore.get();
     this.dialog = dialog;
     this.dataUpdate = JSON.parse(
       JSON.stringify(dialog.dataService.dataSelected)
     );
+    console.log('check color', this.dataUpdate);
     this.formModel = dialog.formModel;
     this.isModeAdd = dt.data?.isModeAdd;
     this.title = dt.data?.headerText;
@@ -43,10 +64,9 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
           res?.customName.slice(1);
       }
     });
-   }
-
-  onInit(): void {
   }
+
+  onInit(): void {}
 
   valueChange(e) {
     if (e) {
@@ -54,26 +74,42 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
     }
   }
 
-  valueChangeColor(e) {
-
-  }
-
   onSave() {
     var formGroup = this.form.formGroup.controls;
     if (
       formGroup.breakName.status == 'VALID' &&
       formGroup.breakValue.status == 'VALID' &&
-      formGroup.color.status == 'VALID'
+      this.dataUpdate.color
     ) {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
           if (this.isModeAdd) {
-            if (res && res.save[2]) this.dialog.close(res.save[2]);
-            else this.notification.notifyCode('SYS023');
+            if (res.save) {
+              if (this.user.userName)
+                res.save['createdName'] = this.user.userName;
+              this.imageUpload
+                .updateFileDirectReload(res.save.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    this.loadData.emit();
+                  }
+                  var obj = { data: res.save, file: result };
+                  this.dialog.close(obj);
+                });
+            } else this.notification.notifyCode('SYS023');
           } else {
-            if (res && res.update[2]) this.dialog.close(res.update[2]);
-            else this.notification.notifyCode('SYS007');
+            if (res && res.update) {
+              this.imageUpload
+                .updateFileDirectReload(res.update.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    this.loadData.emit();
+                  }
+                  var obj = { data: res.update, file: result };
+                  this.dialog.close(obj);
+                });
+            } else this.notification.notifyCode('SYS007');
           }
         });
     } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);
@@ -81,7 +117,7 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
 
   beforeSave(option) {
     option.methodName = 'AddEditRangeLineAsync';
-    if (this.user.userName) this.dataUpdate.createdName = this.user.userName;
+    this.dataUpdate.rangeID = 'KUDOS';
     option.data = [this.dataUpdate, this.isModeAdd];
     return true;
   }
