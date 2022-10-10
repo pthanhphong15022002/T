@@ -1,11 +1,6 @@
 import { Component, Injector, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  DialogData,
-  DialogRef,
-  NotificationsService,
-  UIComponent,
-} from 'codx-core';
+import { DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'popup-edit-shift',
@@ -13,10 +8,8 @@ import {
   styleUrls: ['./popup-edit-shift.component.scss'],
 })
 export class PopupEditShiftComponent extends UIComponent {
-  title = '';
-  //title = 'Thiết lập thời gian ca làm việc';
-  subHeader = '';
-  //subHeader = 'Cho phép thiết lập thời gian ca làm việc';
+  title = 'Thiết lập thời gian ca làm việc';
+  subHeader = 'Cho phép thiết lập thời gian ca làm việc';
   dialogEditShift: FormGroup;
   dialog!: DialogRef;
   data;
@@ -55,14 +48,14 @@ export class PopupEditShiftComponent extends UIComponent {
     this.isAfterRender = true;
   }
 
-  checkLoopS: boolean;
-  checkLoopE: boolean;
+  checkLoopS:boolean;
+  checkLoopE:boolean;
 
   valueStartTimeChange(event: any) {
     if (event?.data) {
       this.startTime = event.data.fromDate;
       this.beginHour = parseInt(this.startTime.split(':')[0]);
-      this.beginMinute = parseInt(this.startTime.split(':')[1]);
+      this.beginMinute = parseInt(this.startTime.split(':')[1]);      
     }
     if (this.beginHour > this.endHour) {
       this.checkLoopS = !this.checkLoopS;
@@ -87,6 +80,7 @@ export class PopupEditShiftComponent extends UIComponent {
       this.endTime = event.data.toDate;
       this.endHour = parseInt(this.endTime.split(':')[0]);
       this.endMinute = parseInt(this.endTime.split(':')[1]);
+      
     }
     if (this.beginHour > this.endHour) {
       this.checkLoopE = !this.checkLoopE;

@@ -215,13 +215,13 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  getDetailBooking(id: any) {
+  getDetailAprovalBooking(id: any) {
     this.api
       .exec<any>(
         'EP',
         'BookingsBusiness',
-        'GetBookingByIDAsync',
-        this.itemDetail?.recID
+        'GetApprovalBookingByIDAsync',
+        [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
       )
       .subscribe((res) => {
         if (res) {

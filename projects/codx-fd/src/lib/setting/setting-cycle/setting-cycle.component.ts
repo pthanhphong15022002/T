@@ -11,7 +11,12 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DialogRef, UIComponent, DialogData, NotificationsService } from 'codx-core';
+import {
+  DialogRef,
+  UIComponent,
+  DialogData,
+  NotificationsService,
+} from 'codx-core';
 
 @Component({
   selector: 'app-setting-cycle',
@@ -76,8 +81,10 @@ export class SettingCycleComponent extends UIComponent implements OnInit {
     this.messageSC003 = this.setCycle(this.dayNameRun, this.monthNameRun);
   }
   valueChangeInputDay(newValue) {
-    this.scheduledTasks.dayOfMonth = newValue;
-    this.setTextMemo();
+    if (newValue) {
+      this.scheduledTasks.dayOfMonth = newValue.data;
+      this.setTextMemo();
+    }
   }
 
   changeMonthActive(index) {
@@ -125,7 +132,8 @@ export class SettingCycleComponent extends UIComponent implements OnInit {
   }
 
   saveSettingCycleRun() {
-    this.scheduledTasks.months = this.monthActive;
+    var months: any = this.monthActive.toString();
+    this.scheduledTasks.months = months.replaceAll(',', '');
     this.api
       .execSv('SYS', 'AD', 'ScheduledTasksBusiness', 'AddUpdateAsync', [
         this.scheduledTasks,

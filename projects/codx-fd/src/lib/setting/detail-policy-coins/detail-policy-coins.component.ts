@@ -29,7 +29,7 @@ import { SettingService } from '../setting.service';
 export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
   applyFor: string = '';
   scheduledTasks = null;
-  listPolicyByPredicate$: Observable<any>;
+  listPolicyByPredicate: any;
   listParameter;
   functionList: any;
   functionID: any;
@@ -85,12 +85,14 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
     });
   }
   getListFEDPolicy() {
-    this.listPolicyByPredicate$ = this.api.exec(
-      'FD',
-      'PoliciesBusiness',
-      'GetListPolicyByPredicateAsync',
-      ['Category = @0 and ApplyFor = @1', `3;${this.applyFor}`]
-    );
+    this.api
+      .exec('FD', 'PoliciesBusiness', 'GetListPolicyByPredicateAsync', [
+        'Category = @0 and ApplyFor = @1',
+        `3;${this.applyFor}`,
+      ])
+      .subscribe((res) => {
+        if (res) this.listPolicyByPredicate = res;
+      });
   }
   getSettingRunPolicy(applyFor: string) {
     this.api
@@ -118,13 +120,22 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
       ])
       .subscribe((result) => {
         if (result) {
-          this.notification.notifyCode('SYS019');
+          this.refreshActive(value);
         }
       });
   }
 
+  refreshActive(item) {
+    var dt = JSON.parse(JSON.stringify(this.listPolicyByPredicate));
+    dt.forEach((obj) => {
+      if (obj.recID == item.recID) obj.actived = !item.actived;
+    });
+    this.listPolicyByPredicate = dt;
+    this.changeDetectorRef.detectChanges();
+  }
+
   LoadDetailPolicy(category, recID) {
-    this.codxService.navigate('', 'fd/setting-policyLines', {
+    this.codxService.navigate('', 'fd/setting-policylines', {
       recID,
       funcID: this.functionID,
     });
@@ -171,7 +182,6 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
   dayNameRun = '';
 
   openPopup() {
-    // this.callFS.openForm(this.popupSettingCycle);
     var obj = {
       messageSC003: this.messageSC003,
       scheduledTasks: this.scheduledTasks,
@@ -205,7 +215,7 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
       this.messageSC003 = main;
     }
   }
-  
+
   updateMonthNameRun() {
     this.monthNameRun = '';
     this.monthActive.forEach((element, index) => {

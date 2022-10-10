@@ -57,24 +57,27 @@
 .pw-container {
     padding: 20px;
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
 }
 
 .pw-card {
-    width: 232px;
+    width: 200px;
+    height: 160px;
     float: left;
-    margin-right: 25px;
-    margin-bottom: 25px;
+    margin-right: 12px;
+    margin-bottom: 12px;
 }
 
+.card-save-note .card-body {
+    height: 60px !important;
+}
 
-.w-228px{
-    width: 228px!important;
+.h-140px {
+    height: 140px !important;
+    overflow: hidden;
 }
-.h-140px{
-    height: 140px!important;
-}
-.card-img  img{
-    height: 140px!important;
+
+.card-img img {
+    height: 140px !important;
 }

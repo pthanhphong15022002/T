@@ -99,40 +99,19 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           alert('Duyệt');
           //this.approve(value)
         }
-        break;
-      case 'EPT40102':
-      case 'EPT40201':
-      case 'EPT40301':
-        {
-          alert('Ký');
-        }
-        break;
-      case 'EPT40103':
-      case 'EPT40203':
-      case 'EPT40303':
-        {
-          alert('Đồng thuận');
-        }
-        break;
-      case 'EPT40104':
-      case 'EPT40204':
-      case 'EPT40304':
-        {
-          alert('Đóng dấu');
-        }
-        break;
+        break;      
       case 'EPT40105':
       case 'EPT40205':
       case 'EPT40305':
         {
-          alert('Từ chối');
+          //alert('Từ chối');
         }
         break;
       case 'EPT40106':
       case 'EPT40206':
       case 'EPT40306':
         {
-          alert('Làm lại');
+          //alert('Làm lại');
         }
         break;
       default:

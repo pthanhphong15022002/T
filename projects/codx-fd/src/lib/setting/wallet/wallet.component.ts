@@ -9,9 +9,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Location } from '@angular/common';
-import { AuthStore, NotificationsService, UIComponent } from 'codx-core';
+import { AuthStore, DialogModel, NotificationsService, UIComponent } from 'codx-core';
 import { SettingService } from '../setting.service';
 import { CodxFdService } from '../../codx-fd.service';
+import { SettingCycleComponent } from '../setting-cycle/setting-cycle.component';
 
 @Component({
   selector: 'app-wallet',
@@ -31,7 +32,6 @@ export class WalletComponent extends UIComponent implements OnInit {
   scheduledTasks;
   scheduledTasks_CoCoin;
   scheduledTasks_KuDos;
-  listParameter;
   funcID: any;
   functionList: any;
 
@@ -158,7 +158,6 @@ export class WalletComponent extends UIComponent implements OnInit {
             'fieldName',
             'fieldValue'
           );
-          console.log('quantity', this.quantity);
           if (this.quantity.ActiveCoCoins == true) {
             this.disableGroupFund = false;
           } else {
@@ -182,23 +181,34 @@ export class WalletComponent extends UIComponent implements OnInit {
       funcID: this.funcID,
     });
   }
-  onSaveStatusPolicy(data) {
+  onSaveStatusPolicy(e, item) {
     this.api
       .execSv<any>(
         'FD',
         'ERM.Business.FD',
         'WalletsBusiness',
         'OnSavePolicySettingWalletAsync',
-        [data.field]
+        [e.field]
       )
       .subscribe((res) => {
-        var index = this.policyList.findIndex((p) => p.recID == data.field);
-        var data = this.policyList.find((p) => p.recID == data.field);
-        data.actived = data.data;
-        this.policyList[index] = data;
-        this.changedr.detectChanges();
+        if (res) {
+          var index = this.policyList.findIndex((p) => p.recID == e.field);
+          var data = this.policyList.find((p) => p.recID == e.field);
+          this.policyList[index] = data;
+          this.refreshActive(item);
+        }
       });
   }
+
+  refreshActive(item) {
+    var dt = JSON.parse(JSON.stringify(this.policyList));
+    dt.forEach((obj) => {
+      if (obj.recID == item.recID) obj.actived = !item.actived;
+    });
+    this.policyList = dt;
+    this.changedr.detectChanges();
+  }
+
   redirectPage(page) {
     // this.router.navigate(['/' + this.tenant + '/fed/setting'], {
     //   queryParams: { funcID: 'FED204', page: page },
@@ -273,7 +283,22 @@ export class WalletComponent extends UIComponent implements OnInit {
       applyFor == '4' ? this.scheduledTasks_CoCoin : this.scheduledTasks_KuDos;
     this.applyFor = applyFor;
     this.changedr.markForCheck();
-    // this.settingCycle.openPopup();
+    var obj = {
+      scheduledTasks: this.scheduledTasks,
+    };
+    let option = new DialogModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    this.callfc.openForm(
+      SettingCycleComponent,
+      '',
+      600,
+      400,
+      '',
+      obj,
+      '',
+      option
+    );
   }
   saveSettingCycleRun() {
     this.api
@@ -282,7 +307,7 @@ export class WalletComponent extends UIComponent implements OnInit {
       ])
       .subscribe((result) => {
         if (result) {
-          this.notification.notifyCode('E0408');
+          
         }
       });
   }

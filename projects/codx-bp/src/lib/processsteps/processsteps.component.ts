@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { PopAddPhaseComponent } from './popup-add-phase/pop-add-phase.component';
-import { PopAddProcessstepsComponent } from './popup-add-processsteps/pop-add-processsteps.component';
+import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'lib-processsteps',
@@ -11,9 +9,18 @@ import { PopAddProcessstepsComponent } from './popup-add-processsteps/pop-add-pr
 })
 export class ProcessstepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('panelRight') panelRight?: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
   @Input() showButtonAdd = true;
   @Input() dataObj?: any;
+
+  model?: DataRequest;
+  request: ResourceModel;
+  resourceKanban?: ResourceModel;
+  modelResource: ResourceModel;
+  resource: ResourceModel;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -22,7 +29,14 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   funcID: any;
   titleAction = '';
   itemSelected: any;
-  idForm ='A'
+  stepType ='A'
+
+  service = 'BP';
+  entityName = 'BP_ProcessSteps';
+  idField = 'recID';
+  assemblyName = 'ERM.Business.BP';
+  className = 'ProcessStepsBusiness';
+  method = 'GetProcessStepsAsync'; //chua viet
 
   constructor(
     inject: Injector,
@@ -88,14 +102,31 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [
       {
-        type: ViewType.list,
+        type: ViewType.content,
         active: false,
         sameData: true,
         model: {
           template: this.itemViewList,
         },
       },
+      {
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
+        },
+      },
     ];
+    
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
@@ -106,93 +137,93 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
 
   //#region CRUD bước công việc
   add() {
-    if(this.idForm === 'A'){
-      this.view.dataService.addNew().subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
-        this.dialog = this.callfc.openSide(
-          PopAddProcessstepsComponent,
-          ['add', this.titleAction, this.idForm],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
-      });
-    }else if(this.idForm === 'P'){
-      this.view.dataService.addNew().subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
-        this.dialog = this.callfc.openSide(
-          PopAddPhaseComponent,
-          ['add', this.titleAction, this.idForm],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
-      });
-    }
+    // if(this.idForm === 'A'){
+    //   this.view.dataService.addNew().subscribe((res: any) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = this.view?.dataService;
+    //     option.FormModel = this.view?.formModel;
+    //     option.Width = '550px';
+    //     this.dialog = this.callfc.openSide(
+    //       PopAddProcessstepsComponent,
+    //       ['add', this.titleAction, this.idForm],
+    //       option
+    //     );
+    //     this.dialog.closed.subscribe((e) => {
+    //       if (e?.event == null)
+    //         this.view.dataService.delete(
+    //           [this.view.dataService.dataSelected],
+    //           false
+    //         );
+    //     });
+    //   });
+    // }else if(this.idForm === 'P'){
+    //   this.view.dataService.addNew().subscribe((res: any) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = this.view?.dataService;
+    //     option.FormModel = this.view?.formModel;
+    //     option.Width = '550px';
+    //     this.dialog = this.callfc.openSide(
+    //       PopAddPhaseComponent,
+    //       ['add', this.titleAction, this.idForm],
+    //       option
+    //     );
+    //     this.dialog.closed.subscribe((e) => {
+    //       if (e?.event == null)
+    //         this.view.dataService.delete(
+    //           [this.view.dataService.dataSelected],
+    //           false
+    //         );
+    //     });
+    //   });
+    // }
   }
 
   edit(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
-        this.dialog = this.callfc.openSide(
-          PopAddProcessstepsComponent,
-          ['edit', this.titleAction, this.idForm],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
-      });
+    // if (data) {
+    //   this.view.dataService.dataSelected = data;
+    // }
+    // this.view.dataService
+    //   .edit(this.view.dataService.dataSelected)
+    //   .subscribe((res: any) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = this.view?.dataService;
+    //     option.FormModel = this.view?.formModel;
+    //     option.Width = '550px';
+    //     this.dialog = this.callfc.openSide(
+    //       PopAddProcessstepsComponent,
+    //       ['edit', this.titleAction, this.idForm],
+    //       option
+    //     );
+    //     this.dialog.closed.subscribe((e) => {
+    //       if (e?.event == null)
+    //         this.view.dataService.delete(
+    //           [this.view.dataService.dataSelected],
+    //           false
+    //         );
+    //     });
+    //   });
   }
 
   copy(data) {
-    if (data) this.view.dataService.dataSelected = data;
-    this.view.dataService.copy().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = 'Auto';
-      this.dialog = this.callfc.openSide(
-        PopAddProcessstepsComponent,
-        ['copy', this.titleAction, this.idForm],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event == null)
-          this.view.dataService.delete(
-            [this.view.dataService.dataSelected],
-            false
-          );
-      });
-    });
+    // if (data) this.view.dataService.dataSelected = data;
+    // this.view.dataService.copy().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.view?.currentView?.dataService;
+    //   option.FormModel = this.view?.currentView?.formModel;
+    //   option.Width = '550px';
+    //   this.dialog = this.callfc.openSide(
+    //     PopAddProcessstepsComponent,
+    //     ['copy', this.titleAction, this.idForm],
+    //     option
+    //   );
+    //   this.dialog.closed.subscribe((e) => {
+    //     if (e?.event == null)
+    //       this.view.dataService.delete(
+    //         [this.view.dataService.dataSelected],
+    //         false
+    //       );
+    //   });
+    // });
   }
 
   delete(data) {
@@ -221,19 +252,16 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   //#region event
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    this.idForm =evt.id
-    switch (evt.id) {
-      case 'btnAdd':
-      case 'A':
-        this.add();
-        break;
-      case 'P':
-        this.add();
-        break;
-      case 'Q':
-        this.add();
-        break;
-    }
+    this.stepType =evt.id ;
+    this.add();
+    // switch (evt.id) {
+    //   case 'btnAdd':
+    //   case 'A':
+    //   case 'P':
+    //   case 'Q':
+    //     this.add();
+    //     break;
+    // }
   }
 
   receiveMF(e: any) {

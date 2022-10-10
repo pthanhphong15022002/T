@@ -56,8 +56,7 @@ export class TreeviewCommentComponent implements OnInit {
   votes: any;
   lstUserVote: any;
   dataSelected: any[];
-  vllL1480:any = [];
-  dVll: any = {};
+  vllL1480:any = null;
   constructor(
     private dt: ChangeDetectorRef,
     private signalRApi: WPService,
@@ -79,12 +78,7 @@ export class TreeviewCommentComponent implements OnInit {
   getValueIcon(){
     this.cache.valueList("L1480").subscribe((res) => {
       if (res) {
-        this.vllL1480 = res.datas as any[];
-        if(this.vllL1480.length > 0){
-          this.vllL1480.forEach(element => {
-            this.dVll[element.value + ""] = element;
-          });
-        }
+        this.vllL1480 = res.datas;
       }
     });
   }

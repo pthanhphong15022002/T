@@ -6,20 +6,11 @@
 
 
 <ng-template #cardTemp let-data>
-    <codx-card-center cardCss="border w-250px h-200" 
-        [formModel]="view.formModel" 
-        [imageId]="data.employeeID"
-        [imageObjType]="view.formModel.entityName" 
-        [imgOn]="data?.modifiedOn" 
-        [imageObjName]="data.employeeName"
-        [title]="placeholder(data.employeeName, view.formModel, 'EmployeeName') | async" 
-        [subTitle]="placeholder(data.positionName, view.formModel, 'PositionID') | async" 
-        [dataItem]="data" 
-        [desc]="placeholder(data.birthday | fmDT,view.formModel,'Birthday') | async" 
-        [footer]="footer" 
-        [typeMF]="'hover'" 
+    <codx-card-center cardCss="border w-250px h-100" [formModel]="view.formModel" [imageId]="data.employeeID"
+        [title]="data.employeeName" [subTitle]="(data.positionName || 'Bộ phận')" [dataItem]="data" [imageObjName]="data.employeeName"
+        [desc]="(data.birthday | date: 'dd/MM/yyyy') || 'dd/MM/yyyy'" [footer]="footer" [typeMF]="'hover'"
         (clickMF)="clickMF($event, data)">
-      </codx-card-center>
+    </codx-card-center>
 </ng-template>
 
 <ng-template #footer let-data>
@@ -57,6 +48,7 @@
                         [style.background]="data.genderColor">
                         {{data.gender}}</div>
                 </div>
+
                 <div class="text-gray-800 fw-bold" *ngIf="data.positionName">
                     {{data.positionName}}
                 </div>
@@ -64,11 +56,21 @@
                     <codx-label name="lblPositionName" formName="Employees" default="Vị trí công việc">
                     </codx-label>
                 </div>
+
+                <!-- <span class="text-dark fw-bold">
+                    <span #positionName>{{ data.positionName | formatvalue: view.formModel:"positionName":positionName | async }}</span>
+                </span> -->
+
                 <div class="" *ngIf="data.organizationName">{{data.organizationName}}</div>
                 <div class="text-gray-400" *ngIf="!data.organizationName">
                     <codx-label name="lblOrganizationName" formName="Employees" default="Bộ phận">
                     </codx-label>
                 </div>
+
+                <!-- <span class="text-dark fw-bold">
+                    <span #organizationName>{{ data.organizationName | formatvalue: view.formModel:"organizationName":organizationName | async }}</span>
+                </span> -->
+
                 <div>
                     <span class="fs-7" *ngIf="data.departmentName">{{data.departmentName}} |
                     </span>
@@ -118,14 +120,18 @@
             <span class="text-gray-600 me-1">
                 <codx-label name="lblBirthday" formName="Employees" default="Ngày sinh: "></codx-label>
             </span>
+            <!-- <span class="text-gray-800" *ngIf="data.birthday">{{data.birthday | date: "dd/MM/yyyy" }}</span>
+            <span class="text-gray-400" *ngIf="!data.birthday">{{data.birthday | date: "dd/MM/yyyy" }}</span> -->
+
             <span class="text-dark fw-bold">
-                <span #birthday>{{ data.birthday | fmDT | formatvalue: view.formModel:"birthday":birthday | async }}</span>
+                <span #birthday>{{ data.birthday | formatvalue: view.formModel:"birthday":birthday | async }}</span>
             </span>
         </div>
         <div class="align-items-center fs-7">
             <span class="text-gray-600 me-1">
                 <codx-label name="lblBirthPlace" formName="Employees" default="Nơi sinh: "></codx-label>
             </span>
+            <!-- <span class="text-gray-800">{{data?.provinceName || data.birthPlace}}</span> -->
             <span class="text-dark fw-bold">
                 <span #birthPlace>{{ data.provinceName | formatvalue: view.formModel:"birthPlace":birthPlace | async
                     }}</span>
@@ -135,6 +141,7 @@
             <span class="text-gray-600 me-1">
                 <codx-label name="lblEducation" formName="Employees" default="Trình độ: "></codx-label>
             </span>
+            <!-- <span class="text-gray-800">{{data.education}}</span> -->
             <span class="text-dark fw-bold">
                 <span #education>{{ data.education | formatvalue: view.formModel:"education":education | async }}</span>
             </span>
@@ -156,8 +163,14 @@
                 </codx-label>
             </span>
             <span class="text-gray-800">
-                <span #joinedOn>{{ data.joinedOn | fmDT | formatvalue: view.formModel:"joinedOn":joinedOn | async }}</span>
+                <span #joinedOn>{{ data.joinedOn | formatvalue: view.formModel:"joinedOn":joinedOn | async }}</span>
             </span>
+            <!-- <span class="text-gray-800" *ngIf="data.joinedOn">
+                {{ data.joinedOn | date: "dd/MM/yyyy" }}
+            </span>
+            <span class="text-gray-400" *ngIf="!data.joinedOn">
+                {{ data.joinedOn | date: "dd/MM/yyyy" }}
+            </span> -->
         </div>
         <div class="align-items-center fs-7">
             <span class="text-gray-600 me-1">

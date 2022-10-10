@@ -7,10 +7,7 @@ import { CodxBpComponent } from './codx-bp.component';
 import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
-import { PopAddProcessesComponent } from './processes/pop-add-processes/pop-add-processes.component';
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
-import { ProcessstepsComponent } from './processsteps/processsteps.component';
-import { PopAddProcessstepsComponent } from './processsteps/popup-add-processsteps/pop-add-processsteps.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
@@ -19,10 +16,10 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
-import { PopupAddProcessStepComponent } from './processstep/popup-add-processstep/popup-add-processstep.component';
-import { ProcessStepComponent } from './processstep/processstep.component';
-import { PopAddPhaseComponent } from './processsteps/popup-add-phase/pop-add-phase.component';
 import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
+import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
+import { ProcessstepsComponent } from './processsteps/processsteps.component';
+import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
 
 export const routes: Routes = [
   {
@@ -37,10 +34,6 @@ export const routes: Routes = [
         path: 'processstep/:funcID',
         component: ProcessstepsComponent,
       },
-      {
-        path: 'processstepTH/:funcID',
-        component: ProcessStepComponent,
-      },
     ],
   },
 ];
@@ -50,15 +43,12 @@ export const routes: Routes = [
     TesthtmlComponent,
     LayoutComponent,
     ProcessesComponent,
-    PopAddProcessesComponent,
+    PopupAddProcessesComponent,
     ViewListProcessesComponent,
     ProcessstepsComponent,
-    PopAddProcessstepsComponent,
-    ProcessStepComponent,
-    PopupAddProcessStepComponent,
-    PopAddPhaseComponent,
+    PopupAddProcessStepsComponent,
     PopupSendEmailComponent,
-
+    PopupAddProcessStepsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

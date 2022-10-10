@@ -251,7 +251,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.data.hours = hours;
       }
     } else {
-      this.notificationsService.notifyCode('TM036');
+      this.notificationsService.notifyCode('EP003');
       return;
     }
     this.tmplstDevice.forEach((element) => {
@@ -426,7 +426,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (endTime <= startTime) {
       this.checkLoop = !this.checkLoop;
       if (!this.checkLoop) {
-        this.notificationsService.notifyCode('TM036');
+        this.notificationsService.notifyCode('EP003');
         return;
       }
     }
@@ -447,7 +447,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (new Date() >= new Date(this.data.startDate)) {
       this.checkLoopS = !this.checkLoopS;
       if (!this.checkLoopS) {
-        this.notificationsService.notifyCode('TM036');
+        this.notificationsService.notifyCode('EP003');
         return;
       }
     }
@@ -461,7 +461,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (new Date() >= new Date(this.data.endDate)) {
       this.checkLoopE = !this.checkLoopE;
       if (!this.checkLoopE) {
-        this.notificationsService.notifyCode('TM036');
+        this.notificationsService.notifyCode('EP003');
         return;
       }
     }
