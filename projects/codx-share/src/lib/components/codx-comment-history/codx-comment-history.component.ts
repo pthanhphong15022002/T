@@ -25,20 +25,21 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() data:any;
   @Input() viewIcon:boolean = true;
   @Input()  allowVotes:boolean = true;
+  @Input()  dVll: any = {};
+  @Input() vllIcon: any = [];
   @Output() evtReply = new EventEmitter;
   @Output() evtDelete = new EventEmitter;
   @Output() evtSend = new EventEmitter;
-
-
   user: any = null;
   message: string = "";
+  lstFile: any[] = [];
+  grdSetUp:any;
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
     APPLICATION: 'application'
   }
-  lstFile: any[] = [];
-  lstData: any;
+  
 
   @ViewChild("codxATM") codxATM: AttachmentComponent;
   constructor(
@@ -48,30 +49,21 @@ export class CodxCommentHistoryComponent implements OnInit {
     private notifySV:NotificationsService,
     private callFuc:CallFuncService,
     private dt: ChangeDetectorRef
-  ) {
-
+  ) 
+  {
+    this.user = this.auth.userValue;
   }
 
   ngOnInit(): void {
-    this.cache.valueList('L1480').subscribe((res) => {
-      if (res) {
-        this.lstData = res.datas;
-      }
-    });
-    this.user = this.auth.userValue;
     if(this.data){
       this.getFileByObjectID();
     }
   }
-  grdSetUp:any;
-  getGrdViewSetUp(){
-    this.cache.gridViewSetup(this.formModel.formName,this.formModel.gridViewName).subscribe((grd:any) => {
-      this.grdSetUp = grd;
-    })
-  }
+
   getFileByObjectID(){
     this.api.execSv(
-      "DM","ERM.Business.DM",
+      "DM",
+      "ERM.Business.DM",
       "FileBussiness",
       "GetFilesByIbjectIDAsync",
       this.data.recID)
@@ -90,14 +82,14 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
 
   deleteComment(item:any){
-    this.notifySV.alertCode('Xóa bình luận?').subscribe((res) => {
+    this.notifySV.alertCode('WP025').subscribe((res) => {
       if (res.event.status == "Y"){
         this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item.recID)
         .subscribe((res:any) => {
           if(res)
           {
             this.evtDelete.emit(item);
-            this.notifySV.notifyCode("SYS008");
+            this.notifySV.notifyCode("WP026");
           }
           else 
             this.notifySV.notifyCode("SYS022");
@@ -130,12 +122,10 @@ export class CodxCommentHistoryComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
-
   removeFile(file: any) {
     this.lstFile = this.lstFile.filter((e: any) => e.fileName != file.fileName);
     this.dt.detectChanges();
   }
-
   async sendComments() {
     if(!this.message && this.lstFile.length == 0){
       this.notifySV.notifyCode("SYS010");
@@ -163,7 +153,7 @@ export class CodxCommentHistoryComponent implements OnInit {
           (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
             if(res2){
               this.evtSend.emit(res1);
-              this.notifySV.notifyCode("SYS006"); 
+              this.notifySV.notifyCode("WP027"); 
               this.clearData();   
             }
           })
@@ -171,7 +161,7 @@ export class CodxCommentHistoryComponent implements OnInit {
         else
         {
             this.evtSend.emit(res1);
-            this.notifySV.notifyCode("SYS006");
+            this.notifySV.notifyCode("WP027");
             this.clearData();   
         }
       }
@@ -221,6 +211,11 @@ export class CodxCommentHistoryComponent implements OnInit {
       });
   }
   showVotes(data:any){
-    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
+    let object = {
+      data: data,
+      entityName: "BG_TrackLogs",
+      vll: this.dVll
+    }
+    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
 }

@@ -49,8 +49,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   funcID: any;
   titleAction = '';
   itemSelected: any;
-  stepType = 'A';
-
+  stepType :any;
   service = 'BP';
   entityName = 'BP_ProcessSteps';
   idField = 'recID';
@@ -209,9 +208,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   //#region event
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    if ((evt.id = 'btnAdd')) this.stepType = 'P';
+    if ((evt.id == 'btnAdd')) this.stepType = 'P';
     else this.stepType = evt.id;
-
     this.add();
     // switch (evt.id) {
     //   case 'btnAdd':

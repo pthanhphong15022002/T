@@ -71,7 +71,7 @@
                         <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                             <span class="icon-push_pin icon-16" type="button"></span>
                         </div>
-                        <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
+                        <div class="d-flex flex-column note-option">
                             <span [innerHTML]="item.memo"></span>
                         </div>
                     </div>
@@ -116,8 +116,8 @@
                         <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
                             <span class="icon-push_pin icon-16" type="button"></span>
                         </div>
-                        <div class="d-flex flex-column note-option" (click)="openFormUpdateNote(item)">
-                            <div *ngFor="let itemList of item.checkList">
+                        <div class="d-flex flex-column note-option">
+                            <div *ngFor="let itemList of item.checkList; index as i">
                                 <div *ngIf="itemList.status == null">
                                     <div class="my-2 note-list">
                                         <ul>
@@ -131,7 +131,7 @@
                                             label="{{itemList.listNote}}" [disabled]="false"
                                             [checked]="itemList?.status == 'true' || itemList?.status == '1'"
                                             labelPosition="After" class="test-check"
-                                            (valueChange)="valueChange($event)"></codx-input>
+                                            (valueChange)="valueChangeCB($event, item, i)"></codx-input>
                                     </div>
                                 </div>
                             </div>

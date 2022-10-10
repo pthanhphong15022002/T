@@ -25,7 +25,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   showLabelAttachment = false;
   title = '';
   processSteps: any;
-  stepType = '';
+  stepType ='C';
   readOnly = false;
   titleActon = '';
   action = '';
@@ -44,8 +44,8 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );
-    this.titleActon = dt?.data[2];
     this.action = dt?.data[1];
+    this.titleActon = dt?.data[2];
     this.stepType = dt?.data[3];
     // this.stepType = 'T'; //thêm để test
     this.dialog = dialog;
