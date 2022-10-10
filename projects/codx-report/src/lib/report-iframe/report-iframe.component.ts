@@ -13,6 +13,7 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
   @Input() predicates: any = "";
   @Input() dataValues: any = "";
   @Input() print: boolean = false;
+  @Input() param: string = "";
   private environment: any;
   private _preArray:any;
   private _user:any;
@@ -36,8 +37,14 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
 
   }
   ngOnChanges(changes: SimpleChanges): void {
+    if(changes["param"] &&changes["param"].currentValue){
+      this.src = `${this.environment.reportUrl}?reportID=${this.funcID}&_param=${changes["param"].currentValue}&locale=vi&lvtk=${this._user.token}`;
+      this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
+    }
+    else{
     this._preArray = this.predicates.split('&&').join(';');
     this.src = `${this.environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
     this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
+    }
   }
 }
