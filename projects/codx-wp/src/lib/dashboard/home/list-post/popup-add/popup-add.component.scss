@@ -71,6 +71,7 @@
 .body-addpost {
     height: 100%;
     position: relative;
+    min-height: 436px;
 }
 
 .addpost-scroll {
@@ -81,4 +82,11 @@
     bottom: 50px;
     overflow: hidden;
     overflow-y: auto;
+}
+
+.body.body-addpost .body-function {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

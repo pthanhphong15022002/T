@@ -772,7 +772,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           optional: true,
           modifiedOn: this.setStatusTime(new Date()),
         };
-
         this.lstUserOptional.push(this.tempAtender);
       });
       for (let i = 0; i < this.lstUserOptional.length; ++i) {

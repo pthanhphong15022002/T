@@ -119,7 +119,7 @@ const routes: Route[] = [
         component: EpCardsComponent,
       },
       {
-        path: 'historycards/:funcID',
+        path: 'historycards/:funcID/:id',
         component: HistoryCardsComponent,
       },
     ],
@@ -149,6 +149,7 @@ const Components: Type<any>[] = [
   DriversComponent,
   RoomsComponent,
   EpCardsComponent,
+  HistoryCardsComponent,
   RoomDashboardComponent,
   CarDashboardComponent,
   StationeryDashboardComponent,

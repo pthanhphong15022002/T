@@ -1,5 +1,5 @@
 <codx-form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
-    
+
 </codx-form>
 <ng-template #body>
     <div class="body body-addpost">
@@ -42,6 +42,7 @@
                     <ng-container *ngTemplateOutlet="create"></ng-container>
                 </ng-container>
             </ng-container>
+
         </div>
         <div class="d-flex justify-content-between align-items-center body-function">
             <div class="text-gray-500 fw-bold">
@@ -50,9 +51,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-emoji">
-                    <button (click)="toggleEmojiPicker()" type="button"
-                        data-toggle="tooltip" 
-                        title="Cảm xúc"
+                    <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Cảm xúc"
                         class="btn btn-icon btn-md ms-2 btn-emoji">
                         <i class="icon-tag_faces icon-24 text-warning"></i>
                     </button>
@@ -64,19 +63,13 @@
                     </ng-container>
                 </div>
                 <div>
-                    <button (click)="tagUser()" 
-                        type="button"
-                        data-toggle="tooltip"
-                        title="Gắn thẻ"
+                    <button (click)="tagUser()" type="button" data-toggle="tooltip" title="Gắn thẻ"
                         class="btn btn-icon btn-md ms-2">
                         <i class="icon-local_offer icon-24 text-primary"></i>
                     </button>
                 </div>
                 <div class="btn-upload">
-                    <button (click)="uploadFile()" 
-                    type="button" 
-                    data-toggle="tooltip"
-                    title="Hình ảnh"
+                    <button (click)="uploadFile()" type="button" data-toggle="tooltip" title="Hình ảnh"
                         class="btn btn-icon btn-md ms-2 ng-star-inserted">
                         <i class="icon-photo icon-24 text-success"></i>
                     </button>
@@ -95,12 +88,7 @@
 </ng-template>
 <ng-template #create>
     <div>
-        <codx-input 
-            format="ed3" 
-            [class]="'border-none'" 
-            type="textarea" 
-            [crrValue]="message" 
-            [placeholder]="title"
+        <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>
@@ -139,33 +127,19 @@
 </ng-template>
 <ng-template #share>
     <div>
-        <codx-input format="ed3" 
-            [class]="'border-none'" 
-            type="textarea" 
-            [crrValue]="message" 
-            [placeholder]="title"
+        <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>
     <div>
-        <codx-file #codxFileCreated 
-            [funcID]="dialogRef.formModel.funcID" 
-            (removeFile)="removeFile($event)"
-            (addFile)="addFile($event)" 
-            [edit]='true'>
+        <codx-file #codxFileCreated [funcID]="dialogRef.formModel.funcID" (removeFile)="removeFile($event)"
+            (addFile)="addFile($event)" [edit]='true'>
         </codx-file>
     </div>
     <div class="d-none">
-        <codx-attachment #atmCreate 
-            objectType="WP_Comments" 
-            hideFolder="1"
-            hideUploadBtn="1" hideDes="1" type="inline"
-            allowExtensions=".jpg,.png" 
-            [showMessage]="0" 
-            allowMultiFile="1" 
-            (fileCount)="getfileCount($event)"
-            idBrowse="atmCreate" 
-            [functionID]="dialogRef.formModel.funcID">
+        <codx-attachment #atmCreate objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1" type="inline"
+            allowExtensions=".jpg,.png" [showMessage]="0" allowMultiFile="1" (fileCount)="getfileCount($event)"
+            idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
         </codx-attachment>
     </div>
     <div class="ndchiase">
@@ -194,13 +168,13 @@
                             </div>
                         </div>
                     </ng-container>
-                    
+
                     <ng-template #WP_News>
                         <div class="fw-bolder">{{dataShare.subject}}</div>
                         <div>{{dataShare.subContent}}</div>
                         <div class="text-gray-600 fs-7 me-2">{{dataShare.createdOn | fmDT}}</div>
                     </ng-template>
-                    
+
                 </div>
             </ng-container>
             <ng-template #category2>

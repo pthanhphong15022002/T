@@ -56,6 +56,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
   method = 'GetProcessStepsAsync'; //chua viet
+ 
+  recIDProcess ='90ab82ac-43d1-11ed-83e7-d493900707c4' ///thêm để add thử
 
   constructor(
     inject: Injector,
@@ -69,6 +71,21 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessStepsBusiness';
+    this.request.method = 'GetProcessStepsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
     this.button = {
       id: 'btnAdd',
       //setcung tam đoi thuong
@@ -95,7 +112,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           text: 'Email',
         },
         {
-          id: 'E',
+          id: 'CA',
           icon: 'icon-calendar_today',
           text: 'Calendar',
         },
@@ -140,11 +157,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       },
     ];
 
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'SYS';
-    this.resourceKanban.assemblyName = 'SYS';
-    this.resourceKanban.className = 'CommonBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+   
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
@@ -159,6 +172,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
+
+      this.view.dataService.dataSelected.processID = this.recIDProcess ;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
         [

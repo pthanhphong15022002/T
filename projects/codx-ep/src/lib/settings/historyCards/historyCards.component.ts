@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, Injector } from '@angular/core';
+import { AfterViewInit, Component, inject, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { UIComponent, FormModel, ViewType } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
 
@@ -12,25 +12,30 @@ export class HistoryCardsComponent
   implements AfterViewInit
 {
   
-  service = 'EP';
-  assemblyName = 'EP';
-  entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '1';
-  idField = 'recID';
-  className = 'ResourcesBusiness';
-  method = 'GetListAsync';
+  @ViewChild('subTitle') tranTypeCol: TemplateRef<any>;
+  @ViewChild('subTitle') userIDCol: TemplateRef<any>;
+  @ViewChild('subTitle') createByCol: TemplateRef<any>;
+  // service = 'EP';
+  // assemblyName = 'EP';
+  // entityName = 'EP_ResourceTrans';
+  // predicate = 'ResourceType=@0';
+  // dataValue = '1';
+  // idField = 'recID';
+  // className = 'ResourceTransBusiness';
+  // method = 'GetAsync';
   
   funcID:any;
   formModel:FormModel;
   columnGrids:any;
   views:any;
+  id:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.id = this.router.snapshot.params['id'];
           
   }
   onInit(): void {
@@ -49,49 +54,39 @@ export class HistoryCardsComponent
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
-          //this.grvRooms=gv;
           this.columnGrids = [
             {
-              field: 'resourceName',
-              headerText: gv['ResourceName'].headerText,
-              width: 350,//gv['ResourceID'].width,
-              //template: this.resourceNameCol,
+              field: 'tranType',
+              headerText: gv['tranType'].headerText,
+              width: 350,
+              template: this.tranTypeCol,
             },
             {
-              headerText: gv['Location'].headerText,
-              width: 200,//gv['Location'].width,
-              field: 'location',
-              //template: this.locationCol,
+              field: 'createOn',
+              headerText: gv['CreateOn'].headerText,
+              width: 200,
               headerTextAlign: 'Center',
             },
             {
-              headerText: gv['Equipments'].headerText,
-              width: 100,//gv['Equipments'].width,
-              field: 'equipments',
-              //template: this.equipmentsCol,
+              field: 'userID',
+              headerText: gv['UserID'].headerText,
+              template: this.userIDCol,
               headerTextAlign: 'Center',
               textAlign: 'Center',
             },          
             {
-              headerText: gv['Note'].headerText,
-              width: 200,//gv['Note'].width,
               field: 'note',
+              headerText: gv['Note'].headerText,
+              width: 200,
               headerTextAlign: 'Center',           
             },
             {
-              headerText: gv['Owner'].headerText,
-              //width:gv['Owner'].width,
+              field: 'createBy',
+              headerText: gv['CreateBy'].headerText,
               width: 200,
-              //template: this.ownerCol,
+              template: this.createByCol,
               headerTextAlign: 'Center',
             },
-            // {
-            //   headerText: 'Người chuẩn bị',//gv['Owner'].headerText,
-            //   width:gv['Owner'].width,
-            //   //width: 200,
-            //   template: this.preparatorCol,
-            //   headerTextAlign: 'Center',
-            // },
           ];
           this.views = [
             {
