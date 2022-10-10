@@ -337,36 +337,36 @@ export class SprintsComponent extends UIComponent {
     //   });
     // }
 
-
     this.tmSv.getSprintsDetails(data.iterationID).subscribe((res) => {
       if (res) {
-        var dataView = res ;
+        var dataView = res;
         var dataObj = {
           projectID: dataView.projectID ? dataView.projectID : '',
           resources: dataView.resources ? dataView.resources : '',
-          iterationID: dataView.iterationID ,
+          iterationID: dataView.iterationID,
           viewMode: dataView.viewMode ? dataView.viewMode : '',
         };
         var obj = {
-          data : dataView,
-          dataObj : dataObj,
+          data: dataView,
+          dataObj: dataObj,
         };
 
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
+        // dialogModel.zIndex = 900;
         var dialog = this.callfc.openForm(
-         PopupTabsViewsDetailsComponent,
-         '',
-         this.widthWin,
-         this.heightWin,
-         '',
-         obj,
-         '',
-         dialogModel
-       );
-       dialog.beforeClose.subscribe((res) => {
-         if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
-       });
+          PopupTabsViewsDetailsComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+        dialog.beforeClose.subscribe((res) => {
+          if (this.toolbarCls) document.body.classList.add(this.toolbarCls);
+        });
       }
     });
   }

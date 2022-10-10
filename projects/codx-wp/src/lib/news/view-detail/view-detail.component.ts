@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel, AuthService } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
@@ -120,8 +121,6 @@ export class ViewDetailComponent implements OnInit {
     }
     return false;
   }
-
-
   getShareUser(shareControl, commentID) {
     if (shareControl == '1') {
       this.api
@@ -154,5 +153,17 @@ export class ViewDetailComponent implements OnInit {
     option.FormModel = this.codxViews.formModel;
     option.IsFull = true;
     this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", { funcID: this.funcID }, "", option);
+  }
+  clickPopupShare(data:any){
+    if (!data) return;
+    var obj = {
+      post: data,
+      refType:"WP_News",
+      status: 'share',
+      headerText: 'Chia sẻ bài viết',
+    };
+    let option = new DialogModel();
+    option.FormModel = this.codxViews.formModel;
+    this.callfc.openForm(PopupAddPostComponent,'',650,550,'',obj,'',option);
   }
 }
