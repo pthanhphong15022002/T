@@ -1,0 +1,48 @@
+<button class="btn btn-danger" (click)="addPanel()">ét be nồ đát bo</button>
+  <ejs-dashboardlayout
+    #dashboard
+    id="defaultLayout"
+    [columns]="5"
+    [cellSpacing]="cellSpacing"
+    [cellAspectRatio]="cellAspectRatio"
+    [allowResizing]="true"
+    (resizeStop)="onResizeStop($event)"
+    (created)="onCreate($event)"
+  >
+    <!-- <e-panels>
+    <e-panel [sizeX]="2" [sizeY]="3" [row]="0" [col]="0">
+      <ng-template #content>
+        <button class="btn btn-sm btn-primary" (click)="addChart()">Thêm chart</button>
+        <div class="w-100">
+          <codx-chart [legendSettings]="{visible:true}" title="BACCCCCC" [chartArea]="chartArea" [marker]="marker"  [enableCrossHair]="true"  [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis" [seriesSetting]="seriesSetting" ></codx-chart>
+        </div>
+
+      </ng-template>
+    </e-panel>
+    <e-panel [sizeX]="2" [sizeY]="3" [row]="0" [col]="1">
+      <ng-template #content>
+        <div class="w-100">
+          <codx-chart [legendSettings]="{visible:true}" title="fffff" [chartArea]="chartArea" [marker]="marker"  [enableCrossHair]="false"  [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis" [seriesSetting]="seriesSetting1" ></codx-chart>
+        </div>
+
+      </ng-template>
+    </e-panel>
+  </e-panels> -->
+  </ejs-dashboardlayout>
+  <ng-template #panelLayout>
+    <layout-panel (addNew)="addChart($event)" (delete)="deletePanel($event)"></layout-panel>
+  </ng-template>
+  <ng-template #chart>
+    <div class="w-100 h-100 chart-item">
+      <codx-chart
+        [legendSettings]="{ visible: true, enableHighlight : true }"
+        title="BACCCCCC"
+        [chartArea]="chartArea"
+        [marker]="marker"
+        [enableCrossHair]="true"
+        [primaryXAxis]="primaryXAxis"
+        [primaryYAxis]="primaryYAxis"
+        [seriesSetting]="seriesSetting"
+      ></codx-chart>
+    </div>
+  </ng-template>

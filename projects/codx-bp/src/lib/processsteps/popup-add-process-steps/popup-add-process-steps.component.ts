@@ -8,6 +8,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
+import { BP_ProcessSteps } from '../../models/BP_Processes.model';
 
 @Component({
   selector: 'lib-popup-add-process-steps',
@@ -19,12 +20,12 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   dialog!: DialogRef;
   formModel: FormModel;
+  processSteps: BP_ProcessSteps;
   user: any;
   data: any;
   funcID: any;
   showLabelAttachment = false;
   title = '';
-  processSteps: any;
   stepType ='C';
   readOnly = false;
   titleActon = '';
@@ -47,6 +48,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.action = dt?.data[1];
     this.titleActon = dt?.data[2];
     this.stepType = dt?.data[3];
+    if(this.stepType) this.processSteps.stepType = this.stepType;
     // this.stepType = 'T'; //thêm để test
     this.dialog = dialog;
 
@@ -83,8 +85,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
     } else {
       op.method = 'AddProcessStepAsync';
-      op.className = 'ProcessStepsBusiness';
-      this.processSteps.stepType = this.stepType;
       data = [this.processSteps];
     }
 
@@ -121,7 +121,11 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps[e?.field] = e?.data;
   }
 
-  valueChangeEstimate(e, stepType) {}
+  valueChangeDuration(e) {
+    if(this.processSteps.stepType=='P'){
+      this.processSteps.duration = e?.data * 24  ;
+    }else  this.processSteps.duration = e?.data *1
+  }
 
   addFile(e) {
     this.attachment.uploadFile();

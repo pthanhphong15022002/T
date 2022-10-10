@@ -10,10 +10,13 @@ import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
 export class PopupVoteComponent implements OnInit {
 
   data: any;
+  entityName:string = "";
   lstVote:any[] = []
   lstUserVoted:any[] = [];
   defaultVote:string = "0";
   dialogRef:DialogRef;
+  vllL1480:any = [];
+  dVll: any = {};
   constructor(
     private api: ApiHttpService,
     private cache:CacheService,
@@ -22,16 +25,33 @@ export class PopupVoteComponent implements OnInit {
     @Optional() dialog?:DialogRef
   ) 
   {
-    this.data = dd.data;
+    this.data = dd.data.data;
+    this.entityName = dd.data.entityName;
+    this.dVll = dd.data.vll;
     this.dialogRef = dialog;
   }
 
   ngOnInit(): void {
-    this.getListVote();
+    if(this.entityName == "WP_Comments"){
+      this.getWPCommentsVotes();
+    }
+    else
+    {
+      this.getTracklogsCommentVotes();
+    }
+  }
+  getTracklogsCommentVotes(){
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetVotesCommentAsync",[this.data.recID])
+    .subscribe((res:any[]) => {
+      if(res)
+      {
+        this.lstVote = res[0];
+        this.getUserVote(this.defaultVote);
+      }
+    })
   }
 
-
-  getListVote(){
+  getWPCommentsVotes(){
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",[this.data.recID])
     .subscribe((res:any[]) => {
       if(res)

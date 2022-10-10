@@ -1,0 +1,70 @@
+<codx-form
+  headerText="Thêm be nồ đát bo"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template popup adde #body>
+    <codx-label
+      name="lblSizeX"
+      [formModel]="dialog.formModel"
+      default="SizeX"
+    ></codx-label>
+    <codx-input
+      type="number"
+      class="test-textbox"
+      field="sizeX"
+      placeholder=""
+      (valueChange)="valueChange($event)"
+    ></codx-input>
+
+    <codx-label
+      name="lblSizeY"
+      [formModel]="dialog.formModel"
+      default="SizeY"
+    ></codx-label>
+    <codx-input
+      type="number"
+      class="test-textbox"
+      field="sizeY"
+      placeholder=""
+      (valueChange)="valueChange($event)"
+    ></codx-input>
+    <codx-label
+      name="lblRow"
+      [formModel]="dialog.formModel"
+      default="Row"
+    ></codx-label>
+    <codx-input
+      type="number"
+      class="test-textbox"
+      field="row"
+      placeholder=""
+      (valueChange)="valueChange($event)"
+    ></codx-input>
+    <codx-label
+      name="lblCol"
+      [formModel]="dialog.formModel"
+      default="Col"
+    ></codx-label>
+    <codx-input
+      type="number"
+      class="test-textbox"
+      field="col"
+      placeholder=""
+      (valueChange)="valueChange($event)"
+    ></codx-input>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="saveForm()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>
