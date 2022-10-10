@@ -14,7 +14,7 @@ import { PopupSearchComponent } from '../popup/popup-search/popup-search.compone
 })
 export class ViewDetailComponent implements OnInit {
   @HostBinding('class') get class() {
-    return "bg-body h-100";
+    return "bg-body h-100 news-detail";
   }
   NEWSTYPE = {
     POST: "1",
