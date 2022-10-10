@@ -282,11 +282,10 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
         obj,
         option
       );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event) {
-          this.view.dataService.add(e.event, 0).subscribe();
-          this.changedr.detectChanges();
-        }
+      this.dialog.closed.subscribe((e: any) => {
+        if (e?.event?.file) e.event.data.modifiedOn = new Date();
+        this.view.dataService.update(e.event?.data).subscribe();
+        this.changedr.detectChanges();
       });
     });
   }
@@ -309,11 +308,10 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
           obj,
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event) {
-            this.view.dataService.update(e.event).subscribe();
-            this.changedr.detectChanges();
-          }
+        this.dialog.closed.subscribe((e: any) => {
+          if (e?.event?.data) e.event.data.modifiedOn = new Date();
+          this.view.dataService.update(e.event?.data).subscribe();
+          this.changedr.detectChanges();
         });
       });
   }
@@ -329,7 +327,7 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
 
   beforeDelete(op: any, data) {
     op.methodName = 'DeleteRangeLineAsync';
-    op.data = data?.recID;
+    op.data = data;
     return true;
   }
 
