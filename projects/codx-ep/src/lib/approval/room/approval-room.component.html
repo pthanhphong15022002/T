@@ -27,19 +27,19 @@
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today me-1"></i>
         <span class="text-gray-600">
-          {{ data?.createdOn | fmDT:'dmy':true}}
+          {{ data?.bookingOn | fmDT}}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
         <span class="text-gray-600">
-          {{ data?.startDate | fmDT:'dmy':true}}
+          {{ data?.startHour }}
         </span>
-        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+        <span *ngIf="data?.startHour && data?.endHour" class="ms-1 me-1">{{
           "-"
         }}</span>
         <span class="text-gray-600">
-          {{ data?.endDate  | fmDT:'dmy':true}}
+          {{ data?.endHour }}
         </span>
       </div>
     </div>
@@ -82,7 +82,7 @@
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
-    (uploaded)="getDetailBooking($event)"
+    (uploaded)="getDetailAprovalBooking($event)"
   ></approval-room-view-detail>
 </ng-template>
 
@@ -101,24 +101,18 @@
           
           <span class="fw-bold ms-1">{{data?.resourceData.area}} m2</span>
         </div>
-        <!-- <span class="text-gray-600">&ensp;|&ensp;</span>
-        <div>
-          <codx-label default="Sức chứa:" name="lblCapacity" class="text-gray-600"></codx-label>
-          
-          <span class="fw-bold ms-1">{{data?.resourceData.capacity}} người</span>
-        </div> -->
       </div>
     </div>
   </div> 
 </ng-template>
 
-<ng-template #resourceTootip let-data>
+<!-- <ng-template #resourceTootip let-data>
   <div class="template-wrap">
     <div class="res-text">Code: {{ data.resourceData.recCode }}</div>
     <div class="res-text">Name: {{ data.resourceData.resourceName }}</div>
     <div class="res-text">Bookings: {{ data.resourceData.events }}</div>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #footerTmp let-data> </ng-template>
 
@@ -160,19 +154,19 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
       <span class=" ms-1 fw-bold">
-        {{ data?.createdOn | fmDT:'dmy':true}}
+        {{ data?.bookingOn | fmDT}}
       </span>
     </div>
     <div class="d-flex me-6">
       <i class="icon-access_time me-1"></i>
       <span class=" ms-1 fw-bold">
-        {{ data?.startDate  | fmDT:'dmy':true}}
+        {{ data?.startHour}}
       </span>
-      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+      <span *ngIf="data?.startHour && data?.endHour" class="ms-1 me-1">{{
         "-"
       }}</span>
       <span class=" fw-bold">
-        {{ data?.endDate | fmDT:'dmy':true}}
+        {{ data?.endHour}}
       </span>
     </div>
   </div>
@@ -260,19 +254,19 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
       <span class="text-gray-600">
-        {{ data?.createdOn | fmDT:'dmy':true}}
+        {{ data?.bookingOn | fmDT}}
       </span>
     </div>
     <div class="d-flex me-6">
       <i class="icon-access_time me-1"></i>
       <span class="text-gray-600">
-        {{ data?.startDate | fmDT:'dmy':true}}
+        {{ data?.startHour }}
       </span>
-      <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
+      <span *ngIf="data?.startHour && data?.endHour" class="ms-1 me-1">{{
         "-"
       }}</span>
       <span class="text-gray-600">
-        {{ data?.endDate | fmDT:'dmy':true}}
+        {{ data?.endHour}}
       </span>
     </div>
   </div>
