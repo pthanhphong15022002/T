@@ -293,11 +293,18 @@ ejs-switch .form-control {
 .e-panel {
   cursor: auto !important;
 }
+
 .title {
   font-size: 15px;
   font-weight: bold;
   color: #737373;
 }
+
 #acc_chart_57724_1_border {
-  fill:"none";
+  fill: "none";
+}
+
+codx-view-tree-detail .e-pane.e-static-pane {
+  flex-basis: 26% !important;
+  min-width: 250px;
 }

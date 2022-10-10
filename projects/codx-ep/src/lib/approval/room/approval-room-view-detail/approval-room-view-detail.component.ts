@@ -50,8 +50,8 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
         changes.itemDetail?.currentValue?.recID
     ) {
       this.api
-        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
-          changes.itemDetail?.currentValue?.recID,
+        .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
+          changes.itemDetail?.currentValue?.recID,changes.itemDetail?.currentValue?.approvalTransRecID,
         ])
         .subscribe((res) => {
           if (res) {
@@ -95,7 +95,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40301':
         {
           alert('Duyệt');
-          this.approve(value,"5")
+          this.approve(datas,"5")
         }
         break;
       case 'EPT40102':
@@ -124,7 +124,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40305':
         {
           alert('Từ chối');
-          this.approve(value,"4")
+          this.approve(datas,"4")
         }
         break;
       case 'EPT40106':
@@ -132,7 +132,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40306':
         {
           alert('Làm lại');
-          this.approve(value,"2")
+          this.approve(datas,"2")
         }
         break;
       default:

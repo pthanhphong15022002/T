@@ -1,12 +1,12 @@
 <codx-form #form [headerText]="header" [body]="body" [dialog]="dialog" [formModel]="dialog.formModel">
     <ng-template popup add #body>
-        <div class="pw-listcard mt-6">
-            <div class="mx-3 mb-6" *ngFor="let item of view.dataService.data">
+        <div class="pw-listcard">
+            <div *ngFor="let item of view.dataService.data">
                 <div class="pw-card card-save-note delay-500" (click)="onEditNote(item)">
-                    <codx-card-img cardCss="border rounded-4 w-230px  h-100" [imageId]="item.recID"
-                        imgCss="w-228px h-140px" icoTitleCss="icon-assignment icon-16" [title]="item.title"
+                    <codx-card-img cardCss="border rounded-4 w-200px h-100" [imageId]="item.recID"
+                        imgCss="w-200px h-140px" icoTitleCss="icon-assignment icon-16" [title]="item.title"
                         cssTitle="line-clamp line-clamp-1" [imgOn]="item?.modifiedOn" [desc2]="item.memo"
-                        cssDes2="line-clamp line-clamp-2" imageWidth="230" [imageObjType]="'WP_NoteBooks'">
+                        cssDes2="line-clamp line-clamp-2" imageWidth="200" [imageObjType]="'WP_NoteBooks'">
                     </codx-card-img>
                 </div>
             </div>
