@@ -10,6 +10,7 @@ import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
 export class PopupVoteComponent implements OnInit {
 
   data: any;
+  entityName:string = "";
   lstVote:any[] = []
   lstUserVoted:any[] = [];
   defaultVote:string = "0";
@@ -24,26 +25,33 @@ export class PopupVoteComponent implements OnInit {
     @Optional() dialog?:DialogRef
   ) 
   {
-    this.data = dd.data;
+    this.data = dd.data.data;
+    this.entityName = dd.data.entityName;
+    this.dVll = dd.data.vll;
     this.dialogRef = dialog;
   }
 
   ngOnInit(): void {
-    this.getListVote();
+    if(this.entityName == "WP_Comments"){
+      this.getWPCommentsVotes();
+    }
+    else
+    {
+      this.getTracklogsCommentVotes();
+    }
+  }
+  getTracklogsCommentVotes(){
+    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetVotesCommentAsync",[this.data.recID])
+    .subscribe((res:any[]) => {
+      if(res)
+      {
+        this.lstVote = res[0];
+        this.getUserVote(this.defaultVote);
+      }
+    })
   }
 
-
-  getListVote(){
-    this.cache.valueList("L1480").subscribe((res) => {
-      if (res) {
-        this.vllL1480 = res.datas as any[];
-        if(this.vllL1480.length > 0){
-          this.vllL1480.forEach(element => {
-            this.dVll[element.value + ""] = element;
-          });
-        }
-      }
-    });
+  getWPCommentsVotes(){
     this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",[this.data.recID])
     .subscribe((res:any[]) => {
       if(res)

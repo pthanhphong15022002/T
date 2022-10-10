@@ -3,7 +3,7 @@
         <ng-container *ngIf="dataComment.totalVote > 0">
             <div class="flex align-items-center">
                 <div *ngFor="let votedType of dataComment.listVoteType">
-                    <a>
+                    <a *ngIf="dVll[votedType]?.icon">
                         <img src="assets/themes/wp/default/img/{{dVll[votedType]?.icon}}"
                          style="width: 15px; height: 15x;">
                     </a>
@@ -40,8 +40,9 @@
             </div>
             <ng-template #myVoted>
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <img src="assets/themes/wp/default/img/{{dVll[dataComment.myVotedType]?.icon}}"
-                     style="width: 18px; height: 18px">
+                    <img *ngIf="dVll[dataComment.myVotedType]?.icon" 
+                        src="assets/themes/wp/default/img/{{dVll[dataComment.myVotedType]?.icon}}"
+                        style="width: 18px; height: 18px">
                     <div>
                         <span class="fw-bold ms-2"
                             [style.color]="dVll[dataComment.myVotedType]?.textColor">

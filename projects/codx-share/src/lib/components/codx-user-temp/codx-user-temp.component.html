@@ -1,7 +1,8 @@
+
 <div>
     <div class="position-relative">
         <div (click)="openPopup()">
-            <span><i class="icon-email icon-comment-temp"></i></span>
+            <span><i class="icon-perm_identity icon-user-temp"></i></span>
         </div>
         <div class="position-absolute 
         d-flex align-items-center justify-content-center 
@@ -15,14 +16,5 @@
     <codx-form [body]="body" [dialog]="dialog">
     </codx-form>
     <ng-template #body>
-        <codx-tree-history
-        [objectID]="objectID"
-        [objectType]="entityName"
-        [actionType]="'C'"
-        [addNew]="true"
-        [viewIcon]="false"
-        [viewVote]="true"
-        >
-        </codx-tree-history>
     </ng-template>
 </ng-template>

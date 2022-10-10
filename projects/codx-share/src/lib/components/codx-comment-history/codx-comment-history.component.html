@@ -141,7 +141,7 @@
                         <ng-container *ngIf="data.totalVote > 0">
                             <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
                                 <div *ngFor="let vote of data.votes">
-                                    <img src="/assets/themes/wp/default/img/{{ dVll[vote.voteType]?.icon }}"
+                                    <img src="/assets/themes/wp/default/img/{{dVll[vote.voteType]?.icon}}"
                                         style="width: 15px; height: 15x;">
                                 </div>
                                 <div>

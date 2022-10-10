@@ -81,6 +81,7 @@ export class TreeviewCommentComponent implements OnInit {
       if (res) {
         this.vllL1480 = res.datas as any[];
         if(this.vllL1480.length > 0){
+          this.dVll["0"] = null;
           this.vllL1480.forEach(element => {
             this.dVll[element.value + ""] = element;
           });
@@ -106,7 +107,12 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
   showVotes(data: any) {
-    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
+    let object = {
+      data: data,
+      entityName: "WP_Comments",
+      vll: this.dVll
+    }
+    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
   getUserVotes(postID: string, voteType: String) {
     this.api.execSv("WP", "ERM.Business.WP", "VotesBusiness", "GetUserVotesAsync", [postID, voteType])
