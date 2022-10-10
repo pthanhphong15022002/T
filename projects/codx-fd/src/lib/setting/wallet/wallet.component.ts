@@ -9,7 +9,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Location } from '@angular/common';
-import { AuthStore, DialogModel, NotificationsService, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  DialogModel,
+  NotificationsService,
+  UIComponent,
+} from 'codx-core';
 import { SettingService } from '../setting.service';
 import { CodxFdService } from '../../codx-fd.service';
 import { SettingCycleComponent } from '../setting-cycle/setting-cycle.component';
@@ -307,7 +312,6 @@ export class WalletComponent extends UIComponent implements OnInit {
       ])
       .subscribe((result) => {
         if (result) {
-          
         }
       });
   }
@@ -332,11 +336,13 @@ export class WalletComponent extends UIComponent implements OnInit {
   }
   valueChangePolicyCoin(applyFor) {
     if (applyFor == '4') {
-      this.scheduledTasks_CoCoin.stop = !this.scheduledTasks_CoCoin.stop;
-      this.scheduledTasks = this.scheduledTasks_CoCoin;
+      var coCoin = JSON.parse(JSON.stringify(this.scheduledTasks_CoCoin));
+      coCoin.stop = !coCoin.stop;
+      this.scheduledTasks = coCoin;
     } else {
-      this.scheduledTasks_KuDos.stop = !this.scheduledTasks_KuDos.stop;
-      this.scheduledTasks = this.scheduledTasks_KuDos;
+      var kudos = JSON.parse(JSON.stringify(this.scheduledTasks_KuDos));
+      kudos.stop = !kudos.stop;
+      this.scheduledTasks = kudos;
     }
     this.saveSettingCycleRun();
   }

@@ -28,6 +28,7 @@ import {
   DialogModel,
   NotificationsService,
   LayoutAddComponent,
+  Util,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
@@ -396,6 +397,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   getHTMLFirstPost(data) {
+    // Util.stringFormat('', '')
     this.dataComment = data;
     var viewRef = this.firstComment.createEmbeddedView({ $implicit: '' });
     viewRef.detectChanges();
