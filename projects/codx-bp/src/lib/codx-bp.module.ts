@@ -8,7 +8,6 @@ import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
 import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
-import { ProcessStepsComponent } from './processsteps/processsteps.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
@@ -18,9 +17,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
-import { PopupAddPhaseComponent } from './processsteps/popup-add-phase/popup-add-phase.component';
-import { PopupAddProcessStepsComponent } from './processsteps/popup-add-processsteps/popup-add-processsteps.component';
 import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
+import { ProcessStepsComponent } from './processsteps/processsteps.component';
+import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
 
 export const routes: Routes = [
   {
@@ -48,8 +47,8 @@ export const routes: Routes = [
     ViewListProcessesComponent,
     ProcessStepsComponent,
     PopupAddProcessStepsComponent,
-    PopupAddPhaseComponent,
     PopupSendEmailComponent,
+    PopupAddProcessStepsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

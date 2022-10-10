@@ -35,7 +35,6 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
-import { CodxOdService } from '../../codx-od.service';
 import {
   convertHtmlAgency2,
   extractContent,
@@ -96,8 +95,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private authStore: AuthStore,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
-    private ref: ChangeDetectorRef,
-    private codxService: CodxOdService
+    private ref: ChangeDetectorRef
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -107,7 +105,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       this.userID = this.authStore.get().userID;
       this.data = changes.data?.currentValue;
       if (!this.data) this.data = {};
-      //this.getDataValuelist();
+      this.getDataValuelist();
       this.getPermission(this.data.recID);
       this.ref.detectChanges();
     }
@@ -165,28 +163,30 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
   }
   getGridViewSetup(funcID: any) {
-    this.codxService.loadFuncList(funcID).subscribe((fuc) => {
+  
+    this.cache.functionList(funcID).subscribe((fuc) => {
       this.formModel = {
         entityName: fuc?.entityName,
         formName: fuc?.formName,
         funcID: funcID,
         gridViewName: fuc?.gridViewName,
       };
-      this.codxService.loadGridView(fuc?.formName, fuc?.gridViewName)
-      .subscribe((grd) => {
-        this.gridViewSetup = grd;
-      });
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridViewSetup = grd;
+        });
     });
-    this.codxService.loadMess('OD020').subscribe((item) => {
+    this.cache.message('OD020').subscribe((item) => {
       this.ms020 = item;
     });
-    this.codxService.loadMess('OD021').subscribe((item) => {
+    this.cache.message('OD021').subscribe((item) => {
       this.ms021 = item;
     });
-    this.codxService.loadMess('OD023').subscribe((item) => {
+    this.cache.message('OD023').subscribe((item) => {
       this.ms023 = item;
     });
-    this.codxService.loadVll('OD008').subscribe((item) => {
+    this.cache.valueList('OD008').subscribe((item) => {
       this.dvlRelType = item;
     });
   }
@@ -253,41 +253,49 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   getDataValuelist() {
     if (this.gridViewSetup['Security']['referedValue'])
-      this.codxService.loadVll(this.gridViewSetup['Security']['referedValue']).subscribe((item) => {
-        this.dvlSecurity = item;
-      });
-       
+      this.cache
+        .valueList(this.gridViewSetup['Security']['referedValue'])
+        .subscribe((item) => {
+          this.dvlSecurity = item;
+        });
     if (this.gridViewSetup['Urgency']['referedValue'])
-      this.codxService.loadVll(this.gridViewSetup['Urgency']['referedValue']).subscribe((item) => {
-        this.dvlUrgency = item;
-      });
+      this.cache
+        .valueList(this.gridViewSetup['Urgency']['referedValue'])
+        .subscribe((item) => {
+          this.dvlUrgency = item;
+          //this.ref.detectChanges();
+        });
     if (this.gridViewSetup['Status']['referedValue'])
-      this.codxService.loadVll(this.gridViewSetup['Status']['referedValue']).subscribe((item) => {
-        this.dvlStatus = item;
-      });
+      this.cache
+        .valueList(this.gridViewSetup['Status']['referedValue'])
+        .subscribe((item) => {
+          this.dvlStatus = item;
+          console.log(this.dvlStatus);
+          //this.ref.detectChanges();
+        });
     if (this.gridViewSetup['Category']['referedValue'])
-      this.codxService.loadVll(this.gridViewSetup['Category']['referedValue']).subscribe((item) => {
-        this.dvlCategory = item;
-      });
-    this.codxService.loadVll("OD008").subscribe((item) => {
+      this.cache
+        .valueList(this.gridViewSetup['Category']['referedValue'])
+        .subscribe((item) => {
+          this.dvlCategory = item;
+          //this.ref.detectChanges();
+        });
+    this.cache.valueList('OD008').subscribe((item) => {
       this.dvlRelType = item;
     });
-    this.codxService.loadVll('OD008').subscribe((item) => {
-      this.dvlRelType = item;
-    });
-    this.codxService.loadVll('OD009').subscribe((item) => {
+    this.cache.valueList('OD009').subscribe((item) => {
       this.dvlStatusRel = item;
     });
-    this.codxService.loadVll('OD010').subscribe((item) => {
+    this.cache.valueList('OD010').subscribe((item) => {
       this.dvlReCall = item;
     });
-    this.codxService.loadVll('L0614').subscribe((item) => {
+    this.cache.valueList('L0614').subscribe((item) => {
       this.dvlStatusTM = item;
     });
-    this.codxService.loadMess('OD020').subscribe((item) => {
+    this.cache.message('OD020').subscribe((item) => {
       this.ms020 = item;
     });
-    this.codxService.loadMess('OD021').subscribe((item) => {
+    this.cache.message('OD021').subscribe((item) => {
       this.ms021 = item;
     });
   }

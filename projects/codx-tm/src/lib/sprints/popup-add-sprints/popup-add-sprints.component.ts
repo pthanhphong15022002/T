@@ -122,7 +122,7 @@ export class PopupAddSprintsComponent implements OnInit {
       this.master.iterationType == '1' &&
       (this.master.projectID == null || this.master.projectID.trim() == '')
     )
-      return this.notiService.notify('Tên dự án không được để trống !');
+      return this.notiService.notify('Tên dự án không được để trống !'); ///Nhờ Hảo, cho câu messCode
     if (
       this.master.iterationType == '0' &&
       (this.master.iterationName == null ||

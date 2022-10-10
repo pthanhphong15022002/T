@@ -264,11 +264,13 @@
           <ejs-toolbar class="border-start">
             <e-items>
               <e-item
+                *ngIf="isEditable"
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="print"
               >
               </e-item>
               <e-item
+                *ngIf="isEditable"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
@@ -529,22 +531,6 @@
                         [formGroup]="formAnnot"
                       >
                         <div
-                          class="signature-change"
-                          *ngIf="area.labelType == 1"
-                        >
-                          <button
-                            type="button"
-                            class="btn btn-sm btn-primary"
-                            (click)="changeSignatureImg(area)"
-                          >
-                            <codx-label
-                              name="lblChangeSignature"
-                              default="Đổi hình chữ ký"
-                              [formModel]=""
-                            ></codx-label>
-                          </button>
-                        </div>
-                        <div
                           class="qr-switch"
                           *ngIf="!isApprover && area.labelType == 8"
                         >
@@ -692,19 +678,11 @@
                             [formModel]=""
                           ></codx-label>
                         </div>
-
                         <div class="btn-apply d-flex justify-content-end">
                           <button
                             type="button"
                             class="btn btn-sm btn-primary"
-                            (click)="
-                              changeAnnotPro(
-                                area.labelType,
-                                area.recID,
-                                area.allowEdit,
-                                area.isLock
-                              )
-                            "
+                            (click)="changeAnnotPro(area.labelType, area.recID)"
                           >
                             <codx-label
                               name="lblSave"

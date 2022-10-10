@@ -1,14 +1,31 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild, Injector, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  Injector,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { PopupAddPhaseComponent } from './popup-add-phase/popup-add-phase.component';
-import { PopupAddProcessStepsComponent } from './popup-add-processsteps/popup-add-processsteps.component';
-
+import {
+  AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogRef,
+  RequestOption,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
+import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
   selector: 'lib-processsteps',
   templateUrl: './processsteps.component.html',
-  styleUrls: ['./processsteps.component.css']
+  styleUrls: ['./processsteps.component.css'],
 })
 export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
@@ -32,20 +49,21 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   funcID: any;
   titleAction = '';
   itemSelected: any;
-  idForm ='A'
-
+  stepType :any;
   service = 'BP';
   entityName = 'BP_ProcessSteps';
   idField = 'recID';
   assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
   method = 'GetProcessStepsAsync'; //chua viet
+ 
+  recIDProcess ='90ab82ac-43d1-11ed-83e7-d493900707c4' ///thêm để add thử
 
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,
+    private activedRouter: ActivatedRoute
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -53,6 +71,21 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessStepsBusiness';
+    this.request.method = 'GetProcessStepsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
     this.button = {
       id: 'btnAdd',
       //setcung tam đoi thuong
@@ -79,7 +112,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           text: 'Email',
         },
         {
-          id: 'E',
+          id: 'CA',
           icon: 'icon-calendar_today',
           text: 'Calendar',
         },
@@ -123,12 +156,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         },
       },
     ];
-    
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'SYS';
-    this.resourceKanban.assemblyName = 'SYS';
-    this.resourceKanban.className = 'CommonBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+   
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
@@ -136,87 +165,23 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-
-
   //#region CRUD bước công việc
   add() {
-    if(this.idForm === 'A'){
-      this.view.dataService.addNew().subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupAddProcessStepsComponent,
-          ['add', this.titleAction, this.idForm],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
-      });
-    }else if(this.idForm === 'P'){
-      this.view.dataService.addNew().subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupAddPhaseComponent,
-          ['add', this.titleAction, this.idForm],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
-      });
-    }
-  }
-
-  edit(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupAddProcessStepsComponent,
-          ['edit', this.titleAction, this.idForm],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
-      });
-  }
-
-  copy(data) {
-    if (data) this.view.dataService.dataSelected = data;
-    this.view.dataService.copy().subscribe((res: any) => {
+    this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
-      option.Width = 'Auto';
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+
+      this.view.dataService.dataSelected.processID = this.recIDProcess ;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        ['copy', this.titleAction, this.idForm],
+        [
+          this.view.dataService.dataSelected,
+          'add',
+          this.titleAction,
+          this.stepType,
+        ],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -228,6 +193,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     });
   }
+
+  edit(data) {}
+
+  copy(data) {}
 
   delete(data) {
     this.view.dataService.dataSelected = data;
@@ -251,23 +220,20 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-
   //#region event
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    this.idForm =evt.id
-    switch (evt.id) {
-      case 'btnAdd':
-      case 'A':
-        this.add();
-        break;
-      case 'P':
-        this.add();
-        break;
-      case 'Q':
-        this.add();
-        break;
-    }
+    if ((evt.id == 'btnAdd')) this.stepType = 'P';
+    else this.stepType = evt.id;
+    this.add();
+    // switch (evt.id) {
+    //   case 'btnAdd':
+    //   case 'A':
+    //   case 'P':
+    //   case 'Q':
+    //     this.add();
+    //     break;
+    // }
   }
 
   receiveMF(e: any) {
@@ -281,21 +247,20 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       case 'SYS01':
         this.add();
         break;
-      // case 'SYS03':
-      //   this.edit(data);
-      //   break;
-      // case 'SYS04':
-      //   this.copy(data);
-      //   break;
-      // case 'SYS02':
-      //   this.delete(data);
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
     }
   }
 
   onDragDrop(e: any) {
     console.log(e);
   }
-
 
   //#endregion
 }

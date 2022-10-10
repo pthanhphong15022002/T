@@ -1,194 +1,187 @@
+import { CodxFdService } from 'projects/codx-fd/src/public-api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
-import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, ElementRef, TemplateRef, ContentChild, Injector, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectorRef,
+  ViewChild,
+  ElementRef,
+  TemplateRef,
+  ContentChild,
+  Injector,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { Location } from '@angular/common';
 import { LayoutService } from '@shared/services/layout.service';
-import { ApiHttpService, ButtonModel, CodxGridviewComponent, ImageViewerComponent, NotificationsService, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import {
+  ApiHttpService,
+  ButtonModel,
+  CodxGridviewComponent,
+  DialogRef,
+  ImageViewerComponent,
+  NotificationsService,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { LayoutModel } from '@shared/models/layout.model';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { AddDedicationRankComponent } from './add-dedication-rank/add-dedication-rank.component';
 @Component({
   selector: 'app-dedication-rank',
   templateUrl: './dedication-rank.component.html',
-  styleUrls: ['./dedication-rank.component.scss']
+  styleUrls: ['./dedication-rank.component.scss'],
 })
 export class DedicationRankComponent extends UIComponent implements OnInit {
-
   datafuntion = null;
-  titlePage = "";
+  titlePage = '';
   funcID = '';
   dataItem: any;
   views: Array<ViewModel> = [];
   userPermission: any;
   showHeader: boolean = true;
   user: any;
+  button: ButtonModel;
+  headerText: any;
+  dialog: DialogRef;
 
   @Input() functionObject;
   @ViewChild('itemCreateBy', { static: true }) itemCreateBy: TemplateRef<any>;
   @ViewChild('GiftIDCell', { static: true }) GiftIDCell: TemplateRef<any>;
   @ViewChild('ColorRank', { static: true }) colorRank: TemplateRef<any>;
-  @ViewChild('imageItem', { static: true }) imageItem: TemplateRef<ImageViewerComponent>;
+  @ViewChild('createdOn', { static: true }) createdOn: TemplateRef<any>;
+  @ViewChild('imageItem', { static: true })
+  imageItem: TemplateRef<ImageViewerComponent>;
   @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
   @ViewChild('imageUploadReload') imageUploadReload: ImageViewerComponent;
-  @ViewChild("subheader") subheader;
+  @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
-  @ViewChild('viewbase') viewbase: ViewsComponent;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
   @ViewChild(ImageViewerComponent) imageViewer: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
-  constructor(private injector: Injector,
-    private fb: FormBuilder,
+  constructor(
+    private injector: Injector,
     private changedr: ChangeDetectorRef,
-    private myElement: ElementRef,
-    private layoutService: LayoutService,
-    private at: ActivatedRoute,
     private notificationsService: NotificationsService,
     public location: Location,
-    private mwpService: CodxMwpService,
     private route: ActivatedRoute,
+    private fdSV: CodxFdService,
   ) {
     super(injector);
-    this.route.params.subscribe(params => {
-      if(params) this.funcID = params['funcID'];
-    })
+    this.route.params.subscribe((params) => {
+      if (params) {
+        this.funcID = params['funcID'];
+        this.api
+          .call('ERM.Business.SYS', 'FunctionListBusiness', 'GetAsync', [
+            '',
+            params.funcID,
+          ])
+          .subscribe((res) => {
+            //this.ngxLoader.stop();
+            if (res && res.msgBodyData[0]) {
+              var data = res.msgBodyData[0] as [];
+              this.datafuntion = data;
+              this.titlePage = data['customName'];
+              this.changedr.detectChanges();
+            }
+          });
+      }
+    });
   }
-  button: Array<ButtonModel> = [{
-    id: '1',
-  }]
 
   onInit(): void {
-    // this.mwpService.layoutcpn.next(new LayoutModel(true, '', false, true));
-    this.changedr.detectChanges();
-
-    this.initForm();
-    this.columnsGrid = [
-      //{ field: 'noName', nameColumn: '', template: this.GiftIDCell, width: 30 },
-      { field: 'breakName', headerText: 'Tên hạng', width: 150 },
-      { field: 'breakValue', headerText: 'Điểm tính hạng', width: 100 },
-      { field: 'color', headerText: 'Màu đại diện', width: 100, template: this.colorRank },
-      { field: 'image', headerText: 'Biểu tượng đại diện', template: this.imageItem, width: 125 },
-      { field: 'note', headerText: 'Ghi chú', width: 100 },
-      { field: 'createdName', headerText: 'Người tạo', width: 150, template: this.itemCreateBy },
-      { field: 'createOn', headerText: 'Ngày tạo', width: 100 }
-
-    ];
-    this.at.queryParams.subscribe(params => {
-      if (params && params.funcID) {
-        this.api.call("ERM.Business.SYS", "FunctionListBusiness", "GetAsync", ["", params.funcID]).subscribe(res => {
-          //this.ngxLoader.stop();
-          if (res && res.msgBodyData[0]) {
-            var data = res.msgBodyData[0] as [];
-            this.datafuntion = data;
-            this.titlePage = data["customName"];
-            this.changedr.detectChanges();
-          }
-        })
-      }
-    })
+    this.button = {
+      id: 'btnAdd',
+    };
   }
 
-  ngAfterViewInit() {
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.content,
-        active: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-        }
-      }
-    ];
-    this.userPermission = this.viewbase.userPermission;
-    this.changedr.detectChanges();
+  ngAfterViewInit() {}
 
-    // this.mwpService.layoutChange.subscribe(res => {
-    //   if (res) {
-    //     if (res.isChange)
-    //       this.showHeader = res.asideDisplay;
-    //     else
-    //       this.showHeader = true;
-    //   }
-    // })
+  onLoading(e) {
+    if (this.view.formModel) {
+      var formModel = this.view.formModel;
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.columnsGrid = [
+              { field: 'breakName', headerText: res.BreakName.headerText },
+              { field: 'breakValue', headerText: res.BreakValue.headerText },
+              {
+                field: 'color',
+                headerText: res.Color.headerText,
+                template: this.colorRank,
+              },
+              {
+                field: 'image',
+                headerText: res.Image.headerText,
+                template: this.imageItem,
+              },
+              { field: 'note', headerText: res.Note.headerText },
+              {
+                field: 'createdName',
+                headerText: res.CreatedBy.headerText,
+                template: this.itemCreateBy,
+              },
+              {
+                field: 'createOn',
+                headerText: res.CreatedOn.headerText,
+                template: this.createdOn,
+              },
+            ];
+          }
+        });
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: false,
+          model: {
+            resources: this.columnsGrid,
+          },
+        },
+      ];
+      this.changedr.detectChanges();
+    }
   }
 
   myModel = {
-    template: null
+    template: null,
   };
   reload = false;
 
   columnsGrid = [];
-
-  openFormCreate(e, isAddMode) {
-    if (isAddMode == true) {
-      this.isAddMode = true;
-      this.closeInfor();
-    }
-    else {
-      this.isAddMode = false;
-      this.addEditForm.patchValue({ breakName: `${this.dataItem.breakName} `, breakValue: this.dataItem.breakValue,
-      note: this.dataItem.note, recID: this.dataItem.recID, color: this.dataItem.color});
-    }
-    // this.viewbase.currentView.openSidebarRight();
-  }
-
-  clickClosePopup() {
-    this.closeInfor();
-    // this.viewbase.currentView.closeSidebarRight();
-  }
-
-  closeInfor() {
-    this.clearInfo();
-  }
-
-  clearInfo() {
-    this.addEditForm.controls['recID'].setValue(null);
-    this.addEditForm.controls['rangeID'].setValue('KUDOS');
-    this.addEditForm.controls['breakName'].setValue('');
-    this.addEditForm.controls['breakValue'].setValue('');
-    this.addEditForm.controls['color'].setValue('');
-    this.addEditForm.controls['image'].setValue('');
-    this.addEditForm.controls['note'].setValue('');
-
-    this.changedr.detectChanges();
-  }
-
-  headerStyle = {
-    textAlign: 'center',
-    backgroundColor: '#F1F2F3',
-    fontWeight: 'bold',
-    border: 'none'
-  }
-  columnStyle = {
-    border: 'none',
-    fontSize: '13px !important',
-    fontWeight: 400,
-    lineHeight: 1.4
-  }
 
   addEditForm: FormGroup;
   isAddMode = true;
   valueTrue = true;
   openForm(dataItem, isAddMode) {
     if (isAddMode == true) {
-      this.initForm();
       this.isAddMode = true;
-    }
-    else {
+    } else {
       this.isAddMode = false;
       this.addEditForm.patchValue(dataItem);
       this.changedr.detectChanges();
     }
-    document.getElementById('canvas_hangconghien').classList.add('offcanvas-on');
+    document
+      .getElementById('canvas_hangconghien')
+      .classList.add('offcanvas-on');
   }
 
   closeHangconghien(): void {
-    document.getElementById('canvas_hangconghien').classList.remove('offcanvas-on');
-    this.initForm();
-    this.addEditForm.controls["recID"].setValue("");
+    document
+      .getElementById('canvas_hangconghien')
+      .classList.remove('offcanvas-on');
+    this.addEditForm.controls['recID'].setValue('');
   }
 
   valueChange(e) {
@@ -198,81 +191,35 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
       var obj = {};
       obj[field] = dt?.value ? dt.value : dt;
       this.addEditForm.patchValue(obj);
-
     }
   }
 
   valueChangeColor(value, element) {
-    this.addEditForm.patchValue({ color: value.data })
+    this.addEditForm.patchValue({ color: value.data });
   }
 
-  initForm() {
-    this.addEditForm = this.fb.group({
-      recID: [
-        null,
-        Validators.compose([
-        ]),
-      ],
-      rangeID: [
-        'KUDOS',
-        Validators.compose([
-          Validators.required,
-        ]),
-      ],
-      breakName: [
-        '',
-        Validators.compose([
-          Validators.required,
-
-        ]),
-      ],
-      breakValue: [
-        '',
-        Validators.compose([
-          Validators.required,
-        ]),
-      ],
-      color: [
-        '',
-        Validators.compose([
-        ]),
-      ],
-      image: [
-        '',
-        Validators.compose([
-        ]),
-      ],
-      note: [
-        '',
-        Validators.compose([
-        ]),
-      ]
-    }, { updateOn: 'blur' });
-
-  }
   deleteDedicationRank(item) {
-    this.notificationsService.alertCode("").subscribe((x: Dialog) => {
+    this.notificationsService.alertCode('').subscribe((x: Dialog) => {
       let that = this;
       x.close = function (e) {
         if (e) {
           var status = e?.event?.status;
-          if (status == "Y") {
+          if (status == 'Y') {
             that.api
-              .call("BS", "RangeLinesBusiness", "DeleteRangeLineAsync", [
-                item.recID
+              .call('BS', 'RangeLinesBusiness', 'DeleteRangeLineAsync', [
+                item.recID,
               ])
               .subscribe((res) => {
                 if (res && res.msgBodyData[0]) {
                   if (res.msgBodyData[0] == true) {
-                    that.gridView.removeHandler(item, "recID");
                     that.changedr.detectChanges();
                   }
                 }
               });
           }
         }
-      }
-    })
+      };
+    });
   }
   reloadChanged(e) {
     this.reload = e;
@@ -286,29 +233,26 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
       delete this.addEditForm.value.recID;
     }
     return this.api
-      .call("BS", "RangeLinesBusiness", "AddEditRangeLineAsync", [
-        this.addEditForm.value, this.isAddMode
+      .call('BS', 'RangeLinesBusiness', 'AddEditRangeLineAsync', [
+        this.addEditForm.value,
+        this.isAddMode,
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           if (res.msgBodyData[0][0] == true) {
             this.closeHangconghien();
             let data = res.msgBodyData[0][2];
-            console.log("check add", res);
-            this.imageUpload.updateFileDirectReload(data.recID).subscribe((result) => {
-              if (result) {
-                this.initForm();
-                this.loadData.emit();
-              
-                this.gridView.addHandler(data, this.isAddMode, "recID");
-                this.changedr.detectChanges();
-              } else {
-                this.initForm();
-                this.gridView.addHandler(data, this.isAddMode, "recID");
-                this.changedr.detectChanges();
-              }
-            });
-            this.clickClosePopup();
+            console.log('check add', res);
+            this.imageUpload
+              .updateFileDirectReload(data.recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.loadData.emit();
+                  this.changedr.detectChanges();
+                } else {
+                  this.changedr.detectChanges();
+                }
+              });
           }
         }
       });
@@ -317,5 +261,86 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
   PopoverEmpEnter(p: any, dataItem) {
     this.dataItem = dataItem;
     p.open();
+  }
+
+  add(e) {
+    this.headerText = e?.text;
+    var obj = {
+      isModeAdd: true,
+      headerText: this.headerText,
+    };
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        AddDedicationRankComponent,
+        obj,
+        option
+      );
+      this.dialog.closed.subscribe((e: any) => {
+        if (e?.event?.file) e.event.data.modifiedOn = new Date();
+        this.view.dataService.update(e.event?.data).subscribe();
+        this.changedr.detectChanges();
+      });
+    });
+  }
+
+  edit(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    var obj = {
+      isModeAdd: false,
+      headerText: this.headerText,
+    };
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          AddDedicationRankComponent,
+          obj,
+          option
+        );
+        this.dialog.closed.subscribe((e: any) => {
+          if (e?.event?.data) e.event.data.modifiedOn = new Date();
+          this.view.dataService.update(e.event?.data).subscribe();
+          this.changedr.detectChanges();
+        });
+      });
+  }
+
+  delete(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (option: any) =>
+        this.beforeDelete(option, this.view.dataService.dataSelected)
+      )
+      .subscribe((res: any) => {
+        if(res) this.fdSV.deleteFile(res.recID, this.view.formModel.entityName)
+      });
+  }
+
+  beforeDelete(op: any, data) {
+    op.methodName = 'DeleteRangeLineAsync';
+    op.data = data;
+    return true;
+  }
+
+  clickMF(e, data) {
+    this.headerText = e?.text;
+    if (e) {
+      switch (e.functionID) {
+        case 'SYS03':
+          this.edit(data);
+          break;
+        case 'SYS02':
+          this.delete(data);
+          break;
+      }
+    }
   }
 }

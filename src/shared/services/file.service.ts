@@ -52,8 +52,8 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "SearchAsync", [textSearch, pageNo, pageSize]);
     }
 
-    searchFileAdv(funcID:string , textSearch: string, predicates: string, paras: string, pageNo: number, pageSize: number, searchAdvance: boolean): Observable<any> {
-        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, pageSize, searchAdvance,funcID]);
+    searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, pageSize: number, searchAdvance: boolean): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, pageSize, searchAdvance]);
     }
 
     updatePermisson(data: any): Observable<any> {
@@ -124,7 +124,9 @@ export class FileService implements OnDestroy {
     }
 
     copyFile(id: string, fileName: string, id_to: string, move: number = 0, rewrite: number = 0): Observable<any> {
+        
         return this.api.exec<DataReturn>("DM", "FileBussiness", "CopyFileAsync", [id, fileName, id_to, move, rewrite]);
+        
     }
 
     // updateFile(id: string, fileName: string): Observable<any> { 

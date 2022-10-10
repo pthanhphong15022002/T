@@ -1,0 +1,73 @@
+<codx-form
+  name="Thêm chạc"
+  subname=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template popup adde #body>
+    <ng-container>
+      <div class="w-100">
+        <ng-container>
+          <div style="padding-bottom: 40px">
+            <ejs-dropdownlist
+              id="games"
+              #sample
+              [dataSource]="chartTypes"
+              (change)="onChange($event)"
+              [value]="value"
+              [popupHeight]="'220px'"
+            ></ejs-dropdownlist>
+          </div>
+          <div *ngFor="let item of chartFields" class="form-group">
+            <codx-label [default]="item.name"></codx-label>
+            <ng-container [ngSwitch]="item?.type">
+              <ng-container *ngSwitchCase="'string'">
+                <codx-input
+                  type="text"
+                  [field]="item.name"
+                  [crrValue]="chartSetting[item.name]"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>
+              </ng-container>
+              <ng-container *ngSwitchCase="'boolean'">
+                <div class="d-flex justify-content-start">
+                  <codx-input
+                    class="float-right"
+                    type="switch"
+                    [field]="item.name"
+                    [crrValue]="chartSetting[item.name]"
+                    (valueChange)="valueChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'number'">
+                <div class="w-100 mt-3">
+                  <codx-input
+                    type="number"
+                    field="numberFrom"
+                    [crrValue]="chartSetting[item.name]"
+                    (valueChange)="valueChange($event)"
+                    placeholder="{{ item.name }}"
+                  ></codx-input>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="saveForm()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

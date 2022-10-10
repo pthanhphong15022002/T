@@ -39,7 +39,6 @@ export class CodxCommentsComponent implements OnInit {
   checkVoted = false
   lstData: any;
   edit:boolean = false;
-
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -269,6 +268,11 @@ export class CodxCommentsComponent implements OnInit {
       });
   }
   showVotes(data: any) {
-    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
+    let object = {
+      data: data,
+      entityName: "WP_Comments",
+      vll: this.dVll
+    }
+    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
 }

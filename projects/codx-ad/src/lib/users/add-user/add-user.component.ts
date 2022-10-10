@@ -28,6 +28,7 @@ import {
   DialogModel,
   NotificationsService,
   LayoutAddComponent,
+  Util,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { throws } from 'assert';
@@ -73,11 +74,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
   formUser: FormGroup;
   checkValueChangeUG = false;
   dataUG: any = new Array();
-  comments: any;
   tmpPost: any;
   dataCopy: any;
   dataComment: any;
-  contentTmp: ContentTmp = new ContentTmp();
+  titleComment: any;
+  descriptionComment: any;
 
   constructor(
     private injector: Injector,
@@ -124,6 +125,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+      }
+    });
+    this.cache.message('WP028').subscribe((res) => {
+      if (res) {
+        this.titleComment = res.description;
+        this.descriptionComment = res.defaultName;
       }
     });
   }
@@ -395,19 +402,21 @@ export class AddUserComponent extends UIComponent implements OnInit {
     } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
+  url = '';
   getHTMLFirstPost(data) {
+    // Util.stringFormat('', '')
+    this.url = this.imageUpload.data?.url;
     this.dataComment = data;
     var viewRef = this.firstComment.createEmbeddedView({ $implicit: '' });
     viewRef.detectChanges();
     let contentDialog = viewRef.rootNodes;
     let html = contentDialog[1] as HTMLElement;
     this.tmpPost = {
-      contentTmp: html.innerHTML,
+      content: html.innerHTML,
       approveControl: '0',
       category: '1',
       shareControl: '9',
       listTag: [],
-      isContentTmp: true,
     };
   }
 

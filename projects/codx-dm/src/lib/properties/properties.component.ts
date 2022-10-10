@@ -44,6 +44,7 @@ export class PropertiesComponent implements OnInit {
   titleSend = 'Gửi';
   titleHistory = 'Lịch sử';
   namelanguage = '';
+  messerror = 'Không có dữ liệu';
   readonly = false;
   currentRate = 1;
   selected = 0;
@@ -225,6 +226,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   txtValue($event, type) {
+    debugger;
     switch (type) {
       case "commenttext":
         this.commenttext = $event.data;
@@ -254,6 +256,7 @@ export class PropertiesComponent implements OnInit {
             }
           }
         }
+        debugger;
         /*  if(this.fileEditing.publisher)
          {
            this.cache.valueList("L1473").subscribe(item=>{
@@ -270,6 +273,7 @@ export class PropertiesComponent implements OnInit {
            
            })
          } */
+        debugger;
 
         this.onUpdateTags();
         this.currentRate = 1;
@@ -347,6 +351,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   openRight(mode = 1, type = true) {
+    debugger;
     this.dmSV.dataFileEditing = this.fileEditing;
     this.callfc.openForm(RolesComponent, "", 950, 650, "", [], "");
   }

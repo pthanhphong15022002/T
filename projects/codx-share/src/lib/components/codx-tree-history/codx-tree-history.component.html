@@ -1,8 +1,15 @@
 <div class="treehis-main">
     <ng-container *ngIf="addNew">
         <div class="tree-footer">
-            <codx-comment-history [type]="'create'" [dVll]="dVll" [vllIcon]="vllIcon" [funcID]="funcID" [actionType]="actionType" [objectID]="objectID"
-                [objectType]="objectType" [reference]="null" (evtSend)="sendComment($event)">
+            <codx-comment-history 
+                [type]="'create'" 
+                [dVll]="dVll" [vllIcon]="vllIcon" 
+                [funcID]="funcID" 
+                [actionType]="actionType" 
+                [objectID]="objectID"
+                [objectType]="objectType" 
+                [reference]="null" 
+                (evtSend)="sendComment($event)">
             </codx-comment-history>
         </div>
     </ng-container>
@@ -14,8 +21,15 @@
 </div>
 <ng-template #NodeHistory let-item>
     <div class="c1 task-his mb-3" [attr.dt]="setDicData(item)">
-        <codx-comment-history [data]="item" [dVll]="dVll" [vllIcon]="vllIcon"  [actionType]="item.actionType" [type]="'view'"
-            (evtDelete)="deleteComment($event)" (evtReply)="replyTo($event)" [viewIcon]="viewIcon"
+        <codx-comment-history 
+            [data]="item"
+            [dVll]="dVll" 
+            [vllIcon]="vllIcon"  
+            [actionType]="item.actionType" 
+            [type]="'view'"
+            (evtDelete)="deleteComment($event)" 
+            (evtReply)="replyTo($event)" 
+            [viewIcon]="viewIcon"
             [allowVotes]="viewVote">
         </codx-comment-history>
         <ng-container *ngIf="item.listSubComment && item.listSubComment.length > 0 ">
@@ -26,7 +40,7 @@
             </ng-container>
         </ng-container>
         <ng-container *ngIf="item.showReply">
-            <codx-comment-history [type]="'create'" [dVll]="dVll" [vllIcon]="vllIcon" [funcID]="funcID" [actionType]="actionType"
+            <codx-comment-history [type]="'create'" [funcID]="funcID" [actionType]="actionType"
                 [objectID]="item.objectID" [objectType]="item.objectType" [reference]="item.recID"
                 (evtSend)="sendComment($event,item)">
             </codx-comment-history>

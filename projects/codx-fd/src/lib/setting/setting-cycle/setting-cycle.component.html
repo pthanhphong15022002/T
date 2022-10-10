@@ -14,7 +14,7 @@
             <div class="d-flex align-items-center">
                 <div class="mr-3">
                     <codx-input type="text" [crrValue]="scheduledTasks.dayOfMonth"
-                        (ngModelChange)="valueChangeInputDay($event)"
+                        (valueChange)="valueChangeInputDay($event)"
                         [attr.disabled]="scheduledTasks?.occurrenceOption !== '1' ? '' : null"
                         class="form-control w-50px" placeholder="0">
                     </codx-input>

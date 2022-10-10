@@ -45,7 +45,6 @@ import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { ActivatedRoute } from '@angular/router';
-import { CodxOdService } from '../codx-od.service';
 
 @Component({
   selector: 'app-incomming',
@@ -129,7 +128,7 @@ export class IncommingComponent
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   fileService: FileService;
-  constructor(inject: Injector, private route: ActivatedRoute,private codxOdService: CodxOdService) {
+  constructor(inject: Injector, private route: ActivatedRoute) {
     super(inject);
     this.odService = inject.get(DispatchService);
     this.agService = inject.get(AgencyService);
@@ -292,52 +291,52 @@ export class IncommingComponent
   }
 
   getGridViewSetup(funcID: any) {
-    this.codxOdService.loadFuncList(funcID).subscribe((fuc) => {
+    this.cache.functionList(funcID).subscribe((fuc) => {
       this.funcList = fuc;
-      this.codxOdService
-        .loadGridView(fuc?.formName, fuc?.gridViewName)
+      this.cache
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetup = grd;
           if (grd['Security']['referedValue'] != undefined)
-            this.codxOdService
-              .loadVll(grd['Security']['referedValue'])
+            this.cache
+              .valueList(grd['Security']['referedValue'])
               .subscribe((item) => {
                 this.dvlSecurity = item;
               });
           if (grd['Urgency']['referedValue'] != undefined)
-            this.codxOdService
-              .loadVll(grd['Urgency']['referedValue'])
+            this.cache
+              .valueList(grd['Urgency']['referedValue'])
               .subscribe((item) => {
                 this.dvlUrgency = item;
                 //this.ref.detectChanges();
               });
           if (grd['Status']['referedValue'] != undefined)
-            this.codxOdService
-              .loadVll(grd['Status']['referedValue'])
+            this.cache
+              .valueList(grd['Status']['referedValue'])
               .subscribe((item) => {
                 this.dvlStatus = item;
                 console.log(this.dvlStatus);
                 //this.ref.detectChanges();
               });
           if (grd['Category']['referedValue'] != undefined)
-            this.codxOdService
-              .loadVll(grd['Category']['referedValue'])
+            this.cache
+              .valueList(grd['Category']['referedValue'])
               .subscribe((item) => {
                 this.dvlCategory = item;
                 //this.ref.detectChanges();
               });
         });
     });
-    this.codxOdService.loadVll('OD008').subscribe((item) => {
+    this.cache.valueList('OD008').subscribe((item) => {
       this.dvlRelType = item;
     });
-    this.codxOdService.loadVll('OD009').subscribe((item) => {
+    this.cache.valueList('OD009').subscribe((item) => {
       this.dvlStatusRel = item;
     });
-    this.codxOdService.loadVll('OD010').subscribe((item) => {
+    this.cache.valueList('OD010').subscribe((item) => {
       this.dvlReCall = item;
     });
-    this.codxOdService.loadVll('L0614').subscribe((item) => {
+    this.cache.valueList('L0614').subscribe((item) => {
       this.dvlStatusTM = item;
     });
     //formName: string, gridName: string

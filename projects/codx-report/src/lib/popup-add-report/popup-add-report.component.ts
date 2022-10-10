@@ -17,10 +17,13 @@ import {
   DialogData,
   DialogRef,
   Util,
+  CallFuncService,
+  DialogModel,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { utils } from 'xlsx';
+import { PopupEditParamComponent } from '../popup-edit-param/popup-edit-param.component';
 
 @Component({
   selector: 'popup-add-report',
@@ -80,6 +83,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     private notiService: NotificationsService,
     public atSV: AttachmentService,
     private cache: CacheService,
+    private callFuncService: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -140,21 +144,25 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   setReportParams(){
-  let serviceName = this.data.service;
-  if (!this.data.service) serviceName = 'rpt' + this.moduleName;
-   this.api
-        .execSv(
-          serviceName,
-          'Codx.RptBusiness.CM',
-          'LVReportHelper',
-          'GetReportParamsAsync',
-          this.reportID
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.getReportParams();
-          }
-        });
+    this.notiService.alertCode("Nếu chọn sẽ định dạng lại toàn bộ tham số, tiếp tục?").subscribe((res:any)=>{
+      if(res.event.status == 'Y'){
+        let serviceName = this.data.service;
+        if (!this.data.service) serviceName = 'rpt' + this.moduleName;
+         this.api
+              .execSv(
+                serviceName,
+                'Codx.RptBusiness.CM',
+                'LVReportHelper',
+                'GetReportParamsAsync',
+                this.reportID
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  this.getReportParams();
+                }
+              });
+      }
+    })
   }
 
   setDefaut() {
@@ -183,7 +191,25 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   }
 
   editParam(evt: any){
-    debugger
+    if(evt){
+      let option = new DialogModel();
+      option.FormModel = this.dialog.formModel;
+     let dialog = this.callFuncService.openForm(
+        PopupEditParamComponent,
+        '',
+        600,
+        800,
+        this.funcID,
+        evt,
+        '',
+        option
+      );
+      dialog.closed.subscribe((res:any)=>{
+        if(res.event){
+          this.getReportParams();
+        }
+      })
+    }
   }
 
   deleteParam(evt: any){

@@ -1,10 +1,108 @@
+<!-- <ng-template #contentHobby let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Sở thích</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <i class="icon-close icon-20 text-dark text-hover-primary"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col">
+                <div class="form-group min-h-200px">
+                    <label>Sở thích</label>
+                    <div class="list-hoppy">
+                        <div *ngFor="let item of chooseHobbyItems" class="user-item tagitem"
+                            [style.background]="item.color">
+                            <div [style.color]="getContrastYIQ(item)">{{item.hobbyName}}</div>
+                        </div>
+
+                        <div class="d-flex align-items-center user-item tagitem" container="body" [autoClose]="false"
+                            triggers="manual" #p="ngbPopover" (click)="open(p)" placement="bottom"
+                            [ngbPopover]="popContent" [popoverTitle]="popTitle">
+                            <span class="icon-add icon-16"></span>
+                            <a class="text-primary">Sở thích</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button (click)="Save(modal)" type="button" *ngIf="!isSaving" class="btn btn-primary">Chọn</button>
+    </div>
+</ng-template>
+
+
+<ng-template #popContent>
+    <div *ngIf="!editItem">
+        <div class="d-flex align-items-center justify-content-between" *ngFor="let item of hobbies">
+            <div class="user-item tagitem tagitemlist" (click)="chooseHobby(item)" [style.color]="getContrastYIQ(item)"
+                [style.background]="item.color">
+                {{item.hobbyName}}
+
+            </div>
+            <a class="btn btn-xs btn-icon btn-hover-primary min-w-30px" id="kt_demo_panel_close">
+                <span (click)="editHobby(item)" class="icon-edit icon-16"></span>
+            </a>
+        </div>
+        <div class="d-flex flex-grow-1">
+            <div class="text-dark user-item tagitem tagitemlist" style="width: 100%;" (click)="addHobby()">
+                Thêm sở thích
+            </div>
+            <div class="min-w-30px"></div>
+        </div>
+    </div>
+    <div *ngIf="editItem">
+        <div class="flex-grow-1">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label>Sở thích</label>
+                        <input class="form-control" [style.color]="getContrastYIQ(this.editItem)"
+                            [style.background]="editItem.color" [(ngModel)]="editItem.hobbyName" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <color-sketch [color]="editItem.color" (onChange)="handleChange($event)"></color-sketch>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <a class="btn btn-sm btn-danger" *ngIf="editItem.hobbyID"
+                            (click)="deleteHobby(editItem)">Xóa</a>
+                        <a class="btn btn-sm btn-primary ml-2" (click)="saveHobby()">Lưu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ng-template>
+<ng-template #popTitle>
+    <div class="d-flex align-items-center justify-content-between">
+        <a *ngIf="editItem" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_demo_panel_close">
+            <span (click)="editItem=null" class="icon-arrow_back icon-18"></span>
+        </a>
+        <div class="text-dark font-size-h5 ml-2 d-flex flex-grow-1">Sở thích</div>
+
+        <a class="btn btn-xs btn-icon text-hover-primary" id="kt_demo_panel_close">
+            <span (click)="close()" class="icon-close icon-18"></span>
+        </a>
+    </div>
+    <div class="mt-2" *ngIf="!editItem">
+        <input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiễm" />
+    </div>
+</ng-template> -->
+
+
 <codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template #body>
         <div class="row">
             <div class="col">
                 <div class="form-group min-h-200px">
                     <!-- <label>Sở thích</label> -->
-                    <codx-label name="lblHobbie" default="Sở thích">
+                    <codx-label name="lblHobbie" formName="Employees" default="Sở thích">
                     </codx-label>
                     <div class="list-hoppy">
                         <div *ngFor="let item of chooseHobbyItems" class="user-item tagitem"
@@ -12,12 +110,11 @@
                             <div [style.color]="getContrastYIQ(item)">{{item.hobbyName}}</div>
                         </div>
 
-                        <div cclass="d-flex align-items-center user-item tagitem" container="body" [autoClose]="false"
-                        triggers="manual" #p="ngbPopover" (click)="open(p)" placement="bottom"
-                        [ngbPopover]="popContent" [popoverTitle]="popTitle">
+                        <div class="d-flex align-items-center user-item tagitem" container="body" triggers="manual"
+                            placement="bottom">
                             <span class="icon-add icon-16"></span>
                             <a class="text-primary">
-                                <codx-label name="lblHobbie" default="Sở thích">
+                                <codx-label name="lblHobbie" formName="Employees" default="Sở thích">
                                 </codx-label>
                             </a>
                             <!-- <codx-tag [entityName]="dialog.formModel.entityName" [value]="?.tags || ''"
@@ -30,85 +127,7 @@
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="saveHobby()">
-                <codx-label name="Save" default="Chọn">
-                </codx-label>
-            </button>
+            <button type="button" class="btn btn-primary" (click)="saveHobby()">Lưu</button>
         </div>
     </ng-template>
 </codx-form>
-
-<ng-template #popContent>
-    <div *ngIf="!editItem">
-        <div class="d-flex align-items-center justify-content-between"
-            *ngFor="let item of hobbies">
-            <div class="user-item tagitem tagitemlist" (click)="chooseHobby(item)"
-            [style.color]="getContrastYIQ(item)"
-            [style.background]="item.color">
-                {{item.hobbyName}}
-            </div>
-            <a class="btn btn-xs btn-icon btn-hover-primary min-w-30px" id="kt_demo_panel_close">
-                <span (click)="editHobby(item)" class="icon-edit icon-16"></span>
-            </a>
-        </div>
-        <div class="d-flex flex-grow-1">
-            <div class="text-dark user-item tagitem tagitemlist" style="width: 100%;" (click)="addHobby()">
-                <codx-label name="lblHobbie" default="Thêm sở thích">
-                </codx-label>
-            </div>
-            <div class="min-w-30px"></div>
-        </div>
-    </div>
-    <div *ngIf="editItem">
-        <div class="flex-grow-1">
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <codx-label fiedName="Hobbies" default="Sở thích">
-                        </codx-label>
-                        <codx-input class="form-control" 
-                        [style.color]="getContrastYIQ(this.editItem)"
-                        [style.background]="editItem.color"
-                        [(ngModel)]="editItem.hobbyName">
-                        </codx-input>
-                    </div>
-                    <div class="form-group mb-3">
-                        <color-sketch [color]="editItem.color" (onChange)="handleChange($event)"></color-sketch>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="d-flex align-items-center justify-content-end">
-                        <a class="btn btn-sm btn-danger" *ngIf="editItem.hobbyID"
-                            (click)="deleteHobby(editItem)">
-                            <codx-label name="Delete" default="Xóa"></codx-label></a>
-                        <a class="btn btn-sm btn-primary ml-2" (click)="saveHobby()">
-                            <codx-label name="Save" default="Lưu"></codx-label>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</ng-template>
-
-<ng-template #popTitle>
-    <div class="d-flex align-items-center justify-content-between">
-        <a *ngIf="editItem" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_demo_panel_close">
-            <span (click)="editItem=null" class="icon-arrow_back icon-18"></span>
-        </a>
-        <div class="text-dark font-size-h5 ml-2 d-flex flex-grow-1">
-            <codx-label fiedName="Hobbies" default="Sở thích">
-            </codx-label>
-        </div>
-
-        <a class="btn btn-xs btn-icon text-hover-primary" id="kt_demo_panel_close">
-            <span (click)="close()" class="icon-close icon-18"></span>
-        </a>
-    </div>
-    <div class="mt-2" *ngIf="!editItem">
-        <input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiễm" />
-    </div>
-</ng-template>

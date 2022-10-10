@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, CallFuncService, DialogModel } from 'codx-core';
 
 @Component({
@@ -14,6 +15,8 @@ export class CodxCommentTempComponent implements OnInit {
   className:string = "TrackLogsBusiness";
   entityName:string = "BG_TrackLogs"
   lstData:any[] = [];
+  dVll:any = {};
+
   countData:number = 0;
   @ViewChild("tmpListItem") tmpListItem:TemplateRef<any>;
   constructor(
@@ -29,15 +32,13 @@ export class CodxCommentTempComponent implements OnInit {
 
 
   getDataAsync(pObjectID:string){
-    console.log(pObjectID);
     if(pObjectID)
     {
-      this.api.execSv(this.services,this.assamplyName,this.className,"GetCommentTrackLogByObjectIDAsync",[pObjectID])
-      .subscribe((res:any[]) => {
+      this.api.execSv(this.services,this.assamplyName,this.className,"GetTotalCommentsAsync",[pObjectID])
+      .subscribe((res:number) => {
         if(res)
         {
-          this.lstData = res[0];
-          this.countData = res[1];
+          this.countData = res;
         }
       });
     }
@@ -46,7 +47,13 @@ export class CodxCommentTempComponent implements OnInit {
   openPopup(){
     if(this.tmpListItem){
       let option = new DialogModel();
-      this.callFC.openForm(this.tmpListItem,"",400,500,"",null,"",option);
+      let popup =  this.callFC.openForm(this.tmpListItem,"",400,500,"",null,"",option);
+      popup.closed.subscribe((res:any) => {
+        if(res)
+        {
+          this.getDataAsync(this.objectID);
+        }
+      });
     }
   }
 }

@@ -2,7 +2,10 @@ import { DialogRef } from 'codx-core/public-api';
 import { Component, OnInit, Injector } from '@angular/core';
 import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
+import { NotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/notify-drawer.component';
 import { ActivatedRoute } from '@angular/router';
+import { SettingNotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
+import { PopupAddNotifyComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
 
 @Component({
   selector: 'lib-layout',
@@ -24,9 +27,6 @@ export class DashboardComponent extends LayoutBaseComponent {
   }
 
   onInit() { 
-    this.route.params.subscribe((res:any) => {
-      if(res) console.log(res);
-    })
   }
 
   onAfterViewInit() {

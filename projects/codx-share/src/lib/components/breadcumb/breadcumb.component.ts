@@ -42,6 +42,7 @@ export class BreadcumbComponent implements OnInit {
     })
 
     this.dmSV.isBreadcum.subscribe(res => {
+      debugger;
       if (res != null) {
         this.breadcumb = res;
         this.breadcumbTree = res;

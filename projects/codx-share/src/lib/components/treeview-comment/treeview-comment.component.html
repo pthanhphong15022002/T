@@ -3,7 +3,7 @@
         <ng-container *ngIf="dataComment.totalVote > 0">
             <div class="flex align-items-center">
                 <div *ngFor="let votedType of dataComment.listVoteType">
-                    <a>
+                    <a *ngIf="dVll[votedType]?.icon">
                         <img src="assets/themes/wp/default/img/{{dVll[votedType]?.icon}}"
                          style="width: 15px; height: 15x;">
                     </a>
@@ -34,18 +34,18 @@
             <div class="d-flex mod icon-like">
                 <ng-container *ngFor="let item of vllL1480">
                     <a class="mod-icon" (click)="votePost(dataComment, item.value)">
-                        <img src="assets/themes/wp/default/img/{{item.icon}}">
-                    </a>
+                        <img src="assets/themes/wp/default/img/{{item.icon}}"></a>
                 </ng-container>
             </div>
             <ng-template #myVoted>
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <img src="assets/themes/wp/default/img/{{dVll[dataComment.myVotedType]?.icon}}"
-                     style="width: 18px; height: 18px">
+                    <img *ngIf="dVll[dataComment.myVotedType]?.icon" 
+                        src="assets/themes/wp/default/img/{{dVll[dataComment.myVotedType]?.icon}}"
+                        style="width: 18px; height: 18px">
                     <div>
                         <span class="fw-bold ms-2"
-                            [style.color]="dVll[dataComment.myVotedType]?.textColor">
-                            {{dVll[dataComment.myVotedType]?.text}}
+                        [style.color]="dVll[dataComment.myVotedType]?.textColor">
+                        {{dVll[dataComment.myVotedType]?.text}}
                         </span>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                             <div class="flex align-items-center">
                                 <div class="me-2">
                                     <img class="h-20px w-20px"
-                                        src="assets/themes/wp/default/img/{{dVll[vote.voteType]?.icon}}">
+                                    src="assets/themes/wp/default/img/{{dVll[vote.voteType]?.icon}}">
                                 </div>
                                 <div class="me-2">
                                     <span class="nav-text d-block h-20px">

@@ -49,7 +49,6 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
   showHeader: boolean = true;
   user: any;
   userName = '';
-  functionList: any;
   button?: ButtonModel;
   dialog: DialogRef;
   headerText = '';
@@ -88,9 +87,6 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) this.functionList = res;
-    });
   }
   columnsGrid = [];
   onInit(): void {
@@ -109,29 +105,25 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             this.columnsGrid = [
-              { field: 'giftID', headerText: res.GiftID.headerText, width: 50 },
+              { field: 'giftID', headerText: res.GiftID.headerText },
               {
                 field: 'giftName',
                 headerText: res.GiftName.headerText,
-                width: 150,
               },
               {
                 field: 'memo',
                 headerText: res.Memo.headerText,
                 template: this.memo,
-                width: 150,
               },
               {
                 field: 'createBy',
                 headerText: res.CreatedBy.headerText,
                 template: this.itemCreateBy,
-                width: 200,
               },
               {
                 field: 'createdOn',
                 headerText: res.CreatedOn.headerText,
                 template: this.createdOn,
-                width: 100,
               },
             ];
           }

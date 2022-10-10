@@ -31,8 +31,7 @@ export class CardComponent implements OnInit {
   constructor(
     public dmSV: CodxDMService,
     private auth: AuthStore,
-    private fileService: FileService,
-    private notificationsService: NotificationsService
+    private fileService: FileService
   ) {
   }
 
@@ -68,10 +67,6 @@ export class CardComponent implements OnInit {
   {
     if(this.data?.recID && this.data?.fileName != null)
     {
-      if (!this.data.read) {
-        this.notificationsService.notifyCode("DM059");
-        return;
-      }
       this.fileService.getFile(this.data?.recID).subscribe((data) => {
         this.viewFile.emit(data);
       });

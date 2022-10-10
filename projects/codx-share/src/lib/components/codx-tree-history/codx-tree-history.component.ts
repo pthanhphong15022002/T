@@ -22,6 +22,9 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   service = "BG";
   assemply = "ERM.Business.BG";
   className = "TrackLogsBusiness";
+  vllL1480 = "L1480"; // valueList icon viết chết
+  vllIcon:any = [];
+  dVll:any = {};
   lstHistory:any[] = [];
   root:any = {
     listSubComment: [],
@@ -43,12 +46,11 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-      this.getDataAsync(this.objectID);
+    this.getDataAsync(this.objectID);
   }
-  vllIcon:any = [];
-  dVll:any = {};
+  
   getValueIcon(){
-    this.cache.valueList("L1480").subscribe((res) => {
+    this.cache.valueList(this.vllL1480).subscribe((res) => {
       if (res) {
         this.vllIcon = res.datas as any[];
         if(this.vllIcon.length > 0){
@@ -63,12 +65,12 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     if(this.actionType && this.actionType == "C")
     {
       this.GetCommentTrackLogByObjectIDAsync(objectID);
-      this.getValueIcon();
     }
     else
     {
       this.getTrackLogAsync(objectID);
     }
+    this.getValueIcon();
   }
   getTrackLogAsync(objectID:string){
     if(!objectID) return;
@@ -152,9 +154,9 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
       }
       if (idx == -1) {
         if (dataNode.length == 0)
-          dataNode.push(newNode);
+          dataNode.unshift(newNode);
         else
-          dataNode.listSubComment.push(newNode);
+          dataNode.listSubComment.unshift(newNode);
       }
       else {
         var obj = dataNode[idx];

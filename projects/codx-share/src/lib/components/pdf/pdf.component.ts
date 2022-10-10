@@ -13,7 +13,12 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { AuthStore, ScrollComponent, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  NotificationsService,
+  ScrollComponent,
+  UIComponent,
+} from 'codx-core';
 import Konva from 'konva';
 import { qr } from './model/mode';
 import { tmpAreaName, tmpSignArea } from './model/tmpSignArea.model';
@@ -40,7 +45,8 @@ export class PdfComponent
     private authStore: AuthStore,
     private esService: CodxEsService,
     private actionCollectionsChanges: IterableDiffers,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private notificationsService: NotificationsService
   ) {
     pdfDefaultOptions.renderInteractiveForms = false;
     pdfDefaultOptions.annotationEditorEnabled = true;
@@ -177,8 +183,6 @@ export class PdfComponent
   hideActions: boolean = false;
 
   onInit() {
-    console.log('input url', this.inputUrl);
-
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
         console.log('allow', res);
@@ -286,14 +290,15 @@ export class PdfComponent
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
-    // if (
-    //   changes['inputUrl'] &&
-    //   changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue
-    // ) {
-    //   console.log('changes', changes);
-    //   this.curFileUrl = changes['inputUrl']?.currentValue;
-    //   this.detectorRef.detectChanges();
-    // }
+    if (
+      changes['inputUrl'] &&
+      changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue
+    ) {
+      console.log('changes', changes);
+
+      this.curFileUrl = changes['inputUrl']?.currentValue;
+      this.detectorRef.detectChanges();
+    }
   }
 
   ngAfterViewInit() {
@@ -460,34 +465,29 @@ export class PdfComponent
         });
 
         let layer = this.lstLayer.get(this.pageMax);
-        let children = layer.children.map((child) => child.attrs);
+        let children = layer.children;
+        let top = children?.reduce((prev, curr) => {
+          return prev.attrs.x < curr.attrs.x ? prev : curr;
+        });
 
-        let lstAreaOnPage = this.lstAreas?.filter(
-          (area) =>
-            area.location.pageNumber + 1 == this.pageMax &&
-            area.signer == this.signerInfo.authorID
-        );
-        let top = lstAreaOnPage?.reduce((prev, curr) =>
-          prev.location.top < curr.location.top ? prev : curr
-        );
+        let bot = children?.reduce((prev, curr) => {
+          return prev.attrs.x > curr.attrs.x ? prev : curr;
+        });
 
-        let left = lstAreaOnPage?.reduce((prev, curr) =>
-          prev.location.left < curr.location.left ? prev : curr
-        );
-        let bot = lstAreaOnPage?.reduce((prev, curr) =>
-          prev.location.top > curr.location.top ? prev : curr
-        );
+        let left = children?.reduce((prev, curr) => {
+          return prev.attrs.y < curr.attrs.y ? prev : curr;
+        });
 
-        let right = lstAreaOnPage?.reduce((prev, curr) =>
-          prev.location.left > curr.location.left ? prev : curr
-        );
+        let right = children?.reduce((prev, curr) => {
+          return prev.attrs.y > curr.attrs.y ? prev : curr;
+        });
 
-        let y = top?.location?.top * this.yScale;
-        let x = left?.location?.left * this.xScale;
-        let height =
-          (+bot.location.top + +bot.location.height) * this.yScale - y;
+        let x = top.attrs.x;
+        let y = left.attrs.y;
+
         let width =
-          (+right.location.left + +right.location.width) * this.xScale - x;
+          left.attrs.x - right.attrs.x + right.width() * right.scaleX();
+        let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
 
         let imgUrl = layer.toDataURL({
           quality: 1,
@@ -520,26 +520,49 @@ export class PdfComponent
             console.log('returnModel', returnModel);
 
             if (!returnModel?.msgCodeError) {
-              this.esService
-                .updateSignFileTrans(
-                  lstPages,
-                  lstAddBefore,
-                  imgUrl.replace('data:image/png;base64,', ''),
-                  x / this.xScale,
-                  y / this.yScale,
-                  width / this.xScale,
-                  height / this.yScale,
-                  this.pageMax,
-                  this.stepNo,
-                  this.isAwait,
-                  this.user.userID,
-                  this.recID,
-                  mode,
-                  comment
-                )
-                .subscribe((status) => {
-                  resolve(status);
-                });
+              if (this.isAwait) {
+                this.esService
+                  .updateSignFileTrans(
+                    lstPages,
+                    lstAddBefore,
+                    imgUrl.replace('data:image/png;base64,', ''),
+                    x / this.xScale,
+                    y / this.yScale,
+                    width / this.xScale,
+                    height / this.yScale,
+                    this.pageMax,
+                    this.stepNo,
+                    this.isAwait,
+                    this.user.userID,
+                    this.recID,
+                    mode,
+                    comment
+                  )
+                  .subscribe((status) => {
+                    resolve(status);
+                  });
+              } else {
+                this.notificationsService.notifyCode('ES010');
+                resolve(true);
+                this.esService
+                  .updateSignFileTrans(
+                    lstPages,
+                    lstAddBefore,
+                    imgUrl.replace('data:image/png;base64,', ''),
+                    x / this.xScale,
+                    y / this.yScale,
+                    width / this.xScale,
+                    height / this.yScale,
+                    this.pageMax,
+                    this.stepNo,
+                    this.isAwait,
+                    this.user.userID,
+                    this.recID,
+                    mode,
+                    comment
+                  )
+                  .subscribe((status) => {});
+              }
             }
           });
       });
@@ -731,7 +754,6 @@ export class PdfComponent
               ) {
                 isRender = true;
               }
-
               if (isRender) {
                 switch (area.labelType) {
                   case '1': {
@@ -830,21 +852,25 @@ export class PdfComponent
                   let attrs = this.needAddKonva.attrs;
                   let name: tmpAreaName = JSON.parse(attrs.name);
 
-                  let signed = stage?.children[0]?.children.find((child) => {
+                  let curLayer = stage?.children[0]?.children;
+                  let signed = curLayer.filter((child) => {
                     if (child != this.tr) {
                       let childName: tmpAreaName = JSON.parse(
                         child?.attrs?.name
                       );
-                      return (
-                        childName.LabelType == name.LabelType &&
-                        ['1', '2', '8'].includes(childName.LabelType) &&
-                        childName.Signer == name.Signer
+
+                      let sameLable = childName.LabelType == name.LabelType;
+                      let isUnique = ['1', '2', '8'].includes(
+                        childName.LabelType.toString()
                       );
+                      let sameSigner = childName.Signer == name.Signer;
+
+                      return sameLable && sameSigner && isUnique;
                     }
-                    return null;
+                    return undefined;
                   });
                   this.holding = 0;
-                  if (!signed) {
+                  if (signed?.length == 1) {
                     switch (name.Type) {
                       case 'text': {
                         this.saveNewToDB(
@@ -871,7 +897,7 @@ export class PdfComponent
                       }
                     }
                   } else {
-                    this.needAddKonva.remove();
+                    this.needAddKonva.destroy();
                     this.tr.remove();
                   }
                 }
@@ -1131,73 +1157,66 @@ export class PdfComponent
     }
   }
 
-  changeSignatureImg(area) {}
-
   chooseSignDate = true;
-  changeAnnotPro(type, recID, allowEdit, isLock) {
-    if (this.allowEdit && allowEdit && !isLock) {
-      switch (type.toString()) {
-        case '6': {
-          this.curSelectedArea.text(this.formAnnot.value.content);
-          this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
-          this.curSelectedArea.attrs.fontFamily =
-            this.formAnnot.value.fontStyle;
-          let style = 'normal';
-          if (this.isBold && this.isItalic) {
-            style.replace('normal', '');
-            style = 'bold italic';
-          } else if (this.isBold) {
-            style.replace('normal', '');
-            style = 'bold';
-          } else if (this.isItalic) {
-            style.replace('normal', '');
-            style = 'italic';
-          }
-
-          this.curSelectedArea.attrs.fontStyle = style;
-          this.curSelectedArea.attrs.textDecoration = this.isUnd
-            ? 'line-through'
-            : '';
-          this.curSelectedArea.draw();
-          this.tr.forceUpdate();
-          //save to db
-          let y = this.curSelectedArea.position().y;
-          let x = this.curSelectedArea.position().x;
-          let w = this.xScale;
-          let h = this.yScale;
-          let tmpName: tmpAreaName = JSON.parse(
-            this.curSelectedArea.attrs.name
-          );
-
-          let tmpArea: tmpSignArea = {
-            signer: tmpName.Signer,
-            labelType: tmpName.LabelType,
-            labelValue: this.curSelectedArea.attrs.text,
-            isLock: this.curSelectedArea.draggable(),
-            allowEditAreas: this.allowEdit,
-            signDate: false,
-            dateFormat: '1',
-            location: {
-              top: y / this.yScale,
-              left: x / this.xScale,
-              width: w / this.xScale,
-              height: h / this.yScale,
-              pageNumber: this.curPage - 1,
-            },
-            stepNo: tmpName.StepNo,
-            fontStyle: this.curSelectedArea.attrs.fontFamily,
-            fontFormat:
-              this.curSelectedArea.attrs.fontStyle +
-              this.curSelectedArea.attrs.textDecoration,
-            fontSize: this.curSelectedArea.attrs.fontSize,
-            signatureType: 2,
-            comment: '',
-            createdBy: tmpName.Signer,
-            modifiedBy: tmpName.Signer,
-            recID: this.curSelectedArea.attrs.id,
-          };
-          this.saveToDB(tmpArea);
+  changeAnnotPro(type, recID) {
+    switch (type.toString()) {
+      case '6': {
+        this.curSelectedArea.text(this.formAnnot.value.content);
+        this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
+        this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
+        let style = 'normal';
+        if (this.isBold && this.isItalic) {
+          style.replace('normal', '');
+          style = 'bold italic';
+        } else if (this.isBold) {
+          style.replace('normal', '');
+          style = 'bold';
+        } else if (this.isItalic) {
+          style.replace('normal', '');
+          style = 'italic';
         }
+
+        this.curSelectedArea.attrs.fontStyle = style;
+        this.curSelectedArea.attrs.textDecoration = this.isUnd
+          ? 'line-through'
+          : '';
+        this.curSelectedArea.draw();
+        this.tr.forceUpdate();
+        //save to db
+        let y = this.curSelectedArea.position().y;
+        let x = this.curSelectedArea.position().x;
+        let w = this.xScale;
+        let h = this.yScale;
+        let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
+
+        let tmpArea: tmpSignArea = {
+          signer: tmpName.Signer,
+          labelType: tmpName.LabelType,
+          labelValue: this.curSelectedArea.attrs.text,
+          isLock: this.curSelectedArea.draggable(),
+          allowEditAreas: this.allowEdit,
+          signDate: false,
+          dateFormat: '1',
+          location: {
+            top: y / this.yScale,
+            left: x / this.xScale,
+            width: w / this.xScale,
+            height: h / this.yScale,
+            pageNumber: this.curPage - 1,
+          },
+          stepNo: tmpName.StepNo,
+          fontStyle: this.curSelectedArea.attrs.fontFamily,
+          fontFormat:
+            this.curSelectedArea.attrs.fontStyle +
+            this.curSelectedArea.attrs.textDecoration,
+          fontSize: this.curSelectedArea.attrs.fontSize,
+          signatureType: 2,
+          comment: '',
+          createdBy: tmpName.Signer,
+          modifiedBy: tmpName.Signer,
+          recID: this.curSelectedArea.attrs.id,
+        };
+        this.saveToDB(tmpArea);
       }
     }
   }
@@ -1354,8 +1373,6 @@ export class PdfComponent
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;
     this.curSignerRecID = this.signerInfo.recID;
-    console.log('cur signer', this.signerInfo);
-
     this.detectorRef.detectChanges();
   }
 
@@ -1573,10 +1590,38 @@ export class PdfComponent
 
   //test func
   show(e: any) {
-    console.log(
-      'data',
-      this.lstLayer.get(this.pageMax).children.map((x) => x.attrs)
-    );
+    let layer = this.lstLayer.get(this.pageMax);
+    let children = layer.children;
+    let top = children?.reduce((prev, curr) => {
+      return prev.attrs.x < curr.attrs.x ? prev : curr;
+    });
+
+    let bot = children?.reduce((prev, curr) => {
+      return prev.attrs.x > curr.attrs.x ? prev : curr;
+    });
+
+    let left = children?.reduce((prev, curr) => {
+      return prev.attrs.y < curr.attrs.y ? prev : curr;
+    });
+
+    let right = children?.reduce((prev, curr) => {
+      return prev.attrs.y > curr.attrs.y ? prev : curr;
+    });
+
+    let x = top.attrs.x;
+    let y = left.attrs.y;
+
+    let width = left.attrs.x - right.attrs.x + right.width() * right.scaleX();
+    let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
+    let imgUrl = layer.toDataURL({
+      quality: 1,
+      x: x,
+      y: y,
+
+      width: width,
+      height: height,
+    });
+    console.log('url', imgUrl);
   }
 }
 

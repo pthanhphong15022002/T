@@ -3,7 +3,7 @@
   [autoSort]="false" [autoSearch]="false" [selectedFirst]="false" (selectedChange)="onSelectionChanged($event)"
   [button]="button" (buttonClick)="addFile($event)" (viewChanged)="changeView($event)"
   (viewChanging)="viewChanging($event)" (filterChange)="filterChange($event)" [autoFilter]="false"
-  (onLoading)="onLoading($event)" (sortChanged)="sortChanged($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)">
+  (onLoading)="onLoading($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)">
 </codx-views>
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
@@ -159,7 +159,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr (dblclick)="dmSV.openItem(item)" class="border-top dms-list has-action-menu" *ngFor="let item of data" [title]="
+          <tr (dblclick)="dmSV.openItem(item)" class="border-top dms-list" *ngFor="let item of data" [title]="
               item.folderName != undefined ? item.folderName : item.fileName
             ">
             <td class="w-30">
@@ -172,25 +172,25 @@
             </td>
             <td class="w-20">
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
-                [imageWidth]="25" [subTitle]="(this.view.funcID != 'DMT06')?(item?.userName):item?.requestPermissionName">
+                [imageWidth]="25" [subTitle]="item.userName">
               </codx-temp-full>
             </td>
             <td class="w-10">
               <div class="erm-date">
-                {{ item?.modifiedOn | date: "dd/MM/yyyy" }}
+                {{ item.createdOn | date: "dd/MM/yyyy" }}
               </div>
             </td>
             <td class="w-10">
-             
+              <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, item)"
+                [formModel]="view.formModel" [typeMF]="'hover'" [title]="dmSV.getSizeKB(item)"
+                (changeDataMF)="dmSV.filterMoreFunction($event, item)" cardCss="d-flex justify-content-end">
+              </codx-temp-full>
             </td>
             <td>
-              <span>{{item.revisionNote}}</span>
+
+              <span>{{item.description}}</span><!-- item.revisionNote -->
             </td>
-            <div class="action-menu">
-              <codx-mfunc [formModel]="view.formModel" [type]="'hover'" (clickMF)="dmSV.clickMF($event, item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"></codx-mfunc>
-            </div>
           </tr>
-         
         </tbody>
       </table>
     </div>

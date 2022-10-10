@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel, AuthService } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
@@ -13,7 +14,9 @@ import { PopupSearchComponent } from '../popup/popup-search/popup-search.compone
   encapsulation: ViewEncapsulation.None
 })
 export class ViewDetailComponent implements OnInit {
-
+  @HostBinding('class') get class() {
+    return "bg-body h-100 news-detail";
+  }
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -36,7 +39,7 @@ export class ViewDetailComponent implements OnInit {
     private callfc: CallFuncService,
     private changedt: ChangeDetectorRef,
     private sanitizer: DomSanitizer
-    ) { }
+  ) { }
   ngOnInit(): void {
     this.route.params.subscribe((p: any) => {
       this.recID = p["recID"];
@@ -84,7 +87,7 @@ export class ViewDetailComponent implements OnInit {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID).subscribe(
       (res) => {
         if (res) {
-          this.codxService.navigate('', '/wp/news/'+this.funcID+'/'+data.category+'/'+data.recID);
+          this.codxService.navigate('', '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
           this.loadData(data.recID);
         }
       });
@@ -98,7 +101,7 @@ export class ViewDetailComponent implements OnInit {
     option.DataService = this.codxViews.dataService;
     option.FormModel = this.codxViews.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', {type:newsType}, '', option);
+    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', { type: newsType }, '', option);
   }
 
   searchField: string = "";
@@ -118,8 +121,6 @@ export class ViewDetailComponent implements OnInit {
     }
     return false;
   }
-
-
   getShareUser(shareControl, commentID) {
     if (shareControl == '1') {
       this.api
@@ -151,6 +152,18 @@ export class ViewDetailComponent implements OnInit {
     let option = new DialogModel();
     option.FormModel = this.codxViews.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupSearchComponent,"",0,0,"",{funcID: this.funcID},"",option);
+    this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", { funcID: this.funcID }, "", option);
+  }
+  clickPopupShare(data:any){
+    if (!data) return;
+    var obj = {
+      post: data,
+      refType:"WP_News",
+      status: 'share',
+      headerText: 'Chia sẻ bài viết',
+    };
+    let option = new DialogModel();
+    option.FormModel = this.codxViews.formModel;
+    this.callfc.openForm(PopupAddPostComponent,'',650,550,'',obj,'',option);
   }
 }

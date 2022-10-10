@@ -25,7 +25,7 @@ export class EditFileComponent implements OnInit {
   @Input('viewBase') viewBase: ViewsComponent;    
   @Output() eventShow = new EventEmitter<boolean>();
   dialog: any;
-  titleDialog = 'Cập nhật tài liệu';
+  titleDialog = 'Cập nhật file';
   titleRolesDialog = 'Cập nhật quyền';
   titleFileNameRequire = 'Tên tài liệu không để trống';
   titleFileNameInvalid = 'Tên tài liệu không hợp lệ';
@@ -41,6 +41,7 @@ export class EditFileComponent implements OnInit {
   titleCate = 'Phân loại';
   titleLanguage = 'Ngôn ngữ';
   titleExcerpts = 'Trích lục';
+  titleDescription = 'Mô tả tài liệu';
   titleRelation = 'Mối quan hệ';
   titleSource = 'Nguồn';
   titleCopyright  = 'Bản quyền';
@@ -151,7 +152,7 @@ export class EditFileComponent implements OnInit {
   copyrights: any;
   copyrightsControl: any;
   approvers: string;
-  revisionNote: string;
+  description: string;
   location: string;
   public loading = false;
   private onScrolling = true;
@@ -263,10 +264,11 @@ export class EditFileComponent implements OnInit {
   }
 
   ngOnInit(): void {   
-    if(this.fileEditing.type == null)
-    {
-      this.fileEditing.type = this.fileEditing.extension.replace('.', '');
-    }
+    debugger;
+if(this.fileEditing.type == null)
+{
+  this.fileEditing.type = this.fileEditing.extension.replace('.', '');
+}
 /* if(this.fileEditing.language)
         {
           this.cache.valueList("L1473").subscribe(item=>{
@@ -390,6 +392,7 @@ export class EditFileComponent implements OnInit {
   }
   
   checkInputFile() {
+    debugger;
     return this.fileEditing.fileName === ""  ? true : false;
   } 
 
@@ -441,6 +444,7 @@ export class EditFileComponent implements OnInit {
   }  
 
   openRight(mode = 1, type = true) {
+    debugger;
     this.dmSV.dataFileEditing = this.fileEditing;
     this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "").closed.subscribe(item => {
       if (item) {
@@ -566,6 +570,12 @@ export class EditFileComponent implements OnInit {
             else
             this.fileEditing.excerpts= "";
             break;
+            case 'description':
+          if ($event.data.length > 0)
+            this.fileEditing.description = $event.data;
+            else
+            this.fileEditing.description= "";
+            break;
         case 'authur':
           if ($event.data.length > 0)
           this.fileEditing.author = $event.data;
@@ -573,6 +583,7 @@ export class EditFileComponent implements OnInit {
             this.fileEditing.author= "";
           break;
         case 'publishdate':
+          debugger;
           if ($event.data != null)
             this.fileEditing.publishDate = $event.data.fromDate;
             else
@@ -585,6 +596,7 @@ export class EditFileComponent implements OnInit {
             this.fileEditing.publisher = "";         
           break;
         case 'publishyear':
+          debugger;
           if ($event.data != null)
           this.fileEditing.publishYear = $event.data.fromDate;
           else

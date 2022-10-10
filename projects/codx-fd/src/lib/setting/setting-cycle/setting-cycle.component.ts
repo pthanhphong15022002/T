@@ -11,7 +11,12 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DialogRef, UIComponent, DialogData, NotificationsService } from 'codx-core';
+import {
+  DialogRef,
+  UIComponent,
+  DialogData,
+  NotificationsService,
+} from 'codx-core';
 
 @Component({
   selector: 'app-setting-cycle',
@@ -76,8 +81,10 @@ export class SettingCycleComponent extends UIComponent implements OnInit {
     this.messageSC003 = this.setCycle(this.dayNameRun, this.monthNameRun);
   }
   valueChangeInputDay(newValue) {
-    this.scheduledTasks.dayOfMonth = newValue;
-    this.setTextMemo();
+    if (newValue) {
+      this.scheduledTasks.dayOfMonth = newValue.data;
+      this.setTextMemo();
+    }
   }
 
   changeMonthActive(index) {
@@ -119,13 +126,13 @@ export class SettingCycleComponent extends UIComponent implements OnInit {
       var main = JSON.parse(JSON.stringify(this.messageSC003Temp));
       mess = mess.replace('{0}', dayNameRun);
       main = mess.replace('{1}', monthNameRun);
-      // this.messageSC003 = this.main;
     }
     return main;
   }
 
   saveSettingCycleRun() {
-    this.scheduledTasks.months = this.monthActive;
+    var months: any = this.monthActive.toString();
+    this.scheduledTasks.months = months.replaceAll(',', '');
     this.api
       .execSv('SYS', 'AD', 'ScheduledTasksBusiness', 'AddUpdateAsync', [
         this.scheduledTasks,
@@ -133,6 +140,7 @@ export class SettingCycleComponent extends UIComponent implements OnInit {
       .subscribe((result) => {
         if (result) {
           this.notification.notifyCode('SYS019');
+          this.dialog.close(this.messageSC003);
         }
       });
   }
