@@ -148,17 +148,17 @@ export class PopupSignForApprovalComponent extends UIComponent {
     });
   }
 
-  clickUSB() {
-    this.http
-      .post('http://localhost:8015/api/es/test', {})
-      .subscribe((data) => {
-        this.http
-          .post('http://localhost:6543/DigitalSignature/Sign', data)
-          .subscribe((o) => {
-            console.log(o);
-          });
-      });
-  }
+  // clickUSB() {
+  //   this.http
+  //     .post('http://localhost:8015/api/es/test', {})
+  //     .subscribe((data) => {
+  //       this.http
+  //         .post('http://localhost:6543/DigitalSignature/Sign', data)
+  //         .subscribe((o) => {
+  //           console.log(o);
+  //         });
+  //     });
+  // }
 
   openTempPopup(mode) {
     this.mode = mode;
