@@ -48,9 +48,7 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-emoji">
-                        <button (click)="toggleEmojiPicker()" type="button"
-                            data-toggle="tooltip" 
-                            title="Cảm xúc"
+                        <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Cảm xúc"
                             class="btn btn-icon btn-md ms-2 btn-emoji">
                             <i class="icon-tag_faces icon-24 text-warning"></i>
                         </button>
@@ -62,19 +60,13 @@
                         </ng-container>
                     </div>
                     <div>
-                        <button (click)="tagUser()" 
-                            type="button"
-                            data-toggle="tooltip"
-                            title="Gắn thẻ"
+                        <button (click)="tagUser()" type="button" data-toggle="tooltip" title="Gắn thẻ"
                             class="btn btn-icon btn-md ms-2">
                             <i class="icon-local_offer icon-24 text-primary"></i>
                         </button>
                     </div>
                     <div class="btn-upload">
-                        <button (click)="uploadFile()" 
-                        type="button" 
-                        data-toggle="tooltip"
-                        title="Hình ảnh"
+                        <button (click)="uploadFile()" type="button" data-toggle="tooltip" title="Hình ảnh"
                             class="btn btn-icon btn-md ms-2 ng-star-inserted">
                             <i class="icon-photo icon-24 text-success"></i>
                         </button>
@@ -94,12 +86,7 @@
 </codx-form>
 <ng-template #create>
     <div>
-        <codx-input 
-            format="ed3" 
-            [class]="'border-none'" 
-            type="textarea" 
-            [crrValue]="message" 
-            [placeholder]="title"
+        <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>
