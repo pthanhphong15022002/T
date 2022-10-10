@@ -8,7 +8,7 @@
     [title]="placeholder(data.employeeName, view.formModel, 'EmployeeName') | async"  [imageObjName]="data.employeeName"
     [subTitle]="placeholder(data.positionName, view.formModel, 'PositionID') | async" [dataItem]="data" 
     [imageObjType]="view.formModel.entityName"
-    [desc]="placeholder(data.birthday | fmDT, view.formModel, 'Birthday') | async" [footer]="footer">
+    [desc]="placeholder(data.birthday | date: 'dd/MM/yyyy', view.formModel, 'Birthday') | async" [footer]="footer">
   </codx-card-center>
 </ng-template>
 

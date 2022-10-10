@@ -6,7 +6,7 @@
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="openFormFuncID($event,itemDetail)"
+  (clickMF)="openFormFuncID($event)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
 
@@ -75,14 +75,14 @@
         </codx-label>
         <span class="text-gray-600">
           :
-          {{itemDetail?.createdOn | fmDT}}
+          {{itemDetail?.createdOn}}
         </span>
       </div>
       <div class="d-flex me-6">
         <codx-label default="Thời gian" class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.startHour}}
+          {{ itemDetail?.startDate | fmDT:'dmy':true }}
         </span>
         <span
           *ngIf="itemDetail?.startDate && itemDetail?.endDate"
@@ -90,7 +90,7 @@
           >{{ "-" }}</span
         >
         <span class="text-gray-600">
-          {{ itemDetail?.endHour }}
+          {{ itemDetail?.endDate | fmDT:'dmy':true }}
         </span>
       </div>
     </div>

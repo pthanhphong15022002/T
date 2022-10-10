@@ -183,8 +183,6 @@ export class PdfComponent
   hideActions: boolean = false;
 
   onInit() {
-    console.log('input url', this.inputUrl);
-
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
         console.log('allow', res);
@@ -292,14 +290,15 @@ export class PdfComponent
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
-    // if (
-    //   changes['inputUrl'] &&
-    //   changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue
-    // ) {
-    //   console.log('changes', changes);
-    //   this.curFileUrl = changes['inputUrl']?.currentValue;
-    //   this.detectorRef.detectChanges();
-    // }
+    if (
+      changes['inputUrl'] &&
+      changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue
+    ) {
+      console.log('changes', changes);
+
+      this.curFileUrl = changes['inputUrl']?.currentValue;
+      this.detectorRef.detectChanges();
+    }
   }
 
   ngAfterViewInit() {
@@ -685,7 +684,6 @@ export class PdfComponent
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
-    this.isEditable = true;
     if (this.isEditable) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
@@ -756,7 +754,6 @@ export class PdfComponent
               ) {
                 isRender = true;
               }
-
               if (isRender) {
                 switch (area.labelType) {
                   case '1': {
@@ -855,21 +852,25 @@ export class PdfComponent
                   let attrs = this.needAddKonva.attrs;
                   let name: tmpAreaName = JSON.parse(attrs.name);
 
-                  let signed = stage?.children[0]?.children.find((child) => {
+                  let curLayer = stage?.children[0]?.children;
+                  let signed = curLayer.filter((child) => {
                     if (child != this.tr) {
                       let childName: tmpAreaName = JSON.parse(
                         child?.attrs?.name
                       );
-                      return (
-                        childName.LabelType == name.LabelType &&
-                        ['1', '2', '8'].includes(childName.LabelType) &&
-                        childName.Signer == name.Signer
+
+                      let sameLable = childName.LabelType == name.LabelType;
+                      let isUnique = ['1', '2', '8'].includes(
+                        childName.LabelType.toString()
                       );
+                      let sameSigner = childName.Signer == name.Signer;
+
+                      return sameLable && sameSigner && isUnique;
                     }
-                    return null;
+                    return undefined;
                   });
                   this.holding = 0;
-                  if (!signed) {
+                  if (signed?.length == 1) {
                     switch (name.Type) {
                       case 'text': {
                         this.saveNewToDB(
@@ -896,7 +897,7 @@ export class PdfComponent
                       }
                     }
                   } else {
-                    this.needAddKonva.remove();
+                    this.needAddKonva.destroy();
                     this.tr.remove();
                   }
                 }
@@ -1156,73 +1157,66 @@ export class PdfComponent
     }
   }
 
-  changeSignatureImg(area) {}
-
   chooseSignDate = true;
-  changeAnnotPro(type, recID, allowEdit, isLock) {
-    if (this.allowEdit && allowEdit && !isLock) {
-      switch (type.toString()) {
-        case '6': {
-          this.curSelectedArea.text(this.formAnnot.value.content);
-          this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
-          this.curSelectedArea.attrs.fontFamily =
-            this.formAnnot.value.fontStyle;
-          let style = 'normal';
-          if (this.isBold && this.isItalic) {
-            style.replace('normal', '');
-            style = 'bold italic';
-          } else if (this.isBold) {
-            style.replace('normal', '');
-            style = 'bold';
-          } else if (this.isItalic) {
-            style.replace('normal', '');
-            style = 'italic';
-          }
-
-          this.curSelectedArea.attrs.fontStyle = style;
-          this.curSelectedArea.attrs.textDecoration = this.isUnd
-            ? 'line-through'
-            : '';
-          this.curSelectedArea.draw();
-          this.tr.forceUpdate();
-          //save to db
-          let y = this.curSelectedArea.position().y;
-          let x = this.curSelectedArea.position().x;
-          let w = this.xScale;
-          let h = this.yScale;
-          let tmpName: tmpAreaName = JSON.parse(
-            this.curSelectedArea.attrs.name
-          );
-
-          let tmpArea: tmpSignArea = {
-            signer: tmpName.Signer,
-            labelType: tmpName.LabelType,
-            labelValue: this.curSelectedArea.attrs.text,
-            isLock: this.curSelectedArea.draggable(),
-            allowEditAreas: this.allowEdit,
-            signDate: false,
-            dateFormat: '1',
-            location: {
-              top: y / this.yScale,
-              left: x / this.xScale,
-              width: w / this.xScale,
-              height: h / this.yScale,
-              pageNumber: this.curPage - 1,
-            },
-            stepNo: tmpName.StepNo,
-            fontStyle: this.curSelectedArea.attrs.fontFamily,
-            fontFormat:
-              this.curSelectedArea.attrs.fontStyle +
-              this.curSelectedArea.attrs.textDecoration,
-            fontSize: this.curSelectedArea.attrs.fontSize,
-            signatureType: 2,
-            comment: '',
-            createdBy: tmpName.Signer,
-            modifiedBy: tmpName.Signer,
-            recID: this.curSelectedArea.attrs.id,
-          };
-          this.saveToDB(tmpArea);
+  changeAnnotPro(type, recID) {
+    switch (type.toString()) {
+      case '6': {
+        this.curSelectedArea.text(this.formAnnot.value.content);
+        this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
+        this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
+        let style = 'normal';
+        if (this.isBold && this.isItalic) {
+          style.replace('normal', '');
+          style = 'bold italic';
+        } else if (this.isBold) {
+          style.replace('normal', '');
+          style = 'bold';
+        } else if (this.isItalic) {
+          style.replace('normal', '');
+          style = 'italic';
         }
+
+        this.curSelectedArea.attrs.fontStyle = style;
+        this.curSelectedArea.attrs.textDecoration = this.isUnd
+          ? 'line-through'
+          : '';
+        this.curSelectedArea.draw();
+        this.tr.forceUpdate();
+        //save to db
+        let y = this.curSelectedArea.position().y;
+        let x = this.curSelectedArea.position().x;
+        let w = this.xScale;
+        let h = this.yScale;
+        let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
+
+        let tmpArea: tmpSignArea = {
+          signer: tmpName.Signer,
+          labelType: tmpName.LabelType,
+          labelValue: this.curSelectedArea.attrs.text,
+          isLock: this.curSelectedArea.draggable(),
+          allowEditAreas: this.allowEdit,
+          signDate: false,
+          dateFormat: '1',
+          location: {
+            top: y / this.yScale,
+            left: x / this.xScale,
+            width: w / this.xScale,
+            height: h / this.yScale,
+            pageNumber: this.curPage - 1,
+          },
+          stepNo: tmpName.StepNo,
+          fontStyle: this.curSelectedArea.attrs.fontFamily,
+          fontFormat:
+            this.curSelectedArea.attrs.fontStyle +
+            this.curSelectedArea.attrs.textDecoration,
+          fontSize: this.curSelectedArea.attrs.fontSize,
+          signatureType: 2,
+          comment: '',
+          createdBy: tmpName.Signer,
+          modifiedBy: tmpName.Signer,
+          recID: this.curSelectedArea.attrs.id,
+        };
+        this.saveToDB(tmpArea);
       }
     }
   }
@@ -1379,8 +1373,6 @@ export class PdfComponent
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;
     this.curSignerRecID = this.signerInfo.recID;
-    console.log('cur signer', this.signerInfo);
-
     this.detectorRef.detectChanges();
   }
 

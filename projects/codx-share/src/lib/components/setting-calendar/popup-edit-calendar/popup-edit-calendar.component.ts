@@ -1,4 +1,3 @@
-import { SettingCalendarService } from './../setting-calender.service';
 import 'lodash';
 import { Component, Injector, Optional } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
@@ -25,9 +24,8 @@ declare var _;
   styleUrls: ['./popup-edit-calendar.component.scss'],
 })
 export class PopupEditCalendarComponent extends UIComponent {
-  headerText: string = '';
   calendarID: string;
-  isAfterRender = false;
+  headerText: string;
   stShift = new BS_CalendarWeekdays();
   ndShift = new BS_CalendarWeekdays();
   user: any;
@@ -36,7 +34,7 @@ export class PopupEditCalendarComponent extends UIComponent {
   dayOffId: string;
   calendarDate: any;
   dayOff: any;
-  dayWeek = [];
+  dayoff = [];
   days: any;
   param: any;
   evtCDDate: any;
@@ -46,7 +44,6 @@ export class PopupEditCalendarComponent extends UIComponent {
 
   constructor(
     private injector: Injector,
-    private settingCalendar: SettingCalendarService,
     private authService: AuthStore,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
@@ -62,65 +59,90 @@ export class PopupEditCalendarComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.settingCalendar
-      .getCalendarName(this.calendarID)
-      .subscribe((calendarName: string) => {
-        this.headerText = calendarName;
-      });
-
+    this.getParams();
     this.cache.valueList('L0012').subscribe((res) => {
       this.days = res.datas;
     });
-
-    this.getDayWeek();
-
-    this.settingCalendar
-      .getSettingCalendar(this.calendarID)
+    this.api
+      .execSv<any>(
+        APICONSTANT.SERVICES.BS,
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.Calendars,
+        'GetSettingCalendarAsync',
+        'STD'
+      )
       .subscribe((res) => {
         if (res) {
+          debugger;
           this.handleWeekDay(res[0]);
           this.dayOff = res[1];
           this.calendarDate = res[2];
         }
       });
-    this.isAfterRender = true;
   }
 
-  getDayWeek() {
-    this.settingCalendar.getDayWeek(this.calendarID).subscribe((res) => {
-      if (res) {
-        res.forEach(() => {
-          this.dayWeek = res;
-        });
-      }
-    });
+  ngAfterViewInit(): void {}
+
+  getParams() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.CM',
+        'ParametersBusiness',
+        'GetOneField',
+        ['TMParameters', null, 'CalendarID']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.param = res;
+          this.calendarID = res.fieldValue;
+          this.getDayOff(this.calendarID);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  getDayOff(id) {
+    this.api
+      .execSv<any>(
+        'BS',
+        'ERM.Business.BS',
+        'CalendarsBusiness',
+        'GetDayWeekAsync',
+        [this.calendarID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          res.forEach(() => {
+            this.dayoff = res;
+          });
+        }
+      });
   }
 
   handleWeekDay(weekday) {
-    if (weekday) {
-      this.stShift.startTime = weekday?.stShift.startTimeSt;
-      this.stShift.endTime = weekday?.stShift.endTimeSt;
-      this.stShift.data = [];
-      this.ndShift.startTime = weekday?.ndShift.startTimeNd;
-      this.ndShift.endTime = weekday?.ndShift.endTimeNd;
-      this.ndShift.data = [];
-      this.days.forEach((e, i) => {
-        let y = i.toString();
-        let stCheck = _.some(weekday?.stShift.data, { weekday: y });
-        let ndCheck = _.some(weekday?.ndShift.data, { weekday: y });
-        this.stShift.data.push({
-          weekday: y,
-          checked: stCheck,
-          shiftType: 1,
-        });
-        this.ndShift.data.push({
-          weekday: y,
-          checked: ndCheck,
-          shiftType: 2,
-        });
+    debugger;
+    this.stShift.startTime = weekday.stShift.startTimeSt;
+    this.stShift.endTime = weekday.stShift.endTimeSt;
+    this.stShift.data = [];
+    this.ndShift.startTime = weekday.ndShift.startTimeNd;
+    this.ndShift.endTime = weekday.ndShift.endTimeNd;
+    this.ndShift.data = [];
+    this.days.forEach((e, i) => {
+      let y = i.toString();
+      let stCheck = _.some(weekday.stShift.data, { weekday: y });
+      let ndCheck = _.some(weekday.ndShift.data, { weekday: y });
+      this.stShift.data.push({
+        weekday: y,
+        checked: stCheck,
+        shiftType: 1,
       });
-    }
-
+      this.ndShift.data.push({
+        weekday: y,
+        checked: ndCheck,
+        shiftType: 2,
+      });
+    });
     this.detectorRef.detectChanges();
   }
 
@@ -129,6 +151,7 @@ export class PopupEditCalendarComponent extends UIComponent {
     this.evtData = new BS_DaysOff();
     if (data) this.evtData = { ...data };
     this.evtData.calendarID = this.calendarID;
+    this.getDayOff(this.calendarID);
     if (this.dayOffId) {
       this.callfc.openForm(
         PopupAddEventComponent,
@@ -151,14 +174,21 @@ export class PopupEditCalendarComponent extends UIComponent {
   }
 
   removeDayOff(item) {
-    this.settingCalendar.removeDayOff(item).subscribe((res) => {
-      if (res) {
-        this.dayOff = _.filter(this.dayOff, function (o) {
-          return o.recID != item.recID;
-        });
-        this.notiService.notifyCode('E0408');
-      }
-    });
+    this.api
+      .exec(
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.DaysOff,
+        'DeleteAsync',
+        item
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dayOff = _.filter(this.dayOff, function (o) {
+            return o.recID != item.recID;
+          });
+          this.notiService.notifyCode('E0408');
+        }
+      });
   }
 
   //Modal calendarDate
@@ -188,14 +218,21 @@ export class PopupEditCalendarComponent extends UIComponent {
   }
 
   removeCalendarDate(item) {
-    this.settingCalendar.removeCalendarDate(item).subscribe((res) => {
-      if (res) {
-        this.calendarDate = _.filter(this.calendarDate, function (o) {
-          return o.recID != item.recID;
-        });
-        this.notiService.notifyCode('E0408');
-      }
-    });
+    this.api
+      .exec(
+        APICONSTANT.ASSEMBLY.BS,
+        APICONSTANT.BUSINESS.BS.CalendarDate,
+        'DeleteAsync',
+        item
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarDate = _.filter(this.calendarDate, function (o) {
+            return o.recID != item.recID;
+          });
+          this.notiService.notifyCode('E0408');
+        }
+      });
   }
 
   editShift(event, shiftType: string = '1') {
@@ -218,13 +255,14 @@ export class PopupEditCalendarComponent extends UIComponent {
     model.wKTemplateID = this.calendarID;
     model.shiftType = item.shiftType;
     model.weekday = item.weekday;
+    let check = e.data.checked;
     this.api
       .execSv<any>(
         APICONSTANT.SERVICES.BS,
         APICONSTANT.ASSEMBLY.BS,
         APICONSTANT.BUSINESS.BS.CalendarWeekdays,
         'SaveWeekdaysAsync',
-        [model]
+        [model, check]
       )
       .subscribe();
   }

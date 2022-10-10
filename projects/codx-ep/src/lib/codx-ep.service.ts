@@ -276,7 +276,7 @@ export class CodxEpService {
           if (res) {
             gridViewSetup = res;
             this.notificationsService.notifyCode(
-              'SYS028',
+              'E0001',
               0,
               '"' + gridViewSetup[fieldName].headerText + '"'
             );
@@ -284,7 +284,7 @@ export class CodxEpService {
         });
     } else {
       this.notificationsService.notifyCode(
-        'SYS028',
+        'E0001',
         0,
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
@@ -349,9 +349,9 @@ export class CodxEpService {
     );
   }
 
-  approve( entity: string, recID: string, status: string) {    
+  approve( entity: string, recID: string, status: string) {
     return this.api.execSv(
-      'ES',
+      'CM',
       'ERM.Business.CM',
       'DataBusiness',
       'ApproveAsync',

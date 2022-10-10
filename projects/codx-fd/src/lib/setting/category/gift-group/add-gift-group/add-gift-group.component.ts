@@ -47,6 +47,7 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
     );
     this.formModel = dialog.formModel;
     this.isModeAdd = dt.data?.isModeAdd;
+    this.title = dt.data?.headerText;
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
       if (res) {
         this.header =

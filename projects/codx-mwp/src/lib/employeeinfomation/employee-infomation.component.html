@@ -113,6 +113,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="joinedOn" formName="Employees"
                           default="Ngày vào làm:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.joinedOn | date : "dd/MM/yyyy"}}</span> -->
                         <span #joinedOn>{{
                           employeeInfo.joinedOn
                           | formatvalue: formModel:"joinedOn":joinedOn
@@ -125,6 +126,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="PayGroupID" formName="Employees"
                           default="Nhóm tính lương:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.payGroupID}}</span> -->
                         <span #payGroupID>{{
                           employeeInfo.payGroupID
                           | formatvalue: formModel:"payGroupID":payGroupID
@@ -140,6 +142,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="hiredOn" formName="Employees"
                           default="Ngày ký hợp đồng chính thức:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.hiredOn | date : "dd/MM/yyyy"}}</span> -->
                         <span #hiredOn>{{
                           employeeInfo.hiredOn
                           | formatvalue: formModel:"hiredOn":hiredOn
@@ -152,6 +155,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="senioritydate" formName="Employees"
                           default="Thâm niên:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.senioritydate}}</span> -->
                         <span #senioritydate>{{
                           employeeInfo.senioritydate
                           | formatvalue
@@ -170,8 +174,9 @@
                         <codx-label class="text-gray-600 me-2" fiedName="recruitedOn" formName="Employees"
                           default="Ngày tuyển dụng:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.recritedOn}}</span> -->
                         <span #recritedOn>{{
-                          employeeInfo.recritedOn | date: "dd/MM/yyyy"
+                          employeeInfo.recritedOn
                           | formatvalue: formModel:"recritedOn":recritedOn
                           | async
                           }}</span>
@@ -202,11 +207,16 @@
                       | async
                       }}</span>
                     <span class="text-gray-500 mx-3">|</span>
+                    <!-- <span class="text-dark" *ngIf="employeeInfo?.street!='---'">{{employeeInfo?.street}}</span>
+                    <span class="text-muted" *ngIf="employeeInfo?.street=='---'"> -->
                     <span #street>{{
                       employeeInfo.street
                       | formatvalue: formModel:"street":street
                       | async
                       }}</span>
+                    <!-- <codx-label fiedName="street" formName="Employees" default="Địa chỉ thường trú">
+                      </codx-label>
+                    </span> -->
                   </div>
 
                   <div class="text-dark fw-bold text-uppercase mt-6 mb-1">
@@ -225,6 +235,8 @@
                         <span class="text-dark">{{
                           employeeInfo?.gender | vll: "L0068":"text" | async
                           }}</span>
+                        <!-- <span #gender>{{ employeeInfo.gender | formatvalue: formModel:"gender":gender | async
+                        }}</span> -->
                       </div>
                     </div>
                     <div class="col">
@@ -232,6 +244,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="birthday" formName="Employees"
                           default="Sinh ngày:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
                         <span #birthday>{{
                           employeeInfo.birthday
                           | formatvalue: formModel:"birthday":birthday
@@ -244,6 +257,8 @@
                         <codx-label class="text-gray-600 me-2" fiedName="birthPlaceName" formName="Employees"
                           default="Tại:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo?.birthPlaceName !=""? employeeInfo?.birthPlaceName :
+                          null}}</span> -->
                         <span #birthPlaceName>{{
                           employeeInfo.birthPlaceName
                           | formatvalue
@@ -261,6 +276,9 @@
                         <codx-label class="text-gray-600 me-2" fiedName="idCardNo" formName="Employees"
                           default="CMND/CCCD:">
                         </codx-label>
+
+                        <!-- <span class="text-dark">{{employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
+                          null}}</span> -->
                         <span #idCardNo>{{
                           employeeInfo.idCardNo
                           | formatvalue: formModel:"idCardNo":idCardNo
@@ -273,6 +291,8 @@
                         <codx-label class="text-gray-600 me-2" fiedName="issuedOn" formName="Employees"
                           default="Cấp ngày:">
                         </codx-label>
+                        <!-- <span class="text-dark me-15">{{employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
+
                         <span #issuedOn>{{
                           employeeInfo.issuedOn
                           | formatvalue: formModel:"issuedOn":issuedOn
@@ -284,6 +304,9 @@
                       <div class="d-flex">
                         <codx-label class="text-gray-600 me-2" fiedName="issuedBy" formName="Employees" default="Tại:">
                         </codx-label>
+
+                        <!-- <span class="text-dark me-15">{{employeeInfo?.issuedBy != "" ? employeeInfo?.issuedBy :
+                          null}}</span> -->
                         <span #issuedBy>{{
                           employeeInfo.issuedBy
                           | formatvalue: formModel:"issuedBy":issuedBy
@@ -298,6 +321,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="religion" formName="Employees"
                           default="Tôn giáo:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.religion}}</span> -->
                         <span #religion>{{
                           employeeInfo.religion
                           | formatvalue: formModel:"religion":religion
@@ -310,6 +334,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="ethnicGroup" formName="Employees"
                           default="Dân tộc:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.ethnicGroup}}</span> -->
                         <span #ethnicGroup>{{
                           employeeInfo.ethnicGroup
                           | formatvalue: formModel:"ethnicGroup":ethnicGroup
@@ -322,6 +347,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="nationality" formName="Employees"
                           default="Quốc tịch:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.nationality}}</span> -->
                         <span #nationality>{{
                           employeeInfo.nationality
                           | formatvalue: formModel:"nationality":nationality
@@ -336,6 +362,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="education" formName="Employees"
                           default="Trình độ văn hóa:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.education}}</span> -->
                         <span #education>{{
                           employeeInfo.education
                           | formatvalue: formModel:"education":education
@@ -348,6 +375,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="degree" formName="Employees"
                           default="Trình độ chuyên môn:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.certificateName}}</span> -->
                         <span #degree>{{
                           employeeInfo.degree
                           | formatvalue: formModel:"degree":degree
@@ -366,6 +394,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="pITNumber" formName="Employees"
                           default="Thuế TNCN số:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.pitNumber}}</span> -->
                         <span #pitNumber>{{
                           employeeInfo.pitNumber
                           | formatvalue: formModel:"pitNumber":pitNumber
@@ -378,10 +407,11 @@
                         <codx-label class="text-gray-600 me-2" fiedName="pitIssuedOn" formName="Employees"
                           default="Cấp ngày:">
                         </codx-label>
-                        <span #pitIssuedOn>{{
-                          employeeInfo.pitIssuedOn | date: "dd/MM/yyyy" | formatvalue: formModel:"pitIssuedOn":pitIssuedOn
-                          | async
+                        <span class="text-dark">{{
+                          employeeInfo.pitIssuedOn | date: "dd/MM/yyyy"
                           }}</span>
+                        <!-- <span #pitIssuedOn>{{ employeeInfo.pitIssuedOn | formatvalue: formModel:"pitIssuedOn":pitIssuedOn | async
+                        }}</span> -->
                       </div>
                     </div>
                     <div class="col">
@@ -398,6 +428,7 @@
                         <codx-label class="text-gray-600 me-2" fiedName="sIRegisterNo" formName="Employees"
                           default="BHXH số:">
                         </codx-label>
+                        <!-- <span class="text-dark">{{employeeInfo.siRegisterNo}}</span> -->
                         <span #siRegisterNo>{{
                           employeeInfo.siRegisterNo
                           | formatvalue: formModel:"siRegisterNo":siRegisterNo
@@ -413,6 +444,8 @@
                         <span class="text-dark">{{
                           employeeInfo.siRegisterOn | date: "dd/MM/yyyy"
                           }}</span>
+                        <!-- <span #siRegisterOn>{{ employeeInfo.siRegisterOn | formatvalue: formModel:"siRegisterOn":siRegisterOn | async
+                        }}</span> -->
                       </div>
                     </div>
                     <div class="col">

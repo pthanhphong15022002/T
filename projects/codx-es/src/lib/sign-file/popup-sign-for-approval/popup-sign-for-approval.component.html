@@ -52,6 +52,19 @@
           ></codx-label>
         </button>
 
+        <button
+          type="button"
+          class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
+          [disabled]="!canOpenSubPopup"
+          (click)="clickUSB()"
+        >
+          <codx-label
+            name="lblDeny"
+            [formModel]="formModel"
+            default="USB"
+          ></codx-label>
+        </button>
+
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close()"></i>
         </div>
