@@ -11,14 +11,32 @@ export class BP_Processes {
 }
 
 export class BP_ProcessSteps {
+  id : string ;
+  recID : string ;
   parentID: string;
-  stepName: string;
-  stepName2: string;
-  memo: string;
-  duration: string;
-  location: string;
-  owners: string;
-  stepType: string;
+  stepNo : number ;	
+  stepName :string ;
+  stepName2 :string ;
+  stepType : string ;
+  reference: string ;
+  memo :string ;
+  location :string ;
+  duration : number ;
+  interval :string ;
+  perUnit  :string ;
+  eventBase  :string ;
+  reminder  :string ;
+  reminderBy  :string ;
+  note :string ;
+  stopOn:Date ;
+  attachments : number ;
+  comments : number
+  refID :string ;
+  refLineID :string ;
+  createdOn : Date ;
+  createdBy : string ;
+  modifiedOn : Date ;
+  modifiedBy : string ;
 }
 
 // Thông tin Email để gửi

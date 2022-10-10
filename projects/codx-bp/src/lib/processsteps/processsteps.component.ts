@@ -52,7 +52,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.button = {
-      id: 'btnAdd',
+      id: 'P',
       //setcung tam đoi thuong
       // P;Phase;A;Activity;T;Task;E;Email;E;Calendar;Q;QuEstionarie;I;Interview;C;Check list
       items: [
@@ -213,14 +213,14 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
       case 'SYS01':
         this.add();
         break;
-      // case 'SYS03':
-      //   this.edit(data);
-      //   break;
-      // case 'SYS04':
-      //   this.copy(data);
-      //   break;
-      // case 'SYS02':
-      //   this.delete(data);
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
     }
   }
 

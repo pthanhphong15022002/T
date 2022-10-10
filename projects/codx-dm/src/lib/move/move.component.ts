@@ -49,8 +49,9 @@ export class MoveComponent implements OnInit {
   loadedFolder: boolean;
   setting: any;  
   title = 'Thông báo';
-  titleFullName = 'Tên';
+  titleFullName = 'Nhập lại tên mới';
   titleSave = "Lưu";
+  mess = '. Bạn có muốn ghi đè';
   titleMessage = "Tên bắt buộc.";
   titleRequired = "Tên bắt buộc.";
   titleDialog = 'Di chuyển/Sao chép tới';
@@ -68,6 +69,7 @@ export class MoveComponent implements OnInit {
   @ViewChild('view') view!: ViewsComponent; 
   
   @Output() eventShow = new EventEmitter<boolean>();
+  checkFolderName: any;
   constructor(  
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
@@ -140,6 +142,36 @@ export class MoveComponent implements OnInit {
   disable() {
     return this.disableSave;
   }
+
+ /*  CheckFolderName() {     
+    if (this.fullName === "")
+      return "1";  
+    else
+      return "0";
+  }
+  validate(item) {  
+    this.errorshow = false;
+    switch (item) {  
+      case "fullName":
+        if (this.CheckFolderName() != "0") {        
+          return "w-100 border border-danger is-invalid";       
+        }
+        else {
+          return "w-100";      
+        }
+    }  
+    return "";    
+  }
+  changeValue($event, type) {
+    debugger;
+    console.log($event);
+    switch(type) {
+      case "fullName":
+        this.fullName = $event.data;    
+     //   alert(this.folderName);
+        break;
+    }
+  } */
  
   displayThumbnail(id, pathDisk) {
     var that = this;
@@ -201,6 +233,7 @@ export class MoveComponent implements OnInit {
           {         
             var config = new AlertConfirmInputConfig();
             config.type = "YesNo";
+            debugger;
             this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
               if(x.event.status == "Y") {
                 that.fileService.copyFile(that.id, that.fullName, "", 0, 1).subscribe(async item => {
@@ -378,6 +411,7 @@ export class MoveComponent implements OnInit {
   }
 
   CopyDataTo() {
+    debugger;
     var that = this;
     if (this.objectType == 'file') {
       this.fileService.copyFile(this.id, this.fullName, that.selectId, this.selection).subscribe(async res => {
@@ -411,8 +445,9 @@ export class MoveComponent implements OnInit {
         if (res.status == 6) {
           //  let newNameMessage = this.renamemessage.replace("{0}", res.data.fileName);
           var config = new AlertConfirmInputConfig();
-          config.type = "checkBox";
-          
+          config.type = "YesNo"/* "checkBox" */;
+          debugger;
+          res.message = res.message + this.mess;
           this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
             if(x.event.status == "Y") {
               that.fileService.copyFile(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {

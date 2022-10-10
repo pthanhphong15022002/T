@@ -31,7 +31,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   action = '';
   vllShare = 'TM003';
   listUser = [];
-  isAlert =true ;
+  isAlert = true;
   isEmail = true;
 
   constructor(
@@ -47,7 +47,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.titleActon = dt?.data[2];
     this.action = dt?.data[1];
     // this.stepType = dt?.data[3];
-    this.stepType ='T';//thêm để test
+    this.stepType = 'T'; //thêm để test
     this.dialog = dialog;
 
     this.funcID = this.dialog.formModel.funcID;
@@ -61,22 +61,55 @@ export class PopupAddProcessStepsComponent implements OnInit {
   //endregio
 
   //#region method
+
+  async saveData() {
+    if (this.attachment && this.attachment.fileUploadList.length)
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          this.processSteps.attachments = Array.isArray(res) ? res.length : 1;
+          if (this.action == 'edit') this.updateProcessStep();
+          else this.addProcessStep();
+        }
+      });
+    else {
+      if (this.action == 'edit') this.updateProcessStep();
+      else this.addProcessStep();
+    }
+  }
+
   beforeSave(op) {
     var data = [];
-    op.method = 'AddProcessStepAsync';
-    op.className = 'ProcessStepsBusiness';
-    this.processSteps.stepType = this.stepType;
-    data = [this.processSteps];
+    if (this.action == 'edit') {
+
+    } else {
+      op.method = 'AddProcessStepAsync';
+      op.className = 'ProcessStepsBusiness';
+      this.processSteps.stepType = this.stepType;
+      data = [this.processSteps];
+    }
 
     op.data = data;
     return true;
   }
-  saveData() {
+
+  addProcessStep() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
+        this.attachment?.clearData();
         if (res) {
-          this.dialog.close([res.save]);
+          this.dialog.close(res.save);
+        } else this.dialog.close();
+      });
+  }
+
+  updateProcessStep() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        this.attachment?.clearData();
+        if (res) {
+          this.dialog.close(res.update);
         } else this.dialog.close();
       });
   }
@@ -94,9 +127,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
-  valueChangeSwitch(e){
-
-  }
+  valueChangeSwitch(e) {}
 
   fileAdded(e) {}
   getfileCount(e) {}

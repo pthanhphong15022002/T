@@ -39,6 +39,8 @@ export class ProcessesComponent
   @ViewChild('itemVersionNo', { static: true })
   itemVersionNo: TemplateRef<any>;
   @ViewChild('itemActivedOn', { static: true }) itemActivedOn: TemplateRef<any>;
+  @ViewChild('templateListCard', { static: true }) templateListCard: TemplateRef<any>;
+
   @ViewChild('itemMemo', { static: true })
   itemMemo: TemplateRef<any>;
   @Input() showButtonAdd = true;
@@ -84,11 +86,19 @@ export class ProcessesComponent
     this.views = [
       {
         type: ViewType.grid,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           resources: this.columnsGrid,
           template: this.itemViewList,
+        },
+      },
+      {
+        type: ViewType.card,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateListCard,
         },
       },
     ];
