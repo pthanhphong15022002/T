@@ -351,7 +351,7 @@ export class CodxEpService {
 
   approve( entity: string, recID: string, status: string) {
     return this.api.execSv(
-      'CM',
+      'EP',
       'ERM.Business.CM',
       'DataBusiness',
       'ApproveAsync',
