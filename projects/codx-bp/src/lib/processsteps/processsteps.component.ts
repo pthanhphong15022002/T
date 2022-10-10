@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
   selector: 'lib-processsteps',
@@ -137,93 +138,30 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
 
   //#region CRUD bước công việc
   add() {
-    // if(this.idForm === 'A'){
-    //   this.view.dataService.addNew().subscribe((res: any) => {
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view?.dataService;
-    //     option.FormModel = this.view?.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfc.openSide(
-    //       PopAddProcessstepsComponent,
-    //       ['add', this.titleAction, this.idForm],
-    //       option
-    //     );
-    //     this.dialog.closed.subscribe((e) => {
-    //       if (e?.event == null)
-    //         this.view.dataService.delete(
-    //           [this.view.dataService.dataSelected],
-    //           false
-    //         );
-    //     });
-    //   });
-    // }else if(this.idForm === 'P'){
-    //   this.view.dataService.addNew().subscribe((res: any) => {
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view?.dataService;
-    //     option.FormModel = this.view?.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfc.openSide(
-    //       PopAddPhaseComponent,
-    //       ['add', this.titleAction, this.idForm],
-    //       option
-    //     );
-    //     this.dialog.closed.subscribe((e) => {
-    //       if (e?.event == null)
-    //         this.view.dataService.delete(
-    //           [this.view.dataService.dataSelected],
-    //           false
-    //         );
-    //     });
-    //   });
-    // }
+      this.view.dataService.addNew().subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          PopupAddProcessStepsComponent,
+          ['add', this.titleAction, this.stepType],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+        });
+      });
   }
 
   edit(data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .edit(this.view.dataService.dataSelected)
-    //   .subscribe((res: any) => {
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view?.dataService;
-    //     option.FormModel = this.view?.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfc.openSide(
-    //       PopAddProcessstepsComponent,
-    //       ['edit', this.titleAction, this.idForm],
-    //       option
-    //     );
-    //     this.dialog.closed.subscribe((e) => {
-    //       if (e?.event == null)
-    //         this.view.dataService.delete(
-    //           [this.view.dataService.dataSelected],
-    //           false
-    //         );
-    //     });
-    //   });
   }
 
   copy(data) {
-    // if (data) this.view.dataService.dataSelected = data;
-    // this.view.dataService.copy().subscribe((res: any) => {
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view?.currentView?.dataService;
-    //   option.FormModel = this.view?.currentView?.formModel;
-    //   option.Width = '550px';
-    //   this.dialog = this.callfc.openSide(
-    //     PopAddProcessstepsComponent,
-    //     ['copy', this.titleAction, this.idForm],
-    //     option
-    //   );
-    //   this.dialog.closed.subscribe((e) => {
-    //     if (e?.event == null)
-    //       this.view.dataService.delete(
-    //         [this.view.dataService.dataSelected],
-    //         false
-    //       );
-    //   });
-    // });
   }
 
   delete(data) {

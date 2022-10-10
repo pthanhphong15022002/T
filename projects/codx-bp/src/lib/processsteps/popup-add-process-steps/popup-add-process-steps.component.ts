@@ -26,10 +26,11 @@ export class PopupAddProcessStepsComponent implements OnInit {
   title = '';
   processSteps: any;
   stepType = '';
-  readOnly=false ;
-  titleActon='' ;
-  action =''
- 
+  readOnly = false;
+  titleActon = '';
+  action = '';
+  vllShare = 'TM003';
+  listUser = [];
 
   constructor(
     private bpService: CodxBpService,
@@ -38,14 +39,16 @@ export class PopupAddProcessStepsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.processSteps = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
-    this.titleActon = dt?.data[2] ;
-    this.action =dt?.data[1];
-    this.stepType =dt?.data[3]
-    this.dialog = dialog ;
-    
+    this.processSteps = JSON.parse(
+      JSON.stringify(dialog.dataService!.dataSelected)
+    );
+    this.titleActon = dt?.data[2];
+    this.action = dt?.data[1];
+    this.stepType = dt?.data[3];
+    this.dialog = dialog;
+
     this.funcID = this.dialog.formModel.funcID;
-    this.title = this.titleActon ;
+    this.title = this.titleActon;
   }
 
   ngOnInit(): void {}
@@ -81,8 +84,15 @@ export class PopupAddProcessStepsComponent implements OnInit {
   valueChange(e) {
     this.processSteps[e?.field] = e?.data;
   }
-  addFile(e) {}
+
+  valueChangeEstimate(e, stepType) {}
+
+  addFile(e) {
+    this.attachment.uploadFile();
+  }
   fileAdded(e) {}
   getfileCount(e) {}
+
+  eventApply(e) {}
   //endregion
 }

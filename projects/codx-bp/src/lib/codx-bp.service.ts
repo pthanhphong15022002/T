@@ -14,7 +14,7 @@ export class CodxBpService {
     //Send Email
     sendMail(recID : string , infor : tmpInforSentEMail  )
     {
-      return this.api.exec<any>('OD' ,'DispatchesBusiness', 'SendMailDispatchAsync' , [recID , infor] )
+      // return this.api.exec<any>('OD' ,'DispatchesBusiness', 'SendMailDispatchAsync' , [recID , infor] )
       
     }
 }
