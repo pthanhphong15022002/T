@@ -1,11 +1,20 @@
-<div class="d-flex justify-content-end mb-3">
+<div class="d-flex justify-content-start mb-3">
   <div class="d-flex align-items-center">
     <div class="me-1 setting-box-search">
-      <codx-input class="form-control" type="combobox" [refValue]="'Calendars'" [crrValue]="this.calendarID"
-        [multiple]="false" (valueChange)="changeCombobox($event)">
+      <codx-input
+        class="form-control"
+        type="combobox"
+        [refValue]="'Calendars'"
+        [crrValue]="this.calendarID"
+        [multiple]="false"
+        (valueChange)="changeCombobox($event)"
+      >
       </codx-input>
     </div>
-    <button class="btn btn-icon btn-primary me-1" (click)="openCalendarSettings()">
+    <button
+      class="btn btn-icon btn-primary me-1"
+      (click)="openCalendarSettings()"
+    >
       <span class="icon-settings text-white icon-18"></span>
     </button>
     <button class="btn btn-primary btn-md" (click)="addCalendar()">
@@ -13,12 +22,11 @@
     </button>
   </div>
 </div>
-<div class="bg-body rounded-3 p-3 setting-calendar-body">
-  <codx-schedule #schedule height="100%" [enableAdaptiveUI]="false" [templateCell]="cellTemplate"
-    [currentView]="currentView" [allowGridLines]="false" [isCalendarView]="true" [isTimelineView]="false">
-  </codx-schedule>
-</div>
-<ng-template #cellTemplate let-data>
-  <div [innerHtml]="getCellContent(data.date)"></div>
-  <div></div>
+
+<codx-views #view [views]="views"> </codx-views>
+
+<ng-template #eventTemplate let-data>
+  <div [style.color]="data?.dayoffColor">
+    <div>{{ data?.note }}</div>
+  </div>
 </ng-template>
