@@ -550,7 +550,7 @@ export class CodxDMService {
                     list.splice(index, 1); //remove element from array
                     //this.changeData(null, list, id);
                     this.listFiles = list;
-                    this.notificationsService.notifyCode("DM046", this.user?.userName)
+                    this.notificationsService.notifyCode("DM046" , 0 , this.user?.userName)
                     this.ChangeData.next(true);
                     //  this.changeDetectorRef.detectChanges();
                   }
@@ -1479,14 +1479,14 @@ export class CodxDMService {
     var item1 = '';
     var item2 = '';
 
-    if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-      item1 = '<img class="h-15px" src="../../../assets/codx/dms/folder.svg">';
+    if (!folder.icon)
+      item1 = '<img class="h-13px" src="../../../assets/codx/dms/folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
       else {
         var path = `${folder.icon}`;
-        item1 = `<img class="h-15px " src="${path}">`;
+        item1 = `<img class="h-13px " src="${path}">`;
       }
     }
 

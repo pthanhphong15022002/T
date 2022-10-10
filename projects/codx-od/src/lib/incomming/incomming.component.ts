@@ -199,6 +199,8 @@ export class IncommingComponent
   show() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
+      // option.zIndex = 499;
+      
       option.DataService = this.view?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         IncommingAddComponent,
