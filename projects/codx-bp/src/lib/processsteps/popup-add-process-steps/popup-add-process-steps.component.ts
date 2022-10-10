@@ -25,7 +25,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   showLabelAttachment = false;
   title = '';
   processSteps: any;
-  idForm = '';
+  stepType = '';
   readOnly=false ;
   titleActon='' ;
   action =''
@@ -41,7 +41,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.titleActon = dt?.data[2] ;
     this.action =dt?.data[1];
-    this.idForm =dt?.data[3]
+    this.stepType =dt?.data[3]
     this.dialog = dialog ;
     
     this.funcID = this.dialog.formModel.funcID;
@@ -59,7 +59,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     var data = [];
     op.method = 'AddProcessStepAsync';
     op.className = 'ProcessStepsBusiness';
-    this.processSteps.stepType = this.idForm;
+    this.processSteps.stepType = this.stepType;
     data = [this.processSteps];
 
     op.data = data;
