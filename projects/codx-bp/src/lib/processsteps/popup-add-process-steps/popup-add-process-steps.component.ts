@@ -46,7 +46,8 @@ export class PopupAddProcessStepsComponent implements OnInit {
     );
     this.titleActon = dt?.data[2];
     this.action = dt?.data[1];
-    this.stepType = dt?.data[3];
+    // this.stepType = dt?.data[3];
+    this.stepType ='C';
     this.dialog = dialog;
 
     this.funcID = this.dialog.formModel.funcID;

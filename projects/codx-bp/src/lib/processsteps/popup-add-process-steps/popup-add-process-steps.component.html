@@ -10,7 +10,7 @@
 >
   <ng-template #body>
     <div class="card-form">
-      <div class="form-group">
+      <div class="form-group" *ngIf="stepType == 'P'">
         <div>
           <codx-label
             fiedName="StepName"
@@ -71,7 +71,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="stepType != 'C' && stepType != 'C'">
         <codx-label
           name="Memo"
           [formModel]="form.formModel"
@@ -116,25 +116,8 @@
           >
           </codx-input>
         </div>
-        <div class="col-4 form-group" *ngIf="stepType == 'C'">
-          <div>
-            <codx-label
-              fiedName="Reminder"
-              [formModel]="form.formModel"
-              default="Nhắc nhở"
-            >
-            </codx-label>
-            <codx-input
-              field="reminder"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              (valueChange)="valueChangeEstimate($event, stepType)"
-            >
-            </codx-input>
-          </div>
-        </div>
         <div class="col-4 form-group row" *ngIf="stepType == 'C'">
-          <div class="d-flex align-items-center col-7 px-0">
+          <div class="d-flex align-items-center col-6 mt-5">
             <codx-input
               type="switch"
               class="test-check"
@@ -151,7 +134,7 @@
               </codx-label>
             </span>
           </div>
-          <div class="d-flex align-items-center col-7 px-0">
+          <div class="d-flex align-items-center col-6 mt-5">
             <codx-input
               type="switch"
               class="test-check"
@@ -237,6 +220,23 @@
           </ng-container>
         </div>
       </ng-container>
+
+      <div class="form-group" *ngIf="stepType == 'C'">
+        <codx-label
+          fiedName="Note"
+          [formModel]="form.formModel"
+          default="Ghi chú"
+        >
+        </codx-label>
+        <codx-input
+          field="note"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      
       <ng-container>
         <div
           class="d-flex align-items-center justify-content-between mt-4"
@@ -276,6 +276,8 @@
           </codx-attachment>
         </div>
       </ng-container>
+
+      
     </div>
   </ng-template>
   <ng-template #footer>
