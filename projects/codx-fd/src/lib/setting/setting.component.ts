@@ -149,8 +149,9 @@ export class SettingComponent extends UIComponent implements OnInit {
   }
 
   getParameter() {
-    this.settingSV.getParameter().subscribe((result) => {
-      if (result?.length > 0) this.parameter = JSON.parse(result[0].dataValue);
+    this.settingSV.getParameter().subscribe((result: any) => {
+      if (result) this.parameter = JSON.parse(result.dataValue);
+      console.log('check parameter', this.parameter);
     });
   }
 
@@ -173,7 +174,7 @@ export class SettingComponent extends UIComponent implements OnInit {
   }
 
   LoadDedicationRank(func) {
-    this.codxService.navigate(func.functionID);
+    this.codxService.navigate(func);
   }
 
   backLocation() {
@@ -184,7 +185,7 @@ export class SettingComponent extends UIComponent implements OnInit {
     // this.location.back();
   }
 
-  valueChange(value, e) {
+  valueChange(value) {
     let item = {};
     item[value.field] = value.data;
     this.onSaveParameter(item);

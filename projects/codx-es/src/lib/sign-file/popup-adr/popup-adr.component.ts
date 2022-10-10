@@ -12,6 +12,7 @@ import {
   DialogRef,
   FormModel,
   AuthStore,
+  NotificationsService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../codx-es.service';
@@ -28,6 +29,8 @@ export class PopupADRComponent extends UIComponent {
     private inject: Injector,
     private esService: CodxEsService,
     private authStore: AuthStore,
+    private notify: NotificationsService,
+
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -74,7 +77,12 @@ export class PopupADRComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog() {
-    this.dialog.close(this.mode);
+    this.notify.notifyCode('ES011');
+    console.log('form model', this.formModel);
+    console.log('dialogSignFile model', this.dialogSignFile);
+    if (this.formModel.currentData.comment != '') {
+      this.dialog.close(this.mode);
+    }
   }
 
   popupUploadFile() {

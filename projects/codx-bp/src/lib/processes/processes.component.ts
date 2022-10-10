@@ -19,7 +19,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { PopAddProcessesComponent } from './pop-add-processes/pop-add-processes.component';
+import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
+
 
 @Component({
   selector: 'lib-processes',
@@ -105,7 +106,7 @@ export class ProcessesComponent
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
-        PopAddProcessesComponent,
+        PopupAddProcessesComponent,
         ['add', this.titleAction],
         option
       );
@@ -131,7 +132,7 @@ export class ProcessesComponent
         option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
-          PopAddProcessesComponent,
+          PopupAddProcessesComponent,
           ['edit', this.titleAction],
           option
         );
@@ -153,7 +154,7 @@ export class ProcessesComponent
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
       this.dialog = this.callfc.openSide(
-        PopAddProcessesComponent,
+        PopupAddProcessesComponent,
         ['copy', this.titleAction],
         option
       );

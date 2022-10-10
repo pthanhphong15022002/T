@@ -1,10 +1,13 @@
-import { BS_DaysOff } from './models/BS_DaysOff.model';
 import { fieldChoose } from './../viewFileDialog/alertRule.model';
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, FormModel, AuthStore } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  FormModel,
+  AuthStore,
+} from 'codx-core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BS_CalendarDate } from './models/BS_CalendarDate.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +17,7 @@ export class SettingCalendarService {
     private cache: CacheService,
     private api: ApiHttpService,
     private auth: AuthStore,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {}
 
   getFormModel(functionID): Promise<FormModel> {
@@ -105,57 +108,21 @@ export class SettingCalendarService {
     );
   }
 
-  getCalendarName(calendarID: string) {
-    return this.api.exec<string>(
-      APICONSTANT.ASSEMBLY.BS,
-      APICONSTANT.BUSINESS.BS.Calendars,
-      'GetCalendarNameAsync',
-      [calendarID]
-    );
-  }
-
-  getDayWeek(calendarID: string) {
+  getDayWeek(id: string) {
     return this.api.exec<any>(
       APICONSTANT.ASSEMBLY.BS,
       APICONSTANT.BUSINESS.BS.Calendars,
       'GetDayWeekAsync',
-      [calendarID]
+      [id]
     );
   }
 
-  getDaysOff(calendarID: string) {
+  getDaysOff(id: string) {
     return this.api.exec<any>(
       APICONSTANT.ASSEMBLY.BS,
       APICONSTANT.BUSINESS.BS.CalendarDate,
       'GetDateOffAsync',
-      [calendarID]
-    );
-  }
-
-  getSettingCalendar(calendarID: string) {
-    return this.api.exec(
-      APICONSTANT.ASSEMBLY.BS,
-      APICONSTANT.BUSINESS.BS.Calendars,
-      'GetSettingCalendarAsync',
-      [calendarID]
-    );
-  }
-
-  removeDayOff(item: BS_DaysOff) {
-    return this.api.exec(
-      APICONSTANT.ASSEMBLY.BS,
-      APICONSTANT.BUSINESS.BS.DaysOff,
-      'DeleteAsync',
-      [item]
-    );
-  }
-
-  removeCalendarDate(item: BS_CalendarDate) {
-    return this.api.exec(
-      APICONSTANT.ASSEMBLY.BS,
-      APICONSTANT.BUSINESS.BS.CalendarDate,
-      'DeleteAsync',
-      [item]
+      [id]
     );
   }
 }

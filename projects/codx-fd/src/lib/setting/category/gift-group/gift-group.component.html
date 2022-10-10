@@ -40,7 +40,7 @@
 
 <ng-template #createdOn let-item>
   <div class="d-flex has-action-menu">
-    <span>{{ item.createdOn | date: "dd/MM/yyy" }}</span>
+    <span>{{ item.createdOn | fmDT }}</span>
     <codx-mfunc
       [dataItem]="item"
       [formModel]="view?.formModel"

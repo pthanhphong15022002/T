@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { CacheService, CallFuncService, CodxService, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { map, Observable, of } from 'rxjs';
+import { CallFuncService, CodxService, DialogRef, NotificationsService, RequestOption, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddEmployeesComponent } from '../employees/popup-add-employees/popup-add-employees.component';
 
@@ -33,7 +32,6 @@ export class EmployeesLeaveComponent implements OnInit {
     private notiService: NotificationsService,
     private callfunc: CallFuncService,
     private codxService: CodxService,
-    private cache: CacheService,
     private hrService: CodxHrService,
   ) {
     this.hrService.getMoreFunction(['HRT04', null, null]).subscribe((res) => {
@@ -132,27 +130,4 @@ export class EmployeesLeaveComponent implements OnInit {
   }
 
   requestEnded(event) { }
-
-  placeholder(value: string,formModel: FormModel,field: string): Observable<string> {
-    if (value) {
-      return of(`<span>${value}</span>`);
-    } else {
-      return this.cache
-        .gridViewSetup(formModel.formName, formModel.gridViewName)
-        .pipe(
-          map((datas) => {
-            if (datas && datas[field]) {
-              var gvSetup = datas[field];
-              if (gvSetup) {
-                if (!value) {
-                  var headerText = gvSetup.headerText as string;
-                  return `<span class="opacity-50">${headerText}</span>`;
-                }
-              }
-            }
-            return `<span class="opacity-50">${field}</span>`;
-          })
-        );
-    }
-  }
 }

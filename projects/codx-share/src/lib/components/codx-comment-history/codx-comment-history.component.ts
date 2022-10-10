@@ -23,8 +23,6 @@ export class CodxCommentHistoryComponent implements OnInit {
   @Input() formModel:FormModel;
   @Input() type: "view" | "create" = "view";
   @Input() data:any;
-  @Input()  dVll: any = {};
-  @Input() vllIcon: any = [];
   @Input() viewIcon:boolean = true;
   @Input()  allowVotes:boolean = true;
   @Output() evtReply = new EventEmitter;
@@ -34,14 +32,14 @@ export class CodxCommentHistoryComponent implements OnInit {
 
   user: any = null;
   message: string = "";
-
-
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
     APPLICATION: 'application'
   }
   lstFile: any[] = [];
+  lstData: any;
+
   @ViewChild("codxATM") codxATM: AttachmentComponent;
   constructor(
     private api: ApiHttpService,
@@ -55,6 +53,11 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cache.valueList('L1480').subscribe((res) => {
+      if (res) {
+        this.lstData = res.datas;
+      }
+    });
     this.user = this.auth.userValue;
     if(this.data){
       this.getFileByObjectID();
@@ -218,6 +221,6 @@ export class CodxCommentHistoryComponent implements OnInit {
       });
   }
   showVotes(data:any){
-    // this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
+    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
   }
 }
