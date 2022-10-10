@@ -750,3 +750,22 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   height: calc(100vh - 112px);
   overflow: auto;
 }
+
+/*****/
+
+codx-view-list-detail .codx-detail-footer.expand .tab-content {
+  overflow: auto;
+  padding: 0 15px;
+  position: relative;
+  height: 358px;
+  padding-bottom: 0 !important;
+}
+
+codx-view-list-detail .codx-detail-footer.expand .tab_footer {
+  bottom: 8px;
+  right: 15px;
+}
+
+codx-view-list-detail .codx-detail-footer.expand .tab_footer .btn.btn-light-primary.mb-4 {
+  margin-bottom: 0 !important;
+}
