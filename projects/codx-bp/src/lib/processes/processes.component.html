@@ -4,6 +4,42 @@
   (onDragDrop)="onDragDrop($event)">
 </codx-views>
 
+<ng-template #templateListCard let-data>
+  <codx-card-img cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
+    imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1" [footer]="footerbg">
+  </codx-card-img>
+  <ng-template #footerbg>
+    <div class="d-flex bg-footer  m-n3 mt-0">
+      <div class="d-flex flex-column w-100 p-3">
+        <div class="fs-4  fw-bold lh-base">{{data.processName}}</div>
+        <div class="d-flex align-items-center">
+          <div class="badge  badge-white my-1 me-3">{{ data.VersionNo }}</div>
+          <div class="d-flex align-items-center card-icon-nowrap">
+            <span class="me-1 icon-16 icon-access_alarm"></span><span
+              class="  line-clamp">{{data.activedOn | date: "dd/MM/yyyy"}}
+            </span>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between  my-1">
+          <div class="d-flex align-items-center">
+            <div class=" d-flex me-3">
+              <span class="icon-check-correct text-warning icon-16 me-1"></span>
+              <span class="">4</span>
+            </div>
+            <div class="d-flex me-3">
+              <span class="icon-attach_file text-primary icon-16 me-1"></span>
+              <span class=" ">{{data.attachments}}</span>
+            </div>
+          </div>
+          <codx-imgs [width]="25" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users" [numberImages]="2">
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+
 <!-- view-list -->
 <ng-template #itemViewList let-data>
   <tr>
@@ -12,22 +48,22 @@
         <div class="d-flex flex-column w-100 p-3">
           <div class="fw-bold lh-base">{{data.processName}}</div>
           <div class="d-flex flex-wrap justify-content-between">
-              <div class="d-flex align-items-center">
-                  <div class=" d-flex me-3">
-                      <span class="icon-server text-dark icon-16 me-1"></span>
-                      <span class="">4</span>
-                  </div>
-                  <div class=" d-flex me-3">
-                      <span class="icon-format_list_numbered text-danger icon-16 me-1"></span>
-                      <span class="">4</span>
-                  </div>
-                  <div class="d-flex me-3">
-                      <span class="icon-attach_file text-primary icon-16 me-1"></span>
-                      <span class=" ">{{data.attachments}}</span>
-                  </div>
+            <div class="d-flex align-items-center">
+              <div class=" d-flex me-3">
+                <span class="icon-server text-dark icon-16 me-1"></span>
+                <span class="">4</span>
               </div>
+              <div class=" d-flex me-3">
+                <span class="icon-format_list_numbered text-danger icon-16 me-1"></span>
+                <span class="">4</span>
+              </div>
+              <div class="d-flex me-3">
+                <span class="icon-attach_file text-primary icon-16 me-1"></span>
+                <span class=" ">{{data.attachments}}</span>
+              </div>
+            </div>
           </div>
-      </div>
+        </div>
       </div>
     </td>
     <td class="rowphoto" placement="left">
@@ -48,7 +84,7 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding" >
+      <div class="padding">
         <div [innerHTML]="data.memo"></div>
 
       </div>

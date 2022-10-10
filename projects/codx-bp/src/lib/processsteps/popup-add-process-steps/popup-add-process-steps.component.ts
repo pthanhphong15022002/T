@@ -26,10 +26,13 @@ export class PopupAddProcessStepsComponent implements OnInit {
   title = '';
   processSteps: any;
   stepType = '';
-  readOnly=false ;
-  titleActon='' ;
-  action =''
- 
+  readOnly = false;
+  titleActon = '';
+  action = '';
+  vllShare = 'TM003';
+  listUser = [];
+  isAlert = true;
+  isEmail = true;
 
   constructor(
     private bpService: CodxBpService,
@@ -38,14 +41,17 @@ export class PopupAddProcessStepsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.processSteps = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
-    this.titleActon = dt?.data[2] ;
-    this.action =dt?.data[1];
-    this.stepType =dt?.data[3]
-    this.dialog = dialog ;
-    
+    this.processSteps = JSON.parse(
+      JSON.stringify(dialog.dataService!.dataSelected)
+    );
+    this.titleActon = dt?.data[2];
+    this.action = dt?.data[1];
+    this.stepType = dt?.data[3];
+    // this.stepType = 'T'; //thêm để test
+    this.dialog = dialog;
+
     this.funcID = this.dialog.formModel.funcID;
-    this.title = this.titleActon ;
+    this.title = this.titleActon;
   }
 
   ngOnInit(): void {}
@@ -55,22 +61,55 @@ export class PopupAddProcessStepsComponent implements OnInit {
   //endregio
 
   //#region method
+
+  async saveData() {
+    if (this.attachment && this.attachment.fileUploadList.length)
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          this.processSteps.attachments = Array.isArray(res) ? res.length : 1;
+          if (this.action == 'edit') this.updateProcessStep();
+          else this.addProcessStep();
+        }
+      });
+    else {
+      if (this.action == 'edit') this.updateProcessStep();
+      else this.addProcessStep();
+    }
+  }
+
   beforeSave(op) {
     var data = [];
-    op.method = 'AddProcessStepAsync';
-    op.className = 'ProcessStepsBusiness';
-    this.processSteps.stepType = this.stepType;
-    data = [this.processSteps];
+    if (this.action == 'edit') {
+
+    } else {
+      op.method = 'AddProcessStepAsync';
+      op.className = 'ProcessStepsBusiness';
+      this.processSteps.stepType = this.stepType;
+      data = [this.processSteps];
+    }
 
     op.data = data;
     return true;
   }
-  saveData() {
+
+  addProcessStep() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
+        this.attachment?.clearData();
         if (res) {
-          this.dialog.close([res.save]);
+          this.dialog.close(res.save);
+        } else this.dialog.close();
+      });
+  }
+
+  updateProcessStep() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        this.attachment?.clearData();
+        if (res) {
+          this.dialog.close(res.update);
         } else this.dialog.close();
       });
   }
@@ -81,8 +120,18 @@ export class PopupAddProcessStepsComponent implements OnInit {
   valueChange(e) {
     this.processSteps[e?.field] = e?.data;
   }
-  addFile(e) {}
+
+  valueChangeEstimate(e, stepType) {}
+
+  addFile(e) {
+    this.attachment.uploadFile();
+  }
+
+  valueChangeSwitch(e) {}
+
   fileAdded(e) {}
   getfileCount(e) {}
+
+  eventApply(e) {}
   //endregion
 }

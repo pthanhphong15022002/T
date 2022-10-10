@@ -54,6 +54,7 @@
                                     </ng-container>
                                 </div>
                                 <div class="d-flex">
+                                    
                                     <a (click)="openRight(2, false)"
                                         class="btn btn-sm btn-outline-primary">{{titleShare}}</a>
                                     <!-- <a (click)="openRight(2, true)"
@@ -61,65 +62,45 @@
                                 </div>
                             </div>
                             <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
                                 <span class="text-gray-600 me-2 w-100px">{{titleFiletype}}:</span>
                                 <span class="">
                                     <!-- {{fileEditing.type}} --> {{fileEditing.extension}}
                                 </span>
-                            </div>
-                            <div *ngIf="fileEditing" class="d-flex my-3">
-                                <span class="text-gray-600 me-2 w-100px">{{titleFilesize}}:</span>
-                                <span class="">{{getSizeKB(fileEditing.fileSize)}} KB
-                                    ({{getSizeByte(fileEditing.fileSize)}} bytes)</span>
-                            </div>
-                            <div *ngIf="fileEditing && fileEditing.createdOn" class="d-flex mb-1 my-3">
-                                <span class="text-gray-600 me-2 w-100px">{{titleCreator}}:</span>
-                                <span class="">{{fileEditing.userName}}</span>
-                                <span class="icon-access_time icon-16 ms-5 me-1"></span>
-                                <span class="">{{fileEditing.createdOn | date:
-                                    'dd/MM/yyyy'}}</span>
-                            </div>
-                            <div *ngIf="fileEditing" class="d-flex mb-1 my-3">
-                                <span class="text-gray-600 me-2 w-100px">{{titleVersion}}:</span>
-                                <ng-container *ngIf="fileEditing.version , else elseVersion">
-                                    <span class="">{{fileEditing.version}}</span>
-                                    <span *ngIf="fileEditing.comment != ''"
-                                        class="icon-comment icon-18 text-warning ms-2" title="{{fileEditing.comment}}">
-                                    </span>
-                                </ng-container>
-                                <ng-template #elseVersion>
-                                    <span class="">Không có dữ liệu</span>
-                                </ng-template>
-                            </div>
-                            <div *ngIf="fileEditing" class="d-flex my-3">
-                                <span class="text-gray-600 me-2 w-100px">{{titleLanguage}}:</span>
-                                <ng-container *ngIf="fileEditing.language , else elselanguage">
-                                    <span class="">{{fileEditing.language}}</span>
-                                </ng-container>
-                                <ng-template #elselanguage>
-                                    <span class="">Không có dữ liệu</span>
-                                </ng-template>
-                                <!-- <span class="">{{fileEditing.language ? fileEditing.language : "Không có dữ liệu"}}</span> -->
-                            </div>
-                            <div *ngIf="fileEditing" class="d-flex my-3">
-                                <span class="text-gray-600 me-2 w-100px">{{titleAuthor}}:</span>
-                                <span class="">{{fileEditing.author ? fileEditing.author : "Không có dữ liệu"}}</span>
-                            </div>
-
+                            </ng-container>
+                            <ng-template #elseVersion>
+                                <span class="">{{messerror}}</span>
+                            </ng-template>
+                        </div>
+                        <div *ngIf="fileEditing" class="d-flex my-3">
+                            <span class="text-gray-600 me-2 w-100px">{{titleLanguage}}:</span>
+                            <ng-container *ngIf="fileEditing.language , else elselanguage">
+                                <span class="">{{fileEditing.language}}</span>
+                            </ng-container>
+                            <ng-template #elselanguage>
+                                <span class="">{{messerror}}</span>
+                            </ng-template>
+                            <!-- <span class="">{{fileEditing.language ? fileEditing.language : "Không có dữ liệu"}}</span> -->
+                        </div>
+                        <div *ngIf="fileEditing" class="d-flex my-3">
+                            <span class="text-gray-600 me-2 w-100px">{{titleAuthor}}:</span>
+                            <span class="">{{fileEditing.author ? fileEditing.author : "Không có dữ liệu"}}</span>
+                        </div>
+                       
                             <div *ngIf="fileEditing" class="d-flex my-3">
                                 <span class="text-gray-600 me-2 w-100px">{{titlePublisher}}:</span>
                                 <ng-container *ngIf="fileEditing.publisher , else elsepublisher">
                                     <span class="">{{fileEditing.publisher}}</span>
                                 </ng-container>
                                 <ng-template #elsepublisher>
-                                    <span class="">Không có dữ liệu</span>
+                                    <span class="">{{messerror}}</span>
                                 </ng-template>
                                 <!-- <span class="">{{fileEditing.publisher ? fileEditing.publisher : "Không có dữ liệu"}}</span> -->
                             </div>
 
                             <div *ngIf="fileEditing" class="d-flex my-3">
                                 <span class="text-gray-600 me-2 w-100px">{{titleCopyrights}}:</span>
-                                <span class="">{{fileEditing.copyRights ? fileEditing.copyRights : "Không có dữ
-                                    liệu"}}</span>
+                                <span class="">{{fileEditing.copyRights ? fileEditing.copyRights : "Không có dữ liệu"}}</span>
                             </div>
                         </div>
                         <div *ngIf="fileEditing" class="card-rating mt-6">

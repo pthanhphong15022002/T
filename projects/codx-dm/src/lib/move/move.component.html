@@ -23,8 +23,21 @@
     <div class="w-100">
       <div class="d-flex justify-content-between w-100">
         <div class="breadcrum-box me-2 flex-grow-1 border p-2 my-2">
-          <span class="fs-5 fw-normal">{{objectType == "file" ? "Tập tin: " : "Thư mục: "}}</span> 
-          <span class="fs-5 fw-normal">{{fullName}}</span>
+          <span class="fs-5 fw-normal">{{objectType == "file" ? "Tập tin: " : "Thư mục: "}}</span>
+          <!-- <span class="fs-5 fw-normal">
+            <codx-input [placeholder]="titleFullName" [class]="validate('fullName')" type="text"
+            [crrValue]="fullName" (valueChange)="changeValue($event, 'fullName')"></codx-input>
+            <div id="folderError" autofocus *ngIf="fullName === ''" class="d-flex mb-4 invalid-feedback">
+              <div *ngIf="fullName === ''; then thenBlockErrorFolder else thenBlockErrorElseFolder">
+              </div>
+              <ng-template #thenBlockErrorFolder>{{titleRequired}}</ng-template>
+              <ng-template #thenBlockErrorElseFolder>{{titleMessage}}</ng-template>
+          </div>
+          </span>  -->
+          
+          <span class="fs-5 fw-normal">{{fullName}}
+            
+          </span>
         </div>
       </div>
       <div class="d-flex w-100 mt-5">

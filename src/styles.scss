@@ -68,6 +68,7 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   --white: #ffffff;
   --black: #0f0f0f;
 
+  --bg-body: #fff;
   --bghover: #f4f8ff;
   --fs-7: 12px;
   --title-color: #f5f9fa;
@@ -768,4 +769,9 @@ codx-view-list-detail .codx-detail-footer.expand .tab_footer {
 
 codx-view-list-detail .codx-detail-footer.expand .tab_footer .btn.btn-light-primary.mb-4 {
   margin-bottom: 0 !important;
+}
+
+codx-dynamic-form codx-view-grid {
+  background-color: var(--bg-body);
+
 }
