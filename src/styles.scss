@@ -787,3 +787,14 @@ codx-dynamic-form codx-view-grid {
 .dms-card .card:hover {
   background-color: #eef4f4 !important;
 }
+
+/*******/
+.news-main {
+  margin-top: -16px;
+  margin-left: -16px;
+  margin-right: -16px;
+}
+
+.menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
+  color: $title-color;
+}

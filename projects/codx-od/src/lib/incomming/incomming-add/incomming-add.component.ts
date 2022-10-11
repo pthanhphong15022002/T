@@ -329,7 +329,7 @@ export class IncommingAddComponent implements OnInit {
       var field = capitalizeFirstLetter(this.objRequied[i]);
       var data = this.dispatch[field];
       if (!data) {
-        return this.notifySvr.notifyCode('E0001', 0, field);
+        return this.notifySvr.notifyCode('SYS028', 0, field);
       }
     }
     if (!this.fileCount || this.fileCount == 0)

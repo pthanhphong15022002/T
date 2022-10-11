@@ -234,26 +234,26 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         )
         .subscribe((res) => {
           if (res) {
-            // var ref = new tmpReferences();
-            // ref.recIDReferences = res.recID;
-            // ref.refType = 'TM_Tasks';
-            // ref.createdOn = res.createdOn;
-            // ref.memo = res.taskName;
-            // ref.createdBy = res.createdBy;
-            // ref.attachments =res.attachments ;
-            // ref.comments =res.comments ;
+            var ref = new tmpReferences();
+            ref.recIDReferences = res.recID;
+            ref.refType = 'TM_Tasks';
+            ref.createdOn = res.createdOn;
+            ref.memo = res.taskName;
+            ref.createdBy = res.createdBy;
+            ref.attachments =res.attachments ;
+            ref.comments =res.comments ;
             var taskParent = res;
-            // this.api
-            //   .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-            //     res.createdBy,
-            //   ])
-            //   .subscribe((user) => {
-            //     if (user) {
-            //       ref.createByName = user.userName;
-            //       this.dataReferences.push(ref);
+            this.api
+              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                res.createdBy,
+              ])
+              .subscribe((user) => {
+                if (user) {
+                  ref.createByName = user.userName;
+                  this.dataReferences.push(ref);
             this.getReferencesByCategory3(taskParent);
-            // }
-            // });
+            }
+            });
           }
         });
     } else if (this.itemSelected.category == '3') {
