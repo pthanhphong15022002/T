@@ -25,7 +25,7 @@ export class ViewDetailComponent implements OnInit {
   category: string = "";
   recID: string = "";
   funcID: string = "";
-  dataItem: any;
+  data: any;
   listViews = [];
   listTag = [];
   listNews = [];
@@ -74,9 +74,8 @@ export class ViewDetailComponent implements OnInit {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewsInforAsync", recID).subscribe(
       (res) => {
         if (res) {
-          this.dataItem = res[0];
-          console.log(this.dataItem)
-          this.dataItem.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.dataItem.contents);
+          this.data = res[0];
+          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
           this.listViews = res[1];
           this.listNews = res[2];
         }

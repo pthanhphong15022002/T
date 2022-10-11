@@ -41,8 +41,6 @@ export class ApproveComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail: ApproveDetailComponent;
-
-
   tabAsside = [
     {
       name: "await",

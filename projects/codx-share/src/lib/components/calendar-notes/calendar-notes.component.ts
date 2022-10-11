@@ -294,7 +294,6 @@ export class CalendarNotesComponent
           }
         }
       });
-    // this.getNumberNotePin(this.WP_Notes);
   }
 
   setEvent(ele = null, args = null) {

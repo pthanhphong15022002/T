@@ -187,7 +187,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           ) {
             this.imgSignature1.imageUpload &&
               this.imgSignature1
-                .updateFileDirectReload(this.data.recID + '1')
+                .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
                   if (img && this.data.signature1 == null) {
                     result.signature1 = (img[0] as any).recID;
@@ -200,7 +200,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                 });
             this.imgSignature2.imageUpload &&
               this.imgSignature2
-                .updateFileDirectReload(this.data.recID + '2')
+                .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
                   this.dialog && this.dialog.close(result);
 
@@ -216,7 +216,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                 });
             this.imgStamp.imageUpload &&
               this.imgStamp
-                .updateFileDirectReload(this.data.recID + 's')
+                .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
                   if (img && this.data.stamp == null) {
                     result.stamp = (img[0] as any).recID;
