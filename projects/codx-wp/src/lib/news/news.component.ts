@@ -34,7 +34,7 @@ export class NewsComponent implements OnInit {
   mssgWP025:string = "";
   mssgWP026:string = "";
   mssgWP027:string = "";
-
+  pageSlider:any[] = [];
 
   NEWSTYPE = {
     POST: "1",
@@ -119,7 +119,13 @@ export class NewsComponent implements OnInit {
           this.lstGroup = res[2]; 
           if(this.videos.length > 3)
           {
+            let page = Math.floor(this.videos.length/3);
+            for (let index = 1; index <= page; index++) 
+            {
+              this.pageSlider.push(index);
+            }; 
             this.isAllowNavigationArrows = true;
+            
           }
           this.changedt.detectChanges();
         }
