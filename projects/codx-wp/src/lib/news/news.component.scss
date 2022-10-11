@@ -66,11 +66,7 @@
         margin: 0 auto;
     }
 
-    .news-title:hover {
-        cursor: pointer;
-        color: #3699ff;
-        opacity: .85;
-    }
+
 
     /*****/
     // .hot-news {
@@ -131,6 +127,11 @@
     }
 
 
+}
+
+.news-title:hover {
+    cursor: pointer;
+    color: var(--text-primary);
 }
 
 /***/
