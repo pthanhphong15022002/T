@@ -24,6 +24,7 @@ export class CodxCommentsComponent implements OnInit {
   @Input() objectType:string = "";
   @Input() formModel:any;
   @Input() new:boolean = false;
+  @Input() dVll: any = {};
   @Output() evtReplyTo = new EventEmitter;
   @Output() evtSendComment = new EventEmitter;
   @Output() evtDeleteComment = new EventEmitter;
@@ -267,6 +268,11 @@ export class CodxCommentsComponent implements OnInit {
       });
   }
   showVotes(data: any) {
-    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", data);
+    let object = {
+      data: data,
+      entityName: "WP_Comments",
+      vll: this.dVll
+    }
+    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
 }

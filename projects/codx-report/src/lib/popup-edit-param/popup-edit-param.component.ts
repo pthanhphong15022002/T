@@ -34,7 +34,6 @@ export class PopupEditParamComponent implements OnInit, AfterViewInit {
           this.lstParam.push(prop);
         }
       }
-      debugger
   }
   ngAfterViewInit(): void {
   }

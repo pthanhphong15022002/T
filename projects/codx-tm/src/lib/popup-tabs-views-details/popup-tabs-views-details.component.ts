@@ -76,7 +76,7 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
     }
 
     if (this.data?.meetingID) {
-      this.getListRecID(this.meetingID);
+      this.getListRecID(this.data?.meetingID);
       this.createdByName = this.data?.userName;
       this.nameObj = this.data?.meetingName;
       this.projectID = this.data?.refID;

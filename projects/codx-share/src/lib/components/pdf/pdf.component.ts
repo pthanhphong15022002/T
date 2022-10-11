@@ -31,6 +31,7 @@ import {
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
 import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
+import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signature/popup-signature/popup-signature.component';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -1261,6 +1262,11 @@ export class PdfComponent
   }
   changeAnnotationItem(type: number) {
     if (!this.signerInfo) {
+      let data = {
+        dialog: this.dialog,
+      };
+      this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+      return;
     }
     if (this.isEditable) {
       this.holding = type;
@@ -1526,6 +1532,8 @@ export class PdfComponent
         let recID = Guid.newGuid();
         const img = document.createElement('img') as HTMLImageElement;
         img.setAttribute('crossOrigin', 'anonymous');
+        img.referrerPolicy = 'noreferrer';
+
         img.src = url;
         img.onload = () => {
           let tmpName: tmpAreaName = {

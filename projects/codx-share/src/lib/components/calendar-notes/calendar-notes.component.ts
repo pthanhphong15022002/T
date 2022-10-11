@@ -183,7 +183,7 @@ export class CalendarNotesComponent
       )
       .subscribe((res) => {
         if (res[2]) {
-          var dataValue = res[2].dataValue
+          var dataValue = res[2].dataValue;
           var json = JSON.parse(dataValue);
           this.maxPinNotes = parseInt(json.MaxPinNotes, 10);
         }
@@ -590,5 +590,17 @@ export class CalendarNotesComponent
       itemUpdate: item,
     };
     this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj);
+  }
+
+  valueChangeCB(e, note, index) {
+    for (let i = 0; i < note.checkList.length; i++) {
+      if (index == i) note.checkList[i].status = e.data;
+    }
+    this.api
+      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
+        note?.recID,
+        note,
+      ])
+      .subscribe();
   }
 }
