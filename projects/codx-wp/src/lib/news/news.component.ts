@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
-import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService,  ViewType,  DialogModel } from 'codx-core';
+import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel } from 'codx-core';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
 
@@ -16,24 +16,24 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
 export class NewsComponent implements OnInit {
 
   @HostBinding('class') get class() {
-    return "bg-white"; 
-   }
-  funcID:string = "";
-  entityName:string = 'WP_News';
-  service:string = "WP";
-  assemblyName:string = "ERM.Business.WP";
-  className:string = "NewsBusiness"
-  predicate:string = "";
-  dataValue:string = "5;null;2;";
-  news:any[] = [];
+    return "bg-body h-100 news-main card-body hover-scroll-overlay-y";
+  }
+  funcID: string = "";
+  entityName: string = 'WP_News';
+  service: string = "WP";
+  assemblyName: string = "ERM.Business.WP";
+  className: string = "NewsBusiness"
+  predicate: string = "";
+  dataValue: string = "5;null;2;";
+  news: any[] = [];
   videos: any[] = [];
   lstGroup: any[] = [];
   isAllowNavigationArrows = false;
   views: Array<ViewModel> = [];
   category: string = "home";
-  mssgWP025:string = "";
-  mssgWP026:string = "";
-  mssgWP027:string = "";
+  mssgWP025: string = "";
+  mssgWP026: string = "";
+  mssgWP027: string = "";
 
 
   NEWSTYPE = {
@@ -60,11 +60,10 @@ export class NewsComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
 
-  ) 
-  { }
+  ) { }
   ngOnInit(): void {
     this.route.params.subscribe((param) => {
-      if(param){
+      if (param) {
         this.funcID = param["funcID"];
         this.category = param["category"];
         this.loadDataAsync(this.funcID, this.category);
@@ -84,41 +83,36 @@ export class NewsComponent implements OnInit {
     ];
     this.changedt.detectChanges();
   }
-  getMessageDefault(){
-    this.cache.message("WP025").subscribe((mssg:any) => {
-      if(mssg && mssg?.defaultName)
-      {
+  getMessageDefault() {
+    this.cache.message("WP025").subscribe((mssg: any) => {
+      if (mssg && mssg?.defaultName) {
         this.mssgWP025 = mssg.defaultName;
       }
     });
-    this.cache.message("WP026").subscribe((mssg:any) => {
-      if(mssg && mssg?.defaultName)
-      {
+    this.cache.message("WP026").subscribe((mssg: any) => {
+      if (mssg && mssg?.defaultName) {
         this.mssgWP026 = mssg.defaultName;
       }
     });
-    this.cache.message("WP027").subscribe((mssg:any) => {
-      if(mssg && mssg?.defaultName)
-      {
+    this.cache.message("WP027").subscribe((mssg: any) => {
+      if (mssg && mssg?.defaultName) {
         this.mssgWP027 = mssg.defaultName;
       }
     });
-  }  
+  }
   loadDataAsync(funcID: string, category: string) {
     this.api.execSv(
-      this.service, 
-      this.assemblyName, 
-      this.className, 
+      this.service,
+      this.assemblyName,
+      this.className,
       "GetDatasNewsAsync",
       [funcID, category])
       .subscribe((res: any[]) => {
-        if (res.length > 0 && res[0] && res[1] && res[2]) 
-        {
-          this.news = res[0]; 
-          this.videos = res[1]; 
-          this.lstGroup = res[2]; 
-          if(this.videos.length > 3)
-          {
+        if (res.length > 0 && res[0] && res[1] && res[2]) {
+          this.news = res[0];
+          this.videos = res[1];
+          this.lstGroup = res[2];
+          if (this.videos.length > 3) {
             this.isAllowNavigationArrows = true;
           }
           this.changedt.detectChanges();
