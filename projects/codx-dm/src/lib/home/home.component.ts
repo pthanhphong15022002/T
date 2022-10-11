@@ -595,7 +595,6 @@ export class HomeComponent extends UIComponent {
           this.dmSV.breadcumbLink = breadcumbLink;
           this.dmSV.breadcumb.next(breadcumb);
         }
-        debugger;
         if (breadcumb.length == 0) {
           id = ""
         }
@@ -814,10 +813,9 @@ export class HomeComponent extends UIComponent {
     if(event.text != "Search")
     {
       this.dmSV.page = 1;
-      this.getDataFile("");
+      var id = !this.dmSV.folderID ? "":this.dmSV.folderID;
+      this.getDataFile(id);
     }
-    
-    debugger;
   }
   ngOnDestroy() {
     console.log('detroy');
@@ -1225,6 +1223,20 @@ export class HomeComponent extends UIComponent {
   viewFile(e: any) {
     this.dataFile = e;
     this.visible = true;
+  }
+  dbView(data:any)
+  {
+    if(data.recID && data.fileName != null)
+    {
+      if (!data.read) {
+        this.notificationsService.notifyCode("DM059");
+        return;
+      }
+      this.fileService.getFile(data.recID).subscribe((data) => {
+        this.viewFile(data);
+      });
+    }
+    this.dmSV.openItem(this.data);
   }
   dialogClosed() {
     this.visible = false;

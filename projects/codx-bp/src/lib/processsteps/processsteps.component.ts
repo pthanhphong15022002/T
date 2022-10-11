@@ -112,7 +112,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           text: 'Email',
         },
         {
-          id: 'CA',
+          id: 'M',
           icon: 'icon-calendar_today',
           text: 'Calendar',
         },

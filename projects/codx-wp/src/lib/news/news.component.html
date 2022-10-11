@@ -29,13 +29,10 @@
     <div class="row ">
       <div class="col-6 hot-left">
         <ng-container *ngIf="news[0];else tmpEmptyNews1">
-          <div (click)="clickViewDetail(news[0])"  >
+          <div (click)="clickViewDetail(news[0])">
             <div class="cursor-pointer">
-              <codx-img imageType="square" 
-                [cssClass]="'image-300 w-100 pic-newshot'" 
-                [width]="480"
-                [objectId]="news[0].recID" 
-                [objectType]="entityName">
+              <codx-img imageType="square" [cssClass]="'image-300 w-100 pic-newshot'" [width]="480"
+                [objectId]="news[0].recID" [objectType]="entityName">
               </codx-img>
             </div>
             <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
@@ -126,26 +123,26 @@
       </div>
     </div>
     <div class="row my-8">
-      <ng-container *ngIf="videos.length > 0; else tmpEmptyVideo">
+      <ng-container *ngIf="videos.length > 0; else tmpEmptyListVideo">
         <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
-        [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
-        <ng-template ngbSlide *ngFor="let list of videos; let i = index">
-          <div class="d-flex" *ngIf="i < 6">
-            <ng-container *ngFor="let item of videos;let idxChild = index;">
-              <ng-container *ngIf="idxChild >= (i * 3) && idxChild < (i + 1 * 3)">
-                <div class="mx-5">
-                  <div (click)="clickViewDetail(item)" class="w-100 video cursor-pointer">
-                    <codx-img [cssClass]="'image-200 w-100'" [width]="300" imageType="square" [objectId]="item.recID"
-                      objectType="WP_News">
-                    </codx-img>
-                    <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:200 }}</div>
+          [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
+          <ng-template ngbSlide *ngFor="let list of videos; let i = index">
+            <div class="d-flex" *ngIf="i < 6">
+              <ng-container *ngFor="let item of videos;let idxChild = index;">
+                <ng-container *ngIf="idxChild >= (i * 3) && idxChild < (i + 1 * 3)">
+                  <div class="mx-5">
+                    <div (click)="clickViewDetail(item)" class="w-100 video cursor-pointer">
+                      <codx-img [cssClass]="'image-200 w-100'" [width]="300" imageType="square" [objectId]="item.recID"
+                        objectType="WP_News">
+                      </codx-img>
+                      <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:200 }}</div>
+                    </div>
                   </div>
-                </div>
+                </ng-container>
               </ng-container>
-            </ng-container>
-          </div>
-        </ng-template>
-      </ngb-carousel>
+            </div>
+          </ng-template>
+        </ngb-carousel>
       </ng-container>
     </div>
     <div class="news-group">
@@ -153,7 +150,8 @@
         <ng-container *ngIf="lstGroup">
           <ng-container *ngFor="let grItem of lstGroup | keyvalue">
             <div class="mt-6">
-              <span class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">{{grItem.key | vll:'WP002':'text' | async}}</span>
+              <span class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">{{grItem.key | vll:'WP002':'text'
+                | async}}</span>
             </div>
             <div *ngFor="let item of grItem.value" (click)="clickViewDetail(item)" class="news-item row my-5">
               <div class="col-2">
@@ -236,13 +234,31 @@
     </div>
   </div>
 </ng-template>
-<ng-template #tmpEmptyVideo>
-  <div>
-    <div class="text-center">
-      <img style="max-width:700px" src="../assets/demos/svg/pic-avata.png" />
+<ng-template #tmpEmptyListVideo>
+  <div class="d-flex justify-content-between">
+    <div>
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div>
     </div>
     <div>
-      <div class="fw-bolder">{{mssgWP025}}</div>
-    </div> 
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div>
+    </div>
+    <div>
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div>
+    </div>
   </div>
 </ng-template>
