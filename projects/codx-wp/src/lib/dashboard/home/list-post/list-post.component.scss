@@ -280,12 +280,13 @@ ejs-listview .e-ul>li {
     box-shadow: 2px 2px 6px #444;
 }
 
-.tmpshare-body{
+.tmpshare-body {
     margin-top: 10px;
     padding: 0px 8px;
     height: 200px;
     overflow-y: scroll;
 }
+
 .tmpTag {
     background-color: #fff;
     right: 0px;
@@ -293,12 +294,13 @@ ejs-listview .e-ul>li {
     z-index: 99;
     box-shadow: 2px 2px 6px #444;
 }
-.tmpTag-body{
-    margin-top: 10px;
-    padding: 0px 8px;
+
+.tmpTag-body {
+    margin-top: 5px;
     height: 200px;
     overflow-y: scroll;
 }
+
 .icon-removePost {
     color: rgb(246, 78, 96);
 }
