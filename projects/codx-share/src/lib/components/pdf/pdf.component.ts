@@ -13,7 +13,12 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { AuthStore, ScrollComponent, UIComponent } from 'codx-core';
+import {
+  AuthStore,
+  NotificationsService,
+  ScrollComponent,
+  UIComponent,
+} from 'codx-core';
 import Konva from 'konva';
 import { qr } from './model/mode';
 import { tmpAreaName, tmpSignArea } from './model/tmpSignArea.model';
@@ -25,6 +30,8 @@ import {
 } from 'ngx-extended-pdf-viewer';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
+import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
+import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signature/popup-signature/popup-signature.component';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -40,7 +47,8 @@ export class PdfComponent
     private authStore: AuthStore,
     private esService: CodxEsService,
     private actionCollectionsChanges: IterableDiffers,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private notificationsService: NotificationsService
   ) {
     pdfDefaultOptions.renderInteractiveForms = false;
     pdfDefaultOptions.annotationEditorEnabled = true;
@@ -114,7 +122,6 @@ export class PdfComponent
   curSelectedAnnotID;
   curSelectedPageGroup;
   formAnnot: FormGroup;
-  actionsButton = [1, 2, 3, 4, 5, 6, 7, 8];
   renderQRAllPage = false;
 
   //save to db
@@ -178,8 +185,6 @@ export class PdfComponent
   hideActions: boolean = false;
 
   onInit() {
-    console.log('input url', this.inputUrl);
-
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
         console.log('allow', res);
@@ -462,34 +467,29 @@ export class PdfComponent
         });
 
         let layer = this.lstLayer.get(this.pageMax);
-        let top = this.lstAreas
-          ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-          ?.reduce((prev, curr) =>
-            prev.location.top < curr.location.top ? prev : curr
-          );
+        let children = layer.children;
+        let top = children?.reduce((prev, curr) => {
+          return prev.attrs.x < curr.attrs.x ? prev : curr;
+        });
 
-        let left = this.lstAreas
-          ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-          ?.reduce((prev, curr) =>
-            prev.location.left < curr.location.left ? prev : curr
-          );
-        let bot = this.lstAreas
-          ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-          ?.reduce((prev, curr) =>
-            prev.location.top > curr.location.top ? prev : curr
-          );
+        let bot = children?.reduce((prev, curr) => {
+          return prev.attrs.x > curr.attrs.x ? prev : curr;
+        });
 
-        let right = this.lstAreas
-          ?.filter((area) => area.location.pageNumber + 1 == this.pageMax)
-          ?.reduce((prev, curr) =>
-            prev.location.left > curr.location.left ? prev : curr
-          );
+        let left = children?.reduce((prev, curr) => {
+          return prev.attrs.y < curr.attrs.y ? prev : curr;
+        });
 
-        let y = top?.location?.top * this.yScale;
-        let x = left?.location?.left * this.xScale;
-        let height = (+bot.location.top + 100) * this.yScale - y + 10;
-        let width = (+right.location.left + 200) * this.xScale - x + 10;
+        let right = children?.reduce((prev, curr) => {
+          return prev.attrs.y > curr.attrs.y ? prev : curr;
+        });
 
+        let x = top.attrs.x;
+        let y = left.attrs.y;
+
+        let width =
+          left.attrs.x - right.attrs.x + right.width() * right.scaleX();
+        let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
         let imgUrl = layer.toDataURL({
           quality: 1,
           x: x,
@@ -498,6 +498,7 @@ export class PdfComponent
           width: width,
           height: height,
         });
+        console.log('signature img', imgUrl);
 
         let approveStt = '5';
 
@@ -521,26 +522,49 @@ export class PdfComponent
             console.log('returnModel', returnModel);
 
             if (!returnModel?.msgCodeError) {
-              this.esService
-                .updateSignFileTrans(
-                  lstPages,
-                  lstAddBefore,
-                  imgUrl.replace('data:image/png;base64,', ''),
-                  x / this.xScale,
-                  y / this.yScale,
-                  width / this.xScale,
-                  height / this.yScale,
-                  this.pageMax,
-                  this.stepNo,
-                  this.isAwait,
-                  this.user.userID,
-                  this.recID,
-                  mode,
-                  comment
-                )
-                .subscribe((status) => {
-                  resolve(status);
-                });
+              if (this.isAwait) {
+                this.esService
+                  .updateSignFileTrans(
+                    lstPages,
+                    lstAddBefore,
+                    imgUrl.replace('data:image/png;base64,', ''),
+                    x / this.xScale,
+                    y / this.yScale,
+                    width / this.xScale,
+                    height / this.yScale,
+                    this.pageMax,
+                    this.stepNo,
+                    this.isAwait,
+                    this.user.userID,
+                    this.recID,
+                    mode,
+                    comment
+                  )
+                  .subscribe((status) => {
+                    resolve(status);
+                  });
+              } else {
+                // this.notificationsService.notifyCode('ES010');
+                resolve(true);
+                this.esService
+                  .updateSignFileTrans(
+                    lstPages,
+                    lstAddBefore,
+                    imgUrl.replace('data:image/png;base64,', ''),
+                    x / this.xScale,
+                    y / this.yScale,
+                    width / this.xScale,
+                    height / this.yScale,
+                    this.pageMax,
+                    this.stepNo,
+                    this.isAwait,
+                    this.user.userID,
+                    this.recID,
+                    mode,
+                    comment
+                  )
+                  .subscribe((status) => {});
+              }
             }
           });
       });
@@ -662,7 +686,7 @@ export class PdfComponent
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
-    if (this.isEditable) {
+    if (this.inputUrl == null) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
       )?.find((ele) => {
@@ -830,21 +854,28 @@ export class PdfComponent
                   let attrs = this.needAddKonva.attrs;
                   let name: tmpAreaName = JSON.parse(attrs.name);
 
-                  let signed = stage?.children[0]?.children.find((child) => {
+                  let curLayer = stage?.children[0]?.children;
+                  let signed = curLayer.filter((child) => {
                     if (child != this.tr) {
                       let childName: tmpAreaName = JSON.parse(
                         child?.attrs?.name
                       );
-                      return (
-                        childName.LabelType == name.LabelType &&
-                        ['1', '2', '8'].includes(childName.LabelType) &&
-                        childName.Signer == name.Signer
+
+                      let sameLable = childName.LabelType == name.LabelType;
+                      let isUnique = ['1', '2', '8'].includes(
+                        childName.LabelType.toString()
                       );
+                      let sameSigner = childName.Signer == name.Signer;
+
+                      return sameLable && sameSigner && isUnique;
                     }
-                    return null;
+                    return undefined;
                   });
                   this.holding = 0;
-                  if (!signed) {
+                  if (
+                    !['1', '2', '8'].includes(name.LabelType.toString()) ||
+                    signed?.length == 1
+                  ) {
                     switch (name.Type) {
                       case 'text': {
                         this.saveNewToDB(
@@ -871,7 +902,7 @@ export class PdfComponent
                       }
                     }
                   } else {
-                    this.needAddKonva.remove();
+                    this.needAddKonva.destroy();
                     this.tr.remove();
                   }
                 }
@@ -1200,6 +1231,11 @@ export class PdfComponent
   }
   changeAnnotationItem(type: number) {
     if (!this.signerInfo) {
+      let data = {
+        dialog: this.dialog,
+      };
+      this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+      return;
     }
     if (this.isEditable) {
       this.holding = type;
@@ -1237,6 +1273,19 @@ export class PdfComponent
         case 8:
           this.url = qr;
           break;
+        case 9: {
+          this.dialog = this.callfc.openForm(
+            PopupSelectLabelComponent,
+            '',
+            700,
+            700,
+            this.funcID,
+            {
+              title: 'Chọn Nhãn',
+            }
+          );
+          break;
+        }
         default:
           this.url = '';
           break;
@@ -1452,6 +1501,8 @@ export class PdfComponent
         let recID = Guid.newGuid();
         const img = document.createElement('img') as HTMLImageElement;
         img.setAttribute('crossOrigin', 'anonymous');
+        img.referrerPolicy = 'noreferrer';
+
         img.src = url;
         img.onload = () => {
           let tmpName: tmpAreaName = {
@@ -1564,7 +1615,38 @@ export class PdfComponent
 
   //test func
   show(e: any) {
-    console.log('data', this.transRecID);
+    let layer = this.lstLayer.get(this.pageMax);
+    let children = layer.children;
+    let top = children?.reduce((prev, curr) => {
+      return prev.attrs.x < curr.attrs.x ? prev : curr;
+    });
+
+    let bot = children?.reduce((prev, curr) => {
+      return prev.attrs.x > curr.attrs.x ? prev : curr;
+    });
+
+    let left = children?.reduce((prev, curr) => {
+      return prev.attrs.y < curr.attrs.y ? prev : curr;
+    });
+
+    let right = children?.reduce((prev, curr) => {
+      return prev.attrs.y > curr.attrs.y ? prev : curr;
+    });
+
+    let x = top.attrs.x;
+    let y = left.attrs.y;
+
+    let width = left.attrs.x - right.attrs.x + right.width() * right.scaleX();
+    let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
+    let imgUrl = layer.toDataURL({
+      quality: 1,
+      x: x,
+      y: y,
+
+      width: width,
+      height: height,
+    });
+    console.log('url', imgUrl);
   }
 }
 

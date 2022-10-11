@@ -18,7 +18,8 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
 import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
-import { ProcessstepsComponent } from './processsteps/processsteps.component';
+import { ProcessStepsComponent } from './processsteps/processsteps.component';
+import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
 
 export const routes: Routes = [
   {
@@ -31,7 +32,11 @@ export const routes: Routes = [
       },
       {
         path: 'processstep/:funcID',
-        component: ProcessstepsComponent,
+        component: ProcessStepsComponent,
+      },
+      {
+        path: 'testhtml',
+        component: TesthtmlComponent,
       },
     ],
   },
@@ -44,10 +49,10 @@ export const routes: Routes = [
     ProcessesComponent,
     PopupAddProcessesComponent,
     ViewListProcessesComponent,
-    ProcessstepsComponent,
-    // PopupAddProcessStepsComponent,
-    // PopupAddPhaseComponent,
+    ProcessStepsComponent,
+    PopupAddProcessStepsComponent,
     PopupSendEmailComponent,
+    PopupAddProcessStepsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -79,6 +79,7 @@ export class AttachmentComponent implements OnInit {
   titleUpload = 'Tải lên';
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
+  numberDes = 0;
 
   urlUpload = '';
   interval: ItemInterval[];
@@ -95,11 +96,10 @@ export class AttachmentComponent implements OnInit {
   referType: string;
   folderID: string;
   isDM: false;
-  infoHDD =
-    {
-      totalHdd: 0,
-      totalUsed: 0
-    }
+  infoHDD = {
+    totalHdd: 0,
+    totalUsed: 0,
+  };
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
@@ -139,6 +139,7 @@ export class AttachmentComponent implements OnInit {
   public uploadWrapper: HTMLElement = document.getElementsByClassName(
     'e-upload'
   )[0] as HTMLElement;
+  public description = [];
   public parentElement: HTMLElement;
   public proxy: any;
   public progressbarContainer: HTMLElement;
@@ -162,7 +163,6 @@ export class AttachmentComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
     this.user = this.auth.get();
     this.dialog = dialog;
     if (data?.data != null) {
@@ -174,7 +174,7 @@ export class AttachmentComponent implements OnInit {
       this.popup = data?.data.popup;
       this.hideBtnSave = data?.data.hideBtnSave;
       this.folderID = data?.data.folderID;
-      if(data?.data.isDM && data?.data.isDM == true)
+      if (data?.data.isDM && data?.data.isDM == true)
         this.isDM = data?.data.isDM;
     }
 
@@ -215,11 +215,11 @@ export class AttachmentComponent implements OnInit {
           if (
             document
               .getElementsByName('UploadFiles')
-            [i].getAttribute('idbutton') == null
+              [i].getAttribute('idbutton') == null
           ) {
             document
               .getElementsByName('UploadFiles')
-            [i].setAttribute('idbutton', this.idBrowse);
+              [i].setAttribute('idbutton', this.idBrowse);
             break;
           }
         }
@@ -325,7 +325,7 @@ export class AttachmentComponent implements OnInit {
     if (status === 'File uploaded successfully') {
       this.uploadObj.remove(
         this.filesDetails[
-        this.filesList.indexOf(args.currentTarget.parentElement)
+          this.filesList.indexOf(args.currentTarget.parentElement)
         ]
       );
     } else {
@@ -400,15 +400,15 @@ export class AttachmentComponent implements OnInit {
       // alert(1);
       if (item == true) this.openPopup();
     });
-    this.fileService.getTotalHdd().subscribe(item => {
+    this.fileService.getTotalHdd().subscribe((item) => {
       if (item) {
         this.infoHDD.totalHdd = item?.totalHdd;
-        this.infoHDD.totalUsed = item?.totalUsed
+        this.infoHDD.totalUsed = item?.totalUsed;
       }
       //  totalUsed: any;
       // totalHdd: any;
       // this.getHDDInformaton(item);
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -461,7 +461,7 @@ export class AttachmentComponent implements OnInit {
         pathFolder,
         pathID
       )
-      .subscribe((item) => { });
+      .subscribe((item) => {});
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async (res) => {
@@ -585,6 +585,15 @@ export class AttachmentComponent implements OnInit {
 
   changeValueAgencyText(event: any) {
     //this.disEdit.agencyName = this.dispatch.AgencyName = event.data
+    let total = this.fileUploadList.length;
+    if (this.numberDes < total) {
+      this.description[this.numberDes] = event.data;
+      this.numberDes += 1;
+    }
+
+    /* for (var i = 0; i < total; i++) {
+      this.description[i] = event.data;
+    } */
   }
   //fetch () : Observable<any[]>
   saveFilesObservable(): Promise<Observable<any[]>> {
@@ -761,6 +770,9 @@ export class AttachmentComponent implements OnInit {
     await this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;
+
+      this.fileUploadList[i].description = this.description[i];
+
       toltalUsed += this.fileUploadList[i].fileSize;
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
@@ -768,15 +780,15 @@ export class AttachmentComponent implements OnInit {
           false
         );
     }
-    if (toltalUsed > remainingStorage) return this.notificationsService.notifyCode("DM053");
+    if (toltalUsed > remainingStorage)
+      return this.notificationsService.notifyCode('DM053');
     this.atSV.fileListAdded = [];
     if (total > 1) {
       var done = this.fileService
-        .addMultiFile(this.fileUploadList,this.isDM)
+        .addMultiFile(this.fileUploadList, this.isDM)
         .toPromise()
         .then((res) => {
           if (res != null) {
-            debugger;
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
@@ -797,12 +809,16 @@ export class AttachmentComponent implements OnInit {
                       item.data.extension
                     )}`;
                     files.push(Object.assign({}, item.data));
-                  }
-                  else {
-                    if (item.data.folderName != null && item.data.folderName != "") {
+                  } else {
+                    if (
+                      item.data.folderName != null &&
+                      item.data.folderName != ''
+                    ) {
                       var folders = this.dmSV.listFolder;
-                      var idx = folders.findIndex(x => x.recID == item.data.recID)
-                      if (idx == - 1) {
+                      var idx = folders.findIndex(
+                        (x) => x.recID == item.data.recID
+                      );
+                      if (idx == -1) {
                         folders.push(Object.assign({}, item.data));
                         this.dmSV.listFolder = folders;
                         // that.changeDetectorRef.detectChanges();
@@ -821,7 +837,11 @@ export class AttachmentComponent implements OnInit {
                 this.dmSV.listFiles = files;
                 this.dmSV.ChangeData.next(true);
               });
-              this.notificationsService.notifyCode("DM061",null,addList.length);
+              this.notificationsService.notifyCode(
+                'DM061',
+                null,
+                addList.length
+              );
             }
 
             // for (var i = 0; i < addList.length; i++) {
@@ -865,9 +885,11 @@ export class AttachmentComponent implements OnInit {
                       if (x.event.data) {
                         for (var i = 0; i < this.fileUploadList.length; i++) {
                           this.fileUploadList[i].reWrite = true;
+                          this.fileUploadList[i].description =
+                            this.description[i];
                         }
                         this.fileService
-                          .addMultiFile(this.fileUploadList,this.isDM)
+                          .addMultiFile(this.fileUploadList, this.isDM)
                           .toPromise()
                           .then((result) => {
                             var mess = '';
@@ -909,6 +931,7 @@ export class AttachmentComponent implements OnInit {
           }
         });
     } else if (total == 1) {
+      this.fileUploadList[0].description = this.description[0];
       this.addFileLargeLong(this.fileUploadList[0]);
       //this.addFile(this.fileUploadList[0]);
 
@@ -1016,7 +1039,7 @@ export class AttachmentComponent implements OnInit {
         }
 
         if (isAddFile)
-          return this.fileService.addFileObservable(fileItem,this.isDM).pipe(
+          return this.fileService.addFileObservable(fileItem, this.isDM).pipe(
             map((item) => {
               if (item.status == 0) {
                 if (this.showMessage == '1')
@@ -1202,7 +1225,7 @@ export class AttachmentComponent implements OnInit {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem,this.isDM).toPromise();
+    var done = this.fileService.addFile(fileItem, this.isDM).toPromise();
     if (done) {
       done
         .then((item) => {
@@ -1281,7 +1304,7 @@ export class AttachmentComponent implements OnInit {
       });
   }
 
-  closeFileDialog(form): void { }
+  closeFileDialog(form): void {}
 
   arrayBufferToBase64(buffer) {
     var binary = '';
@@ -1518,6 +1541,7 @@ export class AttachmentComponent implements OnInit {
         var item = this.arrayBufferToBase64(data);
         fileUpload.order = i;
         fileUpload.fileName = files[i].name;
+
         fileUpload.avatar = this.getAvatar(fileUpload.fileName);
         fileUpload.extension =
           files[i].name.substring(
@@ -1531,6 +1555,9 @@ export class AttachmentComponent implements OnInit {
         fileUpload.objectId = this.objectId;
         fileUpload.fileSize = files[i].size;
         fileUpload.fileName = files[i].name;
+
+        /* fileUpload.description = files[i].description; */
+
         fileUpload.funcId = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.reWrite = false;
@@ -2797,6 +2824,9 @@ export class AttachmentComponent implements OnInit {
         var fileUpload = new FileUpload();
         fileUpload.order = count;
         fileUpload.fileName = files[i].name;
+
+        fileUpload.description = files[i].description; //
+
         var type = files[i].type.toLowerCase();
         if (type == 'png' || type == 'jpg' || type == 'bmp') {
           fileUpload.avatar = data;
@@ -2818,6 +2848,9 @@ export class AttachmentComponent implements OnInit {
         fileUpload.objectId = this.objectId;
         fileUpload.fileSize = files[i].size;
         fileUpload.fileName = files[i].name;
+
+        fileUpload.description = files[i].description; //
+
         fileUpload.funcId = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;

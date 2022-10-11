@@ -125,7 +125,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
         this.pdfView
           .signPDF(mode, this.dialogSignFile.value.comment)
           .then((value) => {
-            console.log('da ki', value);
             if (value) {
               let result = {
                 result: true,
@@ -148,16 +147,22 @@ export class PopupSignForApprovalComponent extends UIComponent {
       }
     });
   }
+
   clickUSB() {
-    this.http
-      .post('http://localhost:8015/api/es/test', {})
-      .subscribe((data) => {
-        this.http
-          .post('http://localhost:6543/DigitalSignature/Sign', data)
-          .subscribe((o) => {
-            console.log(o);
-          });
-      });
+    let signatureBase64 = '';
+    let x = 0;
+    let y = 0;
+    let w = 0;
+    let h = 0;
+    let page = 0;
+
+    this.esService.getPDFBase64(this.pdfView.curFileID).subscribe((data) => {
+      this.http
+        .post('http://localhost:6543/DigitalSignature/Sign', data)
+        .subscribe((o) => {
+          console.log(o);
+        });
+    });
   }
 
   openTempPopup(mode) {
@@ -250,7 +255,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               result: true,
               mode: this.mode,
             };
-            this.notify.notifyCode('RS002');
+            // this.notify.notifyCode('RS002');
             this.canOpenSubPopup = false;
             //this.pdfView.reload();
             dialog1 && dialog1.close(result);
@@ -261,7 +266,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               result: false,
               mode: this.mode,
             };
-            this.notify.notifyCode('SYS021');
+            // this.notify.notifyCode('SYS021');
             dialog1 && dialog1.close(result);
             this.dialog && this.dialog.close(result);
           }

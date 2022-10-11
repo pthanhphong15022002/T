@@ -1126,6 +1126,16 @@ export class CodxEsService {
     );
   }
   //#endregion
+  getPDFBase64(fileID): Observable<any> {
+    let data = [fileID];
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetPDFFileBase64Async',
+      data
+    );
+  }
 
   //#region File
   getFiles(funcID: string, objectId: string, objectType): Observable<any> {

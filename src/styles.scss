@@ -68,6 +68,7 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   --white: #ffffff;
   --black: #0f0f0f;
 
+  --bg-body: #fff;
   --bghover: #f4f8ff;
   --fs-7: 12px;
   --title-color: #f5f9fa;
@@ -749,4 +750,40 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
 .dialog-property .extend-more-content {
   height: calc(100vh - 112px);
   overflow: auto;
+}
+
+.h-13px {
+  height: 13px;
+}
+
+/*****/
+
+codx-view-list-detail .codx-detail-footer.expand .tab-content {
+  overflow: auto;
+  padding: 0 15px;
+  position: relative;
+  height: 358px;
+  padding-bottom: 0 !important;
+}
+
+codx-view-list-detail .codx-detail-footer.expand .tab_footer {
+  bottom: 8px;
+  right: 15px;
+}
+
+codx-view-list-detail .codx-detail-footer.expand .tab_footer .btn.btn-light-primary.mb-4 {
+  margin-bottom: 0 !important;
+}
+
+codx-dynamic-form codx-view-grid {
+  background-color: var(--bg-body);
+
+}
+
+.e-schedule-toolbar.e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
+  margin-left: 2px;
+}
+
+.dms-card .card:hover {
+  background-color: #eef4f4 !important;
 }

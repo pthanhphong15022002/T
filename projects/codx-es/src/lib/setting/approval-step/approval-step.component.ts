@@ -97,7 +97,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
         this.initForm();
       }
     });
-    console.log('transID', this.transId);
   }
 
   ngAfterViewInit() {
@@ -154,8 +153,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       this.esService.getApprovalSteps(gridModels).subscribe((res) => {
         if (res && res?.length >= 0) {
           this.lstStep = res;
-          console.log(this.lstStep);
-
           this.currentStepNo = this.lstStep.length + 1;
           this.lstOldData = [...res];
           this.cr.detectChanges();
@@ -224,6 +221,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       isAdd: true,
       dataEdit: null,
       type: '0',
+      signatureType: this.data?.signatureType,
     };
 
     this.openPopupAddAppStep(data);

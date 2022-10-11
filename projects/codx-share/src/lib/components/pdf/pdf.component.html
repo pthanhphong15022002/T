@@ -264,11 +264,13 @@
           <ejs-toolbar class="border-start">
             <e-items>
               <e-item
+                *ngIf="isEditable"
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="print"
               >
               </e-item>
               <e-item
+                *ngIf="isEditable"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
@@ -331,7 +333,6 @@
       </ng-template>
     </div>
     <div
-      *ngIf="isEditable"
       class="actions flex-column flex-lg-row-auto main-right"
       [class.hideCol]="hideActions"
     >
@@ -406,7 +407,7 @@
                   <div
                     class="card-item me-6 mb-6"
                     #actions
-                    *ngFor="let action of actionsButton; let index = index"
+                    *ngFor="let action of vllActions; let index = index"
                     [class.active]="holding == index + 1"
                     (click)="changeAnnotationItem(index + 1)"
                   >
@@ -471,7 +472,7 @@
             </ng-template>
           </e-tabitem>
 
-          <e-tabitem>
+          <e-tabitem *ngIf="inputUrl == null">
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight1"
@@ -521,6 +522,7 @@
                       </codx-temp-full>
                       <div
                         [class.d-none]="
+                          inputUrl == null ||
                           area.recID != curSelectedAnnotID ||
                           area.labelType == '1' ||
                           area.labelType == '2' ||

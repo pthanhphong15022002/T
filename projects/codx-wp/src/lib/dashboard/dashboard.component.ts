@@ -27,9 +27,6 @@ export class DashboardComponent extends LayoutBaseComponent {
   }
 
   onInit() { 
-    this.route.params.subscribe((res:any) => {
-      if(res) console.log(res);
-    })
   }
 
   onAfterViewInit() {

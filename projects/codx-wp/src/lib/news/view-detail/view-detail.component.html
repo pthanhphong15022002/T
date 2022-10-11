@@ -36,7 +36,7 @@
                                     </div>
                                     <div class="d-flex flex-center me-4">
                                         <span class="icon-account_circle me-1 fs-6 text-gray-600"></span>
-                                        <span class="fs-7 text-gray-600">{{dataItem.createdByName}}</span>
+                                        <span class="fs-7 text-gray-600">{{dataItem.createdName}}</span>
                                     </div>
                                     <div class="d-flex flex-center me-4">
                                         <span class="icon-calendar_customize me-1 fs-6 text-gray-600"></span>
@@ -47,8 +47,14 @@
                                         <span class="fs-7 text-gray-600">{{dataItem.views}}</span>
                                     </div>
                                 </div>
-                                <button class="btn btn-icon btn-sm btn-light-primary"><span
-                                        class="icon-share"></span></button>
+                                <ng-container *ngIf="dataItem.allowShare">
+                                    <button (click)="clickPopupShare(dataItem)" class="btn btn-icon btn-sm btn-light-primary">
+                                        <span
+                                            class="icon-share">
+                                        </span>
+                                    </button>
+                                </ng-container>
+                                
                             </div>
                             <ng-contianer *ngIf="dataItem?.newsType == NEWSTYPE.VIDEO;else news">
                                 <wp-video 
@@ -110,13 +116,16 @@
                                 (click)="clickViewDeital(item)">
                                 <div class="row">
                                     <div class="col-3">
-                                        <codx-img [width]="70" imageType="square" [cssClass]="'img'"
-                                            [objectId]="item.recID" [objectType]="'WP_News'">
+                                        <codx-img [width]="70" 
+                                            imageType="square" 
+                                            [cssClass]="'img'"
+                                            [objectId]="item.recID" 
+                                            [objectType]="'WP_News'">
                                         </codx-img>
                                     </div>
                                     <div class="col-9">
                                         <div class="fs-5 fw-bold news-title">
-                                            {{item.subContent | maxlenght:75}}
+                                            {{item.subject | maxlenght:75}}
                                         </div>
                                         <div class="d-flex justify-content-between mt-2">
                                             <div class="fs-7 d-flex flex-center">
@@ -132,7 +141,8 @@
                         <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
                             <codx-label formName="News" name="lblTags" default="Tag #"></codx-label>
                             <div class="badge-group">
-                                <span *ngFor="let tag of listTag" class="badge badge-danger"
+                                <span *ngFor="let tag of listTag" 
+                                    class="badge badge-danger"
                                     [style.background]="tag.color" (click)="clickTag(tag)">
                                     {{tag.text}}
                                 </span>

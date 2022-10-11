@@ -199,6 +199,10 @@ export class DetailPolicyCoinsComponent extends UIComponent implements OnInit {
       '',
       option
     );
+    this.dialog.closed.subscribe((res) => {
+      if (res.event) this.messageSC003 = res.event;
+    });
+    this.changeDetectorRef.detectChanges();
   }
 
   setTextMemo() {

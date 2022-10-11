@@ -36,11 +36,12 @@
 
 <ng-template #templateListCard let-item>
     <div (dblclick)="openDetailPage(item)">
-        <codx-card-img cardCss="border card-img-mwp rounded-4 w-228px h-225px" (clickMF)="clickMF($event, item)"
-            [imageId]="item.recID" imgCss="w-228px h-140px" icoTitleCss="icon-assignment icon-16" [title]="item.title"
-            cssTitle="line-clamp line-clamp-1" [imgOn]="item?.modifiedOn" [desc2]="item.memo"
-            cssDes2="line-clamp line-clamp-2" imageWidth="228" [imageObjType]="'WP_NoteBooks'"
-            [formModel]="listView.formModel" [dataItem]="item" [imageObjName]="'T C A'">
+        <codx-card-img cardCss="border card-img-mwp rounded-3 img-storage w-225px h-225px"
+            (clickMF)="clickMF($event, item)" [imageId]="item.recID" imgCss="h-140px mb-2"
+            icoTitleCss="icon-assignment icon-16" [title]="item.title" cssTitle="line-clamp line-clamp-1"
+            [imgOn]="item?.modifiedOn" [desc2]="item.memo" cssDes2="line-clamp line-clamp-2" imageWidth="223"
+            [imageObjType]="'WP_NoteBooks'" [formModel]="listView.formModel" [dataItem]="item"
+            [imageObjName]="item.title">
         </codx-card-img>
     </div>
 </ng-template>

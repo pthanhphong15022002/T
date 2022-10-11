@@ -41,6 +41,7 @@ export class EditFileComponent implements OnInit {
   titleCate = 'Phân loại';
   titleLanguage = 'Ngôn ngữ';
   titleExcerpts = 'Trích lục';
+  titleDescription = 'Mô tả tài liệu';
   titleRelation = 'Mối quan hệ';
   titleSource = 'Nguồn';
   titleCopyright  = 'Bản quyền';
@@ -151,7 +152,7 @@ export class EditFileComponent implements OnInit {
   copyrights: any;
   copyrightsControl: any;
   approvers: string;
-  revisionNote: string;
+  description: string;
   location: string;
   public loading = false;
   private onScrolling = true;
@@ -568,6 +569,12 @@ if(this.fileEditing.type == null)
             this.fileEditing.excerpts = $event.data;
             else
             this.fileEditing.excerpts= "";
+            break;
+            case 'description':
+          if ($event.data.length > 0)
+            this.fileEditing.description = $event.data;
+            else
+            this.fileEditing.description= "";
             break;
         case 'authur':
           if ($event.data.length > 0)

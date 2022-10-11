@@ -192,7 +192,7 @@
             <!-- Personal Information -->
             <div class="form-group">
               <div class="body_detail p-6">
-                <div class="d-flex justify-content-between mb-3">
+                <div class="d-flex justify-content-between">
                   <div class="fw-bold text-dark">
                     <codx-label fiedName="" class="title_contact" formName="" gridViewName="" default="Người đại diện">
                     </codx-label>
@@ -204,11 +204,10 @@
                   <div class="row pb-5">
                     <div class="col-6 ps-0">
                       <div class="d-flex align-items-top">
-                        <div class="w-60px me-3">
-
+                        <div class="me-4">
                           <div *ngIf="data.recID; else imgDefault_personal">
                             <codx-img [objectId]="data.recID" [objectName]="data.contactName"
-                              objectType="AD_CompanySettings" [width]="100" [height]="100">
+                              objectType="AD_CompanySettings" [width]="80">
                             </codx-img>
                           </div>
                           <ng-template #imgDefault_personal> <img class="img_avatar"
@@ -240,7 +239,7 @@
             <!-- Bộ nhớ tài khoảng -->
             <div class="form-group col-6">
               <div class="body_detail p-6">
-                <div class="d-flex justify-content-between mb-3">
+                <div class="d-flex justify-content-between">
                   <div class="fw-bold text-dark">
                     <codx-label fiedName="" class="title_contact" formName="" gridViewName=""
                       default="Bộ nhớ tài khoản">
@@ -289,6 +288,21 @@
           </div>
         </ng-template>
         <ng-template #content>
+          <div class="w-100 bg-body rounded-3 p-9">
+            <div class="container">
+              <div class="list-empty card card-flush h-100">
+                <div class="d-flex flex-column flex-center justify-content-center">
+                  <img
+                    src="../assets/themes/sys/default/img/DataEmpty.svg"
+                    class="w-800px"
+                  />
+                  <div class="fs-5 text-dark fw-bold mt-2 text-center">
+                    {{ "SYS011" | mssg | async }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </ng-template>
       </e-tabitem>
       <e-tabitem>
@@ -304,6 +318,21 @@
           </div>
         </ng-template>
         <ng-template #content>
+          <div class="w-100 bg-body rounded-3 p-9">
+            <div class="container">
+              <div class="list-empty card card-flush h-100">
+                <div class="d-flex flex-column flex-center justify-content-center">
+                  <img
+                    src="../assets/themes/sys/default/img/DataEmpty.svg"
+                    class="w-800px"
+                  />
+                  <div class="fs-5 text-dark fw-bold mt-2 text-center">
+                    {{ "SYS011" | mssg | async }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </ng-template>
       </e-tabitem>
     </e-tabitems>
