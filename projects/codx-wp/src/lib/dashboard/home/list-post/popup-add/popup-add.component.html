@@ -157,13 +157,15 @@
                 <div class="">
                     <ng-container *ngIf="dataShare.refType == 'WP_Comments'; else WP_News">
                         <div class="text-dark text-feed">
-                            <p [innerHTML]="dataShare?.content"></p>
+                            <p [innerHTML]="dataShare.content"></p>
                         </div>
                     </ng-container>
                     <ng-template #WP_News>
-                        <div class="fw-bolder">{{dataShare.subject}}</div>
-                        <div>{{dataShare.subContent}}</div>
-                        <div class="text-gray-600 fs-7 me-2">{{dataShare.createdOn | fmDT}}</div>
+                        <ng-container *ngIf="dataShare.subject || dataShare.subContent">
+                            <div class="fw-bolder">{{dataShare.subject}}</div>
+                            <div>{{dataShare.subContent}}</div>
+                            <div class="text-gray-600 fs-7 me-2">{{dataShare.createdOn | fmDT}}</div>
+                        </ng-container>
                     </ng-template>
 
                 </div>
