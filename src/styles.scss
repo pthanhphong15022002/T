@@ -752,6 +752,10 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   overflow: auto;
 }
 
+.h-13px {
+  height: 13px;
+}
+
 /*****/
 
 codx-view-list-detail .codx-detail-footer.expand .tab-content {
@@ -778,4 +782,8 @@ codx-dynamic-form codx-view-grid {
 
 .e-schedule-toolbar.e-toolbar .e-toolbar-items .e-toolbar-item:not(.e-separator) {
   margin-left: 2px;
+}
+
+.dms-card .card:hover {
+  background-color: #eef4f4 !important;
 }

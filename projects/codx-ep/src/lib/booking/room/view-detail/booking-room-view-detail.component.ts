@@ -1,13 +1,16 @@
 import {
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
+import { BookingRoomComponent } from '../booking-room.component';
 import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
 
 @Component({
@@ -19,6 +22,10 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;
+  @ViewChild('bookingRoom') bookingRoom : BookingRoomComponent;
+  @Output('edit') edit: EventEmitter<any> = new EventEmitter();  
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -80,84 +87,29 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
     this.setHeight();
     this.active = 1;
   }
-
-  openFormFuncID(value, datas: any = null) {
-    
-    let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
-    switch (funcID) {
-      case 'EPT40101':
-      case 'EPT40201':
-      case 'EPT40301':
-        {
-          alert('Duyệt');
-          //this.approve(value)
-        }
-        break;      
-      case 'EPT40105':
-      case 'EPT40205':
-      case 'EPT40305':
-        {
-          //alert('Từ chối');
-        }
-        break;
-      case 'EPT40106':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          //alert('Làm lại');
-        }
-        break;
-      default:
-        '';
-        break;
-    }
-  }
-  clickMF(event, data) {
-    //this.popupTitle=event?.text + " " + this.funcIDName;
-    switch (event?.functionID) {     
-
+  
+  childClickMF(event, data) {   
+    switch (event?.functionID) {
       case 'SYS02': //Xoa
-        this.delete(data);
+        this.lviewDelete(data);
         break;
 
       case 'SYS03': //Sua.
-        this.edit(data);
+        this.lviewEdit(data,event.text);
         break;
     }
   }
-  edit(evt?) {
-    if (evt) {
-      this.itemDetailTemplate.dataService
-        .edit(this.itemDetailTemplate.dataService.dataSelected)
-        .subscribe((res) => {          
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callFuncService.openSide(
-            PopupAddBookingRoomComponent,
-            [evt, false],
-            option
-          );
-        });
+  lviewEdit(data?,mfuncName?) {
+    if (data) {  
+      this.setPopupTitle.emit(mfuncName);    
+      this.edit.emit(data);
     }
   }
-  delete(evt?) {
-    let deleteItem = this.itemDetailTemplate.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
+  lviewDelete(data?) {
+    if (data) {      
+      this.delete.emit(data);
     }
-    this.itemDetailTemplate.dataService.delete([deleteItem]).subscribe((res) => {
-    });
-  }  
-  
+  }
   changeDataMF(event, data: any) {}
 
   clickChangeItemDetailDataStatus(stt) {

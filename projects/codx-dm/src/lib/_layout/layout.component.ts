@@ -130,7 +130,7 @@ public layoutColor: string;
 
     this.dmSV.isUpdateHDD.subscribe(item => {     
       this.getHDDInformaton(item);
-      document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',(item));        
+      //document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',(item));        
     });
    
 

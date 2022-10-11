@@ -38,7 +38,7 @@
           field="duration"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChangeEstimate($event, stepType)"
+          (valueChange)="valueChangeDuration($event)"
         >
         </codx-input>
       </div>
@@ -97,7 +97,7 @@
             field="duration"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeEstimate($event, stepType)"
+            (valueChange)="valueChangeDuration($event)"
           >
           </codx-input>
         </div>
@@ -112,7 +112,7 @@
             field="reminder"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeEstimate($event, stepType)"
+            (valueChange)="valueChangeDuration($event)"
           >
           </codx-input>
         </div>
@@ -164,7 +164,7 @@
             field="location"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeEstimate($event, stepType)"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>
@@ -180,7 +180,7 @@
           field="location"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChangeEstimate($event, stepType)"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>

@@ -559,7 +559,7 @@ export class TMMeetingsComponent
 
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-    
+      // dialogModel.zIndex = 900;
       var dialog = this.callfc.openForm(
         PopupTabsViewsDetailsComponent,
         '',
