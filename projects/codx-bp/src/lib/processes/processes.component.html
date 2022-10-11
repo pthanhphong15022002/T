@@ -6,17 +6,18 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
-    imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1" [footer]="footerbg">
+    imageSrc="../assets/media/img/codx/default/card-default.svg" imgCss="w-100 h-140px p-1" [dataItem]="data" [formModel]="view.formModel" [typeMF]="'hover'" 
+    (clickMF)="clickMF($event, data)" [footer]="footerbg">
   </codx-card-img>
   <ng-template #footerbg>
     <div class="d-flex bg-footer  m-n3 mt-0">
       <div class="d-flex flex-column w-100 p-3">
         <div class="fs-4  fw-bold lh-base">{{data.processName}}</div>
         <div class="d-flex align-items-center">
-          <div class="badge  badge-white my-1 me-3">{{ data.VersionNo }}</div>
+          <div class="badge  badge-white my-1 me-3">{{ data.versions }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
             <span class="me-1 icon-16 icon-access_alarm"></span><span
-              class="  line-clamp">{{data.activedOn | date: "dd/MM/yyyy"}}
+              class="line-clamp">{{data.activedOn | fmDT}}
             </span>
           </div>
         </div>
@@ -31,7 +32,7 @@
               <span class=" ">{{data.attachments}}</span>
             </div>
           </div>
-          <codx-imgs [width]="25" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users" [numberImages]="2">
+          <codx-imgs [width]="25" [objectId]="data.owner" objectType="AD_Users" [numberImages]="2">
           </codx-imgs>
         </div>
       </div>
@@ -80,7 +81,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        {{data.activedOn | date: "dd/MM/yyyy"}}
+        {{data.activedOn | fmDT}}
       </div>
     </td>
     <td class="rowphoto">

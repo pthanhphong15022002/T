@@ -47,7 +47,13 @@ export class CodxApprovalStepComponent
     private cr: ChangeDetectorRef,
     private cache: CacheService
   ) {}
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.esService.isSetupChange.subscribe((res) => {
+      if (res) {
+        this.initForm();
+      }
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.initForm();
