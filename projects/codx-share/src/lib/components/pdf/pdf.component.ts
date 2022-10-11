@@ -30,6 +30,7 @@ import {
 } from 'ngx-extended-pdf-viewer';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
+import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -684,7 +685,7 @@ export class PdfComponent
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
-    if (this.isEditable) {
+    if (this.inputUrl == null) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
       )?.find((ele) => {
@@ -870,7 +871,10 @@ export class PdfComponent
                     return undefined;
                   });
                   this.holding = 0;
-                  if (signed?.length == 1) {
+                  if (
+                    !['1', '2', '8'].includes(name.LabelType.toString()) ||
+                    signed?.length == 1
+                  ) {
                     switch (name.Type) {
                       case 'text': {
                         this.saveNewToDB(
@@ -1263,6 +1267,19 @@ export class PdfComponent
         case 8:
           this.url = qr;
           break;
+        case 9: {
+          this.dialog = this.callfc.openForm(
+            PopupSelectLabelComponent,
+            '',
+            700,
+            700,
+            this.funcID,
+            {
+              title: 'Chọn Nhãn',
+            }
+          );
+          break;
+        }
         default:
           this.url = '';
           break;
