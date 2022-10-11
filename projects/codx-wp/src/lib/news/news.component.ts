@@ -31,10 +31,10 @@ export class NewsComponent implements OnInit {
   isAllowNavigationArrows = false;
   views: Array<ViewModel> = [];
   category: string = "home";
-  mssgWP025: string = "";
-  mssgWP026: string = "";
-  mssgWP027: string = "";
-
+  mssgWP025:string = "";
+  mssgWP026:string = "";
+  mssgWP027:string = "";
+  pageSlider:any[] = [];
 
   NEWSTYPE = {
     POST: "1",
@@ -108,12 +108,20 @@ export class NewsComponent implements OnInit {
       "GetDatasNewsAsync",
       [funcID, category])
       .subscribe((res: any[]) => {
-        if (res.length > 0 && res[0] && res[1] && res[2]) {
-          this.news = res[0];
-          this.videos = res[1];
-          this.lstGroup = res[2];
-          if (this.videos.length > 3) {
+        if (res.length > 0 && res[0] && res[1] && res[2]) 
+        {
+          this.news = res[0]; 
+          this.videos = res[1]; 
+          this.lstGroup = res[2]; 
+          if(this.videos.length > 3)
+          {
+            let page = Math.floor(this.videos.length/3);
+            for (let index = 1; index <= page; index++) 
+            {
+              this.pageSlider.push(index);
+            }; 
             this.isAllowNavigationArrows = true;
+            
           }
           this.changedt.detectChanges();
         }
