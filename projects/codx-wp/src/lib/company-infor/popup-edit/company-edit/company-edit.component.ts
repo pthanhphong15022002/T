@@ -25,9 +25,6 @@ export class CompanyEditComponent implements OnInit {
   formGroup: FormGroup;
   dialogData:any;
   dataEdit:any;
-
-
-
   constructor(
     private api:ApiHttpService,
     private auth: AuthService,
@@ -71,7 +68,7 @@ export class CompanyEditComponent implements OnInit {
           this.dataOld.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
           this.dialogRef.close(this.dataOld);
           this.dt.detectChanges();
-          this.notifySvr.notifyCode('E0026');
+          this.notifySvr.notifyCode('SYS007');
         }
       });
     }
