@@ -62,8 +62,8 @@ export class PopupSignatureComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.dialog.formModel = data?.data.dialog.formModel;
-    this.dialogSignature = data?.data.model;
+    this.dialog.formModel = data?.data?.dialog?.formModel;
+    this.dialogSignature = data?.data?.model;
     // this.data = dialog.DataService?.dataSelected;
     this.data = data?.data.data;
     console.log('dialog add signature', this.dialog);

@@ -1230,13 +1230,13 @@ export class HomeComponent extends UIComponent {
     {
       if (!data.read) {
         this.notificationsService.notifyCode("DM059");
-        return;
+        return null;
       }
       this.fileService.getFile(data.recID).subscribe((data) => {
         this.viewFile(data);
       });
     }
-    this.dmSV.openItem(this.data);
+    this.dmSV.openItem(data);
   }
   dialogClosed() {
     this.visible = false;

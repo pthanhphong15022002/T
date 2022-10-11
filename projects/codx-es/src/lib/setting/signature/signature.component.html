@@ -48,16 +48,18 @@
     <div>
       <div class="m-auto text-center">
         <codx-img
-          class="border border-gray-300 rounded symbol square me-2 image-inpt-wrapper fullImage Signature1 p-1"
+          class="symbol square me-2 image-inpt-wrapper fullImage Signature1"
           [width]="60"
-          [objectId]="data.recID + '1'"
+          referType="S1"
+          [objectId]="data.recID"
+          [imageType]="'square'"
           [objectType]="'ES_Signatures'"
           [funcId]="'ESS21'"
           data-kt-menu-trigger="click"
           data-kt-menu-attach="parent"
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="bottom"
-          [isAllowEdit]="false"
+          [imgOn]="data.modifiedOn"
         >
         </codx-img>
       </div>
@@ -70,16 +72,18 @@
     <div>
       <div class="m-auto text-center">
         <codx-img
-          class="border border-gray-300 rounded symbol square me-2 image-inpt-wrapper fullImage ignature2 p-1"
+          class="symbol square me-2 image-inpt-wrapper fullImage ignature2"
+          [imageType]="'square'"
           [width]="60"
-          [objectId]="data.recID + '2'"
+          referType="S2"
+          [objectId]="data.recID"
           [objectType]="'ES_Signatures'"
           [funcId]="'ESS21'"
           data-kt-menu-trigger="click"
           data-kt-menu-attach="parent"
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="bottom"
-          [isAllowEdit]="false"
+          [imgOn]="data.modifiedOn"
         >
         </codx-img>
       </div>
@@ -92,9 +96,11 @@
     <div>
       <div class="m-auto">
         <codx-img
-          class="border border-gray-300 rounded symbol square me-2 image-inpt-wrapper fullImage imageStamp p-1"
+          class="symbol square me-2 image-inpt-wrapper fullImage imageStamp"
+          [imageType]="'square'"
           [width]="60"
-          [objectId]="data.recID + 's'"
+          referType="S3"
+          [objectId]="data.recID"
           [objectType]="'ES_Signatures'"
           [funcId]="'ESS21'"
           data-kt-menu-trigger="click"
