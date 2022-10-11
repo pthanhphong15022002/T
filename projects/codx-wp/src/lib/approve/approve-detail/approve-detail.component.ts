@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, O
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, VLLPipe } from 'codx-core';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { WP_News } from '../../models/WP_News.model';
 import { PopupEditComponent } from '../../news/popup/popup-edit/popup-edit.component';
@@ -68,6 +68,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     VIDEO:"2"
   }
   data: any;
+  vllL1901:string = "L1901";
   acceptApprove = "5";
   cancelApprove  = "4";
   remakeApprove = "2";
@@ -90,8 +91,23 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   }
 
   ngOnInit(): void {
-    if(this.objectID){
-       this.getPostInfor();
+    this.getValueListShare(this.vllL1901);
+    this.getPostInfor();
+  }
+
+  dVllL1901: any = {};
+  getValueListShare(valueList:string){
+    if(valueList)
+    {
+      this.cache.valueList(valueList).subscribe((vll:any) =>{
+        if(vll)
+        {
+          this.dVllL1901["0"] = null;
+          vll.datas.forEach(element => {
+            this.dVllL1901[element.value + ""] = element;
+          });
+        }
+      });
     }
   }
   getPostInfor(){
@@ -104,7 +120,6 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       if(res){
         this.data = res;
         this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-        this.dt.detectChanges();
       }
     })
   }

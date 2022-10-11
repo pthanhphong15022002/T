@@ -113,6 +113,7 @@ export class NewsComponent implements OnInit {
           this.news = res[0]; 
           this.videos = res[1]; 
           this.lstGroup = res[2]; 
+          console.log(this.videos);
           if(this.videos.length > 3)
           {
             let page = Math.floor(this.videos.length/3);
