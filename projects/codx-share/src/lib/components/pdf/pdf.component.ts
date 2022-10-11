@@ -65,7 +65,7 @@ export class PdfComponent
   @Input() stepNo = -1;
   @Input() inputUrl = null;
   @Input() transRecID = null;
-
+  @Input() hideActions = false;
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -182,7 +182,6 @@ export class PdfComponent
 
   //thumbnail
   hideThumbnail: boolean = false;
-  hideActions: boolean = false;
 
   onInit() {
     if (this.inputUrl == null) {
