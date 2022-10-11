@@ -281,7 +281,7 @@ export class CodxTasksComponent
           template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
           template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
@@ -300,7 +300,7 @@ export class CodxTasksComponent
           template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
-          template: this.eventTemplate,
+          // template: this.eventTemplate, lấy event của temo
           template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content

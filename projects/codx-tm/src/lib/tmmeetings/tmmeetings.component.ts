@@ -175,7 +175,7 @@ export class TMMeetingsComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.eventTemplate,
+          // template: this.eventTemplate, bỏ đi :V
           // template4: this.resourceHeader,// schenmoi can
           template6: this.mfButton, //header
           template2: this.headerTemp,
