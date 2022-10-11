@@ -123,12 +123,13 @@
       <div class="d-flex flex-wrap">
         <div class="text-center me-6 mb-3">
           <div
-            class="border border-gray-300 rounded mb-5 d-flex align-items-center"
+            class="mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
               <codx-img
                 #imgSignature1
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                [imageType]="'square'"
                 [width]="80"
                 referType="S1"
                 [objectId]="data.recID"
@@ -150,12 +151,13 @@
         </div>
         <div class="text-center me-6 mb-3">
           <div
-            class="border border-gray-300 rounded mb-5 d-flex align-items-center"
+            class="mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
               <codx-img
                 #imgSignature2
                 referType="S2"
+                [imageType]="'square'"
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
                 [objectId]="data.recID"
@@ -179,13 +181,14 @@
         </div>
         <div class="text-center me-6 mb-3">
           <div
-            class="border border-gray-300 rounded mb-5 d-flex align-items-center"
+            class=" mb-5 d-flex align-items-center"
           >
             <div class="m-auto">
               <codx-img
                 #imgStamp
                 referType="S3"
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                [imageType]="'square'"
                 [width]="80"
                 [objectId]="data.recID"
                 [objectType]="'ES_Signatures'"
