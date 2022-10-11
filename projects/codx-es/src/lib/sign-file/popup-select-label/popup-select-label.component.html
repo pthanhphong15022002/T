@@ -1,0 +1,18 @@
+<div class="d-flex justify-content-around">
+  <button (click)="closePopUp()">
+    <codx-label>X</codx-label>
+  </button>
+  <div class="img-spaces" *ngFor="let label of labels; idx">
+    <img style="width: 100px; height: 100px" [src]="label.src" />
+
+    <codx-input
+      type="radio"
+      name="radio"
+      labelPosition="Before"
+      [disabled]="false"
+      value="radio"
+      (valueChange)="changeLabel(label)"
+    >
+    </codx-input>
+  </div>
+</div>

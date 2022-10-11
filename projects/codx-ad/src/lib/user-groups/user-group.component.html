@@ -10,7 +10,7 @@
     idField="userID"
     [selectedFirst]="true"
     [button]="button"
-    (buttonClick)="click($event)"
+    (buttonClick)="add($event)"
     (viewChanged)="changeView($event)"
     (selectedChange)="selectedChange($event)"
   >
@@ -41,6 +41,7 @@
             [formModel]="view.formModel"
             [dataItem]="data"
             [imgOn]="data?.modifiedOn"
+            (changeDataMF)="changeDataMF($event)"
           >
           </codx-temp-full>
         </div>
