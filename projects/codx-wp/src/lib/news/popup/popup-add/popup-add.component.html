@@ -3,12 +3,15 @@
     <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
             <div class="me-4">
-                <codx-label class="fw-bolder fs-1" [formModel]="dialogRef.formModel" name="lblHeaderText"
+                <codx-label 
+                    class="fw-bolder fs-1" 
+                    [formModel]="dialogRef.formModel" 
+                    name="lblHeaderText"
                     default="Soạn thảo văn bản">
                 </codx-label>
             </div>
             <div class="bg-gray-200 rounded-1 p-1 d-flex align-items-center" (click)="openFormShare(controlShare)">
-                <img class="w-15px ms-1" src="assets/themes/sys/default/img/{{shareIcon}}" />
+                <img *ngIf="shareIcon" class="w-15px ms-1" src="assets/themes/sys/default/img/{{shareIcon}}" />
                 <span class="text-gray-700 fs-7 ms-2">{{shareText}}</span>
                 <i class="icon-arrow_drop_down icon-16 text-dark"></i>
             </div>
@@ -21,7 +24,7 @@
         </button>
     </div>
     <div class="my-3">
-        <codx-tag entityName="WP_News" [isEdit]="false" field="Tags" [value]="tagName"
+        <codx-tag entityName="WP_News" [isEdit]="true" field="Tags" [value]="tagName"
             (valueChange)="valueChange($event)">
         </codx-tag>
     </div>

@@ -268,7 +268,6 @@ export class CatagoryComponent implements OnInit {
   }
 
   getAlertRule() {
-
     var lstRoleID = [];
     if (this.setting) {
       this.setting.forEach((element) => {

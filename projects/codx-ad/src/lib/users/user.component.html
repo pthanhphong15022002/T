@@ -1,6 +1,6 @@
 <codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
   method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true" [button]="button"
-  (buttonClick)="click($event)" (viewChanged)="changeView($event)" (selectedChange)="selectedChange($event)">
+  (buttonClick)="add($event)" (viewChanged)="changeView($event)" (selectedChange)="selectedChange($event)">
 </codx-views>
 
 <ng-template #itemTemplate let-data>

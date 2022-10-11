@@ -1,4 +1,4 @@
-<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
+<codx-layout-add #form [title]="header" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
   [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" [data]="adUser">
 </codx-layout-add>
 
@@ -14,7 +14,7 @@
         <div class="form-group">
           <codx-label fiedName="UserID" [formModel]="form.formModel">
           </codx-label>
-          <codx-input field="userID" [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup"
+          <codx-input field="userID" [disabled]="true" [Group]="form.formGroup"
             [formModel]="form.formModel">
           </codx-input>
         </div>
