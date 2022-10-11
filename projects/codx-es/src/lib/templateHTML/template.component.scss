@@ -44,3 +44,36 @@
     height: calc(100% - 50px);
   }
 }
+.btn-label {
+  position: relative;
+  border-radius: 50rem !important;
+}
+.btn-label .label-icon {
+  position: absolute;
+  width: 35.5px;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  font-size: 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.bg-marketplace {
+  // background-image: url(../images/nft/marketplace.png);
+  background-size: cover;
+}
+.fs-italic {
+  font-style: italic;
+}
+.badge-light-danger {
+  background: #fff4ec !important;
+  border-radius: 10px !important;
+}
