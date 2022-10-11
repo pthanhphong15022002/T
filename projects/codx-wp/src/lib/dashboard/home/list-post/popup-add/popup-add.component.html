@@ -4,13 +4,32 @@
 <ng-template #body>
     <div class="body body-addpost">
         <div class="d-flex">
-            <div class="body-user-img me-3">
-                <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
-                </codx-img>
+            <div class="body-user-img me-2">
+                <ng-container *ngIf="dialogData.status == STATUS.EDIT;else tmpUserID">
+                    <codx-img 
+                        [objectId]="dataEdit.createdBy" 
+                        objectType="AD_Users" 
+                        [width]="40">
+                    </codx-img>
+                </ng-container>
+                <ng-template #tmpUserID>
+                    <codx-img 
+                        [objectId]="user.userID" 
+                        objectType="AD_Users" 
+                        [width]="40">
+                    </codx-img>
+                </ng-template>
             </div>
             <div class="d-flex flex-column">
-                <div class="d-flex align-items-center mb-1">
-                    <div class="user-name fw-bolder me-2">{{user.userName}}</div>
+                <div class="d-flex align-items-center">
+                    <div class="user-name fw-bolder me-2">
+                        <ng-container *ngIf="dialogData.status == STATUS.EDIT;else tmpUserName">
+                            <span>{{dataEdit.createdName}}</span>
+                        </ng-container>
+                        <ng-template #tmpUserName>
+                            <span>{{user.userName}}</span>
+                        </ng-template>
+                    </div>
                     <div [innerHTML]="tagWith"></div>
                 </div>
                 <div class="d-flex align-items-center justify-content-start " (click)="openFormShare(controlShare)">
@@ -127,7 +146,11 @@
 </ng-template>
 <ng-template #share>
     <div>
-        <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
+        <codx-input format="ed3" 
+            [class]="'border-none'" 
+            type="textarea" 
+            [crrValue]="message" 
+            [placeholder]="title"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>
@@ -142,7 +165,7 @@
             idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
         </codx-attachment>
     </div>
-    <div class="ndchiase">
+    <div class="border-start border rounded-3 p-4">
         <div [class.border]="listFileUpload.length > 0">
             <ng-container *ngIf="!dataShare?.isPortal;else category2">
                 <div class="pic-feed">
@@ -150,29 +173,18 @@
                         <codx-file [objectID]="dataShare.recID"></codx-file>
                     </div>
                 </div>
-                <div class="border-start border rounded-3 p-4">
+                <div class="">
                     <ng-container *ngIf="dataShare.refType == 'WP_Comments'; else WP_News">
                         <div class="text-dark text-feed">
-                            <p [innerHTML]="dataShare?.content"></p>
-                        </div>
-                        <div class="d-flex mb-3 card-border my-2">
-                            <codx-img [width]="30" [objectId]="dataShare?.createdBy" bjectType="AD_Users">
-                            </codx-img>
-                            <div class="d-flex flex-column flex-grow-1 ms-2">
-                                <div class="d-flex align-items-center">
-                                    <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
-                                </div>
-                                <div class="text-info-date">
-                                    <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
-                                </div>
-                            </div>
+                            <p [innerHTML]="dataShare.content"></p>
                         </div>
                     </ng-container>
-
                     <ng-template #WP_News>
-                        <div class="fw-bolder">{{dataShare.subject}}</div>
-                        <div>{{dataShare.subContent}}</div>
-                        <div class="text-gray-600 fs-7 me-2">{{dataShare.createdOn | fmDT}}</div>
+                        <ng-container *ngIf="dataShare.subject || dataShare.subContent">
+                            <div class="fw-bolder">{{dataShare.subject}}</div>
+                            <div>{{dataShare.subContent}}</div>
+                            <div class="text-gray-600 fs-7 me-2">{{dataShare.createdOn | fmDT}}</div>
+                        </ng-container>
                     </ng-template>
 
                 </div>
@@ -230,6 +242,20 @@
                     </div>
                 </div>
             </ng-template>
+            <div class="d-flex mb-3 card-border my-2">
+                <codx-img [width]="30" 
+                    [objectId]="dataShare?.createdBy" 
+                    bjectType="AD_Users">
+                </codx-img>
+                <div class="d-flex flex-column flex-grow-1 ms-2">
+                    <div class="d-flex align-items-center">
+                        <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
+                    </div>
+                    <div class="text-info-date">
+                        <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </ng-template>

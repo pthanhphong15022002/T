@@ -315,6 +315,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       {
         formModel: this.dialog.formModel,
         autoNoCode: this.data.categoryID,
+        description: this.formModel?.entityName,
       }
     );
     popupAutoNum.closed.subscribe((res) => {

@@ -17,8 +17,6 @@ export class ViewTagComponent extends UIComponent {
   views: Array<ViewModel> = [];
   tagName:string = "";
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
-
-
   constructor
   (
     private injector:Injector

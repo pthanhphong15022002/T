@@ -126,9 +126,11 @@ export class PopupAddEpCardsComponent extends UIComponent {
             (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
           }          
           this.dialogRef.close();
+        }        
+        else{
+          this.notificationsService.notifyCode('SYS001');
+          return;
         }
-        this.notificationsService.notifyCode('E0011');
-        return;
       });
   }  
 }
