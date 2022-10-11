@@ -67,9 +67,13 @@
   justify-content: center;
 }
 .bg-marketplace {
-  /* background-image: url(../images/nft/marketplace.png); */
+  // background-image: url(../images/nft/marketplace.png);
   background-size: cover;
 }
 .fs-italic {
   font-style: italic;
+}
+.badge-light-danger {
+  background: #fff4ec !important;
+  border-radius: 10px !important;
 }
