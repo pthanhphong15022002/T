@@ -59,6 +59,7 @@ export class TMMeetingsComponent
   @ViewChild('contentTmp') contentTmp!: TemplateRef<any>;
   @ViewChild('mfButton') mfButton!: TemplateRef<any>;
   @ViewChild('footerNone') footerNone!: TemplateRef<any>;
+  @ViewChild('headerTemp') headerTemp!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -167,19 +168,6 @@ export class TMMeetingsComponent
           template: this.itemViewList,
         },
       },
-      // {
-      //   type: ViewType.calendar,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     eventModel: this.fields,
-      //     resourceModel: this.resourceField,
-      //     template: this.eventTemplate,
-      //     template3: this.cellTemplate,
-      //     template7: this.template7,
-      //     statusColorRef: 'CO004'
-      //   },
-      // },
       {
         type: ViewType.calendar,
         active: false,
@@ -190,6 +178,7 @@ export class TMMeetingsComponent
           template: this.eventTemplate,
           // template4: this.resourceHeader,// schenmoi can
           template6: this.mfButton, //header
+          template2: this.headerTemp,
           template3: this.cellTemplate,
           template7: this.footerNone, ///footer
           template8: this.contentTmp, //content
@@ -654,5 +643,35 @@ export class TMMeetingsComponent
         this.viewDetail(e?.data);
         break;
     }
+  }
+
+  getHeaderCalendar(e) {
+    var date = e.getDate();
+    var current_day = e.getDay();
+    switch (current_day) {
+      case 0:
+        current_day = 'Chủ nhật';
+        break;
+        case 1:
+        current_day = 'Thứ hai';
+        break;
+        case 2:
+        current_day = 'Thứ ba';
+        break;
+        case 3:
+        current_day = 'Thứ tư';
+        break;
+        case 4:
+        current_day = 'Thứ năm';
+        break;
+        case 5:
+        current_day = 'Thứ sáu';
+        break;
+        case 6:
+        current_day = 'Thứ bảy';
+        break;
+    }
+
+    return '<div >' + current_day +'</div><div>'+date+'</div>';
   }
 }
