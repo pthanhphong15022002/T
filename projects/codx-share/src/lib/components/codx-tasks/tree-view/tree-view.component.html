@@ -19,7 +19,7 @@
             {{ item?.taskName }}
           </div>
         </div>
-        <div class="w-50px min-w-50px" [ngbTooltip]="item?.memo || item?.memo2 ? tempHtml : 'Không có mô tả'">
+        <div class="w-50px min-w-50px" [ngbTooltip]="item?.memo || item?.memo2 ? tempHtml : tempHtmlNoData">
           <span class="icon-assignment icon-16 text-gray-700 me-1"></span>
         </div>
       </div>
@@ -96,5 +96,9 @@
   <ng-template #tempHtml>
     <span *ngIf="item?.category == '2'" [innerHTML]="item?.memo2"></span>
     <span *ngIf="item?.category != '2'" [innerHTML]="item?.memo"></span>
+  </ng-template>
+
+  <ng-template #tempHtmlNoData>
+    <codx-label name="lblNoMemo" [formModel]="formModel" default="Không có mô tả" ></codx-label> 
   </ng-template>
 </ng-template>

@@ -898,6 +898,16 @@ export class CodxEsService {
     );
   }
 
+  updateApproveTemplate(sfID: string, processID: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'UpdateTemplateSignFileAsync',
+      [sfID, processID]
+    );
+  }
+
   addImgsToPDF(pages, lstAddBefore) {
     let data = [pages, lstAddBefore];
     return this.api.execSv(

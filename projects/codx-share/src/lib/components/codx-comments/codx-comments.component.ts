@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, View
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { Post } from '@shared/models/post';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService } from 'codx-core';
+import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from '../attachment/attachment.component';
@@ -116,8 +116,10 @@ export class CodxCommentsComponent implements OnInit {
         [tmpPost]
       )
       .subscribe(async (res) => {
-        if (res) {
-          if(this.data && this.edit){ // chỉnh sửa
+        if (res) 
+        {
+          if(this.data && this.edit)
+          { // update
             this.data = res;
             this.new = !this.new;
             if(this.fileDelete){
@@ -144,35 +146,71 @@ export class CodxCommentsComponent implements OnInit {
                     });
                   }
                 }
+                else
+                {
+                  let fileName = this.fileUpload.fileName;
+                  this.cache.message("DM006").subscribe((mssg:any) =>{
+                    if(mssg && mssg.defaultName){
+                      let strMssg = Util.stringFormat(mssg.defaultName,fileName);
+                      this.notifySvr.notify(strMssg);
+                    }
+                  });
+                  this.evtSendComment.emit(res);
+                  this.dt.detectChanges();
+                }
               });
             }
             
           }
-          else{ // thêm mới
+          else
+          { // add
+            this.message = "";
             if(this.fileUpload){
               this.codxATM.objectId = res.recID;
               let files = [];
               files.push(this.fileUpload);
               this.codxATM.fileUploadList = files;
               this.codxATM.objectType = this.objectType;
+              debugger
+              this.cache.message("DM006").subscribe((mssg:any) =>{
+                if(mssg && mssg.defaultName)
+                {
+                  let strMssg = Util.stringFormat(mssg.defaultName,this.fileUpload);
+                  console.log(strMssg);
+                }
+              });
               (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
                 if(result){
-                  this.message = "";
                   this.fileUpload = null;
                   this.dt.detectChanges();
                   this.evtSendComment.emit(res);
-                  this.notifySvr.notifyCode("SYS006");
+                  this.notifySvr.notifyCode("WP030");
                 }
-              })
+                else
+                {
+                  let fileName = this.fileUpload.fileName;
+                  this.cache.message("DM006").subscribe((mssg:any) =>{
+                    if(mssg && mssg.defaultName){
+                      let strMssg = Util.stringFormat(mssg.defaultName,fileName);
+                      this.notifySvr.notify(strMssg);
+                    }
+                  });
+                  this.evtSendComment.emit(res);
+                  this.dt.detectChanges();
+                }
+              });
             }
             else
             {
-              this.message = "";
               this.dt.detectChanges();
               this.evtSendComment.emit(res);
-              this.notifySvr.notifyCode("SYS006");
+              this.notifySvr.notifyCode("WP030");
             }
           }
+        }
+        else 
+        {
+          this.notifySvr.notifyCode("SYS023");
         }
       });
   }
@@ -186,20 +224,28 @@ export class CodxCommentsComponent implements OnInit {
   }
 
   deleteComment(){
-    this.notifySvr.alertCode('Xóa bình luận?').subscribe((res) => {
+    this.notifySvr.alertCode('WP028').subscribe((res) => {
       if (res.event.status == "Y") {
         this.api.execSv(
           "WP", 
           "ERM.Business.WP", 
           "CommentsBusiness", 
           "DeletePostAsync", 
-          this.data).subscribe((res: number) => {if(res) { 
-            let obj = {
-              data: this.data,
-              total: res
+          this.data).subscribe((res: number) => {
+            if(res) 
+            { 
+              let obj = {
+                data: this.data,
+                total: res
+              }
+              this.evtDeleteComment.emit(obj);
+              this.notifySvr.notifyCode("WP029");
             }
-            this.evtDeleteComment.emit(obj);
-           }});
+            else
+            {
+              this.notifySvr.notifyCode("SYS022");
+            }
+          });
       }
     });
   }

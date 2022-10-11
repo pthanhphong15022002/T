@@ -48,7 +48,8 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -76,12 +77,13 @@ export class CodxTasksComponent
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   viewsActive: Array<ViewModel> = [];
 
   button?: ButtonModel = {
-    id: 'btnAdd'
+    id: 'btnAdd',
     // items: [{
     //   id: 'avc',
     //   text: 'xxyz'
@@ -206,8 +208,6 @@ export class CodxTasksComponent
     this.requestSchedule.className = 'TaskBusiness';
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
-    // this.requestSchedule.predicate = this.predicateSchedule; //"Category=@0 and CreatedBy=@1";
-    // this.requestSchedule.dataValue = this.dataValueSchedule; //'2;' + this.user.userID;
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -219,7 +219,8 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    if (this.funcID == 'TMT0203') this.isAssignTask = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+
+    ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     //chay code chet cho nhanh, muon dong thi bat len
     // this.cache.functionList(this.funcID).subscribe(f => {
     //   if (f) {
@@ -280,7 +281,8 @@ export class CodxTasksComponent
           template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
+          template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
@@ -298,14 +300,14 @@ export class CodxTasksComponent
           template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
-          template: this.eventTemplate,
+          // template: this.eventTemplate, lấy event của temo
+          template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
         },
       },
       {
-        // id: '16',
         type: ViewType.content,
         active: false,
         sameData: false,
@@ -342,7 +344,7 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      option.zIndex = 5000;
+      // option.zIndex = 5000;
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       var dialog = this.callfc.openSide(
@@ -801,8 +803,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -907,7 +909,7 @@ export class CodxTasksComponent
       }
     }
     //   if (idx > -1) return;
-    //   var schedule = {
+     //   var schedule = {
     //     id: '8',
     //     type: ViewType.schedule,
     //     active: false,
@@ -959,7 +961,7 @@ export class CodxTasksComponent
     // }
   }
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(data) {
     this.api
@@ -1483,6 +1485,8 @@ export class CodxTasksComponent
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
+    if (this.funcID == 'TMT0203') this.isAssignTask = true;
+    else this.isAssignTask = false;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -1537,7 +1541,7 @@ export class CodxTasksComponent
     IdField: 'owner',
     TextField: 'userName',
     Title: 'Resources',
-  }; 
+  };
 
   viewChange(evt: any) {
     let fied = this.gridView?.dateControl || 'DueDate';
@@ -1585,6 +1589,36 @@ export class CodxTasksComponent
     }
 
     return ``;
+  }
+
+  getHeaderCalendar(e) {
+    var date = e.getDate();
+    var current_day = e.getDay();
+    switch (current_day) {
+      case 0:
+        current_day = 'Chủ nhật';
+        break;
+        case 1:
+        current_day = 'Thứ hai';
+        break;
+        case 2:
+        current_day = 'Thứ ba';
+        break;
+        case 3:
+        current_day = 'Thứ tư';
+        break;
+        case 4:
+        current_day = 'Thứ năm';
+        break;
+        case 5:
+        current_day = 'Thứ sáu';
+        break;
+        case 6:
+        current_day = 'Thứ bảy';
+        break;
+    }
+
+    return '<div >' + current_day +'</div><div>'+date+'</div>';
   }
 
   getParams() {
