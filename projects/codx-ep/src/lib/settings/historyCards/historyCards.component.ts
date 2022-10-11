@@ -15,15 +15,15 @@ export class HistoryCardsComponent
   @ViewChild('subTitle') tranTypeCol: TemplateRef<any>;
   @ViewChild('subTitle') userIDCol: TemplateRef<any>;
   @ViewChild('subTitle') createByCol: TemplateRef<any>;
-  // service = 'EP';
-  // assemblyName = 'EP';
-  // entityName = 'EP_ResourceTrans';
-  // predicate = 'ResourceType=@0';
-  // dataValue = '1';
-  // idField = 'recID';
-  // className = 'ResourceTransBusiness';
-  // method = 'GetAsync';
-  
+  service = 'EP';
+  assemblyName = 'EP';
+  entityName = 'EP_ResourceTrans';
+  predicate = 'ResourceType=@0';
+  idField = 'recID';
+  className = 'ResourceTransBusiness';
+  method = 'GetAsync';
+  dataValue='';
+  viewType = ViewType;
   funcID:any;
   formModel:FormModel;
   columnGrids:any;
@@ -35,14 +35,13 @@ export class HistoryCardsComponent
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
-    this.id = this.router.snapshot.params['id'];
+    this.dataValue = this.router.snapshot.params['id'];
           
   }
   onInit(): void {
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
-        this.formModel = res;        
-        
+        this.formModel = res;
       }
     });
   }
@@ -57,32 +56,32 @@ export class HistoryCardsComponent
           this.columnGrids = [
             {
               field: 'tranType',
-              headerText: gv['tranType'].headerText,
+              headerText: gv?.TranType?.headerText,
               width: 350,
               template: this.tranTypeCol,
             },
             {
               field: 'createOn',
-              headerText: gv['CreateOn'].headerText,
+              headerText: gv?.CreateOn?.headerText,
               width: 200,
               headerTextAlign: 'Center',
             },
             {
               field: 'userID',
-              headerText: gv['UserID'].headerText,
+              headerText: gv?.UserID?.headerText,
               template: this.userIDCol,
               headerTextAlign: 'Center',
               textAlign: 'Center',
             },          
             {
               field: 'note',
-              headerText: gv['Note'].headerText,
+              headerText: gv?.Note?.headerText,
               width: 200,
               headerTextAlign: 'Center',           
             },
             {
               field: 'createBy',
-              headerText: gv['CreateBy'].headerText,
+              headerText: gv?.CreateBy?.headerText,
               width: 200,
               template: this.createByCol,
               headerTextAlign: 'Center',
@@ -101,5 +100,6 @@ export class HistoryCardsComponent
           this.detectorRef.detectChanges();
         });
     }
+    
   }
 }

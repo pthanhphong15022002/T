@@ -158,8 +158,10 @@ export class PopupAddRoomsComponent extends UIComponent {
           }          
           this.dialogRef.close();
         }
-        this.notificationsService.notifyCode('E0011');
-        return;
+        else{
+          this.notificationsService.notifyCode('SYS001');
+          return;
+        }
       });
   }
 

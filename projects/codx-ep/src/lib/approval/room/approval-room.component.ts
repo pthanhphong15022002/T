@@ -1,5 +1,6 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
+  CRUDService,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -202,6 +203,9 @@ export class ApprovalRoomsComponent extends UIComponent {
             if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
                 this.notificationsService.notifyCode('ES007');//đã duyệt
+                data.status=="5";
+                this.view.dataService.update(data).subscribe();
+                this.view.dataService.add(data,0).subscribe();
               }
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy

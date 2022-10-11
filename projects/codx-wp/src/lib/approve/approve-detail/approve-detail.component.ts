@@ -123,13 +123,6 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       }
     })
   }
-  getEntityName(){
-    this.cache.functionList(this.formModel.funcID).subscribe((res:any) => {
-      if(res){
-        this.entityName
-      }
-    })
-  }
   clickApprovePost(data:any,approveStatus:any){
     this.evtApproval.emit({data:data,approveStatus:approveStatus})
   }
