@@ -130,7 +130,9 @@
       [title]="item.folderName != undefined ? item.folderName : item.fileName"
       (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
       [bookmark]="dmSV.showBookmark(item)" subTitle="{{ item.createdOn | date: 'dd/MM/yyyy' }} | {{ item.userName }}"
-      cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3">
+      cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3"
+      [baseHeaderRightTmp]="!item?.read?templateSecurity:null"
+    >
     </codx-temp-full>
 
   </div>
@@ -164,8 +166,9 @@
                 (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
                 [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3 cursor-pointer" [title]="
                   item.folderName != undefined ? item.folderName : item.fileName
-                " cardCss="w-250px" titleCss="dms-title pe-6">
+                " cardCss="w-250px" titleCss="dms-title pe-6" [baseHeaderRightTmp]="!item?.read?templateSecurity:null">
               </codx-temp-full>
+
             </td>
             <td class="w-20">
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
@@ -233,3 +236,6 @@
 <ng-container *ngIf="visible">
   <lib-dialogthumb [dataFile]="dataFile" (dialogClosed)="dialogClosed()"></lib-dialogthumb>
 </ng-container>
+<ng-template #templateSecurity>
+  <span class="icon-security text-primary icon-18"></span>
+</ng-template>
