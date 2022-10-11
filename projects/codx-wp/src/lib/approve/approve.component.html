@@ -1,5 +1,4 @@
 <codx-views #view 
-  [funcID]="funcID" 
   [entityName]="entityName" 
   idField="recID" 
   [views]="views" 
@@ -13,7 +12,7 @@
     <ng-container *ngFor="let item of tabAsside">
       <li class="nav-item" [class.text-primary]="item.active">
         <a class="nav-link fw-bold" href="javascript:;" (click)="clickTabApprove(item, item.predicate, item.datavalue)">
-          <codx-label [formName]="view.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
+          <codx-label [formModel]="view.formModel" [name]="'lbl' + item.text" [default]="item.text"></codx-label>
           <span>({{ item.total }})</span>
         </a>
       </li>
