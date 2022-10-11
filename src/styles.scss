@@ -44,6 +44,8 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 
 :root {
   ///
+  /// 
+  --primary: #3699ff;
   --primary-active: #187DE4;
   --primary-inverse: #FFFFFF;
 
@@ -797,4 +799,19 @@ codx-dynamic-form codx-view-grid {
 
 .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
   color: $title-color;
+}
+
+.e-appointment-wrapper .e-appointment {
+  margin-bottom: 5px !important;
+}
+
+.e-more-popup-wrapper .e-more-event-close {
+  box-shadow: none !important;
+}
+
+.e-toolbar .e-tbar-btn:focus,
+.e-toolbar .e-tbar-btn:hover {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--white);
 }
