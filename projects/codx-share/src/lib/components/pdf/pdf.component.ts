@@ -467,6 +467,7 @@ export class PdfComponent
 
         let layer = this.lstLayer.get(this.pageMax);
         let children = layer.children;
+        // nho xoa
         let top = children?.reduce((prev, curr) => {
           return prev.attrs.x < curr.attrs.x ? prev : curr;
         });
@@ -483,12 +484,41 @@ export class PdfComponent
           return prev.attrs.y > curr.attrs.y ? prev : curr;
         });
 
-        let x = top.attrs.x;
-        let y = left.attrs.y;
+        let x = top.attrs.x * this.xScale;
+        let y = left.attrs.y * this.yScale;
 
         let width =
           left.attrs.x - right.attrs.x + right.width() * right.scaleX();
         let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
+
+        //
+
+        // let lstAreaOnPage = this.lstAreas?.filter(
+        //   (area) =>
+        //     area.location.pageNumber + 1 == this.pageMax &&
+        //     area.signer == this.signerInfo.authorID
+        // );
+        // let top = lstAreaOnPage?.reduce((prev, curr) =>
+        //   prev.location.top < curr.location.top ? prev : curr
+        // );
+
+        // let left = lstAreaOnPage?.reduce((prev, curr) =>
+        //   prev.location.left < curr.location.left ? prev : curr
+        // );
+        // let bot = lstAreaOnPage?.reduce((prev, curr) =>
+        //   prev.location.top > curr.location.top ? prev : curr
+        // );
+
+        // let right = lstAreaOnPage?.reduce((prev, curr) =>
+        //   prev.location.left > curr.location.left ? prev : curr
+        // );
+
+        // let y = top?.location?.top * this.yScale;
+        // let x = left?.location?.left * this.xScale;
+        // let height =
+        //   (+bot.location.top + +bot.location.height) * this.yScale - y;
+        // let width =
+        //   (+right.location.left + +right.location.width) * this.xScale - x;
 
         let imgUrl = layer.toDataURL({
           quality: 1,
@@ -498,6 +528,7 @@ export class PdfComponent
           width: width,
           height: height,
         });
+        console.log('signature img', imgUrl);
 
         let approveStt = '5';
 
@@ -543,7 +574,7 @@ export class PdfComponent
                     resolve(status);
                   });
               } else {
-                this.notificationsService.notifyCode('ES010');
+                // this.notificationsService.notifyCode('ES010');
                 resolve(true);
                 this.esService
                   .updateSignFileTrans(
