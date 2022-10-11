@@ -118,6 +118,7 @@ import { PopupAddPanelComponent } from './components/codx-dashboard/popup-add-pa
 import { PopupAddChartComponent } from './components/codx-dashboard/popup-add-chart/popup-add-chart.component';
 import { DashboardLayoutAllModule } from '@syncfusion/ej2-angular-layouts';
 import { LayoutPanelComponent } from './components/codx-dashboard/layout-panel/layout-panel.component';
+import { CodxAttachmentTempComponent } from './components/codx-attachment-temp/codx-attachment-temp.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -198,7 +199,8 @@ const T_Component: Type<any>[] = [
   CodxDashboardComponent,
   PopupAddPanelComponent,
   PopupAddChartComponent,
-  LayoutPanelComponent
+  LayoutPanelComponent,
+  CodxAttachmentTempComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
