@@ -117,13 +117,13 @@
                             </div>
                             <div class="d-flex flex-column note-option">
                                 <div *ngIf="item.noteType == 'check'">
-                                    <div *ngFor="let itemList of item.checkList">
+                                    <div *ngFor="let itemList of item.checkList; index as i">
                                         <div class="my-2 note-list">
                                             <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
                                                 [label]="itemList.listNote"
                                                 [checked]="itemList?.status == 'true' || itemList?.status == '1'"
                                                 labelPosition="After" [disabled]="false" class="test-check"
-                                                (valueChange)="valueChange($event)"></codx-input>
+                                                (valueChange)="valueChangeCB($event, item, i)"></codx-input>
                                         </div>
                                     </div>
                                 </div>

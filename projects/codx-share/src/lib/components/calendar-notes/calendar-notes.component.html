@@ -149,6 +149,15 @@
                 </div>
             </div>
         </div>
+        <div *ngIf="(checkCO_MeetingsParam == true || checkCO_MeetingsParam == '1') && item?.type == 'CO_Meetings'">
+            <div class="meeting-content">
+                <div class="checkbox-list">
+                    <div class="d-flex flex-column note-option">
+                        <span [innerHTML]="item.memo"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </ng-template>
 </div>
 
@@ -166,13 +175,12 @@
                 <li [style.background-color]="WP_NotesParam?.ShowColor" [style.color]="WP_NotesParam?.ShowColor"></li>
             </div>
             <div class="show-event">
-                <!-- {{item.description}} -->
                 <codx-label name="lblNote" formName="WP_Notes" default="Ghi chú"></codx-label>
             </div>
             <div class="show-event-check">
                 <codx-input type="checkbox" field="WP_Notes_ShowEvent"
                     [checked]="checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'" labelPosition="Before"
-                    [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
+                    [disabled]="false" class="test-check" (valueChange)="valueChangeSetting($event)">
                 </codx-input>
             </div>
         </div>
@@ -184,13 +192,12 @@
                 <li [style.background-color]="TM_TasksParam?.ShowColor" [style.color]="TM_TasksParam?.ShowColor"></li>
             </div>
             <div class="show-event">
-                <!-- {{item.description}} -->
                 <codx-label name="lblTask" formName="WP_Task" default="Công việc cá nhân"></codx-label>
             </div>
             <div class="show-event-check">
                 <codx-input type="checkbox" field="TM_Tasks_ShowEvent"
                     [checked]="checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'" labelPosition="Before"
-                    [disabled]="false" class="test-check" (valueChange)="valueChange($event)">
+                    [disabled]="false" class="test-check" (valueChange)="valueChangeSetting($event)">
                 </codx-input>
             </div>
         </div>
