@@ -605,6 +605,7 @@ export class PopupAddSignFileComponent implements OnInit {
             });
             this.data.processID = this.processID;
             this.data.approveControl = '2';
+            this.onSaveSignFile();
             dialogTmp && dialogTmp.close();
           } else {
             this.processID == '';
@@ -692,7 +693,15 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  saveCategoryTemplate() {}
+  updateApproveTemplate() {
+    this.esService
+      .updateApproveTemplate(this.data.recID, this.data.processID)
+      .subscribe((res) => {
+        if (res != null) {
+          this.notify.notifyCode('RS002');
+        }
+      });
+  }
   //#endregion
 
   //#region Change Tab

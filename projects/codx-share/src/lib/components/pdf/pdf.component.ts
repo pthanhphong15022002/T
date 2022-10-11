@@ -1226,13 +1226,23 @@ export class PdfComponent
     this.renderQRAllPage = !this.renderQRAllPage;
   }
   changeAnnotationItem(type: number) {
-    if (!this.signerInfo) {
-      let data = {
-        dialog: this.dialog,
-      };
-      this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
-      return;
+    switch (type) {
+      case 1:
+        if (!this.signerInfo.signature) {
+          let data = {
+            dialog: this.dialog,
+          };
+          this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+          return;
+        }
+        this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
+        break;
+      case 2:
+        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
+        break;
     }
+
+    // }
     if (this.isEditable) {
       this.holding = type;
       switch (type) {
