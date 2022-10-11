@@ -734,14 +734,17 @@ export class PopupAddSignFileComponent implements OnInit {
                 if (item2?.status == 0) {
                   this.disableContinue = false;
                   this.fileAdded(item2);
+                  this.updateNodeStatus(oldNode, newNode);
+                  this.currentTab++;
+                  this.processTab == 0 && this.processTab++;
                 }
               }
             );
+          } else {
+            this.updateNodeStatus(oldNode, newNode);
+            this.currentTab++;
+            this.processTab == 0 && this.processTab++;
           }
-
-          this.updateNodeStatus(oldNode, newNode);
-          this.currentTab++;
-          this.processTab == 0 && this.processTab++;
         } else {
           this.notify.notifyCode('ES006');
         }

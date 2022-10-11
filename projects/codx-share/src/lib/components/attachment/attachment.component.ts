@@ -81,7 +81,6 @@ export class AttachmentComponent implements OnInit {
   appName = 'hps-file-test';
   numberDes = 0;
 
-  
   urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
@@ -97,11 +96,10 @@ export class AttachmentComponent implements OnInit {
   referType: string;
   folderID: string;
   isDM: false;
-  infoHDD =
-    {
-      totalHdd: 0,
-      totalUsed: 0
-    }
+  infoHDD = {
+    totalHdd: 0,
+    totalUsed: 0,
+  };
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
@@ -165,7 +163,6 @@ export class AttachmentComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-
     this.user = this.auth.get();
     this.dialog = dialog;
     if (data?.data != null) {
@@ -177,7 +174,7 @@ export class AttachmentComponent implements OnInit {
       this.popup = data?.data.popup;
       this.hideBtnSave = data?.data.hideBtnSave;
       this.folderID = data?.data.folderID;
-      if(data?.data.isDM && data?.data.isDM == true)
+      if (data?.data.isDM && data?.data.isDM == true)
         this.isDM = data?.data.isDM;
     }
 
@@ -218,11 +215,11 @@ export class AttachmentComponent implements OnInit {
           if (
             document
               .getElementsByName('UploadFiles')
-            [i].getAttribute('idbutton') == null
+              [i].getAttribute('idbutton') == null
           ) {
             document
               .getElementsByName('UploadFiles')
-            [i].setAttribute('idbutton', this.idBrowse);
+              [i].setAttribute('idbutton', this.idBrowse);
             break;
           }
         }
@@ -280,7 +277,6 @@ export class AttachmentComponent implements OnInit {
   }
 
   public formSelectedData(selectedFiles: FileInfo, proxy: any): void {
-    debugger;
     console.log(selectedFiles);
     let liEle: HTMLElement = createElement('li', {
       className: 'file-lists',
@@ -329,7 +325,7 @@ export class AttachmentComponent implements OnInit {
     if (status === 'File uploaded successfully') {
       this.uploadObj.remove(
         this.filesDetails[
-        this.filesList.indexOf(args.currentTarget.parentElement)
+          this.filesList.indexOf(args.currentTarget.parentElement)
         ]
       );
     } else {
@@ -369,7 +365,6 @@ export class AttachmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger;
     //this.getFolderPath();
     this.fileService.getAllowSizeUpload().subscribe((item) => {
       if (item != null) {
@@ -405,15 +400,15 @@ export class AttachmentComponent implements OnInit {
       // alert(1);
       if (item == true) this.openPopup();
     });
-    this.fileService.getTotalHdd().subscribe(item => {
+    this.fileService.getTotalHdd().subscribe((item) => {
       if (item) {
         this.infoHDD.totalHdd = item?.totalHdd;
-        this.infoHDD.totalUsed = item?.totalUsed
+        this.infoHDD.totalUsed = item?.totalUsed;
       }
       //  totalUsed: any;
       // totalHdd: any;
       // this.getHDDInformaton(item);
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -466,7 +461,7 @@ export class AttachmentComponent implements OnInit {
         pathFolder,
         pathID
       )
-      .subscribe((item) => { });
+      .subscribe((item) => {});
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async (res) => {
@@ -589,26 +584,22 @@ export class AttachmentComponent implements OnInit {
   }
 
   changeValueAgencyText(event: any) {
-    debugger;
     //this.disEdit.agencyName = this.dispatch.AgencyName = event.data
     let total = this.fileUploadList.length;
-    if(this.numberDes < total){
+    if (this.numberDes < total) {
       this.description[this.numberDes] = event.data;
-      this.numberDes += 1 ;
+      this.numberDes += 1;
     }
 
     /* for (var i = 0; i < total; i++) {
       this.description[i] = event.data;
     } */
-    
-    
   }
   //fetch () : Observable<any[]>
   saveFilesObservable(): Promise<Observable<any[]>> {
     this.atSV.fileListAdded = [];
     // return this.addFileObservable(this.fileUploadList[0]);
     return this.onMultiFileSaveObservable();
-    debugger;
   }
 
   updateUrlFileUpload(): Observable<any[]> {
@@ -625,7 +616,6 @@ export class AttachmentComponent implements OnInit {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
-    debugger;
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
@@ -771,7 +761,6 @@ export class AttachmentComponent implements OnInit {
   }
 
   async onMultiFileSave() {
-    debugger;
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
@@ -791,16 +780,15 @@ export class AttachmentComponent implements OnInit {
           false
         );
     }
-    debugger;
-    if (toltalUsed > remainingStorage) return this.notificationsService.notifyCode("DM053");
+    if (toltalUsed > remainingStorage)
+      return this.notificationsService.notifyCode('DM053');
     this.atSV.fileListAdded = [];
     if (total > 1) {
       var done = this.fileService
-        .addMultiFile(this.fileUploadList,this.isDM)
+        .addMultiFile(this.fileUploadList, this.isDM)
         .toPromise()
         .then((res) => {
           if (res != null) {
-            debugger;
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
@@ -821,12 +809,16 @@ export class AttachmentComponent implements OnInit {
                       item.data.extension
                     )}`;
                     files.push(Object.assign({}, item.data));
-                  }
-                  else {
-                    if (item.data.folderName != null && item.data.folderName != "") {
+                  } else {
+                    if (
+                      item.data.folderName != null &&
+                      item.data.folderName != ''
+                    ) {
                       var folders = this.dmSV.listFolder;
-                      var idx = folders.findIndex(x => x.recID == item.data.recID)
-                      if (idx == - 1) {
+                      var idx = folders.findIndex(
+                        (x) => x.recID == item.data.recID
+                      );
+                      if (idx == -1) {
                         folders.push(Object.assign({}, item.data));
                         this.dmSV.listFolder = folders;
                         // that.changeDetectorRef.detectChanges();
@@ -845,7 +837,11 @@ export class AttachmentComponent implements OnInit {
                 this.dmSV.listFiles = files;
                 this.dmSV.ChangeData.next(true);
               });
-              this.notificationsService.notifyCode("DM061",null,addList.length);
+              this.notificationsService.notifyCode(
+                'DM061',
+                null,
+                addList.length
+              );
             }
 
             // for (var i = 0; i < addList.length; i++) {
@@ -889,10 +885,11 @@ export class AttachmentComponent implements OnInit {
                       if (x.event.data) {
                         for (var i = 0; i < this.fileUploadList.length; i++) {
                           this.fileUploadList[i].reWrite = true;
-                          this.fileUploadList[i].description = this.description[i];
+                          this.fileUploadList[i].description =
+                            this.description[i];
                         }
                         this.fileService
-                          .addMultiFile(this.fileUploadList,this.isDM)
+                          .addMultiFile(this.fileUploadList, this.isDM)
                           .toPromise()
                           .then((result) => {
                             var mess = '';
@@ -908,7 +905,7 @@ export class AttachmentComponent implements OnInit {
                       } else {
                         // save 1
                         var index = this.fileUploadList.findIndex(
-                          (x) => x.fileName == item.data.fileName 
+                          (x) => x.fileName == item.data.fileName
                         );
                         this.fileUploadList[index].reWrite = true;
                         this.onMultiFileSave();
@@ -921,7 +918,7 @@ export class AttachmentComponent implements OnInit {
                       } else {
                         // cancel 1
                         var index = this.fileUploadList.findIndex(
-                          (x) => x.fileName == item.data.fileName 
+                          (x) => x.fileName == item.data.fileName
                         );
                         this.fileUploadList.splice(index, 1); //remove element from array
                         if (this.fileUploadList.length > 0)
@@ -944,7 +941,6 @@ export class AttachmentComponent implements OnInit {
       // this.notificationsService.notifyCode("");
       this.notificationsService.notify(this.title2);
     }
-    debugger;
   }
 
   async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
@@ -1043,7 +1039,7 @@ export class AttachmentComponent implements OnInit {
         }
 
         if (isAddFile)
-          return this.fileService.addFileObservable(fileItem,this.isDM).pipe(
+          return this.fileService.addFileObservable(fileItem, this.isDM).pipe(
             map((item) => {
               if (item.status == 0) {
                 if (this.showMessage == '1')
@@ -1229,7 +1225,7 @@ export class AttachmentComponent implements OnInit {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem,this.isDM).toPromise();
+    var done = this.fileService.addFile(fileItem, this.isDM).toPromise();
     if (done) {
       done
         .then((item) => {
@@ -1308,7 +1304,7 @@ export class AttachmentComponent implements OnInit {
       });
   }
 
-  closeFileDialog(form): void { }
+  closeFileDialog(form): void {}
 
   arrayBufferToBase64(buffer) {
     var binary = '';
@@ -1546,8 +1542,6 @@ export class AttachmentComponent implements OnInit {
         fileUpload.order = i;
         fileUpload.fileName = files[i].name;
 
-        
-
         fileUpload.avatar = this.getAvatar(fileUpload.fileName);
         fileUpload.extension =
           files[i].name.substring(
@@ -1563,7 +1557,6 @@ export class AttachmentComponent implements OnInit {
         fileUpload.fileName = files[i].name;
 
         /* fileUpload.description = files[i].description; */
-        
 
         fileUpload.funcId = this.functionID;
         fileUpload.folderType = this.folderType;
@@ -2831,8 +2824,8 @@ export class AttachmentComponent implements OnInit {
         var fileUpload = new FileUpload();
         fileUpload.order = count;
         fileUpload.fileName = files[i].name;
-        
-        fileUpload.description = files[i].description;//
+
+        fileUpload.description = files[i].description; //
 
         var type = files[i].type.toLowerCase();
         if (type == 'png' || type == 'jpg' || type == 'bmp') {
@@ -2856,7 +2849,7 @@ export class AttachmentComponent implements OnInit {
         fileUpload.fileSize = files[i].size;
         fileUpload.fileName = files[i].name;
 
-        fileUpload.description = files[i].description;//
+        fileUpload.description = files[i].description; //
 
         fileUpload.funcId = this.functionID;
         fileUpload.folderType = this.folderType;
@@ -2878,7 +2871,6 @@ export class AttachmentComponent implements OnInit {
         // }
         addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
-        debugger;
       }
     }
     this.fileAdded.emit({ data: this.fileUploadList });

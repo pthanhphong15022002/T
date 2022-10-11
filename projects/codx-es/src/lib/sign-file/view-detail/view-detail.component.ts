@@ -77,6 +77,8 @@ export class ViewDetailComponent implements OnInit {
     } else {
       this.esService.getFormModel(this.funcID).then((formModel) => {
         if (formModel) this.formModel = formModel;
+        console.log(this.formModel);
+
         this.initForm();
       });
     }
