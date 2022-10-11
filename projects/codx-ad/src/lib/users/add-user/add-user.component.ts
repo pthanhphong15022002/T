@@ -51,6 +51,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('firstComment') firstComment: TemplateRef<any>;
 
   title = '';
+  header = '';
   dialog!: DialogRef;
   dialogRole: DialogRef;
   data: any;
@@ -118,7 +119,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
         );
         this.countListViewChoose();
       }
-    } else this.adUser.buid = null;
+    } else {
+      this.adUser.buid = null;
+      this.adUser.employeeID = '';
+    }
     this.dialog = dialog;
     this.user = auth.get();
 
@@ -133,6 +137,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.descriptionComment = res.defaultName;
       }
     });
+    this.title = dt.data?.headerText;
   }
 
   onInit(): void {}
@@ -140,19 +145,27 @@ export class AddUserComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     if (this.formType == 'edit') {
-      this.title = 'Cập nhật người dùng';
       this.isAddMode = false;
       this.adService
         .getUserGroupByID(this.adUser.userGroup)
         .subscribe((res) => {
           if (res) this.dataUG = res;
         });
-    } else this.title = 'Thêm người dùng';
+    }
     this.dialog.closed.subscribe((res) => {
       if (!this.saveSuccess) {
         if (this.dataAfterSave && this.dataAfterSave.userID) {
           this.deleteUserBeforeDone(this.dataAfterSave);
         }
+      }
+    });
+    this.cache.functionList(this.formModel.funcID).subscribe((res) => {
+      if (res) {
+        this.header =
+          this.title +
+          ' ' +
+          res?.customName.charAt(0).toLocaleLowerCase() +
+          res?.customName.slice(1);
       }
     });
   }
