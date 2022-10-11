@@ -30,6 +30,7 @@ import {
 } from 'ngx-extended-pdf-viewer';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
+import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
 import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signature/popup-signature/popup-signature.component';
 @Component({
   selector: 'lib-pdf',
@@ -489,7 +490,6 @@ export class PdfComponent
         let width =
           left.attrs.x - right.attrs.x + right.width() * right.scaleX();
         let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
-
         let imgUrl = layer.toDataURL({
           quality: 1,
           x: x,
@@ -498,6 +498,7 @@ export class PdfComponent
           width: width,
           height: height,
         });
+        console.log('signature img', imgUrl);
 
         let approveStt = '5';
 
@@ -543,7 +544,7 @@ export class PdfComponent
                     resolve(status);
                   });
               } else {
-                this.notificationsService.notifyCode('ES010');
+                // this.notificationsService.notifyCode('ES010');
                 resolve(true);
                 this.esService
                   .updateSignFileTrans(
@@ -685,7 +686,7 @@ export class PdfComponent
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
-    if (this.isEditable) {
+    if (this.inputUrl == null) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
       )?.find((ele) => {
@@ -871,7 +872,10 @@ export class PdfComponent
                     return undefined;
                   });
                   this.holding = 0;
-                  if (signed?.length == 1) {
+                  if (
+                    !['1', '2', '8'].includes(name.LabelType.toString()) ||
+                    signed?.length == 1
+                  ) {
                     switch (name.Type) {
                       case 'text': {
                         this.saveNewToDB(
@@ -1269,6 +1273,19 @@ export class PdfComponent
         case 8:
           this.url = qr;
           break;
+        case 9: {
+          this.dialog = this.callfc.openForm(
+            PopupSelectLabelComponent,
+            '',
+            700,
+            700,
+            this.funcID,
+            {
+              title: 'Chọn Nhãn',
+            }
+          );
+          break;
+        }
         default:
           this.url = '';
           break;
