@@ -276,11 +276,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
     }
-    // if (this.viewAutoNumber == '') {
-    //   let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
-    //   this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
-    //   return;
-    // }
+    if (this.viewAutoNumber == '') {
+      let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
+      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+      return;
+    }
 
     this.dialog.dataService.dataSelected = this.data;
     this.dialog.dataService
@@ -327,6 +327,16 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   openPopupApproval() {
     if (this.form?.formGroup.invalid == true) {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
+      return;
+    }
+    if (this.data.categoryID == '' || this.data.categoryID == null) {
+      let headerText = this.grvSetup['CategoryID']?.headerText ?? 'CategoryID';
+      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+      return;
+    }
+    if (this.viewAutoNumber == '') {
+      let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
+      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
       return;
     }
     if (this.isAdd) {
