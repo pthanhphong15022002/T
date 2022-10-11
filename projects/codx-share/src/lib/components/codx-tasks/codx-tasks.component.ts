@@ -416,6 +416,7 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
+      option.zIndex = 5000;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -537,6 +538,7 @@ export class CodxTasksComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
+        option.zIndex = 5000;
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
