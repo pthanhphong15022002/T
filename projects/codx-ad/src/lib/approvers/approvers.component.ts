@@ -108,10 +108,14 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
         let title = "Thêm " + this.func.defaultName;
         let side = this.callfc.openSide(AddApproversComponent, [title, action], option)
         side.closed.subscribe(x => {
-          if (x.event == null && this.view.dataService.hasSaved)
-            this.view.dataService
-              .delete([this.view.dataService.dataSelected])
-              .subscribe();
+          if (x.event == null) {
+            if (this.view.dataService.hasSaved)
+              this.view.dataService
+                .delete([this.view.dataService.dataSelected])
+                .subscribe();
+
+            this.view.dataService.clear();
+          }
         })
       }
     })
@@ -126,7 +130,11 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
       option.Width = "550px";
       let action = 'edit';
       let title = text + " " + this.func.defaultName;
-      let side = this.callfc.openSide(AddApproversComponent, [title, action], option)
+      let side = this.callfc.openSide(AddApproversComponent, [title, action], option);
+      side.closed.subscribe(x => {
+        if (x.event == null)
+          this.view.dataService.clear;
+      })
     })
   }
 
