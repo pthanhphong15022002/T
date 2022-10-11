@@ -84,10 +84,12 @@ export class UserComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
   }
 
+  headerText = '';
   clickMF(e: any, data?: any) {
+    this.headerText = e.text;
     switch (e.functionID) {
       case 'SYS01':
-        this.add();
+        this.add(e);
         break;
       case 'SYS03':
         this.edit(data);
@@ -100,15 +102,6 @@ export class UserComponent extends UIComponent {
       //   break;
       case 'ADS0501':
         this.stop(data);
-        break;
-    }
-  }
-  // ADS0501
-
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
         break;
     }
   }
@@ -135,10 +128,12 @@ export class UserComponent extends UIComponent {
     return desc + '</div>';
   }
 
-  add() {
+  add(e) {
+    this.headerText = e.text;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
+        headerText: this.headerText,
       };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -176,6 +171,7 @@ export class UserComponent extends UIComponent {
       .subscribe((res: any) => {
         var obj = {
           formType: 'edit',
+          headerText: this.headerText,
         };
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
@@ -204,6 +200,7 @@ export class UserComponent extends UIComponent {
         var obj = {
           formType: 'copy',
           dataCopy: res,
+          headerText: this.headerText,
         };
       }
       let option = new SidebarModel();
