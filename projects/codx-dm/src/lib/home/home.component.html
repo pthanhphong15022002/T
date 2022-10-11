@@ -124,7 +124,7 @@
 </ng-template>
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-sm p-5">
-    <codx-temp-full (dblclick)="dmSV.openItem(item)" appDragDropFileFolder [dataDrapDrop]="item"
+    <codx-temp-full (dblclick)="dbView(item)" appDragDropFileFolder [dataDrapDrop]="item"
       (fileFolderDropped)="fileFolderDropped($event)" *ngFor="let item of data" [class]="classFile(item, 'float-start')"
       [imageSrc]="dmSV.getImage(item)" (clickMF)="dmSV.clickMF($event, item)" imgCss="card-item img-folder me-3"
       [title]="item.folderName != undefined ? item.folderName : item.fileName"
@@ -156,7 +156,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr (dblclick)="dmSV.openItem(item)" class="border-top dms-list has-action-menu" *ngFor="let item of data" [title]="
+          <tr (dblclick)="dbView(item)" class="border-top dms-list has-action-menu" *ngFor="let item of data" [title]="
               item.folderName != undefined ? item.folderName : item.fileName
             ">
             <td class="w-30">

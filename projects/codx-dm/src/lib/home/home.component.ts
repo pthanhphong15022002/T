@@ -1224,6 +1224,20 @@ export class HomeComponent extends UIComponent {
     this.dataFile = e;
     this.visible = true;
   }
+  dbView(data:any)
+  {
+    if(data.recID && data.fileName != null)
+    {
+      if (!data.read) {
+        this.notificationsService.notifyCode("DM059");
+        return;
+      }
+      this.fileService.getFile(data.recID).subscribe((data) => {
+        this.viewFile(data);
+      });
+    }
+    this.dmSV.openItem(this.data);
+  }
   dialogClosed() {
     this.visible = false;
     this.changeDetectorRef.detectChanges();
