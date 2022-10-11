@@ -8,6 +8,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
+  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { PopupAddBookingRoomComponent } from '../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
@@ -30,7 +31,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
 
   @ViewChild('subTitle') subTitle?: TemplateRef<any>;
-
+  @ViewChild('view') viewBase: ViewsComponent;
   views: Array<ViewModel> | any = [];
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -199,13 +200,11 @@ export class ApprovalRoomsComponent extends UIComponent {
             status,
           )
           .subscribe((res:any) => {
-            var x= res;
             if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
                 this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.status=="5";
-                this.view.dataService.update(data).subscribe();
-                this.view.dataService.add(data,0).subscribe();
+                this.viewBase.dataService.dataSelected.status=="5";
+                (this.viewBase.currentView as any).schedule?.scheduleObj?.first?.refresh();
               }
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
