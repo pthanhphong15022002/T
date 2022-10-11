@@ -126,7 +126,7 @@
       </div>
     </div>
     <div class="row my-8">
-      <ng-container *ngIf="videos.length > 0; else tmpEmptyVideo">
+      <ng-container *ngIf="videos.length > 0; else tmpEmptyListVideo">
         <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
         [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
         <ng-template ngbSlide *ngFor="let list of videos; let i = index">
@@ -236,13 +236,31 @@
     </div>
   </div>
 </ng-template>
-<ng-template #tmpEmptyVideo>
-  <div>
-    <div class="text-center">
-      <img style="max-width:700px" src="../assets/demos/svg/pic-avata.png" />
+<ng-template #tmpEmptyListVideo>
+  <div class="d-flex justify-content-between">
+    <div>
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div> 
     </div>
     <div>
-      <div class="fw-bolder">{{mssgWP025}}</div>
-    </div> 
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div> 
+    </div>
+    <div>
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div> 
+    </div>
   </div>
 </ng-template>
