@@ -155,7 +155,7 @@ export class CodxTasksComponent
     this.user = this.authStore.get();
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+   
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -219,7 +219,7 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-    if (this.funcID == 'TMT0203') this.isAssignTask = true; ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
+    ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     //chay code chet cho nhanh, muon dong thi bat len
     // this.cache.functionList(this.funcID).subscribe(f => {
     //   if (f) {
@@ -342,7 +342,7 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      option.zIndex = 5000;
+      // option.zIndex = 5000;
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       var dialog = this.callfc.openSide(
@@ -1483,6 +1483,7 @@ export class CodxTasksComponent
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
+    if (this.funcID == 'TMT0203') this.isAssignTask = true ; else this.isAssignTask = false;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
