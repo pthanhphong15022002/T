@@ -58,6 +58,7 @@ export class PopupADRComponent extends UIComponent {
   cbxName;
 
   user;
+
   onInit(): void {
     this.title = this.data.title;
     this.subTitle = this.data.subTitle;
@@ -77,9 +78,6 @@ export class PopupADRComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog() {
-    this.notify.notifyCode('ES011');
-    console.log('form model', this.formModel);
-    console.log('dialogSignFile model', this.dialogSignFile);
     if (this.formModel.currentData.comment != '') {
       this.dialog.close(this.mode);
     }

@@ -76,10 +76,18 @@
         ></codx-label>
       </button>
       <button type="button" class="btn btn-primary" (click)="saveDialog()">
+        <codx-vll
+          *ngIf="data?.stepType != 'S1' && data?.stepType != 'S2'"
+          [name]="'ES002'"
+          [value]="data?.stepType"
+          [showText]="true"
+        >
+        </codx-vll>
         <codx-label
-          name="lblSave"
-          default="OK"
-          [formModel]="dialog.formModel"
+          *ngIf="data?.stepType == 'S1' || data?.stepType == 'S2'"
+          name="lblApprove"
+          [formModel]="formModel"
+          default="Ký"
         ></codx-label>
       </button>
     </div>

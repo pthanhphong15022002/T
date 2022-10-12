@@ -6,7 +6,6 @@ import { ApiHttpService } from 'codx-core';
   providedIn: 'root',
 })
 export class SettingService {
-
   dataUpdate = new BehaviorSubject<any>(null);
 
   constructor(private api: ApiHttpService) {}
@@ -28,6 +27,17 @@ export class SettingService {
       'SettingsBusiness',
       'GetByPredicate',
       [predicate, dataValue]
+    );
+  }
+
+  setLabelsValue(formname, category, newValue) {
+    let data = [formname, category, newValue];
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'UpdateModule_ParamsAsync',
+      data
     );
   }
 }
