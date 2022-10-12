@@ -53,7 +53,7 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
     this.dialogRef = data?.data?.dialogRef;
   }
 
-  onInit(): void { }
+  onInit(): void {}
 
   ngAfterViewInit() {
     if (this.form) {
@@ -67,6 +67,16 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
       itemNoteBookUpdate: itemNoteBook,
       dialogRef: this.dialog,
     };
-    this.callfc.openForm(PopupTitleComponent, '', 400, 100, '', obj);
+    this.dialog = this.callfc.openForm(
+      PopupTitleComponent,
+      '',
+      400,
+      100,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((res) => {
+      if (res) this.dialogRef.close(res);
+    });
   }
 }
