@@ -44,6 +44,7 @@
       [footer]="footer"
       [typeMF]="'hover'"
       (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
     >
     </codx-card-center>
   </div>
@@ -291,6 +292,7 @@
       [dataItem]="data"
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
       type="hover"
     >
     </codx-mfunc>
