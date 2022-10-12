@@ -43,7 +43,7 @@ export class CodxReferencesComponent implements OnInit,OnChanges {
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.dt.detectChanges() ;
+     this.dt.detectChanges() ;
   }
   
  

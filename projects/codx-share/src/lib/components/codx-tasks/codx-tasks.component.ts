@@ -1482,6 +1482,12 @@ export class CodxTasksComponent
         ) {
           x.disabled = true;
         }
+        //an giao viec 
+        if (
+          x.functionID =='SYS005'
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }

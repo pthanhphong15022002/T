@@ -216,7 +216,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           if (isClose) {
             this.dialog && this.dialog.close();
           }
-        } else this.notify.notifyCode('E0011');
+        }
       });
   }
 

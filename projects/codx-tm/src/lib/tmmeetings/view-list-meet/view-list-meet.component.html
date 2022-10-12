@@ -46,7 +46,7 @@
     </div>
   </div>
   <div class=" w-5">
-    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" [dataItem]="data"
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)"  (changeDataMF)="changeDataMF($event, data)" [isBookMark]="false" [dataItem]="data"
       type="hover">
     </codx-mfunc>
   </div>

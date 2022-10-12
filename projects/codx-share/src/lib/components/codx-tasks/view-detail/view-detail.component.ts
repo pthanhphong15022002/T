@@ -180,6 +180,10 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         ) {
           x.disabled = true;
         }
+        //an giao viec
+        if (x.functionID == 'SYS005') {
+          x.disabled = true;
+        }
       });
     }
   }
@@ -215,6 +219,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       )
       .subscribe((res) => {
         if (res) this.dataTree = res || [];
+        this.changeDetectorRef.detectChanges();
       });
   }
   //#endregion
@@ -345,13 +350,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                   if (user) {
                     ref.createByName = user.userName;
                     this.dataReferences.unshift(ref);
+                    this.changeDetectorRef.detectChanges();
                   }
                 });
             }
           });
         break;
     }
-
   }
 
   getUserByListCreateBy(listUser) {
@@ -371,6 +376,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
               ref.createByName = users[index].userName;
             }
           });
+          this.changeDetectorRef.detectChanges();
         }
       });
   }

@@ -150,7 +150,7 @@ export class ApprovalCarsComponent extends UIComponent {
     //   datas = this.view.dataService.data[index];
     // }
     switch (funcID) {
-      case 'EPT40101':
+      case 'EPT40201':
       case 'EPT40201':
       case 'EPT40301':
         {
@@ -158,7 +158,7 @@ export class ApprovalCarsComponent extends UIComponent {
           this.approve(datas,"5")
         }
         break;      
-      case 'EPT40105':
+      case 'EPT40205':
       case 'EPT40205':
       case 'EPT40305':
         {
@@ -166,7 +166,7 @@ export class ApprovalCarsComponent extends UIComponent {
           this.approve(datas,"4")
         }
         break;
-      case 'EPT40106':
+      case 'EPT40206':
       case 'EPT40206':
       case 'EPT40306':
         {
@@ -215,6 +215,65 @@ export class ApprovalCarsComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
+  changeDataMF(event, data:any) {
+    
+    if(event!=null && data!=null){
+      switch(data?.status){
+        case "3":
+        event.forEach(func => {
+          if(func.functionID == "EPT40202" 
+          ||func.functionID == "EPT40203" 
+          || func.functionID == "EPT40204")
+          {
+            func.disabled=true;
+          }
+        });
+        break;
+        case "4":
+          event.forEach(func => {
+            if(func.functionID == "EPT40202" 
+            ||func.functionID == "EPT40203" 
+            || func.functionID == "EPT40204"
+            ||func.functionID == "EPT40205" 
+            ||func.functionID == "EPT40206" 
+            || func.functionID == "EPT40201"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "5":
+          event.forEach(func => {
+            if(func.functionID == "EPT40202" 
+            ||func.functionID == "EPT40203" 
+            || func.functionID == "EPT40204"
+            ||func.functionID == "EPT40205" 
+            ||func.functionID == "EPT40206" 
+            || func.functionID == "EPT40201"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "2":
+          event.forEach(func => {
+            if(func.functionID == "EPT40202" 
+            ||func.functionID == "EPT40203" 
+            || func.functionID == "EPT40204"
+            ||func.functionID == "EPT40205" 
+            ||func.functionID == "EPT40206" 
+            || func.functionID == "EPT40201"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+      }
+    }
+  }
   getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(
