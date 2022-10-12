@@ -82,12 +82,14 @@ export class EmployeeInfomationComponent implements OnInit {
   itemSelected: any;
   employeeID: any;
 
+  width:number = 720;
+  height:number = window.innerHeight;
   constructor(
     private codxMwpService: CodxMwpService,
     private changedt: ChangeDetectorRef,
     private routeActive: ActivatedRoute,
     private api: ApiHttpService,
-    private notiService: NotificationsService,
+    private notifiSV: NotificationsService,
     private auth: AuthService,
     private cachesv: CacheService,
     private callfunc: CallFuncService,
@@ -159,6 +161,7 @@ export class EmployeeInfomationComponent implements OnInit {
       edgeLabelPlacement: 'Shift',
       labelFormat: '{value}'
     };
+    this.getParameterAsync("HRParameters","1");
   }
   getContrastYIQ(item) {
     var hexcolor = (item.color || "#ffffff").replace("#", "");
@@ -202,7 +205,8 @@ export class EmployeeInfomationComponent implements OnInit {
         this.employee = employeeID.Employee;
 
       }
-      if (employeeID.InfoPersonal) {// Info
+      if (employeeID.InfoPersonal)  // Info
+      {
         this.employeeInfo = employeeID.InfoPersonal;
       }
       this.codxMwpService.infoLeftComponent.dataEmployee = {
@@ -213,10 +217,9 @@ export class EmployeeInfomationComponent implements OnInit {
   }
   LoadData(employee) {
     console.log(this.view)
-    this.loadEmployee(employee, e => {
-
-    });
-    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "2").subscribe((response: any) => {
+    this.loadEmployee(employee, e => {});
+    this.codxMwpService.LoadData(employee.Employee.employeeID, "", "2")
+    .subscribe((response: any) => {
       if (response) {
         this.updateExperiences(response);
       }
@@ -338,7 +341,6 @@ export class EmployeeInfomationComponent implements OnInit {
   }
 
   onSectionChange(data: any) {
-    //this.currentSection = sectionId;
     console.log(data);
     this.codxMwpService.currentSection = data.current;
     this.changedt.detectChanges();
@@ -402,7 +404,6 @@ export class EmployeeInfomationComponent implements OnInit {
         }
       });
     });
-    // this.changedt.detectChanges();
   }
 
   addExperences() {
@@ -456,9 +457,7 @@ export class EmployeeInfomationComponent implements OnInit {
   }
 
   editDataEdu(data) {
-    // this.allowedu = true;
-    // this.codxMwpService.EmployeeInfomation = this;
-    // this.codxMwpService.educationEdit.next(data || { employeeID: this.employeeInfo.employeeID });
+   
   }
 
   addRelation() {
@@ -565,24 +564,6 @@ export class EmployeeInfomationComponent implements OnInit {
           });
         }
       });
-
-    // this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'DeleteEmployeeHobby', data.recID)
-    //   .subscribe((o: any) => {
-    //     const index = this.employeeHobbie.indexOf(data);
-    //     if (index > -1) {
-    //       this.employeeHobbie.splice(index, 1);
-    //       this.employeeHobbieCategory = [];
-    //       var obj: any = {};
-    //       for (let index = 0; index < this.employeeHobbie.length; index++) {
-    //         const element = this.employeeHobbie[index];
-    //         if (!obj[element.catagory]) {
-    //           obj[element.catagory] = 1;
-    //           this.employeeHobbieCategory.push(element.catagory);
-    //         }
-    //       }
-    //       this.changedt.detectChanges();
-    //     }
-    //   });
   }
 
   beforeDelExperences(opt: RequestOption) {
@@ -655,4 +636,52 @@ export class EmployeeInfomationComponent implements OnInit {
         }
       });
   }
+
+  parameter:any = 
+  {
+    maxLevelSkill: 0
+  };
+  getParameterAsync(formName:string,category:string)
+  {
+    if(!formName || !category) return;
+    this.api.execSv("SYS",
+    "ERM.Business.SYS",
+    "SettingValuesBusiness",
+    "GetParameterByHRAsync",
+    [formName,category]).subscribe((res:any) => {
+      if(res)
+      {
+        let jsParameter = JSON.parse(res); 
+        this.parameter.maxLevelSkill = jsParameter.MaxLevelSkills;
+      }
+    });
+  }
+
+
+  saveAddSkill(event:any)
+  {
+    if(!event || !event?.dataSelected) return;
+    let skills = event.dataSelected.map((element:any) =>  element.CompetenceID);
+    this.api.execSv(
+      "HR",
+      "ERM.Business.HR",
+      "EmployeesBusiness",
+      "AddSkillsEmployeeAsync",
+      [this.employee.employeeID, skills]
+      ).subscribe((res:boolean) => {
+        if(res)
+        {
+          this.notifiSV.notifyCode("SYS006");
+        }
+        else{
+          this.notifiSV.notifyCode("SYS023");
+        }
+      });
+  }
+
+  clickOpenPopupAddSkill()
+  {
+    this.showCBB = !this.showCBB;
+  }
+
 }

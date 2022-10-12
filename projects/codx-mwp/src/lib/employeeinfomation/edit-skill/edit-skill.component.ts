@@ -43,8 +43,12 @@ export class EditSkillComponent implements OnInit {
     this.dialog = dialog;
     this.skillEmployee = dt?.data;
   }
-
-  ngOnInit(): void {}
+  tooltip:any;
+  ticks:any;
+  ngOnInit(): void {
+    this.tooltip = { placement: 'Before', isVisible: true, showOn: 'Always' };
+    this.ticks = { placement: 'After', largeStep: 0, smallStep: 10, showSmallTicks: true };
+  }
   sliderChange(e, data) {
     this.skillChartEmployee = [];
     data.rating = data.valueX = e.toString();

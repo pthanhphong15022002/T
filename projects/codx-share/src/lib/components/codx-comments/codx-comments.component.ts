@@ -184,7 +184,7 @@ export class CodxCommentsComponent implements OnInit {
                   this.fileUpload = null;
                   this.dt.detectChanges();
                   this.evtSendComment.emit(res);
-                  this.notifySvr.notifyCode("WP030");
+                  this.notifySvr.notifyCode("WP034");
                 }
                 else
                 {
@@ -204,7 +204,7 @@ export class CodxCommentsComponent implements OnInit {
             {
               this.dt.detectChanges();
               this.evtSendComment.emit(res);
-              this.notifySvr.notifyCode("WP030");
+              this.notifySvr.notifyCode("WP034");
             }
           }
         }
@@ -224,7 +224,7 @@ export class CodxCommentsComponent implements OnInit {
   }
 
   deleteComment(){
-    this.notifySvr.alertCode('WP028').subscribe((res) => {
+    this.notifySvr.alertCode('WP032').subscribe((res) => {
       if (res.event.status == "Y") {
         this.api.execSv(
           "WP", 
@@ -239,7 +239,7 @@ export class CodxCommentsComponent implements OnInit {
                 total: res
               }
               this.evtDeleteComment.emit(obj);
-              this.notifySvr.notifyCode("WP029");
+              this.notifySvr.notifyCode("WP033");
             }
             else
             {
