@@ -1,0 +1,184 @@
+<div ngbDropdown class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+    (openChange)="openChange($event)">
+    <span [inlineSVG]="'./assets/media/icons/duotune/communication/com012.svg'" class="svg-icon"
+        [ngClass]="toolbarButtonIconSizeClass" ngbDropdownToggle>
+    </span>
+    <span
+        class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink">
+    </span>
+    <div ngbDropdownMenu class="" style="min-width: 350px;">
+        <div class="card card-flush">
+            <!-- Header -->
+            <div class="card-header pe-5">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <a
+                            class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1 cursor-pointer">Chatting</a>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="me-2">
+                        <button class="btn btn-sm btn-icon btn-active-light-primary" (click)="openCreategroupForm()">
+                            <span class="icon-group_add icon-24 text-dark-75 text-hover-primary"></span>
+                        </button>
+                    </div>
+                    <div class="btn btn-sm btn-icon btn-active-light-primary">
+                        <span class="icon-playlist_add_check  icon-24 text-dark-75 text-hover-primary ms-3"></span>
+                    </div>
+                    <div class="btn btn-sm btn-icon btn-active-light-primary">
+                        <span (click)="clickShowChatting()" class="icon-open_in_new icon-24 text-dark-75 text-hover-primary ms-3"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body pt-0">
+                <!--begin::Form search-->
+                <codx-searchbar #searchbar [width]="300" (searchEvent)="doFilter($event)"></codx-searchbar>
+                <!--end::Form search-->
+
+                <!--Begin show history -->
+                <ng-container>
+                    <div data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}"
+                        data-kt-scroll-max-height="auto"
+                        data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_contacts_header"
+                        data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" data-kt-scroll-offset="0px"
+                        class="scroll-y me-n5 pe-5 h-200px h-lg-auto" style="max-height: 475px;"
+                        [style.display]="isFiltering ? 'none': 'initial'">
+                      
+                        <codx-listview #historyListEle 
+                            [itemTemplate]="historyItemTemplate" 
+                            title="" 
+                            [type]="'listView'"
+                            groupBy="buid"
+                            [funcId]="'WP'" 
+                            gridViewName="'grvUsers'"
+                            method="GetChatHistoryAsync" 
+                            [predicate]="predicate"
+                            [dataValue]="dataValue" service="WP" assemblyName="ERM.Business.WP" className="ChatBusiness">
+                        </codx-listview>
+                        <!-- End list history -->
+
+                        <!-- Item template -->
+                        <ng-template #historyItemTemplate let-data>
+                            <div class="d-flex flex-stack py-2 Unread" *ngIf="!data.isRead"
+                                (click)="historyItemClicked(data)">
+                                <div class="d-flex align-items-center">
+                                    <ng-container *ngIf="data.groupType == '1'">
+                                        <codx-img [objectId]="data.colabId" [objectName]="data.colabName"
+                                            objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+                                        </codx-img>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="data.groupType == '2'">
+                                        <div class="symbol symbol-35px symbol-circle">
+                                            <img alt="Pic" [src]="data.picture">
+                                        </div>
+                                    </ng-container>
+
+                                    <div class="ms-5">
+                                        <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+                                            {{data.groupName}} </a>
+                                        <div class="fw-bold text-primary">
+                                            <span class="me-2"></span><span>{{data.message}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-column align-items-end ms-2">
+                                    <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
+                                    <span class="badge badge-primary badge-circle w-10px h-10px me-1"></span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-stack py-2 read" *ngIf="data.isRead"
+                                (click)="historyItemClicked(data)">
+                                <div class="d-flex align-items-center">
+                                    <ng-container *ngIf="data.groupType == '1'">
+                                        <codx-img [objectId]="data.colabId" [objectName]="data.colabName"
+                                            objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+                                        </codx-img>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="data.groupType == '2'">
+                                        <div class="symbol symbol-35px symbol-circle">
+                                            <img alt="Pic" [src]="data.picture">
+                                        </div>
+                                    </ng-container>
+                                    <div class="ms-5">
+                                        <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+                                            {{data.groupName}} </a>
+                                        <div class="fw-bold text-gray-400">
+                                            <span class="icon-local_offer text-success icon-16 me-2"></span>
+                                            <span class=" me-2">{{data.message}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-column align-items-end ms-2">
+                                    <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
+                                    <span class="badge badge-secondary badge-circle w-10px h-10px me-1"></span>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <!-- End Item template -->
+                    </div>
+                </ng-container>
+                <!--End show history -->
+
+                <!--Begin Search result -->
+                <ng-container>
+                    <div id="filter-result" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}"
+                        data-kt-scroll-max-height="auto"
+                        data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_contacts_header"
+                        data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" data-kt-scroll-offset="0px"
+                        class="scroll-y me-n5 pe-5 h-200px h-lg-auto" style="max-height: 475px !important;"
+                        [style.display]="isFiltering ? 'initial': 'none'">
+                        <codx-listview #searchListEle title="" [itemTemplate]="searchItemTemplate" [funcId]="'AD006'"
+                            groupBy="typeName" formName="Users" entityName="AD_Users" gridViewName="'grvUsers'"
+                            method="SearchUserGroupsAsync" service="WP" assemblyName="WP" className="ChatBusiness">
+                        </codx-listview>
+                        <ng-template #searchItemTemplate let-data>
+                            <ng-container *ngIf="data.type == 'user' && data.userID != user.userID">
+                                <div class="d-flex flex-stack py-2" (click)="openChatBox(data)">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-35px symbol-circle">
+                                            <codx-img [objectId]="data.userID" [objectName]="data.userName"
+                                                objectType="AD_Users" class="symbol symbol-35px symbol-circle">
+                                            </codx-img>
+                                        </div>
+                                        <div class="ms-5">
+                                            <a
+                                                class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+                                                {{data.userName}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="data.type == 'group'">
+                                <div class="d-flex flex-stack py-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-35px symbol-circle">
+                                            <codx-img [objectId]="data.userID" [objectName]="data.userName"
+                                                objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+                                            </codx-img>
+                                        </div>
+                                        <div class="ms-5">
+                                            <a
+                                                class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+                                                {{data.groupName}} </a>
+                                            <div class="fw-bold text-gray-400">
+                                                <span>You and {{(data.numberMemember - 1)}} others</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-template>
+                    </div>
+                </ng-container>
+                <!--End Search result -->
+            </div>
+        </div>
+    </div>
+</div>

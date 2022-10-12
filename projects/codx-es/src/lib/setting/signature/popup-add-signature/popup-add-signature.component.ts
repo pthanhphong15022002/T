@@ -194,8 +194,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
             if (this.imgSignature2.imageUpload?.item) i++;
             if (this.imgStamp.imageUpload?.item) i++;
 
-            alert(i);
-
             this.imgSignature1.imageUpload?.item &&
               this.imgSignature1
                 .updateFileDirectReload(this.data.recID)

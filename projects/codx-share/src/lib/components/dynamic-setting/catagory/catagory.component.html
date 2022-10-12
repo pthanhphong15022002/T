@@ -256,7 +256,6 @@
             </ng-container>
 
             <ng-container *ngIf="data.displayMode === '6'">
-              Đang pending
               <!-- <img src="src\assets\img\es_label\Express.png" alt="" />
               <img src="src\assets\img\es_label\HighUrgent.png" alt="" />
               <img src="src\assets\img\es_label\Urgent.png" alt="" /> -->
@@ -264,7 +263,7 @@
           </div>
         </div>
       </div>
-      <hr class="mt-2" *ngIf="!isGroup && groupSetting.length > 1" />
+      <hr class="mt-2" *ngIf="!isGroup" />
     </div>
   </ng-template>
 </ng-template>

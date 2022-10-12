@@ -13,9 +13,9 @@
                         placeholder="Tên tài liệu..." minlength="4" [(ngModel)]="fileEditing.fileName" #fileNamectrl
                         matInput /> -->
                 </div>
-                <div>
+                <!-- <div>
                     {{fileEditing.description}}
-                </div>
+                </div> -->
                 <div *ngIf="checkFileName() != '0'" class="d-flex mb-2 invalid-feedback">
                     <div *ngIf="(checkFileName() == '1') then titleEmpty else TitleInvalid"></div>
                     <ng-template #titleEmpty>

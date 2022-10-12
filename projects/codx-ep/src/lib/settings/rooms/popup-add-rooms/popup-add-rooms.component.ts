@@ -130,7 +130,7 @@ export class PopupAddRoomsComponent extends UIComponent {
       linkType: '0',
     });    
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt),0)
       .subscribe((res) => {
         if (res) {          
           if (!res.save) {
@@ -151,7 +151,7 @@ export class PopupAddRoomsComponent extends UIComponent {
             });
           }          
           if(this.isAdd){
-            (this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
+            //(this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
           }
           else{
             (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();

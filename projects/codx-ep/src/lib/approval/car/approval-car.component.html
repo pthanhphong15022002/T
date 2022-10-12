@@ -92,6 +92,7 @@
   [formModel]="formModel"
   [footer]="footerTmp"
   (clickMF)="clickMF($event, data)"
+  (changeDataMF)="changeDataMF($event, data)"
   typeMF="hover"
   [dataItem]="data"
     
@@ -141,7 +142,8 @@
     <codx-mfunc
       [dataItem]="data"
       [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
+      (clickMF)="clickMF($event, data)"      
+      (changeDataMF)="changeDataMF($event, data)"
       type="hover"
     ></codx-mfunc>
   </div>

@@ -5,7 +5,7 @@
   [header]="header"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="openFormFuncID($event)"
+  (clickMF)="clickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
 
