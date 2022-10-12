@@ -3,10 +3,12 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Injector,
   Input,
   IterableDiffers,
   OnChanges,
+  Output,
   QueryList,
   SimpleChanges,
   ViewChild,
@@ -70,6 +72,7 @@ export class PdfComponent
   @Input() inputUrl = null;
   @Input() transRecID = null;
   @Input() hideActions = false;
+  @Output() changeSignerInfo = new EventEmitter();
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -228,6 +231,8 @@ export class PdfComponent
               this.signerInfo = res?.approvers.find(
                 (approver) => approver.authorID == this.user.userID
               );
+
+              this.changeSignerInfo.emit(this.signerInfo);
             } else {
               this.signerInfo = res.approvers[0];
             }
