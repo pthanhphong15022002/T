@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Template
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { SignalRService } from '@core/services/signalr/signalr.service';
 import { Post } from '@shared/models/post';
-import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewModel, ViewType, UIComponent, ButtonModel, CRUDService, RequestOption, NotificationsService, ViewsComponent } from 'codx-core';
+import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewModel, ViewType, UIComponent, ButtonModel, CRUDService, RequestOption, NotificationsService, ViewsComponent, SortModel } from 'codx-core';
 
 @Component({
   selector: 'lib-dashboard',
@@ -10,14 +10,15 @@ import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewMo
   styleUrls: ['./dashboard.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class DashboardComponent extends UIComponent implements OnInit, AfterViewInit {
-
-
+export class DashboardComponent extends UIComponent  {
+  dataServiceWP:CRUDService = null;
   predicate = `Category =@0 && Stop=false`;
   dataValue = "3";
-  memberType = "3";
   predicateCoins = `Owner =@0   `;
   dataValueCoins = "";
+  predicateWP: string = "Category =@0 && Stop=false";
+  dataValueWP: string = "3";
+  memberType = "3";
   arrVll = ["L1422", "L1419"];
   reciver = [];
   sender = [];
@@ -60,6 +61,16 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
     this.user = this.auth.userValue;
     this.dataValueCoins = this.user.userID;
     this.getDataAmountCard();
+    this.dataServiceWP = new CRUDService(this.injector);
+    this.dataServiceWP.predicate = this.predicateWP;
+    this.dataServiceWP.dataValue = this.dataValueWP;
+    let arrSort:SortModel[] = [];
+    let sort = new SortModel();
+    sort.field = "CreatedOn";
+    sort.dir = "desc";
+    arrSort.push(sort);
+    this.dataServiceWP.setSort(arrSort);
+    this.dataServiceWP.pageSize = 7;
   }
 
   lstCountCard:any[] = [];
@@ -68,11 +79,7 @@ export class DashboardComponent extends UIComponent implements OnInit, AfterView
     .subscribe((res:any) => {
       if (res) 
       {
-        // var data = res.msgBodyData[0];
-        // this.reciver = data['fbReceiver'];
-        // this.sender = data['fbSender'];
         this.lstCountCard = JSON.parse(res);
-        console.log(this.lstCountCard);
         this.dt.detectChanges();
       }
     });

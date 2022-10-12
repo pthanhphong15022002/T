@@ -61,30 +61,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {
     const tenant = this.tenantStore.getName();
     // redirect to home if already logged in
-    if (this.authService.checkUserStatus()) {
-      this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
-      if (this.returnUrl) {
-        this.returnUrl = decodeURIComponent(this.returnUrl);
-      }
-      if (
-        this.returnUrl.indexOf('http://') == 0 ||
-        this.returnUrl.indexOf('https://') == 0
-      ) {
-        this.api
-          .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
-          .pipe(
-            map((data) => {
-              if (data && data.userID) {
-                document.location.href =
-                  this.returnUrl + '&token=' + this.auth.get().token;
-              }
-            })
-          )
-          .subscribe();
-
-        return;
-      } else this.router.navigate([`/${tenant}`]);
-    }
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
         this.api
@@ -106,6 +82,34 @@ export class LoginComponent implements OnInit, OnDestroy {
           });
       }
       if (params.id && params.id == 'changePass') this.mode = params.id;
+      if (params.type && params.type == 'changePassWord') {
+        var user = this.auth.get();
+      } else {
+        if (this.authService.checkUserStatus()) {
+          this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
+          if (this.returnUrl) {
+            this.returnUrl = decodeURIComponent(this.returnUrl);
+          }
+          if (
+            this.returnUrl.indexOf('http://') == 0 ||
+            this.returnUrl.indexOf('https://') == 0
+          ) {
+            this.api
+              .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
+              .pipe(
+                map((data) => {
+                  if (data && data.userID) {
+                    document.location.href =
+                      this.returnUrl + '&token=' + this.auth.get().token;
+                  }
+                })
+              )
+              .subscribe();
+
+            return;
+          } else this.router.navigate([`/${tenant}`]);
+        }
+      }
     });
   }
 
@@ -183,9 +187,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     );
   }
 
-  valueChange(event:any) {
-    if(!event)
-      return;
+  valueChange(event: any) {
+    if (!event) return;
     let field = event.field;
     let value = event.data;
     this.f.password.patchValue(value);
