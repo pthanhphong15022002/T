@@ -46,3 +46,12 @@
       ></codx-chart>
     </div>
   </ng-template>
+
+  <ng-template #templateContainer let-data *ngIf="template">
+    <ng-container
+    *ngTemplateOutlet="
+    template;
+      context: { $implicit: data }
+    "
+  ></ng-container>
+  </ng-template>

@@ -180,6 +180,10 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         ) {
           x.disabled = true;
         }
+        //an giao viec
+        if (x.functionID == 'SYS005') {
+          x.disabled = true;
+        }
       });
     }
   }
@@ -215,7 +219,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       )
       .subscribe((res) => {
         if (res) this.dataTree = res || [];
-        this.changeDetectorRef.detectChanges() ;
+        this.changeDetectorRef.detectChanges();
       });
   }
   //#endregion
@@ -353,7 +357,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           });
         break;
     }
-
   }
 
   getUserByListCreateBy(listUser) {

@@ -226,11 +226,16 @@ export class TMMeetingsComponent
 
   //#region kanban
   changeDataMF(e: any, data: any) {
-    // console.log(e, data);
-  }
-  //#end region
-
-  //#region schedule
+    if (e) {
+      e.forEach((x) => {
+        //an giao viec
+        if (x.functionID == 'SYS005'){
+          x.disabled = true;
+        }
+      });
+    }
+}
+  //#region schedule 
 
   fields = {
     id: 'meetingID',

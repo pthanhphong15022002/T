@@ -126,9 +126,9 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               template: this.resourceNameCol,
             },
             {
-              headerText: gv['Category'].headerText,
+              headerText: gv['CompanyID'].headerText,
               width: 200,//gv['Location'].width,
-              field: 'category',
+              field: 'companyID',
               template: this.locationCol,
               headerTextAlign: 'Center',
             },
