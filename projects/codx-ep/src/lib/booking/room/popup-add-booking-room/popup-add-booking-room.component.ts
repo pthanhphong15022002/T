@@ -456,7 +456,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     // }
     
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt),0)
       .subscribe(async (res) => {
         if (res.save || res.update) {
           if (!res.save) {
@@ -489,13 +489,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                     if (res?.msgCodeError == null && res?.rowCount) {
                       this.notificationsService.notifyCode('ES007');
                       this.returnData.status="3";
-                      if(this.isAdd){
-
-                        (this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
-                      }
-                      else{
-                        (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
-                      }          
+                      (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();                           
                       this.dialogRef && this.dialogRef.close();
                     } else {
                       this.notificationsService.notifyCode(res?.msgCodeError);
@@ -503,9 +497,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                     }
                   });
               });
-          }          
+          }  
+          else{
+            this.dialogRef && this.dialogRef.close();
+          }        
         } else {
-          this.notificationsService.notifyCode('E0011');
+          //this.notificationsService.notifyCode('SYS01');
           return;
         }
       });

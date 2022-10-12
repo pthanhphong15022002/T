@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormModel } from 'codx-core';
 
 @Component({
@@ -7,14 +15,18 @@ import { FormModel } from 'codx-core';
   styleUrls: ['./codx-view-assign.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxViewAssignComponent implements OnInit {
+export class CodxViewAssignComponent implements OnInit, OnChanges {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
   @Input() vllStatus = 'TMT004';
   dialog: any;
-  isClose =true ;
-  isShow =false ;
-  constructor() {}
+  isClose = true;
+  isShow = false;
+  constructor(private dt: ChangeDetectorRef) {}
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    this.dt.detectChanges();
+  }
 
   ngOnInit(): void {}
 

@@ -21,6 +21,7 @@ import {
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -96,6 +97,9 @@ export class TMMeetingsComponent
   titleAction = '';
   statusVll = 'CO004';
   toolbarCls: string;
+  heightWin: any;
+  widthWin: any;
+
 
   constructor(
     inject: Injector,
@@ -106,8 +110,13 @@ export class TMMeetingsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.api.execSv('CO',
+    'CO',
+    'MeetingsBusiness',
+    'SetAutoStatusMeetingAsync').subscribe();
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
@@ -123,9 +132,13 @@ export class TMMeetingsComponent
 
     this.dataValue = this.user?.userID;
     this.getParams();
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
+
     this.button = {
       id: 'btnAdd',
     };
@@ -133,7 +146,7 @@ export class TMMeetingsComponent
     let body = document.body;
     if (body.classList.contains('toolbar-fixed'))
       this.toolbarCls = 'toolbar-fixed';
-  
+
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'CO';
     this.modelResource.className = 'MeetingsBusiness';
@@ -217,7 +230,7 @@ export class TMMeetingsComponent
   }
   //#end region
 
-  //#region schedule 
+  //#region schedule
 
   fields = {
     id: 'meetingID',
@@ -518,8 +531,11 @@ export class TMMeetingsComponent
     return true;
   }
 
-
- viewDetail(meeting) {
+// viewDetail(func, meeting) {
+  //   // this.codxService.navigate('', func.url, {
+  //   //   meetingID: data.meetingID,
+  //   // })};
+  viewDetail(meeting) {
     this.tmService.getMeetingID(meeting.meetingID).subscribe((data) => {
       var resourceTaskControl = [];
       var arrayResource = data?.resources;
@@ -541,15 +557,14 @@ export class TMMeetingsComponent
         data: data,
         dataObj: dataObj,
       };
-
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       dialogModel.zIndex = 900;
       var dialog = this.callfc.openForm(
         PopupTabsViewsDetailsComponent,
         '',
-        100,
-        100,
+        this.widthWin,
+        this.heightWin,
         '',
         obj,
         '',
@@ -596,7 +611,7 @@ export class TMMeetingsComponent
     //   this.codxService.navigate('', this.urlView, {
     //     meetingID: data.meetingID,
     //   });
-    // } 
+    // }
   }
   //end region
 
@@ -615,19 +630,13 @@ export class TMMeetingsComponent
   }
 
   onDragDrop(data: any) {
-      this.api
-        .execSv<any>(
-          'CO',
-          'CO',
-          'MeetingsBusiness',
-          'UpdateMeetingsAsync',
-          data
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.update(data);
-          }
-        });
+    this.api
+      .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'UpdateMeetingsAsync', data)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.update(data);
+        }
+      });
   }
 
   onActions(e: any) {

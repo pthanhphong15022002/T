@@ -1,3 +1,11 @@
+export class SetupShowSignature {
+  showFullName: boolean = false;
+  showSign: boolean = false;
+  showSignature1: boolean = false;
+  showSignature2: boolean = false;
+  showStamp: boolean = false;
+}
+
 export class File {
   recID: string;
   fileID: string;

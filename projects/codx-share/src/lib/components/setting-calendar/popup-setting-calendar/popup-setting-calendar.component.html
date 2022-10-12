@@ -29,7 +29,7 @@
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
-                      (click)="editShift($event, '1')"
+                      (click)="editShift('1')"
                     >
                       <span class="icon-more_vert icon-18 hoverIcon"></span>
                     </button>
@@ -73,7 +73,7 @@
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
-                      (click)="editShift($event, '2')"
+                      (click)="editShift('2')"
                     >
                       <span class="icon-more_vert icon-18 hoverIcon"></span>
                     </button>
@@ -181,7 +181,7 @@
                       </button>
                       <button ngbDropdownItem (click)="removeDayOff(item)">
                         <div class="d-flex align-items-center">
-                          <span class="icon-edit icon-16"></span>
+                          <span class="icon-delete icon-16"></span>
                           <span class="ms-3">Xóa</span>
                         </div>
                       </button>
@@ -215,9 +215,8 @@
                 <div class="text-dark" [innerHTML]="item.note"></div>
               </td>
               <td class="text-center">
-                <!-- <div class="text-dark">{{ item.calendarDate | fmDT: "dmy" }}</div> -->
                 <div class="text-dark">
-                  {{ item.calendarDate | date: "dd/MM/yyyy" }}
+                  {{ item.calendarDate | fmDT: "dmy" }}
                 </div>
               </td>
               <td class="text-center">
@@ -230,39 +229,32 @@
               </td>
               <td class="text-center">
                 <div class="d-flex align-items-center">
-                  <div class="dropdown ms-2">
+                  <div ngbDropdown class="d-inline-block">
                     <button
-                      mdbDropdownToggle
-                      class="btn btn-icon btn-xs"
                       type="button"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      id="dropdownMenuButton"
+                      class="btn btn-icon align-items-start"
+                      id="dropdownBasic1"
+                      ngbDropdownToggle
                       (click)="toggleMoreFunc(item.recID)"
                     >
                       <span class="icon-more_vert icon-18"></span>
                     </button>
-                    <div
-                      mdbDropdownMenu
-                      aria-labelledby="dropdownMenuButton"
-                      class="dropdown-menu"
-                    >
-                      <a class="dropdown-item" (click)="openCalendarDate(item)">
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button ngbDropdownItem (click)="openCalendarDate(item)">
                         <div class="d-flex align-items-center">
                           <span class="icon-edit icon-16"></span>
                           <span class="ms-3">Chỉnh sửa</span>
                         </div>
-                      </a>
-                      <a
-                        class="dropdown-item"
+                      </button>
+                      <button
+                        ngbDropdownItem
                         (click)="removeCalendarDate(item)"
                       >
                         <div class="d-flex align-items-center">
                           <span class="icon-delete icon-16"></span>
                           <span class="ms-3">Xóa</span>
                         </div>
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
