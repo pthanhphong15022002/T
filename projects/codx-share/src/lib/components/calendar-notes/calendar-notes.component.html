@@ -202,4 +202,21 @@
             </div>
         </div>
     </div>
+    <br>
+    <div *ngIf="CO_MeetingsParam != null">
+        <div class="flex">
+            <div class="w-5px">
+                <li [style.background-color]="CO_MeetingsParam?.ShowColor" [style.color]="CO_MeetingsParam?.ShowColor"></li>
+            </div>
+            <div class="show-event">
+                <codx-label name="lblMeeting" formName="CO_Meetings" default="Lịch họp cá nhân"></codx-label>
+            </div>
+            <div class="show-event-check">
+                <codx-input type="checkbox" field="CO_Meetings_ShowEvent"
+                    [checked]="checkCO_MeetingsParam == 'true' || checkCO_MeetingsParam == '1'" labelPosition="Before"
+                    [disabled]="false" class="test-check" (valueChange)="valueChangeSetting($event)">
+                </codx-input>
+            </div>
+        </div>
+    </div>
 </ng-template>

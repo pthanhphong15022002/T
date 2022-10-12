@@ -360,7 +360,7 @@
     </div>
   </div>
   <div class="w-350px min-w-350px">
-    <div class="rounded-2 bg-body mb-3">
+    <div class="rounded-2 bg-body p-5 mb-3">
       <!-- <div class="d-flex justify-content-start border-bottom p-5">
         <div class="bg-light-primary p-3 rounded-1 me-3">
           <span class="icon-check-correct icon-24"></span>
@@ -386,12 +386,12 @@
           </div>
         </div>
       </div> -->
-      <div class="text-dark text-center fw-bold pt-5 mb-3">
+      <div class="text-dark text-center fw-bold mb-3">
         Top 3 nhân viên hiệu quả làm việc cao nhất
       </div>
       <div>
         <ng-container *ngFor="let item of kpiTop , let i = index ">
-          <div *ngIf="i<=top-1" class="d-flex justify-content-between">
+          <div *ngIf="i<=top-1" class="d-flex justify-content-between mt-4">
             <codx-temp-full [imageId]="item.id" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
               [title]="item.employeeName" [subTitle]="item.positionName"></codx-temp-full>
             <div>
@@ -401,11 +401,11 @@
         </ng-container>
       </div>
     </div>
-    <div class="rounded-2 bg-body mb-3">
-      <div class="text-dark text-center fw-bold pt-5 mb-3">
+    <div class="rounded-2 bg-body p-5">
+      <div class="text-dark text-center fw-bold mb-3">
         Danh sách nhân viên thực hiện công việc
       </div>
-      <div style="position: relative" class="px-5">
+      <div style="position: relative" class="tab-tasklist">
         <button class="btn btn-icon btn-light btn-sortby" style="z-index: 99" (click)="sort()">
           <div *ngIf="isDesc; then Desc; else Asc"></div>
           <ng-template #Desc><span class="text-right icon-sort_Z-A"></span></ng-template>
@@ -415,8 +415,8 @@
         </button>
         <ejs-tab id="element">
           <e-tabitems>
-            <e-tabitem [header]="headerText[0]" [content]="volumeWork"></e-tabitem>
-            <e-tabitem [header]="headerText[1]" [content]="workHours"></e-tabitem>
+            <e-tabitem class="ps-0" [header]="headerText[0]" [content]="volumeWork"></e-tabitem>
+            <e-tabitem class="ps-0" [header]="headerText[1]" [content]="workHours"></e-tabitem>
           </e-tabitems>
         </ejs-tab>
       </div>

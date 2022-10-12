@@ -74,10 +74,6 @@
   font-size: 12px !important;
 }
 
-.e-tab .e-toolbar-items {
-  background-color: #F5F8FA;
-  padding: 3px !important;
-}
 
 .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
   border: 0 !important;
@@ -92,7 +88,7 @@
 .btn-sortby {
   position: absolute;
   top: 2px;
-  right: 16px;
+  right: 0px;
 }
 
 .e-tab .e-tab-header:not(.e-vertical)::before {

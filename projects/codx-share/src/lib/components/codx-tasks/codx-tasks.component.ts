@@ -1591,8 +1591,7 @@ export class CodxTasksComponent
     return ``;
   }
 
-  getHeaderCalendar(e) {
-    var date = e.getDate();
+  getDayCalendar(e) {
     var current_day = e.getDay();
     switch (current_day) {
       case 0:
@@ -1618,7 +1617,7 @@ export class CodxTasksComponent
         break;
     }
 
-    return '<div >' + current_day +'</div><div>'+date+'</div>';
+    return current_day;
   }
 
   getParams() {

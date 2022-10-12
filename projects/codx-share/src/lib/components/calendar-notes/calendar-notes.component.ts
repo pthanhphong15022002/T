@@ -248,6 +248,7 @@ export class CalendarNotesComponent
   TDate: any;
 
   setDate(data, lstView) {
+    console.log("check setDate");
     var dateT = new Date(data);
     var fromDate = dateT.toISOString();
     this.daySelected = fromDate;
@@ -258,7 +259,7 @@ export class CalendarNotesComponent
     (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
     lstView.dataService
       .setPredicate(this.predicate, [this.dataValue])
-      .subscribe(() => {
+      .subscribe((res) => {
         this.changeDetectorRef.detectChanges();
       });
     this.FDdate = fromDate;
@@ -570,6 +571,15 @@ export class CalendarNotesComponent
         }
         this.setEventWeek();
         this.updateSettingValue('TM_Tasks', e.data);
+      } else if (field == 'CO_Meetings_ShowEvent'){
+        var today: any = document.querySelector(
+          ".e-footer-container button[aria-label='Today']"
+        );
+        if (today) {
+          today.click();
+        }
+        this.setEventWeek();
+        this.updateSettingValue('CO_Meetings', e.data);
       }
     }
     this.changeDetectorRef.detectChanges();
