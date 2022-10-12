@@ -15,24 +15,42 @@
     </div>
   </div>
 </ng-container>
-<div *ngIf="formModel" class="hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="true"
+<div>
+  <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true"
   data-kt-scroll-height="auto" data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
   data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
-  <div id="newfeed">
-    <ng-container *ngIf="module == 'WP' ; else FD">
-      <codx-listview [predicates]="predicateWP" [dataValues]="dataValueWP" #listview [funcId]="formModel.funcID"
-        [service]="service" [assemblyName]="assemblyName" class="h-100" [className]="className" [method]="method"
-        entityName="WP_Comments" [itemTemplate]="tmpPortal" [itemTemplateLoading]="templateloading"
-        [emptyTemplate]="empty" [formModel]="formModel">
+    <ng-container>
+      <codx-listview 
+        #listview
+        [dataService]="dataService"
+        [funcId]="'WP'"
+        [service]="service" 
+        [assemblyName]="assemblyName" 
+        [className]="className" 
+        [method]="method"
+        entityName="WP_Comments" 
+        [itemTemplate]="tmpPortal" 
+        [itemTemplateLoading]="templateloading"
+        [emptyTemplate]="empty" 
+        [formModel]="formModel">
       </codx-listview>
     </ng-container>
-    <ng-template #FD>
-      <codx-listview [emptyTemplate]="empty" [predicates]="predicateFD" [dataValues]="dataValueFD"
-        [itemTemplate]="tmpPortal" #listview [funcId]="formModel.funcID" [service]="service"
-        [assemblyName]="assemblyName" class="h-100" [className]="className" [method]="method" entityName="WP_Comments"
-        [itemTemplateLoading]="templateloading" [formModel]="formModel">
+    <!-- <ng-template #FD>
+      <codx-listview 
+        #listview
+        [emptyTemplate]="empty" 
+        [dataService]="dataService"
+        [itemTemplate]="tmpPortal" 
+        [funcId]="'WP'" 
+        entityName="WP_Comments"
+        [service]="service"
+        [assemblyName]="assemblyName" 
+        [className]="className" 
+        [method]="method" 
+        [itemTemplateLoading]="templateloading" 
+        [formModel]="formModel">
       </codx-listview>
-    </ng-template>
+    </ng-template> -->
   </div>
 </div>
 <ng-template #tmpPortal let-item>

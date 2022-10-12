@@ -121,6 +121,12 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
+
+  changePass() {
+    this.tenant
+    var url = `auth/login`;
+    this.codxService.navigate(null, url, {id: 'changePass'})
+  }
 }
 
 interface LanguageFlag {

@@ -1,4 +1,4 @@
-import { ViewEncapsulation } from '@angular/core';
+import { OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import {
   ChangeDetectorRef,
   Component,
@@ -23,7 +23,7 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   styleUrls: ['./codx-references.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class CodxReferencesComponent implements OnInit {
+export class CodxReferencesComponent implements OnInit,OnChanges {
   @Input() funcID?: string// khởi tạo để test,, sau có thể xóa
   // @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
@@ -42,8 +42,13 @@ export class CodxReferencesComponent implements OnInit {
   constructor(private cache: CacheService, private dt: ChangeDetectorRef) {
 
   }
-
+  ngOnChanges(changes: SimpleChanges): void {
+    this.dt.detectChanges() ;
+  }
+  
+ 
   ngOnInit(): void { }
+
   ngAfterViewInit(): void {
   }
 

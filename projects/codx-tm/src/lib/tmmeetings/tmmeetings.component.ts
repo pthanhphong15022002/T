@@ -21,6 +21,7 @@ import {
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -96,6 +97,9 @@ export class TMMeetingsComponent
   titleAction = '';
   statusVll = 'CO004';
   toolbarCls: string;
+  heightWin: any;
+  widthWin: any;
+  
 
   constructor(
     inject: Injector,
@@ -123,6 +127,9 @@ export class TMMeetingsComponent
 
     this.dataValue = this.user?.userID;
     this.getParams();
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
@@ -504,8 +511,8 @@ export class TMMeetingsComponent
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
   }
@@ -518,10 +525,6 @@ export class TMMeetingsComponent
     return true;
   }
 
-// viewDetail(func, meeting) {
-  //   // this.codxService.navigate('', func.url, {
-  //   //   meetingID: data.meetingID,
-  //   // })};
 
  viewDetail(meeting) {
     this.tmService.getMeetingID(meeting.meetingID).subscribe((data) => {
@@ -545,15 +548,14 @@ export class TMMeetingsComponent
         data: data,
         dataObj: dataObj,
       };
-
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-      // dialogModel.zIndex = 900;
+      dialogModel.zIndex = 900;
       var dialog = this.callfc.openForm(
         PopupTabsViewsDetailsComponent,
         '',
-        0,
-        0,
+        this.widthWin,
+        this.heightWin,
         '',
         obj,
         '',
@@ -645,8 +647,7 @@ export class TMMeetingsComponent
     }
   }
 
-  getHeaderCalendar(e) {
-    var date = e.getDate();
+  getDayCalendar(e) {
     var current_day = e.getDay();
     switch (current_day) {
       case 0:
@@ -672,6 +673,6 @@ export class TMMeetingsComponent
         break;
     }
 
-    return '<div >' + current_day +'</div><div>'+date+'</div>';
+    return current_day;
   }
 }

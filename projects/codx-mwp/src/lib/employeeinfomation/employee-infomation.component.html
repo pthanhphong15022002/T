@@ -1,16 +1,27 @@
-<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID" [views]="views"
-  [formModel]="view.formModel" [viewActiveType]="'16'">
+<codx-views #view 
+funcID="MWP002" 
+service="HR" 
+entityName="HR_Employees" 
+idField="employeeID" 
+[views]="views"
+[viewActiveType]="'16'">
 </codx-views>
 
 <ng-template #panelRightRef>
   <div class="page-pw h-100">
-    <div class="pw-profile" style="
-        background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
+    <div class="pw-profile" 
+      style="background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
       ">
       <div class="d-flex align-items-center avatar">
-        <codx-img class="me-4 pic-emloyee" #imageAvatar [width]="100" [objectId]="employeeInfo?.employeeID"
-          objectType="HR_Employees" [objectName]="employeeInfo?.employeeName" [funcId]="view.formModel.funcID"
-          isAllowEdit="true" updateDirect="true">
+        <codx-img 
+          class="me-4 pic-emloyee" 
+          #imageAvatar 
+          [width]="100" 
+          [objectId]="employeeInfo?.employeeID"
+          objectType="HR_Employees" 
+          [objectName]="employeeInfo?.employeeName"
+          isAllowEdit="true" 
+          updateDirect="true">
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
@@ -462,7 +473,7 @@
                   <codx-label name="lblExperencies" formName="Employees" default="Kinh nghiệm trước đây">
                   </codx-label>
                 </div>
-                <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader>
+                <!-- <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader> -->
                 <div class="border rounded-2 p-6 pb-0" *ngIf="ExperencesCurrent">
                   <div class="user-process process-h">
                     <ng-container *ngFor="let experences of ExperencesWorked">
@@ -516,7 +527,7 @@
                     <span class="icon-edit icon-16"></span>
                   </a>
                 </div>
-                <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader>
+                <!-- <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader> -->
                 <div class="border rounded-2 p-6" *ngIf="skillEmployee">
                   <div class="row">
                     <div class="col-6 pe-6">
@@ -597,7 +608,8 @@
                               </a>
                             </div>
                           </div>
-                        </div>                      </ng-container>
+                        </div>                      
+                      </ng-container>
                     </ng-container>
 
                     <ng-container swiperSlide *ngFor="let item of trainingPersonal">

@@ -21,9 +21,14 @@
 </ng-template>
 <ng-template #panelRightRef>
   <div class="py-3 news-appr-right">
-    <app-view-detail #viewdetail [objectID]="selectedID" [entityName]="entityName" [dataService]="view.dataService"
-      [funcID]="funcID" (evtApproval)="clickApprovePost($event)" [formModel]="view.formModel">
-    </app-view-detail>
+    <approve-view-detail 
+      [objectID]="selectedID" 
+      [entityName]="entityName" 
+      [dataService]="view.dataService"
+      [funcID]="funcID" 
+      (evtApproval)="clickApprovePost($event)" 
+      [formModel]="view.formModel">
+    </approve-view-detail>
   </div>
 </ng-template>
 
@@ -54,7 +59,6 @@
         [dataItem]="data" 
         [typeMF]="'hover'" 
         (clickMF)="clickMF($event,data)"
-        (click)="clickViewDetail(data.recID)" 
         [formModel]="view.formModel" 
         [resourceObjType]="'AD_Users'"
         [resources]="data.createdBy" 
