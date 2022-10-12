@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -53,6 +54,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
+    private dtchange : ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
@@ -87,6 +89,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         if (res) {
           this.itemSelected = res;
           this.viewTags = this.itemSelected?.tags;
+          this.dtchange.detectChanges();
           this.loadTreeView();
           this.loadDataReferences();
         }
@@ -348,6 +351,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           });
         break;
     }
+
   }
 
   getUserByListCreateBy(listUser) {
@@ -366,6 +370,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             if (index != -1) {
               ref.createByName = users[index].userName;
             }
+            this.dtchange.detectChanges() ;
           });
         }
       });

@@ -21,6 +21,7 @@ import {
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -96,6 +97,9 @@ export class TMMeetingsComponent
   titleAction = '';
   statusVll = 'CO004';
   toolbarCls: string;
+  heightWin: any;
+  widthWin: any;
+  
 
   constructor(
     inject: Injector,
@@ -123,6 +127,9 @@ export class TMMeetingsComponent
 
     this.dataValue = this.user?.userID;
     this.getParams();
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
@@ -547,8 +554,8 @@ export class TMMeetingsComponent
       var dialog = this.callfc.openForm(
         PopupTabsViewsDetailsComponent,
         '',
-        100,
-        100,
+        this.widthWin,
+        this.heightWin,
         '',
         obj,
         '',

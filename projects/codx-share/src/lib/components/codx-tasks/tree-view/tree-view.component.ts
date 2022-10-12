@@ -28,6 +28,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() vllStatus?: any;
   @Input() listRoles?: any;
   @Input() showMoreFunc?: any;
+  @Input() dataObj: any
   isShow = true ;
   isClose = false ;
 
@@ -66,6 +67,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     gridModel.funcID = this.formModel.funcID;
     gridModel.gridViewName = this.formModel.gridViewName;
     gridModel.treeField = 'ParentID';
+    // gridModel.dataObj = this.dataObj ;
    
     this.api
       .execSv<any>(
