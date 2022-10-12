@@ -116,12 +116,12 @@ export class RoomsComponent extends UIComponent {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: 200,//gv['ResourceID'].width,
+              width: 250,//gv['ResourceID'].width,
               template: this.resourceNameCol,
             },
             {
               headerText: gv['Location'].headerText,
-              width: 200,//gv['Location'].width,
+              width: 250,//gv['Location'].width,
               field: 'location',
               template: this.locationCol,
               headerTextAlign: 'Center',
@@ -147,13 +147,13 @@ export class RoomsComponent extends UIComponent {
               template: this.ownerCol,
               headerTextAlign: 'Center',
             },
-            // {
-            //   headerText: 'Người chuẩn bị',//gv['Owner'].headerText,
-            //   width:gv['Owner'].width,
-            //   //width: 200,
-            //   template: this.preparatorCol,
-            //   headerTextAlign: 'Center',
-            // },
+            {
+              headerText: gv['Preparator'].headerText,
+              //width:gv['Preparator'].width,
+              width: 200,
+              template: this.preparatorCol,
+              headerTextAlign: 'Center',
+            },
           ];
           this.views = [
             {

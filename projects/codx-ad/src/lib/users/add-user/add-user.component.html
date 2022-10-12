@@ -14,7 +14,7 @@
         <div class="form-group">
           <codx-label fiedName="UserID" [formModel]="form.formModel">
           </codx-label>
-          <codx-input field="userID" [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup"
+          <codx-input field="userID" [disabled]="true" [Group]="form.formGroup"
             [formModel]="form.formModel">
           </codx-input>
         </div>
@@ -144,7 +144,7 @@
   </div>
 </ng-template>
 
-<ng-template #firstComment>
+<!-- <ng-template #firstComment>
   <div *ngIf="dataComment">
     <div class="card border rounded-4 border">
       <div class="card-body d-flex">
@@ -170,4 +170,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->

@@ -1,19 +1,35 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ApiHttpService, ButtonModel, CacheService, CodxListviewComponent, DataRequest, FormModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  ButtonModel,
+  CacheService,
+  CodxListviewComponent,
+  DataRequest,
+  FormModel,
+  ViewModel,
+  ViewsComponent,
+  ViewType,
+} from 'codx-core';
 import { catchError, map, Observable, of, finalize, Subscription } from 'rxjs';
 
 @Component({
   selector: 'lib-emp-contacts',
   templateUrl: './emp-contacts.component.html',
-  styleUrls: ['./emp-contacts.component.css'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./emp-contacts.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EmpContactsComponent implements OnInit {
-
   options = new DataRequest();
   actionSub: Subscription;
   displayCard = false;
-  predicate = "Status<@0";
+  predicate = 'Status<@0';
   dataValue = '90';
   columnsGrid = [];
   @ViewChild('chartOrg') chartOrg: CodxListviewComponent;
@@ -25,7 +41,8 @@ export class EmpContactsComponent implements OnInit {
   // @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
-  @ViewChild('itemStatusName', { static: true }) itemStatusName: TemplateRef<any>;
+  @ViewChild('itemStatusName', { static: true })
+  itemStatusName: TemplateRef<any>;
   @ViewChild('itemBirthDay', { static: true }) itemBirthDay: TemplateRef<any>;
   @ViewChild('itemJoinOn', { static: true }) itemJoinOn: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
@@ -38,12 +55,10 @@ export class EmpContactsComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private changedt: ChangeDetectorRef,
-    private cache: CacheService,
-  ) { }
+    private cache: CacheService
+  ) {}
 
-  ngOnDestroy(): void {
-
-  }
+  ngOnDestroy(): void {}
 
   ngOnInit(): void {
     this.options.pageLoading = true;
@@ -66,12 +81,42 @@ export class EmpContactsComponent implements OnInit {
       },
     ];
     this.columnsGrid = [
-      { field: 'employeeName', headerText: 'Họ và tên', width: 200, template: this.itemEmployee },
-      { field: 'birthDay', headerText: 'Ngày sinh', width: 100, template: this.itemBirthDay },
-      { field: 'phone', headerText: 'Di động', width: 100, template: this.itemPhone },
-      { field: 'email', headerText: 'Email', width: 200, template: this.itemEmail },
-      { field: 'joinedOn', headerText: 'Ngày vào làm', width: 140, template: this.itemJoinOn },
-      { field: 'statusName', headerText: 'Trạng thái', template: this.itemStatusName, width: 140 },
+      {
+        field: 'employeeName',
+        headerText: 'Họ và tên',
+        width: 200,
+        template: this.itemEmployee,
+      },
+      {
+        field: 'birthDay',
+        headerText: 'Ngày sinh',
+        width: 100,
+        template: this.itemBirthDay,
+      },
+      {
+        field: 'phone',
+        headerText: 'Di động',
+        width: 100,
+        template: this.itemPhone,
+      },
+      {
+        field: 'email',
+        headerText: 'Email',
+        width: 200,
+        template: this.itemEmail,
+      },
+      {
+        field: 'joinedOn',
+        headerText: 'Ngày vào làm',
+        width: 140,
+        template: this.itemJoinOn,
+      },
+      {
+        field: 'statusName',
+        headerText: 'Trạng thái',
+        template: this.itemStatusName,
+        width: 140,
+      },
     ];
   }
 
@@ -85,7 +130,7 @@ export class EmpContactsComponent implements OnInit {
         model: {
           resources: this.columnsGrid,
           panelLeftRef: this.panelLeftRef,
-        }
+        },
       },
       {
         id: '2',
@@ -94,9 +139,8 @@ export class EmpContactsComponent implements OnInit {
         sameData: true,
         model: {
           template: this.cardTemp,
-        }
+        },
       },
-
     ];
     this.changedt.detectChanges();
   }
@@ -118,8 +162,7 @@ export class EmpContactsComponent implements OnInit {
 
   setEmployeePredicate(orgUnitID): Promise<any> {
     return new Promise((resolve, reject) => {
-      this
-        .loadEOrgChartListChild(orgUnitID)
+      this.loadEOrgChartListChild(orgUnitID)
         .pipe()
         .subscribe((response) => {
           if (response) {
@@ -160,11 +203,9 @@ export class EmpContactsComponent implements OnInit {
       );
   }
 
-  changeView(evt: any) { }
+  changeView(evt: any) {}
 
-  requestEnded(evt: any) {
-
-  }
+  requestEnded(evt: any) {}
 
   placeholder(
     value: string,

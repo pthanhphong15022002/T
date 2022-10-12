@@ -1,7 +1,17 @@
 <codx-views
   #view
   [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [views]="views"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
   (onLoading)="onLoading($event)" 
+  [viewActiveType]="viewType.grid"
 >
 <ng-template #tranTypeCol let-data>
     <!-- <div class="">

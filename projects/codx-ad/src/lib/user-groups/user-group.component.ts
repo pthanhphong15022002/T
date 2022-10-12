@@ -142,7 +142,6 @@ export class UserGroupsComponent extends UIComponent {
         '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +
         buID +
         '</span></div>';
-
     return desc + '</div>';
   }
 

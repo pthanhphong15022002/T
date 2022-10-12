@@ -120,6 +120,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     });
   }
 
+  valueChange(event) {}
+
   initForm() {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)

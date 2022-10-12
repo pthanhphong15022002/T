@@ -139,6 +139,7 @@ export class PopupAddComponent implements OnInit {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
   clickInsertNews() {
+    debugger
     if (!this.formGroup.controls['Category'].value) {
       let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Loại bài viết");
       this.notifSV.notify(mssgCode);
@@ -154,7 +155,7 @@ export class PopupAddComponent implements OnInit {
       this.notifSV.notify(mssgCode);
       return;
     }
-    if (!this.formGroup.controls['Contents'].value) {
+    if (this.newsType == this.NEWSTYPE.POST && !this.formGroup.controls['Contents'].value) {
       let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Nội dung");
       this.notifSV.notify(mssgCode);
       return;
@@ -224,7 +225,7 @@ export class PopupAddComponent implements OnInit {
       this.notifSV.notify(mssgCode);
       return;
     }
-    if (!this.formGroup.controls['Contents'].value) {
+    if (this.newsType == this.NEWSTYPE.POST && !this.formGroup.controls['Contents'].value) {
       let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Nội dung");
       this.notifSV.notify(mssgCode);
       return;

@@ -17,32 +17,31 @@ import { ApproveDetailComponent } from './approve-detail/approve-detail.componen
 })
 export class ApproveComponent extends UIComponent {
 
-  service = "WP";
-  assemblyName = "ERM.Business.WP";
-  className = "NewsBusiness";
-  method = "GetDataApprovalAsync";
-  entityName = "";
-  predicate = "";
-  dataValue = "";
-  predicates = 'ApproveStatus=@0';
-  dataValues = '3';
-  funcID = "";
+  service:string = "WP";
+  assemblyName:string = "ERM.Business.WP";
+  className:string = "NewsBusiness";
+  method:string = "GetDataApprovalAsync";
+  entityName:string = "";
+  predicate:string = "";
+  dataValue:string = "";
+  predicates:string = 'ApproveStatus=@0';
+  dataValues:string = '3';
+  funcID:string = "";
   user: any;
   dataDetail: any;
-  option = "";
-  acceptApprove = "5";
-  cancelApprove = "4";
-  remakeApprove = "2";
+  option:string = "";
+  acceptApprove:string = "5";
+  cancelApprove:string = "4";
+  remakeApprove:string = "2";
   views: Array<ViewModel> = [];
-  gridViewSetUp: any;
-  dataSelected: any;
-  itemSelected: any;
+  gridViewSetUp: any = null;
+  dataSelected: any = null;
+  itemSelected: any = null;
+  selectedID: string = "";
+
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('viewdetail') viewdetail: ApproveDetailComponent;
-
-
   tabAsside = [
     {
       name: "await",
@@ -95,7 +94,6 @@ export class ApproveComponent extends UIComponent {
     this.user = this.auth.userValue;
     this.route.params.subscribe((param) => {
       this.funcID = param["funcID"];
-      this.dataSelected = null;
       this.entityName = "WP_News";
       this.dataValue = this.user.userID;
       switch (this.funcID) {
@@ -110,8 +108,8 @@ export class ApproveComponent extends UIComponent {
           this.predicate = "Approver=@0 && Stop=false"
           break;
       }
-      this.getGridViewSetUp().subscribe();
-      this.loadTabAsside(this.predicate, this.dataValue, this.entityName);
+      this.getGridViewSetUp();
+      this.loadDataTab(this.predicate, this.dataValue, this.entityName);
       this.detectorRef.detectChanges();
     });
   }
@@ -129,18 +127,18 @@ export class ApproveComponent extends UIComponent {
   }
 
   getGridViewSetUp() {
-    return this.cache.functionList(this.funcID).pipe(map((func: any) => {
+    this.cache.functionList(this.funcID).subscribe((func: any) => 
+    {
       this.cache.gridViewSetup(func.formName, func.gridViewName).
         subscribe((grd: any) => {
-          if (grd) {
+          if (grd) 
+          {
             this.gridViewSetUp = grd;
-            this.detectorRef.detectChanges();
           }
         });
-    }
-    ));
+    });
   }
-  loadTabAsside(predicate: string, dataValue: string, entityName: string) {
+  loadDataTab(predicate: string, dataValue: string, entityName: string) {
     let model = new DataRequest();
     model.predicate = predicate;
     model.dataValue = dataValue;
@@ -166,7 +164,7 @@ export class ApproveComponent extends UIComponent {
       }
     );
   }
-  loadData(predicate: string, dataValue: string) {
+  loadDataAsync(predicate: string, dataValue: string) {
     this.view.entityName = this.entityName;
     if (predicate && dataValue) {
       this.view.dataService.setPredicates([predicate], [dataValue]).subscribe();
@@ -174,11 +172,6 @@ export class ApproveComponent extends UIComponent {
     else {
       this.view.dataService.setPredicates([], []).subscribe();
     }
-  }
-  selectedID: string = "";
-  clickViewDetail(postID: string) {
-    this.selectedID = postID;
-    this.detectorRef.detectChanges();
   }
   selectedChange(event: any) {
     if (!event.data) return;
@@ -272,7 +265,7 @@ export class ApproveComponent extends UIComponent {
       this.tabAsside.map(x => { if (x.name != item.name) x.active = false; })
       item.active = true;
     }
-    this.loadData(predicate, dataValue);
+    this.loadDataAsync(predicate, dataValue);
   }
 
   clickMF(event: any, data: any) {

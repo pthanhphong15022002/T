@@ -59,7 +59,7 @@
       [attr.data-group]="data.refLineID"
     >
       <div class="d-flex justify-content-between">
-        <div class="w-40px min-w-40px">
+        <div class="w-20px min-w-20px" *ngIf="!isGroup">
           <ng-container
             *ngIf="data.icon && data.icon.includes('.svg'); else icon"
           >
@@ -75,11 +75,11 @@
         <div class="d-flex flex-column w-100">
           <div
             class="fw-bold text-dark"
-            [ngClass]="isGroup ? 'category-title' : ''"
+            [ngClass]="isGroup ? 'category-title fs-4' : ''"
           >
             {{ data.tilte }}
           </div>
-          <div class="text-gray-500">
+          <div class="text-gray-500 pt-1">
             {{ data.description }}
           </div>
         </div>
@@ -264,7 +264,7 @@
           </div>
         </div>
       </div>
-      <hr *ngIf="!isGroup" />
+      <hr class="mt-2" *ngIf="!isGroup && groupSetting.length > 1" />
     </div>
   </ng-template>
 </ng-template>

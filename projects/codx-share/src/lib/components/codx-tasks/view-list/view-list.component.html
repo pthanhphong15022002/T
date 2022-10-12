@@ -1,6 +1,6 @@
 <div class="tm-viewlist">
   <div class="d-flex flex-row align-items-top p-3 border-bottom" (dblclick)="dbClick(data)">
-    <div class="w-100 min-w-200px ps-3">
+    <div class="w-450px min-w-450px ps-3">
       <div class="a" [ngbTooltip]="data.taskName">
         {{ data?.taskName }}</div>
     </div>
@@ -26,7 +26,8 @@
           aria-haspopup="true" aria-expanded="false">
           <div class="d-flex">
             <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
-            <div class="b text-start" *ngIf="data.memo" [innerHTML]="data?.memo">
+            <div class="b text-start" *ngIf="data.memo" style="font-style: italic;color:#0000ff">
+              <codx-label name="lblNoMemo" default="Xem thêm..." ></codx-label> 
             </div>
           </div>
         </button>
@@ -36,7 +37,9 @@
           aria-haspopup="true" aria-expanded="false">
           <div class="d-flex">
             <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
-            <span *ngIf="!data.memo" class="b text-start">Không có mô tả</span>
+            <span *ngIf="!data.memo" class="b text-start">
+             <codx-label name="lblNoMemo" [formModel]="formModel" default="Không có mô tả" ></codx-label> 
+            </span>
           </div>
         </button>
       </div>
