@@ -63,7 +63,7 @@
       </div>
       <div>
         <div class="d-flex">
-          <span class="d-flex align-items-center position-relative me-4">
+          <!-- <span class="d-flex align-items-center position-relative me-4">
             <span class="icon-mode_comment icon-20 text-gray-400"></span>
             <span
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
@@ -75,11 +75,11 @@
             <span
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
               data?.attachments ?data?.attachments :'0'  }}</span>
-          </span>
- 
-          <!-- <codx-user-temp [objectID]="data.recIDReferences"></codx-user-temp>
+          </span> -->
+          <codx-attachment-temp [objectID]="data.recIDReferences" [formModel]="formModel"></codx-attachment-temp>
+          <!-- <codx-user-temp [objectID]="data.recIDReferences"></codx-user-temp> -->
 
-          <codx-comment-temp [objectID]="data.recIDReferences"></codx-comment-temp> -->
+          <codx-comment-temp [objectID]="data.recIDReferences"></codx-comment-temp>
         </div>
       </div>
     </div>

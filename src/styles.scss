@@ -797,7 +797,7 @@ codx-dynamic-form codx-view-grid {
   margin-right: -16px;
 }
 
-.menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
+codx-header .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
   color: $title-color;
 }
 
@@ -814,4 +814,8 @@ codx-dynamic-form codx-view-grid {
   background: var(--primary) !important;
   border-color: var(--primary) !important;
   color: var(--white);
+}
+
+.content-tree .d-flex.user-card {
+  margin-top: 0px;
 }
