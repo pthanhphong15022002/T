@@ -1,9 +1,0 @@
-.e-grid .e-rowcell {
-    line-height: inherit;
-    padding: 10px;
-}
-
-.emp-card .text-gray-700.line-clamp {
-    font-size: var(--fs-7);
-    color: var(--gray-600) !important;
-}

@@ -387,10 +387,15 @@ export class PopupAddSignFileComponent implements OnInit {
                   });
                   this.data.approveControl = '3';
 
+                  //delete step of signfile
                   this.esService
                     .deleteStepByTransID(this.data.recID)
                     .subscribe();
+
                   this.dialogSignFile.patchValue({ refNo: this.data.refNo });
+                  //this.dialogSignFile.patchValue({ catagoryID: event?.data });
+
+                  //set info of category
                   let category = event.component?.itemsSelected[0];
                   this.dialogSignFile.patchValue({
                     icon: category?.Icon,
@@ -413,6 +418,9 @@ export class PopupAddSignFileComponent implements OnInit {
           this.esService
             .getAutoNumberByCategory(event.data)
             .subscribe((autoNum) => {
+              console.log(this.data);
+              console.log(this.dialogSignFile.value);
+
               if (autoNum != null) {
                 this.data.refNo = autoNum;
               } else if (this.autoNo) {
@@ -424,8 +432,13 @@ export class PopupAddSignFileComponent implements OnInit {
               });
               this.data.approveControl = '3';
 
+              //delete step of signfile
               this.esService.deleteStepByTransID(this.data.recID).subscribe();
+
               this.dialogSignFile.patchValue({ refNo: this.data.refNo });
+              //this.dialogSignFile.patchValue({ catagoryID: event?.data });
+
+              //get info of category
               let category = event.component?.itemsSelected[0];
               this.dialogSignFile.patchValue({
                 icon: category?.Icon,
@@ -461,8 +474,6 @@ export class PopupAddSignFileComponent implements OnInit {
           if (employee?.orgUnitID != null) {
             this.data.orgUnitID = employee?.orgUnitID;
           }
-
-          //this.dialogSignFile.patchValue(this.data);
 
           this.dialogSignFile.patchValue({
             employeeID: employee?.employeeID,
@@ -512,6 +523,9 @@ export class PopupAddSignFileComponent implements OnInit {
 
   //#region Methods Save
   onSaveSignFile() {
+    console.log('onSaveSignFile', this.data);
+    console.log('onSaveSignFile', this.dialogSignFile.value);
+
     if (this.dialogSignFile.invalid == true) {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
@@ -521,6 +535,8 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.addNewSignFile(this.data).subscribe(async (res) => {
         if (res != null) {
           console.log('ADD NEW SIGNFILE: ', res);
+          console.log('ADD NEW SIGNFILE: data', this.data);
+          console.log('ADD NEW SIGNFILE: formGroup', this.dialogSignFile.value);
           this.data.files = res?.files;
           this.data.permissions = res?.permissions;
           this.dialogSignFile.patchValue({
@@ -549,6 +565,15 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.editSignFile(this.data).subscribe((res) => {
         if (res) {
           console.log('EDIT SIGNFILE: ', res);
+          console.log('EDIT SIGNFILE: data', this.data);
+          console.log('EDIT SIGNFILE: formGroup', this.dialogSignFile.value);
+          this.data.modifiedBy = res?.modifiedBy;
+          this.data.modifiedOn = res?.modifiedOn;
+
+          this.dialogSignFile.patchValue({
+            modifiedBy: res?.modifiedBy,
+            modifiedOn: res?.modifiedOn,
+          });
 
           if (this.currentTab == 1) {
             this.updateNodeStatus(this.oldNode, this.newNode);
@@ -580,6 +605,7 @@ export class PopupAddSignFileComponent implements OnInit {
             });
             this.data.processID = this.processID;
             this.data.approveControl = '2';
+            this.onSaveSignFile();
             dialogTmp && dialogTmp.close();
           } else {
             this.processID == '';
@@ -596,56 +622,6 @@ export class PopupAddSignFileComponent implements OnInit {
         this.data.approveControl = '2';
         dialogTmp && dialogTmp.close();
       }
-    }
-  }
-
-  saveProcessStep() {
-    console.log('SAVE PROCESS STEP');
-    return;
-
-    //this.stepAppr?.saveStep();
-    if (
-      this.dialogSignFile.value.approveControl != '1' ||
-      this.data.approveControl != '1'
-    ) {
-      let newProcessStep = [];
-      this.esService.approvalStep.subscribe((res) => {
-        newProcessStep = res;
-      });
-      if (newProcessStep != null) {
-        let lstStep = [];
-        newProcessStep.forEach((element) => {
-          if (element?.id) delete element.id;
-          if (element?.recID) delete element.recID;
-          element.transID = this.dialogSignFile.value.recID;
-          element.transID = this.data.recID;
-          lstStep.push(element);
-        });
-
-        this.esService.addNewApprovalStep(lstStep).subscribe((res) => {
-          if (res) {
-            this.esService.setApprovalStep(null);
-            this.esService.setLstDeleteStep(null);
-            console.log('result add new process step:', res);
-            this.dialogSignFile.patchValue({ approveControl: '1' });
-            this.esService.editSignFile(this.data).subscribe((resSignFile) => {
-              if (resSignFile) {
-                this.dialogSignFile.patchValue(resSignFile);
-                this.data = resSignFile;
-                this.isAfterSaveProcess = true;
-              }
-            });
-          }
-        });
-      }
-    } else {
-      this.esService.editApprovalStep().subscribe((res) => {
-        console.log('result edit step ', res);
-        this.isAfterSaveProcess = true;
-      });
-      this.esService.deleteApprovalStep().subscribe((res) => {
-        console.log('result delete step ', res);
-      });
     }
   }
 
@@ -667,12 +643,22 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  saveCategoryTemplate() {}
+  updateApproveTemplate() {
+    this.esService
+      .updateApproveTemplate(this.data.recID, this.data.processID)
+      .subscribe((res) => {
+        if (res != null) {
+          this.notify.notifyCode('RS002');
+        }
+      });
+  }
   //#endregion
 
   //#region Change Tab
 
   clickTab(tabNo) {
+    console.log('clickTab', this.data);
+    console.log('clickTab', this.dialogSignFile.value);
     let newNo = tabNo;
     let oldNo = this.currentTab;
 
@@ -683,7 +669,8 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   async continue(currentTab) {
-    console.log(this.data);
+    console.log('continue', this.data);
+    console.log('continue', this.dialogSignFile.value);
 
     if (this.currentTab > 3) return;
 
@@ -698,19 +685,25 @@ export class PopupAddSignFileComponent implements OnInit {
         ) {
           if (this.attachment.fileUploadList.length > 0) {
             this.disableContinue = true;
+            for (let i = 0; i < this.attachment.fileUploadList.length; i++) {
+              this.attachment.fileUploadList[i].referType = 'sign';
+            }
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
                 if (item2?.status == 0) {
                   this.disableContinue = false;
                   this.fileAdded(item2);
+                  this.updateNodeStatus(oldNode, newNode);
+                  this.currentTab++;
+                  this.processTab == 0 && this.processTab++;
                 }
               }
             );
+          } else {
+            this.updateNodeStatus(oldNode, newNode);
+            this.currentTab++;
+            this.processTab == 0 && this.processTab++;
           }
-
-          this.updateNodeStatus(oldNode, newNode);
-          this.currentTab++;
-          this.processTab == 0 && this.processTab++;
         } else {
           this.notify.notifyCode('ES006');
         }
@@ -842,7 +835,9 @@ export class PopupAddSignFileComponent implements OnInit {
   close() {
     if (
       this.processTab == 0 ||
-      (this.isAddNew == true && this.dialogSignFile.invalid)
+      (this.isAddNew == true &&
+        this.dialogSignFile.invalid &&
+        this.isSaved == false)
     ) {
       this.dialog && this.dialog.close();
     } else if (this.processTab > 0 && this.isAddNew == true) {

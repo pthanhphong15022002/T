@@ -17,6 +17,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddEpCardsComponent } from './popup-add-epCards/popup-add-epCards.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'setting-epCards',
@@ -49,7 +50,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
 
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService
+    private codxEpService: CodxEpService,
+    private routers:Router, 
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -145,6 +147,15 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       case 'SYS02':
         this.delete(data);
         break;
+      case 'EPS2501'://cấp thẻ
+        //this.delete(data);
+        break;
+      case 'EPS2502'://trả thẻ
+        //this.delete(data);
+        break;
+      case 'EPS2503'://lịch sử thẻ
+        this.historyCard(event?.data.url+'/'+data.recID);
+        break;
 
     }
   }
@@ -216,5 +227,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       }
       });
     }
+  }
+  historyCard(url:any) {
+    this.codxService.navigate('', url);
   }
 }

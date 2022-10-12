@@ -56,7 +56,7 @@ export const routes: Routes = [
 
       {
         path: 'groupusers/:funcID',
-        component: UserComponent,
+        component: UserGroupsComponent,
       },
 
       {

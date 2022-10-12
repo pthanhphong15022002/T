@@ -1,4 +1,4 @@
-<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
+<codx-layout-add #form [title]="header" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
   [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabRoles]" [data]="adUser">
 </codx-layout-add>
 
@@ -14,7 +14,7 @@
         <div class="form-group">
           <codx-label fiedName="UserID" [formModel]="form.formModel">
           </codx-label>
-          <codx-input field="userID" [disabled]="formType == 'edit' ? true : false" [Group]="form.formGroup"
+          <codx-input field="userID" [disabled]="true" [Group]="form.formGroup"
             [formModel]="form.formModel">
           </codx-input>
         </div>
@@ -144,7 +144,7 @@
   </div>
 </ng-template>
 
-<ng-template #firstComment>
+<!-- <ng-template #firstComment>
   <div *ngIf="dataComment">
     <div class="card border rounded-4 border">
       <div class="card-body d-flex">
@@ -152,13 +152,11 @@
           <a href="/" class="mb-2">
             <img alt="Logo" class="h-15px " src="assets/themes/wp/default/img/WP.svg">
           </a>
-          <h4 class="fw-bolder text-primary">Chào mừng thành viên mới</h4>
-          <div class="mb-4">Rất hân hạnh chào đón bạn đến với chúng tôi. Chúng tôi tin rằng với khả năng và nhiệt huyết
-            của mình, bạn sẽ là một nhân tố giúp công ty ngày càng phát triển hơn.</div>
+          <h4 class="fw-bolder text-primary">{{titleComment}}</h4>
+          <div class="mb-4">{{descriptionComment}}</div>
           <div class="d-flex align-items-center flex-center  py-2 px-6">
-            <div class="symbol symbol-40px symbol-circle me-4">
-              <codx-img #image [objectType]="formModel?.entityName" [funcId]="formModel?.funcID"
-                [objectId]="dataComment.userID" [objectType]="'AD_Users'"></codx-img>
+            <div class="symbol symbol-40px symbol-circle me-4" *ngIf="url">
+              <img [src]="url" alt="">
             </div>
             <div class="d-flex flex-column w-100">
               <div class="text-dark fw-bold fs-5">{{dataComment.userName}}</div>
@@ -172,4 +170,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->

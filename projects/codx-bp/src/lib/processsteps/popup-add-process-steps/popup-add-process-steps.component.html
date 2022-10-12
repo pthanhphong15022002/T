@@ -38,11 +38,11 @@
           field="duration"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChangeEstimate($event, stepType)"
+          (valueChange)="valueChangeDuration($event)"
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="stepType != 'P'">
         <codx-label
           fiedName="ParentID"
           [formModel]="form.formModel"
@@ -57,7 +57,7 @@
         >
         </codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="stepType != 'P'">
         <codx-label
           name="StepName2"
           [formModel]="form.formModel"
@@ -71,7 +71,38 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="stepType != 'C' && stepType != 'C'">
+      <div class="form-group" *ngIf="stepType =='C'">
+        <codx-label
+          name="Reference"
+          [formModel]="form.formModel"
+          default="Đầu mục thực hiện"
+        ></codx-label>
+        <codx-input
+          field="reference"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          placeholder="Cho dữ liệu tạm để test đi !!"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+
+      <div class="form-group" *ngIf="stepType =='I'">
+        <codx-label
+          name="Reference"
+          [formModel]="form.formModel"
+          default="Bảng khảo sát"
+        ></codx-label>
+        <codx-input
+          field="reference"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          placeholder="Cho dữ liệu tạm để test đi !!"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="stepType != 'M' && stepType != 'C'">
         <codx-label
           name="Memo"
           [formModel]="form.formModel"
@@ -97,11 +128,11 @@
             field="duration"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeEstimate($event, stepType)"
+            (valueChange)="valueChangeDuration($event)"
           >
           </codx-input>
         </div>
-        <div class="col-4 form-group" *ngIf="stepType == 'C'">
+        <div class="col-4 form-group" *ngIf="stepType == 'M'">
           <codx-label
             fiedName="Reminder"
             [formModel]="form.formModel"
@@ -112,11 +143,11 @@
             field="reminder"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeEstimate($event, stepType)"
+            (valueChange)="valueChangeDuration($event)"
           >
           </codx-input>
         </div>
-        <div class="col-4 form-group row" *ngIf="stepType == 'C'">
+        <div class="col-4 form-group row" *ngIf="stepType == 'M'">
           <div class="d-flex align-items-center col-6 mt-5">
             <codx-input
               type="switch"
@@ -153,7 +184,7 @@
           </div>
         </div>
 
-        <div class="col-8 form-group" *ngIf="stepType != 'C'">
+        <div class="col-8 form-group" *ngIf="stepType != 'M'">
           <codx-label
             fiedName="Location"
             [formModel]="form.formModel"
@@ -164,12 +195,12 @@
             field="location"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeEstimate($event, stepType)"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>
       </div>
-      <div class="form-group" *ngIf="stepType == 'C'">
+      <div class="form-group" *ngIf="stepType == 'M'">
         <codx-label
           fiedName="Location"
           [formModel]="form.formModel"
@@ -180,19 +211,19 @@
           field="location"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChangeEstimate($event, stepType)"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
       <ng-container>
         <div class="d-flex align-items-center justify-content-between mt-4">
           <div class="d-flex align-items-center mb-3">
-            <span class="icon-person icon-18 me-2 text-primary"></span>
+            <!-- <span class="icon-person icon-18 me-2 text-primary"></span> -->
             <div class="fw-bold text-primary mt-1">
               <codx-label
                 fiedName="Owners"
                 [formModel]="form.formModel"
-                default="Phân công cho"
+                default="Vai trò/ bộ phận thực hiện"
               >
               </codx-label>
             </div>
@@ -221,7 +252,7 @@
         </div>
       </ng-container>
 
-      <div class="form-group" *ngIf="stepType == 'C'">
+      <div class="form-group" *ngIf="stepType == 'M' || stepType == 'C'">
         <codx-label
           fiedName="Note"
           [formModel]="form.formModel"
@@ -281,8 +312,8 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-between mt-4">
-      <button
+    <!-- <div class="d-flex justify-content-between mt-4" > -->
+      <button style="float:left" *ngIf="stepType !='P'"
         type="button"
         class="btn btn-light-primary me-3"
         [disabled]="readOnly"
@@ -297,9 +328,9 @@
           ></codx-label>
         </span>
       </button>
-      <button type="button" class="btn btn-primary" (click)="saveData()">
+      <button  type="button" class="btn btn-primary" (click)="saveData()">
         <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
       </button>
-    </div>
+    <!-- </div> -->
   </ng-template>
 </codx-form>

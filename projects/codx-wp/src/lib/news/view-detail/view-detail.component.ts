@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel, AuthService } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
@@ -14,7 +15,7 @@ import { PopupSearchComponent } from '../popup/popup-search/popup-search.compone
 })
 export class ViewDetailComponent implements OnInit {
   @HostBinding('class') get class() {
-    return "bg-body h-100 news-detail";
+    return "bg-body h-100 news-main card-body hover-scroll-overlay-y news-detail";
   }
   NEWSTYPE = {
     POST: "1",
@@ -24,7 +25,7 @@ export class ViewDetailComponent implements OnInit {
   category: string = "";
   recID: string = "";
   funcID: string = "";
-  dataItem: any;
+  data: any;
   listViews = [];
   listTag = [];
   listNews = [];
@@ -73,9 +74,8 @@ export class ViewDetailComponent implements OnInit {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewsInforAsync", recID).subscribe(
       (res) => {
         if (res) {
-          this.dataItem = res[0];
-          console.log(this.dataItem)
-          this.dataItem.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.dataItem.contents);
+          this.data = res[0];
+          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
           this.listViews = res[1];
           this.listNews = res[2];
         }
@@ -120,8 +120,6 @@ export class ViewDetailComponent implements OnInit {
     }
     return false;
   }
-
-
   getShareUser(shareControl, commentID) {
     if (shareControl == '1') {
       this.api
@@ -154,5 +152,17 @@ export class ViewDetailComponent implements OnInit {
     option.FormModel = this.codxViews.formModel;
     option.IsFull = true;
     this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", { funcID: this.funcID }, "", option);
+  }
+  clickPopupShare(data: any) {
+    if (!data) return;
+    var obj = {
+      post: data,
+      refType: "WP_News",
+      status: 'share',
+      headerText: 'Chia sẻ bài viết',
+    };
+    let option = new DialogModel();
+    option.FormModel = this.codxViews.formModel;
+    this.callfc.openForm(PopupAddPostComponent, '', 650, 550, '', obj, '', option);
   }
 }

@@ -18,8 +18,10 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-send-email.component';
 import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
-import { ProcessstepsComponent } from './processsteps/processsteps.component';
+import { ProcessStepsComponent } from './processsteps/processsteps.component';
 import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
+import { RevisionsComponent } from './processes/revisions/revisions.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 
 export const routes: Routes = [
   {
@@ -31,8 +33,18 @@ export const routes: Routes = [
         component: ProcessesComponent,
       },
       {
+        path: 'testhtml',
+        component: TesthtmlComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
         path: 'processstep/:funcID',
-        component: ProcessstepsComponent,
+        component: ProcessStepsComponent,
       },
     ],
   },
@@ -45,10 +57,11 @@ export const routes: Routes = [
     ProcessesComponent,
     PopupAddProcessesComponent,
     ViewListProcessesComponent,
-    ProcessstepsComponent,
+    ProcessStepsComponent,
     PopupAddProcessStepsComponent,
     PopupSendEmailComponent,
     PopupAddProcessStepsComponent,
+    RevisionsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -15,24 +15,42 @@
     </div>
   </div>
 </ng-container>
-<div *ngIf="formModel" class="hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="true"
+<div>
+  <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true"
   data-kt-scroll-height="auto" data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
   data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
-  <div id="newfeed">
-    <ng-container *ngIf="module == 'WP' ; else FD">
-      <codx-listview [predicates]="predicateWP" [dataValues]="dataValueWP" #listview [funcId]="formModel.funcID"
-        [service]="service" [assemblyName]="assemblyName" class="h-100" [className]="className" [method]="method"
-        entityName="WP_Comments" [itemTemplate]="tmpPortal" [itemTemplateLoading]="templateloading"
-        [emptyTemplate]="empty" [formModel]="formModel">
+    <ng-container>
+      <codx-listview 
+        #listview
+        [dataService]="dataService"
+        [funcId]="'WP'"
+        [service]="service" 
+        [assemblyName]="assemblyName" 
+        [className]="className" 
+        [method]="method"
+        entityName="WP_Comments" 
+        [itemTemplate]="tmpPortal" 
+        [itemTemplateLoading]="templateloading"
+        [emptyTemplate]="empty" 
+        [formModel]="formModel">
       </codx-listview>
     </ng-container>
-    <ng-template #FD>
-      <codx-listview [emptyTemplate]="empty" [predicates]="predicateFD" [dataValues]="dataValueFD"
-        [itemTemplate]="tmpPortal" #listview [funcId]="formModel.funcID" [service]="service"
-        [assemblyName]="assemblyName" class="h-100" [className]="className" [method]="method" entityName="WP_Comments"
-        [itemTemplateLoading]="templateloading" [formModel]="formModel">
+    <!-- <ng-template #FD>
+      <codx-listview 
+        #listview
+        [emptyTemplate]="empty" 
+        [dataService]="dataService"
+        [itemTemplate]="tmpPortal" 
+        [funcId]="'WP'" 
+        entityName="WP_Comments"
+        [service]="service"
+        [assemblyName]="assemblyName" 
+        [className]="className" 
+        [method]="method" 
+        [itemTemplateLoading]="templateloading" 
+        [formModel]="formModel">
       </codx-listview>
-    </ng-template>
+    </ng-template> -->
   </div>
 </div>
 <ng-template #tmpPortal let-item>
@@ -48,17 +66,18 @@
             <span class="text-dark fw-bolder">{{ item.createdName }}</span>
           </ng-container>
           <ng-container *ngIf="item.tagName">
-            <div class="position-relative">
+            <div class="position-relative text-hover-underline">
               <span class="ms-2" (click)="showListTag(item)" [innerHTML]="item.tagName">
               </span>
               <ng-container *ngIf="item.isShowTag">
-                <div class="position-absolute tmpTag">
-                  <div class="text-dark fw-bold mb-2">
-                    <codx-label [formModel]="formModel" name="lblTags" default="Danh sách người được gắn thẻ">
+                <div class="position-absolute tmpTag w-250px">
+                  <div class="d-flex algin-items-center justify-content-between text-dark text-nowrap fw-bold mb-2">
+                    <codx-label style="line-height: 26px;" [formModel]="formModel" name="lblTags"
+                      default="Danh sách người được gắn thẻ">
                     </codx-label>
-                    <span class="ms-4" (click)="closeListTag(item)">
+                    <button type="button" class="ms-2 btn btn-icon btn-sm btn-light" (click)="closeListTag(item)">
                       <i class="icon-close"></i>
-                    </span>
+                    </button>
                   </div>
                   <div class="tmpTag-body">
                     <ng-container *ngFor="let tag of lstUserTag">
@@ -190,16 +209,16 @@
         </codx-file>
       </div>
       <ng-container *ngIf="item.refType == 'WP_News'; else tmpSharePost">
-        <ng-container *ngIf="item.wPNews ;else postShareDeleted">
+        <ng-container *ngIf="item.news;else postShareDeleted">
           <div class="post mt-3">
-            <div (click)="naviagteWPNew(item.wPNews)">
+            <div (click)="naviagteWPNew(item.news)">
               <codx-file [objectID]="item.refID" [objectType]="'WP_News'">
               </codx-file>
             </div>
             <div class="p-2">
-              <div class="fw-bolder">{{item.wPNews.subject}}</div>
-              <div>{{item.wPNews.subContent}}</div>
-              <div class="text-gray-600 fs-7 me-2">{{item.wPNews.createdOn | fmDT}}</div>
+              <div class="fw-bolder">{{item.news.subject}}</div>
+              <div>{{item.news.subContent}}</div>
+              <div class="text-gray-600 fs-7 me-2">{{item.news.createdOn | fmDT}}</div>
             </div>
           </div>
         </ng-container>
@@ -238,37 +257,6 @@
     </ng-container>
     <ng-template #shareTemplate>
       <ng-container *ngIf="item.isContentTmp;else noContentShareTemp">
-        <ng-container #contentTmp>
-          <div *ngIf="item.contentTmp">
-            <div *ngFor="let data of item.contentTmp">
-              <div class="card border rounded-4 border">
-                <div class="card-body d-flex">
-                  <div class="d-flex flex-column w-350px me-4">
-                    <a href="/" class="mb-2">
-                      <img alt="Logo" class="h-15px " src="assets/themes/wp/default/img/WP.svg">
-                    </a>
-                    <h4 class="fw-bolder text-primary">{{data.header}}</h4>
-                    <div class="mb-4">{{data.subHeader}}</div>
-                    <div class="d-flex align-items-center flex-center  py-2 px-6">
-                      <div class="symbol symbol-40px symbol-circle me-4">
-                        <codx-img #image [objectType]="data.entityName" [funcId]="data.funcID" [objectId]="data.userID"
-                          [objectType]="'AD_Users'"></codx-img>
-                      </div>
-                      <div class="d-flex flex-column w-100">
-                        <div class="text-dark fw-bold fs-5">{{data.userName}}</div>
-                        <div class="text-gray-400">
-                          <span *ngIf="data.positionName">{{data.positionName}}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <img src="/assets/themes/sys/default/img/Welcome.svg" class="position-absolute me-3  end-0 h-175px"
-                    alt="">
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
       </ng-container>
       <ng-template #noContentShareTemp>
         <div class="my-3">

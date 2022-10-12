@@ -91,16 +91,20 @@ export class FileImage implements PipeTransform {
              case 'R':
               var numberPipe = new NumberPipe();
               var a = numberPipe.formatNumber(factor, dataFormat, 0, refID);
+              break;
              case 'R2':
               var numberPipe = new NumberPipe();
               var a = numberPipe.formatNumber(factor2, dataFormat, 0, refID);
+              break;
              case 'SQ':
               var numberPipe = new NumberPipe();
               var a = numberPipe.formatNumber(settledQty, dataFormat, 0, refID);
+              
                  break;
              case 'u':
               var upperPipe = new UpperPipe();
               var a = upperPipe.formatUpper(dataFormat, "");
+              break;
              case 'O':
               var colorPipe = new ColorPipe();
               var a = colorPipe.formatColor(dataFormat, '0');

@@ -1,10 +1,12 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
@@ -34,20 +36,21 @@ export class CodxTabsComponent implements OnInit {
   @Input() allowExtensions: string = '.jpg,.png';
   @Input() allowMultiFile: string = '1';
   @Input() displayThumb: string = 'full';
-  opened=false;
+  opened = false;
+  @Output() tabChange = new EventEmitter();
 
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-    { name: 'AssignTo', textDefault: 'Công việc', isActive: false },
+    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
     // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
   constructor(
     injector: Injector,
-    private api:ApiHttpService,
-    private dt:ChangeDetectorRef,
+    private api: ApiHttpService,
+    private dt: ChangeDetectorRef,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -69,7 +72,6 @@ export class CodxTabsComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  
   fileAdded(e: any) {
     console.log(e);
   }
@@ -77,5 +79,8 @@ export class CodxTabsComponent implements OnInit {
   getfileCount(e: any) {
     console.log(e);
   }
-  
+
+  navChange(evt: any) {
+    this.tabChange.emit(evt);
+  }
 }

@@ -65,6 +65,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   dataUserCbbTemp: any;
   dataCopy: any;
   oldID: any;
+  header = '';
 
   constructor(
     private injector: Injector,
@@ -118,6 +119,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     }
     this.dialog = dialog;
     this.user = auth.get();
+    this.title = dt.data?.headerText;
   }
 
   capitalizeWords(arr) {
@@ -131,12 +133,20 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
     if (this.formType == 'edit') {
-      this.title = 'Cập nhật nhóm người dùng';
       this.isAddMode = false;
-    } else this.title = 'Thêm nhóm người dùng';
+    }
     this.adService.getListUser().subscribe((res) => {
       if (res) {
         this.lstUser = res;
+      }
+    });
+    this.cache.functionList(this.formModel.funcID).subscribe((res) => {
+      if (res) {
+        this.header =
+          this.title +
+          ' ' +
+          res?.customName.charAt(0).toLocaleLowerCase() +
+          res?.customName.slice(1);
       }
     });
   }

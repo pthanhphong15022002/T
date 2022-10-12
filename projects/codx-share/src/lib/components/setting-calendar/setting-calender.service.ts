@@ -5,9 +5,12 @@ import {
   CacheService,
   FormModel,
   AuthStore,
+  NotificationsService,
 } from 'codx-core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BS_DaysOff } from './models/BS_DaysOff.model';
+import { BS_CalendarDate } from './models/BS_CalendarDate.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +21,7 @@ export class SettingCalendarService {
     private api: ApiHttpService,
     private auth: AuthStore,
     private fb: FormBuilder,
+    private notificationsService: NotificationsService
   ) {}
 
   getFormModel(functionID): Promise<FormModel> {
@@ -108,21 +112,80 @@ export class SettingCalendarService {
     );
   }
 
-  getDayWeek(id: string) {
+  getCalendarName(calendarID: string) {
+    return this.api.exec<string>(
+      APICONSTANT.ASSEMBLY.BS,
+      APICONSTANT.BUSINESS.BS.Calendars,
+      'GetCalendarNameAsync',
+      [calendarID]
+    );
+  }
+
+  getDayWeek(calendarID: string) {
     return this.api.exec<any>(
       APICONSTANT.ASSEMBLY.BS,
       APICONSTANT.BUSINESS.BS.Calendars,
       'GetDayWeekAsync',
-      [id]
+      [calendarID]
     );
   }
 
-  getDaysOff(id: string) {
+  getDaysOff(calendarID: string) {
     return this.api.exec<any>(
       APICONSTANT.ASSEMBLY.BS,
       APICONSTANT.BUSINESS.BS.CalendarDate,
       'GetDateOffAsync',
-      [id]
+      [calendarID]
     );
+  }
+
+  getSettingCalendar(calendarID: string) {
+    return this.api.exec(
+      APICONSTANT.ASSEMBLY.BS,
+      APICONSTANT.BUSINESS.BS.Calendars,
+      'GetSettingCalendarAsync',
+      [calendarID]
+    );
+  }
+
+  removeDayOff(item: BS_DaysOff) {
+    return this.api.exec(
+      APICONSTANT.ASSEMBLY.BS,
+      APICONSTANT.BUSINESS.BS.DaysOff,
+      'DeleteAsync',
+      [item]
+    );
+  }
+
+  removeCalendarDate(item: BS_CalendarDate) {
+    return this.api.exec(
+      APICONSTANT.ASSEMBLY.BS,
+      APICONSTANT.BUSINESS.BS.CalendarDate,
+      'DeleteAsync',
+      [item]
+    );
+  }
+
+  saveCalendarDate(model: BS_CalendarDate) {
+    return this.api.execSv<any>(
+      APICONSTANT.SERVICES.BS,
+      APICONSTANT.ASSEMBLY.BS,
+      APICONSTANT.BUSINESS.BS.CalendarDate,
+      'SaveCalendarDateAsync',
+      model
+    );
+  }
+
+  notifyInvalid(formGroup: FormGroup) {
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+    this.notificationsService.notifyCode('SYS028', 0, '"' + fieldName + '"');
   }
 }

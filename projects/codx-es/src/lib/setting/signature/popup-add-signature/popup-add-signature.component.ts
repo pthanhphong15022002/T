@@ -10,6 +10,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-charts';
 import {
   CacheService,
@@ -64,6 +65,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   headerText = '';
   subHeaderText = '';
   grvSetup: any = {};
+  funcID = '';
 
   constructor(
     private cr: ChangeDetectorRef,
@@ -71,6 +73,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     private notification: NotificationsService,
     private cfService: CallFuncService,
     private cache: CacheService,
+    private router: ActivatedRoute,
     private codxService: CodxService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
@@ -78,8 +81,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.data = dialog?.dataService?.dataSelected;
     this.isAdd = data?.data?.isAdd;
-    this.formModel = this.dialog.formModel;
+    this.formModel = this.dialog?.formModel;
     this.headerText = data?.data?.headerText;
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
   ngAfterViewInit(): void {
@@ -135,6 +139,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           }
         });
       } else if (event?.field == 'signatureType') {
+        console.log(this.data);
+
         if (event?.data == '2') {
           this.data.supplier = '1';
           this.form?.formGroup.patchValue({ supplier: '1' });
@@ -179,13 +185,20 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
             result = res.update;
           }
           if (
-            this.imgSignature1.imageUpload ||
-            this.imgSignature2.imageUpload ||
-            this.imgStamp.imageUpload
+            this.imgSignature1.imageUpload?.item ||
+            this.imgSignature2.imageUpload?.item ||
+            this.imgStamp.imageUpload?.item
           ) {
-            this.imgSignature1.imageUpload &&
+            var i = 0;
+            if (this.imgSignature1.imageUpload?.item) i++;
+            if (this.imgSignature2.imageUpload?.item) i++;
+            if (this.imgStamp.imageUpload?.item) i++;
+
+            alert(i);
+
+            this.imgSignature1.imageUpload?.item &&
               this.imgSignature1
-                .updateFileDirectReload(this.data.recID + '1')
+                .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
                   if (img && this.data.signature1 == null) {
                     result.signature1 = (img[0] as any).recID;
@@ -194,14 +207,20 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       .editSignature(this.data)
                       .subscribe((res) => {});
                   }
-                  this.dialog && this.dialog.close(result);
+                  if (img) i--;
+                  else {
+                    this.notification.notifyCode(
+                      'DM006',
+                      0,
+                      this.imgSignature1.imageUpload?.fileName
+                    );
+                  }
+                  if (i <= 0) this.dialog && this.dialog.close(result);
                 });
-            this.imgSignature2.imageUpload &&
+            this.imgSignature2.imageUpload?.item &&
               this.imgSignature2
-                .updateFileDirectReload(this.data.recID + '2')
+                .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
-                  this.dialog && this.dialog.close(result);
-
                   if (img && this.data.signature2 == null) {
                     result.signature2 = (img[0] as any).recID;
 
@@ -210,12 +229,21 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       .editSignature(this.data)
                       .subscribe((res) => {});
                   }
-                  this.dialog && this.dialog.close(result);
+                  if (img) i--;
+                  else {
+                    this.notification.notifyCode(
+                      'DM006',
+                      0,
+                      this.imgSignature2.imageUpload?.fileName
+                    );
+                  }
+                  if (i <= 0) this.dialog && this.dialog.close(result);
                 });
-            this.imgStamp.imageUpload &&
+            this.imgStamp.imageUpload?.item &&
               this.imgStamp
-                .updateFileDirectReload(this.data.recID + 's')
+                .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
+                  debugger;
                   if (img && this.data.stamp == null) {
                     result.stamp = (img[0] as any).recID;
 
@@ -224,7 +252,15 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       .editSignature(this.data)
                       .subscribe((res) => {});
                   }
-                  this.dialog && this.dialog.close(result);
+                  if (img) i--;
+                  else {
+                    this.notification.notifyCode(
+                      'DM006',
+                      0,
+                      this.imgStamp.imageUpload?.fileName
+                    );
+                  }
+                  if (i <= 0) this.dialog && this.dialog.close(result);
                 });
           } else {
             this.dialog && this.dialog.close(result);

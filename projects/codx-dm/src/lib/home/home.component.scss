@@ -64,13 +64,6 @@ codx-treeview .no-permission {
 //   overflow: auto;
 // }
 
-.tb-dm thead,
-.tb-dm tbody tr {
-  display: table;
-  height: 30px;
-  width: 100%;
-  table-layout: fixed;
-}
 
 .dms-listview {
 
@@ -93,4 +86,8 @@ codx-treeview .no-permission {
   top: 0 !important;
   max-height: 100% !important;
   border-radius: 0px;
+}
+.home
+{
+  height: 100%;
 }

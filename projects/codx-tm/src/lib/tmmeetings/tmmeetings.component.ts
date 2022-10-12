@@ -21,6 +21,7 @@ import {
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -59,6 +60,7 @@ export class TMMeetingsComponent
   @ViewChild('contentTmp') contentTmp!: TemplateRef<any>;
   @ViewChild('mfButton') mfButton!: TemplateRef<any>;
   @ViewChild('footerNone') footerNone!: TemplateRef<any>;
+  @ViewChild('headerTemp') headerTemp!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -95,6 +97,9 @@ export class TMMeetingsComponent
   titleAction = '';
   statusVll = 'CO004';
   toolbarCls: string;
+  heightWin: any;
+  widthWin: any;
+
 
   constructor(
     inject: Injector,
@@ -105,8 +110,13 @@ export class TMMeetingsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.api.execSv('CO',
+    'CO',
+    'MeetingsBusiness',
+    'SetAutoStatusMeetingAsync').subscribe();
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
@@ -122,9 +132,13 @@ export class TMMeetingsComponent
 
     this.dataValue = this.user?.userID;
     this.getParams();
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
+
     this.button = {
       id: 'btnAdd',
     };
@@ -132,7 +146,7 @@ export class TMMeetingsComponent
     let body = document.body;
     if (body.classList.contains('toolbar-fixed'))
       this.toolbarCls = 'toolbar-fixed';
-  
+
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'CO';
     this.modelResource.className = 'MeetingsBusiness';
@@ -167,19 +181,6 @@ export class TMMeetingsComponent
           template: this.itemViewList,
         },
       },
-      // {
-      //   type: ViewType.calendar,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     eventModel: this.fields,
-      //     resourceModel: this.resourceField,
-      //     template: this.eventTemplate,
-      //     template3: this.cellTemplate,
-      //     template7: this.template7,
-      //     statusColorRef: 'CO004'
-      //   },
-      // },
       {
         type: ViewType.calendar,
         active: false,
@@ -187,9 +188,10 @@ export class TMMeetingsComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.eventTemplate,
+          // template: this.eventTemplate, bỏ đi :V
           // template4: this.resourceHeader,// schenmoi can
           template6: this.mfButton, //header
+          template2: this.headerTemp,
           template3: this.cellTemplate,
           template7: this.footerNone, ///footer
           template8: this.contentTmp, //content
@@ -228,7 +230,7 @@ export class TMMeetingsComponent
   }
   //#end region
 
-  //#region schedule 
+  //#region schedule
 
   fields = {
     id: 'meetingID',
@@ -515,8 +517,8 @@ export class TMMeetingsComponent
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
   }
@@ -533,8 +535,7 @@ export class TMMeetingsComponent
   //   // this.codxService.navigate('', func.url, {
   //   //   meetingID: data.meetingID,
   //   // })};
-
- viewDetail(meeting) {
+  viewDetail(meeting) {
     this.tmService.getMeetingID(meeting.meetingID).subscribe((data) => {
       var resourceTaskControl = [];
       var arrayResource = data?.resources;
@@ -556,15 +557,14 @@ export class TMMeetingsComponent
         data: data,
         dataObj: dataObj,
       };
-
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-    
+      dialogModel.zIndex = 900;
       var dialog = this.callfc.openForm(
         PopupTabsViewsDetailsComponent,
         '',
-        0,
-        0,
+        this.widthWin,
+        this.heightWin,
         '',
         obj,
         '',
@@ -611,7 +611,7 @@ export class TMMeetingsComponent
     //   this.codxService.navigate('', this.urlView, {
     //     meetingID: data.meetingID,
     //   });
-    // } 
+    // }
   }
   //end region
 
@@ -630,19 +630,13 @@ export class TMMeetingsComponent
   }
 
   onDragDrop(data: any) {
-      this.api
-        .execSv<any>(
-          'CO',
-          'CO',
-          'MeetingsBusiness',
-          'UpdateMeetingsAsync',
-          data
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.update(data);
-          }
-        });
+    this.api
+      .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'UpdateMeetingsAsync', data)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.update(data);
+        }
+      });
   }
 
   onActions(e: any) {
@@ -654,5 +648,34 @@ export class TMMeetingsComponent
         this.viewDetail(e?.data);
         break;
     }
+  }
+
+  getDayCalendar(e) {
+    var current_day = e.getDay();
+    switch (current_day) {
+      case 0:
+        current_day = 'Chủ nhật';
+        break;
+        case 1:
+        current_day = 'Thứ hai';
+        break;
+        case 2:
+        current_day = 'Thứ ba';
+        break;
+        case 3:
+        current_day = 'Thứ tư';
+        break;
+        case 4:
+        current_day = 'Thứ năm';
+        break;
+        case 5:
+        current_day = 'Thứ sáu';
+        break;
+        case 6:
+        current_day = 'Thứ bảy';
+        break;
+    }
+
+    return current_day;
   }
 }

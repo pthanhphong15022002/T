@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -17,7 +19,8 @@ import { CodxEpService } from '../../../codx-ep.service';
 export class ApprovalRoomViewDetailComponent extends UIComponent implements OnChanges {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
-  @ViewChild('attachment') attachment;
+  @ViewChild('attachment') attachment;  
+  @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -80,7 +83,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
     this.active = 1;
   }
 
-  openFormFuncID(value, datas: any = null) {
+  clickMF(value, datas: any = null) {
     
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
@@ -129,25 +132,30 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
             data?.approvalTransRecID,//ApprovelTrans.RecID
             status,
           )
-          .subscribe((res:any) => {
-            var x= res;
-            if (res?.msgCodeError == null && res?.rowCount) {
+          .subscribe(async (res:any) => {
+            if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
                 this.notificationsService.notifyCode('ES007');//đã duyệt
+                data.status="5"
               }
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
+                data.status="4";
               }
               if(status=="2"){
                 this.notificationsService.notifyCode('ES007');//làm lại
-              }  
+                data.status="2"
+              }                
+              (await this.updateStatus.emit(data));
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
           });
       });
   }
-  changeDataMF(event, data: any) {}
+  changeDataMF(event, data: any) {
+    
+  }
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;

@@ -179,7 +179,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.taskCopy = dt?.data[5];
     this.dialog = dialog;
     this.user = this.authStore.get();
-  
+    
     // if(this.functionID!='TMT0203' && this.functionID!='TMT0201'&& this.functionID!='TMT0202'){
     //   if(this.showAssignTo ) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
     // }
@@ -1025,7 +1025,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                 ref.createdOn = x.createdOn;
                 ref.memo = x.title;
                 ref.createdBy = x.createdBy;
-                this.dataReferences.push(ref);
+                this.dataReferences.unshift(ref);
                 if (listUser.findIndex((p) => p == ref.createdBy) == -1)
                   listUser.push(ref.createdBy);
                 this.getUserByListCreateBy(listUser);
@@ -1051,7 +1051,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                 ref.createdOn = x.createdOn;
                 ref.memo = x.title;
                 ref.createdBy = x.createdBy;
-                this.dataReferences.push(ref);
+                this.dataReferences.unshift(ref);
                 if (listUser.findIndex((p) => p == ref.createdBy) == -1)
                   listUser.push(ref.createdBy);
                 this.getUserByListCreateBy(listUser);
@@ -1084,7 +1084,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                 .subscribe((user) => {
                   if (user) {
                     ref.createByName = user.userName;
-                    this.dataReferences.push(ref);
+                    this.dataReferences.unshift(ref);
                   }
                 });
             }

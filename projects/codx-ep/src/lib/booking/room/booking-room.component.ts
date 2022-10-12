@@ -21,6 +21,7 @@ import {
   CallFuncService,
   ViewType,
   FormModel,
+  NotificationsService,
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
@@ -45,6 +46,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
 
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
+  // Lấy dữ liệu cho view
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
@@ -54,6 +56,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   predicate = 'ResourceType=@0';
   dataValue = '1';
+
   modelResource?: ResourceModel;
   request?: ResourceModel;
   model = new DataRequest();
@@ -80,6 +83,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     private codxEpService: CodxEpService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
+    private notificationsService: NotificationsService,
     private activatedRoute: ActivatedRoute
   ) {
     super(injector);
@@ -98,6 +102,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    //lấy list booking để vẽ schedule
     this.request = new ResourceModel();
     this.request.assemblyName = 'EP';
     this.request.className = 'BookingsBusiness';
@@ -106,7 +111,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '1';
     this.request.idField = 'recID';
-
+    //lấy list resource vẽ header schedule
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
     this.modelResource.className = 'BookingsBusiness';
@@ -115,23 +120,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.modelResource.predicate = 'ResourceType=@0';
     this.modelResource.dataValue = '1';
 
-    this.moreFunc = [
-      {
-        id: 'btnEdit',
-        icon: 'icon-list-chechbox',
-        text: 'Sửa',
-      },
-      {
-        id: 'btnDelete',
-        icon: 'icon-list-chechbox',
-        text: 'Xóa',
-      },
-      {
-        id: 'btnAddReport',
-        icon: 'icon-list-chechbox',
-        text: 'Thêm mới report',
-      },
-    ];
+    
 
     this.fields = {
       id: 'bookingNo',
@@ -156,8 +145,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.view.dataService.methodDelete = 'DeleteBookingAsync';
-    this.view.dataService.methodSave = 'AddEditItemAsync';
-    this.view.dataService.methodUpdate = 'AddEditItemAsync';
     this.views = [
       {
         sameData: false,
@@ -220,8 +207,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         }
       });
   }
-  closeAddForm(event) {}
-
   changeValueDate(evt: any) {}
 
   valueChange(evt: any, a?: any, type?: any) {}
@@ -231,12 +216,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
-        break;
-      case 'btnEdit':
-        this.edit();
-        break;
-      case 'btnDelete':
-        this.delete();
         break;
       // case 'btnAddReport':
       //   this.addReport();
@@ -271,6 +250,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   //     option
   //   );
   // }
+  setPopupTitle(mfunc){
+    this.popupTitle = mfunc + " " + this.funcIDName;
+  }
+
   addNew(evt?) {
     this.view.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.view.dataService.dataSelected;
@@ -307,11 +290,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   delete(evt?) {
     let deleteItem = this.view.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
-    }
+    if (evt) { deleteItem = evt; }
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
-      console.log(res);
+      if(!res){
+        this.notificationsService.notifyCode("SYS022");
+      }
     });
   }  
 }

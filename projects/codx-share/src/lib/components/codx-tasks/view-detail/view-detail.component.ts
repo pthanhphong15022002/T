@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -53,6 +54,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
@@ -87,6 +89,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         if (res) {
           this.itemSelected = res;
           this.viewTags = this.itemSelected?.tags;
+          this.changeDetectorRef.detectChanges();
           this.loadTreeView();
           this.loadDataReferences();
         }
@@ -212,6 +215,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       )
       .subscribe((res) => {
         if (res) this.dataTree = res || [];
+        this.changeDetectorRef.detectChanges() ;
       });
   }
   //#endregion
@@ -234,26 +238,26 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         )
         .subscribe((res) => {
           if (res) {
-            // var ref = new tmpReferences();
-            // ref.recIDReferences = res.recID;
-            // ref.refType = 'TM_Tasks';
-            // ref.createdOn = res.createdOn;
-            // ref.memo = res.taskName;
-            // ref.createdBy = res.createdBy;
-            // ref.attachments =res.attachments ;
-            // ref.comments =res.comments ;
+            var ref = new tmpReferences();
+            ref.recIDReferences = res.recID;
+            ref.refType = 'TM_Tasks';
+            ref.createdOn = res.createdOn;
+            ref.memo = res.taskName;
+            ref.createdBy = res.createdBy;
+            ref.attachments = res.attachments;
+            ref.comments = res.comments;
             var taskParent = res;
-            // this.api
-            //   .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-            //     res.createdBy,
-            //   ])
-            //   .subscribe((user) => {
-            //     if (user) {
-            //       ref.createByName = user.userName;
-            //       this.dataReferences.push(ref);
-            this.getReferencesByCategory3(taskParent);
-            // }
-            // });
+            this.api
+              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+                res.createdBy,
+              ])
+              .subscribe((user) => {
+                if (user) {
+                  ref.createByName = user.userName;
+                  this.dataReferences.push(ref);
+                  this.getReferencesByCategory3(taskParent);
+                }
+              });
           }
         });
     } else if (this.itemSelected.category == '3') {
@@ -278,7 +282,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                 ref.createdBy = x.createdBy;
                 ref.attachments = x.attachments;
                 ref.comments = x.comments;
-                this.dataReferences.push(ref);
+                this.dataReferences.unshift(ref);
                 if (listUser.findIndex((p) => p == ref.createdBy) == -1)
                   listUser.push(ref.createdBy);
                 this.getUserByListCreateBy(listUser);
@@ -306,7 +310,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                 ref.createdBy = x.createdBy;
                 ref.attachments = x.attachments;
                 ref.comments = x.comments;
-                this.dataReferences.push(ref);
+                this.dataReferences.unshift(ref);
                 if (listUser.findIndex((p) => p == ref.createdBy) == -1)
                   listUser.push(ref.createdBy);
                 this.getUserByListCreateBy(listUser);
@@ -341,13 +345,15 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                 .subscribe((user) => {
                   if (user) {
                     ref.createByName = user.userName;
-                    this.dataReferences.push(ref);
+                    this.dataReferences.unshift(ref);
+                    this.changeDetectorRef.detectChanges();
                   }
                 });
             }
           });
         break;
     }
+
   }
 
   getUserByListCreateBy(listUser) {
@@ -367,6 +373,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
               ref.createByName = users[index].userName;
             }
           });
+          this.changeDetectorRef.detectChanges();
         }
       });
   }

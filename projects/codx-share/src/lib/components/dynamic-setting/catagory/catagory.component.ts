@@ -15,6 +15,7 @@ import {
   DialogModel,
   DialogRef,
   LayoutService,
+  PageTitleService,
 } from 'codx-core';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
@@ -51,6 +52,7 @@ export class CatagoryComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
     private layout: LayoutService,
+    private pageTitle: PageTitleService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -67,6 +69,7 @@ export class CatagoryComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((routeParams) => {
       this.layout.setLogo(null);
+      this.pageTitle.setBreadcrumbs([]);
       this.lstFuncID = [];
       this.autoDefault = null;
       this.dataValue = {};
@@ -268,7 +271,6 @@ export class CatagoryComponent implements OnInit {
   }
 
   getAlertRule() {
-
     var lstRoleID = [];
     if (this.setting) {
       this.setting.forEach((element) => {

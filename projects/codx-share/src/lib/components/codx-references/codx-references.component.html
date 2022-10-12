@@ -1,5 +1,4 @@
-
-<div class="container" *ngIf="dataReferences.length==0">
+<div class="container" *ngIf="dataReferences.length == 0">
   <div class="list-empty card card-flush h-100">
     <div class="d-flex flex-column flex-center justify-content-center">
       <img
@@ -13,57 +12,57 @@
   </div>
 </div>
 <div class="container" *ngIf="dataReferences.length > 0">
-<ng-container *ngFor="let data of dataReferences">
-  <div class="tab-tch mt-3 border-bottom">
-    <div class="d-flex align-items-start justify-content-between mb-3 w-100">
-      <div class="d-flex align-items-start">
-        <div class="d-flex align-items-top w-100 pe-9">
-          <div class="me-2">
-            <codx-vll
-              [name]="vllRefType"
-              [value]="data.refType"
-              [showIcon]="true"
-              [showBgColor]="true"
-              class="h-20px pic-ref"
-            >
-            </codx-vll>
-          </div>
-          <div class="d-flex flex-column flex-grow-1">
-            <div class="d-flex align-items-center">
-              <span>
-                <codx-vll
-                  [name]="vllRefType"
-                  [value]="data.refType"
-                  [showText]="true"
-                  class="text-gray-600 fw-bold"
-                >
-                </codx-vll>
-              </span>
+  <ng-container *ngFor="let data of dataReferences; let i = index">
+    <div class="tab-tch mt-3 border-bottom ms-{{ i * 15 }}">
+      <div class="d-flex align-items-start justify-content-between mb-3 w-100">
+        <div class="d-flex align-items-start">
+          <div class="d-flex align-items-top w-100 pe-9">
+            <div class="me-2">
+              <codx-vll
+                [name]="vllRefType"
+                [value]="data.refType"
+                [showIcon]="true"
+                [showBgColor]="true"
+                class="h-20px pic-ref"
+              >
+              </codx-vll>
             </div>
-            <div class="text-dark">
-              {{ data?.memo }}
+            <div class="d-flex flex-column flex-grow-1">
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-vll
+                    [name]="vllRefType"
+                    [value]="data.refType"
+                    [showText]="true"
+                    class="text-gray-600 fw-bold"
+                  >
+                  </codx-vll>
+                </span>
+              </div>
+              <div class="text-dark">
+                {{ data?.memo }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="d-flex justify-content-between align-items-end mt-1 mb-4">
-      <div class="d-flex align-items-end ms-14 codx-badge">
-        <div class="me-3">
-          <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
-          <span class="text-gray-600" #createdOn>
-            {{ data?.createdOn | date: "dd/MM/yyyy" }}</span
-          >
+      <div class="d-flex justify-content-between align-items-end mt-1 mb-4">
+        <div class="d-flex align-items-end ms-14 codx-badge">
+          <div class="me-3">
+            <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
+            <span class="text-gray-600" #createdOn>
+              {{ data?.createdOn | date: "dd/MM/yyyy" }}</span
+            >
+          </div>
+          <div class="me-3">
+            <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
+            <span class="text-gray-600">{{ data?.createByName }}</span>
+          </div>
         </div>
-        <div class="me-3">
-          <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
-          <span class="text-gray-600">{{ data?.createByName }}</span>
-        </div>
-      </div>
-      <div>
-        <div class="d-flex">
-          <span class="d-flex align-items-center position-relative me-4">
+        <div>
+          <div class="d-flex">
+            <!-- <span class="d-flex align-items-center position-relative me-4">
             <span class="icon-mode_comment icon-20 text-gray-400"></span>
             <span
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
@@ -75,10 +74,24 @@
             <span
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
               data?.attachments ?data?.attachments :'0'  }}</span>
-          </span>
+          </span> -->
+
+            <span class="me-4">
+              <codx-comment-temp
+                [objectID]="data.recIDReferences"
+              ></codx-comment-temp>
+            </span>
+            <span class="me-4">
+              <codx-attachment-temp
+                [objectID]="data.recIDReferences"
+                [formModel]="formModel"
+              ></codx-attachment-temp>
+            </span>
+
+            <!-- <codx-user-temp [objectID]="data.recIDReferences"></codx-user-temp> -->
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
 </div>

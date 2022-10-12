@@ -1,19 +1,24 @@
+import { CodxEpService } from 'projects/codx-ep/src/public-api';
 import { SettingCalendarService } from './setting-calender.service';
 import {
   Component,
   Injector,
-  Input,
   AfterViewInit,
   ViewChild,
+  TemplateRef,
 } from '@angular/core';
 import {
   CodxScheduleComponent,
-  DataRequest,
   UIComponent,
   FormModel,
+  ViewType,
+  ViewModel,
+  ResourceModel,
+  ViewsComponent,
 } from 'codx-core';
 import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
-import { PopupEditCalendarComponent } from './popup-edit-calendar/popup-edit-calendar.component';
+import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 @Component({
   selector: 'setting-calendar',
@@ -24,14 +29,15 @@ export class SettingCalendarComponent
   extends UIComponent
   implements AfterViewInit
 {
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('view') viewOrg!: ViewsComponent;
+  views: Array<ViewModel> | any = [];
+  request: ResourceModel;
   funcID: string;
-  @ViewChild('schedule') schedule: CodxScheduleComponent;
-  viewPreset: string = 'weekAndDay';
   calendarID: string;
   calendarName: string;
-  currentView = 'Month';
-  scheduleObj;
-  model = new DataRequest();
+  fields;
+  resourceField;
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
@@ -40,15 +46,42 @@ export class SettingCalendarComponent
     private settingCalendar: SettingCalendarService
   ) {
     super(injector);
+    this.funcID = this.router.snapshot.params['funcID'];
   }
 
   onInit(): void {
-    this.funcID = this.router.snapshot.params['funcID'];
-    this.getParams('TMParameters', 'CalendarID');
+    this.fields = {
+      id: 'calendarID',
+      subject: { name: 'note' },
+      startTime: { name: 'startDate' },
+      endTime: { name: 'endDate' },
+    };
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      this.getParams(res.module + 'Parameters', 'CalendarID');
+    });
   }
 
   ngAfterViewInit(): void {
-    this.scheduleObj = this.schedule.scheduleObj;
+    this.request = new ResourceModel();
+    this.request.service = 'BS';
+    this.request.assemblyName = 'BS';
+    this.request.className = 'CalendarDateBusiness';
+    this.request.method = 'GetDateOffAsync';
+    this.request.idField = 'recID';
+
+    this.views = [
+      {
+        type: ViewType.calendar,
+        active: false,
+        sameData: false,
+        model: {
+          eventModel: this.fields,
+          template: this.cellTemplate,
+          template3: this.cellTemplate,
+        },
+      },
+    ];
+    this.detectorRef.detectChanges();
   }
 
   getParams(formName: string, fieldName: string) {
@@ -56,9 +89,10 @@ export class SettingCalendarComponent
       if (res) {
         let dataValue = res[0].dataValue;
         let json = JSON.parse(dataValue);
-        if ((json.CalendarID = '')) {
+        if (json.CalendarID && json.Calendar == '') {
           this.calendarID = 'STD';
-          this.calendarName = 'Lịch làm việc chuẩn';
+        } else {
+          this.calendarID = json.CalendarID;
         }
         this.getDayWeek(this.calendarID);
         this.getDaysOff(this.calendarID);
@@ -67,28 +101,66 @@ export class SettingCalendarComponent
     });
   }
 
-  getDayWeek(id) {
-    this.settingCalendar.getDayWeek(id).subscribe((res) => {
+  getDayWeek(calendarID: string) {
+    this.settingCalendar.getDayWeek(calendarID).subscribe((res) => {
       if (res) {
         this.dayWeek = res;
-        this.detectorRef.detectChanges();
+        (
+          this.viewOrg.currentView as any
+        ).schedule?.scheduleObj?.first?.refresh();
       }
     });
   }
 
-  getDaysOff(id) {
-    this.settingCalendar.getDaysOff(id).subscribe((res) => {
+  getDaysOff(calendarID: string) {
+    this.settingCalendar.getDaysOff(calendarID).subscribe((res) => {
       if (res) {
         this.daysOff = res;
-        this.detectorRef.detectChanges();
+        (
+          this.viewOrg.currentView as any
+        )?.schedule?.scheduleObj?.first?.refresh();
       }
     });
+  }
+
+  getCellContent(evt: any): string {
+    if (this.daysOff.length > 0) {
+      for (let i = 0; i < this.daysOff.length; i++) {
+        let day = new Date(this.daysOff[i].calendarDate);
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()
+        ) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.color = this.daysOff[i].dayoffColor;
+              (item as any).style.backgroundColor =
+                this.daysOff[i].dayoffColor + '30';
+            });
+          }
+          let content =
+            '<div class="d-flex justify-content-between"><span >' +
+            this.daysOff[i].note +
+            '</span>' +
+            '<span class="' +
+            this.daysOff[i].symbol +
+            '"></span></div>';
+          return content;
+        }
+      }
+    }
+    return ``;
   }
 
   changeCombobox(event) {
     event.data == ''
       ? (this.calendarID = 'STD')
       : (this.calendarID = event.data);
+    this.getDaysOff(this.calendarID);
     this.detectorRef.detectChanges();
   }
 
@@ -104,44 +176,14 @@ export class SettingCalendarComponent
   }
 
   openCalendarSettings() {
-    this.callfc.openForm(
-      PopupEditCalendarComponent,
-      this.calendarName,
-      1200,
-      1000,
-      '',
-      [this.formModel, this.calendarID]
-    );
+    this.callfc.openForm(PopupSettingCalendarComponent, '', 1200, 1000, '', [
+      this.formModel,
+      this.calendarID,
+    ]);
   }
 
-  getCellContent(evt: any) {
-    if (this.daysOff.length > 0) {
-      for (let i = 0; i < this.daysOff.length; i++) {
-        let day = new Date(this.daysOff[i].calendarDate);
-        if (
-          day &&
-          evt.getFullYear() == day.getFullYear() &&
-          evt.getMonth() == day.getMonth() &&
-          evt.getDate() == day.getDate()
-        ) {
-          var time = evt.getTime();
-          var ele = document.querySelectorAll(
-            '[role="gridcell"][data-date="' + time + '"]'
-          );
-          if (ele.length > 0) {
-            ele.forEach((item) => {
-              (item as any).style.backgroundColor = this.daysOff[i].color;
-            });
-          }
-          return `<div class="d-flex justify-content-around">
-              <div>${this.daysOff[i].note}</div>
-              <div class="${this.daysOff[i].symbol}"
-            [ngStyle]="{'color': ${this.daysOff[i].dayoffColor}}"></div>
-            </div>`;
-        }
-      }
-    }
-
-    return ``;
+  reloadCalendar() {
+    alert('trigger');
+    (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
   }
 }

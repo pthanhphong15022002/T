@@ -1,22 +1,40 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild, Injector, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  Injector,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, DataRequest, DialogRef, RequestOption, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogRef,
+  RequestOption,
+  ResourceModel,
+  SidebarModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
   selector: 'lib-processsteps',
   templateUrl: './processsteps.component.html',
-  styleUrls: ['./processsteps.component.css']
+  styleUrls: ['./processsteps.component.css'],
 })
-export class ProcessstepsComponent extends UIComponent implements OnInit {
+export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
-  @Input() showButtonAdd = true;
-  @Input() dataObj?: any;
-
+  showButtonAdd = true;
+  dataObj?: any;
   model?: DataRequest;
   request: ResourceModel;
   resourceKanban?: ResourceModel;
@@ -30,27 +48,46 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   funcID: any;
   titleAction = '';
   itemSelected: any;
-  stepType ='A'
-
+  stepType :any;
   service = 'BP';
   entityName = 'BP_ProcessSteps';
   idField = 'recID';
   assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
   method = 'GetProcessStepsAsync'; //chua viet
+ 
+  recIDProcess ='90ab82ac-43d1-11ed-83e7-d493900707c4' ///thêm để add thử
 
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,
+    private activedRouter: ActivatedRoute
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+
+    this.dataObj ={processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
   }
 
   onInit(): void {
+    
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessStepsBusiness';
+    this.request.method = 'GetProcessStepsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
+
+    //tam coment da
+    // this.resourceKanban = new ResourceModel();
+    // this.resourceKanban.service = 'SYS';
+    // this.resourceKanban.assemblyName = 'SYS';
+    // this.resourceKanban.className = 'CommonBusiness';
+    // this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
     this.button = {
       id: 'btnAdd',
       //setcung tam đoi thuong
@@ -77,7 +114,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
           text: 'Email',
         },
         {
-          id: 'E',
+          id: 'M',
           icon: 'icon-calendar_today',
           text: 'Calendar',
         },
@@ -105,7 +142,7 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
       {
         type: ViewType.content,
         active: false,
-        sameData: true,
+        sameData: false,
         model: {
           template: this.itemViewList,
         },
@@ -121,12 +158,8 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
         },
       },
     ];
-    
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'SYS';
-    this.resourceKanban.assemblyName = 'SYS';
-    this.resourceKanban.className = 'CommonBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+   
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
@@ -134,35 +167,38 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-
-
   //#region CRUD bước công việc
   add() {
-      this.view.dataService.addNew().subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupAddProcessStepsComponent,
-          [this.view.dataService.dataSelected,'add', this.titleAction, this.stepType],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+
+      this.view.dataService.dataSelected.processID = this.recIDProcess ;
+      this.dialog = this.callfc.openSide(
+        PopupAddProcessStepsComponent,
+        [
+          this.view.dataService.dataSelected,
+          'add',
+          this.titleAction,
+          this.stepType,
+        ],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
       });
+    });
   }
 
-  edit(data) {
-  }
+  edit(data) {}
 
-  copy(data) {
-  }
+  copy(data) {}
 
   delete(data) {
     this.view.dataService.dataSelected = data;
@@ -186,11 +222,11 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
   }
   //#endregion
 
-
   //#region event
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    this.stepType =evt.id ;
+    if ((evt.id == 'btnAdd')) this.stepType = 'P';
+    else this.stepType = evt.id;
     this.add();
     // switch (evt.id) {
     //   case 'btnAdd':
@@ -213,21 +249,20 @@ export class ProcessstepsComponent extends UIComponent implements OnInit {
       case 'SYS01':
         this.add();
         break;
-      // case 'SYS03':
-      //   this.edit(data);
-      //   break;
-      // case 'SYS04':
-      //   this.copy(data);
-      //   break;
-      // case 'SYS02':
-      //   this.delete(data);
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
     }
   }
 
   onDragDrop(e: any) {
     console.log(e);
   }
-
 
   //#endregion
 }

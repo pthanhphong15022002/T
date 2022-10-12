@@ -20,7 +20,7 @@
 
 <ng-template #panelLeftRef>
   <div class="fix-container rounded-4 position-relative">
-    <div class="row" *ngIf="lstHotNew[0]">
+    <div class="row" *ngIf="news[0]">
       <div class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">
         <codx-label [formModel]="codxViews.formModel" name="lblNews" default="Tin mới nhất"></codx-label>
       </div>
@@ -28,57 +28,59 @@
 
     <div class="row ">
       <div class="col-6 hot-left">
-        <ng-container *ngIf="lstHotNew[0];else empty1">
-          <div class="cursor-pointer">
-            <codx-img imageType="square" [cssClass]="'image-300 w-100 pic-newshot'" [width]="480"
-              (click)="clickViewDetail(lstHotNew[0])" [objectId]="lstHotNew[0].recID" [objectType]="entityName">
-            </codx-img>
-          </div>
-          <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
-            {{ lstHotNew[0].subject | maxlenght:150}}
+        <ng-container *ngIf="news[0];else tmpEmptyNews1">
+          <div (click)="clickViewDetail(news[0])">
+            <div class="cursor-pointer">
+              <codx-img imageType="square" [cssClass]="'image-300 w-100 pic-newshot'" [width]="480"
+                [objectId]="news[0].recID" [objectType]="entityName">
+              </codx-img>
+            </div>
+            <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
+              {{ news[0].subject | maxlenght:150}}
+            </div>
           </div>
           <div class="text-gray-700 mt-1">
-            {{lstHotNew[0].subContent | maxlenght:500}}
+            {{news[0].subContent | maxlenght:500}}
           </div>
-          <div class="fs-7 text-gray-400 mt-1">
-            {{ lstHotNew[0].createdOn | fmDT }}
+          <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">
+            {{ news[0].createdOn | fmDT }}
           </div>
         </ng-container>
       </div>
       <div class="col-6 hot-right">
-        <div *ngIf="lstHotNew[1];else empty2" class="row mb-5" (click)="clickViewDetail(lstHotNew[1])">
+        <div *ngIf="news[1];else tmpEmptyNews2" class="row mb-5" (click)="clickViewDetail(news[1])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
-              <codx-img imageType="square" [width]="180" [cssClass]="'image w-100'" [objectId]="lstHotNew[1].recID"
+              <codx-img imageType="square" [width]="180" [cssClass]="'image w-100'" [objectId]="news[1].recID"
                 [objectType]="entityName">
               </codx-img>
               <div class="position-absolute bottom-0 end-0">
                 <span class="badge badge-danger">
-                  <!-- <codx-label formName="News" name="lblCategory" [default]="lstHotNew[1].category"></codx-label> -->
-                  {{lstHotNew[1].category | vll:"WP002":"text"| async}}
+                  <!-- <codx-label formName="News" name="lblCategory" [default]="news[1].category"></codx-label> -->
+                  {{news[1].category | vll:"WP002":"text"| async}}
                 </span>
               </div>
             </div>
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ lstHotNew[1].subject | maxlenght:100}}
+              {{ news[1].subject | maxlenght:100}}
             </div>
             <div class="text-gray-700 news-des line-clamp line-clamp-3">
-              {{lstHotNew[1].subContent | maxlenght:300}}
+              {{news[1].subContent | maxlenght:300}}
             </div>
-            <div class="fs-7 text-gray-400 mt-1">{{ lstHotNew[1].createdOn | fmDT }}</div>
+            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ news[1].createdOn | fmDT }}</div>
           </div>
         </div>
-        <div *ngIf="lstHotNew[2];else empty2" class="row mb-5" (click)="clickViewDetail(lstHotNew[2])">
+        <div *ngIf="news[2];else tmpEmptyNews2" class="row mb-5" (click)="clickViewDetail(news[2])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
-              <codx-img [width]="180" imageType="square" [cssClass]="'image w-100'" [objectId]="lstHotNew[2].recID"
+              <codx-img [width]="180" imageType="square" [cssClass]="'image w-100'" [objectId]="news[2].recID"
                 [objectType]="entityName"></codx-img>
               <div class="position-absolute bottom-0 end-0">
                 <span class="badge badge-danger">
-                  <!-- <codx-label formName="News" name="lblCategory" [default]="lstHotNew[2].category"></codx-label> -->
-                  {{lstHotNew[2].category | vll:"WP002":"text"| async}}
+                  <!-- <codx-label formName="News" name="lblCategory" [default]="news[2].category"></codx-label> -->
+                  {{news[2].category | vll:"WP002":"text"| async}}
 
                 </span>
               </div>
@@ -86,23 +88,23 @@
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ lstHotNew[2].subject | maxlenght:70}}
+              {{ news[2].subject | maxlenght:70}}
             </div>
             <div class="text-gray-700 news-des line-clamp line-clamp-3">
-              {{lstHotNew[2].subContent | maxlenght:300}}
+              {{news[2].subContent | maxlenght:300}}
             </div>
-            <div class="fs-7 text-gray-400 mt-1">{{ lstHotNew[2].createdOn | fmDT }}</div>
+            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ news[2].createdOn | fmDT }}</div>
           </div>
         </div>
-        <div *ngIf="lstHotNew[3];else empty2" class="row mb-1" (click)="clickViewDetail(lstHotNew[3])">
+        <div *ngIf="news[3];else tmpEmptyNews2" class="row mb-1" (click)="clickViewDetail(news[3])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
-              <codx-img [width]="180" imageType="square" [cssClass]="'image w-100'" [objectId]="lstHotNew[3].recID"
+              <codx-img [width]="180" imageType="square" [cssClass]="'image w-100'" [objectId]="news[3].recID"
                 [objectType]="entityName"></codx-img>
               <div class="position-absolute bottom-0 end-0">
                 <span class="badge badge-danger">
-                  <!-- <codx-label formName="News" name="lblCategory" [default]="lstHotNew[3].category"></codx-label> -->
-                  {{lstHotNew[3].category | vll:"WP002":"text"| async}}
+                  <!-- <codx-label formName="News" name="lblCategory" [default]="news[3].category"></codx-label> -->
+                  {{news[3].category | vll:"WP002":"text"| async}}
 
                 </span>
               </div>
@@ -110,43 +112,46 @@
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ lstHotNew[3].subject | maxlenght:70}}
+              {{ news[3].subject | maxlenght:70}}
             </div>
             <div class="text-gray-700 news-des line-clamp line-clamp-3">
-              {{lstHotNew[3].subContent | maxlenght:300}}
+              {{news[3].subContent | maxlenght:300}}
             </div>
-            <div class="fs-7 text-gray-400 mt-1">{{ lstHotNew[3].createdOn | fmDT }}</div>
+            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ news[3].createdOn | fmDT }}</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row my-8" *ngIf="lstVideo.length > 0; else emptySilder">
-      <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
-        [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
-        <ng-template ngbSlide *ngFor="let list of lstVideo; let i = index">
-          <div class="d-flex" *ngIf="i < 6">
-            <ng-container *ngFor="let item of lstVideo;let idxChild = index;">
-              <ng-container *ngIf="idxChild >= (i * 3) && idxChild < (i + 1 * 3)">
-                <div class="mx-5">
-                  <div (click)="clickViewDetail(item)" class="w-100 video cursor-pointer">
-                    <codx-img [cssClass]="'image-200 w-100'" [width]="300" imageType="square" [objectId]="item.recID"
-                      objectType="WP_News">
-                    </codx-img>
-                    <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:200 }}</div>
+    <div class="row my-8">
+      <ng-container *ngIf="videos.length > 0; else tmpEmptyListVideo">
+        <ngb-carousel carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
+          [showNavigationArrows]="isAllowNavigationArrows" [showNavigationIndicators]="false">
+          <ng-template ngbSlide *ngFor="let list of videos; let i = index">
+            <div class="d-flex" *ngIf="i < 6">
+              <ng-container *ngFor="let item of videos;let idxChild = index;">
+                <ng-container *ngIf="idxChild >= (i * 3) && idxChild < (i + 1 * 3)">
+                  <div class="mx-5">
+                    <div (click)="clickViewDetail(item)" class="w-100 video cursor-pointer">
+                      <codx-img [cssClass]="'image-200 w-100'" [width]="300" imageType="square" [objectId]="item.recID"
+                        objectType="WP_News">
+                      </codx-img>
+                      <div class="fs-5 mt-2 fw-bold">{{item.subject | maxlenght:200 }}</div>
+                    </div>
                   </div>
-                </div>
+                </ng-container>
               </ng-container>
-            </ng-container>
-          </div>
-        </ng-template>
-      </ngb-carousel>
+            </div>
+          </ng-template>
+        </ngb-carousel>
+      </ng-container>
     </div>
     <div class="news-group">
-      <ng-container *ngIf="category == CATEGORY.HOME;else grCategory">
+      <ng-container *ngIf="category == CATEGORY.HOME;else groupCategory">
         <ng-container *ngIf="lstGroup">
           <ng-container *ngFor="let grItem of lstGroup | keyvalue">
             <div class="mt-6">
-              <span class="fw-bolder fs-5">{{grItem.key | vll:'WP002':'text' | async}}</span>
+              <span class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">{{grItem.key | vll:'WP002':'text'
+                | async}}</span>
             </div>
             <div *ngFor="let item of grItem.value" (click)="clickViewDetail(item)" class="news-item row my-5">
               <div class="col-2">
@@ -163,7 +168,7 @@
           </ng-container>
         </ng-container>
       </ng-container>
-      <ng-template #grCategory>
+      <ng-template #groupCategory>
         <ng-container *ngIf="lstGroup.length > 0">
           <div class="row">
             <span class="fw-bolder fs-5">
@@ -181,7 +186,7 @@
                 <div class="text-gray-700 mt-1">
                   {{item.subContent | maxlenght:500}}
                 </div>
-                <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
+                <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
               </div>
             </div>
           </ng-container>
@@ -201,53 +206,59 @@
       <div class="text-gray-700 mt-1">
         {{item.subContent | maxlenght:500}}
       </div>
-      <div class="fs-7 text-gray-400 mt-1 text-end">{{ item.createdOn | fmDT }}</div>
+      <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ item.createdOn | fmDT }}</div>
     </div>
   </div>
-  <!-- <codx-temp-full 
-    [formModel]="codxViews.formModel"
-    [resourceObjType]="entityName"
-    [imageId]="data.recID"
-    imgCss="me-2 image-full"
-    [imageObjType]="entityName"
-    imageType="square"
-    cardCss="card-template border-bottom px-2 py-3" 
-    [title]="data.subject"
-    [desc]="data.subContent"
-    [date]="data.createdOn"
-    [bookmark]="false">
-  </codx-temp-full> -->
 </ng-template>
-<ng-template #empty1>
-  <div class="text-center">
-    <img class="w-100 h-320px" src="../assets/demos/svg/pic-avata.png" />
+<ng-template #tmpEmptyNews1>
+  <div>
+    <div>
+      <img class="w-100 h-320px" src="../assets/demos/svg/pic-avata.png" />
+    </div>
+    <div>
+      <div class="fw-bolder">{{mssgWP025}}</div>
+      <div class="">{{mssgWP026}}</div>
+      <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">dd/mm/yyyy</div>
+    </div>
   </div>
 </ng-template>
-<ng-template #empty2>
+<ng-template #tmpEmptyNews2>
   <div class="row my-2">
     <div class="col-4">
       <img class="w-100 h-100px" src="../assets/demos/svg/pic-avata.png" />
     </div>
     <div class="col-8">
-      <img class="w-100 h-100px" src="../assets/demos/svg/template-kanban.png" />
+      <div class="fw-bolder">{{mssgWP025}}</div>
+      <div class="">{{mssgWP026}}</div>
+      <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">dd/mm/yyyy</div>
     </div>
   </div>
 </ng-template>
-<ng-template #emptyVideo>
-  <div class="text-center">
-    <img style="max-width:700px" src="../assets/demos/svg/card-preview2.png" />
-  </div>
-</ng-template>
-<ng-template #emptySilder>
-  <div class="row mt-4 justify-content-around">
-    <div class="col-3">
-      <img class="w-100 h-200px" src="../assets/demos/svg/card-preview2.png" />
+<ng-template #tmpEmptyListVideo>
+  <div class="d-flex justify-content-between">
+    <div>
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div>
     </div>
-    <div class="col-3">
-      <img class="w-100 h-200px" src="../assets/demos/svg/card-preview2.png" />
+    <div>
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div>
     </div>
-    <div class="col-3">
-      <img class="w-100 h-200px" src="../assets/demos/svg/card-preview2.png" />
+    <div>
+      <div class="w-100 video">
+        <img style="width:300px" src="../assets/demos/svg/pic-avata.png" />
+      </div>
+      <div class="mt-2">
+        <div class="fw-bolder">{{mssgWP025}}</div>
+      </div>
     </div>
   </div>
 </ng-template>

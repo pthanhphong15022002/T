@@ -50,6 +50,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   isSaved = false;
   header1 = 'Thiết lập quy trình duyệt';
   subHeaderText = 'Qui trình duyệt';
+  defaultSignType = '';
 
   data: any = {};
   lstApprover: any = [];
@@ -95,6 +96,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.lstStep = data?.data.lstStep;
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
+    this.defaultSignType = data?.data.signatureType;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
   }
@@ -109,16 +111,21 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    console.log(this.dataEdit);
-
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
         this.dialog.formModel = this.formModel;
       }
-
       this.initForm();
     });
+  }
+
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      this.data[event?.field] = event.data;
+      this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+      this.cr.detectChanges();
+    }
   }
 
   initForm() {
@@ -135,9 +142,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
                 this.data = res.data;
                 this.data.stepNo = this.stepNo;
                 this.data.transID = this.transId;
-                this.dialogApprovalStep.patchValue(res.data);
-                this.dialogApprovalStep.patchValue({ stepNo: this.stepNo });
-                this.dialogApprovalStep.patchValue({ transID: this.transId });
+                this.data.signatureType = this.defaultSignType;
+                this.dialogApprovalStep.patchValue(this.data);
+                // this.dialogApprovalStep.patchValue({ stepNo: this.stepNo });
+                // this.dialogApprovalStep.patchValue({ transID: this.transId });
                 this.esService.getNewDefaultEmail().subscribe((emailTmp) => {
                   this.data.emailTemplates = emailTmp;
                   this.dialogApprovalStep.patchValue({
@@ -146,9 +154,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
                 });
                 this.currentApproveMode = '1';
                 this.formModel.currentData = this.data;
-
-                console.log(this.dialogApprovalStep.value);
-
                 this.isAfterRender = true;
               }
             });
@@ -159,7 +164,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           );
           this.currentApproveMode = this.dataEdit?.approveMode;
           this.formModel.currentData = this.data;
-          console.log(this.dialogApprovalStep.value);
           this.isAfterRender = true;
 
           if (!this.dialogApprovalStep.value.emailTemplates) {

@@ -1,105 +1,113 @@
 <codx-form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
-    <ng-template #body>
-        <div class="body body-addpost">
-            <div class="d-flex">
-                <div class="body-user-img me-3">
-                    <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
-                    </codx-img>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="d-flex align-items-center mb-1">
-                        <div class="user-name fw-bolder me-2">{{user.userName}}</div>
-                        <div [innerHTML]="tagWith"></div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-start " (click)="openFormShare(controlShare)">
-                        <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
-                            <span class="symbol symbol-12px symbol-circle">
-                                <img src="assets/themes/sys/default/img/{{shareIcon}}" />
-                            </span>
-                            <span class="fs-7 ms-1">{{shareText}}</span>
-                            <i class="icon-arrow_drop_down icon-18 text-dark"></i>
-                        </div>
-                        <div class="ms-2">
-                            <div class="fs-6">
-                                <span class="me-2" [innerHTML]="shareWith"></span>
-                            </div>
-                        </div>
 
-                    </div>
-                </div>
-            </div>
-            <div class="addpost-scroll">
-                <ng-container [ngSwitch]="dialogData.status">
-                    <ng-container *ngSwitchCase="STATUS.EDIT">
-                        <ng-container *ngTemplateOutlet="edit"></ng-container>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="STATUS.SHARE">
-                        <ng-container *ngTemplateOutlet="share"></ng-container>
-                    </ng-container>
-                    <ng-container *ngSwitchDefault>
-                        <ng-container *ngTemplateOutlet="create"></ng-container>
-                    </ng-container>
-                </ng-container>
-            </div>
-            <div class="d-flex justify-content-between align-items-center body-function">
-                <div class="text-gray-500 fw-bold">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblInsertPost" default="Thêm vào bài viết">
-                    </codx-label>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-emoji">
-                        <button (click)="toggleEmojiPicker()" type="button"
-                            data-toggle="tooltip" 
-                            title="Cảm xúc"
-                            class="btn btn-icon btn-md ms-2 btn-emoji">
-                            <i class="icon-tag_faces icon-24 text-warning"></i>
-                        </button>
-                        <ng-container *ngIf="showEmojiPicker">
-                            <div class="emoji">
-                                <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
-                                    (emojiSelect)="addEmoji($event)"></emoji-mart>
-                            </div>
-                        </ng-container>
-                    </div>
-                    <div>
-                        <button (click)="tagUser()" 
-                            type="button"
-                            data-toggle="tooltip"
-                            title="Gắn thẻ"
-                            class="btn btn-icon btn-md ms-2">
-                            <i class="icon-local_offer icon-24 text-primary"></i>
-                        </button>
-                    </div>
-                    <div class="btn-upload">
-                        <button (click)="uploadFile()" 
-                        type="button" 
-                        data-toggle="tooltip"
-                        title="Hình ảnh"
-                            class="btn btn-icon btn-md ms-2 ng-star-inserted">
-                            <i class="icon-photo icon-24 text-success"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ng-template>
-    <ng-template #footer>
-        <div class="d-flex justify-content-between">
-            <button type="button" class="btn btn-primary btn-post" (click)="click()">
-                <codx-label formName="WP_Comments" name="lblSubmit"
-                    [default]="dialogData.status == STATUS.EDIT? 'Lưu':'Đăng'"></codx-label>
-            </button>
-        </div>
-    </ng-template>
 </codx-form>
+<ng-template #body>
+    <div class="body body-addpost">
+        <div class="d-flex">
+            <div class="body-user-img me-2">
+                <ng-container *ngIf="dialogData.status == STATUS.EDIT;else tmpUserID">
+                    <codx-img 
+                        [objectId]="dataEdit.createdBy" 
+                        objectType="AD_Users" 
+                        [width]="40">
+                    </codx-img>
+                </ng-container>
+                <ng-template #tmpUserID>
+                    <codx-img 
+                        [objectId]="user.userID" 
+                        objectType="AD_Users" 
+                        [width]="40">
+                    </codx-img>
+                </ng-template>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center">
+                    <div class="user-name fw-bolder me-2">
+                        <ng-container *ngIf="dialogData.status == STATUS.EDIT;else tmpUserName">
+                            <span>{{dataEdit.createdName}}</span>
+                        </ng-container>
+                        <ng-template #tmpUserName>
+                            <span>{{user.userName}}</span>
+                        </ng-template>
+                    </div>
+                    <div [innerHTML]="tagWith"></div>
+                </div>
+                <div class="d-flex align-items-center justify-content-start " (click)="openFormShare(controlShare)">
+                    <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
+                        <span class="symbol symbol-12px symbol-circle">
+                            <img *ngIf="shareIcon" src="assets/themes/sys/default/img/{{shareIcon}}" />
+                        </span>
+                        <span class="fs-7 ms-1">{{shareText}}</span>
+                        <i class="icon-arrow_drop_down icon-18 text-dark"></i>
+                    </div>
+                    <div class="ms-2">
+                        <div class="fs-6">
+                            <span class="me-2" [innerHTML]="shareWith"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="addpost-scroll">
+            <ng-container [ngSwitch]="dialogData.status">
+                <ng-container *ngSwitchCase="STATUS.EDIT">
+                    <ng-container *ngTemplateOutlet="edit"></ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="STATUS.SHARE">
+                    <ng-container *ngTemplateOutlet="share"></ng-container>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                    <ng-container *ngTemplateOutlet="create"></ng-container>
+                </ng-container>
+            </ng-container>
+
+        </div>
+        <div class="d-flex justify-content-between align-items-center body-function">
+            <div class="text-gray-500 fw-bold">
+                <codx-label [formModel]="dialogRef.formModel" name="lblInsertPost" default="Thêm vào bài viết">
+                </codx-label>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-emoji">
+                    <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Cảm xúc"
+                        class="btn btn-icon btn-md ms-2 btn-emoji">
+                        <i class="icon-tag_faces icon-24 text-warning"></i>
+                    </button>
+                    <ng-container *ngIf="showEmojiPicker">
+                        <div class="emoji">
+                            <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
+                                (emojiSelect)="addEmoji($event)"></emoji-mart>
+                        </div>
+                    </ng-container>
+                </div>
+                <div>
+                    <button (click)="tagUser()" type="button" data-toggle="tooltip" title="Gắn thẻ"
+                        class="btn btn-icon btn-md ms-2">
+                        <i class="icon-local_offer icon-24 text-primary"></i>
+                    </button>
+                </div>
+                <div class="btn-upload">
+                    <button (click)="uploadFile()" type="button" data-toggle="tooltip" title="Hình ảnh"
+                        class="btn btn-icon btn-md ms-2 ng-star-inserted">
+                        <i class="icon-photo icon-24 text-success"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-primary btn-post" (click)="click()">
+            <codx-label formName="WP_Comments" name="lblSubmit"
+                [default]="dialogData.status == STATUS.EDIT? 'Lưu':'Đăng'"></codx-label>
+        </button>
+    </div>
+</ng-template>
 <ng-template #create>
     <div>
-        <codx-input 
-            format="ed3" 
-            [class]="'border-none'" 
-            type="textarea" 
-            [crrValue]="message" 
-            [placeholder]="title"
+        <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>
@@ -115,7 +123,6 @@
         </codx-attachment>
     </div>
 </ng-template>
-
 <ng-template #edit>
     <ng-container *ngIf="dataEdit">
         <div class="row my-3">
@@ -137,10 +144,13 @@
         </div>
     </ng-container>
 </ng-template>
-
 <ng-template #share>
     <div>
-        <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
+        <codx-input format="ed3" 
+            [class]="'border-none'" 
+            type="textarea" 
+            [crrValue]="message" 
+            [placeholder]="title"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>
@@ -155,7 +165,7 @@
             idBrowse="atmCreate" [functionID]="dialogRef.formModel.funcID">
         </codx-attachment>
     </div>
-    <div class="ndchiase">
+    <div class="border-start border rounded-3 p-4">
         <div [class.border]="listFileUpload.length > 0">
             <ng-container *ngIf="!dataShare?.isPortal;else category2">
                 <div class="pic-feed">
@@ -163,22 +173,20 @@
                         <codx-file [objectID]="dataShare.recID"></codx-file>
                     </div>
                 </div>
-                <div class="border-start border rounded-3 p-4">
-                    <div class="text-dark text-feed">
-                        <p [innerHTML]="dataShare?.content"></p>
-                    </div>
-                    <div class="d-flex mb-3 card-border my-2">
-                        <codx-img [width]="30" [objectId]="dataShare?.createdBy" bjectType="AD_Users">
-                        </codx-img>
-                        <div class="d-flex flex-column flex-grow-1 ms-2">
-                            <div class="d-flex align-items-center">
-                                <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
-                            </div>
-                            <div class="text-info-date">
-                                <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
-                            </div>
+                <div class="">
+                    <ng-container *ngIf="dataShare.refType == 'WP_Comments'; else WP_News">
+                        <div class="text-dark text-feed">
+                            <p [innerHTML]="dataShare.content"></p>
                         </div>
-                    </div>
+                    </ng-container>
+                    <ng-template #WP_News>
+                        <ng-container *ngIf="dataShare.subject || dataShare.subContent">
+                            <div class="fw-bolder">{{dataShare.subject}}</div>
+                            <div>{{dataShare.subContent}}</div>
+                            <div class="text-gray-600 fs-7 me-2">{{dataShare.createdOn | fmDT}}</div>
+                        </ng-container>
+                    </ng-template>
+
                 </div>
             </ng-container>
             <ng-template #category2>
@@ -234,6 +242,20 @@
                     </div>
                 </div>
             </ng-template>
+            <div class="d-flex mb-3 card-border my-2">
+                <codx-img [width]="30" 
+                    [objectId]="dataShare?.createdBy" 
+                    bjectType="AD_Users">
+                </codx-img>
+                <div class="d-flex flex-column flex-grow-1 ms-2">
+                    <div class="d-flex align-items-center">
+                        <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
+                    </div>
+                    <div class="text-info-date">
+                        <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </ng-template>

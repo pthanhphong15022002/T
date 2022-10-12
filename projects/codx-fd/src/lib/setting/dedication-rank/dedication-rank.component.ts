@@ -1,3 +1,4 @@
+import { CodxFdService } from 'projects/codx-fd/src/public-api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -69,15 +70,11 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
 
   constructor(
     private injector: Injector,
-    private fb: FormBuilder,
     private changedr: ChangeDetectorRef,
-    private myElement: ElementRef,
-    private layoutService: LayoutService,
-    private at: ActivatedRoute,
     private notificationsService: NotificationsService,
     public location: Location,
-    private mwpService: CodxMwpService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private fdSV: CodxFdService,
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
@@ -322,7 +319,9 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
       .delete([this.view.dataService.dataSelected], true, (option: any) =>
         this.beforeDelete(option, this.view.dataService.dataSelected)
       )
-      .subscribe();
+      .subscribe((res: any) => {
+        if(res) this.fdSV.deleteFile(res.recID, this.view.formModel.entityName)
+      });
   }
 
   beforeDelete(op: any, data) {
