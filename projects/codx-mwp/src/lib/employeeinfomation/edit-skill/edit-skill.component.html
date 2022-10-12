@@ -9,23 +9,21 @@
     <div *ngIf="skillEmployee">
       <ng-container *ngFor="let data of skillEmployee">
         <div class="fw-bold text-dark mb-1">{{ data.category }}</div>
-        <div class="d-flex align-items-center">
+        <div class="w-250px">
           <ejs-slider
-            id="minrange"
             [type]="minType"
             [min]="0"
             [max]="10"
-            width="250"
+            [tooltip]="tooltip" [ticks]="ticks"
             [value]="data.valueX"
-            (valueChange)="sliderChange($event, data)"
-          >
+            (valueChange)="sliderChange($event,data)">
           </ejs-slider>
-          <a
+          <!-- <a
             class="btn btn-xs btn-icon btn-light btn-hover-danger"
             (click)="deleteSkill(data)"
           >
             <span class="icon-close icon-18"></span>
-          </a>
+          </a> -->
         </div>
       </ng-container>
     </div>

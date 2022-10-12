@@ -1,6 +1,5 @@
-<codx-views #codxViews
+<codx-views #view
 [views]="views" 
-[autoLoad]="false" 
 [idField]="'recID'">
 </codx-views>
 
@@ -8,13 +7,13 @@
     <div class="page-home bg-body p-6 rounded-4">
         <div class="d-flex">
             <div class="home-center w-100">
-                <app-list-post [module]="'FD'" [isShowCreate]="false" [codxViews]="codxViews"></app-list-post>
+                <app-list-post [module]="'FD'" [dataService]="dataServiceWP" [isShowCreate]="false" [formModel]="view.formModel"></app-list-post>
             </div>
             <div class="home-right w-350px min-w-350px ms-6 border-left">
                 <div class="card-box border-bottom mb-6">
                     <div class="box-header d-flex justify-content-between align-items-center mb-4">
                         <h4 class="box-title">
-                            <codx-label [formModel]="codxViews.formModel" name="lblFeedbackMessage"
+                            <codx-label [formModel]="view.formModel" name="lblFeedbackMessage"
                                 default="Thông điệp phản hồi">
                             </codx-label>
                         </h4>
@@ -24,7 +23,7 @@
                             <ng-container *ngFor="let item of lstCountCard">
                                 <div class="d-flex align-items-center justify-content-between mb-4">
                                     <div class="text-dark fw-bolder">
-                                        <codx-label [formModel]="codxViews.formModel"
+                                        <codx-label [formModel]="view.formModel"
                                             [default]="item.Text">
                                         </codx-label>
                                     </div>
@@ -42,7 +41,7 @@
                             </ng-container>
                             <!-- <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="codxViews.formModel" name="lblCommendation"
+                                    <codx-label [formModel]="view.formModel" name="lblCommendation"
                                         default="Tuyên dương"></codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
@@ -58,7 +57,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="codxViews.formModel" name="lblThankYouNot"
+                                    <codx-label [formModel]="view.formModel" name="lblThankYouNot"
                                         default="Lời cảm ơn"></codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
@@ -74,7 +73,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="codxViews.formModel" name="" default="Góp ý thay đổi">
+                                    <codx-label [formModel]="view.formModel" name="" default="Góp ý thay đổi">
                                     </codx-label>
                                 </div>
                                 <div class="d-flex w-100px justify-content-end">
@@ -90,7 +89,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="codxViews.formModel" name="lblImprovement"
+                                    <codx-label [formModel]="view.formModel" name="lblImprovement"
                                         default="Đề xuất cải tiến">
                                     </codx-label>
                                 </div>
@@ -112,7 +111,7 @@
                     <div class="box-header d-flex align-items-center justify-content-between mb-5">
                         <h4 class="box-title mb-0">
                             <codx-label name="lblEmpWalletHistory" default="Giao dịch phát sinh gần nhất"
-                                [formModel]="codxViews.formModel">
+                                [formModel]="view.formModel">
                             </codx-label>
                         </h4>
                     </div>
@@ -169,7 +168,7 @@
                     {{item.coCoins> 0?"+":""}}{{item.coCoins}}
                 </span>
                 <span [ngClass]="item.coCoins > 0 ? 'text-success ms-1':'text-danger ms-1'">
-                    <codx-label [formModel]="codxViews.formModel" name="lblCoins" default="xu"></codx-label>
+                    <codx-label [formModel]="view.formModel" name="lblCoins" default="xu"></codx-label>
                 </span>
             </ng-container>
             <ng-template #elsTmp>
@@ -177,7 +176,7 @@
                     {{item?.coins > 0?"+":""}}{{item?.coins}}
                 </span>
                 <span [ngClass]="item.coins > 0 ? 'text-success ms-1':'text-danger ms-1'">
-                    <codx-label [formModel]="codxViews.formModel" name="lblCoins" default="xu"></codx-label>
+                    <codx-label [formModel]="view.formModel" name="lblCoins" default="xu"></codx-label>
                 </span>
             </ng-template>
         </div>

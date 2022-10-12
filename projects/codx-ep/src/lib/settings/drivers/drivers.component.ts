@@ -31,6 +31,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
   @ViewChild('carCol') carCol: TemplateRef<any>;
+  @ViewChild('noteCol') noteCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
 
   @Input() data!: any;
@@ -119,18 +120,13 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
               template: this.resourceNameCol,
             },
             {
-              headerText: gv['Category'].headerText,
+              headerText: gv['CompanyID'].headerText,
               width: 250,//gv['Location'].width,
-              field: 'category',
+              field: 'company',
               template: this.locationCol,
               headerTextAlign: 'Center',
             },         
-            {
-              headerText: gv['Note'].headerText,
-              width: 200,//gv['Note'].width,
-              field: 'note',
-              headerTextAlign: 'Center',       
-            },
+            
             {
               headerText: gv['LinkID'].headerText,
               //width:gv['Owner'].width,
@@ -138,20 +134,27 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
               template: this.carCol,
               headerTextAlign: 'Center',
             },
-            {
-              headerText: gv['Equipments'].headerText,
-              width: 200,//gv['Equipments'].width,
-              field: 'equipments',
-              template: this.equipmentsCol,
-              headerTextAlign: 'Center',
-              textAlign: 'Center',
-            },  
+            // {
+            //   headerText: gv['Equipments'].headerText,
+            //   width: 200,//gv['Equipments'].width,
+            //   field: 'equipments',
+            //   template: this.equipmentsCol,
+            //   headerTextAlign: 'Center',
+            //   textAlign: 'Center',
+            // },  
             {
               headerText: gv['Owner'].headerText,
               //width:gv['Owner'].width,
               width: 200,
               template: this.ownerCol,
               headerTextAlign: 'Center',
+            },
+            {
+              headerText: gv['Note'].headerText,
+              width: 200,//gv['Note'].width,
+              field: 'note',
+              headerTextAlign: 'Center',               
+              template: this.noteCol,      
             },
           ];
           this.views = [

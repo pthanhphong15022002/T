@@ -133,6 +133,13 @@ export class CodxTMService {
     );
   }
 
+  setAutoStatusMeetings(){
+    return this.api.execSv<any>('CO',
+    'CO',
+    'MeetingsBusiness',
+    'SetAutoStatusMeetingAsync');
+  }
+
   addTaskGroup(data) {
     return this.api.execSv<any>(
       'TM',

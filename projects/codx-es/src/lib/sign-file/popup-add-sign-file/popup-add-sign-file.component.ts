@@ -625,56 +625,6 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  // saveProcessStep() {
-  //   console.log('SAVE PROCESS STEP');
-  //   return;
-
-  //   //this.stepAppr?.saveStep();
-  //   if (
-  //     this.dialogSignFile.value.approveControl != '1' ||
-  //     this.data.approveControl != '1'
-  //   ) {
-  //     let newProcessStep = [];
-  //     this.esService.approvalStep.subscribe((res) => {
-  //       newProcessStep = res;
-  //     });
-  //     if (newProcessStep != null) {
-  //       let lstStep = [];
-  //       newProcessStep.forEach((element) => {
-  //         if (element?.id) delete element.id;
-  //         if (element?.recID) delete element.recID;
-  //         element.transID = this.dialogSignFile.value.recID;
-  //         element.transID = this.data.recID;
-  //         lstStep.push(element);
-  //       });
-
-  //       this.esService.addNewApprovalStep(lstStep).subscribe((res) => {
-  //         if (res) {
-  //           this.esService.setApprovalStep(null);
-  //           this.esService.setLstDeleteStep(null);
-  //           console.log('result add new process step:', res);
-  //           this.dialogSignFile.patchValue({ approveControl: '1' });
-  //           this.esService.editSignFile(this.data).subscribe((resSignFile) => {
-  //             if (resSignFile) {
-  //               this.dialogSignFile.patchValue(resSignFile);
-  //               this.data = resSignFile;
-  //               this.isAfterSaveProcess = true;
-  //             }
-  //           });
-  //         }
-  //       });
-  //     }
-  //   } else {
-  //     this.esService.editApprovalStep().subscribe((res) => {
-  //       console.log('result edit step ', res);
-  //       this.isAfterSaveProcess = true;
-  //     });
-  //     this.esService.deleteApprovalStep().subscribe((res) => {
-  //       console.log('result delete step ', res);
-  //     });
-  //   }
-  // }
-
   saveTemplate(dialogTemplateName) {
     if (this.templateName != '') {
       this.esService

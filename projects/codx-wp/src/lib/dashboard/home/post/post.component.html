@@ -1,9 +1,9 @@
-<codx-views #codxView 
+<codx-views #view 
 [views]="views"  
 [entityName]="'WP_Comments'" 
 [idField]="'recID'">
 </codx-views>
 
 <ng-template #content>
-    <app-list-post [module]="'WP'" [formModel]="codxView.formModel"></app-list-post>
+    <app-list-post [module]="'WP'" [dataService]="dataService" [formModel]="view.formModel"></app-list-post>
 </ng-template>

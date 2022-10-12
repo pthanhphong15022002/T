@@ -5,7 +5,7 @@ import {
   Injector,
   AfterViewInit,
 } from '@angular/core';
-import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel, CallFuncService } from 'codx-core';
+import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel, CallFuncService, NotificationsService } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
@@ -16,7 +16,7 @@ import { CodxEpService, ModelPage } from '../../codx-ep.service';
   styleUrls: ['booking-car.component.scss'],
 })
 export class BookingCarComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('base') viewBase: ViewsComponent;
+  @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
@@ -58,6 +58,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     private injector: Injector,    
     private codxEpService: CodxEpService,
     private callFuncService:CallFuncService,
+    private notificationsService: NotificationsService,
     ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -198,7 +199,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
-
+  setPopupTitle(mfunc){
+    this.popupTitle = mfunc + " " + this.funcIDName;
+  }
   getDetailBooking(id: any) {
     this.api
       .exec<any>(
@@ -249,14 +252,14 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     }
   }
   delete(evt?) {
-    let deleteItem = this.viewBase.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
-    }
-    this.viewBase.dataService.delete([deleteItem]).subscribe((res) => {
-      console.log(res);
+    let deleteItem = this.view.dataService.dataSelected;
+    if (evt) { deleteItem = evt; }
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {
+      if(!res){
+        this.notificationsService.notifyCode("SYS022");
+      }
     });
-  }
+  }  
 
   closeEditForm(evt?: any) {
     if (evt) {
@@ -266,7 +269,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   clickMF(event, data) {
     this.popupTitle=event?.text + " " + this.funcIDName;
-    console.log(event);
     switch (event?.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -278,6 +280,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }  
 
   onSelect(obj: any) {
-    console.log(obj);
+    //console.log(obj);
   }
 }

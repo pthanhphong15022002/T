@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #treeView>
-  <share-tree-view [formModel]="view.formModel" [vllStatus]="vllStatus" [listRoles]="listRoles"
+  <share-tree-view [formModel]="view.formModel" [vllStatus]="vllStatus" [listRoles]="listRoles" [dataObj]="dataObj"
     [showMoreFunc]="showMoreFunc" (clickMoreFunction)="receiveMF($event)" (viewTask)="viewTask($event)">
   </share-tree-view>
 </ng-template>
@@ -224,7 +224,8 @@
 
 <ng-template #mfButton let-data>
   <div class="mt-2 me-2">
-    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" type="hover">
+    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)"
+    type="hover">
     </codx-mfunc>
   </div>
 </ng-template>

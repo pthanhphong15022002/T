@@ -3,6 +3,8 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
+  (reload)="reloadCalendar"
+  *ngIf="isAfterRender"
 >
   <ng-template #body>
     <div class="form-popup my-6">
@@ -20,7 +22,7 @@
             type="datetime"
             format="d"
             field="calendarDate"
-            [crrValue]="data?.calendarDate"
+            [crrValue]="this.dialogAddDayoffs.value?.calendarDate"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -37,7 +39,7 @@
             class="form-control text-white color-large"
             field="dayoffColor"
             format="hex"
-            [value]="data?.dayoffColor"
+            [value]="this.dialogAddDayoffs.value?.dayoffColor"
             (valueChange)="valueChange($event)"
           >
           </codx-colorpicker>
@@ -53,7 +55,7 @@
             type="vllicon"
             refValue="L1470"
             field="symbol"
-            [crrValue]="data?.symbol"
+            [crrValue]="this.dialogAddDayoffs.value?.symbol"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -69,10 +71,8 @@
             type="textarea"
             field="note"
             format="ed3"
-            ngDefaultControl
-            [crrValue]="data?.note"
+            [crrValue]="this.dialogAddDayoffs.value?.note"
             (valueChange)="valueChange($event)"
-            placeholder="Diễn giải"
           >
           </codx-input>
         </div>

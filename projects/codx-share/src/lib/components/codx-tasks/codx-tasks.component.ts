@@ -55,6 +55,8 @@ export class CodxTasksComponent
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   @Input() showMoreFunc = true;
+  @Input() refID?: any;
+  @Input() refType?: any;
 
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
@@ -219,7 +221,6 @@ export class CodxTasksComponent
   }
 
   ngAfterViewInit(): void {
-
     ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
     //chay code chet cho nhanh, muon dong thi bat len
     // this.cache.functionList(this.funcID).subscribe(f => {
@@ -347,6 +348,10 @@ export class CodxTasksComponent
       // option.zIndex = 5000;
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
+      if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
+      if (this.refType)
+        this.view.dataService.dataSelected.refType = this.refType;
+
       var dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -418,7 +423,6 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      option.zIndex = 5000;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -540,7 +544,6 @@ export class CodxTasksComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
-        option.zIndex = 5000;
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
@@ -909,7 +912,7 @@ export class CodxTasksComponent
       }
     }
     //   if (idx > -1) return;
-     //   var schedule = {
+    //   var schedule = {
     //     id: '8',
     //     type: ViewType.schedule,
     //     active: false,
@@ -1479,6 +1482,12 @@ export class CodxTasksComponent
         ) {
           x.disabled = true;
         }
+        //an giao viec 
+        if (
+          x.functionID =='SYS005'
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }
@@ -1597,22 +1606,22 @@ export class CodxTasksComponent
       case 0:
         current_day = 'Chủ nhật';
         break;
-        case 1:
+      case 1:
         current_day = 'Thứ hai';
         break;
-        case 2:
+      case 2:
         current_day = 'Thứ ba';
         break;
-        case 3:
+      case 3:
         current_day = 'Thứ tư';
         break;
-        case 4:
+      case 4:
         current_day = 'Thứ năm';
         break;
-        case 5:
+      case 5:
         current_day = 'Thứ sáu';
         break;
-        case 6:
+      case 6:
         current_day = 'Thứ bảy';
         break;
     }
