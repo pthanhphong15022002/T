@@ -803,6 +803,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         .toPromise()
         .then((res) => {
           if (res != null) {
+            debugger;
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);

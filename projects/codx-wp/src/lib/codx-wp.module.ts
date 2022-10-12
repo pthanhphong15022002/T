@@ -15,6 +15,10 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.component';
 import { ApproveComponent } from './approve/approve.component';
+import { ChatListComponent } from './chatting/chat-list/chat-list.component';
+import { ChatBoxComponent } from './chatting/chatbox/chat-box.component';
+import { ChattingComponent } from './chatting/chatting.component';
+import { ListChatBoxComponent } from './chatting/list-chat-box/list-chat-box.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
@@ -44,6 +48,7 @@ import { Layout2Component } from './_layout2/layout2.component';
 import { Layout3Component } from './_layout3/layout3.component';
 
 export const routes: Routes = [
+  
 
   {
     path:"portal",
@@ -53,6 +58,18 @@ export const routes: Routes = [
       {
         path:":funcID",
         component:HomeComponent
+      },
+      
+    ],
+  },
+  {
+    path:"chat",
+    component:DashboardComponent,
+    children:
+    [
+      {
+        path:":funcID",
+        component:ChattingComponent
       },
       
     ],
@@ -214,6 +231,9 @@ const Component: Type<any>[] =
     ViewTagComponent,
     PopupSearchComponent,
     PopupSearchPostComponent,
+    ChatListComponent,
+    ChatBoxComponent,
+    ListChatBoxComponent
 
   ];
 
@@ -236,7 +256,7 @@ const Component: Type<any>[] =
     RouterModule,
     ListPostComponent
   ],
-  declarations: Component,
+  declarations: [Component,ChattingComponent, LayoutComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWpModule {

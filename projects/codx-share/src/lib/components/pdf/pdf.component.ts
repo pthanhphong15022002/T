@@ -34,6 +34,10 @@ import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
 import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
 import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signature/popup-signature/popup-signature.component';
+import {
+  ES_SignFile,
+  SetupShowSignature,
+} from 'projects/codx-es/src/lib/codx-es.model';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -70,6 +74,7 @@ export class PdfComponent
   @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
+  @Output() changeSignerInfo = new EventEmitter();
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -234,6 +239,8 @@ export class PdfComponent
               this.signerInfo = res?.approvers.find(
                 (approver) => approver.authorID == this.user.userID
               );
+
+              this.changeSignerInfo.emit(this.signerInfo);
             } else {
               this.signerInfo = res.approvers[0];
             }
@@ -1272,16 +1279,47 @@ export class PdfComponent
   changeAnnotationItem(type: number) {
     switch (type) {
       case 1:
-        if (!this.signerInfo.signature) {
+        if (!this.signerInfo?.signature) {
+          let setupShowForm = new SetupShowSignature();
+          switch (this.signerInfo?.stepType) {
+            case 'S2': // ký chính
+              setupShowForm.showSignature1 = true;
+              break;
+            case 'S1': // ký nháy
+              setupShowForm.showSignature2 = true;
+              break;
+          }
+
+          let model = {
+            userID: this.signerInfo?.authorID,
+            signatureType: this.signerInfo?.signType,
+          };
           let data = {
-            dialog: this.dialog,
+            data: model,
+            setupShowForm: setupShowForm,
           };
           this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
           return;
         }
-        this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
+        // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
         break;
       case 2:
+        if (!this.signerInfo?.stamp) {
+          let setupShowForm = new SetupShowSignature();
+
+          setupShowForm.showStamp = true;
+
+          let signature = {
+            userID: this.signerInfo?.authorID,
+            signatureType: this.signerInfo?.signType,
+          };
+          let data = {
+            data: signature,
+            setupShowForm: setupShowForm,
+          };
+          this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+          return;
+        }
         this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
         break;
     }

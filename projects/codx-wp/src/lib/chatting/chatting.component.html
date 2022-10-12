@@ -1,0 +1,39 @@
+
+<!-- <ejs-splitter _ngcontent-dra-c358 height="100%" width="100%" ng-reflect-height="100%" ng-reflect-width="100%" class="e-control e-splitter e-lib e-splitter-horizontal" style="height: 100%; width: 100%;">
+    <div class="e-pane e-pane-horizontal e-scrollable e-static-pane" style="flex-basis: 30%; order: 0;">
+
+        <p>chatting works!</p>
+
+        <codx-searchbar #searchbar [width]="300" (searchEvent)="doFilter($event)" [iconPos]="'left'"></codx-searchbar>
+        <codx-searchbar ng-reflect-width="100"><div _ngcontent-ftg-c314="" class="codx-search">
+        </div>
+    </codx-searchbar>
+
+    <codx-listview>
+
+    </codx-listview>
+    
+    </div>
+    <div class="e-split-bar e-split-bar-horizontal e-last-bar" tabindex="0" role="separator" aria-orientation="horizontal" style="width: 3px; order: 0; background: #dee2e6">
+
+    </div>
+    <div class="e-pane e-pane-horizontal e-scrollable e-static-pane" style=" order: 0;">
+        
+    </div>
+    
+
+</ejs-splitter> -->
+
+
+<codx-views #view  [views]="views" entityName="TM_Task" service="TM" assemblyName="TM" className="TaskBusiness" method="GetTasksAsync">
+</codx-views>
+<!-- #itemTemplate  let-data-->
+<ng-template #itemTemplate>
+
+</ng-template>
+   <!-- view detail -->
+<ng-template #panelRightRef>
+
+    aaaaaaaaaaaaaaaaaaaa
+ 
+</ng-template>

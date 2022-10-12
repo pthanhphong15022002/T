@@ -276,7 +276,7 @@ export class CodxEpService {
           if (res) {
             gridViewSetup = res;
             this.notificationsService.notifyCode(
-              'E0001',
+              'SYS028',
               0,
               '"' + gridViewSetup[fieldName].headerText + '"'
             );

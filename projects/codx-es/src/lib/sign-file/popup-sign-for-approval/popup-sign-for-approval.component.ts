@@ -40,6 +40,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.data = dt.data;
+    console.log(this.data);
 
     this.user = this.authStore.get();
   }
@@ -53,6 +54,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   dialog;
   data;
   user;
+  signerInfo: any = {};
 
   formModel: FormModel;
   dialogSignFile: FormGroup;
@@ -107,6 +109,14 @@ export class PopupSignForApprovalComponent extends UIComponent {
       default:
         return;
     }
+    if (this.data.stepType == 'S2' || this.data.stepType == 'S1') {
+      if (this.signerInfo?.otpControl == '3') {
+      }
+    }
+    this.approve(mode, title, subTitle);
+  }
+
+  approve(mode, title: string, subTitle: string) {
     let dialogADR = this.callfc.openForm(
       PopupADRComponent,
       title,
@@ -208,6 +218,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
   changeActiveOpenPopup(e) {
     console.log('active', e);
   }
+
+  changeSignerInfo(event) {
+    if (event) {
+      this.signerInfo = event;
+    }
+  }
+
   saveDialog() {
     this.dialog.close();
   }

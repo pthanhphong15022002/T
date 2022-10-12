@@ -67,7 +67,6 @@ export class BookingStationeryViewDetailComponent
   }
 
   openFormFuncID(value, datas: any = null) {
-    
     let funcID = value?.functionID;
     switch (funcID) {
       case 'EPT40101':
@@ -118,7 +117,11 @@ export class BookingStationeryViewDetailComponent
     }
   }
 
-  changeDataMF(event, data: any) {}
+  changeDataMF(event, data: any) {
+    debugger;
+    console.log(event);
+    console.log(data);
+  }
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;

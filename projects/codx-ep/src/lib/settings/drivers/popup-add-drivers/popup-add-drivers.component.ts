@@ -88,9 +88,9 @@ export class PopupAddDriversComponent
   valueChange(event: any) {
     if (event?.field != null && event?.field != '') {
       if (event.data instanceof Object) {
-        this.fGroupAddDriver.patchValue({ [event['field']]: event.data.value });
+        //this.fGroupAddDriver.patchValue({ [event['field']]: event.data.value });
       } else {
-        this.fGroupAddDriver.patchValue({ [event['field']]: event.data });
+        //this.fGroupAddDriver.patchValue({ [event['field']]: event.data });
       }
     }
   }
@@ -99,12 +99,13 @@ export class PopupAddDriversComponent
       var cbxCar = event.component.dataService.data;
       cbxCar.forEach((element) => {
         if (element.ResourceID == event.component.valueSelected) {
-          this.data.code = element.Code;          
+          this.data.code = element.Code; 
+          this.detectorRef.detectChanges();         
         }
       });
       this.detectorRef.detectChanges();
     }
-    this.detectorRef.detectChanges();
+    
   }
 
   beforeSave(option: any) {
@@ -126,8 +127,8 @@ export class PopupAddDriversComponent
       this.fGroupAddDriver.patchValue({companyID:null});
     }   
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt))
-      .subscribe((res) => {
+      .save((opt: any) => this.beforeSave(opt),0)
+      .subscribe(async (res) => {
         if (res) {          
           if (!res.save) {
             this.returnData = res.update;
@@ -136,8 +137,8 @@ export class PopupAddDriversComponent
           }
           if(this.imageUpload)
           {
-            this.imageUpload
-            .updateFileDirectReload(this.returnData.recID)
+            (await this.imageUpload
+            .updateFileDirectReload(this.returnData.recID))
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
@@ -147,7 +148,7 @@ export class PopupAddDriversComponent
             });
           }          
           if(this.isAdd){
-            (this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
+            //(this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
           }
           else{
             (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();

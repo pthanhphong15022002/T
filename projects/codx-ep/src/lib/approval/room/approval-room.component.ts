@@ -203,29 +203,91 @@ export class ApprovalRoomsComponent extends UIComponent {
             if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
                 this.notificationsService.notifyCode('ES007');//đã duyệt
-                this.viewBase.dataService.dataSelected.status=="5";
-                (this.viewBase.currentView as any).schedule?.scheduleObj?.first?.refresh();
+                data.status="5"
               }
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
+                data.status="4";
               }
               if(status=="2"){
                 this.notificationsService.notifyCode('ES007');//làm lại
-              }  
+                data.status="2"
+              }                
+              this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
           });
       });
   }
-
+  changeDataMF(event, data:any) {    
+    if(event!=null && data!=null){
+      switch(data?.status){
+        case "3":
+        event.forEach(func => {
+          if(func.functionID == "EPT40102" 
+          ||func.functionID == "EPT40103" 
+          || func.functionID == "EPT40104")
+          {
+            func.disabled=true;
+          }
+        });
+        break;
+        case "4":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "5":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "2":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+      }
+    }
+  }
   closeAddForm(event) {}
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
-
-  getDetailAprovalBooking(id: any) {
+  uploadStatus(data:any)
+  {
+    this.view.dataService.update(data).subscribe();
+  }
+  getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(
         'EP',

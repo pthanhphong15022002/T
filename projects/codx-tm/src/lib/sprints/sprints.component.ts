@@ -322,6 +322,10 @@ export class SprintsComponent extends UIComponent {
         ) {
           x.disabled = true;
         }
+        //an giao viec
+        if (x.functionID == 'SYS005') {
+          x.disabled = true;
+        }
       });
     }
   }

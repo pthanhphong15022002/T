@@ -113,7 +113,7 @@ export class CopyComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;      
     }
-
+    debugger;
     if (this.objectType == 'file') {
       // doi ten file   
       if (this.copy) {
@@ -213,17 +213,18 @@ export class CopyComponent implements OnInit {
     else {
       this.folderService.renameFolder(that.id, that.fullName).subscribe(async res => {
         if (res.status == 0) {
+          debugger;
           let folder = new FolderInfo();
           folder.recID = that.id;
           folder.folderName = that.fullName;
-          //    that.dmSV.nodeChange.next(folder);
+          that.dmSV.nodeChange.next(res.data);
           var folders = that.dmSV.listFolder;
           //folders.forEach(item => )
           let index = folders.findIndex(d => d.recID.toString() === that.id);
-          if (index != -1) {
-            folders[index].folderName = that.fullName;
-            that.dmSV.nodeChange.next(folders[index]);
-          }
+          // if (index != -1) {
+          //   folders[index].folderName = that.fullName;
+          //   that.dmSV.nodeChange.next(folders[index]);
+          // }
           that.dmSV.listFolder = folders;
           that.dmSV.ChangeData.next(true);
           that.changeDetectorRef.detectChanges();
