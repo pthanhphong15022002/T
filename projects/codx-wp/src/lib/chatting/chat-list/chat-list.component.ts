@@ -2,13 +2,12 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '
 import { SignalRService } from '@core/services/signalr/signalr.service';
 // import { CreateGroupComponent } from '@modules/wp/components/create-group/create-group.component';
 import { ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogModel, DialogRef } from 'codx-core';
-import { ChatBoxInfo } from '../chat.models';
-import { ChatService } from '../chat.service';
 import { ChatBoxComponent } from '../chatbox/chat-box.component';
-import { CreateGroupComponent } from '../create-group/create-group.component';
+import { ChattingComponent } from '../chatting.component';
+import { ListChatBoxComponent } from '../list-chat-box/list-chat-box.component';
 
 @Component({
-  selector: 'codx-chat-list',
+  selector: 'lib-chat-list',
   templateUrl: 'chat-list.component.html',
   styleUrls: ['./chat-list.component.scss']
 })
@@ -22,9 +21,9 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   dataValue:String = "";
   constructor(
     private api:ApiHttpService,
-    private chatService: ChatService,
     authStore: AuthStore,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private callFC:CallFuncService
   ) {
     this.user = authStore.get();
   }
@@ -75,6 +74,13 @@ export class ChatListComponent implements OnInit, AfterViewInit {
 
   }
 
+  clickShowChatting()
+  {
+    let option = new DialogModel();
+    option.IsFull = true;
+    this.callFC.openForm(ChatBoxComponent,"",0,0,"",null,"",option);
+  }
+
   doFilter(event: any) {
     if (event == '') {
       this.isFiltering = false;
@@ -99,17 +105,17 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
 
   openChatBox(data: any) {
-    let opt = new ChatBoxInfo();
-    opt.ownerId = this.user.userID;
-    opt.ownerName = this.user.userName;
-    opt.colabId = data.userID;
-    opt.colabName = data.userName;
-    opt.groupId = data.groupId;
-    opt.groupType = data.groupType;
-    opt.isMinimum = false;
-    opt.numberNotRead = 1;
-    opt.messageInfo = data.message;
-    this.chatService.openChatBox(opt);
+    // let opt = new ChatBoxInfo();
+    // opt.ownerId = this.user.userID;
+    // opt.ownerName = this.user.userName;
+    // opt.colabId = data.userID;
+    // opt.colabName = data.userName;
+    // opt.groupId = data.groupId;
+    // opt.groupType = data.groupType;
+    // opt.isMinimum = false;
+    // opt.numberNotRead = 1;
+    // opt.messageInfo = data.message;
+    // this.chatService.openChatBox(opt);
   }
 
   getNumberMessageNotRead() {
@@ -134,6 +140,6 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
 
   openCreategroupForm() {
-    this.callfc.openForm(CreateGroupComponent, "Tạo nhóm chat", 800, 600);
+    // this.callfc.openForm(CreateGroupComponent, "Tạo nhóm chat", 800, 600);
   }
 }

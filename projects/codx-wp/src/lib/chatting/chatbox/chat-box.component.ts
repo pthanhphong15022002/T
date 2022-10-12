@@ -12,7 +12,7 @@ import { ApiHttpService, AuthStore } from 'codx-core';
 import { ChatService } from '../chat.service';
 
 @Component({
-  selector: 'codx-chat-boxs',
+  selector: 'codx-chat-box',
   templateUrl: './chat-box.component.html',
   styleUrls: ['./chat-box.component.scss'],
 })

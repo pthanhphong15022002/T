@@ -724,7 +724,7 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-format_list_bulleted',
         text: 'List',
-        type: ViewType.treedetail,
+        type: ViewType.tree_list,
         sameData: true,
         active: false,
         model: {
@@ -741,7 +741,7 @@ export class HomeComponent extends UIComponent {
         icon: 'icon-search',
         text: 'Search',
         hide: true,
-        type: ViewType.treedetail,
+        type: ViewType.tree_list,
         sameData: true,
         /*  toolbarTemplate: this.templateSearch,*/
         model: {
@@ -755,7 +755,7 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-appstore',
         text: 'Card',
-        type: ViewType.treedetail,
+        type: ViewType.tree_card,
         active: true,
         sameData: true,
         /*  toolbarTemplate: this.templateSearch,*/
@@ -770,7 +770,7 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-apps',
         text: 'Small Card',
-        type: ViewType.treedetail,
+        type: ViewType.tree_smallcard,
         active: false,
         sameData: true,
         model: {
@@ -784,7 +784,7 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-format_list_bulleted',
         text: 'List',
-        type: ViewType.treedetail,
+        type: ViewType.tree_list,
         active: false,
         sameData: true,
         model: {
