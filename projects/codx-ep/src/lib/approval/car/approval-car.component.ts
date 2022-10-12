@@ -2,6 +2,7 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
   FormModel,
+  NotificationsService,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -29,7 +30,7 @@ export class ApprovalCarsComponent extends UIComponent {
   assemblyName = 'EP';
   entity = 'EP_Bookings';
   className = 'BookingsBusiness';
-  method = 'GetListBookingAsync';
+  method = 'GetListApprovalAsync';
   predicate = 'ResourceType=@0';
   datavalue = '2';
   idField = 'recID';
@@ -52,7 +53,9 @@ export class ApprovalCarsComponent extends UIComponent {
   formModel:FormModel;
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,) {
+    private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService,
+    ) {
     super(injector);
 
     this.funcID = this.router.snapshot.params['funcID'];
@@ -136,83 +139,89 @@ export class ApprovalCarsComponent extends UIComponent {
 
   click(event) {}
 
-  edit(evt?) {
-    if (evt) {
-      this.view.dataService.dataSelected = evt;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          
-          this.dataSelected = this.view.dataService.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddBookingCarComponent,
-            [this.views.dataService.dataSelected, false],
-            option
-          );
-        });
+  clickMF(value, datas: any = null) {
+    
+    let funcID = value?.functionID;
+    // if (!datas) datas = this.data;
+    // else {
+    //   var index = this.view.dataService.data.findIndex((object) => {
+    //     return object.recID === datas.recID;
+    //   });
+    //   datas = this.view.dataService.data[index];
+    // }
+    switch (funcID) {
+      case 'EPT40101':
+      case 'EPT40201':
+      case 'EPT40301':
+        {
+          //alert('Duyệt');
+          this.approve(datas,"5")
+        }
+        break;      
+      case 'EPT40105':
+      case 'EPT40205':
+      case 'EPT40305':
+        {
+          //alert('Từ chối');
+          this.approve(datas,"4")
+        }
+        break;
+      case 'EPT40106':
+      case 'EPT40206':
+      case 'EPT40306':
+        {
+          //alert('Làm lại');
+          this.approve(datas,"2")
+        }
+        break;
+      default:
+        '';
+        break;
     }
   }
-
-  delete(evt?) {
-    let deleteItem = this.view.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
-    }
-    this.view.dataService.delete([deleteItem]).subscribe();
-  }
-
-  clickMF(event, data) {
-    switch (event?.functionID) {
-      case 'EPT40101': //duyet
-        this.edit(data);
-        break;
-
-      case 'EPT40102': //ki
-        //this.delete(data);
-        break;
-
-      case 'EPT40103': //dong thuan
-        //this.delete(data);
-        break;
-
-      case 'EPT40104': //dong dau
-        //this.delete(data);
-        break;
-
-      case 'EPT40105': //tu choi
-        //this.delete(data);
-        break;
-
-      case 'EPT40106': //lam lai
-        //this.delete(data);
-        break;
-
-      case 'SYS02': //Xoa
-        this.delete(data);
-        break;
-
-      case 'SYS03': //Sua.
-        this.edit(data);
-        break;
-    }
-  }  
+  approve(data:any, status:string){
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(            
+            data?.approvalTransRecID,//ApprovelTrans.RecID
+            status,
+          )
+          .subscribe((res:any) => {
+            if (res?.msgCodeError == null && res?.rowCount>=0) {
+              if(status=="5"){
+                this.notificationsService.notifyCode('ES007');//đã duyệt
+                data.status="5"
+              }
+              if(status=="4"){
+                this.notificationsService.notifyCode('ES007');//bị hủy
+                data.status="4";
+              }
+              if(status=="2"){
+                this.notificationsService.notifyCode('ES007');//làm lại
+                data.status="2"
+              }                
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
+  } 
   closeAddForm(event) {}
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
 
-  getDetailBooking(event) {
+  getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(
         'EP',
         'BookingsBusiness',
-        'GetBookingByIDAsync',
-        this.itemDetail?.recID
+        'GetApprovalBookingByIDAsync',
+        [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
       )
       .subscribe((res) => {
         if (res) {
