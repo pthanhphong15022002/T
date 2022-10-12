@@ -1,5 +1,6 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
+  CRUDService,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -7,6 +8,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
+  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { PopupAddBookingRoomComponent } from '../../booking/room/popup-add-booking-room/popup-add-booking-room.component';
@@ -29,7 +31,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
 
   @ViewChild('subTitle') subTitle?: TemplateRef<any>;
-
+  @ViewChild('view') viewBase: ViewsComponent;
   views: Array<ViewModel> | any = [];
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -198,17 +200,20 @@ export class ApprovalRoomsComponent extends UIComponent {
             status,
           )
           .subscribe((res:any) => {
-            var x= res;
             if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
                 this.notificationsService.notifyCode('ES007');//đã duyệt
+                data.status="5"
               }
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
+                data.status="4";
               }
               if(status=="2"){
                 this.notificationsService.notifyCode('ES007');//làm lại
-              }  
+                data.status="2"
+              }                
+              this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
@@ -221,8 +226,11 @@ export class ApprovalRoomsComponent extends UIComponent {
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
-
-  getDetailAprovalBooking(id: any) {
+  uploadStatus(data:any)
+  {
+    this.view.dataService.update(data).subscribe();
+  }
+  getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(
         'EP',

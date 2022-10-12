@@ -32,6 +32,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   formModelData: FormModel;
   autoNoCode;
   viewAutoNumber = '';
+  description = '';
 
   cbxName: object;
   vllStringFormat;
@@ -54,6 +55,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.formModelData = data?.data?.formModel;
     this.autoNoCode = data?.data?.autoNoCode;
+    this.description = data?.data?.description;
   }
 
   ngAfterViewInit(): void {}
@@ -148,6 +150,9 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       this.data.lastNumber = 0;
       this.data.step = 1;
       this.data.description = 'description';
+      if (this.description) {
+        this.data.description = this.description;
+      }
     }
 
     this.esService

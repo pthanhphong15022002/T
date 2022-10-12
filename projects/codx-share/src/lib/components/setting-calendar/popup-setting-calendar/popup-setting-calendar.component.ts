@@ -1,3 +1,5 @@
+import { SettingCalendarService } from '../setting-calender.service';
+import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 import 'lodash';
 import { Component, Injector, Optional } from '@angular/core';
 import { APICONSTANT } from '@shared/constant/api-const';
@@ -19,17 +21,18 @@ import { PopupEditShiftComponent } from '../popup-edit-shift/popup-edit-shift.co
 declare var _;
 
 @Component({
-  selector: 'popup-edit-calendar',
-  templateUrl: './popup-edit-calendar.component.html',
-  styleUrls: ['./popup-edit-calendar.component.scss'],
+  selector: 'popup-setting-calendar',
+  templateUrl: './popup-setting-calendar.component.html',
+  styleUrls: ['./popup-setting-calendar.component.scss'],
 })
-export class PopupEditCalendarComponent extends UIComponent {
+export class PopupSettingCalendarComponent extends UIComponent {
   calendarID: string;
   headerText: string;
   stShift = new BS_CalendarWeekdays();
   ndShift = new BS_CalendarWeekdays();
   user: any;
   funcID: string;
+  calendarName: string = '';
   data: any;
   dayOffId: string;
   calendarDate: any;
@@ -44,6 +47,7 @@ export class PopupEditCalendarComponent extends UIComponent {
 
   constructor(
     private injector: Injector,
+    private settingCalendar: SettingCalendarService,
     private authService: AuthStore,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
@@ -63,17 +67,21 @@ export class PopupEditCalendarComponent extends UIComponent {
     this.cache.valueList('L0012').subscribe((res) => {
       this.days = res.datas;
     });
+
+    this.settingCalendar.getCalendarName(this.calendarID).subscribe((res) => {
+      this.calendarName = res;
+    });
+
     this.api
       .execSv<any>(
         APICONSTANT.SERVICES.BS,
         APICONSTANT.ASSEMBLY.BS,
         APICONSTANT.BUSINESS.BS.Calendars,
         'GetSettingCalendarAsync',
-        'STD'
+        [this.calendarID]
       )
       .subscribe((res) => {
         if (res) {
-          debugger;
           this.handleWeekDay(res[0]);
           this.dayOff = res[1];
           this.calendarDate = res[2];
@@ -121,7 +129,6 @@ export class PopupEditCalendarComponent extends UIComponent {
   }
 
   handleWeekDay(weekday) {
-    debugger;
     this.stShift.startTime = weekday.stShift.startTimeSt;
     this.stShift.endTime = weekday.stShift.endTimeSt;
     this.stShift.data = [];
@@ -152,24 +159,20 @@ export class PopupEditCalendarComponent extends UIComponent {
     if (data) this.evtData = { ...data };
     this.evtData.calendarID = this.calendarID;
     this.getDayOff(this.calendarID);
-    if (this.dayOffId) {
-      this.callfc.openForm(
+    if (data && data?.recID) {
+      let popup = this.callfc.openForm(
         PopupAddEventComponent,
-        'Chỉnh sửa Lễ/Tết/Sự kiện',
+        '',
         550,
         550,
         '',
         [this.evtData, false]
       );
     } else {
-      this.callfc.openForm(
-        PopupAddEventComponent,
-        'Thêm Lễ/Tết/Sự kiện',
-        550,
-        550,
-        '',
-        [this.evtData, true]
-      );
+      this.callfc.openForm(PopupAddEventComponent, '', 550, 550, '', [
+        this.evtData,
+        true,
+      ]);
     }
   }
 
@@ -186,7 +189,6 @@ export class PopupEditCalendarComponent extends UIComponent {
           this.dayOff = _.filter(this.dayOff, function (o) {
             return o.recID != item.recID;
           });
-          this.notiService.notifyCode('E0408');
         }
       });
   }
@@ -196,24 +198,16 @@ export class PopupEditCalendarComponent extends UIComponent {
     this.evtCDDate = new BS_CalendarDate();
     if (data) this.evtCDDate = data;
     this.evtCDDate.calendarID = this.calendarID;
-    if (!this.evtCDDate) {
-      this.callfc.openForm(
-        PopupAddDayoffsComponent,
-        'Thêm ngày nghỉ',
-        550,
-        420,
-        '',
-        [this.evtCDDate, true]
-      );
+    if (data && data?.recID) {
+      this.callfc.openForm(PopupAddDayoffsComponent, '', 550, 420, '', [
+        this.evtCDDate,
+        false,
+      ]);
     } else {
-      this.callfc.openForm(
-        PopupAddDayoffsComponent,
-        'Chỉnh sửa ngày nghỉ',
-        550,
-        420,
-        '',
-        [this.evtCDDate, false]
-      );
+      this.callfc.openForm(PopupAddDayoffsComponent, '', 550, 420, '', [
+        this.evtCDDate,
+        true,
+      ]);
     }
   }
 
@@ -230,12 +224,11 @@ export class PopupEditCalendarComponent extends UIComponent {
           this.calendarDate = _.filter(this.calendarDate, function (o) {
             return o.recID != item.recID;
           });
-          this.notiService.notifyCode('E0408');
         }
       });
   }
 
-  editShift(event, shiftType: string = '1') {
+  editShift(shiftType: string = '1') {
     let startTime, endTime;
     if (shiftType === '1') {
       startTime = this.stShift.startTime;
@@ -245,6 +238,8 @@ export class PopupEditCalendarComponent extends UIComponent {
       endTime = this.ndShift.endTime;
     }
     this.callfc.openForm(PopupEditShiftComponent, '', 550, 200, '', [
+      this.calendarID,
+      shiftType,
       startTime,
       endTime,
     ]);

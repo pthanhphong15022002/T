@@ -29,6 +29,7 @@ import {
   RequestOption,
 } from 'codx-core';
 import { CodxApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-approval-step/codx-approval-step.component';
+import { SettingAlertDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/alert-drawer/setting-alert-drawer/setting-alert-drawer.component';
 import { CodxEsService, GridModels } from '../../../codx-es.service';
 import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
@@ -42,9 +43,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('editApprovalStep') editApprovalStep: TemplateRef<any>;
   @ViewChild('approvalStep') approvalStep: CodxApprovalStepComponent;
 
-  dialogCategory: FormGroup;
   isAfterRender: boolean = false;
-  cbxName;
   viewAutoNumber = '';
 
   isAdd: boolean = false;
@@ -63,6 +62,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   formModel: FormModel;
   lstApproval: any = null;
   grvSetup: any;
+  settingDataValue: any;
 
   constructor(
     private esService: CodxEsService,
@@ -86,12 +86,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.setLstDeleteStep(null);
       this.esService.setApprovalStep(null);
       if (this.isSaved) {
-        this.esService.deleteCategory(this.dialogCategory.value.categoryID);
+        this.esService.deleteCategory(this.data.categoryID);
       }
       if (!this.isSaved && this.isAddAutoNumber) {
         //delete autoNumer đã thiết lập
         this.esService
-          .deleteAutoNumber(this.dialogCategory.value.categoryID)
+          .deleteAutoNumber(this.data.categoryID)
           .subscribe((res1) => {
             console.log('result delete auto', res1);
           });
@@ -107,7 +107,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    //this.initForm();
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((grv) => {
@@ -119,24 +118,30 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.data.signatureType = '1';
       this.data.icon = 'icon-text_snippet';
       this.data.color = '#0078FF';
+
+      this.esService
+        .getSettingByPredicate(
+          'FormName=@0 and Category=@1',
+          'ESParameters;' + 1
+        )
+        .subscribe((setting) => {
+          if (setting?.dataValue) {
+            this.settingDataValue = JSON.parse(setting.dataValue);
+            if (this.settingDataValue) {
+              for (const key in this.settingDataValue) {
+                console.log(key);
+                let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
+                this.data[fieldName] = this.settingDataValue[key];
+              }
+            }
+            console.log(this.data);
+          }
+        });
     }
     this.form?.formGroup?.addControl(
       'countStep',
       new FormControl(this.data.countStep ?? 0)
     );
-
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) {
-          this.dialogCategory = res;
-        }
-      });
-    this.esService
-      .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) this.cbxName = res;
-      });
 
     if (!this.isAdd) {
       this.esService.getFormModel('EST04').then((res) => {
@@ -166,95 +171,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
   }
 
-  initForm() {
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((res) => {
-        if (res) {
-          if (this.isAdd) {
-            this.data.countStep = 0;
-            this.data.signatureType = '1';
-            this.data.icon = 'icon-text_snippet';
-            this.data.color = '0078FF';
-          }
-
-          this.dialogCategory = res;
-          this.dialogCategory.addControl(
-            'countStep',
-            new FormControl(this.data.countStep ?? 0)
-          );
-          this.dialogCategory.addControl(
-            'id',
-            new FormControl(this.data.id ?? '')
-          );
-          this.dialogCategory.addControl(
-            'recID',
-            new FormControl(this.data.recID)
-          );
-          this.dialogCategory.patchValue(this.data);
-          this.dialogCategory = res;
-          this.dialogCategory.patchValue({
-            signatureType: '1',
-            icon: 'icon-text_snippet',
-            color: '#0078FF',
-          });
-
-          if (!this.isAdd) {
-            this.dialogCategory.patchValue(this.data);
-            this.esService.getFormModel('EST04').then((res) => {
-              if (res && this.data.countStep > 0) {
-                let fmApprovalStep = res;
-                let gridModels = new GridModels();
-                gridModels.dataValue = this.data.recID;
-                gridModels.predicate = 'TransID=@0';
-                gridModels.funcID = fmApprovalStep.funcID;
-                gridModels.entityName = fmApprovalStep.entityName;
-                gridModels.gridViewName = fmApprovalStep.gridViewName;
-                gridModels.pageSize = 20;
-              }
-            });
-
-            //get Autonumber
-            this.esService
-              .getAutoNumber(this.data.categoryID)
-              .subscribe((res) => {
-                if (res != null) {
-                  this.autoNumber = res;
-                  if (res.autoNoCode != null) {
-                    this.setViewAutoNumber(this.autoNumber);
-                    this.isAddAutoNumber = false;
-                  }
-                }
-              });
-            this.isAfterRender = true;
-          } else {
-            this.codxService
-              .getAutoNumber(
-                this.formModel.funcID,
-                this.formModel.entityName,
-                'CategoryID'
-              )
-              .subscribe((dt: any) => {
-                this.dialogCategory.patchValue({ categoryID: dt });
-                this.cr.detectChanges();
-                this.isAfterRender = true;
-              });
-          }
-        }
-      });
-    this.isSaved = false;
-    this.cr.detectChanges();
-  }
-
   valueChange(event) {
     if (event?.field && event?.component) {
-      if (event?.data === Object(event?.data)) {
-        this.dialogCategory.patchValue({ [event['field']]: event.data.value });
-        this.data[event['field']] = event.data;
-      } else {
-        this.data[event['field']] = event.data;
-        this.form?.formGroup?.patchValue({ [event['field']]: event.data });
-      }
+      this.data[event['field']] = event.data;
+      this.form?.formGroup?.patchValue({ [event['field']]: event.data });
     }
     this.cr.detectChanges();
   }
@@ -315,6 +235,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       {
         formModel: this.dialog.formModel,
         autoNoCode: this.data.categoryID,
+        description: this.formModel?.entityName,
       }
     );
     popupAutoNum.closed.subscribe((res) => {
@@ -342,18 +263,17 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     if (this.isAdd) {
       this.esService.addNewCategory(this.data).subscribe((res) => {
         if (res) {
+          this.data = res;
           this.isSaved = true;
         }
       });
     }
     let transID = this.data.recID;
-    // let transID = this.dialogCategory.value.recID;
     let data = {
       type: '0',
       transID: transID,
-      model: this.dialogCategory,
+      model: this.form?.formGroup,
       data: this.data,
-      //isAddNew: false,
       isAddNew: !this.isSaved,
     };
 

@@ -333,7 +333,6 @@
       </ng-template>
     </div>
     <div
-      *ngIf="isEditable"
       class="actions flex-column flex-lg-row-auto main-right"
       [class.hideCol]="hideActions"
     >
@@ -473,7 +472,7 @@
             </ng-template>
           </e-tabitem>
 
-          <e-tabitem>
+          <e-tabitem *ngIf="inputUrl == null">
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight1"
@@ -523,6 +522,7 @@
                       </codx-temp-full>
                       <div
                         [class.d-none]="
+                          inputUrl == null ||
                           area.recID != curSelectedAnnotID ||
                           area.labelType == '1' ||
                           area.labelType == '2' ||

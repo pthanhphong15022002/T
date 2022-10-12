@@ -50,6 +50,7 @@ import { PopupCaPropsComponent } from './sign-file/popup-ca-props/popup-ca-props
 import { PopupAddSignatureComponent } from './setting/signature/popup-add-signature/popup-add-signature.component';
 import { PopupAddCategoryComponent } from './setting/category/popup-add-category/popup-add-category.component';
 import { ESTemplateComponent } from './templateHTML/template.component';
+import { PopupSelectLabelComponent } from './sign-file/popup-select-label/popup-select-label.component';
 
 const routes: Routes = [
   {
@@ -142,6 +143,7 @@ const routes: Routes = [
     SearchingComponent,
     PopupCaPropsComponent,
     ESTemplateComponent,
+    PopupSelectLabelComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

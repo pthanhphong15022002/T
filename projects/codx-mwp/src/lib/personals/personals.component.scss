@@ -118,12 +118,28 @@
     margin-top: 1% !important;
 }
 
-.w-228px {
-    width: 228px !important;
+.w-225px {
+    width: 225px !important;
 }
 
-.h-228px {
-    height: 228px !important;
+.h-225px {
+    height: 225px !important;
+
+}
+
+.w-223px {
+    max-width: 223px !important;
+    width: auto;
+
+}
+
+.w-223px.rounded-circle {
+    min-width: 140px;
+}
+
+.pw-storgae .h-225px img {
+    max-height: 140px;
+    margin: 0 auto;
 }
 
 .h-140px {
@@ -145,4 +161,13 @@ codx-card-img .card-icon-nowrap {
 
 .pw-feed ejs-listview {
     background-color: transparent;
+}
+
+.img-storage .text-gray-600.line-clamp.line-clamp-2 {
+    margin-top: 5px;
+}
+
+.pw-storgae .container-fluid {
+    padding: 0 !important;
+    margin-top: 10px;
 }

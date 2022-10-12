@@ -8,18 +8,21 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   ButtonModel,
   CacheService,
   CallFuncService,
   DialogRef,
+  NotificationsService,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CodxAdService } from '../codx-ad.service';
 import { ViewUsersComponent } from '../users/view-users/view-users.component';
 import { AddUserGroupsComponent } from './add-user-groups/add-user-groups.component';
 
@@ -45,7 +48,9 @@ export class UserGroupsComponent extends UIComponent {
     private authStore: AuthStore,
     private activeRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfunc: CallFuncService
+    private notifySvr: NotificationsService,
+    private callfunc: CallFuncService,
+    private codxAdService: CodxAdService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -73,10 +78,12 @@ export class UserGroupsComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
   }
 
+  headerText = '';
   clickMF(e: any, data?: any) {
+    this.headerText = e?.text;
     switch (e.functionID) {
       case 'SYS01':
-        this.add();
+        this.add(e);
         break;
       case 'SYS03':
         this.edit(data);
@@ -84,18 +91,36 @@ export class UserGroupsComponent extends UIComponent {
       case 'SYS04':
         this.copy(data);
         break;
-      case 'SYS02':
-        this.delete(data);
+      // case 'SYS02':
+      //   this.delete(data);
+      //   break;
+      case 'ADS0501':
+        this.stop(data);
         break;
     }
   }
 
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
+  stop(data: any) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notifySvr.alertCode('AD009', config).subscribe((x) => {
+      if (x.event.status == 'Y') {
+        data.stop = true;
+        this.codxAdService
+          .stopUser(data, false, null, data.stop)
+          .subscribe((res) => {
+            if (res) {
+              this.view.dataService.remove(res).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+      }
+    });
+  }
+
+  changeDataMF(e: any) {
+    var dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
+    dl[0].disabled = true;
   }
 
   openPopup(item: any) {
@@ -107,7 +132,7 @@ export class UserGroupsComponent extends UIComponent {
       '',
       item
     );
-    this.dialog.closed.subscribe((e) => { });
+    this.dialog.closed.subscribe((e) => {});
   }
 
   convertHtmlAgency(buID: any) {
@@ -117,15 +142,16 @@ export class UserGroupsComponent extends UIComponent {
         '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +
         buID +
         '</span></div>';
-
     return desc + '</div>';
   }
 
-  add() {
+  add(e) {
+    this.headerText = e?.text;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         userType: 'userGroup',
         formType: 'add',
+        headerText: this.headerText,
       };
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -153,6 +179,7 @@ export class UserGroupsComponent extends UIComponent {
           formType: 'copy',
           dataCopy: res,
           oldID: oldID,
+          headerText: this.headerText,
         };
       }
       let option = new SidebarModel();
@@ -177,6 +204,7 @@ export class UserGroupsComponent extends UIComponent {
         var obj = {
           userType: 'userGroup',
           formType: 'edit',
+          headerText: this.headerText,
         };
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;

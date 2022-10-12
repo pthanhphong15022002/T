@@ -14,9 +14,11 @@ import {
   ViewType,
   ViewModel,
   ResourceModel,
+  ViewsComponent,
 } from 'codx-core';
 import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
-import { PopupEditCalendarComponent } from './popup-edit-calendar/popup-edit-calendar.component';
+import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 @Component({
   selector: 'setting-calendar',
@@ -27,15 +29,15 @@ export class SettingCalendarComponent
   extends UIComponent
   implements AfterViewInit
 {
-  @ViewChild('schedule') schedule: CodxScheduleComponent;
-  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('view') viewOrg!: ViewsComponent;
   views: Array<ViewModel> | any = [];
+  request: ResourceModel;
   funcID: string;
-  method: string;
   calendarID: string;
   calendarName: string;
-  request: ResourceModel;
   fields;
+  resourceField;
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
@@ -48,10 +50,18 @@ export class SettingCalendarComponent
   }
 
   onInit(): void {
+    this.fields = {
+      id: 'calendarID',
+      subject: { name: 'note' },
+      startTime: { name: 'startDate' },
+      endTime: { name: 'endDate' },
+    };
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.getParams(res.module + 'Parameters', 'CalendarID');
     });
+  }
 
+  ngAfterViewInit(): void {
     this.request = new ResourceModel();
     this.request.service = 'BS';
     this.request.assemblyName = 'BS';
@@ -59,20 +69,15 @@ export class SettingCalendarComponent
     this.request.method = 'GetDateOffAsync';
     this.request.idField = 'recID';
 
-    this.fields = {
-      note: 'note',
-    };
-  }
-
-  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.calendar,
-        active: true,
-        sameData: true,
+        active: false,
+        sameData: false,
         model: {
           eventModel: this.fields,
-          template: this.eventTemplate,
+          template: this.cellTemplate,
+          template3: this.cellTemplate,
         },
       },
     ];
@@ -89,13 +94,8 @@ export class SettingCalendarComponent
         } else {
           this.calendarID = json.CalendarID;
         }
-        this.settingCalendar
-          .getCalendarName(this.calendarID)
-          .subscribe((res: any) => {
-            this.calendarName = res[0].recID;
-          });
-        //this.getDayWeek(this.calendarID);
-        //this.getDaysOff(this.calendarID);
+        this.getDayWeek(this.calendarID);
+        this.getDaysOff(this.calendarID);
         this.detectorRef.detectChanges();
       }
     });
@@ -105,7 +105,9 @@ export class SettingCalendarComponent
     this.settingCalendar.getDayWeek(calendarID).subscribe((res) => {
       if (res) {
         this.dayWeek = res;
-        this.detectorRef.detectChanges();
+        (
+          this.viewOrg.currentView as any
+        ).schedule?.scheduleObj?.first?.refresh();
       }
     });
   }
@@ -114,15 +116,51 @@ export class SettingCalendarComponent
     this.settingCalendar.getDaysOff(calendarID).subscribe((res) => {
       if (res) {
         this.daysOff = res;
-        this.detectorRef.detectChanges();
+        (
+          this.viewOrg.currentView as any
+        )?.schedule?.scheduleObj?.first?.refresh();
       }
     });
+  }
+
+  getCellContent(evt: any): string {
+    if (this.daysOff.length > 0) {
+      for (let i = 0; i < this.daysOff.length; i++) {
+        let day = new Date(this.daysOff[i].calendarDate);
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()
+        ) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.color = this.daysOff[i].dayoffColor;
+              (item as any).style.backgroundColor =
+                this.daysOff[i].dayoffColor + '30';
+            });
+          }
+          let content =
+            '<div class="d-flex justify-content-between"><span >' +
+            this.daysOff[i].note +
+            '</span>' +
+            '<span class="' +
+            this.daysOff[i].symbol +
+            '"></span></div>';
+          return content;
+        }
+      }
+    }
+    return ``;
   }
 
   changeCombobox(event) {
     event.data == ''
       ? (this.calendarID = 'STD')
       : (this.calendarID = event.data);
+    this.getDaysOff(this.calendarID);
     this.detectorRef.detectChanges();
   }
 
@@ -138,13 +176,14 @@ export class SettingCalendarComponent
   }
 
   openCalendarSettings() {
-    this.callfc.openForm(
-      PopupEditCalendarComponent,
-      this.calendarName,
-      1200,
-      1000,
-      '',
-      [this.formModel, this.calendarID]
-    );
+    this.callfc.openForm(PopupSettingCalendarComponent, '', 1200, 1000, '', [
+      this.formModel,
+      this.calendarID,
+    ]);
+  }
+
+  reloadCalendar() {
+    alert('trigger');
+    (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
   }
 }

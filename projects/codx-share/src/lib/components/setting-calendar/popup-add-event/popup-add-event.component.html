@@ -22,7 +22,7 @@
             field="calendar"
             refValue="L1461"
             placeholder=""
-            [crrValue]="data?.calendar"
+            [crrValue]="this.dialogAddEvent.value?.calendar"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -38,7 +38,7 @@
             type="text"
             field="month"
             placeholder=""
-            [crrValue]="data?.month"
+            [crrValue]="this.dialogAddEvent.value?.month"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -54,7 +54,7 @@
             type="text"
             field="day"
             placeholder=""
-            [crrValue]="data?.day"
+            [crrValue]="this.dialogAddEvent.value?.day"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -71,7 +71,7 @@
             class="form-control text-white color-large"
             field="color"
             format="hex"
-            [value]="data?.color"
+            [value]="this.dialogAddEvent.value?.color"
             (valueChange)="valueChange($event)"
           >
           </codx-colorpicker>
@@ -87,7 +87,7 @@
             type="vllicon"
             refValue="L1470"
             field="symbol"
-            [crrValue]="data?.symbol"
+            [crrValue]="this.dialogAddEvent.value?.symbol"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -103,9 +103,8 @@
             type="textarea"
             field="note"
             format="ed3"
-            [crrValue]="data?.note"
+            [crrValue]="this.dialogAddEvent.value?.note"
             (valueChange)="valueChange($event)"
-            placeholder="Diễn giải"
           >
           </codx-input>
         </div>
@@ -117,7 +116,7 @@
             name="checkbox"
             class="text-dark"
             label="Thêm vào bộ ngày nghỉ chuẩn của hệ thống"
-            [disabled]="data?.recID ? true : false"
+            [disabled]="this.dialogAddEvent.value?.recID ? true : false"
             field="set"
             [checked]="set"
             (valueChange)="valueChange($event)"

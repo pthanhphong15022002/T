@@ -30,7 +30,12 @@ import {
 } from 'ngx-extended-pdf-viewer';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
+import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
 import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signature/popup-signature/popup-signature.component';
+import {
+  ES_SignFile,
+  SetupShowSignature,
+} from 'projects/codx-es/src/lib/codx-es.model';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -64,7 +69,7 @@ export class PdfComponent
   @Input() stepNo = -1;
   @Input() inputUrl = null;
   @Input() transRecID = null;
-
+  @Input() hideActions = false;
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -181,7 +186,6 @@ export class PdfComponent
 
   //thumbnail
   hideThumbnail: boolean = false;
-  hideActions: boolean = false;
 
   onInit() {
     if (this.inputUrl == null) {
@@ -489,7 +493,6 @@ export class PdfComponent
         let width =
           left.attrs.x - right.attrs.x + right.width() * right.scaleX();
         let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
-
         let imgUrl = layer.toDataURL({
           quality: 1,
           x: x,
@@ -498,6 +501,7 @@ export class PdfComponent
           width: width,
           height: height,
         });
+        console.log('signature img', imgUrl);
 
         let approveStt = '5';
 
@@ -543,7 +547,7 @@ export class PdfComponent
                     resolve(status);
                   });
               } else {
-                this.notificationsService.notifyCode('ES010');
+                // this.notificationsService.notifyCode('ES010');
                 resolve(true);
                 this.esService
                   .updateSignFileTrans(
@@ -685,7 +689,7 @@ export class PdfComponent
   pageW = 0;
   pageH = 0;
   pageRendered(e: any) {
-    if (this.isEditable) {
+    if (this.inputUrl == null) {
       let rendedPage = Array.from(
         document.getElementsByClassName('page')
       )?.find((ele) => {
@@ -871,7 +875,10 @@ export class PdfComponent
                     return undefined;
                   });
                   this.holding = 0;
-                  if (signed?.length == 1) {
+                  if (
+                    !['1', '2', '8'].includes(name.LabelType.toString()) ||
+                    signed?.length == 1
+                  ) {
                     switch (name.Type) {
                       case 'text': {
                         this.saveNewToDB(
@@ -1226,13 +1233,54 @@ export class PdfComponent
     this.renderQRAllPage = !this.renderQRAllPage;
   }
   changeAnnotationItem(type: number) {
-    if (!this.signerInfo) {
-      let data = {
-        dialog: this.dialog,
-      };
-      this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
-      return;
+    switch (type) {
+      case 1:
+        if (!this.signerInfo?.signature) {
+          let setupShowForm = new SetupShowSignature();
+          switch (this.signerInfo?.stepType) {
+            case 'S2': // ký chính
+              setupShowForm.showSignature1 = true;
+              break;
+            case 'S1': // ký nháy
+              setupShowForm.showSignature2 = true;
+              break;
+          }
+
+          let model = {
+            userID: this.signerInfo?.authorID,
+            signatureType: this.signerInfo?.signType,
+          };
+          let data = {
+            data: model,
+            setupShowForm: setupShowForm,
+          };
+          this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+          return;
+        }
+        // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
+        break;
+      case 2:
+        if (!this.signerInfo?.stamp) {
+          let setupShowForm = new SetupShowSignature();
+
+          setupShowForm.showStamp = true;
+
+          let signature = {
+            userID: this.signerInfo?.authorID,
+            signatureType: this.signerInfo?.signType,
+          };
+          let data = {
+            data: signature,
+            setupShowForm: setupShowForm,
+          };
+          this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+          return;
+        }
+        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
+        break;
     }
+
+    // }
     if (this.isEditable) {
       this.holding = type;
       switch (type) {
@@ -1269,6 +1317,19 @@ export class PdfComponent
         case 8:
           this.url = qr;
           break;
+        case 9: {
+          this.dialog = this.callfc.openForm(
+            PopupSelectLabelComponent,
+            '',
+            700,
+            700,
+            this.funcID,
+            {
+              title: 'Chọn Nhãn',
+            }
+          );
+          break;
+        }
         default:
           this.url = '';
           break;

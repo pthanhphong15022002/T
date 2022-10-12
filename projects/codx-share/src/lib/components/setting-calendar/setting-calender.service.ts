@@ -1,6 +1,12 @@
 import { fieldChoose } from './../viewFileDialog/alertRule.model';
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, FormModel, AuthStore } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  FormModel,
+  AuthStore,
+  NotificationsService,
+} from 'codx-core';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BS_DaysOff } from './models/BS_DaysOff.model';
@@ -14,7 +20,8 @@ export class SettingCalendarService {
     private cache: CacheService,
     private api: ApiHttpService,
     private auth: AuthStore,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notificationsService: NotificationsService
   ) {}
 
   getFormModel(functionID): Promise<FormModel> {
@@ -157,5 +164,28 @@ export class SettingCalendarService {
       'DeleteAsync',
       [item]
     );
+  }
+
+  saveCalendarDate(model: BS_CalendarDate) {
+    return this.api.execSv<any>(
+      APICONSTANT.SERVICES.BS,
+      APICONSTANT.ASSEMBLY.BS,
+      APICONSTANT.BUSINESS.BS.CalendarDate,
+      'SaveCalendarDateAsync',
+      model
+    );
+  }
+
+  notifyInvalid(formGroup: FormGroup) {
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+    this.notificationsService.notifyCode('SYS028', 0, '"' + fieldName + '"');
   }
 }

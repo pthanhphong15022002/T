@@ -351,4 +351,16 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     if (this.lstView) this.lstView.dataService.search(e).subscribe();
     this.detectorRef.detectChanges();
   }
+
+  valueChangeCB(e, note, index) {
+    for (let i = 0; i < note.checkList.length; i++) {
+      if (index == i) note.checkList[i].status = e.data;
+    }
+    this.api
+      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
+        note?.recID,
+        note,
+      ])
+      .subscribe();
+  }
 }

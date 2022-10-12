@@ -154,8 +154,10 @@ export class PopupAddDriversComponent
           }          
           this.dialogRef.close();
         }
-        this.notificationsService.notifyCode('E0011');
-        return;
+        else{
+          this.notificationsService.notifyCode('SYS001');
+          return;
+        }
       }); 
   }
   

@@ -44,6 +44,8 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
 
 :root {
   ///
+  /// 
+  --primary: #3699ff;
   --primary-active: #187DE4;
   --primary-inverse: #FFFFFF;
 
@@ -476,7 +478,7 @@ codx-view-list-detail .codx-detail-footer {
 }
 
 /**** menu tab hor ****/
-.e-tab .e-tab-header .e-toolbar-item {
+.e-tab .e-tab-header div.e-toolbar-item {
   border: 0 !important;
 }
 
@@ -786,4 +788,51 @@ codx-dynamic-form codx-view-grid {
 
 .dms-card .card:hover {
   background-color: #eef4f4 !important;
+}
+
+/*******/
+.news-main {
+  margin-top: -16px;
+  margin-left: -16px;
+  margin-right: -16px;
+}
+
+codx-header .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
+  color: $title-color;
+}
+
+.e-appointment-wrapper .e-appointment {
+  margin-bottom: 5px !important;
+}
+
+.e-more-popup-wrapper .e-more-event-close {
+  box-shadow: none !important;
+}
+
+.e-toolbar .e-tbar-btn:focus,
+.e-toolbar .e-tbar-btn:hover {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--white);
+}
+
+.content-tree .d-flex.user-card {
+  margin-top: 0px;
+}
+
+/****/
+.tab-tasklist .e-tab-wrap {
+  padding: 0 6px !important;
+}
+
+codx-view-list ejs-listview {
+  height: 100%;
+}
+
+.fix-container {
+  margin: 0 auto;
+}
+
+.w-larger {
+  max-width: 1000px;
 }
