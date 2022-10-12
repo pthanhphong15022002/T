@@ -1,3 +1,4 @@
+import { NULL_EXPR } from '@angular/compiler/src/output/output_ast';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -31,6 +32,7 @@ import {
   Util,
   FormModel,
   UIComponent,
+  AuthService,
 } from 'codx-core';
 import { PopupAddPostComponent } from './popup-add/popup-add.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
@@ -42,7 +44,7 @@ import { PopupSavePostComponent } from './popup-save/popup-save.component';
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent extends UIComponent implements OnInit, AfterViewInit {
+export class ListPostComponent  implements OnInit, AfterViewInit {
 
   service = "WP";
   assemblyName = "ERM.Business.WP"
@@ -82,9 +84,10 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
     SHARE: "4",
   }
   @Input() funcID: string = "";
+  @Input() dataService:CRUDService = null;
   @Input() objectID: string = "";
-  @Input() predicates;
-  @Input() dataValues;
+  @Input() predicates:any;
+  @Input() dataValues:any;
   @Input() isShowCreate = true;
   @Input() module: "WP" | "FD" = "WP";
   @Input() formModel:FormModel = null;
@@ -95,33 +98,27 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(
-    private injector: Injector,
-    private authStore: AuthStore,
+    private api:ApiHttpService,
+    private cache: CacheService,
+    private authStore: AuthService,
     private dt: ChangeDetectorRef,
+    private callFC:CallFuncService,
     private notifySvr: NotificationsService,
     private route: ActivatedRoute,
-  ) {
-    super(injector)
+    private codxService: CodxService,
+
+  ) 
+  {
   }
-  ngAfterViewInit(): void {
+  ngAfterViewInit()
+  {
+  
   }
 
-  onInit(): void {
-    this.user = this.authStore.get();
-    this.route.params.subscribe((param: any) => {
-      if (param) {
-        this.funcID = param['funcID'];
-        if (!this.funcID) return;
-        // this.getGridViewSetUp(this.funcID);
-        this.getValueList();
-      }
-    });
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.funcID = this.funcID;
-      this.formModel.gridViewName = this.gridViewName;
-      this.formModel.formName = this.formName;
-    }
+  ngOnInit(): void {
+    this.user = this.authStore.userValue;
+    this.getGridViewSetUp("WP");
+    this.getValueList();
   }
   getValueList() {
     this.cache.valueList('L1480').subscribe((res) => {
@@ -143,7 +140,6 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
       }
     });
   }
-
   getGridViewSetUp(funcID: string) {
     if (!funcID) return;
     this.cache
@@ -155,9 +151,13 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
             .subscribe((grd: any) => {
               if (grd) {
                 this.headerText = grd['Comments'] ? grd['Comments']['headerText'] : "";
-                this.dt.detectChanges();
               }
             });
+            this.formModel = new FormModel();
+            this.formModel.funcID = "WP";
+            this.formModel.formName = func.formName;
+            this.formModel.gridViewName = func.gridViewName;
+            this.formModel.entityName = func.entityName;
         }
       });
   }
@@ -199,7 +199,7 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(
+    this.modal = this.callFC.openForm(
       PopupAddPostComponent,
       '',
       700,
@@ -222,7 +222,7 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(
+    this.modal = this.callFC.openForm(
       PopupAddPostComponent,
       '',
       700,
@@ -244,7 +244,7 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callfc.openForm(
+    this.modal = this.callFC.openForm(
       PopupAddPostComponent,
       '',
       650,
@@ -264,7 +264,7 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.callfc.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
+    this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
   }
   pushComment(data: any) {
     if (!data) return;
@@ -333,7 +333,7 @@ export class ListPostComponent extends UIComponent implements OnInit, AfterViewI
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     option.IsFull = true;
-    this.callfc.openForm(PopupDetailComponent, '', 0, 0, '', file, '', option);
+    this.callFC.openForm(PopupDetailComponent, '', 0, 0, '', file, '', option);
   }
   clickShowComment(data: any) {
     data.isShowComment = !data.isShowComment;
