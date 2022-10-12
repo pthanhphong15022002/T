@@ -44,10 +44,17 @@
                         data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" data-kt-scroll-offset="0px"
                         class="scroll-y me-n5 pe-5 h-200px h-lg-auto" style="max-height: 475px;"
                         [style.display]="isFiltering ? 'none': 'initial'">
-                        <!-- Begin list history-->
-                        <codx-listview #historyListEle [itemTemplate]="historyItemTemplate" title="" groupBy="buid"
-                            [funcId]="'AD006'" formName="Chat" entityName="AD_Users" gridViewName="'grvUsers'"
-                            method="GetChatHistoryAsync" service="WP" assemblyName="WP" className="ChatBusiness">
+                      
+                        <codx-listview #historyListEle 
+                            [itemTemplate]="historyItemTemplate" 
+                            title="" 
+                            [type]="'listView'"
+                            groupBy="buid"
+                            [funcId]="'WP'" 
+                            gridViewName="'grvUsers'"
+                            method="GetChatHistoryAsync" 
+                            [predicate]="predicate"
+                            [dataValue]="dataValue" service="WP" assemblyName="ERM.Business.WP" className="ChatBusiness">
                         </codx-listview>
                         <!-- End list history -->
 

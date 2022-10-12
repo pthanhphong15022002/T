@@ -1,0 +1,310 @@
+.btn.btn-pill {
+  border-radius: 20px !important;
+  padding: 0 14px;
+  border: 1px solid white !important;
+  color: white;
+}
+
+.icon-add {
+  color: white;
+}
+
+.icon-wb_cloudy:before {
+  content: "\ef2a";
+}
+
+.mright {
+  margin-right: 16px;
+}
+
+:host {
+  height: 100%;
+  margin: 0;
+
+  .flex-root {
+    height: 100%;
+  }
+}
+
+.page-loaded {
+  codx-layout {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+  }
+}
+
+#kt_aside_menu_header+div {
+  margin-bottom: 0 !important;
+}
+
+.progress {
+  background-color: #ffffff26;
+}
+
+.progress-bar {
+  background-color: #00bcd4;
+}
+
+/**** module OD ****/
+
+@keyframes growProgressBar {
+
+  0%,
+  33% {
+    --pgPercentage: 0;
+  }
+
+  100% {
+    --pgPercentage: var(--value);
+  }
+}
+
+@property --pgPercentage {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.progress-circle div[role="progressbar"] {
+  --size: 40px;
+  --fg: #003c79;
+  --bg: #def;
+  --pgPercentage: var(--value);
+  animation: growProgressBar 3s 1 forwards;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(closest-side, #005dc7 75%, transparent 0 99.9%, #005dc7 0),
+    conic-gradient(var(--fg) calc(var(--pgPercentage) * 1%), #ffffff17 0);
+  font-size: 14px;
+  color: #fff;
+}
+
+.progress-circle div[role="progressbar"]::before {
+  counter-reset: percentage var(--value);
+  content: counter(percentage) '%';
+}
+
+
+.progress-circle {
+  display: none;
+}
+
+[data-kt-aside-minimize="on"] .progress-circle {
+  display: block;
+}
+
+[data-kt-aside-minimize="on"] {
+  .btn-add {
+    .btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        padding-right: 0 !important;
+        font-size: 24px !important;
+      }
+    }
+
+    .fs-5 {
+      display: none;
+    }
+
+  }
+
+  #kt_aside_menu_header .justify-content-start.ps-6 {
+    justify-content: center !important;
+    padding-left: 0 !important;
+  }
+
+  .aside-light .menu .menu-title {
+    display: none;
+  }
+}
+
+#kt_aside_menu_header {
+  margin-bottom: 15px;
+  white-space: nowrap;
+}
+
+
+.e-pane codx-treeview .aside-menu {
+  padding: 10px;
+}
+
+.aside-menu codx-temp-full .fw-bold {
+  font-weight: 400 !important;
+  line-height: 23px;
+  height: 20px;
+}
+
+.aside-menu .collapse-conent {
+  padding-left: 6px;
+  width: 20px;
+  height: 22px;
+}
+
+.aside-menu codx-temp-full {
+  width: 100%;
+}
+
+.aside-menu .has-action-menu codx-mfunc {
+  box-shadow: none;
+  top: -6px;
+  background-color: transparent;
+  right: 0;
+  padding: 0;
+}
+
+.aside-menu .menu-item .has-action-menu.codx_tempfull:hover {
+  color: #005dc7;
+}
+
+.aside-menu .menu-item .item-selected {
+  color: #005dc7;
+}
+
+.aside-menu .menu-item [class^=icon-] {
+  font-size: 16px !important;
+}
+
+.aside-menu .leaf {
+  height: 16px;
+}
+
+codx-view-tree-detail .e-static-pane,
+codx-view-tree-detail .e-static-pane+.e-pane {
+  border-radius: 0;
+}
+
+codx-view-tree-detail .e-static-pane+.e-pane {
+  margin-left: 0px;
+  //border-left: 1px #e5e6ee solid;
+}
+
+codx-view-tree-detail .e-static-pane+.e-pane>.hover-scroll-y {
+  padding: 15px;
+  padding-left: 25px;
+}
+
+.dms-card .card-img-center[src*="/assets/codx/dms/"] {
+  padding: 15px;
+}
+
+
+.aside-light .menu .menu-title {
+  font-weight: 400;
+}
+
+.dms-card-icon span[class*="icon-"] {
+  font-size: 16px !important;
+  height: 16px !important;
+  color: var(--gray-500);
+  margin-right: 4px;
+}
+
+.dms-title {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.dms-list:hover,
+.sm-card:hover,
+.dms-card .card.codx_cardimg:hover {
+  background-color: rgba(221, 238, 255, 0.25);
+}
+
+.sm-card .text-gray-700.line-clamp {
+  font-size: var(--fs-7);
+  color: var(--gray-500) !important;
+  margin-top: 2px;
+}
+
+.dms-card-sm .fw-bold.line-clamp {
+  max-width: 250px;
+  text-overflow: ellipsis;
+}
+
+.icon-per.no-permission {
+  background-image: url("/assets/themes/dm/default/img/folder-security.svg") !important;
+  background-position: right bottom !important;
+  background-size: 8px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  position: relative;
+  top: 0;
+  width: 16px;
+  margin-left: -16px;
+  margin-right: 0 !important;
+}
+
+.line-clamp-2 {
+  word-break: break-all;
+}
+
+codx-toolbar .flex-stack.container-fluid {
+  padding: 0 22px;
+}
+
+codx-temp-full {
+  background-color: transparent !important;
+}
+
+ejs-switch .form-control {
+  border: 0;
+}
+
+.menu-item.progress-line {
+  height: 65px;
+  padding-top: 5px;
+  padding-right: 20px;
+
+}
+
+.menu-item.progress-line .fw-normal.fs-7 {
+  color: #ffffffc2 !important;
+  font-weight: 300 !important;
+}
+
+.dms-listview .table>thead {
+  background-color: var(--gray-100);
+}
+
+.switch.switch-sm .form-control {
+  border: 0;
+}
+
+.aside-menu .menu .menu-item .menu-link {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+/* css chart */
+.e-panel {
+  cursor: auto !important;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #737373;
+}
+
+#acc_chart_57724_1_border {
+  fill: "none";
+}
+
+codx-view-tree-detail .e-pane.e-static-pane {
+  flex-basis: 26% !important;
+  min-width: 250px;
+}

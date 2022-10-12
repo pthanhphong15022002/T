@@ -26,7 +26,7 @@
 </ng-template>
 <ng-template #locationCol let-data>  
   <div class="d-flex flex-column justify-content-start">
-    <span>{{data?.category| vll: "VL005" : 'text' | async}}</span> 
+    <!-- <span>{{data?.category| vll: "VL005" : 'text' | async}}</span>  -->
     <span>{{data?.companyName}}</span> 
   </div>
   
@@ -99,6 +99,18 @@
     </div>  
   
 </ng-template>  
+<ng-template #noteCol let-data>  
+  <div class="has-action-menu">
+    <span>{{data?.note}}</span>
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+    ></codx-mfunc>
+  </div>  
+
+</ng-template>  
 
 <ng-template #carCol let-data>  
   <div class="d-flex flex-row align-items-center">
@@ -110,11 +122,11 @@
         <span>:</span>
         <span class="fw-bold ms-1">{{ data.carRanking| vll: "EP005" : 'text' | async}}</span>
       </div>
-      <div class="d-flex flex-row">
+      <!-- <div class="d-flex flex-row">
         <codx-label [default]="grvDrivers?.Capacity?.headerText" name="lblCategory" class="text-gray-600"></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1">{{ data.carCapacity}}</span>
-      </div>
+      </div> -->
     </div>
   </div>  
 </ng-template>
@@ -124,12 +136,7 @@
     <div class="ms-2">
       <div class="fw-bold">{{ data.ownerName }}</div>
     </div>      
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
+    
   </div>
 </ng-template>
 

@@ -26,6 +26,7 @@ export class TaskDailyComponent implements OnInit {
   @ViewChild('report') report: TemplateRef<any>;
   @ViewChild('reportObj') reportObj: CodxReportViewerComponent;
   @ViewChild('pined') pined?: TemplateRef<any>;
+  @ViewChild('dashboard') dashboard?: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('iframe', {static: false}) iframe: ElementRef;
   @ViewChild('contentFrame', { read: ViewContainerRef}) contentFrame: ViewContainerRef;
@@ -145,6 +146,15 @@ export class TaskDailyComponent implements OnInit {
         reportView: true,
         model: {
           panelLeftRef: this.report,
+        },
+      },
+      {
+        sameData: false,
+        type: ViewType.content,
+        text: 'Đát Bo Viu ơ',
+        active: false,
+        model: {
+          panelLeftRef: this.dashboard,
         },
       },
     ];

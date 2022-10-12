@@ -40,7 +40,16 @@ export class ViewListMeetComponent implements OnInit {
   clickMF(e: any, dt?: any) {
     this.clickMoreFunction.emit({ e: e, data: dt })
   }
-
+  changeDataMF(e: any, data: any) {
+    if (e) {
+      e.forEach((x) => {
+        //an giao viec
+        if (x.functionID == 'SYS005'){
+          x.disabled = true;
+        }
+      });
+    }
+}
   getResourceID() {
     this.resources = this.data.resources;
     var id = '';
