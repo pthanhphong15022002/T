@@ -1,1 +1,21 @@
-<p>codx-attachment-temp works!</p>
+
+<div>
+    <div class="position-relative">
+        <div (click)="openPopup()">
+            <span><i class=" icon-attach_file icon-20 cursor-pointer"></i></span>
+        </div>
+        <div class="position-absolute 
+        d-flex align-items-center justify-content-center 
+        rounded-circle bg-primary text-white 
+        w-20px h-20px top-0 start-100 translate-middle">
+            <span style="font-size: 10px;">{{countData}}</span>
+        </div>
+    </div>
+</div>
+<ng-template #tmpListItem let-dialog>
+    <codx-form [body]="body" [dialog]="dialog" [subHeaderText]="'Danh sách file đính kèm'">
+    </codx-form>
+    <ng-template #body>
+        <codx-thumbnail [files]="lstFile" [formModel]="formModel"></codx-thumbnail>
+    </ng-template>
+</ng-template>

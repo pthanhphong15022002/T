@@ -71,6 +71,37 @@
         >
         </codx-input>
       </div>
+      <div class="form-group" *ngIf="stepType =='C'">
+        <codx-label
+          name="Reference"
+          [formModel]="form.formModel"
+          default="Đầu mục thực hiện"
+        ></codx-label>
+        <codx-input
+          field="reference"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          placeholder="Cho dữ liệu tạm để test đi !!"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+
+      <div class="form-group" *ngIf="stepType =='I'">
+        <codx-label
+          name="Reference"
+          [formModel]="form.formModel"
+          default="Bảng khảo sát"
+        ></codx-label>
+        <codx-input
+          field="reference"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          placeholder="Cho dữ liệu tạm để test đi !!"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
       <div class="form-group" *ngIf="stepType != 'M' && stepType != 'C'">
         <codx-label
           name="Memo"
@@ -101,7 +132,7 @@
           >
           </codx-input>
         </div>
-        <div class="col-4 form-group" *ngIf="stepType == 'C'">
+        <div class="col-4 form-group" *ngIf="stepType == 'M'">
           <codx-label
             fiedName="Reminder"
             [formModel]="form.formModel"
@@ -116,7 +147,7 @@
           >
           </codx-input>
         </div>
-        <div class="col-4 form-group row" *ngIf="stepType == 'C'">
+        <div class="col-4 form-group row" *ngIf="stepType == 'M'">
           <div class="d-flex align-items-center col-6 mt-5">
             <codx-input
               type="switch"
@@ -153,7 +184,7 @@
           </div>
         </div>
 
-        <div class="col-8 form-group" *ngIf="stepType != 'C'">
+        <div class="col-8 form-group" *ngIf="stepType != 'M'">
           <codx-label
             fiedName="Location"
             [formModel]="form.formModel"
@@ -169,7 +200,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="form-group" *ngIf="stepType == 'C'">
+      <div class="form-group" *ngIf="stepType == 'M'">
         <codx-label
           fiedName="Location"
           [formModel]="form.formModel"
@@ -187,12 +218,12 @@
       <ng-container>
         <div class="d-flex align-items-center justify-content-between mt-4">
           <div class="d-flex align-items-center mb-3">
-            <span class="icon-person icon-18 me-2 text-primary"></span>
+            <!-- <span class="icon-person icon-18 me-2 text-primary"></span> -->
             <div class="fw-bold text-primary mt-1">
               <codx-label
                 fiedName="Owners"
                 [formModel]="form.formModel"
-                default="Phân công cho"
+                default="Vai trò/ bộ phận thực hiện"
               >
               </codx-label>
             </div>
@@ -221,7 +252,7 @@
         </div>
       </ng-container>
 
-      <div class="form-group" *ngIf="stepType == 'C'">
+      <div class="form-group" *ngIf="stepType == 'M' || stepType == 'C'">
         <codx-label
           fiedName="Note"
           [formModel]="form.formModel"
