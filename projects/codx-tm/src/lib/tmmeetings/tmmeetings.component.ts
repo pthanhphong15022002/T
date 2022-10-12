@@ -518,10 +518,6 @@ export class TMMeetingsComponent
     return true;
   }
 
-// viewDetail(func, meeting) {
-  //   // this.codxService.navigate('', func.url, {
-  //   //   meetingID: data.meetingID,
-  //   // })};
 
  viewDetail(meeting) {
     this.tmService.getMeetingID(meeting.meetingID).subscribe((data) => {
@@ -645,8 +641,7 @@ export class TMMeetingsComponent
     }
   }
 
-  getHeaderCalendar(e) {
-    var date = e.getDate();
+  getDayCalendar(e) {
     var current_day = e.getDay();
     switch (current_day) {
       case 0:
@@ -672,6 +667,6 @@ export class TMMeetingsComponent
         break;
     }
 
-    return '<div >' + current_day +'</div><div>'+date+'</div>';
+    return current_day;
   }
 }
