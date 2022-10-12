@@ -504,7 +504,7 @@ export class TMMeetingsComponent
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
+        if (res) {
           this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
