@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef, ViewChild, TemplateRef } from "@angular/core";
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, ViewChild, TemplateRef, Input } from "@angular/core";
 import { AxisModel } from "@syncfusion/ej2-angular-charts";
 import { DashboardLayoutComponent, PanelModel } from "@syncfusion/ej2-angular-layouts";
 import { ApiHttpService, CallFuncService, DialogModel, SeriesSetting, SidebarModel } from "codx-core";
@@ -14,6 +14,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('dashboard') objDashboard!: DashboardLayoutComponent;
   @ViewChild('panelLayout') panelLayout?: TemplateRef<any>;
   @ViewChild('chart') chart?: TemplateRef<any>;
+  @ViewChild('templateContainer') templateContainer?: TemplateRef<any>;
+  @Input() template! : TemplateRef<any>;
   cellSpacing: number[] = [10, 10];
   cellAspectRatio: number = 100 / 50;
   panels: any = [];
@@ -130,25 +132,39 @@ addChart(panelId: any) {
   if (panelId) {
     let elePanel = document.getElementById(panelId);
     let idx = this.objDashboard.panels.findIndex((x:any)=> x.id == elePanel?.parentElement?.id);
-    let chartInfo = undefined;
-    if(Object.keys((this.objDashboard.panels[idx] as any).childChangedProperties).length > 0){
-      chartInfo = (this.objDashboard.panels[idx] as any).childChangedProperties;
-    }
-    let option = new DialogModel();
-    let dialog = this.callfunc.openForm(PopupAddChartComponent,"",600,800,"",chartInfo,"",option);
-    dialog.closed.subscribe(res=>{
-      if(res.event){
-
-        res.event.marker = this.marker;
-        res.event.xName = 'CustomerID';
-        res.event.yName=  'Freight';
-        //this.seriesSetting = [res.event];
-        if(idx > -1){
-          (this.objDashboard.panels[idx] as any).childChangedProperties = JSON.parse(JSON.stringify(res.event));
-        }
-        this.creatChart(panelId,res.event);
+    if(this.template){
+      let viewRef = this.template!.createEmbeddedView({ $implicit: '' });
+      viewRef.detectChanges();
+      let contentChart = viewRef.rootNodes;
+      let html = contentChart[0] as HTMLElement;
+      let eleBody = elePanel?.getElementsByClassName('card-body');
+      if (eleBody && eleBody.length > 0) {
+        eleBody[0].appendChild(html);
+        //this.replaceChart(elePanel);
       }
-    });
+    }
+    else{
+      let chartInfo = undefined;
+      if(Object.keys((this.objDashboard.panels[idx] as any).childChangedProperties).length > 0){
+        chartInfo = (this.objDashboard.panels[idx] as any).childChangedProperties;
+      }
+      let option = new DialogModel();
+      let dialog = this.callfunc.openForm(PopupAddChartComponent,"",600,800,"",chartInfo,"",option);
+      dialog.closed.subscribe(res=>{
+        if(res.event){
+
+          res.event.marker = this.marker;
+          res.event.xName = 'CustomerID';
+          res.event.yName=  'Freight';
+          //this.seriesSetting = [res.event];
+          if(idx > -1){
+            (this.objDashboard.panels[idx] as any).childChangedProperties = JSON.parse(JSON.stringify(res.event));
+          }
+          this.creatChart(panelId,res.event);
+        }
+      });
+    }
+
   }
 }
 

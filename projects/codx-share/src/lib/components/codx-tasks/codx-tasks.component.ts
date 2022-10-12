@@ -278,7 +278,7 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template7: this.footerNone, ///footer
+          //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
           // template: this.eventTemplate,
@@ -297,7 +297,7 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template7: this.footerNone, ///footer
+          //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
           // template: this.eventTemplate, lấy event của temo
