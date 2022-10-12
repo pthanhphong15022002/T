@@ -198,6 +198,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             [this.view.dataService.dataSelected],
             false
           );
+          // else{
+          //   this.view.dataService.data.push(e.event)
+          //   this.dataTreeProcessStep =  this.view.dataService.data ;
+          //   this.changeDetectorRef.detectChanges();
+          // }
+         
       });
     });
   }
