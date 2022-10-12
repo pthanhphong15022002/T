@@ -4,7 +4,6 @@
   [subHeaderText]="subHeader"
   [body]="body"
   [dialog]="dialog"
-  *ngIf="isAfterRender"
 >
   <ng-template #body>
     <div class="d-flex justify-content-between">
@@ -15,9 +14,9 @@
             type="datetime"
             class="test-datetime"
             field="startTime"
-            [crrValue]="dialogEditShift.value?.startTime"
+            [crrValue]="startTime"
             format="t"
-            (valueChange)="valueStartTimeChange($event)"
+            (valueChange)="valueChange($event, 'startTime')"
           >
           </codx-input>
         </div>
@@ -27,9 +26,9 @@
             type="datetime"
             class="test-datetime"
             field="endTime"
-            [crrValue]="dialogEditShift.value?.endTime"
+            [crrValue]="endTime"
             format="t"
-            (valueChange)="valueEndTimeChange($event)"
+            (valueChange)="valueChange($event, 'endTime')"
           >
           </codx-input>
         </div>
