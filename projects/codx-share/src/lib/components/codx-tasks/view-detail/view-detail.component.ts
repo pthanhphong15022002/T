@@ -370,7 +370,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
             if (index != -1) {
               ref.createByName = users[index].userName;
             }
-            this.dtchange.detectChanges() ;
           });
         }
       });
