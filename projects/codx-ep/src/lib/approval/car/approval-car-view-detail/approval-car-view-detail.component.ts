@@ -6,7 +6,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
+import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -32,7 +32,8 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
 
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService
+    private codxEpService: CodxEpService,    
+    private notificationsService: NotificationsService,
   ) {
     super(injector);
   }
@@ -48,9 +49,9 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
         changes.itemDetail?.currentValue?.recID
     ) {
       this.api
-        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
-          changes.itemDetail?.currentValue?.recID,
-        ])
+      .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
+        changes.itemDetail?.currentValue?.recID,changes.itemDetail?.currentValue?.approvalTransRecID,
+      ])
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
@@ -63,7 +64,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
     this.active = 1;
   }
 
-  openFormFuncID(value, datas: any = null) {
+  clickMF(value, datas: any = null) {
     
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
@@ -74,46 +75,28 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
     //   datas = this.view.dataService.data[index];
     // }
     switch (funcID) {
-      case 'EPT40101':
+      case 'EPT40201':
       case 'EPT40201':
       case 'EPT40301':
         {
-          alert('Duyệt');
+          //alert('Duyệt');
+          this.approve(datas,"5")
         }
-        break;
-      case 'EPT40102':
-      case 'EPT40201':
-      case 'EPT40301':
-        {
-          alert('Ký');
-        }
-        break;
-      case 'EPT40103':
-      case 'EPT40203':
-      case 'EPT40303':
-        {
-          alert('Đồng thuận');
-        }
-        break;
-      case 'EPT40104':
-      case 'EPT40204':
-      case 'EPT40304':
-        {
-          alert('Đóng dấu');
-        }
-        break;
-      case 'EPT40105':
+        break;      
+      case 'EPT40205':
       case 'EPT40205':
       case 'EPT40305':
         {
-          alert('Từ chối');
+          //alert('Từ chối');
+          this.approve(datas,"4")
         }
         break;
-      case 'EPT40106':
+      case 'EPT40206':
       case 'EPT40206':
       case 'EPT40306':
         {
-          alert('Làm lại');
+          //alert('Làm lại');
+          this.approve(datas,"2")
         }
         break;
       default:
@@ -121,9 +104,97 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
         break;
     }
   }
+  approve(data:any, status:string){
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(            
+            data?.approvalTransRecID,//ApprovelTrans.RecID
+            status,
+          )
+          .subscribe((res:any) => {
+            if (res?.msgCodeError == null && res?.rowCount>=0) {
+              if(status=="5"){
+                this.notificationsService.notifyCode('ES007');//đã duyệt
+                data.status="5"
+              }
+              if(status=="4"){
+                this.notificationsService.notifyCode('ES007');//bị hủy
+                data.status="4";
+              }
+              if(status=="2"){
+                this.notificationsService.notifyCode('ES007');//làm lại
+                data.status="2"
+              }                
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
+  } 
 
-  changeDataMF(event, data: any) {}
-
+  
+  changeDataMF(event, data: any) {
+    
+    if(event!=null && data!=null){
+      switch(data?.status){
+        case "3":
+        event.forEach(func => {
+          if(func.functionID == "EPT40202" 
+          ||func.functionID == "EPT40203" 
+          || func.functionID == "EPT40204")
+          {
+            func.disabled=true;
+          }
+        });
+        break;
+        case "4":
+          event.forEach(func => {
+            if(func.functionID == "EPT40202" 
+            ||func.functionID == "EPT40203" 
+            || func.functionID == "EPT40204"
+            ||func.functionID == "EPT40205" 
+            ||func.functionID == "EPT40206" 
+            || func.functionID == "EPT40201"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "5":
+          event.forEach(func => {
+            if(func.functionID == "EPT40202" 
+            ||func.functionID == "EPT40203" 
+            || func.functionID == "EPT40204"
+            ||func.functionID == "EPT40205" 
+            ||func.functionID == "EPT40206" 
+            || func.functionID == "EPT40201"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "2":
+          event.forEach(func => {
+            if(func.functionID == "EPT40202" 
+            ||func.functionID == "EPT40203" 
+            || func.functionID == "EPT40204"
+            ||func.functionID == "EPT40205" 
+            ||func.functionID == "EPT40206" 
+            || func.functionID == "EPT40201"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+      }
+    }
+  }
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
   }
