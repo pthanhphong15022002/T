@@ -19,6 +19,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
 
 
@@ -29,8 +30,7 @@ import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-proc
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
@@ -40,7 +40,8 @@ export class ProcessesComponent
   itemVersionNo: TemplateRef<any>;
   @ViewChild('itemActivedOn', { static: true }) itemActivedOn: TemplateRef<any>;
   @ViewChild('templateListCard', { static: true }) templateListCard: TemplateRef<any>;
-
+  @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
+  @ViewChild('view') codxview!: any;
   @ViewChild('itemMemo', { static: true })
   itemMemo: TemplateRef<any>;
   @Input() showButtonAdd = true;
@@ -48,6 +49,15 @@ export class ProcessesComponent
   dialog!: DialogRef;
   titleAction = '';
   columnsGrid = [];
+  textSearch: string;
+  textSearchAll: string;
+  data = [];
+  isSearch = false;
+  predicates: any;
+  values: any;
+  searchAdvance: boolean;
+  viewActive: any;
+  titleUpdateFolder = 'Cập nhật thư mục';
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -101,11 +111,64 @@ export class ProcessesComponent
           template: this.templateListCard,
         },
       },
+      {
+        id: '1',
+        icon: 'icon-search',
+        text: 'Search',
+        hide: true,
+        type: ViewType.list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateSearch,
+        },
+      },
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
     this.dt.detectChanges();
+  }
+
+  searchChange($event) {
+    try {
+      this.textSearch = $event;
+      this.data = [];
+      // this.dmSV.listFiles = [];
+      // this.dmSV.listFolder = [];
+      // this.dmSV.loadedFolder = true;
+      // this.dmSV.loadedFile = false;
+      if (this.codxview.currentView.viewModel.model != null)
+        this.codxview.currentView.viewModel.model.panelLeftHide = true;
+      this.isSearch = true;
+      // this.dmSV.page = 1;
+      // this.fileService.options.page = this.dmSV.page;
+      this.textSearchAll = this.textSearch;
+      // this.predicates = "FileName.Contains(@0)";
+      this.values = this.textSearch;
+      this.searchAdvance = false;
+      this.viewActive = this.views.filter(x => x.active == true)[0];
+      if (this.textSearch == null || this.textSearch == "") {
+        this.views.forEach(item => {
+          item.active = false;
+          item.hide = false;
+          if (item.text == "Search")
+            item.hide = true;
+          if (item.text == this.viewActive.text)
+            item.active = true
+        });
+        if (this.view.funcID == "BPT2") {
+          this.view.viewChange(this.viewActive);
+          this.codxview.currentView.viewModel.model.panelLeftHide = false;
+        }
+        this.dt.detectChanges();
+      }
+      // else this.search();
+    }
+    catch (ex) {
+      this.dt.detectChanges();
+      console.log(ex);
+    }
   }
 
   //#region CRUD
@@ -229,7 +292,19 @@ export class ProcessesComponent
         break;
       case 'SYS02':
         this.delete(data);
+        break;
     }
+  }
+
+  properties(e: any, data?: any) {
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    // let data = {} as any;
+    data.title = this.titleUpdateFolder;
+    data.id = data.recID;
+    this.callfc.openSide(PropertiesComponent, data, option);
   }
 
   onDragDrop(e: any) {

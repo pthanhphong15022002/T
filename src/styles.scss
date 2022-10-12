@@ -76,6 +76,11 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   --title-color: #f5f9fa;
 }
 
+::-webkit-scrollbar {
+  width: 0.4rem;
+  height: 0.4rem;
+}
+
 .text-primary {
   color: var(--text-primary) !important;
 }

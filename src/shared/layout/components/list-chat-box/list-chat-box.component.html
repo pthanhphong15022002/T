@@ -2,9 +2,9 @@
     <div class="chat-manager-wrap">
         <div #chatBoxWrap id="chat-boxes-wrap">
             <ng-container *ngFor="let item of listChatBoxes; let i = index">
-                <codx-chat-box [receiverId]="item.colabId" [receiverName]="item.colabName" [groupId]="item.groupId"
+                <codx-chat-boxs [receiverId]="item.colabId" [receiverName]="item.colabName" [groupId]="item.groupId"
                     [senderId]="item.ownerId" [senderName]="item.ownerName" (close)="onChatBoxClose(item)"
-                    (minimize)="onChatBoxMinimize(item)" (groupIdChange)="onGroupIdChange($event, i)"></codx-chat-box>
+                    (minimize)="onChatBoxMinimize(item)" (groupIdChange)="onGroupIdChange($event, i)"></codx-chat-boxs>
             </ng-container>
         </div>
         <div #chatStackWrap id="chat-stack-wrap">

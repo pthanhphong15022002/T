@@ -119,6 +119,9 @@ import { PopupAddChartComponent } from './components/codx-dashboard/popup-add-ch
 import { DashboardLayoutAllModule } from '@syncfusion/ej2-angular-layouts';
 import { LayoutPanelComponent } from './components/codx-dashboard/layout-panel/layout-panel.component';
 import { CodxAttachmentTempComponent } from './components/codx-attachment-temp/codx-attachment-temp.component';
+import { ChatListComponent } from './layout/components/chat-list/chat-list.component';
+import { ChatBoxComponent } from './layout/components/chatbox/chat-box.component';
+import { ListChatBoxComponent } from './layout/components/list-chat-box/list-chat-box.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -194,6 +197,9 @@ const T_Component: Type<any>[] = [
   CodxPopupViewsComponent,
   CodxCommentTempComponent,
   CodxUserTempComponent,
+  ChatBoxComponent,
+  ChatListComponent,
+  ListChatBoxComponent,
   //pdf
   PdfComponent,
   CodxDashboardComponent,

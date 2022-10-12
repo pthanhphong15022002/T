@@ -1153,7 +1153,7 @@ export class CodxDMService {
   }
 
   clickMF($event, data: any, view: any = null) {
-
+    debugger;
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
 

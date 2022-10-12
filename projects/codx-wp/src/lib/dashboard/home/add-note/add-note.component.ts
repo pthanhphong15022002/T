@@ -531,7 +531,21 @@ export class AddNoteComponent implements OnInit {
         itemUpdate: this.note,
         dialogRef: this.dialog,
       };
-      this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj, '');
+      this.dialog = this.callfc.openForm(
+        SaveNoteComponent,
+        '',
+        900,
+        650,
+        '',
+        obj,
+        ''
+      );
+      this.dialog.closed.subscribe((res) => {
+        if (res) {
+          var obj = [{ data: res.event, type: 'edit-isNote' }];
+          this.noteService.data.next(obj);
+        }
+      });
     } else {
       this.notificationsService.notifyCode('TM037');
     }

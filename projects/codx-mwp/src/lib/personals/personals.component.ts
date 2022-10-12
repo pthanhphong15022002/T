@@ -6,6 +6,7 @@ import {
   CodxService,
   ViewsComponent,
   ViewType,
+  PageTitleService,
 } from 'codx-core';
 import {
   Component,
@@ -58,6 +59,7 @@ export class PersonalsComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private auth: AuthService,
     private route: ActivatedRoute,
+    private pageTitle: PageTitleService,
     private codxService: CodxService
   ) {
     var data: any = this.auth.user$;
@@ -70,6 +72,7 @@ export class PersonalsComponent implements OnInit {
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.menuUrl = this.funcID;
+      this.getFunctionList();
       this.changedt.detectChanges();
     });
   }
@@ -81,6 +84,7 @@ export class PersonalsComponent implements OnInit {
   getFunctionList() {
     this.cachesv.functionList(this.funcID).subscribe((res: any) => {
       if (res) {
+        this.pageTitle.setSubTitle(res.customName);
         this.formName = res.formName;
         this.gridViewName = res.gridViewName;
         this.cachesv
