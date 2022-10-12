@@ -1,39 +1,75 @@
-<codx-views #view funcID="WPT05" service="HR" entityName="HR_Employees" [views]="views" [buttons]="buttons"
-  [formModel]="view.formModel" idField="employeeID" assemblyName="ERM.Business.HR" className="EmployeesBusiness"
-  method="GetModelFormEmployAsync" [selectedFirst]="true" [viewActiveType]="'1'">
+<codx-views
+  #view
+  funcID="WPT05"
+  service="HR"
+  entityName="HR_Employees"
+  [views]="views"
+  [buttons]="buttons"
+  [formModel]="view.formModel"
+  idField="employeeID"
+  assemblyName="ERM.Business.HR"
+  className="EmployeesBusiness"
+  method="GetModelFormEmployAsync"
+  [selectedFirst]="true"
+  [viewActiveType]="'1'"
+>
 </codx-views>
 
 <ng-template #cardTemp let-data>
-  <codx-card-center cardCss="border w-250px h-200" [imageId]="data.employeeID" [formModel]="view.formModel"
-    [title]="placeholder(data.employeeName, view.formModel, 'EmployeeName') | async"  [imageObjName]="data.employeeName"
-    [subTitle]="placeholder(data.positionName, view.formModel, 'PositionID') | async" [dataItem]="data" 
+  <codx-card-center
+    cardCss="border  d-flex flex-center flex-column  card-user"
+    [imageId]="data.employeeID"
+    imageWidth="50"
+    [formModel]="view.formModel"
+    [title]="
+      placeholder(data.employeeName, view.formModel, 'EmployeeName') | async
+    "
+    [imageObjName]="data.employeeName"
+    [subTitle]="
+      placeholder(data.positionName, view.formModel, 'PositionID') | async
+    "
+    [dataItem]="data"
     [imageObjType]="view.formModel.entityName"
-    [desc]="placeholder(data.birthday | date: 'dd/MM/yyyy', view.formModel, 'Birthday') | async" [footer]="footer">
+    [desc]="
+      placeholder(
+        data.birthday | date: 'dd/MM/yyyy',
+        view.formModel,
+        'Birthday'
+      ) | async
+    "
+    [footer]="footer"
+  >
   </codx-card-center>
 </ng-template>
 
 <ng-template #footer let-data>
-  <div class="d-flex align-items-top mt-2">
-    <span class="icon-email icon-16 me-2"> </span>
-    <span class="text-dark fw-bold">
-      <span #email>{{
-        data.email | formatvalue: view.formModel:"email":email | async
-        }}</span>
-    </span>
-  </div>
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center flex-center d-phone">
     <span class="icon-phone_android icon-16 me-2"></span>
-    <span class="text-dark fw-bold">
+    <span class="text-gray-700">
       <span #phone>{{
         data.phone | formatvalue: view.formModel:"phone":phone | async
-        }}</span>
+      }}</span>
+    </span>
+  </div>
+  <div class="d-flex align-items-center flex-center d-mail">
+    <span class="icon-email icon-16 me-2"> </span>
+    <span class="text-gray-700">
+      <span #email>{{
+        data.email | formatvalue: view.formModel:"email":email | async
+      }}</span>
     </span>
   </div>
 </ng-template>
 
 <ng-template #itemEmployee let-data>
   <div class="d-flex align-items-center emp-list">
-    <codx-img class="me-3" [width]="30" [objectId]="data.employeeID" [objectName]="data.employeeName" objectType="HR_Employees">
+    <codx-img
+      class="me-3"
+      [width]="30"
+      [objectId]="data.employeeID"
+      [objectName]="data.employeeName"
+      objectType="HR_Employees"
+    >
     </codx-img>
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex align-items-center">
@@ -50,9 +86,9 @@
         <span class="text-gray-600 fs-7">
           <span #positionName>{{
             data.positionName
-            | formatvalue: view.formModel:"positionName":positionName
-            | async
-            }}</span>
+              | formatvalue: view.formModel:"positionName":positionName
+              | async
+          }}</span>
         </span>
       </div>
     </div>
@@ -60,7 +96,10 @@
 </ng-template>
 
 <ng-template #itemStatusName let-data>
-  <div class="badge badge-danger me-2" [style.background-color]="data?.statusColor">
+  <div
+    class="badge badge-danger me-2"
+    [style.background-color]="data?.statusColor"
+  >
     {{ data.statusName }}
   </div>
 </ng-template>
@@ -71,9 +110,9 @@
       <span class="text-gray-600">
         <span #birthday>{{
           data.birthday
-          | formatvalue: view.formModel:"birthday":birthday
-          | async
-          }}</span>
+            | formatvalue: view.formModel:"birthday":birthday
+            | async
+        }}</span>
       </span>
     </div>
   </div>
@@ -84,7 +123,7 @@
     <span class="text-gray-600">
       <span #joinedOn>{{
         data.joinedOn | formatvalue: view.formModel:"joinedOn":joinedOn | async
-        }}</span>
+      }}</span>
     </span>
   </div>
 </ng-template>
@@ -95,7 +134,7 @@
     <span class="text-gray-600">
       <span #phone>{{
         data.phone | formatvalue: view.formModel:"phone":phone | async
-        }}</span>
+      }}</span>
     </span>
   </div>
 </ng-template>
@@ -106,7 +145,7 @@
     <span class="text-gray-600">
       <span #email>{{
         data.email | formatvalue: view.formModel:"email":email | async
-        }}</span>
+      }}</span>
     </span>
   </div>
 </ng-template>

@@ -185,6 +185,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
             this.imgSignature2.imageUpload ||
             this.imgStamp.imageUpload
           ) {
+            var i = 3;
             this.imgSignature1.imageUpload &&
               this.imgSignature1
                 .updateFileDirectReload(this.data.recID)
@@ -196,14 +197,14 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       .editSignature(this.data)
                       .subscribe((res) => {});
                   }
-                  this.dialog && this.dialog.close(result);
+                  i--;
+                  if(i <= 0)
+                    this.dialog && this.dialog.close(result);
                 });
             this.imgSignature2.imageUpload &&
               this.imgSignature2
                 .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
-                  this.dialog && this.dialog.close(result);
-
                   if (img && this.data.signature2 == null) {
                     result.signature2 = (img[0] as any).recID;
 
@@ -212,12 +213,15 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       .editSignature(this.data)
                       .subscribe((res) => {});
                   }
-                  this.dialog && this.dialog.close(result);
+                  i--;
+                  if(i <= 0)
+                    this.dialog && this.dialog.close(result);
                 });
             this.imgStamp.imageUpload &&
               this.imgStamp
                 .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
+                  debugger
                   if (img && this.data.stamp == null) {
                     result.stamp = (img[0] as any).recID;
 
@@ -226,7 +230,10 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       .editSignature(this.data)
                       .subscribe((res) => {});
                   }
-                  this.dialog && this.dialog.close(result);
+                  i--;
+                  console.log(i);
+                  if(i <= 0)
+                    this.dialog && this.dialog.close(result);
                 });
           } else {
             this.dialog && this.dialog.close(result);
