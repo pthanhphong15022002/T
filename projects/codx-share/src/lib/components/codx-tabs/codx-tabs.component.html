@@ -1,5 +1,11 @@
 <div class="tab-horizone tab-footer tab-off">
-  <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav nav-tabs">
+  <ul
+    ngbNav
+    #nav="ngbNav"
+    [(activeId)]="active"
+    (navChange)="navChange($event)"
+    class="nav nav-tabs"
+  >
     <ng-container *ngFor="let item of TabControl; let i = index">
       <li [ngbNavItem]="i + 1" class="nav-item">
         <a ngbNavLink class="nav-link">

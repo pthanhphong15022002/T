@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -53,6 +54,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
@@ -87,6 +89,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         if (res) {
           this.itemSelected = res;
           this.viewTags = this.itemSelected?.tags;
+          this.changeDetectorRef.detectChanges();
           this.loadTreeView();
           this.loadDataReferences();
         }
