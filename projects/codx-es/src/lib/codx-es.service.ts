@@ -525,6 +525,16 @@ export class CodxEsService {
 
   //#region ES_Signatures
 
+  getDataSignature(userID: string, signatureType: string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'SignaturesBusiness',
+      'GetByUserIDAsync',
+      [userID, signatureType]
+    );
+  }
+
   addNewSignature(data: any): Observable<any> {
     return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddNewAsync', [
       data,

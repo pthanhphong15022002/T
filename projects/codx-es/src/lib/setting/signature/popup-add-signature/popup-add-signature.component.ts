@@ -78,7 +78,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.data = dialog?.dataService?.dataSelected;
     this.isAdd = data?.data?.isAdd;
-    this.formModel = this.dialog.formModel;
+    this.formModel = this.dialog?.formModel;
     this.headerText = data?.data?.headerText;
   }
 
