@@ -1350,8 +1350,8 @@ export class PdfComponent
                   this.signerInfo.stepNo
                 );
               }
-              return;
             }
+            return;
           });
 
           break;

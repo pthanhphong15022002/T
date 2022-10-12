@@ -39,8 +39,10 @@ export class PopupSelectLabelComponent extends UIComponent {
 
     this.detectorRef.detectChanges();
   }
-  closePopUp() {
-    this.dialog.close(this.curLabel);
+  closePopUp(isComplete) {
+    if (isComplete) {
+      this.dialog.close(this.curLabel);
+    } else this.dialog.close(null);
   }
 
   changeLabel(e: any) {
