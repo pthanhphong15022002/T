@@ -1,0 +1,34 @@
+.e-grid .e-rowcell {
+  line-height: inherit;
+  padding: 10px;
+}
+
+.emp-card .text-gray-700.line-clamp {
+  font-size: var(--fs-7);
+  color: var(--gray-600) !important;
+}
+
+.card-user {
+  width: 220px;
+  height: 220px;
+
+  .card-body {
+    padding: 0 !important;
+  }
+
+  .symbol {
+    margin-bottom: 16px !important;
+  }
+
+  .line-clamp {
+    margin-bottom: 4px !important;
+  }
+
+  .d-phone {
+    margin-bottom: 4px !important;
+  }
+
+  .line-clamp.fw-bold {
+    font-size: 13.3px !important;
+  }
+}
