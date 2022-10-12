@@ -47,7 +47,7 @@ export class EditSkillComponent implements OnInit {
   ticks:any;
   ngOnInit(): void {
     this.tooltip = { placement: 'Before', isVisible: true, showOn: 'Always' };
-    this.ticks = { placement: 'After', largeStep: 0, smallStep: 10, showSmallTicks: true };
+    this.ticks = { placement: 'After', largeStep: 1, smallStep: 10, showSmallTicks: true };
   }
   sliderChange(e, data) {
     this.skillChartEmployee = [];

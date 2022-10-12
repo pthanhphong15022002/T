@@ -48,6 +48,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   @ViewChild('pdfView') pdfView: PdfComponent;
 
   isAfterRender: boolean = false;
+  isConfirm = false;
   isApprover = true;
   stepNo;
   dialog;
@@ -88,6 +89,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
     });
   }
 
+  changeConfirmState(state: boolean) {
+    this.isConfirm = state;
+  }
+
   clickOpenPopupADR(mode) {
     let title = '';
     let subTitle = 'Comment khi duyệt';
@@ -126,6 +131,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         funcID: this.funcID,
         formModel: this.formModel,
         formGroup: this.dialogSignFile,
+        stepType: this.data.stepType,
       }
     );
     this.pdfView.curPage = this.pdfView.pageMax;
@@ -142,7 +148,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
               };
               this.notify.notifyCode('RS002');
               this.canOpenSubPopup = false;
-              //this.pdfView.reload();
               this.dialog && this.dialog.close(result);
             } else {
               this.canOpenSubPopup = false;

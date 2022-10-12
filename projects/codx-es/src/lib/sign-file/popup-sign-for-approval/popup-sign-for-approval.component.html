@@ -10,7 +10,7 @@
         <button
           type="button"
           class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup"
+          [disabled]="!canOpenSubPopup && !isConfirm"
           (click)="clickOpenPopupADR(1)"
         >
           <codx-vll
@@ -30,7 +30,7 @@
         <button
           type="button"
           class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup"
+          [disabled]="!canOpenSubPopup && !isConfirm"
           (click)="clickOpenPopupADR(2)"
         >
           <codx-label
@@ -42,7 +42,7 @@
         <button
           type="button"
           class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup"
+          [disabled]="!canOpenSubPopup && !isConfirm"
           (click)="clickOpenPopupADR(3)"
         >
           <codx-label
@@ -73,6 +73,7 @@
     <div class="stepper-body no-header pt-2 w-100">
       <lib-pdf
         #pdfView
+        (confirmChange)="changeConfirmState($event)"
         [isApprover]="isApprover"
         [transRecID]="transRecID"
         [recID]="sfRecID"
@@ -223,7 +224,7 @@
       >
         <codx-label
           name="lblSave"
-          default="OK"
+          [default]="'OK'"
           [formModel]="dialog.formModel"
         ></codx-label>
       </button>
