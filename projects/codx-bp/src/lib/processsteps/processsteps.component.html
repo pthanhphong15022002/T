@@ -1,6 +1,20 @@
-<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName" [className]="className"
-  [method]="method" [views]="views" [button]="button" (buttonClick)="click($event)"
-[moreFuncs]="moreFuncs" [autoLoad]="true" [idField]="idField" (onDragDrop)="onDragDrop($event)">
+<codx-views
+  #view
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="method"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [dataObj]="dataObj"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  [idField]="idField"
+  (onDragDrop)="onDragDrop($event)"
+>
 </codx-views>
 
 <ng-template #cardKanban let-data let-setting="setting">
@@ -18,6 +32,101 @@
   >
   </codx-card-img>
 </ng-template>
-<ng-template #cardImgFooter let-data let-setting="setting">
 
+<ng-template #cardImgFooter let-data let-setting="setting"> </ng-template>
+
+<!-- viewlist-content -detail-Process -->
+<ng-template #itemViewList let-data>
+  aaaaaaaaaaaaaa
+  <div class="p-5">
+    <h2 class="text-danger py-4 uppercase">41_BP_Process_Detail</h2>
+    <h4>Qui trình tuyển dụng - Vị trí Manager</h4>
+    <div class="card" style="width: 936px">
+      <div class="card-body">
+        <div class="mb-5">
+          <h4 class="fw-bold text-gray-900 mb-104">
+            Qui trình tuyển dụng - Vị trí Manager
+          </h4>
+          <div class="d-flex flex-wrap mb-2">
+            <div class="d-flex align-items-center me-4">
+              <span class="fw-bolb">
+                <codx-label name="" default="Phiên bản:"> </codx-label>
+              </span>
+              <span class="text-dark">v1.01</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="fw-bolb">
+                <codx-label name="" default="Ngày hiệu lực:"> </codx-label>
+              </span>
+              <span class="text-dark">01/01/2021</span>
+            </div>
+          </div>
+          <div class="d-flex flex-wrap mb-2">
+            <div class="d-flex align-items-center me-4">
+              <span
+                >Theo dõi quá trình tuyển dụng từ khi yêu cầu > đăng tuyển > sàn
+                lọc hồ sơ > phỏng vấn > tuyển chọn > offer > ký HĐLĐ</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mb-5">
+          <div class="card card-steplist">
+            <div
+              class="steplist-hearder border border-gray-200 rounded px-6 py-4"
+            >
+              <codx-temp-full
+                [title]="'Công đoạn 2: Sơ vấn'"
+                [titleCss]="'fs-3 mb-2'"
+                [baseHeaderRightTmp]="tmp"
+                [desc]="
+                  'Nhân viên TA chuẩn bị câu hỏi khảo sát, gọi điện thoại sơ vấn những ứng viên có hồ sơ qua vòng sàng lọc'
+                "
+              >
+              </codx-temp-full>
+            </div>
+            <ng-template #tmp>
+              <div><span class="text-danger">1.5h/UV</span></div>
+            </ng-template>
+            <div id="kt_docs_card_collapsible" class="collapse show">
+              <div class="card-body p-0">
+                <div class="steplist ps-6 pt-4">
+                  <div class="steplist-item step-primary rounded p-4">
+                    <codx-temp-full
+                      [title]="'Công đoạn 2: Sơ vấn'"
+                      [titleCss]="'fs-5 mb-1'"
+                      [baseHeaderRightTmp]="tmp"
+                      [desc]="
+                        'Nhân viên TA chuẩn bị câu hỏi khảo sát, gọi điện thoại sơ vấn những ứng viên có hồ sơ qua vòng sàng lọc'
+                      "
+                    >
+                    </codx-temp-full>
+                  </div>
+                  <div class="steplist-item step-danger rounded p-4">
+                    <div>Theo dõi quá trình tuyển dụng từ khi yêu cầu</div>
+                    <div class="fs-3 text-danger">
+                      Dùng control Note chỗ Nguyên
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="d-flex align-items-center border border-left-4 border-color-primary card-rounded p-5 p-lg-10 mb-14"
+                >
+                  <div class="d-flex flex-wrap mb-2">
+                    <div class="d-flex align-items-center me-4">
+                      <span
+                        >Theo dõi quá trình tuyển dụng từ khi yêu cầu > đăng
+                        tuyển > sàn lọc hồ sơ > phỏng vấn > tuyển chọn > offer >
+                        ký HĐLĐ</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>

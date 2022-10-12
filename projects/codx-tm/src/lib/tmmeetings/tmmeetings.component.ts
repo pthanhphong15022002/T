@@ -541,7 +541,6 @@ export class TMMeetingsComponent
         data: data,
         dataObj: dataObj,
       };
-
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       dialogModel.zIndex = 900;
