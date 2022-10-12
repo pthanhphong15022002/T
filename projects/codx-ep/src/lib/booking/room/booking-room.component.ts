@@ -21,6 +21,7 @@ import {
   CallFuncService,
   ViewType,
   FormModel,
+  NotificationsService,
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
@@ -82,6 +83,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     private codxEpService: CodxEpService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
+    private notificationsService: NotificationsService,
     private activatedRoute: ActivatedRoute
   ) {
     super(injector);
@@ -288,11 +290,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   delete(evt?) {
     let deleteItem = this.view.dataService.dataSelected;
-    if (evt) {
-      deleteItem = evt;
-    }
+    if (evt) { deleteItem = evt; }
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
-      console.log(res);
+      if(!res){
+        this.notificationsService.notifyCode("SYS022");
+      }
     });
   }  
 }
