@@ -1,16 +1,26 @@
-<codx-views #view funcID="MWP002" service="HR" entityName="HR_Employees" idField="employeeID" [views]="views"
-  [formModel]="view.formModel" [viewActiveType]="'16'">
+<codx-views #view 
+service="HR" 
+entityName="HR_Employees" 
+idField="employeeID" 
+[views]="views"
+[viewActiveType]="'16'">
 </codx-views>
 
 <ng-template #panelRightRef>
   <div class="page-pw h-100">
-    <div class="pw-profile" style="
-        background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
+    <div class="pw-profile" 
+      style="background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
       ">
       <div class="d-flex align-items-center avatar">
-        <codx-img class="me-4 pic-emloyee" #imageAvatar [width]="100" [objectId]="employeeInfo?.employeeID"
-          objectType="HR_Employees" [objectName]="employeeInfo?.employeeName" [funcId]="view.formModel.funcID"
-          isAllowEdit="true" updateDirect="true">
+        <codx-img 
+          class="me-4 pic-emloyee" 
+          #imageAvatar 
+          [width]="100" 
+          [objectId]="employeeInfo?.employeeID"
+          objectType="HR_Employees" 
+          [objectName]="employeeInfo?.employeeName"
+          isAllowEdit="true" 
+          updateDirect="true">
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
@@ -36,7 +46,6 @@
 
     <div class="d-flex w-100 h-employee p-3">
       <div class="w-300px min-w-300px h-100 aside-info-left">
-
         <lib-info-left [formModel]="view.formModel"></lib-info-left>
       </div>
       <div class="employee-container w-100 ms-3 ps-9 pe-6 pb-6">
@@ -462,7 +471,7 @@
                   <codx-label name="lblExperencies" formName="Employees" default="Kinh nghiệm trước đây">
                   </codx-label>
                 </div>
-                <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader>
+                <!-- <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader> -->
                 <div class="border rounded-2 p-6 pb-0" *ngIf="ExperencesCurrent">
                   <div class="user-process process-h">
                     <ng-container *ngFor="let experences of ExperencesWorked">
@@ -509,17 +518,17 @@
               <div class="user-profile overview">
                 <div class="d-flex justify-content-between mb-2 mt-6">
                   <div class="fw-bold fs-4 text-primary">
-                    <codx-label name="lblSkill" formName="Employees" default="Kỹ năng ">
+                    <codx-label [formModel]="view.formModel" formName="Employees" default="Kỹ năng ">
                     </codx-label>
                   </div>
                   <a *ngIf="editMode" class="btn btn-sm btn-icon btn-light" (click)="editSkill(skillEmployee)">
                     <span class="icon-edit icon-16"></span>
                   </a>
                 </div>
-                <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader>
+                <!-- <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader> -->
                 <div class="border rounded-2 p-6" *ngIf="skillEmployee">
-                  <div class="row">
-                    <div class="col-6 pe-6">
+                  <div class="d-flex justify-content-between">
+                    <div class="pe-6">
                       <div class="card-process">
                         <ng-container *ngFor="let data of skillEmployee">
                           <div class="d-flex flex-column">
@@ -530,9 +539,16 @@
                               <div id="container">
                                 <div class="wrap">
                                   <div class="sliderwrap">
-                                    <ejs-slider id="minrange" [type]="minType" [min]="0" [max]="10"
-                                      [value]="data.valueX" [readonly]="true">
-                                    </ejs-slider>
+                                    <ng-container *ngIf="parameter">
+                                      <ejs-slider id="minrange" 
+                                        [type]="minType" 
+                                        [min]="0" 
+                                        [max]="parameter.maxLevelSkill? parameter.maxLevelSkill : 10 "
+                                        [value]="data.valueX"
+                                        [readonly]="true" 
+                                        >
+                                      </ejs-slider>
+                                    </ng-container>
                                   </div>
                                 </div>
                               </div>
@@ -541,7 +557,7 @@
                         </ng-container>
                       </div>
                     </div>
-                    <div class="col-6">
+                    <!-- <div class="">
                       <ejs-chart id="chartcontainer" [title]="" [primaryXAxis]="primaryXAxis"
                         [primaryYAxis]="primaryYAxis">
                         <e-series-collection>
@@ -550,7 +566,32 @@
                           </e-series>
                         </e-series-collection>
                       </ejs-chart>
-                    </div>
+                    </div> -->
+                  </div>
+                  <div class="row">
+                    <ng-container *ngIf="editMode">
+                      <div class="col-xl-4 col-lg-4 col-md-4 mb-4" >
+                        <button class="btn rounded-2 bg-light bg-gradient border" (click)="clickOpenPopupAddSkill()">
+                          <span class="icon-add icon-18"></span>
+                          <span class="text-primary" >
+                            <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
+                            </codx-label>
+                          </span>
+                        </button>
+                      </div>
+                      <ng-container *ngIf="showCBB">
+                        <codx-combobox-popup
+                          comboboxName="Skills"
+                          field="skill"
+                          [multiple]="true"
+                          [width]="width"
+                          [height]="height"
+                          (clickSave)="saveAddSkill($event)"
+                          title="Kỹ năng"
+                        >
+                        </codx-combobox-popup>
+                      </ng-container>                      
+                    </ng-container>
                   </div>
                 </div>
               </div>
@@ -579,25 +620,18 @@
                   <div class="user-process process-v swiper-wrapper">
                     <ng-container swiperSlide *ngIf="editMode">
                       <ng-container>
-                        <!-- <div class="process-item swiper-slide" (click)="editDataEdu(null)">
-                          <span class="icon-add icon-18"></span>
-                          <span class="yeartoyear btn btn-sm add-process">
-                            <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
-                            </codx-label>
-                          </span>
-                        </div> -->
-
                         <div class="col-xl-4 col-lg-4 col-md-4 mb-4" >
                           <div class="d-flex">
                             <div class="d-flex align-items-center user-item add-process">
                               <span class="icon-add icon-18"></span>
                               <a class="text-primary" (click)="editDataEdu(null)">
-                                <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
+                                <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
                                 </codx-label>
                               </a>
                             </div>
                           </div>
-                        </div>                      </ng-container>
+                        </div>                      
+                      </ng-container>
                     </ng-container>
 
                     <ng-container swiperSlide *ngFor="let item of trainingPersonal">

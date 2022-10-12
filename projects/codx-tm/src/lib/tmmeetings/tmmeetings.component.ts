@@ -21,6 +21,7 @@ import {
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -96,6 +97,9 @@ export class TMMeetingsComponent
   titleAction = '';
   statusVll = 'CO004';
   toolbarCls: string;
+  heightWin: any;
+  widthWin: any;
+
 
   constructor(
     inject: Injector,
@@ -106,8 +110,13 @@ export class TMMeetingsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.api.execSv('CO',
+    'CO',
+    'MeetingsBusiness',
+    'SetAutoStatusMeetingAsync').subscribe();
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
@@ -123,9 +132,13 @@ export class TMMeetingsComponent
 
     this.dataValue = this.user?.userID;
     this.getParams();
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
+
     this.button = {
       id: 'btnAdd',
     };
@@ -133,7 +146,7 @@ export class TMMeetingsComponent
     let body = document.body;
     if (body.classList.contains('toolbar-fixed'))
       this.toolbarCls = 'toolbar-fixed';
-  
+
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'CO';
     this.modelResource.className = 'MeetingsBusiness';
@@ -213,10 +226,15 @@ export class TMMeetingsComponent
 
   //#region kanban
   changeDataMF(e: any, data: any) {
-    // console.log(e, data);
-  }
-  //#end region
-
+    if (e) {
+      e.forEach((x) => {
+        //an giao viec
+        if (x.functionID == 'SYS005'){
+          x.disabled = true;
+        }
+      });
+    }
+}
   //#region schedule 
 
   fields = {
@@ -504,8 +522,8 @@ export class TMMeetingsComponent
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
   }
@@ -522,8 +540,7 @@ export class TMMeetingsComponent
   //   // this.codxService.navigate('', func.url, {
   //   //   meetingID: data.meetingID,
   //   // })};
-
- viewDetail(meeting) {
+  viewDetail(meeting) {
     this.tmService.getMeetingID(meeting.meetingID).subscribe((data) => {
       var resourceTaskControl = [];
       var arrayResource = data?.resources;
@@ -545,15 +562,14 @@ export class TMMeetingsComponent
         data: data,
         dataObj: dataObj,
       };
-
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-      // dialogModel.zIndex = 900;
+      dialogModel.zIndex = 900;
       var dialog = this.callfc.openForm(
         PopupTabsViewsDetailsComponent,
         '',
-        0,
-        0,
+        this.widthWin,
+        this.heightWin,
         '',
         obj,
         '',
@@ -600,7 +616,7 @@ export class TMMeetingsComponent
     //   this.codxService.navigate('', this.urlView, {
     //     meetingID: data.meetingID,
     //   });
-    // } 
+    // }
   }
   //end region
 
@@ -619,19 +635,13 @@ export class TMMeetingsComponent
   }
 
   onDragDrop(data: any) {
-      this.api
-        .execSv<any>(
-          'CO',
-          'CO',
-          'MeetingsBusiness',
-          'UpdateMeetingsAsync',
-          data
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.view.dataService.update(data);
-          }
-        });
+    this.api
+      .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'UpdateMeetingsAsync', data)
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.update(data);
+        }
+      });
   }
 
   onActions(e: any) {
@@ -645,8 +655,7 @@ export class TMMeetingsComponent
     }
   }
 
-  getHeaderCalendar(e) {
-    var date = e.getDate();
+  getDayCalendar(e) {
     var current_day = e.getDay();
     switch (current_day) {
       case 0:
@@ -672,6 +681,6 @@ export class TMMeetingsComponent
         break;
     }
 
-    return '<div >' + current_day +'</div><div>'+date+'</div>';
+    return current_day;
   }
 }

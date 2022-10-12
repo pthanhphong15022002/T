@@ -1,3 +1,4 @@
+import { CO_Meetings } from './../../../../../codx-tm/src/lib/models/CO_Meetings.model';
 import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
 import { type } from 'os';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -32,6 +33,7 @@ import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-no
 import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
+import { T } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -43,6 +45,7 @@ export class CalendarNotesComponent
   implements OnInit, AfterViewInit
 {
   message: any;
+  x;
   listNote: any[] = [];
   type: any;
   typeCalendar = 'week';
@@ -53,10 +56,13 @@ export class CalendarNotesComponent
   checkUpdateNotePin = false;
   TM_Tasks: any = new Array();
   WP_Notes: any = new Array();
+  CO_Meetings: any = new Array();
   TM_TasksParam: any;
   WP_NotesParam: any;
+  CO_MeetingsParam: any;
   checkTM_TasksParam: any;
   checkWP_NotesParam: any;
+  checkCO_MeetingsParam: any;
   daySelected: any;
   checkWeek = true;
   typeList = 'notes-home';
@@ -64,14 +70,12 @@ export class CalendarNotesComponent
   predicate = '';
   userID = '';
   data: any;
-  fromDate: any;
   toDate: any;
   dataObj: any;
   editMF: any;
   deleteMF: any;
   pinMF: any;
   saveMF: any;
-  dataUpdate: any;
   functionList: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
@@ -240,7 +244,11 @@ export class CalendarNotesComponent
     this.setDate(data, lstView);
   }
 
+  FDdate: any;
+  TDate: any;
+
   setDate(data, lstView) {
+    console.log("check setDate");
     var dateT = new Date(data);
     var fromDate = dateT.toISOString();
     this.daySelected = fromDate;
@@ -251,7 +259,11 @@ export class CalendarNotesComponent
     (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
     lstView.dataService
       .setPredicate(this.predicate, [this.dataValue])
-      .subscribe();
+      .subscribe((res) => {
+        this.changeDetectorRef.detectChanges();
+      });
+    this.FDdate = fromDate;
+    this.TDate = toDate;
   }
 
   valueChangeTyCalendar(e) {
@@ -278,13 +290,15 @@ export class CalendarNotesComponent
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           var dt = res.msgBodyData[0];
-          this.TM_TasksParam = JSON.parse(dt[2].TM_Tasks[0]?.dataValue);
-          this.WP_NotesParam = JSON.parse(dt[2].WP_Notes[0]?.dataValue);
+          this.TM_TasksParam = JSON.parse(dt[3].TM_Tasks);
+          this.WP_NotesParam = JSON.parse(dt[3].WP_Notes);
+          this.CO_MeetingsParam = JSON.parse(dt[3].CO_Meetings);
           this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
           this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
-
+          this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
           this.WP_Notes = dt[0];
           this.TM_Tasks = dt[1];
+          this.CO_Meetings = dt[2];
           if (this.WP_Notes) {
             this.WP_Notes.forEach((res) => {
               if (res.isPin == true || res.isPin == '1') {
@@ -299,11 +313,11 @@ export class CalendarNotesComponent
   setEvent(ele = null, args = null) {
     let calendarWP = 0;
     let calendarTM = 0;
+    let calendarCO = 0;
     let countShowCalendar = 0;
     if (args) {
       var date = args.date;
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
-
       if (this.checkTM_TasksParam == true || this.checkTM_TasksParam == '1') {
         if (this.TM_TasksParam?.ShowEvent == '1') {
           for (let y = 0; y < this.TM_Tasks?.length; y++) {
@@ -311,6 +325,22 @@ export class CalendarNotesComponent
             var dataLocal = dateParse.toLocaleDateString();
             if (date == dataLocal) {
               calendarTM++;
+              break;
+            }
+          }
+        }
+      }
+
+      if (
+        this.checkCO_MeetingsParam == true ||
+        this.checkCO_MeetingsParam == '1'
+      ) {
+        if (this.CO_MeetingsParam?.ShowEvent == '1') {
+          for (let y = 0; y < this.CO_Meetings?.length; y++) {
+            var dateParse = new Date(this.CO_Meetings[y]?.createdOn);
+            var dataLocal = dateParse.toLocaleDateString();
+            if (date == dataLocal) {
+              calendarCO++;
               break;
             }
           }
@@ -336,70 +366,90 @@ export class CalendarNotesComponent
         }
       }
     }
-    var span: HTMLElement = document.createElement('span');
-    var span2: HTMLElement = document.createElement('span');
+    var spanWP: HTMLElement = document.createElement('span');
+    var spanTM: HTMLElement = document.createElement('span');
+    var spanCO: HTMLElement = document.createElement('span');
     var flex: HTMLElement = document.createElement('span');
     flex.className = 'd-flex note-point';
     ele.append(flex);
 
     if (calendarWP >= 1 && countShowCalendar < 1) {
       if (this.typeCalendar == 'week') {
-        span.setAttribute(
+        spanWP.setAttribute(
           'style',
           `width: 6px;height: 6px;background-color: orange;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
       } else {
-        span.setAttribute(
+        spanWP.setAttribute(
           'style',
           'width: 6px;height: 6px;background-color: orange;border-radius: 50%;'
         );
       }
-      flex.append(span);
+      flex.append(spanWP);
     }
 
     if (calendarTM >= 1) {
       if (this.typeCalendar == 'week') {
-        span2.setAttribute(
+        spanTM.setAttribute(
           'style',
           'width: 6px;background-color: red;height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
         );
       } else {
-        span2.setAttribute(
+        spanTM.setAttribute(
           'style',
           'width: 6px;background-color: red;height: 6px;border-radius: 50%;'
         );
       }
-      flex.append(span2);
+      flex.append(spanTM);
     }
 
-    if (calendarWP >= 1 && calendarTM >= 1 && countShowCalendar < 1) {
+    if (calendarCO >= 1) {
       if (this.typeCalendar == 'week') {
-        span.setAttribute(
+        spanCO.setAttribute(
+          'style',
+          'width: 6px;background-color: #1E90FF;height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
+        );
+      } else {
+        spanCO.setAttribute(
+          'style',
+          'width: 6px;background-color: #1E90FF;height: 6px;border-radius: 50%;'
+        );
+      }
+      flex.append(spanCO);
+    }
+
+    if (calendarWP >= 1 && calendarTM >= 1 && calendarCO >= 1 && countShowCalendar < 1) {
+      if (this.typeCalendar == 'week') {
+        spanWP.setAttribute(
           'style',
           'width: 6px;height: 6px;background-color: orange;border-radius: 50%'
         );
-        span2.setAttribute(
+        spanTM.setAttribute(
           'style',
           'width: 6px;height: 6px;background-color: red;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
         );
+        spanCO.setAttribute(
+          'style',
+          'width: 6px;height: 6px;background-color: #1E90FF;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
+        )
       } else {
-        span.setAttribute(
+        spanWP.setAttribute(
           'style',
           'width: 6px;height: 6px;background-color: orange;border-radius: 50%'
         );
-        span2.setAttribute(
+        spanTM.setAttribute(
           'style',
           'width: 6px;height: 6px;background-color: red;border-radius: 50%;margin-left: 2px'
         );
+        spanCO.setAttribute(
+          'style',
+          'width: 6px;height: 6px;background-color: #1E90FF;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
+        )
       }
-      flex.append(span);
-      flex.append(span2);
+      flex.append(spanWP);
+      flex.append(spanTM);
+      flex.append(spanCO);
     }
-
-    // if(calendarWP == 0) {
-    // var spanT = document.querySelector("span.note-point") as HTMLElement;
-    // spanT.parentNode.removeChild(spanT);
-    // }
   }
 
   openFormUpdateNote(data) {
@@ -493,39 +543,74 @@ export class CalendarNotesComponent
     if (e) {
       var field = e.field;
       if (field == 'textarea') this.message = e.data.checked.checked;
-      else if (field == 'WP_Notes_ShowEvent') {
-        if (e.data == false) {
-          this.checkWP_NotesParam = false;
-        } else {
-          this.checkWP_NotesParam = true;
-        }
-
-        var today: any = document.querySelector(
-          ".e-footer-container button[aria-label='Today']"
-        );
-        if (today) {
-          today.click();
-        }
-        this.setEventWeek();
-      } else if (field == 'TM_Tasks_ShowEvent') {
-        if (e.data == false) {
-          this.checkTM_TasksParam = false;
-        } else {
-          this.checkTM_TasksParam = true;
-        }
-
-        var today: any = document.querySelector(
-          ".e-footer-container button[aria-label='Today']"
-        );
-        if (today) {
-          today.click();
-        }
-        this.setEventWeek();
-      } else if (item) {
+      else if (item) {
         this.message = '';
         item[field] = e.data.checked;
       }
     }
+  }
+
+  valueChangeSetting(e) {
+    if (e) {
+      var field = e.field;
+      if (field == 'WP_Notes_ShowEvent') {
+        var today: any = document.querySelector(
+          ".e-footer-container button[aria-label='Today']"
+        );
+        if (today) {
+          today.click();
+        }
+        this.setEventWeek();
+        this.updateSettingValue('WP_Notes', e.data);
+      } else if (field == 'TM_Tasks_ShowEvent') {
+        var today: any = document.querySelector(
+          ".e-footer-container button[aria-label='Today']"
+        );
+        if (today) {
+          today.click();
+        }
+        this.setEventWeek();
+        this.updateSettingValue('TM_Tasks', e.data);
+      } else if (field == 'CO_Meetings_ShowEvent'){
+        var today: any = document.querySelector(
+          ".e-footer-container button[aria-label='Today']"
+        );
+        if (today) {
+          today.click();
+        }
+        this.setEventWeek();
+        this.updateSettingValue('CO_Meetings', e.data);
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  updateSettingValue(transType, value) {
+    if (value == false) value = '0';
+    else value = '1';
+    this.api
+      .exec<any>(
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'AddUpdateByUserIDAsync',
+        ['WPCalendars', transType, value]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.getParam();
+          (this.lstView.dataService as CRUDService).dataObj = `WPCalendars`;
+          (this.lstView.dataService as CRUDService).predicates =
+            'CreatedOn >= @0 && CreatedOn < @1';
+          (
+            this.lstView.dataService as CRUDService
+          ).dataValues = `${this.FDdate};${this.TDate}`;
+          this.lstView.dataService
+            .setPredicate(this.predicate, [this.dataValue])
+            .subscribe((res) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        }
+      });
   }
 
   onEditIsPin(data: Notes) {

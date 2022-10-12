@@ -9,7 +9,7 @@ import { PopupEditComponent } from '../../news/popup/popup-edit/popup-edit.compo
 import { ApproveComponent } from '../approve.component';
 
 @Component({
-  selector: 'app-view-detail',
+  selector: 'approve-view-detail',
   templateUrl: './approve-detail.component.html',
   styleUrls: ['./approve-detail.component.css']
 })
@@ -120,6 +120,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       if(res){
         this.data = res;
         this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
+        this.dt.detectChanges();
       }
     })
   }
@@ -180,9 +181,6 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     } 
   }
 
-  valueChange(event:any){
-
-  }
 
   clickMF(event:any){
     switch(event.functionID){

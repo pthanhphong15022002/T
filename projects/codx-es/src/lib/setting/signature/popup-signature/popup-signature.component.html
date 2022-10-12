@@ -3,12 +3,13 @@
   [body]="body"
   [footer]="footer"
   [headerText]="headerText"
+  *ngIf="isAfterRender"
 >
   <ng-template popup add #body>
     <div class="card-body card-scroll mx-5 mx-xl-18 pb-15">
       <div class="text-center mb-6"></div>
       <ul class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6">
-        <li class="nav-item m-0">
+        <li class="nav-item m-0" *ngIf="setupShowForm.showFullName">
           <a
             class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab == 1 ? 'active' : ''"
@@ -21,24 +22,24 @@
               <span class="fs-6 fw-bold">
                 <codx-label
                   fiedName="FullName"
-                  [formModel]="dialog.formModel"
+                  [formModel]="formModel"
                 ></codx-label>
               </span>
             </span>
           </a>
         </li>
-        <!--<li class="nav-item m-0">
+        <!--<li class="nav-item m-0"  *ngIf="setupShowForm.showSign">
           <a class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab==2?'active':''" data-bs-toggle="tab" id="#pane_2" (click)="changeTab(2)">
             <span class="d-flex flex-column ">
               <span class=" icon-gesture icon-24 m-auto mb-1"></span>
               <span class="fs-6 fw-bold">
-                <codx-label default="Ký" name="lblSignature1" [formModel]="dialog.formModel"></codx-label>
+                <codx-label default="Ký" name="lblSignature1" [formModel]="formModel"></codx-label>
               </span>
             </span>
           </a>
         </li> -->
-        <li class="nav-item m-0">
+        <li class="nav-item m-0" *ngIf="setupShowForm.showSignature1">
           <a
             class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab == 3 ? 'active' : ''"
@@ -51,13 +52,13 @@
               <span class="fs-6 fw-bold">
                 <codx-label
                   fiedName="Signature1"
-                  [formModel]="dialog.formModel"
+                  [formModel]="formModel"
                 ></codx-label>
               </span>
             </span>
           </a>
         </li>
-        <li class="nav-item m-0">
+        <li class="nav-item m-0" *ngIf="setupShowForm.showSignature2">
           <a
             class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab == 4 ? 'active' : ''"
@@ -70,13 +71,13 @@
               <span class="fs-6 fw-bold">
                 <codx-label
                   fiedName="Signature2"
-                  [formModel]="dialog.formModel"
+                  [formModel]="formModel"
                 ></codx-label>
               </span>
             </span>
           </a>
         </li>
-        <li class="nav-item m-0">
+        <li class="nav-item m-0" *ngIf="setupShowForm.showStamp">
           <a
             class="nav-link text-center flex-center border border-gray-300 rounded-0 min-w-100px py-3 px-4"
             [ngClass]="currentTab == 5 ? 'active' : ''"
@@ -89,7 +90,7 @@
               <span class="fs-6 fw-bold">
                 <codx-label
                   fiedName="Stamp"
-                  [formModel]="dialog.formModel"
+                  [formModel]="formModel"
                 ></codx-label>
               </span>
             </span>
@@ -100,6 +101,7 @@
         <div
           class="tab-pane fade"
           id="pane_1"
+          *ngIf="setupShowForm.showFullName"
           [ngClass]="currentTab == 1 ? 'active show' : ''"
         >
           <div class="row">
@@ -147,6 +149,7 @@
         </div>
         <div
           class="tab-pane fade"
+          *ngIf="setupShowForm.showSign"
           id="pane_2"
           [ngClass]="currentTab == 2 ? 'active show' : ''"
         >
@@ -161,15 +164,17 @@
         <div
           class="tab-pane fade"
           id="pane_3"
-          [ngClass]="currentTab == 3 ? 'active show' : 'd-none'"
+          [ngClass]="currentTab == 3 ? 'active show' : ''"
+          *ngIf="setupShowForm.showSignature1"
         >
           <div class="m-auto text-center">
             <codx-img
               #imgSignature1
               class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
+              referType="S2"
               [width]="200"
               [funcId]="'ESS21'"
-              [objectId]="data.recID + '1'"
+              [objectId]="data.recID"
               [objectType]="'ES_Signatures'"
               data-kt-menu-trigger="click"
               data-kt-menu-attach="parent"
@@ -186,15 +191,17 @@
         <div
           class="tab-pane fade"
           id="pane_4"
-          [ngClass]="currentTab == 4 ? 'active show' : 'd-none'"
+          [ngClass]="currentTab == 4 ? 'active show' : ''"
+          *ngIf="setupShowForm.showSignature2"
         >
           <div class="m-auto text-center">
             <codx-img
               #imgSignature2
               class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
               [width]="200"
+              referType="S1"
               [funcId]="'ESS21'"
-              [objectId]="data.recID + '2'"
+              [objectId]="data.recID"
               [objectType]="'ES_Signatures'"
               data-kt-menu-trigger="click"
               data-kt-menu-attach="parent"
@@ -211,7 +218,8 @@
         <div
           class="tab-pane fade"
           id="pane_5"
-          [ngClass]="currentTab == 5 ? 'active show' : 'd-none'"
+          [ngClass]="currentTab == 5 ? 'active show' : ''"
+          *ngIf="setupShowForm.showStamp"
         >
           <div class="m-auto text-center">
             <codx-img
@@ -219,7 +227,8 @@
               class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
               [width]="200"
               [funcId]="'ESS21'"
-              [objectId]="data.recID + 's'"
+              referType="S3"
+              [objectId]="data.recID"
               [objectType]="'ES_Signatures'"
               data-kt-menu-trigger="click"
               data-kt-menu-attach="parent"
@@ -242,7 +251,7 @@
         <codx-label
           default="Lưu"
           name="lblSave"
-          [formModel]="dialog.formModel"
+          [formModel]="formModel"
         ></codx-label>
       </button>
     </div>

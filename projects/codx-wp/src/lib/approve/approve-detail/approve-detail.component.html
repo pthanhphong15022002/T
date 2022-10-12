@@ -39,7 +39,9 @@
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex justify-content-between">
                         <div class="fw-bold fs-6">{{data.createdByName}}</div>
-                        <div class="text-gray-600 badge bagde-sm bg-gray-200">
+                        <div class="rounded-pill p-2 px-4 text-center"
+                            [style.color]="data.approveStatus | vll:'CO003':'textColor' | async"
+                            [style.background-color]="data.approveStatus | vll:'CO003':'color' | async">
                             {{data.approveStatus | vll:"CO003":"text" | async}}</div>
                     </div>
                     <div class="nav">

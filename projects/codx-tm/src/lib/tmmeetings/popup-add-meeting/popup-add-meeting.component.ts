@@ -21,6 +21,7 @@ import {
   NotificationsService,
   CallFuncService,
   CacheService,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import moment from 'moment';
 import { TemplateComponent } from '../template/template.component';
@@ -79,8 +80,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   endTimeWork: any;
   dayOnWeeks = [];
   selectedDate: Date;
+  listTime = [];
   // gridViewSetup: any;
-
+  timeBool = false;
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -133,7 +135,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTime();
+  }
   ngAfterViewInit(): void {
     if (this.action == 'add') {
       this.meeting.meetingType = '1';
@@ -141,9 +145,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     } else if (this.action == 'edit') {
       // this.setTimeEdit();
       this.resources = this.meeting.resources;
-     if(this.resources?.length > 0 ){
-      this.resources.forEach(obj=>this.listUserID.push(obj.resourceID))
-     }
+      if (this.resources?.length > 0) {
+        this.resources.forEach((obj) => this.listUserID.push(obj.resourceID));
+      }
     } else if (this.action == 'copy') {
       this.meeting.meetingType = '1';
       this.resources = [];
@@ -165,6 +169,17 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           }
         });
     }
+  }
+
+  loadTime() {
+    this.api
+      .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'GetListTimeAsync')
+      .subscribe((res) => {
+        if (res) {
+          console.log(res);
+          this.listTime = res[0];
+        }
+      });
   }
 
   setTimeEdit() {
@@ -288,6 +303,47 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notify('Vui lòng nhập đường link họp online !');
       return;
     }
+    this.listTime.forEach((res) => {
+      var startDate =
+        this.addZero(new Date(res.startDate).getHours()) +
+        ':' +
+        this.addZero(new Date(res.startDate).getMinutes());
+      var endDate =
+        this.addZero(new Date(res.endDate).getHours()) +
+        ':' +
+        this.addZero(new Date(res.endDate).getMinutes());
+      var startDateMT = moment(res.startDate).format('MM/DD/YYYY');
+      console.log(this.startTime);
+      console.log(this.endTime);
+      console.log(this.meeting.startDate);
+      if (
+        startDateMT === moment(this.meeting.startDate).format('MM/DD/YYYY') &&
+        startDate === this.startTime &&
+        endDate === this.endTime
+      ) {
+        this.timeBool = true;
+
+        return;
+      } else {
+        this.timeBool = false;
+      }
+    });
+    if (this.timeBool == true) {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notiService
+        .alert(
+          'Thông báo',
+          'Đã trùng lịch bạn có muốn thêm lịch này không',
+          config
+        )
+        .closed.subscribe((x) => {});
+      //đợi mess code
+      this.notiService.notify(
+        'Đã trùng thời gian họp đã có, vui lòng chọn thời gian khác!'
+      );
+      return;
+    }
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -300,6 +356,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       if (this.action === 'add' || this.action === 'copy') this.onAdd();
       else this.onUpdate();
     }
+  }
+
+  addZero(i) {
+    if (i < 10) {
+      i = '0' + i;
+    }
+    return i;
   }
 
   tabInfo: any[] = [

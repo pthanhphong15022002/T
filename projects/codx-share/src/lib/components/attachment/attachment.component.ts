@@ -8,6 +8,8 @@ import {
   Input,
   ElementRef,
   Optional,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -56,7 +58,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./attachment.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class AttachmentComponent implements OnInit {
+export class AttachmentComponent implements OnInit, OnChanges {
   user: any;
   titlemessage = 'Thông báo';
   remote = true;
@@ -198,15 +200,15 @@ export class AttachmentComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.objectId != '' && this.objectId != undefined) {
-      this.fileService.getFileNyObjectID(this.objectId).subscribe((res) => {
-        if (res) {
-          this.data = res;
-          this.fileGet.emit(this.data);
-          this.changeDetectorRef.detectChanges();
-        }
-      });
-    }
+    // if (this.objectId != '' && this.objectId != undefined) {
+    //   this.fileService.getFileNyObjectID(this.objectId).subscribe((res) => {
+    //     if (res) {
+    //       this.data = res;
+    //       this.fileGet.emit(this.data);
+    //       this.changeDetectorRef.detectChanges();
+    //     }
+    //   });
+    // }
 
     if (document.getElementById(this.idBrowse) != null) {
       var list = document.getElementsByName('UploadFiles');
@@ -362,6 +364,18 @@ export class AttachmentComponent implements OnInit {
 
     this.fileUploadList = [];
     this.changeDetectorRef.detectChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.objectId != '' && this.objectId != undefined) {
+      this.fileService.getFileNyObjectID(this.objectId).subscribe((res) => {
+        if (res) {
+          this.data = res;
+          this.fileGet.emit(this.data);
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    }
   }
 
   ngOnInit(): void {

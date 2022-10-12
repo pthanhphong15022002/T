@@ -78,8 +78,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   tmpPost: any;
   dataCopy: any;
   dataComment: any;
-  titleComment: any;
-  descriptionComment: any;
+  contentComment: any;
 
   constructor(
     private injector: Injector,
@@ -133,8 +132,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     });
     this.cache.message('WP028').subscribe((res) => {
       if (res) {
-        this.titleComment = res.description;
-        this.descriptionComment = res.defaultName;
+        this.contentComment = res.defaultName;
       }
     });
     this.title = dt.data?.headerText;

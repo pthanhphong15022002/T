@@ -91,7 +91,6 @@ export class PopupAddCalendarComponent extends UIComponent {
       )
       .subscribe((res) => {
         if (res) {
-          this.notiService.notifyCode('SYS006');
           this.dialog.close();
         }
       });
