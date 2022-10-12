@@ -12,6 +12,7 @@ import {
   UploadFile,
   UserModel,
 } from 'codx-core';
+import { AnyARecord } from 'dns';
 import { resolve } from 'path';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -535,13 +536,13 @@ export class CodxEsService {
     );
   }
 
-  addNewSignature(data: any): Observable<any> {
+  addNewSignature(data: any) {
     return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddNewAsync', [
       data,
     ]);
   }
 
-  editSignature(data: any): Observable<any> {
+  editSignature(data: any) {
     return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'EditAsync', [
       data,
     ]);
@@ -550,7 +551,7 @@ export class CodxEsService {
   //#endregion
 
   //#region ES_Category
-  addNewCategory(data: any): Observable<any> {
+  addNewCategory(data: any) {
     return this.api.execSv('ES', 'ES', 'CategoriesBusiness', 'AddNewAsync', [
       data,
       '',
@@ -558,7 +559,7 @@ export class CodxEsService {
     ]);
   }
 
-  updateCategory(category: any): Observable<any> {
+  updateCategory(category: any) {
     return this.api.execSv(
       'ES',
       'ES',
@@ -568,7 +569,7 @@ export class CodxEsService {
     );
   }
 
-  deleteCategory(categoryID: string): Observable<any> {
+  deleteCategory(categoryID: string) {
     return this.api.execSv(
       'ES',
       'ES',
@@ -578,8 +579,8 @@ export class CodxEsService {
     );
   }
 
-  getCategoryByCateID(categoryID: string): Observable<any> {
-    return this.api.execSv(
+  getCategoryByCateID(categoryID: string) {
+    return this.api.execSv<any>(
       'ES',
       'ES',
       'CategoriesBusiness',
@@ -1205,6 +1206,16 @@ export class CodxEsService {
       'DataBusiness',
       'LoadDataCbxAsync',
       [dataRequest]
+    );
+  }
+
+  getSettingByPredicate(predicate, dataValue) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByPredicate',
+      [predicate, dataValue]
     );
   }
 }
