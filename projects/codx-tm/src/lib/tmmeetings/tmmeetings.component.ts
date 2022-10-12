@@ -506,22 +506,9 @@ export class TMMeetingsComponent
       .subscribe((res) => {
         if (res[0]) {
           this.view.dataService.onAction.next({ type: 'delete', data: data });
-          // this.itemSelected = this.view.dataService.data[0];
         }
       });
   }
-
-  // delete(data?) {
-  //   let deleteItem = this.view.dataService.dataSelected;
-  //   if (data) {
-  //     deleteItem = data;
-  //   }
-  //   this.view.dataService.delete([deleteItem]).subscribe((res) => {
-  //     console.log(res);
-  //   });
-  // }  
-
-
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
