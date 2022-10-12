@@ -1276,6 +1276,19 @@ export class PdfComponent
   changeQRRenderState(e) {
     this.renderQRAllPage = !this.renderQRAllPage;
   }
+
+  addSignature(setupShowForm) {
+    let model = {
+      userID: this.signerInfo?.authorID,
+      signatureType: this.signerInfo?.signType,
+    };
+    let data = {
+      data: model,
+      setupShowForm: setupShowForm,
+    };
+    this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+  }
+
   changeAnnotationItem(type: number) {
     switch (type) {
       case 1:
@@ -1284,22 +1297,17 @@ export class PdfComponent
           switch (this.signerInfo?.stepType) {
             case 'S2': // ký chính
               setupShowForm.showSignature1 = true;
+              this.addSignature(setupShowForm);
+              return;
+
               break;
             case 'S1': // ký nháy
               setupShowForm.showSignature2 = true;
+              this.addSignature(setupShowForm);
+              return;
+
               break;
           }
-
-          let model = {
-            userID: this.signerInfo?.authorID,
-            signatureType: this.signerInfo?.signType,
-          };
-          let data = {
-            data: model,
-            setupShowForm: setupShowForm,
-          };
-          this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
-          return;
         }
         // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
         break;
@@ -1309,15 +1317,16 @@ export class PdfComponent
 
           setupShowForm.showStamp = true;
 
-          let signature = {
-            userID: this.signerInfo?.authorID,
-            signatureType: this.signerInfo?.signType,
-          };
-          let data = {
-            data: signature,
-            setupShowForm: setupShowForm,
-          };
-          this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+          this.addSignature(setupShowForm);
+          // let signature = {
+          //   userID: this.signerInfo?.authorID,
+          //   signatureType: this.signerInfo?.signType,
+          // };
+          // let data = {
+          //   data: signature,
+          //   setupShowForm: setupShowForm,
+          // };
+          // this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
           return;
         }
         this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
