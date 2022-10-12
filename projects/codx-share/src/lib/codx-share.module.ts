@@ -92,7 +92,7 @@ import { CodxImportAddMappingTemplateComponent } from './components/codx-import/
 import { NotifyDrawerSliderComponent } from './layout/drawers/notify-drawer/notify-drawer-slider/notify-drawer-slider.component';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 import { SettingCalendarComponent } from './components/setting-calendar/setting-calendar.component';
-import { PopupEditCalendarComponent } from './components/setting-calendar/popup-edit-calendar/popup-edit-calendar.component';
+import { PopupSettingCalendarComponent } from './components/setting-calendar/popup-setting-calendar/popup-setting-calendar.component';
 import { PopupAddCalendarComponent } from './components/setting-calendar/popup-add-calendar/popup-add-calendar.component';
 import { PopupAddDayoffsComponent } from './components/setting-calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupAddEventComponent } from './components/setting-calendar/popup-add-event/popup-add-event.component';
@@ -184,7 +184,7 @@ const T_Component: Type<any>[] = [
   PopupAddCalendarComponent,
   PopupAddDayoffsComponent,
   PopupAddEventComponent,
-  PopupEditCalendarComponent,
+  PopupSettingCalendarComponent,
   PopupEditShiftComponent,
   FileComponent,
   InfoLeftComponent,
