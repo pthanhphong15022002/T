@@ -112,7 +112,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res) {
           if (!res.save) {
@@ -136,9 +136,9 @@ export class PopupAddStationeryComponent extends UIComponent {
               });
           }
           if (this.isAdd) {
-            (this.dialog.dataService as CRUDService)
-              .add(this.returnData, 0)
-              .subscribe();
+            // (this.dialog.dataService as CRUDService)
+            //   .add(this.returnData, 0)
+            //   .subscribe();
           } else {
             (this.dialog.dataService as CRUDService)
               .update(this.returnData)
@@ -146,7 +146,6 @@ export class PopupAddStationeryComponent extends UIComponent {
           }
           this.dialog.close();
         }
-        this.notificationsService.notifyCode('E0011');
         return;
       });
   }
