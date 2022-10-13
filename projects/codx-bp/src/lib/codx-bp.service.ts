@@ -17,4 +17,10 @@ export class CodxBpService {
       // return this.api.exec<any>('OD' ,'DispatchesBusiness', 'SendMailDispatchAsync' , [recID , infor] )
       
     }
+
+    getListProcessStepsByProcessID(gridModel)
+    {
+     return this.api.exec<any>('BP' ,'ProcessStepsBusiness', 'GetProcessStepsAsync' , gridModel )
+      
+    }
 }
