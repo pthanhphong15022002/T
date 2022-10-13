@@ -45,6 +45,7 @@ import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { ActivatedRoute } from '@angular/router';
+import { CodxOdService } from '../codx-od.service';
 
 @Component({
   selector: 'app-incomming',
@@ -128,7 +129,7 @@ export class IncommingComponent
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   fileService: FileService;
-  constructor(inject: Injector, private route: ActivatedRoute) {
+  constructor(inject: Injector, private route: ActivatedRoute ,  private codxODService : CodxOdService,) {
     super(inject);
     this.odService = inject.get(DispatchService);
     this.agService = inject.get(AgencyService);
@@ -157,6 +158,7 @@ export class IncommingComponent
   ngAfterViewInit(): void {
     this.views = [
       {
+        id:"1",
         type: ViewType.listdetail,
         active: true,
         sameData: true,
@@ -168,6 +170,7 @@ export class IncommingComponent
         },
       },
       {
+        id:"2",
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -291,52 +294,52 @@ export class IncommingComponent
   }
 
   getGridViewSetup(funcID: any) {
-    this.cache.functionList(funcID).subscribe((fuc) => {
+    this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
       this.funcList = fuc;
-      this.cache
-        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+      this.codxODService
+        .loadGridView(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetup = grd;
           if (grd['Security']['referedValue'] != undefined)
-            this.cache
-              .valueList(grd['Security']['referedValue'])
+            this.codxODService
+              .loadValuelist(grd['Security']['referedValue'])
               .subscribe((item) => {
                 this.dvlSecurity = item;
               });
           if (grd['Urgency']['referedValue'] != undefined)
-            this.cache
-              .valueList(grd['Urgency']['referedValue'])
+            this.codxODService
+              .loadValuelist(grd['Urgency']['referedValue'])
               .subscribe((item) => {
                 this.dvlUrgency = item;
                 //this.ref.detectChanges();
               });
           if (grd['Status']['referedValue'] != undefined)
-            this.cache
-              .valueList(grd['Status']['referedValue'])
+            this.codxODService
+              .loadValuelist(grd['Status']['referedValue'])
               .subscribe((item) => {
                 this.dvlStatus = item;
                 console.log(this.dvlStatus);
                 //this.ref.detectChanges();
               });
           if (grd['Category']['referedValue'] != undefined)
-            this.cache
-              .valueList(grd['Category']['referedValue'])
+            this.codxODService
+              .loadValuelist(grd['Category']['referedValue'])
               .subscribe((item) => {
                 this.dvlCategory = item;
                 //this.ref.detectChanges();
               });
         });
     });
-    this.cache.valueList('OD008').subscribe((item) => {
+    this.codxODService.loadValuelist('OD008').subscribe((item) => {
       this.dvlRelType = item;
     });
-    this.cache.valueList('OD009').subscribe((item) => {
+    this.codxODService.loadValuelist('OD009').subscribe((item) => {
       this.dvlStatusRel = item;
     });
-    this.cache.valueList('OD010').subscribe((item) => {
+    this.codxODService.loadValuelist('OD010').subscribe((item) => {
       this.dvlReCall = item;
     });
-    this.cache.valueList('L0614').subscribe((item) => {
+    this.codxODService.loadValuelist('L0614').subscribe((item) => {
       this.dvlStatusTM = item;
     });
     //formName: string, gridName: string

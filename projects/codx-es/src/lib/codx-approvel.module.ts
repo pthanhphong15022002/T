@@ -23,6 +23,14 @@ const routes: Routes = [
         path: 'signfiles/:funcID/:id',
         component: ESApprovelComponent,
       },
+      {
+        path: 'bookingcars/:funcID/:id',
+        component: ESApprovelComponent,
+      },
+      {
+        path: 'bookingrooms/:funcID/:id',
+        component: ESApprovelComponent,
+      },
     ],
   },
 ];

@@ -14,6 +14,7 @@
   [method]="method"
   (buttonClick)="click($event)"
   (onLoading)="onLoading($event)" 
+  [viewActiveType]="viewType.grid"
 >
   <ng-template #avatarCol let-data>
     <div class="h-50px m-4">
@@ -25,6 +26,18 @@
         width="50"
       ></codx-img>
     </div>
+    
+  </ng-template>
+
+  <ng-template #statusCol let-data>
+    <codx-vll
+      [name]="'EP016'"
+      [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-square badge-md fs-7 p-2"
+      >
+      </codx-vll>
     
   </ng-template>
   

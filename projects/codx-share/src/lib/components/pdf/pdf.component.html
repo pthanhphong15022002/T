@@ -287,8 +287,7 @@
             </e-items>
           </ejs-toolbar>
         </div>
-        <ng-container *ngIf="isApprover" [ngTemplateOutlet]="confirmCheckbox">
-        </ng-container>
+        <ng-container [ngTemplateOutlet]="confirmCheckbox"> </ng-container>
       </div>
       <ngx-extended-pdf-viewer
         *ngIf="curFileUrl"
@@ -763,13 +762,21 @@
 
 <ng-template #panelLeft> </ng-template>
 <ng-template #confirmCheckbox>
-  <codx-input
-    type="checkbox"
-    class="check-add"
-    name="select"
-    (valueChange)="changeConfirmState($event)"
-  >
-  </codx-input>
+  <div class="pdf-check-add btn-flex flex-center btn-white">
+    <codx-input
+      type="checkbox"
+      class="check-add me-2"
+      name="select"
+      (valueChange)="changeConfirmState($event)"
+    >
+    </codx-input>
+    <codx-label
+      name="lblConfirmSeen"
+      [formModel]=""
+      [default]="'Xác nhận đã xem văn bản'"
+      class="text-header"
+    ></codx-label>
+  </div>
 </ng-template>
 
 <div id="contextMenu" style="display: none; position: absolute">

@@ -113,7 +113,6 @@ export class CopyComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;      
     }
-    debugger;
     if (this.objectType == 'file') {
       // doi ten file   
       if (this.copy) {
@@ -213,7 +212,6 @@ export class CopyComponent implements OnInit {
     else {
       this.folderService.renameFolder(that.id, that.fullName).subscribe(async res => {
         if (res.status == 0) {
-          debugger;
           let folder = new FolderInfo();
           folder.recID = that.id;
           folder.folderName = that.fullName;
