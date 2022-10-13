@@ -115,7 +115,7 @@ export class RoomsComponent extends UIComponent {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: 250, //gv['ResourceID'].width,
+              width:'20%',
               template: this.resourceNameCol,
             },
             {
@@ -139,14 +139,10 @@ export class RoomsComponent extends UIComponent {
             },
             {
               headerText: gv['Owner'].headerText,
-              //width:gv['Owner'].width,
-              width: 200,
               template: this.ownerCol,
             },
             {
               headerText: gv['Preparator'].headerText,
-              //width:gv['Preparator'].width,
-              width: 200,
               template: this.preparatorCol,
             },
           ];

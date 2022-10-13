@@ -239,7 +239,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
               this.imgStamp
                 .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
-                  debugger;
                   if (img && this.data.stamp == null) {
                     result.stamp = (img[0] as any).recID;
 
