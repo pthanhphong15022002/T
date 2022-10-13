@@ -135,7 +135,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.formModel = this.view.formModel;
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
-    debugger;
     this.getGridViewSetup(this.pfuncID);
     this.getDataValuelist();
   }
@@ -182,7 +181,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         });
     });
     this.codxODService.loadMessage('OD020').subscribe((item) => {
-      debugger;
       this.ms020 = item;
     });
     this.codxODService.loadMessage('OD021').subscribe((item) => {

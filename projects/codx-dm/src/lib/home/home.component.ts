@@ -303,7 +303,6 @@ export class HomeComponent extends UIComponent {
       }
     });
     this.dmSV.isRefreshTree.subscribe(res => {
-      debugger;
       if (res) {
         var ele = document.getElementsByClassName('collapse');
         for (var i = 0; i < ele.length; i++) {
@@ -561,7 +560,6 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-    debugger;
     ScrollComponent.reinitialization();
     if (!$data && ($data == null || $data?.data == null)) {
       return;

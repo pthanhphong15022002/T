@@ -106,7 +106,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.transID = dt.transID;
       this.dataItem = dt;
     }
-    debugger;
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
       if (fuc) {
         var params;

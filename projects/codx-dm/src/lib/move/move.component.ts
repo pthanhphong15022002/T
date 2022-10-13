@@ -163,7 +163,6 @@ export class MoveComponent implements OnInit {
     return "";    
   }
   changeValue($event, type) {
-    debugger;
     console.log($event);
     switch(type) {
       case "fullName":
@@ -233,7 +232,6 @@ export class MoveComponent implements OnInit {
           {         
             var config = new AlertConfirmInputConfig();
             config.type = "YesNo";
-            debugger;
             this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
               if(x.event.status == "Y") {
                 that.fileService.copyFile(that.id, that.fullName, "", 0, 1).subscribe(async item => {
@@ -517,7 +515,6 @@ export class MoveComponent implements OnInit {
             if(x.event.status == "Y") {
               this.folderService.copyFolder(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {
                 if (item.status == 0) {
-                  debugger;
                   that.dmSV.isTree = false;
                   this.dmSV.currentNode = '';
                   this.dmSV.folderId.next(item.data.recID);

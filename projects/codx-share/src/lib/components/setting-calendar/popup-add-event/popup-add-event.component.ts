@@ -44,7 +44,6 @@ export class PopupAddEventComponent extends UIComponent {
     this.dialog = dialog;
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
-    debugger;
   }
 
   onInit(): void {
@@ -89,7 +88,6 @@ export class PopupAddEventComponent extends UIComponent {
   }
 
   saveDayOff() {
-    debugger;
     this.api
       .execSv<any>(
         APICONSTANT.SERVICES.BS,
