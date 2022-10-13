@@ -82,14 +82,14 @@ export class CodxCommentHistoryComponent implements OnInit {
   }
 
   deleteComment(item:any){
-    this.notifySV.alertCode('WP025').subscribe((res) => {
+    this.notifySV.alertCode('WP032').subscribe((res) => {
       if (res.event.status == "Y"){
         this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item.recID)
         .subscribe((res:any) => {
           if(res)
           {
             this.evtDelete.emit(item);
-            this.notifySV.notifyCode("WP026");
+            this.notifySV.notifyCode("WP033");
           }
           else 
             this.notifySV.notifyCode("SYS022");
@@ -153,7 +153,7 @@ export class CodxCommentHistoryComponent implements OnInit {
           (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
             if(res2){
               this.evtSend.emit(res1);
-              this.notifySV.notifyCode("WP027"); 
+              this.notifySV.notifyCode("WP034"); 
               this.clearData();   
             }
           })
@@ -161,7 +161,7 @@ export class CodxCommentHistoryComponent implements OnInit {
         else
         {
             this.evtSend.emit(res1);
-            this.notifySV.notifyCode("WP027");
+            this.notifySV.notifyCode("WP034");
             this.clearData();   
         }
       }

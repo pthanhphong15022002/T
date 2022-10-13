@@ -1,18 +1,36 @@
-<div class="d-flex justify-content-around">
-  <button (click)="closePopUp()">
-    <codx-label>X</codx-label>
-  </button>
-  <div class="img-spaces" *ngFor="let label of labels; idx">
-    <img style="width: 100px; height: 100px" [src]="label.src" />
+<div class="container">
+  <div class="close-btn d-flex justify-content-end">
+    <button (click)="closePopUp(false)">X</button>
+  </div>
 
-    <codx-input
-      type="radio"
-      name="radio"
-      labelPosition="Before"
-      [disabled]="false"
-      value="radio"
-      (valueChange)="changeLabel(label)"
+  <div class="justify-content-around d-flex flex-row">
+    <div
+      class="imgs d-flex flex-column"
+      *ngFor="let label of labels; let idx = index"
     >
-    </codx-input>
+      <img style="width: 100px; height: 100px" [src]="label.Image" />
+      <codx-vll
+        [showText]="true"
+        [showBgColor]="true"
+        [name]="'ES023'"
+        [value]="label.Type"
+        class="badge badge-light badge-md fs-7"
+      >
+      </codx-vll>
+      <codx-input
+        type="radio"
+        name="radio"
+        labelPosition="Before"
+        [disabled]="false"
+        value="radio"
+        (valueChange)="changeLabel(label)"
+      >
+      </codx-input>
+    </div>
+  </div>
+  <div class="ok-btn d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="closePopUp(true)">
+      <codx-label name="lblChooseStamp" default="OK"></codx-label>
+    </button>
   </div>
 </div>

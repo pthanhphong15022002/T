@@ -725,7 +725,7 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-format_list_bulleted',
         text: 'List',
-        type: ViewType.treedetail,
+        type: ViewType.tree_list,
         sameData: true,
         active: false,
         model: {

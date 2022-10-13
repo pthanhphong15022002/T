@@ -33,4 +33,5 @@ export class tmpAreaName {
   PageNumber: number;
   StepNo: number;
   LabelType: string;
+  LabelValue: string;
 }

@@ -151,7 +151,7 @@ export class CalendarNotesComponent
             this.WP_Notes = this.WP_Notes.filter((x) => x.recID != data.recID);
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
-          }
+          } 
           this.setEventWeek();
           var today: any = document.querySelector(
             ".e-footer-container button[aria-label='Today']"
@@ -248,7 +248,7 @@ export class CalendarNotesComponent
   TDate: any;
 
   setDate(data, lstView) {
-    console.log("check setDate");
+    console.log('check setDate');
     var dateT = new Date(data);
     var fromDate = dateT.toISOString();
     this.daySelected = fromDate;
@@ -418,7 +418,12 @@ export class CalendarNotesComponent
       flex.append(spanCO);
     }
 
-    if (calendarWP >= 1 && calendarTM >= 1 && calendarCO >= 1 && countShowCalendar < 1) {
+    if (
+      calendarWP >= 1 &&
+      calendarTM >= 1 &&
+      calendarCO >= 1 &&
+      countShowCalendar < 1
+    ) {
       if (this.typeCalendar == 'week') {
         spanWP.setAttribute(
           'style',
@@ -431,7 +436,7 @@ export class CalendarNotesComponent
         spanCO.setAttribute(
           'style',
           'width: 6px;height: 6px;background-color: #1E90FF;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
-        )
+        );
       } else {
         spanWP.setAttribute(
           'style',
@@ -444,7 +449,7 @@ export class CalendarNotesComponent
         spanCO.setAttribute(
           'style',
           'width: 6px;height: 6px;background-color: #1E90FF;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
-        )
+        );
       }
       flex.append(spanWP);
       flex.append(spanTM);
@@ -571,7 +576,7 @@ export class CalendarNotesComponent
         }
         this.setEventWeek();
         this.updateSettingValue('TM_Tasks', e.data);
-      } else if (field == 'CO_Meetings_ShowEvent'){
+      } else if (field == 'CO_Meetings_ShowEvent') {
         var today: any = document.querySelector(
           ".e-footer-container button[aria-label='Today']"
         );

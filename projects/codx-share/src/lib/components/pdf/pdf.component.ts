@@ -3,10 +3,12 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Injector,
   Input,
   IterableDiffers,
   OnChanges,
+  Output,
   QueryList,
   SimpleChanges,
   ViewChild,
@@ -69,7 +71,10 @@ export class PdfComponent
   @Input() stepNo = -1;
   @Input() inputUrl = null;
   @Input() transRecID = null;
+  @Output() confirmChange = new EventEmitter<boolean>();
+
   @Input() hideActions = false;
+  @Output() changeSignerInfo = new EventEmitter();
   //View Child
   @ViewChildren('actions') actions: QueryList<ElementRef>;
   @ViewChild('thumbnailTab') thumbnailTab: ElementRef;
@@ -169,9 +174,10 @@ export class PdfComponent
   align;
   isAwait;
   areaControl;
-  allowEdit;
   maxTop = -1;
   maxTopDiv;
+  labels = [];
+
   //css ???
   public cssClass: string = 'e-list-template';
 
@@ -190,14 +196,19 @@ export class PdfComponent
   onInit() {
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
-        console.log('allow', res);
+        console.log('format', res);
 
         this.signPerRow = res.SignPerRow;
         this.align = res.Align;
         this.direction = res.Direction;
         this.areaControl = res.AreaControl == '1';
         this.isAwait = res.Await == '1';
-        this.allowEdit = res.AllowEditAreas == '0' ? false : true;
+        console.log('lang', this.user.language);
+
+        this.labels = res.Label.filter((label) => {
+          return label.Language == this.user.language;
+        });
+        console.log('labels', this.labels);
 
         this.detectorRef.detectChanges();
       });
@@ -228,6 +239,8 @@ export class PdfComponent
               this.signerInfo = res?.approvers.find(
                 (approver) => approver.authorID == this.user.userID
               );
+
+              this.changeSignerInfo.emit(this.signerInfo);
             } else {
               this.signerInfo = res.approvers[0];
             }
@@ -275,18 +288,6 @@ export class PdfComponent
       });
       this.tr = new Konva.Transformer({
         rotateEnabled: false,
-        resizeEnabled:
-          this.isEditable == false
-            ? false
-            : this.allowEdit == false
-            ? false
-            : true,
-        draggable:
-          this.isEditable == false
-            ? false
-            : this.allowEdit == false
-            ? false
-            : true,
       });
       //this.detectorRef.detectChanges();
     } else {
@@ -377,38 +378,40 @@ export class PdfComponent
       .children?.find((node) => {
         return node?.attrs?.id == area.recID;
       });
-    this.tr.remove();
-    let layerChildren = this.lstLayer.get(area.location.pageNumber + 1);
+    if (this.curSelectedArea != null) {
+      this.tr.remove();
+      let layerChildren = this.lstLayer.get(area.location.pageNumber + 1);
 
-    this.tr.resizeEnabled(
-      this.isEditable == false
-        ? false
-        : area.allowEditAreas
-        ? true
-        : area.isLock
-    );
-    this.tr.draggable(
-      this.isEditable == false
-        ? false
-        : area.allowEditAreas
-        ? true
-        : area.isLock
-    );
-    this.tr.forceUpdate();
-    this.tr.nodes([this.curSelectedArea]);
-    layerChildren.add(this.tr);
-    if (this.curSelectedAnnotID != area.recID) {
-      this.formAnnot.controls['content'].setValue(area.labelValue);
-      this.isBold = area.fontFormat?.includes('bold') ? true : false;
-      this.isItalic = area.fontFormat?.includes('italic') ? true : false;
-      this.isUnd = area.fontFormat?.includes('underline') ? true : false;
-      this.curAnnotFontSize = area.fontSize;
-      this.curAnnotFontStyle = area.fontStyle;
-
-      this.tr.draggable(!area.allowEditAreas ? false : area.isLock);
+      this.tr.resizeEnabled(
+        this.isEditable == false
+          ? false
+          : area.isLock == false
+          ? true
+          : area.allowEditAreas
+      );
+      this.tr.draggable(
+        this.isEditable == false
+          ? false
+          : area.isLock == false
+          ? true
+          : area.allowEditAreas
+      );
+      this.tr.forceUpdate();
       this.tr.nodes([this.curSelectedArea]);
-      this.curSelectedAnnotID = area.recID;
-      this.detectorRef.detectChanges();
+      layerChildren.add(this.tr);
+      if (this.curSelectedAnnotID != area.recID) {
+        this.formAnnot.controls['content'].setValue(area.labelValue);
+        this.isBold = area.fontFormat?.includes('bold') ? true : false;
+        this.isItalic = area.fontFormat?.includes('italic') ? true : false;
+        this.isUnd = area.fontFormat?.includes('underline') ? true : false;
+        this.curAnnotFontSize = area.fontSize;
+        this.curAnnotFontStyle = area.fontStyle;
+
+        // this.tr.draggable(area.isLock == false ? !area.allowEditAreas ? false :  true);
+        // this.tr.nodes([this.curSelectedArea]);
+        this.curSelectedAnnotID = area.recID;
+        this.detectorRef.detectChanges();
+      }
     }
   }
 
@@ -471,37 +474,44 @@ export class PdfComponent
 
         let layer = this.lstLayer.get(this.pageMax);
         let children = layer.children;
-        let top = children?.reduce((prev, curr) => {
-          return prev.attrs.x < curr.attrs.x ? prev : curr;
-        });
 
-        let bot = children?.reduce((prev, curr) => {
-          return prev.attrs.x > curr.attrs.x ? prev : curr;
-        });
+        let imgUrl = '';
+        let x = 0;
+        let y = 0;
+        let width = 0;
+        let height = 0;
 
-        let left = children?.reduce((prev, curr) => {
-          return prev.attrs.y < curr.attrs.y ? prev : curr;
-        });
+        if (children.length != 0) {
+          let top = children?.reduce((prev, curr) => {
+            return prev.attrs.x < curr.attrs.x ? prev : curr;
+          });
 
-        let right = children?.reduce((prev, curr) => {
-          return prev.attrs.y > curr.attrs.y ? prev : curr;
-        });
+          let bot = children?.reduce((prev, curr) => {
+            return prev.attrs.x > curr.attrs.x ? prev : curr;
+          });
 
-        let x = top.attrs.x;
-        let y = left.attrs.y;
+          let left = children?.reduce((prev, curr) => {
+            return prev.attrs.y < curr.attrs.y ? prev : curr;
+          });
 
-        let width =
-          left.attrs.x - right.attrs.x + right.width() * right.scaleX();
-        let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
-        let imgUrl = layer.toDataURL({
-          quality: 1,
-          x: x,
-          y: y,
+          let right = children?.reduce((prev, curr) => {
+            return prev.attrs.y > curr.attrs.y ? prev : curr;
+          });
 
-          width: width,
-          height: height,
-        });
-        console.log('signature img', imgUrl);
+          x = top.attrs.x;
+          y = left.attrs.y;
+
+          width = left.attrs.x - right.attrs.x + right.width() * right.scaleX();
+          height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
+          imgUrl = layer.toDataURL({
+            quality: 1,
+            x: x,
+            y: y,
+
+            width: width,
+            height: height,
+          });
+        }
 
         let approveStt = '5';
 
@@ -625,7 +635,7 @@ export class PdfComponent
       labelType: labelType,
       labelValue: url,
       isLock: false,
-      allowEditAreas: this.allowEdit == '0' ? false : true,
+      allowEditAreas: this.signerInfo.allowEditAreas,
       signDate: false,
       dateFormat: '1',
       location: {
@@ -818,12 +828,28 @@ export class PdfComponent
                     }
                     break;
                   }
+                  case '9': {
+                    this.addArea(
+                      area.labelValue,
+                      'img',
+                      area.labelType,
+                      this.isEditable
+                        ? !this.isEditable
+                        : area.allowEditAreas
+                        ? area.allowEditAreas
+                        : !area.isLock,
+                      false,
+                      area.signer,
+                      area.stepNo,
+                      area
+                    );
+                    break;
+                  }
                   case '3':
                   case '4':
                   case '5':
                   case '6':
-                  case '7':
-                  case '9': {
+                  case '7': {
                     this.addArea(
                       area.labelValue,
                       'text',
@@ -845,6 +871,8 @@ export class PdfComponent
 
           //stage event
           stage.on('mouseenter', (mouseover: any) => {
+            console.log('mouseover', mouseover);
+
             if (this.needAddKonva) {
               this.tr.nodes([this.needAddKonva]);
               this.tr.forceUpdate();
@@ -852,70 +880,77 @@ export class PdfComponent
               stage.children[0].add(this.needAddKonva);
               this.needAddKonva.position(stage.getPointerPosition());
               this.needAddKonva.startDrag();
+
               this.needAddKonva.on('dragend', (dragEnd) => {
-                if (this.needAddKonva) {
-                  let attrs = this.needAddKonva.attrs;
-                  let name: tmpAreaName = JSON.parse(attrs.name);
+                if (dragEnd?.evt?.toElement?.tagName == 'CANVAS') {
+                  if (this.needAddKonva) {
+                    let attrs = this.needAddKonva.attrs;
+                    let name: tmpAreaName = JSON.parse(attrs.name);
 
-                  let curLayer = stage?.children[0]?.children;
-                  let signed = curLayer.filter((child) => {
-                    if (child != this.tr) {
-                      let childName: tmpAreaName = JSON.parse(
-                        child?.attrs?.name
-                      );
-
-                      let sameLable = childName.LabelType == name.LabelType;
-                      let isUnique = ['1', '2', '8'].includes(
-                        childName.LabelType.toString()
-                      );
-                      let sameSigner = childName.Signer == name.Signer;
-
-                      return sameLable && sameSigner && isUnique;
-                    }
-                    return undefined;
-                  });
-                  this.holding = 0;
-                  if (
-                    !['1', '2', '8'].includes(name.LabelType.toString()) ||
-                    signed?.length == 1
-                  ) {
-                    switch (name.Type) {
-                      case 'text': {
-                        this.saveNewToDB(
-                          attrs.text,
-                          name.Type,
-                          name.LabelType,
-                          name.Signer,
-                          this.stepNo,
-                          this.needAddKonva
+                    let curLayer = stage?.children[0]?.children;
+                    let signed = curLayer.filter((child) => {
+                      if (child != this.tr) {
+                        let childName: tmpAreaName = JSON.parse(
+                          child?.attrs?.name
                         );
 
-                        break;
-                      }
-                      case 'img': {
-                        this.saveNewToDB(
-                          '',
-                          name.Type,
-                          name.LabelType,
-                          name.Signer,
-                          this.stepNo,
-                          this.needAddKonva
+                        let sameLable = childName.LabelType == name.LabelType;
+                        let isUnique = ['1', '2', '8'].includes(
+                          childName.LabelType.toString()
                         );
-                        break;
+                        let sameSigner = childName.Signer == name.Signer;
+
+                        return sameLable && sameSigner && isUnique;
                       }
+                      return undefined;
+                    });
+                    this.holding = 0;
+                    if (
+                      !['1', '2', '8'].includes(name.LabelType.toString()) ||
+                      signed?.length == 1
+                    ) {
+                      switch (name.Type) {
+                        case 'text': {
+                          this.saveNewToDB(
+                            attrs.text,
+                            name.Type,
+                            name.LabelType,
+                            name.Signer,
+                            this.stepNo,
+                            this.needAddKonva
+                          );
+
+                          break;
+                        }
+                        case 'img': {
+                          this.saveNewToDB(
+                            name.LabelValue,
+                            name.Type,
+                            name.LabelType,
+                            name.Signer,
+                            this.stepNo,
+                            this.needAddKonva
+                          );
+                          break;
+                        }
+                      }
+                    } else {
+                      this.needAddKonva.destroy();
+                      this.tr.remove();
                     }
-                  } else {
-                    this.needAddKonva.destroy();
-                    this.tr.remove();
                   }
+                  this.needAddKonva = null;
+                } else {
+                  this.needAddKonva.startDrag();
                 }
-                this.needAddKonva = null;
               });
             }
           });
 
           //left click
           stage.on('click', (click: any) => {
+            console.log('stage click', click);
+
             let layerChildren = this.lstLayer.get(e.pageNumber);
 
             if (click.target == stage) {
@@ -940,6 +975,7 @@ export class PdfComponent
               layerChildren.add(this.tr);
             }
           });
+
           //right click
           stage.on('contextmenu', (e: any) => {
             e.evt.preventDefault();
@@ -1036,6 +1072,7 @@ export class PdfComponent
       PageNumber: this.curPage - 1,
       StepNo: stepNo,
       LabelType: labelType,
+      LabelValue: url,
     };
     let recID = Guid.newGuid();
     this.stepNo = stepNo;
@@ -1044,7 +1081,7 @@ export class PdfComponent
       case 'text':
         var textArea = new Konva.Text({
           text: url,
-          fontSize: 23,
+          fontSize: 14,
           fontFamily: 'Arial',
           draggable: draggable,
           padding: 10,
@@ -1144,12 +1181,13 @@ export class PdfComponent
   }
 
   //change
+  changeConfirmState(e: any) {
+    this.confirmChange.emit(e.data);
+  }
+
   gotLstCA = false;
   changeLeftTab(e) {
-    console.log('change tab', e.selectedIndex);
     if (this.inputUrl && e?.selectedIndex == 1 && !this.gotLstCA) {
-      console.log('get ca by bytes', this.curFileUrl);
-
       this.esService.getListCAByBytes(this.curFileUrl).subscribe((res) => {
         this.lstCA = res;
         this.lstCA?.forEach((ca) => {
@@ -1162,6 +1200,12 @@ export class PdfComponent
         this.gotLstCA = true;
         this.detectorRef.detectChanges();
       });
+    }
+  }
+
+  changeRightTab(e) {
+    if (e.isSwiped) {
+      e.cancel = true;
     }
   }
 
@@ -1202,7 +1246,7 @@ export class PdfComponent
           labelType: tmpName.LabelType,
           labelValue: this.curSelectedArea.attrs.text,
           isLock: this.curSelectedArea.draggable(),
-          allowEditAreas: this.allowEdit,
+          allowEditAreas: this.signerInfo.allowEditAreas,
           signDate: false,
           dateFormat: '1',
           location: {
@@ -1232,6 +1276,19 @@ export class PdfComponent
   changeQRRenderState(e) {
     this.renderQRAllPage = !this.renderQRAllPage;
   }
+
+  addSignature(setupShowForm) {
+    let model = {
+      userID: this.signerInfo?.authorID,
+      signatureType: this.signerInfo?.signType,
+    };
+    let data = {
+      data: model,
+      setupShowForm: setupShowForm,
+    };
+    this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+  }
+
   changeAnnotationItem(type: number) {
     switch (type) {
       case 1:
@@ -1240,22 +1297,17 @@ export class PdfComponent
           switch (this.signerInfo?.stepType) {
             case 'S2': // ký chính
               setupShowForm.showSignature1 = true;
+              this.addSignature(setupShowForm);
+              return;
+
               break;
             case 'S1': // ký nháy
               setupShowForm.showSignature2 = true;
+              this.addSignature(setupShowForm);
+              return;
+
               break;
           }
-
-          let model = {
-            userID: this.signerInfo?.authorID,
-            signatureType: this.signerInfo?.signType,
-          };
-          let data = {
-            data: model,
-            setupShowForm: setupShowForm,
-          };
-          this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
-          return;
         }
         // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
         break;
@@ -1265,15 +1317,16 @@ export class PdfComponent
 
           setupShowForm.showStamp = true;
 
-          let signature = {
-            userID: this.signerInfo?.authorID,
-            signatureType: this.signerInfo?.signType,
-          };
-          let data = {
-            data: signature,
-            setupShowForm: setupShowForm,
-          };
-          this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+          this.addSignature(setupShowForm);
+          // let signature = {
+          //   userID: this.signerInfo?.authorID,
+          //   signatureType: this.signerInfo?.signType,
+          // };
+          // let data = {
+          //   data: signature,
+          //   setupShowForm: setupShowForm,
+          // };
+          // this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
           return;
         }
         this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
@@ -1318,7 +1371,7 @@ export class PdfComponent
           this.url = qr;
           break;
         case 9: {
-          this.dialog = this.callfc.openForm(
+          let stampDialog = this.callfc.openForm(
             PopupSelectLabelComponent,
             '',
             700,
@@ -1326,8 +1379,28 @@ export class PdfComponent
             this.funcID,
             {
               title: 'Chọn Nhãn',
+              labels: this.labels,
             }
           );
+          stampDialog.closed.subscribe((res) => {
+            if (res.event) {
+              let curLabelUrl = res.event.Image;
+              this.url = '';
+              if (curLabelUrl && curLabelUrl != '') {
+                this.addArea(
+                  curLabelUrl,
+                  'img',
+                  type,
+                  true,
+                  true,
+                  this.curSignerID,
+                  this.signerInfo.stepNo
+                );
+              }
+            }
+            return;
+          });
+
           break;
         }
         default:
@@ -1555,6 +1628,7 @@ export class PdfComponent
             PageNumber: this.curPage - 1,
             StepNo: person.stepNo,
             LabelType: labelType,
+            LabelValue: url,
           };
           let imgArea = new Konva.Image({
             image: img,
@@ -1580,7 +1654,7 @@ export class PdfComponent
             labelType: labelType,
             labelValue: url,
             isLock: false,
-            allowEditAreas: this.allowEdit,
+            allowEditAreas: this.signerInfo.allowEditAreas,
             signDate: false,
             dateFormat: '1',
             location: {

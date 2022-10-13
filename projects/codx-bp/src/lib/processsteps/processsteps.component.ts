@@ -6,6 +6,7 @@ import {
   ViewChild,
   Injector,
   ChangeDetectorRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -20,12 +21,14 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxBpService } from '../codx-bp.service';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
   selector: 'lib-processsteps',
   templateUrl: './processsteps.component.html',
-  styleUrls: ['./processsteps.component.css'],
+  styleUrls: ['./processsteps.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
@@ -57,10 +60,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   method = 'GetProcessStepsAsync'; //chua viet
  
   recIDProcess ='90ab82ac-43d1-11ed-83e7-d493900707c4' ///thêm để add thử
+  // test data trar veef laf 1 []
+  dataTreeProcessStep = []
 
   constructor(
     inject: Injector,
-    private dt: ChangeDetectorRef,
+    private bpService: CodxBpService,
+    private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute
   ) {
@@ -73,13 +79,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     
-    this.request = new ResourceModel();
-    this.request.service = 'BP';
-    this.request.assemblyName = 'BP';
-    this.request.className = 'ProcessStepsBusiness';
-    this.request.method = 'GetProcessStepsAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
+    // this.request = new ResourceModel();
+    // this.request.service = 'BP';
+    // this.request.assemblyName = 'BP';
+    // this.request.className = 'ProcessStepsBusiness';
+    // this.request.method = 'GetProcessStepsAsync';
+    // this.request.idField = 'recID';
+    // this.request.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
 
     //tam coment da
     // this.resourceKanban = new ResourceModel();
@@ -142,9 +148,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       {
         type: ViewType.content,
         active: false,
-        sameData: false,
+        sameData: true,
         model: {
-          template: this.itemViewList,
+          panelRightRef : this.itemViewList ,
         },
       },
       {
@@ -164,7 +170,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
-    this.dt.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
   //#region CRUD bước công việc
@@ -192,6 +198,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             [this.view.dataService.dataSelected],
             false
           );
+          // else{
+          //   this.view.dataService.data.push(e.event)
+          //   this.dataTreeProcessStep =  this.view.dataService.data ;
+          //   this.changeDetectorRef.detectChanges();
+          // }
+         
       });
     });
   }
@@ -262,6 +274,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   onDragDrop(e: any) {
     console.log(e);
+  }
+
+  viewChanged(e){
+    // test
+  if(e?.view.type==16){
+      this.dataTreeProcessStep = this.view.dataService.data ;    
+  }
   }
 
   //#endregion
