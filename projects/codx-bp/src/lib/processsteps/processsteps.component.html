@@ -125,6 +125,8 @@
                               [title]="item2?.stepName2"
                               [titleCss]="'fs-5 mb-1'"
                               [desc]="item2?.memo"
+                              [footer]="footerItem2"
+                              [dataItem]="item2"
                             >
                             </codx-temp-full>
                           </ng-container>
@@ -171,6 +173,40 @@
                       ><codx-label name="lblPeople" default="/UV"></codx-label
                     ></span>
                   </div>
+                </ng-template>
+
+                <ng-template #footerItem2 let-data>
+                  <div
+                    *ngIf="data?.attachments > 0"
+                    class="d-flex align-items-center justify-content-between mt-4"
+                  >
+                    <div class="d-flex align-items-center mb-2">
+                      <div class="fw-bold text-primary">
+                        <codx-label
+                          fiedName="Attachments"
+                          [formModel]="view.formModel"
+                          default="Tài liệu "
+                        >
+                        </codx-label>
+                      </div>
+                    </div>
+                  </div>
+                  <codx-attachment
+                    #attachment
+                    [objectType]="view.formModel.entityName"
+                    [objectId]="data?.recID"
+                    hideFolder="1"
+                    hideImageUpload="0"
+                    hideImageThumb="0"
+                    hideUploadBtn="1"
+                    hideDes="1"
+                    type="inline"
+                    allowMultiFile="1"
+                    [formModel]="view.formModel"
+                    [functionID]="funcID"
+                    displayThumb="full"
+                  >
+                  </codx-attachment>
                 </ng-template>
               </ng-container>
             </ng-container>
