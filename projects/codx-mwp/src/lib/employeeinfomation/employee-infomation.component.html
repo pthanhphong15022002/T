@@ -15,12 +15,13 @@ idField="employeeID"
         <codx-img 
           class="me-4 pic-emloyee" 
           #imageAvatar 
-          [width]="100" 
+          [width]="100"
+          [funcId]="functionID"
           [objectId]="employeeInfo?.employeeID"
           objectType="HR_Employees" 
           [objectName]="employeeInfo?.employeeName"
-          isAllowEdit="true" 
-          updateDirect="true">
+          [isAllowEdit]="true" 
+          [updateDirect]="true">
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
