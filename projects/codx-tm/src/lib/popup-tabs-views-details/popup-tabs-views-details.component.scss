@@ -46,6 +46,14 @@
     }
 
     .empty-data img {
-        max-width: 320px;
+        max-width: 300px !important;
+    }
+
+    div.card-note {
+        width: 100% !important;
+    }
+
+    .add-text-note {
+        padding-right: 15px;
     }
 }
