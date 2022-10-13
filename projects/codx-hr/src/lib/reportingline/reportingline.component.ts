@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, CRUDService, DialogRef, NotificationsService, RequestOption, ScrollComponent, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, CRUDService, DialogRef, NotificationsService, RequestOption, ScrollComponent, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
@@ -45,28 +45,19 @@ export class ReportinglineComponent extends UIComponent {
   positionID: any;
 
   constructor(
-    private changedt: ChangeDetectorRef,
-    private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,
+    private authStore: AuthService,
     private codxHr: CodxHrService,
-    private callfunc: CallFuncService,
-    private notiService: NotificationsService,
+    private notifiSv: NotificationsService,
     inject: Injector
   ) {
     super(inject);
     var dataSv = new CRUDService(inject);
-    // dataSv.request.gridViewName = 'grvPositions';
-    // dataSv.request.entityName = 'HR_Positions';
-    // dataSv.request.formName = 'Positions';
-    //dataSv.request.pageSize = 15;
     this.dtService = dataSv;
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   onInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
+    this.funcID = this.router.snapshot.params['funcID'];
+    
   }
 
   searchName(e) {
@@ -87,20 +78,12 @@ export class ReportinglineComponent extends UIComponent {
 
 
   ngAfterViewInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
     this.views = [
-      // {
-      //   id: '1',
-      //   type: ViewType.treedetail,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     resizable: true,
-      //     template: this.templateTree,
-      //     panelRightRef: this.templateDetail
-      //   }
-      // },
       {
-        id: '2',
+        id: '1',
         type: ViewType.treedetail,
         active: true,
         sameData: true,
@@ -112,7 +95,7 @@ export class ReportinglineComponent extends UIComponent {
       },
     ];
     this.view.dataService.parentIdField = 'ReportTo';
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   clickMF(e: any, data?: any) {
@@ -129,18 +112,7 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
 
-  add() {
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected, option);
-      this.dialog.closed.subscribe(e => {
-        console.log(e);
-      })
-    });
-  }
+  
 
   edit(data?) {
     if (data) {
@@ -151,7 +123,7 @@ export class ReportinglineComponent extends UIComponent {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'edit', option);
+      this.dialog = this.callfc.openSide(PopupAddPositionsComponent, 'edit', option);
     });
   }
 
@@ -164,7 +136,7 @@ export class ReportinglineComponent extends UIComponent {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopupAddPositionsComponent, 'copy', option);
+      this.dialog = this.callfc.openSide(PopupAddPositionsComponent, 'copy', option);
     });
   }
 
@@ -183,7 +155,7 @@ export class ReportinglineComponent extends UIComponent {
       this.beforeDel(opt)).subscribe((res) => {
         if (res) {
           this.itemSelected = this.view.dataService.data[0];
-          this.changedt.detectChanges();
+          this.detectorRef.detectChanges();
         }
       }
       );
@@ -209,7 +181,7 @@ export class ReportinglineComponent extends UIComponent {
     // this.dt.detectChanges();
     if (evt && evt.data) {
       this.orgUnitID = evt.data.orgUnitID;
-      this.changedt.detectChanges();
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -221,6 +193,28 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
 
+  btnClick(){
+    if(this.view)
+    {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.callfc.openSide(PopupAddPositionsComponent, null, option);
+    }
+  }
+  add() {
+    this.view.dataService.addNew().subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(PopupAddPositionsComponent, this.view.dataService.dataSelected, option);
+      this.dialog.closed.subscribe(e => {
+        console.log(e);
+      })
+    });
+  }
   onSelectionChanged(evt: any) {
     ScrollComponent.reinitialization();
     if (this.listview) {
@@ -235,7 +229,7 @@ export class ReportinglineComponent extends UIComponent {
         this.predicate = "PositionID=@0";
         this.dataValue = evt.data.positionID;
       }
-      this.changedt.detectChanges();
+      this.detectorRef.detectChanges();
     }
   }
 

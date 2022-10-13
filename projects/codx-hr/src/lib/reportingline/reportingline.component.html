@@ -1,6 +1,14 @@
-<codx-views #view [autoLoad]="true" idField="positionID" entityName="HR_Positions" [views]="views"
-    [selectedFirst]="true" (selectedChange)="onSelectionChanged($event)" [button]="button" (buttonClick)="click($event)"
-    [formModel]="view.formModel" [itemSelected]="itemSelected" [viewActiveType]="'15'">
+<codx-views #view 
+    [autoLoad]="true" 
+    idField="positionID" 
+    entityName="HR_Positions" 
+    [views]="views"
+    [selectedFirst]="true" 
+    (selectedChange)="onSelectionChanged($event)" 
+    [button]="button" 
+    (buttonClick)="click($event)"
+    [itemSelected]="itemSelected" 
+    [viewActiveType]="'15'">
 </codx-views>
 
 <ng-template #templateTree let-data>

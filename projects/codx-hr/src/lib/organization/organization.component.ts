@@ -145,6 +145,17 @@ export class OrgorganizationComponent extends UIComponent {
     }
   }
 
+  btnClick(){
+    if(this.view)
+    {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.view.currentView.dataService;
+      option.FormModel = this.view.formModel;
+      this.callfc.openSide(PopupAddOrganizationComponent,null,option);
+    }
+    
+  }
   add() {
     this.currentView = this.view.currentView;
     if (this.currentView)
