@@ -287,13 +287,13 @@
             </e-items>
           </ejs-toolbar>
         </div>
+        <ng-container [ngTemplateOutlet]="confirmCheckbox"> </ng-container>
       </div>
       <ngx-extended-pdf-viewer
         *ngIf="curFileUrl"
         #ngxPdfView
         [(src)]="curFileUrl"
         [(zoom)]="zoomValue"
-        [zoomLevels]="zoomValue"
         [(page)]="curPage"
         [customToolbar]="pdfToolbar"
         [showHandToolButton]="false"
@@ -303,12 +303,14 @@
         (pdfLoaded)="loadedPdf($event)"
         (pageRendered)="pageRendered($event)"
         [showBookmarkButton]="false"
-        [showPropertiesButton]="true"
+        [showPropertiesButton]="false"
         [customSidebar]="withoutSidebar"
         [customThumbnail]="ngxThumbnail"
         [enableDragAndDrop]="false"
         [handTool]="false"
         [contextMenuAllowed]="false"
+        [enablePinchOnMobile]="false"
+        (currentZoomFactor)="('1')"
         pageViewMode="vertical"
       >
       </ngx-extended-pdf-viewer>
@@ -341,6 +343,7 @@
         id="rightToolbar"
         [class.d-none]="hideActions"
         heightAdjustMode="Fill"
+        (selecting)="changeRightTab($event)"
       >
         <e-tabitems>
           <e-tabitem *ngIf="isEditable">
@@ -522,7 +525,7 @@
                       </codx-temp-full>
                       <div
                         [class.d-none]="
-                          inputUrl == null ||
+                          inputUrl != null ||
                           area.recID != curSelectedAnnotID ||
                           area.labelType == '1' ||
                           area.labelType == '2' ||
@@ -758,6 +761,23 @@
 </ng-template>
 
 <ng-template #panelLeft> </ng-template>
+<ng-template #confirmCheckbox>
+  <div class="pdf-check-add btn-flex flex-center btn-white">
+    <codx-input
+      type="checkbox"
+      class="check-add me-2"
+      name="select"
+      (valueChange)="changeConfirmState($event)"
+    >
+    </codx-input>
+    <codx-label
+      name="lblConfirmSeen"
+      [formModel]=""
+      [default]="'Xác nhận đã xem văn bản'"
+      class="text-header"
+    ></codx-label>
+  </div>
+</ng-template>
 
 <div id="contextMenu" style="display: none; position: absolute">
   <div style="z-index: 2">

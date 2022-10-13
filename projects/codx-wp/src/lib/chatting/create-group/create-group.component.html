@@ -1,0 +1,44 @@
+<div class="wrap-form">
+    <div class="row">
+        <div class="col-12">
+            <input type="file" />
+            <input type="text" [(value)]="groupName" placeholder="Tên nhóm" class="form-control">
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-8" style="overflow-y: scroll;">
+            <div>
+                <label>Danh sách người dùng</label>
+            </div>
+            <div>
+                <input [(value)]="searchUser" class="form-control" placeholder="Tìm kiếm người dùng"/>
+            </div>
+            <div>
+                <div class="item" style="display: flex;" *ngFor="let data of users">
+                    <img src="">
+                    <div style="flex: 1;">
+                        <div>{{data.userName}}</div>
+                    </div>
+                    <div>
+                        <input type="radio" name="{{data.userID}}" (change)="selectUser(data)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div>
+                <label>Selected <span *ngIf="userSelected.length > 0">({{userSelected.length}})</span></label>
+            </div>
+            <div>
+                <div style="display: flex;" *ngFor="let item of userSelected">
+                    <div>
+                        <img src="">
+                    </div>
+                    <div>
+                        <div style="flex: 1;">{{item.userName}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

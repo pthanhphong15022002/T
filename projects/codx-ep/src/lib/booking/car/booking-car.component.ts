@@ -5,7 +5,15 @@ import {
   Injector,
   AfterViewInit,
 } from '@angular/core';
-import { ResourceModel, DialogRef, SidebarModel, UIComponent, FormModel, CallFuncService, NotificationsService } from 'codx-core';
+import {
+  ResourceModel,
+  DialogRef,
+  SidebarModel,
+  UIComponent,
+  FormModel,
+  CallFuncService,
+  NotificationsService,
+} from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
@@ -36,6 +44,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   predicate = 'ResourceType=@0';
   dataValue = '2';
+  viewType = ViewType;
   formModel: FormModel;
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -51,15 +60,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   resourceField: any;
   funcID: string;
   itemDetail;
-  popupTitle='';
-  funcIDName='';
+  popupTitle = '';
+  funcIDName = '';
   columnsGrid: any;
   constructor(
-    private injector: Injector,    
+    private injector: Injector,
     private codxEpService: CodxEpService,
-    private callFuncService:CallFuncService,
-    private notificationsService: NotificationsService,
-    ) {
+    private callFuncService: CallFuncService,
+    private notificationsService: NotificationsService
+  ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.codxEpService.getFormModel(this.funcID).then((res) => {
@@ -67,8 +76,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         this.formModel = res;
       }
     });
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if (res) {            
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
@@ -149,17 +158,18 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         //toolbarTemplate: this.footerButton,
         showSearchBar: false,
         model: {
-         //panelLeftRef:this.panelLeft,
-         eventModel: this.fields,
-         resourceModel: this.resourceField,
-         //template:this.cardTemplate,
-         template4: this.resourceHeader,
-         //template5: this.resourceTootip,
-         template6: this.mfButton,//header          
-         template8: this.contentTmp,//content
-         statusColorRef: 'vl003',
+          //panelLeftRef:this.panelLeft,
+          eventModel: this.fields,
+          resourceModel: this.resourceField,
+          //template:this.cardTemplate,
+          template4: this.resourceHeader,
+          //template5: this.resourceTootip,
+          template6: this.mfButton, //header
+          template8: this.contentTmp, //content
+          statusColorRef: 'vl003',
         },
-      },{
+      },
+      {
         id: '2',
         type: ViewType.listdetail,
         sameData: true,
@@ -183,7 +193,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   click(evt: ButtonModel) {
-    this.popupTitle=evt?.text + " " + this.funcIDName;
+    this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -199,8 +209,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
-  setPopupTitle(mfunc){
-    this.popupTitle = mfunc + " " + this.funcIDName;
+  setPopupTitle(mfunc) {
+    this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
   getDetailBooking(id: any) {
     this.api
@@ -226,7 +236,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.viewBase?.dataService?.dataSelected, true,this.popupTitle],
+        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle],
         option
       );
     });
@@ -245,7 +255,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callFuncService.openSide(
             PopupAddBookingCarComponent,
-            [this.viewBase.dataService.dataSelected, false,this.popupTitle],
+            [this.viewBase.dataService.dataSelected, false, this.popupTitle],
             option
           );
         });
@@ -253,13 +263,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
   delete(evt?) {
     let deleteItem = this.view.dataService.dataSelected;
-    if (evt) { deleteItem = evt; }
+    if (evt) {
+      deleteItem = evt;
+    }
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
-      if(!res){
-        this.notificationsService.notifyCode("SYS022");
+      if (!res) {
+        this.notificationsService.notifyCode('SYS022');
       }
     });
-  }  
+  }
 
   closeEditForm(evt?: any) {
     if (evt) {
@@ -268,7 +280,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   clickMF(event, data) {
-    this.popupTitle=event?.text + " " + this.funcIDName;
+    this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -277,7 +289,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         this.delete(data);
         break;
     }
-  }  
+  }
 
   onSelect(obj: any) {
     //console.log(obj);

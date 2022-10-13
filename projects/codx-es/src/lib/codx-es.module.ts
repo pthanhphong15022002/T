@@ -51,6 +51,7 @@ import { PopupAddSignatureComponent } from './setting/signature/popup-add-signat
 import { PopupAddCategoryComponent } from './setting/category/popup-add-category/popup-add-category.component';
 import { ESTemplateComponent } from './templateHTML/template.component';
 import { PopupSelectLabelComponent } from './sign-file/popup-select-label/popup-select-label.component';
+import { ExternalSigningComponent } from './external-signing/external-signing.component';
 
 const routes: Routes = [
   {
@@ -144,6 +145,7 @@ const routes: Routes = [
     PopupCaPropsComponent,
     ESTemplateComponent,
     PopupSelectLabelComponent,
+    ExternalSigningComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

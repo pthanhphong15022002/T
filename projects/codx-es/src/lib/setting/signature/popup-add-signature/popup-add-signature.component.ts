@@ -47,7 +47,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   isAdd = true;
   isSaveSuccess = false;
-  dialogSignature: FormGroup;
   cbxName: any;
   isAfterRender: boolean = false;
   currentTab = 1;
@@ -94,6 +93,12 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         });
       }
     }
+  }
+
+  ngOnInit(): void {
+    this.esService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {});
 
     this.cache
       .gridViewSetup(
@@ -104,14 +109,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         if (res) {
           this.grvSetup = res;
         }
-      });
-  }
-
-  ngOnInit(): void {
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.dialogSignature = item;
       });
   }
 
@@ -142,8 +139,11 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         console.log(this.data);
 
         if (event?.data == '2') {
-          this.data.supplier = '1';
-          this.form?.formGroup.patchValue({ supplier: '1' });
+          this.data.supplier = null;
+          this.form?.formGroup.patchValue({ supplier: null });
+        } else if (event?.data == '1') {
+          this.data.supplier = '2';
+          this.form?.formGroup.patchValue({ supplier: '2' });
         }
       } else if (event?.data === Object(event?.data))
         this.data[event['field']] = event?.data.value[0];
@@ -165,8 +165,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   onSaveForm() {
-    this.dialogSignature.patchValue(this.data);
-
     if (this.form?.formGroup?.invalid == true) {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
@@ -193,8 +191,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
             if (this.imgSignature1.imageUpload?.item) i++;
             if (this.imgSignature2.imageUpload?.item) i++;
             if (this.imgStamp.imageUpload?.item) i++;
-
-            alert(i);
 
             this.imgSignature1.imageUpload?.item &&
               this.imgSignature1
@@ -286,7 +282,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     }
     let data = {
       dialog: this.dialog,
-      model: this.dialogSignature,
+      model: this.form?.formGroup,
       data: this.data,
     };
     this.cfService.openForm(PopupSignatureComponent, '', 800, 600, '', data);
@@ -319,27 +315,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   //   }
   //   this.cr.detectChanges();
   // }
-
-  getJSONString(data) {
-    if (data) {
-      switch (this.currentTab) {
-        case 3:
-          this.dialogSignature.patchValue({
-            signature1: data[0]?.recID ?? null,
-          });
-          break;
-        case 4:
-          this.dialogSignature.patchValue({
-            signature2: data[0]?.recID ?? null,
-          });
-          break;
-        case 5:
-          this.dialogSignature.patchValue({ stamp: data[0]?.recID ?? null });
-          break;
-      }
-    }
-    return JSON.stringify(data);
-  }
 
   changeTab(tab) {
     this.currentTab = tab;

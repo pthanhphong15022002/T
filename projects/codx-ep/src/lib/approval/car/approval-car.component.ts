@@ -274,6 +274,11 @@ export class ApprovalCarsComponent extends UIComponent {
       }
     }
   }
+  
+  updateStatus(data:any)
+  {
+    this.view.dataService.update(data).subscribe();
+  }
   getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(

@@ -1,3 +1,4 @@
+import { E } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -5,6 +6,7 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
+import { ELEMENTS } from '@syncfusion/ej2-angular-inplace-editor';
 import {
   ApiHttpService,
   CallFuncService,
@@ -31,23 +33,25 @@ export class EditSkillComponent implements OnInit {
   dataValue = '';
   parentIdField = '';
   skill = [];
-
+  tooltip:any = {};
+  ticks:any = {};
+  employeeID:String = "";
   constructor(
-    private notiService: NotificationsService,
+    private notifiSV: NotificationsService,
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private df: ChangeDetectorRef,
-    @Optional() dialog?: DialogRef,
-    @Optional() dt?: DialogData
+    @Optional() dialogRef?: DialogRef,
+    @Optional() dialog?: DialogData
   ) {
     this.dialog = dialog;
-    this.skillEmployee = dt?.data;
+    this.skillEmployee = dialog?.data.skill;
+    this.employeeID = dialog?.data.employeeID;
   }
-  tooltip:any;
-  ticks:any;
+  
   ngOnInit(): void {
     this.tooltip = { placement: 'Before', isVisible: true, showOn: 'Always' };
-    this.ticks = { placement: 'After', largeStep: 0, smallStep: 10, showSmallTicks: true };
+    // this.ticks = { placement: 'After', largeStep: 1, smallStep: 10, showSmallTicks: true };
   }
   sliderChange(e, data) {
     this.skillChartEmployee = [];
@@ -78,45 +82,40 @@ export class EditSkillComponent implements OnInit {
   popupAddSkill() {
     this.showCBB = true;
     this.df.detectChanges();
-    // dialog.closed.subscribe(e => {
-    //   console.log(e);
-    // })
   }
 
-  saveAddSkill(e: any) {
-    let data = e.dataSelected;
-    if (data && data.length > 0) {
-      this.skillEmployee = data;
-      this.skillChartEmployee = data;
-      data.forEach((e:any) => {
-        let s = {
-          objectID: e.CompetenceID,
-          objectName: e.CompetenceName,
-          objectType: e.idField
-        }
-        this.skill.push(s);
-      })
+  addSkill(event: any) {
+    if(!event || !event?.dataSelected) return;
+    let skills = [];
+    if(this.skillEmployee && this.skillEmployee?.length > 0 ){
+      event.dataSelected.map((element:any) =>  {
+        let isExsitElement = this.skillEmployee.some(x => x.competenceID == element.CompetenceID)
+         if(!isExsitElement){
+          skills.push(element);
+         }
+      });
     }
-    // e.dataSelected.forEach((e:any) => {
-      // let s = {
-      //   CompetenceID: e.id,
-      //   CompetenceName: e.text,
-      //   idField: e.type
-      // };
-      // this.skillEmployee.push(s);
-    // });
-    this.showCBB = false;
-    this.df.detectChanges();
+    if(skills.length > 0)
+    {
+      this.api.execSv(
+        "HR",
+        "ERM.Business.HR",
+        "EmployeesBusiness",
+        "AddSkillsEmployeeAsync",
+        [this.employeeID, skills]
+        ).subscribe((res:boolean) => {
+          if(res)
+          {
+            this.notifiSV.notifyCode("SYS006");
+          }
+          else{
+            this.notifiSV.notifyCode("SYS023");
+          }
+        });
+    }
   }
 
-  deleteSkill(data) {
-    // this.view.dataService.dataSelected = data;
-    // this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-    //   this.beforeDel(opt)).subscribe((res) => {
-    //     if (res[0]) {
-    //       this.itemSelected = this.view.dataService.data[0];
-    //     }
-    //   }
-    //   );
+  removeSkill(data) 
+  {
   }
 }

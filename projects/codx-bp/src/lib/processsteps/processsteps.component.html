@@ -14,6 +14,7 @@
   [autoLoad]="true"
   [idField]="idField"
   (onDragDrop)="onDragDrop($event)"
+  (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
@@ -35,98 +36,148 @@
 
 <ng-template #cardImgFooter let-data let-setting="setting"> </ng-template>
 
-<!-- viewlist-content -detail-Process -->
-<ng-template #itemViewList let-data>
-  aaaaaaaaaaaaaa
-  <div class="p-5">
+<!-- viewlist-content -detail-Process tesssssssssssssssssssssssss  -->
+<ng-template #itemViewList>
+  <!-- <div class="p-5">
     <h2 class="text-danger py-4 uppercase">41_BP_Process_Detail</h2>
-    <h4>Qui trình tuyển dụng - Vị trí Manager</h4>
-    <div class="card" style="width: 936px">
-      <div class="card-body">
-        <div class="mb-5">
-          <h4 class="fw-bold text-gray-900 mb-104">
-            Qui trình tuyển dụng - Vị trí Manager
-          </h4>
-          <div class="d-flex flex-wrap mb-2">
-            <div class="d-flex align-items-center me-4">
-              <span class="fw-bolb">
-                <codx-label name="" default="Phiên bản:"> </codx-label>
-              </span>
-              <span class="text-dark">v1.01</span>
-            </div>
-            <div class="d-flex align-items-center">
-              <span class="fw-bolb">
-                <codx-label name="" default="Ngày hiệu lực:"> </codx-label>
-              </span>
-              <span class="text-dark">01/01/2021</span>
-            </div>
+    <h4>Qui trình tuyển dụng - Vị trí Manager</h4> -->
+  <div class="card">
+    <div class="card-body">
+      <div class="mb-5">
+        <h4 class="fw-bold text-gray-900 mb-104">
+          Qui trình tuyển dụng - Vị trí Manager
+        </h4>
+        <div class="d-flex flex-wrap mb-2">
+          <div class="d-flex align-items-center me-4">
+            <span class="fw-bolb">
+              <codx-label name="" default="Phiên bản:"> </codx-label>
+            </span>
+            <span class="text-dark">v1.01</span>
           </div>
-          <div class="d-flex flex-wrap mb-2">
-            <div class="d-flex align-items-center me-4">
-              <span
-                >Theo dõi quá trình tuyển dụng từ khi yêu cầu > đăng tuyển > sàn
-                lọc hồ sơ > phỏng vấn > tuyển chọn > offer > ký HĐLĐ</span
-              >
-            </div>
+          <div class="d-flex align-items-center">
+            <span class="fw-bolb">
+              <codx-label name="" default="Ngày hiệu lực:"> </codx-label>
+            </span>
+            <span class="text-dark">01/01/2021</span>
           </div>
         </div>
+        <div class="d-flex flex-wrap mb-2">
+          <div class="d-flex align-items-center me-4">
+            <span>
+              <codx-label
+                name="lblPhases"
+                default="Theo dõi quá trình tuyển dụng từ khi "
+              ></codx-label>
+              &nbsp;
+            </span>
+            <ng-container *ngFor="let item of listPhaseName; let i = index">
+              <span>{{ item }}</span
+              ><span
+                *ngIf="i < listPhaseName.length - 1"
+                class="text-danger"
+                style="font-size: 20px"
+              >
+                <codx-label name="lblIcon" default=">"></codx-label>
+              </span>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngFor="let item of dataTreeProcessStep">
         <div class="mb-5">
           <div class="card card-steplist">
             <div
               class="steplist-hearder border border-gray-200 rounded px-6 py-4"
             >
               <codx-temp-full
-                [title]="'Công đoạn 2: Sơ vấn'"
+                [title]="item?.stepName"
                 [titleCss]="'fs-3 mb-2'"
-                [baseHeaderRightTmp]="tmp"
-                [desc]="
-                  'Nhân viên TA chuẩn bị câu hỏi khảo sát, gọi điện thoại sơ vấn những ứng viên có hồ sơ qua vòng sàng lọc'
-                "
+                [baseHeaderRightTmp]="tmpPhase"
+                [desc]="item?.memo"
               >
               </codx-temp-full>
             </div>
-            <ng-template #tmp>
-              <div><span class="text-danger">1.5h/UV</span></div>
-            </ng-template>
-            <div id="kt_docs_card_collapsible" class="collapse show">
-              <div class="card-body p-0">
-                <div class="steplist ps-6 pt-4">
-                  <div class="steplist-item step-primary rounded p-4">
-                    <codx-temp-full
-                      [title]="'Công đoạn 2: Sơ vấn'"
-                      [titleCss]="'fs-5 mb-1'"
-                      [baseHeaderRightTmp]="tmp"
-                      [desc]="
-                        'Nhân viên TA chuẩn bị câu hỏi khảo sát, gọi điện thoại sơ vấn những ứng viên có hồ sơ qua vòng sàng lọc'
-                      "
-                    >
-                    </codx-temp-full>
-                  </div>
-                  <div class="steplist-item step-danger rounded p-4">
-                    <div>Theo dõi quá trình tuyển dụng từ khi yêu cầu</div>
-                    <div class="fs-3 text-danger">
-                      Dùng control Note chỗ Nguyên
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="d-flex align-items-center border border-left-4 border-color-primary card-rounded p-5 p-lg-10 mb-14"
-                >
-                  <div class="d-flex flex-wrap mb-2">
-                    <div class="d-flex align-items-center me-4">
-                      <span
-                        >Theo dõi quá trình tuyển dụng từ khi yêu cầu > đăng
-                        tuyển > sàn lọc hồ sơ > phỏng vấn > tuyển chọn > offer >
-                        ký HĐLĐ</span
-                      >
-                    </div>
-                  </div>
-                </div>
+            <ng-template #tmpPhase>
+              <div>
+                <span class="text-danger">
+                  <span>{{ item.duration }} </span>
+                  <codx-label name="lblDay" default="ngày"></codx-label>
+                </span>
               </div>
-            </div>
+            </ng-template>
+
+            <ng-container *ngIf="item?.items.length > 0">
+              <ng-container *ngFor="let item1 of item.items">
+                <div id="kt_docs_card_collapsible" class="collapse show">
+                  <div class="card-body p-0">
+                    <div class="steplist ps-6 pt-4">
+                      <div class="steplist-item step-danger rounded p-4">
+                        <codx-temp-full
+                          [title]="item1?.stepName2"
+                          [titleCss]="'fs-5 mb-1'"
+                          [baseHeaderRightTmp]="tmp"
+                          [desc]="item1?.memo"
+                        >
+                        </codx-temp-full>
+                        <ng-container *ngIf="item?.items.length > 0">
+                          <ng-container *ngFor="let item2 of item1.items">
+                            <codx-temp-full
+                              [title]="item2?.stepName2"
+                              [titleCss]="'fs-5 mb-1'"
+                              [desc]="item2?.memo"
+                            >
+                            </codx-temp-full>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+
+                      <!-- <div class="steplist-item step-danger rounded p-4">
+                      <div>Theo dõi quá trình tuyển dụng từ khi yêu cầu</div>
+                      <div class="fs-3 text-danger">
+                        Dùng control Note chỗ Nguyên
+                      </div>
+                    </div> -->
+                    </div>
+                    <!-- <div
+                    class="d-flex align-items-center border border-left-4 border-color-primary card-rounded p-5 p-lg-10 mb-14"
+                  >
+                     <div class="d-flex flex-wrap mb-2">
+                      <div class="d-flex align-items-center me-4">
+                        <span
+                          >Theo dõi quá trình tuyển dụng từ khi yêu cầu > đăng
+                          tuyển > sàn lọc hồ sơ > phỏng vấn > tuyển chọn > offer >
+                          ký HĐLĐ</span
+                        >
+                      </div>
+                    </div> 
+                  </div> -->
+                  </div>
+                </div>
+
+                <!-- <ng-template #tmpTitle>
+                  <span>
+                    <codx-label name="lblActivity" default="Bước"></codx-label
+                  ></span>
+                  <span>{{ item1.stepNo }}</span
+                  ><codx-label name="lblSplit" default=":"></codx-label
+                  ><span>{{ item1.stepName2 }}</span>
+                </ng-template> -->
+
+                <ng-template #tmp>
+                  <div>
+                    <span class="text-danger"
+                      ><span>{{ item1.duration }}</span>
+                      <codx-label name="lblHour" default="h"></codx-label
+                      ><codx-label name="lblPeople" default="/UV"></codx-label
+                    ></span>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </ng-container>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
   </div>
+  <!-- </div> -->
 </ng-template>

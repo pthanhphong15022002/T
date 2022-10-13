@@ -130,7 +130,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               width: 200,//gv['Location'].width,
               field: 'companyID',
               template: this.locationCol,
-              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Equipments'].headerText,
@@ -142,9 +141,8 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['Note'].headerText,
-              width: 200,//gv['Note'].width,
+              width: 200, //gv['Note'].width,
               field: 'note',
-              headerTextAlign: 'Center',
             },
             {
               headerText: 'Lái xe', //gv['Owner'].headerText,

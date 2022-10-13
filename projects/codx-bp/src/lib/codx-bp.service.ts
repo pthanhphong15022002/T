@@ -8,13 +8,24 @@ import { tmpInforSentEMail } from './models/BP_Processes.model';
 })
 export class CodxBpService {
  
-
   constructor(private api : ApiHttpService) { } 
 
     //Send Email
     sendMail(recID : string , infor : tmpInforSentEMail  )
     {
       // return this.api.exec<any>('OD' ,'DispatchesBusiness', 'SendMailDispatchAsync' , [recID , infor] )
+      
+    }
+
+    getListProcessSteps(gridModel)
+    {
+     return this.api.exec<any>('BP' ,'ProcessStepsBusiness', 'GetProcessStepsAsync' , gridModel )
+      
+    }
+
+    addProcessStep(data)
+    {
+     return this.api.exec<any>('BP' ,'ProcessStepsBusiness', 'AddProcessStepAsync' , data )
       
     }
 }
