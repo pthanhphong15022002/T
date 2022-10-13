@@ -1,112 +1,74 @@
-<div class="stepper-body no-header">
-  <div class="card-body p-0 m-5 row sprints-task-header">
+<div class="stepper-body no-header page-viewdetail">
+  <div class="my-3 mx-6 sprints-task-header">
     <div class="d-flex justify-content-between">
-      <div class="d-flex">
-        <div class="text-dark fw-bolder fs-3 me-6">
+      <div class="d-flex align-items-center">
+        <div class="text-dark fw-bold fs-3 me-6">
           {{ nameObj }}
         </div>
-        <div class="d-status me-6">
-          <codx-vll
-            *ngIf="data?.iterationID"
-            [name]="'PM001'"
-            [value]="projectCategory"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-md fs-7 ms-2"
-          ></codx-vll>
-          <codx-vll
-            *ngIf="data?.meetingID"
-            [name]="'CO002'"
-            [value]="data?.meetingType"
-            [showText]="true"
-            [showIcon]="true"
-            class="badge badge-light badge-md fs-7"
-          >
+        <div class="d-status me-5">
+          <codx-vll *ngIf="data?.iterationID" [name]="'PM001'" [value]="projectCategory" [showText]="true"
+            [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2"></codx-vll>
+          <codx-vll *ngIf="data?.meetingID" [name]="'CO002'" [value]="data?.meetingType" [showText]="true"
+            [showIcon]="true" class="badge badge-light badge-md fs-7">
           </codx-vll>
         </div>
       </div>
       <div>
-        <button
-          class="btn text-dark-75 text-hover-primary cursor-pointer px-0"
-          (click)="dialog.close()"
-        >
+        <button class="btn text-dark-75 text-hover-danger cursor-pointer px-0" (click)="dialog.close()">
           <span class="icon-close icon-18"></span>
         </button>
       </div>
     </div>
-    <div class="d-flex mt-2">
-      <div class="me-3">
-        <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
-        <span class="text-gray-600" #createdOn>
-          {{ data?.createdOn | date: "dd/MM/yyyy" }}</span
-        >
+  </div>
+  <!-- </div> -->
+  <div class="w-100 bg-gray-100 pt-2 view-details-main">
+    <div class="view-details-header rounded-3 bg-body scroll-y px-6 mt-3">
+      <div class="d-flex align-items-center justify-content-between mt-4">
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center mb-1">
+            <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
+            <span class="text-gray-600 me-6" #createdOn>
+              {{ data?.createdOn | date: "dd/MM/yyyy" }}</span>
+            <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
+            <span class="text-gray-600">{{ createdByName }}</span>
+          </div>
+          <div class="d-flex align-items-center" *ngIf="data?.fromDate && data?.toDate">
+            <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
+              <codx-label name="lblTimeReview" [default]="'Thời gian review dữ liệu:'"></codx-label>
+            </div>
+            <div class="d-flex align-items-center me-2">
+              {{ data.fromDate | date: "dd/MM/yyyy" }} -
+              {{ data.toDate | date: "dd/MM/yyyy" }}
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="" *ngIf="resources && resources != ''">
+            <codx-imgs [objectId]="resources" objectType="AD_Users" [numberImages]="7" [width]="35"></codx-imgs>
+          </div>
+        </div>
       </div>
-      <div class="me-3">
-        <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
-        <span class="text-gray-600">{{ createdByName }}</span>
-      </div>
-    </div>
-    <div class="d-flex mt-2" *ngIf="data?.fromDate && data?.toDate">
-      <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
-        <codx-label
-          name="lblTimeReview"
-          [default]="'Thời gian review dữ liệu:'"
-        ></codx-label>
-      </div>
-      <div class="d-flex align-items-center me-2">
-        {{ data.fromDate | date: "dd/MM/yyyy" }} -
-        {{ data.toDate | date: "dd/MM/yyyy" }}
-      </div>
-    </div>
 
-    <div class="d-flex row mt-2">
-      <div class="d-flex mt-5 tab-header col-8">
+      <div class="d-flex mt-4 tab-header">
         <ng-container *ngFor="let item of tabControl; let i = index">
-          <a
-            [class]="
-              'me-5 text-gray-600 text-hover-primary cursor-pointer' +
+          <a [class]="
+              'tab-item text-dark fw-bold' +
               ' ' +
-              (item.isActive ? 'text-primary tab-active' : '')
-            "
-          >
-            <codx-label
-              [name]="'lbl' + item.name"
-              [formName]="'SYS'"
-              [default]="item.textDefault"
-              (click)="clickMenu(item)"
-            >
+              (item.isActive ? 'tab-active' : '')
+            ">
+            <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
+              (click)="clickMenu(item)">
             </codx-label>
           </a>
         </ng-container>
       </div>
-      <div class="col-4" *ngIf="resources && resources != ''">
-        <codx-imgs
-          style="float: right"
-          [objectId]="resources"
-          objectType="AD_Users"
-          [numberImages]="7"
-          [width]="30"
-        ></codx-imgs>
-      </div>
     </div>
-  </div>
-  <!-- </div> -->
-  <div class="page-content d-flex flex-row m-5" style="height: 100%">
-    <div class="w-100">
-      <div
-        class="m-0 bg-body rounded-2 sprints-task-detail"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="{default: true}"
-        data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".sprints-task-header"
-        data-kt-scroll-wrappers=".stepper-body .no-header"
-        [attr.data-kt-scroll-offset]="offset"
-      >
+    <div class="view-details-content rounded-3 bg-body scroll-y p-3 pb-0 mt-4">
+      <div class="sprints-task-detail" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+        data-kt-scroll-height="auto" data-kt-scroll-dependencies=".sprints-task-header"
+        data-kt-scroll-wrappers=".stepper-body .no-header" [attr.data-kt-scroll-offset]="offset">
         <ng-container *ngIf="name == 'Dashboard'">
-          <codx-sprintdetails-dashboard
-            [projectID]="projectID"
-            [resources]="resources"
-          ></codx-sprintdetails-dashboard>
+          <codx-sprintdetails-dashboard [projectID]="projectID" [resources]="resources"></codx-sprintdetails-dashboard>
         </ng-container>
 
         <ng-container *ngIf="name == 'MeetingContents'">
@@ -118,49 +80,30 @@
           </div>
         </ng-container>
         <ng-container *ngIf="name == 'Tasks'">
-          <codx-tasks-share
-            *ngIf="dataObj"
-            [dataObj]="dataObj"
-            [showButtonAdd]="showButtonAdd"
-            [showMoreFunc]="showMoreFunc"
-            [funcID]="'TMT03011'"
-          >
+          <codx-tasks-share *ngIf="dataObj" [dataObj]="dataObj" [showButtonAdd]="showButtonAdd"
+            [showMoreFunc]="showMoreFunc" [funcID]="'TMT03011'">
           </codx-tasks-share>
         </ng-container>
         <ng-container *ngIf="name == 'History'">
           <ng-container>
             <ng-container>
-              <codx-tree-history
-                [objectID]="iterationID"
-                [objectType]="'TM_Sprints'"
-                [viewIcon]="true"
-                [funcID]="functionParent"
-              >
+              <codx-tree-history [objectID]="iterationID" [objectType]="'TM_Sprints'" [viewIcon]="true"
+                [funcID]="functionParent">
               </codx-tree-history>
             </ng-container>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Comments'">
           <ng-container>
-            <codx-tree-history
-              [objectID]="iterationID ? iterationID : meetingID"
-              [objectType]="iterationID ? 'TM_Sprints' : 'CO_Meetings'"
-              [actionType]="'C'"
-              [addNew]="true"
-              [viewIcon]="false"
-              [viewVote]="true"
-              [funcID]="functionParent"
-            >
+            <codx-tree-history [objectID]="iterationID ? iterationID : meetingID"
+              [objectType]="iterationID ? 'TM_Sprints' : 'CO_Meetings'" [actionType]="'C'" [addNew]="true"
+              [viewIcon]="false" [viewVote]="true" [funcID]="functionParent">
             </codx-tree-history>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Meetings'">
-          <codx-tmmeetings
-            *ngIf="dataObj"
-            [funcID]="'TMT05011'"
-            [dataObj]="dataObj"
-            [showButtonAdd]="false"
-          ></codx-tmmeetings>
+          <codx-tmmeetings *ngIf="dataObj" [funcID]="'TMT05011'" [dataObj]="dataObj" [showButtonAdd]="false">
+          </codx-tmmeetings>
         </ng-container>
       </div>
     </div>
@@ -168,30 +111,14 @@
 </div>
 <ng-template #templateMeeting>
   <div class="">
-    <codx-note
-      [showMenu]="true"
-      [showMF]="true"
-      service="CO"
-      assembly="ERM.Business.CO"
-      className="MeetingsBusiness"
-      method="UpdateContentMeetingAsync"
-      [objectParentID]="meetingID"
-      [data]="data?.contents"
-      [objectID]=""
-      [objectType]="'CO_Meetings'"
-      [vllControlShare]="'TM003'"
-      [vllRose]="'TM002'"
-    >
+    <codx-note [showMenu]="true" [showMF]="true" service="CO" assembly="ERM.Business.CO" className="MeetingsBusiness"
+      method="UpdateContentMeetingAsync" [objectParentID]="meetingID" [data]="data?.contents" [objectID]=""
+      [objectType]="'CO_Meetings'" [vllControlShare]="'TM003'" [vllRose]="'TM002'">
     </codx-note>
   </div>
 </ng-template>
 
 <ng-template #templateAssign>
-  <codx-tasks-share
-    [funcID]="'TMT0203'"
-    [dataObj]="dataObjAssign"
-    [showButtonAdd]="true"
-    [refID]="data?.recID"
-    [refType]="'CO_Meetings'"
-  ></codx-tasks-share>
+  <codx-tasks-share [funcID]="'TMT0203'" [dataObj]="dataObjAssign" [showButtonAdd]="true" [refID]="data?.recID"
+    [refType]="'CO_Meetings'"></codx-tasks-share>
 </ng-template>
