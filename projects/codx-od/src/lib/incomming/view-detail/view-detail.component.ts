@@ -931,11 +931,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         );
       } else {
         return 'Gửi đến ' + agencyName;
-        /* return Util.stringFormat(
-          this.ms023?.customName,
-          this.fmTextValuelist(relationType, '6'),
-          agencyName
-        ); */
       }
     }
     return Util.stringFormat(

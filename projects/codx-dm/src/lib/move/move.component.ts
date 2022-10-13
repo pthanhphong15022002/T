@@ -411,7 +411,6 @@ export class MoveComponent implements OnInit {
   }
 
   CopyDataTo() {
-    debugger;
     var that = this;
     if (this.objectType == 'file') {
       this.fileService.copyFile(this.id, this.fullName, that.selectId, this.selection).subscribe(async res => {
@@ -438,7 +437,7 @@ export class MoveComponent implements OnInit {
           this.dialog.close();
         }
         else {      
-          that.notificationsService.notify(res.message);
+          //that.notificationsService.notify(res.message);
           that.errorshow = true;
         }
 
@@ -446,7 +445,6 @@ export class MoveComponent implements OnInit {
           //  let newNameMessage = this.renamemessage.replace("{0}", res.data.fileName);
           var config = new AlertConfirmInputConfig();
           config.type = "YesNo"/* "checkBox" */;
-          debugger;
           res.message = res.message + this.mess;
           this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
             if(x.event.status == "Y") {
@@ -506,29 +504,30 @@ export class MoveComponent implements OnInit {
           that.dialog.close();         
         }
         else {        
-          that.notificationsService.notify(res.message);
+          //that.notificationsService.notify(res.message);
           that.errorshow = true;
         }
         // thu muc da ce 
         if (res.status == 2) {
 
           var config = new AlertConfirmInputConfig();
-          config.type = "checkBox";
+          config.type = "YesNo";
           
           this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x=>{
             if(x.event.status == "Y") {
               this.folderService.copyFolder(that.id, that.fullName, that.selectId, that.selection, 1).subscribe(async item => {
                 if (item.status == 0) {
+                  debugger;
                   that.dmSV.isTree = false;
                   this.dmSV.currentNode = '';
                   this.dmSV.folderId.next(item.data.recID);
-                  var folders = this.dmSV.listFolder;
-                  let index = folders.findIndex(d => d.recID.toString() === that.id);
-                  if (index > -1 && that.selection == 1) {
-                    folders.splice(index, 1);//remove element from array
+                  //var folders = this.dmSV.listFolder;
+                  //let index = folders.findIndex(d => d.recID.toString() === that.id);
+                  if(that.selection == 1)
+                  {
                     that.dmSV.nodeDeleted.next(that.id);
                   }
-                  that.dmSV.listFolder = folders;
+                  //that.dmSV.listFolder = folders;
                   that.dmSV.ChangeData.next(true);
                   // that.dmSV.nodeSelect.next(item.data);
                   // this.dmSV.changeData(folders, null, that.dmSV.getFolderId());
