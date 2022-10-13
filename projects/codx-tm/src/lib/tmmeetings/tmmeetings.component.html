@@ -44,6 +44,7 @@
       [footer]="footer"
       [typeMF]="'hover'"
       (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
     >
     </codx-card-center>
   </div>
@@ -291,9 +292,17 @@
       [dataItem]="data"
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
       type="hover"
     >
     </codx-mfunc>
+  </div>
+</ng-template>
+
+
+<ng-template #headerTemp let-data>
+  <div style="font-weight: bold;font-size: 14px; height: 40px; text-align: center; float: left !important;"  >
+    <div ><codx-label name="lblDate" [default]="getDayCalendar(data?.date)" ></codx-label></div><div>{{data?.date.getDate()}}</div>
   </div>
 </ng-template>
 

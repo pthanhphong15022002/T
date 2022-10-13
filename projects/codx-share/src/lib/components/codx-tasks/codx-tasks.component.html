@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #treeView>
-  <share-tree-view [formModel]="view.formModel" [vllStatus]="vllStatus" [listRoles]="listRoles"
+  <share-tree-view [formModel]="view.formModel" [vllStatus]="vllStatus" [listRoles]="listRoles" [dataObj]="dataObj"
     [showMoreFunc]="showMoreFunc" (clickMoreFunction)="receiveMF($event)" (viewTask)="viewTask($event)">
   </share-tree-view>
 </ng-template>
@@ -214,8 +214,33 @@
   </div>
 </ng-template>
 
+<ng-template #resourceHeader let-data>
+  <div class="container">
+    <codx-temp-full [imageId]="data.resourceData?.owner" [title]="data.resourceData.userName"
+      [subTitle]="data.resourceData.postionName" [content]="data.resourceData.events + ' công việc'">
+    </codx-temp-full>
+  </div>
+</ng-template>
+
+<ng-template #mfButton let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)"
+    type="hover">
+    </codx-mfunc>
+  </div>
+</ng-template>
+
+
+<ng-template #headerTemp let-data>
+  <div style="font-weight: bold;font-size: 14px; height: 40px; text-align: center; float: left !important;"  >
+    <div ><codx-label name="lblDate" [default]="getDayCalendar(data?.date)" ></codx-label></div><div>{{data?.date.getDate()}}</div>
+  </div>
+</ng-template>
+
 <!-- content -->
 <ng-template #footerNone></ng-template>
+
+
 
 <ng-template #footerList let-data>
   <div class="d-flex justify-content-between align-items-end mt-1">
@@ -287,20 +312,7 @@
   </div>
 </ng-template>
 
-<ng-template #resourceHeader let-data>
-  <div class="container">
-    <codx-temp-full [imageId]="data.resourceData?.owner" [title]="data.resourceData.userName"
-      [subTitle]="data.resourceData.postionName" [content]="data.resourceData.events + ' công việc'">
-    </codx-temp-full>
-  </div>
-</ng-template>
 
-<ng-template #mfButton let-data>
-  <div class="mt-2 me-2">
-    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" type="hover">
-    </codx-mfunc>
-  </div>
-</ng-template>
 
 <codx-views #view [service]="service" [entityName]="entityName" [idField]="idField" [funcID]="funcID"
   [assemblyName]="assemblyName" [className]="className" [method]="method" [views]="views"

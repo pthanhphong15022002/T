@@ -20,6 +20,9 @@ import { PopupSendEmailComponent } from './processsteps/popup-send-email/popup-s
 import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
 import { ProcessStepsComponent } from './processsteps/processsteps.component';
 import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
+import { RevisionsComponent } from './processes/revisions/revisions.component';
+import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { PropertiesComponent } from './properties/properties.component';
 
 export const routes: Routes = [
   {
@@ -31,12 +34,18 @@ export const routes: Routes = [
         component: ProcessesComponent,
       },
       {
-        path: 'processstep/:funcID',
-        component: ProcessStepsComponent,
-      },
-      {
         path: 'testhtml',
         component: TesthtmlComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'processstep/:funcID',
+        component: ProcessStepsComponent,
       },
     ],
   },
@@ -53,6 +62,8 @@ export const routes: Routes = [
     PopupAddProcessStepsComponent,
     PopupSendEmailComponent,
     PopupAddProcessStepsComponent,
+    RevisionsComponent,
+    PropertiesComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

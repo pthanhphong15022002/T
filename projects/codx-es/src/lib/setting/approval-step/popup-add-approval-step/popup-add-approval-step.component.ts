@@ -120,6 +120,14 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     });
   }
 
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      this.data[event?.field] = event.data;
+      this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+      this.cr.detectChanges();
+    }
+  }
+
   initForm() {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)

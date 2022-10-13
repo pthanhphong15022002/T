@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   sessionID = null;
   email = null;
   mode: string = 'login';
+  user: any;
 
   // private fields
   private unsubscribe: Subscription[] = [];
@@ -61,30 +62,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {
     const tenant = this.tenantStore.getName();
     // redirect to home if already logged in
-    if (this.authService.checkUserStatus()) {
-      this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
-      if (this.returnUrl) {
-        this.returnUrl = decodeURIComponent(this.returnUrl);
-      }
-      if (
-        this.returnUrl.indexOf('http://') == 0 ||
-        this.returnUrl.indexOf('https://') == 0
-      ) {
-        this.api
-          .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
-          .pipe(
-            map((data) => {
-              if (data && data.userID) {
-                document.location.href =
-                  this.returnUrl + '&token=' + this.auth.get().token;
-              }
-            })
-          )
-          .subscribe();
-
-        return;
-      } else this.router.navigate([`/${tenant}`]);
-    }
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
         this.api
@@ -105,7 +82,37 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
           });
       }
-      if (params.id && params.id == 'changePass') this.mode = params.id;
+      if (params.id && params.id == 'changePass') {
+        this.mode = params.id;
+        this.user = this.auth.get();
+        this.email = this.user.email;
+        dt.detectChanges();
+      } else {
+        if (this.authService.checkUserStatus()) {
+          this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
+          if (this.returnUrl) {
+            this.returnUrl = decodeURIComponent(this.returnUrl);
+          }
+          if (
+            this.returnUrl.indexOf('http://') == 0 ||
+            this.returnUrl.indexOf('https://') == 0
+          ) {
+            this.api
+              .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
+              .pipe(
+                map((data) => {
+                  if (data && data.userID) {
+                    document.location.href =
+                      this.returnUrl + '&token=' + this.auth.get().token;
+                  }
+                })
+              )
+              .subscribe();
+
+            return;
+          } else this.router.navigate([`/${tenant}`]);
+        }
+      }
     });
   }
 
@@ -160,6 +167,15 @@ export class LoginComponent implements OnInit, OnDestroy {
           '',
           Validators.compose([Validators.required, Validators.email]),
         ],
+        passwordOld: [
+          //this.defaultAuth.password,
+          '',
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ]),
+        ],
         password: [
           //this.defaultAuth.password,
           '',
@@ -183,10 +199,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     );
   }
 
-  valueChange(event:any) {
-    if(!event)
-      return;
-    let field = event.field;
+  valueChange(event: any) {
+    if (!event) return;
     let value = event.data;
     this.f.password.patchValue(value);
     this.dt.detectChanges();
@@ -245,13 +259,21 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   submitChangePass() {
-    if (this.c.email.value.toString().trim() != this.email.trim()) {
+    if (
+      (this.mode == 'firstLogin' || this.mode == 'changePass') &&
+      this.c.email.value.toString().trim() != this.email.trim()
+    ) {
       this.notificationsService.notify('Email không phù hợp!');
       return;
     }
-    //$(this.error.nativeElement).html('');
+    if (this.c.passwordOld.status == 'INVALID') {
+      this.notificationsService.notify('Vui lòng nhập mật khẩu cũ!');
+      return;
+    }
+    var passOld = '';
+    if (this.mode == 'changePass') passOld = this.c.passwordOld.value;
     const changepwSubscr = this.authService
-      .changepw(this.c.email.value, '', this.c.password.value)
+      .changepw(this.c.email.value, passOld, this.c.password.value)
       .pipe()
       .subscribe((data1) => {
         if (!data1.isError) {

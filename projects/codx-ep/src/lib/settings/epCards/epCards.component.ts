@@ -154,7 +154,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         //this.delete(data);
         break;
       case 'EPS2503'://lịch sử thẻ
-        this.historyCard(data);
+        this.historyCard(event?.data.url+'/'+data.recID);
         break;
 
     }
@@ -228,7 +228,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
-  historyCard(data:any) {
-    this.codxService.navigate('', 'ep/historycards/EPS2503/'+data.recID);
+  historyCard(url:any) {
+    this.codxService.navigate('', url);
   }
 }

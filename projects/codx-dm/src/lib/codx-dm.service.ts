@@ -453,7 +453,7 @@ export class CodxDMService {
   openItem(data: any) {
     if (data.fileName == undefined) {
       if (!data.read) {
-        this.notificationsService.notify(this.titleAccessDenied);
+        this.notificationsService.notifyCode("DM059");
         return;
       }
 
@@ -501,7 +501,7 @@ export class CodxDMService {
     } else {
       // open file
       if (!data.read) {
-        this.notificationsService.notify(this.titleFileAccessDenied);
+        this.notificationsService.notify("DM059");
         return;
       }
       var dialogModel = new DialogModel();
@@ -1153,7 +1153,7 @@ export class CodxDMService {
   }
 
   clickMF($event, data: any, view: any = null) {
-
+    debugger;
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
 

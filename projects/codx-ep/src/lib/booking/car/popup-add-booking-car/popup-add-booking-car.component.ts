@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AuthService, CacheService } from 'codx-core';
+import { AuthService, CacheService, CRUDService } from 'codx-core';
 import {
   DialogData,
   DialogRef,
@@ -251,7 +251,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.data.hours = hours;
       }
     } else {
-      this.notificationsService.notifyCode('EP003');
+      this.notificationsService.notifyCode('TM036');
       return;
     }
     this.tmplstDevice.forEach((element) => {
@@ -269,17 +269,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.stopOn = this.data.endDate;
     this.data.bookingOn = this.data.startDate;
     this.data.category = '2';
-    if(approval){
-      this.data.status = '3';
-    }
-    else{      
-      this.data.status = '1';
-    }
-    this.data.resourceType = '2';
-    (this.data.equipments = this.lstEquipment),
-      this.dialogRef.dataService
+    this.data.status = '1';
+    this.data.resourceType = '2';    
+    this.data.equipments = this.lstEquipment;
+
+    this.dialogRef.dataService
         .save((opt: any) => this.beforeSave(opt))
-        .subscribe((res) => {
+        .subscribe(async (res) => {
           if (res.save || res.update) {
             if (!res.save) {
               this.returnData = res.update;
@@ -287,8 +283,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
               this.returnData = res.save;
             }
             if (approval) {
-              this.codxEpService
-                .getCategoryByEntityName(this.formModel.entityName)
+              (await this.codxEpService
+                .getCategoryByEntityName(this.formModel.entityName))
                 .subscribe((res: any) => {
                   this.codxEpService
                     .release(
@@ -300,15 +296,21 @@ export class PopupAddBookingCarComponent extends UIComponent {
                     .subscribe((res) => {
                       if (res?.msgCodeError == null && res?.rowCount) {
                         this.notificationsService.notifyCode('ES007');
+                        this.returnData.status="3";
+                        (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe(); 
+                        this.dialogRef && this.dialogRef.close();
                       } else {
                         this.notificationsService.notifyCode(res?.msgCodeError);
+                        // Thêm booking thành công nhưng gửi duyệt thất bại
+                        return
                       }
                     });
                 });
             }
-            this.dialogRef && this.dialogRef.close();
+            else{
+              this.dialogRef && this.dialogRef.close();
+            }  
           } else {
-            this.notificationsService.notifyCode('E0011');
             return;
           }
         });
@@ -393,7 +395,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
             this.driverCheck = res.msgBodyData[0];
             if (!res.msgBodyData[0]) {
               this.driver = null;
-              this.notificationsService.notifyCode('E0011'); //Tài xế ko săn sàng
+              this.notificationsService.notifyCode('EP008'); //Tài xế ko săn sàng
             }
           }
           this.detectorRef.detectChanges();
@@ -426,7 +428,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (endTime <= startTime) {
       this.checkLoop = !this.checkLoop;
       if (!this.checkLoop) {
-        this.notificationsService.notifyCode('EP003');
+        this.notificationsService.notifyCode('TM036');
         return;
       }
     }
@@ -447,7 +449,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (new Date() >= new Date(this.data.startDate)) {
       this.checkLoopS = !this.checkLoopS;
       if (!this.checkLoopS) {
-        this.notificationsService.notifyCode('EP003');
+        this.notificationsService.notifyCode('TM036');
         return;
       }
     }
@@ -461,7 +463,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (new Date() >= new Date(this.data.endDate)) {
       this.checkLoopE = !this.checkLoopE;
       if (!this.checkLoopE) {
-        this.notificationsService.notifyCode('EP003');
+        this.notificationsService.notifyCode('TM036');
         return;
       }
     }

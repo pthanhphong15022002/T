@@ -1,6 +1,7 @@
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -54,6 +55,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     private api: ApiHttpService,
     private callfc: CallFuncService,
     private sanitizer: DomSanitizer,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) { }
@@ -90,6 +92,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.itemSelected['memoHTML'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo)
           this.itemSelected['memoHTML2'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo2)
           this.viewTags = this.itemSelected?.tags;
+          this.changeDetectorRef.detectChanges();
           this.loadTreeView();
           this.loadDataReferences();
         }
@@ -180,6 +183,10 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         ) {
           x.disabled = true;
         }
+        //an giao viec
+        if (x.functionID == 'SYS005') {
+          x.disabled = true;
+        }
       });
     }
   }
@@ -215,6 +222,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       )
       .subscribe((res) => {
         if (res) this.dataTree = res || [];
+        this.changeDetectorRef.detectChanges();
       });
   }
   //#endregion
@@ -345,6 +353,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
                   if (user) {
                     ref.createByName = user.userName;
                     this.dataReferences.unshift(ref);
+                    this.changeDetectorRef.detectChanges();
                   }
                 });
             }
@@ -370,6 +379,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
               ref.createByName = users[index].userName;
             }
           });
+          this.changeDetectorRef.detectChanges();
         }
       });
   }

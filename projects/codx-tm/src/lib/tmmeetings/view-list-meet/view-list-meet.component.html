@@ -1,8 +1,8 @@
-<div class="d-flex flex-row align-items-center p-2 border-bottom" (dblclick)="dbClick(data)">
-  <td class="w-15">
+<div class="d-flex flex-row align-items-top p-2 border-bottom" (dblclick)="dbClick(data)">
+  <div class="me-5">
     <div class="badge badge-danger me-2 label-status a" [style.background-color]="
     (data.status | vll: 'CO004':'textColor' | async) +
-    '30'" >
+    '30'">
       <div class="text-dark">
         Tháng {{month }}
       </div>
@@ -15,8 +15,8 @@
         {{startTime}}
       </div>
     </div>
-  </td>
-  <td class="w-30">
+  </div>
+  <div class="w-30">
     <div class="text-dark fw-bold fs-6 ">
       {{data.meetingName}}
     </div>
@@ -25,30 +25,31 @@
         [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data">
       </codx-temp-full>
     </div>
-  </td>
-  <td class="w-25">
+  </div>
+  <div class="w-25">
     <div [innerHTML]="data.memo">
     </div>
-  </td>
-  <td class="w-15">
+  </div>
+  <div class="w-15">
     <div *ngIf="data.tags">
       <codx-tag [entityName]="formModel.entityName" [disabled]="true" [isEdit]="false" [value]="data.tags">
       </codx-tag>
     </div>
-  </td>
-  <td class="w-10">
+  </div>
+  <div class="w-10">
     <div>
-      <codx-imgs [objectId]="resourceID" objectType="AD_Users" [numberImages]="4" (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
-      #popoverList="ngbPopover" placement="bottom" container="body" autoClose="outside" [openDelay]="500">
+      <codx-imgs [objectId]="resourceID" objectType="AD_Users" [numberImages]="4"
+        (mouseenter)="popoverEmpList(popoverList)" [ngbPopover]="popEmpList" popoverClass="empPopoverClass"
+        #popoverList="ngbPopover" placement="bottom" container="body" autoClose="outside" [openDelay]="500">
 
       </codx-imgs>
     </div>
-  </td>
-  <td class=" w-5">
-    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false" [dataItem]="data"
+  </div>
+  <div class=" w-5">
+    <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)"  (changeDataMF)="changeDataMF($event, data)" [isBookMark]="false" [dataItem]="data"
       type="hover">
     </codx-mfunc>
-  </td>
+  </div>
 </div>
 
 <ng-template #titleTmp>

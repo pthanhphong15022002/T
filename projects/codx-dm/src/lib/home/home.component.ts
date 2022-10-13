@@ -289,6 +289,7 @@ export class HomeComponent extends UIComponent {
 
     this.dmSV.isNodeChange.subscribe(res => {
       if (res) {
+        debugger;
         var tree = this.codxview.currentView.currentComponent.treeView;
         if (tree != null) tree.setNodeTree(res);
         //  that.dmSV.folderId.next(res.recID);
@@ -301,6 +302,7 @@ export class HomeComponent extends UIComponent {
       }
     });
     this.dmSV.isRefreshTree.subscribe(res => {
+      debugger;
       if (res) {
         var ele = document.getElementsByClassName('collapse');
         for (var i = 0; i < ele.length; i++) {
@@ -352,13 +354,14 @@ export class HomeComponent extends UIComponent {
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
+        debugger;
         this.data = [];
-        this.changeDetectorRef.detectChanges();
+        //this.changeDetectorRef.detectChanges();
         if (this.dmSV.listFiles != null)
           this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
         else
           this.data = this.dmSV.listFolder;
-        this.changeDetectorRef.detectChanges();
+        //this.changeDetectorRef.detectChanges();
       }
     });
     this.dmSV.isAddFolder.subscribe((item) => {
@@ -558,7 +561,7 @@ export class HomeComponent extends UIComponent {
   }
 
   onSelectionChanged($data) {
-
+    debugger;
     ScrollComponent.reinitialization();
     if (!$data && ($data == null || $data?.data == null)) {
       return;
@@ -723,7 +726,7 @@ export class HomeComponent extends UIComponent {
         id: '1',
         icon: 'icon-format_list_bulleted',
         text: 'List',
-        type: ViewType.treedetail,
+        type: ViewType.tree_list,
         sameData: true,
         active: false,
         model: {
@@ -1080,7 +1083,7 @@ export class HomeComponent extends UIComponent {
     debugger;
     this.isSearch = false;
     if (e.type === "read") {
-      this.data = [];
+      //this.data = [];
       this.clearWaitingThumbnail();
       // this.dmSV.listFolder = [];
       this.dmSV.listFiles = [];
@@ -1139,6 +1142,7 @@ export class HomeComponent extends UIComponent {
         this.dmSV.parentUpdate = true;
         this.dmSV.disableInput.next(false);
         this.dmSV.disableUpload.next(false);
+        //this.data = [...e?.data]
       }
 
       this.changeDetectorRef.detectChanges();
@@ -1230,13 +1234,13 @@ export class HomeComponent extends UIComponent {
     {
       if (!data.read) {
         this.notificationsService.notifyCode("DM059");
-        return;
+        return null;
       }
       this.fileService.getFile(data.recID).subscribe((data) => {
         this.viewFile(data);
       });
     }
-    this.dmSV.openItem(this.data);
+    this.dmSV.openItem(data);
   }
   dialogClosed() {
     this.visible = false;

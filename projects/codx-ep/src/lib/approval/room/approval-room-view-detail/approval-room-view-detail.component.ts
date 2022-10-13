@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -18,6 +20,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;  
+  @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -129,25 +132,85 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
             data?.approvalTransRecID,//ApprovelTrans.RecID
             status,
           )
-          .subscribe((res:any) => {
-            var x= res;
-            if (res?.msgCodeError == null && res?.rowCount) {
+          .subscribe(async (res:any) => {
+            if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
                 this.notificationsService.notifyCode('ES007');//đã duyệt
+                data.status="5"
               }
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
+                data.status="4";
               }
               if(status=="2"){
                 this.notificationsService.notifyCode('ES007');//làm lại
-              }  
+                data.status="2"
+              }                
+              (await this.updateStatus.emit(data));
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
           });
       });
   }
-  changeDataMF(event, data: any) {}
+  changeDataMF(event, data:any) {    
+    if(event!=null && data!=null){
+      switch(data?.status){
+        case "3":
+        event.forEach(func => {
+          if(func.functionID == "EPT40102" 
+          ||func.functionID == "EPT40103" 
+          || func.functionID == "EPT40104")
+          {
+            func.disabled=true;
+          }
+        });
+        break;
+        case "4":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "5":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "2":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+      }
+    }
+  }
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;

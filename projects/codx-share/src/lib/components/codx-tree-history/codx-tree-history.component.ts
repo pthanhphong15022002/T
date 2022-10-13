@@ -62,6 +62,8 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     });
   }
   getDataAsync(objectID:string){
+    console.log(this.objectID);
+
     if(this.actionType && this.actionType == "C")
     {
       this.GetCommentTrackLogByObjectIDAsync(objectID);

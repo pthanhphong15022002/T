@@ -215,19 +215,23 @@ export class AddNoteComponent implements OnInit {
   }
 
   valueChangeDate(e) {
-    this.countValueChange++;
-    var date = new Date(e.data.fromDate);
-    var crr = date.toLocaleDateString();
-    this.currentDate = '';
-    this.currentDate = crr;
-    if (this.countValueChange == 1) {
-      var date1 = new Date(e.data.fromDate);
-      var crr1 = date1.toLocaleDateString();
-      this.date1 = crr1;
-    } else if (this.countValueChange > 1) {
-      var date2 = new Date(e.data.fromDate);
-      var crr2 = date2.toLocaleDateString();
-      this.date2 = crr2;
+    if (e) {
+      this.countValueChange++;
+      var date = new Date(e.data.fromDate);
+      var crr = date.toLocaleDateString();
+      if (crr !== this.currentDate) {
+        this.currentDate = '';
+        this.currentDate = crr;
+      }
+      if (this.countValueChange == 1) {
+        var date1 = new Date(e.data.fromDate);
+        var crr1 = date1.toLocaleDateString();
+        this.date1 = crr1;
+      } else if (this.countValueChange > 1) {
+        var date2 = new Date(e.data.fromDate);
+        var crr2 = date2.toLocaleDateString();
+        this.date2 = crr2;
+      }
     }
   }
 
@@ -527,7 +531,23 @@ export class AddNoteComponent implements OnInit {
         itemUpdate: this.note,
         dialogRef: this.dialog,
       };
-      this.callfc.openForm(SaveNoteComponent, '', 900, 650, '', obj, '');
+      this.dialog = this.callfc.openForm(
+        SaveNoteComponent,
+        '',
+        900,
+        650,
+        '',
+        obj,
+        ''
+      );
+      this.dialog.closed.subscribe((res) => {
+        if (res) {
+          res.event['type'] = 'WP_Notes';
+          var data = res.event;
+          var obj = [{ data: data, type: 'edit' }];
+          this.noteService.data.next(obj);
+        }
+      });
     } else {
       this.notificationsService.notifyCode('TM037');
     }

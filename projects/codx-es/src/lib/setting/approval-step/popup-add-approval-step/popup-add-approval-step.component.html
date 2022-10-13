@@ -186,6 +186,22 @@
       </ng-container>
     </div>
   </div>
+  <div class="d-flex align-items-center mb-4">
+    <codx-input
+      #checkbox
+      type="switch"
+      id="switch"
+      [checked]="data.editSignAreas"
+      labelPosition="After"
+      field="editSignAreas"
+      class="test-switch"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+    <label class="ms-2">
+      <codx-label fiedName="EditSignAreas" [formModel]="formModel"></codx-label>
+    </label>
+  </div>
   <div class="d-flex flex-column mb-4">
     <div class="fw-bolder d-block mb-2">
       <codx-label
