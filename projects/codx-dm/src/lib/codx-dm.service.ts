@@ -1596,7 +1596,7 @@ export class CodxDMService {
           var config = new AlertConfirmInputConfig();
           config.type = 'YesNo';
           this.notificationsService
-            .alert(this.title, res?.message + " Bạn có muốn ghi đè không?", config)
+            .alert(this.title, res?.message, config)
             .closed.subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.fileService
