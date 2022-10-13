@@ -15,12 +15,13 @@ idField="employeeID"
         <codx-img 
           class="me-4 pic-emloyee" 
           #imageAvatar 
-          [width]="100" 
+          [width]="100"
+          [funcId]="functionID"
           [objectId]="employeeInfo?.employeeID"
           objectType="HR_Employees" 
           [objectName]="employeeInfo?.employeeName"
-          isAllowEdit="true" 
-          updateDirect="true">
+          [isAllowEdit]="true" 
+          [updateDirect]="true">
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
@@ -527,37 +528,29 @@ idField="employeeID"
                 </div>
                 <!-- <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader> -->
                 <div class="border rounded-2 p-6" *ngIf="skillEmployee">
-                  <div class="d-flex justify-content-between">
-                    <div class="pe-6">
-                      <div class="card-process">
+                  <div class="row">
+                    <div class="col-6 pe-4">
                         <ng-container *ngFor="let data of skillEmployee">
-                          <div class="d-flex flex-column">
+                          <div>
                             <div class="fw-bold text-dark mb-1">
                               {{ data.category }}
                             </div>
                             <div class="bg-success-o-60">
-                              <div id="container">
-                                <div class="wrap">
-                                  <div class="sliderwrap">
-                                    <ng-container *ngIf="parameter">
-                                      <ejs-slider id="minrange" 
-                                        [type]="minType" 
-                                        [min]="0" 
-                                        [max]="parameter.maxLevelSkill? parameter.maxLevelSkill : 10 "
-                                        [value]="data.valueX"
-                                        [readonly]="true" 
-                                        >
-                                      </ejs-slider>
-                                    </ng-container>
-                                  </div>
-                                </div>
-                              </div>
+                                <ng-container *ngIf="parameter">
+                                  <ejs-slider id="minrange" 
+                                    [type]="minType" 
+                                    [min]="0" 
+                                    [max]="parameter.maxLevelSkill? parameter.maxLevelSkill : 10 "
+                                    [value]="data.valueX"
+                                    [readonly]="true" 
+                                    >
+                                  </ejs-slider>
+                                </ng-container>
                             </div>
                           </div>
                         </ng-container>
-                      </div>
                     </div>
-                    <!-- <div class="">
+                    <div class="col-6">
                       <ejs-chart id="chartcontainer" [title]="" [primaryXAxis]="primaryXAxis"
                         [primaryYAxis]="primaryYAxis">
                         <e-series-collection>
@@ -566,7 +559,7 @@ idField="employeeID"
                           </e-series>
                         </e-series-collection>
                       </ejs-chart>
-                    </div> -->
+                    </div>
                   </div>
                   <div class="row">
                     <ng-container *ngIf="editMode">

@@ -289,7 +289,6 @@ export class HomeComponent extends UIComponent {
 
     this.dmSV.isNodeChange.subscribe(res => {
       if (res) {
-        debugger;
         var tree = this.codxview.currentView.currentComponent.treeView;
         if (tree != null) tree.setNodeTree(res);
         //  that.dmSV.folderId.next(res.recID);
@@ -1080,7 +1079,6 @@ export class HomeComponent extends UIComponent {
   }
 
   requestEnded(e: any) {
-    debugger;
     this.isSearch = false;
     if (e.type === "read") {
       //this.data = [];
