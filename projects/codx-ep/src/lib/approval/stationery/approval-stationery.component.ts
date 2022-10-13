@@ -5,7 +5,8 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { NotificationsService, UIComponent, ViewModel, ViewType, FormModel } from 'codx-core';
+import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
   selector: 'approval-stationery',
@@ -34,11 +35,20 @@ export class ApprovalStationeryComponent
   preStepNo;
   button;
   itemSelected: any;
+  formModel:FormModel;
 
-  constructor(private injector: Injector) {
+  constructor(
+    private injector: Injector,
+    private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService,
+    ) {
     super(injector);
-
     this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -64,37 +74,137 @@ export class ApprovalStationeryComponent
 
   click(event) {}
 
-  clickMF(event, data) {
-    switch (event?.functionID) {
-      case 'EPT40101': //duyet
+  clickMF(value, datas: any = null) {
+    
+    let funcID = value?.functionID;
+    // if (!datas) datas = this.data;
+    // else {
+    //   var index = this.view.dataService.data.findIndex((object) => {
+    //     return object.recID === datas.recID;
+    //   });
+    //   datas = this.view.dataService.data[index];
+    // }
+    switch (funcID) {
+      case 'EPT40101':
+      case 'EPT40201':
+      case 'EPT40301':
+        {
+          //alert('Duyệt');
+          this.approve(datas,"5")
+        }
+        break;      
+      case 'EPT40105':
+      case 'EPT40205':
+      case 'EPT40305':
+        {
+          //alert('Từ chối');
+          this.approve(datas,"4")
+        }
         break;
-
-      case 'EPT40102': //ki
-        //this.delete(data);
+      case 'EPT40106':
+      case 'EPT40206':
+      case 'EPT40306':
+        {
+          //alert('Làm lại');
+          this.approve(datas,"2")
+        }
         break;
-
-      case 'EPT40103': //dong thuan
-        //this.delete(data);
-        break;
-
-      case 'EPT40104': //dong dau
-        //this.delete(data);
-        break;
-
-      case 'EPT40105': //tu choi
-        //this.delete(data);
-        break;
-
-      case 'EPT40106': //lam lai
-        //this.delete(data);
-        break;
-
-      case 'SYS02': //Xoa
-        break;
-
-      case 'SYS03': //Sua.
+      default:
+        '';
         break;
     }
+  }
+  approve(data:any, status:string){
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .approve(            
+            data?.approvalTransRecID,//ApprovelTrans.RecID
+            status,
+          )
+          .subscribe((res:any) => {
+            if (res?.msgCodeError == null && res?.rowCount>=0) {
+              if(status=="5"){
+                this.notificationsService.notifyCode('ES007');//đã duyệt
+                data.status="5"
+              }
+              if(status=="4"){
+                this.notificationsService.notifyCode('ES007');//bị hủy
+                data.status="4";
+              }
+              if(status=="2"){
+                this.notificationsService.notifyCode('ES007');//làm lại
+                data.status="2"
+              }                
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
+  }
+  changeDataMF(event, data:any) {    
+    if(event!=null && data!=null){
+      switch(data?.status){
+        case "3":
+        event.forEach(func => {
+          if(func.functionID == "EPT40102" 
+          ||func.functionID == "EPT40103" 
+          || func.functionID == "EPT40104")
+          {
+            func.disabled=true;
+          }
+        });
+        break;
+        case "4":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "5":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+        case "2":
+          event.forEach(func => {
+            if(func.functionID == "EPT40102" 
+            ||func.functionID == "EPT40103" 
+            || func.functionID == "EPT40104"
+            ||func.functionID == "EPT40105" 
+            ||func.functionID == "EPT40106" 
+            || func.functionID == "EPT40101"
+            )
+            {
+              func.disabled=true;
+            }
+          });
+        break;
+      }
+    }
+  }
+  updateStatus(data:any)
+  {
+    this.view.dataService.update(data).subscribe();
   }
 
   closeAddForm(event) {}
@@ -117,7 +227,7 @@ export class ApprovalStationeryComponent
         'EP',
         'BookingsBusiness',
         'GetBookingByIDAsync',
-        this.itemDetail?.recID
+        [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
       )
       .subscribe((res) => {
         if (res) {
@@ -126,6 +236,7 @@ export class ApprovalStationeryComponent
         }
       });
   }
+
 
   setStyles(resourceType) {
     let styles = {};

@@ -44,7 +44,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-
+  viewType = ViewType;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   buttons: ButtonModel;

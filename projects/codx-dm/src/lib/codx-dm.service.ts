@@ -1153,7 +1153,6 @@ export class CodxDMService {
   }
 
   clickMF($event, data: any, view: any = null) {
-    debugger;
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
 
@@ -1257,7 +1256,6 @@ export class CodxDMService {
         break;
 
       case "DMT0222": // properties file
-        debugger
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1279,7 +1277,6 @@ export class CodxDMService {
 
       case "DMT0202": // chinh sua thu muc
       case "DMT0209": // properties folder
-        debugger
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
