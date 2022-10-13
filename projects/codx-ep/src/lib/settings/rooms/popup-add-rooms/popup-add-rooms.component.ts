@@ -139,13 +139,13 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt),index)
       .subscribe((res) => {
-        if (res) {          
+        if (res.save || res.update) {          
           if (!res.save) {
             this.returnData = res.update;
           } else {
             this.returnData = res.save;
           }
-          if(this.imageUpload)
+          if(this.imageUpload && this.returnData?.recID)
           {
             this.imageUpload
             .updateFileDirectReload(this.returnData.recID)
