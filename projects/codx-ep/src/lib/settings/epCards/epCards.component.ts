@@ -28,6 +28,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('avatarCol') avatarCol: TemplateRef<any>; 
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
   funcID: string;
+  viewType = ViewType;
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
