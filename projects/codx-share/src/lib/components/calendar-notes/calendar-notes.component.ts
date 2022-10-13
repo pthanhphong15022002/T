@@ -77,6 +77,7 @@ export class CalendarNotesComponent
   pinMF: any;
   saveMF: any;
   functionList: any;
+  dialog: DialogRef;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   @ViewChild('calendar') calendar: any;
@@ -147,11 +148,15 @@ export class CalendarNotesComponent
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'edit-note-drawer') {
-            (this.lstView.dataService as CRUDService).remove(data).subscribe();
-            this.WP_Notes = this.WP_Notes.filter((x) => x.recID != data.recID);
+            var indexCRUD = (
+              this.lstView.dataService as CRUDService
+            ).data.findIndex((x) => x.recID == data.recID);
+            (this.lstView.dataService as CRUDService).data[indexCRUD] = data;
+            var index = this.WP_Notes.findIndex((x) => x.recID == data.recID);
+            this.WP_Notes[index] = data;
             (this.lstView.dataService as CRUDService).load().subscribe();
-            this.WP_Notes.push(data);
-          } 
+            console.log('check this.WP_Notes', this.WP_Notes);
+          }
           this.setEventWeek();
           var today: any = document.querySelector(
             ".e-footer-container button[aria-label='Today']"
@@ -182,12 +187,12 @@ export class CalendarNotesComponent
       .exec<any>(
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetOneField',
+        'GetOneFieldByCalendarNote',
         'WPCalendars'
       )
       .subscribe((res) => {
-        if (res[2]) {
-          var dataValue = res[2].dataValue;
+        if (res[0]) {
+          var dataValue = res[0].dataValue;
           var json = JSON.parse(dataValue);
           this.maxPinNotes = parseInt(json.MaxPinNotes, 10);
         }
@@ -248,7 +253,6 @@ export class CalendarNotesComponent
   TDate: any;
 
   setDate(data, lstView) {
-    console.log('check setDate');
     var dateT = new Date(data);
     var fromDate = dateT.toISOString();
     this.daySelected = fromDate;

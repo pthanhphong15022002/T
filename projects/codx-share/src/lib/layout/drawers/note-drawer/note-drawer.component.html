@@ -5,8 +5,8 @@
                 <codx-searchbar (searchEvent)="onSearch($event)"></codx-searchbar>
             </div>
             <div class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative btn-sort">
-                <i class="icon-sort_A-Z icon-18" (click)="sortDataByASC()" *ngIf="checkSortASC == false"></i>
-                <i class="icon-sort_Z-A icon-18" (click)="sortDataByDESC()" *ngIf="checkSortASC == true"></i>
+                <i class="icon-sort_Z-A icon-18" (click)="sortDataByASC()" *ngIf="checkSortASC == false"></i>
+                <i class="icon-sort_A-Z icon-18" (click)="sortDataByDESC()" *ngIf="checkSortASC == true"></i>
             </div>
         </div>
         <div class="d-flex flex-column">
@@ -67,7 +67,7 @@
                             </div>
                         </div>
                         <div class="note-date format-date d-flex justify-content-end">
-                            <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                            <span class=" text-primary">{{item.createdOn | fmDT}}</span>
                         </div>
 
                     </div>
@@ -139,7 +139,7 @@
                             </div>
                         </div>
                         <div class="note-date format-date d-flex justify-content-end">
-                            <span class=" text-primary">{{item.createdOn | date:'dd-MM-yyy'}}</span>
+                            <span class=" text-primary">{{item.createdOn | fmDT}}</span>
                         </div>
                     </div>
                 </div>
