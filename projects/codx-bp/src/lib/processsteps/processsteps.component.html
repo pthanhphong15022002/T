@@ -67,11 +67,16 @@
               <codx-label
                 name="lblPhases"
                 default="Theo dõi quá trình tuyển dụng từ khi "
-              ></codx-label> &nbsp;
+              ></codx-label>
+              &nbsp;
             </span>
             <ng-container *ngFor="let item of listPhaseName; let i = index">
               <span>{{ item }}</span
-              ><span *ngIf="i < listPhaseName.length - 1" class="text-danger" style="font-size: 20px;">
+              ><span
+                *ngIf="i < listPhaseName.length - 1"
+                class="text-danger"
+                style="font-size: 20px"
+              >
                 <codx-label name="lblIcon" default=">"></codx-label>
               </span>
             </ng-container>
@@ -92,12 +97,14 @@
               >
               </codx-temp-full>
             </div>
-            <ng-template #tmpPhase >
-              <div><span class="text-danger">
-                <span>{{item.duration}} </span> <codx-label name="lblDay" default="ngày"></codx-label>
-              </span></div>
+            <ng-template #tmpPhase>
+              <div>
+                <span class="text-danger">
+                  <span>{{ item.duration }} </span>
+                  <codx-label name="lblDay" default="ngày"></codx-label>
+                </span>
+              </div>
             </ng-template>
-         
 
             <ng-container *ngIf="item?.items.length > 0">
               <ng-container *ngFor="let item1 of item.items">
@@ -117,7 +124,6 @@
                             <codx-temp-full
                               [title]="item2?.stepName2"
                               [titleCss]="'fs-5 mb-1'"
-                        
                               [desc]="item2?.memo"
                             >
                             </codx-temp-full>
@@ -148,18 +154,30 @@
                   </div>
                 </div>
 
-                <ng-template #tmp >
-                  <div><span class="text-danger"><span>{{item1.duration}}</span> <codx-label name="lblHour" default="h"></codx-label><codx-label name="lblPeople" default="/UV"></codx-label></span></div>
+                <!-- <ng-template #tmpTitle>
+                  <span>
+                    <codx-label name="lblActivity" default="Bước"></codx-label
+                  ></span>
+                  <span>{{ item1.stepNo }}</span
+                  ><codx-label name="lblSplit" default=":"></codx-label
+                  ><span>{{ item1.stepName2 }}</span>
+                </ng-template> -->
+
+                <ng-template #tmp>
+                  <div>
+                    <span class="text-danger"
+                      ><span>{{ item1.duration }}</span>
+                      <codx-label name="lblHour" default="h"></codx-label
+                      ><codx-label name="lblPeople" default="/UV"></codx-label
+                    ></span>
+                  </div>
                 </ng-template>
               </ng-container>
             </ng-container>
           </div>
         </div>
-        
       </ng-container>
     </div>
   </div>
   <!-- </div> -->
- 
- 
 </ng-template>
