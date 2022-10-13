@@ -26,7 +26,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   funcID: any;
   showLabelAttachment = false;
   title = '';
-  stepType ='C';
+  stepType = 'C';
   readOnly = false;
   titleActon = '';
   action = '';
@@ -48,7 +48,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.action = dt?.data[1];
     this.titleActon = dt?.data[2];
     this.stepType = dt?.data[3];
-    if(this.stepType) this.processSteps.stepType = this.stepType;
+    if (this.stepType) this.processSteps.stepType = this.stepType;
     // this.stepType = 'T'; //thêm để test
     this.dialog = dialog;
 
@@ -82,7 +82,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
   beforeSave(op) {
     var data = [];
     if (this.action == 'edit') {
-
     } else {
       op.method = 'AddProcessStepAsync';
       data = [this.processSteps];
@@ -93,15 +92,23 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
 
   addProcessStep() {
-    var index = this.dialog.dataService?.data.length-1;
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option),index)
-      .subscribe((res) => {
-        this.attachment?.clearData();
-        if (res) {
-          this.dialog.close(res.save);
+    // if (this.stepType == 'P') {
+    //   var index = this.dialog.dataService?.data.length - 1;
+    //   this.dialog.dataService
+    //     .save((option: any) => this.beforeSave(option),)
+    //     .subscribe((res) => {
+    //       // this.attachment?.clearData();
+    //       if (res) {
+    //         this.dialog.close(res.save);
+    //       } else this.dialog.close();
+    //     });
+    // } else {
+      this.bpService.addProcessStep(this.processSteps).subscribe((data) => {
+        if (data) {
+          this.dialog.close(data);
         } else this.dialog.close();
       });
+    // }
   }
 
   updateProcessStep() {
@@ -123,9 +130,10 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
 
   valueChangeDuration(e) {
-    if(this.processSteps.stepType=='P'){
-      this.processSteps.duration = e?.data * 24  ;
-    }else  this.processSteps.duration = e?.data *1
+    // if (this.processSteps.stepType == 'P') {
+    //   this.processSteps.duration = e?.data * 24;
+    // } else 
+    this.processSteps.duration = e?.data;
   }
 
   addFile(e) {
