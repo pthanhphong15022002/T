@@ -126,8 +126,15 @@ export class PopupAddDriversComponent
     if (this.fGroupAddDriver.value.category != 1) {
       this.fGroupAddDriver.patchValue({companyID:null});
     }   
+    let index:any
+    if(this.isAdd){
+      index=0;
+    }
+    else{
+      index=null;
+    }
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),0)
+      .save((opt: any) => this.beforeSave(opt),index)
       .subscribe(async (res) => {
         if (res) {          
           if (!res.save) {
@@ -146,13 +153,7 @@ export class PopupAddDriversComponent
                 //...
               }
             });
-          }          
-          if(this.isAdd){
-            //(this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
-          }
-          else{
-            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
-          }          
+          }    
           this.dialogRef.close();
         }
         else{
