@@ -35,7 +35,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
-  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
+  @ViewChild('linkCol') linkCol: TemplateRef<any>;
 
   @Input() data!: any;
 
@@ -130,7 +130,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               width: 200,//gv['Location'].width,
               field: 'companyID',
               template: this.locationCol,
-              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Equipments'].headerText,
@@ -142,23 +141,20 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['Note'].headerText,
-              width: 200,//gv['Note'].width,
+              width: 200, //gv['Note'].width,
               field: 'note',
-              headerTextAlign: 'Center',
             },
             {
-              headerText: 'Lái xe', //gv['Owner'].headerText,
+              headerText: gv['LinkID'].headerText,
               //width:gv['Owner'].width,
               width: 200,
-              template: this.preparatorCol,
-              headerTextAlign: 'Center',
+              template: this.linkCol,
             },
             {
               headerText: gv['Owner'].headerText,
               //width:gv['Owner'].width,
               width: 200,
               template: this.ownerCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [

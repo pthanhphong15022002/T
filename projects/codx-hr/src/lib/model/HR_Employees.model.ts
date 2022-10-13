@@ -39,4 +39,6 @@ export class HR_Employees {
     public fromDate: Date;
     public toDate: Date;
     public statusName: string;
+
+    constructor(){}
 }

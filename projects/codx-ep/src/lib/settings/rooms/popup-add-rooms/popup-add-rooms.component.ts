@@ -128,9 +128,16 @@ export class PopupAddRoomsComponent extends UIComponent {
       equipments: this.lstEquipment,
       category: '1',
       linkType: '0',
-    });    
+    });   
+    let index:any
+    if(this.isAdd){
+      index=0;
+    }
+    else{
+      index=null;
+    }
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),0)
+      .save((opt: any) => this.beforeSave(opt),index)
       .subscribe((res) => {
         if (res) {          
           if (!res.save) {
@@ -149,17 +156,11 @@ export class PopupAddRoomsComponent extends UIComponent {
                 //...
               }
             });
-          }          
-          if(this.isAdd){
-            //(this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
-          }
-          else{
-            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
-          }          
+          } 
           this.dialogRef.close();
         }
         else{
-          this.notificationsService.notifyCode('SYS001');
+          
           return;
         }
       });

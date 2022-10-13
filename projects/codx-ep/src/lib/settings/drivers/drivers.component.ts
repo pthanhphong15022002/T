@@ -121,10 +121,9 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['CompanyID'].headerText,
-              width: 250,//gv['Location'].width,
+              width: 200,//gv['Location'].width,
               field: 'company',
               template: this.locationCol,
-              headerTextAlign: 'Center',
             },         
             
             {
@@ -132,7 +131,6 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
               //width:gv['Owner'].width,
               width: 300,
               template: this.carCol,
-              headerTextAlign: 'Center',
             },
             // {
             //   headerText: gv['Equipments'].headerText,
@@ -145,15 +143,12 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
             {
               headerText: gv['Owner'].headerText,
               //width:gv['Owner'].width,
-              width: 200,
               template: this.ownerCol,
-              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Note'].headerText,
               width: 200,//gv['Note'].width,
-              field: 'note',
-              headerTextAlign: 'Center',               
+              field: 'note',              
               template: this.noteCol,      
             },
           ];
