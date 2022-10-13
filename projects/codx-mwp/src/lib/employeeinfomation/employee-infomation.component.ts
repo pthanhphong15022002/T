@@ -175,12 +175,14 @@ export class EmployeeInfomationComponent implements OnInit {
     this.editSkillMode = true;
     var model = new DialogModel();
     model.DataService = new CRUDService(this.inject);
-    var dt = item;
-    var dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', dt, "", model);
+    var data = {
+      employeeID:this.employee.employeeID,
+      skill: item,
+    }
+    var dialog = this.callfunc.openForm(EditSkillComponent, '', 450, 600, '', data, "", model);
     dialog.closed.subscribe(e => {
       this.skillEmployee = [...e.event, ...[]];
       this.changedt.detectChanges();
-      console.log(e);
     })
   }
   scrollToElement(idElement:any): void {
@@ -661,22 +663,33 @@ export class EmployeeInfomationComponent implements OnInit {
   saveAddSkill(event:any)
   {
     if(!event || !event?.dataSelected) return;
-    let skills = event.dataSelected.map((element:any) =>  element.CompetenceID);
-    this.api.execSv(
-      "HR",
-      "ERM.Business.HR",
-      "EmployeesBusiness",
-      "AddSkillsEmployeeAsync",
-      [this.employee.employeeID, skills]
-      ).subscribe((res:boolean) => {
-        if(res)
-        {
-          this.notifiSV.notifyCode("SYS006");
-        }
-        else{
-          this.notifiSV.notifyCode("SYS023");
-        }
+    let skills = [];
+    if(this.skillEmployee && this.skillEmployee?.length > 0 ){
+      event.dataSelected.map((element:any) =>  {
+        let isExsitElement = this.skillEmployee.some(x => x.competenceID == element.CompetenceID)
+         if(!isExsitElement){
+          skills.push(element);
+         }
       });
+    }
+    if(skills.length > 0)
+    {
+      this.api.execSv(
+        "HR",
+        "ERM.Business.HR",
+        "EmployeesBusiness",
+        "AddSkillsEmployeeAsync",
+        [this.employee.employeeID, skills]
+        ).subscribe((res:boolean) => {
+          if(res)
+          {
+            this.notifiSV.notifyCode("SYS006");
+          }
+          else{
+            this.notifiSV.notifyCode("SYS023");
+          }
+        });
+    }
   }
 
   clickOpenPopupAddSkill()

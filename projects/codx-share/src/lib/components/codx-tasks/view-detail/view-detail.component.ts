@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -36,7 +37,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllExtendStatus?: any;
   @Input() vllApproveStatus?: any;
   @Input() showMoreFunc?: any;
-
   dataTree?: any[];
   dataReferences?: any[];
   @Input() taskID: string;
@@ -54,15 +54,16 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
+    private sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {}
+  ) { }
   //#endregion
   //#region Init
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -78,7 +79,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#region
   //#region Method
-  getChangeData() {}
+  getChangeData() { }
   getTaskDetail() {
     this.viewTags = '';
     this.dataTree = [];
@@ -88,6 +89,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         if (res) {
           this.itemSelected = res;
+          this.itemSelected['memoHTML'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo)
+          this.itemSelected['memoHTML2'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo2)
           this.viewTags = this.itemSelected?.tags;
           this.changeDetectorRef.detectChanges();
           this.loadTreeView();
