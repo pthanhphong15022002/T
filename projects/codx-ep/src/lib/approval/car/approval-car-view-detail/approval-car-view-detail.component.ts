@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -17,6 +19,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 export class ApprovalCarViewDetailComponent extends UIComponent implements OnChanges {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
+  @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -126,8 +129,8 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
               if(status=="2"){
                 this.notificationsService.notifyCode('ES007');//làm lại
                 data.status="2"
-              }                
-              this.view.dataService.update(data).subscribe();
+              }
+              this.updateStatus.emit(data);
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }

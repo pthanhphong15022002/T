@@ -30,6 +30,7 @@
     [typeMF]="'hover'"
     [title]="data?.requester"
     [subTitle]="data?.positionID"
+    [subTitleCss]="'text-gray-600'"
     [content]="data?.note"
     [footer]="footerTmp"
     [icoCss]="
@@ -57,22 +58,25 @@
 </ng-template>
 
 <ng-template #footerTmp let-data>
-  <div class="d-flex justify-content-between m-2 py-2 px-12">
+  <div class="d-flex justify-content-between mt-1 px-12">
     <div class="d-flex align-items-center">
-      <div
-        class="badge border-0 me-2"
-        [style.background-color]="'3' | vll: 'VL003':'color' | async"
-        [style.color]="'3' | vll: 'VL003':'textColor' | async"
-      >
-        {{ "3" | vll: "VL003":"text" | async }}
-      </div>
-      <div
-        class="badge border-0 me-2"
-        [style.background-color]="'4' | vll: 'VL003':'color' | async"
-        [style.color]="'4' | vll: 'VL003':'textColor' | async"
-      >
-        {{ "4" | vll: "VL003":"text" | async }}
-      </div>
+      <codx-vll
+        [showText]="true"
+        [showBgColor]="true"
+        [name]="'VL003'"
+        [value]="data?.status"
+        class="badge badge-light badge-md fs-7"
+        >
+      </codx-vll>
+      <codx-vll
+        [showText]="true"
+        [showBgColor]="true"
+        [name]="'VL003'"
+        [value]="data?.issueStatus"
+        class="badge badge-light badge-md fs-7"
+        >
+      </codx-vll> 
+      <!-- đợi vll issueStatus -->
     </div>
     <div>{{ data?.createdOn | fmDT }}</div>
   </div>
