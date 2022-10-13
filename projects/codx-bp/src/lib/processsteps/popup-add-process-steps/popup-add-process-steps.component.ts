@@ -34,6 +34,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   listUser = [];
   isAlert = true;
   isEmail = true;
+  isHaveFile =false;
 
   constructor(
     private bpService: CodxBpService,
@@ -136,14 +137,19 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps.duration = e?.data;
   }
 
-  addFile(e) {
+  addFile(evt: any) {
     this.attachment.uploadFile();
   }
-
+  fileAdded(e) {
+    console.log(e);
+  }
+  getfileCount(e) {
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+  }
   valueChangeSwitch(e) {}
 
-  fileAdded(e) {}
-  getfileCount(e) {}
 
   eventApply(e) {}
   //endregion

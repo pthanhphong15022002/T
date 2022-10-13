@@ -464,8 +464,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           } else {
             this.returnData = res.save;
           }
-          if (this.returnData.recID && this.returnData.attachments > 0) {
-            this.attachment.objectId = this.returnData.recID;
+          if (this.returnData?.recID && this.returnData?.attachments > 0) {
+            this.attachment.objectId = this.returnData?.recID;
             (await this.attachment.saveFilesObservable()).subscribe(
               (item2: any) => {
                 if (item2?.status == 0) {
