@@ -88,8 +88,8 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
       {
-        id: '1',
-        type: ViewType.tree_card,
+        id: '2',
+        type: ViewType.tree_card, 
         sameData: true,
         active: false,
         model: {
@@ -98,7 +98,7 @@ export class OrgorganizationComponent extends UIComponent {
           panelRightRef: this.templateRight,
           template2: this.templateCard,
         },
-      },
+      }
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
