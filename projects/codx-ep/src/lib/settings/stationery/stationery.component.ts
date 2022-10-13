@@ -36,7 +36,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   @ViewChild('owner') owner: TemplateRef<any>;
   @ViewChild('columnsList') columnsList: TemplateRef<any>;
   @ViewChild('templateListCard') templateListCard: TemplateRef<any>;
-
+  viewType = ViewType;
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];

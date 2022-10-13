@@ -72,22 +72,20 @@
             <div class="d-flex justify-content-between container mb-10 mt-10">
               <ul class="nav">
                 <li class="nav-item">
-                  <span class="nav-link fw-bold active">Tất cả</span>
+                  <span
+                    class="nav-link fw-bold cursor-pointer"
+                    [ngClass]="{ active: groupID == '0' }"
+                    (click)="filterStationery()"
+                    >Tất cả</span
+                  >
                 </li>
                 <li class="nav-item" *ngFor="let item of groupStationery">
-                  <span class="nav-link fw-bold">{{ item?.resourceName }}</span>
-                </li>
-                <li class="nav-item">
-                  <span class="nav-link fw-bold">Văn phòng phẩm</span>
-                </li>
-                <li class="nav-item">
-                  <span class="nav-link fw-bold">Trà & nước</span>
-                </li>
-                <li class="nav-item">
-                  <span class="nav-link fw-bold">Bánh kẹo</span>
-                </li>
-                <li class="nav-item">
-                  <span class="nav-link fw-bold">Trái cây</span>
+                  <span
+                    class="nav-link fw-bold cursor-pointer active"
+                    [ngClass]="{ active: item?.resourceID == groupID }"
+                    (click)="filterStationery(item?.resourceID)"
+                    >{{ item?.resourceName }}</span
+                  >
                 </li>
               </ul>
               <div class="d-flex">
@@ -128,9 +126,7 @@
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="border w-200px h-100"
-    [imageSrc]="
-      data?.icon ? '' : '../assets/media/svg/files/blank-image.svg'
-    "
+    [imageSrc]="data?.icon ? '' : '../assets/media/svg/files/blank-image.svg'"
     [imageObjType]="'EP_Stationery'"
     [imageId]="data?.recID"
     [title]="data?.resourceName"
@@ -212,7 +208,7 @@
           >
           </codx-input>
         </div>
-        <div class="form-group d-flex col-4">
+        <div class="form-group d-flex col-4 align-items-center">
           <codx-input
             type="radio"
             [crrValue]="data?.recID"
@@ -226,7 +222,7 @@
             [formModel]="formModel"
           ></codx-label>
         </div>
-        <div class="form-group d-flex col-4">
+        <div class="form-group col-4">
           <codx-input
             type="radio"
             [crrValue]="data?.recID"
@@ -249,11 +245,7 @@
             default="Đơn vị/Phòng ban"
           >
           </codx-label>
-          <codx-input
-            type="combobox"
-            field="bUID"
-            refValue="BusinessUnits"
-          >
+          <codx-input type="combobox" field="bUID" refValue="BusinessUnits">
           </codx-input>
         </div>
         <div class="form-group col-6">

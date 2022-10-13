@@ -44,6 +44,9 @@
     border-radius: 50% !important;
   }
 }
+.active {
+  color: #005dc7;
+}
 
 ::ng-deep {
   .codx-card-custom {
@@ -168,4 +171,3 @@
     }
   }
 }
-
