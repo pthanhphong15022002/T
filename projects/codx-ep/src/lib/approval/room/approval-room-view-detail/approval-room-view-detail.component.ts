@@ -146,7 +146,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
                 this.notificationsService.notifyCode('ES007');//làm lại
                 data.status="2"
               }                
-              (await this.updateStatus.emit(data));
+              this.updateStatus.emit(data);
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
