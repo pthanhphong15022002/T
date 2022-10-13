@@ -27,7 +27,7 @@
 </ng-template>
 <ng-template #locationCol let-data>  
   <div class="d-flex flex-column justify-content-start">
-    <!-- <span>{{data?.category| vll: "VL005" : 'text' | async}}</span>  -->
+    <span>{{data?.category| vll: "VL005" : 'text' | async}}</span> 
     <span>{{data?.companyName}}</span> 
   </div>
   
@@ -123,11 +123,11 @@
         <span>:</span>
         <span class="fw-bold ms-1">{{ data.carRanking| vll: "EP005" : 'text' | async}}</span>
       </div>
-      <!-- <div class="d-flex flex-row">
+      <div class="d-flex flex-row">
         <codx-label [default]="grvDrivers?.Capacity?.headerText" name="lblCategory" class="text-gray-600"></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1">{{ data.carCapacity}}</span>
-      </div> -->
+      </div>
     </div>
   </div>  
 </ng-template>

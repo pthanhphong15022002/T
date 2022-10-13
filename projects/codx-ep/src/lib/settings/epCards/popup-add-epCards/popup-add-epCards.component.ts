@@ -98,8 +98,15 @@ export class PopupAddEpCardsComponent extends UIComponent {
       return;
     }
     this.data.resourceType='7';
+    let index:any
+    if(this.isAdd){
+      index=0;
+    }
+    else{
+      index=null;
+    }
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),0)
+      .save((opt: any) => this.beforeSave(opt),index)
       .subscribe((res) => {
         if (res) {          
           if (!res.save) {
@@ -118,13 +125,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
                 //...
               }
             });
-          }          
-          if(this.isAdd){
-            //(this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
           }
-          else{
-            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
-          }          
           this.dialogRef.close();
         }        
         else{

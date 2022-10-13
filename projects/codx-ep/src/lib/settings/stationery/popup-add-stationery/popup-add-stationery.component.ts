@@ -111,8 +111,15 @@ export class PopupAddStationeryComponent extends UIComponent {
   onSaveForm() {
     this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
+    let index:any
+    if(this.isAdd){
+      index=0;
+    }
+    else{
+      index=null;
+    }
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), 0)
+      .save((opt: any) => this.beforeSave(opt), index)
       .subscribe((res) => {
         if (res) {
           if (!res.save) {
@@ -135,15 +142,7 @@ export class PopupAddStationeryComponent extends UIComponent {
                 }
               });
           }
-          if (this.isAdd) {
-            // (this.dialog.dataService as CRUDService)
-            //   .add(this.returnData, 0)
-            //   .subscribe();
-          } else {
-            (this.dialog.dataService as CRUDService)
-              .update(this.returnData)
-              .subscribe();
-          }
+          
           this.dialog.close();
         }
         return;
