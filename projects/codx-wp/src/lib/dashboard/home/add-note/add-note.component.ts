@@ -542,7 +542,9 @@ export class AddNoteComponent implements OnInit {
       );
       this.dialog.closed.subscribe((res) => {
         if (res) {
-          var obj = [{ data: res.event, type: 'edit-isNote' }];
+          res.event['type'] = 'WP_Notes';
+          var data = res.event;
+          var obj = [{ data: data, type: 'edit' }];
           this.noteService.data.next(obj);
         }
       });

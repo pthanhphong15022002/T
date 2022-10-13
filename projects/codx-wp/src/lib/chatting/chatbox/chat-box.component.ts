@@ -8,8 +8,9 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { Post } from '@shared/models/post';
-import { ApiHttpService, AuthStore } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogModel } from 'codx-core';
 import { ChatService } from '../chat.service';
+import { ChattingComponent } from '../chatting.component';
 
 @Component({
   selector: 'codx-chat-box',
@@ -35,6 +36,7 @@ export class ChatBoxComponent implements OnInit {
   pageIndex = 0;
   isFull = false;
   tags = '';
+  callFC: any;
 
   constructor(
     private api: ApiHttpService,
@@ -50,6 +52,13 @@ export class ChatBoxComponent implements OnInit {
     this.senderId = this.user.userID;
     this.senderName = this.user.userName;
     this.loadGroupInformation();
+  }
+  clickShowChatting()
+  {
+    let option = new DialogModel();
+    option.IsFull = true;
+    this.callFC.openForm(ChattingComponent,"",0,0,"",null,"",option);
+    
   }
 
   loadGroupInformation() {

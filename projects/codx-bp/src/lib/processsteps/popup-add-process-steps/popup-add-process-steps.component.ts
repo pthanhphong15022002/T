@@ -93,8 +93,9 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
 
   addProcessStep() {
+    var index = this.dialog.dataService?.data.length-1;
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
+      .save((option: any) => this.beforeSave(option),index)
       .subscribe((res) => {
         this.attachment?.clearData();
         if (res) {

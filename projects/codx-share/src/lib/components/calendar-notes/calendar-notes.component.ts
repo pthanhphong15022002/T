@@ -151,13 +151,7 @@ export class CalendarNotesComponent
             this.WP_Notes = this.WP_Notes.filter((x) => x.recID != data.recID);
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
-          } else if (type == 'edit-isNote') {
-            for (let i = 0; i < this.WP_Notes.length; i++) {
-              if (this.WP_Notes[i].recID == data?.recID) {
-                this.WP_Notes[i].isNote = data.isNote;
-              }
-            }
-          }
+          } 
           this.setEventWeek();
           var today: any = document.querySelector(
             ".e-footer-container button[aria-label='Today']"

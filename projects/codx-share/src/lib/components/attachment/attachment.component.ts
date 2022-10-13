@@ -784,7 +784,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     await this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;
-
       this.fileUploadList[i].description = this.description[i];
 
       toltalUsed += this.fileUploadList[i].fileSize;
