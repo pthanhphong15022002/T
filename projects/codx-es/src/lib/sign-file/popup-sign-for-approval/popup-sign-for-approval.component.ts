@@ -46,6 +46,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   @ViewChild('pdfView') pdfView: PdfComponent;
+  @ViewChild('popupOTPPin', { static: false }) popupOTPPin: TemplateRef<any>;
 
   isAfterRender: boolean = false;
   isConfirm = false;
@@ -59,12 +60,16 @@ export class PopupSignForApprovalComponent extends UIComponent {
   formModel: FormModel;
   dialogSignFile: FormGroup;
 
+  confirmValue: string = '';
+
   sfRecID = '';
   transRecID = null;
   funcID;
-  cbxName;
-
   canOpenSubPopup;
+
+  mode;
+  title: string;
+  subTitle: string;
 
   onInit(): void {
     this.canOpenSubPopup = false;
@@ -89,11 +94,35 @@ export class PopupSignForApprovalComponent extends UIComponent {
     });
   }
 
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      if (event?.field == 'otpPin') {
+        this.confirmValue = event?.data;
+      }
+    }
+  }
+
+  confirmOTPPin() {
+    if (this.confirmValue != '') {
+      if (this.confirmValue === this.signerInfo.otpPin) {
+        this.approve(this.mode, this.title, this.subTitle);
+      } else {
+        this.notify.notify('Giá trị không hợp lệ!');
+      }
+    } else {
+      this.notify.notify('Nhập giá trị');
+    }
+  }
+
   changeConfirmState(state: boolean) {
     this.isConfirm = state;
   }
 
   clickOpenPopupADR(mode) {
+    if (!this.canOpenSubPopup && !this.isConfirm) {
+      return;
+    }
+    this.mode = mode;
     let title = '';
     let subTitle = 'Comment khi duyệt';
     switch (mode) {
@@ -109,11 +138,23 @@ export class PopupSignForApprovalComponent extends UIComponent {
       default:
         return;
     }
-    if (this.data.stepType == 'S2' || this.data.stepType == 'S1') {
-      if (this.signerInfo?.otpControl == '3') {
-      }
+    this.title = title;
+    this.subTitle = subTitle;
+    if (this.data.stepType == 'S' && this.signerInfo?.otpControl == '3') {
+      this.openConfirm();
+    } else {
+      this.approve(mode, title, subTitle);
     }
-    this.approve(mode, title, subTitle);
+  }
+
+  openConfirm() {
+    let dialogOtpPin = this.callfc.openForm(
+      this.popupOTPPin,
+      '',
+      350,
+      410,
+      this.funcID
+    );
   }
 
   approve(mode, title: string, subTitle: string) {
@@ -180,41 +221,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
     });
   }
 
-  openTempPopup(mode) {
-    this.mode = mode;
-    this.title = '';
-    this.subTitle = 'Comment khi duyệt';
-    switch (mode) {
-      case 1:
-        this.title = 'Duyệt';
-        break;
-      case 2:
-        this.title = 'Từ chối';
-        break;
-      case 3:
-        this.title = 'Làm lại';
-        break;
-      default:
-        return;
-    }
-    this.onInit1();
-    let dialogPopup = this.callfc.openForm(
-      this.content,
-      this.title,
-      500,
-      500,
-      this.funcID
-    );
-    // dialogPopup.closed.subscribe((res) => {
-    //   if (res.event == 'ok') {
-    //     console.log('run');
-    //     this.pdfView.renderAnnotPanel();
-    //     this.notify.notifyCode('RS002');
-    //     this.dialog && this.dialog.close();
-    //   }
-    // });
-  }
-
   changeActiveOpenPopup(e) {
     console.log('active', e);
   }
@@ -231,73 +237,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   close(dialog: DialogRef = null) {
     if (dialog != null) {
+      this.confirmValue = '';
       dialog && dialog.close();
     } else {
       this.dialog && this.dialog.close();
     }
   }
-
-  //#region popup
-
-  @ViewChild('attachment') attachment: AttachmentComponent;
-  //@ViewChild('popupApprove1', { static: false }) content: TemplateRef<any>;
-  @ViewChild('popupApprove', { static: false }) content: TemplateRef<any>;
-
-  okClick = false;
-  title: string;
-  subTitle: string;
-  mode;
-
-  approvalTrans: any = {};
-
-  controlName;
-
-  noteData;
-
-  onInit1() {
-    // this.formModel = this.data.formModel;
-    this.formModel.currentData = this.approvalTrans;
-    this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
-
-    this.detectorRef.detectChanges();
-  }
-
-  getfileCount(event) {}
-
-  changeReason(e) {}
-
-  saveDialog1(dialog1: DialogRef) {
-    if (this.mode) {
-      this.pdfView
-        .signPDF(this.mode, this.dialogSignFile.value.comment)
-        .then((value) => {
-          console.log('da ki', value);
-          if (value) {
-            let result = {
-              result: true,
-              mode: this.mode,
-            };
-            // this.notify.notifyCode('RS002');
-            this.canOpenSubPopup = false;
-            //this.pdfView.reload();
-            dialog1 && dialog1.close(result);
-            this.dialog && this.dialog.close(result);
-          } else {
-            this.canOpenSubPopup = false;
-            let result = {
-              result: false,
-              mode: this.mode,
-            };
-            // this.notify.notifyCode('SYS021');
-            dialog1 && dialog1.close(result);
-            this.dialog && this.dialog.close(result);
-          }
-        });
-    }
-  }
-
-  popupUploadFile() {
-    this.attachment.uploadFile();
-  }
-  //#endregion
 }
