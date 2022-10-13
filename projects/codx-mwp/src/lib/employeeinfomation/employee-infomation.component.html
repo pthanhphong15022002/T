@@ -1,12 +1,13 @@
 <codx-views #view 
-service="HR" 
 entityName="HR_Employees" 
 idField="employeeID" 
 [views]="views"
-[viewActiveType]="'16'">
+[viewActiveType]="'16'"
+[autoLoad]="false"
+>
 </codx-views>
 
-<ng-template #panelRightRef>
+<ng-template #panelContent>
   <div class="page-pw h-100">
     <div class="pw-profile" 
       style="background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
@@ -14,11 +15,10 @@ idField="employeeID"
       <div class="d-flex align-items-center avatar">
         <codx-img 
           class="me-4 pic-emloyee" 
-          #imageAvatar 
-          [width]="100"
           [funcId]="functionID"
+          [width]="100" 
           [objectId]="employeeInfo?.employeeID"
-          objectType="HR_Employees" 
+          [objectType]="'HR_Employees'" 
           [objectName]="employeeInfo?.employeeName"
           [isAllowEdit]="true" 
           [updateDirect]="true">
@@ -44,7 +44,6 @@ idField="employeeID"
         </div>
       </div>
     </div>
-
     <div class="d-flex w-100 h-employee p-3">
       <div class="w-300px min-w-300px h-100 aside-info-left">
         <lib-info-left [formModel]="view.formModel"></lib-info-left>
@@ -126,7 +125,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.joinedOn | date : "dd/MM/yyyy"}}</span> -->
                         <span #joinedOn>{{
                           employeeInfo.joinedOn
-                          | formatvalue: formModel:"joinedOn":joinedOn
+                          | formatvalue: view.formModel:"joinedOn":joinedOn
                           | async
                           }}</span>
                       </div>
@@ -139,7 +138,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.payGroupID}}</span> -->
                         <span #payGroupID>{{
                           employeeInfo.payGroupID
-                          | formatvalue: formModel:"payGroupID":payGroupID
+                          | formatvalue: view.formModel:"payGroupID":payGroupID
                           | async
                           }}</span>
                       </div>
@@ -155,7 +154,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.hiredOn | date : "dd/MM/yyyy"}}</span> -->
                         <span #hiredOn>{{
                           employeeInfo.hiredOn
-                          | formatvalue: formModel:"hiredOn":hiredOn
+                          | formatvalue: view.formModel:"hiredOn":hiredOn
                           | async
                           }}</span>
                       </div>
@@ -169,7 +168,7 @@ idField="employeeID"
                         <span #senioritydate>{{
                           employeeInfo.senioritydate
                           | formatvalue
-                          : formModel
+                          : view.formModel
                           : "senioritydate"
                           : senioritydate
                           | async
@@ -187,7 +186,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.recritedOn}}</span> -->
                         <span #recritedOn>{{
                           employeeInfo.recritedOn
-                          | formatvalue: formModel:"recritedOn":recritedOn
+                          | formatvalue: view.formModel:"recritedOn":recritedOn
                           | async
                           }}</span>
                       </div>
@@ -221,7 +220,7 @@ idField="employeeID"
                     <span class="text-muted" *ngIf="employeeInfo?.street=='---'"> -->
                     <span #street>{{
                       employeeInfo.street
-                      | formatvalue: formModel:"street":street
+                      | formatvalue: view.formModel:"street":street
                       | async
                       }}</span>
                     <!-- <codx-label fiedName="street" formName="Employees" default="Địa chỉ thường trú">
@@ -245,7 +244,7 @@ idField="employeeID"
                         <span class="text-dark">{{
                           employeeInfo?.gender | vll: "L0068":"text" | async
                           }}</span>
-                        <!-- <span #gender>{{ employeeInfo.gender | formatvalue: formModel:"gender":gender | async
+                        <!-- <span #gender>{{ employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
                         }}</span> -->
                       </div>
                     </div>
@@ -257,7 +256,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
                         <span #birthday>{{
                           employeeInfo.birthday
-                          | formatvalue: formModel:"birthday":birthday
+                          | formatvalue: view.formModel:"birthday":birthday
                           | async
                           }}</span>
                       </div>
@@ -272,7 +271,7 @@ idField="employeeID"
                         <span #birthPlaceName>{{
                           employeeInfo.birthPlaceName
                           | formatvalue
-                          : formModel
+                          : view.formModel
                           : "birthPlaceName"
                           : birthPlaceName
                           | async
@@ -291,7 +290,7 @@ idField="employeeID"
                           null}}</span> -->
                         <span #idCardNo>{{
                           employeeInfo.idCardNo
-                          | formatvalue: formModel:"idCardNo":idCardNo
+                          | formatvalue: view.formModel:"idCardNo":idCardNo
                           | async
                           }}</span>
                       </div>
@@ -305,7 +304,7 @@ idField="employeeID"
 
                         <span #issuedOn>{{
                           employeeInfo.issuedOn
-                          | formatvalue: formModel:"issuedOn":issuedOn
+                          | formatvalue: view.formModel:"issuedOn":issuedOn
                           | async
                           }}</span>
                       </div>
@@ -319,7 +318,7 @@ idField="employeeID"
                           null}}</span> -->
                         <span #issuedBy>{{
                           employeeInfo.issuedBy
-                          | formatvalue: formModel:"issuedBy":issuedBy
+                          | formatvalue: view.formModel:"issuedBy":issuedBy
                           | async
                           }}</span>
                       </div>
@@ -334,7 +333,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.religion}}</span> -->
                         <span #religion>{{
                           employeeInfo.religion
-                          | formatvalue: formModel:"religion":religion
+                          | formatvalue: view.formModel:"religion":religion
                           | async
                           }}</span>
                       </div>
@@ -347,7 +346,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.ethnicGroup}}</span> -->
                         <span #ethnicGroup>{{
                           employeeInfo.ethnicGroup
-                          | formatvalue: formModel:"ethnicGroup":ethnicGroup
+                          | formatvalue: view.formModel:"ethnicGroup":ethnicGroup
                           | async
                           }}</span>
                       </div>
@@ -360,7 +359,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.nationality}}</span> -->
                         <span #nationality>{{
                           employeeInfo.nationality
-                          | formatvalue: formModel:"nationality":nationality
+                          | formatvalue: view.formModel:"nationality":nationality
                           | async
                           }}</span>
                       </div>
@@ -375,7 +374,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.education}}</span> -->
                         <span #education>{{
                           employeeInfo.education
-                          | formatvalue: formModel:"education":education
+                          | formatvalue: view.formModel:"education":education
                           | async
                           }}</span>
                       </div>
@@ -388,7 +387,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.certificateName}}</span> -->
                         <span #degree>{{
                           employeeInfo.degree
-                          | formatvalue: formModel:"degree":degree
+                          | formatvalue: view.formModel:"degree":degree
                           | async
                           }}</span>
                       </div>
@@ -407,7 +406,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.pitNumber}}</span> -->
                         <span #pitNumber>{{
                           employeeInfo.pitNumber
-                          | formatvalue: formModel:"pitNumber":pitNumber
+                          | formatvalue: view.formModel:"pitNumber":pitNumber
                           | async
                           }}</span>
                       </div>
@@ -420,7 +419,7 @@ idField="employeeID"
                         <span class="text-dark">{{
                           employeeInfo.pitIssuedOn | date: "dd/MM/yyyy"
                           }}</span>
-                        <!-- <span #pitIssuedOn>{{ employeeInfo.pitIssuedOn | formatvalue: formModel:"pitIssuedOn":pitIssuedOn | async
+                        <!-- <span #pitIssuedOn>{{ employeeInfo.pitIssuedOn | formatvalue: view.formModel:"pitIssuedOn":pitIssuedOn | async
                         }}</span> -->
                       </div>
                     </div>
@@ -441,7 +440,7 @@ idField="employeeID"
                         <!-- <span class="text-dark">{{employeeInfo.siRegisterNo}}</span> -->
                         <span #siRegisterNo>{{
                           employeeInfo.siRegisterNo
-                          | formatvalue: formModel:"siRegisterNo":siRegisterNo
+                          | formatvalue: view.formModel:"siRegisterNo":siRegisterNo
                           | async
                           }}</span>
                       </div>
@@ -454,7 +453,7 @@ idField="employeeID"
                         <span class="text-dark">{{
                           employeeInfo.siRegisterOn | date: "dd/MM/yyyy"
                           }}</span>
-                        <!-- <span #siRegisterOn>{{ employeeInfo.siRegisterOn | formatvalue: formModel:"siRegisterOn":siRegisterOn | async
+                        <!-- <span #siRegisterOn>{{ employeeInfo.siRegisterOn | formatvalue: view.formModel:"siRegisterOn":siRegisterOn | async
                         }}</span> -->
                       </div>
                     </div>
@@ -514,7 +513,7 @@ idField="employeeID"
               </div>
             </div>
 
-            <!-- kỹ năng -->
+            <!-- skills -->
             <div id="MWP00203" #MWP00203 class="d-block">
               <div class="user-profile overview">
                 <div class="d-flex justify-content-between mb-2 mt-6">
@@ -526,9 +525,8 @@ idField="employeeID"
                     <span class="icon-edit icon-16"></span>
                   </a>
                 </div>
-                <!-- <ngx-skeleton-loader *ngIf="!skillEmployee" count="5" animation="progress"></ngx-skeleton-loader> -->
-                <div class="border rounded-2 p-6" *ngIf="skillEmployee">
-                  <div class="row">
+                <div class="border rounded-2 p-6" >
+                  <div class="row" *ngIf="skillEmployee">
                     <div class="col-6 pe-4">
                         <ng-container *ngFor="let data of skillEmployee">
                           <div>
@@ -537,7 +535,7 @@ idField="employeeID"
                             </div>
                             <div class="bg-success-o-60">
                                 <ng-container *ngIf="parameter">
-                                  <ejs-slider id="minrange" 
+                                  <ejs-slider
                                     [type]="minType" 
                                     [min]="0" 
                                     [max]="parameter.maxLevelSkill? parameter.maxLevelSkill : 10 "
@@ -550,12 +548,16 @@ idField="employeeID"
                           </div>
                         </ng-container>
                     </div>
-                    <div class="col-6">
-                      <ejs-chart id="chartcontainer" [title]="" [primaryXAxis]="primaryXAxis"
+                    <div class="col-6" *ngIf="skillEmployee" >
+                      <ejs-chart
+                        [primaryXAxis]="primaryXAxis"
                         [primaryYAxis]="primaryYAxis">
                         <e-series-collection>
-                          <e-series *ngIf="skillEmployee" [dataSource]="skillEmployee" name="Employee" type="Radar"
-                            xName="competenceName" yName="valueX">
+                          <e-series
+                            [dataSource]="skillEmployee" 
+                            name="Employee" type="Radar"
+                            xName="competenceName" 
+                            yName="valueX">
                           </e-series>
                         </e-series-collection>
                       </ejs-chart>
@@ -681,7 +683,7 @@ idField="employeeID"
                     <ng-container *ngFor="let relationship of employeeRelationship">
                       <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
                         <codx-card-center cardCss="border h-100" [imageId]="relationship.recID"
-                          [formModel]="view.formModel" [title]="relationship.relationName" [formModel]="view.formModel"
+                          [formModel]="view.formModel" [title]="relationship.relationName"
                           (clickMF)="clickMFS($event, relationship)" [dataItem]="relationship" [typeMF]="'hover'"
                           [desc]="
                             relationship.relationType +

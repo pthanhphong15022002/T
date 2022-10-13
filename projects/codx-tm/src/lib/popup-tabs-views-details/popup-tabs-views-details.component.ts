@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   Optional,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
@@ -16,6 +17,7 @@ import { TabModelSprints } from '../models/TM_Sprints.model';
   selector: 'lib-popup-tabs-views-details',
   templateUrl: './popup-tabs-views-details.component.html',
   styleUrls: ['./popup-tabs-views-details.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
   title = 'Danh sách công việc';

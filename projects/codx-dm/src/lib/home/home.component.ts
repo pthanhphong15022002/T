@@ -260,6 +260,7 @@ export class HomeComponent extends UIComponent {
           var list = tree.arrBreadCumb;
           if (list && list.length > 0) {
             var index = list.findIndex(x => x.id == res);
+            this.codxview.dataService.data = this.codxview.dataService.data.filter(x=>x.id != res);
             if (index >= 0) {
               list = list.slice(index + 1);
               if (list.length > 0) {
@@ -276,6 +277,7 @@ export class HomeComponent extends UIComponent {
                 this.dmSV.folderID = "";
               }
               this.dmSV.page = 1;
+              this.data = [];
               this.getDataFile(this.dmSV.folderID);
               this.getDataFolder(this.dmSV.folderID);
               this.dmSV.breadcumbLink = breadcumbLink;
@@ -353,7 +355,6 @@ export class HomeComponent extends UIComponent {
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
-        debugger;
         this.data = [];
         //this.changeDetectorRef.detectChanges();
         if (this.dmSV.listFiles != null)
@@ -979,54 +980,61 @@ export class HomeComponent extends UIComponent {
   }
 
   filterChange($event) {
-    try {
-      this.data = [];
-      this.isSearch = true;
-      this.view.orgView = this.orgViews;
-      this.dmSV.page = 1;
-      // if (this.codxview.currentView.viewModel.model != null)
-      //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
-      this.dmSV.listFiles = [];
-      this.dmSV.listFolder = [];
-      if ($event != undefined) {
-        var predicates = $event.predicates;
-        var values = $event.values;
-        //$event.paras;
-        var list = [];
-        var item = new Filters;
-        $event?.filter.forEach(ele => {
-          item = ele as Filters;
-          list.push(Object.assign({}, item));
-        });
-        var text = JSON.stringify(list);
-        this.textSearchAll = text;
-        this.predicates = predicates;
-        this.values = values;
-        this.searchAdvance = true;
-        this.search();
-        // this.fileService.searchFileAdv(text, predicates, values, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
-        //   if (item != null) {
-        //     this.dmSV.loadedFile = true;
-        //     this.dmSV.listFiles = item.data;
-        //     this.totalSearch = item.total;
-        //     this.data = [...this.data, ...this.dmSV.listFiles];
-        //     this.getTotalPage(item.total);
-        //     this.changeDetectorRef.detectChanges();
-        //   }
-        //   else {
-        //     this.dmSV.loadedFile = true;
-        //     this.totalSearch = 0;
-        //     this.dmSV.totalPage = 0;
-        //     this.changeDetectorRef.detectChanges();
-        //   }
-        // });
-      }
+    if(!$event)
+    {
+      alert("aa");
     }
-    catch (ex) {
-      this.dmSV.loadedFile = true;
-      this.totalSearch = 0;
-      this.changeDetectorRef.detectChanges();
-      console.log(ex);
+    else
+    {
+      try {
+        this.data = [];
+        this.isSearch = true;
+        this.view.orgView = this.orgViews;
+        this.dmSV.page = 1;
+        // if (this.codxview.currentView.viewModel.model != null)
+        //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
+        this.dmSV.listFiles = [];
+        this.dmSV.listFolder = [];
+        if ($event != undefined) {
+          var predicates = $event.predicates;
+          var values = $event.values;
+          //$event.paras;
+          var list = [];
+          var item = new Filters;
+          $event?.filter.forEach(ele => {
+            item = ele as Filters;
+            list.push(Object.assign({}, item));
+          });
+          var text = JSON.stringify(list);
+          this.textSearchAll = text;
+          this.predicates = predicates;
+          this.values = values;
+          this.searchAdvance = true;
+          this.search();
+          // this.fileService.searchFileAdv(text, predicates, values, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
+          //   if (item != null) {
+          //     this.dmSV.loadedFile = true;
+          //     this.dmSV.listFiles = item.data;
+          //     this.totalSearch = item.total;
+          //     this.data = [...this.data, ...this.dmSV.listFiles];
+          //     this.getTotalPage(item.total);
+          //     this.changeDetectorRef.detectChanges();
+          //   }
+          //   else {
+          //     this.dmSV.loadedFile = true;
+          //     this.totalSearch = 0;
+          //     this.dmSV.totalPage = 0;
+          //     this.changeDetectorRef.detectChanges();
+          //   }
+          // });
+        }
+      }
+      catch (ex) {
+        this.dmSV.loadedFile = true;
+        this.totalSearch = 0;
+        this.changeDetectorRef.detectChanges();
+        console.log(ex);
+      }
     }
   }
 
@@ -1204,6 +1212,7 @@ export class HomeComponent extends UIComponent {
       });
   }
   getDataFolder(id: any) {
+    this.dmSV.listFolder = [];
     this.folderService.options.srtColumns = this.sortColumn;
     this.folderService.options.srtDirections = this.sortDirection;
     this.folderService.options.funcID = this.view.funcID;
