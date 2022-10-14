@@ -61,7 +61,6 @@ export class PopupAddDriversComponent
   ) {
     super(injector);
     this.data =  dialogData?.data[0];
-    this.data.code="";
     this.isAdd = dialogData?.data[1];    
     this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
@@ -73,7 +72,9 @@ export class PopupAddDriversComponent
     .subscribe(res=>{
       if(res){
         this.grvDriver=res;
-        this.data.code=res?.Code?.headerText;
+        if(this.isAdd){
+          this.data.code=res?.Code?.headerText;
+        }
       }
     })
     this.initForm();

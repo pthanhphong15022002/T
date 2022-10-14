@@ -55,7 +55,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   justView = false;
   isAddNew: boolean = true;
 
-  data: any = {};
+  data: any = {}; // object category
 
   model: any;
 
@@ -73,6 +73,9 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
       this.data = dialogData?.data.data;
+
+      console.log(this.data);
+
       this.dialogApproval = dialog;
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
@@ -107,39 +110,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
     this.dialogApproval && this.dialogApproval.close();
   }
 
-  // initForm() {
-  //   this.esService.isSetupApprovalStep.subscribe((res) => {
-  //     if (res != null) {
-  //       this.lstStep = res;
-  //       this.lstOldData = [...res];
-  //       console.log(this.lstStep);
-  //       this.cr.detectChanges();
-  //     } else if (this.transId != '') {
-  //       let gridModels = new GridModels();
-  //       gridModels.dataValue = this.transId;
-  //       gridModels.predicate = 'TransID=@0';
-  //       gridModels.funcID = this.formModel.funcID;
-  //       gridModels.entityName = this.formModel.entityName;
-  //       gridModels.gridViewName = this.formModel.gridViewName;
-  //       gridModels.pageSize = 20;
-
-  //       this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-  //         if (res && res?.length >= 0) {
-  //           this.lstStep = res;
-  //           console.log(this.lstStep);
-
-  //           this.currentStepNo = this.lstStep.length + 1;
-  //           this.lstOldData = [...res];
-  //           this.cr.detectChanges();
-  //         }
-  //       });
-  //     } else {
-  //       this.lstStep = [];
-  //       this.currentStepNo = this.lstStep.length + 1;
-  //     }
-  //   });
-  // }
-
   initForm() {
     if (this.transId != '') {
       let gridModels = new GridModels();
@@ -172,8 +142,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   onSaveForm() {
-    // this.esService.setApprovalStep(this.lstStep);
-    // this.esService.setLstDeleteStep(this.lstDeleteStep);
     if (this.type == '1') {
       //Lưu khi cập nhật step
       this.updateApprovalStep();
@@ -185,20 +153,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       this.dialogApproval && this.dialogApproval.close(true);
     }
   }
-
-  // saveStep() {
-  //   if (this.isEdited) {
-  //     console.log('SET VALUE');
-
-  //     this.esService.setApprovalStep(this.lstStep);
-  //     this.esService.setLstDeleteStep(this.lstDeleteStep);
-  //   } else {
-  //     console.log('SET NULL');
-
-  //     this.esService.setApprovalStep(null);
-  //     this.esService.setLstDeleteStep(null);
-  //   }
-  // }
 
   openFormFuncID(val: any, data: any) {}
 
@@ -222,6 +176,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       dataEdit: null,
       type: '0',
       signatureType: this.data?.signatureType,
+      eSign: this.data?.eSign,
     };
 
     this.openPopupAddAppStep(data);
@@ -235,6 +190,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       isAdd: false,
       dataEdit: approvalStep,
       type: '0',
+      eSign: this.data?.eSign,
     };
     this.openPopupAddAppStep(data);
   }

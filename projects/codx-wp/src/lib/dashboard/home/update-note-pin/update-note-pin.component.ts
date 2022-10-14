@@ -35,6 +35,8 @@ export class UpdateNotePinComponent implements OnInit {
   predicate = 'IsPin=@0 && TransID=null';
   dataValue = 'true';
   maxPinNotes = 0;
+  dialogRef: DialogRef;
+  component: any;
 
   constructor(
     private api: ApiHttpService,
@@ -50,6 +52,7 @@ export class UpdateNotePinComponent implements OnInit {
     this.data = data.data?.data;
     this.typeUpdate = data.data?.typeUpdate;
     this.maxPinNotes = data.data?.maxPinNotes;
+    this.dialogRef = data.data?.dialogRef;
   }
 
   ngOnInit(): void {
@@ -62,11 +65,11 @@ export class UpdateNotePinComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.dialog.closed.subscribe(x => {
-      if(!x.event) {
+    this.dialog.closed.subscribe((x) => {
+      if (!x.event) {
         this.noteService.dataUpdate.next(null);
       }
-    })
+    });
   }
 
   valueChange(e, item = null) {
@@ -97,15 +100,18 @@ export class UpdateNotePinComponent implements OnInit {
         this.dataOld,
       ])
       .subscribe((res) => {
-        this.dialog.close();
-        var object = [{ data: res, type: 'edit' }];
-        this.noteService.data.next(object);
-        if (this.typeUpdate != undefined)
-          this.noteService.dataUpdate.next(object);
-        for (let i = 0; i < this.data.length; i++) {
-          if (this.data[i].recID == this.dataOld?.recID) {
-            this.data[i].isPin = res?.isPin;
+        if (res) {
+          var object = [{ data: res, type: 'edit-note-drawer' }];
+          this.noteService.data.next(object);
+          if (this.typeUpdate != undefined)
+            this.noteService.dataUpdate.next(object);
+          for (let i = 0; i < this.data.length; i++) {
+            if (this.data[i].recID == this.dataOld?.recID) {
+              this.data[i].isPin = res?.isPin;
+            }
           }
+          if (this.dialogRef != undefined) this.dialogRef.close();
+          this.dialog.close();
         }
       });
   }
@@ -122,11 +128,19 @@ export class UpdateNotePinComponent implements OnInit {
           this.itemUpdate,
         ])
         .subscribe((res) => {
-          var object = [{ data: res, type: 'edit' }];
-          this.noteService.data.next(object);
-          this.dialog.close();
-          this.notificationsService.notifyCode('SYS007');
-          this.changeDetectorRef.detectChanges();
+          if (res) {
+            var object = [
+              {
+                data: res,
+                type: 'edit-note-drawer',
+              },
+            ];
+            this.noteService.data.next(object);
+            this.notificationsService.notifyCode('SYS007');
+            this.changeDetectorRef.detectChanges();
+            if (this.dialogRef != undefined) this.dialogRef.close();
+            this.dialog.close();
+          }
         });
     } else {
       this.notificationsService.notify(

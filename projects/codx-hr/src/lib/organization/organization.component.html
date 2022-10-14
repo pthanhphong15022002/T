@@ -7,8 +7,9 @@
   [selectedFirst]="true"
   (selectedChange)="onSelectionChanged($event)"
   [button]="button"
-  (buttonClick)="click($event)"
+  (buttonClick)="btnClick()"
   (viewChanged)="changeView($event)"
+  [viewActiveType]="1"
 ></codx-views>
 
 <ng-template #templateRight>

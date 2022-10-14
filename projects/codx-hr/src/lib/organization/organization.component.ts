@@ -88,8 +88,8 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
       {
-        id: '1',
-        type: ViewType.tree_card,
+        id: '2',
+        type: ViewType.tree_card, 
         sameData: true,
         active: false,
         model: {
@@ -98,7 +98,7 @@ export class OrgorganizationComponent extends UIComponent {
           panelRightRef: this.templateRight,
           template2: this.templateCard,
         },
-      },
+      }
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
@@ -145,6 +145,17 @@ export class OrgorganizationComponent extends UIComponent {
     }
   }
 
+  btnClick(){
+    if(this.view)
+    {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.view.currentView.dataService;
+      option.FormModel = this.view.formModel;
+      this.callfc.openSide(PopupAddOrganizationComponent,null,option);
+    }
+    
+  }
   add() {
     this.currentView = this.view.currentView;
     if (this.currentView)
