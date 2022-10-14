@@ -2,69 +2,83 @@
 //   margin-left: 20px;
 //   font-size: xx-large;
 // }
-codx-view-list-card {
-  background: white;
-}
+.tm-meeting {
 
-.footer-bottom {
-  position: absolute;
-  bottom: 10px;
-  left: 20px;
-  right: 20px;
-}
+  .footer-tag {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 50px;
+    overflow: auto;
+  }
 
-.card-footer .btn:not(.btn-icon) {
-  min-width: 0px !important;
-}
+  .card-footer .btn:not(.btn-icon) {
+    min-width: 0px !important;
+  }
 
-.schedule-overview .overview-scheduler {
-  padding: 0 !important;
-}
+  .footer-att {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    width: 25px;
+  }
 
-.schedule-overview .overview-content {
-  border: 0 !important;
-}
+  .schedule-overview .overview-scheduler {
+    padding: 0 !important;
+  }
 
-.e-schedule .e-month-view .e-appointment {
-  padding: 7px 10px !important;
-  border-left-width: 4px !important;
-}
+  .schedule-overview .overview-content {
+    border: 0 !important;
+  }
 
-.cut-size-long {
-  display: -webkit-box;
-  max-width: 150px;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-right: 10px;
-  text-align: center;
-  height: 60px !important;
-}
+  .e-schedule .e-month-view .e-appointment {
+    padding: 7px 10px !important;
+    border-left-width: 4px !important;
+  }
 
-.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:focus,
-.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:focus {
-  border-color: rgb(194, 202, 202);
-}
+  .cut-size-long {
+    display: -webkit-box;
+    max-width: 150px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-right: 10px;
+    text-align: center;
+    height: 60px !important;
+  }
 
-.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:hover,
-.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:hover {
-  border-color: rgb(212, 216, 221);
-}
+  .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:focus,
+  .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:focus {
+    border-color: rgb(194, 202, 202);
+  }
 
-codx-view-kanban .e-card .border {
-  border: 0 !important;
-}
+  .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:hover,
+  .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:hover {
+    border-color: rgb(212, 216, 221);
+  }
 
-.e-appointment {
-  height: auto !important;
-}
+  codx-view-kanban .e-card .border {
+    border: 0 !important;
+  }
 
-.size-content-schedule {
-  display: -webkit-box;
-  max-width: 100%;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-right: 10px;
-  font-weight: 600;
+  .e-appointment {
+    height: auto !important;
+  }
+
+  .size-content-schedule {
+    display: -webkit-box;
+    max-width: 100%;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-right: 10px;
+    font-weight: 600;
+  }
+
+  .tag-1line {
+
+    .d-flex.flex-wrap {
+      flex-wrap: nowrap !important;
+    }
+  }
 }
