@@ -1,3 +1,4 @@
+import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 import {
   Component,
   EventEmitter,
@@ -30,19 +31,19 @@ import { Equipments } from '../../../models/equipments.model';
 })
 export class PopupAddRoomsComponent extends UIComponent {
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+  
   @Input() data!: any;
   @Input() editResources: any;
   @Input() isAdd = true;
   @Output() closeEdit = new EventEmitter();
-  @Output() loadData = new EventEmitter();
-  dialogRef: any;
+  dialogRef: DialogRef;
   cacheGridViewSetup: any;
   CbxName: any;
   fGroupAddRoom: FormGroup;
   vllDevices = [];
   lstDevices: [];
   isAfterRender = false;
-
+  isDone=true;
   tmplstDevice = [];
   lstDeviceRoom = [];
   returnData:any;
@@ -61,15 +62,19 @@ export class PopupAddRoomsComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
+    
     this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;    
+    if(this.isAdd){
+      this.data.preparator= this.authService.userValue.userID;
+    }
   }
 
   onInit(): void {
-    this.initForm();
+    this.initForm();    
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -138,29 +143,34 @@ export class PopupAddRoomsComponent extends UIComponent {
     }
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt),index)
-      .subscribe((res) => {
+      .subscribe(async (res) => {
         if (res.save || res.update) {          
           if (!res.save) {
             this.returnData = res.update;
           } else {
             this.returnData = res.save;
           }
-          if(this.imageUpload && this.returnData?.recID)
+          if(this.returnData?.recID)
           {
-            this.imageUpload
-            .updateFileDirectReload(this.returnData.recID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-                //xử lí nếu upload ảnh thất bại
-                //...
-              }
-            });
+            if(this.imageUpload?.imageUpload?.item) {
+              this.imageUpload
+              .updateFileDirectReload(this.returnData.recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                  //xử lí nếu upload ảnh thất bại
+                  //...                
+                }
+              });  
+            }          
+            else 
+            {
+              this.dialogRef && this.dialogRef.close(this.returnData);
+            }
           } 
-          this.dialogRef.close();
         }
-        else{
-          
+        else{ 
+          //Trả lỗi từ backend.         
           return;
         }
       });

@@ -155,7 +155,6 @@ export class CalendarNotesComponent
             var index = this.WP_Notes.findIndex((x) => x.recID == data.recID);
             this.WP_Notes[index] = data;
             (this.lstView.dataService as CRUDService).load().subscribe();
-            console.log('check this.WP_Notes', this.WP_Notes);
           }
           this.setEventWeek();
           var today: any = document.querySelector(

@@ -22,7 +22,7 @@
               field="rangeID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
-              [attr.disabled]="!master?.isNew() ? '' : null"
+              [disabled]="showInput"
             >
             </codx-input>
           </div>

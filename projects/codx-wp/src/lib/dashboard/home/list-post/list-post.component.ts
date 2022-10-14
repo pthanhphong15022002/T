@@ -59,8 +59,8 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
   title: string = '';
   searchField = '';
   checkFormAddPost = false;
-  predicateWP: string = '(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
-  dataValueWP: string = '0;1;5;2';
+  predicateWP: string = '';
+  dataValueWP: string = '';
   predicateFD: string = "Category =@0 && Stop=false";
   dataValueFD: string = "3";
   modal: DialogRef;

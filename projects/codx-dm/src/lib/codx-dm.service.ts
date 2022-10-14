@@ -901,7 +901,7 @@ export class CodxDMService {
 
   getImage(data: any) {
     if (data?.folderName && !data?.extension)
-      return '../../../assets/codx/dms/folder.svg';
+      return '../../../assets/themes/dm/default/img/folder.svg';
     else {
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       // if (data.hasThumbnail == null || data.hasThumbnail == false) {
