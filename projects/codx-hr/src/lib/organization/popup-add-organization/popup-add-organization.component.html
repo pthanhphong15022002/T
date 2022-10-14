@@ -97,7 +97,19 @@
         ></codx-input>
       </div>
     </div>
-
+    <div class="row">
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialogRef.formModel"
+          fiedName="assistant"
+        ></codx-label>
+        <codx-input
+          [formModel]="dialogRef.formModel"
+          [Group]="form.formGroup"
+          field="assistant"
+        ></codx-input>
+      </div>
+    </div>
     <div class="row">
       <div class="col-6">
         <div class="form-group">

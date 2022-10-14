@@ -50,7 +50,6 @@ export class EmployeeInfomationComponent extends UIComponent {
   valueMember = "";
   dataValue = "";
   parentIdField = "";
-  dataSelcected = [];
   service = "BS";
 
   minType = "MinRange";
@@ -152,7 +151,6 @@ export class EmployeeInfomationComponent extends UIComponent {
       },
     ];
     this.detectorRef.detectChanges();
-    console.log(this.skillEmployee)
   }
 
   getDataAsync(funcID:string){
@@ -186,18 +184,29 @@ export class EmployeeInfomationComponent extends UIComponent {
     return (yiq >= 128) ? 'black' : 'white';
   }
   editSkill(item: any) {
-    this.editSkillMode = true;
-    var model = new DialogModel();
-    model.DataService = new CRUDService(this.injector);
-    var data = {
-      employeeID:this.employee.employeeID,
-      skill: item,
+    if(this.view){
+      this.editSkillMode = true;
+      var model = new DialogModel();
+      model.DataService = this.view.dataService;
+      model.FormModel = this.view.formModel;
+      var data = {
+        employeeID:this.employee.employeeID,
+        skill: item,
+      }
+      this.callfc.openForm(EditSkillComponent, '', 450, 600, '', data, "", model);
     }
-    var dialog = this.callfc.openForm(EditSkillComponent, '', 450, 600, '', data, "", model);
-    dialog.closed.subscribe(e => {
-      this.skillEmployee = [...e.event, ...[]];
-      this.detectorRef.detectChanges();
-    })
+    // this.editSkillMode = true;
+    // var model = new DialogModel();
+    // model.DataService = new CRUDService(this.injector);
+    // var data = {
+    //   employeeID:this.employee.employeeID,
+    //   skill: item,
+    // }
+    // var dialog = this.callfc.openForm(EditSkillComponent, '', 450, 600, '', data, "", model);
+    // dialog.closed.subscribe(e => {
+    //   this.skillEmployee = [...e.event, ...[]];
+    //   this.detectorRef.detectChanges();
+    // })
   }
   scrollToElement(idElement:any): void {
     if(!idElement) return;
@@ -319,7 +328,7 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.skillRequest = [];
     this.skillEmployee = [];
     this.skillChartEmployee = [];
-    if (response.Skill) { //Skill
+    if (response.Skill) { 
       var skill = response.Skill;
       if (skill.Request)
         this.skillRequest = skill.Request;
@@ -661,14 +670,26 @@ export class EmployeeInfomationComponent extends UIComponent {
   saveAddSkill(event:any)
   {
     if(!event || !event?.dataSelected) return;
+    let data = event.dataSelected;
     let skills = [];
-    if(this.skillEmployee && this.skillEmployee?.length > 0 ){
-      event.dataSelected.map((element:any) =>  {
-        let isExsitElement = this.skillEmployee.some(x => x.competenceID == element.CompetenceID)
-         if(!isExsitElement){
-          skills.push(element);
+    if(this.skillEmployee && this.skillEmployee.length > 0 ){
+      data.map((element:any) =>  {
+        let isExsitElement = this.skillEmployee
+        .some(x => x.competenceID == element.CompetenceID)
+         if(!isExsitElement)
+         {
+          let skill = {
+            CompetenceID: element.CompetenceID,
+            CompetenceName: element.CompetenceName
+          }
+          skills.push(skill);
          }
       });
+    }
+    else
+    {
+      // data.map((e:any) => skills.push(e.CompetenceID));
+      skills = data.dataSelected;
     }
     if(skills.length > 0)
     {
@@ -687,6 +708,10 @@ export class EmployeeInfomationComponent extends UIComponent {
             this.notifiSV.notifyCode("SYS023");
           }
         });
+    }
+    else
+    {
+      this.notifiSV.notifyCode("SYS023"); 
     }
   }
 

@@ -11,13 +11,13 @@
 >
   <ng-template #header>
     <div class="d-flex justify-content-between">
-      <h3>{{itemDetail?.title}}</h3>
+      <h3>{{ itemDetail?.title }}</h3>
       <codx-vll
-      [name]="'VL003'"
-      [value]="itemDetail?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-light badge-square badge-md fs-7 p-2"
+        [name]="'VL003'"
+        [value]="itemDetail?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-square badge-md fs-7 p-2"
       >
       </codx-vll>
     </div>
@@ -34,19 +34,13 @@
 
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
-        <codx-label name="lblCategory" default="Loại đăng kí" class="fw-bold"></codx-label>
+        <codx-label
+          name="lblBUID"
+          default="Đơn vị/Bộ phận"
+          class="fw-bold"
+        ></codx-label>
         <span class="me-1 fw-bold">:</span>
-        <span class="text-gray-600">          
-          {{ itemDetail?.category }}
-        </span>
-      </div>
-    </div>
-
-    <div class="d-flex mb-2">
-      <div class="d-flex text-dark me-6">
-        <codx-label name="lblBUID" default="Đơn vị/Bộ phận" class="fw-bold"></codx-label>
-        <span class="me-1 fw-bold">:</span>
-        <span class="text-gray-600">          
+        <span class="text-gray-600">
           {{ itemDetail?.buid }}
         </span>
       </div>
@@ -54,7 +48,34 @@
 
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
-        <codx-label name="lblNote" default="Diễn giải" class="fw-bold"></codx-label>
+        <codx-label
+          name="lblCategory"
+          default="Loại đăng kí"
+          class="fw-bold"
+        ></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-600">
+          {{ itemDetail?.category }}
+        </span>
+      </div>
+      <div class="d-flex text-dark me-6">
+        <codx-label
+          name="lblEmpQty"
+          default="Số lượng nhân viên"
+          class="fw-bold"
+        ></codx-label>
+        <span class="me-1 fw-bold">:</span>
+        <span class="text-gray-600"> 10 </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label
+          name="lblNote"
+          default="Diễn giải"
+          class="fw-bold"
+        ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
           {{ itemDetail?.note }}
@@ -71,7 +92,10 @@
             <div class="d-flex align-item-center">
               <i class="icon-layers me-2 text-primary"></i
               ><span>
-                <codx-label default="Văn phòng phẩm" name="lblStationery"></codx-label>
+                <codx-label
+                  default="Văn phòng phẩm"
+                  name="lblStationery"
+                ></codx-label>
               </span>
             </div>
           </a>

@@ -29,14 +29,14 @@
 
 <ng-template #productImg let-data>
   <div class="w-100px h-100px m-4">
-    <codx-img 
-      [objectId]="data?.recID"       
-      [funcId]="funcID"       
+    <codx-img
+      [objectId]="data?.recID"
+      [funcId]="funcID"
       [objectType]="formModel?.entityName"
-      [imageType]="'square'" 
-      width="100" 
+      [imageType]="'square'"
+      width="100"
       [imgOn]="data.modifiedOn"
-    ></codx-img>  
+    ></codx-img>
   </div>
 </ng-template>
 
@@ -59,15 +59,39 @@
 <ng-template #quantity let-data>
   <div>
     <div>
-      <span class="fw-bold text-black-50">Tồn kho: </span>
+      <span class="fw-bold text-black-50"
+        ><codx-label
+          name="lblCurrentQty"
+          [formName]="formModel.formName"
+          [gridViewName]="formModel.gridViewName"
+          default="Tồn kho"
+        ></codx-label
+        >:
+      </span>
       <span class="fw-bold">{{ data?.currentQty }}</span>
     </div>
     <div>
-      <span class="fw-bold text-black-50">Đã được đăng ký: </span>
+      <span class="fw-bold text-black-50"
+        ><codx-label
+          name="lblReservedQty"
+          [formName]="formModel.formName"
+          [gridViewName]="formModel.gridViewName"
+          default="Đã được đăng ký"
+        ></codx-label
+        >:
+      </span>
       <span class="fw-bold">{{ data?.reservedQty }}</span>
     </div>
     <div>
-      <span class="fw-bold text-black-50">Được phép đăng ký: </span>
+      <span class="fw-bold text-black-50"
+        ><codx-label
+          name="lblAvailableQty"
+          [formName]="formModel.formName"
+          [gridViewName]="formModel.gridViewName"
+          default="Được phép đăng ký"
+        ></codx-label
+        >:
+      </span>
       <span class="fw-bold">{{ data?.availableQty }}</span>
     </div>
   </div>
@@ -93,20 +117,28 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="w-25 m-4">
         <div class="d-flex align-items-center">
-          <codx-img 
-            [objectId]="data?.recID"       
-            [funcId]="funcID"       
+          <codx-img
+            [objectId]="data?.recID"
+            [funcId]="funcID"
             [objectType]="formModel?.entityName"
-            [imageType]="'square'" 
-            width="50" 
+            [imageType]="'square'"
+            width="50"
             [imgOn]="data.modifiedOn"
-          ></codx-img>  
+          ></codx-img>
           <div class="m-2">
             <div class="fw-bold">{{ data?.resourceName }}</div>
             <div>
               <span>{{ data?.resourceID }}</span>
               <span> | </span>
-              <span>Nhóm: </span>
+              <span
+                ><codx-label
+                  name="lblGroup"
+                  [formName]="formModel.formName"
+                  [gridViewName]="formModel.gridViewName"
+                  default="Nhóm"
+                ></codx-label
+                >:
+              </span>
               <span class="fw-bold">{{ data?.groupName }}</span>
             </div>
           </div>
@@ -114,7 +146,15 @@
       </div>
       <div class="w-25">
         <div class="d-flex align-items-center">
-          <div class="me-4">Màu sắc:</div>
+          <div class="me-4">
+            <codx-label
+              name="lblColor"
+              [formName]="formModel.formName"
+              [gridViewName]="formModel.gridViewName"
+              default="Màu sắc"
+            ></codx-label
+            >:
+          </div>
           <div
             class="border"
             [ngStyle]="{ 'background-color': data?.color }"
@@ -124,20 +164,51 @@
       </div>
       <div class="w-25">
         <div class="my-2">
-          <span class="fw-bold text-black-50">Tồn kho: </span>
+          <span class="fw-bold text-black-50"
+            ><codx-label
+              name="lblCurrentQty"
+              [formName]="formModel.formName"
+              [gridViewName]="formModel.gridViewName"
+              default="Tồn kho"
+            ></codx-label
+            >:
+          </span>
           <span class="fw-bold">{{ data?.currentQty }}</span>
         </div>
         <div class="my-2">
-          <span class="fw-bold text-black-50">Đã được đăng ký: </span>
+          <span class="fw-bold text-black-50"
+            ><codx-label
+              name="lblReservedQty"
+              [formName]="formModel.formName"
+              [gridViewName]="formModel.gridViewName"
+              default="Đã được đăng ký"
+            ></codx-label
+            >:
+          </span>
           <span class="fw-bold">{{ data?.reservedQty }}</span>
         </div>
         <div class="my-2">
-          <span class="fw-bold text-black-50">Được phép đăng ký: </span>
+          <span class="fw-bold text-black-50"
+            ><codx-label
+              name="lblAvailableQty"
+              [formName]="formModel.formName"
+              [gridViewName]="formModel.gridViewName"
+              default="Được phép đăng ký"
+            ></codx-label
+            >:
+          </span>
           <span class="fw-bold">{{ data?.availableQty }}</span>
         </div>
       </div>
       <div class="w-25 has-action-menu">
-        <div class="my-2">Người điều phối</div>
+        <div class="my-2">
+          <codx-label
+            name="lblOwner"
+            [formName]="formModel.formName"
+            [gridViewName]="formModel.gridViewName"
+            default="Người điều phối"
+          ></codx-label>
+        </div>
         <div class="d-flex align-items-center">
           <codx-img
             [objectId]="data?.owner"
@@ -148,7 +219,7 @@
           >
           </codx-img>
           <div class="ms-2">
-            <div>{{ data?.ownerName}}</div>
+            <div>{{ data?.ownerName }}</div>
             <div class="text-black-50">{{ data?.position }}</div>
           </div>
         </div>
@@ -166,10 +237,8 @@
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="border w-250px h-100"
-    [imageSrc]="data?.icon ? '' : '../assets/media/svg/files/blank-image.svg'"
     [imageObjType]="'EP_Stationery'"
     [imageId]="data?.recID"
-    [title]="data?.resourceName"
     [rootData]="data"
     [footer]="cardItemFooter"
     [imgOn]="data.modifiedOn"
@@ -179,6 +248,9 @@
 
 <ng-template #cardItemFooter let-data>
   <div class="d-flex flex-column flex-grow-1 mt-2">
+    <div class="fw-bold line-clamp line-clamp-1 text-start">
+      {{ data?.resourceName }}
+    </div>
     <div class="d-flex justify-content-between align-items-end mt-2">
       <div class="d-flex align-items-end me-2 codx-badge mb-3">
         <div class="d-flex align-items-center position-relative me-4">

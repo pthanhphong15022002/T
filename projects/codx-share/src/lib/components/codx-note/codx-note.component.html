@@ -1,6 +1,6 @@
 <div class="card-note">
-    <ng-container #body>
-        <div class="rounded-2 bg-body border border-1 h-400px overflow-auto p-3">
+    <ng-container >
+        <div #body class="rounded-2 bg-body border border-1 h-400px overflow-auto p-3">
             <div *ngFor="let item of contents; index as i">
                 <div class="has-action-menu">
                     <div class="d-flex align-items-center">
@@ -131,12 +131,12 @@
                                 <div class="li" *ngIf="item?.lineType == 'LIST'">
                                     <li></li>
                                 </div>
-                                <div class="w-100 text-after-check-box" (click)="getElement(input, i)">
+                                <div class="w-100 text-after-check-box" (click)="getElement(input, i, body)">
                                     <ng-container #text>
                                         <div
                                             [class]="(item.lineType !== 'FILE' && item.lineType !== 'IMAGE') ? '' : 'disable-element'">
                                             <codx-input #input type="text" [class]="'border-0'"
-                                                class="test-textbox input-note memo" style="font-weight: normal;font-style: normal;text-decoration-line: none;color: #000000;
+                                                class="test-textbox input-note memo input-N" style="font-weight: normal;font-style: normal;text-decoration-line: none;color: #000000;
               " (keyUpEnter)="keyUpEnter($event, i)" [crrValue]="item.memo" field="memo" id="{{ i }}"
                                                 (valueChange)="item.memo = $event.data; valueChange($event,item) "
                                                 [placeholder]="gridViewSetup?.Memo?.headerText + '...'">
