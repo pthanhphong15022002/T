@@ -33,6 +33,7 @@ export class BookingStationeryComponent
 
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+  viewType = ViewType;
   views: Array<ViewModel> = [];
   button: ButtonModel;
   dataSelected: any;

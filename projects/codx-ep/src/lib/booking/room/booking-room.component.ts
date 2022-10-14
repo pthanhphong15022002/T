@@ -56,7 +56,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   predicate = 'ResourceType=@0';
   dataValue = '1';
-
+  viewType = ViewType;
   modelResource?: ResourceModel;
   request?: ResourceModel;
   model = new DataRequest();

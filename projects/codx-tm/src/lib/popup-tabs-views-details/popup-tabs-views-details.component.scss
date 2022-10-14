@@ -1,4 +1,4 @@
-::ng-deep {
+.page-viewdetail {
     .status-color span {
         display: block;
         white-space: nowrap;
@@ -9,7 +9,51 @@
         padding: 0 12px !important;
     }
 
-    .treehis-main {
-        padding-top: 15px;
+    .tab-item {
+        padding: 7px;
+        display: inline-block;
+        border-bottom: 2px transparent solid;
+        margin-right: 1px;
+    }
+
+    .tab-item:hover,
+    .tab-item.tab-active {
+        cursor: pointer;
+        color: var(--text-primary) !important;
+        border-color: var(--text-primary);
+    }
+
+    .view-details-header,
+    .view-details-content {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .view-details-content {
+        height: calc(100vh - 194px) !important;
+    }
+
+    codx-view-list-detail {
+        height: calc(100vh - 250px) !important;
+    }
+
+    .sprints-task-detail {
+        height: calc(100vh - 204px) !important;
+    }
+
+    .toolbar {
+        margin-bottom: 0 !important;
+    }
+
+    .empty-data img {
+        max-width: 300px !important;
+    }
+
+    div.card-note {
+        width: 100% !important;
+    }
+
+    .add-text-note {
+        padding-right: 15px;
     }
 }

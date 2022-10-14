@@ -278,15 +278,24 @@ export class ApprovalRoomsComponent extends UIComponent {
       }
     }
   }
-  closeAddForm(event) {}
-
-  changeItemDetail(event) {
-    this.itemDetail = event?.data;
-  }
-  uploadStatus(data:any)
+  updateStatus(data:any)
   {
     this.view.dataService.update(data).subscribe();
   }
+  closeAddForm(event) {}
+
+  changeItemDetail(event) {
+    let recID = '';
+    if (event?.data) {
+      recID = event.data.recID;
+      this.itemDetail = event?.data;
+    } else if (event?.recID) {
+      recID = event.recID;
+      this.itemDetail = event;
+    }
+    this.getDetailApprovalBooking(recID);
+  }
+  
   getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(

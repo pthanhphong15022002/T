@@ -7,9 +7,9 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { HoverPreloadModule } from 'ngx-hover-preload';
 import {
-  //NgxUiLoaderModule,
-  //SPINNER,
-  //NgxUiLoaderConfig,
+  NgxUiLoaderModule,
+  SPINNER,
+  NgxUiLoaderConfig,
   NgxUiLoaderRouterModule,
   NgxUiLoaderHttpModule,
 } from 'ngx-ui-loader';
@@ -48,35 +48,35 @@ function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   }
 }
 
-// const ngxUiLoaderConfig: NgxUiLoaderConfig = {
-//   bgsColor: '#187DE4',
-//   // bgsOpacity: 0.5,
-//   // bgsPosition: POSITION.bottomLeft,
-//   // bgsSize: 60,
-//   bgsType: SPINNER.pulse,
-//   // blur: 5,
-//   // delay: 0,
-//   fastFadeOut: true,
-//   fgsColor: '#187DE4',
-//   // fgsPosition: POSITION.centerCenter,
-//   fgsSize: 60,
-//   fgsType: SPINNER.cubeGrid,
-//   // gap: -65,
-//   // logoPosition: POSITION.centerCenter,
-//   // logoSize: 32,
-//   // logoUrl: 'assets/media/logos/logo-1.svg',
-//   // overlayBorderRadius: '0',
-//   overlayColor: 'rgba(255,255,255,0.7)',
-//   pbColor: '#187DE4',
-//   // pbDirection: PB_DIRECTION.leftToRight,
-//   // pbThickness: 5,
-//   // hasProgressBar: true,
-//   // text: 'Welcome to ngx-ui-loader',
-//   // textColor: '#FFFFFF',
-//   // textPosition: POSITION.centerCenter,
-//   // maxTime: -1,
-//   // minTime: 500
-// };
+const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+  bgsColor: '#187DE4',
+  // bgsOpacity: 0.5,
+  // bgsPosition: POSITION.bottomLeft,
+  // bgsSize: 60,
+  bgsType: SPINNER.pulse,
+  // blur: 5,
+  // delay: 0,
+  fastFadeOut: true,
+  fgsColor: '#187DE4',
+  // fgsPosition: POSITION.centerCenter,
+  fgsSize: 60,
+  fgsType: SPINNER.cubeGrid,
+  // gap: -65,
+  // logoPosition: POSITION.centerCenter,
+  // logoSize: 32,
+  // logoUrl: 'assets/media/logos/logo-1.svg',
+  // overlayBorderRadius: '0',
+  overlayColor: 'rgba(255,255,255,0)',
+  pbColor: '#187DE4',
+  // pbDirection: PB_DIRECTION.leftToRight,
+  // pbThickness: 5,
+  // hasProgressBar: true,
+  // text: 'Welcome to ngx-ui-loader',
+  // textColor: '#FFFFFF',
+  // textPosition: POSITION.centerCenter,
+  // maxTime: -1,
+  // minTime: 500
+};
 
 @NgModule({
   declarations: [
@@ -91,8 +91,8 @@ function appInitializer(authService: AuthService, appConfig: AppConfigService) {
     ClipboardModule,
     InlineSVGModule.forRoot(),
 
-    //NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
-    NgxUiLoaderRouterModule, //.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
+    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
+    NgxUiLoaderRouterModule,//.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
     NgxUiLoaderHttpModule,
 
     SharedModule,

@@ -943,6 +943,16 @@ export class CodxEsService {
     );
   }
 
+  addQRBeforeRelease(sfRecID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'AddQRBeforeReleaseAsync',
+      [sfRecID]
+    );
+  }
+
   release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
     return this.api.execSv(
       'ES',

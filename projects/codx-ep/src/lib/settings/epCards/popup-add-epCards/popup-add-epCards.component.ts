@@ -98,37 +98,43 @@ export class PopupAddEpCardsComponent extends UIComponent {
       return;
     }
     this.data.resourceType='7';
+    let index:any
+    if(this.isAdd){
+      index=0;
+    }
+    else{
+      index=null;
+    }
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),0)
-      .subscribe((res) => {
-        if (res) {          
+      .save((opt: any) => this.beforeSave(opt),index)
+      .subscribe(async (res) => {
+        if (res.save || res.update) {          
           if (!res.save) {
             this.returnData = res.update;
           } else {
             this.returnData = res.save;
           }
-          if(this.imageUpload)
+          if(this.returnData?.recID)
           {
-            this.imageUpload
-            .updateFileDirectReload(this.returnData.recID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-                //xử lí nếu upload ảnh thất bại
-                //...
-              }
-            });
-          }          
-          if(this.isAdd){
-            //(this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
-          }
-          else{
-            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
-          }          
-          this.dialogRef.close();
-        }        
-        else{
-          this.notificationsService.notifyCode('SYS001');
+            if(this.imageUpload?.imageUpload?.item) {
+              this.imageUpload
+              .updateFileDirectReload(this.returnData.recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                  //xử lí nếu upload ảnh thất bại
+                  //...                
+                }
+              });  
+            }          
+            else 
+            {
+              this.dialogRef && this.dialogRef.close(this.returnData);
+            }
+          } 
+        }
+        else{ 
+          //Trả lỗi từ backend.         
           return;
         }
       });

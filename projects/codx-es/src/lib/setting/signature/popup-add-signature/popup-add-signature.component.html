@@ -210,6 +210,7 @@
           field="oTPControl"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -220,7 +221,7 @@
           field="oTPPin"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
-          [disabled]="data.otpControl == '3' ? false : true"
+          [disabled]="data.oTPControl == '3' ? false : true"
         >
         </codx-input>
       </div>
@@ -236,7 +237,7 @@
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
           [disabled]="
-            data.otpControl == '1' || data.otpControl == '2' ? false : true
+            data.oTPControl == '1' || data.oTPControl == '2' ? false : true
           "
         >
         </codx-input>

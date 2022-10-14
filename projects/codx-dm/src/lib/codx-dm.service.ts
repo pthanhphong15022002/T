@@ -901,7 +901,7 @@ export class CodxDMService {
 
   getImage(data: any) {
     if (data?.folderName && !data?.extension)
-      return '../../../assets/codx/dms/folder.svg';
+      return '../../../assets/themes/dm/default/img/folder.svg';
     else {
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       // if (data.hasThumbnail == null || data.hasThumbnail == false) {
@@ -1153,7 +1153,6 @@ export class CodxDMService {
   }
 
   clickMF($event, data: any, view: any = null) {
-    debugger;
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
 
@@ -1257,7 +1256,6 @@ export class CodxDMService {
         break;
 
       case "DMT0222": // properties file
-        debugger
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1279,7 +1277,6 @@ export class CodxDMService {
 
       case "DMT0202": // chinh sua thu muc
       case "DMT0209": // properties folder
-        debugger
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1575,6 +1572,7 @@ export class CodxDMService {
   }
 
   copyFileTo(id, fullName, toselectId) {
+    debugger
     var that = this;
     this.fileService
       .copyFile(id, fullName, toselectId, 1)
@@ -1594,18 +1592,15 @@ export class CodxDMService {
         }
 
         if (res.status == 6) {
-          let newNameMessage = this.titelRenamemessage.replace(
-            '{0}',
-            res.data.fileName
-          );
+          //let newNameMessage = this.titelRenamemessage.replace('{0}', res.data.fileName);
           var config = new AlertConfirmInputConfig();
           config.type = 'YesNo';
           this.notificationsService
-            .alert(this.title, res.data.fileName + newNameMessage, config)
+            .alert(this.title, res?.message, config)
             .closed.subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.fileService
-                  .copyFile(id, res.data.fileName, toselectId, 1)
+                  .copyFile(id, fullName, toselectId, 1,1)
                   .subscribe(async (item) => {
                     if (item.status == 0) {
                       let list = this.listFiles;

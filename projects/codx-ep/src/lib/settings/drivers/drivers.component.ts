@@ -5,6 +5,7 @@ import {
   ViewChild,
   Input,
   AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   ButtonModel,
@@ -44,7 +45,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-
+  viewType = ViewType;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   buttons: ButtonModel;
@@ -65,7 +66,8 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
 
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,
+    private codxEpService: CodxEpService,    
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -116,23 +118,20 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: 200,//gv['ResourceID'].width,
               template: this.resourceNameCol,
+              width:'20%',
             },
             {
               headerText: gv['CompanyID'].headerText,
-              width: 250,//gv['Location'].width,
               field: 'company',
               template: this.locationCol,
-              headerTextAlign: 'Center',
             },         
             
             {
               headerText: gv['LinkID'].headerText,
               //width:gv['Owner'].width,
-              width: 300,
               template: this.carCol,
-              headerTextAlign: 'Center',
+              width:'20%',
             },
             // {
             //   headerText: gv['Equipments'].headerText,
@@ -145,15 +144,11 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
             {
               headerText: gv['Owner'].headerText,
               //width:gv['Owner'].width,
-              width: 200,
               template: this.ownerCol,
-              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Note'].headerText,
-              width: 200,//gv['Note'].width,
-              field: 'note',
-              headerTextAlign: 'Center',               
+              field: 'note',              
               template: this.noteCol,      
             },
           ];
@@ -222,9 +217,21 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddDriversComponent,
-        [this.dataSelected, true,this.popupTitle],
+        [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
     });
   }
 
@@ -241,9 +248,16 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddDriversComponent,
-            [this.view.dataService.dataSelected, false,this.popupTitle],
+            [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );
+          );    
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {
+              });
+            }
+          });     
         });
     }
   }

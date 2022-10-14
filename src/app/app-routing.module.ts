@@ -7,6 +7,7 @@ import { SosComponent } from '@pages/sos/sos.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
+import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-signing/external-signing.component';
 export const routes: Routes = [
   {
     path: ':tenant',
@@ -151,9 +152,13 @@ export const routes: Routes = [
         component: SosComponent,
       },
       {
+        path: 'externalsign',
+        component: ExternalSigningComponent,
+      },
+      {
         path: '',
         redirectTo: 'wp',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       { path: '**', redirectTo: 'error/404' },
     ],
@@ -166,4 +171,4 @@ export const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
