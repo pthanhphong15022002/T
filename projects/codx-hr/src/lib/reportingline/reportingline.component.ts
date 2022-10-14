@@ -93,6 +93,17 @@ export class ReportinglineComponent extends UIComponent {
           panelRightRef: this.itemViewList,
         }
       },
+      {
+        id: '2',
+        type: ViewType.tree_card,
+        active: true,
+        sameData: true,
+        model: {
+          resizable: true,
+          template: this.templateTree,
+          panelRightRef: this.itemViewList,
+        }
+      },
     ];
     this.view.dataService.parentIdField = 'ReportTo';
     this.detectorRef.detectChanges();

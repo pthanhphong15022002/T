@@ -257,3 +257,57 @@
     </div>
   </ng-template>
 </codx-form>
+
+<ng-template #popupSupplier let-dialogSupplier>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label
+              class="dialog-title line-clamp line-clamp-1"
+              name="lblProcessTemplate"
+              default="Chọn nhà cung cấp"
+              [formModel]="formModel"
+            ></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button
+            type="button"
+            class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="closePopupSupplier(dialogSupplier)"
+          >
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <label class="me-2">
+          <codx-label
+            fiedName=""
+            [formModel]="formModel"
+            default="Nhà cung cấp"
+          ></codx-label>
+        </label>
+        <codx-input
+          type="combobox"
+          field="processID"
+          refValue="ProcessTemplate"
+          [crrValue]="data.supplier"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <a class="btn btn-primary" (click)="onSaveSupplier(dialogSupplier)">
+          <codx-label name="lblOk" default="OK" [formModel]=""> </codx-label>
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-template>

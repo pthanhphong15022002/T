@@ -42,7 +42,7 @@ export class PopupAddRoomsComponent extends UIComponent {
   vllDevices = [];
   lstDevices: [];
   isAfterRender = false;
-
+  isDone=true;
   tmplstDevice = [];
   lstDeviceRoom = [];
   returnData:any;
@@ -157,7 +157,7 @@ export class PopupAddRoomsComponent extends UIComponent {
               }
             });
           } 
-          this.dialogRef.close();
+          this.dialogRef.close(this.data);
         }
         else{
           
