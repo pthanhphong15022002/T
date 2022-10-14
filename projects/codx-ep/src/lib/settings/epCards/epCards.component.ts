@@ -1,6 +1,7 @@
 import { CodxEpService } from './../../codx-ep.service';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   TemplateRef,
@@ -53,7 +54,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
-    private routers:Router, 
+    private routers:Router,    
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -182,9 +184,21 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddEpCardsComponent,
-        [this.dataSelected, true,this.popupTitle],
+        [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
     });
   }
 
@@ -201,9 +215,16 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddEpCardsComponent,
-            [this.view.dataService.dataSelected, false,this.popupTitle],
+            [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );
+          );    
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {
+              });
+            }
+          });     
         });
     }
   }

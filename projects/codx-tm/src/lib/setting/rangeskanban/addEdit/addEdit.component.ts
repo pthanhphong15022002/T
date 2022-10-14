@@ -11,6 +11,7 @@ import {
   NotificationsService,
   CodxService,
   DialogData,
+  CacheService,
 } from 'codx-core';
 import { RangeLine } from '../../../models/task.model';
 
@@ -31,11 +32,12 @@ export class AddEditComponent implements OnInit {
     formName: 'RangeLines',
     gridViewName: 'grvRangeLines',
   };
+  showInput= true ;
+  titleAction =''
 
   constructor(
     private api: ApiHttpService,
-    private notiService: NotificationsService,
-    private codxService: CodxService,
+    private cache: CacheService,
     private callfc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData,
@@ -44,11 +46,39 @@ export class AddEditComponent implements OnInit {
     this.dialog = dialog;
     this.master = dialog.dataService!.dataSelected;
     this.lines = this.master.rangeLines || [];
-    this.action = dialogData.data;
+    this.action = dialogData.data[0];
+    this.titleAction = dialogData.data[1];
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
+
+    this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'GetFieldAutoNoAsync',
+      [this.dialog.formModel.funcID, this.dialog.formModel.entityName]
+    )
+    .subscribe((res) => {
+      if (res && res.stop) {
+        this.showInput = false;
+      } else {
+        this.showInput = true;
+      }
+    });
   }
   //#region Init
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.cache.functionList(this.dialog.formModel.funcID).subscribe((f) => {
+      if (f) {
+         var customName = f?.customName;
+        this.title =
+          this.titleAction +
+          ' ' +
+          customName.charAt(0).toLocaleLowerCase() +
+          customName.slice(1);
+      }
+    });
+  }
   //#endregion
   //#region master
   onSave() {
