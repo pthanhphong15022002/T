@@ -61,7 +61,6 @@ export class PopupAddDriversComponent
   ) {
     super(injector);
     this.data =  dialogData?.data[0];
-    this.data.code="";
     this.isAdd = dialogData?.data[1];    
     this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
@@ -73,7 +72,9 @@ export class PopupAddDriversComponent
     .subscribe(res=>{
       if(res){
         this.grvDriver=res;
-        this.data.code=res?.Code?.headerText;
+        if(this.isAdd){
+          this.data.code=res?.Code?.headerText;
+        }
       }
     })
     this.initForm();
@@ -148,25 +149,30 @@ export class PopupAddDriversComponent
           } else {
             this.returnData = res.save;
           }
-          if(this.imageUpload && this.returnData?.recID)
+          if(this.returnData?.recID)
           {
-            (await this.imageUpload
-            .updateFileDirectReload(this.returnData?.recID))
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-                //xử lí nếu upload ảnh thất bại
-                //...
-              }
-            });
-          }    
-          this.dialogRef.close();
+            if(this.imageUpload?.imageUpload?.item) {
+              this.imageUpload
+              .updateFileDirectReload(this.returnData.recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                  //xử lí nếu upload ảnh thất bại
+                  //...                
+                }
+              });  
+            }          
+            else 
+            {
+              this.dialogRef && this.dialogRef.close(this.returnData);
+            }
+          } 
         }
-        else{
-          
+        else{ 
+          //Trả lỗi từ backend.         
           return;
         }
-      }); 
+      });
   }
   
   changeCategory(event:any){

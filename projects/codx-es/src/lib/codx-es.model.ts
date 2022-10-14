@@ -102,4 +102,5 @@ export class Approvers {
   icon: string = null;
   createdOn: any;
   delete: boolean = true;
+  write: boolean = false;
 }

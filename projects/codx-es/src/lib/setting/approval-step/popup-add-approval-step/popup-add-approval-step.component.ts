@@ -1,3 +1,4 @@
+import { E } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -51,6 +52,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   header1 = 'Thiết lập quy trình duyệt';
   subHeaderText = 'Qui trình duyệt';
   defaultSignType = '';
+  eSign: boolean = false;
 
   data: any = {};
   lstApprover: any = [];
@@ -96,7 +98,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.lstStep = data?.data.lstStep;
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
-    this.defaultSignType = data?.data.signatureType;
+    this.defaultSignType = data?.data?.signatureType;
+    this.eSign = data?.data?.eSign ?? false;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
   }
@@ -160,8 +163,18 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
           this.lstApprover = JSON.parse(
-            JSON.stringify(this.dialogApprovalStep.value.approvers)
+            JSON.stringify(this.dataEdit?.approvers)
           );
+          if (this.lstApprover?.length > 0) {
+            this.lstApprover.forEach((element) => {
+              if (element.roleType == 'PE') element.write = true;
+              else element.write = false;
+
+              element.delete = true;
+              element.share = false;
+              element.assign = false;
+            });
+          }
           this.currentApproveMode = this.dataEdit?.approveMode;
           this.formModel.currentData = this.data;
           this.isAfterRender = true;
@@ -308,6 +321,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           );
           if (i == -1) {
             let appr = new Approvers();
+            if (appr.roleType == 'PE') {
+              appr.write = true;
+            }
             appr.roleType = element?.objectType;
             appr.name = element?.objectName;
             appr.approver = element?.objectType;
