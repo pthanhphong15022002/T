@@ -1083,38 +1083,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(
-    pages,
-    lstImg,
-    imgUrl,
-    x,
-    y,
-    width,
-    height,
-    page,
-    stepNo,
-    isAwait,
-    userID,
-    sfID,
-    mode,
-    comment
-  ) {
-    let data = [
-      pages,
-      lstImg,
-      imgUrl,
-      x,
-      y,
-      width,
-      height,
-      page,
-      stepNo,
-      isAwait,
-      userID,
-      sfID,
-      mode,
-      comment,
-    ];
+  updateSignFileTrans(stepNo, isAwait, userID, sfID, mode, comment) {
+    let data = [stepNo, isAwait, userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

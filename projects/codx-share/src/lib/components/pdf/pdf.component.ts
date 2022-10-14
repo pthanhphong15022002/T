@@ -443,76 +443,6 @@ export class PdfComponent
   signPDF(mode, comment): any {
     if (this.transRecID) {
       return new Promise<any>((resolve, rejects) => {
-        let lstAddBefore = [];
-        let lstPages = [];
-        this.tr.remove();
-        this.lstLayer.forEach((layer) => {
-          let page = Number(layer.attrs.id.replace('layer', ''));
-          if (page != this.pageMax) {
-            let areaInfo = [];
-            layer.children.forEach((child) => {
-              let name: tmpAreaName = JSON.parse(child.name());
-              if (name.LabelType != '8') {
-                areaInfo.push({
-                  page: page,
-                  position: {
-                    x: (child.x() / this.xScale) * 0.75,
-                    y: (child.y() / this.yScale) * 0.75,
-                    w: (child.width() / this.xScale) * 0.75,
-                    h: (child.height() / this.yScale) * 0.75,
-                  },
-                  url: child.toDataURL().replace('data:image/png;base64,', ''),
-                });
-              }
-            });
-            if (areaInfo.length != 0) {
-              lstPages.push(page);
-              lstAddBefore.push(areaInfo);
-            }
-          }
-        });
-
-        let layer = this.lstLayer.get(this.pageMax);
-        let children = layer.children;
-
-        let imgUrl = '';
-        let x = 0;
-        let y = 0;
-        let width = 0;
-        let height = 0;
-
-        if (children.length != 0) {
-          let top = children?.reduce((prev, curr) => {
-            return prev.attrs.x < curr.attrs.x ? prev : curr;
-          });
-
-          let bot = children?.reduce((prev, curr) => {
-            return prev.attrs.x > curr.attrs.x ? prev : curr;
-          });
-
-          let left = children?.reduce((prev, curr) => {
-            return prev.attrs.y < curr.attrs.y ? prev : curr;
-          });
-
-          let right = children?.reduce((prev, curr) => {
-            return prev.attrs.y > curr.attrs.y ? prev : curr;
-          });
-
-          x = top.attrs.x;
-          y = left.attrs.y;
-
-          width = left.attrs.x - right.attrs.x + right.width() * right.scaleX();
-          height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
-          imgUrl = layer.toDataURL({
-            quality: 1,
-            x: x,
-            y: y,
-
-            width: width,
-            height: height,
-          });
-        }
-
         let approveStt = '5';
 
         switch (mode) {
@@ -538,14 +468,6 @@ export class PdfComponent
               if (this.isAwait) {
                 this.esService
                   .updateSignFileTrans(
-                    lstPages,
-                    lstAddBefore,
-                    imgUrl.replace('data:image/png;base64,', ''),
-                    x / this.xScale,
-                    y / this.yScale,
-                    width / this.xScale,
-                    height / this.yScale,
-                    this.pageMax,
                     this.stepNo,
                     this.isAwait,
                     this.user.userID,
@@ -561,14 +483,6 @@ export class PdfComponent
                 resolve(true);
                 this.esService
                   .updateSignFileTrans(
-                    lstPages,
-                    lstAddBefore,
-                    imgUrl.replace('data:image/png;base64,', ''),
-                    x / this.xScale,
-                    y / this.yScale,
-                    width / this.xScale,
-                    height / this.yScale,
-                    this.pageMax,
                     this.stepNo,
                     this.isAwait,
                     this.user.userID,
@@ -871,8 +785,6 @@ export class PdfComponent
 
           //stage event
           stage.on('mouseenter', (mouseover: any) => {
-            console.log('mouseover', mouseover);
-
             if (this.needAddKonva) {
               this.tr.nodes([this.needAddKonva]);
               this.tr.forceUpdate();
@@ -1733,41 +1645,9 @@ export class PdfComponent
 
   //test func
   show(e: any) {
-    let layer = this.lstLayer.get(this.pageMax);
-    let children = layer.children;
-    let top = children?.reduce((prev, curr) => {
-      return prev.attrs.x < curr.attrs.x ? prev : curr;
-    });
-
-    let bot = children?.reduce((prev, curr) => {
-      return prev.attrs.x > curr.attrs.x ? prev : curr;
-    });
-
-    let left = children?.reduce((prev, curr) => {
-      return prev.attrs.y < curr.attrs.y ? prev : curr;
-    });
-
-    let right = children?.reduce((prev, curr) => {
-      return prev.attrs.y > curr.attrs.y ? prev : curr;
-    });
-
-    let x = top.attrs.x;
-    let y = left.attrs.y;
-
-    let width = left.attrs.x - right.attrs.x + right.width() * right.scaleX();
-    let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
-    let imgUrl = layer.toDataURL({
-      quality: 1,
-      x: x,
-      y: y,
-
-      width: width,
-      height: height,
-    });
-    console.log('url', imgUrl);
+    this.signPDF('1', 'da xem');
   }
 }
-
 //create new guid
 class Guid {
   static newGuid() {
