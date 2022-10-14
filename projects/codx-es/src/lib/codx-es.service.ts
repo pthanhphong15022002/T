@@ -18,6 +18,7 @@ import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
 
+export const UrlUpload: string = 'http://172.16.1.210:8011';
 export class GridModels {
   pageSize: number;
   entityName: string;

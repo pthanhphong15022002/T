@@ -644,6 +644,10 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   updateApproveTemplate() {
+    if (this.data?.approveControl != '1') {
+      this.notify.notify('Qui trình chưa thay đổi');
+      return;
+    }
     this.esService
       .updateApproveTemplate(this.data.recID, this.data.processID)
       .subscribe((res) => {
