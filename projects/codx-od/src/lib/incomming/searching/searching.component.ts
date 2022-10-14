@@ -1,5 +1,5 @@
-import { Component, OnInit,  OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
-import { CacheService } from 'codx-core';
+import { Component, OnInit,  OnDestroy, AfterViewInit, ViewChild, Injector } from '@angular/core';
+import { CacheService, UIComponent } from 'codx-core';
 import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { CodxOdService } from '../../codx-od.service';
 import { convertHtmlAgency, extractContent, getIdUser } from '../../function/default.function';
@@ -8,9 +8,9 @@ import { convertHtmlAgency, extractContent, getIdUser } from '../../function/def
   templateUrl: './searching.component.html',
 })
 
-export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
+export class SearchingComponent extends UIComponent implements  OnDestroy , AfterViewInit {
 
-  @ViewChild("view") view : CodxFullTextSearch;
+  @ViewChild("view") views : CodxFullTextSearch;
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
@@ -19,10 +19,12 @@ export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
   service = "OD"
   entityName = "OD_Dispatches"
   formModel : any = {};
-  constructor(  
-    private cache: CacheService,
+  constructor( 
+    inject: Injector, 
+    // private cache: CacheService,
     private hideToolbar : CodxOdService
   ){
+    super(inject);
   }
   ngAfterViewInit(): void {
     //this.hideToolbar.SetLayout.next(false);
@@ -32,8 +34,7 @@ export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
     this.hideToolbar.SetLayout.next(true);
   }
 
-  ngOnInit(): void {
-    //
+  onInit(): void {
     this.getGridViewSetup();
   }
 
@@ -57,7 +58,7 @@ export class SearchingComponent implements OnInit ,  OnDestroy , AfterViewInit {
 
   testSearch()
   {
-    this.view!.filter = {"AgencyName" : ["Bảo"]};
-    this.view.searchText();
+    this.views!.filter = {"AgencyName" : ["Bảo"]};
+    this.views.searchText();
   }
 }
