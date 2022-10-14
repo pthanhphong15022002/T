@@ -96,12 +96,14 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
+              width:'20%',
             },
             {
               headerText: gv['Icon'].headerText,
               template: this.avatarCol,
               textAlign: 'Center',
               headerTextAlign: 'Center',
+              width:'15%',
             },
             {
               field: 'status',
@@ -117,7 +119,6 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             {
               headerText: gv['Owner'].headerText,
               template: this.ownerCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [
