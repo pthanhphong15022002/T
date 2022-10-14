@@ -72,7 +72,7 @@ export class PersonalsComponent implements OnInit {
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.menuUrl = this.funcID;
-      this.getFunctionList();
+      // this.getFunctionList();
       this.changedt.detectChanges();
     });
   }
@@ -82,19 +82,23 @@ export class PersonalsComponent implements OnInit {
   }
 
   getFunctionList() {
-    this.cachesv.functionList(this.funcID).subscribe((res: any) => {
-      if (res) {
-        this.pageTitle.setSubTitle(res.customName);
-        this.formName = res.formName;
-        this.gridViewName = res.gridViewName;
-        this.cachesv
-          .moreFunction(this.formName, this.gridViewName)
-          .subscribe((res: any) => {
-            this.moreFunc = res;
-            this.changedt.detectChanges();
-          });
-      }
-    });
+    // if (this.funcID) {
+    //   this.cachesv.functionList(this.funcID).subscribe((res: any) => {
+    //     if (res) {
+    //       this.pageTitle.setSubTitle(res.customName);
+    //       this.formName = res.formName;
+    //       this.gridViewName = res.gridViewName;
+    //       debugger
+    //       this.cachesv
+    //         .moreFunction(this.formName, this.gridViewName)
+    //         .subscribe((res: any) => {
+    //           debugger
+    //           this.moreFunc = res;
+    //           this.changedt.detectChanges();
+    //         });
+    //     }
+    //   });
+    // }
   }
 
   getMenu(url, icon) {
