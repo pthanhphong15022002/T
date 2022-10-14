@@ -42,67 +42,66 @@
   </div>
 </ng-template>
 <ng-template #templateSearch>
-  <div class="py-5">
-    <div *ngFor="let file of data" class="result-group px-3">
-      <div class="d-flex align-items-start justify-content-between result-item border-bottom pb-5 mb-5">
-        <div class="d-flex flex-column">
-          <div class="d-flex align-items-center">
-            <codx-temp-full appDragDropFileFolder [dataDrapDrop]="file" (fileFolderDropped)="fileFolderDropped($event)"
-              [class]="classFile(file, 'float-start')" [imageWidth]="20" [imageSrc]="dmSV.getImage(file)"
-              imgCss="w-20px me-3 cursor-pointer" [title]="
-                file.folderName != undefined ? file.folderName : file.fileName
-              " cardCss="w-250px" [typeMF]="'hover'">
-            </codx-temp-full>
-          </div>
-          <div class="d-flex align-items-center text-primary font-size-md mt-1">
-            <span>{{ file.filePath }}</span>
-          </div>
-          <div class="text-dark-50 font-size-md mt-1">
-            <div class="text-dark" [innerHtml]="file.highlight"></div>
-          </div>
-          <div class="d-flex align-items-center font-size-md mt-1">
-            <div class="d-flex text-dark-75">
-              <span class="icon-query_builder icon-16"></span>&nbsp;
-              <span class="ml-2">{{ file.createdOn | date: "dd/MM/yyyy" }}</span>
-            </div>
-            &nbsp;&nbsp;&nbsp;
-            <div class="d-flex text-dark-75">
-              {{ this.dmSV.getViews(file.history) }}&nbsp;
-              <codx-label fiedName="" formName="" gridViewName="" default="lượt xem">
-              </codx-label>
-            </div>
-            &nbsp;&nbsp;
-            <!-- <div class="icon-star icon-9 mx-3"></div> -->
-            <!-- <codx-label fiedName="" formName="" gridViewName="" default="đánh giá">&nbsp;
-                  </codx-label> -->
-            <div class="rating-group">
-              <div class="d-flex">
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-              </div>
-              <div [style.width]="this.dmSV.getRating(file.views)" class="d-flex rating-percent">
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="dropdown ml-2">
-          <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, file)"
-            [formModel]="view.formModel" [typeMF]="'hover'" [title]=""
-            (changeDataMF)="dmSV.filterMoreFunction($event, file)" cardCss="w-150px">
+  <div *ngFor="let file of data" class="result-group result-group-dm has-action-menu">
+    <div class="d-flex align-items-start justify-content-between result-item border-bottom p-5">
+      <div class="d-flex flex-column">
+        <div class="d-flex align-items-center">
+          <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file" (fileFolderDropped)="fileFolderDropped($event)"
+            [class]="classFile(file, 'float-start')" [imageWidth]="20" [imageSrc]="dmSV.getImage(file)"
+            imgCss="w-20px me-3 cursor-pointer" [title]="
+              file.folderName != undefined ? file.folderName : file.fileName
+            " cardCss="w-250px" [typeMF]="'hover'"
+            [baseHeaderRightTmp]="rightSecurity"
+          >
           </codx-temp-full>
+          <ng-template #rightSecurity>
+            <span *ngIf="dmSV.checkView(file?.read) == false" class="icon-security text-primary icon-18"></span>
+          </ng-template>
         </div>
+        <div class="d-flex align-items-center text-primary font-size-md mt-1">
+          <span>{{ file.filePath }}</span>
+        </div>
+        <div class="text-dark-50 font-size-md mt-1">
+          <div class="text-dark" [innerHtml]="file.highlight"></div>
+        </div>
+        <div class="d-flex align-items-center font-size-md mt-1">
+          <div class="d-flex text-dark-75">
+            <span class="icon-query_builder icon-16"></span>&nbsp;
+            <span class="ml-2">{{ file.createdOn | date: "dd/MM/yyyy" }}</span>
+          </div>
+          &nbsp;&nbsp;&nbsp;
+          <div class="d-flex text-dark-75">
+            {{ this.dmSV.getViews(file.history) }}&nbsp;
+            <codx-label fiedName="" formName="" gridViewName="" default="lượt xem">
+            </codx-label>
+          </div>
+          &nbsp;&nbsp;
+          <!-- <div class="icon-star icon-9 mx-3"></div> -->
+          <!-- <codx-label fiedName="" formName="" gridViewName="" default="đánh giá">&nbsp;
+                </codx-label> -->
+          <div class="rating-group">
+            <div class="d-flex">
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+            </div>
+            <div [style.width]="this.dmSV.getRating(file.views)" class="d-flex rating-percent">
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="action-menu-item ml-2">
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="dmSV.clickMF($event, file)" (changeDataMF)="dmSV.filterMoreFunction($event, file)" [type]="'hover'"></codx-mfunc>
       </div>
     </div>
   </div>
-
 </ng-template>
 <ng-template #templateCard>
   <div class="d-flex flex-wrap dms-card p-5">

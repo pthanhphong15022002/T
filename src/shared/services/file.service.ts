@@ -55,7 +55,6 @@ export class FileService implements OnDestroy {
     searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, pageSize: number, searchAdvance: boolean): Observable<any> {
         return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, pageSize, searchAdvance]);
     }
-
     updatePermisson(data: any): Observable<any> {
         return this.api.exec<DataReturn>("DM", "FileBussiness", "UpdatePermissionAsync", [data]);
     }
