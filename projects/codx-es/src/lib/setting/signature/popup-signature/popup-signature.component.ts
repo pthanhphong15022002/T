@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Injector,
   OnInit,
   Optional,
@@ -13,6 +14,7 @@ import {
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  NotificationsService,
   UIComponent,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
@@ -28,12 +30,14 @@ export class PopupSignatureComponent extends UIComponent {
   @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
   @ViewChild('imgSignature2') imgSignature2: ImageViewerComponent;
   @ViewChild('imgStamp') imgStamp: ImageViewerComponent;
+  @ViewChild('popupSupplier') popupSupplier: ElementRef<any>;
 
   currentTab: number = 1;
   dataFile: any = null;
 
   isAfterRender: boolean = false;
   isAddNew: boolean = false;
+  type = '';
   isSave: boolean = false;
 
   headerText = 'Chọn chữ kí';
@@ -53,6 +57,7 @@ export class PopupSignatureComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private cr: ChangeDetectorRef,
+    public notify: NotificationsService,
     public dmSV: CodxDMService,
     public esService: CodxEsService,
     @Optional() data?: DialogData,
@@ -91,12 +96,18 @@ export class PopupSignatureComponent extends UIComponent {
 
   onInit(): void {
     if (!this.data?.recID) {
+      this.type = 'signFile';
       this.esService
         .getDataSignature(this.data?.userID, this.data?.signatureType)
         .subscribe((res) => {
           if (res) {
             this.data = res[0];
             this.isAddNew = res[1];
+
+            //Mới tạo và chữ ký công cộng -> mở popup chọn Supplier
+            if (this.isAddNew && this.data?.signatureType == 1) {
+              this.callfc.openForm(this.popupSupplier, '', 350, 420);
+            }
             this.isAfterRender = true;
           }
         });
@@ -110,38 +121,59 @@ export class PopupSignatureComponent extends UIComponent {
     });
   }
 
+  addEditSignature(i) {
+    if (this.isAddNew && i <= 0 && this.type == 'signFile') {
+      this.esService.addNewSignature(this.data).subscribe((res) => {
+        if (res) this.notify.notifyCode('RS002');
+      });
+    } else if (this.isAddNew == false && i <= 0 && this.type == 'signFile') {
+      this.esService.editSignature(this.data).subscribe((res) => {
+        if (res) this.notify.notifyCode('RS002');
+      });
+    }
+  }
+
   onSaveForm() {
-    if (this.imgSignature1?.imageUpload) {
+    let i = 0;
+    if (this.imgSignature1?.imageUpload?.item) i++;
+    if (this.imgSignature2?.imageUpload?.item) i++;
+    if (this.imgStamp?.imageUpload?.item) i++;
+
+    if (this.imgSignature1?.imageUpload?.item) {
+      i++;
       this.imgSignature1
         .updateFileDirectReload(this.data.recID)
         .subscribe((img) => {
+          i--;
           if (img && this.data?.signature1 == null) {
             this.data.signature1 = (img[0] as any).recID;
-
-            this.dialog && this.dialog.close(this.data);
+            this.addEditSignature(i);
           }
+          if (i <= 0) this.dialog && this.dialog.close(this.data);
         });
     }
 
-    if (this.imgSignature2?.imageUpload) {
+    if (this.imgSignature2?.imageUpload?.item) {
       this.imgSignature2
         .updateFileDirectReload(this.data.recID)
         .subscribe((img) => {
+          i--;
           if (img && this.data?.signature2 == null) {
             this.data.signature2 = (img[0] as any).recID;
-
-            this.dialog && this.dialog.close(this.data);
+            this.addEditSignature(i);
           }
+          if (i <= 0) this.dialog && this.dialog.close(this.data);
         });
     }
 
-    if (this.imgStamp?.imageUpload) {
+    if (this.imgStamp?.imageUpload?.item) {
       this.imgStamp.updateFileDirectReload(this.data.recID).subscribe((img) => {
+        i--;
         if (img && this.data?.stamp == null) {
           this.data.stamp = (img[0] as any).recID;
-
-          this.dialog && this.dialog.close(this.data);
+          this.addEditSignature(i);
         }
+        if (i <= 0) this.dialog && this.dialog.close(this.data);
       });
     }
     this.dialog && this.dialog.close(this.data);
@@ -165,4 +197,13 @@ export class PopupSignatureComponent extends UIComponent {
       else if (setupShowForm.showStamp) this.currentTab = 5;
     }
   }
+
+  closePopupSupplier(popup: DialogRef) {
+    popup && popup.close();
+    if (this.isAddNew) this.dialog && this.dialog.close();
+  }
+
+  valueChange(event) {}
+
+  onSaveSupplier(popup: DialogRef) {}
 }
