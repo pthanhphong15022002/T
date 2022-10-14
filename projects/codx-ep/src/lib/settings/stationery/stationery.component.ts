@@ -15,6 +15,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
+  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
@@ -68,8 +69,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   };
   dialog!: DialogRef;
   model: DataRequest;
-  formModel: FormModel;  
-  grvStationery:any;
+  formModel: FormModel;
+  grvStationery: any;
   moreFuncs = [
     {
       id: 'btnEdit',
@@ -102,8 +103,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
-          this.grvStationery=gv;
-          this.columnsGrid = [  
+          this.grvStationery = gv;
+          this.columnsGrid = [
             {
               headerText: gv['ResourceID'].headerText,
               template: this.resourceID,
@@ -129,7 +130,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
               template: this.note,
             },
             {
-              headerText: "Số lượng",//gv['Quantity'].headerText,
+              headerText: 'Số lượng', //gv['Quantity'].headerText,
               template: this.quantity,
             },
             {
@@ -137,7 +138,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
               template: this.owner,
             },
           ];
-          this.views = [            
+          this.views = [
             {
               type: ViewType.grid,
               sameData: true,
@@ -172,7 +173,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
     this.buttons = {
       id: 'btnAdd',
-    };   
+    };
 
     this.moreFunc = [
       {
@@ -215,32 +216,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  // addNew() {
-  //   this.view.dataService.addNew().subscribe((res: any) => {
-  //     let option = new SidebarModel();
-  //     let dataSelected = this.view.dataService.dataSelected;
-  //     option.Width = '800px';
-  //     option.FormModel = this.formModel;
-  //     option.DataService = this.view?.dataService;
-  //     this.dialog = this.callfc.openSide(
-  //       PopupAddStationeryComponent,
-  //       [dataSelected, true],
-  //       option
-  //     );
-  //     this.dialog.closed.subscribe((x) => {
-  //       if (x.event == null && this.view.dataService.hasSaved)
-  //         this.view.dataService
-  //           .delete([this.view.dataService.dataSelected])
-  //           .subscribe((x) => {
-  //             this.changeDetectorRef.detectChanges();
-  //           });
-  //       else if (x.event) {
-  //         x.event.modifiedOn = new Date();
-  //         this.view.dataService.update(x.event).subscribe();
-  //       }
-  //     });
-  //   });
-  // }
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
       let dataSelected = this.view.dataService.dataSelected;
