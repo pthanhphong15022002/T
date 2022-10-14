@@ -28,6 +28,18 @@
     </div>
     
   </ng-template>
+
+  <ng-template #statusCol let-data>
+    <codx-vll
+      [name]="'EP016'"
+      [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-square badge-md fs-7 p-2"
+      >
+      </codx-vll>
+    
+  </ng-template>
   
   <ng-template #ownerCol let-data>
     <div class="d-flex has-action-menu align-items-center">

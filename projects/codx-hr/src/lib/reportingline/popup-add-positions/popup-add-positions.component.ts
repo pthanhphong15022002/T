@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output } from '@angular/core';
-import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { HR_Positions } from '../../model/HR_Positions.module';
 
@@ -10,7 +10,7 @@ import { HR_Positions } from '../../model/HR_Positions.module';
 })
 export class PopupAddPositionsComponent implements OnInit {
   title = 'Thêm mới';
-  dialog: any;
+  dialogRef: any;
   isNew: boolean = true;
   user: any;
   functionID: string;
@@ -22,22 +22,22 @@ export class PopupAddPositionsComponent implements OnInit {
   constructor(
     private detectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
-    private authStore: AuthStore,
+    private auth: AuthService,
     private api: ApiHttpService,
     private reportingLine: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
   ) {
     this.action = dt.data;
-    this.dialog = dialog;
-    this.user = this.authStore.get();
-    this.functionID = this.dialog.formModel.funcID;
+    this.dialogRef = dialog;
+    this.functionID = this.dialogRef.formModel.funcID;
     this.data = dialog.dataService!.dataSelected;
     this.position = this.data;
   }
 
   ngOnInit(): void {
-
+    this.user = this.auth.userValue;
+    this.getParamerAsync(this.functionID);
     if (this.action === 'edit') {
       this.title = 'Chỉnh sửa';
       this.isNew = false;
@@ -47,39 +47,60 @@ export class PopupAddPositionsComponent implements OnInit {
     }
   }
 
-  // valueChange(e) {
-  //   switch (e.field) {
-  //     case "orgUnitID":
-  //       var value = e.data?.OrgUnitID;
-  //       this.position[e.field] = value;
-  //       this.position["departmentID"] = e.data?.OrgUnitType;
-  //       this.df.detectChanges();
-  //       break;
-  //     case "departmentID":
-  //       value = e.data?.DepartmentID;
-  //       break;
-  //     case "divisionID":
-  //       value = e.data?.DivisionID;
-  //       break;
-  //     case "companyID":
-  //       value = e.data?.CompanyID;
-  //       break;
-  //     case "reportTo":
-  //       value = e.data?.ReportTo;
-  //       break;
-  //     case "reportTo2":
-  //       value = e.data?.eportTo2;
-  //       break;
-  //     case "jobID":
-  //       value = e.data?.JobID;
-  //       break;
-  //     case "jobGroup":
-  //       value = e.data?.JobGroup;
-  //       break;
 
-  //   }
-  //   this.position[e.field] = value;
-  // }
+  paramaterHR:any = null;
+  getParamerAsync(funcID:string){
+    if(funcID)
+    {
+      this.api.execSv("SYS",
+      "ERM.Business.AD",
+      "AutoNumberDefaultsBusiness",
+      "GenAutoDefaultAsync",
+      [funcID])
+      .subscribe((res:any) => {
+        if(res)
+        {
+          console.log('paramaterHR: ',res);
+          this.paramaterHR = res;
+          if(this.paramaterHR.stop) return;
+          else
+          {
+            let funcID = this.dialogRef.formModel.funcID;
+            let entityName = this.dialogRef.formModel.entityName;
+            let fieldName = "PositionID";
+            if(funcID && entityName)
+            {
+              this.getDefaultPositionID(funcID,entityName,fieldName);
+            }
+          }
+        }
+      })
+    }
+  }
+  positionID:string = "";
+  getDefaultPositionID(funcID:string,entityName:string,fieldName:string,data:any = null)
+  {
+    if(funcID && entityName && fieldName){
+      this.api.execSv(
+        "SYS", 
+        "ERM.Business.AD",
+        "AutoNumbersBusiness",
+        "GenAutoNumberAsync",
+        [funcID, entityName, fieldName, null])
+        .subscribe((res:any) =>{
+          if(res)
+          {
+            this.positionID = res;
+            this.data.OrgUnitID = res;
+            this.detectorRef.detectChanges();
+          }
+        })
+    }
+    
+  }
+  valueChange(event:any){
+    
+  }
 
   dataChange(e: any, field: string) {
     if (e) {
@@ -109,12 +130,6 @@ export class PopupAddPositionsComponent implements OnInit {
   }
 
   OnSaveForm() {
-    //   this.dialog.dataService
-    //   .save((option: any) => this.beforeSave(option))
-    //   .subscribe((res) => {
-    //     this.dialog.close(res)
-    //   });
-    // this.detectorRef.detectChanges();
 
     this.api.exec("ERM.Business.HR", "PositionsBusiness", "UpdateAsync", [this.data, this.isNew]).subscribe(res => {
       if (res) {
@@ -125,21 +140,8 @@ export class PopupAddPositionsComponent implements OnInit {
           else {
             this.reportingLine.positionsComponent.updatePosition(res);
           }
-          // if (continune) {
-          //   if (this.isNew) {
-          //     this.dataBind = {};
-          //     this.api.exec('ERM.Business.HR', 'PositionsBusiness', 'GetAsync', "")
-          //       .subscribe((o: any) => {
-          //         if (!o) return;
-
-          //         this.dataBind = o;
-          //         this.detectorRef.detectChanges();
-          //       });
-          //   }
-          //   return;
-          // }
           this.Savechange.emit(res);
-          this.dialog.close(res);
+          this.dialogRef.close(res);
         }
         else {
           this.notiService.notify("Error");
@@ -150,18 +152,18 @@ export class PopupAddPositionsComponent implements OnInit {
 
   addPosition() {
     var t = this;
-    this.dialog.dataService.save((opt: any) => {
+    this.dialogRef.dataService.save((opt: any) => {
       opt.data = [this.position];
       return true;
     })
       .subscribe((res) => {
         if (res.save) {
-          this.dialog.close();
+          this.dialogRef.close();
         }
       });
   }
 
   closePanel() {
-    this.dialog.close()
+    this.dialogRef.close()
   }
 }

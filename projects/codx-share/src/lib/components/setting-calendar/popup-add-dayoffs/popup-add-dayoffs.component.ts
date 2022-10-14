@@ -81,7 +81,6 @@ export class PopupAddDayoffsComponent extends UIComponent {
         note: '',
       });
     } else {
-      debugger;
       this.dialogAddDayoffs.addControl('recID', new FormControl(''));
       this.dialogAddDayoffs.patchValue(this.data);
     }

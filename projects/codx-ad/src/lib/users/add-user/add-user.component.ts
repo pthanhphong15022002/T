@@ -10,6 +10,8 @@ import {
   EventEmitter,
   Injector,
   TemplateRef,
+  Pipe,
+  PipeTransform,
 } from '@angular/core';
 import {
   DialogData,
@@ -38,6 +40,7 @@ import { AnyRecordWithTtl } from 'dns';
 import { AD_Roles } from '../../models/AD_Roles.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 import { ContentTmp } from '../../models/contentTmp.model';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'lib-add-user',
@@ -49,7 +52,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
   @ViewChild('firstComment') firstComment: TemplateRef<any>;
-
   title = '';
   header = '';
   dialog!: DialogRef;
@@ -86,6 +88,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     private auth: AuthStore,
     private adService: CodxAdService,
     private notification: NotificationsService,
+    private sanitizer: DomSanitizer,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -109,7 +112,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       this.adUser.phone = '';
       this.adUser.email = '';
       this.adUser.employeeID = '';
-      this.adUser.buid = '';
+      this.adUser.buid = null;
       this.adUser.userName = '';
       if (this.dataCopy?.chooseRoles) {
         this.viewChooseRole = this.dataCopy?.chooseRoles;
@@ -167,7 +170,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
       }
     });
   }
-
   openPopup(item: any) {
     var formGroup = this.form.formGroup.controls;
     if (
@@ -264,6 +266,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   addUserTemp() {
     this.checkBtnAdd = true;
     var formGroup = this.form.formGroup.controls;
+    if (!this.adUser.buid) formGroup.buid.setValue(null);
     if (
       formGroup.userID.status == 'VALID' &&
       formGroup.userName.status == 'VALID' &&
@@ -274,6 +277,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .save((opt: any) => this.beforeSaveTemp(opt), 0)
         .subscribe((res) => {
           if (res.save) {
+            this.getHTMLFirstPost(this.adUser);
+            this.adService.createFirstPost(this.tmpPost).subscribe();
             this.imageUpload
               .updateFileDirectReload(res.save.userID)
               .subscribe((result) => {
@@ -336,6 +341,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.save) {
+          this.getHTMLFirstPost(this.adUser);
+          this.adService.createFirstPost(this.tmpPost).subscribe();
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
@@ -378,6 +385,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   onSave() {
     this.saveSuccess = true;
     var formGroup = this.form.formGroup.controls;
+    if (!this.adUser.buid) formGroup.buid.setValue(null);
     if (
       formGroup.userID.status == 'VALID' &&
       formGroup.userName.status == 'VALID' &&
@@ -407,23 +415,40 @@ export class AddUserComponent extends UIComponent implements OnInit {
           }
           this.notification.notifyCode('SYS006');
         }
-        this.getHTMLFirstPost(this.adUser);
-        this.adService.createFirstPost(this.tmpPost).subscribe();
       } else this.onUpdate();
     } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
-  url = '';
+  src = '';
+  url: any =
+    '<img src="/assets/themes/sys/default/img/Avatar_Default.svg" class="w-40px" alt="">';
+  htmlHaveUrl = '<img class="w-40px" src="{0}" alt="">';
   getHTMLFirstPost(data) {
-    // Util.stringFormat('', '')
-    this.url = this.imageUpload.data?.url;
+    this.src = this.imageUpload.data?.url;
     this.dataComment = data;
     var viewRef = this.firstComment.createEmbeddedView({ $implicit: '' });
     viewRef.detectChanges();
     let contentDialog = viewRef.rootNodes;
     let html = contentDialog[1] as HTMLElement;
+    /*Binding dữ liệu vào html*/
+    var urlTemp = '';
+    if (this.src) {
+      urlTemp = Util.stringFormat(this.htmlHaveUrl, this.src);
+      this.url = this.sanitizer.bypassSecurityTrustHtml(urlTemp);
+      this.url = this.url.changingThisBreaksApplicationSecurity;
+    }
+    var positionName = '';
+    if (this.dataComment?.positionName)
+      positionName = this.dataComment.positionName;
+    let HTMLParse = Util.stringFormat(
+      html.innerHTML,
+      this.url,
+      this.dataComment.userName,
+      positionName
+    );
+    /*Binding dữ liệu vào html*/
     this.tmpPost = {
-      content: html.innerHTML,
+      content: HTMLParse,
       approveControl: '0',
       category: '1',
       shareControl: '9',

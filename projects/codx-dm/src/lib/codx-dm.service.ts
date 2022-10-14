@@ -1572,6 +1572,7 @@ export class CodxDMService {
   }
 
   copyFileTo(id, fullName, toselectId) {
+    debugger
     var that = this;
     this.fileService
       .copyFile(id, fullName, toselectId, 1)
@@ -1591,18 +1592,15 @@ export class CodxDMService {
         }
 
         if (res.status == 6) {
-          let newNameMessage = this.titelRenamemessage.replace(
-            '{0}',
-            res.data.fileName
-          );
+          //let newNameMessage = this.titelRenamemessage.replace('{0}', res.data.fileName);
           var config = new AlertConfirmInputConfig();
           config.type = 'YesNo';
           this.notificationsService
-            .alert(this.title, res.data.fileName + newNameMessage, config)
+            .alert(this.title, res?.message, config)
             .closed.subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.fileService
-                  .copyFile(id, res.data.fileName, toselectId, 1)
+                  .copyFile(id, fullName, toselectId, 1,1)
                   .subscribe(async (item) => {
                     if (item.status == 0) {
                       let list = this.listFiles;

@@ -1,24 +1,32 @@
-<codx-form
-  #form
-  headerText="{{ title }}"
+<codx-form #form
   [body]="body"
-  [formModel]="dialog?.formModel"
+  [subHeader]="subheader"
+  [formModel]="dialogRef.formModel"
   [footer]="footer"
-  [dialog]="dialog"
+  [dialog]="dialogRef"
   [data]="data"
 >
+<ng-template #subheader>
+  <div class="w-100">
+    <div class="fw-bolder fs-1">
+      <codx-label [formModel]="dialogRef.formModel" name="lblHeader" [default]="'Thêm mới'"></codx-label>
+    </div>
+  </div>
+  
+</ng-template>
   <ng-template #body>
     <div class="row">
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            [formModel]="form.formModel!"
+            [formModel]="dialogRef.formModel!"
             fiedName="orgUnitID"
           ></codx-label>
           <codx-input
-            [formModel]="form.formModel!"
-            [disabled]="true"
-            [Group]="form.formGroup"
+            [formModel]="dialogRef.formModel!"
+            [disabled]="paramaterHR?.stop?false:true"
+            [crrValue]="orgUnitID"
+            (valueChange)="valueChange($event)"
             field="orgUnitID"
           ></codx-input>
         </div>
@@ -26,11 +34,11 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            [formModel]="form.formModel!"
+            [formModel]="dialogRef.formModel!"
             fiedName="orgUnitType"
           ></codx-label>
           <codx-input
-            [formModel]="form.formModel!"
+            [formModel]="dialogRef.formModel"
             [Group]="form.formGroup"
             field="orgUnitType"
           ></codx-input>
@@ -40,11 +48,11 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           fiedName="orgUnitName"
         ></codx-label>
         <codx-input
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           [Group]="form.formGroup"
           field="orgUnitName"
         ></codx-input>
@@ -53,11 +61,11 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           fiedName="parentID"
         ></codx-label>
         <codx-input
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           [Group]="form.formGroup"
           field="parentID"
         ></codx-input>
@@ -66,11 +74,11 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           fiedName="manager"
         ></codx-label>
         <codx-input
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           [Group]="form.formGroup"
           field="manager"
         ></codx-input>
@@ -79,11 +87,11 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           fiedName="manager2"
         ></codx-label>
         <codx-input
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           [Group]="form.formGroup"
           field="manager2"
         ></codx-input>
@@ -94,11 +102,11 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            [formModel]="form.formModel!"
+            [formModel]="dialogRef.formModel"
             fiedName="phone"
           ></codx-label>
           <codx-input
-            [formModel]="form.formModel!"
+            [formModel]="dialogRef.formModel"
             [Group]="form.formGroup"
             field="phone"
           ></codx-input>
@@ -107,11 +115,11 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label
-            [formModel]="form.formModel!"
+            [formModel]="dialogRef.formModel"
             fiedName="email"
           ></codx-label>
           <codx-input
-            [formModel]="form.formModel!"
+            [formModel]="dialogRef.formModel"
             [Group]="form.formGroup"
             field="email"
           ></codx-input>
@@ -121,11 +129,11 @@
     <div class="row">
       <div class="form-group">
         <codx-label
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           fiedName="street"
         ></codx-label>
         <codx-input
-          [formModel]="form.formModel!"
+          [formModel]="dialogRef.formModel"
           [Group]="form.formGroup"
           field="street"
         ></codx-input>

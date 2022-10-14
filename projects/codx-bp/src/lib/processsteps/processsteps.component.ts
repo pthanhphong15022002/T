@@ -66,6 +66,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   dataTreeProcessStep = [];
   urlBack = '/bp/processes/BPT1'  //gang tam
 
+//view file
+ 
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -317,4 +320,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   //#endregion
+  //view Temp
+ 
+ 
 }

@@ -264,11 +264,10 @@ export class EditFileComponent implements OnInit {
   }
 
   ngOnInit(): void {   
-    debugger;
-if(this.fileEditing.type == null)
-{
-  this.fileEditing.type = this.fileEditing.extension.replace('.', '');
-}
+    if(this.fileEditing.type == null)
+    {
+      this.fileEditing.type = this.fileEditing.extension.replace('.', '');
+    }
 /* if(this.fileEditing.language)
         {
           this.cache.valueList("L1473").subscribe(item=>{
@@ -392,7 +391,6 @@ if(this.fileEditing.type == null)
   }
   
   checkInputFile() {
-    debugger;
     return this.fileEditing.fileName === ""  ? true : false;
   } 
 
@@ -444,7 +442,6 @@ if(this.fileEditing.type == null)
   }  
 
   openRight(mode = 1, type = true) {
-    debugger;
     this.dmSV.dataFileEditing = this.fileEditing;
     this.callfc.openForm(RolesComponent, this.titleRolesDialog, 950, 650, "", [this.functionID], "").closed.subscribe(item => {
       if (item) {
@@ -583,7 +580,6 @@ if(this.fileEditing.type == null)
             this.fileEditing.author= "";
           break;
         case 'publishdate':
-          debugger;
           if ($event.data != null)
             this.fileEditing.publishDate = $event.data.fromDate;
             else
@@ -596,7 +592,6 @@ if(this.fileEditing.type == null)
             this.fileEditing.publisher = "";         
           break;
         case 'publishyear':
-          debugger;
           if ($event.data != null)
           this.fileEditing.publishYear = $event.data.fromDate;
           else
