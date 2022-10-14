@@ -27,6 +27,7 @@ import { Router } from '@angular/router';
 export class EpCardsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('avatarCol') avatarCol: TemplateRef<any>; 
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
+  @ViewChild('statusCol') statusCol: TemplateRef<any>;  
   funcID: string;
   viewType = ViewType;
   views: Array<ViewModel> = [];
@@ -91,36 +92,33 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             {
               field: 'resourceID',
               headerText: gv['ResourceID'].headerText,
-              width: gv['ResourceID'].width,
             },
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: gv['ResourceName'].width,
+              width:'20%',
             },
             {
               headerText: gv['Icon'].headerText,
-              width: gv['Icon'].width,
               template: this.avatarCol,
               textAlign: 'Center',
               headerTextAlign: 'Center',
+              width:'15%',
             },
             {
               field: 'status',
               headerText: gv['Status'].headerText,
-              width: gv['Status'].width,
+              textAlign: 'Center',
+              headerTextAlign: 'Center',
+              template: this.statusCol,
             },
             {
               field: 'note',
               headerText: gv['Note'].headerText,
-              width: gv['Note'].width,
             },
             {
               headerText: gv['Owner'].headerText,
-              //width:gv['Owner'].width,
-              width: 200,
               template: this.ownerCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [

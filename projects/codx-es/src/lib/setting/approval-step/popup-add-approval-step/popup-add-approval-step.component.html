@@ -48,8 +48,10 @@
         <codx-label fiedName="StepType" [formModel]="formModel"> </codx-label>
         <codx-input
           field="stepType"
-          [formModel]="formModel"
-          [Group]="dialogApprovalStep"
+          type="valuelist"
+          [crrValue]="this.data.stepType"
+          [refValue]="eSign == true ? 'ES002' : 'ES026'"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -70,7 +72,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-4" *ngIf="eSign == true">
       <div class="form-group">
         <codx-label fiedName="SignatureType" [formModel]="formModel">
         </codx-label>
@@ -186,7 +188,7 @@
       </ng-container>
     </div>
   </div>
-  <div class="d-flex align-items-center mb-4">
+  <div class="d-flex align-items-center mb-4" *ngIf="eSign == true">
     <codx-input
       #checkbox
       type="switch"

@@ -140,7 +140,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             (this.lstView.dataService as CRUDService)
               .add(data)
               .subscribe((res) => {
-                this.sortDataByDESC();
+                this.sortDataByDESC('drawer');
               });
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
@@ -154,7 +154,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             (this.lstView.dataService as CRUDService)
               .update(data)
               .subscribe((res) => {
-                this.sortDataByDESC();
+                this.sortDataByDESC('drawer');
               });
           }
           this.changeDetectorRef.detectChanges();
@@ -163,12 +163,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     });
   }
 
-  sortDataByDESC() {
+  sortDataByDESC(type = null) {
     if (this.lstView)
       this.lstView.dataService.data = this.lstView.dataService.data.sort(
         function (a, b) {
-          var dateA = new Date(a.modifiedOn).getTime();
-          var dateB = new Date(b.modifiedOn).getTime();
+          var dateA = new Date(type == null ? a.createdOn : a.modifiedOn).getTime();
+          var dateB = new Date(type == null ? b.createdOn : b.modifiedOn).getTime();
           return Number(b.isPin) - Number(a.isPin) || dateB - dateA;
         }
       );
@@ -176,12 +176,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.checkSortASC = false;
   }
 
-  sortDataByASC() {
+  sortDataByASC(type= null) {
     if (this.lstView)
       this.lstView.dataService.data = this.lstView.dataService.data.sort(
         function (a, b) {
-          var dateA = new Date(a.modifiedOn).getTime();
-          var dateB = new Date(b.modifiedOn).getTime();
+          var dateA = new Date(type == null ? a.createdOn : a.modifiedOn).getTime();
+          var dateB = new Date(type == null ? b.createdOn : b.modifiedOn).getTime();
           return Number(b.isPin) - Number(a.isPin) || dateA - dateB;
         }
       );
@@ -261,6 +261,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         data: this.lstView.dataService.data,
         itemUpdate: data,
         maxPinNotes: this.maxPinNotes,
+        component: 'note-drawer',
       };
       this.callfc.openForm(
         UpdateNotePinComponent,
@@ -308,9 +309,8 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         data,
       ])
       .subscribe((res) => {
-        // this.lstView?.dataService.setPredicate(this.predicate, [this.dataValue]).subscribe();
         if (res) {
-          var object = [{ data: res, type: 'edit' }];
+          var object = [{ data: res, type: 'edit-note-drawer' }];
           this.noteService.data.next(object);
           this.changeDetectorRef.detectChanges();
         }

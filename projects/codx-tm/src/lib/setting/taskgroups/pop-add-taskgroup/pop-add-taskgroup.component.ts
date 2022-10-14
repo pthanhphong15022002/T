@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
@@ -31,7 +32,7 @@ import { TM_TaskGroups } from '../../../models/TM_TaskGroups.model';
   templateUrl: './pop-add-taskgroup.component.html',
   styleUrls: ['./pop-add-taskgroup.component.css'],
 })
-export class PopAddTaskgroupComponent implements OnInit {
+export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   @Input() taskGroups = new TM_TaskGroups();
 
   @ViewChild('gridView') gridView: CodxGridviewComponent;
@@ -41,14 +42,13 @@ export class PopAddTaskgroupComponent implements OnInit {
   user: any;
   STATUS_TASK_GOAL = StatusTaskGoal;
   param: any;
-  paramModule: any;
   functionID: string;
   data: any;
   gridViewSetup: any;
   enableAddtodolist: boolean = false;
   listTodo: any;
   todoAddText: any;
-  title = 'Tạo mới công việc';
+  title = '';
   formName = '';
   gridViewName = '';
   gridViewSetUp: any;
@@ -62,6 +62,8 @@ export class PopAddTaskgroupComponent implements OnInit {
   listName = '';
   fieldValue = '';
   listCombobox = {};
+  showInput = true;
+  titleAction=''
 
   constructor(
     private authStore: AuthStore,
@@ -75,11 +77,32 @@ export class PopAddTaskgroupComponent implements OnInit {
   ) {
     this.data = dialog.dataService!.dataSelected;
     this.taskGroups = this.data;
-    this.action = dt.data;
     this.dialog = dialog;
+    this.action = dt.data[0];
+    this.titleAction = dt.data[1];
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+    this.api
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        [this.functionID, this.dialog.formModel.entityName]
+      )
+      .subscribe((res) => {
+        if (res && res.stop) {
+          this.showInput = false;
+          if(this.action=='add'|| this.action=='copy'){
+            this.data.taskGroupID ='' ;
+            this.taskGroups.taskGroupID =''
+          }
+        } else {
+          this.showInput = true;
+        }
+      });
   }
+  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     //   this.initForm();
@@ -99,23 +122,6 @@ export class PopAddTaskgroupComponent implements OnInit {
     this.changDetec.detectChanges();
     // this.openForm(this.taskGroups, false);
     this.getGridViewSetUp();
-  }
-
-  getParam(callback = null) {
-    this.api
-      .execSv<any>(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleWithCategoryAsync',
-        ['TMParameters', '1']
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.param = JSON.parse(res.dataValue);
-          this.paramModule = this.param;
-        }
-      });
   }
 
   onDeleteTodo(index) {
@@ -338,11 +344,8 @@ export class PopAddTaskgroupComponent implements OnInit {
   ];
 
   setTitle(e: any) {
-    if (this.action == 'add') {
-      this.title = 'Thêm ' + e;
-    } else if (this.action == 'edit') {
-      this.title = 'Sửa ' + e;
-    }
+    this.title =
+      this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     this.changDetec.detectChanges();
   }
 

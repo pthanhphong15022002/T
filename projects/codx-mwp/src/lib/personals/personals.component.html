@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="personal-container">
-        <div class="pw-menu d-flex">
+        <div class="pw-menu d-flex" *ngIf="moreFunc">
             <div *ngFor="let item of moreFunc">
                 <a (click)="getMenu(item.functionID, item.smallIcon)">
                     <div *ngIf="funcID == 'MWP009'">
@@ -80,6 +80,5 @@
         <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body" *ngIf="funcID == 'MWP0095'">
             <app-storage></app-storage>
         </div>
-
     </div>
 </div>

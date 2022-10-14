@@ -7,7 +7,7 @@
     <div class="form-group mt-3">
       <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm công việc">
       </codx-label>
-      <codx-input field="taskGroupID" [attr.disabled]="!data?.isNew() ? '' : null" type="text"
+      <codx-input field="taskGroupID"  type="text" [disabled]="showInput"
         [crrValue]="taskGroups.taskGroupID">
       </codx-input>
 

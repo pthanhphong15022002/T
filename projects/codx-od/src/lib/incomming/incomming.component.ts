@@ -158,6 +158,7 @@ export class IncommingComponent
   ngAfterViewInit(): void {
     this.views = [
       {
+        id:"1",
         type: ViewType.listdetail,
         active: true,
         sameData: true,
@@ -169,6 +170,7 @@ export class IncommingComponent
         },
       },
       {
+        id:"2",
         type: ViewType.kanban,
         active: false,
         sameData: false,

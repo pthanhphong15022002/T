@@ -87,242 +87,58 @@
   </div>
 </div>
 
-<ng-template #popupApprove let-dialog1>
-  <div class="codx-form card w-100 h-100 rounded-0 border-0">
-    <div class="card-header flex-column">
-      <div class="d-flex align-items-center justify-content-between w-100">
-        <div class="card-title">
-          <div class="d-flex flex-column">
-            {{ title }}
-            <!-- <codx-label
-              class="dialog-title line-clamp line-clamp-1"
-              name="lblProcessTemplate"
-              default="Quy trình mẫu"
-              [formModel]="formModel"
-            ></codx-label> -->
-          </div>
-        </div>
-        <div class="card-toolbar">
-          <button
-            type="button"
-            class="btn btn-flex text-dark-75 text-hover-primary px-0"
-            (click)="close(dialog1)"
-          >
-            <span class="icon-close icon-18"></span>
-          </button>
-        </div>
-      </div>
-      <div class="d-flex align-items-end justify-content-between w-100">
-        <div class="d-flex align-items-center w-100">
-          <span class="dialog-subheader">
-            {{ subTitle }}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="card-body h-300px">
-    <ng-container *ngTemplateOutlet="body1"></ng-container>
-  </div>
-  <div class="card-footer border-0">
-    <ng-container *ngTemplateOutlet="footer1"></ng-container>
-  </div>
-  <!-- <codx-form
-    #form
-    [headerText]="title"
-    [subHeaderText]="subTitle"
-    [body]="body1"
-    [footer]="footer1"
-    [dialog]="dialog"
-    [data]="approvalTrans"
-  > -->
-  <ng-template #body1>
-    <div class="reason form-group" *ngIf="mode != 1">
-      <codx-label
-        fiedName="ResourceName"
-        [formModel]="formModel"
-        default="Lí do"
-      >
-      </codx-label>
-      <codx-input
-        type="combobox"
-        [Group]="dialogSignFile"
-        [ControlName]="controlName"
-        [formModel]="formModel"
-      >
-      </codx-input>
-    </div>
-
-    <div class="note form-group">
-      <codx-label fiedName="Comment" [formModel]="formModel" default="Ghi chú">
-      </codx-label>
-      <codx-input
-        type="text"
-        ControlName="comment"
-        [Group]="dialogSignFile"
-        [formModel]="formModel"
-      >
-      </codx-input>
-    </div>
-
-    <div class="attachment" *ngIf="mode == 1">
-      <!-- <codx-attachment
-        #attachment
-        objectType="ES_SignFiles"
-        [objectId]="recID"
-        hideBtnSave="1"
-        hideFolder="1"
-        hideUploadBtn="0"
-        hideDes="1"
-        [functionID]="funcID"
-        type="inline"
-        (fileCount)="getfileCount($event)"
-      >
-      </codx-attachment> -->
-      <codx-attachment
-        #attachment
-        [objectType]="'ES_SignFiles'"
-        hideBtnSave="1"
-        hideFolder="1"
-        hideUploadBtn="1"
-        hideDes="1"
-        hideImageUpload="0"
-        hideImageThumb="1"
-        [functionID]="funcID"
-        [objectId]="sfRecID"
-        [allowMultiFile]="1"
-        [idBrowse]="'add'"
-      >
-      </codx-attachment>
-    </div>
-  </ng-template>
-
-  <ng-template #footer1>
-    <div
-      [class]="
-        mode == 1
-          ? 'justify-content-between d-flex'
-          : 'justify-content-end d-flex'
-      "
+<ng-template #popupOTPPin let-dialogOTPPin>
+  <div class="card card-flush h-100 p-4">
+    <button
+      type=" button"
+      class="position-absolute top-0 end-0 m-2 btn btn-icon"
+      data-bs-dismiss="alert"
+      (click)="close(dialogOTPPin)"
     >
-      <button
-        *ngIf="mode == 1"
-        type="button"
-        class="btn btn-primary"
-        (click)="popupUploadFile()"
-      >
-        <codx-label
-          name="lblAttachFiles"
-          default="Đính kèm"
-          [formModel]="formModel"
-        ></codx-label>
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="saveDialog1(dialog1)"
-      >
-        <codx-label
-          name="lblSave"
-          [default]="'OK'"
-          [formModel]="dialog.formModel"
-        ></codx-label>
-      </button>
-    </div>
-  </ng-template>
-  <!-- </codx-form> -->
-</ng-template>
-
-<ng-template #popupApprove1 let-dialog1>
-  <codx-form
-    #form
-    [headerText]="title"
-    [subHeaderText]="subTitle"
-    [body]="body"
-    [footer]="footer"
-    [dialog]="dialog"
-    [data]="approvalTrans"
-  >
-    <ng-template #body>
-      <div class="reason form-group" *ngIf="mode != 1">
-        <codx-label
-          fiedName="ResourceName"
-          [formModel]="formModel"
-          default="Lí do"
-        >
-        </codx-label>
-        <codx-input
-          type="combobox"
-          [Group]="dialogSignFile"
-          [ControlName]="controlName"
-          [formModel]="formModel"
-        >
-        </codx-input>
+      <span class="icon-close"></span>
+    </button>
+    <div class="card-body px-10">
+      <div class="d-flex align-items-start mb-4">
+        <h2>
+          <codx-label
+            name="lblInsertCode"
+            [formModel]="formModel"
+            default="Nhập mã xác nhận"
+          ></codx-label>
+        </h2>
       </div>
-
-      <div class="note form-group">
-        <codx-label fiedName="" [formModel]="formModel" default="Ghi chú">
-        </codx-label>
+      <div class="mw-100 mh-300px w-25 w-sm-50 mx-auto my-4">
+        <img
+          src="../assets/themes/es/default/img/amico.svg"
+          alt=""
+          class="img-fluid"
+        />
+      </div>
+      <div class="w-100">
         <codx-input
           type="text"
-          ControlName="comment"
-          [Group]="dialogSignFile"
-          [formModel]="formModel"
-        >
-        </codx-input>
+          field="otpPin"
+          [disabled]="false"
+          class="test-textbox"
+          [placeholder]="'Mã...'"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
       </div>
-
-      <div class="attachment" *ngIf="mode == 1">
-        <codx-attachment
-          #attachment
-          [objectType]="'ES_SignFiles'"
-          hideBtnSave="1"
-          hideFolder="1"
-          hideUploadBtn="1"
-          hideDes="1"
-          hideImageUpload="0"
-          hideImageThumb="1"
-          [functionID]="funcID"
-          [objectId]="sfRecID"
-          [allowMultiFile]="1"
-          [idBrowse]="'add'"
-        >
-        </codx-attachment>
-      </div>
-    </ng-template>
-
-    <ng-template #footer>
-      <div
-        [class]="
-          mode == 1
-            ? 'justify-content-between card-footer d-flex'
-            : 'justify-content-end card-footer d-flex'
-        "
-      >
+    </div>
+    <div class="card-footer px-10">
+      <div class="text-center mt-4">
         <button
-          *ngIf="mode == 1"
-          type="button"
-          class="btn btn-primary"
-          (click)="popupUploadFile()"
+          class="btn btn-primary w-100 my-2"
+          type="submit"
+          (click)="confirmOTPPin()"
         >
           <codx-label
-            name="lblAttachFiles"
-            default="Đính kèm"
+            name="lblConfirm"
             [formModel]="formModel"
-          ></codx-label>
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="saveDialog1(dialog1)"
-        >
-          <codx-label
-            name="lblSave"
-            default="OK"
-            [formModel]="dialog.formModel"
+            default="Xác nhận"
           ></codx-label>
         </button>
       </div>
-    </ng-template>
-  </codx-form>
+    </div>
+  </div>
 </ng-template>

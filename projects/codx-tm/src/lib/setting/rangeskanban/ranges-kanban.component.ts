@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@a
 import { NotificationsService } from 'codx-core';
 import { RequestOption } from 'codx-core';
 import { ButtonModel, DialogRef, SidebarModel, ViewModel, ViewsComponent, ViewType, CallFuncService } from 'codx-core';
+import { title } from 'process';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class RangesKanbanComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   dialog!: DialogRef;
-  orgData: any;
+  titleAction = ''
+
   columnsGrid = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -84,7 +86,7 @@ export class RangesKanbanComponent implements OnInit {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(AddEditComponent, 'add', option);
+      this.dialog = this.callfunc.openSide(AddEditComponent, ['add', this.titleAction], option);
       this.dialog.closed.subscribe((x) => {
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
@@ -97,14 +99,13 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   edit(data?) {
-    this.orgData = JSON.parse(JSON.stringify(data));
     this.view.dataService.dataSelected = data;
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(AddEditComponent, 'edit', option);
+      this.dialog = this.callfunc.openSide(AddEditComponent, ['edit', this.titleAction], option);
     });
   }
 
@@ -136,6 +137,7 @@ export class RangesKanbanComponent implements OnInit {
 
   //#region Events
   buttonClick(evt: ButtonModel) {
+    this.titleAction = evt?.text;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -144,6 +146,7 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   moreFuncClick(e: any, data?: any) {
+    this.titleAction = e?.text;
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);

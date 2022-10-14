@@ -49,7 +49,6 @@
   </div>
 </ng-template>
 
-
 <codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [entityName]="'OD_Dispatches'"
   [method]="'GetListByStatusAsync'" [assemblyName]="'OD'" [service]="'OD'" [className]="'DispatchesBusiness'"
   (selectedChange)="valueChange($event)" [selectedFirst]="true" idField="recID" (requestEnded)="requestEnded($event)" (viewChanged)="viewChange($event)">

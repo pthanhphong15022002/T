@@ -48,7 +48,7 @@ export class PopupAddDriversComponent
   fGroupAddDriver: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
-
+  grvDriver:any;
   CbxName: any;
   isAfterRender = false;
   returnData:any;
@@ -68,7 +68,17 @@ export class PopupAddDriversComponent
   }
 
   onInit(): void {
+    this.cache.gridViewSetup(this.formModel?.formName,this.formModel?.gridViewName)
+    .subscribe(res=>{
+      if(res){
+        this.grvDriver=res;
+        if(this.isAdd){
+          this.data.code=res?.Code?.headerText;
+        }
+      }
+    })
     this.initForm();
+    
   }
 
   ngAfterViewInit(): void {}
@@ -109,7 +119,7 @@ export class PopupAddDriversComponent
   }
 
   beforeSave(option: any) {
-    let itemData = this.fGroupAddDriver.value;
+    let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
@@ -122,23 +132,27 @@ export class PopupAddDriversComponent
     if (this.fGroupAddDriver.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddDriver, this.formModel);
       return;
-    }
-    if (this.fGroupAddDriver.value.category != 1) {
-      this.fGroupAddDriver.patchValue({companyID:null});
     }   
+    let index:any
+    if(this.isAdd){
+      index=0;
+    }
+    else{
+      index=null;
+    }
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),0)
+      .save((opt: any) => this.beforeSave(opt),index)
       .subscribe(async (res) => {
-        if (res) {          
+        if (res.save || res.update) {          
           if (!res.save) {
             this.returnData = res.update;
           } else {
             this.returnData = res.save;
           }
-          if(this.imageUpload)
+          if(this.imageUpload && this.returnData?.recID)
           {
             (await this.imageUpload
-            .updateFileDirectReload(this.returnData.recID))
+            .updateFileDirectReload(this.returnData?.recID))
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
@@ -146,17 +160,11 @@ export class PopupAddDriversComponent
                 //...
               }
             });
-          }          
-          if(this.isAdd){
-            //(this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
-          }
-          else{
-            (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
-          }          
+          }    
           this.dialogRef.close();
         }
         else{
-          this.notificationsService.notifyCode('SYS001');
+          
           return;
         }
       }); 

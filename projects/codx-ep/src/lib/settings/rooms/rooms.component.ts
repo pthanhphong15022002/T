@@ -31,11 +31,11 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('resourceNameCol') resourceNameCol: TemplateRef<any>;
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
-  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
+  @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  viewType = ViewType; 
+  viewType = ViewType;
   buttons: ButtonModel;
   //moreFuncs: Array<ButtonModel> = [];
   devices: any;
@@ -46,10 +46,10 @@ export class RoomsComponent extends UIComponent {
   isAdd = false;
   dialog!: DialogRef;
   vllDevices = [];
-  lstDevices = [];  
+  lstDevices = [];
   funcID: string;
   showToolBar = 'true';
-  roomEquipments=[];
+  roomEquipments = [];
 
   service = 'EP';
   assemblyName = 'EP';
@@ -59,50 +59,49 @@ export class RoomsComponent extends UIComponent {
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-  moreFunc:any;
-  funcIDName:any;
+  moreFunc: any;
+  funcIDName: any;
   afterViewInit = false;
-  popupTitle='';
-  grvRooms:any;
+  popupTitle = '';
+  grvRooms: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
-          
   }
 
   onInit(): void {
     //this.view.dataService.methodDelete = 'DeleteResourceAsync';
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
-        this.formModel = res;        
-        this.cache.functionList(this.funcID).subscribe(res => {
-          if (res) {            
+        this.formModel = res;
+        this.cache.functionList(this.funcID).subscribe((res) => {
+          if (res) {
             this.funcIDName = res.customName.toString().toLowerCase();
           }
         });
       }
     });
-    
+
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
-        device.text = item.text;       
+        device.text = item.text;
         this.roomEquipments.push(device);
         this.roomEquipments = JSON.parse(JSON.stringify(this.roomEquipments));
       });
-    });    
+    });
   }
 
   ngAfterViewInit(): void {
     this.buttons = {
       id: 'btnAdd',
-    };     
-        
+    };
+
     this.detectorRef.detectChanges();
   }
   onLoading(evt: any) {
@@ -111,48 +110,40 @@ export class RoomsComponent extends UIComponent {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
-          this.grvRooms=gv;
+          this.grvRooms = gv;
           this.columnGrids = [
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: 250,//gv['ResourceID'].width,
+              width:'20%',
               template: this.resourceNameCol,
             },
             {
               headerText: gv['Location'].headerText,
-              width: 250,//gv['Location'].width,
+              width: gv['Location'].width,
               field: 'location',
               template: this.locationCol,
-              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Equipments'].headerText,
-              width: 150,//gv['Equipments'].width,
+              width: 150, //gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
               headerTextAlign: 'Center',
               textAlign: 'Center',
-            },          
+            },
             {
               headerText: gv['Note'].headerText,
-              width: 250,//gv['Note'].width,
+              width: gv['Note'].width,
               field: 'note',
-              headerTextAlign: 'Center',           
             },
             {
               headerText: gv['Owner'].headerText,
-              //width:gv['Owner'].width,
-              width: 200,
               template: this.ownerCol,
-              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Preparator'].headerText,
-              //width:gv['Preparator'].width,
-              width: 200,
               template: this.preparatorCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [
@@ -163,23 +154,23 @@ export class RoomsComponent extends UIComponent {
               model: {
                 resources: this.columnGrids,
               },
-            },            
+            },
           ];
           this.detectorRef.detectChanges();
         });
     }
   }
-  openPopupDevice(template: any,lstEquipments? ) {    
-    this.roomEquipments.forEach(element => {
-      element.isSelected=false;
+  openPopupDevice(template: any, lstEquipments?) {
+    this.roomEquipments.forEach((element) => {
+      element.isSelected = false;
     });
-    this.roomEquipments.forEach(element => {
-      lstEquipments.forEach(item=>{
-        if(element.id==item.equipmentID){
-          element.isSelected=true;
+    this.roomEquipments.forEach((element) => {
+      lstEquipments.forEach((item) => {
+        if (element.id == item.equipmentID) {
+          element.isSelected = true;
         }
-      })
-    });   
+      });
+    });
 
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
@@ -187,19 +178,18 @@ export class RoomsComponent extends UIComponent {
 
   clickMF(event, data) {
     console.log(event);
-    this.popupTitle=event?.text + " " + this.funcIDName;      
+    this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
-      case 'SYS03':        
+      case 'SYS03':
         this.edit(data);
         break;
       case 'SYS02':
         this.delete(data);
         break;
-
     }
   }
   click(evt: ButtonModel) {
-    this.popupTitle=evt?.text + " " + this.funcIDName;  
+    this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -222,9 +212,14 @@ export class RoomsComponent extends UIComponent {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddRoomsComponent,
-        [this.dataSelected, true,this.popupTitle],
+        [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe(res=>{
+        if(res){
+          this.view.dataService.update(res).subscribe();
+        }
+      })
     });
   }
 
@@ -241,7 +236,7 @@ export class RoomsComponent extends UIComponent {
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddRoomsComponent,
-            [this.view.dataService.dataSelected, false,this.popupTitle],
+            [this.view.dataService.dataSelected, false, this.popupTitle],
             option
           );
         });
@@ -252,18 +247,18 @@ export class RoomsComponent extends UIComponent {
     this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.view.dataService.delete([obj], true).subscribe((res) => {
-        if (res) {          
+        if (res) {
           this.api
-          .execSv(
-            'DM',
-            'ERM.Business.DM',
-            'FileBussiness',
-            'DeleteByObjectIDAsync',
-            [obj.recID, 'EP_Rooms', true]
-          )
-          .subscribe();
-        this.detectorRef.detectChanges();
-      }
+            .execSv(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'DeleteByObjectIDAsync',
+              [obj.recID, 'EP_Rooms', true]
+            )
+            .subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
     }
   }
