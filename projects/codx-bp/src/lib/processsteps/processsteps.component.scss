@@ -65,6 +65,17 @@
     .step-warning{
         border-left-color:#FFA800;
     }
+
+    .step-items{  //thêm cho dễ test- sau này mấy chị làm đẹp giúp em !!
+        background-color: rgb(228, 238, 236);
+        border: 1px solid #e4e4e7;
+        border-left-width: 4px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 0px 3px 3px 0px;
+        box-shadow: none;
+    }
+    
     
 }
 .kanban-board {

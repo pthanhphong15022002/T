@@ -714,7 +714,7 @@ export class HomeComponent extends UIComponent {
           icon: this.sys025?.datas[4].icon,
           text: this.sys025?.datas[4].text,
           type: ViewType.tree_smallcard,
-          //active: false,
+          active: false,
           sameData: true,
           model: {
             template: this.templateMain,
@@ -797,7 +797,7 @@ export class HomeComponent extends UIComponent {
             resizable: false,
           }
         }];
-  
+      this.viewActive = this.views.filter(x=>x.active == true)[0];
       this.codxview.dataService.parentIdField = 'parentId';
       this.dmSV.formModel = this.view.formModel;
       this.dmSV.dataService = this.view?.currentView?.dataService;
@@ -957,7 +957,7 @@ export class HomeComponent extends UIComponent {
       if (item.text == "Search")
         item.hide = false;
     });
-    this.fileService.searchFileAdv(this.textSearchAll, this.predicates, this.values, this.dmSV.page, this.dmSV.pageSize, this.searchAdvance).subscribe(item => {
+    this.fileService.searchFile(this.textSearchAll, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
       if (item != null) {
         if(!isScroll)
         {
@@ -1059,9 +1059,10 @@ export class HomeComponent extends UIComponent {
       this.predicates = "FileName.Contains(@0)";
       this.values = this.textSearch;
       this.searchAdvance = false;
-      this.viewActive = this.views.filter(x=>x.active == true)[0];
+     
       if(this.textSearch == null || this.textSearch == "")
       {
+       debugger
         this.views.forEach(item => {
           item.active = false;
           item.hide = false;

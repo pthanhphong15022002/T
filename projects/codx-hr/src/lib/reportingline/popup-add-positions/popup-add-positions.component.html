@@ -48,8 +48,14 @@ subHeaderText=""
                     <div class="form-group">
                         <codx-label fiedName="JobID" default="Nhóm chức danh">
                         </codx-label>
-                        <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="position?.jobID"
-                            field="jobID" refValue="jobID" service="HR" (valueChange)="dataChange($event, 'JobID')"
+                        <codx-input 
+                            type="combobox" 
+                            class="form-control borderless p-0" 
+                            [crrValue]="position?.jobID"
+                            field="jobID" 
+                            refValue="jobID" 
+                            service="HR" 
+                            (valueChange)="dataChange($event, 'JobID')"
                             ngDefaultControl loadFull="true">
                         </codx-input>
                     </div>

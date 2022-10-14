@@ -69,7 +69,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   groupStationery;
   lstStationery;
 
-  groupID: string = '0';
+  groupID: string;
 
   dialogAddBookingStationery: FormGroup;
 
@@ -106,6 +106,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     });
 
     this.initForm();
+    this.filterStationery();
   }
 
   ngAfterViewInit() {
@@ -171,10 +172,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
   //#region cart
 
   addCart(event, data) {
-    // let tmpResource = new tempResources();
-    // tmpResource = { ...data };
+    let tmpResource ;
+    tmpResource = { ...data };
 
-    // let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
+    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
     // if (isPresent) {
     //   this.cart.filter((item: tempResources) => {

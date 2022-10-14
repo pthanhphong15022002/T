@@ -9,10 +9,12 @@ import {
 import { ELEMENTS } from '@syncfusion/ej2-angular-inplace-editor';
 import {
   ApiHttpService,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 
 @Component({
@@ -21,7 +23,7 @@ import {
   styleUrls: ['./edit-skill.component.css'],
 })
 export class EditSkillComponent implements OnInit {
-  dialog: any;
+  dialogRef: any;
   title = 'Chỉnh sửa kỹ năng';
   minType = 'MinRange';
   skillEmployee: any;
@@ -38,13 +40,14 @@ export class EditSkillComponent implements OnInit {
   employeeID:String = "";
   constructor(
     private notifiSV: NotificationsService,
+    private cache: CacheService,
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private df: ChangeDetectorRef,
     @Optional() dialogRef?: DialogRef,
     @Optional() dialog?: DialogData
   ) {
-    this.dialog = dialog;
+    this.dialogRef = dialogRef;
     this.skillEmployee = dialog?.data.skill;
     this.employeeID = dialog?.data.employeeID;
   }
@@ -76,24 +79,28 @@ export class EditSkillComponent implements OnInit {
       .subscribe((o: any) => {
         console.log(o);
       });
-    this.dialog.close(this.skillEmployee);
+    this.dialogRef.close(this.skillEmployee);
   }
 
   popupAddSkill() {
     this.showCBB = true;
     this.df.detectChanges();
   }
-
   addSkill(event: any) {
     if(!event || !event?.dataSelected) return;
+    let data = event.dataSelected;
     let skills = [];
-    if(this.skillEmployee && this.skillEmployee?.length > 0 ){
-      event.dataSelected.map((element:any) =>  {
+    if(this.skillEmployee && this.skillEmployee.length > 0 ){
+      data.map((element:any) =>  {
         let isExsitElement = this.skillEmployee.some(x => x.competenceID == element.CompetenceID)
          if(!isExsitElement){
-          skills.push(element);
+          skills.push(element.CompetenceID);
          }
       });
+    }
+    else
+    {
+      data.map((e:any) => skills.push(e.CompetenceID));
     }
     if(skills.length > 0)
     {
@@ -107,11 +114,16 @@ export class EditSkillComponent implements OnInit {
           if(res)
           {
             this.notifiSV.notifyCode("SYS006");
+            this.dialogRef.close(skills);
           }
           else{
             this.notifiSV.notifyCode("SYS023");
           }
         });
+    }
+    else
+    {
+      this.notifiSV.notifyCode("SYS023");
     }
   }
 
