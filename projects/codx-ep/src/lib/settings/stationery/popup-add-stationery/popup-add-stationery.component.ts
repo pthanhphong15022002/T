@@ -39,21 +39,15 @@ export class PopupAddStationeryComponent extends UIComponent {
   tabInfo: any[] = [
     {
       icon: 'icon-info',
-      text: 'Thông tin chung',
-      subName: 'Thông tin chi tiết của VPP',
-      name: 'tabGeneralInfo',
+      name: 'lblGeneralInfo',
     },
     {
       icon: 'icon-person_add_alt_1',
-      text: 'Định mức sử dụng',
-      subName: 'Định mức khi đặt VPP',
-      name: 'tabQuotaInfo',
+      name: 'lblQuotaInfo',
     },
     {
       icon: 'icon-tune',
-      text: 'Thông tin khác',
-      subName: 'Thông tin tham chiếu',
-      name: 'tabMoreInfo',
+      name: 'lblMoreInfo',
     },
   ];
   data: any = {};
@@ -111,12 +105,11 @@ export class PopupAddStationeryComponent extends UIComponent {
   onSaveForm() {
     this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
-    let index:any
-    if(this.isAdd){
-      index=0;
-    }
-    else{
-      index=null;
+    let index: any;
+    if (this.isAdd) {
+      index = 0;
+    } else {
+      index = null;
     }
     this.dialog.dataService
     .save((opt: any) => this.beforeSave(opt),index)
