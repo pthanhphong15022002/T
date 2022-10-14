@@ -31,6 +31,7 @@ export class AddEditComponent implements OnInit {
     formName: 'RangeLines',
     gridViewName: 'grvRangeLines',
   };
+  showInput= true ;
 
   constructor(
     private api: ApiHttpService,
@@ -46,6 +47,23 @@ export class AddEditComponent implements OnInit {
     this.lines = this.master.rangeLines || [];
     this.action = dialogData.data;
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
+
+    this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'AutoNumberDefaultsBusiness',
+      'GetFieldAutoNoAsync',
+      [this.dialog.formModel.funcID, this.dialog.formModel.entityName]
+    )
+    .subscribe((res) => {
+      if (res && res.stop) {
+        this.showInput = false;
+        this.master.rangeID ='' ;
+      } else {
+        this.showInput = true;
+      }
+    });
   }
   //#region Init
   ngOnInit(): void { }
