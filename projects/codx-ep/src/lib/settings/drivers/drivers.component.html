@@ -101,8 +101,9 @@
   
 </ng-template>  
 <ng-template #noteCol let-data>  
-  <div class="has-action-menu">
-    <span>{{data?.note}}</span>
+  <div class="has-action-menu d-flex align-items-center">
+    <span>{{data?.note}}</span>    
+    <span>&nbsp;</span>
     <codx-mfunc
       [dataItem]="data"
       [formModel]="formModel"
