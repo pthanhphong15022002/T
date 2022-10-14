@@ -11,6 +11,7 @@ import {
   NotificationsService,
   CodxService,
   DialogData,
+  RequestOption,
 } from 'codx-core';
 import { RangeLine } from '../../../models/task.model';
 
@@ -25,6 +26,7 @@ export class AddEditComponent implements OnInit {
   title = 'Thêm khoảng thời gian';
   action = 'add';
   master: any;
+  orgData: any;
   dialog: DialogRef;
   dialogRangeLine: DialogRef;
   formModelRangeLine: FormModel = {
@@ -43,19 +45,38 @@ export class AddEditComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.master = dialog.dataService!.dataSelected;
+    this.orgData = JSON.parse(JSON.stringify(this.master));
     this.lines = this.master.rangeLines || [];
     this.action = dialogData.data;
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
   }
   //#region Init
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.dialog.beforeClose.subscribe(res => {
+      if (res.event == null && this.action == 'edit') {
+        this.master.rangeName = this.orgData.rangeName;
+        this.master.note = this.orgData.note
+      }
+    })
+  }
   //#endregion
   //#region master
   onSave() {
-    this.dialog.dataService.save().subscribe((res) => {
+    this.dialog.dataService.save((opt: RequestOption) => {
+      opt.service = "BS";
+      opt.assemblyName = "BS";
+      opt.className = "RangesBusiness";
+      if (this.action == "add")
+        opt.methodName = "AddAsync";
+      else
+        opt.methodName = "UpdateAsync";
+
+      opt.data = this.dialog.dataService.dataSelected;
+      return true
+    }).subscribe((res) => {
       if (res && !res.error) {
         this.dialog.dataService.hasSaved = false;
-        this.dialog.close();
+        this.dialog.close(true);
       }
     });
   }
@@ -94,7 +115,7 @@ export class AddEditComponent implements OnInit {
           this.lines.push(res);
           this.master.rangeLines = this.lines;
           this.line = new RangeLine();
-          dialog.close();
+          dialog.close(true);
         }
       });
   }
@@ -104,9 +125,12 @@ export class AddEditComponent implements OnInit {
       .exec<any>('BS', 'RangeLinesBusiness', 'UpdateAsync', this.line)
       .subscribe((res) => {
         if (res) {
-          this.lines.push(res);
+          let idx = this.lines.findIndex(x => x.id == this.line.id);
+          if (idx > -1)
+            this.lines[idx] = this.line;
           this.line = new RangeLine();
-          dialog.close();
+          this.master.rangeLines = this.lines;
+          dialog.close(true);
         }
       });
   }

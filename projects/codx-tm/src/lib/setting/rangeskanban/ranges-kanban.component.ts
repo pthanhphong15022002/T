@@ -21,7 +21,7 @@ export class RangesKanbanComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   dialog!: DialogRef;
-
+  orgData: any;
   columnsGrid = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -97,6 +97,7 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   edit(data?) {
+    this.orgData = JSON.parse(JSON.stringify(data));
     this.view.dataService.dataSelected = data;
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
       let option = new SidebarModel();

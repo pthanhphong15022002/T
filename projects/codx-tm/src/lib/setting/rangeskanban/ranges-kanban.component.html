@@ -1,50 +1,83 @@
-<codx-views #view entityName="BS_Ranges" service="BS" assemblyName="ERM.Business.BS" className="RangesBusiness"
-  method="GetListRangesKanbanAsync" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
-  (viewChanged)="changeView($event)" (buttonClick)="buttonClick($event)" (selectedChange)="selectedChange($event)"
-  idField="rangeID" [selectedFirst]="true" [autoLoad]="true">
+<codx-views
+  #view
+  entityName="BS_Ranges"
+  service="BS"
+  assemblyName="ERM.Business.BS"
+  className="RangesBusiness"
+  method="GetListRangesKanbanAsync"
+  [views]="views"
+  [button]="button"
+  [moreFuncs]="moreFuncs"
+  (viewChanged)="changeView($event)"
+  (buttonClick)="buttonClick($event)"
+  (selectedChange)="selectedChange($event)"
+  idField="rangeID"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+>
 </codx-views>
 
 <ng-template #grid let-data>
   <tr>
     <td class="rowphoto">
-      {{data.rangeID}}
+      {{ data.rangeID }}
     </td>
     <td class="rowphoto">
       <div [ngbTooltip]="data.rangeName">
-        {{data.rangeName}}
+        {{ data.rangeName }}
       </div>
-
     </td>
     <td class="rowphoto">
       <!-- <div [innerHTML]="data.note" placement="left" [ngbTooltip]="data.note">
       </div> -->
-      <div [innerHTML]="data.note" placement="left" [ngbTooltip]="data.note">
-      </div>
+      <div
+        [innerHTML]="data.note"
+        placement="left"
+        [ngbTooltip]="data.note"
+      ></div>
     </td>
     <td class="rowphoto">
       <div *ngFor="let h of data?.rangeLines; let i = index">
-        <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
+        <li *ngIf="i < 3 || data.disableReadmore">{{ h?.breakName }}</li>
       </div>
-      <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue"
-          (click)="readMore(data)">{{
-          !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+      <div *ngIf="data.rangeLines?.length > 3">
+        <a
+          class="text-35-italic"
+          style="color: blue"
+          (click)="readMore(data)"
+          >{{ !data.disableReadmore ? "Read More ..." : "... Read Less" }}</a
+        >
+      </div>
     </td>
     <td class="rowphoto">
-      <div class="d-flex align-items-center" #itemCreateBy>
-        <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="data.createdBy" objectType="AD_Users"
-          width="25">
+      <div class="d-flex align-items-center" #item.createBy>
+        <codx-img
+          class="symbol symbol-24 symbol-circle me-3"
+          [objectId]="data.createdBy"
+          objectType="AD_Users"
+          width="25"
+        >
         </codx-img>
-        <div class="text-dark font-size-lg" placement="left" style="margin-left: 20px;">
-          {{data.createName}}
+        <div
+          class="text-dark font-size-lg"
+          placement="left"
+          style="margin-left: 20px"
+        >
+          {{ data.createdName }}
         </div>
       </div>
     </td>
     <td class="rowphoto">
-      {{data.createdOn | date: 'dd/MM/yyyy'}}
+      {{ data.createdOn | date: "dd/MM/yyyy" }}
     </td>
     <td class="rowphoto">
-      <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
-        (clickMF)="moreFuncClick($event,data)" [dataItem]="data">
+      <codx-mfunc
+        [formModel]="view.formModel"
+        [isBookMark]="true"
+        [itemSelected]="itemSelected"
+        (clickMF)="moreFuncClick($event, data)"
+        [dataItem]="data"
+      >
       </codx-mfunc>
     </td>
   </tr>
@@ -52,88 +85,136 @@
 
 <ng-template #itemRangeID let-data>
   <div class="padding">
-    <codx-label fiedName="RangeID" formName="RangesKanban" gridViewName="grvRangesKanban" default="Mã">
+    <codx-label
+      fiedName="RangeID"
+      formName="RangesKanban"
+      gridViewName="grvRangesKanban"
+      default="Mã"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemRangeName let-data>
   <div class="padding">
-    <codx-label fiedName="RangeName" formName="RangesKanban" gridViewName="grvRangesKanban" default="Mô tả">
+    <codx-label
+      fiedName="RangeName"
+      formName="RangesKanban"
+      gridViewName="grvRangesKanban"
+      default="Mô tả"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemNote let-data>
   <div class="padding">
-    <codx-label fiedName="Note" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ghi chú">
+    <codx-label
+      fiedName="Note"
+      formName="RangesKanban"
+      gridViewName="grvRangesKanban"
+      default="Ghi chú"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemRange let-data>
   <div class="padding">
-    <codx-label fiedName="RangeID" formName="RangesKanban" gridViewName="grvRangesKanban" default="Khoảng thời gian">
+    <codx-label
+      fiedName="RangeID"
+      formName="RangesKanban"
+      gridViewName="grvRangesKanban"
+      default="Khoảng thời gian"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemCreatedBy let-data>
   <div class="padding">
-    <codx-label fiedName="CreatedBy" formName="RangesKanban" gridViewName="grvRangesKanban" default="Người tạo">
+    <codx-label
+      fiedName="CreatedBy"
+      formName="RangesKanban"
+      gridViewName="grvRangesKanban"
+      default="Người tạo"
+    >
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemCreatedOn let-data>
   <div class="padding">
-    <codx-label fiedName="CreatedOn" formName="RangesKanban" gridViewName="grvRangesKanban" default="Ngày tạo">
+    <codx-label
+      fiedName="CreatedOn"
+      formName="RangesKanban"
+      gridViewName="grvRangesKanban"
+      default="Ngày tạo"
+    >
     </codx-label>
   </div>
 </ng-template>
 
-
 <ng-template #itemListReadmore let-data>
   <div *ngFor="let h of data?.rangeLines; let i = index">
-    <li *ngIf=" (i<3 || data.disableReadmore) ">{{h?.breakName}}</li>
+    <li *ngIf="i < 3 || data.disableReadmore">{{ h?.breakName }}</li>
   </div>
-  <div *ngIf="data.rangeLines?.length > 3"> <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
-      !data.disableReadmore ? 'Read More ...': '... Read Less' }}</a></div>
+  <div *ngIf="data.rangeLines?.length > 3">
+    <a class="text-35-italic" style="color: blue" (click)="readMore(data)">{{
+      !data.disableReadmore ? "Read More ..." : "... Read Less"
+    }}</a>
+  </div>
 </ng-template>
 
 <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
-    <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
+    <codx-img
+      class="symbol symbol-24 symbol-circle me-3"
+      [objectId]="dataItem.createdBy"
+      objectType="AD_Users"
+    >
     </codx-img>
-    <div class="text-dark font-size-lg" placement="bottom" style="margin-left: 20px;">
-      {{dataItem.createName}}
+    <div
+      class="text-dark font-size-lg"
+      placement="bottom"
+      style="margin-left: 20px"
+    >
+      {{ dataItem.createName }}
     </div>
   </div>
 </ng-template>
 
 <ng-template #itemCreate let-data>
-  {{data.createdOn | date: 'dd/MM/yyyy'}}
+  {{ data.createdOn | date: "dd/MM/yyyy" }}
 </ng-template>
 
 <ng-template #itemNote let-data>
-  <div [innerHTML]="data.note">
-  </div>
+  <div [innerHTML]="data.note"></div>
 </ng-template>
 
 <ng-template #moreFun let-data>
   <div>
-    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" [isBookMark]="true" [itemSelected]="itemSelected"
-      (clickMF)="moreFuncClick($event,data)">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      [isBookMark]="true"
+      [itemSelected]="itemSelected"
+      (clickMF)="moreFuncClick($event, data)"
+    >
     </codx-mfunc>
   </div>
 </ng-template>
 
-
-
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template border-bottom px-2 py-3" (clickMF)="moreFuncClick($event,data)"
-    [title]="data.rangeName" [desc2]="data.memo" [formModel]="view.formModel" [imageId]="data.createdBy"
-    imageObjType="AD_Users">
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 py-3"
+    (clickMF)="moreFuncClick($event, data)"
+    [title]="data.rangeName"
+    [desc2]="data.memo"
+    [formModel]="view.formModel"
+    [imageId]="data.createdBy"
+    imageObjType="AD_Users"
+  >
     <!-- icoSubTitleCss="icon-assignment" [subTitle]="data.positionName" 1;fa fa-flag-o;2;fa fa-flag-o;3;fa fa-flag-o-->
   </codx-temp-full>
 </ng-template>
