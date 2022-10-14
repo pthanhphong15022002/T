@@ -215,6 +215,11 @@ export class RoomsComponent extends UIComponent {
         [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe(res=>{
+        if(res){
+          this.view.dataService.update(res).subscribe();
+        }
+      })
     });
   }
 
