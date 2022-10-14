@@ -63,6 +63,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   fieldValue = '';
   listCombobox = {};
   showInput = true;
+  titleAction=''
 
   constructor(
     private authStore: AuthStore,
@@ -77,7 +78,8 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     this.data = dialog.dataService!.dataSelected;
     this.taskGroups = this.data;
     this.dialog = dialog;
-    this.action = dt.data;
+    this.action = dt.data[0];
+    this.titleAction = dt.data[1];
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
     this.api
@@ -342,11 +344,8 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   ];
 
   setTitle(e: any) {
-    if (this.action == 'add') {
-      this.title = 'Thêm ' + e;
-    } else if (this.action == 'edit') {
-      this.title = 'Sửa ' + e;
-    }
+    this.title =
+      this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     this.changDetec.detectChanges();
   }
 
