@@ -32,6 +32,7 @@ export class AddEditComponent implements OnInit {
     gridViewName: 'grvRangeLines',
   };
   showInput= true ;
+  rangID
 
   constructor(
     private api: ApiHttpService,
@@ -59,7 +60,6 @@ export class AddEditComponent implements OnInit {
     .subscribe((res) => {
       if (res && res.stop) {
         this.showInput = false;
-        this.master.rangeID ='' ;
       } else {
         this.showInput = true;
       }
