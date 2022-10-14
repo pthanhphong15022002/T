@@ -278,7 +278,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     if (isAddMode == false) {
       this.isAddMode = false;
       this.taskGroups = new TM_TaskGroups();
-      this.title = 'Chỉnh sửa nhóm công việc';
+      // this.title = 'Chỉnh sửa nhóm công việc';
       this.api
         .execSv<any>(
           'TM',
