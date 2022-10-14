@@ -114,6 +114,7 @@ export class TaskGroupComponent extends UIComponent
     fontWeight: 400,
     lineHeight: 1.4,
   };
+  titleAction=''
 
   onInit(): void {
     this.columnsGrid = [
@@ -159,6 +160,7 @@ export class TaskGroupComponent extends UIComponent
   }
 
   clickMF(e: any, data?: any) {
+    this.titleAction = e?.text
     switch (e.functionID) {
       case 'btnAdd':
         this.add();
@@ -224,6 +226,7 @@ export class TaskGroupComponent extends UIComponent
 
   //#region Events
   buttonClick(evt: ButtonModel) {
+    this.titleAction = evt?.text
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -266,7 +269,7 @@ export class TaskGroupComponent extends UIComponent
       option.Width = 'Auto';
       this.dialog = this.callfunc.openSide(
         PopAddTaskgroupComponent,
-        'add',
+        ['add',this.titleAction],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -306,7 +309,7 @@ export class TaskGroupComponent extends UIComponent
         option.Width = '800px';
         this.dialog = this.callfunc.openSide(
           PopAddTaskgroupComponent,
-          'edit',
+          ['edit',this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {

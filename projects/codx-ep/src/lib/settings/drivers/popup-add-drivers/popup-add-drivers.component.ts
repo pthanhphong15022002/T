@@ -149,25 +149,30 @@ export class PopupAddDriversComponent
           } else {
             this.returnData = res.save;
           }
-          if(this.imageUpload && this.returnData?.recID)
+          if(this.returnData?.recID)
           {
-            (await this.imageUpload
-            .updateFileDirectReload(this.returnData?.recID))
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-                //xử lí nếu upload ảnh thất bại
-                //...
-              }
-            });
-          }    
-          this.dialogRef.close();
+            if(this.imageUpload?.imageUpload?.item) {
+              this.imageUpload
+              .updateFileDirectReload(this.returnData.recID)
+              .subscribe((result) => {
+                if (result) {
+                  this.dialogRef && this.dialogRef.close(this.returnData);
+                  //xử lí nếu upload ảnh thất bại
+                  //...                
+                }
+              });  
+            }          
+            else 
+            {
+              this.dialogRef && this.dialogRef.close(this.returnData);
+            }
+          } 
         }
-        else{
-          
+        else{ 
+          //Trả lỗi từ backend.         
           return;
         }
-      }); 
+      });
   }
   
   changeCategory(event:any){

@@ -219,9 +219,21 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddCarsComponent,
-        [this.dataSelected, true,this.popupTitle],
+        [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
     });
   }
 
@@ -238,9 +250,16 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddCarsComponent,
-            [this.view.dataService.dataSelected, false,this.popupTitle],
+            [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );
+          );    
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {
+              });
+            }
+          });     
         });
     }
   }
