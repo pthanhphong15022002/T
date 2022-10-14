@@ -47,22 +47,16 @@ export class PopupAddBookingCarComponent extends UIComponent {
       icon: 'icon-info',
       text: 'Thông tin chung',
       name: 'tabGeneralInfo',
-      subName: 'Thông tin chung',
-      subText: 'Thông tin chung',
     },
     {
       icon: 'icon-person_outline',
       text: 'Người tham dự',
       name: 'tabPeopleInfo',
-      subName: 'Thành viên tham gia',
-      subText: 'Thành viên tham gia',
     },
     {
       icon: 'icon-tune',
       text: 'Thông tin khác',
       name: 'tabMoreInfo',
-      subName: 'Thông tin tham chiếu',
-      subText: 'Thông tin tham chiếu',
     },
   ];
   returnData:any;
