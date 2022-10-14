@@ -61,10 +61,7 @@
             </codx-input>
           </div>
           <div class="form-group col-4">
-            <codx-label
-              fiedName="ResourceID"
-              [formModel]="form.formModel"
-            >
+            <codx-label fiedName="ResourceID" [formModel]="form.formModel">
             </codx-label>
 
             <codx-input
@@ -114,13 +111,13 @@
           <div *ngIf="data?.recID" class="upload-img">
             <codx-img
               #imageUpLoad
-              width="150"
+              [width]="100"
               imageType="square"
               [objectType]="formModel?.entityName"
-              [objectId]="data?.recID"
-              aria-disabled="true"
-              [funcId]="form.formModel?.funcID"
+              aria-disabled="false"
+              [funcId]="formModel?.funcID"
               [isAllowEdit]="true"
+              [objectId]="data?.recID"
             >
             </codx-img>
           </div>

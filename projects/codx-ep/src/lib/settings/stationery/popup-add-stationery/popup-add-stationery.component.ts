@@ -39,21 +39,15 @@ export class PopupAddStationeryComponent extends UIComponent {
   tabInfo: any[] = [
     {
       icon: 'icon-info',
-      text: 'Thông tin chung',
-      subName: 'Thông tin chi tiết của VPP',
-      name: 'tabGeneralInfo',
+      name: 'lblGeneralInfo',
     },
     {
       icon: 'icon-person_add_alt_1',
-      text: 'Định mức sử dụng',
-      subName: 'Định mức khi đặt VPP',
-      name: 'tabQuotaInfo',
+      name: 'lblQuotaInfo',
     },
     {
       icon: 'icon-tune',
-      text: 'Thông tin khác',
-      subName: 'Thông tin tham chiếu',
-      name: 'tabMoreInfo',
+      name: 'lblMoreInfo',
     },
   ];
   data: any = {};
@@ -111,42 +105,45 @@ export class PopupAddStationeryComponent extends UIComponent {
   onSaveForm() {
     this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
-    let index:any
-    if(this.isAdd){
-      index=0;
-    }
-    else{
-      index=null;
+    let index: any;
+    if (this.isAdd) {
+      index = 0;
+    } else {
+      index = null;
     }
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), index)
-      .subscribe((res) => {
-        if (res.save || res.update) {
-          if (!res.save) {
-            this.returnData = res.update;
-          } else {
-            this.returnData = res.save;
-          }
-          if (this.imageUpload && this.returnData?.recID) {
-            this.imageUpload
-              .updateFileDirectReload(this.returnData?.recID)
-              .subscribe((result) => {
-                if (result) {
-                  this.data.icon = result[0].fileName;
-                  this.epService
-                    .updateResource(this.data, this.isAdd)
-                    .subscribe();
-                  this.loadData.emit();
-                  //xử lí nếu upload ảnh thất bại
-                  //...
-                }
-              });
-          }
-          
-          this.dialog.close();
+    .save((opt: any) => this.beforeSave(opt),index)
+    .subscribe(async (res) => {
+      if (res.save || res.update) {          
+        if (!res.save) {
+          this.returnData = res.update;
+        } else {
+          this.returnData = res.save;
         }
+        if(this.returnData?.recID)
+        {
+          if(this.imageUpload?.imageUpload?.item) {
+            this.imageUpload
+            .updateFileDirectReload(this.returnData.recID)
+            .subscribe((result) => {
+              if (result) {
+                this.dialog && this.dialog.close(this.returnData);
+                //xử lí nếu upload ảnh thất bại
+                //...                
+              }
+            });  
+          }          
+          else 
+          {
+            this.dialog && this.dialog.close(this.returnData);
+          }
+        } 
+      }
+      else{ 
+        //Trả lỗi từ backend.         
         return;
-      });
+      }
+    });
   }
 
   valueChange(event) {
