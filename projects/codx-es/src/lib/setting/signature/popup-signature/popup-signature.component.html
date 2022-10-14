@@ -171,7 +171,7 @@
             <codx-img
               #imgSignature1
               class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
-              referType="S2"
+              referType="S1"
               [width]="200"
               [funcId]="'ESS21'"
               [objectId]="data.recID"
@@ -199,7 +199,7 @@
               #imgSignature2
               class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
               [width]="200"
-              referType="S1"
+              referType="S2"
               [funcId]="'ESS21'"
               [objectId]="data.recID"
               [objectType]="'ES_Signatures'"
@@ -286,16 +286,12 @@
     <div class="card-body">
       <div class="form-group">
         <label class="me-2">
-          <codx-label
-            fiedName=""
-            [formModel]="formModel"
-            default="Nhà cung cấp"
-          ></codx-label>
+          <codx-label fiedName="Supplier" [formModel]="formModel"></codx-label>
         </label>
         <codx-input
-          type="combobox"
-          field="processID"
-          refValue="ProcessTemplate"
+          type="valuelist"
+          field="supplier"
+          [refValue]="cbxName['Supplier']"
           [crrValue]="data.supplier"
           (valueChange)="valueChange($event)"
         >

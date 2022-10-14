@@ -27,7 +27,7 @@ export class SearchingComponent extends UIComponent implements  OnDestroy , Afte
     super(inject);
   }
   ngAfterViewInit(): void {
-    //this.hideToolbar.SetLayout.next(false);
+    this.hideToolbar.SetLayout.next(false);
     
   }
   ngOnDestroy(): void {
