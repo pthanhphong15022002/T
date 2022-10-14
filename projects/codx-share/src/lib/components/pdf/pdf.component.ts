@@ -1323,7 +1323,7 @@ export class PdfComponent
     popupSignature.closed.subscribe((res) => {
       if (res?.event[0]) {
         let img = res.event[0];
-        switch (res.event?.referType) {
+        switch (res.img?.referType) {
           case 'S1': // Ky chinh
             this.signerInfo.signature = UrlUpload + '/' + img?.pathDisk;
             break;
