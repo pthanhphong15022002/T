@@ -171,7 +171,6 @@ export class CodxCommentsComponent implements OnInit {
               files.push(this.fileUpload);
               this.codxATM.fileUploadList = files;
               this.codxATM.objectType = this.objectType;
-              debugger
               this.cache.message("DM006").subscribe((mssg:any) =>{
                 if(mssg && mssg.defaultName)
                 {
