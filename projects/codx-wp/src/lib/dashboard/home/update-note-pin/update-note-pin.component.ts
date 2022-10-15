@@ -32,11 +32,12 @@ export class UpdateNotePinComponent implements OnInit {
   dataOld: any;
   typeUpdate = '';
   messageParam: any;
-  predicate = 'IsPin=@0 && TransID=null';
+  predicate = 'IsPin=@0';
   dataValue = 'true';
   maxPinNotes = 0;
   dialogRef: DialogRef;
   component: any;
+  formType: any;
 
   constructor(
     private api: ApiHttpService,
@@ -53,6 +54,7 @@ export class UpdateNotePinComponent implements OnInit {
     this.typeUpdate = data.data?.typeUpdate;
     this.maxPinNotes = data.data?.maxPinNotes;
     this.dialogRef = data.data?.dialogRef;
+    this.formType = data.data?.formType;
   }
 
   ngOnInit(): void {
@@ -110,7 +112,9 @@ export class UpdateNotePinComponent implements OnInit {
               this.data[i].isPin = res?.isPin;
             }
           }
-          if (this.dialogRef != undefined) this.dialogRef.close();
+          if (this.formType == 'edit' || this.formType !== undefined) {
+            if (this.dialogRef != undefined) this.dialogRef.close();
+          }
           this.dialog.close();
         }
       });
@@ -138,7 +142,9 @@ export class UpdateNotePinComponent implements OnInit {
             this.noteService.data.next(object);
             this.notificationsService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
-            if (this.dialogRef != undefined) this.dialogRef.close();
+            if (this.formType == 'edit' || this.formType !== undefined) {
+              if (this.dialogRef != undefined) this.dialogRef.close();
+            }
             this.dialog.close();
           }
         });

@@ -391,6 +391,7 @@ export class AddNoteComponent implements OnInit {
       maxPinNotes: this.maxPinNotes,
       dialogRef: this.dialog,
       component: this.component,
+      noteType: this.formType,
     };
     this.callfc.openForm(
       UpdateNotePinComponent,

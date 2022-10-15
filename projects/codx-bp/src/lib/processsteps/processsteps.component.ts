@@ -247,11 +247,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
+      .delete([data], true, (opt) =>
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
+        if (res) {
+          this.dataTreeProcessStep = this.view.dataService.data;
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
@@ -259,8 +261,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteProcessStepAsync';
-
-    opt.data = itemSelected.processID;
+    opt.data = itemSelected.recID;
     return true;
   }
   //#endregion

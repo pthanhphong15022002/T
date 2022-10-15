@@ -341,7 +341,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
           var taskParent = res[1][0];
-          if (taskParent?.confirmControl == '1')
+          if (this.param?.ConfirmControl == '1')
             this.tmSv
               .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)
               .subscribe();

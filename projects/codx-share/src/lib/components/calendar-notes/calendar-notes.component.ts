@@ -148,12 +148,32 @@ export class CalendarNotesComponent
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'edit-note-drawer') {
-            var indexCRUD = (
-              this.lstView.dataService as CRUDService
-            ).data.findIndex((x) => x.recID == data.recID);
-            (this.lstView.dataService as CRUDService).data[indexCRUD] = data;
-            var index = this.WP_Notes.findIndex((x) => x.recID == data.recID);
-            this.WP_Notes[index] = data;
+            // var indexCRUD = (
+            //   this.lstView.dataService as CRUDService
+            // ).data.findIndex((x) => x.recID == data.recID);
+            // (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            // var index = this.WP_Notes.findIndex((x) => x.recID == data.recID);
+            // this.WP_Notes[index] = data;
+            (this.lstView.dataService as CRUDService).data.forEach((x) => {
+              if (x.recID == data.recID) {
+                x.isPin = data.isPin;
+                x.isNote = data.isNote;
+                x.noteType = data.noteType;
+                x.memo = data.memo;
+                x.checkList = data.checkList;
+                x.showCalendar = data.showCalendar;
+              }
+            });
+            this.WP_Notes.forEach((x) => {
+              if (x.recID == data.recID) {
+                x.isPin = data.isPin;
+                x.isNote = data.isNote;
+                x.noteType = data.noteType;
+                x.memo = data.memo;
+                x.checkList = data.checkList;
+                x.showCalendar = data.showCalendar;
+              }
+            });
             (this.lstView.dataService as CRUDService).load().subscribe();
           }
           this.setEventWeek();
