@@ -51,22 +51,6 @@ export class AddEditComponent implements OnInit {
     this.action = dialogData.data[0];
     this.titleAction = dialogData.data[1];
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
-
-    // this.api
-    //   .execSv<any>(
-    //     'SYS',
-    //     'AD',
-    //     'AutoNumberDefaultsBusiness',
-    //     'GetFieldAutoNoAsync',
-    //     [this.dialog.formModel.funcID, this.dialog.formModel.entityName]
-    //   )
-    //   .subscribe((res) => {
-    //     if (res && res.stop) {
-    //       this.showInput = false;
-    //     } else {
-    //       this.showInput = true;
-    //     }
-    //   });
   }
   //#region Init
   ngOnInit(): void {
@@ -80,6 +64,11 @@ export class AddEditComponent implements OnInit {
   //#endregion
   //#region master
   onSave() {
+    if (!this.master['updateColumn']) {
+      this.dialog.close(true);
+      return;
+    }
+
     this.dialog.dataService.save((opt: RequestOption) => {
       opt.service = "BS";
       opt.assemblyName = "BS";
