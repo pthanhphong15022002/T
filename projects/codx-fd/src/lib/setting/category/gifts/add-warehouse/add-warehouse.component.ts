@@ -38,7 +38,6 @@ export class AddWarehouseComponent extends UIComponent implements OnInit {
   }
 
   beforeSave(option) {
-    debugger
     option.methodName = 'UpdateOnHandOfGiftsAsync';
     option.data = [this.dataUpdate.giftID, this.dataUpdate.onhand];
     return true;

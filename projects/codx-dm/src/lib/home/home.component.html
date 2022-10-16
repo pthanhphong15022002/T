@@ -30,7 +30,7 @@
 <!-- view-list -->
 <ng-template #templateRight>
   <ng-container *ngTemplateOutlet="empty"></ng-container>
-  <div *ngIf="isSearch && this.dmSV.loadedFile">
+  <div *ngIf="isSearch">
   </div>
   <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
     class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
@@ -38,7 +38,6 @@
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="currView"></ng-container>
     <ng-container *ngTemplateOutlet="nodata"></ng-container>
-    <ng-container *ngTemplateOutlet="loading"></ng-container>
   </div>
 </ng-template>
 <ng-template #templateSearch>
@@ -104,12 +103,14 @@
   </div>
 </ng-template>
 <ng-template #templateCard>
-  <div class="d-flex flex-wrap dms-card p-5">
-    <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-      *ngFor="let item of data" [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item"
-      [formModel]="view.formModel">
-    </card>
-  </div>
+    <div class="d-flex flex-wrap dms-card p-5">
+      <ng-container  *ngFor="let item of data ; trackBy: trackItem">
+        <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
+          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item"
+          [formModel]="view.formModel">
+        </card>
+      </ng-container>
+    </div>
 </ng-template>
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-sm p-5">
@@ -209,8 +210,6 @@
 </ng-template>
 <ng-template #nodata>
   <ng-container *ngIf="
-      this.dmSV.loadedFile &&
-      this.dmSV.loadedFolder &&
       (data === undefined || !data || data.length <= 0)
     ">
     <div class="w-100 align-items-center mt-20">
@@ -220,15 +219,6 @@
       <div class="text-center">
         <h5 class="text-dark mt-6">{{ dmSV.titleNodaTa }}</h5>
         <div class="mt-3">{{ dmSV.titleNodaTaFolder }}</div>
-      </div>
-    </div>
-  </ng-container>
-</ng-template>
-<ng-template #loading>
-  <ng-container *ngIf="!this.dmSV.loadedFile && !this.dmSV.loadedFolder">
-    <div class="w-100 align-items-center mt-20">
-      <div class="text-center">
-        <img class="mh-200px" src="../../../assets/img/loader.gif" />
       </div>
     </div>
   </ng-container>

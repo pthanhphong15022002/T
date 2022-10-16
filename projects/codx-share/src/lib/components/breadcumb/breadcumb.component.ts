@@ -48,6 +48,16 @@ export class BreadcumbComponent implements OnInit {
       
       }
     })
+    this.dmSV.isChangeBreadCumb.subscribe((item) => {
+      if (item) {
+        var index = this.linkList.findIndex(x=>x == item.id);
+        if(index >=0)
+        {
+          this.breadcumb[index] = item.name;
+          this.changeDetectorRef.detectChanges();
+        }
+      }
+    });
   }
 
   hover(ctrl) {

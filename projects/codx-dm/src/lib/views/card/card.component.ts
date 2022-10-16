@@ -1,5 +1,5 @@
 import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Subject } from "rxjs";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -20,7 +20,7 @@ import { AnimationSettingsModel, DialogComponent } from '@syncfusion/ej2-angular
   styleUrls: ['./card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardComponent implements OnInit {  
+export class CardComponent implements OnInit , OnChanges {  
 
   @Input() formModel: any;
   user: any;
@@ -34,6 +34,12 @@ export class CardComponent implements OnInit {
     private fileService: FileService,
     private notificationsService: NotificationsService
   ) {
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes["data"] && changes["data"].currentValue != changes["data"].previousValue )
+    {
+      this.data = changes["data"].currentValue 
+    }
   }
 
   ngOnInit(): void {
