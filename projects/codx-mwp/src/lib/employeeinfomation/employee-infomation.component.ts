@@ -672,47 +672,46 @@ export class EmployeeInfomationComponent extends UIComponent {
     if(!event || !event?.dataSelected) return;
     let data = event.dataSelected;
     let skills = [];
-    if(this.skillEmployee && this.skillEmployee.length > 0 ){
+    if(data && data.length > 0 ){
       data.map((element:any) =>  {
         let isExsitElement = this.skillEmployee
-        .some(x => x.competenceID == element.CompetenceID)
+        .some((x:any) => x.competenceID == element.CompetenceID)
          if(!isExsitElement)
          {
           let skill = {
+            RecID: Guid.newGuid(),
             CompetenceID: element.CompetenceID,
-            CompetenceName: element.CompetenceName
+            CompetenceName: element.CompetenceName,
+            ValueX: 0,
+            Rating: "0"
           }
           skills.push(skill);
          }
       });
-    }
-    else
-    {
-      // data.map((e:any) => skills.push(e.CompetenceID));
-      skills = data.dataSelected;
-    }
-    if(skills.length > 0)
-    {
+      if(skills.length > 0)
+      {
       this.api.execSv(
         "HR",
         "ERM.Business.HR",
         "EmployeesBusiness",
         "AddSkillsEmployeeAsync",
         [this.employee.employeeID, skills]
-        ).subscribe((res:boolean) => {
-          if(res)
+        ).subscribe((res:any) => {
+          if(res && res.length > 0)
           {
+            res.forEach((e) => {
+              this.skillEmployee.push(e);
+            });
+            this.detectorRef.detectChanges();
             this.notifiSV.notifyCode("SYS006");
           }
           else{
             this.notifiSV.notifyCode("SYS023");
           }
         });
-    }
-    else
-    {
-      this.notifiSV.notifyCode("SYS023"); 
-    }
+      }
+    }                                   
+  
   }
 
   clickOpenPopupAddSkill()
@@ -720,4 +719,18 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.showCBB = !this.showCBB;
   }
 
+}
+
+
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  }
 }

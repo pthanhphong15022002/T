@@ -156,11 +156,11 @@ export class PopupAddRoomsComponent extends UIComponent {
               this.imageUpload
               .updateFileDirectReload(this.returnData.recID)
               .subscribe((result) => {
-                if (result) {
-                  this.dialogRef && this.dialogRef.close(this.returnData);
+                if (result) {                  
                   //xử lí nếu upload ảnh thất bại
                   //...                
                 }
+                this.dialogRef && this.dialogRef.close(this.returnData);
               });  
             }          
             else 

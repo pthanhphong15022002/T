@@ -1,4 +1,4 @@
-import { Component, OnInit,  OnDestroy, AfterViewInit, ViewChild, Injector } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, Injector } from '@angular/core';
 import { CacheService, UIComponent } from 'codx-core';
 import { CodxFullTextSearch } from 'projects/codx-share/src/lib/components/codx-fulltextsearch/codx-fulltextsearch.component';
 import { CodxOdService } from '../../codx-od.service';
@@ -8,9 +8,9 @@ import { convertHtmlAgency, extractContent, getIdUser } from '../../function/def
   templateUrl: './searching.component.html',
 })
 
-export class SearchingComponent extends UIComponent implements  OnDestroy , AfterViewInit {
+export class SearchingComponent extends UIComponent implements OnDestroy, AfterViewInit {
 
-  @ViewChild("view") views : CodxFullTextSearch;
+  @ViewChild("view") views: CodxFullTextSearch;
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
@@ -18,17 +18,16 @@ export class SearchingComponent extends UIComponent implements  OnDestroy , Afte
   funcID = "ODT31";
   service = "OD"
   entityName = "OD_Dispatches"
-  formModel : any = {};
-  constructor( 
-    inject: Injector, 
+  formModel: any = {};
+  constructor(
+    inject: Injector,
     // private cache: CacheService,
-    private hideToolbar : CodxOdService
-  ){
+    private hideToolbar: CodxOdService
+  ) {
     super(inject);
   }
   ngAfterViewInit(): void {
     this.hideToolbar.SetLayout.next(false);
-    
   }
   ngOnDestroy(): void {
     this.hideToolbar.SetLayout.next(true);
@@ -38,27 +37,25 @@ export class SearchingComponent extends UIComponent implements  OnDestroy , Afte
     this.getGridViewSetup();
   }
 
-  getGridViewSetup(){
+  getGridViewSetup() {
     this.cache.functionList(this.funcID).subscribe((fuc) => {
       this.formModel.entityName = fuc?.entityName;
       this.formModel.formName = fuc?.formName;
       this.formModel.funcID = fuc?.functionID;
       this.formModel.gridViewName = fuc?.gridViewName;
       this.cache
-      .gridViewSetup(fuc?.formName, fuc?.gridViewName)
-      .subscribe((grd) => {
-        this.gridViewSetup = grd;
-      });
+        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridViewSetup = grd;
+        });
     });
   }
-  onSelected(e:any)
-  {
+  onSelected(e: any) {
     alert(JSON.stringify(e));
   }
 
-  testSearch()
-  {
-    this.views!.filter = {"AgencyName" : ["Bảo"]};
+  testSearch() {
+    this.views!.filter = { "AgencyName": ["Bảo"] };
     this.views.searchText();
   }
 }

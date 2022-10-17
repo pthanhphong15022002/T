@@ -63,6 +63,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   lstApproval: any = null;
   grvSetup: any;
   settingDataValue: any;
+  havaESign: boolean = false;
 
   constructor(
     private esService: CodxEsService,
@@ -92,8 +93,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         //delete autoNumer đã thiết lập
         this.esService
           .deleteAutoNumber(this.data.categoryID)
-          .subscribe((res1) => {
-            console.log('result delete auto', res1);
+          .subscribe((resDelete) => {
+            console.log('result delete auto', resDelete);
           });
 
         //delete EmailTemplate da thiet lap
@@ -113,6 +114,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (grv) this.grvSetup = grv;
       });
 
+    this.cache.functionList('ES').subscribe((res) => {
+      if (res) this.havaESign = true;
+      if (this.isAdd == true) {
+        this.data.eSign = this.havaESign;
+        this.cr.detectChanges();
+      }
+    });
     if (this.isAdd) {
       this.data.countStep = 0;
       this.data.signatureType = '1';

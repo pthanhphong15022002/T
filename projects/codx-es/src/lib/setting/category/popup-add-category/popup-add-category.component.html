@@ -24,16 +24,6 @@
       </div>
 
       <div class="ms-4">
-        <!-- <codx-input
-          class="ms-4"
-          type="colorpicker"
-          [showText]="false"
-          [modeSwitcher]="false"
-          [crrValue]="dialogCategory.value.color"
-          field="color"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input> -->
         <codx-input
           class="ms-4"
           type="colorpicker"
@@ -75,7 +65,7 @@
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center mb-4">
+    <div class="d-flex align-items-center mb-4" *ngIf="havaESign == true">
       <codx-input
         #checkbox
         type="switch"

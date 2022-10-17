@@ -22,7 +22,7 @@ export class RangesKanbanComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') view!: ViewsComponent;
   dialog!: DialogRef;
-  titleAction =''
+  titleAction = ''
 
   columnsGrid = [];
   button?: ButtonModel;
@@ -86,7 +86,7 @@ export class RangesKanbanComponent implements OnInit {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(AddEditComponent, ['add',this.titleAction], option);
+      this.dialog = this.callfunc.openSide(AddEditComponent, ['add', this.titleAction], option);
       this.dialog.closed.subscribe((x) => {
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
@@ -105,7 +105,7 @@ export class RangesKanbanComponent implements OnInit {
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(AddEditComponent, ['edit',this.titleAction], option);
+      this.dialog = this.callfunc.openSide(AddEditComponent, ['edit', this.titleAction], option);
     });
   }
 
@@ -137,7 +137,7 @@ export class RangesKanbanComponent implements OnInit {
 
   //#region Events
   buttonClick(evt: ButtonModel) {
-    this.titleAction = evt?.text ;
+    this.titleAction = evt?.text;
     switch (evt.id) {
       case 'btnAdd':
         this.add();
@@ -146,7 +146,7 @@ export class RangesKanbanComponent implements OnInit {
   }
 
   moreFuncClick(e: any, data?: any) {
-    this.titleAction = e?.text ;
+    this.titleAction = e?.text;
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);

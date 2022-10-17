@@ -15,6 +15,7 @@ import {
   AuthStore,
   ButtonModel,
   DialogRef,
+  NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
@@ -24,6 +25,7 @@ import {
 import { BP_Processes } from '../models/BP_Processes.model';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
+import { RevisionsComponent } from './revisions/revisions.component';
 
 
 @Component({
@@ -78,6 +80,7 @@ export class ProcessesComponent
 
   constructor(
     inject: Injector,
+    private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
@@ -97,6 +100,7 @@ export class ProcessesComponent
       { headerTemplate: this.itemVersionNo, width: 150 },
       { headerTemplate: this.itemActivedOn, width: 200 },
       { headerTemplate: this.itemMemo, width: 300 },
+      { field: '', headerText: '', width: 30 },
       { field: '', headerText: '', width: 30 },
 
     ];
@@ -123,18 +127,16 @@ export class ProcessesComponent
           template: this.templateListCard,
         },
       },
-      // {
-      //   id: '1',
-      //   icon: 'icon-search',
-      //   text: 'Search',
-      //   hide: true,
-      //   type: ViewType.list,
-      //   sameData: true,
-      //   active: false,
-      //   model: {
-      //     template: this.templateSearch,
-      //   },
-      // },
+      {
+        text: 'Search',
+        hide: true,
+        type: ViewType.listdetail,
+        sameData: true,
+        active: false,
+        model: {
+          template2: this.templateSearch,
+        },
+      },
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
@@ -340,6 +342,7 @@ export class ProcessesComponent
       if (res) {
         this.dataSelected.processName = this.newName;
         this.view.dataService.update(this.dataSelected).subscribe();
+        this.notification.notifyCode('SYS007');
         this.changeDetectorRef.detectChanges();
       }
       this.dialogPopupReName.close();
@@ -356,6 +359,32 @@ export class ProcessesComponent
       desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' + position + '</span></div>';
 
     return desc + '</div>';
+  }
+
+  revisions(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          RevisionsComponent,
+          ['edit', this.titleAction],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+        });
+      });
   }
   //#endregion
 }
