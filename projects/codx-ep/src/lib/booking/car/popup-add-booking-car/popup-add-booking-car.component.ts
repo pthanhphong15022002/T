@@ -186,7 +186,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (this.isAdd) {
       this.data.attendees = 1;
       this.data.bookingOn = new Date();
-
+      this.data.startDate=null;
+      this.data.endDate=null;
       let people = this.authService.userValue;
       this.tempAtender = {
         userID: people.userID,
@@ -354,7 +355,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
       }
     }
   }
-
   valueCbxCarChange(event?) {
     if (event?.data != null && event?.data != '') {
       this.tmplstDevice = [];
@@ -380,7 +380,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-
   driverChangeWithCar(carID: string) {
     this.codxEpService.getGetDriverByCar(carID).subscribe((res) => {
       if (res && res.msgBodyData[0]?.resourceID != null) {
@@ -431,13 +430,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
         });
     }
   }
-  
-
   openPopupDevice(template: any) {
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
   }
-
   checkedChange(event: any, device: any) {
     let index = this.tmplstDevice.indexOf(device);
     if (index != -1) {
@@ -448,18 +444,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.initForm();
     this.closeEdit.emit(data);
   }
-  timeCheck() {
-    if (!this.data.startDate || !this.data.endDate) {
-      return;
-    }
-    let startTime = new Date(this.data.startDate);
-    let endTime = new Date(this.data.endDate);
+  timeCheck(startTime:Date, endTime:Date) { 
+    
     if (endTime <= startTime) {
-      this.checkLoop = !this.checkLoop;
-      if (!this.checkLoop) {
-        this.notificationsService.notifyCode('TM036');
-        return;
-      }
+      return false;      
     }
     if (this.driver != null) {
       this.driverValidator(
@@ -469,6 +457,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.data.recID
       );
     }
+    return true;
   }
   startDateChange(evt: any) {
     if (!evt.field || !evt.data) {
@@ -482,11 +471,20 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (new Date() >= new Date(this.data.startDate)) {
       this.checkLoopS = !this.checkLoopS;
       if (!this.checkLoopS) {
-        this.notificationsService.notifyCode('TM036');
-        return;
+        this.notificationsService.notifyCode('TM036');        
       }
+      return;
+    }    
+    if(this.data.startDate && this.data.endDate){
+      if(!this.timeCheck(this.data.startDate,this.data.endDate)){
+        this.checkLoopS = !this.checkLoopS;
+        if (!this.checkLoopS) {
+          this.notificationsService.notifyCode('TM036');          
+        }
+        return;
+      };
     }
-    this.timeCheck();
+    
   }
   endDateChange(evt: any) {
     if (!evt.field || !evt.data) {
@@ -497,19 +495,26 @@ export class PopupAddBookingCarComponent extends UIComponent {
       let temp= this.data.endDate;
       this.data.endDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.endHour,this.endMinutes);
     }
-    if (new Date() >= new Date(this.data.endDate)) {
-      this.checkLoopE = !this.checkLoopE;
-      if (!this.checkLoopE) {
-        this.notificationsService.notifyCode('TM036');
+    // if (new Date() >= new Date(this.data.endDate)) {
+    //   this.checkLoopE = !this.checkLoopE;
+    //   if (!this.checkLoopE) {
+    //     this.notificationsService.notifyCode('TM036');        
+    //   }
+    //   return;
+    // }
+    if(this.data.startDate && this.data.endDate){
+      if(!this.timeCheck(this.data.startDate,this.data.endDate)){
+        this.checkLoopE = !this.checkLoopE;
+        if (!this.checkLoopE) {
+          this.notificationsService.notifyCode('TM036');
+        }
         return;
-      }
+      };
     }
-    this.timeCheck();
   }
   openPopupCbb() {
     this.isPopupCbb = true;
   }
-
   valueCbxUserChange(event) {
     this.cbbData=event;  
     if (event?.dataSelected) {      
