@@ -136,6 +136,8 @@ export class PdfComponent
   formAnnot: FormGroup;
   renderQRAllPage = false;
 
+  imgConfig = ['S1', 'S2', 'S3', '8'];
+
   //save to db
   after_X_Second: number = 100;
 
@@ -446,56 +448,17 @@ export class PdfComponent
   signPDF(mode, comment): any {
     if (this.transRecID) {
       return new Promise<any>((resolve, rejects) => {
-        let approveStt = '5';
-
-        switch (mode) {
-          case '1': {
-            approveStt = '5';
-            break;
-          }
-          case '2': {
-            approveStt = '4';
-            break;
-          }
-          case '3': {
-            approveStt = '2';
-            break;
-          }
-        }
         this.esService
-          .approveAsync(this.transRecID, approveStt, '', '')
-          .subscribe((returnModel: any) => {
-            console.log('returnModel', returnModel);
-
-            if (!returnModel?.msgCodeError) {
-              if (this.isAwait) {
-                this.esService
-                  .updateSignFileTrans(
-                    this.stepNo,
-                    this.isAwait,
-                    this.user.userID,
-                    this.recID,
-                    mode,
-                    comment
-                  )
-                  .subscribe((status) => {
-                    resolve(status);
-                  });
-              } else {
-                // this.notificationsService.notifyCode('ES010');
-                resolve(true);
-                this.esService
-                  .updateSignFileTrans(
-                    this.stepNo,
-                    this.isAwait,
-                    this.user.userID,
-                    this.recID,
-                    mode,
-                    comment
-                  )
-                  .subscribe((status) => {});
-              }
-            }
+          .updateSignFileTrans(
+            this.stepNo,
+            this.isAwait,
+            this.user.userID,
+            this.recID,
+            mode,
+            comment
+          )
+          .subscribe((status) => {
+            resolve(status);
           });
       });
     }
@@ -831,7 +794,7 @@ export class PdfComponent
                         );
 
                         let sameLable = childName.LabelType == name.LabelType;
-                        let isUnique = ['S1', 'S2', 'S3', '8'].includes(
+                        let isUnique = this.imgConfig.includes(
                           childName.LabelType.toString()
                         );
                         let sameSigner = childName.Signer == name.Signer;
@@ -842,9 +805,7 @@ export class PdfComponent
                     });
                     this.holding = 0;
                     if (
-                      !['S1', 'S2', 'S3', '8'].includes(
-                        name.LabelType.toString()
-                      ) ||
+                      !this.imgConfig.includes(name.LabelType.toString()) ||
                       signed?.length == 1
                     ) {
                       switch (name.Type) {
@@ -1404,7 +1365,7 @@ export class PdfComponent
           this.url = '';
           break;
       }
-      if (['S1', 'S2', 'S3', '8'].includes(type.value)) {
+      if (this.imgConfig.includes(type.value)) {
         if (this.url != '') {
           this.addArea(
             this.url,
@@ -1534,7 +1495,7 @@ export class PdfComponent
     let lstSigned = this.lstAreas.filter((area) => {
       return (
         area.signer &&
-        ['S1', 'S2', 'S3', '8'].includes(area.labelType) &&
+        this.imgConfig.includes(area.labelType) &&
         area.location.pageNumber + 1 == this.pageMax
       );
     });

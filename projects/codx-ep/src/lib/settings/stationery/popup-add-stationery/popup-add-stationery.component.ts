@@ -127,10 +127,10 @@ export class PopupAddStationeryComponent extends UIComponent {
             .updateFileDirectReload(this.returnData.recID)
             .subscribe((result) => {
               if (result) {
-                this.dialog && this.dialog.close(this.returnData);
                 //xử lí nếu upload ảnh thất bại
                 //...                
               }
+              this.dialog && this.dialog.close(this.returnData);
             });  
           }          
           else 

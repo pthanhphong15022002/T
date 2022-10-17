@@ -73,13 +73,15 @@ export class EditSkillComponent implements OnInit {
       .exec(
         'ERM.Business.HR',
         'EmployeesBusiness',
-        'UpdateEmployeeSkillAsync',
-        [this.skillEmployee]
+        'UpdateSkillAsync',
+        [this.employeeID, this.skillEmployee]
       )
-      .subscribe((o: any) => {
-        console.log(o);
+      .subscribe((res:boolean) => {
+        if(res)
+        {
+          this.dialogRef.close();
+        }
       });
-    this.dialogRef.close(this.skillEmployee);
   }
 
   popupAddSkill() {
@@ -89,45 +91,42 @@ export class EditSkillComponent implements OnInit {
   addSkill(event: any) {
     if(!event || !event?.dataSelected) return;
     let data = event.dataSelected;
-    let skills = [];
-    if(this.skillEmployee && this.skillEmployee.length > 0 ){
+    if(data && data.length > 0 ){
       data.map((element:any) =>  {
-        let isExsitElement = this.skillEmployee.some(x => x.competenceID == element.CompetenceID)
-         if(!isExsitElement){
-          skills.push(element.CompetenceID);
+        let isExsitElement = this.skillEmployee
+        .some((x:any) => x.competenceID == element.CompetenceID)
+         if(!isExsitElement)
+         {
+          let skill = {
+            RecID: Guid.newGuid(),
+            CompetenceID: element.CompetenceID,
+            CompetenceName: element.CompetenceName,
+            ValueX: 0,
+            Rating: "0"
+          }
+          this.skillEmployee.push(skill);
          }
       });
-    }
-    else
-    {
-      data.map((e:any) => skills.push(e.CompetenceID));
-    }
-    if(skills.length > 0)
-    {
-      this.api.execSv(
-        "HR",
-        "ERM.Business.HR",
-        "EmployeesBusiness",
-        "AddSkillsEmployeeAsync",
-        [this.employeeID, skills]
-        ).subscribe((res:boolean) => {
-          if(res)
-          {
-            this.notifiSV.notifyCode("SYS006");
-            this.dialogRef.close(skills);
-          }
-          else{
-            this.notifiSV.notifyCode("SYS023");
-          }
-        });
-    }
-    else
-    {
-      this.notifiSV.notifyCode("SYS023");
     }
   }
 
   removeSkill(data) 
   {
+  }
+
+
+  
+}
+
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }

@@ -47,6 +47,7 @@
         [openDelay]="500"
       >
         <codx-imgs
+          *ngIf="data.members && data.members.length"
           [isToolTip]="false"
           [width]="30"
           [objectId]="data.memberIDs"

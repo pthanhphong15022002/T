@@ -156,6 +156,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 this.sortDataByDESC('drawer');
               });
+            this.countNotePin = 0;
+            this.lstView.dataService.data.forEach((res) => {
+              if (res.isPin == true || res.isPin == '1') {
+                this.countNotePin++;
+              }
+            });
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -167,8 +173,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     if (this.lstView)
       this.lstView.dataService.data = this.lstView.dataService.data.sort(
         function (a, b) {
-          var dateA = new Date(type == null ? a.createdOn : a.modifiedOn).getTime();
-          var dateB = new Date(type == null ? b.createdOn : b.modifiedOn).getTime();
+          var dateA = new Date(
+            type == null ? a.createdOn : a.modifiedOn
+          ).getTime();
+          var dateB = new Date(
+            type == null ? b.createdOn : b.modifiedOn
+          ).getTime();
           return Number(b.isPin) - Number(a.isPin) || dateB - dateA;
         }
       );
@@ -176,12 +186,16 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     this.checkSortASC = false;
   }
 
-  sortDataByASC(type= null) {
+  sortDataByASC(type = null) {
     if (this.lstView)
       this.lstView.dataService.data = this.lstView.dataService.data.sort(
         function (a, b) {
-          var dateA = new Date(type == null ? a.createdOn : a.modifiedOn).getTime();
-          var dateB = new Date(type == null ? b.createdOn : b.modifiedOn).getTime();
+          var dateA = new Date(
+            type == null ? a.createdOn : a.modifiedOn
+          ).getTime();
+          var dateB = new Date(
+            type == null ? b.createdOn : b.modifiedOn
+          ).getTime();
           return Number(b.isPin) - Number(a.isPin) || dateA - dateB;
         }
       );
@@ -194,12 +208,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       .exec<any>(
         'ERM.Business.SYS',
         'SettingValuesBusiness',
-        'GetOneField',
+        'GetOneFieldByCalendarNote',
         'WPCalendars'
       )
       .subscribe((res) => {
-        if (res[2]) {
-          var dataValue = res[2].dataValue;
+        if (res[0]) {
+          var dataValue = res[0].dataValue;
           var json = JSON.parse(dataValue);
           this.maxPinNotes = parseInt(json.MaxPinNotes, 10);
         }
@@ -262,6 +276,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
         itemUpdate: data,
         maxPinNotes: this.maxPinNotes,
         component: 'note-drawer',
+        formType: 'edit',
       };
       this.callfc.openForm(
         UpdateNotePinComponent,
@@ -327,6 +342,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
+          if (item.isPin) this.countNotePin--;
           var object = [{ data: res, type: 'delete' }];
           this.noteService.data.next(object);
         }

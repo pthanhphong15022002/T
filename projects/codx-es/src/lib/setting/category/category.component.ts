@@ -198,7 +198,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         let data = {
           dialog: this.dialog,
           formGroup: null,
-          templateID: '2cbb5174-ab13-ed11-9441-00155d035517',
+          templateID: '5860917c-af36-4803-b90d-ed9f364985c6',
           showIsTemplate: true,
           showIsPublish: true,
           showSendLater: true,

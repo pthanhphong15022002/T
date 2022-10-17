@@ -43,8 +43,7 @@
                                                     <codx-input #checkBoxNote id="checkBoxNote" type="checkbox"
                                                         label="{{itemList.listNote}}"
                                                         [checked]="itemList?.status == 'true' || itemList?.status == '1'"
-                                                        labelPosition="After" [disabled]="false" class="test-check"
-                                                        (valueChange)="valueChange($event)"></codx-input>
+                                                        labelPosition="After" [disabled]="false" class="test-check"></codx-input>
                                                 </div>
                                             </div>
                                         </div>
@@ -68,7 +67,7 @@
             <button class="btn btn-light-primary" (click)="dialog.close()">
                 <codx-label name="Close" formName="Tasks" default="Đóng"></codx-label>
             </button>
-            <button type="button" class="btn btn-primary ms-1" (click)="onCheckEdit()" *ngIf="!readOnly">
+            <button type="button" class="btn btn-primary ms-1" (click)="onSave()" *ngIf="!readOnly">
                 <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
             </button>
         </div>
