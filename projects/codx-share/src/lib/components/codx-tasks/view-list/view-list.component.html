@@ -9,7 +9,9 @@
         <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''"></span>
         <span [class]="data?.priority | vll: vllPriority:'icon' | async" [style.color]="
                   data?.priority | vll: vllPriority:'textColor' | async
-                    ">
+                    "  [ngbPopover]="popDetailPriority"
+                    #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
+                    placement="bottom" >
         </span>
       </div>
     </div>
@@ -70,9 +72,10 @@
     </div> -->
     </div>
     <div class="w-100px min-w-100px">
-      <div class="text-gray-600 fs-7">Ngày hết hạn:</div>
-      <div class="text-dark">
-        {{data.dueDate|date:'dd/MM/yyyy'}}
+      <div class="text-gray-600 fs-7"><codx-label name="DueDate" [formModel]="formModel" default="Ngày hết hạn:"></codx-label></div>
+      <div class="text-dark" #duaDate>
+        <!-- {{data.dueDate|date:'dd/MM/yyyy'}} -->
+        {{data?.dueDate | formatvalue :formModel:"dueDate": duaDate : "Tasks": "grvTasks" | async }}
       </div>
     </div>
     <div class="w-120px min-w-120px">
@@ -163,11 +166,17 @@
               [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
             </codx-vll>
             <span class="text-gray-700">{{
-              item.dueDate | date: "dd/MM/yyyy"
+              item?.dueDate | date: "dd/MM/yyyy"
               }}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #popDetailPriority>
+  <span><codx-label name="Priority" formModel="f" default="Độ ưu tiên :"></codx-label></span><span>
+    {{data?.priority | vll: vllPriority:"text" | async}}
+  </span>
 </ng-template>

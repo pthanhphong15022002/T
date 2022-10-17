@@ -394,6 +394,7 @@ export class IncommingComponent
   }
 
   valueChange(dt: any) {
+    debugger;
     var recID = null;
     if (dt?.data) {
       recID = dt.data.recID;
