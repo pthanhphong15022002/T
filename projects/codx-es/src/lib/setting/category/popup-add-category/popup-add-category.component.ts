@@ -216,13 +216,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res.update || res.save) {
           this.isSaved = true;
-          if (res.update) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.update)
-              .subscribe();
-          }
+          // if (res.update) {
+          //   (this.dialog.dataService as CRUDService)
+          //     .update(res.update)
+          //     .subscribe();
+          // }
           if (isClose) {
-            this.dialog && this.dialog.close();
+            this.dialog && this.dialog.close(res?.update);
           }
         }
       });

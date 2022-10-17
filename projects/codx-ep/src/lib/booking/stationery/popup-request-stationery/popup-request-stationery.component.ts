@@ -172,42 +172,40 @@ export class PopupRequestStationeryComponent extends UIComponent {
   //#region cart
 
   addCart(event, data) {
-    let tmpResource ;
+    let tmpResource;
     tmpResource = { ...data };
 
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
-    // if (isPresent) {
-    //   this.cart.filter((item: tempResources) => {
-    //     if (item.recID == tmpResource.recID) {
-    //       if (tmpResource.quantity <= tmpResource.availableQty) {
-    //         item.quantity = item.quantity + 1;
-    //       } else {
-    //         this.api
-    //           .exec<any>(
-    //             'EP',
-    //             'ResourceQuotaBusiness',
-    //             'GetQuotaByResourceIDAsync',
-    //             item.resourceID
-    //           )
-    //           .subscribe((res: any) => {});
-    //         this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3'); //Test
-    //       }
-    //     }
-    //   });
-    // } else {
-    //   this.cartQty = this.cartQty + 1;
-    //   tmpResource.quantity = 1;
-    //   if (tmpResource.quantity <= tmpResource.availableQty) {
-    //     this.cart.push(tmpResource);
-    //     this.cache.message('EP001').subscribe((mssg) => {
-    //       this.notificationsService.notify(mssg.defaultName, '1');
-    //     });
-    //   } else {
-    //     this.notificationsService.notify('Hết hàng', '3');
-    //   }
-    // }
-    // console.log(this.cart);
+    if (isPresent) {
+      this.cart.filter((item: any) => {
+        if (item.recID == tmpResource.recID) {
+          if (tmpResource.quantity <= tmpResource.availableQty) {
+            item.quantity = item.quantity + 1;
+          } else {
+            this.api
+              .exec<any>(
+                'EP',
+                'ResourceQuotaBusiness',
+                'GetQuotaByResourceIDAsync',
+                item.resourceID
+              )
+              .subscribe((res: any) => {});
+            this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3'); //Test
+          }
+        }
+      });
+    } else {
+      this.cartQty = this.cartQty + 1;
+      tmpResource.quantity = 1;
+      if (tmpResource.quantity <= tmpResource.availableQty) {
+        this.cart.push(tmpResource);
+        this.notificationsService.notifyCode('SYS006');
+      } else {
+        this.notificationsService.notify('Hết hàng', '3');
+      }
+    }
+    console.log(this.cart);
     this.detectorRef.detectChanges();
   }
 
