@@ -116,8 +116,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
     this.cache.functionList('ES').subscribe((res) => {
       if (res) this.havaESign = true;
-      this.data.eSign = this.havaESign;
-      this.cr.detectChanges();
+      if (this.isAdd == true) {
+        this.data.eSign = this.havaESign;
+        this.cr.detectChanges();
+      }
     });
     if (this.isAdd) {
       this.data.countStep = 0;
