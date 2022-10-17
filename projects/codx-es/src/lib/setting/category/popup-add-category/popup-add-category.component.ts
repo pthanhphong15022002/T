@@ -93,8 +93,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         //delete autoNumer đã thiết lập
         this.esService
           .deleteAutoNumber(this.data.categoryID)
-          .subscribe((res1) => {
-            console.log('result delete auto', res1);
+          .subscribe((resDelete) => {
+            console.log('result delete auto', resDelete);
           });
 
         //delete EmailTemplate da thiet lap
