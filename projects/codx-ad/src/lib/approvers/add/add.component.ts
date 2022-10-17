@@ -10,6 +10,7 @@ import { ApiHttpService, CallFuncService, CodxService, DialogData, DialogRef, Fo
 export class AddApproversComponent implements OnInit {
   //#region Constructor
   master: any;
+  orgData: any;
   details: Array<any> = [];
   detailIDs: string;
   dialog: DialogRef;
@@ -27,7 +28,8 @@ export class AddApproversComponent implements OnInit {
     this.dialog = dialog;
     this.title = dialogData.data[0];
     this.action = dialogData.data[1];
-    this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+    this.master = dialog.dataService!.dataSelected;
+    this.orgData = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
   }
   //#endregion
 
@@ -37,6 +39,19 @@ export class AddApproversComponent implements OnInit {
       this.details = this.master.members;
       this.detailIDs = this.master.memberIDs;
     }
+
+    this.dialog.beforeClose.subscribe(res => {
+      if (!res.event && this.action == 'edit') {
+        if (this.master.updateColumn) {
+          let updateColumn = this.master.updateColumn.split(';');
+          updateColumn.forEach(e => {
+            let key = this.codxService.capitalize(e);
+            this.master[key] = this.orgData[key];
+          });
+        }
+      }
+      this.dialog.dataService.clear();
+    })
   }
   //#endregion
 
@@ -44,7 +59,7 @@ export class AddApproversComponent implements OnInit {
   eventApply(e) {
     if (!e.data || e.data.length == 0) return;
     if (!this.dialog.dataService.hasSaved && this.action == "add") {
-      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt)).subscribe(res => {
+      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt), 0, "", "", false).subscribe(res => {
         if (res && !res.error) {
           this.dialog.dataService.hasSaved = true;
           this.saveMember(e.data);
@@ -58,14 +73,14 @@ export class AddApproversComponent implements OnInit {
     if (this.dialog.dataService.hasSaved) {
       this.dialog.dataService.hasSaved = false;
       if (this.details.length)
-        this.dialog.dataService.update(this.master);
-      this.dialog.close();
+        this.dialog.dataService.update(this.master).subscribe();
+      this.dialog.close(true);
     }
     else {
-      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt)).subscribe(res => {
+      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt), 0).subscribe(res => {
         if (res && !res.error) {
           this.dialog.dataService.hasSaved = false;
-          this.dialog.close();
+          this.dialog.close(true);
         }
       })
     }
@@ -80,7 +95,7 @@ export class AddApproversComponent implements OnInit {
           this.details.splice(idx, 1);
           let ids = "";
           this.details.forEach((v) => {
-            ids += v.memberID + "";
+            ids += v.memberID + ";";
           })
           this.master['memberIDs'] = ids;
           this.master["members"] = this.details;
@@ -104,10 +119,11 @@ export class AddApproversComponent implements OnInit {
     });
     this.api.execSv<any>("SYS", "AD", "GroupMembersBusiness", "AddAsync", [groupMembers]).subscribe(res => {
       if (res && res.length == 3) {
-        this.master["memberType"] = res[0];
-        this.master['memberIDs'] = this.detailIDs + ';' + res[1];
+        this.master.memberType = res[0];
+        this.master.memberIDs = this.detailIDs ? this.detailIDs + ';' + res[1] : res[1];
         this.details = [...this.details, ...res[2]];
-        this.master["members"] = this.details;
+        this.master.members = this.details;
+        this.dialog.dataService.update(this.master).subscribe();
       }
     })
   }
