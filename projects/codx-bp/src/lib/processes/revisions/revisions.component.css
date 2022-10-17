@@ -1,0 +1,48 @@
+.nav-import .nav-link
+{
+  color: black;
+}
+.nav-import .nav-item
+{
+  min-width: 150px;
+  border-radius: 10px;
+}
+.nav-import .active
+{
+  background-color: #F4F7FF;
+}
+.card-body
+{
+  height: 100%;
+}
+.btn-mgl{
+  margin-left: 166px;
+}
+.hideAttachment
+{
+  background-color: #F5F8FA;
+  min-height: 35px;
+}
+.w-10
+{
+  width: 10%;
+}
+.w-15
+{
+  width: 15%;
+}
+.w-20
+{
+  width: 20%;
+}
+.tr-ip-add-tmp td
+{
+  padding: 8px;
+}
+.select-sheet
+{
+  border: solid 1px #d8dbdd;
+  border-radius: 2px;
+  height: 32px;
+  padding: 0 15px;
+}

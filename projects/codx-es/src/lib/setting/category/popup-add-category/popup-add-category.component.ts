@@ -93,8 +93,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         //delete autoNumer đã thiết lập
         this.esService
           .deleteAutoNumber(this.data.categoryID)
-          .subscribe((res1) => {
-            console.log('result delete auto', res1);
+          .subscribe((resDelete) => {
+            console.log('result delete auto', resDelete);
           });
 
         //delete EmailTemplate da thiet lap
@@ -216,13 +216,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res.update || res.save) {
           this.isSaved = true;
-          if (res.update) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.update)
-              .subscribe();
-          }
+          // if (res.update) {
+          //   (this.dialog.dataService as CRUDService)
+          //     .update(res.update)
+          //     .subscribe();
+          // }
           if (isClose) {
-            this.dialog && this.dialog.close();
+            this.dialog && this.dialog.close(res?.update);
           }
         }
       });

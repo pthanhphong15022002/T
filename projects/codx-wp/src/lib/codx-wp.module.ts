@@ -1,7 +1,12 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CoreModule } from '@core/core.module';
@@ -46,57 +51,53 @@ import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { Layout2Component } from './_layout2/layout2.component';
 import { Layout3Component } from './_layout3/layout3.component';
+import { TestSurveyComponent } from './test-survey/test-survey.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
 
 export const routes: Routes = [
-  
-
   {
-    path:"portal",
-    component:DashboardComponent,
-    children:
-    [
+    path: 'portal',
+    component: DashboardComponent,
+    children: [
       {
-        path:":funcID",
-        component:HomeComponent
+        path: ':funcID',
+        component: HomeComponent,
       },
-      
     ],
   },
   {
-    path:"chat",
-    component:DashboardComponent,
-    children:
-    [
+    path: 'chat',
+    component: DashboardComponent,
+    children: [
       {
-        path:":funcID",
-        component:ChattingComponent
+        path: ':funcID',
+        component: ChattingComponent,
       },
-      
     ],
   },
   {
-    path:"news",
-    component:Layout2Component,
-    children:
-    [
+    path: 'news',
+    component: Layout2Component,
+    children: [
       {
         path: ':funcID/tag/:tagName',
-        component: ViewTagComponent
+        component: ViewTagComponent,
       },
       {
-        path:":funcID/:category",
-        component: NewsComponent
+        path: ':funcID/:category',
+        component: NewsComponent,
       },
       {
-        path:":funcID/:category/:recID",
-        component: ViewDetailComponent
+        path: ':funcID/:category/:recID',
+        component: ViewDetailComponent,
       },
       {
-        path:':funcID',
+        path: ':funcID',
         redirectTo: 'WPT02P/home',
-        pathMatch: 'full'
-      }
-    ]
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: 'companyinfo',
@@ -104,19 +105,19 @@ export const routes: Routes = [
     children: [
       {
         path: ':funcID',
-        component: CompanyInforComponent
+        component: CompanyInforComponent,
       },
-    ]
+    ],
   },
   {
-    path:'approvals',
+    path: 'approvals',
     component: Layout3Component,
-    children:[
+    children: [
       {
-        path:':funcID',
-        component: ApproveComponent,     
+        path: ':funcID',
+        component: ApproveComponent,
       },
-    ]
+    ],
   },
   {
     path: 'orgchartportal',
@@ -125,20 +126,30 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: OrgorganizationComponent,
-      }
+      },
     ],
   },
   {
-    path:'wp/portal/wp',
+    path: 'wp/portal/wp',
     redirectTo: 'portal/WP',
-    pathMatch: "full"
+    pathMatch: 'full',
   },
   {
-    path:"",
-    redirectTo:"portal/WP",
-    pathMatch:"full"
+    path: '',
+    redirectTo: 'portal/WP',
+    pathMatch: 'full',
   },
- 
+  {
+    path: 'survey',
+    component: LayoutOnlyHeaderComponent,
+    children: [
+      {
+        path: 'test',
+        component: TestSurveyComponent,
+      },
+    ],
+  },
+
   // {
   //   path: 'news',
   //   component: Layout2Component,
@@ -151,12 +162,12 @@ export const routes: Routes = [
   //       path: ':funcID/:category',
   //       component: NewsComponent
   //     },
-      
+
   //     {
   //       path: ':funcID/:category/:recID',
   //       component: ViewDetailComponent
   //     },
-      
+
   //     {
   //       path: '**',
   //       redirectTo: 'WPT02P/home',
@@ -170,7 +181,7 @@ export const routes: Routes = [
   //   children:[
   //     {
   //       path:':funcID',
-  //       component: ApproveComponent,     
+  //       component: ApproveComponent,
   //     },
   //     {
   //       path: '**',
@@ -201,41 +212,40 @@ export const routes: Routes = [
   // }
 ];
 
-const Component: Type<any>[] =
-  [
-    LayoutComponent,
-    Layout2Component,
-    Layout3Component,
-    CodxWpComponent,
-    NewsComponent,
-    PopupAddComponent,
-    ViewDetailComponent,
-    CompanyInforComponent,
-    PopupEditComponent,
-    ApproveComponent,
-    ApproveDetailComponent,
-    DashboardComponent,
-    HomeComponent,
-    AddNoteComponent,
-    SaveNoteComponent,
-    PostComponent,
-    ListPostComponent,
-    PopupAddPostComponent,
-    PopupSavePostComponent,
-    MyTeamComponent,
-    UpdateNotePinComponent,
-    ViewVideoComponent,
-    PopupDetailComponent,
-    CompanyEditComponent,
-    PopupTitleComponent,
-    ViewTagComponent,
-    PopupSearchComponent,
-    PopupSearchPostComponent,
-    ChatListComponent,
-    ChatBoxComponent,
-    ListChatBoxComponent
-
-  ];
+const Component: Type<any>[] = [
+  LayoutComponent,
+  Layout2Component,
+  Layout3Component,
+  CodxWpComponent,
+  NewsComponent,
+  PopupAddComponent,
+  ViewDetailComponent,
+  CompanyInforComponent,
+  PopupEditComponent,
+  ApproveComponent,
+  ApproveDetailComponent,
+  DashboardComponent,
+  HomeComponent,
+  AddNoteComponent,
+  SaveNoteComponent,
+  PostComponent,
+  ListPostComponent,
+  PopupAddPostComponent,
+  PopupSavePostComponent,
+  MyTeamComponent,
+  UpdateNotePinComponent,
+  ViewVideoComponent,
+  PopupDetailComponent,
+  CompanyEditComponent,
+  PopupTitleComponent,
+  ViewTagComponent,
+  PopupSearchComponent,
+  PopupSearchPostComponent,
+  ChatListComponent,
+  ChatBoxComponent,
+  ListChatBoxComponent,
+  TestSurveyComponent,
+];
 
 @NgModule({
   imports: [
@@ -249,14 +259,11 @@ const Component: Type<any>[] =
     NgbModule,
     CoreModule,
     PickerModule,
+    InPlaceEditorModule,
     RouterModule.forChild(routes),
-
   ],
-  exports: [
-    RouterModule,
-    ListPostComponent
-  ],
-  declarations: [Component,ChattingComponent, LayoutComponent],
+  exports: [RouterModule, ListPostComponent],
+  declarations: [Component, ChattingComponent, LayoutComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWpModule {
