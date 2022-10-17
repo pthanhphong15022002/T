@@ -319,16 +319,6 @@ export class CodxTasksComponent
         sameData: false,
         text: 'Cây',
         icon: 'icon-account_tree',
-        // request: {
-        //   idField: 'recID',
-        //   parentIDField: 'ParentID',
-        //   service: 'TM',
-        //   assemblyName: 'TM',
-        //   className: 'TaskBusiness',
-        //   method: 'GetTasksAsync',
-        //   autoLoad: true,
-        //   dataObj: null,
-        // },
         model: {
           panelLeftRef: this.treeView,
         },
@@ -350,7 +340,6 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      // option.zIndex = 5000;
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;

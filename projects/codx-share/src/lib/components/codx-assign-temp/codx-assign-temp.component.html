@@ -67,8 +67,7 @@
             <div class="d-flex align-items-end me-2 codx-badge">
               <span>
                 <codx-vll
-                  [name]="vllStatus"
-                  [formModel]="formModel"
+                [name]="item?.category=='3'?vllStatus: vllStatusAssign"
                   [field]="'Status'"
                   [value]="item?.status"
                   [showText]="true"
