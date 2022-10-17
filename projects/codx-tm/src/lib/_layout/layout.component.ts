@@ -33,7 +33,9 @@ export class LayoutComponent extends LayoutBaseComponent {
 
     // })
   }
-
+  menuClick(e) {
+    console.log(e);
+  }
   onAfterViewInit(): void {
 
   }

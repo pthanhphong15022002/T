@@ -201,7 +201,6 @@ export class IncommingComponent
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       // option.zIndex = 499;
-      
       option.DataService = this.view?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         IncommingAddComponent,
@@ -365,7 +364,7 @@ export class IncommingComponent
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
-      this.odService.getDetailDispatch(id).subscribe((item) => {
+      this.odService.getDetailDispatch(id,this.view.formModel.entityName).subscribe((item) => {
         //this.getChildTask(id);
         if (item) {
           this.lstDtDis = formatDtDis(item);

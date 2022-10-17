@@ -146,7 +146,7 @@ export class PopupAddRoomsComponent extends UIComponent {
       .subscribe(async (res) => {
         if (res.save || res.update) {          
           if (!res.save) {
-            this.returnData = res.update;
+            this.returnData = res.update;            
           } else {
             this.returnData = res.save;
           }

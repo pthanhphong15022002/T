@@ -975,6 +975,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               height: 200, //Kích thước của file ảnh Thum bề dọc
             },
             IsPublic: true,
+            ThumbConstraints:"30,60,120,300,500,600"
           },
         }
       );
@@ -1012,6 +1013,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             height: 200, //Kích thước của file ảnh Thum bề dọc
           },
           IsPublic: true,
+          ThumbConstraints:"30,60,120,300,500,600"
         },
       })
     );
@@ -1160,7 +1162,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (fileItem.fileSize % chunSizeInfBytes > 0) {
         numOfChunks++;
       }
-
       //api/lv-docs/files/upload
       for (var i = 0; i < numOfChunks; i++) {
         var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file

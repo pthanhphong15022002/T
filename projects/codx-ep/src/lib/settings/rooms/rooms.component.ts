@@ -228,7 +228,8 @@ export class RoomsComponent extends UIComponent {
             });
         else if (x.event) {
           x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
+          //this.view.dataService.update(x.event).subscribe();          
+          this.view.dataService.clear();
         }
       });
     });
@@ -250,13 +251,15 @@ export class RoomsComponent extends UIComponent {
             [this.view.dataService.dataSelected, false, this.popupTitle],
             option
           );    
-          this.dialog.closed.subscribe((x) => {
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {
-              });
+          this.dialog.closed.subscribe((res) => {
+            
+            if (res?.event) {
+              res.event.modifiedOn = new Date();
+              //this.view.dataService.update(res.event).subscribe((res) => {});
             }
-          });     
+            this.view.dataService.clear();
+          }); 
+              
         });
     }
   }
