@@ -59,6 +59,8 @@ export class AddEditComponent implements OnInit {
         this.master.rangeName = this.orgData.rangeName;
         this.master.note = this.orgData.note
       }
+      this.dialog.dataService.clear();
+
     })
   }
   //#endregion
@@ -80,7 +82,7 @@ export class AddEditComponent implements OnInit {
 
       opt.data = this.dialog.dataService.dataSelected;
       return true
-    }).subscribe((res) => {
+    }, 0).subscribe((res) => {
       if (res && !res.error) {
         this.dialog.dataService.hasSaved = false;
         this.dialog.close(true);

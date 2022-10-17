@@ -50,6 +50,7 @@ export class AddApproversComponent implements OnInit {
           });
         }
       }
+      this.dialog.dataService.clear();
     })
   }
   //#endregion
@@ -76,7 +77,7 @@ export class AddApproversComponent implements OnInit {
       this.dialog.close(true);
     }
     else {
-      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt)).subscribe(res => {
+      this.dialog.dataService.save((opt: RequestOption) => this.beforeSave(opt), 0).subscribe(res => {
         if (res && !res.error) {
           this.dialog.dataService.hasSaved = false;
           this.dialog.close(true);
