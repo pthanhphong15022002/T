@@ -493,13 +493,11 @@ export class EditFileComponent implements OnInit {
 
   hideLicence() {
     //this.dmSV.hideShowBoxLicense.next(!this.license);
-    debugger ; 
     this.license = !this.license;
     this.changeDetectorRef.detectChanges();
   }
 
   hideInfo() {
-    debugger ;
     this.information = !this.information;
     this.changeDetectorRef.detectChanges();
    // this.dmSV.hideShowBoxInfo.next(!this.information);

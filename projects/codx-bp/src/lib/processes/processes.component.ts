@@ -15,6 +15,7 @@ import {
   AuthStore,
   ButtonModel,
   DialogRef,
+  NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
@@ -78,6 +79,7 @@ export class ProcessesComponent
 
   constructor(
     inject: Injector,
+    private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
@@ -123,18 +125,16 @@ export class ProcessesComponent
           template: this.templateListCard,
         },
       },
-      // {
-      //   id: '1',
-      //   icon: 'icon-search',
-      //   text: 'Search',
-      //   hide: true,
-      //   type: ViewType.list,
-      //   sameData: true,
-      //   active: false,
-      //   model: {
-      //     template: this.templateSearch,
-      //   },
-      // },
+      {
+        text: 'Search',
+        hide: true,
+        type: ViewType.listdetail,
+        sameData: true,
+        active: false,
+        model: {
+          template2: this.templateSearch,
+        },
+      },
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
@@ -340,6 +340,7 @@ export class ProcessesComponent
       if (res) {
         this.dataSelected.processName = this.newName;
         this.view.dataService.update(this.dataSelected).subscribe();
+        this.notification.notifyCode('SYS007');
         this.changeDetectorRef.detectChanges();
       }
       this.dialogPopupReName.close();

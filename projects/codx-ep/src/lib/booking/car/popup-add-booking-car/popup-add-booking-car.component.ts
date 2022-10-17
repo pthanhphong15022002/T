@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { APICONSTANT } from '@shared/constant/api-const';
 import { AuthService, CacheService, CRUDService } from 'codx-core';
 import {
   DialogData,
@@ -47,22 +48,16 @@ export class PopupAddBookingCarComponent extends UIComponent {
       icon: 'icon-info',
       text: 'Thông tin chung',
       name: 'tabGeneralInfo',
-      subName: 'Thông tin chung',
-      subText: 'Thông tin chung',
     },
     {
       icon: 'icon-person_outline',
       text: 'Người tham dự',
       name: 'tabPeopleInfo',
-      subName: 'Thành viên tham gia',
-      subText: 'Thành viên tham gia',
     },
     {
       icon: 'icon-tune',
       text: 'Thông tin khác',
       name: 'tabMoreInfo',
-      subName: 'Thông tin tham chiếu',
-      subText: 'Thông tin tham chiếu',
     },
   ];
   returnData:any;
@@ -108,7 +103,11 @@ export class PopupAddBookingCarComponent extends UIComponent {
   editCarDevice = null;
   tmpTitle = '';
   tempArray = [];
-
+  endHour:any;
+  startHour:any; 
+  endMinutes:any;
+  startMinutes:any;  
+  calendarID:any;
   isPopupCbb = false;
   constructor(
     private injector: Injector,
@@ -129,7 +128,37 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.requester = this.authService?.userValue?.userName;
   }
   onInit(): void {
+    this.api.callSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPParameters'
+    )
+    .subscribe((res) => {
+      if(res){
+        this.calendarID =JSON.parse(res.msgBodyData[0].dataValue)?.CalendarID;
+        this.api.exec<any>(APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.CalendarWeekdays, 'GetDayShiftAsync', [this.calendarID]).subscribe((res):any=>{
+          if(res){
+            res.forEach(day => {        
+              if(day?.shiftType=="1"){
+                let tmpstartTime= day?.startTime.split(":");
+                this.startHour=tmpstartTime[0];
+                this.startMinutes=tmpstartTime[1];
+              }
+              else if(day?.shiftType=="2"){
+                let tmpEndTime= day?.endTime.split(":");
+                this.endHour=tmpEndTime[0];
+                this.endMinutes=tmpEndTime[1];
+              }          
+            });
+          }
+        });
+      } 
+    });
     this.initForm();
+    
+     
     this.cacheService.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -445,7 +474,11 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (!evt.field || !evt.data) {
       return;
     }
-    this.data.startDate = evt.data.fromDate;
+    this.data.startDate = new Date(evt.data.fromDate);
+    if(this.data.startDate.getHours()==0 && this.data.startDate.getMinutes()==0){
+      let temp= this.data.startDate;
+      this.data.startDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.startHour,this.startMinutes);
+    }
     if (new Date() >= new Date(this.data.startDate)) {
       this.checkLoopS = !this.checkLoopS;
       if (!this.checkLoopS) {
@@ -459,7 +492,11 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (!evt.field || !evt.data) {
       return;
     }
-    this.data.endDate = evt.data.fromDate;
+    this.data.endDate = new Date(evt.data.fromDate);    
+    if(this.data.endDate.getHours()==0 && this.data.endDate.getMinutes()==0){
+      let temp= this.data.endDate;
+      this.data.endDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.endHour,this.endMinutes);
+    }
     if (new Date() >= new Date(this.data.endDate)) {
       this.checkLoopE = !this.checkLoopE;
       if (!this.checkLoopE) {

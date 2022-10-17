@@ -212,20 +212,23 @@ export class CopyComponent implements OnInit {
     else {
       this.folderService.renameFolder(that.id, that.fullName).subscribe(async res => {
         if (res.status == 0) {
-          let folder = new FolderInfo();
-          folder.recID = that.id;
-          folder.folderName = that.fullName;
           that.dmSV.nodeChange.next(res.data);
           var folders = that.dmSV.listFolder;
           //folders.forEach(item => )
           let index = folders.findIndex(d => d.recID.toString() === that.id);
-          // if (index != -1) {
-          //   folders[index].folderName = that.fullName;
-          //   that.dmSV.nodeChange.next(folders[index]);
-          // }
+          if (index >=0) {
+            folders[index].folderName = that.fullName;
+            
+          }
+          var obj = 
+          {
+            id : that.id,
+            name : that.fullName
+          }
           that.dmSV.listFolder = folders;
+          that.dmSV.breadcumbChange.next(obj);
           that.dmSV.ChangeData.next(true);
-          that.changeDetectorRef.detectChanges();
+          //that.changeDetectorRef.detectChanges();
           this.dialog.close();
          // that.notificationsService.notify(res.message);
          // this.modalService.dismissAll();

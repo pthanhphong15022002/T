@@ -113,29 +113,21 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       icon: 'icon-info',
       text: 'Thông tin chung',
       name: 'tabGeneralInfo',
-      subName: 'Thông tin chung',
-      subText: 'Thông tin chung',
     },
     {
       icon: 'icon-person_outline',
       text: 'Người tham dự',
       name: 'tabPeopleInfo',
-      subName: 'Thành viên tham gia',
-      subText: 'Thành viên tham gia',
     },
     {
       icon: 'icon-layers',
       text: 'Văn phòng phẩm',
       name: 'tabStationery',
-      subName: 'VPP của buổi họp',
-      subText: 'VPP của buổi họp',
     },
     {
       icon: 'icon-tune',
       text: 'Thông tin khác',
       name: 'tabMoreInfo',
-      subName: 'Thông tin tham chiếu',
-      subText: 'Thông tin tham chiếu',
     },
   ];
   lstEquipment = [];
@@ -448,12 +440,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.resourceType = '1';
     this.data.requester = this.curUser.userName;
     this.data.status = '1';
-    // if(approval){
-    //   this.data.status = '3';
-    // }
-    // else{      
-    //   this.data.status = '1';
-    // }
     
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt),0)
@@ -666,20 +652,29 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   valueAllDayChange(event) {    
     if (event?.data == true) { 
       this.api.exec<any>(APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.CalendarWeekdays, 'GetDayShiftAsync', [this.calendarID]).subscribe(res=>{
-              
-        let today= new Date(this.data.bookingOn).getDay().toString();
+        //Check thời gian theo từng ngày
+        // let today= new Date(this.data.bookingOn).getDay().toString();
+        // res.forEach(day => {        
+        //   if(day?.weekday==today && day?.shiftType=="1"){
+        //     let tmpstartTime= day?.startTime.split(":");
+        //     this.startTime=tmpstartTime[0]+":"+tmpstartTime[1];
+        //   }
+        //   else if(day?.weekday==today && day?.shiftType=="2"){
+        //     let tmpEndTime= day?.endTime.split(":");
+        //     this.endTime=tmpEndTime[0]+":"+tmpEndTime[1];
+        //   }          
+        // });
         res.forEach(day => {        
-          if(day?.weekday==today && day?.shiftType=="1"){
+          if(day?.shiftType=="1"){
             let tmpstartTime= day?.startTime.split(":");
             this.startTime=tmpstartTime[0]+":"+tmpstartTime[1];
           }
-          else if(day?.weekday==today && day?.shiftType=="2"){
+          else if(day?.shiftType=="2"){
             let tmpEndTime= day?.endTime.split(":");
             this.endTime=tmpEndTime[0]+":"+tmpEndTime[1];
           }          
         });
-      });
-  
+      });  
       this.changeDetectorRef.detectChanges();
     }
   }

@@ -157,7 +157,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     return styles;
   }
   changeMF(data: any, value: object | any = null) {
-    debugger
     var datas = this.dataItem;
     if (value) datas = value;
     if (datas) {
