@@ -1,14 +1,8 @@
 <div>
-  <div class="position-relative">
-    <div (click)="openPopup()">
-      <span><i class="icon-person_outline icon-20 cursor-pointer"></i></span>
+    <div class="d-flex align-items-center">
+        <div class="me-1" (click)="openPopup()"><i class=" icon-person_outline icon-16 text-dark cursor-pointer"></i></div>
+        <div>{{countResource}}</div>
     </div>
-    <div
-      class="position-absolute d-flex align-items-center justify-content-center rounded-circle bg-primary text-white w-20px h-20px top-0 start-100 translate-middle"
-    >
-      <span style="font-size: 10px">{{ countResource }}</span>
-    </div>
-  </div>
 </div>
 <ng-template #tmpListResource let-dialog>
   <div class="m-5">

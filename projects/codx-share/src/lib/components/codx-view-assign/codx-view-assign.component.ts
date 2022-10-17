@@ -45,5 +45,7 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
       }
     }
   }
-
+  clickTemp(e){
+    e.stopPropagation() ;
+  }
 }
