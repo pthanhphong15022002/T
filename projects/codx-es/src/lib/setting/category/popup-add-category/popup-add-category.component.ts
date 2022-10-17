@@ -63,6 +63,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   lstApproval: any = null;
   grvSetup: any;
   settingDataValue: any;
+  havaESign: boolean = false;
 
   constructor(
     private esService: CodxEsService,
@@ -113,6 +114,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (grv) this.grvSetup = grv;
       });
 
+    this.cache.functionList('ES').subscribe((res) => {
+      if (res) this.havaESign = true;
+      this.data.eSign = this.havaESign;
+      this.cr.detectChanges();
+    });
     if (this.isAdd) {
       this.data.countStep = 0;
       this.data.signatureType = '1';

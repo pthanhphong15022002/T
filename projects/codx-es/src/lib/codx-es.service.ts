@@ -787,6 +787,16 @@ export class CodxEsService {
       tmpHistory
     );
   }
+
+  sendEmailTemplate(emailRecID) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'SendEmailAsync',
+      emailRecID
+    );
+  }
   //#endregion
 
   //#region ES_SignFiles
