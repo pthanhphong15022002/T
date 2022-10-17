@@ -81,7 +81,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   dataCopy: any;
   dataComment: any;
   contentComment: any;
-
+  date = new Date;
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,

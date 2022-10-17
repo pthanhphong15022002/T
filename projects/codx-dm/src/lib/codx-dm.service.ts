@@ -59,7 +59,6 @@ export class CodxDMService {
   public titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
   public titleFileAccessDenied = 'Bạn không có quyền truy cập file này';
   public titleMessage = 'Thông báo';
-  public titleCopymessage = 'Bạn có muốn lưu lên không ?';
   public titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
   public FOLDER_NAME = 'DM'; //"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
   public titleEmptyTrash30 =
@@ -114,8 +113,6 @@ export class CodxDMService {
   public type: string;
   public currentNode: string;
   public listDialog = [];
-  public loadedFile: boolean;
-  public loadedFolder: boolean;
   public fileUploadList: FileUpload[];
   public dataFileEditing: FileUpload;
   public listFolder = [];
@@ -169,6 +166,7 @@ export class CodxDMService {
 
   public breadcumb = new BehaviorSubject<string[]>(null);
   isBreadcum = this.breadcumb.asObservable();
+
 
   public breadcumbTree = new BehaviorSubject<string[]>(null);
   isBreadcumTree = this.breadcumbTree.asObservable();
@@ -263,6 +261,8 @@ export class CodxDMService {
   public refreshTree = new BehaviorSubject<boolean>(null);
   isRefreshTree = this.refreshTree.asObservable();
 
+  public breadcumbChange = new BehaviorSubject<any>(null);
+  isChangeBreadCumb = this.breadcumbChange.asObservable();
 
   // public listFolder = new BehaviorSubject<FolderInfo[]>(null);
   // isListFolder = this.listFolder.asObservable();
@@ -459,8 +459,6 @@ export class CodxDMService {
 
       if (this.idMenuActive == 'DMT08') return;
 
-      this.loadedFile = false;
-      this.loadedFolder = false;
       this.level = data.level;
       if (this.level == '1') this.parentFolderId = '000000000000000000000000';
       else this.parentFolderId = data.parentId;
@@ -488,14 +486,12 @@ export class CodxDMService {
         this.isTree = true;
         this.listFolder = res[0];
         this.listFiles = [];
-        this.loadedFolder = true;
         this.ChangeData.next(true);
       });
 
       this.fileService.options.funcID = this.idMenuActive;
       this.fileService.GetFiles(data.recID).subscribe(async (res) => {
         this.listFiles = res[0];
-        this.loadedFile = true;
         this.ChangeData.next(true);
       });
     } else {
@@ -566,21 +562,8 @@ export class CodxDMService {
               this.folderService
                 .deleteFolderToTrash(id, false)
                 .subscribe(async (res) => {
-                  let list = this.listFolder;
-                  //list = list.filter(item => item.recID != id);
-                  let index = list.findIndex(
-                    (d) => d.recID.toString() === id.toString()
-                  ); //find index in your array
+                  this.listFolder = this.listFolder.filter(x=>x.recID != id);
                   this.nodeDeleted.next(id);
-                  if (index > -1) {
-                    list.splice(index, 1); //remove element from array
-                    this.nodeDeleted.next(id);
-                    this.listFolder = list;
-                    this.ChangeData.next(true);
-                    //  this.dmSV.changeData(list, null, id);
-                    //  this.changeDetectorRef.detectChanges();
-                  }
-
                   this.fileService.getTotalHdd().subscribe((i) => {
                     this.updateHDD.next(i);
                     //  this.changeDetectorRef.detectChanges();
@@ -1572,7 +1555,6 @@ export class CodxDMService {
   }
 
   copyFileTo(id, fullName, toselectId) {
-    debugger
     var that = this;
     this.fileService
       .copyFile(id, fullName, toselectId, 1)
@@ -1649,7 +1631,7 @@ export class CodxDMService {
           var config = new AlertConfirmInputConfig();
           config.type = 'YesNo';
           this.notificationsService
-            .alert(this.title, res.message + this.titleCopymessage, config)
+            .alert(this.title,res.message,config)
             .closed.subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.folderService

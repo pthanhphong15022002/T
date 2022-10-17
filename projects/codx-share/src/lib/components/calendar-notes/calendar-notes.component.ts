@@ -121,16 +121,24 @@ export class CalendarNotesComponent
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'add-currentDate') {
-            (this.lstView.dataService as CRUDService).add(data).subscribe();
+            (this.lstView.dataService as CRUDService).add(data, 0).subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'delete') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
             this.WP_Notes = this.WP_Notes.filter((x) => x.recID != data.recID);
           } else if (type == 'edit-otherDate') {
             (this.lstView.dataService as CRUDService).remove(data).subscribe();
+            this.countNotePin = 0;
             for (let i = 0; i < this.WP_Notes.length; i++) {
               if (this.WP_Notes[i].recID == data?.recID) {
                 this.WP_Notes[i].createdOn = data.createdOn;
+                this.WP_Notes[i].isPin = data.isPin;
+              }
+              if (
+                this.WP_Notes[i].isPin == true ||
+                this.WP_Notes[i].isPin == '1'
+              ) {
+                this.countNotePin++;
               }
             }
           } else if (type == 'edit-currentDate') {
@@ -142,18 +150,43 @@ export class CalendarNotesComponent
                 }
               }
             }
+            var index = this.WP_Notes.findIndex((x) => x.recID == data?.recID);
+            this.WP_Notes[index].isPin = data.isPin;
+            if (this.WP_Notes) {
+              this.countNotePin = 0;
+              this.WP_Notes.forEach((res) => {
+                if (res.isPin == true || res.isPin == '1') {
+                  this.countNotePin++;
+                }
+              });
+            }
           } else if (type == 'edit') {
             (this.lstView.dataService as CRUDService).update(data).subscribe();
           } else if (type == 'add-note-drawer') {
             (this.lstView.dataService as CRUDService).load().subscribe();
             this.WP_Notes.push(data);
           } else if (type == 'edit-note-drawer') {
-            var indexCRUD = (
-              this.lstView.dataService as CRUDService
-            ).data.findIndex((x) => x.recID == data.recID);
-            (this.lstView.dataService as CRUDService).data[indexCRUD] = data;
-            var index = this.WP_Notes.findIndex((x) => x.recID == data.recID);
-            this.WP_Notes[index] = data;
+            this.countNotePin = this.maxPinNotes;
+            (this.lstView.dataService as CRUDService).data.forEach((x) => {
+              if (x.recID == data.recID) {
+                x.isPin = data.isPin;
+                x.isNote = data.isNote;
+                x.noteType = data.noteType;
+                x.memo = data.memo;
+                x.checkList = data.checkList;
+                x.showCalendar = data.showCalendar;
+              }
+            });
+            this.WP_Notes.forEach((x) => {
+              if (x.recID == data.recID) {
+                x.isPin = data.isPin;
+                x.isNote = data.isNote;
+                x.noteType = data.noteType;
+                x.memo = data.memo;
+                x.checkList = data.checkList;
+                x.showCalendar = data.showCalendar;
+              }
+            });
             (this.lstView.dataService as CRUDService).load().subscribe();
           }
           this.setEventWeek();
@@ -163,8 +196,8 @@ export class CalendarNotesComponent
           if (today) {
             today.click();
           }
-          this.changeDetectorRef.detectChanges();
         }
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -509,6 +542,7 @@ export class CalendarNotesComponent
         data: this.WP_Notes,
         itemUpdate: data,
         maxPinNotes: this.maxPinNotes,
+        formType: 'edit',
       };
       this.callfc.openForm(
         UpdateNotePinComponent,
@@ -656,6 +690,7 @@ export class CalendarNotesComponent
       })
       .subscribe((res: any) => {
         if (res) {
+          if (item.isPin) this.countNotePin--;
           if (res.fileCount > 0) this.deleteFile(res.recID, true);
           var object = [{ data: res, type: 'delete' }];
           this.noteService.data.next(object);
