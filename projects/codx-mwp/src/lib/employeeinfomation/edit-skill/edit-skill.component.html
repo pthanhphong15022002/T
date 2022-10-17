@@ -7,9 +7,9 @@
 >
   <ng-template #body>
     <div *ngIf="skillEmployee">
-      <ng-container *ngFor="let data of skillEmployee">
+      <ng-container *ngFor="let skill of skillEmployee">
         <div class="my-2">
-          <div class="fw-bold text-dark mb-1">{{ data.category }}</div>
+          <div class="fw-bold text-dark mb-1">{{ skill.competenceName }}</div>
           <div class="d-flex align-items-center mt-2">
             <span class="w-250px">
               <ejs-slider
@@ -17,8 +17,8 @@
                 [min]="0"
                 [max]="10"
                 [tooltip]="tooltip" 
-                [value]="data.valueX"
-                (valueChange)="sliderChange($event,data)">
+                [value]="skill.valueX"
+                (valueChange)="sliderChange($event,skill)">
               </ejs-slider>
             </span>
             <span class="ms-6 cursor-pointer">
