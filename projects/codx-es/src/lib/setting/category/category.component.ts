@@ -223,7 +223,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfunc.openSide(
+      let popupAdd = this.callfunc.openSide(
         PopupAddCategoryComponent,
         {
           data: this.viewBase.dataService.dataSelected,
@@ -232,6 +232,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         },
         option
       );
+
+      popupAdd.closed.subscribe((res) => {
+        if (!res?.event) this.viewBase.dataService.clear();
+      });
     });
   }
 
@@ -247,7 +251,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           option.Width = '550px';
           option.DataService = this.viewBase?.dataService;
           option.FormModel = this.viewBase?.formModel;
-          this.dialog = this.callfunc.openSide(
+          let popupEdit = this.callfunc.openSide(
             PopupAddCategoryComponent,
             {
               data: evt?.data,
@@ -256,6 +260,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             },
             option
           );
+          popupEdit.closed.subscribe((res) => {
+            if (!res?.event) this.viewBase.dataService.clear();
+          });
         });
     }
   }

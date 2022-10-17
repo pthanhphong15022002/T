@@ -200,6 +200,17 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
+      //edit PA
+      if (event?.functionID == 'SYS03') {
+        // this.notifySvr.alertCode('SYS030').subscribe((x) => {
+        //   if (x.event.status == 'Y') {
+        //     let i = this.lstApprover.indexOf(data);
+        //     if (i != -1) {
+        //       this.lstApprover.splice(i, 1);
+        //     }
+        //   }
+        // });
+      }
     }
   }
 
@@ -319,9 +330,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           let i = this.lstApprover.findIndex(
             (p) => p.approver == element?.objectType
           );
-          if (i == -1) {
+          if (i == -1 || element?.objectType == 'PA') {
             let appr = new Approvers();
-            if (appr.roleType == 'PE') {
+            if (element?.objectType == 'PA') {
               appr.write = true;
             }
             appr.roleType = element?.objectType;
