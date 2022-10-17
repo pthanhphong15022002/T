@@ -6,10 +6,14 @@
     </div>
     <div class="w-50px min-w-50px">
       <div class="d-flex align-items-center">
-        <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''"></span>
+        <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''" [ngbPopover]="popOverDue"
+        #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()"
+        placement="top right bottom" ></span>
         <span [class]="data?.priority | vll: vllPriority:'icon' | async" [style.color]="
                   data?.priority | vll: vllPriority:'textColor' | async
-                    ">
+                    "  [ngbPopover]="popDetailPriority"
+                    #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()"
+                    placement="top right bottom" >
         </span>
       </div>
     </div>
@@ -70,9 +74,10 @@
     </div> -->
     </div>
     <div class="w-100px min-w-100px">
-      <div class="text-gray-600 fs-7">Ngày hết hạn:</div>
-      <div class="text-dark">
-        {{data.dueDate|date:'dd/MM/yyyy'}}
+      <div class="text-gray-600 fs-7"><codx-label name="DueDate" [formModel]="formModel" default="Ngày hết hạn:"></codx-label></div>
+      <div class="text-dark" #duaDate>
+        <!-- {{data.dueDate|date:'dd/MM/yyyy'}} -->
+        {{data?.dueDate | formatvalue :formModel:"dueDate": duaDate : "Tasks": "grvTasks" | async }}
       </div>
     </div>
     <div class="w-120px min-w-120px">
@@ -163,11 +168,21 @@
               [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
             </codx-vll>
             <span class="text-gray-700">{{
-              item.dueDate | date: "dd/MM/yyyy"
+              item?.dueDate | date: "dd/MM/yyyy"
               }}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #popDetailPriority>
+  <span><codx-label name="Priority" [formModel]="formModel" default="Độ ưu tiên :"></codx-label></span><span>
+    {{data?.priority | vll: vllPriority:"text" | async}}
+  </span>
+</ng-template>
+
+<ng-template #popOverDue>
+  <span><codx-label name="lblOverDue"[formModel]="formModel" default="Đã quá hạn !"></codx-label></span>
 </ng-template>

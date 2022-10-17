@@ -62,13 +62,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     optional: boolean;
     modifiedOn: string;
   };
-  isPopupStationeryCbb=false;
+  isPopupStationeryCbb = false;
   attendeesList = [];
   tmpAttendeesList = [];
   grvBookingRoom: any;
   peopleAttend = [];
   tempArray = [];
-  calendarID:any;
+  calendarID: any;
   returnData: any;
   checkLoopS = true;
   checkLoopE = true;
@@ -154,11 +154,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.funcID = this.formModel.funcID;
     if (this.isAdd) {
       this.data.bookingOn = null;
-    } 
+    }
     this.data.attendees = 1;
   }
 
-  onInit(): void {    
+  onInit(): void {
     this.initForm();
     // xử lí thiết bị
     this.cacheService.valueList('EP012').subscribe((res) => {
@@ -187,7 +187,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
       this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
     });
-    
+
     if (this.data) {
       if (this.data.hours == 24) {
         this.isFullDay = true;
@@ -300,46 +300,61 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
-    this.api.callSv(
-      'SYS',
-      'ERM.Business.SYS',
-      'SettingValuesBusiness',
-      'GetByModuleAsync',
-      'EPParameters'
-    )
-    .subscribe((res) => {
-      if(res){
-        this.calendarID =JSON.parse(res.msgBodyData[0].dataValue)?.CalendarID;
-        this.api.exec<any>(APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.CalendarWeekdays, 'GetDayShiftAsync', [this.calendarID]).subscribe(res=>{
-          //Check thời gian theo từng ngày
-          // let today= new Date(this.data.bookingOn).getDay().toString();
-          // res.forEach(day => {        
-          //   if(day?.weekday==today && day?.shiftType=="1"){
-          //     let tmpstartTime= day?.startTime.split(":");
-          //     this.startTime=tmpstartTime[0]+":"+tmpstartTime[1];
-          //   }
-          //   else if(day?.weekday==today && day?.shiftType=="2"){
-          //     let tmpEndTime= day?.endTime.split(":");
-          //     this.endTime=tmpEndTime[0]+":"+tmpEndTime[1];
-          //   }          
-          // });
-          res.forEach(day => {        
-            if(day?.shiftType=="1"){
-              let tmpstartTime= day?.startTime.split(":");
-              this.calendarStartTime=tmpstartTime[0]+":"+tmpstartTime[1];
-            }
-            else if(day?.shiftType=="2"){
-              let tmpEndTime= day?.endTime.split(":");
-              this.calendarEndTime=tmpEndTime[0]+":"+tmpEndTime[1];
-              
-            }          
-          });
-        });  
-        this.changeDetectorRef.detectChanges();
-      }
-      
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'EPParameters'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = JSON.parse(
+            res.msgBodyData[0].dataValue
+          )?.CalendarID;
+          if (this.calendarID) {
+            this.api
+              .exec<any>(
+                APICONSTANT.ASSEMBLY.BS,
+                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
+                'GetDayShiftAsync',
+                [this.calendarID]
+              )
+              .subscribe((res) => {
+                res.forEach((day) => {
+                  if (day?.shiftType == '1') {
+                    let tmpstartTime = day?.startTime.split(':');
+                    this.calendarStartTime =
+                      tmpstartTime[0] + ':' + tmpstartTime[1];
+                  } else if (day?.shiftType == '2') {
+                    let tmpEndTime = day?.endTime.split(':');
+                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
+                  }
+                });
+              });
+          } else {
+            this.api
+              .execSv(
+                'SYS',
+                'ERM.Business.SYS',
+                'SettingValuesBusiness',
+                'GetByModuleAsync',
+                'Calendar'
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  let tempStartTime = JSON.parse(res.dataValue)[0]?.StartTime.split(':');
+                  this.calendarStartTime = tempStartTime[0] + ':' + tempStartTime[1];
+                  let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(':');
+                  this.calendarEndTime = endTime[0] + ':' + endTime[1];
+                }
+              });
+          }
 
-    });
+          this.changeDetectorRef.detectChanges();
+        }
+      });
   }
 
   initForm() {
@@ -454,9 +469,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.resourceType = '1';
     this.data.requester = this.curUser.userName;
     this.data.status = '1';
-    
+
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),0)
+      .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe(async (res) => {
         if (res.save || res.update) {
           if (!res.save) {
@@ -475,38 +490,40 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             );
           }
           if (approval) {
-            (await this.codxEpService
-              .getCategoryByEntityName(this.formModel.entityName))
-              .subscribe((res: any) => {
-                this.codxEpService
-                  .release(
-                    this.returnData,
-                    res.processID,
-                    'EP_Bookings',
-                    this.formModel.funcID
-                  )
-                  .subscribe((res) => {
-                    if (res?.msgCodeError == null && res?.rowCount) {
-                      this.notificationsService.notifyCode('ES007');
-                      this.returnData.status="3";
-                      (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();                           
-                      this.dialogRef && this.dialogRef.close();
-                    } else {
-                      this.notificationsService.notifyCode(res?.msgCodeError);
-                      return;
-                    }
-                  });
-              });
-          }  
-          else{
+            (
+              await this.codxEpService.getCategoryByEntityName(
+                this.formModel.entityName
+              )
+            ).subscribe((res: any) => {
+              this.codxEpService
+                .release(
+                  this.returnData,
+                  res.processID,
+                  'EP_Bookings',
+                  this.formModel.funcID
+                )
+                .subscribe((res) => {
+                  if (res?.msgCodeError == null && res?.rowCount) {
+                    this.notificationsService.notifyCode('ES007');
+                    this.returnData.status = '3';
+                    (this.dialogRef.dataService as CRUDService)
+                      .update(this.returnData)
+                      .subscribe();
+                    this.dialogRef && this.dialogRef.close();
+                  } else {
+                    this.notificationsService.notifyCode(res?.msgCodeError);
+                    return;
+                  }
+                });
+            });
+          } else {
             this.dialogRef && this.dialogRef.close();
-          }        
+          }
         } else {
           //this.notificationsService.notifyCode('SYS01');
           return;
         }
       });
-    
   }
 
   valueChange(event) {
@@ -519,8 +536,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
     this.changeDetectorRef.detectChanges();
   }
-  
-  
+
   closeForm() {
     this.initForm();
     this.closeEdit.emit();
@@ -542,7 +558,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
   }
   //Date time validate
-  
 
   valueDateChange(event: any) {
     if (event.data) {
@@ -586,13 +601,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
     
   }
-  fullDayChangeWithTime(){
-    if(this.startTime == this.calendarStartTime && this.endTime == this.calendarEndTime){
-      this.isFullDay=true;
+  fullDayChangeWithTime() {
+    if (
+      this.startTime == this.calendarStartTime &&
+      this.endTime == this.calendarEndTime
+    ) {
+      this.isFullDay = true;
+    } else {
+      this.isFullDay = false;
     }
-    else{
-      this.isFullDay=false;
-    }    
     this.changeDetectorRef.detectChanges();
   }
   valueStartTimeChange(event: any) {
@@ -748,7 +765,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
     return true;
   }
-  
+
   openPopupLink() {
     this.callfc.openForm(this.addLink, '', 500, 300);
     this.changeDetectorRef.detectChanges();
@@ -756,7 +773,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   valueAttendeesChange(event: any) {
     if (event?.data) {
-      this.data.attendees= event.data;
+      this.data.attendees = event.data;
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -774,7 +791,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   fileCount(event: any) {}
 
   //Popup Stationery and User
-  closePopUpCbb(){
+  closePopUpCbb() {
     this.isPopupStationeryCbb = false;
     this.isPopupUserCbb = false;
     this.isPopupOptionalUserCbb = false;
@@ -819,13 +836,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
   }
 
-  cbbDataOptionalUser:any;
-  valueCbxUserOptionalChange(event) {    
-    if(event==null){
+  cbbDataOptionalUser: any;
+  valueCbxUserOptionalChange(event) {
+    if (event == null) {
       this.isPopupOptionalUserCbb = false;
       return;
     }
-    this.cbbDataUser=event;  
+    this.cbbDataUser = event;
     if (event?.dataSelected) {
       this.lstUserOptional = [];
       this.attendeesList = [];
@@ -854,13 +871,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
 
-  cbbDataUser:any;
+  cbbDataUser: any;
   valueCbxUserChange(event) {
-    if(event==null){
+    if (event == null) {
       this.isPopupUserCbb = false;
       return;
     }
-    this.cbbDataUser=event;  
+    this.cbbDataUser = event;
     if (event?.dataSelected) {
       this.lstUser = [];
       this.attendeesList = [];
@@ -874,10 +891,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           optional: false,
           modifiedOn: this.setStatusTime(new Date()),
         };
-  
+
         this.lstUser.push(this.tempAtender);
       });
-  
+
       if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
         for (let i = 0; i < this.lstUser.length; ++i) {
           for (let j = 0; j < this.lstUserOptional.length; ++j) {
@@ -918,7 +935,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   valueCbxStationeryChange(event?) {
-    if(event==null){
+    if (event == null) {
       this.isPopupStationeryCbb = false;
       return;
     }
@@ -941,9 +958,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       };
       this.lstStationery.push(tempStationery);
     });
-      
-    
-    this.changeDetectorRef.detectChanges();  
+
+    this.changeDetectorRef.detectChanges();
   }
 
   valueQuantityChange(event?) {
@@ -953,5 +969,4 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
   }
-
 }

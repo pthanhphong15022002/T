@@ -14,7 +14,7 @@ export class BP_ProcessSteps {
   id : string ;
   recID : string ;
   parentID: string;
-  stepNo : number ;	
+  stepNo : number ;
   stepName :string ;
   stepName2 :string ;
   stepType : string ;
@@ -38,7 +38,9 @@ export class BP_ProcessSteps {
   modifiedOn : Date ;
   modifiedBy : string ;
 }
+export class BP_ProcessRevisions{
 
+}
 export class BP_ProcessOwners {
   id : string ;
   recID : string ;

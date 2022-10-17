@@ -1115,16 +1115,16 @@ export class CodxEsService {
     );
   }
 
-  approveAsync(transID, status, reasonID, comment) {
-    let data = [transID, status, reasonID, comment];
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'ApproveAsync',
-      data
-    );
-  }
+  // approveAsync(transID, status, reasonID, comment) {
+  //   let data = [transID, status, reasonID, comment];
+  //   return this.api.execSv(
+  //     'es',
+  //     'ERM.Business.ES',
+  //     'ApprovalTransBusiness',
+  //     'ApproveAsync',
+  //     data
+  //   );
+  // }
   //#endregion
 
   //#region CA

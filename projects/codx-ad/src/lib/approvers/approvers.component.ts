@@ -1,6 +1,6 @@
 import { AddApproversComponent } from './add/add.component';
 import { UIComponent, ViewModel, ViewType, ButtonModel, SidebarModel, RequestOption } from 'codx-core';
-import { Component, OnInit, Injector, AfterViewInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Injector, AfterViewInit, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'lib-approvers',
@@ -21,7 +21,7 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   //End tooltip
 
   @ViewChild('item2') itemTemplate: TemplateRef<any>;
-  constructor(injector: Injector) {
+  constructor(injector: Injector, private changeDetectorRef: ChangeDetectorRef) {
     super(injector);
   }
   //#endregion
@@ -37,6 +37,7 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
         template: this.itemTemplate
       }
     }];
+    this.changeDetectorRef.detectChanges();
     this.cache.functionList(this.view.formModel.funcID).subscribe(res => {
       if (res)
         this.func = res;
@@ -111,7 +112,7 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
           if (x.event == null) {
             if (this.view.dataService.hasSaved)
               this.view.dataService
-                .delete([this.view.dataService.dataSelected])
+                .delete([this.view.dataService.dataSelected], false)
                 .subscribe();
 
             this.view.dataService.clear();
