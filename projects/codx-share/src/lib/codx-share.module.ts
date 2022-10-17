@@ -122,6 +122,8 @@ import { CodxAttachmentTempComponent } from './components/codx-attachment-temp/c
 import { ChatListComponent } from './layout/components/chat-list/chat-list.component';
 import { ChatBoxComponent } from './layout/components/chatbox/chat-box.component';
 import { ListChatBoxComponent } from './layout/components/list-chat-box/list-chat-box.component';
+import { CodxAssignTempComponent } from './components/codx-assign-temp/codx-assign-temp.component';
+
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -206,7 +208,8 @@ const T_Component: Type<any>[] = [
   PopupAddPanelComponent,
   PopupAddChartComponent,
   LayoutPanelComponent,
-  CodxAttachmentTempComponent
+  CodxAttachmentTempComponent,
+  CodxAssignTempComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

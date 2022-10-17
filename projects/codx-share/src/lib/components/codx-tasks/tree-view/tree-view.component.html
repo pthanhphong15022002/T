@@ -1,16 +1,36 @@
 <div class="card-body bg-body p-0 scroll-y h-100 task-tree p-3 rounded-3">
-  <codx-treeview id="tree" #treeView [itemTemplate]="templateTreeView" [data]="dataTree" [enableCheck]="false"
-    idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true" [isLoadChild]="false"
-    (selectionChange)="selectionChange($event)">
+  <codx-treeview
+    id="tree"
+    #treeView
+    [itemTemplate]="templateTreeView"
+    [data]="dataTree"
+    [enableCheck]="false"
+    idField="recID"
+    parentIdField="parentID"
+    [autoLoad]="false"
+    [isOutput]="true"
+    [isLoadChild]="false"
+    (selectionChange)="selectionChange($event)"
+  >
   </codx-treeview>
 </div>
 <ng-template #templateTreeView let-item>
-  <div class="d-flex align-items-center p-2 border-bottom" (dblclick)="dbClick(item)">
+  <div
+    class="d-flex align-items-center p-2 border-bottom"
+    (dblclick)="dbClick(item)"
+  >
     <div class="d-flex align-items-center justify-content-between w-100">
       <div class="d-flex align-items-center w-100">
         <div class="w-30px min-w-30px me-2">
-          <button type="button" class="btn btn-icon btn-sm btn-white" *ngIf="item?.isAssign">
-            <span id="{{item.taskID}}" class="icon-18 icon-add_box align-datas-start"></span>
+          <button
+            type="button"
+            class="btn btn-icon btn-sm btn-white"
+            *ngIf="item?.isAssign"
+          >
+            <span
+              id="{{ item.taskID }}"
+              class="icon-18 icon-add_box align-datas-start"
+            ></span>
             <!-- <span  class="icon-18 icon-add_circle me-2 align-datas-start"></span> -->
           </button>
         </div>
@@ -19,7 +39,10 @@
             {{ item?.taskName }}
           </div>
         </div>
-        <div class="w-50px min-w-50px" [ngbTooltip]="item?.memo || item?.memo2 ? tempHtml : tempHtmlNoData">
+        <div
+          class="w-50px min-w-50px"
+          [ngbTooltip]="item?.memo || item?.memo2 ? tempHtml : tempHtmlNoData"
+        >
           <span class="icon-assignment icon-16 text-gray-700 me-1"></span>
         </div>
       </div>
@@ -27,47 +50,78 @@
         <div class="w-125px min-w-125px">
           <div>
             <div *ngIf="item.category == '3'" class="">
-              <codx-imgs [width]="25" [objectId]="item?.assignTo" objectType="AD_Users" [numberImages]="4">
+              <codx-imgs
+                [width]="25"
+                [objectId]="item?.assignTo"
+                objectType="AD_Users"
+                [numberImages]="4"
+              >
               </codx-imgs>
             </div>
             <div *ngIf="item.category == '1' || item.category == '2'" class="">
-              <codx-imgs [width]="25" [objectId]="item?.owner" objectType="AD_Users" [numberImages]="4">
+              <codx-imgs
+                [width]="25"
+                [objectId]="item?.owner"
+                objectType="AD_Users"
+                [numberImages]="4"
+              >
               </codx-imgs>
             </div>
           </div>
         </div>
-        <div class="w-30px min-w-30px">
-          <span class="priority mb-1 max-h-70px" [class]="item?.priority | vll: vllPriority:'icon' | async"
-            [style.color]="item?.priority | vll: vllPriority:'textColor' | async"></span>
+        <div class="w-45px min-w-45px">
+          <span [ngClass]="item?.isTimeOut?'icon-notifications expired':''" [ngbPopover]="popOverDue"
+          #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()"
+          placement="top right bottom" ></span>
+          <span
+            class="priority mb-1 max-h-70px"
+            [class]="item?.priority | vll: vllPriority:'icon' | async"
+            [style.color]="
+              item?.priority | vll: vllPriority:'textColor' | async
+            "
+            [ngbPopover]="popDetailPriority"
+            #p="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="p.open()"
+            (mouseleave)="p.close()"
+            placement="top right bottom"
+          ></span>
         </div>
         <div class="w-125px min-w-125px d-flex align-items-center">
-          <div [class]="
-          'd-flex align-items-center me-3' +
-          ' ' +
-          (item?.comments ? 'text-success' : 'text-gray-600')
-        ">
-            <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
+          <div
+            [class]="
+              'd-flex align-items-center me-3' +
+              ' ' +
+              (item?.comments ? 'text-success' : 'text-gray-600')
+            "
+          >
+            <span
+              class="text-hover-primary icon-chat_bubble_outline icon-16"
+            ></span>
             <span class="ms-1"> {{ item?.comments }}</span>
           </div>
-          <div [class]="
-          'd-flex align-items-center me-3' +
-          ' ' +
-          (item?.todo ? 'text-success' : 'text-gray-600')
-        ">
+          <div
+            [class]="
+              'd-flex align-items-center me-3' +
+              ' ' +
+              (item?.todo ? 'text-success' : 'text-gray-600')
+            "
+          >
             <span class="text-hover-primary icon-check-correct icon-16"></span>
             <span class="ms-1"> {{ item?.todo }}</span>
           </div>
-          <div [class]="
-          'd-flex align-items-center' +
-          ' ' +
-          (item?.attachments ? 'text-success' : 'text-gray-600')
-        ">
+          <div
+            [class]="
+              'd-flex align-items-center' +
+              ' ' +
+              (item?.attachments ? 'text-success' : 'text-gray-600')
+            "
+          >
             <span class="text-hover-primary icon-attach_file icon-16"></span>
             <span>
               {{ item?.attachments }}
             </span>
           </div>
-
         </div>
         <div class="w-50px min-w-50px pe-6">
           <div class="d-flex flex-column justify-content-start">
@@ -75,18 +129,34 @@
               {{ item?.percentage.toFixed(2) }}%
             </div>
             <div class="progress w-100 h-5px">
-              <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="item?.percentage"></div>
+              <div
+                class="progress-bar progress-bar-done"
+                role="progressbar"
+                [style.width.%]="item?.percentage"
+              ></div>
             </div>
           </div>
         </div>
         <div class="w-125px min-w-125px">
-          <codx-vll [name]="vllStatus" [field]="'Status'" [value]="item?.status" [showText]="true" [showBgColor]="true"
-            class="badge badge-light badge-md fs-7 ms-2">
+          <codx-vll
+            [name]="vllStatus"
+            [field]="'Status'"
+            [value]="item?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-md fs-7 ms-2"
+          >
           </codx-vll>
         </div>
         <div class="w-50px min-w-50px" *ngIf="showMoreFunc">
-          <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)"
-            (changeDataMF)="changeDataMF($event, item)" [isBookMark]="false" [dataItem]="data" type="hover">
+          <codx-mfunc
+            [formModel]="formModel"
+            (clickMF)="clickMF($event, data)"
+            (changeDataMF)="changeDataMF($event, item)"
+            [isBookMark]="false"
+            [dataItem]="data"
+            type="hover"
+          >
           </codx-mfunc>
         </div>
       </div>
@@ -99,6 +169,31 @@
   </ng-template>
 
   <ng-template #tempHtmlNoData>
-    <codx-label name="lblNoMemo" [formModel]="formModel" default="Không có mô tả" ></codx-label> 
+    <codx-label
+      name="lblNoMemo"
+      [formModel]="formModel"
+      default="Không có mô tả"
+    ></codx-label>
   </ng-template>
+
+  <ng-template #popDetailPriority>
+    <span
+      ><codx-label
+        name="Priority"
+        formModel="f"
+        default="Độ ưu tiên :"
+      ></codx-label></span
+    ><span>
+      {{ item?.priority | vll: vllPriority:"text" | async }}
+    </span>
+  </ng-template>
+
+  <ng-template #popOverDue>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="formModel"
+      default="Đã quá hạn !"
+    ></codx-label>
+  </ng-template>
+
 </ng-template>
