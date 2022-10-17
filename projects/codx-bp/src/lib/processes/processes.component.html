@@ -98,6 +98,11 @@
         </codx-mfunc>
       </div>
     </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <i class="icon-create icon-18" (click)="revisions(data)"></i>
+      </div>
+    </td>
   </tr>
 </ng-template>
 <!-- view-list -->
@@ -238,35 +243,4 @@
       </ul>
     </div>
   </div>
-</ng-template>
-
-<ng-template #viewReName let-dialog="dialogPopupReName">
-  <codx-form 
-    headerText="{{ titleReName }}"
-    [body]="bodyFormReName"
-    [footer]="footerFormReName"
-    [dialog]="dialogPopupReName"
-  >
-  </codx-form>
-</ng-template>
-
-<ng-template #bodyFormReName>
-  <div class="form-group mt-3">
-    <codx-input field="processName" type="text" [crrValue]="newName"
-     (valueChange)="valueChange($event)">
-    </codx-input>
-  </div>
-</ng-template>
-
-<ng-template #footerFormReName>
-  <button
-    type="button"
-    class="btn btn-primary"
-    (click)="onSave()"
-  >
-    <codx-label
-      name="lblSave"
-      default="Lưu"      
-    ></codx-label>
-  </button>
 </ng-template>

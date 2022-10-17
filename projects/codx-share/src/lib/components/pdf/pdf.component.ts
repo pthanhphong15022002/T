@@ -136,6 +136,8 @@ export class PdfComponent
   formAnnot: FormGroup;
   renderQRAllPage = false;
 
+  imgConfig = ['S1', 'S2', 'S3', '8'];
+
   //save to db
   after_X_Second: number = 100;
 
@@ -446,56 +448,17 @@ export class PdfComponent
   signPDF(mode, comment): any {
     if (this.transRecID) {
       return new Promise<any>((resolve, rejects) => {
-        let approveStt = '5';
-
-        switch (mode) {
-          case '1': {
-            approveStt = '5';
-            break;
-          }
-          case '2': {
-            approveStt = '4';
-            break;
-          }
-          case '3': {
-            approveStt = '2';
-            break;
-          }
-        }
         this.esService
-          .approveAsync(this.transRecID, approveStt, '', '')
-          .subscribe((returnModel: any) => {
-            console.log('returnModel', returnModel);
-
-            if (!returnModel?.msgCodeError) {
-              if (this.isAwait) {
-                this.esService
-                  .updateSignFileTrans(
-                    this.stepNo,
-                    this.isAwait,
-                    this.user.userID,
-                    this.recID,
-                    mode,
-                    comment
-                  )
-                  .subscribe((status) => {
-                    resolve(status);
-                  });
-              } else {
-                // this.notificationsService.notifyCode('ES010');
-                resolve(true);
-                this.esService
-                  .updateSignFileTrans(
-                    this.stepNo,
-                    this.isAwait,
-                    this.user.userID,
-                    this.recID,
-                    mode,
-                    comment
-                  )
-                  .subscribe((status) => {});
-              }
-            }
+          .updateSignFileTrans(
+            this.stepNo,
+            this.isAwait,
+            this.user.userID,
+            this.recID,
+            mode,
+            comment
+          )
+          .subscribe((status) => {
+            resolve(status);
           });
       });
     }
@@ -831,7 +794,7 @@ export class PdfComponent
                         );
 
                         let sameLable = childName.LabelType == name.LabelType;
-                        let isUnique = ['S1', 'S2', 'S3', '8'].includes(
+                        let isUnique = this.imgConfig.includes(
                           childName.LabelType.toString()
                         );
                         let sameSigner = childName.Signer == name.Signer;
@@ -842,9 +805,7 @@ export class PdfComponent
                     });
                     this.holding = 0;
                     if (
-                      !['S1', 'S2', 'S3', '8'].includes(
-                        name.LabelType.toString()
-                      ) ||
+                      !this.imgConfig.includes(name.LabelType.toString()) ||
                       signed?.length == 1
                     ) {
                       switch (name.Type) {
@@ -1235,20 +1196,28 @@ export class PdfComponent
     popupSignature.closed.subscribe((res) => {
       if (res?.event[0]) {
         let img = res.event[0];
-        switch (res.img?.referType) {
+        switch (img?.referType) {
           case 'S1': // Ky chinh
-            this.signerInfo.signature = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature1 = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.signature1 ?? '';
             break;
           case 'S2': //Ky nhay
-            this.signerInfo.signature = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature2 = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.signature2 ?? '';
             break;
           case 'S3': //Con dau
             this.signerInfo.stamp = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.stamp ?? '';
             break;
         }
       }
     });
   }
+
+  crrType: any;
 
   changeAnnotationItem(type: any) {
     if (!type) return;
@@ -1266,73 +1235,81 @@ export class PdfComponent
     if (this.needAddKonva) {
       this.needAddKonva?.destroy();
     }
-    switch (type?.value) {
-      case 'S1':
-        if (!this.signerInfo?.signature) {
-          let setupShowForm = new SetupShowSignature();
-          switch (this.signerInfo?.stepType) {
-            case 'S': // ký chính
-              setupShowForm.showSignature1 = true;
-              this.addSignature(setupShowForm);
-              return;
-          }
-        }
-        // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-        break;
-      case 'S2':
-        if (!this.signerInfo?.signature) {
-          let setupShowForm = new SetupShowSignature();
-          switch (this.signerInfo?.stepType) {
-            case 'S': // ký nháy
-              setupShowForm.showSignature2 = true;
-              this.addSignature(setupShowForm);
-              return;
-          }
-        }
-        // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-        break;
-      case 'S3':
-        if (!this.signerInfo?.stamp) {
-          let setupShowForm = new SetupShowSignature();
 
-          setupShowForm.showStamp = true;
+    this.crrType = type;
+    // switch (type?.value) {
+    //   case 'S1':
+    //     if (!this.signerInfo?.signature1) {
+    //       let setupShowForm = new SetupShowSignature();
+    //       switch (this.signerInfo?.stepType) {
+    //         case 'S': // ký chính
+    //           setupShowForm.showSignature1 = true;
+    //           this.addSignature(setupShowForm);
+    //           return;
+    //       }
+    //     }
+    //     // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
+    //     break;
+    //   case 'S2':
+    //     if (!this.signerInfo?.signature2) {
+    //       let setupShowForm = new SetupShowSignature();
+    //       switch (this.signerInfo?.stepType) {
+    //         case 'S': // ký nháy
+    //           setupShowForm.showSignature2 = true;
+    //           this.addSignature(setupShowForm);
+    //           return;
+    //       }
+    //     }
+    //     // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
+    //     break;
+    //   case 'S3':
+    //     if (!this.signerInfo?.stamp) {
+    //       let setupShowForm = new SetupShowSignature();
 
-          this.addSignature(setupShowForm);
-          return;
-        }
-        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
-        break;
-    }
+    //       setupShowForm.showStamp = true;
+
+    //       this.addSignature(setupShowForm);
+    //       return;
+    //     }
+    //     this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
+    //     break;
+    // }
 
     if (this.isEditable) {
       this.holding = type?.value;
       switch (type?.value) {
         case 'S1':
-          if (!this.signerInfo?.signature) {
+          if (
+            !this.signerInfo?.signature1 &&
+            this.signerInfo?.stepType == 'S'
+          ) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showSignature1 = true;
             this.addSignature(setupShowForm);
             return;
           }
-          this.url = this.signerInfo?.signature
-            ? this.signerInfo?.signature
+          this.url = this.signerInfo?.signature1
+            ? this.signerInfo?.signature1
             : '';
           break;
         case 'S2':
-          if (!this.signerInfo?.signature) {
+          if (
+            !this.signerInfo?.signature2 &&
+            this.signerInfo?.stepType == 'S'
+          ) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
-            setupShowForm.showSignature1 = true;
+            setupShowForm.showSignature2 = true;
             this.addSignature(setupShowForm);
             return;
           }
-          this.url = this.signerInfo?.signature
-            ? this.signerInfo?.signature
+          this.url = this.signerInfo?.signature2
+            ? this.signerInfo?.signature2
             : '';
           break;
         case 'S3':
-          if (!this.signerInfo?.stamp) {
+          if (!this.signerInfo?.stamp && this.signerInfo?.stepType == 'S') {
             // thiet lap con dau
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showStamp = true;
@@ -1404,7 +1381,7 @@ export class PdfComponent
           this.url = '';
           break;
       }
-      if (['S1', 'S2', 'S3', '8'].includes(type.value)) {
+      if (this.imgConfig.includes(type.value)) {
         if (this.url != '') {
           this.addArea(
             this.url,
@@ -1534,7 +1511,7 @@ export class PdfComponent
     let lstSigned = this.lstAreas.filter((area) => {
       return (
         area.signer &&
-        ['S1', 'S2', 'S3', '8'].includes(area.labelType) &&
+        this.imgConfig.includes(area.labelType) &&
         area.location.pageNumber + 1 == this.pageMax
       );
     });
