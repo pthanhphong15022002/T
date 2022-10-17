@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { NoteServices } from '../../../services/note.services';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-update-note-pin',
@@ -30,11 +31,13 @@ export class UpdateNotePinComponent implements OnInit {
   checkEditIsPin = false;
   data: any = [];
   dataOld: any;
-  typeUpdate = '';
   messageParam: any;
-  predicate = 'IsPin=@0 && TransID=null';
+  predicate = 'IsPin=@0';
   dataValue = 'true';
   maxPinNotes = 0;
+  component: any;
+  formType: any;
+  typeUpdate: any = '';
 
   constructor(
     private api: ApiHttpService,
@@ -48,8 +51,9 @@ export class UpdateNotePinComponent implements OnInit {
     this.dialog = dt;
     this.itemUpdate = data.data?.itemUpdate;
     this.data = data.data?.data;
-    this.typeUpdate = data.data?.typeUpdate;
     this.maxPinNotes = data.data?.maxPinNotes;
+    this.formType = data.data?.formType;
+    this.typeUpdate = data.data?.typeUpdate;
   }
 
   ngOnInit(): void {
@@ -62,11 +66,7 @@ export class UpdateNotePinComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.dialog.closed.subscribe(x => {
-      if(!x.event) {
-        this.noteService.dataUpdate.next(null);
-      }
-    })
+    this.noteService.dataUpdate.next(null);
   }
 
   valueChange(e, item = null) {
@@ -82,12 +82,41 @@ export class UpdateNotePinComponent implements OnInit {
     }
   }
 
-  onCheckEdit() {
-    if (this.typeUpdate != undefined) this.onEditIsPin();
-    else this.onEditNote();
+  onSave() {
+    if (this.checkEditIsPin) {
+      this.onEditNoteOld();
+      if (this.formType == 'edit') {
+        var isPin = !this.itemUpdate.isPin;
+        this.itemUpdate.isPin = isPin;
+        this.itemUpdate.isNote = true;
+        this.api
+          .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
+            this.itemUpdate?.recID,
+            this.itemUpdate,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              var object = [{
+                data: res,
+                type: 'edit-note-drawer',
+                formType: this.formType,
+              }];
+              this.noteService.data.next(object);
+              this.noteService.dataUpdate.next(object);
+              this.dialog.close(res);
+            }
+          });
+      }
+    } else {
+      this.notificationsService.notify(
+        'Vui lòng chọn ghi chú thay thế',
+        'error',
+        2000
+      );
+    }
   }
 
-  onEditIsPin() {
+  onEditNoteOld() {
     var isPin = !this.dataOld.isPin;
     this.dataOld.isPin = isPin;
     this.dataOld.isNote = true;
@@ -97,43 +126,18 @@ export class UpdateNotePinComponent implements OnInit {
         this.dataOld,
       ])
       .subscribe((res) => {
-        this.dialog.close();
-        var object = [{ data: res, type: 'edit' }];
-        this.noteService.data.next(object);
-        if (this.typeUpdate != undefined)
-          this.noteService.dataUpdate.next(object);
-        for (let i = 0; i < this.data.length; i++) {
-          if (this.data[i].recID == this.dataOld?.recID) {
-            this.data[i].isPin = res?.isPin;
+        if (res) {
+          var object = [{
+            data: res,
+            type: 'edit-note-drawer',
+            formType: this.formType,
+          }];
+          this.noteService.data.next(object);
+          if (this.formType == 'add') {
+            this.noteService.dataUpdate.next(object);
+            this.dialog.close(res);
           }
         }
       });
-  }
-
-  onEditNote() {
-    if (this.checkEditIsPin == true) {
-      this.onEditIsPin();
-      var isPin = !this.itemUpdate.isPin;
-      this.itemUpdate.isPin = isPin;
-      this.itemUpdate.isNote = true;
-      this.api
-        .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-          this.itemUpdate?.recID,
-          this.itemUpdate,
-        ])
-        .subscribe((res) => {
-          var object = [{ data: res, type: 'edit' }];
-          this.noteService.data.next(object);
-          this.dialog.close();
-          this.notificationsService.notifyCode('SYS007');
-          this.changeDetectorRef.detectChanges();
-        });
-    } else {
-      this.notificationsService.notify(
-        'Vui lòng chọn ghi chú thay thế',
-        'error',
-        2000
-      );
-    }
   }
 }

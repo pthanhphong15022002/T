@@ -1,6 +1,7 @@
 import { CodxEpService } from './../../codx-ep.service';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   TemplateRef,
@@ -27,6 +28,7 @@ import { Router } from '@angular/router';
 export class EpCardsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('avatarCol') avatarCol: TemplateRef<any>; 
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;  
+  @ViewChild('statusCol') statusCol: TemplateRef<any>;  
   funcID: string;
   viewType = ViewType;
   views: Array<ViewModel> = [];
@@ -52,7 +54,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
-    private routers:Router, 
+    private routers:Router,    
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -91,36 +94,33 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             {
               field: 'resourceID',
               headerText: gv['ResourceID'].headerText,
-              width: gv['ResourceID'].width,
             },
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: gv['ResourceName'].width,
+              width:'20%',
             },
             {
               headerText: gv['Icon'].headerText,
-              width: gv['Icon'].width,
               template: this.avatarCol,
               textAlign: 'Center',
               headerTextAlign: 'Center',
+              width:'15%',
             },
             {
               field: 'status',
               headerText: gv['Status'].headerText,
-              width: gv['Status'].width,
+              textAlign: 'Center',
+              headerTextAlign: 'Center',
+              template: this.statusCol,
             },
             {
               field: 'note',
               headerText: gv['Note'].headerText,
-              width: gv['Note'].width,
             },
             {
               headerText: gv['Owner'].headerText,
-              //width:gv['Owner'].width,
-              width: 200,
               template: this.ownerCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [
@@ -184,9 +184,21 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddEpCardsComponent,
-        [this.dataSelected, true,this.popupTitle],
+        [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
     });
   }
 
@@ -203,9 +215,16 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddEpCardsComponent,
-            [this.view.dataService.dataSelected, false,this.popupTitle],
+            [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );
+          );    
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {
+              });
+            }
+          });     
         });
     }
   }

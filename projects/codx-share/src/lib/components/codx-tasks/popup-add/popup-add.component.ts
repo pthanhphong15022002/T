@@ -68,8 +68,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   isCheckProjectTrue = true;
   isCheckAttachmentTrue = true;
   isCheckCheckListTrue = true;
-  memoByPass: any;
-  memoByPass2: any;
   openMemo2 = false;
   showPlan = true;
   showAssignTo = false;
@@ -164,7 +162,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     private notiService: NotificationsService,
     public atSV: AttachmentService,
     private cache: CacheService,
-    private sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -250,12 +247,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     else if (this.task.startDate || this.task.endDate) this.changTimeCount = 1;
     if (this.action != 'add') {
       this.loadDataReferences();
-    }
-    if (this.task.memo) {
-      this.memoByPass = this.sanitizer.bypassSecurityTrustHtml(this.task.memo)
-    }
-    if (this.task.memo) {
-      this.memoByPass2 = this.sanitizer.bypassSecurityTrustHtml(this.task.memo2)
     }
   }
 
@@ -597,8 +588,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.dialog.close(res);
         this.attachment?.clearData();
         if (res && res.save) {
-          var task = res.save;
-          if (task?.confirmControl == "1") this.tmSv.sendAlertMail(task?.recID, "TM_0008", this.functionID).subscribe();
+          var task = res.save[0];
+          if (this.param?.ConfirmControl == "1") this.tmSv.sendAlertMail(task?.recID, "TM_0008", this.functionID).subscribe();
           if (task?.category == '1' && task.verifyControl == '1') this.tmSv.sendAlertMail(task?.recID, "TM_0018", this.functionID).subscribe();
         }
       });

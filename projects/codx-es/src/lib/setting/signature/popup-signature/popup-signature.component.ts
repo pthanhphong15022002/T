@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Injector,
   OnInit,
   Optional,
@@ -13,6 +14,7 @@ import {
   DialogRef,
   FormModel,
   ImageViewerComponent,
+  NotificationsService,
   UIComponent,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
@@ -28,12 +30,14 @@ export class PopupSignatureComponent extends UIComponent {
   @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
   @ViewChild('imgSignature2') imgSignature2: ImageViewerComponent;
   @ViewChild('imgStamp') imgStamp: ImageViewerComponent;
+  @ViewChild('popupSupplier') popupSupplier: ElementRef<any>;
 
   currentTab: number = 1;
   dataFile: any = null;
 
   isAfterRender: boolean = false;
   isAddNew: boolean = false;
+  type = '';
   isSave: boolean = false;
 
   headerText = 'Chọn chữ kí';
@@ -49,10 +53,12 @@ export class PopupSignatureComponent extends UIComponent {
   selectedFont;
   selectedFontIndex = 0;
   sMssg: string = '';
+  cbxName;
 
   constructor(
     private inject: Injector,
     private cr: ChangeDetectorRef,
+    public notify: NotificationsService,
     public dmSV: CodxDMService,
     public esService: CodxEsService,
     @Optional() data?: DialogData,
@@ -64,14 +70,6 @@ export class PopupSignatureComponent extends UIComponent {
     this.formModel = data?.data?.dialog?.formModel;
     this.setupShowForm = data?.data?.setupShowForm;
     this.data = data?.data.data;
-
-    if (!this.formModel) {
-      this.esService.getFormModel('ESS21').then((fm) => {
-        this.formModel = fm;
-        this.dialog.formModel = this.formModel;
-        this.esService.setCacheFormModel(this.formModel);
-      });
-    }
 
     if (!this.setupShowForm) {
       this.setupShowForm = new SetupShowSignature();
@@ -91,15 +89,31 @@ export class PopupSignatureComponent extends UIComponent {
 
   onInit(): void {
     if (!this.data?.recID) {
-      this.esService
-        .getDataSignature(this.data?.userID, this.data?.signatureType)
-        .subscribe((res) => {
-          if (res) {
-            this.data = res[0];
-            this.isAddNew = res[1];
-            this.isAfterRender = true;
-          }
-        });
+      this.esService.getFormModel('ESS21').then((fm) => {
+        this.formModel = fm;
+        this.dialog.formModel = this.formModel;
+        //this.esService.setCacheFormModel(this.formModel);
+        this.type = 'signFile';
+        this.esService
+          .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+          .then((res) => {
+            if (res) this.cbxName = res;
+          });
+        this.esService
+          .getDataSignature(this.data?.userID, this.data?.signatureType)
+          .subscribe((res) => {
+            if (res) {
+              this.data = res[0];
+              this.isAddNew = res[1];
+
+              //Mới tạo và chữ ký công cộng -> mở popup chọn Supplier
+              if (this.isAddNew && this.data?.signatureType == 1) {
+                this.callfc.openForm(this.popupSupplier, '', 350, 420);
+              }
+              this.isAfterRender = true;
+            }
+          });
+      });
     } else {
       this.isAfterRender = true;
     }
@@ -110,41 +124,83 @@ export class PopupSignatureComponent extends UIComponent {
     });
   }
 
+  addEditSignature(i) {
+    if (this.isAddNew && i <= 0 && this.type == 'signFile') {
+      this.esService.addNewSignature(this.data).subscribe((res) => {
+        if (res) this.notify.notifyCode('RS002');
+      });
+    } else if (this.isAddNew == false && i <= 0 && this.type == 'signFile') {
+      this.esService.editSignature(this.data).subscribe((res) => {
+        if (res) this.notify.notifyCode('RS002');
+      });
+    }
+  }
+
   onSaveForm() {
-    if (this.imgSignature1?.imageUpload) {
+    let i = 0;
+    if (
+      !this.imgSignature1?.imageUpload?.item &&
+      !this.imgSignature2?.imageUpload?.item &&
+      !this.imgStamp?.imageUpload?.item
+    ) {
+      this.dialog && this.dialog.close(this.data);
+      return;
+    }
+
+    if (this.imgSignature1?.imageUpload?.item) i++;
+    if (this.imgSignature2?.imageUpload?.item) i++;
+    if (this.imgStamp?.imageUpload?.item) i++;
+
+    if (this.imgSignature1?.imageUpload?.item) {
       this.imgSignature1
         .updateFileDirectReload(this.data.recID)
         .subscribe((img) => {
+          console.log('img', img);
+
+          i--;
           if (img && this.data?.signature1 == null) {
             this.data.signature1 = (img[0] as any).recID;
-
-            this.dialog && this.dialog.close(this.data);
+            this.addEditSignature(i);
+          }
+          if (i <= 0) {
+            if (this.type == 'signFile') {
+              this.dialog && this.dialog.close(img);
+            } else this.dialog && this.dialog.close(this.data);
           }
         });
     }
 
-    if (this.imgSignature2?.imageUpload) {
+    if (this.imgSignature2?.imageUpload?.item) {
       this.imgSignature2
         .updateFileDirectReload(this.data.recID)
         .subscribe((img) => {
+          i--;
           if (img && this.data?.signature2 == null) {
             this.data.signature2 = (img[0] as any).recID;
-
-            this.dialog && this.dialog.close(this.data);
+            this.addEditSignature(i);
+          }
+          if (i <= 0) {
+            if (this.type == 'signFile') {
+              this.dialog && this.dialog.close(img);
+            } else this.dialog && this.dialog.close(this.data);
           }
         });
     }
 
-    if (this.imgStamp?.imageUpload) {
+    if (this.imgStamp?.imageUpload?.item) {
       this.imgStamp.updateFileDirectReload(this.data.recID).subscribe((img) => {
+        i--;
         if (img && this.data?.stamp == null) {
           this.data.stamp = (img[0] as any).recID;
-
-          this.dialog && this.dialog.close(this.data);
+          this.addEditSignature(i);
+        }
+        if (i <= 0) {
+          if (this.type == 'signFile') {
+            this.dialog && this.dialog.close(img);
+          } else this.dialog && this.dialog.close(this.data);
         }
       });
     }
-    this.dialog && this.dialog.close(this.data);
   }
 
   changeTab(tab) {
@@ -163,6 +219,24 @@ export class PopupSignatureComponent extends UIComponent {
       else if (setupShowForm.showSignature1) this.currentTab = 3;
       else if (setupShowForm.showSignature2) this.currentTab = 4;
       else if (setupShowForm.showStamp) this.currentTab = 5;
+    }
+  }
+
+  closePopupSupplier(popup: DialogRef) {
+    popup && popup.close();
+    if (this.isAddNew) this.dialog && this.dialog.close();
+  }
+
+  valueChange(event) {
+    if (event?.field && event?.component) {
+      this.data[event['field']] = event?.data;
+    }
+  }
+
+  onSaveSupplier(popup: DialogRef) {
+    if (this.data?.supplier && this.data?.supplier != '1') {
+      popup && popup.close();
+    } else {
     }
   }
 }

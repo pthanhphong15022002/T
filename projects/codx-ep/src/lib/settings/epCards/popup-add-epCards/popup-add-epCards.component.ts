@@ -107,29 +107,34 @@ export class PopupAddEpCardsComponent extends UIComponent {
     }
     this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt),index)
-      .subscribe((res) => {
-        if (res) {          
+      .subscribe(async (res) => {
+        if (res.save || res.update) {          
           if (!res.save) {
             this.returnData = res.update;
           } else {
             this.returnData = res.save;
           }
-          if(this.imageUpload)
+          if(this.returnData?.recID)
           {
-            this.imageUpload
-            .updateFileDirectReload(this.returnData.recID)
-            .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-                //xử lí nếu upload ảnh thất bại
-                //...
-              }
-            });
-          }
-          this.dialogRef.close();
-        }        
-        else{
-          this.notificationsService.notifyCode('SYS001');
+            if(this.imageUpload?.imageUpload?.item) {
+              this.imageUpload
+              .updateFileDirectReload(this.returnData.recID)
+              .subscribe((result) => {
+                if (result) {
+                  //xử lí nếu upload ảnh thất bại
+                  //...                
+                }
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              });  
+            }          
+            else 
+            {
+              this.dialogRef && this.dialogRef.close(this.returnData);
+            }
+          } 
+        }
+        else{ 
+          //Trả lỗi từ backend.         
           return;
         }
       });

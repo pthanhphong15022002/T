@@ -118,7 +118,6 @@ export class BookingStationeryViewDetailComponent
   }
 
   changeDataMF(event, data: any) {
-    debugger;
     console.log(event);
     console.log(data);
   }

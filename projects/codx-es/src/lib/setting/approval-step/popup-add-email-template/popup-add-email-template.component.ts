@@ -245,6 +245,10 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     }
   }
 
+  sendEmail() {
+    this.esService.sendEmailTemplate(this.templateID).subscribe((res) => {});
+  }
+
   onSaveForm1(dialog1: DialogRef) {
     let lstSento = [
       ...this.lstFrom,

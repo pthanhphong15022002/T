@@ -193,7 +193,7 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
-  saveNote() {
+  onSave() {
     if (this.formType == 'add') this.checkPinWithFormAdd();
     else this.onEditNote();
   }
@@ -324,7 +324,6 @@ export class AddNoteComponent implements OnInit {
       if (this.note.memo == null || this.note.memo == '') this.checkNull = true;
       else this.checkNull = false;
     }
-    this.note.checkList;
     this.note.fileCount = this.listFileUpload?.length;
     if (this.checkNull == false) {
       this.api
@@ -383,12 +382,13 @@ export class AddNoteComponent implements OnInit {
     }
   }
 
-  openFormUpdateIsPin(data, typeUpdate = null) {
+  openFormUpdateIsPin(data) {
     var obj = {
       data: this.data,
       itemUpdate: data,
-      typeUpdate: typeUpdate,
       maxPinNotes: this.maxPinNotes,
+      component: this.component,
+      formType: this.formType,
     };
     this.callfc.openForm(
       UpdateNotePinComponent,
@@ -398,8 +398,11 @@ export class AddNoteComponent implements OnInit {
       '',
       obj
     );
-    this.noteService.dataUpdate.subscribe((res) => {
-      if (res && res?.length) this.countNotePin--;
+    this.noteService.dataUpdate.subscribe((x) => {
+      if (x) {
+        if (x[0].formType == 'edit') this.dialog.close();
+        if(x[0].formType == 'add') this.onCreateNote();
+      }
     });
   }
 
@@ -423,7 +426,7 @@ export class AddNoteComponent implements OnInit {
   checkPinWithFormAdd() {
     if (this.checkPin == true) {
       if (this.countNotePin + 1 > this.maxPinNotes)
-        this.openFormUpdateIsPin(this.note, 'updateNoteNew');
+        this.openFormUpdateIsPin(this.note);
       else this.onCreateNote();
     } else this.onCreateNote();
   }

@@ -6,6 +6,7 @@ import {
   ViewChild,
   Injector,
   AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
@@ -32,7 +33,8 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
-  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
+  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;  
+  
 
   views: Array<ViewModel> = [];
   viewType = ViewType;
@@ -66,7 +68,9 @@ export class RoomsComponent extends UIComponent {
   grvRooms: any;
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService
+    private codxEpService: CodxEpService,    
+    private changeDetectorRef: ChangeDetectorRef,
+
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -105,7 +109,7 @@ export class RoomsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   onLoading(evt: any) {
-    let formModel = this.view.formModel;
+    let formModel = this.view?.formModel;
     if (formModel) {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
@@ -115,7 +119,7 @@ export class RoomsComponent extends UIComponent {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: 250, //gv['ResourceID'].width,
+              width: '20%',
               template: this.resourceNameCol,
             },
             {
@@ -139,14 +143,10 @@ export class RoomsComponent extends UIComponent {
             },
             {
               headerText: gv['Owner'].headerText,
-              //width:gv['Owner'].width,
-              width: 200,
               template: this.ownerCol,
             },
             {
               headerText: gv['Preparator'].headerText,
-              //width:gv['Preparator'].width,
-              width: 200,
               template: this.preparatorCol,
             },
           ];
@@ -219,6 +219,18 @@ export class RoomsComponent extends UIComponent {
         [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
     });
   }
 
@@ -237,7 +249,14 @@ export class RoomsComponent extends UIComponent {
             PopupAddRoomsComponent,
             [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );
+          );    
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {
+              });
+            }
+          });     
         });
     }
   }

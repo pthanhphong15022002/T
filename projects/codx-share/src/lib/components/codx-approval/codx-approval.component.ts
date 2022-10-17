@@ -106,7 +106,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.transID = dt.transID;
       this.dataItem = dt;
     }
-    debugger;
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
       if (fuc) {
         var params;
@@ -170,8 +169,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           list[i].disabled = true;
           if (value.status == '5') list[i].disabled = true;
           else if (
-            ((datas?.stepType == 'S1' || datas?.stepType == 'S2') &&
-              list[i].functionID == 'SYS202') ||
+            ((datas?.stepType == 'S1' || datas?.stepType == 'S2' || datas?.stepType == 'S3' || datas?.stepType == 'S') && list[i].functionID == 'SYS202') ||
             ((datas?.stepType == 'A1' ||
               datas?.stepType == 'R' ||
               datas?.stepType == 'C') &&

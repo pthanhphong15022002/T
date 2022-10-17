@@ -135,7 +135,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.formModel = this.view.formModel;
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
-    debugger;
     this.getGridViewSetup(this.pfuncID);
     this.getDataValuelist();
   }
@@ -169,12 +168,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   getGridViewSetup(funcID: any) {
   
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
-      this.formModel = {
-        entityName: fuc?.entityName,
-        formName: fuc?.formName,
-        funcID: funcID,
-        gridViewName: fuc?.gridViewName,
-      };
+      // this.formModel = {
+      //   entityName: fuc?.entityName,
+      //   formName: fuc?.formName,
+      //   funcID: funcID,
+      //   gridViewName: fuc?.gridViewName,
+      // };
       this.codxODService
         .loadGridView(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
@@ -182,7 +181,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         });
     });
     this.codxODService.loadMessage('OD020').subscribe((item) => {
-      debugger;
       this.ms020 = item;
     });
     this.codxODService.loadMessage('OD021').subscribe((item) => {
@@ -440,7 +438,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               //this.view.dataService.update(x.event).subscribe();
 
               this.odService
-                .getDetailDispatch(x.event.recID)
+                .getDetailDispatch(x.event.recID , this.formModel?.entityName)
                 .subscribe((item) => {
                   this.data = item;
                   this.data.lstUserID = getListImg(item.relations);
@@ -466,7 +464,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           .subscribe((item: any) => {
             if (item.status == 0) {
               this.odService
-                .getDetailDispatch(this.view.dataService.data[0].recID)
+                .getDetailDispatch(this.view.dataService.data[0].recID , this.view.formModel.entityName)
                 .subscribe((item) => {
                   this.data = formatDtDis(item);
                   this.view.dataService.setDataSelected(this.data);
@@ -498,7 +496,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               this.view.dataService
                 .remove(this.view.dataService.dataSelected)
                 .subscribe();
-            } else this.view.dataService.add(x.event, 0).subscribe();
+            } else this.view.dataService.add(x.event, 0).subscribe(item=>{
+              this.view.dataService.onAction.next({ type: 'update', data: x.event });
+            });
           });
         });
         break;

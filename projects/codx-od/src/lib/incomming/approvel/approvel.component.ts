@@ -86,7 +86,7 @@ export class ODApprovelComponent
     this.data = null;
     if(id)
     {
-      this.odService.getDetailDispatch(id).subscribe((item) => {
+      this.odService.getDetailDispatch(id,this.formModel?.entityName).subscribe((item) => {
         //this.getChildTask(id);
         if (item) {
           this.data = formatDtDis(item);

@@ -88,7 +88,6 @@ export class IncommingComponent
   button?: ButtonModel;
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-
   userPermission: any;
   checkUserPer: any;
   compareDate = compareDate;
@@ -158,6 +157,7 @@ export class IncommingComponent
   ngAfterViewInit(): void {
     this.views = [
       {
+        id:"1",
         type: ViewType.listdetail,
         active: true,
         sameData: true,
@@ -169,6 +169,7 @@ export class IncommingComponent
         },
       },
       {
+        id:"2",
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -200,7 +201,6 @@ export class IncommingComponent
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       // option.zIndex = 499;
-      
       option.DataService = this.view?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         IncommingAddComponent,
@@ -364,7 +364,7 @@ export class IncommingComponent
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
-      this.odService.getDetailDispatch(id).subscribe((item) => {
+      this.odService.getDetailDispatch(id,this.view.formModel.entityName).subscribe((item) => {
         //this.getChildTask(id);
         if (item) {
           this.lstDtDis = formatDtDis(item);

@@ -1,3 +1,4 @@
+import { I } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -7,18 +8,21 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectorRef,
+  Optional,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
   ButtonModel,
   DialogRef,
+  NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { BP_Processes } from '../models/BP_Processes.model';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
 import { RevisionsComponent } from './revisions/revisions.component';
@@ -66,12 +70,20 @@ export class ProcessesComponent
   user: any;
   funcID: any;
   itemSelected: any;
+  titleReName = "Thay đổi tên";
+  dialogPopupReName: DialogRef;
+  @ViewChild('viewReName', { static: true }) viewReName;
+  @Input() process = new BP_Processes();
+  newName = '';
+  crrRecID = '';
+  dataSelected: any;
 
   constructor(
     inject: Injector,
+    private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private dt: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -97,8 +109,9 @@ export class ProcessesComponent
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.grid,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           resources: this.columnsGrid,
@@ -106,30 +119,29 @@ export class ProcessesComponent
         },
       },
       {
+        id: '2',
         type: ViewType.card,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           template: this.templateListCard,
         },
       },
       {
-        id: '1',
-        icon: 'icon-search',
         text: 'Search',
         hide: true,
-        type: ViewType.list,
+        type: ViewType.listdetail,
         sameData: true,
         active: false,
         model: {
-          template: this.templateSearch,
+          template2: this.templateSearch,
         },
       },
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
-    this.dt.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 
   searchChange($event) {
@@ -163,12 +175,12 @@ export class ProcessesComponent
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
-        this.dt.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }
       // else this.search();
     }
     catch (ex) {
-      this.dt.detectChanges();
+      this.changeDetectorRef.detectChanges();
       console.log(ex);
     }
   }
@@ -307,6 +319,34 @@ export class ProcessesComponent
     data.title = this.titleUpdateFolder;
     data.id = data.recID;
     this.callfc.openSide(PropertiesComponent, data, option);
+  }
+
+  reName(data) {
+    this.dataSelected = data;
+    this.newName = data.processName;
+    this.crrRecID = data.recID
+    this.dialogPopupReName = this.callfc.openForm(
+      this.viewReName,
+      '',
+      500,
+      10
+    );
+  }
+
+  valueChange(e) {
+    this.newName = e.data;
+  }
+
+  onSave() {
+    this.api.exec('BP', 'ProcessesBusiness', 'UpdateProcessNameAsync', [this.crrRecID, this.newName]).subscribe(res => {
+      if (res) {
+        this.dataSelected.processName = this.newName;
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notification.notifyCode('SYS007');
+        this.changeDetectorRef.detectChanges();
+      }
+      this.dialogPopupReName.close();
+    })
   }
 
   onDragDrop(e: any) {

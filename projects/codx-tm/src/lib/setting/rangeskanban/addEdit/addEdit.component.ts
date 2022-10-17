@@ -11,6 +11,8 @@ import {
   NotificationsService,
   CodxService,
   DialogData,
+  RequestOption,
+  CacheService,
 } from 'codx-core';
 import { RangeLine } from '../../../models/task.model';
 
@@ -25,17 +27,18 @@ export class AddEditComponent implements OnInit {
   title = 'Thêm khoảng thời gian';
   action = 'add';
   master: any;
+  orgData: any;
   dialog: DialogRef;
   dialogRangeLine: DialogRef;
   formModelRangeLine: FormModel = {
     formName: 'RangeLines',
     gridViewName: 'grvRangeLines',
   };
+  titleAction = ''
 
   constructor(
     private api: ApiHttpService,
-    private notiService: NotificationsService,
-    private codxService: CodxService,
+    private cache: CacheService,
     private callfc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData,
@@ -43,19 +46,46 @@ export class AddEditComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.master = dialog.dataService!.dataSelected;
+    this.orgData = JSON.parse(JSON.stringify(this.master));
     this.lines = this.master.rangeLines || [];
-    this.action = dialogData.data;
+    this.action = dialogData.data[0];
+    this.titleAction = dialogData.data[1];
     this.formModelRangeLine.userPermission = dialog.formModel.userPermission;
   }
   //#region Init
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.dialog.beforeClose.subscribe(res => {
+      if (res.event == null && this.action == 'edit') {
+        this.master.rangeName = this.orgData.rangeName;
+        this.master.note = this.orgData.note
+      }
+      this.dialog.dataService.clear();
+
+    })
+  }
   //#endregion
   //#region master
   onSave() {
-    this.dialog.dataService.save().subscribe((res) => {
+    if (!this.master['updateColumn']) {
+      this.dialog.close(true);
+      return;
+    }
+
+    this.dialog.dataService.save((opt: RequestOption) => {
+      opt.service = "BS";
+      opt.assemblyName = "BS";
+      opt.className = "RangesBusiness";
+      if (this.action == "add")
+        opt.methodName = "AddAsync";
+      else
+        opt.methodName = "UpdateAsync";
+
+      opt.data = this.dialog.dataService.dataSelected;
+      return true
+    }, 0).subscribe((res) => {
       if (res && !res.error) {
         this.dialog.dataService.hasSaved = false;
-        this.dialog.close();
+        this.dialog.close(true);
       }
     });
   }
@@ -94,7 +124,7 @@ export class AddEditComponent implements OnInit {
           this.lines.push(res);
           this.master.rangeLines = this.lines;
           this.line = new RangeLine();
-          dialog.close();
+          dialog.close(true);
         }
       });
   }
@@ -104,9 +134,12 @@ export class AddEditComponent implements OnInit {
       .exec<any>('BS', 'RangeLinesBusiness', 'UpdateAsync', this.line)
       .subscribe((res) => {
         if (res) {
-          this.lines.push(res);
+          let idx = this.lines.findIndex(x => x.id == this.line.id);
+          if (idx > -1)
+            this.lines[idx] = this.line;
           this.line = new RangeLine();
-          dialog.close();
+          this.master.rangeLines = this.lines;
+          dialog.close(true);
         }
       });
   }

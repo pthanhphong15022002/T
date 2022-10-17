@@ -105,6 +105,7 @@ export class PopupAddEmployeesComponent implements OnInit {
       .subscribe((res:any) => {
         if(res)
         {
+          console.log(res);
           this.paramaterHR = res;
           if(this.paramaterHR.stop) return;
           else

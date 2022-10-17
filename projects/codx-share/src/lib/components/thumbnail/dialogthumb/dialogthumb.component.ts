@@ -23,7 +23,6 @@ export class DialogthumbComponent implements OnInit {
   }
 
   afterClose(evt: any){
-    debugger
     this.dialogClosed.emit(this);
     this.Dialog.destroy();
   }

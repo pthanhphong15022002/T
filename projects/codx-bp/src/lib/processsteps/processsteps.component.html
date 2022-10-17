@@ -34,7 +34,14 @@
   </codx-card-img>
 </ng-template>
 
-<ng-template #cardImgFooter let-data let-setting="setting"> </ng-template>
+<ng-template #cardImgFooter let-data let-setting="setting">
+
+</ng-template>
+
+
+
+
+
 
 <!-- viewlist-content -detail-Process tesssssssssssssssssssssssss  -->
 <ng-template #itemViewList>
@@ -92,21 +99,15 @@
               <codx-temp-full
                 [title]="item?.stepName"
                 [titleCss]="'fs-3 mb-2'"
-                [baseHeaderRightTmp]="tmpPhase"
+                [baseHeaderRightTmp]="baseHeaderRightTmp"
                 [desc]="item?.memo"
+                [footer]="footerBase"
+                [dataItem]="item"
               >
               </codx-temp-full>
             </div>
-            <ng-template #tmpPhase>
-              <div>
-                <span class="text-danger">
-                  <span>{{ item.duration }} </span>
-                  <codx-label name="lblDay" default="ngày"></codx-label>
-                </span>
-              </div>
-            </ng-template>
 
-            <ng-container *ngIf="item?.items.length > 0">
+            <ng-container *ngIf="item?.items?.length > 0">
               <ng-container *ngFor="let item1 of item.items">
                 <div id="kt_docs_card_collapsible" class="collapse show">
                   <div class="card-body p-0">
@@ -115,18 +116,28 @@
                         <codx-temp-full
                           [title]="item1?.stepName2"
                           [titleCss]="'fs-5 mb-1'"
-                          [baseHeaderRightTmp]="tmp"
+                          [baseHeaderRightTmp]="baseHeaderRightTmp"
                           [desc]="item1?.memo"
+                          [dataItem]="item1"
                         >
                         </codx-temp-full>
-                        <ng-container *ngIf="item?.items.length > 0">
+
+                        <ng-container *ngIf="item?.items?.length > 0">
                           <ng-container *ngFor="let item2 of item1.items">
+                           <div class="steplist-item step-items rounded p-4">
                             <codx-temp-full
-                              [title]="item2?.stepName2"
-                              [titleCss]="'fs-5 mb-1'"
-                              [desc]="item2?.memo"
-                            >
-                            </codx-temp-full>
+                            cardCss="mb-5"
+                            [title]="item2?.stepName2"
+                            [titleCss]="'fs-5 mb-1'"
+                            [desc]="item2?.memo"
+                            [desc2]="item2?.note"
+                            [icoDesc2Css]="'text-danger'"
+                            [baseHeaderRightTmp]="baseHeaderRightTmp"
+                            [footer]="footerBase"
+                            [dataItem]="item2"
+                          >
+                          </codx-temp-full>
+                           </div>   
                           </ng-container>
                         </ng-container>
                       </div>
@@ -153,25 +164,6 @@
                   </div> -->
                   </div>
                 </div>
-
-                <!-- <ng-template #tmpTitle>
-                  <span>
-                    <codx-label name="lblActivity" default="Bước"></codx-label
-                  ></span>
-                  <span>{{ item1.stepNo }}</span
-                  ><codx-label name="lblSplit" default=":"></codx-label
-                  ><span>{{ item1.stepName2 }}</span>
-                </ng-template> -->
-
-                <ng-template #tmp>
-                  <div>
-                    <span class="text-danger"
-                      ><span>{{ item1.duration }}</span>
-                      <codx-label name="lblHour" default="h"></codx-label
-                      ><codx-label name="lblPeople" default="/UV"></codx-label
-                    ></span>
-                  </div>
-                </ng-template>
               </ng-container>
             </ng-container>
           </div>
@@ -181,3 +173,147 @@
   </div>
   <!-- </div> -->
 </ng-template>
+
+<!-- <ng-template #tmpTitle let-data>
+  <span> <codx-label name="lblActivity" default="Bước"></codx-label></span>
+  <span>{{ data.stepNo }}</span
+  ><codx-label name="lblSplit" default=":"></codx-label
+  ><span>{{ data.stepName2 }}</span>
+</ng-template> -->
+
+<ng-template #footerBase let-data>
+  <div
+    *ngIf="data?.attachments > 0 && data.stepType!='P'&& data.stepType!='A'"
+    class="d-flex align-items-center justify-content-between mt-4"
+  >
+    <div class="d-flex align-items-center mb-2">
+      <div class="fw-bold text-primary">
+        <codx-label
+          fiedName="lblAttachments"
+          [formModel]="view.formModel"
+          default="Tài liệu "
+        >
+        </codx-label>
+      </div>
+    </div>
+  </div>
+  <codx-attachment
+  #attachment
+  [objectType]="view.formModel.entityName"
+  [objectId]="data?.recID"
+  hideFolder="1"
+  hideImageUpload="0"
+  hideImageThumb="0"
+  hideUploadBtn="1"
+  hideDes="1"
+  type="inline"
+  allowMultiFile="1"
+  [formModel]="view.formModel"
+  [functionID]="funcID"
+  displayThumb="full"
+>
+</codx-attachment>
+
+  <div class="mt-5">
+    <codx-imgs
+      [width]="25"
+      objectId="ADMIN;HPHOA;HPHOA1;PMNHI"
+      objectType="AD_Users"
+      [numberImages]="3"
+    >
+    </codx-imgs>
+  </div>
+</ng-template>
+
+<ng-template #baseHeaderRightTmp let-data>
+  <div>
+    <span
+      class="text-danger"
+      *ngIf="data.stepType == 'P' || data.stepType == 'A'"
+    >
+      <span>{{ data?.duration }} </span>
+      <span *ngIf="data.stepType == 'P'">
+        <codx-label name="lblDay" default="ngày"></codx-label>
+      </span>
+      <span *ngIf="data.stepType == 'A'">
+        <codx-label name="lblDuration" default="h/UV"></codx-label>
+      </span>
+    </span>
+    <codx-mfunc
+      type="hover"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+
+
+  <!-- <div class="kanban-board w-300px me-1">
+    <div class="kanban-board-header bg-danger d-flex justify-content-between">
+        <div class="kanban-title-board">{{data?.stepName}}</div>
+        <div class="dropdown"> <codx-mfunc
+        
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          [isBookMark]="false"
+          [dataItem]="data"
+        >
+        </codx-mfunc></div>
+    </div>
+    <div class="kanban-board-body">
+        <div class="processStep border bg-white ">
+            <h4 class="text-dark fw-bold text-hover-primary fs-4">Gọi điện sơ vấn</h4>
+            <div class="box-body">
+                <div class="Activities mb-3">
+                    <label class="text-danger fw-bold mb-2">Tiêu chí tuyển chọn</label>
+                    <div class="check-list text-dark">
+                        <codx-input #checkbox type="checkbox" label="Học vấn" [checked]="false"
+                            labelPosition="After" [disabled]="false" class="test-check me-4 mb-2 "></codx-input>
+                        <codx-input #checkbox type="checkbox" label="Hẹn lịch phỏng vấn với ứng viên"
+                            [checked]="false" labelPosition="After" [disabled]="false"
+                            class="test-check me-4 mb-2 "></codx-input>
+                        <codx-input #checkbox type="checkbox" label="Chốt lịch phỏng vấn với hội đồng PV"
+                            [checked]="false" labelPosition="After" [disabled]="false"
+                            class="test-check me-4 mb-2 ">
+                        </codx-input>
+                        <codx-input #checkbox type="checkbox" label="Gởi mail & đặt phòng phỏng vấn"
+                            [checked]="false" labelPosition="After" [disabled]="false"
+                            class="test-check me-4 mb-2 "></codx-input>
+                    </div>
+                </div>
+                <div class="Attachments mb-3">
+                    <label class="text-primary fw-bold mb-2">Tiêu chí tuyển chọn</label>
+                    <div class="d-flex align-items-center">
+                        <img class="cursor-pointer me-3 w-20px" />
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex bg-footer bg-light-warning">
+                <div class="d-flex flex-column w-100 p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center card-icon-nowrap me-1 ">
+                            <span class="me-1 icon-16 icon-access_alarm"></span><span class="fw-bolb">Thời
+                                gian:</span>
+                        </div>
+                        <div class="badge  badge-white my-1 me-3">30’/hồ sơ</div>
+                    </div>
+                    <div class="d-flex align-items-center card-icon-nowrap me-1 ">
+                        <span class="me-1 icon-person_pin_circle"></span><span class="fw-bolb ">Nhân viên
+                            tuyển
+                            dụng</span>
+                    </div>
+                    <div class="d-flex align-items-center mt-2">
+                        <codx-imgs [width]="25" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users"
+                            [numberImages]="2">
+                        </codx-imgs>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div> -->
+
+
