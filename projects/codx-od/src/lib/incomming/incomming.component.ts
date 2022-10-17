@@ -88,7 +88,6 @@ export class IncommingComponent
   button?: ButtonModel;
   request: ResourceModel;
   resourceKanban?: ResourceModel;
-
   userPermission: any;
   checkUserPer: any;
   compareDate = compareDate;

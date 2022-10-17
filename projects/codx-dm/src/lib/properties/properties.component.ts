@@ -328,11 +328,11 @@ export class PropertiesComponent implements OnInit {
     }
 
     if (this.totalViews != 0) {
-      this.rating1 = ((_rating1 / this.totalViews) * 100).toFixed(2).toString() + "%";
-      this.rating2 = ((_rating2 / this.totalViews) * 100).toFixed(2).toString() + "%";
-      this.rating3 = ((_rating3 / this.totalViews) * 100).toFixed(2).toString() + "%";
-      this.rating4 = ((_rating4 / this.totalViews) * 100).toFixed(2).toString() + "%";
-      this.rating5 = ((_rating5 / this.totalViews) * 100).toFixed(2).toString() + "%";
+      this.rating1 = ((_rating1 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating2 = ((_rating2 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating3 = ((_rating3 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating4 = ((_rating4 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating5 = ((_rating5 / this.totalViews) * 100).toFixed(0).toString() + "%";
       this.totalRating = _sum / this.totalViews;
     }
     else {

@@ -74,10 +74,10 @@
                 <li class="nav-item">
                   <span
                     class="nav-link fw-bold cursor-pointer"
-                    [ngClass]="{ active: groupID == '0' }"
+                    [ngClass]="{ active: !groupID }"
                     (click)="filterStationery()"
-                    >Tất cả</span
-                  >
+                    ><codx-label name="lblAll" default="Tất cả"></codx-label
+                  ></span>
                 </li>
                 <li class="nav-item" *ngFor="let item of groupStationery">
                   <span
@@ -126,12 +126,8 @@
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="border w-200px h-100"
-    [imageSrc]="data?.icon ? '' : '../assets/media/svg/files/blank-image.svg'"
     [imageObjType]="'EP_Stationery'"
     [imageId]="data?.recID"
-    [title]="data?.resourceName"
-    [subTitle]="data?.resourceName"
-    [content]="data?.costPrice | currency: 'VND':'symbol':'3.0'"
     [rootData]="data"
     [footer]="cardItemFooter"
   >
@@ -140,6 +136,12 @@
 
 <ng-template #cardItemFooter let-data>
   <div class="d-flex flex-column flex-grow-1 mt-2">
+    <div class="fw-bold line-clamp line-clamp-1 text-start">
+      {{ data?.resourceName }}
+    </div>
+    <div class="text-start">
+      {{ data?.costPrice | currency: "VND":"symbol":"3.0" }}
+    </div>
     <div class="d-flex justify-content-between align-items-end mt-2">
       <div class="d-flex align-items-end me-2 codx-badge mb-3">
         <div class="d-flex align-items-center position-relative me-4">

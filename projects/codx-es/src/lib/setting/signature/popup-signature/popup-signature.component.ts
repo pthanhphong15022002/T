@@ -53,6 +53,7 @@ export class PopupSignatureComponent extends UIComponent {
   selectedFont;
   selectedFontIndex = 0;
   sMssg: string = '';
+  cbxName;
 
   constructor(
     private inject: Injector,
@@ -69,14 +70,6 @@ export class PopupSignatureComponent extends UIComponent {
     this.formModel = data?.data?.dialog?.formModel;
     this.setupShowForm = data?.data?.setupShowForm;
     this.data = data?.data.data;
-
-    if (!this.formModel) {
-      this.esService.getFormModel('ESS21').then((fm) => {
-        this.formModel = fm;
-        this.dialog.formModel = this.formModel;
-        this.esService.setCacheFormModel(this.formModel);
-      });
-    }
 
     if (!this.setupShowForm) {
       this.setupShowForm = new SetupShowSignature();
@@ -96,21 +89,31 @@ export class PopupSignatureComponent extends UIComponent {
 
   onInit(): void {
     if (!this.data?.recID) {
-      this.type = 'signFile';
-      this.esService
-        .getDataSignature(this.data?.userID, this.data?.signatureType)
-        .subscribe((res) => {
-          if (res) {
-            this.data = res[0];
-            this.isAddNew = res[1];
+      this.esService.getFormModel('ESS21').then((fm) => {
+        this.formModel = fm;
+        this.dialog.formModel = this.formModel;
+        //this.esService.setCacheFormModel(this.formModel);
+        this.type = 'signFile';
+        this.esService
+          .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+          .then((res) => {
+            if (res) this.cbxName = res;
+          });
+        this.esService
+          .getDataSignature(this.data?.userID, this.data?.signatureType)
+          .subscribe((res) => {
+            if (res) {
+              this.data = res[0];
+              this.isAddNew = res[1];
 
-            //Mới tạo và chữ ký công cộng -> mở popup chọn Supplier
-            if (this.isAddNew && this.data?.signatureType == 1) {
-              this.callfc.openForm(this.popupSupplier, '', 350, 420);
+              //Mới tạo và chữ ký công cộng -> mở popup chọn Supplier
+              if (this.isAddNew && this.data?.signatureType == 1) {
+                this.callfc.openForm(this.popupSupplier, '', 350, 420);
+              }
+              this.isAfterRender = true;
             }
-            this.isAfterRender = true;
-          }
-        });
+          });
+      });
     } else {
       this.isAfterRender = true;
     }
@@ -135,21 +138,35 @@ export class PopupSignatureComponent extends UIComponent {
 
   onSaveForm() {
     let i = 0;
+    if (
+      !this.imgSignature1?.imageUpload?.item &&
+      !this.imgSignature2?.imageUpload?.item &&
+      !this.imgStamp?.imageUpload?.item
+    ) {
+      this.dialog && this.dialog.close(this.data);
+      return;
+    }
+
     if (this.imgSignature1?.imageUpload?.item) i++;
     if (this.imgSignature2?.imageUpload?.item) i++;
     if (this.imgStamp?.imageUpload?.item) i++;
 
     if (this.imgSignature1?.imageUpload?.item) {
-      i++;
       this.imgSignature1
         .updateFileDirectReload(this.data.recID)
         .subscribe((img) => {
+          console.log('img', img);
+
           i--;
           if (img && this.data?.signature1 == null) {
             this.data.signature1 = (img[0] as any).recID;
             this.addEditSignature(i);
           }
-          if (i <= 0) this.dialog && this.dialog.close(this.data);
+          if (i <= 0) {
+            if (this.type == 'signFile') {
+              this.dialog && this.dialog.close(img);
+            } else this.dialog && this.dialog.close(this.data);
+          }
         });
     }
 
@@ -162,7 +179,11 @@ export class PopupSignatureComponent extends UIComponent {
             this.data.signature2 = (img[0] as any).recID;
             this.addEditSignature(i);
           }
-          if (i <= 0) this.dialog && this.dialog.close(this.data);
+          if (i <= 0) {
+            if (this.type == 'signFile') {
+              this.dialog && this.dialog.close(img);
+            } else this.dialog && this.dialog.close(this.data);
+          }
         });
     }
 
@@ -173,10 +194,13 @@ export class PopupSignatureComponent extends UIComponent {
           this.data.stamp = (img[0] as any).recID;
           this.addEditSignature(i);
         }
-        if (i <= 0) this.dialog && this.dialog.close(this.data);
+        if (i <= 0) {
+          if (this.type == 'signFile') {
+            this.dialog && this.dialog.close(img);
+          } else this.dialog && this.dialog.close(this.data);
+        }
       });
     }
-    this.dialog && this.dialog.close(this.data);
   }
 
   changeTab(tab) {
@@ -203,7 +227,16 @@ export class PopupSignatureComponent extends UIComponent {
     if (this.isAddNew) this.dialog && this.dialog.close();
   }
 
-  valueChange(event) {}
+  valueChange(event) {
+    if (event?.field && event?.component) {
+      this.data[event['field']] = event?.data;
+    }
+  }
 
-  onSaveSupplier(popup: DialogRef) {}
+  onSaveSupplier(popup: DialogRef) {
+    if (this.data?.supplier && this.data?.supplier != '1') {
+      popup && popup.close();
+    } else {
+    }
+  }
 }

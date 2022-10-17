@@ -5,6 +5,7 @@ import {
   ViewChild,
   Input,
   AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   ButtonModel,
@@ -65,7 +66,8 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
 
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,
+    private codxEpService: CodxEpService,    
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -215,9 +217,21 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddDriversComponent,
-        [this.dataSelected, true,this.popupTitle],
+        [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
     });
   }
 
@@ -234,9 +248,16 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddDriversComponent,
-            [this.view.dataService.dataSelected, false,this.popupTitle],
+            [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );
+          );    
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {
+              });
+            }
+          });     
         });
     }
   }
