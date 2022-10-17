@@ -20,12 +20,16 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom p-3 list-task" (clickMF)="clickMF($event, data)"
-    [hideMF]="!showMoreFunc" (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
-    [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
-    [icoStatusVll2]="vllPriority" [imageId]="data.createdBy" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
+    [hideMF]="!showMoreFunc" (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" 
+    [imageId]="data.createdBy" [imageWidth]="35" imgCss="me-3" imageObjType="AD_Users"
     [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.taskName"
-    [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
+    [formModel]="view.formModel" [footer]="footerList" [dataItem]="data" 
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
+    >
   </codx-temp-full>
+
+  <!-- [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''" [icoStatus2]="data?.priority"
+  [icoStatusVll2]="vllPriority"  -->
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
@@ -310,6 +314,30 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #baseHeaderRightTmp let-data>
+  <div>
+    <span [class]="data.isTimeOut ? 'icon-notifications icon-18 expired' : ''" >
+    </span>
+    <span
+    class="icon-18 me-1"
+    [class]="
+      data?.priority | vll: vllPriority:'icon' | async
+    "
+    [style.color]="
+      data?.priority
+        | vll: vllPriority:'textColor'
+        | async
+    "
+    ngbTooltip='{{data?.priority | vll: vllPriority:"text" | async}}'
+  >
+  </span>
+  </div> 
+  
+<!-- <span class="text-gray-700">{{
+  data?.priority | vll: vllPriority:"text" | async
+}}</span> -->
 </ng-template>
 
 
