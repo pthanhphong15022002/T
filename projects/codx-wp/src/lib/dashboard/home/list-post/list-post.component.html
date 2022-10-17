@@ -212,14 +212,16 @@
       <ng-container *ngIf="item.refType == 'WP_News'; else tmpSharePost">
         <ng-container *ngIf="item.news;else postShareDeleted">
           <div class="post mt-3">
-            <div (click)="naviagteWPNew(item.news)">
-              <codx-file [objectID]="item.refID" [objectType]="'WP_News'">
-              </codx-file>
-            </div>
-            <div class="p-2">
-              <div class="fw-bolder">{{item.news.subject}}</div>
-              <div>{{item.news.subContent}}</div>
-              <div class="text-gray-600 fs-7 me-2">{{item.news.createdOn | fmDT}}</div>
+            <div class="border-top border-bottom" (click)="naviagteWPNew(item.news)">
+              <div>
+                <codx-file [objectID]="item.refID" [objectType]="'WP_News'">
+                </codx-file>
+              </div>
+              <div class="p-2">
+                <div class="fw-bolder">{{item.news.subject}}</div>
+                <div>{{item.news.subContent}}</div>
+                <div class="text-gray-600 fs-7 me-2">{{item.news.createdOn | fmDT}}</div>
+              </div>
             </div>
           </div>
         </ng-container>
