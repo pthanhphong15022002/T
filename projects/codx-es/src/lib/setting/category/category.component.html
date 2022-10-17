@@ -75,6 +75,25 @@
   </div>
 </ng-template>
 
+<ng-template #eSign let-data>
+  <!-- <codx-input
+    type="checkbox"
+    class="check-add me-2"
+    name="select"
+    [crrValue]="data.eSign"
+    [disabled]="true"
+  >
+  </codx-input> -->
+  <codx-input
+    #checkbox
+    type="switch"
+    id="switch"
+    [checked]="data.eSign"
+    [disabled]="true"
+  >
+  </codx-input>
+</ng-template>
+
 <!-- <ng-template #color let-data>
   <div class="d-flex">
     <div class="badge badge-square badge-md me-3" [style.background]="data.color"></div>
