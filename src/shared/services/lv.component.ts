@@ -162,6 +162,7 @@ var lvFileClientAPI = {
             var fetcher = await fetch(url, {
                 method: 'POST',
                 headers:header,
+                credentials: 'include',
                 body: formData
             });
             if (fetcher.status >= 200 && fetcher.status < 300) {
