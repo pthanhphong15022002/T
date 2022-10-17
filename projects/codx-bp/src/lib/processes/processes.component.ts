@@ -21,6 +21,7 @@ import {
 } from 'codx-core';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
+import { RevisionsComponent } from './revisions/revisions.component';
 
 
 @Component({
@@ -87,6 +88,7 @@ export class ProcessesComponent
       { headerTemplate: this.itemVersionNo, width: 150 },
       { headerTemplate: this.itemActivedOn, width: 200 },
       { headerTemplate: this.itemMemo, width: 300 },
+      { field: '', headerText: '', width: 30 },
       { field: '', headerText: '', width: 30 },
 
     ];
@@ -317,6 +319,32 @@ export class ProcessesComponent
       desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' + position + '</span></div>';
 
     return desc + '</div>';
+  }
+
+  revisions(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          RevisionsComponent,
+          ['edit', this.titleAction],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+        });
+      });
   }
   //#endregion
 }
