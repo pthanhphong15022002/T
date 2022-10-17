@@ -153,11 +153,13 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(AddGiftGroupComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
+      let popupAdd = this.callfc.openSide(AddGiftGroupComponent, obj, option);
+      popupAdd.closed.subscribe((e) => {
         if (e?.event) {
           this.view.dataService.add(e.event, 0).subscribe();
           this.changedr.detectChanges();
+        } else {
+          this.viewbase.dataService.clear();
         }
       });
     });
@@ -176,9 +178,14 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(AddGiftGroupComponent, obj, option);
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event) {
+        let popupEdit = this.callfc.openSide(
+          AddGiftGroupComponent,
+          obj,
+          option
+        );
+        popupEdit.closed.subscribe((e) => {
+          if (!e?.event) this.viewbase.dataService.clear();
+          else {
             this.view.dataService.update(e.event).subscribe();
             this.changedr.detectChanges();
           }
