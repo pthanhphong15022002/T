@@ -6,12 +6,14 @@
     </div>
     <div class="w-50px min-w-50px">
       <div class="d-flex align-items-center">
-        <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''"></span>
+        <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''" [ngbPopover]="popOverDue"
+        #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()"
+        placement="top right bottom" ></span>
         <span [class]="data?.priority | vll: vllPriority:'icon' | async" [style.color]="
                   data?.priority | vll: vllPriority:'textColor' | async
                     "  [ngbPopover]="popDetailPriority"
-                    #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
-                    placement="bottom" >
+                    #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()"
+                    placement="top right bottom" >
         </span>
       </div>
     </div>
@@ -176,7 +178,11 @@
 </ng-template>
 
 <ng-template #popDetailPriority>
-  <span><codx-label name="Priority" formModel="f" default="Độ ưu tiên :"></codx-label></span><span>
+  <span><codx-label name="Priority" [formModel]="formModel" default="Độ ưu tiên :"></codx-label></span><span>
     {{data?.priority | vll: vllPriority:"text" | async}}
   </span>
+</ng-template>
+
+<ng-template #popOverDue>
+  <span><codx-label name="lblOverDue"[formModel]="formModel" default="Đã quá hạn !"></codx-label></span>
 </ng-template>

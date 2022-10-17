@@ -18,7 +18,7 @@ import { FormModel } from 'codx-core';
 export class CodxViewAssignComponent implements OnInit, OnChanges {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
-  @Input() vllStatus = 'TMT004';
+  @Input() vllStatus = 'TMT007';
   dialog: any;
   isClose = true;
   isShow = false;
@@ -44,5 +44,8 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
         element.classList.add('icon-add_box');
       }
     }
+  }
+  clickTemp(e){
+    e.stopPropagation() ;
   }
 }
