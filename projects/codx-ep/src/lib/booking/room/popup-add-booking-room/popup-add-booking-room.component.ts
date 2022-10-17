@@ -664,11 +664,17 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         //     this.endTime=tmpEndTime[0]+":"+tmpEndTime[1];
         //   }          
         // });
-        
-        
-        
-      });
-  
+        res.forEach(day => {        
+          if(day?.shiftType=="1"){
+            let tmpstartTime= day?.startTime.split(":");
+            this.startTime=tmpstartTime[0]+":"+tmpstartTime[1];
+          }
+          else if(day?.shiftType=="2"){
+            let tmpEndTime= day?.endTime.split(":");
+            this.endTime=tmpEndTime[0]+":"+tmpEndTime[1];
+          }          
+        });
+      });  
       this.changeDetectorRef.detectChanges();
     }
   }
