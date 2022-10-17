@@ -353,8 +353,12 @@
 </ng-template>
 <!-- content body -->
 <ng-template #empty>
-  <div class="card-body-nodata text-center">
-    <img src="../../../../assets/img/EmptyDataPortal.png" />
+  <div class="d-flex justify-content-between">
+    <div [innerHTML]="strEmtyData">
+    </div>
+    <div>
+      <img src="../../../../assets/img/EmptyDataPortal.png" />
+    </div>
   </div>
 </ng-template>
 

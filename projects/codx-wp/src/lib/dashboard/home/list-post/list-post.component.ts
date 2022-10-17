@@ -57,6 +57,8 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
   showEmojiPicker = false;
   dataVll = [];
   title: string = '';
+  strEmtyData: string = '';
+
   searchField = '';
   checkFormAddPost = false;
   predicateWP: string = '';
@@ -133,9 +135,15 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
         this.dt.detectChanges();
       }
     });
-    this.cache.message('WP011').subscribe((mssg: any) => {
-      if (mssg) {
-        this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
+    this.cache.message('WP011').subscribe((mssg1: any) => {
+      if (mssg1) {
+        this.title = Util.stringFormat(mssg1.defaultName, this.user.userName);
+        this.dt.detectChanges();
+      }
+    });
+    this.cache.message('WP035').subscribe((mssg2: any) => {
+      if (mssg2) {
+        this.strEmtyData = mssg2.defaultName;
         this.dt.detectChanges();
       }
     });

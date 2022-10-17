@@ -242,10 +242,10 @@
                     </div>
                 </div>
             </ng-template>
-            <ng-container *ngIf="dataShare.refType != 'WP_News'">
+            <ng-container *ngIf="entityName != 'WP_News'">
                 <div class="d-flex mb-3 card-border my-2">
                     <codx-img [width]="30" 
-                        [objectId]="dataShare?.createdBy" 
+                        [objectId]="dataShare.createdBy" 
                         bjectType="AD_Users">
                     </codx-img>
                     <div class="d-flex flex-column flex-grow-1 ms-2">
