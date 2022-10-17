@@ -65,7 +65,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   // test data tra ve la  1 []
   dataTreeProcessStep = [];
   urlBack = '/bp/processes/BPT1'  //gang tam
-
+ data : any //them de test 
 //view file
  
 
@@ -90,20 +90,21 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    // this.request = new ResourceModel();
-    // this.request.service = 'BP';
-    // this.request.assemblyName = 'BP';
-    // this.request.className = 'ProcessStepsBusiness';
-    // this.request.method = 'GetProcessStepsAsync';
-    // this.request.idField = 'recID';
-    // this.request.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessStepsBusiness';
+    this.request.method = 'GetProcessStepsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
 
-    //tam coment da
-    // this.resourceKanban = new ResourceModel();
-    // this.resourceKanban.service = 'SYS';
-    // this.resourceKanban.assemblyName = 'SYS';
-    // this.resourceKanban.className = 'CommonBusiness';
-    // this.resourceKanban.method = 'GetColumnsKanbanAsync';
+   //tam test
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'BP';
+    this.resourceKanban.assemblyName = 'BP';
+    this.resourceKanban.className = 'ProcessStepsBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};
 
     this.button = {
       id: 'btnAdd',
