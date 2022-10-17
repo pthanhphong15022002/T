@@ -247,7 +247,8 @@ export class IncommingAddComponent implements OnInit {
     if (this.type == 'add' || this.type == 'copy') {
       this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
-      if (this.type == 'copy') {
+      if (this.type == 'copy') 
+      {
         delete this.dispatch.id;
         this.dispatch.relations = null;
         this.dispatch.updates = null;

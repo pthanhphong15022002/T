@@ -478,6 +478,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'SYS04': {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
+          this.view.dataService.dataSelected.recID = res?.recID
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(
