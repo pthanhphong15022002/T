@@ -29,9 +29,8 @@ declare var $: any;
 })
 export class RoleDetailComponent
   extends UIComponent
-  implements OnDestroy, OnChanges {
-  // dataPermissions: any;
-  // dataAdvances: any;
+  implements OnDestroy, OnChanges
+{
   dataMoreFuntions: any;
   dataBasic: any = [];
   dataMore: any = [];
@@ -52,6 +51,8 @@ export class RoleDetailComponent
   sub: Subscription;
   funcID: any;
   views = [];
+  formName = '';
+  gridViewName = '';
 
   @ViewChild('template') template: TemplateRef<any>;
 
@@ -66,17 +67,6 @@ export class RoleDetailComponent
     private route: ActivatedRoute,
     injector: Injector
   ) {
-    // super(
-    //   {
-    //     title: "",
-    //     formName: "",
-    //     gridViewName: "",
-    //     entity: "",
-    //     functionID: "",
-    //     hiddenTree: true
-    //   } as ModelPage,
-    //   injector
-    // );
     super(injector);
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
@@ -84,7 +74,7 @@ export class RoleDetailComponent
     this.tenant = this.tenantStore.get()?.tenant;
     this.roleName = this.tempService.roleName;
   }
-  ngOnChanges(changes: SimpleChanges): void { }
+  ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
     var rid = this.at.snapshot.queryParams.recID;
     if (rid) {
@@ -157,7 +147,6 @@ export class RoleDetailComponent
   }
 
   LoadAsside() {
-    //$('#kt_aside_menu').empty();
     this.api
       .execSv(
         'SYS',
@@ -167,53 +156,55 @@ export class RoleDetailComponent
         [this.recid]
       )
       .subscribe((res: any) => {
-        console.log('check GetFunctionRoleAsync', res);
         if (res) {
           var data = res;
           this.myTree = data;
           this.df.detectChanges();
-          //this.loadSource();
+          this.loadSource();
         }
       });
   }
 
   onSelectionAddChanged(evt: any, tree: any) {
-    if (evt) {
+    if (evt && evt.data) {
+      let item = evt.data;
+      this.formName = item.formName;
+      this.gridViewName = item.gridViewName;
       this.api
         .execSv(
           'SYS',
           'ERM.Business.SYS',
           'FunctionListBusiness',
           'GetFunctionRoleAsync',
-          [this.recid, evt.data.functionID]
+          [this.recid, item.functionID]
         )
         .subscribe((res: any) => {
           if (res) {
-            var data = res;
-            var dataTree = tree.dicDatas[evt.data.functionID];
-            dataTree.items = data;
-            //this.myTree = data;
+            var dataTree = tree.dicDatas[item.functionID];
+            dataTree.items = res;
             this.df.detectChanges();
-            //this.loadSource();
+            this.loadSource();
           }
         });
     }
   }
 
   loadSource() {
-    var formName = this.RolesService.formName;
-    var gridViewName = this.RolesService.gridViewName;
+    var formName = this.formName;
+    var gridViewName = this.gridViewName;
     this.api
-      .call('ERM.Business.AD', 'RolesBusiness', 'GetModelFromRolesAsync', [
-        formName,
-        gridViewName,
-      ])
-      .subscribe((res) => {
+      .execSv(
+        'SYS',
+        'ERM.Business.AD',
+        'RolesBusiness',
+        'GetModelFromRolesAsync',
+        [formName, gridViewName]
+      )
+      .subscribe((res: any) => {
         if (res) {
-          var data = res.msgBodyData[0];
-          this.dataBasic = data.Basic;
-          this.dataMore = data.More;
-          this.dataExport = data.Export;
+          this.dataBasic = res.Basic;
+          this.dataMore = res.More;
+          this.dataExport = res.Export;
           this.df.detectChanges();
         }
       });

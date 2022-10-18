@@ -1,6 +1,6 @@
 export class ChatBoxInfo{
-    constructor(){}
     public groupId: string;
+    public groupName: string;
     public groupType: string;
     public ownerId: string;
     public ownerName: string;
@@ -9,4 +9,6 @@ export class ChatBoxInfo{
     public isMinimum: boolean;
     public numberNotRead: number;
     public messageInfo: any;
+    public members: any = new Array();
+    public menberType: string;
 }

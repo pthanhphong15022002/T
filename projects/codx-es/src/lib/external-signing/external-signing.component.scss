@@ -31,17 +31,17 @@
 
 .codx-template {
   .codx-temp-header {
-    position: fixed;
+    position: relative;
     top: 0;
     right: 0;
     left: 0;
     z-index: 102;
-    height: 50px;
+    height: 60px;
     padding: 0;
     box-shadow: 0px 10px 30px 0px rgb(82 63 105 / 5%);
   }
   .codx-temp-body {
-    height: calc(100% - 50px);
+    height: calc(100% - 60px);
   }
 }
 .btn-label {

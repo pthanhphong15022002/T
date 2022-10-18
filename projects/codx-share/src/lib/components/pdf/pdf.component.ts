@@ -642,7 +642,7 @@ export class PdfComponent
             lstAreaOnPage?.forEach((area) => {
               let isRender = false;
               if (
-                (!this.isApprover && !area.isLock) ||
+                (area.labelType != '8' && !this.isApprover && !area.isLock) ||
                 (this.isApprover &&
                   area.signer == this.curSignerID &&
                   area.stepNo == this.stepNo)
@@ -657,7 +657,7 @@ export class PdfComponent
                     this.addArea(
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature,
+                      ).signature1,
                       'img',
                       area.labelType,
                       this.isEditable
@@ -676,7 +676,7 @@ export class PdfComponent
                     this.addArea(
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature,
+                      ).signature2,
                       'img',
                       area.labelType,
                       this.isEditable
@@ -1237,52 +1237,12 @@ export class PdfComponent
     }
 
     this.crrType = type;
-    // switch (type?.value) {
-    //   case 'S1':
-    //     if (!this.signerInfo?.signature1) {
-    //       let setupShowForm = new SetupShowSignature();
-    //       switch (this.signerInfo?.stepType) {
-    //         case 'S': // ký chính
-    //           setupShowForm.showSignature1 = true;
-    //           this.addSignature(setupShowForm);
-    //           return;
-    //       }
-    //     }
-    //     // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-    //     break;
-    //   case 'S2':
-    //     if (!this.signerInfo?.signature2) {
-    //       let setupShowForm = new SetupShowSignature();
-    //       switch (this.signerInfo?.stepType) {
-    //         case 'S': // ký nháy
-    //           setupShowForm.showSignature2 = true;
-    //           this.addSignature(setupShowForm);
-    //           return;
-    //       }
-    //     }
-    //     // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-    //     break;
-    //   case 'S3':
-    //     if (!this.signerInfo?.stamp) {
-    //       let setupShowForm = new SetupShowSignature();
-
-    //       setupShowForm.showStamp = true;
-
-    //       this.addSignature(setupShowForm);
-    //       return;
-    //     }
-    //     this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
-    //     break;
-    // }
 
     if (this.isEditable) {
       this.holding = type?.value;
       switch (type?.value) {
         case 'S1':
-          if (
-            !this.signerInfo?.signature1 &&
-            this.signerInfo?.stepType == 'S'
-          ) {
+          if (!this.signerInfo?.signature1) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showSignature1 = true;
@@ -1294,10 +1254,7 @@ export class PdfComponent
             : '';
           break;
         case 'S2':
-          if (
-            !this.signerInfo?.signature2 &&
-            this.signerInfo?.stepType == 'S'
-          ) {
+          if (!this.signerInfo?.signature2) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showSignature2 = true;
@@ -1309,7 +1266,7 @@ export class PdfComponent
             : '';
           break;
         case 'S3':
-          if (!this.signerInfo?.stamp && this.signerInfo?.stepType == 'S') {
+          if (!this.signerInfo?.stamp) {
             // thiet lap con dau
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showStamp = true;
@@ -1483,6 +1440,13 @@ export class PdfComponent
     }
   }
   changeSigner(e: any) {
+    //reset
+    if (this.needAddKonva) {
+      this.url = '';
+      this.holding = 0;
+      this.needAddKonva?.destroy();
+      this.needAddKonva = null;
+    }
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;
@@ -1567,11 +1531,11 @@ export class PdfComponent
       let labelType = '';
       switch (person.stepType) {
         case 'S1': //chu ky chinh
-          url = person.signature;
+          url = person.signature1;
           labelType = person.stepType;
           break;
         case 'S2': //chu ky nhay
-          url = person.signature;
+          url = person.signature2;
           labelType = person.stepType;
           break;
         case 'S3': //con dau

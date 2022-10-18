@@ -157,7 +157,7 @@ export class EmployeesComponent extends UIComponent {
       popup.closed.subscribe((res:any) => {
         if(res && res.event){
           let data = res.event;
-          this.view.dataService.add(data).subscribe();
+          this.view.dataService.add(data,0).subscribe();
           this.detectorRef.detectChanges();
         }
       })

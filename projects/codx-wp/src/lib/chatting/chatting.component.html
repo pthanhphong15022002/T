@@ -25,15 +25,91 @@
 </ejs-splitter> -->
 
 
-<codx-views #view  [views]="views" entityName="TM_Task" service="TM" assemblyName="TM" className="TaskBusiness" method="GetTasksAsync">
+<codx-views #view  
+    [views]="views"
+    [idField]="'recID'"
+    entityName="WP_Messages" 
+    service="WP" 
+    assemblyName="ERM.Business.WP"
+    className="ChatBusiness" 
+    method="LoadChatMessagesAsync">
 </codx-views>
 <!-- #itemTemplate  let-data-->
-<ng-template #itemTemplate>
 
+
+
+<ng-template #itemTemplate let-data>
+    <div class="d-flex flex-stack py-2 Unread" *ngIf="!data.isRead">
+    <div class="d-flex align-items-center">
+        <ng-container *ngIf="data.groupType == '1'">
+            <codx-img [objectId]="data.senderId" 
+                objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+            </codx-img>
+        </ng-container>
+
+        <ng-container *ngIf="data.groupType == '2'">
+            <div class="symbol symbol-35px symbol-circle">
+                <img alt="Pic" [src]="data.picture">
+            </div>
+        </ng-container>
+
+        <div class="ms-5">
+            <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+                {{data.groupName}} </a>
+            <div class="fw-bold text-primary">
+                <span class="me-2"></span><span>{{data.message}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-end ms-2">
+        <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
+        <span class="badge badge-primary badge-circle w-10px h-10px me-1"></span>
+    </div>
+</div>
+
+<div class="d-flex flex-stack py-2 read" *ngIf="data.isRead">
+    <div class="d-flex align-items-center">
+        <ng-container *ngIf="data.groupType == '1'">
+            <codx-img [objectId]="data.colabId" [objectName]="data.colabName"
+                objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+            </codx-img>
+        </ng-container>
+
+        <ng-container *ngIf="data.groupType == '2'">
+            <div class="symbol symbol-35px symbol-circle">
+                <img alt="Pic" [src]="data.picture">
+            </div>
+        </ng-container>
+        <div class="ms-5">
+            <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+                {{data.groupName}} </a>
+            <div class="fw-bold text-gray-400">
+                <span class="icon-local_offer text-success icon-16 me-2"></span>
+                <span class=" me-2">{{data.message}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-end ms-2">
+        <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
+        <span class="badge badge-secondary badge-circle w-10px h-10px me-1"></span>
+    </div>
+</div>
 </ng-template>
    <!-- view detail -->
 <ng-template #panelRightRef>
 
     aaaaaaaaaaaaaaaaaaaa
  
+</ng-template>
+<ng-template #tmpSearch>
+    <codx-searchbar #searchbar [width]="600" (searchEvent)="doFilter($event)"></codx-searchbar>
+
+    <div class="me-2">
+        <button class="btn btn-sm btn-icon btn-active-light-primary" (click)="openCreategroupForm()">
+            <span class="icon-group_add icon-24 text-dark-75 text-hover-primary"></span>
+        </button>
+    </div>
+
 </ng-template>
