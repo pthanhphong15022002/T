@@ -26,9 +26,9 @@
     </div>
 </div> -->
 
-<ejs-listbox [dataSource]='data' [allowDragAndDrop]='true'>
-    <ng-template #itemTemplate let-data>
-        <div class="card-survey">
+<div class="card-survey">
+    <ejs-listbox [dataSource]='data' [allowDragAndDrop]='true'>
+        <ng-template #itemTemplate let-data>
             <div class="control-section inplace-editor-control-section form-layout" #formlayout
                 id='inplace-editor-control'>
                 <div class="content-wrapper">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </ng-template>
-</ejs-listbox>
-<button style="display: none"></button>
+        </ng-template>
+    </ejs-listbox>
+    <button style="display: none"></button>
+</div>

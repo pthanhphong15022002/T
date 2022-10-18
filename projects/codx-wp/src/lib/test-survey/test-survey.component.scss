@@ -1,8 +1,6 @@
 .card-survey {
-  width: 60% !important;
-  background-color: white;
-  border: 1px solid white;
-  border-radius: 0.6rem;
+  max-width: fit-content !important;
+  margin: auto;
 }
 
 .border-0 {
@@ -18,8 +16,8 @@
 .inplace-editor-control-section #formId {
   padding-top: 20px;
   margin-bottom: 45px;
-  border: 1px solid white;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.36);
+  border: 1px solid gray;
+  box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
   border-radius: 5px;
 }
 
@@ -165,4 +163,12 @@ input#Title_editor {
 
 .e-rte-content {
   margin-top: 2px !important;
+}
+
+.e-listbox-wrapper {
+  border: 0 !important;
+}
+
+.e-list-item {
+  background-color: white !important;
 }
