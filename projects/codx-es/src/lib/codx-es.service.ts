@@ -18,6 +18,7 @@ import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
 
+export const UrlUpload: string = 'http://172.16.1.210:8011';
 export class GridModels {
   pageSize: number;
   entityName: string;
@@ -786,6 +787,16 @@ export class CodxEsService {
       tmpHistory
     );
   }
+
+  sendEmailTemplate(emailRecID) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'SendEmailAsync',
+      emailRecID
+    );
+  }
   //#endregion
 
   //#region ES_SignFiles
@@ -943,6 +954,16 @@ export class CodxEsService {
     );
   }
 
+  addQRBeforeRelease(sfRecID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'AddQRBeforeReleaseAsync',
+      [sfRecID]
+    );
+  }
+
   release(oSignFile: any, entityName: string, funcID: string): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -1083,38 +1104,8 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(
-    pages,
-    lstImg,
-    imgUrl,
-    x,
-    y,
-    width,
-    height,
-    page,
-    stepNo,
-    isAwait,
-    userID,
-    sfID,
-    mode,
-    comment
-  ) {
-    let data = [
-      pages,
-      lstImg,
-      imgUrl,
-      x,
-      y,
-      width,
-      height,
-      page,
-      stepNo,
-      isAwait,
-      userID,
-      sfID,
-      mode,
-      comment,
-    ];
+  updateSignFileTrans(stepNo, isAwait, userID, sfID, mode, comment) {
+    let data = [stepNo, isAwait, userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
@@ -1124,16 +1115,16 @@ export class CodxEsService {
     );
   }
 
-  approveAsync(transID, status, reasonID, comment) {
-    let data = [transID, status, reasonID, comment];
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'ApproveAsync',
-      data
-    );
-  }
+  // approveAsync(transID, status, reasonID, comment) {
+  //   let data = [transID, status, reasonID, comment];
+  //   return this.api.execSv(
+  //     'es',
+  //     'ERM.Business.ES',
+  //     'ApprovalTransBusiness',
+  //     'ApproveAsync',
+  //     data
+  //   );
+  // }
   //#endregion
 
   //#region CA

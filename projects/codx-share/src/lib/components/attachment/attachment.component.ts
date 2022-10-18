@@ -784,7 +784,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     await this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectId = this.objectId;
-
       this.fileUploadList[i].description = this.description[i];
 
       toltalUsed += this.fileUploadList[i].fileSize;
@@ -803,7 +802,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
         .toPromise()
         .then((res) => {
           if (res != null) {
-            debugger;
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
@@ -977,6 +975,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               height: 200, //Kích thước của file ảnh Thum bề dọc
             },
             IsPublic: true,
+            ThumbConstraints:"30,60,120,300,500,600"
           },
         }
       );
@@ -1014,6 +1013,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             height: 200, //Kích thước của file ảnh Thum bề dọc
           },
           IsPublic: true,
+          ThumbConstraints:"30,60,120,300,500,600"
         },
       })
     );
@@ -1162,7 +1162,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (fileItem.fileSize % chunSizeInfBytes > 0) {
         numOfChunks++;
       }
-
       //api/lv-docs/files/upload
       for (var i = 0; i < numOfChunks; i++) {
         var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file

@@ -30,7 +30,10 @@ import {
   pdfDefaultOptions,
   TextLayerRenderedEvent,
 } from 'ngx-extended-pdf-viewer';
-import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
+import {
+  CodxEsService,
+  UrlUpload,
+} from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
 import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
 import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signature/popup-signature/popup-signature.component';
@@ -132,6 +135,8 @@ export class PdfComponent
   curSelectedPageGroup;
   formAnnot: FormGroup;
   renderQRAllPage = false;
+
+  imgConfig = ['S1', 'S2', 'S3', '8'];
 
   //save to db
   after_X_Second: number = 100;
@@ -443,142 +448,17 @@ export class PdfComponent
   signPDF(mode, comment): any {
     if (this.transRecID) {
       return new Promise<any>((resolve, rejects) => {
-        let lstAddBefore = [];
-        let lstPages = [];
-        this.tr.remove();
-        this.lstLayer.forEach((layer) => {
-          let page = Number(layer.attrs.id.replace('layer', ''));
-          if (page != this.pageMax) {
-            let areaInfo = [];
-            layer.children.forEach((child) => {
-              let name: tmpAreaName = JSON.parse(child.name());
-              if (name.LabelType != '8') {
-                areaInfo.push({
-                  page: page,
-                  position: {
-                    x: (child.x() / this.xScale) * 0.75,
-                    y: (child.y() / this.yScale) * 0.75,
-                    w: (child.width() / this.xScale) * 0.75,
-                    h: (child.height() / this.yScale) * 0.75,
-                  },
-                  url: child.toDataURL().replace('data:image/png;base64,', ''),
-                });
-              }
-            });
-            if (areaInfo.length != 0) {
-              lstPages.push(page);
-              lstAddBefore.push(areaInfo);
-            }
-          }
-        });
-
-        let layer = this.lstLayer.get(this.pageMax);
-        let children = layer.children;
-
-        let imgUrl = '';
-        let x = 0;
-        let y = 0;
-        let width = 0;
-        let height = 0;
-
-        if (children.length != 0) {
-          let top = children?.reduce((prev, curr) => {
-            return prev.attrs.x < curr.attrs.x ? prev : curr;
-          });
-
-          let bot = children?.reduce((prev, curr) => {
-            return prev.attrs.x > curr.attrs.x ? prev : curr;
-          });
-
-          let left = children?.reduce((prev, curr) => {
-            return prev.attrs.y < curr.attrs.y ? prev : curr;
-          });
-
-          let right = children?.reduce((prev, curr) => {
-            return prev.attrs.y > curr.attrs.y ? prev : curr;
-          });
-
-          x = top.attrs.x;
-          y = left.attrs.y;
-
-          width = left.attrs.x - right.attrs.x + right.width() * right.scaleX();
-          height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
-          imgUrl = layer.toDataURL({
-            quality: 1,
-            x: x,
-            y: y,
-
-            width: width,
-            height: height,
-          });
-        }
-
-        let approveStt = '5';
-
-        switch (mode) {
-          case '1': {
-            approveStt = '5';
-            break;
-          }
-          case '2': {
-            approveStt = '4';
-            break;
-          }
-          case '3': {
-            approveStt = '2';
-            break;
-          }
-        }
         this.esService
-          .approveAsync(this.transRecID, approveStt, '', '')
-          .subscribe((returnModel: any) => {
-            console.log('returnModel', returnModel);
-
-            if (!returnModel?.msgCodeError) {
-              if (this.isAwait) {
-                this.esService
-                  .updateSignFileTrans(
-                    lstPages,
-                    lstAddBefore,
-                    imgUrl.replace('data:image/png;base64,', ''),
-                    x / this.xScale,
-                    y / this.yScale,
-                    width / this.xScale,
-                    height / this.yScale,
-                    this.pageMax,
-                    this.stepNo,
-                    this.isAwait,
-                    this.user.userID,
-                    this.recID,
-                    mode,
-                    comment
-                  )
-                  .subscribe((status) => {
-                    resolve(status);
-                  });
-              } else {
-                // this.notificationsService.notifyCode('ES010');
-                resolve(true);
-                this.esService
-                  .updateSignFileTrans(
-                    lstPages,
-                    lstAddBefore,
-                    imgUrl.replace('data:image/png;base64,', ''),
-                    x / this.xScale,
-                    y / this.yScale,
-                    width / this.xScale,
-                    height / this.yScale,
-                    this.pageMax,
-                    this.stepNo,
-                    this.isAwait,
-                    this.user.userID,
-                    this.recID,
-                    mode,
-                    comment
-                  )
-                  .subscribe((status) => {});
-              }
-            }
+          .updateSignFileTrans(
+            this.stepNo,
+            this.isAwait,
+            this.user.userID,
+            this.recID,
+            mode,
+            comment
+          )
+          .subscribe((status) => {
+            resolve(status);
           });
       });
     }
@@ -765,17 +645,20 @@ export class PdfComponent
                 (!this.isApprover && !area.isLock) ||
                 (this.isApprover &&
                   area.signer == this.curSignerID &&
-                  area.stepNo == this.stepNo)
+                  area.stepNo == this.stepNo &&
+                  area.labelType != '8')
               ) {
                 isRender = true;
               }
               if (isRender) {
+                console.log('area', area.labelType);
+
                 switch (area.labelType) {
-                  case '1': {
+                  case 'S1': {
                     this.addArea(
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature,
+                      ).signature1,
                       'img',
                       area.labelType,
                       this.isEditable
@@ -790,7 +673,26 @@ export class PdfComponent
                     );
                     break;
                   }
-                  case '2': {
+                  case 'S2': {
+                    this.addArea(
+                      this.lstSigners.find(
+                        (signer) => signer.authorID == area.signer
+                      ).signature2,
+                      'img',
+                      area.labelType,
+                      this.isEditable
+                        ? !this.isEditable
+                        : area.allowEditAreas
+                        ? area.allowEditAreas
+                        : !area.isLock,
+                      false,
+                      area.signer,
+                      area.stepNo,
+                      area
+                    );
+                    break;
+                  }
+                  case 'S3': {
                     this.addArea(
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
@@ -871,8 +773,6 @@ export class PdfComponent
 
           //stage event
           stage.on('mouseenter', (mouseover: any) => {
-            console.log('mouseover', mouseover);
-
             if (this.needAddKonva) {
               this.tr.nodes([this.needAddKonva]);
               this.tr.forceUpdate();
@@ -895,7 +795,7 @@ export class PdfComponent
                         );
 
                         let sameLable = childName.LabelType == name.LabelType;
-                        let isUnique = ['1', '2', '8'].includes(
+                        let isUnique = this.imgConfig.includes(
                           childName.LabelType.toString()
                         );
                         let sameSigner = childName.Signer == name.Signer;
@@ -906,7 +806,7 @@ export class PdfComponent
                     });
                     this.holding = 0;
                     if (
-                      !['1', '2', '8'].includes(name.LabelType.toString()) ||
+                      !this.imgConfig.includes(name.LabelType.toString()) ||
                       signed?.length == 1
                     ) {
                       switch (name.Type) {
@@ -1286,91 +1186,123 @@ export class PdfComponent
       data: model,
       setupShowForm: setupShowForm,
     };
-    this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
+    let popupSignature = this.callfc.openForm(
+      PopupSignatureComponent,
+      '',
+      800,
+      600,
+      '',
+      data
+    );
+    popupSignature.closed.subscribe((res) => {
+      if (res?.event[0]) {
+        let img = res.event[0];
+        switch (img?.referType) {
+          case 'S1': // Ky chinh
+            this.signerInfo.signature1 = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.signature1 ?? '';
+            break;
+          case 'S2': //Ky nhay
+            this.signerInfo.signature2 = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.signature2 ?? '';
+            break;
+          case 'S3': //Con dau
+            this.signerInfo.stamp = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.stamp ?? '';
+            break;
+        }
+      }
+    });
   }
 
-  changeAnnotationItem(type: number) {
-    switch (type) {
-      case 1:
-        if (!this.signerInfo?.signature) {
-          let setupShowForm = new SetupShowSignature();
-          switch (this.signerInfo?.stepType) {
-            case 'S2': // ký chính
-              setupShowForm.showSignature1 = true;
-              this.addSignature(setupShowForm);
-              return;
+  crrType: any;
 
-              break;
-            case 'S1': // ký nháy
-              setupShowForm.showSignature2 = true;
-              this.addSignature(setupShowForm);
-              return;
-
-              break;
-          }
-        }
-        // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-        break;
-      case 2:
-        if (!this.signerInfo?.stamp) {
-          let setupShowForm = new SetupShowSignature();
-
-          setupShowForm.showStamp = true;
-
-          this.addSignature(setupShowForm);
-          // let signature = {
-          //   userID: this.signerInfo?.authorID,
-          //   signatureType: this.signerInfo?.signType,
-          // };
-          // let data = {
-          //   data: signature,
-          //   setupShowForm: setupShowForm,
-          // };
-          // this.callfc.openForm(PopupSignatureComponent, '', 800, 600, '', data);
-          return;
-        }
-        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
-        break;
+  changeAnnotationItem(type: any) {
+    if (!type) return;
+    /** action: object vll
+    {value: 'S1', text: 'Chữ ký chính', default: 'Chữ ký chính', color: null, textColor: null, …}
+    {value: 'S2', text: 'Ký nháy', default: 'Ký nháy', color: null, textColor: null, …}
+    {value: 'S3', text: 'Con dấu', default: 'Con dấu', color: null, textColor: null, …}
+    {value: '3', text: 'Tên đầy đủ', default: 'Tên đầy đủ', color: null, textColor: null, …}
+    {value: '4', text: 'Chức danh', default: 'Chức danh', color: null, textColor: null, …}
+    {value: '5', text: 'Ngày giờ', default: 'Ngày giờ', color: null, textColor: null, …}
+    {value: '6', text: 'Ghi chú', default: 'Ghi chú', color: null, textColor: null, …}
+    {value: '7', text: 'Số văn bản', default: 'Số văn bản', color: null, textColor: null, …}
+    {value: '8', text: 'QR Code', default: 'QR Code', color: null, textColor: null, …}
+    {value: '9', text: 'Nhãn', default: 'Nhãn', color: null, textColor: null, …} */
+    if (this.needAddKonva) {
+      this.needAddKonva?.destroy();
     }
 
-    // }
+    this.crrType = type;
+
     if (this.isEditable) {
-      this.holding = type;
-      switch (type) {
-        case 1:
-          this.url = this.signerInfo?.signature
-            ? this.signerInfo?.signature
+      this.holding = type?.value;
+      switch (type?.value) {
+        case 'S1':
+          if (!this.signerInfo?.signature1) {
+            // thiet lap chu ki nhay
+            let setupShowForm = new SetupShowSignature();
+            setupShowForm.showSignature1 = true;
+            this.addSignature(setupShowForm);
+            return;
+          }
+          this.url = this.signerInfo?.signature1
+            ? this.signerInfo?.signature1
             : '';
           break;
-        case 2:
+        case 'S2':
+          if (!this.signerInfo?.signature2) {
+            // thiet lap chu ki nhay
+            let setupShowForm = new SetupShowSignature();
+            setupShowForm.showSignature2 = true;
+            this.addSignature(setupShowForm);
+            return;
+          }
+          this.url = this.signerInfo?.signature2
+            ? this.signerInfo?.signature2
+            : '';
+          break;
+        case 'S3':
+          if (!this.signerInfo?.stamp) {
+            // thiet lap con dau
+            let setupShowForm = new SetupShowSignature();
+            setupShowForm.showStamp = true;
+            this.addSignature(setupShowForm);
+            return;
+          }
           this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
           break;
-        case 3:
+
+        case '3':
           this.url = this.signerInfo?.fullName
             ? this.signerInfo?.fullName
-            : this.vllActions[type - 1].text;
+            : type?.text;
           break;
-        case 4:
+        case '4':
           this.url = this.signerInfo?.position
             ? this.signerInfo?.position
-            : this.vllActions[type - 1].text;
+            : type?.text;
           break;
-        case 5:
+        case '5':
           let selected = document.getElementsByClassName('date-Type').item(0);
           console.log('selected', selected);
 
           this.url = this.datePipe.transform(new Date(), 'M/d/yy, h:mm a');
           break;
-        case 6:
-          this.url = this.vllActions[5].text;
+        case '6':
+          this.url = type?.text;
           break;
-        case 7:
+        case '7':
           this.url = this.fileInfo?.fileRefNum;
           break;
-        case 8:
+        case '8':
           this.url = qr;
           break;
-        case 9: {
+        case '9': {
           let stampDialog = this.callfc.openForm(
             PopupSelectLabelComponent,
             '',
@@ -1390,7 +1322,7 @@ export class PdfComponent
                 this.addArea(
                   curLabelUrl,
                   'img',
-                  type,
+                  type?.value,
                   true,
                   true,
                   this.curSignerID,
@@ -1407,12 +1339,12 @@ export class PdfComponent
           this.url = '';
           break;
       }
-      if ([1, 2, 8].includes(type)) {
+      if (this.imgConfig.includes(type.value)) {
         if (this.url != '') {
           this.addArea(
             this.url,
             'img',
-            type,
+            type?.value,
             true,
             true,
             this.curSignerID,
@@ -1422,7 +1354,7 @@ export class PdfComponent
           this.addArea(
             this.signerInfo.fullName,
             'text',
-            type,
+            type?.value,
             true,
             true,
             this.curSignerID,
@@ -1433,7 +1365,7 @@ export class PdfComponent
         this.addArea(
           this.url,
           'text',
-          type,
+          type?.value,
           true,
           true,
           this.curSignerID,
@@ -1509,6 +1441,13 @@ export class PdfComponent
     }
   }
   changeSigner(e: any) {
+    //reset
+    if (this.needAddKonva) {
+      this.url = '';
+      this.holding = 0;
+      this.needAddKonva?.destroy();
+      this.needAddKonva = null;
+    }
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;
@@ -1537,7 +1476,7 @@ export class PdfComponent
     let lstSigned = this.lstAreas.filter((area) => {
       return (
         area.signer &&
-        ['1', '2', '8'].includes(area.labelType) &&
+        this.imgConfig.includes(area.labelType) &&
         area.location.pageNumber + 1 == this.pageMax
       );
     });
@@ -1592,24 +1531,20 @@ export class PdfComponent
       let url = '';
       let labelType = '';
       switch (person.stepType) {
-        //chu ky
-        case 'S1':
-        case 'S2': {
-          url = person.signature;
-          labelType = '1';
+        case 'S1': //chu ky chinh
+          url = person.signature1;
+          labelType = person.stepType;
           break;
-        }
-
-        //con dau
-        case 'S3': {
+        case 'S2': //chu ky nhay
+          url = person.signature2;
+          labelType = person.stepType;
+          break;
+        case 'S3': //con dau
           url = person.stamp;
-          labelType = '2';
+          labelType = person.stepType;
           break;
-        }
-
-        default: {
+        default:
           break;
-        }
       }
       let layer = this.lstLayer.get(this.pageMax);
       layer = this.lstLayer.get(this.pageMax);
@@ -1733,41 +1668,9 @@ export class PdfComponent
 
   //test func
   show(e: any) {
-    let layer = this.lstLayer.get(this.pageMax);
-    let children = layer.children;
-    let top = children?.reduce((prev, curr) => {
-      return prev.attrs.x < curr.attrs.x ? prev : curr;
-    });
-
-    let bot = children?.reduce((prev, curr) => {
-      return prev.attrs.x > curr.attrs.x ? prev : curr;
-    });
-
-    let left = children?.reduce((prev, curr) => {
-      return prev.attrs.y < curr.attrs.y ? prev : curr;
-    });
-
-    let right = children?.reduce((prev, curr) => {
-      return prev.attrs.y > curr.attrs.y ? prev : curr;
-    });
-
-    let x = top.attrs.x;
-    let y = left.attrs.y;
-
-    let width = left.attrs.x - right.attrs.x + right.width() * right.scaleX();
-    let height = top.attrs.y - bot.attrs.y + bot.height() * bot.scaleY();
-    let imgUrl = layer.toDataURL({
-      quality: 1,
-      x: x,
-      y: y,
-
-      width: width,
-      height: height,
-    });
-    console.log('url', imgUrl);
+    this.signPDF('1', 'da xem');
   }
 }
-
 //create new guid
 class Guid {
   static newGuid() {

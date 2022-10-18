@@ -360,7 +360,7 @@
             <ng-template #content>
               <div style="padding: 0 20px">
                 <div class="position-relative" *ngIf="!isApprover">
-                  <div class="mt-3 mb-3">
+                  <div class="mt-3 mb-3 text-primary fw-bold">
                     <codx-label
                       name="lblChooseSigner"
                       [formModel]=""
@@ -397,11 +397,11 @@
                     </ng-template>
                   </ejs-dropdownlist>
                 </div>
-                <div class="mt-3 mb-3">
+                <div class="mt-3 mb-3 text-primary fw-bold">
                   <codx-label
                     name="lblDragAction"
                     [formModel]=""
-                    default="Kéo thả"
+                    default="Kéo & thả chữ ký vào tài liệu"
                     class="text-header d-block"
                   >
                   </codx-label>
@@ -412,15 +412,13 @@
                     class="card-item me-6 mb-6"
                     #actions
                     *ngFor="let action of vllActions; let index = index"
-                    [class.active]="holding == index + 1"
-                    (click)="changeAnnotationItem(index + 1)"
+                    [class.active]="holding == action?.value"
+                    (click)="changeAnnotationItem(action)"
                   >
                     <codx-card-center
                       cardCss="border h-100 w-125px pt-4 pb-2 "
-                      icoCss="icon-30 mb-1 {{
-                        index + 1 | vll: 'ES015':'icon' | async
-                      }}"
-                      content="{{ index + 1 | vll: 'ES015':'text' | async }}"
+                      icoCss="icon-30 mb-1 {{ action?.icon }}"
+                      content="{{ action?.text }}"
                     >
                     </codx-card-center>
                   </div>
@@ -763,13 +761,21 @@
 
 <ng-template #panelLeft> </ng-template>
 <ng-template #confirmCheckbox>
-  <codx-input
-    type="checkbox"
-    class="check-add"
-    name="select"
-    (valueChange)="changeConfirmState($event)"
-  >
-  </codx-input>
+  <div class="pdf-check-add btn-flex flex-center btn-white">
+    <codx-input
+      type="checkbox"
+      class="check-add me-2"
+      name="select"
+      (valueChange)="changeConfirmState($event)"
+    >
+    </codx-input>
+    <codx-label
+      name="lblConfirmSeen"
+      [formModel]=""
+      [default]="'Xác nhận đã xem văn bản'"
+      class="text-header"
+    ></codx-label>
+  </div>
 </ng-template>
 
 <div id="contextMenu" style="display: none; position: absolute">

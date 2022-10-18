@@ -1,3 +1,4 @@
+import { E } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -23,6 +24,7 @@ import {
 } from 'codx-core';
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
+import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
 import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
 @Component({
@@ -51,6 +53,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   header1 = 'Thiết lập quy trình duyệt';
   subHeaderText = 'Qui trình duyệt';
   defaultSignType = '';
+  eSign: boolean = false;
 
   data: any = {};
   lstApprover: any = [];
@@ -96,7 +99,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.lstStep = data?.data.lstStep;
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
-    this.defaultSignType = data?.data.signatureType;
+    this.defaultSignType = data?.data?.signatureType;
+    this.eSign = data?.data?.eSign ?? false;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
   }
@@ -160,8 +164,18 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         } else {
           this.dialogApprovalStep.patchValue(this.dataEdit);
           this.lstApprover = JSON.parse(
-            JSON.stringify(this.dialogApprovalStep.value.approvers)
+            JSON.stringify(this.dataEdit?.approvers)
           );
+          if (this.lstApprover?.length > 0) {
+            this.lstApprover.forEach((element) => {
+              if (element.roleType == 'PE') element.write = true;
+              else element.write = false;
+
+              element.delete = true;
+              element.share = false;
+              element.assign = false;
+            });
+          }
           this.currentApproveMode = this.dataEdit?.approveMode;
           this.formModel.currentData = this.data;
           this.isAfterRender = true;
@@ -187,6 +201,17 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
+      //edit PA
+      if (event?.functionID == 'SYS03') {
+        // this.notifySvr.alertCode('SYS030').subscribe((x) => {
+        //   if (x.event.status == 'Y') {
+        //     let i = this.lstApprover.indexOf(data);
+        //     if (i != -1) {
+        //       this.lstApprover.splice(i, 1);
+        //     }
+        //   }
+        // });
+      }
     }
   }
 
@@ -242,6 +267,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showIsTemplate: true,
         showIsPublish: true,
         showSendLater: true,
+        showFrom: true,
       };
 
       this.callfc.openForm(
@@ -306,7 +332,18 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           let i = this.lstApprover.findIndex(
             (p) => p.approver == element?.objectType
           );
-          if (i == -1) {
+          if (element?.objectType == 'PA') {
+            //loại đối tác mở popup
+            let appr = new Approvers();
+            appr.write = true;
+
+            let popupApprover = this.callfc.openForm(
+              PopupAddApproverComponent,
+              '',
+              550,
+              screen.height
+            );
+          } else if (i == -1) {
             let appr = new Approvers();
             appr.roleType = element?.objectType;
             appr.name = element?.objectName;

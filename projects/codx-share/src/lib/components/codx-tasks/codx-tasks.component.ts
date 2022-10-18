@@ -113,7 +113,6 @@ export class CodxTasksComponent
   eventStatus: any;
   itemSelected: any;
   user: any;
-  // funcID: string;
   gridView: any;
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
@@ -145,8 +144,6 @@ export class CodxTasksComponent
   listViewModel = [];
   dataReferences = [];
   titleAction = '';
-  // predicateSchedule: any;
-  // dataValueSchedule: any;
 
   constructor(
     inject: Injector,
@@ -165,6 +162,11 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
+
+    // this.api.execSv<any>('TM',
+    // 'TM',
+    // 'TaskBusiness',
+    // 'AutoUpdateIsOverDueAsync').subscribe();
   }
 
   //#region Init
@@ -314,16 +316,6 @@ export class CodxTasksComponent
         sameData: false,
         text: 'Cây',
         icon: 'icon-account_tree',
-        // request: {
-        //   idField: 'recID',
-        //   parentIDField: 'ParentID',
-        //   service: 'TM',
-        //   assemblyName: 'TM',
-        //   className: 'TaskBusiness',
-        //   method: 'GetTasksAsync',
-        //   autoLoad: true,
-        //   dataObj: null,
-        // },
         model: {
           panelLeftRef: this.treeView,
         },
@@ -345,7 +337,6 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      // option.zIndex = 5000;
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;

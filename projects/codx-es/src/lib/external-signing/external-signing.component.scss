@@ -1,0 +1,98 @@
+.step-default .step-number {
+  color: #c9c9d4 !important;
+}
+.step-approve .step-number {
+  color: #1bc5bd !important;
+}
+.step-pending .step-number {
+  color: #ffa800 !important;
+}
+.codx-approval-foreground {
+  .codx-approval-step::after {
+    content: "";
+    background-color: transparent;
+    width: 0px;
+  }
+}
+.line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+.w-200px {
+  width: 200px;
+}
+/******ên ngoài hệ thống */
+.bg-primary-darker {
+  background: #005dc7;
+}
+
+.codx-template {
+  .codx-temp-header {
+    position: relative;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 102;
+    height: 60px;
+    padding: 0;
+    box-shadow: 0px 10px 30px 0px rgb(82 63 105 / 5%);
+  }
+  .codx-temp-body {
+    height: calc(100% - 60px);
+  }
+}
+.btn-label {
+  position: relative;
+  border-radius: 50rem !important;
+  .label-icon {
+    position: absolute;
+    width: 35.5px;
+    left: -1px;
+    top: -1px;
+    bottom: -1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
+}
+
+.fst-italic {
+  font-style: italic !important;
+}
+
+.fst-normal {
+  font-style: normal !important;
+}
+.bg-marketplace {
+  // background: url(../assets/themes/sys/default/img/bg-list-item-birth.svg)
+  //   no-repeat right bottom;
+  // background-size: cover;
+}
+
+.badge-light-danger {
+  background: #fff4ec !important;
+  border-radius: 10px !important;
+}
+.bg-list-item-birth {
+  background: #fff3b4;
+  .translate-middle {
+    transform: translate(-85%, -85%) !important;
+  }
+}
+.fs-14 {
+  font-size: 14px;
+}
+.fs-18 {
+  font-size: 18px;
+}

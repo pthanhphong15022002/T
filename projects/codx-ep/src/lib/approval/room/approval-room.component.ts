@@ -177,14 +177,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           this.approve(datas,"4")
         }
         break;
-      case 'EPT40106':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          //alert('Làm lại');
-          this.approve(datas,"2")
-        }
-        break;
+      
       default:
         '';
         break;
@@ -208,11 +201,7 @@ export class ApprovalRoomsComponent extends UIComponent {
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
                 data.status="4";
-              }
-              if(status=="2"){
-                this.notificationsService.notifyCode('ES007');//làm lại
-                data.status="2"
-              }                
+              }                          
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -227,6 +216,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         event.forEach(func => {
           if(func.functionID == "EPT40102" 
           ||func.functionID == "EPT40103" 
+          ||func.functionID == "EPT40106" 
           || func.functionID == "EPT40104")
           {
             func.disabled=true;
@@ -278,15 +268,24 @@ export class ApprovalRoomsComponent extends UIComponent {
       }
     }
   }
-  closeAddForm(event) {}
-
-  changeItemDetail(event) {
-    this.itemDetail = event?.data;
-  }
-  uploadStatus(data:any)
+  updateStatus(data:any)
   {
     this.view.dataService.update(data).subscribe();
   }
+  closeAddForm(event) {}
+
+  changeItemDetail(event) {
+    let recID = '';
+    if (event?.data) {
+      recID = event.data.recID;
+      this.itemDetail = event?.data;
+    } else if (event?.recID) {
+      recID = event.recID;
+      this.itemDetail = event;
+    }
+    this.getDetailApprovalBooking(recID);
+  }
+  
   getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(

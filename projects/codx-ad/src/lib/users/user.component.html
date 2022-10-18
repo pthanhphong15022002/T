@@ -10,7 +10,7 @@
         <codx-temp-full cardCss="card-template" (clickMF)="clickMF($event,data)" [imageId]="data.userID"
           imageObjType="AD_Users" [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.buName)" [typeMF]="'hover'"
           [formModel]="view.formModel" [dataItem]="data" [footer]="footer" [imgOn]="data?.modifiedOn" #tempFull
-          (changeDataMF)="changeDataMF($event)">
+          (changeDataMF)="changeDataMF($event)" [imageObjName]="data.userName">
         </codx-temp-full>
       </div>
       <div class="d-flex flex-wrap align-items-center">

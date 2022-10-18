@@ -129,7 +129,7 @@
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [imageType]="'square'"
                 [width]="80"
-                referType="S2"
+                referType="S1"
                 [objectId]="data.recID"
                 [objectType]="'ES_Signatures'"
                 data-kt-menu-trigger="click"
@@ -152,7 +152,7 @@
             <div class="m-auto">
               <codx-img
                 #imgSignature2
-                referType="S1"
+                referType="S2"
                 [imageType]="'square'"
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
@@ -210,6 +210,7 @@
           field="oTPControl"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -220,7 +221,7 @@
           field="oTPPin"
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
-          [disabled]="data.otpControl == '3' ? false : true"
+          [disabled]="data.oTPControl == '3' ? false : true"
         >
         </codx-input>
       </div>
@@ -236,7 +237,7 @@
           [Group]="form.formGroup"
           [formModel]="dialog.formModel"
           [disabled]="
-            data.otpControl == '1' || data.otpControl == '2' ? false : true
+            data.oTPControl == '1' || data.oTPControl == '2' ? false : true
           "
         >
         </codx-input>

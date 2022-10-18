@@ -242,20 +242,23 @@
                     </div>
                 </div>
             </ng-template>
-            <div class="d-flex mb-3 card-border my-2">
-                <codx-img [width]="30" 
-                    [objectId]="dataShare?.createdBy" 
-                    bjectType="AD_Users">
-                </codx-img>
-                <div class="d-flex flex-column flex-grow-1 ms-2">
-                    <div class="d-flex align-items-center">
-                        <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
-                    </div>
-                    <div class="text-info-date">
-                        <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
+            <ng-container *ngIf="entityName != 'WP_News'">
+                <div class="d-flex mb-3 card-border my-2">
+                    <codx-img [width]="30" 
+                        [objectId]="dataShare.createdBy" 
+                        bjectType="AD_Users">
+                    </codx-img>
+                    <div class="d-flex flex-column flex-grow-1 ms-2">
+                        <div class="d-flex align-items-center">
+                            <span class="text-gray-800 fw-bold">{{dataShare?.createdName}}</span>
+                        </div>
+                        <div class="text-info-date">
+                            <span class="text-gray-500 me-2">{{dataShare?.createdOn | timefrom}}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </ng-container>
+            
         </div>
     </div>
 </ng-template>

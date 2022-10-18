@@ -59,7 +59,6 @@ export class CodxDMService {
   public titleAccessDenied = 'Bạn không có quyền truy cập thư mục này';
   public titleFileAccessDenied = 'Bạn không có quyền truy cập file này';
   public titleMessage = 'Thông báo';
-  public titleCopymessage = 'Bạn có muốn lưu lên không ?';
   public titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
   public FOLDER_NAME = 'DM'; //"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
   public titleEmptyTrash30 =
@@ -114,8 +113,6 @@ export class CodxDMService {
   public type: string;
   public currentNode: string;
   public listDialog = [];
-  public loadedFile: boolean;
-  public loadedFolder: boolean;
   public fileUploadList: FileUpload[];
   public dataFileEditing: FileUpload;
   public listFolder = [];
@@ -169,6 +166,7 @@ export class CodxDMService {
 
   public breadcumb = new BehaviorSubject<string[]>(null);
   isBreadcum = this.breadcumb.asObservable();
+
 
   public breadcumbTree = new BehaviorSubject<string[]>(null);
   isBreadcumTree = this.breadcumbTree.asObservable();
@@ -263,6 +261,8 @@ export class CodxDMService {
   public refreshTree = new BehaviorSubject<boolean>(null);
   isRefreshTree = this.refreshTree.asObservable();
 
+  public breadcumbChange = new BehaviorSubject<any>(null);
+  isChangeBreadCumb = this.breadcumbChange.asObservable();
 
   // public listFolder = new BehaviorSubject<FolderInfo[]>(null);
   // isListFolder = this.listFolder.asObservable();
@@ -459,8 +459,6 @@ export class CodxDMService {
 
       if (this.idMenuActive == 'DMT08') return;
 
-      this.loadedFile = false;
-      this.loadedFolder = false;
       this.level = data.level;
       if (this.level == '1') this.parentFolderId = '000000000000000000000000';
       else this.parentFolderId = data.parentId;
@@ -488,14 +486,12 @@ export class CodxDMService {
         this.isTree = true;
         this.listFolder = res[0];
         this.listFiles = [];
-        this.loadedFolder = true;
         this.ChangeData.next(true);
       });
 
       this.fileService.options.funcID = this.idMenuActive;
       this.fileService.GetFiles(data.recID).subscribe(async (res) => {
         this.listFiles = res[0];
-        this.loadedFile = true;
         this.ChangeData.next(true);
       });
     } else {
@@ -566,21 +562,8 @@ export class CodxDMService {
               this.folderService
                 .deleteFolderToTrash(id, false)
                 .subscribe(async (res) => {
-                  let list = this.listFolder;
-                  //list = list.filter(item => item.recID != id);
-                  let index = list.findIndex(
-                    (d) => d.recID.toString() === id.toString()
-                  ); //find index in your array
+                  this.listFolder = this.listFolder.filter(x=>x.recID != id);
                   this.nodeDeleted.next(id);
-                  if (index > -1) {
-                    list.splice(index, 1); //remove element from array
-                    this.nodeDeleted.next(id);
-                    this.listFolder = list;
-                    this.ChangeData.next(true);
-                    //  this.dmSV.changeData(list, null, id);
-                    //  this.changeDetectorRef.detectChanges();
-                  }
-
                   this.fileService.getTotalHdd().subscribe((i) => {
                     this.updateHDD.next(i);
                     //  this.changeDetectorRef.detectChanges();
@@ -901,7 +884,7 @@ export class CodxDMService {
 
   getImage(data: any) {
     if (data?.folderName && !data?.extension)
-      return '../../../assets/codx/dms/folder.svg';
+      return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       // if (data.hasThumbnail == null || data.hasThumbnail == false) {
@@ -1153,7 +1136,6 @@ export class CodxDMService {
   }
 
   clickMF($event, data: any, view: any = null) {
-    debugger;
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
 
@@ -1257,7 +1239,6 @@ export class CodxDMService {
         break;
 
       case "DMT0222": // properties file
-        debugger
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1279,7 +1260,6 @@ export class CodxDMService {
 
       case "DMT0202": // chinh sua thu muc
       case "DMT0209": // properties folder
-        debugger
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1480,7 +1460,7 @@ export class CodxDMService {
     var item2 = '';
 
     if (!folder.icon)
-      item1 = '<img class="h-13px" src="../../../assets/codx/dms/folder.svg">';
+      item1 = '<img class="h-13px" src="../../../assets/themes/dm/default/img/icon-folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
@@ -1594,18 +1574,15 @@ export class CodxDMService {
         }
 
         if (res.status == 6) {
-          let newNameMessage = this.titelRenamemessage.replace(
-            '{0}',
-            res.data.fileName
-          );
+          //let newNameMessage = this.titelRenamemessage.replace('{0}', res.data.fileName);
           var config = new AlertConfirmInputConfig();
           config.type = 'YesNo';
           this.notificationsService
-            .alert(this.title, res.data.fileName + newNameMessage, config)
+            .alert(this.title, res?.message, config)
             .closed.subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.fileService
-                  .copyFile(id, res.data.fileName, toselectId, 1)
+                  .copyFile(id, fullName, toselectId, 1,1)
                   .subscribe(async (item) => {
                     if (item.status == 0) {
                       let list = this.listFiles;
@@ -1654,7 +1631,7 @@ export class CodxDMService {
           var config = new AlertConfirmInputConfig();
           config.type = 'YesNo';
           this.notificationsService
-            .alert(this.title, res.message + this.titleCopymessage, config)
+            .alert(this.title,res.message,config)
             .closed.subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.folderService

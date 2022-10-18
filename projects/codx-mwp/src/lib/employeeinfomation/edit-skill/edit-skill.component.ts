@@ -1,3 +1,4 @@
+import { E } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -5,12 +6,15 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
+import { ELEMENTS } from '@syncfusion/ej2-angular-inplace-editor';
 import {
   ApiHttpService,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 
 @Component({
@@ -19,7 +23,7 @@ import {
   styleUrls: ['./edit-skill.component.css'],
 })
 export class EditSkillComponent implements OnInit {
-  dialog: any;
+  dialogRef: any;
   title = 'Chỉnh sửa kỹ năng';
   minType = 'MinRange';
   skillEmployee: any;
@@ -31,23 +35,26 @@ export class EditSkillComponent implements OnInit {
   dataValue = '';
   parentIdField = '';
   skill = [];
-
+  tooltip:any = {};
+  ticks:any = {};
+  employeeID:String = "";
   constructor(
-    private notiService: NotificationsService,
+    private notifiSV: NotificationsService,
+    private cache: CacheService,
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private df: ChangeDetectorRef,
-    @Optional() dialog?: DialogRef,
-    @Optional() dt?: DialogData
+    @Optional() dialogRef?: DialogRef,
+    @Optional() dialog?: DialogData
   ) {
-    this.dialog = dialog;
-    this.skillEmployee = dt?.data;
+    this.dialogRef = dialogRef;
+    this.skillEmployee = dialog?.data.skill;
+    this.employeeID = dialog?.data.employeeID;
   }
-  tooltip:any;
-  ticks:any;
+  
   ngOnInit(): void {
     this.tooltip = { placement: 'Before', isVisible: true, showOn: 'Always' };
-    this.ticks = { placement: 'After', largeStep: 1, smallStep: 10, showSmallTicks: true };
+    // this.ticks = { placement: 'After', largeStep: 1, smallStep: 10, showSmallTicks: true };
   }
   sliderChange(e, data) {
     this.skillChartEmployee = [];
@@ -66,57 +73,60 @@ export class EditSkillComponent implements OnInit {
       .exec(
         'ERM.Business.HR',
         'EmployeesBusiness',
-        'UpdateEmployeeSkillAsync',
-        [this.skillEmployee]
+        'UpdateSkillAsync',
+        [this.employeeID, this.skillEmployee]
       )
-      .subscribe((o: any) => {
-        console.log(o);
+      .subscribe((res:boolean) => {
+        if(res)
+        {
+          this.dialogRef.close();
+        }
       });
-    this.dialog.close(this.skillEmployee);
   }
 
   popupAddSkill() {
     this.showCBB = true;
     this.df.detectChanges();
-    // dialog.closed.subscribe(e => {
-    //   console.log(e);
-    // })
   }
-
-  saveAddSkill(e: any) {
-    let data = e.dataSelected;
-    if (data && data.length > 0) {
-      this.skillEmployee = data;
-      this.skillChartEmployee = data;
-      data.forEach((e:any) => {
-        let s = {
-          objectID: e.CompetenceID,
-          objectName: e.CompetenceName,
-          objectType: e.idField
-        }
-        this.skill.push(s);
-      })
+  addSkill(event: any) {
+    if(!event || !event?.dataSelected) return;
+    let data = event.dataSelected;
+    if(data && data.length > 0 ){
+      data.map((element:any) =>  {
+        let isExsitElement = this.skillEmployee
+        .some((x:any) => x.competenceID == element.CompetenceID)
+         if(!isExsitElement)
+         {
+          let skill = {
+            RecID: Guid.newGuid(),
+            competenceID: element.CompetenceID,
+            competenceName: element.CompetenceName,
+            valueX: 0,
+            rating: "0"
+          }
+          this.skillEmployee.push(skill);
+         }
+      });
     }
-    // e.dataSelected.forEach((e:any) => {
-      // let s = {
-      //   CompetenceID: e.id,
-      //   CompetenceName: e.text,
-      //   idField: e.type
-      // };
-      // this.skillEmployee.push(s);
-    // });
-    this.showCBB = false;
-    this.df.detectChanges();
   }
 
-  deleteSkill(data) {
-    // this.view.dataService.dataSelected = data;
-    // this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
-    //   this.beforeDel(opt)).subscribe((res) => {
-    //     if (res[0]) {
-    //       this.itemSelected = this.view.dataService.data[0];
-    //     }
-    //   }
-    //   );
+  removeSkill(data) 
+  {
+  }
+
+
+  
+}
+
+class Guid {
+  static newGuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
   }
 }

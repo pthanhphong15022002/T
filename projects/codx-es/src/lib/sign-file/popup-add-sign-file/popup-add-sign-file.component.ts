@@ -644,6 +644,10 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   updateApproveTemplate() {
+    if (this.data?.approveControl != '1') {
+      this.notify.notify('Qui trình chưa thay đổi');
+      return;
+    }
     this.esService
       .updateApproveTemplate(this.data.recID, this.data.processID)
       .subscribe((res) => {
@@ -680,10 +684,10 @@ export class PopupAddSignFileComponent implements OnInit {
     switch (currentTab) {
       case 0:
         if (
-          this.attachment.fileUploadList.length > 0 ||
-          this.dialogSignFile.value.files?.length > 0
+          this.attachment?.fileUploadList?.length > 0 ||
+          this.data?.files?.length > 0
         ) {
-          if (this.attachment.fileUploadList.length > 0) {
+          if (this.attachment.fileUploadList?.length > 0) {
             this.disableContinue = true;
             for (let i = 0; i < this.attachment.fileUploadList.length; i++) {
               this.attachment.fileUploadList[i].referType = 'sign';
@@ -867,8 +871,13 @@ export class PopupAddSignFileComponent implements OnInit {
 
   setValueAreaControl(event) {}
 
-  approve() {
-    //Gửi duyệt
+  release() {
+    //Gửi duyệt'
+    if (this.processTab < 3) {
+      return;
+    }
+    this.esService.addQRBeforeRelease(this.data.recID).subscribe((res) => {});
+
     this.esService
       .release(
         this.data,

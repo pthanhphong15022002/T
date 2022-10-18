@@ -139,7 +139,6 @@ export class PopupAddComponent implements OnInit {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
   clickInsertNews() {
-    debugger
     if (!this.formGroup.controls['Category'].value) {
       let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Loại bài viết");
       this.notifSV.notify(mssgCode);

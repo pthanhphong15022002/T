@@ -16,10 +16,17 @@
   (onLoading)="onLoading($event)" 
   [viewActiveType]="viewType.grid"
 >
-
+</codx-views>
 <ng-template #resourceNameCol let-data>  
   <div class="d-flex flex-row align-items-center">
-    <codx-img [objectId]="data.recID" [imageType]="'square'" width="50" [objectType]="formModel?.entityName"></codx-img>  
+    <codx-img 
+      [objectId]="data?.recID"       
+      [funcId]="funcID"       
+      [objectType]="formModel?.entityName"
+      [imageType]="'square'" 
+      width="50" 
+      [imgOn]="data.modifiedOn"
+    ></codx-img>  
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data.resourceName}} - {{data.code}}</span>
       <div class="d-flex flex-row">
@@ -124,14 +131,12 @@
   </div>
 </ng-template>
 
-<ng-template #preparatorCol let-data>
+<ng-template #linkCol let-data>
   <div class="d-flex has-action-menu align-items-center">
-    <codx-img [objectId]="data.driverRecID" [imageType]="'square'" [width]="50" [objectType]="'EP_Drivers'"></codx-img>
+    <codx-img [objectId]="data.driverRecID" [imageType]="'square'" [width]="35" [objectType]="'EP_Drivers'"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data.driverName }}</div>
     </div>   
   </div>
 </ng-template>
-
-</codx-views>
 

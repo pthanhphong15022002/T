@@ -8,6 +8,7 @@ import {
   ChangeDetectorRef,
   Input,
   AfterViewInit,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -37,11 +38,11 @@ import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popu
   selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
   styleUrls: ['./tmmeetings.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TMMeetingsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @Input() meeting = new CO_Meetings();
   @Input() funcID: string;
   @Input() dataObj?: any;
@@ -114,9 +115,9 @@ export class TMMeetingsComponent
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.api.execSv('CO',
-    'CO',
-    'MeetingsBusiness',
-    'SetAutoStatusMeetingAsync').subscribe();
+      'CO',
+      'MeetingsBusiness',
+      'SetAutoStatusMeetingAsync').subscribe();
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
@@ -229,12 +230,12 @@ export class TMMeetingsComponent
     if (e) {
       e.forEach((x) => {
         //an giao viec
-        if (x.functionID == 'SYS005'){
+        if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
       });
     }
-}
+  }
   //#region schedule 
 
   fields = {
@@ -536,7 +537,7 @@ export class TMMeetingsComponent
     return true;
   }
 
-// viewDetail(func, meeting) {
+  // viewDetail(func, meeting) {
   //   // this.codxService.navigate('', func.url, {
   //   //   meetingID: data.meetingID,
   //   // })};
@@ -661,22 +662,22 @@ export class TMMeetingsComponent
       case 0:
         current_day = 'Chủ nhật';
         break;
-        case 1:
+      case 1:
         current_day = 'Thứ hai';
         break;
-        case 2:
+      case 2:
         current_day = 'Thứ ba';
         break;
-        case 3:
+      case 3:
         current_day = 'Thứ tư';
         break;
-        case 4:
+      case 4:
         current_day = 'Thứ năm';
         break;
-        case 5:
+      case 5:
         current_day = 'Thứ sáu';
         break;
-        case 6:
+      case 6:
         current_day = 'Thứ bảy';
         break;
     }

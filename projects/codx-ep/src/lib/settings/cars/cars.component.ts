@@ -35,7 +35,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
-  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
+  @ViewChild('linkCol') linkCol: TemplateRef<any>;
 
   @Input() data!: any;
 
@@ -122,15 +122,13 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: 250, //gv['ResourceID'].width,
               template: this.resourceNameCol,
+              width:'20%',
             },
             {
               headerText: gv['CompanyID'].headerText,
-              width: 200,//gv['Location'].width,
               field: 'companyID',
               template: this.locationCol,
-              headerTextAlign: 'Center',
             },
             {
               headerText: gv['Equipments'].headerText,
@@ -142,23 +140,17 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['Note'].headerText,
-              width: 200,//gv['Note'].width,
               field: 'note',
-              headerTextAlign: 'Center',
             },
             {
-              headerText: 'Lái xe', //gv['Owner'].headerText,
+              headerText: gv['LinkID'].headerText,
               //width:gv['Owner'].width,
-              width: 200,
-              template: this.preparatorCol,
-              headerTextAlign: 'Center',
+              template: this.linkCol,
             },
             {
               headerText: gv['Owner'].headerText,
               //width:gv['Owner'].width,
-              width: 200,
               template: this.ownerCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [
@@ -227,9 +219,21 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddCarsComponent,
-        [this.dataSelected, true,this.popupTitle],
+        [this.dataSelected, true, this.popupTitle],
         option
       );
+      this.dialog.closed.subscribe((x) => {
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
     });
   }
 
@@ -246,9 +250,16 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
             PopupAddCarsComponent,
-            [this.view.dataService.dataSelected, false,this.popupTitle],
+            [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );
+          );    
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {
+              });
+            }
+          });     
         });
     }
   }

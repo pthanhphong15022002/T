@@ -841,3 +841,11 @@ codx-view-list ejs-listview {
 .w-larger {
   max-width: 1000px;
 }
+
+.has-action-menu codx-temp-full codx-mfunc {
+  right: 50px;
+}
+
+.aside-menu .content-tree .menu-item {
+  line-height: 22px;
+}

@@ -1,5 +1,5 @@
 <codx-card-img (dblclick)="dbView()" cardCss="border w-200px h-100 card-folder-center" [imageSrc]="dmSV.getImage(data)"
-  imgCss="card-img-center h-100px" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
+  imgCss="card-img-center h-100px mt-2" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
   [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)"
   [typeMF]="'hover'" [footer]="cardImgFooter" 
   (changeDataMF)="dmSV.filterMoreFunction($event, data)">
@@ -9,7 +9,7 @@
     class="d-flex align-items-start w-100 dms-card-icon">
     <div *ngIf="(data.folderName && !data?.extension) then folder else file"></div>
     <ng-template #folder>
-      <!-- <div *ngIf="(data.icon != null && data.icon != '') then showicon2 else noshowicon2"></div>
+      <div *ngIf="(data.icon != null && data.icon != '') then showicon2 else noshowicon2"></div>
       <ng-template #showicon2>
         <div class="icon-16 me2" *ngIf="(dmSV.checkIconFolder(data)) then showsvg2 else noshowsvg2">
         </div>
@@ -21,9 +21,9 @@
         </ng-template>
       </ng-template>
       <ng-template #noshowicon2>
-        <img alt="" class="mh-15px me-2" src="../../../assets/codx/dms/folder.svg">
-      </ng-template> -->
-      <div class="d-flex flex-column w-100 dms-footer-r">
+        <!-- <img alt="" class="mh-15px me-2" src="../../../assets/codx/dms/folder.svg"> -->
+      </ng-template>
+      <div class="d-flex flex-column w-100 dms-footer-r align-items-center">
         <div class="text-dark-75 fw-bold file-name text-box-140">{{data.folderName}}
         </div>
         <div class="d-flex justify-content-between" style="height: 18px">

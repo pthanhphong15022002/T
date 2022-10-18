@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -17,6 +19,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 export class ApprovalCarViewDetailComponent extends UIComponent implements OnChanges {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
+  @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -91,14 +94,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
           this.approve(datas,"4")
         }
         break;
-      case 'EPT40206':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          //alert('Làm lại');
-          this.approve(datas,"2")
-        }
-        break;
+      
       default:
         '';
         break;
@@ -122,12 +118,8 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
                 data.status="4";
-              }
-              if(status=="2"){
-                this.notificationsService.notifyCode('ES007');//làm lại
-                data.status="2"
-              }                
-              this.view.dataService.update(data).subscribe();
+              }              
+              this.updateStatus.emit(data);
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
@@ -144,6 +136,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
         event.forEach(func => {
           if(func.functionID == "EPT40202" 
           ||func.functionID == "EPT40203" 
+          ||func.functionID == "EPT40206"
           || func.functionID == "EPT40204")
           {
             func.disabled=true;

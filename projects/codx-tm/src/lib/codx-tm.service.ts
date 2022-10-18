@@ -28,8 +28,9 @@ export class CodxTMService {
   taskGroupComponent = false;
   aside = new BehaviorSubject<any>(null);
   toolbar = new BehaviorSubject<any>(null);
+  menuClick = new BehaviorSubject<any>(null);
   urlback = '';
-  functionParent ="TMT0301"
+  functionParent = "TMT0301"
   constructor(
     private api: ApiHttpService,
     private authStore: AuthStore,
@@ -133,11 +134,11 @@ export class CodxTMService {
     );
   }
 
-  setAutoStatusMeetings(){
+  setAutoStatusMeetings() {
     return this.api.execSv<any>('CO',
-    'CO',
-    'MeetingsBusiness',
-    'SetAutoStatusMeetingAsync');
+      'CO',
+      'MeetingsBusiness',
+      'SetAutoStatusMeetingAsync');
   }
 
   addTaskGroup(data) {

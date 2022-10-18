@@ -44,7 +44,7 @@ import { PopupSavePostComponent } from './popup-save/popup-save.component';
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent  implements OnInit, AfterViewInit {
+export class ListPostComponent implements OnInit, AfterViewInit {
 
   service = "WP";
   assemblyName = "ERM.Business.WP"
@@ -57,10 +57,12 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
   showEmojiPicker = false;
   dataVll = [];
   title: string = '';
+  strEmtyData: string = '';
+
   searchField = '';
   checkFormAddPost = false;
-  predicateWP: string = '(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
-  dataValueWP: string = '0;1;5;2';
+  predicateWP: string = '';
+  dataValueWP: string = '';
   predicateFD: string = "Category =@0 && Stop=false";
   dataValueFD: string = "3";
   modal: DialogRef;
@@ -69,13 +71,13 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
   lstUserShare: any[] = [];
   lstUserTag: any = [];
   CARDTYPE_EMNUM = {
-    Commendation : "1",
-    Thankyou : "2",
-    CommentForChange : "3",
-    SuggestionImprovement : "4",
-    Share : "5",
-    Congratulation : "6",
-    Radio : "7"
+    Commendation: "1",
+    Thankyou: "2",
+    CommentForChange: "3",
+    SuggestionImprovement: "4",
+    Share: "5",
+    Congratulation: "6",
+    Radio: "7"
   };
   CATEGORY = {
     POST: "1",
@@ -84,35 +86,33 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
     SHARE: "4",
   }
   @Input() funcID: string = "";
-  @Input() dataService:CRUDService = null;
+  @Input() dataService: CRUDService = null;
   @Input() objectID: string = "";
-  @Input() predicates:any;
-  @Input() dataValues:any;
+  @Input() predicates: any;
+  @Input() dataValues: any;
   @Input() isShowCreate = true;
   @Input() module: "WP" | "FD" = "WP";
-  @Input() formModel:FormModel = null;
-  @Input() formName:string = "";
-  @Input() gridViewName:string = "";
-  @Input() moreFunc:any = null;
-  @Input() moreFuncTmp:TemplateRef<any> = null;
+  @Input() formModel: FormModel = null;
+  @Input() formName: string = "";
+  @Input() gridViewName: string = "";
+  @Input() moreFunc: any = null;
+  @Input() moreFuncTmp: TemplateRef<any> = null;
   @ViewChild('listview') listview: CodxListviewComponent;
 
   constructor(
-    private api:ApiHttpService,
+    private api: ApiHttpService,
     private cache: CacheService,
     private authStore: AuthService,
     private dt: ChangeDetectorRef,
-    private callFC:CallFuncService,
+    private callFC: CallFuncService,
     private notifySvr: NotificationsService,
     private route: ActivatedRoute,
     private codxService: CodxService,
 
-  ) 
-  {
+  ) {
   }
-  ngAfterViewInit()
-  {
-  
+  ngAfterViewInit() {
+
   }
 
   ngOnInit(): void {
@@ -133,9 +133,15 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
         this.dt.detectChanges();
       }
     });
-    this.cache.message('WP011').subscribe((mssg: any) => {
-      if (mssg) {
-        this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
+    this.cache.message('WP011').subscribe((mssg1: any) => {
+      if (mssg1) {
+        this.title = Util.stringFormat(mssg1.defaultName, this.user.userName);
+        this.dt.detectChanges();
+      }
+    });
+    this.cache.message('WP035').subscribe((mssg2: any) => {
+      if (mssg2) {
+        this.strEmtyData = mssg2.defaultName;
         this.dt.detectChanges();
       }
     });
@@ -153,11 +159,11 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
                 this.headerText = grd['Comments'] ? grd['Comments']['headerText'] : "";
               }
             });
-            this.formModel = new FormModel();
-            this.formModel.funcID = "WP";
-            this.formModel.formName = func.formName;
-            this.formModel.gridViewName = func.gridViewName;
-            this.formModel.entityName = func.entityName;
+          this.formModel = new FormModel();
+          this.formModel.funcID = "WP";
+          this.formModel.formName = func.formName;
+          this.formModel.gridViewName = func.gridViewName;
+          this.formModel.entityName = func.entityName;
         }
       });
   }
@@ -174,7 +180,7 @@ export class ListPostComponent  implements OnInit, AfterViewInit {
   removePost(data: any) {
     if (!data) return;
     (this.listview.dataService as CRUDService).
-      delete([data], true, (op: any) => this.beforDelete(op, data),'','WP022','','WP023').
+      delete([data], true, (op: any) => this.beforDelete(op, data), '', 'WP022', '', 'WP023').
       subscribe((res) => {
         if (res) {
           if (data.files) {

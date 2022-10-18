@@ -30,17 +30,7 @@
 <!-- view-list -->
 <ng-template #templateRight>
   <ng-container *ngTemplateOutlet="empty"></ng-container>
-  <div *ngIf="isSearch && this.dmSV.loadedFile">
-    <!-- <h5 class="text-warning">
-      <codx-label name="lblSearch1" [formModel]="view.formModel" default="Kết quả tìm kiếm:" class="fw-bold">
-      </codx-label>
-      {{ this.textSearch }}
-      <div class="result-header font-size-h4 text-dark mb-6">
-        <codx-label name="lblSearch2" [formModel]="views" default="Khoảng" class="fw-bold"></codx-label>
-        {{ this.totalSearch }}
-        <codx-label name="lblSearch3" [formModel]="views" default="kết quả được tìm thấy" class="fw-bold"></codx-label>
-      </div>
-    </h5> -->
+  <div *ngIf="isSearch">
   </div>
   <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
     class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
@@ -48,97 +38,104 @@
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="currView"></ng-container>
     <ng-container *ngTemplateOutlet="nodata"></ng-container>
-    <ng-container *ngTemplateOutlet="loading"></ng-container>
   </div>
 </ng-template>
 <ng-template #templateSearch>
-  <div class="py-5">
-    <div *ngFor="let file of data" class="result-group px-3">
-      <div class="d-flex align-items-start justify-content-between result-item border-bottom pb-5 mb-5">
-        <div class="d-flex flex-column">
-          <div class="d-flex align-items-center">
-            <codx-temp-full appDragDropFileFolder [dataDrapDrop]="file" (fileFolderDropped)="fileFolderDropped($event)"
-              [class]="classFile(file, 'float-start')" [imageWidth]="20" [imageSrc]="dmSV.getImage(file)"
-              imgCss="w-20px me-3 cursor-pointer" [title]="
-                file.folderName != undefined ? file.folderName : file.fileName
-              " cardCss="w-250px" [typeMF]="'hover'">
-            </codx-temp-full>
-          </div>
-          <div class="d-flex align-items-center text-primary font-size-md mt-1">
-            <span>{{ file.filePath }}</span>
-          </div>
-          <div class="text-dark-50 font-size-md mt-1">
-            <div class="text-dark" [innerHtml]="file.highlight"></div>
-          </div>
-          <div class="d-flex align-items-center font-size-md mt-1">
-            <div class="d-flex text-dark-75">
-              <span class="icon-query_builder icon-16"></span>&nbsp;
-              <span class="ml-2">{{ file.createdOn | date: "dd/MM/yyyy" }}</span>
-            </div>
-            &nbsp;&nbsp;&nbsp;
-            <div class="d-flex text-dark-75">
-              {{ this.dmSV.getViews(file.history) }}&nbsp;
-              <codx-label fiedName="" formName="" gridViewName="" default="lượt xem">
-              </codx-label>
-            </div>
-            &nbsp;&nbsp;
-            <!-- <div class="icon-star icon-9 mx-3"></div> -->
-            <!-- <codx-label fiedName="" formName="" gridViewName="" default="đánh giá">&nbsp;
-                  </codx-label> -->
-            <div class="rating-group">
-              <div class="d-flex">
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-                <span class="icon-star text-muted icon-16 mr-1"></span>
-              </div>
-              <div [style.width]="this.dmSV.getRating(file.views)" class="d-flex rating-percent">
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-                <span class="icon-star text-warning icon-16 mr-1"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="dropdown ml-2">
-          <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, file)"
-            [formModel]="view.formModel" [typeMF]="'hover'" [title]=""
-            (changeDataMF)="dmSV.filterMoreFunction($event, file)" cardCss="w-150px">
+  <div *ngFor="let file of data" class="result-group result-group-dm has-action-menu">
+    <div class="d-flex align-items-start justify-content-between result-item border-bottom p-5">
+      <div class="d-flex flex-column">
+        <div class="d-flex align-items-center">
+          <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file" (fileFolderDropped)="fileFolderDropped($event)"
+            [class]="classFile(file, 'float-start')" [imageWidth]="20" [imageSrc]="dmSV.getImage(file)"
+            imgCss="w-20px me-3 cursor-pointer" [title]="
+              file.folderName != undefined ? file.folderName : file.fileName
+            " cardCss="w-250px" [typeMF]="'hover'"
+            [baseHeaderRightTmp]="rightSecurity"
+          >
           </codx-temp-full>
+          <ng-template #rightSecurity>
+            <span *ngIf="dmSV.checkView(file?.read) == false" class="icon-security text-primary icon-18"></span>
+          </ng-template>
         </div>
+        <div class="d-flex align-items-center text-primary font-size-md mt-1">
+          <span>{{ file.filePath }}</span>
+        </div>
+        <div class="text-dark-50 font-size-md mt-1">
+          <div class="text-dark" [innerHtml]="file.highlight"></div>
+        </div>
+        <div class="d-flex align-items-center font-size-md mt-1">
+          <div class="d-flex text-dark-75">
+            <span class="icon-query_builder icon-16"></span>&nbsp;
+            <span class="ml-2">{{ file.createdOn | date: "dd/MM/yyyy" }}</span>
+          </div>
+          &nbsp;&nbsp;&nbsp;
+          <div class="d-flex text-dark-75">
+            {{ this.dmSV.getViews(file.history) }}&nbsp;
+            <codx-label fiedName="" formName="" gridViewName="" default="lượt xem">
+            </codx-label>
+          </div>
+          &nbsp;&nbsp;
+          <!-- <div class="icon-star icon-9 mx-3"></div> -->
+          <!-- <codx-label fiedName="" formName="" gridViewName="" default="đánh giá">&nbsp;
+                </codx-label> -->
+          <div class="rating-group">
+            <div class="d-flex">
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+              <span class="icon-star text-muted icon-16 mr-1"></span>
+            </div>
+            <div [style.width]="this.dmSV.getRating(file.views)" class="d-flex rating-percent">
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+              <span class="icon-star text-warning icon-16 mr-1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="action-menu-item ml-2">
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="dmSV.clickMF($event, file)" (changeDataMF)="dmSV.filterMoreFunction($event, file)" [type]="'hover'"></codx-mfunc>
       </div>
     </div>
   </div>
-
 </ng-template>
 <ng-template #templateCard>
-  <div class="d-flex flex-wrap dms-card p-5">
-    <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-      *ngFor="let item of data" [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item"
-      [formModel]="view.formModel">
-    </card>
-  </div>
+    <div class="d-flex flex-wrap dms-card p-5">
+      <ng-container  *ngFor="let item of data ; trackBy: trackItem">
+        <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
+          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item"
+          [formModel]="view.formModel">
+        </card>
+      </ng-container>
+    </div>
 </ng-template>
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-sm p-5">
-    <codx-temp-full (dblclick)="dmSV.openItem(item)" appDragDropFileFolder [dataDrapDrop]="item"
-      (fileFolderDropped)="fileFolderDropped($event)" *ngFor="let item of data" [class]="classFile(item, 'float-start')"
-      [imageSrc]="dmSV.getImage(item)" (clickMF)="dmSV.clickMF($event, item)" imgCss="card-item img-folder me-3"
-      [title]="item.folderName != undefined ? item.folderName : item.fileName"
-      (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
-      [bookmark]="dmSV.showBookmark(item)" subTitle="{{ item.createdOn | date: 'dd/MM/yyyy' }} | {{ item.userName }}"
-      cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3">
-    </codx-temp-full>
-
+    <ng-container *ngFor="let item of data">
+      <codx-temp-full (dblclick)="dbView(item)" appDragDropFileFolder [dataDrapDrop]="item"
+        (fileFolderDropped)="fileFolderDropped($event)"  [class]="classFile(item, 'float-start')"
+        [imageSrc]="dmSV.getImage(item)" (clickMF)="dmSV.clickMF($event, item)" imgCss="card-item img-folder me-3"
+        [title]="item.folderName != undefined ? item.folderName : item.fileName"
+        (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
+        [bookmark]="dmSV.showBookmark(item)" subTitle="{{ item.createdOn | date: 'dd/MM/yyyy' }} | {{ item.userName }}"
+        cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3"
+        [baseHeaderRightTmp]="rightSecurity"
+      >
+      </codx-temp-full>
+      <ng-template #rightSecurity>
+        <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
+      </ng-template>
+    </ng-container>
+    
   </div>
 </ng-template>
 <ng-template #templateList>
   <ng-container *ngIf="data && data.length > 0">
     <div class="dms-listview h-100 p-2">
-      <table class="table h-100 tb-dm">
+      <table class="table tb-dm">
         <thead class="border-top">
           <tr>
             <th scope="col" class="w-30">
@@ -159,7 +156,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr (dblclick)="dmSV.openItem(item)" class="border-top dms-list" *ngFor="let item of data" [title]="
+          <tr (dblclick)="dbView(item)" class="border-top dms-list" *ngFor="let item of data" [title]="
               item.folderName != undefined ? item.folderName : item.fileName
             ">
             <td class="w-30">
@@ -167,8 +164,11 @@
                 (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
                 [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3 cursor-pointer" [title]="
                   item.folderName != undefined ? item.folderName : item.fileName
-                " cardCss="w-250px" titleCss="dms-title pe-6">
+                " cardCss="w-250px" titleCss="dms-title pe-6" [baseHeaderRightTmp]="rightSecurity">
               </codx-temp-full>
+              <ng-template #rightSecurity>
+                <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
+              </ng-template>
             </td>
             <td class="w-20">
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
@@ -210,8 +210,6 @@
 </ng-template>
 <ng-template #nodata>
   <ng-container *ngIf="
-      this.dmSV.loadedFile &&
-      this.dmSV.loadedFolder &&
       (data === undefined || !data || data.length <= 0)
     ">
     <div class="w-100 align-items-center mt-20">
@@ -221,15 +219,6 @@
       <div class="text-center">
         <h5 class="text-dark mt-6">{{ dmSV.titleNodaTa }}</h5>
         <div class="mt-3">{{ dmSV.titleNodaTaFolder }}</div>
-      </div>
-    </div>
-  </ng-container>
-</ng-template>
-<ng-template #loading>
-  <ng-container *ngIf="!this.dmSV.loadedFile && !this.dmSV.loadedFolder">
-    <div class="w-100 align-items-center mt-20">
-      <div class="text-center">
-        <img class="mh-200px" src="../../../assets/img/loader.gif" />
       </div>
     </div>
   </ng-container>

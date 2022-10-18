@@ -1,4 +1,4 @@
-import { CodxEpService } from './../../../codx-ep.service';
+import { CodxEpService, GridModels } from './../../../codx-ep.service';
 import {
   Component,
   Injector,
@@ -18,7 +18,7 @@ import {
   NotificationsService,
   UserModel,
   AuthStore,
-  ResourceModel,
+  RequestModel,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -32,6 +32,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   @ViewChild('status') status: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('stepAppr') stepAppr: ApprovalStepComponent;
+  @ViewChild('listView') listView: ViewsComponent;
   @ViewChild('content') content;
   @ViewChild('viewApprovalStep') viewApprovalStep: ApprovalStepComponent;
 
@@ -62,10 +63,13 @@ export class PopupRequestStationeryComponent extends UIComponent {
   cartQty = 0;
 
   user: UserModel;
+  gridModels: GridModels;
 
   model?: FormModel;
   groupStationery;
   lstStationery;
+
+  groupID: string;
 
   dialogAddBookingStationery: FormGroup;
 
@@ -88,11 +92,21 @@ export class PopupRequestStationeryComponent extends UIComponent {
   onInit(): void {
     this.user = this.auth.get();
 
-    // this.epService.getStationeryGroup().subscribe((res) => {
-    //   console.log(res);
-    // });
+    this.gridModels = new GridModels();
+    this.gridModels.funcID = 'EPS27';
+    (this.gridModels.entityName = 'EP_Resources'),
+      (this.gridModels.entityPermission = 'EP_StationeryGroups'),
+      (this.gridModels.gridViewName = 'grvStationeryGroups');
+    this.gridModels.predicate = 'ResourceType=@0';
+    this.gridModels.dataValue = '5';
+    this.gridModels.pageSize = 20;
+
+    this.epService.getStationeryGroup(this.gridModels).subscribe((res) => {
+      this.groupStationery = res[0];
+    });
 
     this.initForm();
+    this.filterStationery();
   }
 
   ngAfterViewInit() {
@@ -142,45 +156,56 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   //#endregion
 
+  filterStationery(groupID: string = null) {
+    this.groupID = groupID;
+    this.api
+      .exec('EP', 'ResourcesBusiness', 'GetListStationeryByGroupIDAsync', [
+        groupID,
+      ])
+      .subscribe((res: any) => {
+        this.listView.dataService.data = [];
+        this.listView.dataService.add(res).subscribe();
+      });
+    this.detectorRef.detectChanges();
+  }
+
   //#region cart
 
   addCart(event, data) {
-    // let tmpResource = new tempResources();
-    // tmpResource = { ...data };
+    let tmpResource;
+    tmpResource = { ...data };
 
-    // let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
+    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
-    // if (isPresent) {
-    //   this.cart.filter((item: tempResources) => {
-    //     if (item.recID == tmpResource.recID) {
-    //       if (tmpResource.quantity <= tmpResource.availableQty) {
-    //         item.quantity = item.quantity + 1;
-    //       } else {
-    //         this.api
-    //           .exec<any>(
-    //             'EP',
-    //             'ResourceQuotaBusiness',
-    //             'GetQuotaByResourceIDAsync',
-    //             item.resourceID
-    //           )
-    //           .subscribe((res: any) => {});
-    //         this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3'); //Test
-    //       }
-    //     }
-    //   });
-    // } else {
-    //   this.cartQty = this.cartQty + 1;
-    //   tmpResource.quantity = 1;
-    //   if (tmpResource.quantity <= tmpResource.availableQty) {
-    //     this.cart.push(tmpResource);
-    //     this.cache.message('EP001').subscribe((mssg) => {
-    //       this.notificationsService.notify(mssg.defaultName, '1');
-    //     });
-    //   } else {
-    //     this.notificationsService.notify('Hết hàng', '3');
-    //   }
-    // }
-    // console.log(this.cart);
+    if (isPresent) {
+      this.cart.filter((item: any) => {
+        if (item.recID == tmpResource.recID) {
+          if (tmpResource.quantity <= tmpResource.availableQty) {
+            item.quantity = item.quantity + 1;
+          } else {
+            this.api
+              .exec<any>(
+                'EP',
+                'ResourceQuotaBusiness',
+                'GetQuotaByResourceIDAsync',
+                item.resourceID
+              )
+              .subscribe((res: any) => {});
+            this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3'); //Test
+          }
+        }
+      });
+    } else {
+      this.cartQty = this.cartQty + 1;
+      tmpResource.quantity = 1;
+      if (tmpResource.quantity <= tmpResource.availableQty) {
+        this.cart.push(tmpResource);
+        this.notificationsService.notifyCode('SYS006');
+      } else {
+        this.notificationsService.notify('Hết hàng', '3');
+      }
+    }
+    console.log(this.cart);
     this.detectorRef.detectChanges();
   }
 

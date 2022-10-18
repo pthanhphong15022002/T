@@ -16,6 +16,7 @@
 (selectedChange)="changeItemDetail($event)"
 [selectedFirst]="true"
 [autoLoad]="true"
+[viewActiveType]="viewType.schedule"
 >
 </codx-views>
 
@@ -212,7 +213,7 @@
   "
   [status]="data?.status"
   [statusVll]="'VL003'"
-  [date]="data?.createdOn | fmDT"
+  [date]="data?.createdOn"
   [imageId]="data?.createdBy"
   imageObjType="AD_Users"
   

@@ -16,6 +16,7 @@
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
+  [viewActiveType]="viewType.schedule"
 >
 </codx-views>
 
@@ -134,7 +135,7 @@
         <span class="me-1 text-gray-600">:</span>
         <span class="fw-bold">{{ data?.resourceData?.capacity}}</span>
       </div>
-    </div>
+    </div>    
   </div>  
 </ng-template>
 

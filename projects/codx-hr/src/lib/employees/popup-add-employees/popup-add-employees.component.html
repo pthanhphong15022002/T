@@ -1,6 +1,14 @@
-<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="dialog.formModel" [subHeader]=""
-  [footer]="footer" [dialog]="dialog" [openMore]="true" (buttonClick)="buttonClick($event)"
-  [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]" (setTitle)="setTitle($event)"
+<codx-layout-add #form 
+  [title]="title" 
+  [tabInfo]="tabInfo" 
+  [formModel]="dialogRef.formModel" 
+  [subHeader]=""
+  [footer]="footer" 
+  [dialog]="dialogRef" 
+  [openMore]="true" 
+  (buttonClick)="buttonClick($event)"
+  [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]" 
+  (setTitle)="setTitle($event)"
   [data]="data">
 </codx-layout-add>
 
@@ -15,18 +23,14 @@
     <div *ngIf="isNew" class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="EmployeeID" default="Mã nhân viên">
+          <codx-label [formModel]="dialogRef.formModel" name="lblEmployeeID" fiedName="EmployeeID" default="Mã nhân viên">
           </codx-label>
-          <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup"
-                        field="employeeID">
-                    </codx-input> -->
-
           <codx-input class="form-control" 
-            [disabled]="true"
+            [disabled]="paramaterHR?.stop?false:true"
             type="text" 
-            [crrValue]="employee?.employeeID" 
+            [crrValue]="defaultEmployeeID" 
             field="employeeID"
-            (valueChange)="dataChange($event, 'employeeID')">
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -36,9 +40,6 @@
         <div class="form-group">
           <codx-label fiedName="EmployeeName" default="Tên nhân viên">
           </codx-label>
-          <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="employeeName">
-                    </codx-input> -->
-
           <codx-input class="form-control" type="text" [crrValue]="employee?.employeeName" field="employeeName"
             (valueChange)="dataChange($event, 'employeeName')" placeholder="Tên nhân viên">
           </codx-input>

@@ -14,17 +14,31 @@
   [method]="method"
   (buttonClick)="click($event)"
   (onLoading)="onLoading($event)" 
+  [viewActiveType]="viewType.grid"
 >
   <ng-template #avatarCol let-data>
     <div class="h-50px m-4">
-      <codx-img
-        [funcId]="funcID"
-        [objectType]="'EP_Rooms'"
-        [objectId]="data?.recID"
-        imageType="square"
-        width="50"
-      ></codx-img>
+      <codx-img 
+      [objectId]="data?.recID"       
+      [funcId]="funcID"       
+      [objectType]="formModel?.entityName"
+      [imageType]="'square'" 
+      width="50" 
+      [imgOn]="data.modifiedOn"
+    ></codx-img>  
     </div>
+    
+  </ng-template>
+
+  <ng-template #statusCol let-data>
+    <codx-vll
+      [name]="'EP016'"
+      [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-square badge-md fs-7 p-2"
+      >
+      </codx-vll>
     
   </ng-template>
   

@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   Component,
   OnInit,
@@ -171,7 +172,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
     } else this.getParam();
-  
+
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
     this.titleAction = dt?.data[3];
@@ -179,26 +180,26 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.taskCopy = dt?.data[5];
     this.dialog = dialog;
     this.user = this.authStore.get();
-    
+
     // if(this.functionID!='TMT0203' && this.functionID!='TMT0201'&& this.functionID!='TMT0202'){
     //   if(this.showAssignTo ) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
     // }
-    
-    this.cache.functionList(this.functionID).subscribe(f=>{
-        if(f){
-          this.cache
-      .gridViewSetup(
-           f.formName,
-           f.gridViewName
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
-        }
+
+    this.cache.functionList(this.functionID).subscribe(f => {
+      if (f) {
+        this.cache
+          .gridViewSetup(
+            f.formName,
+            f.gridViewName
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.gridViewSetup = res;
+            }
+          });
+      }
     })
-   // this.functionID = this.dialog.formModel.funcID;
+    // this.functionID = this.dialog.formModel.funcID;
     // this.cache
     //   .gridViewSetup(
     //     this.dialog.formModel.formName,
@@ -209,11 +210,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     //       this.gridViewSetup = res;
     //     }
     //   });
-      this.cache.valueList(this.vllRole).subscribe((res) => {
-        if (res && res?.datas.length > 0) {
-          this.listRoles = res.datas;
-        }
-      });
+    this.cache.valueList(this.vllRole).subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -587,8 +588,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.dialog.close(res);
         this.attachment?.clearData();
         if (res && res.save) {
-          var task = res.save;
-          if (task?.confirmControl == "1") this.tmSv.sendAlertMail(task?.recID, "TM_0008", this.functionID).subscribe();
+          var task = res.save[0];
+          if (this.param?.ConfirmControl == "1") this.tmSv.sendAlertMail(task?.recID, "TM_0008", this.functionID).subscribe();
           if (task?.category == '1' && task.verifyControl == '1') this.tmSv.sendAlertMail(task?.recID, "TM_0018", this.functionID).subscribe();
         }
       });

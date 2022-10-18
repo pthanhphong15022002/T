@@ -322,9 +322,22 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         [this.data, this.fuctionItem]
       )
       .subscribe((res) => {
-        console.log(res);
+        this.setDataset();
         this.dialog.close();
       });
+  }
+  setDataset(){
+    let serviceName = this.data.service;
+    if (!this.data.service) serviceName = 'rpt' + this.moduleName;
+     this.api
+          .execSv(
+            serviceName,
+            'Codx.RptBusiness.CM',
+            'LVReportHelper',
+            'SetReportDatasetAsync',
+            this.reportID
+          )
+          .subscribe();
   }
 }
 class GuId {

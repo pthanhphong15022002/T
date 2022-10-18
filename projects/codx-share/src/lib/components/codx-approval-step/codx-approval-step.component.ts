@@ -117,7 +117,7 @@ export class CodxApprovalStepComponent
       if (leadtime != 0) return (duration / leadtime) * 100;
       return 0;
     } else {
-      return (leadtime / duration) * 100;
+      return (1 - leadtime / duration) * 100;
     }
   }
 }

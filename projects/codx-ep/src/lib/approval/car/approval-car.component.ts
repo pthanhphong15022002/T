@@ -165,15 +165,7 @@ export class ApprovalCarsComponent extends UIComponent {
           //alert('Từ chối');
           this.approve(datas,"4")
         }
-        break;
-      case 'EPT40206':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          //alert('Làm lại');
-          this.approve(datas,"2")
-        }
-        break;
+        break;      
       default:
         '';
         break;
@@ -198,10 +190,7 @@ export class ApprovalCarsComponent extends UIComponent {
                 this.notificationsService.notifyCode('ES007');//bị hủy
                 data.status="4";
               }
-              if(status=="2"){
-                this.notificationsService.notifyCode('ES007');//làm lại
-                data.status="2"
-              }                
+                             
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -222,7 +211,8 @@ export class ApprovalCarsComponent extends UIComponent {
         case "3":
         event.forEach(func => {
           if(func.functionID == "EPT40202" 
-          ||func.functionID == "EPT40203" 
+          ||func.functionID == "EPT40203"
+          ||func.functionID == "EPT40206" 
           || func.functionID == "EPT40204")
           {
             func.disabled=true;
@@ -273,6 +263,11 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
       }
     }
+  }
+  
+  updateStatus(data:any)
+  {
+    this.view.dataService.update(data).subscribe();
   }
   getDetailApprovalBooking(id: any) {
     this.api

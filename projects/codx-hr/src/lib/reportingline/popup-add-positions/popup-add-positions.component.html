@@ -1,12 +1,21 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form 
+headerText="{{title}}" 
+subHeaderText="" 
+[body]="body" 
+[footer]="footer" 
+[dialog]="dialogRef">
     <ng-template popup adde #body>
         <div style="width: 100%;">
             <div *ngIf="isNew" class="row">
                 <div class="col">
                     <div class="form-group">
-                        <codx-label fiedName="PositionID" default="Mã chức danh"></codx-label>
-                        <codx-input disabled="true" class="form-control" type="text"
-                            (valueChange)="dataChange($event, 'PositionID')" [crrValue]="position?.positionID">
+                        <codx-label [formModel]="dialogRef.formModel" fiedName="PositionID" default="Mã chức danh"></codx-label>
+                        <codx-input 
+                            [disabled]="paramaterHR?.stop?false:true"
+                            class="form-control"
+                            type="text"
+                            (valueChange)="dataChange($event, 'PositionID')" 
+                            [crrValue]="positionID">
                         </codx-input>
                     </div>
                 </div>
@@ -39,8 +48,14 @@
                     <div class="form-group">
                         <codx-label fiedName="JobID" default="Nhóm chức danh">
                         </codx-label>
-                        <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="position?.jobID"
-                            field="jobID" refValue="jobID" service="HR" (valueChange)="dataChange($event, 'JobID')"
+                        <codx-input 
+                            type="combobox" 
+                            class="form-control borderless p-0" 
+                            [crrValue]="position?.jobID"
+                            field="jobID" 
+                            refValue="jobID" 
+                            service="HR" 
+                            (valueChange)="dataChange($event, 'JobID')"
                             ngDefaultControl loadFull="true">
                         </codx-input>
                     </div>

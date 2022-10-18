@@ -1,9 +1,6 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { ApiHttpService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
 
@@ -36,13 +33,13 @@ export class PopupAddEmployeesComponent implements OnInit {
       name: 'tabInfoLaw',
     },
   ];
-  dialog: any;
-  employee: any;
+  dialogRef: any;
+  employee: HR_Employees;
+  defaultEmployeeID:string = "";
   readOnly = false;
   showAssignTo = false;
   isSaving: boolean = false;
   isNew: boolean = true;
-  // dataBind: any = {};
   currentSection = "InfoPersonal";
   isDisable = false;
   user: any;
@@ -51,53 +48,115 @@ export class PopupAddEmployeesComponent implements OnInit {
   functionID: string;
   isAfterRender = false;
   gridViewSetup: any;
-  action = '';
+  action : "add" | "edit" | "copy" = "add";
   data: any;
   titleAction = 'Thêm';
+  paramaterHR:any = null
 
   constructor(
-    private authStore: AuthStore,
-    private notiService: NotificationsService,
+    private auth: AuthService,
+    private notifiSV: NotificationsService,
     private detectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
     private cache: CacheService,
     private api: ApiHttpService,
-    @Optional() dialog?: DialogRef,
-    @Optional() dt?: DialogData,
-  ) {
-    this.action = dt.data;
-    this.dialog = dialog;
-    this.user = this.authStore.get();
-    this.formName = this.dialog.formModel.formName;
-    this.gridViewName = this.dialog.formModel.gridViewName;
-    this.functionID = this.dialog.formModel.funcID;
-    this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
-    this.employee = this.data;
+    @Optional() dialogData?: DialogData,
+    @Optional() dialogRef?: DialogRef
+  ) 
+  {
+    this.user = this.auth.userValue
+    this.action = dialogData.data;
+    this.dialogRef = dialogRef;
+    this.functionID = this.dialogRef.formModel.funcID;
+    
+    
   }
 
   ngOnInit(): void {
-    this.initForm();
-    this.cache.gridViewSetup('Employees', 'grvEmployees').subscribe(res => {
-      if (res)
-        this.gridViewSetup = res
-    });
-    if (this.action === 'edit') {
-      this.titleAction = 'Chỉnh sửa';
-      this.isNew = false;
+    if(this.action === "add")
+    {
+      this.employee = new HR_Employees();
+      this.getParamerAsync(this.functionID);
     }
-    if (this.action === 'copy') {
-      this.titleAction = 'Sao chép';
+    else
+    {
+      if (this.action === 'edit') {
+        this.titleAction = 'Chỉnh sửa';
+        this.isNew = false;
+      }
+      if (this.action === 'copy') {
+        this.titleAction = 'Sao chép';
+      }
+      if(this.dialogRef.dataService.dataSelected){
+        this.data = JSON.parse(JSON.stringify(this.dialogRef.dataService.dataSelected));
+        this.employee = this.data;
+      }
+      this.employee = this.data;
+    }
+    this.initForm();
+  }
+
+
+  getParamerAsync(funcID:string){
+    if(funcID)
+    {
+      this.api.execSv("SYS",
+      "ERM.Business.AD",
+      "AutoNumberDefaultsBusiness",
+      "GenAutoDefaultAsync",
+      [funcID])
+      .subscribe((res:any) => {
+        if(res)
+        {
+          console.log(res);
+          this.paramaterHR = res;
+          if(this.paramaterHR.stop) return;
+          else
+          {
+            let funcID = this.dialogRef.formModel.funcID;
+            let entityName = this.dialogRef.formModel.entityName;
+            let fieldName = "EmployeeID";
+            if(funcID && entityName)
+            {
+              this.getDefaultEmployeeID(funcID,entityName,fieldName);
+            }
+          }
+        }
+      })
     }
   }
 
+  getDefaultEmployeeID(funcID:string,entityName:string,fieldName:string,data:any = null)
+  {
+    if(funcID && entityName && fieldName){
+      this.api.execSv(
+        "SYS", 
+        "ERM.Business.AD",
+        "AutoNumbersBusiness",
+        "GenAutoNumberAsync",
+        [funcID, entityName, fieldName, null])
+        .subscribe((res:any) =>{
+          if(res)
+          {
+            this.defaultEmployeeID = res;
+            this.employee.employeeID = this.defaultEmployeeID;
+          }
+          else
+          {
+            this.notifiSV.notifyCode("SYS020");
+          }
+        })
+    }
+    
+  }
   initForm() {
     this.getFormGroup(this.formName, this.gridViewName).then((item) => {
       this.isAfterRender = true;
-      if (this.action === 'add') {
-        this.getAutonumber("HRT03", "HR_Employees", "EmployeeID").subscribe(key => {
-          this.employee.employeeID = key;
-        })
-      }
+      // if (this.action === 'add') {
+      //   this.getAutonumber("HRT03", "HR_Employees", "EmployeeID").subscribe(key => {
+      //     this.employee.employeeID = key;
+      //   })
+      // }
 
     })
   }
@@ -107,16 +166,13 @@ export class PopupAddEmployeesComponent implements OnInit {
       this.cache.gridViewSetup(formName, gridView).subscribe(gv => {
         var model = {};
         if (gv) {
-          const user = this.authStore.get();
           for (const key in gv) {
-            var b = false;
             if (Object.prototype.hasOwnProperty.call(gv, key)) {
               const element = gv[key];
               element.fieldName = element.fieldName.charAt(0).toLowerCase() + element.fieldName.slice(1);
               model[element.fieldName] = [];
-
               if (element.fieldName == "owner") {
-                model[element.fieldName].push(user.userID);
+                model[element.fieldName].push(this.user.userID);
               }
               if (element.fieldName == "createdOn") {
                 model[element.fieldName].push(new Date());
@@ -125,7 +181,7 @@ export class PopupAddEmployeesComponent implements OnInit {
                 model[element.fieldName].push(false);
               }
               else if (element.fieldName == "orgUnitID") {
-                model[element.fieldName].push(user['buid']);
+                model[element.fieldName].push(this.user['buid']);
               }
               else if (element.dataType == "Decimal" || element.dataType == "Int") {
                 model[element.fieldName].push(0);
@@ -133,7 +189,7 @@ export class PopupAddEmployeesComponent implements OnInit {
               else if (element.dataType == "Bool" || element.dataType == "Boolean")
                 model[element.fieldName].push(false);
               else if (element.fieldName == "createdBy") {
-                model[element.fieldName].push(user.userID);
+                model[element.fieldName].push(this.user.userID);
               } else {
                 model[element.fieldName].push(null);
               }
@@ -183,16 +239,33 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
   OnSaveForm() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        // if (res) {
-        //   this.dialog.close(res);
-        // }
-        this.dialog.close(res)
-      });
+    // this.dialogRef.dataService
+    //   .save((option: any) => this.beforeSave(option))
+    //   .subscribe((res) => {
+    //     this.dialogRef.close(res)
+    //   });
+    this.addEmployeeAsync(this.employee);
   }
 
+
+
+  addEmployeeAsync(employee:any){
+    if(employee){
+      this.api.execSv("HR",
+      "ERM.Business.HR",
+      "EmployeesBusiness",
+      "AddEmployeeAsync",[employee,this.functionID])
+      .subscribe((res:any) => {
+        if(res){
+          this.dialogRef.close(res);
+        }
+      })
+    }
+  }
+
+  valueChange(event:any){
+    console.log(event);
+  }
   dataChange(e: any, field: string) {
     if (e) {
       if (!Array.isArray(e.data)) {

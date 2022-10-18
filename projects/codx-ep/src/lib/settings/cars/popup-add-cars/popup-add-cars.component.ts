@@ -70,6 +70,7 @@ export class PopupAddCarsComponent extends UIComponent {
     this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    
   }
 
   ngAfterViewInit(): void {}
@@ -165,41 +166,46 @@ export class PopupAddCarsComponent extends UIComponent {
     this.fGroupAddCar.patchValue({
       equipments: this.lstEquipment,
     });
-
+    let index:any
+    if(this.isAdd){
+      index=0;
+    }
+    else{
+      index=null;
+    }
     this.dialogRef.dataService
-    .save((opt: any) => this.beforeSave(opt),0)
-    .subscribe((res) => {
-      if (res) {          
-        if (!res.save) {
-          this.returnData = res.update;
-        } else {
-          this.returnData = res.save;
-        }
-        if(this.imageUpload)
-        {
-          this.imageUpload
-          .updateFileDirectReload(this.returnData.recID)
-          .subscribe((result) => {
-            if (result) {
-              this.loadData.emit();
-              //xử lí nếu upload ảnh thất bại
-              //...
+      .save((opt: any) => this.beforeSave(opt),index)
+      .subscribe(async (res) => {
+        if (res.save || res.update) {          
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if(this.returnData?.recID)
+          {
+            if(this.imageUpload?.imageUpload?.item) {
+              this.imageUpload
+              .updateFileDirectReload(this.returnData.recID)
+              .subscribe((result) => {
+                if (result) {
+                  //xử lí nếu upload ảnh thất bại
+                  //...                
+                }
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              });  
+            }          
+            else 
+            {
+              this.dialogRef && this.dialogRef.close(this.returnData);
             }
-          });
-        }          
-        if(this.isAdd){
-          //(this.dialogRef.dataService as CRUDService).add(this.returnData,0).subscribe();
+          } 
         }
-        else{
-          (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
-        }          
-        this.dialogRef.close();
-      }
-      else{
-        this.notificationsService.notifyCode('SYS001');
-        return;
-      }
-    });
+        else{ 
+          //Trả lỗi từ backend.         
+          return;
+        }
+      });
   }
   changeCategory(event:any){
     if(event?.data && event?.data!='1'){

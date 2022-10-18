@@ -35,6 +35,7 @@ import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assi
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
+import { CodxOdService } from '../../codx-od.service';
 import {
   convertHtmlAgency2,
   extractContent,
@@ -88,6 +89,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   ms020: any;
   ms021: any;
   ms023: any;
+  vllStatus='TM004'
+  vllStatusAssign='TM007'
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -95,7 +98,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private authStore: AuthStore,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private codxODService : CodxOdService,
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -105,8 +109,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       this.userID = this.authStore.get().userID;
       this.data = changes.data?.currentValue;
       if (!this.data) this.data = {};
-      this.getDataValuelist();
-      this.getPermission(this.data.recID);
+      //this.getDataValuelist();
+      //this.getPermission(this.data.recID);
       this.ref.detectChanges();
     }
     if (
@@ -133,6 +137,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.formModel = this.view.formModel;
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
+    this.getGridViewSetup(this.pfuncID);
     this.getDataValuelist();
   }
   setHeight() {
@@ -164,29 +169,29 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   getGridViewSetup(funcID: any) {
   
-    this.cache.functionList(funcID).subscribe((fuc) => {
-      this.formModel = {
-        entityName: fuc?.entityName,
-        formName: fuc?.formName,
-        funcID: funcID,
-        gridViewName: fuc?.gridViewName,
-      };
-      this.cache
-        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
+    this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
+      // this.formModel = {
+      //   entityName: fuc?.entityName,
+      //   formName: fuc?.formName,
+      //   funcID: funcID,
+      //   gridViewName: fuc?.gridViewName,
+      // };
+      this.codxODService
+        .loadGridView(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetup = grd;
         });
     });
-    this.cache.message('OD020').subscribe((item) => {
+    this.codxODService.loadMessage('OD020').subscribe((item) => {
       this.ms020 = item;
     });
-    this.cache.message('OD021').subscribe((item) => {
+    this.codxODService.loadMessage('OD021').subscribe((item) => {
       this.ms021 = item;
     });
-    this.cache.message('OD023').subscribe((item) => {
+    this.codxODService.loadMessage('OD023').subscribe((item) => {
       this.ms023 = item;
     });
-    this.cache.valueList('OD008').subscribe((item) => {
+    this.codxODService.loadValuelist('OD008').subscribe((item) => {
       this.dvlRelType = item;
     });
   }
@@ -253,49 +258,49 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   getDataValuelist() {
     if (this.gridViewSetup['Security']['referedValue'])
-      this.cache
-        .valueList(this.gridViewSetup['Security']['referedValue'])
+      this.codxODService
+        .loadValuelist(this.gridViewSetup['Security']['referedValue'])
         .subscribe((item) => {
           this.dvlSecurity = item;
         });
     if (this.gridViewSetup['Urgency']['referedValue'])
-      this.cache
-        .valueList(this.gridViewSetup['Urgency']['referedValue'])
+      this.codxODService
+        .loadValuelist(this.gridViewSetup['Urgency']['referedValue'])
         .subscribe((item) => {
           this.dvlUrgency = item;
           //this.ref.detectChanges();
         });
     if (this.gridViewSetup['Status']['referedValue'])
-      this.cache
-        .valueList(this.gridViewSetup['Status']['referedValue'])
+      this.codxODService
+        .loadValuelist(this.gridViewSetup['Status']['referedValue'])
         .subscribe((item) => {
           this.dvlStatus = item;
           console.log(this.dvlStatus);
           //this.ref.detectChanges();
         });
     if (this.gridViewSetup['Category']['referedValue'])
-      this.cache
-        .valueList(this.gridViewSetup['Category']['referedValue'])
+      this.codxODService
+        .loadValuelist(this.gridViewSetup['Category']['referedValue'])
         .subscribe((item) => {
           this.dvlCategory = item;
           //this.ref.detectChanges();
         });
-    this.cache.valueList('OD008').subscribe((item) => {
+    this.codxODService.loadValuelist('OD008').subscribe((item) => {
       this.dvlRelType = item;
     });
-    this.cache.valueList('OD009').subscribe((item) => {
+    this.codxODService.loadValuelist('OD009').subscribe((item) => {
       this.dvlStatusRel = item;
     });
-    this.cache.valueList('OD010').subscribe((item) => {
+    this.codxODService.loadValuelist('OD010').subscribe((item) => {
       this.dvlReCall = item;
     });
-    this.cache.valueList('L0614').subscribe((item) => {
+    this.codxODService.loadValuelist('L0614').subscribe((item) => {
       this.dvlStatusTM = item;
     });
-    this.cache.message('OD020').subscribe((item) => {
+    this.codxODService.loadMessage('OD020').subscribe((item) => {
       this.ms020 = item;
     });
-    this.cache.message('OD021').subscribe((item) => {
+    this.codxODService.loadMessage('OD021').subscribe((item) => {
       this.ms021 = item;
     });
   }
@@ -435,7 +440,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               //this.view.dataService.update(x.event).subscribe();
 
               this.odService
-                .getDetailDispatch(x.event.recID)
+                .getDetailDispatch(x.event.recID , this.formModel?.entityName)
                 .subscribe((item) => {
                   this.data = item;
                   this.data.lstUserID = getListImg(item.relations);
@@ -461,7 +466,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           .subscribe((item: any) => {
             if (item.status == 0) {
               this.odService
-                .getDetailDispatch(this.view.dataService.data[0].recID)
+                .getDetailDispatch(this.view.dataService.data[0].recID , this.view.formModel.entityName)
                 .subscribe((item) => {
                   this.data = formatDtDis(item);
                   this.view.dataService.setDataSelected(this.data);
@@ -475,6 +480,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'SYS04': {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
+          this.view.dataService.dataSelected.recID = res?.recID
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(
@@ -493,7 +499,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               this.view.dataService
                 .remove(this.view.dataService.dataSelected)
                 .subscribe();
-            } else this.view.dataService.add(x.event, 0).subscribe();
+            } else this.view.dataService.add(x.event, 0).subscribe(item=>{
+              this.view.dataService.onAction.next({ type: 'update', data: x.event });
+            });
           });
         });
         break;
@@ -529,8 +537,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Giao việc
       case 'ODT102': {
-        if (this.checkOpenForm(funcID)) {
-        }
+        // if (this.checkOpenForm(funcID)) {
+        // }
         var task = new TM_Tasks();
         task.refID = datas?.recID;
         task.refType = this.view?.formModel.entityName;
@@ -583,8 +591,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       //Chia sẻ
       case 'ODT104':
       case 'ODT203': {
-        if (this.checkOpenForm(funcID)) {
-        }
+        // if (this.checkOpenForm(funcID)) {
+        // }
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.formModel;
@@ -650,8 +658,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       //Gia hạn
       case 'ODT107':
       case 'ODT206': {
-        if (this.checkOpenForm(funcID)) {
-        }
+        // if (this.checkOpenForm(funcID)) {
+        // }
         this.callfunc
           .openForm(this.tmpdeadline, null, 600, 400)
           .closed.subscribe((x) => {
@@ -665,8 +673,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       //Quản lý phiên bản
       case 'ODT108':
       case 'ODT207': {
-        if (this.checkOpenForm(funcID)) {
-        }
+        // if (this.checkOpenForm(funcID)) {
+        // }
         break;
       }
       //Chuyển vào thư mục
@@ -917,21 +925,17 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
     if (relationType == '1') {
       if (this.formModel.funcID == 'ODT31') {
+        var text =  this.ms020?.customName;
+        if(!text) text = ""
         return Util.stringFormat(
-          this.ms020?.customName,
+          text,
           this.fmTextValuelist(relationType, '6'),
           agencyName
         );
       } else {
         return 'Gửi đến ' + agencyName;
-        /* return Util.stringFormat(
-          this.ms023?.customName,
-          this.fmTextValuelist(relationType, '6'),
-          agencyName
-        ); */
       }
     }
-
     return Util.stringFormat(
       this.ms021?.customName,
       this.fmTextValuelist(relationType, '6'),
@@ -1030,5 +1034,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       );
       this.data.listInformationRel[index].view = '3';
     }
+  }
+
+  clickTemp(e){
+    e.stopPropagation() ;
   }
 }

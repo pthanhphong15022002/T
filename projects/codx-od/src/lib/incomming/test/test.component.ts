@@ -85,7 +85,7 @@ export class ODTestDetailComponent implements OnInit, AfterViewInit, OnChanges {
   getDtDis(id: any) {
     this.data = null;
     if (id) {
-      this.odService.getDetailDispatch(id).subscribe((item) => {
+      this.odService.getDetailDispatch(id,this.formModel?.entityName).subscribe((item) => {
         //this.getChildTask(id);
         if (item) {
           this.data = formatDtDis(item);

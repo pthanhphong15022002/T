@@ -72,22 +72,20 @@
             <div class="d-flex justify-content-between container mb-10 mt-10">
               <ul class="nav">
                 <li class="nav-item">
-                  <span class="nav-link fw-bold active">Tất cả</span>
+                  <span
+                    class="nav-link fw-bold cursor-pointer"
+                    [ngClass]="{ active: !groupID }"
+                    (click)="filterStationery()"
+                    ><codx-label name="lblAll" default="Tất cả"></codx-label
+                  ></span>
                 </li>
                 <li class="nav-item" *ngFor="let item of groupStationery">
-                  <span class="nav-link fw-bold">{{ item?.resourceName }}</span>
-                </li>
-                <li class="nav-item">
-                  <span class="nav-link fw-bold">Văn phòng phẩm</span>
-                </li>
-                <li class="nav-item">
-                  <span class="nav-link fw-bold">Trà & nước</span>
-                </li>
-                <li class="nav-item">
-                  <span class="nav-link fw-bold">Bánh kẹo</span>
-                </li>
-                <li class="nav-item">
-                  <span class="nav-link fw-bold">Trái cây</span>
+                  <span
+                    class="nav-link fw-bold cursor-pointer active"
+                    [ngClass]="{ active: item?.resourceID == groupID }"
+                    (click)="filterStationery(item?.resourceID)"
+                    >{{ item?.resourceName }}</span
+                  >
                 </li>
               </ul>
               <div class="d-flex">
@@ -128,14 +126,8 @@
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="border w-200px h-100"
-    [imageSrc]="
-      data?.icon ? '' : '../assets/media/svg/files/blank-image.svg'
-    "
     [imageObjType]="'EP_Stationery'"
     [imageId]="data?.recID"
-    [title]="data?.resourceName"
-    [subTitle]="data?.resourceName"
-    [content]="data?.costPrice | currency: 'VND':'symbol':'3.0'"
     [rootData]="data"
     [footer]="cardItemFooter"
   >
@@ -144,6 +136,12 @@
 
 <ng-template #cardItemFooter let-data>
   <div class="d-flex flex-column flex-grow-1 mt-2">
+    <div class="fw-bold line-clamp line-clamp-1 text-start">
+      {{ data?.resourceName }}
+    </div>
+    <div class="text-start">
+      {{ data?.costPrice | currency: "VND":"symbol":"3.0" }}
+    </div>
     <div class="d-flex justify-content-between align-items-end mt-2">
       <div class="d-flex align-items-end me-2 codx-badge mb-3">
         <div class="d-flex align-items-center position-relative me-4">
@@ -176,43 +174,51 @@
 <ng-template #addNewRequest let-dialogSaveToTemplate>
   <div *ngIf="isAfterRender && formModel" class="row" style="height: 99%">
     <div class="left col-6">
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-start mb-4">
+        <h3 class="h3-title">
+          <codx-label
+            name="lblInfoRequest"
+            default="Thông tin yêu cầu"
+            [formModel]="formModel"
+          ></codx-label>
+        </h3>
+      </div>
+      <div class="d-flex justify-content-between mb-4">
         <div class="d-flex">
           <codx-img
             [objectId]="user?.userID"
             [objectName]="user?.userName"
             [objectType]="'AD_Users'"
           ></codx-img>
-          <div>
-            <div>{{ user?.userName }}</div>
-            <div>{{ user?.employee?.positionName }}</div>
+          <div class="ms-2">
+            <div class="fw-bold text-start">{{ user?.userName }}</div>
+            <div class="fw-bold text-black-50">
+              {{ user?.employee?.positionName }} Thư ký trung tâm - NDX
+            </div>
           </div>
         </div>
-        <div
-          *ngIf="!isAddNew"
-          class="badge border-0 me-2"
-          [style.background-color]="'4' | vll: 'VL003':'color' | async"
-          [style.color]="'4' | vll: 'VL003':'textColor' | async"
+        <codx-vll
+          [name]="'VL003'"
+          [value]="'1'"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-square badge-md fs-7 p-2"
         >
-          {{ "4" | vll: "VL003":"text" | async }}
-        </div>
+        </codx-vll>
       </div>
       <div class="row">
         <div class="form-group col-4">
           <codx-label
+            class="d-flex justify-content-start"
             fiedName="BookingOn"
             [formModel]="formModel"
             default="Ngày yêu cầu"
           >
           </codx-label>
-          <codx-input
-            field="bookingOn"
-            [formModel]="formModel"
-            [Group]="dialogAddBookingStationery"
-          >
+          <codx-input type="datetime" format="f" field="bookingOn">
           </codx-input>
         </div>
-        <div class="form-group d-flex col-4">
+        <div class="d-flex align-items-center form-group col-4">
           <codx-input
             type="radio"
             [crrValue]="data?.recID"
@@ -221,12 +227,13 @@
           >
           </codx-input>
           <codx-label
+            class="ms-6 mt-6"
             name="lblPersonalRequest"
             default="Yêu cầu theo cá nhân"
             [formModel]="formModel"
           ></codx-label>
         </div>
-        <div class="form-group d-flex col-4">
+        <div class="d-flex align-items-center form-group col-4">
           <codx-input
             type="radio"
             [crrValue]="data?.recID"
@@ -235,6 +242,7 @@
           >
           </codx-input>
           <codx-label
+            class="ms-6 mt-6"
             name="lblDeptRequest"
             default="Yêu cầu theo phòng"
             [formModel]="formModel"
@@ -244,20 +252,18 @@
       <div class="row">
         <div class="form-group col-6">
           <codx-label
+            class="d-flex justify-content-start"
             name="lblEmpQty"
             [formModel]="formModel"
             default="Đơn vị/Phòng ban"
           >
           </codx-label>
-          <codx-input
-            type="combobox"
-            field="bUID"
-            refValue="BusinessUnits"
-          >
+          <codx-input type="combobox" field="bUID" refValue="BusinessUnits">
           </codx-input>
         </div>
         <div class="form-group col-6">
           <codx-label
+            class="d-flex justify-content-start"
             fiedName="BUID"
             [formModel]="formModel"
             default="Số lượng nhân viên"
@@ -269,6 +275,7 @@
       <div class="row">
         <div class="form-group col-12">
           <codx-label
+            class="d-flex justify-content-start"
             fiedName="ReasonID"
             [formModel]="formModel"
             default="Lý do đăng ký"
@@ -284,7 +291,12 @@
       </div>
       <div class="row">
         <div class="form-group col-12">
-          <codx-label fiedName="Note" [formModel]="formModel"> </codx-label>
+          <codx-label
+            class="d-flex justify-content-start"
+            fiedName="Note"
+            [formModel]="formModel"
+          >
+          </codx-label>
           <codx-input
             ControlName="note"
             [formModel]="formModel"
@@ -297,7 +309,7 @@
     <div class="vr px-0"></div>
     <div class="right col-5">
       <codx-label
-        class="fw-bold text-left"
+        class="fw-bold text-start"
         name="lblStationeryList"
         default="Danh sách văn phòng phẩm"
       ></codx-label>

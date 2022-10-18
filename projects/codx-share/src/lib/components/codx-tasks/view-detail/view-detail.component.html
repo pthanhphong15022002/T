@@ -549,7 +549,7 @@
       <div
         class="text-gray-700"
         *ngIf="itemSelected?.memo"
-        [innerHTML]="itemSelected?.memo"
+        [innerHTML]="itemSelected['memoHTML']"
       ></div>
       <div *ngIf="itemSelected?.memo2">
         <span class="text-gray-700">
@@ -561,7 +561,10 @@
           </codx-label
           >:
         </span>
-        <span class="text-gray-700" [innerHTML]="itemSelected?.memo2"></span>
+        <div
+          class="text-gray-700"
+          [innerHTML]="itemSelected['memoHTML2']"
+        ></div>
       </div>
 
       <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">

@@ -9,9 +9,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Thickness } from '@syncfusion/ej2-charts';
 import {
   CacheService,
   CallFuncService,
@@ -47,7 +45,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   isAdd = true;
   isSaveSuccess = false;
-  dialogSignature: FormGroup;
   cbxName: any;
   isAfterRender: boolean = false;
   currentTab = 1;
@@ -80,6 +77,15 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.data = dialog?.dataService?.dataSelected;
+
+    //set gia trị data oTP != otp
+    this.data.oTPControl = this.data?.otpControl;
+    this.data.oTPPin = this.data?.otpPin;
+
+    //delete otp
+    delete this.data?.otpControl;
+    delete this.data?.otpPin;
+
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog?.formModel;
     this.headerText = data?.data?.headerText;
@@ -94,6 +100,12 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         });
       }
     }
+  }
+
+  ngOnInit(): void {
+    this.esService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {});
 
     this.cache
       .gridViewSetup(
@@ -104,14 +116,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         if (res) {
           this.grvSetup = res;
         }
-      });
-  }
-
-  ngOnInit(): void {
-    this.esService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.dialogSignature = item;
       });
   }
 
@@ -142,12 +146,13 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         console.log(this.data);
 
         if (event?.data == '2') {
-          this.data.supplier = '1';
-          this.form?.formGroup.patchValue({ supplier: '1' });
+          this.data.supplier = null;
+          this.form?.formGroup.patchValue({ supplier: null });
+        } else if (event?.data == '1') {
+          this.data.supplier = '2';
+          this.form?.formGroup.patchValue({ supplier: '2' });
         }
-      } else if (event?.data === Object(event?.data))
-        this.data[event['field']] = event?.data.value[0];
-      else this.data[event['field']] = event?.data;
+      } else this.data[event['field']] = event?.data;
       this.cr.detectChanges();
     }
   }
@@ -164,9 +169,13 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  onSaveForm() {
-    this.dialogSignature.patchValue(this.data);
+  updateAfterUpload(i) {
+    if (i <= 0) {
+      this.esService.editSignature(this.data).subscribe((res) => {});
+    }
+  }
 
+  onSaveForm() {
     if (this.form?.formGroup?.invalid == true) {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
@@ -184,6 +193,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           if (res.update) {
             result = res.update;
           }
+          this.data = result;
           if (
             this.imgSignature1.imageUpload?.item ||
             this.imgSignature2.imageUpload?.item ||
@@ -198,13 +208,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
               this.imgSignature1
                 .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
-                  if (img && this.data.signature1 == null) {
-                    result.signature1 = (img[0] as any).recID;
-                    this.data.signature1 = (img[0] as any).recID;
-                    this.esService
-                      .editSignature(this.data)
-                      .subscribe((res) => {});
-                  }
                   if (img) i--;
                   else {
                     this.notification.notifyCode(
@@ -213,20 +216,18 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       this.imgSignature1.imageUpload?.fileName
                     );
                   }
-                  if (i <= 0) this.dialog && this.dialog.close(result);
+                  if (img && this.data.signature1 == null) {
+                    result.signature1 = (img[0] as any).recID;
+                    this.data.signature1 = (img[0] as any).recID;
+                    this.updateAfterUpload(i);
+                  }
+
+                  if (i <= 0) this.dialog && this.dialog.close(this.data);
                 });
             this.imgSignature2.imageUpload?.item &&
               this.imgSignature2
                 .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
-                  if (img && this.data.signature2 == null) {
-                    result.signature2 = (img[0] as any).recID;
-
-                    this.data.signature2 = (img[0] as any).recID;
-                    this.esService
-                      .editSignature(this.data)
-                      .subscribe((res) => {});
-                  }
                   if (img) i--;
                   else {
                     this.notification.notifyCode(
@@ -235,21 +236,19 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       this.imgSignature2.imageUpload?.fileName
                     );
                   }
-                  if (i <= 0) this.dialog && this.dialog.close(result);
+                  if (img && this.data.signature2 == null) {
+                    result.signature2 = (img[0] as any).recID;
+
+                    this.data.signature2 = (img[0] as any).recID;
+                    this.updateAfterUpload(i);
+                  }
+
+                  if (i <= 0) this.dialog && this.dialog.close(this.data);
                 });
             this.imgStamp.imageUpload?.item &&
               this.imgStamp
                 .updateFileDirectReload(this.data.recID)
                 .subscribe((img) => {
-                  debugger;
-                  if (img && this.data.stamp == null) {
-                    result.stamp = (img[0] as any).recID;
-
-                    this.data.stamp = (img[0] as any).recID;
-                    this.esService
-                      .editSignature(this.data)
-                      .subscribe((res) => {});
-                  }
                   if (img) i--;
                   else {
                     this.notification.notifyCode(
@@ -258,7 +257,14 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
                       this.imgStamp.imageUpload?.fileName
                     );
                   }
-                  if (i <= 0) this.dialog && this.dialog.close(result);
+                  if (img && this.data.stamp == null) {
+                    result.stamp = (img[0] as any).recID;
+
+                    this.data.stamp = (img[0] as any).recID;
+                    this.updateAfterUpload(i);
+                  }
+
+                  if (i <= 0) this.dialog && this.dialog.close(this.data);
                 });
           } else {
             this.dialog && this.dialog.close(result);
@@ -284,7 +290,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     }
     let data = {
       dialog: this.dialog,
-      model: this.dialogSignature,
+      model: this.form?.formGroup,
       data: this.data,
     };
     this.cfService.openForm(PopupSignatureComponent, '', 800, 600, '', data);
@@ -296,48 +302,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   File: any;
   fileAdd: any;
   files: any;
-  // fileAdded(event, currentTab) {
-  //   switch (currentTab) {
-  //     case 3:
-  //       this.Signature1 = event.data;
-  //       this.dialogSignature.patchValue({
-  //         signature1: event.data[0].recID ?? null,
-  //       });
-  //       break;
-  //     case 4:
-  //       this.Signature2 = event.data;
-  //       this.dialogSignature.patchValue({
-  //         signature2: event.data[0].recID ?? null,
-  //       });
-  //       break;
-  //     case 5:
-  //       this.Stamp = event.data;
-  //       this.dialogSignature.patchValue({ stamp: event.data[0].recID ?? null });
-  //       break;
-  //   }
-  //   this.cr.detectChanges();
-  // }
-
-  getJSONString(data) {
-    if (data) {
-      switch (this.currentTab) {
-        case 3:
-          this.dialogSignature.patchValue({
-            signature1: data[0]?.recID ?? null,
-          });
-          break;
-        case 4:
-          this.dialogSignature.patchValue({
-            signature2: data[0]?.recID ?? null,
-          });
-          break;
-        case 5:
-          this.dialogSignature.patchValue({ stamp: data[0]?.recID ?? null });
-          break;
-      }
-    }
-    return JSON.stringify(data);
-  }
 
   changeTab(tab) {
     this.currentTab = tab;

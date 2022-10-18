@@ -46,16 +46,15 @@
         </div>
 
         <div class="col-3 form-group">
-          <codx-label fiedName="StartDate" aria-disabled="false" [formModel]="form.formModel">
+          <codx-label name="lblStatTime" default="Từ giờ" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName">
           </codx-label>
           <codx-input type="datetime" class="test-datetime" field="startTime" [crrValue]="startTime" format="t"
             (valueChange)="valueStartTimeChange($event)" [disabled]="bookingOnValid">
           </codx-input>
         </div>
         <div class="col-3 form-group">
-          <codx-label fiedName="EndDate" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
+          <codx-label name="lblEndTime" default="Đến giờ" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"></codx-label>
+            <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
             (valueChange)="valueEndTimeChange($event)" [disabled]="bookingOnValid">
           </codx-input>
         </div>
@@ -112,7 +111,7 @@
 
       <div class="d-flex flex-column mb-8">
         <div class="d-flex justify-content-between align-items-center mb-2 form-group">
-          <codx-label fiedName="attendees" [formModel]="formModel"> </codx-label>
+          <codx-label name="lblAttendees" default="Người tham dự" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"> </codx-label>
           <div class="d-flex flex-row text-end align-items-end">
             <div class="mx-2">
               <button class="btn btn-sm btn-icon btn-light-secondary" (click)="openOptionalUserPopup()">
@@ -388,6 +387,7 @@
       </div>
     </ng-container>
   </ng-template>
+  
   <ng-template #popupDevice let-dialog>
     <div class="modal-header">
       <div class="d-flex flex-column flex-grow-1">

@@ -226,7 +226,6 @@ export class PropertiesComponent implements OnInit {
   }
 
   txtValue($event, type) {
-    debugger;
     switch (type) {
       case "commenttext":
         this.commenttext = $event.data;
@@ -256,7 +255,6 @@ export class PropertiesComponent implements OnInit {
             }
           }
         }
-        debugger;
         /*  if(this.fileEditing.publisher)
          {
            this.cache.valueList("L1473").subscribe(item=>{
@@ -273,7 +271,6 @@ export class PropertiesComponent implements OnInit {
            
            })
          } */
-        debugger;
 
         this.onUpdateTags();
         this.currentRate = 1;
@@ -331,11 +328,11 @@ export class PropertiesComponent implements OnInit {
     }
 
     if (this.totalViews != 0) {
-      this.rating1 = ((_rating1 / this.totalViews) * 100).toFixed(2).toString() + "%";
-      this.rating2 = ((_rating2 / this.totalViews) * 100).toFixed(2).toString() + "%";
-      this.rating3 = ((_rating3 / this.totalViews) * 100).toFixed(2).toString() + "%";
-      this.rating4 = ((_rating4 / this.totalViews) * 100).toFixed(2).toString() + "%";
-      this.rating5 = ((_rating5 / this.totalViews) * 100).toFixed(2).toString() + "%";
+      this.rating1 = ((_rating1 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating2 = ((_rating2 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating3 = ((_rating3 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating4 = ((_rating4 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating5 = ((_rating5 / this.totalViews) * 100).toFixed(0).toString() + "%";
       this.totalRating = _sum / this.totalViews;
     }
     else {
@@ -351,7 +348,6 @@ export class PropertiesComponent implements OnInit {
   }
 
   openRight(mode = 1, type = true) {
-    debugger;
     this.dmSV.dataFileEditing = this.fileEditing;
     this.callfc.openForm(RolesComponent, "", 950, 650, "", [], "");
   }
