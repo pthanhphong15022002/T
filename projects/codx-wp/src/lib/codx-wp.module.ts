@@ -24,6 +24,7 @@ import { ChatListComponent } from './chatting/chat-list/chat-list.component';
 import { ChatBoxComponent } from './chatting/chatbox/chat-box.component';
 import { ChattingComponent } from './chatting/chatting.component';
 import { ListChatBoxComponent } from './chatting/list-chat-box/list-chat-box.component';
+import { PopupGroupComponent } from './chatting/popup-group/popup-group.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
@@ -54,6 +55,7 @@ import { Layout3Component } from './_layout3/layout3.component';
 import { TestSurveyComponent } from './test-survey/test-survey.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
+import { ListBoxAllModule } from '@syncfusion/ej2-angular-dropdowns';
 
 export const routes: Routes = [
   {
@@ -212,40 +214,42 @@ export const routes: Routes = [
   // }
 ];
 
-const Component: Type<any>[] = [
-  LayoutComponent,
-  Layout2Component,
-  Layout3Component,
-  CodxWpComponent,
-  NewsComponent,
-  PopupAddComponent,
-  ViewDetailComponent,
-  CompanyInforComponent,
-  PopupEditComponent,
-  ApproveComponent,
-  ApproveDetailComponent,
-  DashboardComponent,
-  HomeComponent,
-  AddNoteComponent,
-  SaveNoteComponent,
-  PostComponent,
-  ListPostComponent,
-  PopupAddPostComponent,
-  PopupSavePostComponent,
-  MyTeamComponent,
-  UpdateNotePinComponent,
-  ViewVideoComponent,
-  PopupDetailComponent,
-  CompanyEditComponent,
-  PopupTitleComponent,
-  ViewTagComponent,
-  PopupSearchComponent,
-  PopupSearchPostComponent,
-  ChatListComponent,
-  ChatBoxComponent,
-  ListChatBoxComponent,
-  TestSurveyComponent,
-];
+const Component: Type<any>[] =
+  [
+    LayoutComponent,
+    Layout2Component,
+    Layout3Component,
+    CodxWpComponent,
+    NewsComponent,
+    PopupAddComponent,
+    ViewDetailComponent,
+    CompanyInforComponent,
+    PopupEditComponent,
+    ApproveComponent,
+    ApproveDetailComponent,
+    DashboardComponent,
+    HomeComponent,
+    AddNoteComponent,
+    SaveNoteComponent,
+    PostComponent,
+    ListPostComponent,
+    PopupAddPostComponent,
+    PopupSavePostComponent,
+    MyTeamComponent,
+    UpdateNotePinComponent,
+    ViewVideoComponent,
+    PopupDetailComponent,
+    CompanyEditComponent,
+    PopupTitleComponent,
+    ViewTagComponent,
+    PopupSearchComponent,
+    PopupSearchPostComponent,
+    ChatListComponent,
+    ChatBoxComponent,
+    ListChatBoxComponent,
+    PopupGroupComponent,
+    TestSurveyComponent,
+  ];
 
 @NgModule({
   imports: [
@@ -260,6 +264,7 @@ const Component: Type<any>[] = [
     CoreModule,
     PickerModule,
     InPlaceEditorModule,
+    ListBoxAllModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule, ListPostComponent],

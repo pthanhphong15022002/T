@@ -191,9 +191,6 @@ item: any;
   }
 
   onInit(): void {
-
-    
-
     this.user = this.auth.get();
     this.path = this.getPath();
     this.button = {

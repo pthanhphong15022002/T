@@ -1,8 +1,6 @@
 .card-survey {
-  width: 60% !important;
-  background-color: white;
-  border: 1px solid white;
-  border-radius: 0.6rem;
+  max-width: fit-content !important;
+  margin: auto;
 }
 
 .border-0 {
@@ -18,8 +16,8 @@
 .inplace-editor-control-section #formId {
   padding-top: 20px;
   margin-bottom: 45px;
-  border: 1px solid white;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.36);
+  border: 1px solid gray;
+  box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
   border-radius: 5px;
 }
 
@@ -27,7 +25,7 @@
   margin: 0 20px;
 }
 
-.inplace-editor-control-section .form-horizontal .form-group > * {
+.inplace-editor-control-section .form-horizontal .form-group>* {
   width: 100%;
 }
 
@@ -50,19 +48,13 @@
   text-align: center;
 }
 
-.inplace-editor-control-section.form-layout
-  .control-wrapper
-  .form-horizontal
-  .control-label {
+.inplace-editor-control-section.form-layout .control-wrapper .form-horizontal .control-label {
   padding: 15px 15px 15px 0;
   font-weight: 600;
 }
 
 @media (max-width: 768px) {
-  .inplace-editor-control-section.form-layout
-    .control-wrapper
-    .form-horizontal
-    .control-label {
+  .inplace-editor-control-section.form-layout .control-wrapper .form-horizontal .control-label {
     padding-top: 7px;
     margin-bottom: 0;
   }
@@ -101,15 +93,13 @@ ejs-inplaceeditor {
   position: relative;
 }
 
-ejs-inplaceeditor
-  .e-editable-value-wrapper.e-editable-open
-  + .e-editable-inline {
+ejs-inplaceeditor .e-editable-value-wrapper.e-editable-open+.e-editable-inline {
   font-size: 14px !important;
 }
 
 ejs-inplaceeditor .e-rte-toolbar {
   position: absolute !important;
-  bottom: -42px;
+  bottom: 0;
   left: 0;
   right: 0;
 }
@@ -125,6 +115,7 @@ ejs-inplaceeditor .e-rte-toolbar {
 .e-editable-overlay-icon.e-icons {
   display: none !important;
 }
+
 .e-inplaceeditor .e-editable-value-wrapper .e-editable-value {
   display: inline-block;
   font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI",
@@ -137,13 +128,21 @@ ejs-inplaceeditor .e-rte-toolbar {
 .e-richtexteditor.e-rte-tb-expand,
 .e-rte-content {
   border: none !important;
+  padding-bottom: 20px;
 }
+
 ejs-inplaceeditor .e-editable-value-wrapper:hover {
   background-color: transparent !important;
 }
+
 .e-input-group,
 .e-input-group.e-control-wrapper {
   font-size: 14px !important;
+
+}
+
+.e-richtexteditor .e-rte-content .e-content {
+  min-height: 56px !important;
 }
 
 .e-input-focus {
@@ -165,4 +164,12 @@ input#Title_editor {
 
 .e-rte-content {
   margin-top: 2px !important;
+}
+
+.e-listbox-wrapper {
+  border: 0 !important;
+}
+
+.e-list-item {
+  background-color: white !important;
 }
