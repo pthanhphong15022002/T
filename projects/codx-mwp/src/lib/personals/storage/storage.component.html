@@ -75,7 +75,7 @@
     <codx-card-img cardCss="border rounded-3 card-img-mwp img-storage w-225px h-225px" [imageId]="item.recID"
       imgCss="h-140px mb-2" icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo"
       [imgOn]="item?.modifiedOn" [imageObjType]="'WP_Storages'" imageWidth="223" [formModel]="listView?.formModel"
-      (clickMF)="clickMF($event, item)" [dataItem]="item">
+      (clickMF)="clickMF($event, item)" [dataItem]="item" [imageObjName]="item.title">
     </codx-card-img>
   </div>
 </ng-template>

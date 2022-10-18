@@ -849,3 +849,22 @@ codx-view-list ejs-listview {
 .aside-menu .content-tree .menu-item {
   line-height: 22px;
 }
+
+codx-views>.container-fluid {
+  padding: 0 !important;
+}
+
+.e-kanban .e-kanban-table .e-header-cells .e-column-expand {
+  color: #fff !important;
+  font-size: 15px !important;
+  padding: 0 !important;
+}
+
+.btn-outline-primary:hover {
+  color: var(--primary-inverse);
+}
+
+codx-tag .codx-tag:hover {
+  cursor: pointer;
+  opacity: 0.9;
+}

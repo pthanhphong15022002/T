@@ -7,26 +7,28 @@
         </h2>
       </div>
       <div class="d-flex justify-content-end">
-        <button
-          type="button"
-          class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup && !isConfirm"
-          (click)="clickOpenPopupADR(1)"
-        >
-          <codx-vll
-            *ngIf="data?.stepType != 'S1' && data?.stepType != 'S2'"
-            [name]="'ES002'"
-            [value]="data?.stepType"
-            [showText]="true"
+        <div>
+          <button
+            type="button"
+            class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+            [disabled]="!canOpenSubPopup && !isConfirm"
+            (click)="clickOpenPopupADR(1)"
           >
-          </codx-vll>
-          <codx-label
-            *ngIf="data?.stepType == 'S1' || data?.stepType == 'S2'"
-            name="lblApprove"
-            [formModel]="formModel"
-            default="Ký"
-          ></codx-label>
-        </button>
+            <codx-vll
+              *ngIf="data?.stepType != 'S1' && data?.stepType != 'S2'"
+              [name]="'ES002'"
+              [value]="data?.stepType"
+              [showText]="true"
+            >
+            </codx-vll>
+            <codx-label
+              *ngIf="data?.stepType == 'S1' || data?.stepType == 'S2'"
+              name="lblApprove"
+              [formModel]="formModel"
+              default="Ký"
+            ></codx-label>
+          </button>
+        </div>
         <button
           type="button"
           class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
