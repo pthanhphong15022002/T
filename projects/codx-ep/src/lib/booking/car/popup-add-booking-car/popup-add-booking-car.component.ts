@@ -87,6 +87,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     objectType: string;
     objectID: any;
   };
+  carCapacity=0;
   attendeesList = [];
   checkLoopS = true;
   checkLoopE = true;
@@ -284,6 +285,14 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.notificationsService.notifyCode('TM036');
       return;
     }
+    // if(this.data.attendees>this.carCapacity){
+    //    this.notificationsService.alertCode('EP010').subscribe((x) => {
+    //     if (x.event.status == 'N') {
+    //       return;
+    //     }
+    //   });
+    // }
+    
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
@@ -305,7 +314,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
     this.dialogRef.dataService
         .save((opt: any) => this.beforeSave(opt))
-        .subscribe(async (res) => {
+        .subscribe((res) => {
           if (res.save || res.update) {
             if (!res.save) {
               this.returnData = res.update;
@@ -313,8 +322,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
               this.returnData = res.save;
             }
             if (approval) {
-              (await this.codxEpService
-                .getCategoryByEntityName(this.formModel.entityName))
+              this.codxEpService
+                .getCategoryByEntityName(this.formModel.entityName)
                 .subscribe((res: any) => {
                   this.codxEpService
                     .release(
@@ -332,7 +341,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                       } else {
                         this.notificationsService.notifyCode(res?.msgCodeError);
                         // Thêm booking thành công nhưng gửi duyệt thất bại
-                        return
+                        this.dialogRef && this.dialogRef.close();
                       }
                     });
                 });
@@ -361,6 +370,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       var cbxCar = event.component.dataService.data;
       cbxCar.forEach((element) => {
         if (element.ResourceID == event.data) {
+          this.carCapacity=element.Capacity;
           this.useCard = element.UseCard;
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
@@ -495,13 +505,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
       let temp= this.data.endDate;
       this.data.endDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.endHour,this.endMinutes);
     }
-    // if (new Date() >= new Date(this.data.endDate)) {
-    //   this.checkLoopE = !this.checkLoopE;
-    //   if (!this.checkLoopE) {
-    //     this.notificationsService.notifyCode('TM036');        
-    //   }
-    //   return;
-    // }
+    if (new Date() >= new Date(this.data.endDate)) {
+      this.checkLoopE = !this.checkLoopE;
+      if (!this.checkLoopE) {
+        this.notificationsService.notifyCode('TM036');        
+      }
+      return;
+    }
     if(this.data.startDate && this.data.endDate){
       if(!this.timeCheck(this.data.startDate,this.data.endDate)){
         this.checkLoopE = !this.checkLoopE;
@@ -533,7 +543,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
         }
       });
       if (this.lstPeople.length > 0) {
-        this.data.attendees = this.lstPeople.length + 1;
+        this.data.attendees = this.lstPeople.length + 1; 
+        if(this.data.attendees>this.carCapacity){
+          this.notificationsService.notifyCode('EP010');
+        }       
       }
       this.isPopupCbb = false;
       this.detectorRef.detectChanges();

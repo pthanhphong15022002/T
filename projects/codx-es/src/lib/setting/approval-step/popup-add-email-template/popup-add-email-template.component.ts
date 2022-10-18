@@ -64,6 +64,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   showIsTemplate = true;
   showIsPublish = true;
   showSendLater = true;
+  showFrom = true;
+
   formGroup: FormGroup;
   showCC = false;
   showBCC = false;
@@ -102,16 +104,13 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.formGroup = data?.data?.formGroup;
-    // this.email = data?.data.dialogEmail;
-    // this.email = {
-    //   templateID: '8bd48f33-b31e-ed11-9449-00155d035517',
-    // };
     this.templateID = data?.data?.templateID;
     console.log(this.templateID);
 
     this.showIsPublish = data.data?.showIsPublish ?? true;
     this.showIsTemplate = data.data?.showIsTemplate ?? true;
     this.showSendLater = data.data?.showSendLater ?? true;
+    this.showFrom = data.data?.showFrom ?? true;
 
     this.renderer.listen('window', 'click', (e: Event) => {
       if (this.isInside == false && this.show == true) {
@@ -326,18 +325,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
         this.dialogETemplate.patchValue({
           [event['field']]: event.data.fromDate,
         });
-      }
-      // else if (event.field == 'sendLater') {
-      //   this.dialogETemplate.patchValue({
-      //     [event['field']]: !event.data,
-      //   });
-      // }
-      // else if (event.data instanceof Object) {
-      //   this.dialogETemplate.patchValue({
-      //     [event['field']]: event.data,
-      //   });
-      // }
-      else {
+      } else {
         this.dialogETemplate.patchValue({ [event['field']]: event.data });
       }
     }
