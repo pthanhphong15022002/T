@@ -69,6 +69,7 @@
     "moment": "^2.29.4",
     "ng-inline-svg": "^13.1.2",
     "ngx-clipboard": "^15.1.0",
+    "ngx-drag-drop": "^14.0.0",
     "ngx-extended-pdf-viewer": "^15.0.0-alpha.6",
     "ngx-hover-preload": "^0.0.3",
     "ngx-moment": "^6.0.2",
