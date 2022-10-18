@@ -267,6 +267,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showIsTemplate: true,
         showIsPublish: true,
         showSendLater: true,
+        showFrom: true,
       };
 
       this.callfc.openForm(
