@@ -260,7 +260,7 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.percentage = 0;
       }
       if (this.type == 'add')
-        this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
+        this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
       this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       this.odService
