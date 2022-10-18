@@ -1,7 +1,7 @@
 .card-survey {
   width: 60% !important;
-  background-color: #ffffff;
-  border: 1px solid #ebf0f1;
+  background-color: white;
+  border: 1px solid white;
   border-radius: 0.6rem;
 }
 
@@ -18,7 +18,7 @@
 .inplace-editor-control-section #formId {
   padding-top: 20px;
   margin-bottom: 45px;
-  border: 1px solid #ccc;
+  border: 1px solid white;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.36);
   border-radius: 5px;
 }
@@ -27,7 +27,7 @@
   margin: 0 20px;
 }
 
-.inplace-editor-control-section .form-horizontal .form-group>* {
+.inplace-editor-control-section .form-horizontal .form-group > * {
   width: 100%;
 }
 
@@ -50,13 +50,19 @@
   text-align: center;
 }
 
-.inplace-editor-control-section.form-layout .control-wrapper .form-horizontal .control-label {
+.inplace-editor-control-section.form-layout
+  .control-wrapper
+  .form-horizontal
+  .control-label {
   padding: 15px 15px 15px 0;
   font-weight: 600;
 }
 
 @media (max-width: 768px) {
-  .inplace-editor-control-section.form-layout .control-wrapper .form-horizontal .control-label {
+  .inplace-editor-control-section.form-layout
+    .control-wrapper
+    .form-horizontal
+    .control-label {
     padding-top: 7px;
     margin-bottom: 0;
   }
@@ -91,15 +97,14 @@ textarea.e-input::selection,
   border-width: 0 0 1px 0 !important;
 }
 
-
-
 ejs-inplaceeditor {
-
   position: relative;
 }
 
-ejs-inplaceeditor .e-editable-value-wrapper.e-editable-open+.e-editable-inline {
-  padding-bottom: 42px;
+ejs-inplaceeditor
+  .e-editable-value-wrapper.e-editable-open
+  + .e-editable-inline {
+  font-size: 14px !important;
 }
 
 ejs-inplaceeditor .e-rte-toolbar {
@@ -107,5 +112,57 @@ ejs-inplaceeditor .e-rte-toolbar {
   bottom: -42px;
   left: 0;
   right: 0;
+}
 
+.e-content {
+  padding: 3px 8px 5px 8px !important;
+}
+
+#rte_editor_rte-edit-view {
+  font-size: 14px !important;
+}
+
+.e-editable-overlay-icon.e-icons {
+  display: none !important;
+}
+.e-inplaceeditor .e-editable-value-wrapper .e-editable-value {
+  display: inline-block;
+  font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI",
+    "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 14px;
+  margin: 0;
+}
+
+.e-richtexteditor.e-rte-tb-expand,
+.e-rte-content {
+  border: none !important;
+}
+ejs-inplaceeditor .e-editable-value-wrapper:hover {
+  background-color: transparent !important;
+}
+.e-input-group,
+.e-input-group.e-control-wrapper {
+  font-size: 14px !important;
+}
+
+.e-input-focus {
+  box-shadow: none !important;
+}
+
+input#Title_editor {
+  font-size: 14px !important;
+}
+
+.e-editable-value-wrapper {
+  margin-bottom: 5px !important;
+}
+
+.e-editable-inline {
+  margin-top: -2px !important;
+  padding-bottom: 2px !important;
+}
+
+.e-rte-content {
+  margin-top: 2px !important;
 }

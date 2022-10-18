@@ -2,9 +2,8 @@
   idField="recID"
   [entityName]="entityName" 
   [views]="views" 
-  [predicate]="predicate"
-  [dataValue]="dataValue"
-  [autoLoad]="false">
+  autoLoad="false"
+  >
 </codx-views>
 <ng-template #panelContent>
     <div class="row">
@@ -17,12 +16,13 @@
           </div>
           <div class="row">
             <codx-listview
+            #listview
               [itemTemplate]="itemTemplate"
               service="WP"
               [funcId]="funcID" 
               [entityName]="entityName"
               [predicate]="predicate"
-              [dataValue]="dataValue" >
+              [dataValue]="dataValue">
             </codx-listview>
           </div>
         </div>

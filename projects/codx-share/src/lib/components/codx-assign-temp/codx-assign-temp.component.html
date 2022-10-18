@@ -1,5 +1,5 @@
 <div>
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center text-hover-primary">
         <div class="me-1" (click)="openPopup()"><i class=" icon-person_outline icon-16 text-dark cursor-pointer"></i></div>
         <div>{{countResource}}</div>
     </div>
@@ -67,8 +67,7 @@
             <div class="d-flex align-items-end me-2 codx-badge">
               <span>
                 <codx-vll
-                  [name]="vllStatus"
-                  [formModel]="formModel"
+                [name]="item?.category=='3'?vllStatusAssign: vllStatus"
                   [field]="'Status'"
                   [value]="item?.status"
                   [showText]="true"

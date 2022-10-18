@@ -1,25 +1,42 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, DialogModel, FormModel } from 'codx-core';
+import {
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  FormModel,
+} from 'codx-core';
 
 @Component({
   selector: 'codx-assign-temp',
   templateUrl: './codx-assign-temp.component.html',
-  styleUrls: ['./codx-assign-temp.component.css']
+  styleUrls: ['./codx-assign-temp.component.css'],
 })
 export class CodxAssignTempComponent implements OnInit {
+  @Input() formModel: FormModel;
+  @Input() objectID = '';
 
-  @Input() formModel : FormModel ;
-  @Input() objectID ='' ;
-  @Input() vllStatus ='TMT007';
-   @ViewChild("tmpListResource") tmpListResource :TemplateRef<any>;
+  @ViewChild('tmpListResource') tmpListResource: TemplateRef<any>;
 
-  countResource =0 ;
-  listTaskResousce=[]
-  listTaskResousceSearch =[] ;
-  listRoles=[];
+  countResource = 0;
+  listTaskResousce = [];
+  listTaskResousceSearch = [];
+  listRoles = [];
   vllRole = 'TM002';
-  searchField=''
-  constructor(private cache : CacheService, private api : ApiHttpService,  private callFC:CallFuncService,) { 
+  vllStatusAssign = 'TM007';
+  vllStatus = 'TM004';
+  searchField = '';
+  constructor(
+    private cache: CacheService,
+    private api: ApiHttpService,
+    private callFC: CallFuncService
+  ) {
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -28,9 +45,9 @@ export class CodxAssignTempComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDatas()
+    this.getDatas();
   }
-  getDatas(){
+  getDatas() {
     this.listTaskResousceSearch = [];
     this.countResource = 0;
     this.api
@@ -48,11 +65,20 @@ export class CodxAssignTempComponent implements OnInit {
           this.countResource = res.length;
         }
       });
-  } ;
+  }
 
-  openPopup(){
+  openPopup() {
     let option = new DialogModel();
-    this.callFC.openForm(this.tmpListResource,"",400,500,"",null,"",option);
+    this.callFC.openForm(
+      this.tmpListResource,
+      '',
+      400,
+      500,
+      '',
+      null,
+      '',
+      option
+    );
   }
 
   searchName(e) {

@@ -76,6 +76,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       this.getTaskDetail();
     }
     this.firstLoad = false;
+    this.changeDetectorRef.detectChanges();
+
   }
   //#region
   //#region Method

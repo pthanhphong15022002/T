@@ -49,9 +49,6 @@
     [hideMF]="!showMoreFunc"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-    [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
-    [icoStatus2]="data?.priority"
-    [icoStatusVll2]="vllPriority"
     [imageId]="data.createdBy"
     [imageWidth]="35"
     imgCss="me-3"
@@ -62,8 +59,12 @@
     [formModel]="view.formModel"
     [footer]="footerList"
     [dataItem]="data"
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
   >
   </codx-temp-full>
+  <!-- [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
+  [icoStatus2]="data?.priority"
+  [icoStatusVll2]="vllPriority" -->
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
@@ -341,7 +342,7 @@
       [imageId]="data.resourceData?.owner"
       [title]="data.resourceData.userName"
       [subTitle]="data.resourceData.postionName"
-      [content]="'('+data.resourceData.events + ')'"
+      [content]="'(' + data.resourceData.events + ')'"
     >
     </codx-temp-full>
   </div>
@@ -501,26 +502,53 @@
   </div>
 </ng-template>
 
-<!-- <ng-template #baseHeaderRightTmp let-data>
+<ng-template #baseHeaderRightTmp let-data>
   <div>
-    <span [class]="data.isTimeOut ? 'icon-notifications icon-18 expired' : ''" >
+    <span
+      [class]="data.isTimeOut ? 'icon-notifications icon-18 expired' : ''"
+      [ngbPopover]="popOverDue"
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+    >
     </span>
     <span
-    class="icon-18 me-1"
-    [class]="
-      data?.priority | vll: vllPriority:'icon' | async
-    "
-    [style.color]="
-      data?.priority
-        | vll: vllPriority:'textColor'
-        | async
-    "
-    ngbTooltip='{{data?.priority | vll: vllPriority:"text" | async}}'
-  >
-  </span>
-  </div> 
-  
-</ng-template> -->
+      class="icon-18 me-1"
+      [class]="data?.priority | vll: vllPriority:'icon' | async"
+      [style.color]="data?.priority | vll: vllPriority:'textColor' | async"
+      [ngbPopover]="popDetailPriority"
+      #p="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="p.open()"
+      (mouseleave)="p.close()"
+      placement="left"
+    >
+    </span>
+  </div>
+  <ng-template #popDetailPriority>
+    <span
+      ><codx-label
+        name="Priority"
+        [formModel]="view.formModel"
+        default="Độ ưu tiên :"
+      ></codx-label></span
+    ><span>
+      {{ data?.priority | vll: vllPriority:"text" | async }}
+    </span>
+  </ng-template>
+
+  <ng-template #popOverDue>
+    <span
+      ><codx-label
+        name="lblOverDue"
+        [formModel]="view.formModel"
+        default="Đã quá hạn !"
+      ></codx-label
+    ></span>
+  </ng-template>
+</ng-template>
 
 <codx-views
   #view

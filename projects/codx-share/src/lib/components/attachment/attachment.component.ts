@@ -1162,7 +1162,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (fileItem.fileSize % chunSizeInfBytes > 0) {
         numOfChunks++;
       }
-      debugger;
       //api/lv-docs/files/upload
       for (var i = 0; i < numOfChunks; i++) {
         var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
