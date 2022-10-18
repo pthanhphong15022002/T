@@ -29,8 +29,8 @@ export class CodxAssignTempComponent implements OnInit {
   listTaskResousceSearch = [];
   listRoles = [];
   vllRole = 'TM002';
-  vllStatusAssign = 'TM004';
-  vllStatus = 'TM007';
+  vllStatusAssign = 'TM007';
+  vllStatus = 'TM004';
   searchField = '';
   constructor(
     private cache: CacheService,

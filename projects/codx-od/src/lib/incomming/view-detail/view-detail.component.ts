@@ -89,8 +89,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   ms020: any;
   ms021: any;
   ms023: any;
-  vllStatus='TM007'
-  vllStatusAssign='TM004'
+  vllStatus='TM004'
+  vllStatusAssign='TM007'
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,

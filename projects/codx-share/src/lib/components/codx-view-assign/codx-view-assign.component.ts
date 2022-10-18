@@ -18,8 +18,8 @@ import { FormModel } from 'codx-core';
 export class CodxViewAssignComponent implements OnInit, OnChanges {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
-  vllStatusAssign = 'TM004';
-  vllStatus = 'TM007';
+  vllStatusAssign = 'TM007';
+  vllStatus = 'TM004';
   dialog: any;
   isClose = true;
   isShow = false;

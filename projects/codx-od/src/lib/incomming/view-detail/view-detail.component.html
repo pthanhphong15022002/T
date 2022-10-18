@@ -336,7 +336,7 @@
       </div>
       <div class="mt-5 ms-5 justify-content-end w-120px text-center">
         <codx-vll
-          [name]="item?.category=='3'?vllStatus: vllStatusAssign"
+          [name]="item?.category=='3'? vllStatusAssign:vllStatus"
           [value]="item?.status"
           [showText]="true"
           [showBgColor]="true"
