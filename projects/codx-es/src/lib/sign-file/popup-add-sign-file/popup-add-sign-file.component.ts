@@ -876,7 +876,6 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.processTab < 3) {
       return;
     }
-    this.esService.addQRBeforeRelease(this.data.recID).subscribe((res) => {});
 
     this.esService
       .release(
@@ -888,8 +887,15 @@ export class PopupAddSignFileComponent implements OnInit {
         if (res?.msgCodeError == null && res?.rowCount > 0) {
           this.dialogSignFile.patchValue({ approveStatus: '3' });
           this.data.approveStatus = '3';
+
           this.esService.editSignFile(this.data).subscribe((result) => {
             if (result) {
+              //Gen QR code
+              this.esService
+                .addQRBeforeRelease(this.data.recID)
+                .subscribe((res) => {});
+
+              // Notify
               this.notify.notifyCode('ES007');
               this.dialog &&
                 this.dialog.close({

@@ -118,8 +118,15 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.isConfirm = state;
   }
 
+  checkConfirm(mode) {
+    if (this.canOpenSubPopup) {
+      if (!this.isConfirm) this.notify.notifyCode('ES011');
+    }
+  }
+
   clickOpenPopupADR(mode) {
     if (!this.canOpenSubPopup && !this.isConfirm) {
+      if (!this.isConfirm) this.notify.notifyCode('ES011');
       return;
     }
     this.mode = mode;

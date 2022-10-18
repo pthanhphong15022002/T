@@ -9,6 +9,7 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
 import { NotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/notify-drawer.component';
 import { ActivatedRoute } from '@angular/router';
 import { SettingNotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
+import { CodxTMService } from '../codx-tm.service';
 
 @Component({
   selector: 'codx-layout',
@@ -23,18 +24,15 @@ export class LayoutComponent extends LayoutBaseComponent {
   // override toolbarFixed: boolean = false;
   constructor(inject: Injector,
     private route: ActivatedRoute,
+    private tmService: CodxTMService,
     private callfc: CallFuncService) {
     super(inject);
   }
 
-  onInit(): void {
-    // this.funcs$.subscribe(res => {
-    //   console.log(res);
+  onInit(): void { }
 
-    // })
-  }
   menuClick(e) {
-    console.log(e);
+    this.tmService.menuClick.next(e);
   }
   onAfterViewInit(): void {
 
