@@ -247,7 +247,7 @@ export class CalendarNotesComponent
       let obj = { date: date };
       var eleEvent = htmlEle.querySelector('.week-item-event');
       eleEvent.innerHTML = '';
-      this.setEvent(eleEvent, obj);
+      this.setEvent(eleEvent, obj); 
     }
   }
 

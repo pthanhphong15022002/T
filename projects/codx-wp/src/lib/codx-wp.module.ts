@@ -55,7 +55,6 @@ import { Layout3Component } from './_layout3/layout3.component';
 import { TestSurveyComponent } from './test-survey/test-survey.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
-import { ListBoxAllModule } from '@syncfusion/ej2-angular-dropdowns';
 
 export const routes: Routes = [
   {
@@ -264,7 +263,6 @@ const Component: Type<any>[] =
     CoreModule,
     PickerModule,
     InPlaceEditorModule,
-    ListBoxAllModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule, ListPostComponent],
