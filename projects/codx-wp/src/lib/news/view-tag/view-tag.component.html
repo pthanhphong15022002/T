@@ -1,36 +1,77 @@
 <codx-views
   #view
   idField="recID"
-  [entityName]="entityName"
-  [views]="views"
-  autoLoad="false"
->
+  [entityName]="entityName" 
+  [views]="views" 
+  [autoLoad]="false"
+  >
 </codx-views>
 <ng-template #panelContent>
-  <div class="row">
-    <div class="col-8">
-      <div class="row fw-bolder er text-primary fs-3 mb-5">
-        <span>
-          <codx-label
-            [formModel]="view.formModel"
-            name="lblHeader"
-            default="#Tag:"
-          ></codx-label>
-          <span class="ms-2">{{ tagName }}</span>
-        </span>
-      </div>
-      <div class="row">
-        <codx-listview
-          #listview
-          [itemTemplate]="itemTemplate"
-          service="WP"
-          [funcId]="funcID"
-          [entityName]="entityName"
-          [predicate]="predicate"
-          [dataValue]="dataValue"
-        >
-        </codx-listview>
-      </div>
+    <div class="row">
+        <div class="col-8">
+          <div class="row fw-bolder er text-primary fs-3 mb-5">
+            <span>
+              <codx-label [formModel]="view.formModel" name="lblHeader" default="#Tag:"></codx-label>
+              <span class="ms-2">{{tagName}}</span>
+            </span>
+          </div>
+          <div class="row">
+            <codx-listview
+              #listview
+              [itemTemplate]="itemTemplate"
+              service="WP"
+              [funcId]="funcID" 
+              [entityName]="entityName"
+              [predicate]="predicate"
+              [dataValue]="dataValue"
+              [predicates]="predicates"
+              [dataValues]="dataValues">
+            </codx-listview>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="w-350px min-w-350px ms-5 news-right">
+              <div class="fw-bolder er text-primary fs-3 mb-5 border-bottom border-gray pb-2">
+                  <codx-label [formModel]="view.formModel" name="lblTopview" default="Xem nhiều nhất"></codx-label>
+              </div>
+              <ng-container *ngFor="let item of listViews; index as i">
+                  <div [class]="(i == 0 || i == listViews.length - 1)?'my-2':'my-4'"
+                      (click)="clickViewDeital(item)">
+                      <div class="row cursor-pointer">
+                          <div class="col-3">
+                              <codx-img [width]="70" imageType="square" [cssClass]="'img'" [objectId]="item.recID"
+                                  [objectType]="'WP_News'">
+                              </codx-img>
+                          </div>
+                          <div class="col-9">
+                              <div class="fs-5 fw-bold news-title">
+                                  {{item.subContent | maxlenght:75}}
+                              </div>
+                              <div class="d-flex justify-content-between mt-2">
+                                  <div class="fs-7 d-flex flex-center">
+                                      <span class="icon-visibility icon-18 text-gray-500"></span>
+                                      <span class="text-gray-500 ms-1">{{item.views}}</span>
+                                  </div>
+                                  <div class="fs-7 text-gray-500">{{item.createdOn | fmDT}}</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </ng-container>
+              <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
+                  <codx-label [formModel]="view.formModel" name="lblTags" default="Tag #"></codx-label>
+                  <div class="badge-group">
+                    <ng-container *ngFor="let tag of listTag">
+                      <span class="badge badge-danger cursor-pointer" 
+                          [style.background]="tag.color"
+                          (click)="clickTag(tag)">
+                          {{tag.text}}
+                      </span>
+                    </ng-container>
+                  </div>
+              </div>
+          </div>
+        </div>
     </div>
     <ng-container *ngFor="let item of listViews; index as i">
       <div
@@ -80,7 +121,6 @@
         </span>
       </div>
     </div>
-  </div>
 </ng-template>
 <ng-template #itemTemplate let-data>
   <div class="row my-2" (click)="clickViewDeital(data)">

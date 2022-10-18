@@ -642,7 +642,7 @@ export class PdfComponent
             lstAreaOnPage?.forEach((area) => {
               let isRender = false;
               if (
-                (!this.isApprover && !area.isLock) ||
+                (area.labelType != '8' && !this.isApprover && !area.isLock) ||
                 (this.isApprover &&
                   area.signer == this.curSignerID &&
                   area.stepNo == this.stepNo)
@@ -657,7 +657,7 @@ export class PdfComponent
                     this.addArea(
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature,
+                      ).signature1,
                       'img',
                       area.labelType,
                       this.isEditable
@@ -676,7 +676,7 @@ export class PdfComponent
                     this.addArea(
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature,
+                      ).signature2,
                       'img',
                       area.labelType,
                       this.isEditable
@@ -1531,11 +1531,11 @@ export class PdfComponent
       let labelType = '';
       switch (person.stepType) {
         case 'S1': //chu ky chinh
-          url = person.signature;
+          url = person.signature1;
           labelType = person.stepType;
           break;
         case 'S2': //chu ky nhay
-          url = person.signature;
+          url = person.signature2;
           labelType = person.stepType;
           break;
         case 'S3': //con dau
