@@ -49,12 +49,6 @@
     [hideMF]="!showMoreFunc"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
-<<<<<<< HEAD
-    [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
-    [icoStatus2]="data?.priority"
-    [icoStatusVll2]="vllPriority"
-=======
->>>>>>> 6d32e418b293df6331b28a64efa4515299bacfe8
     [imageId]="data.createdBy"
     [imageWidth]="35"
     imgCss="me-3"
@@ -65,10 +59,7 @@
     [formModel]="view.formModel"
     [footer]="footerList"
     [dataItem]="data"
-<<<<<<< HEAD
-=======
     [baseHeaderRightTmp]="baseHeaderRightTmp"
->>>>>>> 6d32e418b293df6331b28a64efa4515299bacfe8
   >
   </codx-temp-full>
   <!-- [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
@@ -351,11 +342,7 @@
       [imageId]="data.resourceData?.owner"
       [title]="data.resourceData.userName"
       [subTitle]="data.resourceData.postionName"
-<<<<<<< HEAD
-      [content]="data.resourceData.events + ' công việc'"
-=======
       [content]="'(' + data.resourceData.events + ')'"
->>>>>>> 6d32e418b293df6331b28a64efa4515299bacfe8
     >
     </codx-temp-full>
   </div>
@@ -516,8 +503,6 @@
   </div>
 </ng-template>
 
-<<<<<<< HEAD
-=======
 <ng-template #baseHeaderRightTmp let-data>
   <div>
     <span
@@ -566,7 +551,6 @@
   </ng-template>
 </ng-template>
 
->>>>>>> 6d32e418b293df6331b28a64efa4515299bacfe8
 <codx-views
   #view
   [service]="service"
