@@ -11,10 +11,9 @@ import {
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { TextBoxModel } from '@syncfusion/ej2-angular-inputs';
-import {
-  RichTextEditorModel,
-} from '@syncfusion/ej2-angular-richtexteditor'; 
+import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import { UIComponent } from 'codx-core';
+import { DndDropEvent } from 'ngx-drag-drop';
 
 @Component({
   selector: 'lib-test-survey',
@@ -43,8 +42,7 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
     rte: { required: [true, 'Enter valid comments'] },
   };
 
-  constructor(inject: Injector, 
-    ) {
+  constructor(inject: Injector) {
     super(inject);
   }
 
@@ -84,5 +82,46 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
   onInit(): void {}
   valueChange(e) {
     console.log(e);
+  }
+
+  draggable = {
+    // note that data is handled with JSON.stringify/JSON.parse
+    // only set simple data or POJO's as methods will be lost
+    data: 'myDragData',
+    effectAllowed: 'all',
+    disable: false,
+    handle: false,
+  };
+
+  onDragStart(event: DragEvent) {
+    console.log('drag started', JSON.stringify(event, null, 2));
+  }
+
+  onDragEnd(event: DragEvent) {
+    console.log('drag ended', JSON.stringify(event, null, 2));
+  }
+
+  onDraggableCopied(event: DragEvent) {
+    console.log('draggable copied', JSON.stringify(event, null, 2));
+  }
+
+  onDraggableLinked(event: DragEvent) {
+    console.log('draggable linked', JSON.stringify(event, null, 2));
+  }
+
+  onDraggableMoved(event: DragEvent) {
+    console.log('draggable moved', JSON.stringify(event, null, 2));
+  }
+
+  onDragCanceled(event: DragEvent) {
+    console.log('drag cancelled', JSON.stringify(event, null, 2));
+  }
+
+  onDragover(event: DragEvent) {
+    console.log('dragover', JSON.stringify(event, null, 2));
+  }
+
+  onDrop(event: DndDropEvent) {
+    console.log('dropped', JSON.stringify(event, null, 2));
   }
 }
