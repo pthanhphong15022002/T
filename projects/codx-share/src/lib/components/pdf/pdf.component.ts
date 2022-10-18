@@ -642,11 +642,10 @@ export class PdfComponent
             lstAreaOnPage?.forEach((area) => {
               let isRender = false;
               if (
-                (!this.isApprover && !area.isLock) ||
+                (area.labelType != '8' && !this.isApprover && !area.isLock) ||
                 (this.isApprover &&
                   area.signer == this.curSignerID &&
-                  area.stepNo == this.stepNo &&
-                  area.labelType != '8')
+                  area.stepNo == this.stepNo)
               ) {
                 isRender = true;
               }
