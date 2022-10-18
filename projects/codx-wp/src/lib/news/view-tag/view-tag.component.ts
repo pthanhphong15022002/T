@@ -38,8 +38,6 @@ export class ViewTagComponent extends UIComponent {
         }
       },
     ];
-    this.listview.dataService.setPredicates([this.predicates],[this.dataValues]).subscribe();
-
     this.detectorRef.detectChanges();
   }
 
@@ -48,18 +46,6 @@ export class ViewTagComponent extends UIComponent {
     this.tagName =  this.router.snapshot.params["tagName"];
     this.dataValues = this.tagName;
     this.loadDataAsync();
-
-    // this.router.params.subscribe((param:any) => {
-    //   if(param){
-    //     this.funcID = param['funcID'];
-    //     this.tagName = param['tagName'];
-    //     this.dataValues = this.tagName;
-    //     if(this.view){
-    //       this.view.dataService.setPredicates([this.predicates],[this.dataValues]);
-    //       this.view.load();
-    //     }
-    //   }
-    // })
   }
 
   loadDataAsync(){

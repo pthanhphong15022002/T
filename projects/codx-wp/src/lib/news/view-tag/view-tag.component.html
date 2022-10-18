@@ -2,7 +2,7 @@
   idField="recID"
   [entityName]="entityName" 
   [views]="views" 
-  autoLoad="false"
+  [autoLoad]="false"
   >
 </codx-views>
 <ng-template #panelContent>
@@ -16,25 +16,27 @@
           </div>
           <div class="row">
             <codx-listview
-            #listview
+              #listview
               [itemTemplate]="itemTemplate"
               service="WP"
               [funcId]="funcID" 
               [entityName]="entityName"
               [predicate]="predicate"
-              [dataValue]="dataValue">
+              [dataValue]="dataValue"
+              [predicates]="predicates"
+              [dataValues]="dataValues">
             </codx-listview>
           </div>
         </div>
         <div class="col-4">
           <div class="w-350px min-w-350px ms-5 news-right">
               <div class="fw-bolder er text-primary fs-3 mb-5 border-bottom border-gray pb-2">
-                  <codx-label fromName="News" name="lblTopview" default="Xem nhiều nhất"></codx-label>
+                  <codx-label [formModel]="view.formModel" name="lblTopview" default="Xem nhiều nhất"></codx-label>
               </div>
               <ng-container *ngFor="let item of listViews; index as i">
                   <div [class]="(i == 0 || i == listViews.length - 1)?'my-2':'my-4'"
                       (click)="clickViewDeital(item)">
-                      <div class="row">
+                      <div class="row cursor-pointer">
                           <div class="col-3">
                               <codx-img [width]="70" imageType="square" [cssClass]="'img'" [objectId]="item.recID"
                                   [objectType]="'WP_News'">
@@ -56,12 +58,15 @@
                   </div>
               </ng-container>
               <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
-                  <codx-label formName="News" name="lblTags" default="Tag #"></codx-label>
+                  <codx-label [formModel]="view.formModel" name="lblTags" default="Tag #"></codx-label>
                   <div class="badge-group">
-                      <span *ngFor="let tag of listTag" class="badge badge-danger" [style.background]="tag.color"
+                    <ng-container *ngFor="let tag of listTag">
+                      <span class="badge badge-danger cursor-pointer" 
+                          [style.background]="tag.color"
                           (click)="clickTag(tag)">
                           {{tag.text}}
                       </span>
+                    </ng-container>
                   </div>
               </div>
           </div>
