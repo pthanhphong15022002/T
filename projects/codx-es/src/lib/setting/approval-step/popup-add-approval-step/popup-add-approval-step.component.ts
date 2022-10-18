@@ -24,6 +24,7 @@ import {
 } from 'codx-core';
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
+import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
 import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
 @Component({
@@ -266,6 +267,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showIsTemplate: true,
         showIsPublish: true,
         showSendLater: true,
+        showFrom: true,
       };
 
       this.callfc.openForm(
@@ -330,11 +332,19 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           let i = this.lstApprover.findIndex(
             (p) => p.approver == element?.objectType
           );
-          if (i == -1 || element?.objectType == 'PA') {
+          if (element?.objectType == 'PA') {
+            //loại đối tác mở popup
             let appr = new Approvers();
-            if (element?.objectType == 'PA') {
-              appr.write = true;
-            }
+            appr.write = true;
+
+            let popupApprover = this.callfc.openForm(
+              PopupAddApproverComponent,
+              '',
+              550,
+              screen.height
+            );
+          } else if (i == -1) {
+            let appr = new Approvers();
             appr.roleType = element?.objectType;
             appr.name = element?.objectName;
             appr.approver = element?.objectType;

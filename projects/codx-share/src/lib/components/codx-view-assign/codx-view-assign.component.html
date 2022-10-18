@@ -89,7 +89,7 @@
           </div> -->
           <div class="w-125px d-flex justify-content-end">
             <codx-vll
-              [name]="vllStatus"
+              [name]="data?.category=='3'?vllStatusAssign:vllStatus"
               [field]="'Status'"
               [value]="data?.status"
               [showText]="true"

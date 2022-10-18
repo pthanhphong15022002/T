@@ -40,6 +40,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('process', { static: true }) process;
   @ViewChild('editCategory') editCategory: PopupAddCategoryComponent;
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
+  @ViewChild('eSign', { static: true }) eSign: TemplateRef<any>;
   @ViewChild('color', { static: true }) color: TemplateRef<any>;
   @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
   @ViewChild('parentID', { static: true }) parentID: TemplateRef<any>;
@@ -150,6 +151,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               headerText: gv ? gv['Memo'].headerText || 'Memo' : 'Memo',
               template: this.memo,
               width: 180,
+            },
+            {
+              field: 'eSign',
+              headerText: gv ? gv['ESign'].headerText || 'ESign' : 'ESign',
+              template: this.eSign,
+              width: 80,
             },
             {
               field: 'processID',

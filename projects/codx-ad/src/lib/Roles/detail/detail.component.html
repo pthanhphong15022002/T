@@ -3,11 +3,6 @@
     <div class="d-flex">
       <div class="aside-detail flex-row-auto w-300px">
         <div class="aside-menu">
-          <!-- <app-asideroledetail
-            (onChangeSelected)="onChangeSelectedFunction($event)"
-            [treeData]="myTree"
-          >
-          </app-asideroledetail> -->
           <codx-treeview
             id="treeAdd"
             #asideTree
@@ -22,6 +17,7 @@
             [autoLoad]="false"
             [isOutput]="true"
             [isLoadChild]="false"
+            [selectFirst]="false"
           >
           </codx-treeview>
           <ng-template #templatetree let-data>
@@ -57,10 +53,11 @@
           <h2>
             <codx-label
               name="lblRoleAuthorize"
-              formName="AD_Roles"
-              [default]="'Phân quyền vai trò' + roleName"
+              formName="Roles"
+              [default]="'Phân quyền vai trò '"
             >
             </codx-label>
+            {{ roleName }}
           </h2>
           <div>
             <button
@@ -85,7 +82,7 @@
               <h4 class="text-dark">
                 <codx-label
                   name="lblDataAuthorize"
-                  formName="AD_Roles"
+                  formName="Roles"
                   default="Phân quyền dữ liệu"
                 >
                 </codx-label>
@@ -216,7 +213,7 @@
               <h4 class="text-dark">
                 <codx-label
                   name="lblBasicFunction"
-                  formName="AD_Roles"
+                  formName="Roles"
                   default="Chức năng cơ bản"
                 >
                 </codx-label>
@@ -234,15 +231,6 @@
                 [disabled]="!active"
               >
               </codx-input>
-              <!-- <span class="switch switch-sm">
-                                                <label>
-                                                    <input type="checkbox" class="check-sys" #sys [disabled]="!active"
-                                                        (change)="inputChange($event)" (change)="inputChange($event)"
-                                                        [(ngModel)]="activeSys" name="select"
-                                                        (change)="activeSysChange($event)" />
-                                                    <span></span>
-                                                </label>
-                                            </span> -->
             </div>
             <div class="task-status list-content sys">
               <ng-container *ngFor="let item of dataBasic">
@@ -280,11 +268,7 @@
               class="list-title d-flex align-items-center justify-content-between"
             >
               <h4 class="text-dark">
-                <codx-label
-                  name="lblExport"
-                  formName="AD_Roles"
-                  default="Export"
-                >
+                <codx-label name="lblExport" formName="Roles" default="Export">
                 </codx-label>
               </h4>
               <codx-input
@@ -341,7 +325,7 @@
               <h4 class="text-dark">
                 <codx-label
                   name="lblExtendedFunction"
-                  formName="AD_Roles"
+                  formName="Roles"
                   default="Chức năng mở rộng"
                 >
                 </codx-label>
@@ -359,14 +343,6 @@
                 [disabled]="!active"
               >
               </codx-input>
-              <!-- <span class="switch switch-sm">
-                                                <label>
-                                                    <input type="checkbox" class="check-more" #more
-                                                        (change)="activeMoreChange($event)" [disabled]="!active"
-                                                        [(ngModel)]="activeMore" />
-                                                    <span></span>
-                                                </label>
-                                            </span> -->
             </div>
             <div class="task-status list-content more">
               <ng-container *ngFor="let item of dataMore">

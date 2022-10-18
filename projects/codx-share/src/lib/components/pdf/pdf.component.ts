@@ -1237,52 +1237,12 @@ export class PdfComponent
     }
 
     this.crrType = type;
-    // switch (type?.value) {
-    //   case 'S1':
-    //     if (!this.signerInfo?.signature1) {
-    //       let setupShowForm = new SetupShowSignature();
-    //       switch (this.signerInfo?.stepType) {
-    //         case 'S': // ký chính
-    //           setupShowForm.showSignature1 = true;
-    //           this.addSignature(setupShowForm);
-    //           return;
-    //       }
-    //     }
-    //     // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-    //     break;
-    //   case 'S2':
-    //     if (!this.signerInfo?.signature2) {
-    //       let setupShowForm = new SetupShowSignature();
-    //       switch (this.signerInfo?.stepType) {
-    //         case 'S': // ký nháy
-    //           setupShowForm.showSignature2 = true;
-    //           this.addSignature(setupShowForm);
-    //           return;
-    //       }
-    //     }
-    //     // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-    //     break;
-    //   case 'S3':
-    //     if (!this.signerInfo?.stamp) {
-    //       let setupShowForm = new SetupShowSignature();
-
-    //       setupShowForm.showStamp = true;
-
-    //       this.addSignature(setupShowForm);
-    //       return;
-    //     }
-    //     this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
-    //     break;
-    // }
 
     if (this.isEditable) {
       this.holding = type?.value;
       switch (type?.value) {
         case 'S1':
-          if (
-            !this.signerInfo?.signature1 &&
-            this.signerInfo?.stepType == 'S'
-          ) {
+          if (!this.signerInfo?.signature1) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showSignature1 = true;
@@ -1294,10 +1254,7 @@ export class PdfComponent
             : '';
           break;
         case 'S2':
-          if (
-            !this.signerInfo?.signature2 &&
-            this.signerInfo?.stepType == 'S'
-          ) {
+          if (!this.signerInfo?.signature2) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showSignature2 = true;
@@ -1309,7 +1266,7 @@ export class PdfComponent
             : '';
           break;
         case 'S3':
-          if (!this.signerInfo?.stamp && this.signerInfo?.stepType == 'S') {
+          if (!this.signerInfo?.stamp) {
             // thiet lap con dau
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showStamp = true;
@@ -1483,6 +1440,13 @@ export class PdfComponent
     }
   }
   changeSigner(e: any) {
+    //reset
+    if (this.needAddKonva) {
+      this.url = '';
+      this.holding = 0;
+      this.needAddKonva?.destroy();
+      this.needAddKonva = null;
+    }
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;
