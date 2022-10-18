@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, View
 import { WPService } from '@core/services/signalr/apiwp.service';
 import { Post } from '@shared/models/post';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util } from 'codx-core';
+import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util, DialogModel } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from '../attachment/attachment.component';
@@ -320,4 +320,5 @@ export class CodxCommentsComponent implements OnInit {
     }
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
+
 }
