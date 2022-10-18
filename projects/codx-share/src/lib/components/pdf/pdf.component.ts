@@ -1445,6 +1445,7 @@ export class PdfComponent
       this.url = '';
       this.holding = 0;
       this.needAddKonva?.destroy();
+      this.needAddKonva = null;
     }
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
