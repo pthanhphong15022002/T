@@ -710,6 +710,10 @@ export class EmployeeInfomationComponent extends UIComponent {
           }
         });
       }
+      else
+      {
+        this.notifiSV.notifyCode("SYS031");
+      }
     }                                   
   
   }

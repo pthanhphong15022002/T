@@ -8,17 +8,19 @@ import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService
   styleUrls: ['./view-tag.component.scss']
 })
 export class ViewTagComponent extends UIComponent {
-  funcID = "";
-  entityName = "WP_News";
-  predicate = "Category != @0 && (ApproveStatus==@1 or ApproveStatus==null) && Status==@2 && Stop==false";
-  dataValue = "companyinfo;5;2";
-  predicates = "";
-  dataValues = "";
-  listViews = [];
-  listTag = [];
+  funcID: string = "";
+  entityName: string = "WP_News";
+  predicate: string = "Category != @0 && (ApproveStatus==@1 or ApproveStatus==null) && Status==@2 && Stop==false ";
+  dataValue: string = "companyinfo;5;2";
+  predicates: string = "Tags.Contains(@0)"
+  dataValues: string = "";
+  listViews: any = [];
+  listTag: any = [];
   views: Array<ViewModel> = [];
   tagName: string = "";
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
+  @ViewChild('listview') listview: CodxListviewComponent;
+
   constructor
     (
       private injector: Injector
@@ -35,19 +37,28 @@ export class ViewTagComponent extends UIComponent {
         }
       },
     ];
-    // this.codxListView.dataService.setPredicates(this.predicates,this.dataValues).subscribe();
+    this.listview.dataService.setPredicates([this.predicates], [this.dataValues]).subscribe();
+
     this.detectorRef.detectChanges();
   }
 
   onInit() {
-    this.router.params.subscribe((param: any) => {
-      if (param) {
-        this.funcID = param['funcID'];
-        this.predicates = 'Tags.Contains(@0)';
-        this.dataValues = param['tagName'];
-        this.loadDataAsync();
-      }
-    })
+    this.funcID = this.router.snapshot.params["funcID"];
+    this.tagName = this.router.snapshot.params["tagName"];
+    this.dataValues = this.tagName;
+    this.loadDataAsync();
+
+    // this.router.params.subscribe((param:any) => {
+    //   if(param){
+    //     this.funcID = param['funcID'];
+    //     this.tagName = param['tagName'];
+    //     this.dataValues = this.tagName;
+    //     if(this.view){
+    //       this.view.dataService.setPredicates([this.predicates],[this.dataValues]);
+    //       this.view.load();
+    //     }
+    //   }
+    // })
   }
 
   loadDataAsync() {
@@ -92,7 +103,11 @@ export class ViewTagComponent extends UIComponent {
           });
   }
   clickTag(tag: any) {
-    this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + tag.value);
+    if (tag && tag.text) {
+      this.dataValues = tag.text;
+      this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + this.dataValues)
+      this.listview.dataService.setPredicates([this.predicates], [this.dataValues]).subscribe();
+    }
   }
   clickShowPopupCreate() {
   }

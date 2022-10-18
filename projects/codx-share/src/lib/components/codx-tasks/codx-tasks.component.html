@@ -49,9 +49,12 @@
     [hideMF]="!showMoreFunc"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
+<<<<<<< HEAD
     [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
     [icoStatus2]="data?.priority"
     [icoStatusVll2]="vllPriority"
+=======
+>>>>>>> 6d32e418b293df6331b28a64efa4515299bacfe8
     [imageId]="data.createdBy"
     [imageWidth]="35"
     imgCss="me-3"
@@ -62,8 +65,15 @@
     [formModel]="view.formModel"
     [footer]="footerList"
     [dataItem]="data"
+<<<<<<< HEAD
+=======
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
+>>>>>>> 6d32e418b293df6331b28a64efa4515299bacfe8
   >
   </codx-temp-full>
+  <!-- [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
+  [icoStatus2]="data?.priority"
+  [icoStatusVll2]="vllPriority" -->
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
@@ -341,7 +351,11 @@
       [imageId]="data.resourceData?.owner"
       [title]="data.resourceData.userName"
       [subTitle]="data.resourceData.postionName"
+<<<<<<< HEAD
       [content]="data.resourceData.events + ' công việc'"
+=======
+      [content]="'(' + data.resourceData.events + ')'"
+>>>>>>> 6d32e418b293df6331b28a64efa4515299bacfe8
     >
     </codx-temp-full>
   </div>
@@ -502,6 +516,57 @@
   </div>
 </ng-template>
 
+<<<<<<< HEAD
+=======
+<ng-template #baseHeaderRightTmp let-data>
+  <div>
+    <span
+      [class]="data.isTimeOut ? 'icon-notifications icon-18 expired' : ''"
+      [ngbPopover]="popOverDue"
+      #popOver="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popOver.open()"
+      (mouseleave)="popOver.close()"
+      placement="left"
+    >
+    </span>
+    <span
+      class="icon-18 me-1"
+      [class]="data?.priority | vll: vllPriority:'icon' | async"
+      [style.color]="data?.priority | vll: vllPriority:'textColor' | async"
+      [ngbPopover]="popDetailPriority"
+      #p="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="p.open()"
+      (mouseleave)="p.close()"
+      placement="left"
+    >
+    </span>
+  </div>
+  <ng-template #popDetailPriority>
+    <span
+      ><codx-label
+        name="Priority"
+        [formModel]="view.formModel"
+        default="Độ ưu tiên :"
+      ></codx-label></span
+    ><span>
+      {{ data?.priority | vll: vllPriority:"text" | async }}
+    </span>
+  </ng-template>
+
+  <ng-template #popOverDue>
+    <span
+      ><codx-label
+        name="lblOverDue"
+        [formModel]="view.formModel"
+        default="Đã quá hạn !"
+      ></codx-label
+    ></span>
+  </ng-template>
+</ng-template>
+
+>>>>>>> 6d32e418b293df6331b28a64efa4515299bacfe8
 <codx-views
   #view
   [service]="service"

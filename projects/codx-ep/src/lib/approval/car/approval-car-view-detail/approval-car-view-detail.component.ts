@@ -94,14 +94,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
           this.approve(datas,"4")
         }
         break;
-      case 'EPT40206':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          //alert('Làm lại');
-          this.approve(datas,"2")
-        }
-        break;
+      
       default:
         '';
         break;
@@ -125,11 +118,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
                 data.status="4";
-              }
-              if(status=="2"){
-                this.notificationsService.notifyCode('ES007');//làm lại
-                data.status="2"
-              }
+              }              
               this.updateStatus.emit(data);
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -147,6 +136,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
         event.forEach(func => {
           if(func.functionID == "EPT40202" 
           ||func.functionID == "EPT40203" 
+          ||func.functionID == "EPT40206"
           || func.functionID == "EPT40204")
           {
             func.disabled=true;

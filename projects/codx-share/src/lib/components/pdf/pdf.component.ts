@@ -1196,20 +1196,28 @@ export class PdfComponent
     popupSignature.closed.subscribe((res) => {
       if (res?.event[0]) {
         let img = res.event[0];
-        switch (res.img?.referType) {
+        switch (img?.referType) {
           case 'S1': // Ky chinh
-            this.signerInfo.signature = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature1 = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.signature1 ?? '';
             break;
           case 'S2': //Ky nhay
-            this.signerInfo.signature = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature2 = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.signature2 ?? '';
             break;
           case 'S3': //Con dau
             this.signerInfo.stamp = UrlUpload + '/' + img?.pathDisk;
+            this.changeAnnotationItem(this.crrType);
+            //this.url = this.signerInfo.stamp ?? '';
             break;
         }
       }
     });
   }
+
+  crrType: any;
 
   changeAnnotationItem(type: any) {
     if (!type) return;
@@ -1227,69 +1235,34 @@ export class PdfComponent
     if (this.needAddKonva) {
       this.needAddKonva?.destroy();
     }
-    switch (type?.value) {
-      case 'S1':
-        if (!this.signerInfo?.signature) {
-          let setupShowForm = new SetupShowSignature();
-          switch (this.signerInfo?.stepType) {
-            case 'S': // ký chính
-              setupShowForm.showSignature1 = true;
-              this.addSignature(setupShowForm);
-              return;
-          }
-        }
-        // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-        break;
-      case 'S2':
-        if (!this.signerInfo?.signature) {
-          let setupShowForm = new SetupShowSignature();
-          switch (this.signerInfo?.stepType) {
-            case 'S': // ký nháy
-              setupShowForm.showSignature2 = true;
-              this.addSignature(setupShowForm);
-              return;
-          }
-        }
-        // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-        break;
-      case 'S3':
-        if (!this.signerInfo?.stamp) {
-          let setupShowForm = new SetupShowSignature();
 
-          setupShowForm.showStamp = true;
-
-          this.addSignature(setupShowForm);
-          return;
-        }
-        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
-        break;
-    }
+    this.crrType = type;
 
     if (this.isEditable) {
       this.holding = type?.value;
       switch (type?.value) {
         case 'S1':
-          if (!this.signerInfo?.signature) {
+          if (!this.signerInfo?.signature1) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showSignature1 = true;
             this.addSignature(setupShowForm);
             return;
           }
-          this.url = this.signerInfo?.signature
-            ? this.signerInfo?.signature
+          this.url = this.signerInfo?.signature1
+            ? this.signerInfo?.signature1
             : '';
           break;
         case 'S2':
-          if (!this.signerInfo?.signature) {
+          if (!this.signerInfo?.signature2) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
-            setupShowForm.showSignature1 = true;
+            setupShowForm.showSignature2 = true;
             this.addSignature(setupShowForm);
             return;
           }
-          this.url = this.signerInfo?.signature
-            ? this.signerInfo?.signature
+          this.url = this.signerInfo?.signature2
+            ? this.signerInfo?.signature2
             : '';
           break;
         case 'S3':
@@ -1467,6 +1440,12 @@ export class PdfComponent
     }
   }
   changeSigner(e: any) {
+    //reset
+    if (this.needAddKonva) {
+      this.url = '';
+      this.holding = 0;
+      this.needAddKonva?.destroy();
+    }
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;

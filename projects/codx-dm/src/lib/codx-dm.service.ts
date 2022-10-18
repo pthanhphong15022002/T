@@ -884,7 +884,7 @@ export class CodxDMService {
 
   getImage(data: any) {
     if (data?.folderName && !data?.extension)
-      return '../../../assets/themes/dm/default/img/folder.svg';
+      return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       // if (data.hasThumbnail == null || data.hasThumbnail == false) {
@@ -1460,7 +1460,7 @@ export class CodxDMService {
     var item2 = '';
 
     if (!folder.icon)
-      item1 = '<img class="h-13px" src="../../../assets/codx/dms/folder.svg">';
+      item1 = '<img class="h-13px" src="../../../assets/themes/dm/default/img/icon-folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;

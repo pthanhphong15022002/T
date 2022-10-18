@@ -24,6 +24,7 @@ import {
 } from 'codx-core';
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
+import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
 import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
 @Component({
@@ -200,6 +201,17 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
+      //edit PA
+      if (event?.functionID == 'SYS03') {
+        // this.notifySvr.alertCode('SYS030').subscribe((x) => {
+        //   if (x.event.status == 'Y') {
+        //     let i = this.lstApprover.indexOf(data);
+        //     if (i != -1) {
+        //       this.lstApprover.splice(i, 1);
+        //     }
+        //   }
+        // });
+      }
     }
   }
 
@@ -319,11 +331,19 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           let i = this.lstApprover.findIndex(
             (p) => p.approver == element?.objectType
           );
-          if (i == -1) {
+          if (element?.objectType == 'PA') {
+            //loại đối tác mở popup
             let appr = new Approvers();
-            if (appr.roleType == 'PE') {
-              appr.write = true;
-            }
+            appr.write = true;
+
+            let popupApprover = this.callfc.openForm(
+              PopupAddApproverComponent,
+              '',
+              550,
+              screen.height
+            );
+          } else if (i == -1) {
+            let appr = new Approvers();
             appr.roleType = element?.objectType;
             appr.name = element?.objectName;
             appr.approver = element?.objectType;

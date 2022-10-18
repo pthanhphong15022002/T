@@ -521,6 +521,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
+    if(!this.listUser) this.listUser = []
     this.listUser = this.listUser.concat(arrUser);
     this.api
       .execSv<any>(

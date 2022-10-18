@@ -58,7 +58,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   idField = 'recID';
   assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
-  method = 'GetProcessStepsAsync'; //chua viet
+  // method :any
+  method = 'GetProcessStepsAsync'; 
   listPhaseName = [] ;
 
   recIDProcess = '90ab82ac-43d1-11ed-83e7-d493900707c4'; ///thêm để add thử

@@ -70,7 +70,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       if (changes['taskID'].currentValue === this.id) return;
       this.id = changes['taskID'].currentValue;
       this.getTaskDetail();
-      this.firstLoad = false;
     }
   }
   //#region

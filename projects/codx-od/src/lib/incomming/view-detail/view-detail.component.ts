@@ -89,6 +89,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   ms020: any;
   ms021: any;
   ms023: any;
+  vllStatus='TM004'
+  vllStatusAssign='TM007'
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -478,6 +480,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'SYS04': {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
+          this.view.dataService.dataSelected.recID = res?.recID
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(
@@ -1031,5 +1034,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       );
       this.data.listInformationRel[index].view = '3';
     }
+  }
+
+  clickTemp(e){
+    e.stopPropagation() ;
   }
 }
