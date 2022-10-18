@@ -10,18 +10,19 @@ import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService
 export class ViewTagComponent extends UIComponent {
   funcID = "";
   entityName = "WP_News";
-  predicate = "Category != @0 && (ApproveStatus==@1 or ApproveStatus==null) && Status==@2 && Stop==false && Tags.Contains(@3)";
+  predicate = "Category != @0 && (ApproveStatus==@1 or ApproveStatus==null) && Status==@2 && Stop==false";
   dataValue = "companyinfo;5;2";
+  predicates = "";
+  dataValues = "";
   listViews = [];
   listTag = [];
   views: Array<ViewModel> = [];
-  tagName:string = "";
+  tagName: string = "";
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   constructor
-  (
-    private injector:Injector
-  )
-  {
+    (
+      private injector: Injector
+    ) {
     super(injector);
   }
   ngAfterViewInit(): void {
@@ -39,62 +40,61 @@ export class ViewTagComponent extends UIComponent {
   }
 
   onInit() {
-    this.router.params.subscribe((param:any) => {
-      if(param){
+    this.router.params.subscribe((param: any) => {
+      if (param) {
         this.funcID = param['funcID'];
-        this.tagName = param['tagName'];
-        this.dataValue = this.dataValue +";"+this.tagName;
+        this.predicates = 'Tags.Contains(@0)';
+        this.dataValues = param['tagName'];
         this.loadDataAsync();
       }
     })
   }
 
-  loadDataAsync(){
+  loadDataAsync() {
     this.loadDataViews();
     this.loadDataTags();
   }
-  loadDataViews(){
-    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetNewOderByViewAsync")
-    .subscribe((res:any) => {
-      if(res) 
-      { 
-        this.listViews = res; 
-      }
-      else { this.listViews = []; }
-      this.detectorRef.detectChanges();
-    });
+  loadDataViews() {
+    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewOderByViewAsync")
+      .subscribe((res: any) => {
+        if (res) {
+          this.listViews = res;
+        }
+        else { this.listViews = []; }
+        this.detectorRef.detectChanges();
+      });
   }
-  loadDataTags(){
+  loadDataTags() {
     this.api
-      .execSv('BS','ERM.Business.BS' ,'TagsBusiness', 'GetModelDataAsync', this.entityName)
+      .execSv('BS', 'ERM.Business.BS', 'TagsBusiness', 'GetModelDataAsync', this.entityName)
       .subscribe((res: any) => {
         if (res) {
           this.listTag = res.datas;
         }
-        else{
+        else {
           this.listTag = [];
         }
         this.detectorRef.detectChanges();
       });
   }
-  clickViewDeital(data:any){
+  clickViewDeital(data: any) {
     this.api.execSv
-    (
-    "WP", 
-    "ERM.Business.WP",
-    "NewsBusiness",
-    "UpdateViewNewsAsync",
-    data.recID).subscribe(
-      (res) => {
-        if (res) {
-          this.codxService.navigate("", '/wp/news/'+this.funcID+'/'+ data.category+'/'+data.recID);
-        }
-      });
+      (
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "UpdateViewNewsAsync",
+        data.recID).subscribe(
+          (res) => {
+            if (res) {
+              this.codxService.navigate("", '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+            }
+          });
   }
-  clickTag(tag:any){
+  clickTag(tag: any) {
     this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + tag.value);
   }
-  clickShowPopupCreate(){
+  clickShowPopupCreate() {
   }
 
 }
