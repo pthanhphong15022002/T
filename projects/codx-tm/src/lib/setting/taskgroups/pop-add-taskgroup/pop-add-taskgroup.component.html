@@ -3,12 +3,11 @@
 </codx-layout-add>
 
 <ng-template #tabDescip>
-  <div class="form-group">
+  <div class="add-taskgroup">
     <div class="form-group mt-3">
       <codx-label fiedName="TaskGroupID" formName="TaskGroups" gridViewName="grvTaskGroups" default="Mã nhóm công việc">
       </codx-label>
-      <codx-input field="taskGroupID"  type="text" [disabled]="showInput"
-        [crrValue]="taskGroups.taskGroupID">
+      <codx-input field="taskGroupID" type="text" [disabled]="showInput" [crrValue]="taskGroups.taskGroupID">
       </codx-input>
 
     </div>
@@ -29,7 +28,7 @@
   </div>
 </ng-template>
 <ng-template #tabControl>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="ProjectControl" default="Dự án" formName="TaskGroups" gridViewName="grvTaskGroups">
       </codx-label>
@@ -46,7 +45,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="LocationControl" default="Địa điểm" formName="TaskGroups" gridViewName="grvTaskGroups">
       </codx-label>
@@ -64,7 +63,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="PlanControl" default="Kế hoạch thực hiện công việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
@@ -82,7 +81,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="UpdateControl" default="Cập nhật tình trạng công việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
@@ -100,7 +99,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="VerifyControl" default="" formName="TaskGroups" gridViewName="grvTaskGroups">
       </codx-label>
@@ -127,7 +126,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="ApproveControl" default="Đánh giá công việc khi hoàn tất" formName="TaskGroups"
         gridViewName="grvTaskGroups">
@@ -155,7 +154,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="MaxHoursControl" default="Thời gian tối đa hoàn thành" formName="TaskGroups"
         gridViewName="grvTaskGroups">
@@ -180,7 +179,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="EditControl" default="Chỉnh sửa nội dung công việc được phân công" formName="TaskGroups"
         gridViewName="grvTaskGroups">
@@ -201,7 +200,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="DueDateControl" default="Được phép thêm công việc quá khứ" formName="TaskGroups"
         gridViewName="grvTaskGroups">
@@ -222,7 +221,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="AutoCompleted" default="Cập nhật hoàn thành tự động đối với giao việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
@@ -244,7 +243,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="ExtendControl" default="Gia hạn công việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
@@ -265,7 +264,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="row mt-3">
     <div class="form-group col-8">
       <codx-label fiedName="ConfirmControl" default="Xác nhận thực hiện công việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
