@@ -1,7 +1,7 @@
 <div class="wrap-form">
     <div class="row">
-        <div class="col-12">
-            <input type="file" />
+        <div class="d-flex justify-content-between l-12">
+            <codx-img [objectId]="" [width]="40" [objectType]="'WP_Groups'" [isAllowEdit]="true"></codx-img>
             <codx-input type="text" [crrValue]="data?.groupName" placeholder="Tên nhóm" class="form-control"
                 (valueChange)="valueChange($event)" field="groupName"></codx-input>
         </div>
