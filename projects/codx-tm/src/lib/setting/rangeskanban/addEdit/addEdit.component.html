@@ -1,122 +1,60 @@
-<codx-form
-  headerText="{{ title }}"
-  #form
-  [body]="body"
-  [footer]="footer"
-  [data]="master"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
->
+<codx-form headerText="{{ title }}" #form [body]="body" [footer]="footer" [data]="master" [formModel]="dialog.formModel"
+  [dialog]="dialog">
   <ng-template #body>
-    <div class="card-body">
+    <div class="card-add">
       <div class="row">
         <div class="form-group">
-          <div class="form-group mt-3">
-            <codx-label
-              fiedName="RangeID"
-              [formModel]="form.formModel"
-              default="Mã danh mục"
-            >
+          <div class="form-group pt-1">
+            <codx-label fiedName="RangeID" [formModel]="form.formModel" default="Mã danh mục">
             </codx-label>
-            <codx-input
-              field="rangeID"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              [disabled]="master?.allowEditKey"
-            >
+            <codx-input field="rangeID" [formModel]="form.formModel" [Group]="form.formGroup"
+              [disabled]="master?.allowEditKey">
             </codx-input>
           </div>
-          <div class="form-group mt-3">
-            <codx-label
-              fiedName="RangeName"
-              [formModel]="form.formModel"
-              default="Mô tả"
-            >
+          <div class="form-group pt-1">
+            <codx-label fiedName="RangeName" [formModel]="form.formModel" default="Mô tả">
             </codx-label>
-            <codx-input
-              field="rangeName"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-            >
+            <codx-input field="rangeName" [formModel]="form.formModel" [Group]="form.formGroup">
             </codx-input>
           </div>
-          <div class="form-group mt-3">
-            <codx-label
-              fiedName="note"
-              [formModel]="form.formModel"
-              default="Ghi chú"
-            >
+          <div class="form-group pt-1">
+            <codx-label fiedName="note" [formModel]="form.formModel" default="Ghi chú">
             </codx-label>
-            <codx-input
-              field="note"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-            ></codx-input>
+            <codx-input field="note" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
           </div>
-          <div class="workToDo">
-            <div
-              class="d-flex align-items-center justify-content-between mt-4 mb-3"
-            >
+          <div class="workToDo pt-1">
+            <div class="d-flex align-items-center justify-content-between my-3">
               <div class="d-flex align-items-center">
-                <codx-label
-                  class="text-primary fw-bold"
-                  name="txtDetail"
-                  [formModel]="form.formModel"
-                  default="Chi tiết khoảng thời gian"
-                ></codx-label>
+                <codx-label class="text-primary fw-bold" name="txtDetail" [formModel]="form.formModel"
+                  default="Chi tiết khoảng thời gian"></codx-label>
               </div>
-              <div class="d-flex mt-2">
-                <a
-                  class="btn btn-sm btn-outline-secondary"
-                  (click)="addLine(template)"
-                >
-                  <i class="icon-add icon-16 text-dark-75"></i>
-                  <codx-label
-                    name="btnAdd"
-                    formName="System"
-                    default="Thêm mới"
-                  ></codx-label>
-                </a>
-              </div>
+              <button class="btn btn-sm btn-light-primary" (click)="addLine(template)">
+                <i class="icon-add icon-14"></i>
+                <codx-label name="btnAdd" formName="System" default="Thêm mới"></codx-label>
+              </button>
             </div>
           </div>
-          <div class="form-group mt-3">
-            <table class="table bg-header" *ngIf="lines.length">
+          <div class="form-group pt-1">
+            <table class="table table-row-bordered" *ngIf="lines.length">
               <thead>
-                <tr>
-                  <th scope="col" class="w-50 text-left">Diễn giải</th>
-                  <th scope="col" class="w-30 text-left">Số ngày</th>
-                  <th scope="col" class="w-10 min-w-50px"></th>
+                <tr class="bg-gray-100">
+                  <th scope="col" class="fw-bold ps-4">Diễn giải</th>
+                  <th scope="col" class="w-100px fw-bold">Số ngày</th>
+                  <th scope="col" class="w-100px fw-bold"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of lines; let index = index">
-                  <td class="text-left">
-                    <label>{{ item.breakName }}</label>
-                  </td>
-                  <td class="text-left">
-                    <label>{{ item.breakValue }}</label>
-                  </td>
+                  <td class="ps-4">{{ item.breakName }}</td>
+                  <td>{{ item.breakValue }}</td>
                   <td>
-                    <div class="d-flex align-items-center">
-                      <div
-                        class="Box-tools pull-right"
-                        style="vertical-align: middle"
-                      >
-                        <a
-                          class="btn btn-xs btn-flat btn-info"
-                          style="margin: 10px"
-                          (click)="updateLine(template, item)"
-                        >
-                          <i class="fa fa-edit text-primary"></i>
-                        </a>
-                        <a
-                          class="btn btn-xs btn-flat btn-danger"
-                          (click)="removeLine(item, index)"
-                        >
-                          <i class="fa fa-remove"></i>
-                        </a>
-                      </div>
+                    <div class="d-flex justify-content-end align-items-center">
+                      <button class="btn btn-sm btn-icon btn-light-warning" (click)="updateLine(template, item)">
+                        <i class="icon icon-14 icon-edit"></i>
+                      </button>
+                      <button class="btn btn-sm btn-icon btn-light-danger ms-2" (click)="removeLine(item, index)">
+                        <i class="icon icon-14 icon-close"></i>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -137,75 +75,39 @@
 </codx-form>
 
 <ng-template #template let-dialog>
-  <codx-form
-    headerText="Khoảng thời gian"
-    [body]="body"
-    [footer]="footer"
-    [dialog]="dialog"
-  >
+  <codx-form headerText="Khoảng thời gian" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template #body>
-      <div class="card-body">
-        <div class="form-group row mt-3">
-          <div class="form-group col-4">
-            <codx-label
-              fiedName="BreakName"
-              default="Diễn giải"
-              formName="RangeLines"
-              gridViewName="grvRangeLines"
-            >
+      <div class="card-addtime pt-5">
+        <div class="form-group row">
+          <div class="col-3">
+            <codx-label fiedName="BreakName" default="Diễn giải" formName="RangeLines" gridViewName="grvRangeLines">
             </codx-label>
           </div>
-          <div class="col-8">
-            <codx-input
-              name="BreakName"
-              field="breakName"
-              type="text"
-              placeholder="Diễn giải"
-              [crrValue]="line.breakName"
-              (valueChange)="valueChange($event)"
-            ></codx-input>
+          <div class="col-9">
+            <codx-input name="BreakName" field="breakName" type="text" placeholder="Diễn giải"
+              [crrValue]="line.breakName" (valueChange)="valueChange($event)"></codx-input>
           </div>
         </div>
-        <div class="form-group row mt-3">
-          <div class="form-group col-4">
-            <codx-label
-              fiedName="BreakValue"
-              default="Số ngày"
-              formName="RangeLines"
-              gridViewName="grvRangeLines"
-            >
+        <div class="form-group row">
+          <div class="col-3">
+            <codx-label fiedName="BreakValue" default="Số ngày" formName="RangeLines" gridViewName="grvRangeLines">
             </codx-label>
           </div>
-          <div class="col-8">
-            <codx-input
-              name="BreakValue"
-              field="breakValue"
-              type="text"
-              placeholder="Số ngày"
-              [crrValue]="line.breakValue"
-              (valueChange)="valueChange($event)"
-            ></codx-input>
+          <div class="col-9">
+            <codx-input name="BreakValue" field="breakValue" type="text" placeholder="Số ngày"
+              [crrValue]="line.breakValue" (valueChange)="valueChange($event)"></codx-input>
           </div>
         </div>
         <div class="text-muted mt-3">
-          <codx-label
-            fiedName="lblDetail"
-            default="Người dùng nhập số âm (-) khi thiết lập khoảng thời gian quá khứ,
-      nhập số dương (+) khi thiết lập khoảng thời gian tương lai"
-            formName="RangeLines"
-            gridViewName="grvRangeLines"
-          >
+          <codx-label fiedName="lblDetail" default="Người dùng nhập số âm (-) khi thiết lập khoảng thời gian quá khứ,
+      nhập số dương (+) khi thiết lập khoảng thời gian tương lai" formName="RangeLines" gridViewName="grvRangeLines">
           </codx-label>
         </div>
       </div>
     </ng-template>
     <ng-template #footer>
       <div class="card-footer">
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="saveLine(dialog)"
-        >
+        <button type="button" class="btn btn-primary" (click)="saveLine(dialog)">
           Lưu
         </button>
       </div>
