@@ -113,7 +113,6 @@ export class CodxTasksComponent
   eventStatus: any;
   itemSelected: any;
   user: any;
-  // funcID: string;
   gridView: any;
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
@@ -145,8 +144,6 @@ export class CodxTasksComponent
   listViewModel = [];
   dataReferences = [];
   titleAction = '';
-  // predicateSchedule: any;
-  // dataValueSchedule: any;
 
   constructor(
     inject: Injector,
