@@ -1,13 +1,14 @@
 import {
   ChangeDetectorRef,
   Component,
+  Input,
   OnInit,
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
 import { Post } from '@shared/models/post';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
 
 @Component({
   selector: 'lib-popup-detail',
@@ -16,15 +17,22 @@ import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
   encapsulation: ViewEncapsulation.None,
 })
 export class PopupDetailComponent implements OnInit {
+  
   service: string = 'WP';
   assemplyName: string = 'ERM.Business.WP';
   className: string = 'CommentsBusiness';
   methodName: string = 'GetPostByIDAsync';
-  parentPost: Post = null;
-  childPost: Post = new Post();
+  post: Post = new Post();
   dialogRef: any;
   recID: string = '';
+  userID:string = "";
+  userName:string = "";
+  shareControl:string = "";
+  createdOn:string = "";
   file: any = null;
+  vllL1480:any = null;
+  dVll:any = {};
+  data:any = null;
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
@@ -33,6 +41,7 @@ export class PopupDetailComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
+    private cache:CacheService,
     @Optional() dd?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -41,24 +50,43 @@ export class PopupDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getPostByID(this.file.objectID);
+    this.getValueIcon("L1480");
+    this.getPostByID(this.file.objectID,this.file.recID);
   }
-
-  getPostByID(recID: string) {
-    this.api
+  getValueIcon(vll:string){
+    if(vll)
+    {
+      this.cache.valueList(vll).subscribe((res) => {
+        if (res && res?.datas) {
+          this.vllL1480 = res.datas;
+          if(this.vllL1480.length > 0){
+            this.dVll["0"] = null;
+            this.vllL1480.forEach((element:any) => {
+              this.dVll[element.value + ""] = element;
+            });
+          }
+        }
+      });
+    }
+  }
+  getPostByID(postID: string,fileID:string) {
+    if(postID && fileID)
+    {
+      this.api
       .execSv(
         this.service,
         this.assemplyName,
         this.className,
-        this.methodName,
-        recID
+        'GetDetailPostByIDAsync',
+        [postID,fileID]
       )
       .subscribe((res: any) => {
-        if (res) {
-          this.parentPost = res;
-          this.dt.detectChanges();
+        if (res) 
+        {
+          this.post = res;
         }
       });
+    }
   }
 
   clickClosePopup() {
@@ -66,6 +94,6 @@ export class PopupDetailComponent implements OnInit {
   }
 
   pushComment(data: any) {
-    this.childPost.listComment.push(data);
+
   }
 }
