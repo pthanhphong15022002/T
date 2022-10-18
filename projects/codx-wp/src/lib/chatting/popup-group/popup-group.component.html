@@ -1,0 +1,71 @@
+<div class="wrap-form">
+    <div class="row">
+        <div class="col-12">
+            <input type="file" />
+            <codx-input type="text" [crrValue]="data?.groupName" placeholder="Tên nhóm" class="form-control"
+                (valueChange)="valueChange($event)" field="groupName"></codx-input>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-8" style="overflow-y: scroll;">
+            <div>
+                <label>Danh sách người dùng</label>
+            </div>
+            <!-- <div>
+                <input [(value)]="searchUser" class="form-control" placeholder="Tìm kiếm người dùng"/>
+            </div> -->
+
+
+            <!-- (searchEvent)="doFilter($event)" -->
+            <codx-searchbar #searchbar [width]="600" (searchEvent)="onSearch($event)"></codx-searchbar>
+            <div *ngIf="users">
+                <ng-container *ngFor="let data of users">
+                    <div (click)="clickUser(data)" class="item" style="display: flex;">
+                        <!-- <img src=""> -->
+                        <codx-img [objectId]="data.userID" [objectType]="'AD_Users'"
+                            class="symbol symbol-30 symbol-circle me-3">
+                        </codx-img>
+
+                        <div style="flex: 1;">
+                            <div>{{data.userName}}</div>
+                        </div>
+                        <div>
+                            <!-- [class]="'e-checkbox-wrapper e-wrapper checkbox check-circle codx-checkbox e-checkbox-disabled'"   -->
+                            <codx-input type="checkbox" name="{{data.userID}}" [crrValue]="data.checked">
+                            </codx-input>
+                        </div>
+                    </div>
+                </ng-container>
+
+            </div>
+        </div>
+        <div class="col-4">
+            <div>
+                <label>Selected <span *ngIf="userSelected.length > 0">({{userSelected.length}})</span></label>
+            </div>
+            <ng-container *ngFor="let item of userSelected">
+                <div style="display: flex;">
+                    <codx-img [objectId]="item.userID" [objectType]="'AD_Users'"
+                        class="symbol symbol-30 symbol-circle me-3">
+                    </codx-img>
+                    <div>
+                        <div style="">{{item.userName}}</div>
+                    </div>
+                    <div>
+                        <!-- [class]="'e-checkbox-wrapper e-wrapper checkbox check-circle codx-checkbox e-checkbox-disabled'" -->
+
+                        <i _ngcontent-jrf-c314="" class="icon-close" (click)="remoteuser(item)"></i>
+
+                    </div>
+                </div>
+            </ng-container>
+
+        </div>
+
+    </div>
+    <div>
+        <button (click)="clickCreateGroup()" text="Them">
+            Them
+        </button>
+    </div>
+</div>

@@ -12,7 +12,10 @@ import {
   ViewModel,
   UIComponent,
   ButtonModel,
+  CallFuncService,
+  DialogModel,
 } from 'codx-core';
+import { PopupGroupComponent } from './popup-group/popup-group.component';
 
 @Component({
   selector: 'lib-chatting',
@@ -24,6 +27,8 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
 
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
   @ViewChild("panelRightRef") panelRightRef: TemplateRef<any>;
+  @ViewChild("tmpSearch") tmpSearch: TemplateRef<any>;
+
 
   views: Array<ViewModel> = [];
   changeDetectorRef: any;
@@ -45,7 +50,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   user: any;
   constructor
   (
-    private  inject: Injector
+    private  inject: Injector,//service mở cửa sổ
   ) 
   {
     super(inject);
@@ -57,12 +62,21 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
       sameData:true,
       model:{
         template: this.itemTemplate,
-        panelRightRef: this.panelRightRef
+        panelRightRef: this.panelRightRef,
+        panelLeftRef:this.tmpSearch
       }
     }]
   }
 
   onInit(): void {
+    //this.api.execSv("WP","ERM.Business.WP","ChatBusiness","AddChatTestAsync").subscribe();
+  }
+
+  clikPopup(){
+    let dialogModel = new DialogModel();
+    dialogModel.DataService = this.view.dataService;
+    dialogModel.FormModel = this.view.formModel;
+    this.callfc.openForm("CreateGroupComponent","Tao nhom chat",0,0,"",null,"",dialogModel);
   }
 
   doFilter(event: any) {
@@ -80,6 +94,13 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  openCreategroupForm() {
+     //this.callfc.openForm(CreateGroupComponent, "Tạo nhóm chat", 800, 600);
+     let dialogModel = new DialogModel();
+    dialogModel.DataService = this.view.dataService;
+    dialogModel.FormModel = this.view.formModel;
+    this.callfc.openForm(PopupGroupComponent,"Tao nhom chat",0,0,"",null,"",dialogModel);
+  }
 
   viewChanging(event) {
     // this.dmSV.page = 1;

@@ -55,6 +55,7 @@ export class DynamicSettingComponent implements OnInit {
   }
 
   navigate(evt: any, catagory: string) {
+    debugger;
     let categoryAdd = '';
     if (catagory === '2') categoryAdd = '7';
     this.loaded = false;
@@ -111,7 +112,7 @@ export class DynamicSettingComponent implements OnInit {
           this.itemMenu = Object.keys(res);
         }
         this.changeDetectorRef.detectChanges();
-
+debugger;
         var path = window.location.pathname;
         var arrPath = path.split('/');
         var catagory = arrPath[arrPath.length - 1];

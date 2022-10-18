@@ -19,6 +19,7 @@ import { ChatListComponent } from './chatting/chat-list/chat-list.component';
 import { ChatBoxComponent } from './chatting/chatbox/chat-box.component';
 import { ChattingComponent } from './chatting/chatting.component';
 import { ListChatBoxComponent } from './chatting/list-chat-box/list-chat-box.component';
+import { PopupGroupComponent } from './chatting/popup-group/popup-group.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
@@ -233,8 +234,8 @@ const Component: Type<any>[] =
     PopupSearchPostComponent,
     ChatListComponent,
     ChatBoxComponent,
-    ListChatBoxComponent
-
+    ListChatBoxComponent,
+    PopupGroupComponent,
   ];
 
 @NgModule({
