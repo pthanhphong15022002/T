@@ -1,0 +1,18 @@
+.news-edit-left {
+    max-height: calc(100vh - 155px);
+    overflow: auto;
+}
+
+.news-edit-right {
+
+    max-height: calc(100vh - 155px);
+    overflow: auto;
+}
+
+.news-edit-right .e-richtexteditor .e-rte-content {
+    height: calc(100vh - 225px) !important;
+}
+
+.news-edit-right .e-richtexteditor {
+    height: calc(100vh - 185px) !important;
+}

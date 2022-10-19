@@ -33,10 +33,11 @@ export class Approver {}
   styleUrls: ['./approval-step.component.scss'],
 })
 export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
-  @Input() transId = '';
-  @Input() type = '0'; //0: có nút lưu; 1: không có nút lưu
-  @Input() recID = '';
+  @Input() transId: string = '';
+  @Input() type: string = '0'; //0: có nút lưu; 1: không có nút lưu
+  @Input() recID: string = '';
   @Input() mssgDelete = '';
+  @Input() eSign: boolean = false; //Quy trình ký số
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -176,7 +177,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       dataEdit: null,
       type: '0',
       signatureType: this.data?.signatureType,
-      eSign: this.data?.eSign,
+      eSign: this.type == '1' ? this.eSign : this.data?.eSign,
     };
 
     this.openPopupAddAppStep(data);
@@ -190,7 +191,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       isAdd: false,
       dataEdit: approvalStep,
       type: '0',
-      eSign: this.data?.eSign,
+      eSign: this.type == '1' ? this.eSign : this.data?.eSign,
     };
     this.openPopupAddAppStep(data);
   }

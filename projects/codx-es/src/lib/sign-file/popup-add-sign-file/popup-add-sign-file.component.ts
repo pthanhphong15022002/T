@@ -58,13 +58,13 @@ export class PopupAddSignFileComponent implements OnInit {
   processTab = 0; // tổng bước đã đi qua
   formModelCustom: FormModel;
   isAfterRender = false;
-  cbxName: any = {};
   dialogSignFile: FormGroup;
   lstDataFile = [];
   isAddNew: boolean = true; // flag thêm mới signfile
   processID: String = '';
   transID: String = '';
   gvSetup: any;
+  eSign: boolean = true; //Phân loại là ký số. defaul true for release form others module
 
   isSaved: boolean = false; // flag đã gọi hàm lưu signfile
   isEdit: boolean = false; // flag kiểm tra đã chỉnh sửa thông tin signfile
@@ -81,7 +81,7 @@ export class PopupAddSignFileComponent implements OnInit {
   oldNode: number; //vị trí node trước
 
   disableContinue: boolean = false;
-
+  disableCateID: boolean = false;
   isAfterSaveProcess: boolean = false;
   mssgDelete: string = '';
 
@@ -89,6 +89,7 @@ export class PopupAddSignFileComponent implements OnInit {
   oSignFile: ES_SignFile;
   user: any = {};
   showPlan: boolean = true;
+
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -108,6 +109,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
+    this.disableCateID = data?.data?.disableCateID ?? false;
 
     this.user = this.auth.get();
 
@@ -188,15 +190,6 @@ export class PopupAddSignFileComponent implements OnInit {
                   }
                 });
             }
-          });
-
-        this.esService
-          .getComboboxName(
-            this.formModelCustom.formName,
-            this.formModelCustom.gridViewName
-          )
-          .then((res) => {
-            if (res) this.cbxName = res;
           });
       });
     } else {
@@ -370,9 +363,11 @@ export class PopupAddSignFileComponent implements OnInit {
   valueChange(event) {
     if (event?.field && event?.component && event?.data != '') {
       this.isEdit = true;
+
       if (event.field == 'categoryID' && this.data.categoryID != event.data) {
         if ((!this.isAddNew || this.isSaved) && this.processTab >= 3) {
           this.notify.alertCode('ES001').subscribe((x) => {
+            //open popup confirm
             if (x.event.status == 'Y') {
               this.esService
                 .getAutoNumberByCategory(event.data)
@@ -407,6 +402,8 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.data.color = category?.Color;
                   this.data.processID = category?.RecID;
                   this.data.categoryName = category?.CategoryName;
+
+                  this.eSign = category?.ESign;
                   this.cr.detectChanges();
                 });
             } else {
@@ -450,6 +447,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.color = category?.Color;
               this.data.processID = category?.RecID;
               this.data.categoryName = category?.CategoryName;
+              this.eSign = category?.ESign;
               this.cr.detectChanges();
             });
         }
@@ -876,7 +874,6 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.processTab < 3) {
       return;
     }
-    this.esService.addQRBeforeRelease(this.data.recID).subscribe((res) => {});
 
     this.esService
       .release(
@@ -888,8 +885,15 @@ export class PopupAddSignFileComponent implements OnInit {
         if (res?.msgCodeError == null && res?.rowCount > 0) {
           this.dialogSignFile.patchValue({ approveStatus: '3' });
           this.data.approveStatus = '3';
+
           this.esService.editSignFile(this.data).subscribe((result) => {
             if (result) {
+              //Gen QR code
+              this.esService
+                .addQRBeforeRelease(this.data.recID)
+                .subscribe((res) => {});
+
+              // Notify
               this.notify.notifyCode('ES007');
               this.dialog &&
                 this.dialog.close({

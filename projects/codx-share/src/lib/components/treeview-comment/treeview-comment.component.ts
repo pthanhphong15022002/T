@@ -32,6 +32,8 @@ export class TreeviewCommentComponent implements OnInit {
   @Input() rootData: any;
   @Input() dataComment: any;
   @Output() pushComment = new EventEmitter;
+  @Output() voteCommentEvt = new EventEmitter;
+
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   @ViewChild('codxFile') codxFile : ImageGridComponent;
 
@@ -73,7 +75,7 @@ export class TreeviewCommentComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.auth.userValue;
     this.getValueIcon();
-    // this.getDataComment();
+    this.getDataComment();
   }
 
   getValueIcon(){
@@ -89,7 +91,6 @@ export class TreeviewCommentComponent implements OnInit {
       }
     });
   }
-  lstComment:any[] = [];
   totalComment:number = 0;
   getDataComment(){ 
     this.api.execSv
@@ -99,13 +100,12 @@ export class TreeviewCommentComponent implements OnInit {
     "GetCommentsByOjectIDAsync",[this.objectID, this.pageIndex])
     .subscribe((res:any[]) => {
       if(res){
-        this.lstComment = res[0];
+        this.dataComment.listComment = res[0];
         this.totalComment = res[1];
         this.dt.detectChanges();
       }
     })
   }
-
   showVotes(data: any) {
     let object = {
       data: data,
@@ -149,8 +149,6 @@ export class TreeviewCommentComponent implements OnInit {
         });
     }
   }
-
-
   sendComment(event:any,data:any = null){
     this.comments = "";
     this.repComment = "";
@@ -164,41 +162,45 @@ export class TreeviewCommentComponent implements OnInit {
     this.setNodeTree(event);
     this.dt.detectChanges();
   }
-
   replyTo(data) {
     data.showReply = !data.showReply;
     this.dt.detectChanges();
   }
-
-  votePost(data: any, voteType = null) {
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "VotesBusiness",
-      "VotePostAsync",
-      [data.recID, voteType])
-      .subscribe((res: any) => {
-        if (res) {
-          data.votes = res[0];
-          data.totalVote = res[1];
-          data.listVoteType = res[2];
-          if (voteType == data.myVotedType) {
-            data.myVotedType = null;
-            data.myVoted = false;
-            this.checkVoted = false;
-          }
-          else {
-            data.myVotedType = voteType;
-            data.myVoted = true;
-            this.checkVoted = true;
-          }
-          this.dt.detectChanges();
-        }
-
-      });
+  votePostEmit(event:any){
+    if(event)
+    {
+      this.voteCommentEvt.emit();
+    }
   }
-
-
+  votePost(data: any, voteType = null) {
+    if(data && voteType){
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "VotesBusiness",
+        "VotePostAsync",
+        [data, voteType])
+        .subscribe((res: any) => {
+          if (res) {
+            data.votes = res[0];
+            data.totalVote = res[1];
+            data.listVoteType = res[2];
+            if (voteType == data.myVotedType) {
+              data.myVotedType = null;
+              data.myVoted = false;
+              this.checkVoted = false;
+            }
+            else {
+              data.myVotedType = voteType;
+              data.myVoted = true;
+              this.checkVoted = true;
+            }
+            this.dt.detectChanges();
+          }
+  
+        });
+    }
+  }
   voteComment(data: any) {
     if (!data.recID) return;
     this.api
@@ -297,7 +299,7 @@ export class TreeviewCommentComponent implements OnInit {
         }
       }
       else {
-        this.lstComment.push(newNode);
+        this.dataComment.listComment.push(newNode);
       }
     this.dt.detectChanges();   
   }
@@ -318,7 +320,6 @@ export class TreeviewCommentComponent implements OnInit {
           return element["recID"] != id;
         });
       }
-
       delete this.dicDatas[id];
     }
     this.dt.detectChanges();

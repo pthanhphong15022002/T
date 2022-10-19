@@ -69,11 +69,13 @@ export class PdfComponent
   //Input
   @Input() recID = '';
   @Input() isEditable = true;
+  @Input() isConfirm = false;
   @Input() hasPermission = false;
   @Input() isApprover;
   @Input() stepNo = -1;
   @Input() inputUrl = null;
   @Input() transRecID = null;
+  @Input() oSignFile = {};
   @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
@@ -642,11 +644,10 @@ export class PdfComponent
             lstAreaOnPage?.forEach((area) => {
               let isRender = false;
               if (
-                (!this.isApprover && !area.isLock) ||
+                (area.labelType != '8' && !this.isApprover && !area.isLock) ||
                 (this.isApprover &&
                   area.signer == this.curSignerID &&
-                  area.stepNo == this.stepNo &&
-                  area.labelType != '8')
+                  area.stepNo == this.stepNo)
               ) {
                 isRender = true;
               }
@@ -770,7 +771,6 @@ export class PdfComponent
             });
             stage.add(layer);
           }
-
           //stage event
           stage.on('mouseenter', (mouseover: any) => {
             if (this.needAddKonva) {
