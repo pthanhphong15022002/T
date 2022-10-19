@@ -65,22 +65,75 @@
         </div>
       </div>
     </div>
-    <div class="d-flex align-items-center mb-4" *ngIf="havaESign == true">
-      <codx-input
-        #checkbox
-        type="switch"
-        id="switch"
-        [checked]="form.formGroup?.value?.eSign"
-        labelPosition="After"
-        field="eSign"
-        class="test-switch"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>
-      <label class="ms-2">
-        <codx-label fiedName="ESign" [formModel]="formModel"></codx-label>
-      </label>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="d-flex align-items-center mb-4" *ngIf="havaESign == true">
+          <codx-input
+            #checkbox
+            type="switch"
+            id="switch"
+            [checked]="data?.eSign"
+            labelPosition="After"
+            field="eSign"
+            class="test-switch"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+          <label class="ms-2">
+            <codx-label fiedName="ESign" [formModel]="formModel"></codx-label>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div
+          class="d-flex align-items-center mb-4"
+          *ngIf="havaESign == true && data.eSign"
+        >
+          <codx-input
+            #checkbox
+            type="switch"
+            id="switch"
+            [checked]="data?.confirmControl"
+            labelPosition="After"
+            field="confirmControl"
+            class="test-switch"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+          <label class="ms-2">
+            <codx-label
+              fiedName="ConfirmControl"
+              [formModel]="formModel"
+            ></codx-label>
+          </label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div
+          class="d-flex align-items-center mb-4"
+          *ngIf="havaESign == true && data.eSign"
+        >
+          <codx-input
+            #checkbox
+            type="switch"
+            id="switch"
+            [checked]="data?.areaControl"
+            labelPosition="After"
+            field="areaControl"
+            class="test-switch"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+          <label class="ms-2">
+            <codx-label
+              fiedName="AreaControl"
+              [formModel]="formModel"
+            ></codx-label>
+          </label>
+        </div>
+      </div>
     </div>
+
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">

@@ -28,31 +28,14 @@ import { PopupADRComponent } from '../popup-adr/popup-adr.component';
   styleUrls: ['./popup-sign-for-approval.component.scss'],
 })
 export class PopupSignForApprovalComponent extends UIComponent {
-  constructor(
-    private inject: Injector,
-    private esService: CodxEsService,
-    private notify: NotificationsService,
-    private authStore: AuthStore,
-    private http: HttpClient,
-    @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
-  ) {
-    super(inject);
-    this.dialog = dialog;
-    this.data = dt.data;
-    console.log(this.data);
-
-    this.user = this.authStore.get();
-  }
-
   @ViewChild('pdfView') pdfView: PdfComponent;
   @ViewChild('popupOTPPin', { static: false }) popupOTPPin: TemplateRef<any>;
 
   isAfterRender: boolean = false;
-  isConfirm = false;
+  isConfirm = true;
   isApprover = true;
-  stepNo;
-  dialog;
+  stepNo: number;
+  dialog: DialogRef;
   data;
   user;
   signerInfo: any = {};
@@ -65,11 +48,32 @@ export class PopupSignForApprovalComponent extends UIComponent {
   sfRecID = '';
   transRecID = null;
   funcID;
+  oApprovalTrans: any = {};
   canOpenSubPopup;
 
   mode;
   title: string;
   subTitle: string;
+
+  constructor(
+    private inject: Injector,
+    private esService: CodxEsService,
+    private notify: NotificationsService,
+    private authStore: AuthStore,
+    private http: HttpClient,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    super(inject);
+    this.dialog = dialog;
+    this.data = dt.data;
+    this.oApprovalTrans = dt?.data?.oTrans;
+    if (this.oApprovalTrans?.confirmControl == '1') {
+      this.isConfirm = false;
+    }
+
+    this.user = this.authStore.get();
+  }
 
   onInit(): void {
     this.canOpenSubPopup = false;
@@ -115,11 +119,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   changeConfirmState(state: boolean) {
-    this.isConfirm = state;
+    if (this.oApprovalTrans.confirmControl == '1') {
+      this.isConfirm = state;
+    }
   }
 
   checkConfirm(mode) {
-    if (this.canOpenSubPopup) {
+    if (this.canOpenSubPopup && this.oApprovalTrans?.confirmControl == '1') {
       if (!this.isConfirm) this.notify.notifyCode('ES011');
     }
   }
@@ -165,50 +171,72 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   approve(mode, title: string, subTitle: string) {
-    let dialogADR = this.callfc.openForm(
-      PopupADRComponent,
-      title,
-      500,
-      500,
-      this.funcID,
-      {
-        signfileID: this.sfRecID,
-        mode: mode,
-        title: title,
-        subTitle: subTitle,
-        funcID: this.funcID,
-        formModel: this.formModel,
-        formGroup: this.dialogSignFile,
-        stepType: this.data.stepType,
-      }
-    );
-    this.pdfView.curPage = this.pdfView.pageMax;
-    dialogADR.closed.subscribe((res) => {
-      console.log('res.event', res.event);
-      if (res.event) {
-        this.pdfView
-          .signPDF(mode, this.dialogSignFile.value.comment)
-          .then((value) => {
-            if (value) {
-              let result = {
-                result: true,
-                mode: mode,
-              };
-              this.notify.notifyCode('RS002');
-              this.canOpenSubPopup = false;
-              this.dialog && this.dialog.close(result);
-            } else {
-              this.canOpenSubPopup = false;
-              let result = {
-                result: false,
-                mode: mode,
-              };
-              this.notify.notifyCode('SYS021');
-              this.dialog && this.dialog.close(result);
-            }
-          });
-      }
-    });
+    if (this.oApprovalTrans?.approveControl == '1') {
+      let dialogADR = this.callfc.openForm(
+        PopupADRComponent,
+        title,
+        500,
+        500,
+        this.funcID,
+        {
+          signfileID: this.sfRecID,
+          mode: mode,
+          title: title,
+          subTitle: subTitle,
+          funcID: this.funcID,
+          formModel: this.formModel,
+          formGroup: this.dialogSignFile,
+          stepType: this.data.stepType,
+        }
+      );
+      this.pdfView.curPage = this.pdfView.pageMax;
+      dialogADR.closed.subscribe((res) => {
+        console.log('res.event', res.event);
+        if (res.event) {
+          this.pdfView
+            .signPDF(mode, this.dialogSignFile.value.comment)
+            .then((value) => {
+              if (value) {
+                let result = {
+                  result: true,
+                  mode: mode,
+                };
+                this.notify.notifyCode('RS002');
+                this.canOpenSubPopup = false;
+                this.dialog && this.dialog.close(result);
+              } else {
+                this.canOpenSubPopup = false;
+                let result = {
+                  result: false,
+                  mode: mode,
+                };
+                this.notify.notifyCode('SYS021');
+                this.dialog && this.dialog.close(result);
+              }
+            });
+        }
+      });
+    } else {
+      this.pdfView.signPDF(mode, '').then((value) => {
+        if (value) {
+          let result = {
+            result: true,
+            mode: mode,
+          };
+          this.notify.notifyCode('RS002');
+          this.canOpenSubPopup = false;
+          this.dialog && this.dialog.close(result);
+        } else {
+          this.canOpenSubPopup = false;
+          let result = {
+            result: false,
+            mode: mode,
+          };
+          this.notify.notifyCode('SYS021');
+          this.dialog && this.dialog.close(result);
+        }
+      });
+    }
   }
 
   clickUSB() {

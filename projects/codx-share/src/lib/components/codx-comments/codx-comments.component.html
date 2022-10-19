@@ -115,7 +115,7 @@
                 </ng-container>
             </div>
             <ng-container *ngIf="fileUpload">
-                <div class="d-flex my-3">
+                <div class="d-flex my-3" (click)="clickViewDetail(fileUpload)">
                     <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
                         <ng-container *ngIf="fileUpload.recID;else imageSrc">
                             <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
