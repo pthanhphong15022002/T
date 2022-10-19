@@ -10,7 +10,7 @@
 
 <ng-template #body>
   <div class="list-group">
-    <h3 class="list-header mb-7">{{ title }}</h3>
+    <h3 class="list-header">{{ title }}</h3>
     <div class="list-content">
       <ng-container
         *ngIf="groupSetting && groupSetting.length > 0; else noGroup"
@@ -203,18 +203,14 @@
           <!-- vân chỉnh ở chỗ này giúp e cái checkbox -->
 
           <div class="w-30px setting-btnright ms-2">
-            <a
-              [routerLink]="
-                data.reference ? '../../../../' + data.reference : 'detail'
-              "
-              [state]="{
-                setting: setting | group: data.recID:'2',
-                function: function,
-                dataValue: dataValue[data.fieldName],
-                urlOld: urlOld
-              }"
-              *ngIf="data.displayMode === '1'"
-            >
+            <a [routerLink]="
+            data.reference ? '../../../' + data.reference : 'detail'
+          " [state]="{
+            keepPage: true,
+            setting: setting | group: data.recID:'2',
+            function: function,
+            dataValue: dataValue[data.fieldName]
+          }" *ngIf="data.displayMode === '1'">
               <span class="w-30px d-flex justify-content-center"
                 ><span class="icon-keyboard_arrow_right icon-22"></span></span
             ></a>
@@ -245,7 +241,7 @@
             >
               <codx-input
                 type="Share"
-                [refValue]="data.refValue || 'L1901'"
+                [refValue]="data.referdValue || 'L1901'"
                 field="popup"
                 [dataShared]="[]"
                 [showInput]="false"

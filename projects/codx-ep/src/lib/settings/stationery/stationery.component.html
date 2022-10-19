@@ -15,7 +15,7 @@
   [method]="method"
   (onLoading)="onLoading($event)"
   (requestEnded)="closeEditForm($event)"
-  [viewActiveType]="viewType.grid"
+  [viewActiveType]="viewType.card"
 >
 </codx-views>
 
@@ -239,7 +239,6 @@
     cardCss="border w-250px h-100"
     [imageObjType]="'EP_Stationery'"
     [imageId]="data?.recID"
-    
     [rootData]="data"
     [footer]="cardItemFooter"
     [imgOn]="data.modifiedOn"
