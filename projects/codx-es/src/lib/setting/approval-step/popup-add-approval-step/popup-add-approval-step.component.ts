@@ -47,6 +47,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   lstApproveMode: any;
   currentApproveMode: string;
 
+  confirmControl = 0;
+
   dialog: DialogRef;
   lstStep;
   isSaved = false;
@@ -128,6 +130,18 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     if (event?.field && event?.component && event?.data != '') {
       this.data[event?.field] = event.data;
       this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+      this.cr.detectChanges();
+    }
+  }
+
+  changeConfirm(event) {
+    if (
+      event?.field &&
+      event?.field == 'confirmControl' &&
+      event?.component &&
+      event?.data != ''
+    ) {
+      this.confirmControl = event.data;
       this.cr.detectChanges();
     }
   }

@@ -58,7 +58,6 @@ export class PopupAddSignFileComponent implements OnInit {
   processTab = 0; // tổng bước đã đi qua
   formModelCustom: FormModel;
   isAfterRender = false;
-  cbxName: any = {};
   dialogSignFile: FormGroup;
   lstDataFile = [];
   isAddNew: boolean = true; // flag thêm mới signfile
@@ -89,6 +88,8 @@ export class PopupAddSignFileComponent implements OnInit {
   oSignFile: ES_SignFile;
   user: any = {};
   showPlan: boolean = true;
+  disableCateID: boolean = false;
+
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -108,6 +109,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
+    this.disableCateID = data?.data?.disableCateID ?? true;
 
     this.user = this.auth.get();
 
@@ -188,15 +190,6 @@ export class PopupAddSignFileComponent implements OnInit {
                   }
                 });
             }
-          });
-
-        this.esService
-          .getComboboxName(
-            this.formModelCustom.formName,
-            this.formModelCustom.gridViewName
-          )
-          .then((res) => {
-            if (res) this.cbxName = res;
           });
       });
     } else {

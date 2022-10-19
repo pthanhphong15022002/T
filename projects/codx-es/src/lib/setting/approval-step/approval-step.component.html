@@ -87,15 +87,14 @@
                           <div class="stepper-desc">
                             {{ item.stepName }}
                           </div>
-                          <div class="action-menu">
-                            <codx-mfunc
-                              [formModel]="formModel"
-                              (clickMF)="clickMF($event, item)"
-                              type="hover"
-                              [dataItem]="item"
-                            >
-                            </codx-mfunc>
-                          </div>
+
+                          <codx-mfunc
+                            [formModel]="formModel"
+                            (clickMF)="clickMF($event, item)"
+                            type="hover"
+                            [dataItem]="item"
+                          >
+                          </codx-mfunc>
                         </div>
                       </div>
                       <div class="timeline-content mx-auto">
@@ -274,15 +273,14 @@
                     <div class="stepper-desc">
                       {{ item.stepName }}
                     </div>
-                    <div class="action-menu">
-                      <codx-mfunc
-                        [formModel]="formModel"
-                        (clickMF)="clickMF($event, item)"
-                        type="hover"
-                        [dataItem]="item"
-                      >
-                      </codx-mfunc>
-                    </div>
+
+                    <codx-mfunc
+                      [formModel]="formModel"
+                      (clickMF)="clickMF($event, item)"
+                      type="hover"
+                      [dataItem]="item"
+                    >
+                    </codx-mfunc>
                   </div>
                 </div>
                 <div class="timeline-content mx-auto">

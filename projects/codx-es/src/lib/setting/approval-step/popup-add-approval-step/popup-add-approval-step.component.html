@@ -188,22 +188,48 @@
       </ng-container>
     </div>
   </div>
-  <div class="d-flex align-items-center mb-4" *ngIf="eSign == true">
-    <codx-input
-      #checkbox
-      type="switch"
-      id="switch"
-      [checked]="data.editSignAreas"
-      labelPosition="After"
-      field="editSignAreas"
-      class="test-switch"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input>
-    <label class="ms-2">
-      <codx-label fiedName="EditSignAreas" [formModel]="formModel"></codx-label>
-    </label>
+  <div class="row mb-4">
+    <div class="d-flex align-items-center col-4" *ngIf="eSign == true">
+      <codx-input
+        #checkbox
+        type="switch"
+        id="switch"
+        [checked]="data.editSignAreas"
+        labelPosition="After"
+        field="editSignAreas"
+        class="test-switch"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+      <label class="ms-2">
+        <codx-label
+          fiedName="EditSignAreas"
+          [formModel]="formModel"
+        ></codx-label>
+      </label>
+    </div>
+
+    <div class="d-flex align-items-center col-4" *ngIf="eSign == true">
+      <codx-input
+        #checkbox
+        type="switch"
+        id="switch"
+        [checked]="confirmControl"
+        labelPosition="After"
+        field="confirmControl"
+        class="test-switch"
+        (valueChange)="changeConfirm($event)"
+      >
+      </codx-input>
+      <label class="ms-2">
+        <codx-label
+          fiedName="ConfirmControl"
+          [formModel]="formModel"
+        ></codx-label>
+      </label>
+    </div>
   </div>
+
   <div class="d-flex flex-column mb-4">
     <div class="fw-bolder d-block mb-2">
       <codx-label
@@ -224,6 +250,18 @@
         >
         </codx-input>
       </div>
+      <div class="form-group col-6">
+        <codx-label fiedName="CancelControl" [formModel]="formModel">
+        </codx-label>
+        <codx-input
+          [formModel]="formModel"
+          [Group]="dialogApprovalStep"
+          field="cancelControl"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="row">
       <div class="form-group col-6">
         <codx-label fiedName="RejectControl" [formModel]="formModel">
         </codx-label>
@@ -359,21 +397,7 @@
       </codx-input>
     </div>
   </div>
-
-  <div class="row">
-    <div class="form-group col-7">
-      <codx-label fiedName="CancelControl" [formModel]="formModel">
-      </codx-label>
-      <codx-input
-        [formModel]="formModel"
-        [Group]="dialogApprovalStep"
-        field="cancelControl"
-      >
-      </codx-input>
-    </div>
-  </div>
-
-  <div class="row">
+  <!-- <div class="row">
     <div class="form-group col-7">
       <codx-label fiedName="AlterApprovers" [formModel]="formModel">
       </codx-label>
@@ -384,7 +408,7 @@
       >
       </codx-input>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 
 <ng-template #footer>
