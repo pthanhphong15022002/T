@@ -5,16 +5,11 @@ import {
   Input,
   OnInit,
   Output,
-  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
-import { SignalRService } from '@core/services/signalr/signalr.service';
-import { Post } from '@shared/models/post';
-import { NgbModal, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-declare var _;
-import { ApiHttpService, AuthService, CacheService, CallFuncService, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
 import { PopupVoteComponent } from './popup-vote/popup-vote.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
@@ -25,12 +20,12 @@ import { ImageGridComponent } from '../image-grid/image-grid.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class TreeviewCommentComponent implements OnInit {
-  @Input() funcID:string;
-  @Input() objectID:string;
-  @Input() objectType:string;
-  @Input() formModel:any;
-  @Input() rootData: any;
-  @Input() dataComment: any;
+  @Input() funcID:string = "";
+  @Input() objectID:string = "";
+  @Input() objectType:string = "";
+  @Input() formModel:FormModel = null;
+  @Input() rootData: any = null;
+  @Input() dataComment: any = null;
   @Output() pushComment = new EventEmitter;
   @Output() voteCommentEvt = new EventEmitter;
 
