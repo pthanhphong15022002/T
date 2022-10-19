@@ -11,8 +11,8 @@ import { CRUDService, SortModel, UIComponent, ViewModel, ViewsComponent, ViewTyp
 export class PostComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
   dataService:CRUDService = null;
-  predicate: string = '(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
-  dataValue: string = '0;1;5;2';
+  predicate: string = '(Category = @0 || Category = @1 || Category = @2) && (ApproveControl=@3 or (ApproveControl=@4 && ApproveStatus = @5)) && Stop = false';
+  dataValue: string = '1;3;4;0;1;5';
   @ViewChild("content") content : TemplateRef<any>;
   constructor
   (
@@ -47,7 +47,6 @@ export class PostComponent extends UIComponent {
     arrSort.push(sort);
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 7;
-    this.detectorRef.detectChanges();
   }
 
 
