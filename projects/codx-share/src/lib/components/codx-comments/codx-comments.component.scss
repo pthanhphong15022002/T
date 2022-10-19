@@ -67,6 +67,9 @@
 }
 
 
+// .comments {
+//     border: 1px aqua solid;
+// }
 
 .icon-like {
     visibility: hidden;
@@ -78,6 +81,10 @@
     box-shadow: 0px 10px 20px 0px rgb(82 63 105 / 10%);
     padding: 5px;
     border-radius: 6px;
+}
+
+.comment-like .icon-like {
+    margin-left: -75px;
 }
 
 .btn-like:hover .icon-like {

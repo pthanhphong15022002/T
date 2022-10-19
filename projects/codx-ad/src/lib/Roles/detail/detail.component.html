@@ -27,7 +27,7 @@
             >
             </codx-treeview>
             <ng-template #templatetree let-data>
-              <ng-container *ngIf="data?.parent?.isFunction; else notFunction">
+              <ng-container *ngIf="!data?.parent?.isFunction; else notFunction">
                 <span
                   class="{{
                     data?.parent?.largeIcon
@@ -113,23 +113,11 @@
                   <codx-input
                     type="switch"
                     [disabled]="!active"
-                    [crrValue]="dataPermission?.run"
+                    [checked]="dataPermission?.run || false"
                     field="run"
                     (valueChange)="valueChange($event)"
                   >
                   </codx-input>
-                  <!-- <span class="switch switch-sm mr-2">
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="check-add"
-                        [disabled]="!active"
-                        [(ngModel)]="dataPermission.run"
-                        name="select"
-                      />
-                      <span></span>
-                    </label>
-                  </span> -->
                 </div>
                 <hr />
                 <div class="d-flex align-items-center justify-content-between">
@@ -140,23 +128,11 @@
                   <codx-input
                     type="switch"
                     [disabled]="!active"
-                    [crrValue]="dataPermission?.create"
+                    [checked]="dataPermission?.create || false"
                     field="create"
                     (valueChange)="valueChange($event)"
                   >
                   </codx-input>
-                  <!-- <span class="switch switch-sm mr-2">
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="check-add"
-                        [disabled]="!active"
-                        [(ngModel)]="dataPermission.create"
-                        name="select"
-                      />
-                      <span></span>
-                    </label>
-                  </span> -->
                 </div>
                 <hr />
                 <div class="d-flex align-items-center justify-content-between">

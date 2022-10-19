@@ -51,7 +51,7 @@ export class PopupDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getValueIcon("L1480");
-    this.getPostByID(this.file.objectID,this.file.recID);
+    this.getPostByID(this.file.objectID,this.file.recID,this.file.referType);
   }
   getValueIcon(vll:string){
     if(vll)
@@ -69,8 +69,8 @@ export class PopupDetailComponent implements OnInit {
       });
     }
   }
-  getPostByID(postID: string,fileID:string) {
-    if(postID && fileID)
+  getPostByID(postID: string,fileID:string,referType:string) {
+    if(postID && fileID && referType)
     {
       this.api
       .execSv(
@@ -78,7 +78,7 @@ export class PopupDetailComponent implements OnInit {
         this.assemplyName,
         this.className,
         'GetDetailPostByIDAsync',
-        [postID,fileID]
+        [postID,fileID,referType]
       )
       .subscribe((res: any) => {
         if (res) 

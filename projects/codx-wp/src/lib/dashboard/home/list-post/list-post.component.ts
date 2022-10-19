@@ -160,7 +160,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
               }
             });
           this.formModel = new FormModel();
-          this.formModel.funcID = "WP";
+          this.formModel.funcID = funcID;
           this.formModel.formName = func.formName;
           this.formModel.gridViewName = func.gridViewName;
           this.formModel.entityName = func.entityName;

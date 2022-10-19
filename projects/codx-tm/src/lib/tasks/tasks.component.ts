@@ -19,8 +19,10 @@ export class TasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.tmService.menuClick.subscribe(res => {
-      if (res) {
-        this.funcID = res.funcId
+      if (res && res.func) {
+        if (this.funcID != res.func.functionID)
+          this.funcID = res.func.functionID;
+        this.tmService.menuClick.next(null);
       }
     })
   }

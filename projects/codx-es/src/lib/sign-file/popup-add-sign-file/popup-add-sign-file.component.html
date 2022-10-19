@@ -383,6 +383,7 @@
                         [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
                         (valueChange)="valueChange($event)"
+                        [disabled]="disableCateID"
                       >
                       </codx-input>
                     </div>
@@ -477,6 +478,7 @@
                 "
                 [recID]="data.recID"
                 [type]="'1'"
+                [eSign]="eSign"
                 [mssgDelete]="mssgDelete"
                 (addEditItem)="dataStepChange($event)"
               >
