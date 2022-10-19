@@ -866,8 +866,12 @@ codx-tag .codx-tag:hover {
   height: calc(100vh - 155px) !important;
 }
 
-.e-control.e-dialog {
-  max-width: 96%;
-  margin: auto;
+// .e-control.e-dialog {
+//   max-width: 96%;
+//   margin: auto;
 
+// }
+
+.form-control {
+  font-size: inherit !important;
 }
