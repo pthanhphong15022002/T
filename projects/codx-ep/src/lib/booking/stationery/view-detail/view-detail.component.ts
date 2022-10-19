@@ -158,4 +158,6 @@ export class BookingStationeryViewDetailComponent
       )[0].style.height = main - header - 27 + 'px';
     }
   }
+
+  
 }
