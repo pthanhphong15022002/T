@@ -84,13 +84,14 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   dvlReCall: any;
   dvlStatusTM: any;
   formModel: any;
+  formModels: any;
   dialog!: DialogRef;
   name: any;
   ms020: any;
   ms021: any;
   ms023: any;
-  vllStatus = 'TM004';
-  vllStatusAssign = 'TM007';
+  vllStatus='TM004'
+  vllStatusAssign='TM007'
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -99,7 +100,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
-    private codxODService: CodxOdService
+    private codxODService : CodxOdService,
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -143,8 +144,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
  
   setHeight() {
-    let main,
-      header = 0;
+    let main, header = 0;
     let ele = document.getElementsByClassName(
       'codx-detail-main'
     ) as HTMLCollectionOf<HTMLElement>;
@@ -171,13 +171,14 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
   }
   getGridViewSetup(funcID: any) {
+  
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
-      // this.formModel = {
-      //   entityName: fuc?.entityName,
-      //   formName: fuc?.formName,
-      //   funcID: funcID,
-      //   gridViewName: fuc?.gridViewName,
-      // };
+      this.formModels = {
+        entityName: fuc?.entityName,
+        formName: fuc?.formName,
+        funcID: funcID,
+        gridViewName: fuc?.gridViewName,
+      };
       this.codxODService
         .loadGridView(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
@@ -442,7 +443,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               //this.view.dataService.update(x.event).subscribe();
 
               this.odService
-                .getDetailDispatch(x.event.recID, this.formModel?.entityName)
+                .getDetailDispatch(x.event.recID , this.formModel?.entityName)
                 .subscribe((item) => {
                   this.data = item;
                   this.data.lstUserID = getListImg(item.relations);
@@ -468,10 +469,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           .subscribe((item: any) => {
             if (item.status == 0) {
               this.odService
-                .getDetailDispatch(
-                  this.view.dataService.data[0].recID,
-                  this.view.formModel.entityName
-                )
+                .getDetailDispatch(this.view.dataService.data[0].recID , this.view.formModel.entityName)
                 .subscribe((item) => {
                   this.data = formatDtDis(item);
                   this.view.dataService.setDataSelected(this.data);
@@ -485,7 +483,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'SYS04': {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
-          this.view.dataService.dataSelected.recID = res?.recID;
+          this.view.dataService.dataSelected.recID = res?.recID
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(
@@ -504,13 +502,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               this.view.dataService
                 .remove(this.view.dataService.dataSelected)
                 .subscribe();
-            } else
-              this.view.dataService.add(x.event, 0).subscribe((item) => {
-                this.view.dataService.onAction.next({
-                  type: 'update',
-                  data: x.event,
-                });
-              });
+            } else this.view.dataService.add(x.event, 0).subscribe(item=>{
+              this.view.dataService.onAction.next({ type: 'update', data: x.event });
+            });
           });
         });
         break;
@@ -703,11 +697,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'ODT210': {
         this.odService.bookMark(datas.recID).subscribe((item) => {
           if (item.status == 0) {
-            this.view.dataService.onAction.next({
-              type: 'update',
-              data: item.data,
-            });
-            this.view.dataService.update(item.data).subscribe((item) => {
+            this.view.dataService.onAction.next({ type: 'update', data: item.data });
+            this.view.dataService.update(item.data).subscribe(item=>{
               //this.view.dataService.setDataSelected(datas);
             });
           }
@@ -808,71 +799,39 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Gửi duyệt
       case 'ODT201': {
-        
-        this.api
-          .execSv(
-            'ES',
-            'ES',
-            'ApprovalTransBusiness',
-            'GetCategoryByProcessIDAsync',
-            '350d611b-1de0-11ed-9448-00155d035517'
-          )
-          .subscribe((res2: any) => {
-            let dialogModel = new DialogModel();
-            dialogModel.IsFull = true;
-
-            //trình ký
-            if (res2?.eSign == true) {
-              let signFile = new ES_SignFile();
-              signFile.recID = datas.recID;
-              signFile.title = datas.title;
-              signFile.categoryID = res2?.categoryID;
-              signFile.refId = datas.recID;
-              signFile.refDate = datas.refDate;
-              signFile.refNo = datas.refNo;
-              signFile.priority = datas.urgency;
-              signFile.files = [];
-              if (this.data?.files) {
-                for (var i = 0; i < this.data?.files.length; i++) {
-                  var file = new File();
-                  file.fileID = this.data?.files[i].recID;
-                  file.fileName = this.data?.files[i].fileName;
-                  signFile.files.push(file);
-                }
+        debugger;
+        if(datas.bsCategory)
+        {
+          //Có thiết lập bước duyệt
+          if(datas.bsCategory.approval)
+          {
+            this.api.execSv("ES","ES","CategoriesBusiness","GetByCategoryIDAsync",datas.bsCategory.categoryID).subscribe((item:any)=>{
+              if(item)
+              {
+                this.approvalTrans(item?.processID,datas);
               }
-              let dialogApprove = this.callfunc.openForm(
-                PopupAddSignFileComponent,
-                'Chỉnh sửa',
-                700,
-                650,
-                '',
-                {
-                  oSignFile: signFile,
-                  files: this.data?.files,
-                  disableCateID: true,
-                  //formModel: this.view?.currentView?.formModel,
-                },
-                '',
-                dialogModel
-              );
-              dialogApprove.closed.subscribe((res) => {
-                if (res.event && res.event?.approved == true) {
-                  datas.status = '3';
-                  datas.approveStatus = '3';
-                  this.odService
-                    .updateDispatch(datas, false)
-                    .subscribe((item) => {
-                      if (item.status == 0) {
-                        this.view.dataService.update(item?.data).subscribe();
-                      } else this.notifySvr.notify(item.message);
-                    });
-                }
-              });
-              //this.callfunc.openForm();
-            } else if (res2?.eSign == false)
-              //xét duyệt
-              this.release(datas);
-          });
+              else{}
+            })
+          }
+          //Chưa thiết lập bước duyệt
+          else
+          {
+            var config = new AlertConfirmInputConfig();
+            config.type = "YesNo";
+            this.notifySvr.alertCode("OD024",config).subscribe(item=>{
+              if(item.event.status == "Y") {
+                //Lấy processID mặc định theo entity
+                this.api.execSv("ES","ES","CategoriesBusiness","GetDefaulProcessIDAsync",this.formModels.entityName).subscribe((item:any)=>{
+                  if(item)
+                  {
+                    this.approvalTrans(item?.processID,datas);
+                  }
+                });
+              }
+            })
+          }
+        }
+       
         break;
       }
       //Hoàn tất
@@ -939,8 +898,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
     if (relationType == '1') {
       if (this.formModel.funcID == 'ODT31') {
-        var text = this.ms020?.customName;
-        if (!text) text = '';
+        var text =  this.ms020?.customName;
+        if(!text) text = ""
         return Util.stringFormat(
           text,
           this.fmTextValuelist(relationType, '6'),
@@ -1041,6 +1000,72 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         //this.notifySvr.notify(res2?.msgCodeError)
       });
   }
+  //Xét duyệt
+  approvalTrans(processID:any , datas:any)
+  {
+    this.api.execSv(
+      'ES',
+      'ES',
+      'ApprovalTransBusiness',
+      'GetCategoryByProcessIDAsync',
+      processID
+    )
+    .subscribe((res2: any) => {
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+
+      //trình ký
+      if (res2?.eSign == true) {
+        let signFile = new ES_SignFile();
+        signFile.recID = datas.recID;
+        signFile.title = datas.title;
+        signFile.categoryID = res2?.categoryID;
+        signFile.refId = datas.recID;
+        signFile.refDate = datas.refDate;
+        signFile.refNo = datas.refNo;
+        signFile.priority = datas.urgency;
+        signFile.files = [];
+        if (this.data?.files) {
+          for (var i = 0; i < this.data?.files.length; i++) {
+            var file = new File();
+            file.fileID = this.data?.files[i].recID;
+            file.fileName = this.data?.files[i].fileName;
+            signFile.files.push(file);
+          }
+        }
+        let dialogApprove = this.callfunc.openForm(
+          PopupAddSignFileComponent,
+          'Chỉnh sửa',
+          700,
+          650,
+          '',
+          {
+            oSignFile: signFile,
+            files: this.data?.files,
+            //formModel: this.view?.currentView?.formModel,
+          },
+          '',
+          dialogModel
+        );
+        dialogApprove.closed.subscribe((res) => {
+          if (res.event && res.event?.approved == true) {
+            datas.status = '3';
+            datas.approveStatus = '3';
+            this.odService
+              .updateDispatch(datas, false)
+              .subscribe((item) => {
+                if (item.status == 0) {
+                  this.view.dataService.update(item?.data).subscribe();
+                } else this.notifySvr.notify(item.message);
+              });
+          }
+        });
+        //this.callfunc.openForm();
+      } else if (res2?.eSign == false)
+        //xét duyệt
+        this.release(datas);
+    });
+  }
   handleViewFile(e: any) {
     if (e == true) {
       var index = this.data.listInformationRel.findIndex(
@@ -1050,7 +1075,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
   }
 
-  clickTemp(e) {
-    e.stopPropagation();
+  clickTemp(e){
+    e.stopPropagation() ;
   }
 }
