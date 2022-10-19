@@ -15,13 +15,6 @@ import {
   NotificationsService,
 } from 'codx-core';
 
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { DispatchService } from '../../services/dispatch.service';
 import {
@@ -51,7 +44,7 @@ export class IncommingAddComponent implements OnInit {
   activeAngecy = 1;
   showAgency = false;
   idAgency: any;
-  dispatch: any;
+  dispatch: any ;
   headerText: any;
   subHeaderText: any;
   gridViewSetup: any;
@@ -340,5 +333,11 @@ export class IncommingAddComponent implements OnInit {
   handleDelete(e:any)
   {
     this.fileDelete = e;
+  }
+  changeCbb(e:any)
+  {
+    debugger;
+    var data = e?.component?.itemsSelected;
+    if(data && data[0]) this.dispatch.category = data[0].CategoryName;
   }
 }

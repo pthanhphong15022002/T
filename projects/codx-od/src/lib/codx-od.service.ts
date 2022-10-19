@@ -11,7 +11,7 @@ export class CodxOdService {
   SetLayout = new BehaviorSubject<any>(null);
   constructor( private api: ApiHttpService ,  private cache: CacheService) { }
 
-  loadGridView(formName:any, gridViewName:any)
+  loadGridView(formName:any, gridViewName:any): Observable<any>
   {
     let paras = [formName,gridViewName];
     let keyRoot = formName + gridViewName;
@@ -41,7 +41,7 @@ export class CodxOdService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-  loadFunctionList(funcID:any)
+  loadFunctionList(funcID:any): Observable<any>
   {
     let paras = ["FuncID",funcID];
     let keyRoot = "FuncID" + funcID;
@@ -71,7 +71,7 @@ export class CodxOdService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-  loadMessage(message:any)
+  loadMessage(message:any): Observable<any>
   {
     let paras = ["Message",message];
     let keyRoot = "Message" + message;
@@ -101,7 +101,7 @@ export class CodxOdService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-  loadValuelist(vll:any)
+  loadValuelist(vll:any): Observable<any>
   {
     let paras = ["VLL",vll];
     let keyRoot = "VLL" + vll;
