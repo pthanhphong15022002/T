@@ -91,7 +91,6 @@
             [formModel]="formModel"
             (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)"
-            (evtViewDetail)="clickViewDetail($event)"
             >
         </codx-comments>
         <div class="ms-15" *ngFor="let item of data.listComment">
@@ -123,7 +122,6 @@
                 [new]="false" 
                 [formModel]="formModel" 
                 (evtDeleteComment)="deleteComment($event)"
-                (evtViewDetail)="clickViewDetail($event)"
                 (evtReplyTo)="replyTo($event)">
             </codx-comments>
         </div>

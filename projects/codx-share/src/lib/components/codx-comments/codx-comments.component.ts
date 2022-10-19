@@ -1,13 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { WPService } from '@core/services/signalr/apiwp.service';
 import { Post } from '@shared/models/post';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util, DialogModel } from 'codx-core';
-import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { CodxFilesComponent } from '../codx-files/codx-files.component';
 import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
 
 @Component({
@@ -326,9 +321,9 @@ export class CodxCommentsComponent implements OnInit {
 
 
   clickViewDetail(file:any){
-    if(this.evtViewDetail){
-      this.evtViewDetail.emit(file);
-    }
+    // if(this.evtViewDetail){
+    //   this.evtViewDetail.emit(file);
+    // }
   }
 
 }
