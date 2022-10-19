@@ -846,9 +846,6 @@ codx-view-list ejs-listview {
   right: 50px;
 }
 
-codx-views>.container-fluid {
-  padding: 0 !important;
-}
 
 .e-kanban .e-kanban-table .e-header-cells .e-column-expand {
   color: #fff !important;
@@ -863,4 +860,14 @@ codx-views>.container-fluid {
 codx-tag .codx-tag:hover {
   cursor: pointer;
   opacity: 0.9;
+}
+
+.codx-tab .tab-content {
+  height: calc(100vh - 155px) !important;
+}
+
+.e-control.e-dialog {
+  max-width: 96%;
+  margin: auto;
+
 }
