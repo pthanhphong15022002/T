@@ -89,6 +89,7 @@
                           </div>
 
                           <codx-mfunc
+                            *ngIf="!justView"
                             [formModel]="formModel"
                             (clickMF)="clickMF($event, item)"
                             type="hover"

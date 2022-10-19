@@ -69,6 +69,7 @@ export class PdfComponent
   //Input
   @Input() recID = '';
   @Input() isEditable = true;
+  @Input() isConfirm = false;
   @Input() hasPermission = false;
   @Input() isApprover;
   @Input() stepNo = -1;

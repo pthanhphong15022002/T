@@ -47,7 +47,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   lstApproveMode: any;
   currentApproveMode: string;
 
-  confirmControl = 0;
+  confirmControl: string = '0';
 
   dialog: DialogRef;
   lstStep;
@@ -135,13 +135,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   changeConfirm(event) {
-    if (
-      event?.field &&
-      event?.field == 'confirmControl' &&
-      event?.component &&
-      event?.data != ''
-    ) {
-      this.confirmControl = event.data;
+    if (event?.field && event?.field == 'confirmControl' && event?.component) {
+      this.confirmControl = event?.data ? '1' : '0';
+      console.log('aaaaaaaaaaa', this.confirmControl);
+
       this.cr.detectChanges();
     }
   }
@@ -182,6 +179,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           );
           if (this.lstApprover?.length > 0) {
             this.lstApprover.forEach((element) => {
+              this.confirmControl = element?.confirmControl ?? '0';
+
               if (element.roleType == 'PE') element.write = true;
               else element.write = false;
 
@@ -231,10 +230,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {
     this.isSaved = true;
-
-    console.log(this.dialogApprovalStep.value);
-    console.log(this.data);
-
     if (this.dialogApprovalStep.invalid == true) {
       this.esService.notifyInvalid(this.dialogApprovalStep, this.formModel);
       return;
@@ -253,6 +248,11 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         });
       return;
     }
+    this.lstApprover.forEach((appr) => {
+      appr.confirmControl = this.confirmControl;
+    });
+    console.log(this.lstApprover);
+
     this.dialogApprovalStep.patchValue({
       approveMode: this.currentApproveMode,
       approvers: this.lstApprover,

@@ -32,7 +32,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   @ViewChild('popupOTPPin', { static: false }) popupOTPPin: TemplateRef<any>;
 
   isAfterRender: boolean = false;
-  isConfirm = false;
+  isConfirm = true;
   isApprover = true;
   stepNo: number;
   dialog: DialogRef;
@@ -68,7 +68,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.dialog = dialog;
     this.data = dt.data;
     this.oApprovalTrans = dt?.data?.oTrans;
-    console.log(this.data);
+    if (this.oApprovalTrans?.confirmControl == '1') {
+      this.isConfirm = false;
+    }
 
     this.user = this.authStore.get();
   }
@@ -117,11 +119,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   changeConfirmState(state: boolean) {
-    this.isConfirm = state;
+    if (this.oApprovalTrans.confirmControl == '1') {
+      this.isConfirm = state;
+    }
   }
 
   checkConfirm(mode) {
-    if (this.canOpenSubPopup) {
+    if (this.canOpenSubPopup && this.oApprovalTrans?.confirmControl == '1') {
       if (!this.isConfirm) this.notify.notifyCode('ES011');
     }
   }
@@ -210,6 +214,26 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 this.dialog && this.dialog.close(result);
               }
             });
+        }
+      });
+    } else {
+      this.pdfView.signPDF(mode, '').then((value) => {
+        if (value) {
+          let result = {
+            result: true,
+            mode: mode,
+          };
+          this.notify.notifyCode('RS002');
+          this.canOpenSubPopup = false;
+          this.dialog && this.dialog.close(result);
+        } else {
+          this.canOpenSubPopup = false;
+          let result = {
+            result: false,
+            mode: mode,
+          };
+          this.notify.notifyCode('SYS021');
+          this.dialog && this.dialog.close(result);
         }
       });
     }

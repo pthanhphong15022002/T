@@ -214,7 +214,7 @@
         #checkbox
         type="switch"
         id="switch"
-        [checked]="confirmControl"
+        [checked]="confirmControl == '1'"
         labelPosition="After"
         field="confirmControl"
         class="test-switch"
@@ -234,7 +234,8 @@
     <div class="fw-bolder d-block mb-2">
       <codx-label
         class="text-primary"
-        fiedName="Attendees"
+        name="lblTitleComment"
+        default="Đóng góp ý kiến"
         [formModel]="formModel"
       >
       </codx-label>
@@ -374,7 +375,7 @@
 </ng-template>
 <ng-template #tabAnother>
   <div class="row">
-    <div class="form-group col-7">
+    <div class="form-group col-6">
       <codx-label fiedName="OverdueControl" [formModel]="formModel">
       </codx-label>
       <codx-input
