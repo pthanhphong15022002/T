@@ -98,6 +98,7 @@ export class Approvers {
   phone: string;
   leadTime: any;
   allowEditAreas: boolean;
+  confirmControl: string;
   comment: string;
   icon: string = null;
   createdOn: any;

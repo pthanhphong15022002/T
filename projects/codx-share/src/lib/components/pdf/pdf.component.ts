@@ -69,11 +69,13 @@ export class PdfComponent
   //Input
   @Input() recID = '';
   @Input() isEditable = true;
+  @Input() isConfirm = false;
   @Input() hasPermission = false;
   @Input() isApprover;
   @Input() stepNo = -1;
   @Input() inputUrl = null;
   @Input() transRecID = null;
+  @Input() oSignFile = {};
   @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
@@ -769,7 +771,6 @@ export class PdfComponent
             });
             stage.add(layer);
           }
-
           //stage event
           stage.on('mouseenter', (mouseover: any) => {
             if (this.needAddKonva) {
