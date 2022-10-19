@@ -106,7 +106,6 @@ export class TreeviewCommentComponent implements OnInit {
       }
     })
   }
-
   showVotes(data: any) {
     let object = {
       data: data,
@@ -150,8 +149,6 @@ export class TreeviewCommentComponent implements OnInit {
         });
     }
   }
-
-
   sendComment(event:any,data:any = null){
     this.comments = "";
     this.repComment = "";
@@ -165,12 +162,10 @@ export class TreeviewCommentComponent implements OnInit {
     this.setNodeTree(event);
     this.dt.detectChanges();
   }
-
   replyTo(data) {
     data.showReply = !data.showReply;
     this.dt.detectChanges();
   }
-
   votePostEmit(event:any){
     if(event)
     {
@@ -184,7 +179,7 @@ export class TreeviewCommentComponent implements OnInit {
         "ERM.Business.WP",
         "VotesBusiness",
         "VotePostAsync",
-        [data.recID, voteType])
+        [data, voteType])
         .subscribe((res: any) => {
           if (res) {
             data.votes = res[0];
@@ -206,8 +201,6 @@ export class TreeviewCommentComponent implements OnInit {
         });
     }
   }
-
-
   voteComment(data: any) {
     if (!data.recID) return;
     this.api

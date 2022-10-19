@@ -20,10 +20,19 @@
     data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
     data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
     <ng-container>
-      <codx-listview #listview [dataService]="dataService" [funcId]="'WP'" [service]="service"
-        [assemblyName]="assemblyName" [className]="className" [method]="method" entityName="WP_Comments"
-        [itemTemplate]="tmpPortal" [itemTemplateLoading]="templateloading" [emptyTemplate]="empty"
-        [predicate]="predicateWP ? predicateWP : ''" [formModel]="formModel">
+      <codx-listview #listview 
+        [dataService]="dataService" 
+        [funcId]="'WP'" 
+        [service]="service"
+        [assemblyName]="assemblyName" 
+        [className]="className" 
+        [method]="method" 
+        entityName="WP_Comments"
+        [itemTemplate]="tmpPortal" 
+        [itemTemplateLoading]="templateloading" 
+        [emptyTemplate]="empty"
+        [predicate]="predicateWP ? predicateWP : ''" 
+        [formModel]="formModel">
       </codx-listview>
     </ng-container>
     <!-- <ng-template #FD>
