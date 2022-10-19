@@ -3,11 +3,7 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <codx-label
-            name="lblTitleProcess"
-            default="Thiết lập quy trình duyệt"
-            [formModel]="formModel"
-          ></codx-label>
+          <codx-label name="lblTitleProcess" default="Thiết lập quy trình duyệt" [formModel]="formModel"></codx-label>
         </h2>
       </div>
       <div class="d-flex justify-content-end">
@@ -17,48 +13,27 @@
       </div>
     </div>
     <div class="stepper-body p-2 w-100">
-      <div
-        class="card shadow-none border-0 rounded-0 mx-auto w-100 mw-800px h-100"
-      >
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 mw-800px h-100">
         <div class="mb-10 mt-10 text-center tab-pane-header">
           <h2 class="h2-title">
-            <codx-label
-              name="lblSubHeaderApprover"
-              default="Quy trình xét duyệt"
-              [formModel]="formModel"
-            >
+            <codx-label name="lblSubHeaderApprover" default="Quy trình xét duyệt" [formModel]="formModel">
             </codx-label>
           </h2>
         </div>
-        <div
-          class="card-body hover-scroll-overlay-y"
-          data-kt-scroll="true"
-          data-kt-scroll-activate="{default: true}"
-          data-kt-scroll-height="auto"
-          data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
-          data-kt-scroll-wrappers=".stepper-body"
-          data-kt-scroll-offset="0px"
-        >
+        <div class="card-body hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
+          data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
           <div *ngIf="lstStep?.length == 0">
-            <div class="container">
+            <div class="container h-100">
               <div class="list-empty card card-flush h-100">
-                <div
-                  class="d-flex flex-column flex-center justify-content-center"
-                >
-                  <img
-                    src="../assets/themes/sys/default/img/DataEmpty.svg"
-                    class="w-200px"
-                  />
+                <div class="d-flex flex-column flex-center justify-content-center">
+                  <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
                   <div class="fw-bold mt-1 text-center">
                     {{ "SYS011" | mssg | async }}
                   </div>
                   <div class="mb-0">
                     <a class="btn btn-primary fw-bold" (click)="add()">
-                      <codx-label
-                        name="lblAdd"
-                        default="Thêm"
-                        [formModel]="formModel"
-                      ></codx-label>
+                      <codx-label name="lblAdd" default="Thêm" [formModel]="formModel"></codx-label>
                     </a>
                   </div>
                 </div>
@@ -70,13 +45,8 @@
               <div class="timeline timeline-3">
                 <div class="timeline-items">
                   <ng-container *ngFor="let item of lstStep; let index = index">
-                    <div
-                      class="timeline-item"
-                      [ngClass]="justView ? '' : 'has-action-menu'"
-                    >
-                      <div
-                        class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex"
-                      >
+                    <div class="timeline-item" [ngClass]="justView ? '' : 'has-action-menu'">
+                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
                         <div class="timeline-media w-40px h-40px me-4">
                           <span class="stepper-number">{{ item.stepNo }}</span>
                         </div>
@@ -88,12 +58,8 @@
                             {{ item.stepName }}
                           </div>
                           <div class="action-menu">
-                            <codx-mfunc
-                              [formModel]="formModel"
-                              (clickMF)="clickMF($event, item)"
-                              type="hover"
-                              [dataItem]="item"
-                            >
+                            <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, item)" type="hover"
+                              [dataItem]="item">
                             </codx-mfunc>
                           </div>
                         </div>
@@ -101,60 +67,34 @@
                       <div class="timeline-content mx-auto">
                         <div class="d-flex flex-wrap">
                           <ng-container *ngFor="let approver of item.approvers">
-                            <div
-                              class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
-                            >
-                              <codx-temp-full
-                                cardCss="card-template px-2 pt-4 pb-2"
-                                *ngIf="approver.roleType?.length == 1"
-                                [imageId]="approver.approver"
-                                [title]="approver.name"
-                                [subTitle]="
+                            <div class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
+                              <codx-temp-full cardCss="card-template px-2 pt-4 pb-2"
+                                *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
+                                [title]="approver.name" [subTitle]="
                                   approver.position ?? 'Vị trí công việc'
-                                "
-                                [status]="lstStep.status"
-                                [imageObjType]="'AD_Users'"
-                                [modeImgs]="true"
-                                [titleLine]="3"
-                                [footer]="footer1"
-                                [dataItem]="item"
-                              >
+                                " [status]="lstStep.status" [imageObjType]="'AD_Users'" [modeImgs]="true"
+                                [titleLine]="3" [footer]="footer1" [dataItem]="item">
                               </codx-temp-full>
 
-                              <codx-temp-full
-                                cardCss="card-template px-2 pt-4 pb-2"
-                                *ngIf="approver.roleType.length > 1"
-                                [imageSrc]="
+                              <codx-temp-full cardCss="card-template px-2 pt-4 pb-2"
+                                *ngIf="approver.roleType.length > 1" [imageSrc]="
                                   './assets/themes/sys/default/img/' +
                                   (item.icon ? item.icon : 'share_default.svg')
-                                "
-                                imgCss="me-3 p-3 user-mini-icon w-40px h-40px"
-                                [title]="
+                                " imgCss="me-3 p-3 user-mini-icon w-40px h-40px" [title]="
                                   approver.approver
                                     | vll: 'ES014':'text'
                                     | async
-                                "
-                                [subTitle]="
+                                " [subTitle]="
                                   approver.approver
                                     | vll: 'ES014':'text'
                                     | async
-                                "
-                                [status]="lstStep.status"
-                                [modeImgs]="true"
-                                [titleLine]="3"
-                                [footer]="footer1"
-                                [dataItem]="item"
-                              >
+                                " [status]="lstStep.status" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
+                                [dataItem]="item">
                               </codx-temp-full>
 
                               <ng-template #footer1 let-data>
-                                <div
-                                  class="d-flex align-items-center justify-content-end"
-                                >
-                                  <span
-                                    class="icon-access_time icon-14 me-1"
-                                  ></span
-                                  >{{ data.leadtime }} giờ
+                                <div class="d-flex align-items-center justify-content-end">
+                                  <span class="icon-access_time icon-14 me-1"></span>{{ data.leadtime }} giờ
                                 </div>
                               </ng-template>
                             </div>
@@ -162,18 +102,9 @@
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="timeline-item"
-                      *ngIf="index == lstStep.length - 1 && !justView"
-                    >
-                      <div
-                        class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex"
-                      >
-                        <div
-                          class="step-add cursor-pointer w-30px h-30px"
-                          ngbTooltip="Thêm mới"
-                          (click)="add()"
-                        >
+                    <div class="timeline-item" *ngIf="index == lstStep.length - 1 && !justView">
+                      <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
+                        <div class="step-add cursor-pointer w-30px h-30px" ngbTooltip="Thêm mới" (click)="add()">
                           <span class="stepper-number">+</span>
                         </div>
                       </div>
@@ -184,22 +115,11 @@
             </div>
           </div>
         </div>
-        <div
-          class="d-flex flex-stack justify-content-end card-footer tab-pane-footer border-0"
-          *ngIf="!justView"
-        >
+        <div class="d-flex flex-stack justify-content-end card-footer tab-pane-footer border-0" *ngIf="!justView">
           <div class="left">
-            <button
-              type="button"
-              class="btn btn-primary"
-              (click)="onSaveForm()"
-              *ngIf="lstStep?.length > 0 || isDeleteAll"
-            >
-              <codx-label
-                name="lblSave"
-                default="Lưu"
-                [formModel]="dialogApproval.formModel"
-              ></codx-label>
+            <button type="button" class="btn btn-primary" (click)="onSaveForm()"
+              *ngIf="lstStep?.length > 0 || isDeleteAll">
+              <codx-label name="lblSave" default="Lưu" [formModel]="dialogApproval.formModel"></codx-label>
             </button>
           </div>
         </div>
@@ -214,34 +134,19 @@
       <div class="list-empty py-15 py-lg-20">
         <div class="nondata-container">
           <div class="mb-0">
-            <img
-              src="../../../assets/demos/svg/data-empty.png"
-              class="mw-100 mh-300px theme-light-show"
-              alt=""
-            />
+            <img src="../../../assets/demos/svg/data-empty.png" class="mw-100 mh-300px theme-light-show" alt="" />
           </div>
           <h4 class="text-gray-600">
-            <codx-label
-              name="lblSubEmpty"
-              default="Chưa có dữ liệu phát sinh"
-              [formModel]="formModel"
-            >
+            <codx-label name="lblSubEmpty" default="Chưa có dữ liệu phát sinh" [formModel]="formModel">
             </codx-label>
           </h4>
           <div class="fs-5 text-gray-500 mb-7">
-            <codx-label
-              name="lblContentEmpty"
-              default="Vui lòng chọn '''Thêm''' để nhập dữ liệu!"
-              [formModel]="formModel"
-            ></codx-label>
+            <codx-label name="lblContentEmpty" default="Vui lòng chọn '''Thêm''' để nhập dữ liệu!"
+              [formModel]="formModel"></codx-label>
           </div>
           <div class="mb-0">
             <a class="btn btn-primary" (click)="add()">
-              <codx-label
-                name="lblAdd"
-                default="Thêm"
-                [formModel]="formModel"
-              ></codx-label>
+              <codx-label name="lblAdd" default="Thêm" [formModel]="formModel"></codx-label>
             </a>
           </div>
         </div>
@@ -249,15 +154,9 @@
     </div>
   </div>
   <div *ngIf="lstStep?.length > 0">
-    <div
-      class="hover-scroll-y min-h-200px scroll-a"
-      data-kt-scroll="true"
-      data-kt-scroll-activate="{default: true}"
-      data-kt-scroll-height="auto"
-      data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
-      data-kt-scroll-wrappers=".tab-content"
-      data-kt-scroll-offset="0px"
-    >
+    <div class="hover-scroll-y min-h-200px scroll-a" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+      data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
+      data-kt-scroll-wrappers=".tab-content" data-kt-scroll-offset="0px">
       <div class="mx-5 mx-xl-4 pt-0 pb-5">
         <div class="timeline timeline-3">
           <div class="timeline-items">
@@ -275,12 +174,8 @@
                       {{ item.stepName }}
                     </div>
                     <div class="action-menu">
-                      <codx-mfunc
-                        [formModel]="formModel"
-                        (clickMF)="clickMF($event, item)"
-                        type="hover"
-                        [dataItem]="item"
-                      >
+                      <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, item)" type="hover"
+                        [dataItem]="item">
                       </codx-mfunc>
                     </div>
                   </div>
@@ -288,52 +183,29 @@
                 <div class="timeline-content mx-auto">
                   <div class="d-flex flex-wrap">
                     <ng-container *ngFor="let approver of item.approvers">
-                      <div
-                        class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
-                      >
-                        <codx-temp-full
-                          cardCss="card-template px-2 pt-4 pb-2"
-                          *ngIf="approver.roleType?.length == 1"
-                          [imageId]="approver.approver"
-                          [title]="approver.name"
-                          [subTitle]="approver.position ?? 'Vị trí công việc'"
-                          [status]="lstStep.status"
-                          [imageObjType]="'AD_Users'"
-                          [modeImgs]="true"
-                          [titleLine]="3"
-                          [footer]="footer1"
-                          [dataItem]="item"
-                        >
+                      <div class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
+                        <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType?.length == 1"
+                          [imageId]="approver.approver" [title]="approver.name"
+                          [subTitle]="approver.position ?? 'Vị trí công việc'" [status]="lstStep.status"
+                          [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
+                          [dataItem]="item">
                         </codx-temp-full>
 
-                        <codx-temp-full
-                          cardCss="card-template px-2 pt-4 pb-2"
-                          *ngIf="approver.roleType.length > 1"
+                        <codx-temp-full cardCss="card-template px-2 pt-4 pb-2" *ngIf="approver.roleType.length > 1"
                           [imageSrc]="
                             './assets/themes/sys/default/img/' +
                             (item.icon ? item.icon : 'share_default.svg')
-                          "
-                          imgCss="me-3 p-3 user-mini-icon w-40px h-40px"
-                          [title]="
+                          " imgCss="me-3 p-3 user-mini-icon w-40px h-40px" [title]="
                             approver.approver | vll: 'ES014':'text' | async
-                          "
-                          [subTitle]="
+                          " [subTitle]="
                             approver.approver | vll: 'ES014':'text' | async
-                          "
-                          [status]="lstStep.status"
-                          [modeImgs]="true"
-                          [titleLine]="3"
-                          [footer]="footer1"
-                          [dataItem]="item"
-                        >
+                          " [status]="lstStep.status" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
+                          [dataItem]="item">
                         </codx-temp-full>
 
                         <ng-template #footer1 let-data>
-                          <div
-                            class="d-flex align-items-center justify-content-end"
-                          >
-                            <span class="icon-access_time icon-14 me-1"></span
-                            >{{ data.leadtime }} giờ
+                          <div class="d-flex align-items-center justify-content-end">
+                            <span class="icon-access_time icon-14 me-1"></span>{{ data.leadtime }} giờ
                           </div>
                         </ng-template>
                       </div>
@@ -343,11 +215,7 @@
               </div>
               <div class="timeline-item" *ngIf="index == lstStep.length - 1">
                 <div class="timeline-nav flex-row-auto w-100 w-lg-200px d-flex">
-                  <div
-                    class="step-add cursor-pointer w-30px h-30px"
-                    ngbTooltip="Thêm mới"
-                    (click)="add()"
-                  >
+                  <div class="step-add cursor-pointer w-30px h-30px" ngbTooltip="Thêm mới" (click)="add()">
                     <span class="stepper-number">+</span>
                   </div>
                 </div>
