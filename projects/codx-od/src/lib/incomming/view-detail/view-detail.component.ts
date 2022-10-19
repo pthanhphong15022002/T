@@ -62,7 +62,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   checkUserPer: any;
   userID: any;
   @Input() pfuncID: any;
-  @Input() data: any;
+  @Input() data: any = {category: "Phân loại công văn"};
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;
   @Input() getDataDispatch: Function;
@@ -139,7 +139,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
     this.getDataValuelist();
+   
   }
+ 
   setHeight() {
     let main,
       header = 0;
@@ -806,6 +808,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Gửi duyệt
       case 'ODT201': {
+        
         this.api
           .execSv(
             'ES',
@@ -1041,7 +1044,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   handleViewFile(e: any) {
     if (e == true) {
       var index = this.data.listInformationRel.findIndex(
-        (x) => x.userID == this.userID
+        (x) => x.userID == this.userID && x.relationType != "1"
       );
       this.data.listInformationRel[index].view = '3';
     }
