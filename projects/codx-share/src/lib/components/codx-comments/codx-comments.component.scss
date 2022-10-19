@@ -83,6 +83,10 @@
     border-radius: 6px;
 }
 
+.comment-like .icon-like {
+    margin-left: -75px;
+}
+
 .btn-like:hover .icon-like {
     visibility: visible;
 }
