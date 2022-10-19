@@ -80,9 +80,19 @@
 </div>
 <ng-template #cmt let-data>
     <div class="c1" [attr.dt]="setDicData(data)" id="{{data.recID}}">
-        <codx-comments [funcID]="funcID"  [dVll]="dVll" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
-            [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
-            (evtReplyTo)="replyTo($event)">
+        <codx-comments 
+            [funcID]="funcID"  
+            [dVll]="dVll" 
+            [objectType]="objectType" 
+            [data]="data" 
+            [parentID]="data.parentID"
+            [refID]="data.recID" 
+            [new]="false" 
+            [formModel]="formModel"
+            (evtDeleteComment)="deleteComment($event)"
+            (evtReplyTo)="replyTo($event)"
+            (evtViewDetail)="clickViewDetail($event)"
+            >
         </codx-comments>
         <div class="ms-15" *ngFor="let item of data.listComment">
             <ng-container *ngTemplateOutlet="subCmt context: { $implicit: item }"></ng-container>
@@ -103,8 +113,17 @@
 <ng-template #subCmt let-data>
     <div class="c2" [attr.dt]="setDicData(data)" id="{{data.recID}}">
         <div>
-            <codx-comments [funcID]="funcID"  [dVll]="dVll" [objectType]="objectType" [data]="data" [parentID]="data.parentID"
-                [refID]="data.recID" [new]="false" [formModel]="formModel" (evtDeleteComment)="deleteComment($event)"
+            <codx-comments 
+                [funcID]="funcID"  
+                [dVll]="dVll" 
+                [objectType]="objectType" 
+                [data]="data" 
+                [parentID]="data.parentID"
+                [refID]="data.recID" 
+                [new]="false" 
+                [formModel]="formModel" 
+                (evtDeleteComment)="deleteComment($event)"
+                (evtViewDetail)="clickViewDetail($event)"
                 (evtReplyTo)="replyTo($event)">
             </codx-comments>
         </div>

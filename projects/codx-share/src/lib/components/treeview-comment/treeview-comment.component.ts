@@ -14,10 +14,11 @@ import { SignalRService } from '@core/services/signalr/signalr.service';
 import { Post } from '@shared/models/post';
 import { NgbModal, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 declare var _;
-import { ApiHttpService, AuthService, CacheService, CallFuncService, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, DialogModel, FormModel, NotificationsService } from 'codx-core';
 import { PopupVoteComponent } from './popup-vote/popup-vote.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
+import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 @Component({
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
@@ -28,7 +29,7 @@ export class TreeviewCommentComponent implements OnInit {
   @Input() funcID:string;
   @Input() objectID:string;
   @Input() objectType:string;
-  @Input() formModel:any;
+  @Input() formModel:FormModel;
   @Input() rootData: any;
   @Input() dataComment: any;
   @Output() pushComment = new EventEmitter;
@@ -388,5 +389,12 @@ export class TreeviewCommentComponent implements OnInit {
   removeFile(file: any) {
     this.fileUpload = this.fileUpload.filter((f: any) => { return f.fileName != file.fileName });
     this.dt.detectChanges();
+  }
+
+  clickViewDetail(file:any){
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    option.IsFull = true;
+    this.callFuc.openForm(PopupDetailComponent, '', 0, 0, '', file, '', option);
   }
 }

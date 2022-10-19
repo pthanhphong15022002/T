@@ -269,8 +269,12 @@
       <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
     </ng-template>
     <!-- commemt -->
-    <treeview-comment [funcID]="formModel.funcID" [fromModel]="formModel" [objectType]="'WP_Comments'"
-      [dataComment]="item" [objectID]="item.recID">
+    <treeview-comment 
+      [funcID]="listview.formModel.funcID" 
+      [fromModel]="listview.formModel" 
+      [objectType]="'WP_Comments'"
+      [dataComment]="item" 
+      [objectID]="item.recID">
     </treeview-comment>
     <!-- end comment -->
   </div>

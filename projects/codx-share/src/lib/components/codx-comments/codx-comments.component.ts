@@ -31,7 +31,7 @@ export class CodxCommentsComponent implements OnInit {
   @Output() evtSendComment = new EventEmitter;
   @Output() evtDeleteComment = new EventEmitter;
   @Output() evtLoadSubComment = new EventEmitter;
-
+  @Output() evtViewDetail = new EventEmitter;
   //
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   user:any
@@ -324,5 +324,11 @@ export class CodxCommentsComponent implements OnInit {
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
 
+
+  clickViewDetail(file:any){
+    if(this.evtViewDetail){
+      this.evtViewDetail.emit(file);
+    }
+  }
 
 }
