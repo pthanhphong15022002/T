@@ -62,7 +62,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   checkUserPer: any;
   userID: any;
   @Input() pfuncID: any;
-  @Input() data: any;
+  @Input() data: any = {category: "Phân loại công văn"};
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;
   @Input() getDataDispatch: Function;
@@ -89,8 +89,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   ms020: any;
   ms021: any;
   ms023: any;
-  vllStatus='TM004'
-  vllStatusAssign='TM007'
+  vllStatus = 'TM004';
+  vllStatusAssign = 'TM007';
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -99,7 +99,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
-    private codxODService : CodxOdService,
+    private codxODService: CodxOdService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -139,9 +139,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
     this.getDataValuelist();
+   
   }
+ 
   setHeight() {
-    let main, header = 0;
+    let main,
+      header = 0;
     let ele = document.getElementsByClassName(
       'codx-detail-main'
     ) as HTMLCollectionOf<HTMLElement>;
@@ -168,7 +171,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
   }
   getGridViewSetup(funcID: any) {
-  
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
       // this.formModel = {
       //   entityName: fuc?.entityName,
@@ -440,7 +442,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               //this.view.dataService.update(x.event).subscribe();
 
               this.odService
-                .getDetailDispatch(x.event.recID , this.formModel?.entityName)
+                .getDetailDispatch(x.event.recID, this.formModel?.entityName)
                 .subscribe((item) => {
                   this.data = item;
                   this.data.lstUserID = getListImg(item.relations);
@@ -466,7 +468,10 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           .subscribe((item: any) => {
             if (item.status == 0) {
               this.odService
-                .getDetailDispatch(this.view.dataService.data[0].recID , this.view.formModel.entityName)
+                .getDetailDispatch(
+                  this.view.dataService.data[0].recID,
+                  this.view.formModel.entityName
+                )
                 .subscribe((item) => {
                   this.data = formatDtDis(item);
                   this.view.dataService.setDataSelected(this.data);
@@ -480,7 +485,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'SYS04': {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
-          this.view.dataService.dataSelected.recID = res?.recID
+          this.view.dataService.dataSelected.recID = res?.recID;
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(
@@ -499,9 +504,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
               this.view.dataService
                 .remove(this.view.dataService.dataSelected)
                 .subscribe();
-            } else this.view.dataService.add(x.event, 0).subscribe(item=>{
-              this.view.dataService.onAction.next({ type: 'update', data: x.event });
-            });
+            } else
+              this.view.dataService.add(x.event, 0).subscribe((item) => {
+                this.view.dataService.onAction.next({
+                  type: 'update',
+                  data: x.event,
+                });
+              });
           });
         });
         break;
@@ -694,8 +703,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       case 'ODT210': {
         this.odService.bookMark(datas.recID).subscribe((item) => {
           if (item.status == 0) {
-            this.view.dataService.onAction.next({ type: 'update', data: item.data });
-            this.view.dataService.update(item.data).subscribe(item=>{
+            this.view.dataService.onAction.next({
+              type: 'update',
+              data: item.data,
+            });
+            this.view.dataService.update(item.data).subscribe((item) => {
               //this.view.dataService.setDataSelected(datas);
             });
           }
@@ -796,6 +808,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Gửi duyệt
       case 'ODT201': {
+        
         this.api
           .execSv(
             'ES',
@@ -836,6 +849,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
                 {
                   oSignFile: signFile,
                   files: this.data?.files,
+                  disableCateID: true,
                   //formModel: this.view?.currentView?.formModel,
                 },
                 '',
@@ -925,8 +939,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {
     if (relationType == '1') {
       if (this.formModel.funcID == 'ODT31') {
-        var text =  this.ms020?.customName;
-        if(!text) text = ""
+        var text = this.ms020?.customName;
+        if (!text) text = '';
         return Util.stringFormat(
           text,
           this.fmTextValuelist(relationType, '6'),
@@ -1030,13 +1044,13 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   handleViewFile(e: any) {
     if (e == true) {
       var index = this.data.listInformationRel.findIndex(
-        (x) => x.userID == this.userID
+        (x) => x.userID == this.userID && x.relationType != "1"
       );
       this.data.listInformationRel[index].view = '3';
     }
   }
 
-  clickTemp(e){
-    e.stopPropagation() ;
+  clickTemp(e) {
+    e.stopPropagation();
   }
 }
