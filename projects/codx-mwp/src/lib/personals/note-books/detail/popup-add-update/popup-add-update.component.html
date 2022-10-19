@@ -14,13 +14,13 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-between mt-4">
                     <div class="d-flex align-items-center">
-                        <span class="icon-attach icon-16 me-2 text-primary"></span>
+                        <span class="icon-attach_file icon-18 text-primary"></span>
                         <div class="fw-bold fs-6 text-primary">
                             <codx-label name="lblFile" formName="NoteBooks" default="Tài liệu đính kèm"></codx-label>
                         </div>
                     </div>
                 </div>
-                <div class="file">
+                <div class="file mt-3">
                     <codx-attachment #attachment [objectType]="functionList.entityName" hideBtnSave="1" hideFolder="1"
                         hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="1"
                         [functionID]="functionList.funcID" [objectId]="note?.recID" [allowMultiFile]="1"
@@ -36,8 +36,8 @@
                     <div *ngIf="formType == 'add'">
                         <div *ngIf="type == 'text'">
                             <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
-                                [crrValue]="empty || ''" placeholder="Nhập ghi chú..." (valueChange)="valueChange($event)"
-                                ngDefaultControl field="memo">
+                                [crrValue]="empty || ''" placeholder="Nhập ghi chú..."
+                                (valueChange)="valueChange($event)" ngDefaultControl field="memo">
                             </codx-input>
                         </div>
                         <div *ngIf="type == 'check' || type =='list'">

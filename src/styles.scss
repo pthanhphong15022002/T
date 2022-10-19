@@ -846,6 +846,28 @@ codx-view-list ejs-listview {
   right: 50px;
 }
 
-.aside-menu .content-tree .menu-item {
-  line-height: 22px;
+
+.e-kanban .e-kanban-table .e-header-cells .e-column-expand {
+  color: #fff !important;
+  font-size: 15px !important;
+  padding: 0 !important;
+}
+
+.btn-outline-primary:hover {
+  color: var(--primary-inverse);
+}
+
+codx-tag .codx-tag:hover {
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.codx-tab .tab-content {
+  height: calc(100vh - 155px) !important;
+}
+
+.e-control.e-dialog {
+  max-width: 96%;
+  margin: auto;
+
 }

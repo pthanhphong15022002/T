@@ -1,377 +1,378 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
-  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)"
+  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)" 
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabMoreInfo]" [data]="data">
-  <ng-template #tabGeneralInfo>
-    <ng-container *ngIf="form && form.formGroup">
-      <div class="form-group">
-        <div class="d-flex justify-content-between align-items-center">
-          <codx-label fiedName="ResourceID" [formModel]="form.formModel">
-          </codx-label>
-          <span class="label-status text-primary">{{
-            data?.status | vll: "VL003":"text" | async
-            }}</span>
-        </div>
-        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
-          (valueChange)="valueCbxCarChange($event)">
-        </codx-input>
-        <div class="row">
-          <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
-            <div class="d-flex justify-content-start">
-              <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
-                <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
-                  <span class="me-1 ps-2" [ngClass]="[
-                      item.isSelected ? 'text-primary' : 'text-muted',
-                      item.id == '1'
-                        ? 'icon-wifi'
-                        : item.id == '2'
-                        ? 'icon-personal_video'
-                        : item.id == '3'
-                        ? 'icon-mic_none'
-                        : item.id == '4'
-                        ? 'icon-switch_video'
-                        : ' icon-thermostat'
-                    ]">
-                  </span>{{ item.text }}
-                  <!-- <i class="icon-panorama_fish_eye"></i> -->
-                </li>
-              </div>
-            </div>
-            <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
-              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
-                (click)="openPopupDevice(popupDevice)">
-                <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
-              </button>
-            </span>
-          </div>
-        </div>
+  
+</codx-layout-add>
+<ng-template #tabGeneralInfo>
+  <ng-container *ngIf="form && form.formGroup">
+    <div class="form-group">
+      <div class="d-flex justify-content-between align-items-center">
+        <codx-label fiedName="ResourceID" [formModel]="form.formModel">
+        </codx-label>
+        <span class="label-status text-primary">{{
+          data?.status | vll: "VL003":"text" | async
+          }}</span>
       </div>
-
-      <div class="row form-group d-flex flex-row justify-content-start align-items-center">
-        <div class="col-1">
-          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-        <div class="col-5">
-          <codx-label name="lblDriverStatus" default="Đã điều tài xế" [formModel]="form.formModel"></codx-label>
-        </div>
-
-        <div class="col-1">
-          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="useCard"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-        <div class="col-5">
-          <codx-label name="lblUseCard" default="Có sử dụng thẻ" [formModel]="form.formModel"></codx-label>
-        </div>
-      </div>
-
+      <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+        (valueChange)="valueCbxCarChange($event)">
+      </codx-input>
       <div class="row">
-        <div class="col-6 form-group">
-          <codx-label fiedName="StartDate" [formModel]="form.formModel">
-          </codx-label>
-          <!-- <codx-input
-        ControlName="startDate"
-        format="f"
-        type="datetime"
-        class="test-datetime"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      >
-      </codx-input> -->
-          <codx-input field="startDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
-            (valueChange)="startDateChange($event)">
-          </codx-input>
-        </div>
-        <div class="col-6 form-group">
-          <codx-label fiedName="EndDate" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input field="endDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
-            (valueChange)="endDateChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="form-group">
-        <codx-label fiedName="ReasonID" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup">
-        </codx-input>
-      </div>
-
-      <div class="form-group">
-        <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
-        <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
-      </div>
-
-      <div class="form-group">
-        <codx-label fiedName="AgencyName" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input ControlName="agencyName" [formModel]="form.formModel" [Group]="form.formGroup">
-        </codx-input>
-      </div>
-
-      <div class="form-group">
-        <codx-label fiedName="Address" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input type="text" ControlName="address" [formModel]="form.formModel" [Group]="form.formGroup">
-        </codx-input>
-      </div>
-
-      <div class="row">
-        <div class="col-7 form-group">
-          <codx-label fiedName="Requester" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input ControlName="requester" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
-        </div>
-        <div class="col-5 form-group">
-          <codx-label fiedName="Phone" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input type="number" ControlName="phone" [formModel]="form.formModel" [Group]="form.formGroup">
-          </codx-input>
-        </div>
-      </div>
-
-      <div class="d-flex flex-column mb-8">
-        <div class="d-flex justify-content-between align-items-center form-group">
-          <codx-label default="Lái xe & người đi cùng" fiedName="Note">
-          </codx-label>
-          <div class="d-flex flex-row text-end align-items-end">
-            <span class="mx-2"> </span>
-            <button class="btn btn-sm btn-icon " (click)="openPopupCbb()">
-              <span class="icon-group_add icon-18 text-primary"></span>
-            </button> 
-          </div>
-        </div>
-        <ng-container *ngIf="isPopupCbb">
-          <codx-combobox-popup [comboboxName]="'Users'" [field]="'cbbUser'" [multiple]="true" [width]="700" [height]="600"
-              [value]="cbbData" [formModel]="formModel" (clickSave)="valueCbxUserChange($event)">
-          </codx-combobox-popup>
-        </ng-container>
-        <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
-          <div class="" *ngIf="driver != null">
-            <div class="symbol symbol-30px symbol-circle">
-              <codx-img [objectId]="driver.objectID" width="30" [objectType]="driver.objectType"></codx-img>
-              <span
-                class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
+        <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
+          <div class="d-flex justify-content-start">
+            <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
+              <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
+                <span class="me-1 ps-2" [ngClass]="[
+                    item.isSelected ? 'text-primary' : 'text-muted',
+                    item.id == '1'
+                      ? 'icon-wifi'
+                      : item.id == '2'
+                      ? 'icon-personal_video'
+                      : item.id == '3'
+                      ? 'icon-mic_none'
+                      : item.id == '4'
+                      ? 'icon-switch_video'
+                      : ' icon-thermostat'
+                  ]">
+                </span>{{ item.text }}
+                <!-- <i class="icon-panorama_fish_eye"></i> -->
+              </li>
             </div>
           </div>
-          <div class="" *ngIf="curUser != null">
-            <div class="symbol symbol-30px symbol-circle">
-              <codx-img [objectId]="curUser.userID" [width]="30" objectType="AD_Users"></codx-img>
-              <span
-                class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
-            </div>
-          </div>
-          <div class="" *ngIf="lstPeople?.length >= 1">
-            <div class="symbol symbol-30px symbol-circle">
-              <codx-img [objectId]="lstPeople[0].userID" [width]="30" objectType="AD_Users"></codx-img>
-              <span
-                class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
-            </div>
-          </div>
-
-          <div class="symbol-more-check" *ngIf="lstPeople?.length >= 2">
-            <span href="#" class="symbol symbol-30px symbol-circle" data-bs-toggle="modal"
-              data-bs-target="#kt_modal_view_users">
-              <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ lstPeople.length - 1 }}</span>
-            </span>
-          </div>
+          <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
+            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+              (click)="openPopupDevice(popupDevice)">
+              <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+            </button>
+          </span>
         </div>
-      </div>
-    </ng-container>
-  </ng-template>
-
-  <ng-template #tabPeopleInfo>
-    <div class="d-flex justify-content-between align-items-center mb-2" id="PeopleInfo">
-      <div class="mb-3 fs-5 fw-bold">
-        <codx-label name="lblPeopleInfo" default="Người đi cùng"> </codx-label>
-      </div>
-      <div class="d-flex flex-row text-end align-items-end">
-        <button class="btn btn-sm btn-icon " (click)="openPopupCbb()">
-          <span class="icon-group_add icon-18 text-primary"></span>
-        </button> 
       </div>
     </div>
-    <div class="d-flex align-items-center mb-4" *ngIf="driver != null">
-      <div class="symbol symbol-30px symbol-circle me-4">
-        <codx-img [objectId]="driver.objectID" [width]="30" [objectType]="driver.objectType"></codx-img>
 
-        <span class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
+    <div class="row form-group d-flex flex-row justify-content-start align-items-center">
+      <div class="col-1">
+        <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-5">
+        <codx-label name="lblDriverStatus" default="Đã điều tài xế" [formModel]="form.formModel"></codx-label>
+      </div>
+
+      <div class="col-1">
+        <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="useCard"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-5">
+        <codx-label name="lblUseCard" default="Có sử dụng thẻ" [formModel]="form.formModel"></codx-label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6 form-group">
+        <codx-label fiedName="StartDate" [formModel]="form.formModel">
+        </codx-label>
+        <!-- <codx-input
+      ControlName="startDate"
+      format="f"
+      type="datetime"
+      class="test-datetime"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    >
+    </codx-input> -->
+        <codx-input field="startDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
+          (valueChange)="startDateChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-6 form-group">
+        <codx-label fiedName="EndDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="endDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
+          (valueChange)="endDateChange($event)">
+        </codx-input>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
+      <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="AgencyName" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input ControlName="agencyName" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
+    </div>
+
+    <div class="form-group">
+      <codx-label fiedName="Address" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input type="text" ControlName="address" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
+    </div>
+
+    <div class="row">
+      <div class="col-7 form-group">
+        <codx-label fiedName="Requester" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input ControlName="requester" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+      </div>
+      <div class="col-5 form-group">
+        <codx-label fiedName="Phone" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input type="number" ControlName="phone" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column mb-8">
+      <div class="d-flex justify-content-between align-items-center form-group">
+        <codx-label default="Lái xe & người đi cùng" fiedName="Note">
+        </codx-label>
+        <div class="d-flex flex-row text-end align-items-end">
+          <span class="mx-2"> </span>
+          <button class="btn btn-sm btn-icon " (click)="openPopupCbb()">
+            <span class="icon-group_add icon-18 text-primary"></span>
+          </button> 
+        </div>
+      </div>
+      <ng-container *ngIf="isPopupCbb">
+        <codx-combobox-popup [comboboxName]="'Users'" [field]="'cbbUser'" [multiple]="true" [width]="700" [height]="600"
+            [value]="cbbData" [formModel]="formModel" (clickSave)="valueCbxUserChange($event)">
+        </codx-combobox-popup>
+      </ng-container>
+      <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
+        <div class="" *ngIf="driver != null">
+          <div class="symbol symbol-30px symbol-circle">
+            <codx-img [objectId]="driver.objectID" width="30" [objectType]="driver.objectType"></codx-img>
+            <span
+              class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
+          </div>
+        </div>
+        <div class="" *ngIf="curUser != null">
+          <div class="symbol symbol-30px symbol-circle">
+            <codx-img [objectId]="curUser.userID" [width]="30" objectType="AD_Users"></codx-img>
+            <span
+              class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
+          </div>
+        </div>
+        <div class="" *ngIf="lstPeople?.length >= 1">
+          <div class="symbol symbol-30px symbol-circle">
+            <codx-img [objectId]="lstPeople[0].userID" [width]="30" objectType="AD_Users"></codx-img>
+            <span
+              class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
+          </div>
+        </div>
+
+        <div class="symbol-more-check" *ngIf="lstPeople?.length >= 2">
+          <span href="#" class="symbol symbol-30px symbol-circle" data-bs-toggle="modal"
+            data-bs-target="#kt_modal_view_users">
+            <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ lstPeople.length - 1 }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabPeopleInfo>
+  <div class="d-flex justify-content-between align-items-center mb-2" id="PeopleInfo">
+    <div class="mb-3 fs-5 fw-bold">
+      <codx-label name="lblPeopleInfo" default="Người đi cùng"> </codx-label>
+    </div>
+    <div class="d-flex flex-row text-end align-items-end">
+      <button class="btn btn-sm btn-icon " (click)="openPopupCbb()">
+        <span class="icon-group_add icon-18 text-primary"></span>
+      </button> 
+    </div>
+  </div>
+  <div class="d-flex align-items-center mb-4" *ngIf="driver != null">
+    <div class="symbol symbol-30px symbol-circle me-4">
+      <codx-img [objectId]="driver.objectID" [width]="30" [objectType]="driver.objectType"></codx-img>
+
+      <span class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
+    </div>
+
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="text-dark fw-bold fs-6 fw-bolder">
+        {{ driver.userName }}
+      </div>
+      <span class="text-muted fw-bold">{{
+        "2" | vll: "EP010":"text" | async
+        }}</span>
+    </div>
+
+    <!-- <div class="d-flex flex-column justify-content-end align-items-end">
+    <span class="badge badge-light-success fs-7 fw-bold mb-1"
+      >Bắt buộc</span>
+    <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
+  </div> -->
+  </div>
+
+  <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
+    <div class="symbol symbol-30px symbol-circle me-4">
+      <codx-img [objectId]="curUser.userID" [width]="30" objectType="AD_Users"></codx-img>
+      <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">R</span>
+    </div>
+
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="text-dark fw-bold fs-6 fw-bolder">
+        {{ curUser.userName }}
+      </div>
+      <span class="text-muted fw-bold">{{
+        curUser.roleType | vll: "EP010":"text" | async
+        }}</span>
+    </div>
+
+    <!-- <div class="d-flex flex-column justify-content-end align-items-end">
+    <span class="badge badge-light-success fw-bold mb-1">Bắt buộc</span>
+    <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
+  </div> -->
+  </div>
+
+  <div *ngIf="lstPeople != null">
+    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
+      <div class="symbol symbol-30px symbol-circle me-4">
+        <codx-img [objectId]="item.userID" [width]="30" objectType="AD_Users"></codx-img>
+        <span class="symbol-badge badge badge-sm badge-circle bg-secondary top-100 start-100 text-white fs-8">O</span>
       </div>
 
       <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ driver.userName }}
+        <div class="text-dark fw-bold fw-bold">
+          {{ item.userName }}
         </div>
         <span class="text-muted fw-bold">{{
-          "2" | vll: "EP010":"text" | async
+          item.roleType | vll: "EP010":"text" | async
           }}</span>
       </div>
 
       <!-- <div class="d-flex flex-column justify-content-end align-items-end">
       <span class="badge badge-light-success fs-7 fw-bold mb-1"
-        >Bắt buộc</span>
+        >Không bắt buộc</span
+      >
       <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
     </div> -->
     </div>
+  </div>
+</ng-template>
 
-    <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
-      <div class="symbol symbol-30px symbol-circle me-4">
-        <codx-img [objectId]="curUser.userID" [width]="30" objectType="AD_Users"></codx-img>
-        <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">R</span>
-      </div>
-
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ curUser.userName }}
-        </div>
-        <span class="text-muted fw-bold">{{
-          curUser.roleType | vll: "EP010":"text" | async
-          }}</span>
-      </div>
-
-      <!-- <div class="d-flex flex-column justify-content-end align-items-end">
-      <span class="badge badge-light-success fw-bold mb-1">Bắt buộc</span>
-      <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
-    </div> -->
+<ng-template #tabMoreInfo>
+  <ng-container *ngIf="form && form.formGroup">
+    <div id="MoreInfo"></div>
+    <div class="form-group">
+      <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
+      <codx-input field="note" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
     </div>
-
-    <div *ngIf="lstPeople != null">
-      <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
-        <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [objectId]="item.userID" [width]="30" objectType="AD_Users"></codx-img>
-          <span class="symbol-badge badge badge-sm badge-circle bg-secondary top-100 start-100 text-white fs-8">O</span>
-        </div>
-
-        <div class="d-flex flex-column flex-grow-1">
-          <div class="text-dark fw-bold fw-bold">
-            {{ item.userName }}
-          </div>
-          <span class="text-muted fw-bold">{{
-            item.roleType | vll: "EP010":"text" | async
-            }}</span>
-        </div>
-
-        <!-- <div class="d-flex flex-column justify-content-end align-items-end">
-        <span class="badge badge-light-success fs-7 fw-bold mb-1"
-          >Không bắt buộc</span
-        >
-        <span class="text-muted fw-bold text-center"> 1 ngày trước </span>
-      </div> -->
+    <div class="form-group">
+      <codx-label name="lblCardInfo" default="Thông tin thẻ" class="text-primary">
+      </codx-label>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label name="lblCardInfo" default="Mã số thẻ"> </codx-label>
+        <codx-input type="text" [disabled]="true"> </codx-input>
       </div>
     </div>
-  </ng-template>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label name="lblCardInfo" default="Người cấp thẻ"> </codx-label>
+        <codx-input type="text" [disabled]="true"> </codx-input>
+      </div>
 
-  <ng-template #tabMoreInfo>
-    <ng-container *ngIf="form && form.formGroup">
-      <div id="MoreInfo"></div>
-      <div class="form-group">
-        <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
-        <codx-input field="note" [formModel]="form.formModel" [Group]="form.formGroup">
+      <div class="col-5">
+        <codx-label name="lblCardInfo" default="Ngày cấp thẻ"> </codx-label>
+        <codx-input type="datetime" [disabled]="true" format="f" class="test-datetime">
         </codx-input>
       </div>
-      <div class="form-group">
-        <codx-label name="lblCardInfo" default="Thông tin thẻ" class="text-primary">
-        </codx-label>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label name="lblCardInfo" default="Người trả thẻ"> </codx-label>
+        <codx-input type="text" [disabled]="true"> </codx-input>
       </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label name="lblCardInfo" default="Mã số thẻ"> </codx-label>
-          <codx-input type="text" [disabled]="true"> </codx-input>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label name="lblCardInfo" default="Người cấp thẻ"> </codx-label>
-          <codx-input type="text" [disabled]="true"> </codx-input>
-        </div>
 
-        <div class="col-5">
-          <codx-label name="lblCardInfo" default="Ngày cấp thẻ"> </codx-label>
-          <codx-input type="datetime" [disabled]="true" format="f" class="test-datetime">
-          </codx-input>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-6">
-          <codx-label name="lblCardInfo" default="Người trả thẻ"> </codx-label>
-          <codx-input type="text" [disabled]="true"> </codx-input>
-        </div>
-
-        <div class="col-5">
-          <codx-label name="lblCardInfo" default="Ngày trả thẻ"> </codx-label>
-          <codx-input type="datetime" [disabled]="true" format="f" class="test-datetime">
-          </codx-input>
-        </div>
-      </div>
-    </ng-container>
-  </ng-template>
-
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <div class="btn-group">
-        <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
-          <codx-label name="lblApprove" default="Gửi duyệt"  [formModel]="formModel"></codx-label>
-        </button>
-        <button class="btn btn-primary" (click)="onSaveForm()">
-          <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
-        </button>
+      <div class="col-5">
+        <codx-label name="lblCardInfo" default="Ngày trả thẻ"> </codx-label>
+        <codx-input type="datetime" [disabled]="true" format="f" class="test-datetime">
+        </codx-input>
       </div>
     </div>
-  </ng-template>
-  <ng-template #popupDevice let-dialog>
-    <div class="modal-header">
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 id="modal-basic-title">
-            <codx-label default="Chọn thiết bị" name="lblEquipment" [formModel]="dialog.formModel"></codx-label>
-          </h2>
-          <button type="button" class="btn btn-xs btn-icon btn-active-color-primary btn-light btn-hover-primary"
-            aria-label="Close" (click)="dialog.close()">
-            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
-          </button>
-        </div>
-        <div class="text-dark-50">
-          <codx-label default="Chọn các thiết bị đã tích hợp sẵn trong xe" name="lblChooseEquipments"
-            [formModel]="dialog.formModel"></codx-label>
-        </div>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="py-2" *ngFor="let item of tmplstDevice">
-        <div class="d-flex flex-stack">
-          <div class="d-flex">
-            <span class="text-dark me-2 p-1" [ngClass]="[
-                item.isSelected ? 'text-primary' : 'text-muted',
-                item.id == '1'
-                  ? 'icon-wifi'
-                  : item.id == '2'
-                  ? 'icon-personal_video'
-                  : item.id == '3'
-                  ? 'icon-mic_none'
-                  : item.id == '4'
-                  ? 'icon-switch_video'
-                  : ' icon-thermostat'
-              ]">
-            </span>
-            <div class="d-flex flex-column justify-content-center">
-              <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
-            </div>
-          </div>
-          <div class="d-flex justify-content-end">
-            <div class="form-check form-check-solid form-switch">
-              <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
-                [checked]="item.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
-              <label class="form-check-label" for="googleswitch"></label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer" (click)="dialog.close()">
-      <button type="button" class="btn btn-primary">
-        <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
+  </ng-container>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <div class="btn-group">
+      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
+        <codx-label name="lblApprove" default="Gửi duyệt"  [formModel]="formModel"></codx-label>
+      </button>
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </button>
     </div>
-  </ng-template>
-</codx-layout-add>
+  </div>
+</ng-template>
+<ng-template #popupDevice let-dialog>
+  <div class="modal-header">
+    <div class="d-flex flex-column flex-grow-1">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 id="modal-basic-title">
+          <codx-label default="Chọn thiết bị" name="lblEquipment" [formModel]="dialog.formModel"></codx-label>
+        </h2>
+        <button type="button" class="btn btn-xs btn-icon btn-active-color-primary btn-light btn-hover-primary"
+          aria-label="Close" (click)="dialog.close()">
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+        </button>
+      </div>
+      <div class="text-dark-50">
+        <codx-label default="Chọn các thiết bị đã tích hợp sẵn trong xe" name="lblChooseEquipments"
+          [formModel]="dialog.formModel"></codx-label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="py-2" *ngFor="let item of tmplstDevice">
+      <div class="d-flex flex-stack">
+        <div class="d-flex">
+          <span class="text-dark me-2 p-1" [ngClass]="[
+              item.isSelected ? 'text-primary' : 'text-muted',
+              item.id == '1'
+                ? 'icon-wifi'
+                : item.id == '2'
+                ? 'icon-personal_video'
+                : item.id == '3'
+                ? 'icon-mic_none'
+                : item.id == '4'
+                ? 'icon-switch_video'
+                : ' icon-thermostat'
+            ]">
+          </span>
+          <div class="d-flex flex-column justify-content-center">
+            <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="form-check form-check-solid form-switch">
+            <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
+              [checked]="item.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
+            <label class="form-check-label" for="googleswitch"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer" (click)="dialog.close()">
+    <button type="button" class="btn btn-primary">
+      <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
+    </button>
+  </div>
+</ng-template>

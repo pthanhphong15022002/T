@@ -9,6 +9,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
@@ -45,6 +46,10 @@ export class CatagoryComponent implements OnInit {
   lstFuncID: any[] = [];
   autoDefault?: any;
   dialog?: DialogRef;
+
+  //labels
+  labels = [];
+
   constructor(
     private route: ActivatedRoute,
     private cacheService: CacheService,
@@ -59,6 +64,7 @@ export class CatagoryComponent implements OnInit {
     this.dialog = dialog;
     if (data) {
       this.setting = data.data?.setting;
+
       this.valuelist = data.data?.valuelist;
       this.category = data.data?.category;
       this.function = data.data?.function;
@@ -105,6 +111,30 @@ export class CatagoryComponent implements OnInit {
         this.dialog = null;
       });
     }
+
+    //labels
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByPredicate',
+        ['FormName=@0 and Category=@1', 'ESParameters;1']
+      )
+      .subscribe((setting: any) => {
+        let format = JSON.parse(setting.dataValue);
+        console.log('func', this.function);
+
+        // this.cacheService.functionList(this.lstFuncID)
+        this.labels = format?.Label.filter((label) => {
+          console.log('label', label);
+
+          return label.Language == this.function?.language;
+        });
+        console.log('labels', this.labels);
+
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
