@@ -685,7 +685,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 400);
+    var dialog = this.callfc.openForm(template, '', 550, 350);
     this.changeDetectorRef.detectChanges();
   }
   //Date time validate
