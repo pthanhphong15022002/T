@@ -167,8 +167,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.epService
         .getEmployeeByOrgUnitID(event.data)
         .subscribe((res: any) => {
+          this.qtyEmp = 0;
           if (res) {
-            this.qtyEmp = res[1];
+            this.qtyEmp = res;
           }
         });
     }

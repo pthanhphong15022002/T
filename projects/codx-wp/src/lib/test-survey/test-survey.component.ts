@@ -1,3 +1,5 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { A } from '@angular/cdk/keycodes';
 import {
   Component,
   Injector,
@@ -13,13 +15,11 @@ import {
 import { TextBoxModel } from '@syncfusion/ej2-angular-inputs';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import { UIComponent } from 'codx-core';
-import { DndDropEvent } from 'ngx-drag-drop';
 
 @Component({
   selector: 'lib-test-survey',
   templateUrl: './test-survey.component.html',
   styleUrls: ['./test-survey.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   providers: [RteService, MultiSelectService],
 })
 export class TestSurveyComponent extends UIComponent implements OnInit {
@@ -46,26 +46,54 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
     super(inject);
   }
 
-  public data: any = [
+  data: any = [
     {
+      id: '1',
       text: 'JavaScript',
       pic: 'javascript',
       description:
         'It is a lightweight interpreted or JIT-compiled programming language.',
+      answer: [
+        {
+          text: 'A',
+        },
+        {
+          text: 'B',
+        },
+      ],
     },
     {
+      id: '2',
       text: 'TypeScript',
       pic: 'typescript',
       description:
         'It is a typed superset of Javascript that compiles to plain JavaScript.',
+      answer: [
+        {
+          text: 'A',
+        },
+        {
+          text: 'B',
+        },
+      ],
     },
     {
+      id: '3',
       text: 'Angular',
       pic: 'angular',
       description:
         'It is a TypeScript-based open-source web application framework.',
+      answer: [
+        {
+          text: 'A',
+        },
+        {
+          text: 'B',
+        },
+      ],
     },
     {
+      id: '4',
       text: 'React',
       pic: 'react',
       description:
@@ -79,49 +107,32 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
     },
   ];
 
+  dataAnswer: any = new Array();
+
   onInit(): void {}
   valueChange(e) {
     console.log(e);
   }
 
-  draggable = {
-    // note that data is handled with JSON.stringify/JSON.parse
-    // only set simple data or POJO's as methods will be lost
-    data: 'myDragData',
-    effectAllowed: 'all',
-    disable: false,
-    handle: false,
-  };
-
-  onDragStart(event: DragEvent) {
-    console.log('drag started', JSON.stringify(event, null, 2));
+  items = [
+    { value: 'Oranges', disabled: false },
+    { value: 'Bananas', disabled: true },
+    { value: 'Mangoes', disabled: false },
+  ];
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+  }
+  dropAnswer(event: CdkDragDrop<string[]>, idParent) {
+    var index = this.data.findIndex((x) => x.id == idParent);
+    this.dataAnswer = this.data[index].answer;
+    moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
   }
 
-  onDragEnd(event: DragEvent) {
-    console.log('drag ended', JSON.stringify(event, null, 2));
+  public focusIn(target: HTMLElement): void {
+    target.parentElement.classList.add('e-input-focus');
   }
 
-  onDraggableCopied(event: DragEvent) {
-    console.log('draggable copied', JSON.stringify(event, null, 2));
-  }
-
-  onDraggableLinked(event: DragEvent) {
-    console.log('draggable linked', JSON.stringify(event, null, 2));
-  }
-
-  onDraggableMoved(event: DragEvent) {
-    console.log('draggable moved', JSON.stringify(event, null, 2));
-  }
-
-  onDragCanceled(event: DragEvent) {
-    console.log('drag cancelled', JSON.stringify(event, null, 2));
-  }
-
-  onDragover(event: DragEvent) {
-    console.log('dragover', JSON.stringify(event, null, 2));
-  }
-
-  onDrop(event: DndDropEvent) {
-    console.log('dropped', JSON.stringify(event, null, 2));
+  public focusOut(target: HTMLElement): void {
+    target.parentElement.classList.remove('e-input-focus');
   }
 }
