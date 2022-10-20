@@ -83,24 +83,25 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    this.layout.setUrl(this.urlBack);//gan tam
+    this.bpService.viewProcesses.subscribe(res=>this.process = res) ;
+    this.dataObj = {processID : this.process?.recID} ;
+
+    this.layout.setUrl(this.urlBack);
+    this.layout.setLogo(null)
     if(! this.dataObj?.processID){
         this.codxService.navigate('',this.urlBack);
     }
-
+   debugger
   }
 
   onInit(): void {
-    this.bpService.viewProcesses.subscribe(res=>this.process = res)
-    this.dataObj =JSON.stringify({processID : this.process?.recID}) ;
-
     this.request = new ResourceModel();
     this.request.service = 'BP';
     this.request.assemblyName = 'BP';
     this.request.className = 'ProcessStepsBusiness';
     this.request.method = 'GetProcessStepsAsync';
     this.request.idField = 'recID';
-    this.request.dataObj =  this.dataObj///de test
+    this.request.dataObj =  {processID : this.process?.recID}///de test
 
    //tam test
     this.resourceKanban = new ResourceModel();

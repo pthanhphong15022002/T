@@ -424,6 +424,6 @@ export class ProcessesComponent
   //tesst
   clickProscessTessttttttttttttttt(data){
     this.bpService.viewProcesses.next(data);
-    this.codxService.navigate('','bp/processstep/BPT11');
+    this.codxService.navigate('','/bp/processstep/BPT11');
   }
 }
