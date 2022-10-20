@@ -125,7 +125,7 @@ export class DynamicFormComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.viewBase?.currentView?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      this.dialog = this.callfc.openSide(
+      var dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
         {
           formModel: option.FormModel,
@@ -136,6 +136,16 @@ export class DynamicFormComponent extends UIComponent {
         },
         option
       );
+      //Xử lý riêng của OD
+      if(this.viewBase?.currentView?.formModel?.funcID == "ODS21")
+        dialog.closed.subscribe(item=>{
+          var dt = item?.event?.save;
+          if(dt && !dt?.error && dt?.data && dt?.data?.approval)
+          {
+            //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
+            this.api.execSv("ES","ES","CategoriesBusiness","ExistAsync",dt?.data).subscribe();
+          }
+        })
     });
   }
 

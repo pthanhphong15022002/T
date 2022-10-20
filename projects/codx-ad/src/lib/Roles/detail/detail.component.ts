@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import {
   NotificationsService,
+  ScrollComponent,
   TenantStore,
   UIComponent,
   ViewType,
@@ -53,6 +54,8 @@ export class RoleDetailComponent
   views = [];
   formName = '';
   gridViewName = '';
+  functionID = '';
+  arrTemplate = [];
 
   @ViewChild('template') template: TemplateRef<any>;
 
@@ -84,46 +87,6 @@ export class RoleDetailComponent
       this.RolesService._activeSysFuction = false;
       this.RolesService._activeMoreFuction = false;
     }
-
-    this.RolesService.LoadDataPermission.subscribe((data: any) => {
-      if (!data) return;
-      var d = data[0] || {};
-
-      this.dataBasic = d.Basic || [];
-      this.dataMore = d.More || [];
-      this.dataExport = d.Export || [];
-
-      this.dataPermission = d.Data || {};
-
-      this.df.detectChanges();
-
-      var funcExp: Array<string> = d.Adv || [];
-      // if (!this.tempService.isSystem)
-      this.active = true;
-      // else
-      //   this.active = false;
-      this.checkAndLock('exp', false);
-
-      this.activeSys = this.RolesService._activeSysFuction;
-      this.checkAndLock('sys', this.activeSys);
-
-      this.activeMore = this.RolesService._activeMoreFuction;
-      this.checkAndLock('more', this.activeMore);
-
-      var sysfunc = $('input[data-funcID]');
-
-      var t = this;
-
-      $.each(sysfunc, function (i, elm) {
-        var funcID = $(elm).data('funcid');
-        if (funcExp.indexOf(funcID) >= 0) {
-          elm.checked = true;
-        } else {
-          elm.checked = false;
-        }
-      });
-      this.df.detectChanges();
-    });
   }
 
   ngAfterViewInit() {
@@ -140,10 +103,7 @@ export class RoleDetailComponent
   }
   ngOnDestroy(): void {
     if (this.sub) this.sub.unsubscribe();
-    this.RolesService.appendPesmission(null);
-  }
-  onChangeSelectedFunction(data) {
-    this.roleName = this.tempService.roleName + ' - ' + data.nameFunction;
+    //this.RolesService.appendPesmission(null);
   }
 
   LoadAsside() {
@@ -166,27 +126,89 @@ export class RoleDetailComponent
   }
 
   onSelectionAddChanged(evt: any, tree: any) {
+    ScrollComponent.reinitialization();
     if (evt && evt.data) {
       let item = evt.data;
       this.formName = item.formName;
       this.gridViewName = item.gridViewName;
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.SYS',
-          'FunctionListBusiness',
-          'GetFunctionRoleAsync',
-          [this.recid, item.functionID]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            var dataTree = tree.dicDatas[item.functionID];
-            dataTree.items = res;
-            this.df.detectChanges();
-            this.loadSource();
-          }
-        });
+      this.functionID = item.functionType == 'M' ? '' : item.functionID;
+      if (this.formName && this.gridViewName && this.functionID) {
+        this.roleName = this.tempService.roleName + ' - ' + item.customName;
+        this.api
+          .execSv(
+            'SYS',
+            'ERM.Business.AD',
+            'RolesBusiness',
+            'GetPermissionAsync',
+            [this.functionID, this.formName, this.gridViewName, this.recid]
+          )
+          .subscribe((res) => {
+            if (res) {
+              //var data = res.msgBodyData;
+              this.LoadPermission(res);
+              //this.RolesService.appendPesmission(data);
+            }
+          });
+      } else {
+        this.api
+          .execSv(
+            'SYS',
+            'ERM.Business.SYS',
+            'FunctionListBusiness',
+            'GetFunctionRoleAsync',
+            [this.recid, item.functionID]
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              var dataTree = tree.dicDatas[item.functionID];
+              dataTree.items = res;
+              this.df.detectChanges();
+              //this.loadSource();
+            }
+          });
+      }
     }
+  }
+
+  LoadPermission(d: any) {
+    if (!d) return;
+
+    this.dataBasic = d.Basic || [];
+    this.dataMore = d.More || [];
+    this.dataExport = d.Export || [];
+
+    this.dataPermission = d.Data || {};
+
+    this.df.detectChanges();
+
+    var funcExp: Array<string> = d.Adv || [];
+
+    this.active = true;
+
+    this.checkAndLock('exp', false);
+
+    this.activeSys = this.RolesService._activeSysFuction;
+    this.checkAndLock('sys', this.activeSys);
+
+    this.activeMore = this.RolesService._activeMoreFuction;
+    this.checkAndLock('more', this.activeMore);
+
+    var sysfunc = document.querySelectorAll('codx-input[data-funcID]');
+
+    sysfunc.forEach((elm: any) => {
+      let funcID = elm.dataset?.funcid;
+      let inner = elm.querySelector('span.e-switch-inner');
+      let handle = elm.querySelector('span.e-switch-handle');
+
+      if (funcExp.indexOf(funcID) >= 0) {
+        if (inner) inner.classList.add('e-switch-active');
+        if (handle) handle.classList.add('e-switch-active');
+      } else {
+        if (inner) inner.classList.remove('e-switch-active');
+        if (handle) handle.classList.remove('e-switch-active');
+      }
+    });
+    this.df.detectChanges();
   }
 
   loadSource() {
@@ -210,20 +232,11 @@ export class RoleDetailComponent
       });
   }
 
-  reloadComponent() {
-    // let currentUrl = this.router.url;
-    //TEMP
-    // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    // this.router.onSameUrlNavigation = "reload";
-    // this.router.navigate([currentUrl]);
-    //TEMP
-  }
-
   valueChange(e) {
     if (e.field == 'sys' || e.field == 'exp' || e.field == 'more')
       this.checkAndLock(e.field, e.data);
     else {
-      this.dataPermission[e.field] = e.data.value;
+      this.dataPermission[e.field] = e.data;
       this.RolesService._dataChanged = true;
     }
   }
@@ -237,72 +250,53 @@ export class RoleDetailComponent
   activeMoreChange(e) {
     this.checkAndLock('more', e.srcElement.checked);
   }
-  activeExpChange(e) {
-    if (e.srcElement.checked) {
-      $('#penal').removeClass('collapse');
-    } else {
-      $('#penal').addClass('collapse');
-    }
-  }
+
   checkAndLock(t, check) {
-    var eles = $('input[data-funcID]', $('.' + t));
-    var a = this.active;
-    if (check) {
-      $.each(eles, function (i, elm) {
-        //console.log(elm);
-        elm.checked = true;
-        elm.disabled = true && a;
-      });
-    } else {
-      $.each(eles, function (i, elm) {
-        elm.checked = false;
-        elm.disabled = false;
+    var eleCurrent = document.getElementsByClassName(t);
+    if (eleCurrent.length > 0) {
+      var current = eleCurrent[0] as HTMLElement;
+      var eles = current.querySelectorAll('codx-input[data-funcID]'); // $('input[data-funcID]', $('.' + t));
+      var a = this.active;
+      eles.forEach((element) => {
+        let inner = element.querySelector('span.e-switch-inner');
+        let handle = element.querySelector('span.e-switch-handle');
+        if (check) {
+          if (inner) inner.classList.add('e-switch-active');
+          if (handle) handle.classList.add('e-switch-active');
+          // element.checked = true;
+          // element.disabled = true && a;
+        } else {
+          if (inner) inner.classList.remove('e-switch-active');
+          if (handle) handle.classList.remove('e-switch-active');
+        }
       });
     }
   }
   Save() {
-    var funcID = this.RolesService.funcID;
-    var formName = this.RolesService.formName;
+    var funcID = this.functionID;
+    var formName = this.formName;
     var roleID = this.recid;
     if (!funcID || !roleID) return;
+    var run = this.dataPermission.run;
     var create = this.dataPermission.create;
     var sys = this.activeSys;
     var more = this.activeMore;
     var view = this.dataPermission.read;
     var edit = this.dataPermission.write;
     var deleted = this.dataPermission.delete;
-    var sysfunc = $('input[data-funcID]', $('.sys'));
-    var morefunc = $('input[data-funcID]', $('.more'));
-    var expfunc = $('input[data-funcID]', $('.exp'));
     var t = this;
+    let $sys = document.getElementsByClassName('sys');
+    let $more = document.getElementsByClassName('more');
+    let $exp = document.getElementsByClassName('exp');
+    if ($sys && $sys.length > 0) this.addIDActive($sys[0] as HTMLElement);
 
-    $.each(sysfunc, function (i, elm) {
-      //console.log(elm);
-      if (elm.checked) {
-        var funcID = $(elm).data('funcid');
-        t.dataFuncRole.push(funcID);
-      }
-    });
+    if ($more && $more.length > 0) this.addIDActive($more[0] as HTMLElement);
 
-    $.each(expfunc, function (i, elm) {
-      //console.log(elm);
-      if (elm.checked) {
-        var funcID = $(elm).data('funcid');
-        t.dataFuncRole.push(funcID);
-      }
-    });
-
-    $.each(morefunc, function (i, elm) {
-      //console.log(elm);
-      if (elm.checked) {
-        var funcID = $(elm).data('funcid');
-        t.dataFuncRole.push(funcID);
-      }
-    });
-
+    if ($exp && $exp.length > 0) this.addIDActive($exp[0] as HTMLElement);
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'SaveRolePermissionAsync', [
         roleID,
+        run,
         create,
         view,
         edit,
@@ -316,19 +310,31 @@ export class RoleDetailComponent
       .subscribe((res) => {
         t.dataFuncRole = [];
         if (res && res.msgBodyData[0]) {
-          $('.check-per[data-id="' + funcID + '"]').addClass(
-            'far fa-check-square'
+          var checkper = document.querySelector(
+            '.check-per[data-id="' + funcID + '"]'
           );
+          if (checkper) checkper.classList.add('far', 'fa-check-square');
           this.RolesService._dataChanged = false;
           this.notificationsService.notifyCode('SYS019');
         }
       });
   }
 
+  private addIDActive(element: HTMLElement) {
+    var eles = element.querySelectorAll('codx-input[data-funcID]');
+    eles.forEach((element: any) => {
+      let inner = element.querySelector('span.e-switch-inner');
+      if (inner.classList.contains('e-switch-active')) {
+        let funcID = element.dataset?.funcid;
+        this.dataFuncRole.push(funcID);
+      }
+    });
+  }
+
   Delete() {
-    var funcID = this.RolesService.funcID;
-    var formName = this.RolesService.formName;
-    var funcID = this.RolesService.funcID;
+    var funcID = this.funcID;
+    var formName = this.formName;
+    var funcID = this.funcID;
     var roleID = this.recid;
     if (!funcID || !roleID) return;
     this.api
@@ -339,23 +345,24 @@ export class RoleDetailComponent
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
-          $('.check-per[data-id="' + funcID + '"]').removeClass(
-            'far fa-check-square'
+          var checkper = document.querySelector(
+            '.check-per[data-id="' + funcID + '"]'
           );
+          if (checkper) checkper.classList.remove('far', 'fa-check-square');
           this.notificationsService.notifyCode('SYS019');
           this.RolesService._dataChanged = false;
 
           this.api
-            .call('ERM.Business.AD', 'RolesBusiness', 'GetPermissionAsync', [
-              funcID,
-              formName,
-              '',
-              this.recid,
-            ])
+            .execSv(
+              'SYS',
+              'ERM.Business.AD',
+              'RolesBusiness',
+              'GetPermissionAsync',
+              [funcID, formName, '', this.recid]
+            )
             .subscribe((res) => {
               if (res) {
-                var data = res.msgBodyData;
-                this.RolesService.appendPesmission(data);
+                this.LoadPermission(res);
               }
             });
         }

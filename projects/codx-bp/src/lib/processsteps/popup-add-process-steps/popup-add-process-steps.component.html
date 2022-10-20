@@ -71,37 +71,43 @@
         >
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="stepType =='C'">
+      <div class="form-group" *ngIf="stepType == 'C'">
         <codx-label
           name="Reference"
           [formModel]="form.formModel"
           default="Đầu mục thực hiện"
         ></codx-label>
         <codx-input
-          field="reference"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          placeholder="Cho dữ liệu tạm để test đi !!"
-          (valueChange)="valueChange($event)"
+           [style.border]="'none'"
+          field="reference" 
+          type="text"
+          [crrValue]="textChange"
+          (keyUpEnter)="valueChangeRefrence($event)"
         >
         </codx-input>
       </div>
 
-      <div class="form-group" *ngIf="stepType =='I'">
+      <div class="form-group" *ngIf="stepType == 'I'">
         <codx-label
           name="Reference"
           [formModel]="form.formModel"
           default="Bảng khảo sát"
         ></codx-label>
         <codx-input
-          field="reference"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          placeholder="Cho dữ liệu tạm để test đi !!"
-          (valueChange)="valueChange($event)"
+          field="reference" 
+          type="text"
+          [crrValue]="textChange"
+          (keyUpEnter)="valueChangeRefrence($event)"
         >
         </codx-input>
       </div>
+      <ng-container *ngIf="referenceText?.length > 0">
+        <div *ngFor="let item of referenceText; let i = index">
+          <span>{{i}}</span><span>
+            <codx-label name="lblSymboy" default="-"></codx-label>
+          </span><span>{{item}}</span>
+        </div>
+      </ng-container>
       <div class="form-group" *ngIf="stepType != 'M' && stepType != 'C'">
         <codx-label
           name="Memo"
@@ -306,30 +312,30 @@
           </codx-attachment>
         </div>
       </ng-container>
-
-      
     </div>
   </ng-template>
   <ng-template #footer>
     <!-- <div class="d-flex justify-content-between mt-4" > -->
-      <button style="float:left" *ngIf="stepType !='P'"
-        type="button"
-        class="btn btn-light-primary me-3"
-        [disabled]="readOnly"
-        (click)="addFile($event)"
-      >
-        <i class="icon-cloud_upload fs-5"></i
-        ><span>
-          <codx-label
-            name="UploadFile"
-            formName="Tasks"
-            default="Upload File"
-          ></codx-label>
-        </span>
-      </button>
-      <button  type="button" class="btn btn-primary" (click)="saveData()">
-        <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
-      </button>
+    <button
+      style="float: left"
+      *ngIf="stepType != 'P'"
+      type="button"
+      class="btn btn-light-primary me-3"
+      [disabled]="readOnly"
+      (click)="addFile($event)"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
+        <codx-label
+          name="UploadFile"
+          formName="Tasks"
+          default="Upload File"
+        ></codx-label>
+      </span>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="saveData()">
+      <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
+    </button>
     <!-- </div> -->
   </ng-template>
 </codx-form>

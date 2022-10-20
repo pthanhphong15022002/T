@@ -185,7 +185,7 @@
           <codx-label name="lblBirthday" formName="Employees" default="Ngày sinh: "></codx-label>
         </span>
         <span class="text-dark fw-bold">
-          <span #birthday>{{data.birthday | fmDT | formatvalue: view.formModel:"birthday":birthday| async}}</span>
+          <span #birthday>{{data.birthday  | formatvalue: view.formModel:"birthday":birthday| async}}</span>
         </span>
       </div>
       <div class="align-items-center fs-7">

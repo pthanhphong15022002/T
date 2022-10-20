@@ -55,7 +55,7 @@ import { Layout3Component } from './_layout3/layout3.component';
 import { TestSurveyComponent } from './test-survey/test-survey.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
-import { ListBoxAllModule } from '@syncfusion/ej2-angular-dropdowns';
+import { DndModule } from 'ngx-drag-drop';
 
 export const routes: Routes = [
   {
@@ -83,6 +83,13 @@ export const routes: Routes = [
     component: Layout2Component,
     children: [
       {
+        path: 'settings/:funcID',
+        loadChildren: () =>
+          import(
+            'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
+          ).then((m) => m.DynamicSettingModule),
+      },
+      {
         path: ':funcID/tag/:tagName',
         component: ViewTagComponent,
       },
@@ -105,6 +112,13 @@ export const routes: Routes = [
     path: 'companyinfo',
     component: LayoutComponent,
     children: [
+      {
+        path: 'settings/:funcID',
+        loadChildren: () =>
+          import(
+            'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
+          ).then((m) => m.DynamicSettingModule),
+      },
       {
         path: ':funcID',
         component: CompanyInforComponent,
@@ -264,7 +278,7 @@ const Component: Type<any>[] =
     CoreModule,
     PickerModule,
     InPlaceEditorModule,
-    ListBoxAllModule,
+    DndModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule, ListPostComponent],

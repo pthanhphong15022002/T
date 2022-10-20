@@ -3,9 +3,14 @@
         <ng-container [ngSwitch]="file.referType">
             <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
                 <div class="w-100 h-100 img-full">
-                    <!-- <img [src]="file.thumbnail" alt="" class="w-100 image"> -->
-                    <codx-img [recId]="file.recID" [objectId]="file.objectID" objectType="WP_Comments"
-                        imageType="square" [width]="0" cssClass="w-100 h-auto image"></codx-img>
+                    <codx-img 
+                        [recId]="file.recID" 
+                        [objectId]="file.objectID" 
+                        objectType="WP_Comments"
+                        imageType="square"
+                        [width]="700"
+                        cssClass="w-100 h-auto image">
+                    </codx-img>
                 </div>
             </ng-container>
             <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
@@ -52,37 +57,47 @@
             </div>
         </div>
     </div>
-    <div class="col-4 mt-5 ps-6" *ngIf="parentPost">
+    <div class="col-4 mt-5 ps-6" *ngIf="post">
         <div class="d-flex">
             <div class="me-2">
-                <codx-img [objectId]="parentPost.createdBy" objectType="AD_Users" [width]="40">
+                <codx-img 
+                    [objectId]="post.createdBy" 
+                    [imageType]="'circle'"
+                    [isDefaulImg]="true" 
+                    objectType="AD_Users" 
+                    [width]="40">
                 </codx-img>
             </div>
             <div class="text-info-date ms-2">
                 <div class="">
-                    <span class="fw-bolder fs-7 me-2">{{parentPost.createdName}}</span>
-                    <ng-container *ngIf="parentPost.shareName">
-                        <span [innerHTML]="parentPost.shareName"></span>
+                    <span class="fw-bolder fs-7 me-2">{{post.createdName}}</span>
+                    <ng-container *ngIf="post.shareName">
+                        <span [innerHTML]="post.shareName"></span>
                     </ng-container>
                 </div>
                 <div class="mt-2">
-                    <span class="text-gray-600 fs-7 me-2">{{parentPost.createdOn | timefrom}}</span>
-                    <span class="rounded-1 py-1 px-2 bg-gray-200">
+                    <span class="text-gray-600 fs-7 me-2">{{post.createdOn | timefrom}}</span>
+                    <span *ngIf="post.shareIcon && post.shareText" class="rounded-1 py-1 px-2 bg-gray-200">
                         <span class="symbol symbol-circle ">
                             <img class="h-13px w-13px"
-                                src="assets/themes/sys/default/img/{{(parentPost.shareControl | vll:'L1901' : 'icon' | async)}}" />
+                                src="assets/themes/sys/default/img/{{post.shareIcon}}" />
                         </span>
                         <span class="fs-7">
-                            {{parentPost.shareControl | vll:'L1901' : 'text' | async}}
+                            {{post.shareText}}
                         </span>
                     </span>
                 </div>
             </div>
         </div>
-        <!-- child post -->
-        <div *ngIf="childPost">
-            <treeview-comment [rootData]="childPost.listComment" [dataComment]="childPost"
-                (pushComment)="pushComment($event)">
+        <!-- comment -->
+        <div>
+            <treeview-comment
+                [funcID]="'WP'"
+                [fromModel]="dialogRef.formModel"
+                [objectType]="'WP_Comments'"
+                [dataComment]="post"
+                [objectID]="post.recID"
+                >
             </treeview-comment>
         </div>
     </div>
