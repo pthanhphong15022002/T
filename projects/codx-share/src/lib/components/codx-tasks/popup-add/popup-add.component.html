@@ -208,11 +208,22 @@
           type="number"
           field="estimated"
           placeholder="Số giờ "
+          [showSpinButton]="false"
           [crrValue]="task?.estimated"
           (valueChange)="valueChangeEstimated($event)"
           [disabled]="readOnly"
         >
         </codx-input>
+        <!-- <codx-input
+        field="estimated"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        [showSpinButton]="false"
+        (valueChange)="valueChangeEstimated($event)"
+        [crrValue]="task?.estimated"
+        [disabled]="readOnly"
+      >
+      </codx-input> -->
       </div>
     </div>
   </ng-container>
