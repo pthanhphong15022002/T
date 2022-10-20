@@ -135,11 +135,16 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         .subscribe((setting) => {
           if (setting?.dataValue) {
             this.settingDataValue = JSON.parse(setting.dataValue);
+            console.log(this.settingDataValue);
             if (this.settingDataValue) {
               for (const key in this.settingDataValue) {
                 console.log(key);
                 let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
                 this.data[fieldName] = this.settingDataValue[key];
+                if (key == 'AllowEditAreas') {
+                  this.data[fieldName] =
+                    this.settingDataValue[key] == '0' ? false : true;
+                }
               }
             }
             console.log(this.data);
