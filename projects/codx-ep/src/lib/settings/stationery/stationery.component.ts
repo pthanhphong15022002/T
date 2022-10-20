@@ -139,14 +139,14 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
             },
           ];
           this.views = [
-            {
-              type: ViewType.grid,
-              sameData: true,
-              active: false,
-              model: {
-                resources: this.columnsGrid,
-              },
-            },
+            // {
+            //   type: ViewType.grid,
+            //   sameData: true,
+            //   active: false,
+            //   model: {
+            //     resources: this.columnsGrid,
+            //   },
+            // },
             {
               type: ViewType.card,
               sameData: true,
@@ -281,7 +281,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   addQuota(data) {
-    this.callfc.openForm(PopupAddQuotaComponent, '', 500, 200, '', [data]);
+    this.callfc.openForm(PopupAddQuotaComponent, '', 500, null, '', [data]);
   }
 
   closeEditForm(evt?: any) {

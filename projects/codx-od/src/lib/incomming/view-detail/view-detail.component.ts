@@ -84,7 +84,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   dvlReCall: any;
   dvlStatusTM: any;
   formModel: any;
-  formModels: any;
   dialog!: DialogRef;
   name: any;
   ms020: any;
@@ -173,7 +172,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   getGridViewSetup(funcID: any) {
   
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
-      this.formModels = {
+      this.formModel = {
         entityName: fuc?.entityName,
         formName: fuc?.formName,
         funcID: funcID,
@@ -821,7 +820,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             this.notifySvr.alertCode("OD024",config).subscribe(item=>{
               if(item.event.status == "Y") {
                 //Lấy processID mặc định theo entity
-                this.api.execSv("ES","ES","CategoriesBusiness","GetDefaulProcessIDAsync",this.formModels.entityName).subscribe((item:any)=>{
+                this.api.execSv("ES","ES","CategoriesBusiness","GetDefaulProcessIDAsync",this.formModel.entityName).subscribe((item:any)=>{
                   if(item)
                   {
                     this.approvalTrans(item?.processID,datas);

@@ -6,17 +6,12 @@ import {
   Type,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
-  AuthStore,
-  CacheService,
   CallFuncService,
   DialogData,
   DialogModel,
-  DialogRef,
-  LayoutService,
-  PageTitleService,
+  DialogRef
 } from 'codx-core';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
@@ -33,7 +28,7 @@ export class CatagoryComponent implements OnInit {
   };
   category = '';
   title = '';
-  listName = 'SYS001';
+  //listName = 'SYS001';
   setting = [];
   settingValue = [];
   groupSetting = [];
@@ -42,7 +37,7 @@ export class CatagoryComponent implements OnInit {
   valuelist: any = {};
   dataValue: any = {};
   catagoryName: any = '';
-  urlOld = '';
+  //urlOld = '';
   lstFuncID: any[] = [];
   autoDefault?: any;
   dialog?: DialogRef;
@@ -51,13 +46,9 @@ export class CatagoryComponent implements OnInit {
   labels = [];
 
   constructor(
-    private route: ActivatedRoute,
-    private cacheService: CacheService,
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
-    private layout: LayoutService,
-    private pageTitle: PageTitleService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -73,30 +64,25 @@ export class CatagoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe((routeParams) => {
-      this.layout.setLogo(null);
-      this.pageTitle.setBreadcrumbs([]);
+    if (this.dialog) {
+      this.dialog.closed.subscribe((res) => {
+        this.dialog = null;
+      });
+    }else{
       this.lstFuncID = [];
       this.autoDefault = null;
       this.dataValue = {};
-      this.urlOld = '..' + window.location.pathname;
-      var state = history.state;
-      if (state && !this.dialog) {
-        this.setting = state.setting || [];
-        this.function = state.function || [];
-        this.valuelist = state.valuelist || {};
+      if(this.setting){
         this.groupSetting = this.setting.filter((x) => {
           return (
             x.controlType && x.controlType.toLowerCase() === 'groupcontrol'
           );
         });
       }
-      var catagory = routeParams.catagory;
-      if (this.valuelist && this.valuelist.datas && catagory) {
+      if (this.valuelist && this.valuelist.datas && this.category) {
         const ds = (this.valuelist.datas as any[]).find(
-          (item) => item.default == catagory
+          (item) => item.value == this.category
         );
-        this.category = ds.value;
         this.title = ds.text;
         if (this.category === '2' || this.category === '7')
           this.getIDAutoNumber();
@@ -105,11 +91,6 @@ export class CatagoryComponent implements OnInit {
       this.loadSettingValue();
 
       this.changeDetectorRef.detectChanges();
-    });
-    if (this.dialog) {
-      this.dialog.closed.subscribe((res) => {
-        this.dialog = null;
-      });
     }
 
     //labels

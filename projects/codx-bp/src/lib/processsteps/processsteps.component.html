@@ -34,14 +34,7 @@
   </codx-card-img>
 </ng-template>
 
-<ng-template #cardImgFooter let-data let-setting="setting">
-
-</ng-template>
-
-
-
-
-
+<ng-template #cardImgFooter let-data let-setting="setting"> </ng-template>
 
 <!-- viewlist-content -detail-Process tesssssssssssssssssssssssss  -->
 <ng-template #itemViewList>
@@ -124,20 +117,19 @@
 
                         <ng-container *ngIf="item?.items?.length > 0">
                           <ng-container *ngFor="let item2 of item1.items">
-                           <div class="steplist-item step-items rounded p-4">
-                            <codx-temp-full
-                            cardCss="mb-5"
-                            [title]="item2?.stepName2"
-                            [titleCss]="'fs-5 mb-1'"
-                            [desc]="item2?.memo"
-                            [desc2]="item2?.note"
-                            [icoDesc2Css]="'text-danger'"
-                            [baseHeaderRightTmp]="baseHeaderRightTmp"
-                            [footer]="footerBase"
-                            [dataItem]="item2"
-                          >
-                          </codx-temp-full>
-                           </div>   
+                            <div class="steplist-item step-items rounded p-4">
+                              <codx-temp-full
+                                cardCss="mb-5"
+                                [title]="item2?.stepName2"
+                                [titleCss]="'fs-5 mb-1'"
+                                [desc]="item2?.memo"
+                                [desc2Tmp]="desc2Tmp"
+                                [baseHeaderRightTmp]="baseHeaderRightTmp"
+                                [footer]="footerBase"
+                                [dataItem]="item2"
+                              >
+                              </codx-temp-full>
+                            </div>
                           </ng-container>
                         </ng-container>
                       </div>
@@ -183,7 +175,9 @@
 
 <ng-template #footerBase let-data>
   <div
-    *ngIf="data?.attachments > 0 && data.stepType!='P'&& data.stepType!='A'"
+    *ngIf="
+      data?.attachments > 0 && data.stepType != 'P' && data.stepType != 'A'
+    "
     class="d-flex align-items-center justify-content-between mt-4"
   >
     <div class="d-flex align-items-center mb-2">
@@ -203,7 +197,7 @@
   [objectType]="view.formModel.entityName"
   [objectId]="data?.recID"
   hideFolder="1"
-  hideImageUpload="0"
+  hideImageUpload="1"
   hideImageThumb="0"
   hideUploadBtn="1"
   hideDes="1"
@@ -250,9 +244,24 @@
     </codx-mfunc>
   </div>
 </ng-template>
+<ng-template #desc2Tmp let-data>
+  <ng-container
+    *ngIf="data?.reference.split(';').length > 0"
+  >
+    <ng-container *ngFor="let item of data?.reference.split(';')">
+      <codx-input
+        type="checkbox"
+        [label]="item"
+        [checked]="false"
+        labelPosition="After"
+        [disabled]="false"
+        class="test-check me-4 mb-2"
+      ></codx-input>
+    </ng-container>
+  </ng-container>
+</ng-template>
 
-
-  <!-- <div class="kanban-board w-300px me-1">
+<!-- <div class="kanban-board w-300px me-1">
     <div class="kanban-board-header bg-danger d-flex justify-content-between">
         <div class="kanban-title-board">{{data?.stepName}}</div>
         <div class="dropdown"> <codx-mfunc
@@ -316,5 +325,3 @@
         </div>
     </div>
   </div> -->
-
-
