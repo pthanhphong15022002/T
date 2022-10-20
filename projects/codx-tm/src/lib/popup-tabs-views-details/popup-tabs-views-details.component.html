@@ -80,9 +80,11 @@
           </div>
         </ng-container>
         <ng-container *ngIf="name == 'Tasks'">
-          <codx-tasks-share *ngIf="dataObj" [dataObj]="dataObj" [showButtonAdd]="showButtonAdd"
+          <ng-container *ngIf="dataObj">
+            <codx-tasks-share  [dataObj]="dataObj" [showButtonAdd]="showButtonAdd"
             [showMoreFunc]="showMoreFunc" [funcID]="'TMT03011'">
           </codx-tasks-share>
+          </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'History'">
           <ng-container>
