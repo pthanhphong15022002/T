@@ -321,6 +321,7 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #popupDevice let-dialog>
   <div class="modal-header">
     <div class="d-flex flex-column flex-grow-1">
@@ -369,10 +370,5 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="modal-footer" (click)="dialog.close()">
-    <button type="button" class="btn btn-primary">
-      <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
-    </button>
   </div>
 </ng-template>

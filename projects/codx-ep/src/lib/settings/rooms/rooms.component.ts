@@ -33,8 +33,7 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('locationCol') locationCol: TemplateRef<any>;
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
-  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;  
-  
+  @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   viewType = ViewType;
@@ -68,9 +67,8 @@ export class RoomsComponent extends UIComponent {
   grvRooms: any;
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,    
-    private changeDetectorRef: ChangeDetectorRef,
-
+    private codxEpService: CodxEpService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -119,18 +117,18 @@ export class RoomsComponent extends UIComponent {
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
-              width: '20%',
+              width: '25%',
               template: this.resourceNameCol,
             },
             {
               headerText: gv['Location'].headerText,
-              width: gv['Location'].width,
+              width: '15%', //width: gv['Location'].width,
               field: 'location',
               template: this.locationCol,
             },
             {
               headerText: gv['Equipments'].headerText,
-              width: 150, //gv['Equipments'].width,
+              width: '10%', //gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
               headerTextAlign: 'Center',
@@ -138,15 +136,18 @@ export class RoomsComponent extends UIComponent {
             },
             {
               headerText: gv['Note'].headerText,
-              width: gv['Note'].width,
+              textAlign: 'center',
+              width: '20%', //width: gv['Note'].width,
               field: 'note',
             },
             {
               headerText: gv['Owner'].headerText,
+              width: '15%',
               template: this.ownerCol,
             },
             {
               headerText: gv['Preparator'].headerText,
+              width: '15%',
               template: this.preparatorCol,
             },
           ];
@@ -228,7 +229,7 @@ export class RoomsComponent extends UIComponent {
             });
         else if (x.event) {
           x.event.modifiedOn = new Date();
-          //this.view.dataService.update(x.event).subscribe();          
+          //this.view.dataService.update(x.event).subscribe();
           this.view.dataService.clear();
         }
       });
@@ -250,16 +251,14 @@ export class RoomsComponent extends UIComponent {
             PopupAddRoomsComponent,
             [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );    
+          );
           this.dialog.closed.subscribe((res) => {
-            
             if (res?.event) {
               res.event.modifiedOn = new Date();
               //this.view.dataService.update(res.event).subscribe((res) => {});
             }
             this.view.dataService.clear();
-          }); 
-              
+          });
         });
     }
   }

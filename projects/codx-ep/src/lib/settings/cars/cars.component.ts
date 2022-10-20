@@ -59,7 +59,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   columnsGrid: any;
   grView: any;
   formModel: FormModel;
-  funcIDName:any;
+  funcIDName: any;
   dialogRef: DialogRef;
   isAfterRender = false;
   str: string;
@@ -68,8 +68,8 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   carsEquipments = [];
   temp: string;
   columnGrids: any;
-  grvCars:any;
-  popupTitle='';
+  grvCars: any;
+  popupTitle = '';
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -82,8 +82,8 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       if (res) {
         this.formModel = res;
         this.isAfterRender = true;
-        this.cache.functionList(this.funcID).subscribe(res => {
-          if (res) {            
+        this.cache.functionList(this.funcID).subscribe((res) => {
+          if (res) {
             this.funcIDName = res.customName.toString().toLowerCase();
           }
         });
@@ -107,8 +107,8 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.buttons = {
       id: 'btnAdd',
-    };     
-        
+    };
+
     this.detectorRef.detectChanges();
   }
   onLoading(evt: any) {
@@ -117,22 +117,23 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
       this.cache
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
-          this.grvCars=gv;
+          this.grvCars = gv;
           this.columnGrids = [
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,
               template: this.resourceNameCol,
-              width:'20%',
+              width: '25%',
             },
             {
               headerText: gv['CompanyID'].headerText,
+              width: '15%',
               field: 'companyID',
               template: this.locationCol,
             },
             {
               headerText: gv['Equipments'].headerText,
-              width: 200,//gv['Equipments'].width,
+              width: '10%', //gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
               headerTextAlign: 'Center',
@@ -140,16 +141,18 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['Note'].headerText,
+              textAlign: 'center',
+              width: '20%',
               field: 'note',
             },
             {
               headerText: gv['LinkID'].headerText,
-              //width:gv['Owner'].width,
+              width: '15%', //width:gv['Owner'].width,
               template: this.linkCol,
             },
             {
               headerText: gv['Owner'].headerText,
-              //width:gv['Owner'].width,
+              width: '15%', //width:gv['Owner'].width,
               template: this.ownerCol,
             },
           ];
@@ -161,7 +164,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               model: {
                 resources: this.columnGrids,
               },
-            },            
+            },
           ];
           this.detectorRef.detectChanges();
         });
@@ -181,22 +184,21 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     var dialog = this.callfc.openForm(template, '', 550, 430);
     this.detectorRef.detectChanges();
   }
-  
+
   clickMF(event, data) {
     console.log(event);
-    this.popupTitle=event?.text + " " + this.funcIDName;      
+    this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
-      case 'SYS03':        
+      case 'SYS03':
         this.edit(data);
         break;
       case 'SYS02':
         this.delete(data);
         break;
-
     }
   }
   click(evt: ButtonModel) {
-    this.popupTitle=evt?.text + " " + this.funcIDName;  
+    this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -252,14 +254,13 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             PopupAddCarsComponent,
             [this.view.dataService.dataSelected, false, this.popupTitle],
             option
-          );    
+          );
           this.dialog.closed.subscribe((x) => {
             if (x?.event) {
               x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {
-              });
+              this.view.dataService.update(x.event).subscribe((res) => {});
             }
-          });     
+          });
         });
     }
   }
@@ -268,18 +269,18 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
       this.view.dataService.delete([obj], true).subscribe((res) => {
-        if (res) {          
+        if (res) {
           this.api
-          .execSv(
-            'DM',
-            'ERM.Business.DM',
-            'FileBussiness',
-            'DeleteByObjectIDAsync',
-            [obj.recID, 'EP_Cars', true]
-          )
-          .subscribe();
-        this.detectorRef.detectChanges();
-      }
+            .execSv(
+              'DM',
+              'ERM.Business.DM',
+              'FileBussiness',
+              'DeleteByObjectIDAsync',
+              [obj.recID, 'EP_Cars', true]
+            )
+            .subscribe();
+          this.detectorRef.detectChanges();
+        }
       });
     }
   }

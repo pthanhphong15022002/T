@@ -141,12 +141,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
     }
   }
 
-  valueChangeDuration(e) {
-    // if (this.processSteps.stepType == 'P') {
-    //   this.processSteps.duration = e?.data * 24;
-    // } else
-    this.processSteps.duration = e?.data;
-  }
 
   addFile(evt: any) {
     this.attachment.uploadFile();

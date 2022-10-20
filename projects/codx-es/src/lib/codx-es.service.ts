@@ -940,6 +940,16 @@ export class CodxEsService {
       data
     );
   }
+
+  cancelSignfile(sfRecID: string, comment: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CancelSignfileAsync',
+      [sfRecID, comment]
+    );
+  }
   //#endregion
 
   //#region ES_ApprovalTrans
@@ -989,6 +999,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'GetViewByTransIDAsync',
       [recID]
+    );
+  }
+
+  getApprovalTransActive(sfRecID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetTransActiveAsync',
+      [sfRecID]
     );
   }
 

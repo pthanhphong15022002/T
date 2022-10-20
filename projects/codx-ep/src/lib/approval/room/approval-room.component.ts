@@ -162,16 +162,12 @@ export class ApprovalRoomsComponent extends UIComponent {
     // }
     switch (funcID) {
       case 'EPT40101':
-      case 'EPT40201':
-      case 'EPT40301':
         {
           //alert('Duyệt');
           this.approve(datas,"5")
         }
         break;      
       case 'EPT40105':
-      case 'EPT40205':
-      case 'EPT40305':
         {
           //alert('Từ chối');
           this.approve(datas,"4")
