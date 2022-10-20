@@ -55,7 +55,7 @@ import { Layout3Component } from './_layout3/layout3.component';
 import { TestSurveyComponent } from './test-survey/test-survey.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
-import { DndModule } from 'ngx-drag-drop';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 export const routes: Routes = [
   {
@@ -278,7 +278,7 @@ const Component: Type<any>[] =
     CoreModule,
     PickerModule,
     InPlaceEditorModule,
-    DndModule,
+    DragDropModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule, ListPostComponent],
