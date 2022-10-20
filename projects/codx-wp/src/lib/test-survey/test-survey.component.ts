@@ -20,6 +20,7 @@ import { UIComponent } from 'codx-core';
   selector: 'lib-test-survey',
   templateUrl: './test-survey.component.html',
   styleUrls: ['./test-survey.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   providers: [RteService, MultiSelectService],
 })
 export class TestSurveyComponent extends UIComponent implements OnInit {
@@ -109,7 +110,7 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
 
   dataAnswer: any = new Array();
 
-  onInit(): void {}
+  onInit(): void { }
   valueChange(e) {
     console.log(e);
   }
