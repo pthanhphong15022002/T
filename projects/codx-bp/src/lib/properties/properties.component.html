@@ -1,4 +1,4 @@
-<codx-form #form headerText="{{titleDialog}}" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
+<codx-form #form headerText="{{title}}" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
     [dialog]="dialog" class="dialog-property">
     <ng-template #header>
         <div class="offcanvas-header w-100">
@@ -9,7 +9,10 @@
                 </ng-container>
                 <a class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
                     (click)="extendShow()">
-                    <span *ngIf="hideExtend" class="text-dark me-2">{{titleExpand}}</span>
+                    <span *ngIf="hideExtend" class="text-dark me-2">
+                        <codx-label fiedName="Expand" [formModel]="form.formModel" default="Mở rộng">
+                        </codx-label>
+                    </span>
                     <span class="icon-login icon-20 ext_button"></span>
                 </a>
             </div>
@@ -282,7 +285,10 @@
                         <e-tabitems>
                             <e-tabitem>
                                 <ng-template #headerText>
-                                    <div>{{titleVersion}}</div>
+                                    <div>
+                                        <codx-label name="Version" default="Phiên bản">
+                                        </codx-label>
+                                    </div>
                                 </ng-template>
                                 <!-- <ng-template #content>
                                     <div class="pt-5 extend-more-content pe-3">
@@ -313,7 +319,10 @@
                             </e-tabitem>
                             <e-tabitem>
                                 <ng-template #headerText>
-                                    <div>{{titleHistory}}</div>
+                                    <div>
+                                        <codx-label name="History" default="Lịch sử">
+                                        </codx-label>
+                                    </div>
                                 </ng-template>
                                 <ng-template #content>
                                     <div class="pt-5 extend-more-content pe-3">

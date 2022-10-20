@@ -22,6 +22,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
@@ -83,7 +84,7 @@ export class ProcessesComponent
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -142,23 +143,50 @@ export class ProcessesComponent
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
     this.changeDetectorRef.detectChanges();
+  } 
+
+  search(isScroll = false) {
+    // this.views.forEach(item => {
+    //   item.hide = true;
+    //   if (item.text == "Search")
+    //     item.hide = false;
+    // });
+    // this.fileService.searchFile(this.textSearchAll, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
+    //   if (item != null) {
+    //     if(!isScroll)
+    //     {
+    //       var view = this.views.filter(x=>x.text == "Search")[0];
+    //       view.active = true;
+    //       this.view.viewChange(view);
+    //     }
+       
+    //     // this.dmSV.listFiles = item.data;
+    //     this.totalSearch = item.total;
+    //     this.dmSV.listFiles = [...this.dmSV.listFiles, ...item.data];
+    //     this.data = [...this.data, ...this.dmSV.listFiles];
+    //     this.getTotalPage(item.total);
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    //   else {
+    //     //this.dmSV.loadedFile = true;
+    //     this.totalSearch = 0;
+    //     this.dmSV.totalPage = 0;
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
   }
 
   searchChange($event) {
     try {
       this.textSearch = $event;
       this.data = [];
-      // this.dmSV.listFiles = [];
-      // this.dmSV.listFolder = [];
-      // this.dmSV.loadedFolder = true;
-      // this.dmSV.loadedFile = false;
       if (this.codxview.currentView.viewModel.model != null)
         this.codxview.currentView.viewModel.model.panelLeftHide = true;
       this.isSearch = true;
       // this.dmSV.page = 1;
       // this.fileService.options.page = this.dmSV.page;
       this.textSearchAll = this.textSearch;
-      // this.predicates = "FileName.Contains(@0)";
+      this.predicates = "FileName.Contains(@0)";
       this.values = this.textSearch;
       this.searchAdvance = false;
       this.viewActive = this.views.filter(x => x.active == true)[0];
@@ -177,7 +205,7 @@ export class ProcessesComponent
         }
         this.changeDetectorRef.detectChanges();
       }
-      // else this.search();
+      else this.search();
     }
     catch (ex) {
       this.changeDetectorRef.detectChanges();
@@ -307,6 +335,9 @@ export class ProcessesComponent
       case 'SYS02':
         this.delete(data);
         break;
+      // case 'BPT11':
+      //   this.properties(data);
+      //   break;
     }
   }
 
@@ -361,7 +392,7 @@ export class ProcessesComponent
     return desc + '</div>';
   }
 
-  revisions(data){
+  revisions(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }

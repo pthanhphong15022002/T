@@ -174,13 +174,13 @@ export class CodxEpService {
       .subscribe();
   }
 
-  getStationeryGroup(model: any) {
+  getStationeryGroup() {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
-      'GetListAsync',
-      [model]
+      'GetListGroupStationeryAsync',
+      []
     );
   }
 
@@ -226,6 +226,16 @@ export class CodxEpService {
       'ResourceQuotaBusiness',
       'GetQuotaByResourceIDAsync',
       [resourceID]
+    );
+  }
+
+  getEmployeeByOrgUnitID(id: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'OrganizationUnitsBusiness',
+      'GetEmployeeListByOrgAsync',
+      [id, null, false]
     );
   }
 
@@ -349,13 +359,13 @@ export class CodxEpService {
     );
   }
 
-  approve(recID: string,status: string) {
+  approve(recID: string, status: string) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'ApproveAsync',
-      [recID, status,'', '', '']
+      [recID, status, '', '', '']
     );
   }
 

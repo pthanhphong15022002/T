@@ -9,13 +9,10 @@ import { DialogData, DialogRef } from 'codx-core';
 })
 export class PropertiesComponent implements OnInit {
 
-  titleDialog = 'Thông tin';
-  titleExpand = 'Mở rộng';
+  title = 'Thông tin';
   dialog: any;
   data: any;
   hideExtend = true;
-  titleVersion = 'Phiên bản';
-  titleHistory = 'Lịch sử';
   fileEditing: FileUpload;
 
 
@@ -26,6 +23,7 @@ export class PropertiesComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = data.data;
+    
   }
 
   ngOnInit(): void {
