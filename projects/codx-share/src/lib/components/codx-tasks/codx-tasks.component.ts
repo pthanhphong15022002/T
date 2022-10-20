@@ -162,20 +162,17 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
-
-    // this.api.execSv<any>('TM',
-    // 'TM',
-    // 'TaskBusiness',
-    // 'AutoUpdateIsOverDueAsync').subscribe();
   }
 
   //#region Init
   onInit(): void {
-    // this.modelResource = new ResourceModel();
-    // this.modelResource.assemblyName = 'TM';
-    // this.modelResource.className = 'TaskBusiness';
-    // this.modelResource.service = 'TM';
-    // this.modelResource.method = 'GetUserByTasksAsync';
+    if (this.funcID == 'TMT0203') {
+      this.vllStatus = this.vllStatusAssignTasks;
+    } else {
+      this.vllStatus = this.vllStatusTasks;
+    }
+    this.projectID = this.dataObj?.projectID;
+    this.viewMode = this.dataObj?.viewMode;
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011') {
@@ -234,6 +231,9 @@ export class CodxTasksComponent
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
     this.getParams();
+
+    this.detectorRef.detectChanges();
+
   }
 
   ngAfterViewInit(): void {
@@ -254,13 +254,6 @@ export class CodxTasksComponent
     //   }
     // })
 
-    if (this.funcID == 'TMT0203') {
-      this.vllStatus = this.vllStatusAssignTasks;
-    } else {
-      this.vllStatus = this.vllStatusTasks;
-    }
-    this.projectID = this.dataObj?.projectID;
-    this.viewMode = this.dataObj?.viewMode;
     this.views = [
       {
         type: ViewType.list,
