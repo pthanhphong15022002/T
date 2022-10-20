@@ -8,9 +8,11 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { viewChangeEvent } from '@syncfusion/ej2-angular-documenteditor';
 import {
   NotificationsService,
   ScrollComponent,
@@ -27,11 +29,11 @@ declare var $: any;
   selector: 'app-roles',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class RoleDetailComponent
   extends UIComponent
-  implements OnDestroy, OnChanges
-{
+  implements OnDestroy, OnChanges {
   dataMoreFuntions: any;
   dataBasic: any = [];
   dataMore: any = [];
@@ -77,7 +79,7 @@ export class RoleDetailComponent
     this.tenant = this.tenantStore.get()?.tenant;
     this.roleName = this.tempService.roleName;
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void { }
   onInit(): void {
     var rid = this.at.snapshot.queryParams.recID;
     if (rid) {

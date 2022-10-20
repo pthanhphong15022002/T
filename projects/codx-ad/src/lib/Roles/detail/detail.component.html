@@ -4,7 +4,7 @@
   <div class="content h-100 d-flex flex-column flex-column-fluid p-0 mt-2" id="kt_content">
     <div id="erm_content" class="d-flex flex-column-fluid h-100">
       <div class="d-flex container h-100">
-        <div class="aside-detail flex-row-auto w-250px me-6">
+        <div class="aside-detail h-100 hover-scroll-overlay-y w-250px pe-3 me-5">
           <div class="aside-menu">
             <codx-treeview id="treeAdd" #asideTree [itemTemplate]="templatetree" [data]="myTree" textField="customName"
               fieldCheck="hasChildren" [enableCheck]="false" idField="functionID" parentIdField="parentID"
@@ -18,17 +18,16 @@
                     data?.parent?.largeIcon
                       ? data?.parent?.largeIcon
                       : 'icon-label icon-18'
-                  }} me-2"></span>
+                  }} me-2 icon-16"></span>
 
                   <span class="text-dark fs-6"> {{ data?.parent?.customName }}</span>
                 </div>
               </ng-container>
 
               <ng-template #notFunction>
-                <span class="mx-2 check-per {{
+                <span class="icon-node check-per {{
                     data?.isper ? 'far fa-check-square' : ''
-                  }}" [attr.data-id]="data?.parent?.functionID"
-                  style="width: 10px; color: #005dc7; font-size: 10px"></span>
+                  }}" [attr.data-id]="data?.parent?.functionID"></span>
                 <span> {{ data?.parent?.customName }}</span>
               </ng-template>
             </ng-template>
