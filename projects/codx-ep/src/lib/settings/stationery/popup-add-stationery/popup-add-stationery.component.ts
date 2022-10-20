@@ -106,9 +106,9 @@ export class PopupAddStationeryComponent extends UIComponent {
       .then((item: any) => {
         this.dialogAddStationery = item;
         this.dialogAddStationery.patchValue({
-          reservedQty: '0',
-          currentQty: '0',
-          availableQty: '0',
+          reservedQty: 0,
+          currentQty: 0,
+          availableQty: 0,
         });
         this.isAfterRender = true;
       });

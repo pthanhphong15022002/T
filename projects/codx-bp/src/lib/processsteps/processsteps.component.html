@@ -192,22 +192,22 @@
     </div>
   </div>
 
-  <codx-attachment
-    #attachment
-    [objectType]="view.formModel.entityName"
-    [objectId]="data?.recID"
-    hideFolder="1"
-    hideImageUpload="0"
-    hideImageThumb="0"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="inline"
-    allowMultiFile="1"
-    [formModel]="view.formModel"
-    [functionID]="funcID"
-    displayThumb="full"
-  >
-  </codx-attachment>
+  <codx-attachment 
+  #attachment
+  [objectType]="view.formModel.entityName"
+  [objectId]="data?.recID"
+  hideFolder="1"
+  hideImageUpload="1"
+  hideImageThumb="0"
+  hideUploadBtn="1"
+  hideDes="1"
+  type="inline"
+  allowMultiFile="1"
+  [formModel]="view.formModel"
+  [functionID]="funcID"
+  displayThumb="full"
+>
+</codx-attachment>
 
   <div class="mt-5">
     <codx-imgs
