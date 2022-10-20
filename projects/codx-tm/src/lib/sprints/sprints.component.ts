@@ -231,7 +231,7 @@ export class SprintsComponent extends UIComponent {
         if (data.iterationID != this.user.userID) this.shareBoard(e.data, data);
         break;
       case 'TMT03012':
-        this.viewBoard(e.data, data);
+        this.viewBoard(data);
         break;
       default:
         break;
@@ -284,23 +284,8 @@ export class SprintsComponent extends UIComponent {
     );
   }
 
-  viewBoard(e, data) {
-    this.urlView = e?.url;
-    // this.urlView = 'tm/sprintdetails/TMT03011'; ///gán cứng chứ thương chưa đổi
-    this.codxService.navigate('', this.urlView, {
-      iterationID: data.iterationID,
-    });
-    // this.urlView = 'tm/sprintdetails/TMT03011';
-    // if (data.iterationID != this.user.userID)
-    //   this.urlView += '/' + data.iterationID;
-    //   this.codxService.navigate('', this.urlView)
-    // this.codxService.navigateMF(e.functionID, this.view.formModel.formName, this.view.formModel.gridViewName, data);
-    // Đoạn này em rem lại vì chạy core cũ với lý do core mới lỗi
-
-    // var state = {
-    //   iterationID: data?.iterationID,
-    // };
-    // this.codxService.navigate('', this.urlView,null,state);
+  viewBoard( data) {
+    this.doubleClick(data)
   }
 
   changeView(evt: any) {}
@@ -332,15 +317,6 @@ export class SprintsComponent extends UIComponent {
 
   //#region doubeclick carrd
   doubleClick(data) {
-    // if (this.listMoreFunc.length > 0) {
-    //   this.listMoreFunc.forEach((obj) => {
-    //     if (obj.functionID == 'TMT03012') this.urlView = obj.url;
-    //   });
-    //   this.codxService.navigate('', this.urlView, {
-    //     iterationID: data.iterationID,
-    //   });
-    // }
-
     this.tmSv.getSprintsDetails(data.iterationID).subscribe((res) => {
       if (res) {
         var dataView = res;

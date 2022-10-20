@@ -15,11 +15,11 @@
   [method]="method"
   (onLoading)="onLoading($event)"
   (requestEnded)="closeEditForm($event)"
-  [viewActiveType]="viewType.grid"
+  [viewActiveType]="viewType.card"
 >
 </codx-views>
 
-<ng-template #resourceID let-data>
+<!-- <ng-template #resourceID let-data>
   <div class="fw-bold">{{ data?.resourceID }}</div>
 </ng-template>
 
@@ -110,7 +110,7 @@
       type="hover"
     ></codx-mfunc>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #columnsList let-data>
   <div class="p-4">
@@ -158,7 +158,7 @@
           <div
             class="border"
             [ngStyle]="{ 'background-color': data?.color }"
-            style="width: 50px; height: 50px; border-radius: 25%"
+            style="width: 30px; height: 30px; border-radius: 25%"
           ></div>
         </div>
       </div>
@@ -238,8 +238,8 @@
   <codx-card-img
     cardCss="border w-250px h-100"
     [imageObjType]="'EP_Stationery'"
+    [imageWidth]="600"
     [imageId]="data?.recID"
-    
     [rootData]="data"
     [footer]="cardItemFooter"
     [imgOn]="data.modifiedOn"

@@ -670,131 +670,143 @@ item: any;
   ngAfterViewInit(): void {
     this.cache.valueList("SYS025").subscribe(item=>{
       this.sys025 = item;
-      this.views = [
-        {
-          id: '1',
-          icon: this.sys025?.datas[3].icon,
-          text: this.sys025?.datas[3].text,
-          type: ViewType.tree_card,
-          active: true,
-          sameData: true,
-          /*  toolbarTemplate: this.templateSearch,*/
-          model: {
-            template: this.templateMain,
-            panelRightRef: this.templateRight,
-            template2: this.templateCard,
-            resizable: false,
-          },
-        },
-        {
-          id: '1',
-          icon: 'icon-search',
-          text: 'Search',
-          hide: true,
-          type: ViewType.tree_list,
-          sameData: true,
-          model: {
-            template: this.templateMain,
-            panelRightRef: this.templateRight,
-            template2: this.templateSearch,
-            resizable: false,
-          },
-        },
-        {
-          id: '1',
-          icon: this.sys025?.datas[4].icon,
-          text: this.sys025?.datas[4].text,
-          type: ViewType.tree_smallcard,
-          active: false,
-          sameData: true,
-          model: {
-            template: this.templateMain,
-            panelRightRef: this.templateRight,
-            template2: this.templateSmallCard,
-            resizable: false,
-          },
-        },
-        {
-          id: '1',
-          icon: this.sys025?.datas[0].icon,
-          text: this.sys025?.datas[0].text,
-          type: ViewType.tree_list,
-          sameData: true,
-          active: false,
-          model: {
-            template: this.templateMain,
-            panelRightRef: this.templateRight,
-            template2: this.templateList,
-            resizable: false,
-          }
-        },
-      ];
-      this.orgViews = [
-        {
-          id: '1',
-          icon: 'icon-search',
-          text: 'Search',
-          hide: true,
-          type: ViewType.tree_list,
-          sameData: true,
-          /*  toolbarTemplate: this.templateSearch,*/
-          model: {
-            template: this.templateMain,
-            panelRightRef: this.templateRight,
-            template2: this.templateSearch,
-            resizable: false,
-          },
-        },
-        {
-          id: '1',
-          icon: this.sys025?.datas[3].icon,
-          text: this.sys025?.datas[3].text,
-          type: ViewType.tree_card,
-          active: true,
-          sameData: true,
-          /*  toolbarTemplate: this.templateSearch,*/
-          model: {
-            template: this.templateMain,
-            panelRightRef: this.templateRight,
-            template2: this.templateCard,
-            resizable: false,
-          },
-        },
-        {
-          id: '1',
-          icon: this.sys025?.datas[4].icon,
-          text: this.sys025?.datas[4].text,
-          type: ViewType.tree_smallcard,
-          active: false,
-          sameData: true,
-          model: {
-            template: this.templateMain,
-            panelRightRef: this.templateRight,
-            template2: this.templateSmallCard,
-            resizable: false,
-          },
-        },
-        {
-          id: '1',
-          icon: this.sys025?.datas[0].icon,
-          text: this.sys025?.datas[0].text,
-          type: ViewType.tree_list,
-          active: false,
-          sameData: true,
-          model: {
-            template: this.templateMain,
-            panelRightRef: this.templateRight,
-            template2: this.templateList,
-            resizable: false,
-          }
-        }];
-        this.viewActive = this.views.filter(x=>x.active == true)[0];
-      this.codxview.dataService.parentIdField = 'parentId';
-      this.dmSV.formModel = this.view.formModel;
-      this.dmSV.dataService = this.view?.currentView?.dataService;
+      this.views[0].text = item.datas[3].text;
+      this.views[0].icon = item.datas[3].icon;
+      this.views[2].text = item.datas[4].text;
+      this.views[2].icon = item.datas[4].icon;
+      this.views[3].text = item.datas[0].text;
+      this.views[3].icon = item.datas[0].icon;
+      this.orgViews[1].text = item.datas[3].text;
+      this.orgViews[1].icon = item.datas[3].icon;
+      this.orgViews[2].text = item.datas[4].text;
+      this.orgViews[2].icon = item.datas[4].icon;
+      this.orgViews[3].text = item.datas[0].text;
+      this.orgViews[3].icon = item.datas[0].icon;
+      this.view.views = this.views;
       this.changeDetectorRef.detectChanges();
     })
-   
+    this.views = [
+      {
+        id: '1',
+        icon: this.sys025?.datas[3].icon,
+        text: "card",
+        type: ViewType.tree_card,
+        active: true,
+        sameData: true,
+        /*  toolbarTemplate: this.templateSearch,*/
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateCard,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: 'icon-search',
+        text: 'Search',
+        hide: true,
+        type: ViewType.tree_list,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSearch,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[4].icon,
+        text: "smallcard",
+        type: ViewType.tree_smallcard,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSmallCard,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[0].icon,
+        text: "list",
+        type: ViewType.tree_list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateList,
+          resizable: false,
+        }
+      },
+    ];
+    this.orgViews = [
+      {
+        id: '1',
+        icon: 'icon-search',
+        text: 'Search',
+        hide: true,
+        type: ViewType.tree_list,
+        sameData: true,
+        /*  toolbarTemplate: this.templateSearch,*/
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSearch,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[3].icon,
+        text: "card",
+        type: ViewType.tree_card,
+        active: true,
+        sameData: true,
+        /*  toolbarTemplate: this.templateSearch,*/
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateCard,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[4].icon,
+        text: "smallcard",
+        type: ViewType.tree_smallcard,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateSmallCard,
+          resizable: false,
+        },
+      },
+      {
+        id: '1',
+        icon: this.sys025?.datas[0].icon,
+        text: "list",
+        type: ViewType.tree_list,
+        active: false,
+        sameData: true,
+        model: {
+          template: this.templateMain,
+          panelRightRef: this.templateRight,
+          template2: this.templateList,
+          resizable: false,
+        }
+    }];
+    this.viewActive = this.views.filter(x=>x.active == true)[0];
+    this.codxview.dataService.parentIdField = 'parentId';
+    this.dmSV.formModel = this.view.formModel;
+    this.dmSV.dataService = this.view?.currentView?.dataService;
 
     //   console.log(this.button);
   }

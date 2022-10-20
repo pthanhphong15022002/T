@@ -28,14 +28,14 @@ import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-st
   styleUrls: ['./stationery.component.scss'],
 })
 export class StationeryComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('resourceID') resourceID: TemplateRef<any>;
-  @ViewChild('resourceName') resourceName: TemplateRef<any>;
-  @ViewChild('productImg') productImg: TemplateRef<any>;
-  @ViewChild('color') color: TemplateRef<any>;
-  @ViewChild('groupID') groupID: TemplateRef<any>;
-  @ViewChild('note') note: TemplateRef<any>;
-  @ViewChild('quantity') quantity: TemplateRef<any>;
-  @ViewChild('owner') owner: TemplateRef<any>;
+  // @ViewChild('resourceID') resourceID: TemplateRef<any>;
+  // @ViewChild('resourceName') resourceName: TemplateRef<any>;
+  // @ViewChild('productImg') productImg: TemplateRef<any>;
+  // @ViewChild('color') color: TemplateRef<any>;
+  // @ViewChild('groupID') groupID: TemplateRef<any>;
+  // @ViewChild('note') note: TemplateRef<any>;
+  // @ViewChild('quantity') quantity: TemplateRef<any>;
+  // @ViewChild('owner') owner: TemplateRef<any>;
   @ViewChild('columnsList') columnsList: TemplateRef<any>;
   @ViewChild('templateListCard') templateListCard: TemplateRef<any>;
   viewType = ViewType;
@@ -104,49 +104,49 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.grvStationery = gv;
-          this.columnsGrid = [
-            {
-              headerText: gv['ResourceID'].headerText,
-              template: this.resourceID,
-            },
-            {
-              headerText: gv['ResourceName'].headerText,
-              template: this.resourceName,
-            },
-            {
-              headerText: gv['Icon'].headerText,
-              template: this.productImg,
-            },
-            {
-              headerText: gv['Color'].headerText,
-              template: this.color,
-            },
-            {
-              headerText: gv['GroupID'].headerText,
-              template: this.groupID,
-            },
-            {
-              headerText: gv['Note'].headerText,
-              template: this.note,
-            },
-            {
-              headerText: 'Số lượng', //gv['Quantity'].headerText,
-              template: this.quantity,
-            },
-            {
-              headerText: gv['Owner'].headerText,
-              template: this.owner,
-            },
-          ];
+          // this.columnsGrid = [
+          //   {
+          //     headerText: gv['ResourceID'].headerText,
+          //     template: this.resourceID,
+          //   },
+          //   {
+          //     headerText: gv['ResourceName'].headerText,
+          //     template: this.resourceName,
+          //   },
+          //   {
+          //     headerText: gv['Icon'].headerText,
+          //     template: this.productImg,
+          //   },
+          //   {
+          //     headerText: gv['Color'].headerText,
+          //     template: this.color,
+          //   },
+          //   {
+          //     headerText: gv['GroupID'].headerText,
+          //     template: this.groupID,
+          //   },
+          //   {
+          //     headerText: gv['Note'].headerText,
+          //     template: this.note,
+          //   },
+          //   {
+          //     headerText: 'Số lượng', //gv['Quantity'].headerText,
+          //     template: this.quantity,
+          //   },
+          //   {
+          //     headerText: gv['Owner'].headerText,
+          //     template: this.owner,
+          //   },
+          // ];
           this.views = [
-            {
-              type: ViewType.grid,
-              sameData: true,
-              active: false,
-              model: {
-                resources: this.columnsGrid,
-              },
-            },
+            // {
+            //   type: ViewType.grid,
+            //   sameData: true,
+            //   active: false,
+            //   model: {
+            //     resources: this.columnsGrid,
+            //   },
+            // },
             {
               type: ViewType.card,
               sameData: true,
@@ -281,7 +281,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   addQuota(data) {
-    this.callfc.openForm(PopupAddQuotaComponent, '', 500, 200, '', [data]);
+    this.callfc.openForm(PopupAddQuotaComponent, '', 500, null, '', [data]);
   }
 
   closeEditForm(evt?: any) {

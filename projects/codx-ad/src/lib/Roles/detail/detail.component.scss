@@ -24,14 +24,20 @@
 //     margin-left: 14px;
 // }
 
-.btn.btn-primary.disabled, .btn.btn-primary:disabled,
-.btn.btn-primary.disabled:hover, .btn.btn-primary:disabled  {
+.btn.btn-primary.disabled,
+.btn.btn-primary:disabled,
+.btn.btn-primary.disabled:hover,
+.btn.btn-primary:disabled {
     color: #FFFFFF;
-    background-color:rgb(179, 173, 173) !important;
+    background-color: rgb(179, 173, 173) !important;
     border-color: rgb(179, 173, 173) !important;
     cursor: unset;
 }
 
 .pd-r {
     padding-right: 13rem !important;
+}
+
+#Content-Fillter .menu-item {
+    margin-bottom: 4px;
 }

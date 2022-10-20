@@ -1,303 +1,168 @@
 <codx-views #view [funcID]="funcID" [autoLoad]="false" [views]="views">
 </codx-views>
 <ng-template #template>
-  <div
-    class="content h-100 d-flex flex-column flex-column-fluid p-0"
-    id="kt_content"
-  >
+  <div class="content h-100 d-flex flex-column flex-column-fluid p-0 mt-2" id="kt_content">
     <div id="erm_content" class="d-flex flex-column-fluid h-100">
       <div class="d-flex container h-100">
         <div class="aside-detail flex-row-auto w-250px me-6">
           <div class="aside-menu">
-            <codx-treeview
-              id="treeAdd"
-              #asideTree
-              [itemTemplate]="templatetree"
-              [data]="myTree"
-              textField="customName"
-              fieldCheck="hasChildren"
-              [enableCheck]="false"
-              idField="functionID"
-              parentIdField="parentID"
-              (selectionChange)="onSelectionAddChanged($event, asideTree)"
-              [autoLoad]="false"
-              [isOutput]="true"
-              [isLoadChild]="false"
-              [selectFirst]="false"
-            >
+            <codx-treeview id="treeAdd" #asideTree [itemTemplate]="templatetree" [data]="myTree" textField="customName"
+              fieldCheck="hasChildren" [enableCheck]="false" idField="functionID" parentIdField="parentID"
+              (selectionChange)="onSelectionAddChanged($event, asideTree)" [autoLoad]="false" [isOutput]="true"
+              [isLoadChild]="false" [selectFirst]="false">
             </codx-treeview>
             <ng-template #templatetree let-data>
-              <ng-container *ngIf="data?.parent?.isFunction; else notFunction">
-                <span
-                  class="{{
+              <ng-container *ngIf="!data?.parent?.isFunction; else notFunction">
+                <div class="d-flex align-items-center">
+                  <span class="{{
                     data?.parent?.largeIcon
                       ? data?.parent?.largeIcon
                       : 'icon-label icon-18'
-                  }} me-2"
-                ></span>
+                  }} me-2"></span>
 
-                <span> {{ data?.parent?.customName }}</span>
+                  <span class="text-dark fs-6"> {{ data?.parent?.customName }}</span>
+                </div>
               </ng-container>
 
               <ng-template #notFunction>
-                <span
-                  class="mx-2 check-per {{
+                <span class="mx-2 check-per {{
                     data?.isper ? 'far fa-check-square' : ''
-                  }}"
-                  [attr.data-id]="data?.parent?.functionID"
-                  style="width: 10px; color: #005dc7; font-size: 10px"
-                ></span>
+                  }}" [attr.data-id]="data?.parent?.functionID"
+                  style="width: 10px; color: #005dc7; font-size: 10px"></span>
                 <span> {{ data?.parent?.customName }}</span>
               </ng-template>
             </ng-template>
           </div>
         </div>
-        <div class="rounded-3 p-6 flex-grow-1 h-100 role-content">
-          <div
-            class="d-flex align-items-center justify-content-between setting-sticky menu-action-role"
-          >
+        <div class="flex-grow-1 h-100 role-content">
+          <div class="d-flex align-items-center justify-content-between mb-3 setting-sticky menu-action-role">
             <h2>
-              <codx-label
-                name="lblRoleAuthorize"
-                formName="Roles"
-                [default]="'Phân quyền vai trò '"
-              >
+              <codx-label name="lblRoleAuthorize" formName="Roles" [default]="'Phân quyền vai trò '">
               </codx-label>
               {{ roleName }}
             </h2>
             <div>
-              <button
-                class="btn btn-primary btn-sm mx-1"
-                [disabled]="!active"
-                (click)="Save()"
-              >
+              <button class="btn btn-primary btn-sm mx-1" [disabled]="!active" (click)="Save()">
                 Lưu
               </button>
-              <button
-                class="btn btn-primary btn-sm mx-1"
-                [disabled]="!active"
-                (click)="Delete()"
-              >
+              <button class="btn btn-primary btn-sm mx-1" [disabled]="!active" (click)="Delete()">
                 Xóa
               </button>
             </div>
           </div>
-          <div
-            class="role-detail pb-3 hover-scroll-overlay-y px-5"
-            data-kt-scroll="true"
-            data-kt-scroll-activate="{default: true}"
-            data-kt-scroll-height="auto"
+          <div class="role-detail p-6 rounded-3 bg-body hover-scroll-overlay-y" data-kt-scroll="true"
+            data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
             data-kt-scroll-dependencies=".menu-action-role"
-            data-kt-scroll-wrappers=".wrapper, .wrapper-only-header, .role-content"
-            data-kt-scroll-offset="5px"
-          >
-            <div class="bg-body list-group">
+            data-kt-scroll-wrappers=".wrapper, .wrapper-only-header, .role-content" data-kt-scroll-offset="5px">
+            <div class="list-group">
               <div class="list-title">
-                <h4 class="text-dark">
-                  <codx-label
-                    name="lblDataAuthorize"
-                    formName="Roles"
-                    default="Phân quyền dữ liệu"
-                  >
+                <h4 class="text-dark mb-5">
+                  <codx-label name="lblDataAuthorize" formName="Roles" default="Phân quyền dữ liệu">
                   </codx-label>
                 </h4>
               </div>
               <div class="list-content">
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="d-flex flex-column">
-                    <div>Cho phép sử dụng</div>
+                    <div class="text-dark">Cho phép sử dụng</div>
                     <div class="text-muted">
                       Cho phép người dùng thực hiện chức năng
                     </div>
                   </div>
-                  <codx-input
-                    type="switch"
-                    [disabled]="!active"
-                    [crrValue]="dataPermission?.run"
-                    field="run"
-                    (valueChange)="valueChange($event)"
-                  >
+                  <codx-input type="switch" [disabled]="!active" [checked]="dataPermission?.run || false" field="run"
+                    (valueChange)="valueChange($event)">
                   </codx-input>
-                  <!-- <span class="switch switch-sm mr-2">
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="check-add"
-                        [disabled]="!active"
-                        [(ngModel)]="dataPermission.run"
-                        name="select"
-                      />
-                      <span></span>
-                    </label>
-                  </span> -->
                 </div>
                 <hr />
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="d-flex flex-column">
-                    <div>Thêm</div>
+                    <div class="text-dark">Thêm</div>
                     <div class="text-muted">Cho phép tạo mới đối tượng mới</div>
                   </div>
-                  <codx-input
-                    type="switch"
-                    [disabled]="!active"
-                    [crrValue]="dataPermission?.create"
-                    field="create"
-                    (valueChange)="valueChange($event)"
-                  >
+                  <codx-input type="switch" [disabled]="!active" [checked]="dataPermission?.create || false"
+                    field="create" (valueChange)="valueChange($event)">
                   </codx-input>
-                  <!-- <span class="switch switch-sm mr-2">
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="check-add"
-                        [disabled]="!active"
-                        [(ngModel)]="dataPermission.create"
-                        name="select"
-                      />
-                      <span></span>
-                    </label>
-                  </span> -->
                 </div>
                 <hr />
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="d-flex flex-column">
-                    <div>Xem</div>
+                    <div class="text-dark">Xem</div>
                     <div class="text-muted">
                       Hiển thị thông tin lên danh sách
                     </div>
                   </div>
                   <div class="lv-control">
-                    <codx-input
-                      type="valuelist"
-                      name="select"
-                      class="cotrol-vll"
-                      placeholder=""
-                      ngDefaultControl
-                      refValue="L0001"
-                      [disabled]="!active"
-                      [crrValue]="
+                    <codx-input type="valuelist" name="select" class="cotrol-vll" placeholder="" ngDefaultControl
+                      refValue="L0001" [disabled]="!active" [crrValue]="
                         dataPermission?.read ? dataPermission?.read : 0
-                      "
-                      field="read"
-                      (valueChange)="valueChange($event)"
-                    >
+                      " field="read" (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
                 </div>
                 <hr />
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="d-flex flex-column">
-                    <div>Sửa</div>
+                    <div class="text-dark">Sửa</div>
                     <div class="text-muted">
                       Lưu dữ liệu chỉnh sửa vào cơ sở dữ liệu
                     </div>
                   </div>
                   <div class="lv-control">
-                    <codx-input
-                      type="valuelist"
-                      name="select"
-                      class="cotrol-vll"
-                      placeholder=""
-                      [disabled]="!active"
-                      ngDefaultControl
-                      refValue="L0001"
-                      field="write"
-                      [crrValue]="
+                    <codx-input type="valuelist" name="select" class="cotrol-vll" placeholder="" [disabled]="!active"
+                      ngDefaultControl refValue="L0001" field="write" [crrValue]="
                         dataPermission?.write ? dataPermission?.write : 0
-                      "
-                      (valueChange)="valueChange($event)"
-                    >
+                      " (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
                 </div>
                 <hr />
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="d-flex flex-column">
-                    <div>Xóa</div>
+                    <div class="text-dark">Xóa</div>
                     <div class="text-muted">
                       Xóa đối tượng được chọn ra khỏi danh sách
                     </div>
                   </div>
                   <div class="lv-control">
-                    <codx-input
-                      type="valuelist"
-                      name="select"
-                      class="cotrol-vll"
-                      placeholder=""
-                      [disabled]="!active"
-                      ngDefaultControl
-                      refValue="L0001"
-                      field="delete"
-                      [crrValue]="
+                    <codx-input type="valuelist" name="select" class="cotrol-vll" placeholder="" [disabled]="!active"
+                      ngDefaultControl refValue="L0001" field="delete" [crrValue]="
                         dataPermission?.delete ? dataPermission?.delete : 0
-                      "
-                      (valueChange)="valueChange($event)"
-                    >
+                      " (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
                 </div>
                 <hr />
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="d-flex flex-column">
-                    <div>Xem dữ liệu trên combobox</div>
+                    <div class="text-dark">Xem dữ liệu trên combobox</div>
                     <div class="text-muted">
                       Người dùng xem dữ liệu trên combobox
                     </div>
                   </div>
                   <div class="lv-control">
-                    <codx-input
-                      type="valuelist"
-                      name="select"
-                      class="cotrol-vll"
-                      placeholder=""
-                      [disabled]="!active"
-                      ngDefaultControl
-                      refValue="L0001"
-                      field="refer"
-                      [crrValue]="
+                    <codx-input type="valuelist" name="select" class="cotrol-vll" placeholder="" [disabled]="!active"
+                      ngDefaultControl refValue="L0001" field="refer" [crrValue]="
                         dataPermission?.refer ? dataPermission?.refer : 0
-                      "
-                      (valueChange)="valueChange($event)"
-                    >
+                      " (valueChange)="valueChange($event)">
                     </codx-input>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              *ngIf="dataBasic && dataBasic.length > 0"
-              class="bg-body list-group"
-            >
-              <div
-                class="list-title d-flex align-items-center justify-content-between"
-              >
+            <div *ngIf="dataBasic && dataBasic.length > 0" class="bg-body list-group">
+              <div class="list-title d-flex align-items-center justify-content-between">
                 <h4 class="text-dark">
-                  <codx-label
-                    name="lblBasicFunction"
-                    formName="Roles"
-                    default="Chức năng cơ bản"
-                  >
+                  <codx-label name="lblBasicFunction" formName="Roles" default="Chức năng cơ bản">
                   </codx-label>
                 </h4>
-                <codx-input
-                  type="checkbox"
-                  name="checkbox"
-                  class="check-sys d-block text-right"
-                  placeholder=""
-                  ngDefaultControl
-                  field="sys"
-                  (valueChange)="valueChange($event)"
-                  label="Chọn tất cả"
-                  labelPosition="before"
-                  [disabled]="!active"
-                >
+                <codx-input type="checkbox" name="checkbox" class="check-sys d-block text-right" placeholder=""
+                  ngDefaultControl field="sys" (valueChange)="valueChange($event)" label="Chọn tất cả"
+                  labelPosition="before" [disabled]="!active">
                 </codx-input>
               </div>
               <div class="task-status list-content sys">
                 <ng-container *ngFor="let item of dataBasic">
-                  <div
-                    class="d-flex align-items-center justify-content-between border-top item-hover py-2"
-                  >
+                  <div class="d-flex align-items-center justify-content-between border-top item-hover py-2">
                     <div class="d-flex align-items-start">
                       <span class="{{ item.largeIcon }} pt-1"></span>
                       <div class="ms-3">
@@ -307,13 +172,8 @@
                         <div class="text-muted">{{ item.description }}</div>
                       </div>
                     </div>
-                    <codx-input
-                      [attr.data-funcID]="item.functionID"
-                      (change)="inputChange($event)"
-                      class="role-function"
-                      type="switch"
-                      name="select"
-                    >
+                    <codx-input [attr.data-funcID]="item.functionID" (change)="inputChange($event)"
+                      class="role-function" type="switch" name="select">
                     </codx-input>
                     <!-- <span class="switch switch-sm">
                       <label>
@@ -332,41 +192,21 @@
                 </ng-container>
               </div>
             </div>
-            <div
-              *ngIf="dataExport && dataExport.length > 0"
-              class="bg-body list-group"
-            >
-              <div
-                class="list-title d-flex align-items-center justify-content-between"
-              >
+            <div *ngIf="dataExport && dataExport.length > 0" class="bg-body list-group">
+              <div class="list-title d-flex align-items-center justify-content-between">
                 <h4 class="text-dark">
-                  <codx-label
-                    name="lblExport"
-                    formName="Roles"
-                    default="Export"
-                  >
+                  <codx-label name="lblExport" formName="Roles" default="Export">
                   </codx-label>
                 </h4>
-                <codx-input
-                  type="checkbox"
-                  name="checkbox"
-                  class="check-exp d-block text-right"
-                  placeholder=""
-                  ngDefaultControl
-                  field="exp"
-                  (valueChange)="valueChange($event)"
-                  label="Chọn tất cả"
-                  labelPosition="before"
-                  [disabled]="!active"
-                >
+                <codx-input type="checkbox" name="checkbox" class="check-exp d-block text-right" placeholder=""
+                  ngDefaultControl field="exp" (valueChange)="valueChange($event)" label="Chọn tất cả"
+                  labelPosition="before" [disabled]="!active">
                 </codx-input>
               </div>
 
               <div id="penal" class="task-status list-content exp">
                 <ng-container *ngFor="let item of dataExport">
-                  <div
-                    class="d-flex align-items-center justify-content-between border-top item-hover"
-                  >
+                  <div class="d-flex align-items-center justify-content-between border-top item-hover">
                     <div class="d-flex align-items-start">
                       <span class="{{ item.largeIcon }} pt-1"></span>
                       <div class="ms-3">
@@ -376,13 +216,8 @@
                         <div class="text-muted">{{ item.description }}</div>
                       </div>
                     </div>
-                    <codx-input
-                      [attr.data-funcID]="item.functionID"
-                      (change)="inputChange($event)"
-                      class="role-function"
-                      type="switch"
-                      name="select"
-                    >
+                    <codx-input [attr.data-funcID]="item.functionID" (change)="inputChange($event)"
+                      class="role-function" type="switch" name="select">
                     </codx-input>
                     <!-- <span class="switch switch-sm">
                       <label>
@@ -402,40 +237,20 @@
               </div>
             </div>
 
-            <div
-              *ngIf="dataMore && dataMore.length > 0"
-              class="bg-body list-group"
-            >
-              <div
-                class="list-title d-flex align-items-center justify-content-between"
-              >
+            <div *ngIf="dataMore && dataMore.length > 0" class="bg-body list-group">
+              <div class="list-title d-flex align-items-center justify-content-between">
                 <h4 class="text-dark">
-                  <codx-label
-                    name="lblExtendedFunction"
-                    formName="Roles"
-                    default="Chức năng mở rộng"
-                  >
+                  <codx-label name="lblExtendedFunction" formName="Roles" default="Chức năng mở rộng">
                   </codx-label>
                 </h4>
-                <codx-input
-                  type="checkbox"
-                  name="checkbox"
-                  class="check-more d-block text-right"
-                  placeholder=""
-                  ngDefaultControl
-                  field="more"
-                  (valueChange)="valueChange($event)"
-                  label="chọn tất cả"
-                  labelPosition="before"
-                  [disabled]="!active"
-                >
+                <codx-input type="checkbox" name="checkbox" class="check-more d-block text-right" placeholder=""
+                  ngDefaultControl field="more" (valueChange)="valueChange($event)" label="chọn tất cả"
+                  labelPosition="before" [disabled]="!active">
                 </codx-input>
               </div>
               <div class="task-status list-content more">
                 <ng-container *ngFor="let item of dataMore">
-                  <div
-                    class="d-flex align-items-center justify-content-between border-top item-hover"
-                  >
+                  <div class="d-flex align-items-center justify-content-between border-top item-hover">
                     <div class="d-flex align-items-start">
                       <span class="{{ item.largeIcon }} pt-1"></span>
                       <div class="ms-3">
@@ -445,13 +260,8 @@
                         <div class="text-muted">{{ item.description }}</div>
                       </div>
                     </div>
-                    <codx-input
-                      [attr.data-funcID]="item.functionID"
-                      (change)="inputChange($event)"
-                      class="role-function"
-                      type="switch"
-                      name="select"
-                    >
+                    <codx-input [attr.data-funcID]="item.functionID" (change)="inputChange($event)"
+                      class="role-function" type="switch" name="select">
                     </codx-input>
                     <!-- <span class="switch switch-sm">
                       <label>

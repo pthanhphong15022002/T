@@ -105,9 +105,6 @@ export class RoleDetailComponent
     if (this.sub) this.sub.unsubscribe();
     //this.RolesService.appendPesmission(null);
   }
-  onChangeSelectedFunction(data) {
-    this.roleName = this.tempService.roleName + ' - ' + data.nameFunction;
-  }
 
   LoadAsside() {
     this.api
@@ -136,6 +133,7 @@ export class RoleDetailComponent
       this.gridViewName = item.gridViewName;
       this.functionID = item.functionType == 'M' ? '' : item.functionID;
       if (this.formName && this.gridViewName && this.functionID) {
+        this.roleName = this.tempService.roleName + ' - ' + item.customName;
         this.api
           .execSv(
             'SYS',
@@ -174,7 +172,6 @@ export class RoleDetailComponent
 
   LoadPermission(d: any) {
     if (!d) return;
-    //var d = data[0] || {};
 
     this.dataBasic = d.Basic || [];
     this.dataMore = d.More || [];
@@ -185,10 +182,9 @@ export class RoleDetailComponent
     this.df.detectChanges();
 
     var funcExp: Array<string> = d.Adv || [];
-    // if (!this.tempService.isSystem)
+
     this.active = true;
-    // else
-    //   this.active = false;
+
     this.checkAndLock('exp', false);
 
     this.activeSys = this.RolesService._activeSysFuction;
@@ -199,13 +195,18 @@ export class RoleDetailComponent
 
     var sysfunc = document.querySelectorAll('codx-input[data-funcID]');
 
-    sysfunc.forEach((elm) => {
-      //var funcID = $(elm).data('funcid');
-      // if (funcExp.indexOf(funcID) >= 0) {
-      //   elm.checked = true;
-      // } else {
-      //   elm.checked = false;
-      // }
+    sysfunc.forEach((elm: any) => {
+      let funcID = elm.dataset?.funcid;
+      let inner = elm.querySelector('span.e-switch-inner');
+      let handle = elm.querySelector('span.e-switch-handle');
+
+      if (funcExp.indexOf(funcID) >= 0) {
+        if (inner) inner.classList.add('e-switch-active');
+        if (handle) handle.classList.add('e-switch-active');
+      } else {
+        if (inner) inner.classList.remove('e-switch-active');
+        if (handle) handle.classList.remove('e-switch-active');
+      }
     });
     this.df.detectChanges();
   }
@@ -269,29 +270,14 @@ export class RoleDetailComponent
           if (handle) handle.classList.remove('e-switch-active');
         }
       });
-      if (check) {
-        // $.each(eles, function (i, elm) {
-        //   //console.log(elm);
-        //   elm.checked = true;
-        //   elm.disabled = true && a;
-        // });
-      } else {
-        eles.forEach((element) => {
-          // element.checked = false;
-          // element.disabled = false;
-        });
-        // $.each(eles, function (i, elm) {
-        //   elm.checked = false;
-        //   elm.disabled = false;
-        // });
-      }
     }
   }
   Save() {
-    var funcID = this.RolesService.funcID;
-    var formName = this.RolesService.formName;
+    var funcID = this.functionID;
+    var formName = this.formName;
     var roleID = this.recid;
     if (!funcID || !roleID) return;
+    var run = this.dataPermission.run;
     var create = this.dataPermission.create;
     var sys = this.activeSys;
     var more = this.activeMore;
@@ -299,37 +285,18 @@ export class RoleDetailComponent
     var edit = this.dataPermission.write;
     var deleted = this.dataPermission.delete;
     var t = this;
-    // var sysfunc = $('input[data-funcID]', $('.sys'));
-    // var morefunc = $('input[data-funcID]', $('.more'));
-    // var expfunc = $('input[data-funcID]', $('.exp'));
+    let $sys = document.getElementsByClassName('sys');
+    let $more = document.getElementsByClassName('more');
+    let $exp = document.getElementsByClassName('exp');
+    if ($sys && $sys.length > 0) this.addIDActive($sys[0] as HTMLElement);
 
-    // $.each(sysfunc, function (i, elm) {
-    //   //console.log(elm);
-    //   if (elm.checked) {
-    //     var funcID = $(elm).data('funcid');
-    //     t.dataFuncRole.push(funcID);
-    //   }
-    // });
+    if ($more && $more.length > 0) this.addIDActive($more[0] as HTMLElement);
 
-    // $.each(expfunc, function (i, elm) {
-    //   //console.log(elm);
-    //   if (elm.checked) {
-    //     var funcID = $(elm).data('funcid');
-    //     t.dataFuncRole.push(funcID);
-    //   }
-    // });
-
-    // $.each(morefunc, function (i, elm) {
-    //   //console.log(elm);
-    //   if (elm.checked) {
-    //     var funcID = $(elm).data('funcid');
-    //     t.dataFuncRole.push(funcID);
-    //   }
-    // });
-
+    if ($exp && $exp.length > 0) this.addIDActive($exp[0] as HTMLElement);
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'SaveRolePermissionAsync', [
         roleID,
+        run,
         create,
         view,
         edit,
@@ -343,19 +310,31 @@ export class RoleDetailComponent
       .subscribe((res) => {
         t.dataFuncRole = [];
         if (res && res.msgBodyData[0]) {
-          $('.check-per[data-id="' + funcID + '"]').addClass(
-            'far fa-check-square'
+          var checkper = document.querySelector(
+            '.check-per[data-id="' + funcID + '"]'
           );
+          if (checkper) checkper.classList.add('far', 'fa-check-square');
           this.RolesService._dataChanged = false;
           this.notificationsService.notifyCode('SYS019');
         }
       });
   }
 
+  private addIDActive(element: HTMLElement) {
+    var eles = element.querySelectorAll('codx-input[data-funcID]');
+    eles.forEach((element: any) => {
+      let inner = element.querySelector('span.e-switch-inner');
+      if (inner.classList.contains('e-switch-active')) {
+        let funcID = element.dataset?.funcid;
+        this.dataFuncRole.push(funcID);
+      }
+    });
+  }
+
   Delete() {
-    var funcID = this.RolesService.funcID;
-    var formName = this.RolesService.formName;
-    var funcID = this.RolesService.funcID;
+    var funcID = this.funcID;
+    var formName = this.formName;
+    var funcID = this.funcID;
     var roleID = this.recid;
     if (!funcID || !roleID) return;
     this.api
@@ -366,23 +345,24 @@ export class RoleDetailComponent
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
-          $('.check-per[data-id="' + funcID + '"]').removeClass(
-            'far fa-check-square'
+          var checkper = document.querySelector(
+            '.check-per[data-id="' + funcID + '"]'
           );
+          if (checkper) checkper.classList.remove('far', 'fa-check-square');
           this.notificationsService.notifyCode('SYS019');
           this.RolesService._dataChanged = false;
 
           this.api
-            .call('ERM.Business.AD', 'RolesBusiness', 'GetPermissionAsync', [
-              funcID,
-              formName,
-              '',
-              this.recid,
-            ])
+            .execSv(
+              'SYS',
+              'ERM.Business.AD',
+              'RolesBusiness',
+              'GetPermissionAsync',
+              [funcID, formName, '', this.recid]
+            )
             .subscribe((res) => {
               if (res) {
-                var data = res.msgBodyData;
-                this.RolesService.appendPesmission(data);
+                this.LoadPermission(res);
               }
             });
         }

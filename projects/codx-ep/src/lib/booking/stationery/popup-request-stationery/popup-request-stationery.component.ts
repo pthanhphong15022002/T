@@ -1,3 +1,5 @@
+import { title } from 'process';
+import { switchMap } from 'rxjs/operators';
 import { CodxEpService, GridModels } from './../../../codx-ep.service';
 import {
   Component,
@@ -6,7 +8,7 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import {
   DialogData,
   DialogRef,
@@ -38,6 +40,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   headerText = 'Thêm mới đăng ký';
 
+  requestType;
+  funcID: string;
+
   currentTab = 1; // buoc hiện tại
   formModel: FormModel;
   isAfterRender = true;
@@ -62,47 +67,43 @@ export class PopupRequestStationeryComponent extends UIComponent {
   cart = [];
   cartQty = 0;
 
+  lstStationery = [];
+
   user: UserModel;
-  gridModels: GridModels;
 
   model?: FormModel;
   groupStationery;
-  lstStationery;
 
   groupID: string;
 
+  qtyEmp: number = 0;
+  title:'';
   dialogAddBookingStationery: FormGroup;
-
+  
   constructor(
     private injector: Injector,
     private auth: AuthStore,
     private epService: CodxEpService,
     private notificationsService: NotificationsService,
-    @Optional() dialog: DialogRef,
+    @Optional() dialogRef: DialogRef,
     @Optional() data: DialogData
   ) {
     super(injector);
-    this.dialog = dialog;
+    this.dialog = dialogRef;
     this.formModel = data?.data?.formModel;
+    this.funcID = this.formModel?.funcID;
     this.data = data?.data?.option?.DataService.dataSelected || {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
+    this.title=data?.data?.title;
+    this.dialog.dataService=this.option.DataService;
   }
 
   onInit(): void {
     this.user = this.auth.get();
 
-    this.gridModels = new GridModels();
-    this.gridModels.funcID = 'EPS27';
-    (this.gridModels.entityName = 'EP_Resources'),
-      (this.gridModels.entityPermission = 'EP_StationeryGroups'),
-      (this.gridModels.gridViewName = 'grvStationeryGroups');
-    this.gridModels.predicate = 'ResourceType=@0';
-    this.gridModels.dataValue = '5';
-    this.gridModels.pageSize = 20;
-
-    this.epService.getStationeryGroup(this.gridModels).subscribe((res) => {
-      this.groupStationery = res[0];
+    this.epService.getStationeryGroup().subscribe((res) => {
+      this.groupStationery = res;
     });
 
     this.initForm();
@@ -114,40 +115,113 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   initForm() {
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        this.cache.valueList(res?.Category.referedValue).subscribe((res) => {
+          this.requestType = res.datas;
+        });
+      });
     this.epService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogAddBookingStationery = item;
         if (this.data) {
-          this.dialogAddBookingStationery.patchValue({
-            resourceType: '6',
-          });
+          if (this.isAddNew) {
+            this.dialogAddBookingStationery.patchValue({
+              resourceType: '6',
+              category: '1',
+              status: '1', 
+            });
+            this.dialogAddBookingStationery.addControl('issueStatus', new FormControl('1'));              
+          }
+          if(!this.isAddNew){
+            this.data.bookingOn= new Date(this.data.bookingOn);
+            this.dialogAddBookingStationery.patchValue(this.data);
+            this.detectorRef.detectChanges();
+          }
         }
         this.isAfterRender = true;
       });
   }
 
   changeTab(tabNo) {
+    if (tabNo == 2 && this.cart.length == 0) {
+      return;
+    }
     this.currentTab = tabNo;
+    this.detectorRef.detectChanges();
+  }
 
+  valueChange(event) {
+    
+    if (event?.field) {
+      if (event.data instanceof Object) {
+        this.data[event.field] = event.data.value;
+      } else {
+        this.data[event.field] = event.data;
+      }
+    }
+
+    if (event?.field === 'bUID') {
+      this.epService
+        .getEmployeeByOrgUnitID(event.data)
+        .subscribe((res: any) => {
+          this.qtyEmp = 0;
+          if (res) {
+            this.qtyEmp = res;
+          }
+        });
+    }
+
+    this.detectorRef.detectChanges();
+  }
+  valueBookingOnChange(event) {
+    if (event?.field) {
+      if (event.data instanceof Object) {
+        this.dialogAddBookingStationery.patchValue({[event.field]:event.data.value});
+      } else {
+        this.dialogAddBookingStationery.patchValue({[event.field]:event.data});
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  valueChangeQtyStationery(event: any, resourceID: string) {
+    if (event?.data == 0) {
+      this.cart = this.cart.filter((item) => {
+        return item?.resourceID != resourceID;
+      });
+    }
     this.detectorRef.detectChanges();
   }
 
   beforeSave(option: any) {
     let itemData = this.dialogAddBookingStationery.value;
+    this.addQuota();
+    this.groupByWareHouse();
+
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAddNew, null, null, this.lstStationery];
     return true;
   }
 
   onSaveForm() {
-    this.dialogAddBookingStationery.patchValue(this.data);
-    // this.dialog.dataService
-    //   .save((opt: any) => this.beforeSave(opt))
-    //   .subscribe((res) => {
-    //     this.dialog.close();
-    //   });
-    console.log(this.dialogAddBookingStationery);
+    //this.data.reasonID='RS-001';//Dev Test
+    //this.dialogAddBookingStationery.patchValue(this.data);
+    if (this.dialogAddBookingStationery.invalid == true) {
+      this.epService.notifyInvalid(
+        this.dialogAddBookingStationery,
+        this.formModel
+      );
+    }
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt))
+      .subscribe((res) => {
+        this.dialog.close();
+      });
+    console.log(this.addQuota());
+    console.log(this.groupByWareHouse());
   }
 
   close() {
@@ -180,36 +254,43 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (isPresent) {
       this.cart.filter((item: any) => {
         if (item.recID == tmpResource.recID) {
-          if (tmpResource.quantity <= tmpResource.availableQty) {
-            item.quantity = item.quantity + 1;
-          } else {
-            this.api
-              .exec<any>(
-                'EP',
-                'ResourceQuotaBusiness',
-                'GetQuotaByResourceIDAsync',
-                item.resourceID
-              )
-              .subscribe((res: any) => {});
-            this.notificationsService.notify('Vượt quá sô lượng sẵn có', '3'); //Test
-          }
+          item.quantity = item.quantity + 1;
         }
       });
     } else {
       this.cartQty = this.cartQty + 1;
       tmpResource.quantity = 1;
-      if (tmpResource.quantity <= tmpResource.availableQty) {
-        this.cart.push(tmpResource);
-        this.notificationsService.notifyCode('SYS006');
-      } else {
-        this.notificationsService.notify('Hết hàng', '3');
-      }
+      this.cart.push(tmpResource);
+      this.notificationsService.notifyCode('SYS006');
     }
-    console.log(this.cart);
     this.detectorRef.detectChanges();
   }
 
+  addQuota() {
+    this.cart.map((item) => {
+      this.lstStationery.push({
+        id: item?.resourceID,
+        quantity: item?.quantity * this.qtyEmp,
+      });
+    });
+
+    return this.lstStationery;
+  }
+
   //#endregion
+
+  //#region split warehouses
+  groupByWareHouse() {
+    let warehouse = this.cart.reduce((bookings, item) => {
+      const { location } = item;
+      bookings[location] = bookings[location] ?? [];
+      bookings[location].push(item);
+      return bookings;
+    }, {});
+    return warehouse;
+  }
+  //#endregion
+
   click(data) {}
 
   clickMF($event, data) {}
@@ -217,6 +298,4 @@ export class PopupRequestStationeryComponent extends UIComponent {
   itemByRecID(index, item) {
     return item.recID;
   }
-
-  valueChange() {}
 }

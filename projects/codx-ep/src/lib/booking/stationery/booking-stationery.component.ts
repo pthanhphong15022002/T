@@ -1,5 +1,5 @@
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
-import { DialogModel, UIComponent } from 'codx-core';
+import { CacheService, CallFuncService, DialogModel, UIComponent, FormModel } from 'codx-core';
 import {
   AfterViewInit,
   Component,
@@ -28,7 +28,6 @@ export class BookingStationeryComponent
   extends UIComponent
   implements AfterViewInit
 {
-  @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('chart') chart: TemplateRef<any>;
 
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -48,12 +47,32 @@ export class BookingStationeryComponent
   method = 'GetListBookingAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
-  datavalue = '1';
+  datavalue = '6';
+  funcIDName='';
+  popupTitle='';
+  formModel:FormModel;
   itemDetail;
 
-  constructor(private injector: Injector) {
+  constructor(
+    private injector: Injector,
+    private callFuncService: CallFuncService,
+    private codxEpService: CodxEpService,
+    private cacheService: CacheService,
+    private notificationsService: NotificationsService,
+    ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+        
+      }
+    });
+    this.cache.functionList(this.funcID).subscribe(res => {
+      if (res) {            
+        this.funcIDName = res.customName.toString().toLowerCase();
+      }
+    });
   }
 
   onInit(): void {
@@ -79,6 +98,7 @@ export class BookingStationeryComponent
   }
 
   click(evt: any) {
+    this.popupTitle=evt?.text + " " + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
         this.addNewRequest();
@@ -88,17 +108,29 @@ export class BookingStationeryComponent
         break;
     }
   }
+  clickMF(event, data) {
+    this.popupTitle=event?.text + " " + this.funcIDName;
+    switch (event?.functionID) {     
 
+      case 'SYS02': //Xoa
+        this.delete(data);
+        break;
+
+      case 'SYS03': //Sua.
+        this.edit(data);
+        break;
+    }
+  }
   addNewRequest() {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+      option.FormModel = this.formModel;
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       this.callfc.openForm(
         PopupRequestStationeryComponent,
-        'Thêm mới',
+        this.popupTitle,
         700,
         650,
         this.funcID,
@@ -106,12 +138,92 @@ export class BookingStationeryComponent
           isAddNew: true,
           formModel: this.view?.formModel,
           option: option,
+          title:this.popupTitle,
         },
         '',
         dialogModel
       );
     });
   }
+  edit(evt:any) {
+    if (evt) {
+    this.view.dataService.dataSelected = evt;
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      this.callfc.openForm(
+        PopupRequestStationeryComponent,
+        this.popupTitle,
+        700,
+        650,
+        this.funcID,
+        {
+          isAddNew: false,
+          formModel: this.view?.formModel,
+          option: option,
+          title:this.popupTitle,
+        },
+        '',
+        dialogModel
+      );
+    });
+  }
+}
+  setPopupTitle(mfunc){
+    this.popupTitle = mfunc + " " + this.funcIDName;
+  }
+
+  // addNewRequest(evt?) {
+  //   this.view.dataService.addNew().subscribe((res) => {
+  //     this.dataSelected = this.view.dataService.dataSelected;
+  //     let option = new SidebarModel();
+  //     option.DataService = this.view?.dataService;
+  //     option.FormModel = this.formModel;
+  //     let dialogModel = new DialogModel();
+  //     dialogModel.IsFull = true;
+  //     this.dialog = this.callFuncService.openForm(
+  //       PopupRequestStationeryComponent,
+  //       this.popupTitle,
+  //       700,
+  //       650,
+  //       this.funcID,
+  //       [this.dataSelected, true],        
+  //     );
+  //   });
+  // }
+
+  // edit(evt?) {
+  //   if (evt) {
+  //     this.view.dataService.dataSelected = evt;
+  //     this.view.dataService
+  //       .edit(this.view.dataService.dataSelected)
+  //       .subscribe((res) => {
+  //         this.dataSelected = this.view.dataService.dataSelected;
+  //         let option = new SidebarModel();
+  //         option.DataService = this.view?.dataService;
+  //         option.FormModel = this.formModel;
+  //         let dialogModel = new DialogModel();
+  //         dialogModel.IsFull = true;
+  //         this.dialog = this.callFuncService.openSide(
+  //           PopupRequestStationeryComponent,
+  //           [this.view.dataService.dataSelected, false,this.popupTitle],
+  //           option
+  //         );
+  //       });
+  //   }
+  // }
+  delete(evt?) {
+    let deleteItem = this.view.dataService.dataSelected;
+    if (evt) { deleteItem = evt; }
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {
+      if(!res){
+        this.notificationsService.notifyCode("SYS022");
+      }
+    });
+  } 
 
   closeEditForm(evt?: any) {
     if (evt) {
@@ -119,7 +231,6 @@ export class BookingStationeryComponent
     }
   }
 
-  clickMF(evt, data) {}
 
   getDetailBooking(id: any) {
     this.api
