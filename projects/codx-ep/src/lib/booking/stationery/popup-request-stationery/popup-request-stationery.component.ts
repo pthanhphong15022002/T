@@ -1,3 +1,4 @@
+import { fieldAdv } from './../../../../../../codx-share/src/lib/components/viewFileDialog/alertRule.model';
 import { title } from 'process';
 import { switchMap } from 'rxjs/operators';
 import { CodxEpService, GridModels } from './../../../codx-ep.service';
@@ -73,7 +74,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   model?: FormModel;
   groupStationery;
-
+  radioGroupCheck:boolean =false;
+  radioPersonalCheck:boolean =true;
   groupID: string;
 
   qtyEmp: number = 0;
@@ -108,6 +110,17 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     this.initForm();
     this.filterStationery();
+    
+    if(!this.isAddNew){
+      this.epService.getEmployeeByOrgUnitID(this.data?.orgUnitID).subscribe((res:number)=>{
+        if(res){
+          this.qtyEmp=res;
+          this.detectorRef.detectChanges();
+        }
+      })
+      this.cart=this.data.bookingItems;
+      this.changeTab(2);
+    }
   }
 
   ngAfterViewInit() {
@@ -133,7 +146,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
               category: '1',
               status: '1', 
             });
-            this.dialogAddBookingStationery.addControl('issueStatus', new FormControl('1'));              
+            this.dialogAddBookingStationery.addControl('issueStatus', new FormControl('1')); 
+            
+            this.detectorRef.detectChanges();             
           }
           if(!this.isAddNew){
             this.data.bookingOn= new Date(this.data.bookingOn);
@@ -145,7 +160,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
       });
   }
 
-  changeTab(tabNo) {
+  changeTab(tabNo:number) {
     if (tabNo == 2 && this.cart.length == 0) {
       return;
     }
@@ -174,8 +189,17 @@ export class PopupRequestStationeryComponent extends UIComponent {
         });
     }
 
+    if (event?.field === 'category') {
+      if(event?.data){
+        this.dialogAddBookingStationery.patchValue({category:'1'});        
+      }
+      else{
+        this.dialogAddBookingStationery.patchValue({category:'2'}); 
+      }
+    }
     this.detectorRef.detectChanges();
   }
+
   valueBookingOnChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
