@@ -103,7 +103,7 @@ export const routes: Routes = [
       },
       {
         path: ':funcID',
-        redirectTo: 'WPT02P/home',
+        redirectTo: 'WPT02/home',
         pathMatch: 'full',
       },
     ],

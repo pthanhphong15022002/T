@@ -1,8 +1,6 @@
-import { ChangeDetectorRef, Component, HostBinding, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, SidebarModel, DialogModel, AuthService } from 'codx-core';
-import { environment } from 'src/environments/environment';
+import { ViewModel, ViewType, DialogModel, UIComponent } from 'codx-core';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
@@ -13,7 +11,7 @@ import { PopupSearchComponent } from '../popup/popup-search/popup-search.compone
   styleUrls: ['./view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewDetailComponent extends UIComponent {
   @HostBinding('class') get class() {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y news-detail";
   }
@@ -30,32 +28,23 @@ export class ViewDetailComponent implements OnInit {
   listTag = [];
   listNews = [];
   views: Array<ViewModel> = [];
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('codxViews') codxViews: ViewsComponent;
-  constructor(private api: ApiHttpService,
-    private codxService: CodxService,
-    private auth: AuthService,
-    private route: ActivatedRoute,
-    private callfc: CallFuncService,
-    private changedt: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
-  ) { }
-  ngOnInit(): void {
-    this.route.params.subscribe((p: any) => {
-      this.recID = p["recID"];
-      this.category = p["category"];
-      this.funcID = p["funcID"];
-      this.loadData(this.recID);
-    });
-    this.api
-      .exec<any[]>('BS', 'TagsBusiness', 'GetModelDataAsync', this.entityName)
-      .subscribe((o: any) => {
-        if (o) {
-          this.listTag = o.datas;
-          this.changedt.detectChanges();
-        }
-      });
+  userPermission:any = null;
 
+  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+  constructor(
+    private injector:Injector,
+    private sanitizer: DomSanitizer
+  ) {
+    super(injector);
+  }
+  onInit(): void {
+    this.recID = this.router.snapshot.params["recID"];
+    this.category = this.router.snapshot.params["category"];
+    this.funcID = this.router.snapshot.params["funcID"];
+    this.loadData(this.recID);
+    this.getUserPermission(this.funcID);
+    this.getDataTagAsync("WP_News");
+    this.detectorRef.detectChanges();
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -68,7 +57,7 @@ export class ViewDetailComponent implements OnInit {
         }
       },
     ];
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
   loadData(recID: string) {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetNewsInforAsync", recID).subscribe(
@@ -81,6 +70,30 @@ export class ViewDetailComponent implements OnInit {
         }
       }
     );
+  }
+  getUserPermission(funcID:string){
+    if(funcID){
+      let funcIDPermission  = funcID + "P";
+      this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcIDPermission])
+      .subscribe((res:any) => {
+        if(res){
+          this.userPermission = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+  }
+  getDataTagAsync(entityName:string){
+    if(entityName){
+      this.api
+      .exec<any[]>('BS', 'TagsBusiness', 'GetModelDataAsync', [entityName])
+      .subscribe((res: any) => {
+        if (res) {
+          this.listTag = res.datas;
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
   }
   clickViewDeital(data: any) {
     this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "UpdateViewNewsAsync", data.recID).subscribe(
@@ -95,13 +108,7 @@ export class ViewDetailComponent implements OnInit {
     this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + tag.value);
   }
 
-  clickShowPopupCreate(newsType: string) {
-    let option = new DialogModel();
-    option.DataService = this.codxViews.dataService;
-    option.FormModel = this.codxViews.formModel;
-    option.IsFull = true;
-    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', { type: newsType }, '', option);
-  }
+  
 
   searchField: string = "";
   tagUsers: any;
@@ -147,11 +154,23 @@ export class ViewDetailComponent implements OnInit {
         });
     }
   }
+  clickShowPopupCreate(newsType: string) {
+    if(this.view){
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      this.callfc.openForm(PopupAddComponent, '', 0, 0, '', { type: newsType }, '', option);
+    }
+  }
   clickShowPopupSearch() {
-    let option = new DialogModel();
-    option.FormModel = this.codxViews.formModel;
-    option.IsFull = true;
-    this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", { funcID: this.funcID }, "", option);
+    if(this.view){
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", { funcID: this.view.funcID }, "", option);
+    }
   }
   clickPopupShare(data: any) {
     if (!data) return;
@@ -162,7 +181,7 @@ export class ViewDetailComponent implements OnInit {
       headerText: 'Chia sẻ bài viết',
     };
     let option = new DialogModel();
-    option.FormModel = this.codxViews.formModel;
+    option.FormModel = this.view.formModel;
     this.callfc.openForm(PopupAddPostComponent, '', 650, 550, '', obj, '', option);
   }
 }

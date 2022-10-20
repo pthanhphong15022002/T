@@ -99,6 +99,16 @@
             </div>
           </div>
         </div>
+        <ng-container *ngIf="userPermission && userPermission.create">
+          <div class="menu-item me-lg-1">
+            <a [class.isActive]="category == 'settings'" routerlinkactive="active" class="menu-link py-3"
+              (click)="navigate('settings','WPT022')">
+              <span class="menu-title">
+                <codx-label formName="News" name="lblSetting" default="Thiết lập"></codx-label>
+              </span>
+            </a>
+          </div>
+        </ng-container>
       </div>
     </div>
   </ng-template>
