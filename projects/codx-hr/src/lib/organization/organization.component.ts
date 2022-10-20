@@ -5,6 +5,8 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { TreeViewComponent } from '@syncfusion/ej2-angular-navigations';
 import {
   ButtonModel,
   CodxTreeviewComponent,
@@ -162,9 +164,29 @@ export class OrgorganizationComponent extends UIComponent {
     {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.view.currentView.dataService;
       option.FormModel = this.view.formModel;
-      this.callfc.openSide(PopupAddOrganizationComponent,null,option);
+      let funcID = this.view.function;
+      let currentView:any = null;
+      let modeView:any = null;
+      if(this.view.currentView){
+        currentView = this.view.currentView
+        option.DataService = currentView.dataService;
+        if(currentView.currentComponent) 
+        {
+          modeView = currentView.currentComponent.treeView
+          if(modeView){
+            this.treeComponent = modeView as CodxTreeviewComponent;
+          }
+        }
+      }
+      let data = 
+      {
+        function: funcID,
+        orgUnitID: this.orgUnitID,
+        detailComponent: this.detailComponent,
+        treeComponent: this.treeComponent,
+      };
+      this.callfc.openSide(PopupAddOrganizationComponent,data,option);
     }
     
   }
@@ -223,30 +245,6 @@ export class OrgorganizationComponent extends UIComponent {
     this.currView = null;
     if (evt.view) {
       this.currView = evt.view.model.template2;
-      // var type = evt.view.type;
-      // if (type === ViewType.tree_orgchart) this.numberLV = '3';
-      // else this.numberLV = '1';
-      // if (!this.orgUnitID && !this.parentID) return;
-      // this.hrservice
-      //   .loadOrgchart(
-      //     this.orgUnitID,
-      //     this.parentID,
-      //     this.numberLV,
-      //     this.onlyDepartment
-      //   )
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       this.dataDetail = res.Data as any[];
-      //       var dataTemp = JSON.parse(JSON.stringify(this.dataDetail)) as any[];
-      //       this.dataCard = dataTemp.filter((item) => {
-      //         if (
-      //           item.orgUnitID === this.orgUnitID ||
-      //           item.parentID === this.orgUnitID
-      //         )
-      //           return item;
-      //       });
-      //     }
-      //   });
     }
   }
 }
