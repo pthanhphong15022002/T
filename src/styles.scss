@@ -876,3 +876,23 @@ codx-tag .codx-tag:hover {
 .form-control {
   font-size: inherit !important;
 }
+
+.header-fixed.toolbar-fixed .wrapper .fillter-card-body {
+  height: calc(100vh - 212px);
+  max-height: calc(100vh - 212px);
+  overflow: auto;
+  padding-top: 10px;
+}
+
+.card .card-header.fillter-card-header {
+  height: 46px !important;
+  margin-bottom: 5px !important;
+}
+
+.card .card-header.fillter-card-header .card-title {
+  margin: 0 !important;
+}
+
+.card .card-footer.fillter-card-footer {
+  padding: 1rem 1.5rem !important;
+}
