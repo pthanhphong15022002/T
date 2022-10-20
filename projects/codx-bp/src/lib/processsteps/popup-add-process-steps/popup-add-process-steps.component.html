@@ -27,20 +27,37 @@
         >
         </codx-input>
       </div>
-      <div class="col-md-4 form-group" *ngIf="stepType == 'P'">
-        <codx-label
-          fiedName="Duration"
-          [formModel]="form.formModel"
-          default="Thời gian chuẩn"
-        >
-        </codx-label>
-        <codx-input
-          field="duration"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChangeDuration($event)"
-        >
-        </codx-input>
+      <div class="form-group row" *ngIf="stepType == 'P'">
+        <div class="col-3">
+          <codx-label
+            fiedName="Duration"
+            [formModel]="form.formModel"
+            default="Thời gian chuẩn"
+          >
+          </codx-label>
+          <codx-input
+            field="duration"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-label
+            fiedName="Interval"
+            [formModel]="form.formModel"
+            default="Dựa trên"
+          >
+          </codx-label>
+          <codx-input
+            field="interval"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
       </div>
       <div class="form-group" *ngIf="stepType != 'P'">
         <codx-label
@@ -78,8 +95,8 @@
           default="Đầu mục thực hiện"
         ></codx-label>
         <codx-input
-           [style.border]="'none'"
-          field="reference" 
+          [style.border]="'none'"
+          field="reference"
           type="text"
           [crrValue]="textChange"
           (keyUpEnter)="valueChangeRefrence($event)"
@@ -94,7 +111,6 @@
           default="Bảng khảo sát"
         ></codx-label>
         <codx-input
-          field="reference" 
           type="text"
           [crrValue]="textChange"
           (keyUpEnter)="valueChangeRefrence($event)"
@@ -102,10 +118,12 @@
         </codx-input>
       </div>
       <ng-container *ngIf="referenceText?.length > 0">
-        <div *ngFor="let item of referenceText; let i = index">
-          <span>{{i}}</span><span>
-            <codx-label name="lblSymboy" default="-"></codx-label>
-          </span><span>{{item}}</span>
+        <div *ngFor="let item of referenceText; let i = index" class="m-5">
+          <div class="hover-text-primary">
+            <span>{{ i +1 }}</span
+              ><span> <codx-label name="lblSymboy" default="."></codx-label> </span
+              ><span>{{ item }}</span>
+          </div>
         </div>
       </ng-container>
       <div class="form-group" *ngIf="stepType != 'M' && stepType != 'C'">
@@ -127,18 +145,35 @@
           <codx-label
             fiedName="Duration"
             [formModel]="form.formModel"
-            default="Thời (=giờ)"
+            default="Thời gian (=giờ)"
           >
           </codx-label>
           <codx-input
             field="duration"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeDuration($event)"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>
-        <div class="col-4 form-group" *ngIf="stepType == 'M'">
+        <div class="col-4">
+          <codx-label
+            fiedName="Interval"
+            [formModel]="form.formModel"
+            default="Dựa trên"
+          >
+          </codx-label>
+          <codx-input
+            field="interval"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group row" *ngIf="stepType == 'M'">
+        <div class="col-4 form-group">
           <codx-label
             fiedName="Reminder"
             [formModel]="form.formModel"
@@ -149,11 +184,11 @@
             field="reminder"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChangeDuration($event)"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>
-        <div class="col-4 form-group row" *ngIf="stepType == 'M'">
+        <div class="col-4 form-group row">
           <div class="d-flex align-items-center col-6 mt-5">
             <codx-input
               type="switch"
@@ -189,24 +224,8 @@
             </span>
           </div>
         </div>
-
-        <div class="col-8 form-group" *ngIf="stepType != 'M'">
-          <codx-label
-            fiedName="Location"
-            [formModel]="form.formModel"
-            default="Địa điểm"
-          >
-          </codx-label>
-          <codx-input
-            field="location"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
       </div>
-      <div class="form-group" *ngIf="stepType == 'M'">
+      <div class="form-group">
         <codx-label
           fiedName="Location"
           [formModel]="form.formModel"

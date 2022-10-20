@@ -5,7 +5,7 @@
         <h2 class="h2-title">
           <codx-label
             name="lblTitleSignFile"
-            default="Thêm mới đăng ký"
+            [default]="title"
             [formModel]="formModel"
           ></codx-label>
         </h2>
@@ -97,7 +97,7 @@
 
                 <button (click)="changeTab(2)">
                   <i class="icon-double_arrow"></i>
-                  <span>Tiếp theo</span>
+                  <span><codx-label name="lblContinue" default="Tiếp theo"></codx-label></span>
                 </button>
               </div>
             </div>
@@ -129,7 +129,8 @@
     [imageObjType]="'EP_Stationery'"
     [imageId]="data?.recID"
     [rootData]="data"
-    [footer]="cardItemFooter"
+    [footer]="cardItemFooter"    
+    [imageWidth]="600"
   >
   </codx-card-img>
 </ng-template>
@@ -193,7 +194,7 @@
           <div class="ms-2">
             <div class="fw-bold text-start">{{ user?.userName }}</div>
             <div class="fw-bold text-black-50">
-              {{ user?.employee?.positionName }} Thư ký trung tâm - NDX
+              {{ user?.employee?.positionName }} 
             </div>
           </div>
         </div>
@@ -219,9 +220,17 @@
               type="datetime"
               format="d"
               field="bookingOn"
-              (valueChange)="valueChange($event)"
+              [crrValue]="dialogAddBookingStationery.value.bookingOn"             
+              (valueChange)="valueBookingOnChange($event)"
             >
             </codx-input>
+            <!-- <codx-input
+              type="datetime"
+              format="d"
+              field="bookingOn"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input> -->
           </div>
           <div class="d-flex align-items-center form-group col-4">
             <codx-input
