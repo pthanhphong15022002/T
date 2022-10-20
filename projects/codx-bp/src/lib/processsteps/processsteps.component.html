@@ -42,20 +42,22 @@
     <div class="card-body">
       <div class="mb-5">
         <h4 class="fw-bold text-gray-900 mb-104">
-          Qui trình tuyển dụng - Vị trí Manager
+         {{process?.processName}}
         </h4>
         <div class="d-flex flex-wrap mb-2">
           <div class="d-flex align-items-center me-4">
             <span class="fw-bolb">
-              <codx-label name="" default="Phiên bản:"> </codx-label>
+              <codx-label name="lblVersionNo" [formName]="'ProcessRevisions'" [gridViewName]="'grvProcessRevisions'" default="Phiên bản:"> </codx-label>
             </span>
-            <span class="text-dark">v1.01</span>
+            <span class="text-dark" #versionNo>{{process?.versionNo|formatvalue : view.formModel : "versionNo":versionNo :'ProcessRevisions' :"grvProcessRevisions" |async}}</span>
           </div>
           <div class="d-flex align-items-center">
             <span class="fw-bolb">
-              <codx-label name="" default="Ngày hiệu lực:"> </codx-label>
+              <codx-label name="lblActivedOn" default="Ngày hiệu lực:"> </codx-label>
             </span>
-            <span class="text-dark">01/01/2021</span>
+            <span class="text-dark" #activedOn>
+             {{process?.activedOn |formatvalue : view.formModel : "activedOn":activedOn :'Processes' :"grvProcesses" |async}}
+            </span>
           </div>
         </div>
         <div class="d-flex flex-wrap mb-2">

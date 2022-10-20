@@ -23,6 +23,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
+import { BP_Processes } from '../models/BP_Processes.model';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
@@ -36,7 +37,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-
+  process? : BP_Processes; 
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -66,7 +67,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   // test data tra ve la  1 []
   dataTreeProcessStep = [];
   urlBack = '/bp/processes/BPT1'  //gang tam
- data : any //them de test 
+  data : any //them de test 
 //view file
  
 
@@ -81,23 +82,25 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    
-    this.dataObj = { processID: '90ab82ac-43d1-11ed-83e7-d493900707c4' }; ///de test
 
     this.layout.setUrl(this.urlBack);//gan tam
     if(! this.dataObj?.processID){
         this.codxService.navigate('',this.urlBack);
     }
+
   }
 
   onInit(): void {
+    this.bpService.viewProcesses.subscribe(res=>this.process = res)
+    this.dataObj =JSON.stringify({processID : this.process?.recID}) ;
+
     this.request = new ResourceModel();
     this.request.service = 'BP';
     this.request.assemblyName = 'BP';
     this.request.className = 'ProcessStepsBusiness';
     this.request.method = 'GetProcessStepsAsync';
     this.request.idField = 'recID';
-   this.request.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};///de test
+    this.request.dataObj =  this.dataObj///de test
 
    //tam test
     this.resourceKanban = new ResourceModel();
@@ -105,13 +108,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.resourceKanban.assemblyName = 'BP';
     this.resourceKanban.className = 'ProcessStepsBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    // this.resourceKanban.dataObj = {processID : '90ab82ac-43d1-11ed-83e7-d493900707c4'};
+    this.resourceKanban.dataObj =  this.dataObj ;
 
-    // this.resourceKanban = new ResourceModel();
-    // this.resourceKanban.service = 'SYS';
-    // this.resourceKanban.assemblyName = 'SYS';
-    // this.resourceKanban.className = 'CommonBusiness';
-    // this.resourceKanban.method = 'GetColumnsKanbanAsync';
 
     this.button = {
       id: 'btnAdd',
