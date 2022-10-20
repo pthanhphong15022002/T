@@ -169,8 +169,8 @@ export class ViewDetailComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", { funcID: this.view.funcID }, "", option);
-    }
+      this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", this.view.funcID, "", option);
+    } 
   }
   clickPopupShare(data: any) {
     if (!data) return;
