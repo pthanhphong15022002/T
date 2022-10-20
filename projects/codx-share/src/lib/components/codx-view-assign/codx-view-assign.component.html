@@ -23,7 +23,7 @@
           <span *ngIf="data?.items.length > 0">
             <div
               id="{{ data.taskID }}"
-              class="icon-16 icon-add_box me-2 align-items-start pt-3"
+              class="icon-16  me-2 align-items-start pt-3  {{data.isCollapse?'icon-indeterminate_check_box' : 'icon-add_box'}}"
             ></div>
           </span>
           <div class="d-flex align-items-top w-100">

@@ -169,7 +169,7 @@
             <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTasks" default="Số giờ">
             </codx-label>
           </div>
-          <codx-input type="number" field="estimated" placeholder="Số giờ " [crrValue]="task?.estimated"
+          <codx-input type="number" field="estimated" placeholder="Số giờ "  [showSpinButton]="false" [crrValue]="task?.estimated"
             (valueChange)="valueChangeEstimated($event)" [disabled]="readOnly">
           </codx-input>
         </div>
@@ -180,10 +180,6 @@
         <codx-label fiedName="ProjectID" formName="Tasks" gridViewName="grvTasks" default="Dự án">
         </codx-label>
       </div>
-      <!-- <codx-input service="TM" type="combobox" name="combobox" style="border: none"  [placeholder]="gridViewSetup['ProjectID']['headerText']" ngDefaultControl
-        refValue="Projects" loadFull="true" field="projectID" (valueChange)="cbxChange($event)"
-        [crrValue]="task?.projectID" [disabled]="readOnly">
-      </codx-input> -->
       <codx-input field="projectID" [type]="gridViewSetup?.ProjectID['controlType']"
         [placeholder]="gridViewSetup?.ProjectID['headerText']" [refValue]="gridViewSetup?.ProjectID['referedValue']"
         [refType]="gridViewSetup?.ProjectID['referedType']" (valueChange)="cbxChange($event)"
