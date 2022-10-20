@@ -83,15 +83,17 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    this.bpService.viewProcesses.subscribe(res=>this.process = res) ;
+    this.bpService.viewProcesses.subscribe(res=>this.process = res) ;     
     this.dataObj = {processID : this.process?.recID} ;
 
+    this.dataObj = {processID : this.recIDProcess}   //tesst
+    
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null)
     if(! this.dataObj?.processID){
         this.codxService.navigate('',this.urlBack);
     }
-   debugger
+ 
   }
 
   onInit(): void {
