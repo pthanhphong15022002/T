@@ -6,7 +6,7 @@
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="openFormFuncID($event)"
+  (clickMF)="childClickMF($event,itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
   <ng-template #header>

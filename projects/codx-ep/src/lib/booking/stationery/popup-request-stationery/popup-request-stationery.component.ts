@@ -133,8 +133,12 @@ export class PopupRequestStationeryComponent extends UIComponent {
               category: '1',
               status: '1', 
             });
-            this.dialogAddBookingStationery.addControl('issueStatus', new FormControl('1')) ;
-              
+            this.dialogAddBookingStationery.addControl('issueStatus', new FormControl('1'));              
+          }
+          if(!this.isAddNew){
+            this.data.bookingOn= new Date(this.data.bookingOn);
+            this.dialogAddBookingStationery.patchValue(this.data);
+            this.detectorRef.detectChanges();
           }
         }
         this.isAfterRender = true;

@@ -161,7 +161,7 @@ export class BookingStationeryComponent
         650,
         this.funcID,
         {
-          isAddNew: true,
+          isAddNew: false,
           formModel: this.view?.formModel,
           option: option,
           title:this.popupTitle,
