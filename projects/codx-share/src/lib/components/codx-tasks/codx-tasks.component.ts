@@ -217,7 +217,6 @@ export class CodxTasksComponent
       } else {
         this.requestSchedule.predicate = 'Category=@0 or Category=@1';
         this.requestSchedule.dataValue = '1;2';
-        this.dataObj = null;
       }
     } else {
       this.requestSchedule.predicate = '';
@@ -231,7 +230,8 @@ export class CodxTasksComponent
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
     this.getParams();
-
+    
+    this.dataObj =JSON.stringify(this.dataObj) ;
     this.detectorRef.detectChanges();
 
   }

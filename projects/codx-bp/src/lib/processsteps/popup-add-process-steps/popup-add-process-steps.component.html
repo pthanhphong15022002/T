@@ -111,7 +111,6 @@
           default="Bảng khảo sát"
         ></codx-label>
         <codx-input
-          field="reference"
           type="text"
           [crrValue]="textChange"
           (keyUpEnter)="valueChangeRefrence($event)"
@@ -120,9 +119,11 @@
       </div>
       <ng-container *ngIf="referenceText?.length > 0">
         <div *ngFor="let item of referenceText; let i = index" class="m-5">
-          <span>{{ i +1 }}</span
-          ><span> <codx-label name="lblSymboy" default="."></codx-label> </span
-          ><span>{{ item }}</span>
+          <div class="hover-text-primary">
+            <span>{{ i +1 }}</span
+              ><span> <codx-label name="lblSymboy" default="."></codx-label> </span
+              ><span>{{ item }}</span>
+          </div>
         </div>
       </ng-container>
       <div class="form-group" *ngIf="stepType != 'M' && stepType != 'C'">
