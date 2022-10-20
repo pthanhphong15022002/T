@@ -46,7 +46,8 @@ export class PopupAddOrganizationComponent implements OnInit {
     this.user = this.auth.userValue;
     this.option = dt.data;
     this.dialogRef = dialogRef;
-    this.functionID = this.dialogRef.formModel.funcID
+    this.functionID = this.dialogRef.formModel.funcID;
+    this.treeComponent = this.option.treeComponent;
     // if (this.option) {
     //   this.parentID = this.option.orgUnitID;
     //   this.detailComponent = this.option.detailComponent;
@@ -81,9 +82,9 @@ export class PopupAddOrganizationComponent implements OnInit {
           //     this.detailComponent.addItem(res);
           //   }
           // }
-          // if (this.treeComponent) {
-          //   this.treeComponent.setNodeTree(this.data);
-          // }
+          if (this.treeComponent) {
+            this.treeComponent.setNodeTree(this.data);
+          }
           this.notifiSV.notifyCode("SYS006");
           this.dialogRef.close();
         }

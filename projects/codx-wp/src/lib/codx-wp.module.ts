@@ -28,7 +28,6 @@ import { PopupGroupComponent } from './chatting/popup-group/popup-group.componen
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { AddNoteComponent } from './dashboard/home/add-note/add-note.component';
 import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
@@ -50,17 +49,18 @@ import { ViewDetailComponent } from './news/view-detail/view-detail.component';
 import { ViewTagComponent } from './news/view-tag/view-tag.component';
 import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { Layout2Component } from './_layout2/layout2.component';
-import { Layout3Component } from './_layout3/layout3.component';
 import { TestSurveyComponent } from './test-survey/test-survey.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
-import { DndModule } from 'ngx-drag-drop';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { LayoutNewsComponent } from './layout-news/layout-news.component';
+import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
+import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 
 export const routes: Routes = [
   {
     path: 'portal',
-    component: DashboardComponent,
+    component: LayoutPortalComponent,
     children: [
       {
         path: ':funcID',
@@ -70,7 +70,7 @@ export const routes: Routes = [
   },
   {
     path: 'chat',
-    component: DashboardComponent,
+    component: LayoutPortalComponent,
     children: [
       {
         path: ':funcID',
@@ -80,7 +80,7 @@ export const routes: Routes = [
   },
   {
     path: 'news',
-    component: Layout2Component,
+    component: LayoutNewsComponent,
     children: [
       {
         path: 'settings/:funcID',
@@ -103,7 +103,7 @@ export const routes: Routes = [
       },
       {
         path: ':funcID',
-        redirectTo: 'WPT02P/home',
+        redirectTo: 'WPT02/home',
         pathMatch: 'full',
       },
     ],
@@ -127,7 +127,7 @@ export const routes: Routes = [
   },
   {
     path: 'approvals',
-    component: Layout3Component,
+    component: LayoutApprovalComponent,
     children: [
       {
         path: ':funcID',
@@ -166,73 +166,13 @@ export const routes: Routes = [
     ],
   },
 
-  // {
-  //   path: 'news',
-  //   component: Layout2Component,
-  //   children: [
-  //     {
-  //       path: ':funcID/tag/:tagName',
-  //       component: ViewTagComponent
-  //     },
-  //     {
-  //       path: ':funcID/:category',
-  //       component: NewsComponent
-  //     },
-
-  //     {
-  //       path: ':funcID/:category/:recID',
-  //       component: ViewDetailComponent
-  //     },
-
-  //     {
-  //       path: '**',
-  //       redirectTo: 'WPT02P/home',
-  //       pathMatch: 'full'
-  //     }
-  //   ]
-  // },
-  // {
-  //   path:'approvals',
-  //   component: Layout3Component,
-  //   children:[
-  //     {
-  //       path:':funcID',
-  //       component: ApproveComponent,
-  //     },
-  //     {
-  //       path: '**',
-  //       redirectTo: 'approvals/WPT0211',
-  //       pathMatch: 'full'
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: 'portal',
-  //   component: DashboardComponent,
-  //   children: [
-  //     {
-  //       path: ':funcID',
-  //       component: HomeComponent
-  //     },
-  //     {
-  //       path: '**',
-  //       redirectTo: 'portal/WP',
-  //       pathMatch: 'full'
-  //     }
-  //   ],
-  // },
-  // {
-  //   path: '',
-  //   redirectTo: 'portal/WP',
-  //   pathMatch: 'full'
-  // }
 ];
 
 const Component: Type<any>[] =
   [
     LayoutComponent,
-    Layout2Component,
-    Layout3Component,
+    LayoutNewsComponent,
+    LayoutApprovalComponent,
     CodxWpComponent,
     NewsComponent,
     PopupAddComponent,
@@ -241,7 +181,7 @@ const Component: Type<any>[] =
     PopupEditComponent,
     ApproveComponent,
     ApproveDetailComponent,
-    DashboardComponent,
+    LayoutPortalComponent,
     HomeComponent,
     AddNoteComponent,
     SaveNoteComponent,
@@ -278,7 +218,7 @@ const Component: Type<any>[] =
     CoreModule,
     PickerModule,
     InPlaceEditorModule,
-    DndModule,
+    DragDropModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule, ListPostComponent],

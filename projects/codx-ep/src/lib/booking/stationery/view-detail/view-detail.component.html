@@ -6,7 +6,7 @@
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="openFormFuncID($event)"
+  (clickMF)="childClickMF($event,itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
   <ng-template #header>
@@ -55,7 +55,7 @@
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
-          {{ itemDetail?.category }}
+          {{ itemDetail?.category | vll: "EP018":"text" | async}}
         </span>
       </div>
       <div class="d-flex text-dark me-6">

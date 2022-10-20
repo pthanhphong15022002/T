@@ -1,10 +1,10 @@
 <div class="codx-news">
-  <codx-views #codxViews [funcID]="funcID" idField="recID" [views]="views">
+  <codx-views #view  idField="recID" [views]="views">
   </codx-views>
   <div class="more-function">
     <div class="d-flex flex-column">
       <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
-      <span class="postnews mt-3">
+      <span class="postnews mt-3" *ngIf="userPermission && userPermission.create">
         <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
         <div class="d-flex btn-postnews">
 
@@ -15,14 +15,15 @@
         </div>
       </span>
     </div>
-  </div>
+  </div> 
+  
 </div>
 
 <ng-template #panelLeftRef>
   <div class="fix-container rounded-4 position-relative">
     <div class="row" *ngIf="news[0]">
       <div class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">
-        <codx-label [formModel]="codxViews.formModel" name="lblNews" default="Tin mới nhất"></codx-label>
+        <codx-label [formModel]="view.formModel" name="lblNews" default="Tin mới nhất"></codx-label>
       </div>
     </div>
 
@@ -172,7 +173,7 @@
         <ng-container *ngIf="lstGroup.length > 0">
           <div class="row">
             <span class="fw-bolder fs-5">
-              <codx-label [formModel]="codxView.formModel" name="lblHeaderGroup" default="Tin cũ hơn"></codx-label>
+              <codx-label [formModel]="view.formModel" name="lblHeaderGroup" default="Tin cũ hơn"></codx-label>
             </span>
           </div>
           <ng-container *ngFor="let item of lstGroup">
