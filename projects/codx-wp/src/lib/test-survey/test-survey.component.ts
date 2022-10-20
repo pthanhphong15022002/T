@@ -24,16 +24,16 @@ import { UIComponent } from 'codx-core';
   providers: [RteService, MultiSelectService],
 })
 export class TestSurveyComponent extends UIComponent implements OnInit {
-  public titleEditorValue: String = 'Succinctly E-Book about TypeScript';
-  public commentEditorValue: String =
-    'The extensive adoption of JavaScript for application development, and the ability to use HTML and JavaScript to create Windows Store apps, has made JavaScript a vital part of the Windows development ecosystem. Microsoft has done extensive work to make JavaScript easier to use';
-  public titleEditorModel: TextBoxModel = {
-    placeholder: 'Enter your question title',
-  };
-  public commentEditorModel: RichTextEditorModel = {
+  public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
       items: ['Bold', 'Italic', 'Underline', 'ClearFormat', 'CreateLink'],
+    },
+  };
+  public descriptionEditorModel: RichTextEditorModel = {
+    toolbarSettings: {
+      enableFloating: false,
+      items: ['Bold', 'Italic', 'Underline', 'ClearFormat', 'CreateLink', 'NumberFormatList', 'BulletFormatList'],
     },
   };
   public titleRule: { [name: string]: { [rule: string]: Object } } = {
@@ -50,10 +50,9 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
   data: any = [
     {
       id: '1',
-      text: 'JavaScript',
+      text: 'Mẫu không có tiêu đề',
       pic: 'javascript',
-      description:
-        'It is a lightweight interpreted or JIT-compiled programming language.',
+      description: 'Mô tả biểu mẫu',
       answer: [
         {
           text: 'A',
@@ -110,7 +109,7 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
 
   dataAnswer: any = new Array();
 
-  onInit(): void { }
+  onInit(): void {}
   valueChange(e) {
     console.log(e);
   }
