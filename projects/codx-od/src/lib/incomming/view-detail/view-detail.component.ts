@@ -799,7 +799,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Gửi duyệt
       case 'ODT201': {
-        debugger;
         if(datas.bsCategory)
         {
           //Có thiết lập bước duyệt
