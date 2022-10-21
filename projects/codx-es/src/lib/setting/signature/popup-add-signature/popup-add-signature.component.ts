@@ -83,8 +83,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.data.oTPPin = this.data?.otpPin;
 
     //delete otp
-    delete this.data?.otpControl;
-    delete this.data?.otpPin;
+    // delete this.data?.otpControl;
+    // delete this.data?.otpPin;
 
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog?.formModel;
