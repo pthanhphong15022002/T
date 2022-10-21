@@ -40,7 +40,6 @@ const Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     CodxShareModule,
-    CodxSVModule,
     CoreModule,
     NgbModule,
     RouterModule.forChild(routes),
