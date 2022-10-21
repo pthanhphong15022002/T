@@ -164,8 +164,8 @@
 </ng-template>
 
 <ng-template #footer>
-  <div class="d-flex flex-stack" *ngIf="dialog">
-    <div class="right justify-content-end">
+  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
+    <div class="right">
       <button type="button" class="btn btn-primary" (click)="click($event)">
         <codx-label name="lblSave" formName="Settings" default="Lưu">
         </codx-label>
