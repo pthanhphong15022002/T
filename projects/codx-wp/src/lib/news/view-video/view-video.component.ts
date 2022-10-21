@@ -4,7 +4,7 @@ import { ApiHttpService, AuthService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'wp-video',
+  selector: 'wp-view-video',
   templateUrl: './view-video.component.html',
   styleUrls: ['./view-video.component.scss']
 })

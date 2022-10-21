@@ -1,4 +1,3 @@
-
 <!-- <ejs-splitter _ngcontent-dra-c358 height="100%" width="100%" ng-reflect-height="100%" ng-reflect-width="100%" class="e-control e-splitter e-lib e-splitter-horizontal" style="height: 100%; width: 100%;">
     <div class="e-pane e-pane-horizontal e-scrollable e-static-pane" style="flex-basis: 30%; order: 0;">
 
@@ -25,91 +24,400 @@
 </ejs-splitter> -->
 
 
-<codx-views #view  
-    [views]="views"
-    [idField]="'recID'"
-    entityName="WP_Messages" 
-    service="WP" 
-    assemblyName="ERM.Business.WP"
-    className="ChatBusiness" 
-    method="LoadChatMessagesAsync">
+<codx-views #view [views]="views" [idField]="'recID'" entityName="WP_Messages" service="WP"
+  assemblyName="ERM.Business.WP" className="ChatBusiness" method="LoadChatMessagesAsync">
 </codx-views>
 <!-- #itemTemplate  let-data-->
 
 
 
 <ng-template #itemTemplate let-data>
-    <div class="d-flex flex-stack py-2 Unread" *ngIf="!data.isRead">
+  <div (click)="historyItemClicked(data)" class="d-flex flex-stack py-2 Unread" *ngIf="!data.isRead">
     <div class="d-flex align-items-center">
-        <ng-container *ngIf="data.groupType == '1'">
-            <codx-img [objectId]="data.senderId" 
-                objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
-            </codx-img>
-        </ng-container>
+      <ng-container *ngIf="data.groupType == '1'">
+        <codx-img [objectId]="data.senderId" objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+        </codx-img>
+      </ng-container>
 
-        <ng-container *ngIf="data.groupType == '2'">
-            <div class="symbol symbol-35px symbol-circle">
-                <img alt="Pic" [src]="data.picture">
-            </div>
-        </ng-container>
-
-        <div class="ms-5">
-            <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
-                {{data.groupName}} </a>
-            <div class="fw-bold text-primary">
-                <span class="me-2"></span><span>{{data.message}}</span>
-            </div>
+      <ng-container *ngIf="data.groupType == '2'">
+        <div class="symbol symbol-35px symbol-circle">
+          <codx-img [objectId]="data.groupId" [objectType]="'WP_Groups'" class="symbol symbol-30 symbol-circle me-2">
+          </codx-img>
         </div>
+      </ng-container>
+
+      <div class="ms-5">
+        <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+          {{data.groupName}} </a>
+        <div class="fw-bold text-primary">
+          <span class="me-2"></span><span>{{data.message}}</span>
+        </div>
+      </div>
     </div>
 
     <div class="d-flex flex-column align-items-end ms-2">
-        <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
-        <span class="badge badge-primary badge-circle w-10px h-10px me-1"></span>
+      <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
+      <span class="badge badge-primary badge-circle w-10px h-10px me-1"></span>
     </div>
-</div>
+  </div>
 
-<div class="d-flex flex-stack py-2 read" *ngIf="data.isRead">
+  <div (click)="historyItemClicked(data)" class="d-flex flex-stack py-2 read" *ngIf="data.isRead">
     <div class="d-flex align-items-center">
-        <ng-container *ngIf="data.groupType == '1'">
-            <codx-img [objectId]="data.colabId" [objectName]="data.colabName"
-                objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
-            </codx-img>
-        </ng-container>
-
-        <ng-container *ngIf="data.groupType == '2'">
-            <div class="symbol symbol-35px symbol-circle">
-                <img alt="Pic" [src]="data.picture">
-            </div>
-        </ng-container>
-        <div class="ms-5">
-            <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
-                {{data.groupName}} </a>
-            <div class="fw-bold text-gray-400">
-                <span class="icon-local_offer text-success icon-16 me-2"></span>
-                <span class=" me-2">{{data.message}}</span>
-            </div>
+      <ng-container *ngIf="data.groupType == '1'">
+        <codx-img [objectId]="data.colabId" [objectName]="data.colabName" objectType="AD_Users"
+          class="symbol symbol-30 symbol-circle me-3">
+        </codx-img>
+      </ng-container>
+      <!-- [src]="data.picture" -->
+      <ng-container *ngIf="data.groupType == '2'">
+        <div class="symbol symbol-35px symbol-circle">
+          <codx-img [objectId]="data.groupId" objectType="WP_Group" class="symbol symbol-30 symbol-circle me-3">
+          </codx-img>
         </div>
+      </ng-container>
+      <div class="ms-5">
+        <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+          {{data.groupName}} </a>
+        <div class="fw-bold text-gray-400">
+          <span class="icon-local_offer text-success icon-16 me-2"></span>
+          <span class=" me-2">{{data.message}}</span>
+        </div>
+      </div>
     </div>
 
     <div class="d-flex flex-column align-items-end ms-2">
-        <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
-        <span class="badge badge-secondary badge-circle w-10px h-10px me-1"></span>
+      <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
+      <span class="badge badge-secondary badge-circle w-10px h-10px me-1"></span>
     </div>
-</div>
+  </div>
 </ng-template>
-   <!-- view detail -->
+<!-- view detail -->
 <ng-template #panelRightRef>
 
-    aaaaaaaaaaaaaaaaaaaa
- 
+  aaaaaaaaaaaaaaaaaaaa
+
+  <!-- <div class=""> modal-dialog modal-dialog-centered mw-400px -->
+  <!--begin::Modal content-->
+  <div class="modal-content">
+    <!--begin::Modal header-->
+    <div class="modal-header py-0">
+      <div class="d-flex flex-stack py-4">
+        <!--begin::Details-->
+        <div class="d-flex align-items-center">
+          <!--begin::Avatar-->
+          <div class="symbol symbol-40px symbol-circle">
+            <!-- <codx-img [objectId]="receiverId" [objectName]="receiverName" objectType="AD_Users"
+                    class="symbol symbol-35px symbol-circle">
+                  </codx-img> -->
+
+            <ng-container *ngIf="groupType == '1'">
+              <codx-img [objectId]="receiverId" objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+              </codx-img>
+            </ng-container>
+
+            <ng-container *ngIf="groupType == '2'">
+              <div class="symbol symbol-35px symbol-circle">
+                <codx-img [objectId]="groupId" objectType="WP_Group" class="symbol symbol-30 symbol-circle me-3">
+                </codx-img>
+              </div>
+            </ng-container>
+
+            <!-- <img
+                    alt="Pic"
+                    src="../../../assets/themes/wp/default/light/img/user_F1.svg"
+                  /> -->
+            <div class="symbol-badge bg-success start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2"></div>
+          </div>
+          <!--end::Avatar-->
+          <!--begin::Details-->
+          <div class="ms-4">
+            <!--begin::Name-->
+
+            <a href="#" class="d-flex align-items-center fs-5 fw-bolder text-dark text-hover-primary">{{ receiverName }}
+            </a>
+            <!--end::Name-->
+            <div class="badge badge-danger fs-8 fw-bold" *ngIf="tags">
+              {{ tags }}
+            </div>
+          </div>
+          <!--end::Details-->
+        </div>
+        <!--end::Details-->
+      </div>
+      <div class="card-toolbar">
+        <span class="icon- icon-24 text-dark-75 text-hover-primary ms-3"></span>
+        <span class="icon-group_add icon-24 text-dark-75 text-hover-primary ms-3"
+          (click)="openCreategroupForm()"></span>
+
+      </div>
+    </div>
+    <!--begin::Modal header-->
+
+    <!--begin::Modal body-->
+    <div class="modal-body">
+      <!--begin::Scroll-->
+      <div class="scroll-y me-n7 pe-7" id="kt_modal_new_address_scroll" data-kt-scroll="true"
+        data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
+        data-kt-scroll-dependencies="#kt_modal_new_address_header"
+        data-kt-scroll-wrappers="#kt_modal_new_address_scroll" data-kt-scroll-offset="300px"
+        style="max-height: 700px; height: 700px" (scroll)="onScroll($event)">
+        <!--begin::Messages-->
+        <div class="messages">
+          <ng-container *ngFor="let item of chatMessages; let i = index">
+            <!--begin::Message Out *ngIf="item.messageType == '1' && item.senderId == senderId">-->
+            <div class="d-flex flex-column mb-5 align-items-end" *ngIf="item.senderId == senderId">
+              <div class="d-flex align-items-center flex-wrap gap-2">
+                <div class="d-flex">
+                  <!-- begin::Star
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" type="button"
+                      id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="icon-more_vert icon-20 text-dark-25"></span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-attach icon-18"></span>
+                          <span class="ms-3">Đính kèm</span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-share icon-18 text-warning"></span>
+                          <span class="ms-3">Gửi mail</span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-share icon-18"></span>
+                          <span class="ms-3">Chia sẻ</span>
+                        </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-list_alt icon-18"></span>
+                          <span class="ms-3">Chức năng mở rộng</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+
+                  <a href="#" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3">
+                    <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2"></span>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3">
+                    <span class="icon-redo icon-18 ms-3 me-2 text-dark-25"></span>
+                  </a> -->
+                  <div class="has-action-menu">
+                    <div class="action-menu d-flex">
+                      <div class="d-flex align-items-center">
+                        
+                        <div ngbDropdown class="dropdown" container="body">
+                          <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                            ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                            <i class="icon-more_vert icon-20 text-dark-75"></i>
+                          </a>
+                          <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-attach icon-18"></span>
+                                <span class="ms-3">{{titleAttach}}</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-share icon-18 text-warning"></span>
+                                <span class="ms-3">{{titleSendMail}}</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-share icon-18"></span>
+                                <span class="ms-3">{{titleShare}}</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)" (click)="DelMessage(item)">
+                                <span class="icon-list_alt icon-18"></span>
+                                <span class="ms-3" >{{titleFunction}}</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                        <a class="action-item">
+                          <div class="d-flex align-items-center btn-tooltip icon-18">
+                            <span class="icon-redo icon-18 ms-3 me-2 text-dark-25"></span>
+                          </div>
+                        </a>
+                        <a class="action-item">
+                          <div class="d-flex align-items-center btn-tooltip icon-18">
+                            <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2"></span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-2 mess-rounded p-2 bg-primary text-white fw-bold font-size-lg text-right max-w-400px">
+                <ng-container *ngIf="item.refContent">
+                  <div class="border-refchat refchat-sender">
+                    {{item.refContent}}
+                  </div>
+                </ng-container> 
+                {{item.message}}
+              </div>
+            </div>
+            <!--end::Message Out *ngIf="item.messageType == '3'  -->
+
+            <div class="separator separator-content my-15" *ngIf="datenow == item.sendTime">
+              <!-- Hôm nay -->
+              <!-- 14/10/2021 2:54 PM -->
+            </div>
+
+            <!--begin::Message In  item.messageType == '1' && -->
+            <div class="d-flex align-items-start user-card py-2" *ngIf="  item.senderId != senderId">
+              <div class="symbol symbol-35px symbol-circle me-4" *ngIf="item.showImage">
+
+                <ng-container>
+
+                  <codx-img [objectId]="item.senderId" objectType="AD_Users"
+                    class="symbol symbol-30 symbol-circle me-3">
+                  </codx-img>
+
+                  <!-- <codx-img [objectId]="item.senderId" [objectName]="receiverName" objectType="AD_Users"
+                        class="symbol symbol-35px symbol-circle">
+                      </codx-img> -->
+                </ng-container>
+
+                <!-- <img alt="Pic" src="../../../assets/themes/wp/default/light/img/user_F3.svg" /> -->
+              </div>
+              <!-- receiver -->
+              <div class="d-flex">
+                <div class="mt-2 rounded bg-light-info p-2 bg-light-primary text-dark max-w-400px">
+                  <ng-container *ngIf="item.refContent">
+                    <div class="border-refchat refchat-sender">
+                      {{item.refContent}}
+                    </div>
+                  </ng-container> 
+                  
+                  {{ item.message }}
+                  
+                </div>
+                
+                
+                <div class="has-action-menu">
+                  <div class="action-menu d-flex">
+                    <div class="d-flex align-items-center">
+                      <a class="action-item">
+                        <div class="d-flex align-items-center btn-tooltip icon-18">
+                          <span class="icon-redo icon-18 ms-3 me-2 text-dark-25" (click)="clickrendo(item)"></span>
+                        </div>
+                      </a>
+                      <a class="action-item">
+                        <div class="d-flex align-items-center btn-tooltip icon-18">
+                          <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2"></span>
+                        </div>
+                      </a>
+                      <div ngbDropdown class="dropdown" container="body">
+                        <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                          ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                          <i class="icon-more_vert icon-20 text-dark-75"></i>
+                        </a>
+                        <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                          <li>
+                            <a ngbDropdownItem href="javascript:void(0)">
+                              <span class="icon-attach icon-18"></span>
+                              <span class="ms-3">{{titleAttach}}</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a ngbDropdownItem href="javascript:void(0)">
+                              <span class="icon-share icon-18 text-warning"></span>
+                              <span class="ms-3">{{titleSendMail}}</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a ngbDropdownItem href="javascript:void(0)">
+                              <span class="icon-share icon-18"></span>
+                              <span class="ms-3">{{titleShare}}</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a ngbDropdownItem href="javascript:void(0)" >
+                              <span class="icon-list_alt icon-18"></span>
+                              <span class="ms-3" (click)="DelMessage(item)">{{titleFunction}}</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end::Message In-->
+          </ng-container>
+        </div>
+        <!--end::Messages-->
+      </div>
+      <!--end::Scroll-->
+    </div>
+    <!--end::Modal body-->
+
+    <!--begin::Modal footer-->
+    <div class=" px-0" style="display: flexbox">
+      <div class="cl-ref" *ngIf="clickCheck">
+        <div class="justify-content-between">
+          <span class="me-2">{{titleRef}}</span><b class="">{{refName}}</b>
+          <span class="icon-close icon-24 text-dark-75 text-hover-primary ms-3" (click)="onCloseref()"></span>
+        </div>
+        <div>
+          <span class="fw-bold text-gray-400">{{refContent}}</span>
+        </div>
+      </div>
+      <!-- modal-footer -->
+      <div class="d-flex flex-stack justify-content-between">
+        <!--begin::Actions-->
+        <div class="d-flex align-items-start justify-content-between">
+          <button class="btn btn-sm btn-icon btn-active-light-primary me-1" type="button" data-bs-toggle="tooltip"
+            title="" data-bs-original-title="Biểu cảm">
+            <i class="icon-tag_faces icon-24 text-primary"></i>
+          </button>
+          <button class="btn btn-sm btn-icon btn-active-light-primary me-1" type="button" data-bs-toggle="tooltip"
+            title="" data-bs-original-title="đính kèm">
+            <i class="icon-broken_image icon-24 text-primary"></i>
+          </button>
+        </div>
+        <codx-input type="text" [crrValue]="message" placeholder="Type a message" class="form-control form-control-flush form-message" 
+                (valueChange)="valueChange($event)" field="groupName" (keydown.enter)="sendMessage()" style="width: 600px;"></codx-input>
+        <!-- <input class="form-control form-control-flush form-message" data-kt-element="input" placeholder="Type a message"
+          [(ngModel)]="message" (keydown.enter)="sendMessage()" /> -->
+        <!--end::Actions-->
+        <!--begin::Send-->
+        <div class="d-flex align-items-end justify-content-between">
+          <button class="btn btn-sm btn-icon btn-active-light-primary me-1" type="button" data-bs-toggle="tooltip"
+            title="" data-bs-original-title="send" data-kt-element="send" (click)="sendMessage()">
+            <i class="icon-send icon-24 text-primary"></i>
+          </button>
+        </div>
+        <!--end::Send-->
+      </div>
+    </div>
+    <!--end::Modal footer-->
+  </div>
+  <!-- </div> -->
+
+
 </ng-template>
 <ng-template #tmpSearch>
-    <codx-searchbar #searchbar [width]="600" (searchEvent)="doFilter($event)"></codx-searchbar>
+  <codx-searchbar #searchbar [width]="600" (searchEvent)="doFilter($event)"></codx-searchbar>
 
-    <div class="me-2">
-        <button class="btn btn-sm btn-icon btn-active-light-primary" (click)="openCreategroupForm()">
-            <span class="icon-group_add icon-24 text-dark-75 text-hover-primary"></span>
-        </button>
-    </div>
+  <div class="me-2">
+    <button class="btn btn-sm btn-icon btn-active-light-primary" (click)="openCreategroupForm()">
+      <span class="icon-group_add icon-24 text-dark-75 text-hover-primary"></span>
+    </button>
+  </div>
 
 </ng-template>
