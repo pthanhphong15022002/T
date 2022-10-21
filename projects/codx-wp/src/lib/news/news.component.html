@@ -199,8 +199,14 @@
 <ng-template #itemTemplate let-item>
   <div (click)="clickViewDetail(item)" class="row my-4">
     <div class="col-2">
-      <codx-img [width]="180" [isDefaulImg]="true" [cssClass]="'image-150 w-100'" imageType="square" [objectId]="item.recID"
-        objectType="WP_News"></codx-img>
+      <codx-img [width]="180" 
+        [imgOn]="newDate"
+        [isDefaulImg]="true" 
+        [cssClass]="'image-150 w-100'" 
+        imageType="square" 
+        [objectId]="item.recID"
+        objectType="WP_News">
+      </codx-img>
     </div>
     <div class="col-10">
       <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>
