@@ -1,6 +1,13 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   AuthStore,
+  CacheService,
   DialogData,
   DialogRef,
   FormModel,
@@ -36,12 +43,16 @@ export class PopupAddProcessStepsComponent implements OnInit {
   isEmail = true;
   isHaveFile = false;
   referenceText = [];
-  textChange=''
+  textChange = '';
+  popover: any;
+  crrIndex = 0;
+  grvSetup :any
 
   constructor(
     private bpService: CodxBpService,
     private authStore: AuthStore,
-    private changeDef : ChangeDetectorRef,
+    private cache: CacheService,
+    private changeDef: ChangeDetectorRef,
     private notifySvr: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -58,6 +69,10 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
     this.funcID = this.dialog.formModel.funcID;
     this.title = this.titleActon;
+
+    // this.cache.gridViewSetup("BPTasks","grvBPTasks").subscribe(res=>{
+    //   this.grvSetup =res
+    // })
   }
 
   ngOnInit(): void {}
@@ -135,29 +150,35 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
-    debugger
+    debugger;
   }
-
 
   valueChangeRefrence(e) {
     if (e?.data && e?.data.trim() != '') {
-      this.textChange= e?.data
+      this.textChange = e?.data;
       this.changeDef.detectChanges();
     }
   }
-  enterRefrence(){
+  enterRefrence() {
     if (this.textChange && this.textChange.trim() != '') {
       this.referenceText.push(this.textChange);
-      this.textChange=''
+      this.textChange = '';
       this.changeDef.detectChanges();
     }
   }
 
-  showPoppoverDeleteRef(p,index){
-
+  showPoppoverDeleteRef(p, i) {
+    if (i == null) return;
+    if (this.popover) this.popover.close();
+    this.crrIndex = i;
+    p.open();
+    this.popover = p;
   }
 
-
+  clickDelete(i) {
+    if (this.referenceText[i]) this.referenceText.splice(i, 1);
+    this.changeDef.detectChanges();
+  }
 
   addFile(evt: any) {
     this.attachment.uploadFile();
