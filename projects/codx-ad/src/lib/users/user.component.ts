@@ -223,14 +223,12 @@ export class UserComponent extends UIComponent {
     this.notifySvr.alertCode('AD009', config).subscribe((x) => {
       if (x.event.status == 'Y') {
         data.stop = true;
-        this.codxAdService
-          .stopUser(data, false, null, data.stop)
-          .subscribe((res) => {
-            if (res) {
-              this.view.dataService.remove(res).subscribe();
-              this.detectorRef.detectChanges();
-            }
-          });
+        this.codxAdService.stopUser(data).subscribe((res) => {
+          if (res) {
+            this.view.dataService.remove(res).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
       }
     });
   }
