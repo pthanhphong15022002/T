@@ -107,58 +107,75 @@
           </div>
         </div>
       </div>
-      <ng-container *ngFor="let item of dataTreeProcessStep">
-        <div class="mb-5">
-          <div class="card card-steplist">
-            <div
-              class="steplist-hearder border border-gray-200 rounded px-6 py-4"
-            >
-              <codx-temp-full
-                [titleTmp]="titleTmp"
-              
-                [desc]="item?.memo"
-                [footer]="footerBase"
-                [dataItem]="item"
+      <!-- drop -->
+      <ng-container>
+        <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+          <ng-container *ngFor="let item of dataTreeProcessStep">
+            <!-- <div class="card-survey">
+              <div
+                class="col-lg-8 control-section inplace-editor-control-section form-layout"
+                #formlayout
+                id="inplace-editor-control"
               >
-              </codx-temp-full>
-            </div>
+                <div class="content-wrapper">
+                  <form id="formId" class="form-horizontal example-box"> -->
+            <div class="mb-5" cdkDrag>
+              <div class="card card-steplist">
+                <div
+                  class="steplist-hearder border border-gray-200 rounded px-6 py-4"
+                >
+                  <codx-temp-full
+                    [titleTmp]="titleTmp"
+                    [desc]="item?.memo"
+                    [footer]="footerBase"
+                    [dataItem]="item"
+                  >
+                  </codx-temp-full>
+                </div>
+                <div cdkDropList class="list" (cdkDropListDropped)="dropStepChild($event, item.recID)">
+                <ng-container *ngIf="item?.items?.length > 0">
+                  <ng-container *ngFor="let item1 of item.items">
+                    <div id="kt_docs_card_collapsible" class="collapse show">
+                      <div class="card-body p-0">
+                        <div class="steplist ps-6 pt-4">
+                          <div class="steplist-item step-danger rounded p-4">
+                            <codx-temp-full
+                              [titleTmp]="titleTmp"
+                              [desc]="item1?.memo"
+                              [dataItem]="item1"
+                            >
+                            </codx-temp-full>
 
-            <ng-container *ngIf="item?.items?.length > 0">
-              <ng-container *ngFor="let item1 of item.items">
-                <div id="kt_docs_card_collapsible" class="collapse show">
-                  <div class="card-body p-0">
-                    <div class="steplist ps-6 pt-4">
-                      <div class="steplist-item step-danger rounded p-4">
-                        <codx-temp-full
-                          [titleTmp]="titleTmp"
-                    
-                          [desc]="item1?.memo"
-                          [dataItem]="item1"
-                        >
-                        </codx-temp-full>
-
-                        <ng-container *ngIf="item?.items?.length > 0">
-                          <ng-container *ngFor="let item2 of item1.items">
-                            <div class="steplist-item step-items rounded p-4">
-                              <codx-temp-full
-                                cardCss="mb-5"
-                                [titleTmp]="titleTmp"
-                                [desc]="item2?.memo"
-                      
-                                [footer]="footerBase"
-                                [dataItem]="item2"
-                              >
-                              </codx-temp-full>
-                            </div>
-                          </ng-container>
-                        </ng-container>
+                            <ng-container *ngIf="item?.items?.length > 0">
+                              <ng-container *ngFor="let item2 of item1.items">
+                                <div
+                                  class="steplist-item step-items rounded p-4"
+                                >
+                                  <codx-temp-full
+                                    cardCss="mb-5"
+                                    [titleTmp]="titleTmp"
+                                    [desc]="item2?.memo"
+                                    [footer]="footerBase"
+                                    [dataItem]="item2"
+                                  >
+                                  </codx-temp-full>
+                                </div>
+                              </ng-container>
+                            </ng-container>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </ng-container>
+                </ng-container>
                 </div>
-              </ng-container>
-            </ng-container>
-          </div>
+              </div>
+            </div>
+            <!-- </form>
+                </div>
+              </div> -->
+            <!-- </div> -->
+          </ng-container>
         </div>
       </ng-container>
     </div>
@@ -176,7 +193,9 @@
     <codx-label name="lblSplit" default=":"></codx-label
     >{{ " " + (data?.stepType == "P" ? data?.stepName : data?.stepName2) }}
   </div>
-
+  <div class="example-handle" cdkDragHandle>
+      <span class="icon-reorder"></span>
+    </div>
   <div>
     <span
       class="text-danger"

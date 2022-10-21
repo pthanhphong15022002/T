@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   Component,
   Input,
@@ -37,7 +38,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
-  process? : BP_Processes; 
+  process?: BP_Processes;
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -60,21 +61,21 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
   // method :any
-  method = 'GetProcessStepsAsync'; 
-  listPhaseName = [] ;
+  method = 'GetProcessStepsAsync';
+  listPhaseName = [];
 
   recIDProcess = '90ab82ac-43d1-11ed-83e7-d493900707c4'; ///thêm để add thử
   // test data tra ve la  1 []
   dataTreeProcessStep = [];
-  urlBack = '/bp/processes/BPT1'  //gang tam
-  data : any //them de test 
-//view file
- 
+  urlBack = '/bp/processes/BPT1'; //gang tam
+  data: any; //them de test
+  //view file
+  dataChild = [];
 
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
-    private layout : LayoutService,
+    private layout: LayoutService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute
@@ -83,17 +84,16 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
-    this.bpService.viewProcesses.subscribe(res=>this.process = res) ;     
-    this.dataObj = {processID : this.process?.recID} ;
+    this.bpService.viewProcesses.subscribe((res) => (this.process = res));
+    this.dataObj = { processID: this.process?.recID };
 
-    this.dataObj = {processID : this.recIDProcess}   //tesst
+    this.dataObj = { processID: this.recIDProcess }; //tesst
 
     this.layout.setUrl(this.urlBack);
-    this.layout.setLogo(null)
-    if(! this.dataObj?.processID){
-        this.codxService.navigate('',this.urlBack);
+    this.layout.setLogo(null);
+    if (!this.dataObj?.processID) {
+      this.codxService.navigate('', this.urlBack);
     }
- 
   }
 
   onInit(): void {
@@ -103,16 +103,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.request.className = 'ProcessStepsBusiness';
     this.request.method = 'GetProcessStepsAsync';
     this.request.idField = 'recID';
-    this.request.dataObj =  {processID : this.process?.recID}///de test
+    this.request.dataObj = { processID: this.process?.recID }; ///de test
 
-   //tam test
+    //tam test
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
     this.resourceKanban.assemblyName = 'BP';
     this.resourceKanban.className = 'ProcessStepsBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj =  this.dataObj ;
-
+    this.resourceKanban.dataObj = this.dataObj;
 
     this.button = {
       id: 'btnAdd',
@@ -202,11 +201,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.view.dataService.dataSelected.processID = this.recIDProcess;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        [
-          'add',
-          this.titleAction,
-          this.stepType,
-        ],
+        ['add', this.titleAction, this.stepType],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -224,7 +219,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                   obj.items.push(processStep);
                 }
               });
-              
             } else {
               this.view.dataService.data.forEach((obj) => {
                 if (obj.items.length > 0) {
@@ -236,10 +230,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 }
               });
             }
-           
-          }else{
-            this.view.dataService.data.push(processStep)
-            this.listPhaseName.push(processStep.stepName)
+          } else {
+            this.view.dataService.data.push(processStep);
+            this.listPhaseName.push(processStep.stepName);
           }
           this.dataTreeProcessStep = this.view.dataService.data;
           this.changeDetectorRef.detectChanges();
@@ -261,7 +254,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         option.Width = 'Auto';
         this.dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
-          ['edit', this.titleAction,this.view.dataService.dataSelected?.stepType],
+          [
+            'edit',
+            this.titleAction,
+            this.view.dataService.dataSelected?.stepType,
+          ],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -279,9 +276,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   delete(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .delete([data], true, (opt) =>
-        this.beforeDel(opt)
-      )
+      .delete([data], true, (opt) => this.beforeDel(opt))
       .subscribe((res) => {
         if (res) {
           this.dataTreeProcessStep = this.view.dataService.data;
@@ -345,15 +340,22 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     if (e?.view.type == 16) {
       this.dataTreeProcessStep = this.view.dataService.data;
       this.listPhaseName = [];
-      this.dataTreeProcessStep.forEach(obj=>{
-        this.listPhaseName.push(obj?.stepName)
-      })
+      this.dataTreeProcessStep.forEach((obj) => {
+        this.listPhaseName.push(obj?.stepName);
+      });
       this.changeDetectorRef.detectChanges();
     }
   }
 
   //#endregion
-  //view Temp
- 
- 
+  //view Temp drop
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+  }
+
+  dropStepChild(event: CdkDragDrop<string[]>, parentID) {
+    var index = this.data.findIndex((x) => x.id == parentID);
+    this.dataChild = this.data[index].items;
+    moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
+  }
 }
