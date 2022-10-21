@@ -34,6 +34,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   isAfterRender: boolean = false;
   isConfirm = true;
   isApprover = true;
+  otpControl: string = ''; //'1':SMS;2:Email;3:OTP
   stepNo: number;
   dialog: DialogRef;
   data;
@@ -156,7 +157,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
     this.title = title;
     this.subTitle = subTitle;
-    if (this.data.stepType == 'S' && this.signerInfo?.otpControl == '3') {
+    if (
+      this.data.stepType == 'S' &&
+      (this.signerInfo?.otpControl == '1' ||
+        this.signerInfo?.otpControl == '2' ||
+        this.signerInfo?.otpControl == '3')
+    ) {
+      this.otpControl = this.signerInfo.otpControl;
       this.openConfirm();
     } else {
       this.approve(mode, title, subTitle);
@@ -164,6 +171,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   openConfirm() {
+    if (this.otpControl == '2') {
+      //this.esService.createOTPPin(this.oApprovalTrans.recID, 1).subscribe();
+    }
     let dialogOtpPin = this.callfc.openForm(
       this.popupOTPPin,
       '',
