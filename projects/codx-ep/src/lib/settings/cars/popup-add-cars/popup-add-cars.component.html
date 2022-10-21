@@ -177,7 +177,8 @@
           >
             <span
             class="me-1"
-            [ngClass]="[item?.isSelected ? 'text-primary' : 'text-muted',item?.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']"
+            [className]="item.icon"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"
           >
             </span
             >{{ item?.text }}
@@ -215,7 +216,7 @@
           <h2 id="modal-basic-title">
             <codx-label
               name="lblEquipment"
-              default="Thiết bị"
+              default="Cài đặt thiết bị"
               [formModel]="form.formModel"
             ></codx-label>
           </h2>
@@ -232,7 +233,7 @@
         </div>
         <div class="text-dark-50">
           <codx-label
-            name="lblChooseEquipments"
+            name="lblChooseCarEquipments"
             default="Chọn các thiết bị đã tích hợp sẵn trong xe"
             [formModel]="form.formModel"
           ></codx-label>
@@ -244,7 +245,8 @@
         <div class="d-flex flex-stack">
           <div class="d-flex">
             <span class="text-dark me-2 p-1" 
-            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
+            [className]="item.icon"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
             </span>
             <div class="d-flex flex-column justify-content-center">
               <span href="#" class="text-dark fw-bolder">{{
@@ -267,15 +269,7 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer" (click)="dialogRef.close()">
-      <button type="button" class="btn btn-primary">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="form.formModel"
-        ></codx-label>
-      </button>
-    </div>
+    
   </ng-template>
   
 </codx-form>

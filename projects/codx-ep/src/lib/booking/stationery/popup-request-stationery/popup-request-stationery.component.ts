@@ -74,11 +74,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   model?: FormModel;
   groupStationery;
-  radioGroupCheck:boolean =false;
-  radioPersonalCheck:boolean =true;
+  radioGroupCheck:boolean ;
+  radioPersonalCheck:boolean;
   groupID: string;
 
-  qtyEmp: number = 0;
+  qtyEmp: number = 1;
   title:'';
   dialogAddBookingStationery: FormGroup;
   
@@ -112,6 +112,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.filterStationery();
     
     if(!this.isAddNew){
+      this.radioPersonalCheck=true;
+      this.radioGroupCheck=false;
       this.epService.getEmployeeByOrgUnitID(this.data?.orgUnitID).subscribe((res:number)=>{
         if(res){
           this.qtyEmp=res;
@@ -120,6 +122,16 @@ export class PopupRequestStationeryComponent extends UIComponent {
       })
       this.cart=this.data.bookingItems;
       this.changeTab(2);
+    }
+    else{
+      if(this.data?.category=='1'){        
+        this.radioPersonalCheck=true;
+        this.radioGroupCheck=false;
+      }
+      else{            
+        this.radioPersonalCheck=false;
+        this.radioGroupCheck=true;
+      }
     }
   }
 
@@ -145,6 +157,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
               resourceType: '6',
               category: '1',
               status: '1', 
+              bookingOn:new Date(),
             });
             this.dialogAddBookingStationery.addControl('issueStatus', new FormControl('1')); 
             
@@ -217,6 +230,13 @@ export class PopupRequestStationeryComponent extends UIComponent {
         return item?.resourceID != resourceID;
       });
     }
+    if(event?.data>0){
+      this.cart.forEach(item=>{
+        if(item.resourceID==resourceID){
+          item.quantity=event?.data;
+        }
+      })
+    }
     this.detectorRef.detectChanges();
   }
 
@@ -240,7 +260,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
       );
     }
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt))
+      .save((opt: any) => this.beforeSave(opt),0)
       .subscribe((res) => {
         this.dialog.close();
       });
@@ -291,6 +311,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   addQuota() {
+    
     this.cart.map((item) => {
       this.lstStationery.push({
         id: item?.resourceID,
