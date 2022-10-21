@@ -2,17 +2,14 @@ import { DialogRef } from 'codx-core/public-api';
 import { Component, OnInit, Injector } from '@angular/core';
 import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
-import { NotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/notify-drawer.component';
 import { ActivatedRoute } from '@angular/router';
-import { SettingNotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/setting-notify-drawer/setting-notify-drawer.component';
-import { PopupAddNotifyComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/popup-add-notify/popup-add-notify.component';
 
 @Component({
-  selector: 'lib-layout',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  selector: 'lib-layout-portal',
+  templateUrl: './layout-portal.component.html',
+  styleUrls: ['./layout-portal.component.scss']
 })
-export class DashboardComponent extends LayoutBaseComponent {
+export class LayoutPortalComponent extends LayoutBaseComponent {
   module = 'WP';
   funcID:string = "";
   override asideFixed = false;

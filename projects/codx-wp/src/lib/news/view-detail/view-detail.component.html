@@ -1,9 +1,12 @@
-<codx-views #codxViews [entityName]="entityName" [views]="views" [showToolBar]="false">
+<codx-views #view 
+[entityName]="entityName" 
+[views]="views" 
+[showToolBar]="false">
 </codx-views>
 <div class="more-function">
     <div class="d-flex flex-column">
         <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
-        <span class="postnews mt-3">
+        <span class="postnews mt-3" *ngIf="userPermission && userPermission.create">
             <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
             <div class="d-flex btn-postnews">
 
@@ -15,6 +18,7 @@
         </span>
     </div>
 </div>
+
 <ng-template #panelLeftRef>
     <ng-container *ngIf="data">
         <div class="fix-container p-6">
@@ -62,34 +66,12 @@
                             </ng-contianer>
                             <ng-template #news>
                                 <div class="py-3" [innerHTML]="data?.subContent"></div>
-                                <!-- <codx-input 
-                                type="textarea" 
-                                [class]="'border-none'"
-                                format="ed3"
-                                [crrValue]="data.subContent">
-                            </codx-input> -->
-                                <!-- <div class="row p-4">
-                                <codx-input 
-                                    type="textarea" 
-                                    class="test-textarea" 
-                                    field="textarea" 
-                                    format="ed3"
-                                    [crrValue]="data.contentHtml"
-                                    ngDefaultControl>
-                                </codx-input>
-                            </div> -->
                                 <div class="py-3 news-detail-content" [innerHTML]="data?.contentHtml"></div>
-                                <!-- <codx-input 
-                                type="textarea" 
-                                [class]="'border-none'"
-                                format="ed3"
-                                [crrValue]="data.contentHtml">
-                            </codx-input> -->
                             </ng-template>
 
                         </div>
                         <div class="fw-bolder fs-3 erer text-primary mt-6">
-                            <codx-label fromName="News" name="lblViewmore" default="Xem thêm"></codx-label>
+                            <codx-label [formModel]="view.formModel" name="lblViewmore" default="Xem thêm"></codx-label>
                         </div>
                         <div class="w-100">
                             <ul>
@@ -107,7 +89,7 @@
                 <div class="col-4">
                     <div class="w-350px min-w-350px ms-5 news-right">
                         <div class="fw-bolder er text-primary fs-3 mb-5 border-bottom border-gray pb-2">
-                            <codx-label fromName="News" name="lblTopview" default="Xem nhiều nhất"></codx-label>
+                            <codx-label [formModel]="view.formModel" name="lblTopview" default="Xem nhiều nhất"></codx-label>
                         </div>
                         <ng-container *ngFor="let item of listViews; index as i">
                             <div [class]="(i == 0 || i == listViews.length - 1)?'news-item py-3 first':'news-item py-3'"
@@ -134,7 +116,7 @@
                             </div>
                         </ng-container>
                         <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
-                            <codx-label formName="News" name="lblTags" default="Tag #"></codx-label>
+                            <codx-label [formModel]="view.formModel" name="lblTags" default="Tag #"></codx-label>
                             <div class="badge-group">
                                 <span *ngFor="let tag of listTag" class="badge badge-danger"
                                     [style.background]="tag.color" (click)="clickTag(tag)">

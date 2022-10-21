@@ -829,13 +829,13 @@ export class CodxEsService {
     );
   }
 
-  getSFByID(data): Observable<any> {
-    return this.api.execSv(
+  getSFByID(sfRecID) {
+    return this.api.execSv<any>(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetByIDAsync',
-      data
+      sfRecID
     );
   }
 
@@ -920,6 +920,16 @@ export class CodxEsService {
     );
   }
 
+  saveSignAreasTemplate(sfRecID: string, tmpRecID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CancelSignfileAsync',
+      [sfRecID, tmpRecID]
+    );
+  }
+
   updateApproveTemplate(sfID: string, processID: string): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -938,6 +948,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'AddImgToPDFAsync',
       data
+    );
+  }
+
+  cancelSignfile(sfRecID: string, comment: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CancelSignfileAsync',
+      [sfRecID, comment]
     );
   }
   //#endregion
@@ -989,6 +1009,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'GetViewByTransIDAsync',
       [recID]
+    );
+  }
+
+  getApprovalTransActive(sfRecID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetTransActiveAsync',
+      [sfRecID]
     );
   }
 

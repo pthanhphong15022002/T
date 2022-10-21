@@ -52,6 +52,7 @@
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
+    (updateStatus)="updateStatus($event)"
     (uploaded)="getDetailBooking($event)"
   ></approval-stationery-view-detail>
 </ng-template>
