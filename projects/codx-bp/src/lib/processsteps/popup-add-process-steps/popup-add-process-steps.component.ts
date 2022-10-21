@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   AuthStore,
   DialogData,
@@ -34,11 +34,14 @@ export class PopupAddProcessStepsComponent implements OnInit {
   listUser = [];
   isAlert = true;
   isEmail = true;
-  isHaveFile =false;
+  isHaveFile = false;
+  referenceText = [];
+  textChange=''
 
   constructor(
     private bpService: CodxBpService,
     private authStore: AuthStore,
+    private changeDef : ChangeDetectorRef,
     private notifySvr: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -46,9 +49,9 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );
-    this.action = dt?.data[1];
-    this.titleActon = dt?.data[2];
-    this.stepType = dt?.data[3];
+    this.action = dt?.data[0];
+    this.titleActon = dt?.data[1];
+    this.stepType = dt?.data[2];
     if (this.stepType) this.processSteps.stepType = this.stepType;
     // this.stepType = 'T'; //thêm để test
     this.dialog = dialog;
@@ -104,11 +107,11 @@ export class PopupAddProcessStepsComponent implements OnInit {
     //       } else this.dialog.close();
     //     });
     // } else {
-      this.bpService.addProcessStep(this.processSteps).subscribe((data) => {
-        if (data) {
-          this.dialog.close(data);
-        } else this.dialog.close();
-      });
+    this.bpService.addProcessStep(this.processSteps).subscribe((data) => {
+      if (data) {
+        this.dialog.close(data);
+      } else this.dialog.close();
+    });
     // }
   }
 
@@ -130,12 +133,14 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps[e?.field] = e?.data;
   }
 
-  valueChangeDuration(e) {
-    // if (this.processSteps.stepType == 'P') {
-    //   this.processSteps.duration = e?.data * 24;
-    // } else 
-    this.processSteps.duration = e?.data;
+  valueChangeRefrence(e) {
+    if (e?.data && e?.data.trim() != '') {
+      this.referenceText.push(e?.data);
+      this.textChange=''
+      this.changeDef.detectChanges();
+    }
   }
+
 
   addFile(evt: any) {
     this.attachment.uploadFile();
@@ -150,7 +155,15 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
   valueChangeSwitch(e) {}
 
-
   eventApply(e) {}
   //endregion
+  convertReference() {
+    switch (this.processSteps.stepType) {
+      case 'C':
+        if (this.referenceText.length > 0) {
+          this.processSteps.reference = this.referenceText.join(';');
+        }
+        break;
+    }
+  }
 }

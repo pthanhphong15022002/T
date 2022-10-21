@@ -3,7 +3,7 @@
 
 <ng-template #body>
   <div class="list-group">
-    <h3 class="list-header mb-7">{{ title }}</h3>
+    <h3 class="list-header mb-5">{{ title }}</h3>
     <div class="list-content">
       <ng-container *ngIf="groupSetting && groupSetting.length > 0; else noGroup">
         <ng-container *ngFor="let item of groupSetting">
@@ -129,13 +129,13 @@
 
           <div class="w-30px setting-btnright ms-2">
             <a [routerLink]="
-                data.reference ? '../../../../' + data.reference : 'detail'
-              " [state]="{
-                setting: setting | group: data.recID:'2',
-                function: function,
-                dataValue: dataValue[data.fieldName],
-                urlOld: urlOld
-              }" *ngIf="data.displayMode === '1'">
+            data.reference ? '../../../' + data.reference : 'detail'
+          " [state]="{
+            keepPage: true,
+            setting: setting | group: data.recID:'2',
+            function: function,
+            dataValue: dataValue[data.fieldName]
+          }" *ngIf="data.displayMode === '1'">
               <span class="w-30px d-flex justify-content-center"><span
                   class="icon-keyboard_arrow_right icon-22"></span></span></a>
             <a href="javascript:void(0)" (click)="openPopup($event, data)" *ngIf="data.displayMode === '2'"><span
@@ -146,15 +146,14 @@
               (click)="collapseItem($event, data.recID)"><span class="w-30px d-flex justify-content-center"><span
                   class="icon-keyboard_arrow_right icon-22" [attr.data-id]="data.recID"></span></span></a>
             <ng-container *ngIf="data.displayMode === '4' || data.displayMode === '5'">
-              <codx-input type="Share" [refValue]="data.refValue || 'L1901'" field="popup" [dataShared]="[]"
+              <codx-input type="Share" [refValue]="data.referdValue || 'L1901'" field="popup" [dataShared]="[]"
                 [showInput]="false" [listCombobox]="data.reference" [multiple]="data.displayMode === '5'">
               </codx-input>
             </ng-container>
 
             <ng-container *ngIf="data.displayMode === '6'">
-              <!-- <img src="src\assets\img\es_label\Express.png" alt="" />
-              <img src="src\assets\img\es_label\HighUrgent.png" alt="" />
-              <img src="src\assets\img\es_label\Urgent.png" alt="" /> -->
+              <codx-img [updateDirect]="true" [isAllowEdit]="true" [objectId]="data.recID"
+                [objectType]="function.entityName"></codx-img>
             </ng-container>
           </div>
         </div>

@@ -1,4 +1,4 @@
-<div class="container" *ngIf="dataReferences.length == 0">
+<div class="container h-100" *ngIf="dataReferences.length == 0">
   <div class="list-empty card card-flush h-100">
     <div class="d-flex flex-column flex-center justify-content-center">
       <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
@@ -35,7 +35,7 @@
       </div>
 
       <div class="d-flex justify-content-between align-items-center mt-1 mb-4">
-        <div class="d-flex align-items-center ms-14 codx-badge">
+        <div class="d-flex align-items-center ms-6 codx-badge">
           <div class="me-3">
             <span class="icon-calendar_today icon-14 text-gray-600 me-1"></span>
             <span class="text-gray-600" #createdOn>
@@ -46,31 +46,29 @@
             <span class="text-gray-600">{{ data?.createByName }}</span>
           </div>
         </div>
-        <div>
-          <div class="d-flex">
-            <!-- <span class="d-flex align-items-center position-relative me-4">
-            <span class="icon-mode_comment icon-20 text-gray-400"></span>
-            <span
-              class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
-              data?.comments ? data?.comments :'0'  }}</span>
-              </span>
-     
-          <span class="d-flex align-items-center position-relative me-4">
-            <span class="icon-attach_file icon-20 text-gray-400"></span>
-            <span
-              class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
-              data?.attachments ?data?.attachments :'0'  }}</span>
-          </span> -->
-
-            <span class="me-4">
-              <codx-comment-temp [objectID]="data.recIDReferences"></codx-comment-temp>
+        <div class="d-flex">
+          <!-- <span class="d-flex align-items-center position-relative me-4">
+          <span class="icon-mode_comment icon-20 text-gray-400"></span>
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+            data?.comments ? data?.comments :'0'  }}</span>
             </span>
-            <span class="me-4">
-              <codx-attachment-temp [objectID]="data.recIDReferences" [formModel]="formModel"></codx-attachment-temp>
-            </span>
+   
+        <span class="d-flex align-items-center position-relative me-4">
+          <span class="icon-attach_file icon-20 text-gray-400"></span>
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
+            data?.attachments ?data?.attachments :'0'  }}</span>
+        </span> -->
 
-            <!-- <codx-user-temp [objectID]="data.recIDReferences"></codx-user-temp> -->
-          </div>
+          <span class="me-4">
+            <codx-comment-temp [objectID]="data.recIDReferences"></codx-comment-temp>
+          </span>
+          <span class="me-4">
+            <codx-attachment-temp [objectID]="data.recIDReferences" [formModel]="formModel"></codx-attachment-temp>
+          </span>
+
+          <codx-user-temp [objectID]="data.recIDReferences"></codx-user-temp>
         </div>
       </div>
     </div>

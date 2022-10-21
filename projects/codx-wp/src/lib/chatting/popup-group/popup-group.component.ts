@@ -60,7 +60,6 @@ export class PopupGroupComponent implements OnInit {
   selectUser(user) {
     /* this.userSelected = user;
     this.change.detectChanges(); */
-    debugger;
   } 
 
   loadData() {
@@ -146,11 +145,11 @@ export class PopupGroupComponent implements OnInit {
     this.data.members = this.userSelected;
 
     if(this.data.groupName == null){
-      this.notificationsService.notify(this.namegroupmessage);
+      //this.notificationsService.notify(this.namegroupmessage);
       return;
     }
     if(this.data.members.length <= 1){
-      this.notificationsService.notify(this.usersmessage);
+      //this.notificationsService.notify(this.usersmessage);
       return;
     }
 

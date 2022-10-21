@@ -47,6 +47,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   lstApproveMode: any;
   currentApproveMode: string;
 
+  confirmControl: string = '0';
+  allowEditAreas: boolean;
+
   dialog: DialogRef;
   lstStep;
   isSaved = false;
@@ -100,6 +103,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
     this.defaultSignType = data?.data?.signatureType;
+
+    this.allowEditAreas = data?.data?.signatureType;
+    this.confirmControl = data?.data?.confirmControl;
+
     this.eSign = data?.data?.eSign ?? false;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
@@ -124,14 +131,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     });
   }
 
-  valueChange(event) {
-    if (event?.field && event?.component && event?.data != '') {
-      this.data[event?.field] = event.data;
-      this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
-      this.cr.detectChanges();
-    }
-  }
-
   initForm() {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -148,8 +147,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
                 this.data.transID = this.transId;
                 this.data.signatureType = this.defaultSignType;
                 this.dialogApprovalStep.patchValue(this.data);
-                // this.dialogApprovalStep.patchValue({ stepNo: this.stepNo });
-                // this.dialogApprovalStep.patchValue({ transID: this.transId });
+
                 this.esService.getNewDefaultEmail().subscribe((emailTmp) => {
                   this.data.emailTemplates = emailTmp;
                   this.dialogApprovalStep.patchValue({
@@ -168,6 +166,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           );
           if (this.lstApprover?.length > 0) {
             this.lstApprover.forEach((element) => {
+              this.confirmControl = element?.confirmControl ?? '0';
+              this.allowEditAreas = element?.allowEditAreas ?? false;
+
               if (element.roleType == 'PE') element.write = true;
               else element.write = false;
 
@@ -187,6 +188,42 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
+  }
+
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      if (event.field == 'allowEditAreas') {
+        this.allowEditAreas = event.data;
+      } else if (event.field == 'stepType') {
+        this.data[event?.field] = event.data;
+        this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+        if (this.data.stepName == '' || this.data.stepName == null) {
+          let vllName = this.eSign == true ? 'ES002' : 'ES026';
+          this.cache.valueList(vllName).subscribe((res) => {
+            if (res?.datas) {
+              let i = res.datas.findIndex((p) => p.value == event.data);
+              this.data.stepName = res.datas[i]?.text;
+              this.dialogApprovalStep.patchValue({
+                stepName: this.data.stepName,
+              });
+              this.cr.detectChanges();
+            }
+          });
+        }
+      } else {
+        this.data[event?.field] = event.data;
+        this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+      }
+
+      this.cr.detectChanges();
+    }
+  }
+
+  changeConfirm(event) {
+    if (event?.field && event?.field == 'confirmControl' && event?.component) {
+      this.confirmControl = event?.data ? '1' : '0';
+      this.cr.detectChanges();
+    }
   }
 
   MFClick(event, data) {
@@ -217,10 +254,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   onSaveForm() {
     this.isSaved = true;
-
-    console.log(this.dialogApprovalStep.value);
-    console.log(this.data);
-
     if (this.dialogApprovalStep.invalid == true) {
       this.esService.notifyInvalid(this.dialogApprovalStep, this.formModel);
       return;
@@ -239,6 +272,12 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         });
       return;
     }
+    this.lstApprover.forEach((appr) => {
+      appr.confirmControl = this.confirmControl;
+      appr.allowEditAreas = this.allowEditAreas;
+    });
+    console.log(this.lstApprover);
+
     this.dialogApprovalStep.patchValue({
       approveMode: this.currentApproveMode,
       approvers: this.lstApprover,

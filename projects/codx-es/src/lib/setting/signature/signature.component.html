@@ -29,15 +29,13 @@
     <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
       data.supplier | vll: "ES006":"text" | async
     }}</span>
-    <div class="action-menu">
-      <codx-mfunc
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-        [dataItem]="data"
-      >
-      </codx-mfunc>
-    </div>
+    <codx-mfunc
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 
@@ -121,15 +119,13 @@
     <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
       data.otpControl | vll: "ES005":"text" | async
     }}</span>
-    <div class="action-menu">
-      <codx-mfunc
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-        [dataItem]="data"
-      >
-      </codx-mfunc>
-    </div>
+    <codx-mfunc
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 

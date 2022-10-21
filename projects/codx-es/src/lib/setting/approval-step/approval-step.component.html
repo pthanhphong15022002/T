@@ -40,7 +40,7 @@
           data-kt-scroll-offset="0px"
         >
           <div *ngIf="lstStep?.length == 0">
-            <div class="container">
+            <div class="container h-100">
               <div class="list-empty card card-flush h-100">
                 <div
                   class="d-flex flex-column flex-center justify-content-center"
@@ -87,15 +87,15 @@
                           <div class="stepper-desc">
                             {{ item.stepName }}
                           </div>
-                          <div class="action-menu">
-                            <codx-mfunc
-                              [formModel]="formModel"
-                              (clickMF)="clickMF($event, item)"
-                              type="hover"
-                              [dataItem]="item"
-                            >
-                            </codx-mfunc>
-                          </div>
+
+                          <codx-mfunc
+                            *ngIf="!justView"
+                            [formModel]="formModel"
+                            (clickMF)="clickMF($event, item)"
+                            type="hover"
+                            [dataItem]="item"
+                          >
+                          </codx-mfunc>
                         </div>
                       </div>
                       <div class="timeline-content mx-auto">
@@ -109,9 +109,7 @@
                                 *ngIf="approver.roleType?.length == 1"
                                 [imageId]="approver.approver"
                                 [title]="approver.name"
-                                [subTitle]="
-                                  approver.position ?? 'Vị trí công việc'
-                                "
+                                [subTitle]="approver.position ?? ''"
                                 [status]="lstStep.status"
                                 [imageObjType]="'AD_Users'"
                                 [modeImgs]="true"
@@ -274,15 +272,14 @@
                     <div class="stepper-desc">
                       {{ item.stepName }}
                     </div>
-                    <div class="action-menu">
-                      <codx-mfunc
-                        [formModel]="formModel"
-                        (clickMF)="clickMF($event, item)"
-                        type="hover"
-                        [dataItem]="item"
-                      >
-                      </codx-mfunc>
-                    </div>
+
+                    <codx-mfunc
+                      [formModel]="formModel"
+                      (clickMF)="clickMF($event, item)"
+                      type="hover"
+                      [dataItem]="item"
+                    >
+                    </codx-mfunc>
                   </div>
                 </div>
                 <div class="timeline-content mx-auto">
@@ -296,7 +293,7 @@
                           *ngIf="approver.roleType?.length == 1"
                           [imageId]="approver.approver"
                           [title]="approver.name"
-                          [subTitle]="approver.position ?? 'Vị trí công việc'"
+                          [subTitle]="approver.position ?? ''"
                           [status]="lstStep.status"
                           [imageObjType]="'AD_Users'"
                           [modeImgs]="true"

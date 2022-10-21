@@ -160,7 +160,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
               }
             });
           this.formModel = new FormModel();
-          this.formModel.funcID = "WP";
+          this.formModel.funcID = funcID;
           this.formModel.formName = func.formName;
           this.formModel.gridViewName = func.gridViewName;
           this.formModel.entityName = func.entityName;
@@ -333,7 +333,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file: any) {
+  clickViewDetail(file: any) 
+  {
     if (!file) return;
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;

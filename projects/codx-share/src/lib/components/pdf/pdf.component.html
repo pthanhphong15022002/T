@@ -287,7 +287,7 @@
             </e-items>
           </ejs-toolbar>
         </div>
-        <ng-container *ngIf="isApprover" [ngTemplateOutlet]="confirmCheckbox">
+        <ng-container *ngIf="isConfirm" [ngTemplateOutlet]="confirmCheckbox">
         </ng-container>
       </div>
       <ngx-extended-pdf-viewer
@@ -389,7 +389,7 @@
                             ? approver.fullName
                             : (approver.roleType | vll: 'ES014':'text' | async)
                         "
-                        [subTitle]="approver.position ?? 'Vị trí công việc'"
+                        [subTitle]="approver.position ?? ''"
                         [baseHeaderRightTmp]="footer"
                         [dataItem]="approver"
                       >
@@ -769,12 +769,13 @@
       (valueChange)="changeConfirmState($event)"
     >
     </codx-input>
-    <codx-label
+    {{ "ES011" | mssg | async }}
+    <!-- <codx-label
       name="lblConfirmSeen"
       [formModel]=""
       [default]="'Xác nhận đã xem văn bản'"
       class="text-header"
-    ></codx-label>
+    ></codx-label> -->
   </div>
 </ng-template>
 

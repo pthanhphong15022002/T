@@ -7,30 +7,25 @@
         </h2>
       </div>
       <div class="d-flex justify-content-end">
-        <button
-          type="button"
-          class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup && !isConfirm"
-          (click)="clickOpenPopupADR(1)"
-        >
-          <codx-vll
-            *ngIf="data?.stepType != 'S1' && data?.stepType != 'S2'"
-            [name]="'ES002'"
-            [value]="data?.stepType"
-            [showText]="true"
+        <div>
+          <button
+            type="button"
+            class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+            [disabled]="!canOpenSubPopup || !isConfirm"
+            (click)="clickOpenPopupADR(1)"
           >
-          </codx-vll>
-          <codx-label
-            *ngIf="data?.stepType == 'S1' || data?.stepType == 'S2'"
-            name="lblApprove"
-            [formModel]="formModel"
-            default="Ký"
-          ></codx-label>
-        </button>
+            <codx-vll
+              [name]="'ES002'"
+              [value]="data?.stepType"
+              [showText]="true"
+            >
+            </codx-vll>
+          </button>
+        </div>
         <button
           type="button"
           class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup && !isConfirm"
+          [disabled]="!canOpenSubPopup || !isConfirm"
           (click)="clickOpenPopupADR(2)"
         >
           <codx-label
@@ -42,7 +37,7 @@
         <button
           type="button"
           class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup && !isConfirm"
+          [disabled]="!canOpenSubPopup || !isConfirm"
           (click)="clickOpenPopupADR(3)"
         >
           <codx-label
@@ -75,6 +70,7 @@
         #pdfView
         (confirmChange)="changeConfirmState($event)"
         [isApprover]="isApprover"
+        [isConfirm]="oApprovalTrans.confirmControl == '1' ? true : false"
         [transRecID]="transRecID"
         [recID]="sfRecID"
         [stepNo]="stepNo"

@@ -31,6 +31,7 @@ import { isBuffer } from 'util';
 import { ES_SignFile, File } from '../../codx-es.model';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
+import { Files } from '../../setting/approval-step/popup-add-approval-step/popup-add-approval-step.component';
 
 @Component({
   selector: 'popup-add-sign-file',
@@ -54,17 +55,17 @@ export class PopupAddSignFileComponent implements OnInit {
     gridViewName: 'grvSignFiles',
   };
 
-  currentTab = 0; // buoc hiện tại
+  currentTab = 0; // buoc hiện tại: 0, 1, 2, 3
   processTab = 0; // tổng bước đã đi qua
   formModelCustom: FormModel;
   isAfterRender = false;
-  cbxName: any = {};
   dialogSignFile: FormGroup;
   lstDataFile = [];
   isAddNew: boolean = true; // flag thêm mới signfile
   processID: String = '';
   transID: String = '';
   gvSetup: any;
+  eSign: boolean = true; //Phân loại là ký số. defaul true for release form others module
 
   isSaved: boolean = false; // flag đã gọi hàm lưu signfile
   isEdit: boolean = false; // flag kiểm tra đã chỉnh sửa thông tin signfile
@@ -81,7 +82,7 @@ export class PopupAddSignFileComponent implements OnInit {
   oldNode: number; //vị trí node trước
 
   disableContinue: boolean = false;
-
+  disableCateID: boolean = false;
   isAfterSaveProcess: boolean = false;
   mssgDelete: string = '';
 
@@ -89,6 +90,7 @@ export class PopupAddSignFileComponent implements OnInit {
   oSignFile: ES_SignFile;
   user: any = {};
   showPlan: boolean = true;
+
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -108,6 +110,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
+    this.disableCateID = data?.data?.disableCateID ?? false;
 
     this.user = this.auth.get();
 
@@ -189,15 +192,6 @@ export class PopupAddSignFileComponent implements OnInit {
                 });
             }
           });
-
-        this.esService
-          .getComboboxName(
-            this.formModelCustom.formName,
-            this.formModelCustom.gridViewName
-          )
-          .then((res) => {
-            if (res) this.cbxName = res;
-          });
       });
     } else {
       this.initForm1();
@@ -205,10 +199,6 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.processTab >= 3) {
-      this.mssgDelete = 'ES003';
-      this.viewApprovalStep?.updateMssgDelete('ES003');
-    }
     ScrollComponent.reinitialization();
   }
 
@@ -274,7 +264,15 @@ export class PopupAddSignFileComponent implements OnInit {
                 .subscribe((res) => {
                   if (res) {
                     this.data = res;
-                    if (this.data.files.length == 1) {
+                    if (this.data?.files?.length > 0) {
+                      this.eSign = this.data.files[0].eSign;
+                      if (this.data.files[0].areas?.length > 0) {
+                        if (this.eSign == true) {
+                          this.mssgDelete = 'ES003';
+                        }
+                      }
+                    }
+                    if (this.data?.files?.length == 1) {
                       let title = JSON.parse(
                         JSON.stringify(this.data.files[0].fileName)
                       );
@@ -293,6 +291,7 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.isAfterRender = true;
                     this.cr.detectChanges();
                     if (this.oSignFile) {
+                      this.eSign = true;
                       this.updateNodeStatus(0, 1);
                     }
                   }
@@ -328,10 +327,10 @@ export class PopupAddSignFileComponent implements OnInit {
           file.createdBy = element.data.createdBy;
           file.comment = element.data.extension;
 
-          let index = lstESign.indexOf(file.comment);
-          if (index >= 0) {
-            file.eSign = true;
-          }
+          // let index = lstESign.indexOf(file.comment);
+          // if (index >= 0) {
+          //   file.eSign = true;
+          // }
 
           files.push(file);
         });
@@ -342,10 +341,10 @@ export class PopupAddSignFileComponent implements OnInit {
         file.createdOn = event.data.createdOn;
         file.createdBy = event.data.createdBy;
         file.comment = event.data.extension;
-        let index = lstESign.indexOf(file.comment);
-        if (index >= 0) {
-          file.eSign = true;
-        }
+        // let index = lstESign.indexOf(file.comment);
+        // if (index >= 0) {
+        //   file.eSign = true;
+        // }
 
         files.push(file);
       }
@@ -370,9 +369,11 @@ export class PopupAddSignFileComponent implements OnInit {
   valueChange(event) {
     if (event?.field && event?.component && event?.data != '') {
       this.isEdit = true;
+
       if (event.field == 'categoryID' && this.data.categoryID != event.data) {
         if ((!this.isAddNew || this.isSaved) && this.processTab >= 3) {
           this.notify.alertCode('ES001').subscribe((x) => {
+            //open popup confirm
             if (x.event.status == 'Y') {
               this.esService
                 .getAutoNumberByCategory(event.data)
@@ -407,6 +408,9 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.data.color = category?.Color;
                   this.data.processID = category?.RecID;
                   this.data.categoryName = category?.CategoryName;
+
+                  this.eSign = category?.ESign;
+                  this.afterCategoryChange();
                   this.cr.detectChanges();
                 });
             } else {
@@ -450,6 +454,8 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.color = category?.Color;
               this.data.processID = category?.RecID;
               this.data.categoryName = category?.CategoryName;
+              this.eSign = category?.ESign;
+              this.afterCategoryChange();
               this.cr.detectChanges();
             });
         }
@@ -595,7 +601,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
     if (this.processID != '') {
-      if (!this.isAddNew || this.isSaved) {
+      if ((!this.isAddNew || this.isSaved) && this.eSign == true) {
         this.notify.alertCode('ES002').subscribe((x) => {
           if (x.event.status == 'Y') {
             this.esService.deleteStepByTransID(this.data.recID).subscribe();
@@ -605,8 +611,31 @@ export class PopupAddSignFileComponent implements OnInit {
             });
             this.data.processID = this.processID;
             this.data.approveControl = '2';
-            this.onSaveSignFile();
-            dialogTmp && dialogTmp.close();
+            //Apply sign areas from template
+            this.esService.getSFByID(this.processID).subscribe((res) => {
+              if (res?.signFile && res.signFile?.files?.length > 0) {
+                let areas = res.signFile?.files[0]?.areas;
+
+                // set new area
+                if (areas?.length > 0) {
+                  areas.forEach((area) => {
+                    delete area.id;
+                    delete area.recID;
+                    delete area.modifiedBy;
+                    delete area.modifiedOn;
+                    area.createdOn = new Date();
+                    area.createdBy = this.user.userID;
+                  });
+                }
+                if (this.data?.files?.length > 0) {
+                  this.data?.files.forEach((element) => {
+                    element.areas = areas;
+                  });
+                }
+              }
+              this.onSaveSignFile();
+              dialogTmp && dialogTmp.close();
+            });
           } else {
             this.processID == '';
             return;
@@ -620,6 +649,28 @@ export class PopupAddSignFileComponent implements OnInit {
         });
         this.data.processID = this.processID;
         this.data.approveControl = '2';
+
+        //Apply sign areas from template
+        this.esService.getSFByID(this.processID).subscribe((res) => {
+          if (res?.signFile && res.signFile?.files?.length > 0) {
+            let areas = res.signFile?.files[0]?.areas;
+            if (areas?.length > 0) {
+              areas.forEach((area) => {
+                delete area.id;
+                delete area.recID;
+                delete area.modifiedBy;
+                delete area.modifiedOn;
+                area.createdOn = new Date();
+                area.createdBy = this.user.userID;
+              });
+            }
+            if (this.data?.files?.length > 0) {
+              this.data?.files.forEach((element) => {
+                element.areas = areas;
+              });
+            }
+          }
+        });
         dialogTmp && dialogTmp.close();
       }
     }
@@ -665,6 +716,21 @@ export class PopupAddSignFileComponent implements OnInit {
     console.log('clickTab', this.dialogSignFile.value);
     let newNo = tabNo;
     let oldNo = this.currentTab;
+
+    if (oldNo == 3) {
+      this.esService.getSFByID(this.data?.recID).subscribe((res) => {
+        if (res?.signFile) {
+          this.data.files = res?.signFile?.files;
+          this.dialogSignFile.patchValue({ files: res?.signFile?.files });
+
+          //Thay doi cau canh bao khi xoa step
+          if (this.data.files[0]?.areas?.length > 0) {
+            this.mssgDelete = 'ES003';
+            this.cr.detectChanges();
+          }
+        }
+      });
+    }
 
     if (tabNo <= this.processTab && tabNo != this.currentTab) {
       this.updateNodeStatus(oldNo, newNo);
@@ -729,7 +795,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
         this.currentTab++;
         this.processTab == 2 && this.processTab++;
-        this.viewApprovalStep.updateMssgDelete('ES003');
+        this.cr.detectChanges();
         break;
       case 3:
         if (this.esService.getApprovalStep) break;
@@ -873,10 +939,13 @@ export class PopupAddSignFileComponent implements OnInit {
 
   release() {
     //Gửi duyệt'
-    if (this.processTab < 3) {
+
+    if (this.user.userID != this.data.owner) {
       return;
     }
-    this.esService.addQRBeforeRelease(this.data.recID).subscribe((res) => {});
+    if (this.eSign == true && this.processTab < 3 && this.currentTab == 3) {
+      return;
+    }
 
     this.esService
       .release(
@@ -888,8 +957,15 @@ export class PopupAddSignFileComponent implements OnInit {
         if (res?.msgCodeError == null && res?.rowCount > 0) {
           this.dialogSignFile.patchValue({ approveStatus: '3' });
           this.data.approveStatus = '3';
+
           this.esService.editSignFile(this.data).subscribe((result) => {
             if (result) {
+              //Gen QR code
+              this.esService
+                .addQRBeforeRelease(this.data.recID)
+                .subscribe((res) => {});
+
+              // Notify
               this.notify.notifyCode('ES007');
               this.dialog &&
                 this.dialog.close({
@@ -902,5 +978,13 @@ export class PopupAddSignFileComponent implements OnInit {
           this.notify.notifyCode(res?.msgCodeError);
         }
       });
+  }
+
+  afterCategoryChange() {
+    if (this.data?.files.length > 0) {
+      this.data?.files.forEach((file) => {
+        file.eSign = this.eSign;
+      });
+    }
   }
 }

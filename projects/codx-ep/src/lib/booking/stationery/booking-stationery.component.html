@@ -54,6 +54,9 @@
     [funcID]="funcID"
     [formModel]="view?.formModel"
     [view]="view"
+    (edit)="edit($event)"
+    (delete)="delete($event)"    
+    (setPopupTitle)="setPopupTitle($event)"
     (uploaded)="getDetailBooking($event)"
   ></booking-stationery-view-detail>
 </ng-template>
@@ -79,6 +82,6 @@
       </codx-vll> 
       <!-- đợi vll issueStatus -->
     </div>
-    <div>{{ data?.createdOn | fmDT }}</div>
+    <div>{{ data?.bookingOn | fmDT }}</div>
   </div>
 </ng-template>

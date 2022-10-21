@@ -62,7 +62,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   checkUserPer: any;
   userID: any;
   @Input() pfuncID: any;
-  @Input() data: any;
+  @Input() data: any = {category: "Phân loại công văn"};
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;
   @Input() getDataDispatch: Function;
@@ -84,6 +84,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   dvlReCall: any;
   dvlStatusTM: any;
   formModel: any;
+  formModels: any;
   dialog!: DialogRef;
   name: any;
   ms020: any;
@@ -139,7 +140,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
     this.getDataValuelist();
+   
   }
+ 
   setHeight() {
     let main, header = 0;
     let ele = document.getElementsByClassName(
@@ -170,12 +173,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   getGridViewSetup(funcID: any) {
   
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
-      // this.formModel = {
-      //   entityName: fuc?.entityName,
-      //   formName: fuc?.formName,
-      //   funcID: funcID,
-      //   gridViewName: fuc?.gridViewName,
-      // };
+      this.formModels = {
+        entityName: fuc?.entityName,
+        formName: fuc?.formName,
+        funcID: funcID,
+        gridViewName: fuc?.gridViewName,
+      };
       this.codxODService
         .loadGridView(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
@@ -796,69 +799,38 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Gửi duyệt
       case 'ODT201': {
-        this.api
-          .execSv(
-            'ES',
-            'ES',
-            'ApprovalTransBusiness',
-            'GetCategoryByProcessIDAsync',
-            '350d611b-1de0-11ed-9448-00155d035517'
-          )
-          .subscribe((res2: any) => {
-            let dialogModel = new DialogModel();
-            dialogModel.IsFull = true;
-
-            //trình ký
-            if (res2?.eSign == true) {
-              let signFile = new ES_SignFile();
-              signFile.recID = datas.recID;
-              signFile.title = datas.title;
-              signFile.categoryID = res2?.categoryID;
-              signFile.refId = datas.recID;
-              signFile.refDate = datas.refDate;
-              signFile.refNo = datas.refNo;
-              signFile.priority = datas.urgency;
-              signFile.files = [];
-              if (this.data?.files) {
-                for (var i = 0; i < this.data?.files.length; i++) {
-                  var file = new File();
-                  file.fileID = this.data?.files[i].recID;
-                  file.fileName = this.data?.files[i].fileName;
-                  signFile.files.push(file);
-                }
+        if(datas.bsCategory)
+        {
+          //Có thiết lập bước duyệt
+          if(datas.bsCategory.approval)
+          {
+            this.api.execSv("ES","ES","CategoriesBusiness","GetByCategoryIDAsync",datas.bsCategory.categoryID).subscribe((item:any)=>{
+              if(item)
+              {
+                this.approvalTrans(item?.processID,datas);
               }
-              let dialogApprove = this.callfunc.openForm(
-                PopupAddSignFileComponent,
-                'Chỉnh sửa',
-                700,
-                650,
-                '',
-                {
-                  oSignFile: signFile,
-                  files: this.data?.files,
-                  //formModel: this.view?.currentView?.formModel,
-                },
-                '',
-                dialogModel
-              );
-              dialogApprove.closed.subscribe((res) => {
-                if (res.event && res.event?.approved == true) {
-                  datas.status = '3';
-                  datas.approveStatus = '3';
-                  this.odService
-                    .updateDispatch(datas, false)
-                    .subscribe((item) => {
-                      if (item.status == 0) {
-                        this.view.dataService.update(item?.data).subscribe();
-                      } else this.notifySvr.notify(item.message);
-                    });
-                }
-              });
-              //this.callfunc.openForm();
-            } else if (res2?.eSign == false)
-              //xét duyệt
-              this.release(datas);
-          });
+              else{}
+            })
+          }
+          //Chưa thiết lập bước duyệt
+          else
+          {
+            var config = new AlertConfirmInputConfig();
+            config.type = "YesNo";
+            this.notifySvr.alertCode("OD024",config).subscribe(item=>{
+              if(item.event.status == "Y") {
+                //Lấy processID mặc định theo entity
+                this.api.execSv("ES","ES","CategoriesBusiness","GetDefaulProcessIDAsync",this.formModels.entityName).subscribe((item:any)=>{
+                  if(item)
+                  {
+                    this.approvalTrans(item?.processID,datas);
+                  }
+                });
+              }
+            })
+          }
+        }
+       
         break;
       }
       //Hoàn tất
@@ -889,7 +861,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteDispatchByIDAsync';
-    opt.data = this.view.dataService.dataSelected;
+    opt.data = [this.view.dataService.dataSelected,this.view.formModel.entityName];
     return true;
   }
   checkOpenForm(val: any) {
@@ -980,7 +952,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           x.functionID == 'ODT211' ||
           x.functionID == 'ODT112' ||
           x.functionID == 'SYS02' ||
-          x.functionID == 'SYS03'
+          x.functionID == 'SYS03' ||
+          x.functionID == 'ODT103' || 
+          x.functionID == 'ODT202'
       );
       for (var i = 0; i < completed.length; i++) {
         completed[i].disabled = true;
@@ -1027,10 +1001,76 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         //this.notifySvr.notify(res2?.msgCodeError)
       });
   }
+  //Xét duyệt
+  approvalTrans(processID:any , datas:any)
+  {
+    this.api.execSv(
+      'ES',
+      'ES',
+      'ApprovalTransBusiness',
+      'GetCategoryByProcessIDAsync',
+      processID
+    )
+    .subscribe((res2: any) => {
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+
+      //trình ký
+      if (res2?.eSign == true) {
+        let signFile = new ES_SignFile();
+        signFile.recID = datas.recID;
+        signFile.title = datas.title;
+        signFile.categoryID = res2?.categoryID;
+        signFile.refId = datas.recID;
+        signFile.refDate = datas.refDate;
+        signFile.refNo = datas.refNo;
+        signFile.priority = datas.urgency;
+        signFile.files = [];
+        if (this.data?.files) {
+          for (var i = 0; i < this.data?.files.length; i++) {
+            var file = new File();
+            file.fileID = this.data?.files[i].recID;
+            file.fileName = this.data?.files[i].fileName;
+            signFile.files.push(file);
+          }
+        }
+        let dialogApprove = this.callfunc.openForm(
+          PopupAddSignFileComponent,
+          'Chỉnh sửa',
+          700,
+          650,
+          '',
+          {
+            oSignFile: signFile,
+            files: this.data?.files,
+            //formModel: this.view?.currentView?.formModel,
+          },
+          '',
+          dialogModel
+        );
+        dialogApprove.closed.subscribe((res) => {
+          if (res.event && res.event?.approved == true) {
+            datas.status = '3';
+            datas.approveStatus = '3';
+            this.odService
+              .updateDispatch(datas, false)
+              .subscribe((item) => {
+                if (item.status == 0) {
+                  this.view.dataService.update(item?.data).subscribe();
+                } else this.notifySvr.notify(item.message);
+              });
+          }
+        });
+        //this.callfunc.openForm();
+      } else if (res2?.eSign == false)
+        //xét duyệt
+        this.release(datas);
+    });
+  }
   handleViewFile(e: any) {
     if (e == true) {
       var index = this.data.listInformationRel.findIndex(
-        (x) => x.userID == this.userID
+        (x) => x.userID == this.userID && x.relationType != "1"
       );
       this.data.listInformationRel[index].view = '3';
     }
