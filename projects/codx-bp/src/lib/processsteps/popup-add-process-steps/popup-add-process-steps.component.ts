@@ -133,13 +133,30 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps[e?.field] = e?.data;
   }
 
+  valueChangeCbx(e) {
+    this.processSteps.parentID = e?.data;
+    debugger
+  }
+
+
   valueChangeRefrence(e) {
     if (e?.data && e?.data.trim() != '') {
-      this.referenceText.push(e?.data);
+      this.textChange= e?.data
+      this.changeDef.detectChanges();
+    }
+  }
+  enterRefrence(){
+    if (this.textChange && this.textChange.trim() != '') {
+      this.referenceText.push(this.textChange);
       this.textChange=''
       this.changeDef.detectChanges();
     }
   }
+
+  showPoppoverDeleteRef(p,index){
+
+  }
+
 
 
   addFile(evt: any) {
