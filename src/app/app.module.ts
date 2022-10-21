@@ -31,6 +31,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { FileComponent } from './file/file.component';
 import { AppConfigService } from '@core/services/config/app-config.service';
 import { AppConfig } from '@core/services/config/app-config';
+import { CodxSVModule } from 'projects/codx-sv/src/public-api';
 
 
 //import { ReportComponent } from './modules/report/report.component';
