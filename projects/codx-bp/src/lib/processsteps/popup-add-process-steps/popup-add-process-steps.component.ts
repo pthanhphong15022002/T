@@ -49,9 +49,9 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );
-    this.action = dt?.data[1];
-    this.titleActon = dt?.data[2];
-    this.stepType = dt?.data[3];
+    this.action = dt?.data[0];
+    this.titleActon = dt?.data[1];
+    this.stepType = dt?.data[2];
     if (this.stepType) this.processSteps.stepType = this.stepType;
     // this.stepType = 'T'; //thêm để test
     this.dialog = dialog;
@@ -141,12 +141,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
     }
   }
 
-  valueChangeDuration(e) {
-    // if (this.processSteps.stepType == 'P') {
-    //   this.processSteps.duration = e?.data * 24;
-    // } else
-    this.processSteps.duration = e?.data;
-  }
 
   addFile(evt: any) {
     this.attachment.uploadFile();

@@ -229,13 +229,13 @@ export class CodxEpService {
     );
   }
 
-  getEmployeeByOrgUnitID(id: string) {
+  getEmployeeByOrgUnitID(orgID: string) {
     return this.api.execSv(
       'HR',
       'ERM.Business.HR',
-      'OrganizationUnitsBusiness',
-      'GetEmployeeListByOrgAsync',
-      [id, null, false]
+      'PositionsBusiness',
+      'GetTotalFilledCountsByOrgUnitIDAsync',
+      [orgID]
     );
   }
 

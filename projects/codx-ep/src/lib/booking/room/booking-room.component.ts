@@ -189,7 +189,15 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
 
   changeItemDetail(event) {
-    this.itemDetail = event?.data;
+    let recID = '';
+    if (event?.data) {
+      recID = event.data.recID;
+      this.itemDetail = event?.data;
+    } else if (event?.recID) {
+      recID = event.recID;
+      this.itemDetail = event;
+    }
+    this.getDetailBooking(recID);
   }
 
   getDetailBooking(id: any) {
@@ -297,4 +305,5 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     });
   }  
+  closeAddForm(event) {}
 }
