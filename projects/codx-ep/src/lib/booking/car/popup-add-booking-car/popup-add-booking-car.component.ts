@@ -24,7 +24,7 @@ import { Equipments } from '../../../models/equipments.model';
 export class Device {
   id;
   text = '';
-  isSelected = false;
+  isSelected = true;
   icon = '';
 }
 
@@ -60,6 +60,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       name: 'tabMoreInfo',
     },
   ];
+  tempDriver:any;
   returnData:any;
   title = '';
   cbbData:any;
@@ -104,6 +105,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
   editCarDevice = null;
   tmpTitle = '';
   tempArray = [];
+  calendarStartTime:any;
+  calendarEndTime:any;
   endHour:any;
   startHour:any; 
   endMinutes:any;
@@ -129,34 +132,72 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.requester = this.authService?.userValue?.userName;
   }
   onInit(): void {
-    this.api.callSv(
-      'SYS',
-      'ERM.Business.SYS',
-      'SettingValuesBusiness',
-      'GetByModuleAsync',
-      'EPParameters'
-    )
-    .subscribe((res) => {
-      if(res){
-        this.calendarID =JSON.parse(res.msgBodyData[0].dataValue)?.CalendarID;
-        this.api.exec<any>(APICONSTANT.ASSEMBLY.BS, APICONSTANT.BUSINESS.BS.CalendarWeekdays, 'GetDayShiftAsync', [this.calendarID]).subscribe((res):any=>{
-          if(res){
-            res.forEach(day => {        
-              if(day?.shiftType=="1"){
-                let tmpstartTime= day?.startTime.split(":");
-                this.startHour=tmpstartTime[0];
-                this.startMinutes=tmpstartTime[1];
-              }
-              else if(day?.shiftType=="2"){
-                let tmpEndTime= day?.endTime.split(":");
-                this.endHour=tmpEndTime[0];
-                this.endMinutes=tmpEndTime[1];
-              }          
-            });
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'EPParameters'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = JSON.parse(
+            res.msgBodyData[0].dataValue
+          )?.CalendarID;
+          if (this.calendarID) {
+            this.api
+              .exec<any>(
+                APICONSTANT.ASSEMBLY.BS,
+                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
+                'GetDayShiftAsync',
+                [this.calendarID]
+              )
+              .subscribe((res) => {
+                let tmpDateTime=new Date();
+                res.forEach((day) => {
+                  if (day?.shiftType == '1') {
+                    let tmpstartTime = day?.startTime.split(':');
+                    this.calendarStartTime = tmpstartTime[0] + ':' + tmpstartTime[1];
+                      if(this.isAdd){
+                        this.data.startDate = new Date(tmpDateTime.getFullYear(),tmpDateTime.getMonth(),tmpDateTime.getDate(),tmpstartTime[0],tmpstartTime[1],0);
+                      }
+                  } else if (day?.shiftType == '2') {
+                    let tmpEndTime = day?.endTime.split(':');
+                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
+                    if(this.isAdd){
+                      this.data.endDate = new Date(tmpDateTime.getFullYear(),tmpDateTime.getMonth(),tmpDateTime.getDate(),tmpEndTime[0],tmpEndTime[1],0);
+                    }
+                  }
+                });
+              });
+          } else {
+            this.api
+              .execSv(
+                'SYS',
+                'ERM.Business.SYS',
+                'SettingValuesBusiness',
+                'GetByModuleAsync',
+                'Calendar'
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  let tempStartTime = JSON.parse(res.dataValue)[0]?.StartTime.split(':');
+                  this.calendarStartTime = tempStartTime[0] + ':' + tempStartTime[1];
+                  let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(':');
+                  this.calendarEndTime = tempEndTime[0] + ':' + tempEndTime[1];
+                  let tmpDateTime= new Date()
+                  if(this.isAdd){
+                    this.data.startDate = new Date(tmpDateTime.getFullYear(),tmpDateTime.getMonth(),tmpDateTime.getDate(),tempStartTime[0],tempStartTime[1],0);
+                    this.data.startDate = new Date(tmpDateTime.getFullYear(),tmpDateTime.getMonth(),tmpDateTime.getDate(),tempEndTime[0],tempEndTime[1],0);
+                    
+                  }
+                }
+              });
           }
-        });
-      } 
-    });
+          this.detectorRef.detectChanges();
+        }
+      });
     this.initForm();
     
      
@@ -166,6 +207,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
+        device.icon = item.icon;
         this.lstDeviceCar.push(device);
       });
 
@@ -183,6 +225,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.tmplstDevice.push(tmpDevice);
         });
       }
+      this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
     });
     if (this.isAdd) {
       this.data.attendees = 1;
@@ -375,10 +418,11 @@ export class PopupAddBookingCarComponent extends UIComponent {
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
             tmpDevice.id = item.EquipmentID;
-            tmpDevice.isSelected = false;
+            tmpDevice.isSelected = true;
             this.vllDevices.forEach((vlItem) => {
               if (tmpDevice.id == vlItem.value) {
                 tmpDevice.text = vlItem.text;
+                tmpDevice.icon = vlItem.icon;
               }
             });
             this.tmplstDevice.push(tmpDevice);
@@ -402,8 +446,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
           objectID: res.msgBodyData[0].recID,
         };
         this.driver = this.tempAtender;
+        this.tempDriver=this.driver;
         this.driverValidator(
-          this.driver.userID,
+          this.tempDriver.userID,
           this.data.startDate,
           this.data.endDate,
           this.data.recID
@@ -423,7 +468,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     ) {
       this.codxEpService
         .driverValidator(
-          this.driver.userID,
+          driverID,
           new Date(startDate),
           new Date(endDate),
           recID
@@ -431,6 +476,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
         .subscribe((res) => {
           if (res && res.msgBodyData[0] != null) {
             this.driverCheck = res.msgBodyData[0];
+            if(res.msgBodyData[0]){              
+              this.driver=this.tempDriver;
+            }
             if (!res.msgBodyData[0]) {
               this.driver = null;
               this.notificationsService.notifyCode('EP008'); //Tài xế ko săn sàng
@@ -459,9 +507,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (endTime <= startTime) {
       return false;      
     }
-    if (this.driver != null) {
+    if (this.tempDriver != null) {
       this.driverValidator(
-        this.driver.userID,
+        this.tempDriver.userID,
         this.data.startDate,
         this.data.endDate,
         this.data.recID
@@ -474,11 +522,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
       return;
     }
     this.data.startDate = new Date(evt.data.fromDate);
-    if(this.data.startDate.getHours()==0 && this.data.startDate.getMinutes()==0){
-      let temp= this.data.startDate;
-      this.data.startDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.startHour,this.startMinutes);
-    }
-    if (new Date() >= new Date(this.data.startDate)) {
+    // if(this.data.startDate.getHours()==0 && this.data.startDate.getMinutes()==0){
+    //   let temp= this.data.startDate;
+    //   this.data.startDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.startHour,this.startMinutes);
+    // }
+    let tmpDate = new Date();
+    let startDate= this.data.startDate;
+    if (new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),0,0,0,0) > new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0,0)) {
       this.checkLoopS = !this.checkLoopS;
       if (!this.checkLoopS) {
         this.notificationsService.notifyCode('TM036');        
@@ -500,13 +550,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
     if (!evt.field || !evt.data) {
       return;
     }
-    this.data.endDate = new Date(evt.data.fromDate);    
-    if(this.data.endDate.getHours()==0 && this.data.endDate.getMinutes()==0){
-      let temp= this.data.endDate;
-      this.data.endDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.endHour,this.endMinutes);
-    }
-    if (new Date() >= new Date(this.data.endDate)) {
-      this.checkLoopE = !this.checkLoopE;
+    this.data.endDate = new Date(evt.data.fromDate);  
+
+    let tmpDate = new Date();
+    let endDate= this.data.endDate;
+    if (new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),0,0,0,0) > new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),0,0,0,0)) {
+        this.checkLoopE = !this.checkLoopE;
       if (!this.checkLoopE) {
         this.notificationsService.notifyCode('TM036');        
       }

@@ -163,18 +163,18 @@
             >
             </codx-input> -->
             <codx-input ControlName="bookingOn" [formModel]="formModel" [Group]="dialogAddBookingStationery"
-              (valueChange)="valueBookingOnChange($event)">
+              >
             </codx-input>
           </div>
           <div class="d-flex align-items-center form-group col-4">
-            <codx-input type="radio" name="category" field="category"
+            <codx-input type="radio" name="category" field="category" [checked]="radioPersonalCheck"
               [crrValue]="radioPersonalCheck" (valueChange)="valueChange($event)">
             </codx-input>            
             <codx-label class="ms-6 mt-6" fiedName="Category" [default]="requestType[0].text" [formModel]="formModel">
             </codx-label>
           </div>
           <div class="d-flex align-items-center form-group col-4">
-            <codx-input type="radio" name="category" field="category"
+            <codx-input type="radio" name="category" field="category"[checked]="radioGroupCheck"
             [crrValue]="radioGroupCheck" (valueChange)="valueChange($event)">
             </codx-input>
             <codx-label class="ms-6 mt-6" fiedName="Category" [default]="requestType[1].text" [formModel]="formModel">
