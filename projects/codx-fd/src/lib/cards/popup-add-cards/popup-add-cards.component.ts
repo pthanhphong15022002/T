@@ -142,7 +142,7 @@ export class PopupAddCardsComponent implements OnInit {
       "SYS",
       "ERM.Business.SYS",
       "SettingValuesBusiness",
-      "GetParameterByFDAsync",
+      "GetParameterAsync",
       ["FDParameters",cardType])
     .subscribe((res:any)=>{
       if(res){

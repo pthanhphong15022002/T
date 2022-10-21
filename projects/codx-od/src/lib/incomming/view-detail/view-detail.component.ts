@@ -799,7 +799,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Gửi duyệt
       case 'ODT201': {
-        debugger;
         if(datas.bsCategory)
         {
           //Có thiết lập bước duyệt
@@ -862,7 +861,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteDispatchByIDAsync';
-    opt.data = this.view.dataService.dataSelected;
+    opt.data = [this.view.dataService.dataSelected,this.view.formModel.entityName];
     return true;
   }
   checkOpenForm(val: any) {
@@ -953,7 +952,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           x.functionID == 'ODT211' ||
           x.functionID == 'ODT112' ||
           x.functionID == 'SYS02' ||
-          x.functionID == 'SYS03'
+          x.functionID == 'SYS03' ||
+          x.functionID == 'ODT103' || 
+          x.functionID == 'ODT202'
       );
       for (var i = 0; i < completed.length; i++) {
         completed[i].disabled = true;

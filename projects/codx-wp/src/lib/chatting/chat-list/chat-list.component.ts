@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '
 import { SignalRService } from '@core/services/signalr/signalr.service';
 // import { CreateGroupComponent } from '@modules/wp/components/create-group/create-group.component';
 import { ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogModel, DialogRef } from 'codx-core';
+import { ChatBoxInfo } from '../chat.models';
 import { ChatBoxComponent } from '../chatbox/chat-box.component';
 import { ChattingComponent } from '../chatting.component';
 import { ListChatBoxComponent } from '../list-chat-box/list-chat-box.component';
@@ -19,6 +20,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   user: any;
   predicate:String = "UserID = @0 && LastMssgID != null";
   dataValue:String = "";
+  chatService: any;
   constructor(
     private api:ApiHttpService,
     authStore: AuthStore,
@@ -28,12 +30,12 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     this.user = authStore.get();
   }
   ngAfterViewInit(): void {
-    // if (this.historyListObj) {
-    //   this.historyListObj.SearchText = this.user.userID;
-    //   // this.historyListObj.options.page = 1;
-    //   // this.historyListObj.options.pageLoading = true;
-    //   this.historyListObj.loadData();
-    // }
+    if (this.historyListObj) {
+      this.historyListObj.SearchText = this.user.userID;
+      // this.historyListObj.options.page = 1;
+      // this.historyListObj.options.pageLoading = true;
+      this.historyListObj.loadData();
+    }
   }
 
   toolbarButtonMarginClass = 'ms-1 ms-lg-3';
@@ -44,26 +46,26 @@ export class ChatListComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.dataValue = this.user.userID;
-    // this.chatService.receiveMessage.subscribe((mesInfo: any) => {
-    //   // Thông tin của box
-    //   // Lúc nào sender của box cũng phải là current user
-    //   // Người còn lại sẽ là userId và userName
-    //   let data = {
-    //     userID: mesInfo.senderId == this.user.userID ? mesInfo.receiverId : mesInfo.senderId,
-    //     userName: mesInfo.senderId == this.user.userID ? this.user.userName : mesInfo.senderName,
-    //     groupId: mesInfo.groupId,
-    //     groupType: mesInfo.groupType,
-    //     senderId: this.user.userID,
-    //     message: mesInfo
-    //   };
-    //   this.openChatBox(data);
-    // });
-    // this.chatService.readMessage.subscribe((data) => {
-    //   let groupId = data.groupId;
-    //   // cập nhật danh sách not read
-    // });
-    // this.getChatHistory();
-    // this.getNumberMessageNotRead();
+    this.chatService.receiveMessage.subscribe((mesInfo: any) => {
+      // Thông tin của box
+      // Lúc nào sender của box cũng phải là current user
+      // Người còn lại sẽ là userId và userName
+      let data = {
+        userID: mesInfo.senderId == this.user.userID ? mesInfo.receiverId : mesInfo.senderId,
+        userName: mesInfo.senderId == this.user.userID ? this.user.userName : mesInfo.senderName,
+        groupId: mesInfo.groupId,
+        groupType: mesInfo.groupType,
+        senderId: this.user.userID,
+        message: mesInfo
+      };
+      this.openChatBox(data);
+    });
+    this.chatService.readMessage.subscribe((data) => {
+      let groupId = data.groupId;
+      // cập nhật danh sách not read
+    });
+    this.getChatHistory();
+    this.getNumberMessageNotRead();
   }
 
   getChatHistory() {
@@ -105,17 +107,17 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
 
   openChatBox(data: any) {
-    // let opt = new ChatBoxInfo();
-    // opt.ownerId = this.user.userID;
-    // opt.ownerName = this.user.userName;
-    // opt.colabId = data.userID;
-    // opt.colabName = data.userName;
-    // opt.groupId = data.groupId;
-    // opt.groupType = data.groupType;
-    // opt.isMinimum = false;
-    // opt.numberNotRead = 1;
-    // opt.messageInfo = data.message;
-    // this.chatService.openChatBox(opt);
+    let opt = new ChatBoxInfo();
+    opt.ownerId = this.user.userID;
+    opt.ownerName = this.user.userName;
+    opt.colabId = data.userID;
+    opt.colabName = data.userName;
+    opt.groupId = data.groupId;
+    opt.groupType = data.groupType;
+    opt.isMinimum = false;
+    opt.numberNotRead = 1;
+    opt.messageInfo = data.message;
+    this.chatService.openChatBox(opt);
   }
 
   getNumberMessageNotRead() {

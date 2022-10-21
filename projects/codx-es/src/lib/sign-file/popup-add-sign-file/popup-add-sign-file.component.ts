@@ -601,7 +601,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
     if (this.processID != '') {
-      if (!this.isAddNew || this.isSaved) {
+      if ((!this.isAddNew || this.isSaved) && this.eSign == true) {
         this.notify.alertCode('ES002').subscribe((x) => {
           if (x.event.status == 'Y') {
             this.esService.deleteStepByTransID(this.data.recID).subscribe();
@@ -955,23 +955,30 @@ export class PopupAddSignFileComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res?.msgCodeError == null && res?.rowCount > 0) {
-          this.dialogSignFile.patchValue({ approveStatus: '3' });
-          this.data.approveStatus = '3';
+          this.esService.getSFByID(this.data?.recID).subscribe((res) => {
+            if (res?.signFile) {
+              this.data.files = res?.signFile?.files;
+              this.dialogSignFile.patchValue({ files: res?.signFile?.files });
 
-          this.esService.editSignFile(this.data).subscribe((result) => {
-            if (result) {
-              //Gen QR code
-              this.esService
-                .addQRBeforeRelease(this.data.recID)
-                .subscribe((res) => {});
+              this.dialogSignFile.patchValue({ approveStatus: '3' });
+              this.data.approveStatus = '3';
 
-              // Notify
-              this.notify.notifyCode('ES007');
-              this.dialog &&
-                this.dialog.close({
-                  data: this.data,
-                  approved: true,
-                });
+              this.esService.editSignFile(this.data).subscribe((result) => {
+                if (result) {
+                  //Gen QR code
+                  this.esService
+                    .addQRBeforeRelease(this.data.recID)
+                    .subscribe((res) => {});
+
+                  // Notify
+                  this.notify.notifyCode('ES007');
+                  this.dialog &&
+                    this.dialog.close({
+                      data: this.data,
+                      approved: true,
+                    });
+                }
+              });
             }
           });
         } else {

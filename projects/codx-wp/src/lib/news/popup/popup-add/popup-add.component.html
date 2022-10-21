@@ -103,7 +103,7 @@
                                 </div>
                             </ng-template>
                             <div class="d-none">
-                                <codx-attachment #codxATMImage 
+                                <codx-attachment #codxATM
                                     [functionID]="dialogRef?.formModel.funcID"
                                     [objectType]="'WP_News'"
                                     [allowMultiFile]="0" 
@@ -171,16 +171,6 @@
                                 </video>
                             </ng-container>
                         </div>
-
-                        <!-- <div class="d-none">
-                            <codx-attachment 
-                                [functionID]="dialogRef?.formModel.funcID"
-                                [objectType]="dialogRef?.formModel.entityName" [objectType]="'WP_News'"
-                                [allowMultiFile]="0" [showMessage]="0" [hideImageUpload]="'1'" [hideUploadBtn]="1"
-                                [hideBtnSave]="1" [hideImageThumb]="1" [idBrowse]="'atmVideo'"
-                                (fileCount)="addFiles($event)">
-                            </codx-attachment>
-                        </div> -->
                     </div>
                 </ng-template>
             </div>
@@ -190,9 +180,9 @@
     <div class="card-footer pt-4">
         <div class="d-flex align-items-center justify-content-end">
             <div class="me-3">
-                <!-- <button (click)="clickInsertNews()" type="button" class="btn btn-primary">
+                <button (click)="clickInsertNews()" type="button" class="btn btn-primary">
                     <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Lưu"></codx-label>
-                </button> -->
+                </button>
             </div>
             <div>
                 <button (click)="approPost()" type="button" class="btn btn-primary">

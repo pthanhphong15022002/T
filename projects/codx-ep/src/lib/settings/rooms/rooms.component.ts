@@ -93,6 +93,7 @@ export class RoomsComponent extends UIComponent {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
+        device.icon=item.icon;
         this.roomEquipments.push(device);
         this.roomEquipments = JSON.parse(JSON.stringify(this.roomEquipments));
       });
@@ -177,7 +178,7 @@ export class RoomsComponent extends UIComponent {
       });
     });
 
-    var dialog = this.callfc.openForm(template, '', 550, 430);
+    var dialog = this.callfc.openForm(template, '', 550, 350);
     this.detectorRef.detectChanges();
   }
 
