@@ -115,7 +115,6 @@ export class IncommingComponent
   showAgency = false;
   dataItem: any;
   funcList: any;
-  formModel: any;
   ///////////Các biến data valuelist/////////////////
 
   ///////////Các biến data default///////////////////
@@ -183,19 +182,11 @@ export class IncommingComponent
     ];
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
-    this.formModel = this.view.formModel;
+
     this.getGridViewSetup(this.view.formModel.funcID);
     this.button = {
       id: 'btnAdd',
     };
-    this.codxODService.loadFunctionList(this.view?.formModel?.funcID).subscribe((fuc) => {
-      this.formModel = {
-        entityName: fuc?.entityName,
-        formName: fuc?.formName,
-        funcID: this.view?.formModel?.funcID,
-        gridViewName: fuc?.gridViewName,
-      };
-    });
     this.detectorRef.detectChanges();
   }
   click(evt: ButtonModel) {
@@ -218,7 +209,7 @@ export class IncommingComponent
           headerText: 'Thêm mới ' + (this.funcList?.defaultName).toLowerCase(),
           subHeaderText: 'Tạo & Upload File văn bản',
           type: 'add',
-          formModel: this.formModel,
+          formModel: this.view.formModel,
           dispatchType: this.funcList?.dataValue,
         },
         option
@@ -373,7 +364,7 @@ export class IncommingComponent
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
-      this.odService.getDetailDispatch(id,this.formModel.entityName).subscribe((item) => {
+      this.odService.getDetailDispatch(id,this.view.formModel.entityName).subscribe((item) => {
         //this.getChildTask(id);
         if (item) {
           this.lstDtDis = formatDtDis(item);
