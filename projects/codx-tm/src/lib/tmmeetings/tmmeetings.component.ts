@@ -114,10 +114,10 @@ export class TMMeetingsComponent
 
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.api.execSv('CO',
-      'CO',
-      'MeetingsBusiness',
-      'SetAutoStatusMeetingAsync').subscribe();
+    // this.api.execSv('CO',
+    //   'CO',
+    //   'MeetingsBusiness',
+    //   'SetAutoStatusMeetingAsync').subscribe();
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
@@ -189,7 +189,7 @@ export class TMMeetingsComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          // template: this.eventTemplate, bỏ đi :V
+          template: this.eventTemplate,
           // template4: this.resourceHeader,// schenmoi can
           template6: this.mfButton, //header
           template2: this.headerTemp,

@@ -96,8 +96,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   tempDate = new Date();
   lstDevices = [];
   tmplstDevice = [];
-  // subHeaderText = 'Đặt phòng họp';
-  // titleAction = 'Thêm mới';
   tmpTitle = '';
   title = '';
   tabInfo: any[] = [
@@ -147,12 +145,90 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
     if (this.isAdd) {
-      this.data.bookingOn = null;
+      this.data.bookingOn = new Date();
       this.data.attendees = 1;
     }
   }
 
   onInit(): void {
+    if(this.isAdd){
+      let tmpDate = new Date();
+      let crrMinute = tmpDate.getMinutes();
+      let crrHour =tmpDate.getHours();
+      if(crrMinute<30){
+        crrMinute= 30;        
+      }
+      else{
+        crrMinute=0;
+        crrHour=crrHour+1;
+      }
+      this.startTime =
+          ('0' + crrHour.toString()).slice(-2) +
+          ':' +
+          ('0' + crrMinute.toString()).slice(-2);
+    }
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'EPParameters'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = JSON.parse(
+            res.msgBodyData[0].dataValue
+          )?.CalendarID;
+          if (this.calendarID) {
+            this.api
+              .exec<any>(
+                APICONSTANT.ASSEMBLY.BS,
+                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
+                'GetDayShiftAsync',
+                [this.calendarID]
+              )
+              .subscribe((res) => {
+                res.forEach((day) => {
+                  if (day?.shiftType == '1') {
+                    let tmpstartTime = day?.startTime.split(':');
+                    this.calendarStartTime = tmpstartTime[0] + ':' + tmpstartTime[1];
+                    
+                  } else if (day?.shiftType == '2') {
+                    let tmpEndTime = day?.endTime.split(':');
+                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
+                    if(this.isAdd){
+                      this.endTime=this.calendarEndTime;
+                    }
+                  }
+                });
+              });
+          } else {
+            this.api
+              .execSv(
+                'SYS',
+                'ERM.Business.SYS',
+                'SettingValuesBusiness',
+                'GetByModuleAsync',
+                'Calendar'
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  let tempStartTime = JSON.parse(res.dataValue)[0]?.StartTime.split(':');
+                  this.calendarStartTime = tempStartTime[0] + ':' + tempStartTime[1];
+                  let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(':');
+                  this.calendarEndTime = endTime[0] + ':' + endTime[1];
+                  if(this.isAdd){
+                    this.endTime=this.calendarEndTime;
+                  }
+                }
+              });
+          }
+
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+      
     this.initForm();
     // xử lí thiết bị
     this.cacheService.valueList('EP012').subscribe((res) => {
@@ -182,23 +258,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
     });
 
-    if (this.data) {
-      if (this.data.hours == 24) {
-        this.isFullDay = true;
-      } else {
-        this.isFullDay = false;
-      }
-
-      if (this.isAdd) {
-        this.data.attendees = 1;
-        this.endTime = null;
-        this.startTime = null;
-      }
+    if (this.data) {      
       if (!this.isAdd) {
-        if (this.data?.hours == 24) {
-          this.isFullDay = true;
-          this.changeDetectorRef.detectChanges();
-        }
         let tmpStartTime = new Date(this.data?.startDate);
         let tmpEndTime = new Date(this.data?.endDate);
         this.startTime =
@@ -209,6 +270,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           ('0' + tmpEndTime.getHours()).toString().slice(-2) +
           ':' +
           ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
+        if(this.startTime==this.calendarStartTime && this.endTime==this.calendarEndTime){
+          this.isFullDay=true;          
+          this.changeDetectorRef.detectChanges();
+        }
       }
     }
     if (this.isAdd) {
@@ -282,66 +347,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
-    this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'EPParameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = JSON.parse(
-            res.msgBodyData[0].dataValue
-          )?.CalendarID;
-          if (this.calendarID) {
-            this.api
-              .exec<any>(
-                APICONSTANT.ASSEMBLY.BS,
-                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
-                'GetDayShiftAsync',
-                [this.calendarID]
-              )
-              .subscribe((res) => {
-                res.forEach((day) => {
-                  if (day?.shiftType == '1') {
-                    let tmpstartTime = day?.startTime.split(':');
-                    this.calendarStartTime =
-                      tmpstartTime[0] + ':' + tmpstartTime[1];
-                  } else if (day?.shiftType == '2') {
-                    let tmpEndTime = day?.endTime.split(':');
-                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
-                  }
-                });
-              });
-          } else {
-            this.api
-              .execSv(
-                'SYS',
-                'ERM.Business.SYS',
-                'SettingValuesBusiness',
-                'GetByModuleAsync',
-                'Calendar'
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  let tempStartTime = JSON.parse(
-                    res.dataValue
-                  )[0]?.StartTime.split(':');
-                  this.calendarStartTime =
-                    tempStartTime[0] + ':' + tempStartTime[1];
-                  let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
-                    ':'
-                  );
-                  this.calendarEndTime = endTime[0] + ':' + endTime[1];
-                }
-              });
-          }
-
-          this.changeDetectorRef.detectChanges();
-        }
-      });
   }
 
   initForm() {
@@ -442,64 +447,59 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.requester = this.curUser.userName;
     this.data.status = '1';
     this.dialogRef.dataService
-    .save((opt: any) => this.beforeSave(opt), 0)
-    .subscribe(async (res) => {
-      if (res.save || res.update) {
-        if (!res.save) {
-          this.returnData = res.update;
-        } else {
-          this.returnData = res.save;
-        }
-        if (
-          this.returnData?.recID &&
-          this.returnData?.attachments > 0
-        ) {
-          this.attachment.objectId = this.returnData?.recID;
-          (await this.attachment.saveFilesObservable()).subscribe(
-            (item2: any) => {
-              if (item2?.status == 0) {
-                this.fileAdded(item2);
-              }
-            }
-          );
-        }
-        if (approval) {
-          (
-            await this.codxEpService.getCategoryByEntityName(
-              this.formModel.entityName
-            )
-          ).subscribe((res: any) => {
-            this.codxEpService
-              .release(
-                this.returnData,
-                res.processID,
-                'EP_Bookings',
-                this.formModel.funcID
-              )
-              .subscribe((res) => {
-                if (res?.msgCodeError == null && res?.rowCount) {
-                  this.notificationsService.notifyCode('ES007');
-                  this.returnData.status = '3';
-                  (this.dialogRef.dataService as CRUDService)
-                    .update(this.returnData)
-                    .subscribe();
-                  this.dialogRef && this.dialogRef.close();
-                } else {
-                  this.notificationsService.notifyCode(
-                    res?.msgCodeError
-                  );
-                  return;
+      .save((opt: any) => this.beforeSave(opt), 0)
+      .subscribe(async (res) => {
+        if (res.save || res.update) {
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if (this.returnData?.recID && this.returnData?.attachments > 0) {
+            this.attachment.objectId = this.returnData?.recID;
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (item2: any) => {
+                if (item2?.status == 0) {
+                  this.fileAdded(item2);
                 }
-              });
-          });
+              }
+            );
+          }
+          if (approval) {
+            (
+              await this.codxEpService.getCategoryByEntityName(
+                this.formModel.entityName
+              )
+            ).subscribe((res: any) => {
+              this.codxEpService
+                .release(
+                  this.returnData,
+                  res.processID,
+                  'EP_Bookings',
+                  this.formModel.funcID
+                )
+                .subscribe((res) => {
+                  if (res?.msgCodeError == null && res?.rowCount) {
+                    this.notificationsService.notifyCode('ES007');
+                    this.returnData.status = '3';
+                    (this.dialogRef.dataService as CRUDService)
+                      .update(this.returnData)
+                      .subscribe();
+                    this.dialogRef && this.dialogRef.close();
+                  } else {
+                    this.notificationsService.notifyCode(res?.msgCodeError);
+                    return;
+                  }
+                });
+            });
+          } else {
+            this.dialogRef && this.dialogRef.close();
+          }
         } else {
-          this.dialogRef && this.dialogRef.close();
+          return;
         }
-      } else {
-        //this.notificationsService.notifyCode('SYS01');
-        return;
-      }
-    });
+      });
+    // Cơ chế thông báo người tham gia bị trùng cuộc họp chưa hoạt động theo yêu cầu (fixing)
     // this.api
     //   .callSv(
     //     'EP',
@@ -685,7 +685,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 400);
+    var dialog = this.callfc.openForm(template, '', 550, 350);
     this.changeDetectorRef.detectChanges();
   }
   //Date time validate
@@ -718,9 +718,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     let crrDate = new Date(
       tmpCrrDate.getFullYear(),
       tmpCrrDate.getMonth(),
-      tmpCrrDate.getDate()
+      tmpCrrDate.getDate(),0,0,0,0
     );
-    if (selectDate < crrDate) {
+    if (new Date(selectDate.getFullYear(),selectDate.getMonth(),selectDate.getDate(),0,0,0,0) < crrDate) {
       this.bookingOnValid = true;
       return false;
     } else {
@@ -971,7 +971,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
             tmpDevice.id = item.EquipmentID;
-            tmpDevice.isSelected = false;
+            tmpDevice.isSelected = true;
             this.vllDevices.forEach((vlItem) => {
               if (tmpDevice.id == vlItem.value) {
                 tmpDevice.text = vlItem.text;

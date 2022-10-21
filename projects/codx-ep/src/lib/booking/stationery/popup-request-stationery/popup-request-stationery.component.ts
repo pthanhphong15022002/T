@@ -1,3 +1,5 @@
+import { fieldAdv } from './../../../../../../codx-share/src/lib/components/viewFileDialog/alertRule.model';
+import { title } from 'process';
 import { switchMap } from 'rxjs/operators';
 import { CodxEpService, GridModels } from './../../../codx-ep.service';
 import {
@@ -7,7 +9,7 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import {
   DialogData,
   DialogRef,
@@ -72,28 +74,31 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   model?: FormModel;
   groupStationery;
-
+  radioGroupCheck:boolean ;
+  radioPersonalCheck:boolean;
   groupID: string;
 
-  qtyEmp: number = 0;
-
+  qtyEmp: number = 1;
+  title:'';
   dialogAddBookingStationery: FormGroup;
-
+  
   constructor(
     private injector: Injector,
     private auth: AuthStore,
     private epService: CodxEpService,
     private notificationsService: NotificationsService,
-    @Optional() dialog: DialogRef,
+    @Optional() dialogRef: DialogRef,
     @Optional() data: DialogData
   ) {
     super(injector);
-    this.dialog = dialog;
+    this.dialog = dialogRef;
     this.formModel = data?.data?.formModel;
     this.funcID = this.formModel?.funcID;
     this.data = data?.data?.option?.DataService.dataSelected || {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
+    this.title=data?.data?.title;
+    this.dialog.dataService=this.option.DataService;
   }
 
   onInit(): void {
@@ -105,6 +110,29 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     this.initForm();
     this.filterStationery();
+    
+    if(!this.isAddNew){
+      this.radioPersonalCheck=true;
+      this.radioGroupCheck=false;
+      this.epService.getEmployeeByOrgUnitID(this.data?.orgUnitID).subscribe((res:number)=>{
+        if(res){
+          this.qtyEmp=res;
+          this.detectorRef.detectChanges();
+        }
+      })
+      this.cart=this.data.bookingItems;
+      this.changeTab(2);
+    }
+    else{
+      if(this.data?.category=='1'){        
+        this.radioPersonalCheck=true;
+        this.radioGroupCheck=false;
+      }
+      else{            
+        this.radioPersonalCheck=false;
+        this.radioGroupCheck=true;
+      }
+    }
   }
 
   ngAfterViewInit() {
@@ -128,15 +156,24 @@ export class PopupRequestStationeryComponent extends UIComponent {
             this.dialogAddBookingStationery.patchValue({
               resourceType: '6',
               category: '1',
-              status: '1',
+              status: '1', 
+              bookingOn:new Date(),
             });
+            this.dialogAddBookingStationery.addControl('issueStatus', new FormControl('1')); 
+            
+            this.detectorRef.detectChanges();             
+          }
+          if(!this.isAddNew){
+            this.data.bookingOn= new Date(this.data.bookingOn);
+            this.dialogAddBookingStationery.patchValue(this.data);
+            this.detectorRef.detectChanges();
           }
         }
         this.isAfterRender = true;
       });
   }
 
-  changeTab(tabNo) {
+  changeTab(tabNo:number) {
     if (tabNo == 2 && this.cart.length == 0) {
       return;
     }
@@ -145,6 +182,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   valueChange(event) {
+    
     if (event?.field) {
       if (event.data instanceof Object) {
         this.data[event.field] = event.data.value;
@@ -157,12 +195,32 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.epService
         .getEmployeeByOrgUnitID(event.data)
         .subscribe((res: any) => {
+          this.qtyEmp = 0;
           if (res) {
-            this.qtyEmp = res[1];
+            this.qtyEmp = res;
           }
         });
     }
 
+    if (event?.field === 'category') {
+      if(event?.data){
+        this.dialogAddBookingStationery.patchValue({category:'1'});        
+      }
+      else{
+        this.dialogAddBookingStationery.patchValue({category:'2'}); 
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  valueBookingOnChange(event) {
+    if (event?.field) {
+      if (event.data instanceof Object) {
+        this.dialogAddBookingStationery.patchValue({[event.field]:event.data.value});
+      } else {
+        this.dialogAddBookingStationery.patchValue({[event.field]:event.data});
+      }
+    }
     this.detectorRef.detectChanges();
   }
 
@@ -171,6 +229,13 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.cart = this.cart.filter((item) => {
         return item?.resourceID != resourceID;
       });
+    }
+    if(event?.data>0){
+      this.cart.forEach(item=>{
+        if(item.resourceID==resourceID){
+          item.quantity=event?.data;
+        }
+      })
     }
     this.detectorRef.detectChanges();
   }
@@ -186,13 +251,19 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
-    this.dialogAddBookingStationery.patchValue(this.data);
-
-    // this.dialog.dataService
-    //   .save((opt: any) => this.beforeSave(opt))
-    //   .subscribe((res) => {
-    //     this.dialog.close();
-    //   });
+    //this.data.reasonID='RS-001';//Dev Test
+    //this.dialogAddBookingStationery.patchValue(this.data);
+    if (this.dialogAddBookingStationery.invalid == true) {
+      this.epService.notifyInvalid(
+        this.dialogAddBookingStationery,
+        this.formModel
+      );
+    }
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt),0)
+      .subscribe((res) => {
+        this.dialog.close();
+      });
     console.log(this.addQuota());
     console.log(this.groupByWareHouse());
   }
@@ -240,6 +311,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   addQuota() {
+    
     this.cart.map((item) => {
       this.lstStationery.push({
         id: item?.resourceID,

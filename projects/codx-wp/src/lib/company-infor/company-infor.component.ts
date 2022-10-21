@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CallFuncService, DataRequest, DialogModel, DialogRef, NotificationsService, SidebarModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, CallFuncService, DataRequest, DialogModel, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CompanyEditComponent } from './popup-edit/company-edit/company-edit.component';
 import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
 
@@ -9,7 +9,7 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser
   templateUrl: './company-infor.component.html',
   styleUrls: ['./company-infor.component.scss']
 })
-export class CompanyInforComponent implements OnInit, AfterViewInit {
+export class CompanyInforComponent extends UIComponent {
 
   funcID:string = '';
   entityName:string = 'WP_News';
@@ -17,16 +17,17 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
   fromName:string = "News";
   data :any = null;
   views: Array<ViewModel> = [];
+  userPermission:any = null;
   @ViewChild('panelLeftRef') panelLefRef :  TemplateRef<any>;
-  @ViewChild('codxViews') codxView: ViewsComponent;
   constructor(
-    private api:ApiHttpService,
+    private injector:Injector,
     private callc:CallFuncService,
     private notifySvr:NotificationsService,
-    private route : ActivatedRoute,
-    private changedt:ChangeDetectorRef,
     private sanitizer: DomSanitizer
-    ) { }
+    ) 
+    {
+      super(injector);
+    }
   ngAfterViewInit(): void {
     this.views= [{
       id: "1",
@@ -35,18 +36,29 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
       model : {
         panelLeftRef : this.panelLefRef
       }
-    }];
-    this.changedt.detectChanges();
-
+    }]; 
   }
 
-  ngOnInit(): void {
-    this.route.params.subscribe((param:any) => {
-       this.funcID = param['funcID'];
-        this.loadData();
+  onInit(): void {
+    this.loadData();
+    let funcID =  this.router.snapshot.params["funcID"];
+    if(funcID){
+      let funcIDPermisson = funcID + "P";
+      this.getUserPermission(funcIDPermisson);
+    }
+    
+  }
+  getUserPermission(funcID:string){
+    if(funcID){
+      this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcID])
+      .subscribe((res:any) => {
+        if(res){
+          this.userPermission = res;
+          this.detectorRef.detectChanges();
+        }
       });
+    }
   }
-
   loadData(){
       this.api
         .execSv(
@@ -58,24 +70,27 @@ export class CompanyInforComponent implements OnInit, AfterViewInit {
         .subscribe((res:any) => {
           this.data = res;
           this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          this.changedt.detectChanges();
+          this.detectorRef.detectChanges();
         });
   }
 
   clickShowPopupEdit(){
-    let option = new DialogModel();
-    option.DataService = this.codxView.dataService;
-    option.FormModel = this.codxView.formModel;
-    option.IsFull = true;
-    let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
-    popup.closed.subscribe((res:any)=>{
-      if(res.event && res.closedBy != "escape"){
-        this.data = res.event;
-        this.changedt.detectChanges();
-      }
-    })
+    if(this.view){
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
+      popup.closed.subscribe((res:any)=>{
+        if(res.event && res.closedBy != "escape"){
+          this.data = res.event;
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
   }
 
-  public inlineMode: object = { enable: true, onSelection: true };
+  
+
 }
 

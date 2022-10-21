@@ -121,19 +121,19 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   //#region Function
   selectionChange(parent) {
-  var id = parent?.data.taskID ;
-  var element = document.getElementById(id);
-  if(element){
-    this.isClose =  element.classList.contains("icon-add_box");
-    this.isShow =  element.classList.contains("icon-indeterminate_check_box"); 
-    if(this.isClose){
-      element.classList.remove("icon-add_box");
-      element.classList.add("icon-indeterminate_check_box");
-    }else if(this.isShow){
-      element.classList.remove("icon-indeterminate_check_box");
-      element.classList.add("icon-add_box");
-    }
-  }
+  // var id = parent?.data.taskID ;
+  // var element = document.getElementById(id);
+  // if(element){
+  //   this.isClose =  element.classList.contains("icon-add_box");
+  //   this.isShow =  element.classList.contains("icon-indeterminate_check_box"); 
+  //   if(this.isClose){
+  //     element.classList.remove("icon-add_box");
+  //     element.classList.add("icon-indeterminate_check_box");
+  //   }else if(this.isShow){
+  //     element.classList.remove("icon-indeterminate_check_box");
+  //     element.classList.add("icon-add_box");
+  //   }
+  // }
    if(parent.isItem){
     this.api
       .execSv<any>(

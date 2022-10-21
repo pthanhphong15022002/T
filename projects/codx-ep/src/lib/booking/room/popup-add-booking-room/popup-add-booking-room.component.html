@@ -393,7 +393,7 @@
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
           <h2 id="modal-basic-title">
-            <codx-label name="lblEquipment" default="Thiết bị" [formModel]="form.formModel"></codx-label>
+            <codx-label name = "lblEquipment" default="Cài đặt thiết bị" ></codx-label>
           </h2>
           <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
             (click)="dialog.close()">
@@ -401,8 +401,8 @@
           </button>
         </div>
         <div class="text-dark-50">
-          <codx-label name="lblChooseEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong xe"
-            [formModel]="dialog.formModel"></codx-label>
+          <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+          ></codx-label>
         </div>
       </div>
     </div>
@@ -413,7 +413,7 @@
             <span class="me-1 ps-2" [className]="item.icon"
               [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"></span>
             <div class="d-flex flex-column justify-content-center">
-              <span href="#" class="text-dark fw-bolder">{{ item?.text }}</span>
+              <span href="#" class="ms-2 text-dark fw-bolder">{{ item?.text }}</span>
             </div>
           </div>
           <div class="d-flex justify-content-end">
@@ -426,11 +426,6 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer" (click)="dialog.close()">
-      <button type="button" class="btn btn-primary">
-        <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
-      </button>
-    </div>
   </ng-template>
 
   <ng-template #addLink let-dialog>
@@ -438,7 +433,7 @@
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
           <h2 id="modal-basic-title">
-            <codx-label name="lblOnlineUrl" default="Họp trực tuyến" [formModel]="form.formModel"></codx-label>
+            <codx-label name="lblOnlineUrl" default="Họp trực tuyến" ></codx-label>
           </h2>
           <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
             (click)="dialog.close()">
@@ -447,7 +442,7 @@
         </div>
         <div class="text-dark-50">
           <codx-label name="lblOnlineUrlSetting" default="Thiết lập đường dẫn"
-            [formModel]="dialog.formModel"></codx-label>
+            ></codx-label>
         </div>
       </div>
     </div>
@@ -465,7 +460,7 @@
     <div class="card-footer" (click)="dialog.close()">
       <div class="form-group d-flex justify-content-end flex-row">
         <button type="button" class="btn btn-primary">
-          <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
+          <codx-label name="lblSave" default="Lưu"></codx-label>
         </button>
       </div>
     </div>

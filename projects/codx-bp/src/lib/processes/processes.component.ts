@@ -81,6 +81,7 @@ export class ProcessesComponent
 
   constructor(
     inject: Injector,
+    private bpService :CodxBpService,
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
@@ -418,4 +419,11 @@ export class ProcessesComponent
       });
   }
   //#endregion
+
+
+  //tesst
+  clickProscessTessttttttttttttttt(data){
+    this.bpService.viewProcesses.next(data);
+    this.codxService.navigate('','bp/processstep/BPT11');
+  }
 }

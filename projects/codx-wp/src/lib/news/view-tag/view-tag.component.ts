@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, CodxListviewComponent, UIComponent } from 'codx-core';
+import { ViewModel, ViewsComponent, ApiHttpService, CodxService, CallFuncService, ViewType, CodxListviewComponent, UIComponent, DialogModel } from 'codx-core';
+import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
+import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
 @Component({
   selector: 'lib-view-tag',
@@ -18,6 +20,8 @@ export class ViewTagComponent extends UIComponent {
   listTag: any = [];
   views: Array<ViewModel> = [];
   tagName: string = "";
+  userPermission:any = null;
+
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('listview') listview: CodxListviewComponent;
 
@@ -45,8 +49,20 @@ export class ViewTagComponent extends UIComponent {
     this.tagName = this.router.snapshot.params["tagName"];
     this.dataValues = this.tagName;
     this.loadDataAsync();
+    this.getUserPermission(this.funcID);
   }
-
+  getUserPermission(funcID:string){
+    if(funcID){
+      let funcIDPermission  = funcID + "P";
+      this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcIDPermission])
+      .subscribe((res:any) => {
+        if(res){
+          this.userPermission = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+  }
   loadDataAsync() {
     this.loadDataViews();
     this.loadDataTags();
@@ -95,7 +111,26 @@ export class ViewTagComponent extends UIComponent {
       this.listview.dataService.setPredicates([this.predicates], [this.dataValues]).subscribe();
     }
   }
-  clickShowPopupCreate() {
+
+  NEWSTYPE = {
+    POST: "1",
+    VIDEO: "2"
+  }
+  clickShowPopupCreate(newsType: string) {
+    let option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.IsFull = true;
+    this.callfc.openForm(PopupAddComponent, '', 0, 0, '', { type: newsType }, '', option);
   }
 
+  clickShowPopupSearch() {
+    if(this.view){
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", this.view.funcID, "", option);
+    } 
+  }
 }

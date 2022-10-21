@@ -10,7 +10,7 @@
 
 <ng-template #body>
   <div class="list-group">
-    <h3 class="list-header">{{ title }}</h3>
+    <h3 class="list-header mb-5">{{ title }}</h3>
     <div class="list-content">
       <ng-container
         *ngIf="groupSetting && groupSetting.length > 0; else noGroup"
@@ -273,8 +273,8 @@
 </ng-template>
 
 <ng-template #footer>
-  <div class="d-flex flex-stack" *ngIf="dialog">
-    <div class="right justify-content-end">
+  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
+    <div class="right">
       <button type="button" class="btn btn-primary" (click)="click($event)">
         <codx-label name="lblSave" formName="Settings" default="Lưu">
         </codx-label>

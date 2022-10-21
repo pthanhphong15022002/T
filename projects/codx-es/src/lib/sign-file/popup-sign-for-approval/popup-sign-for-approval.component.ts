@@ -131,8 +131,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   clickOpenPopupADR(mode) {
-    if (!this.canOpenSubPopup && !this.isConfirm) {
-      if (!this.isConfirm) this.notify.notifyCode('ES011');
+    if (!this.isConfirm) {
+      this.notify.notifyCode('ES011');
+      return;
+    }
+    if (!this.canOpenSubPopup) {
       return;
     }
     this.mode = mode;
@@ -171,7 +174,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   approve(mode, title: string, subTitle: string) {
-    if (this.oApprovalTrans?.approveControl == '1') {
+    if (this.oApprovalTrans?.approveControl != '1') {
       let dialogADR = this.callfc.openForm(
         PopupADRComponent,
         title,
@@ -187,6 +190,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           formModel: this.formModel,
           formGroup: this.dialogSignFile,
           stepType: this.data.stepType,
+          approveControl: this.oApprovalTrans?.approveControl,
         }
       );
       this.pdfView.curPage = this.pdfView.pageMax;

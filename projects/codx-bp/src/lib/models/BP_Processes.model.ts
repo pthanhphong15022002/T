@@ -1,13 +1,42 @@
 export class BP_Processes {
+  recID :string ;
+  category  :string ;
   processNo: string;
   processName: string;
   processName2: string;
   processType: string;
   memo: string;
   groupID: string;
+  status : string;
+  flowchart: string
   activedOn: Date;
   expiredOn: Date;
+  stopOn :Date ;
+  note :string ;
+  url :string;
+  revision :boolean ;
+  revisionID : string ;
+  versionNo : string ;
+  versionOn : Date
+  versions : string ;
+  phases : number ;
+  activities : number;
+  views :number ;
   attachments: number;
+  comments : number;
+  rattings :string ;
+  positionID :string ;
+  deptID :string ;
+  divisionID :string ;
+  companyID:string ;
+  owner :string ;
+  bUID :string ;
+  approvedOn :Date;
+  approvedBy :string;
+  createdOn :Date
+  createdBy :string
+  modifiedOn :Date
+  modifiedBy :string
 }
 
 export class BP_ProcessSteps {
