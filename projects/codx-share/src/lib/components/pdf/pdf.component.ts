@@ -133,6 +133,10 @@ export class PdfComponent
   lstAreas: Array<tmpSignArea> = [];
   lstCA;
   lstCACollapseState: Array<any> = [];
+
+  lstSignDateType = [];
+  curSignDateType;
+
   curSelectedAnnotID;
   curSelectedPageGroup;
   formAnnot: FormGroup;
@@ -203,20 +207,14 @@ export class PdfComponent
   onInit() {
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
-        console.log('format', res);
-
         this.signPerRow = res.SignPerRow;
         this.align = res.Align;
         this.direction = res.Direction;
         this.areaControl = res.AreaControl == '1';
         this.isAwait = res.Await == '1';
-        console.log('lang', this.user.language);
-
         this.labels = res.Label.filter((label) => {
           return label.Language == this.user.language;
         });
-        console.log('labels', this.labels);
-
         this.detectorRef.detectChanges();
       });
 
@@ -287,6 +285,14 @@ export class PdfComponent
         this.detectorRef.detectChanges();
       });
 
+      this.cache.valueList('ES027').subscribe((res) => {
+        res?.datas?.forEach((type) => {
+          this.lstSignDateType.push(type);
+        });
+        this.curSignDateType = this.lstSignDateType[0];
+        this.detectorRef.detectChanges();
+      });
+
       this.formAnnot = new FormGroup({
         content: new FormControl(),
         fontStyle: new FormControl(this.curAnnotFontStyle),
@@ -322,37 +328,39 @@ export class PdfComponent
         .getElementById('delete-btn')
         ?.addEventListener('click', (e: any) => {
           this.contextMenu.style.display = 'none';
-          this.esService
-            .deleteAreaById([
-              this.recID,
-              this.fileInfo.fileID,
-              this.curSelectedArea.id(),
-            ])
-            .subscribe((res) => {
-              if (res) {
-                // this.lstAreas = this.lstAreas.filter((area) => {
-                //   return area.recID != this.curSelectedArea.id();
-                // });
-                this.esService
-                  .getSignAreas(
-                    this.recID,
-                    this.fileInfo.fileID,
-                    this.isApprover,
-                    this.user.userID
-                  )
-                  .subscribe((res) => {
-                    if (res) {
-                      this.lstAreas = res;
-                      this.detectorRef.detectChanges();
-                    }
-                  });
-                this.curSelectedArea.destroy();
-                this.tr.remove();
-              }
-            });
+          this.removeArea();
         });
       this.detectorRef.detectChanges();
     }
+  }
+
+  //remove area
+  removeArea() {
+    this.esService
+      .deleteAreaById([
+        this.recID,
+        this.fileInfo.fileID,
+        this.curSelectedArea.id(),
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.esService
+            .getSignAreas(
+              this.recID,
+              this.fileInfo.fileID,
+              this.isApprover,
+              this.user.userID
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.lstAreas = res;
+                this.detectorRef.detectChanges();
+              }
+            });
+          this.curSelectedArea.destroy();
+          this.tr.remove();
+        }
+      });
   }
 
   //go to
@@ -413,9 +421,6 @@ export class PdfComponent
         this.isUnd = area.fontFormat?.includes('underline') ? true : false;
         this.curAnnotFontSize = area.fontSize;
         this.curAnnotFontStyle = area.fontStyle;
-
-        // this.tr.draggable(area.isLock == false ? !area.allowEditAreas ? false :  true);
-        // this.tr.nodes([this.curSelectedArea]);
         this.curSelectedAnnotID = area.recID;
         this.detectorRef.detectChanges();
       }
@@ -451,7 +456,7 @@ export class PdfComponent
     if (this.transRecID) {
       return new Promise<any>((resolve, rejects) => {
         this.esService
-          .updateSignFileTrans(
+          .SignAsync(
             this.stepNo,
             this.isAwait,
             this.user.userID,
@@ -1111,66 +1116,70 @@ export class PdfComponent
 
   chooseSignDate = true;
   changeAnnotPro(type, recID) {
-    switch (type.toString()) {
-      case '6': {
-        this.curSelectedArea.text(this.formAnnot.value.content);
-        this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
-        this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
-        let style = 'normal';
-        if (this.isBold && this.isItalic) {
-          style.replace('normal', '');
-          style = 'bold italic';
-        } else if (this.isBold) {
-          style.replace('normal', '');
-          style = 'bold';
-        } else if (this.isItalic) {
-          style.replace('normal', '');
-          style = 'italic';
-        }
-
-        this.curSelectedArea.attrs.fontStyle = style;
-        this.curSelectedArea.attrs.textDecoration = this.isUnd
-          ? 'line-through'
-          : '';
-        this.curSelectedArea.draw();
-        this.tr.forceUpdate();
-        //save to db
-        let y = this.curSelectedArea.position().y;
-        let x = this.curSelectedArea.position().x;
-        let w = this.xScale;
-        let h = this.yScale;
-        let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
-
-        let tmpArea: tmpSignArea = {
-          signer: tmpName.Signer,
-          labelType: tmpName.LabelType,
-          labelValue: this.curSelectedArea.attrs.text,
-          isLock: this.curSelectedArea.draggable(),
-          allowEditAreas: this.signerInfo.allowEditAreas,
-          signDate: false,
-          dateFormat: '1',
-          location: {
-            top: y / this.yScale,
-            left: x / this.xScale,
-            width: w / this.xScale,
-            height: h / this.yScale,
-            pageNumber: this.curPage - 1,
-          },
-          stepNo: tmpName.StepNo,
-          fontStyle: this.curSelectedArea.attrs.fontFamily,
-          fontFormat:
-            this.curSelectedArea.attrs.fontStyle +
-            this.curSelectedArea.attrs.textDecoration,
-          fontSize: this.curSelectedArea.attrs.fontSize,
-          signatureType: 2,
-          comment: '',
-          createdBy: tmpName.Signer,
-          modifiedBy: tmpName.Signer,
-          recID: this.curSelectedArea.attrs.id,
-        };
-        this.saveToDB(tmpArea);
-      }
+    // switch (type.toString()) {
+    if (this.imgConfig.includes(type)) {
     }
+
+    // [3, 4, 5, 6, 7]
+    else {
+      this.curSelectedArea.text(this.formAnnot.value.content);
+      this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
+      this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
+      let style = 'normal';
+      if (this.isBold && this.isItalic) {
+        style.replace('normal', '');
+        style = 'bold italic';
+      } else if (this.isBold) {
+        style.replace('normal', '');
+        style = 'bold';
+      } else if (this.isItalic) {
+        style.replace('normal', '');
+        style = 'italic';
+      }
+
+      this.curSelectedArea.attrs.fontStyle = style;
+      this.curSelectedArea.attrs.textDecoration = this.isUnd
+        ? 'line-through'
+        : '';
+      this.curSelectedArea.draw();
+      this.tr.forceUpdate();
+      //save to db
+      let y = this.curSelectedArea.position().y;
+      let x = this.curSelectedArea.position().x;
+      let w = this.xScale;
+      let h = this.yScale;
+      let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
+
+      let tmpArea: tmpSignArea = {
+        signer: tmpName.Signer,
+        labelType: tmpName.LabelType,
+        labelValue: this.curSelectedArea.attrs.text,
+        isLock: this.curSelectedArea.draggable(),
+        allowEditAreas: this.signerInfo.allowEditAreas,
+        signDate: false,
+        dateFormat: '1',
+        location: {
+          top: y / this.yScale,
+          left: x / this.xScale,
+          width: w / this.xScale,
+          height: h / this.yScale,
+          pageNumber: this.curPage - 1,
+        },
+        stepNo: tmpName.StepNo,
+        fontStyle: this.curSelectedArea.attrs.fontFamily,
+        fontFormat:
+          this.curSelectedArea.attrs.fontStyle +
+          this.curSelectedArea.attrs.textDecoration,
+        fontSize: this.curSelectedArea.attrs.fontSize,
+        signatureType: 2,
+        comment: '',
+        createdBy: tmpName.Signer,
+        modifiedBy: tmpName.Signer,
+        recID: this.curSelectedArea.attrs.id,
+      };
+      this.saveToDB(tmpArea);
+    }
+    // }
   }
 
   changeQRRenderState(e) {
@@ -1668,7 +1677,9 @@ export class PdfComponent
 
   //test func
   show(e: any) {
-    this.signPDF('1', 'da xem');
+    this.esService.testFont('Nguyễn Hoàng Bửu').subscribe((res) => {
+      console.log('done', res);
+    });
   }
 }
 //create new guid

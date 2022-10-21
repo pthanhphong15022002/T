@@ -44,6 +44,8 @@ export class PopupEditComponent implements OnInit {
   shareText: string = "";
   shareWith: String = "";
   permissions: Permission[] = [];
+  mssgCodeNoty:any = null;
+
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -74,7 +76,14 @@ export class PopupEditComponent implements OnInit {
     VIDEO: "video",
     APPLICATION: 'application'
   }
-
+  APPROVE_STATUS = {
+    NEW: "1",
+    REDO: "2",
+    SUBMITED: "3",
+    REJECTED:"4",
+    APPROVETED:"5",
+    CANCELLED:"6"
+  }
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('codxAttachment') codxAttachment: AttachmentComponent;
@@ -95,21 +104,68 @@ export class PopupEditComponent implements OnInit {
   ) {
 
     this.data = dd.data;
+    console.log(this.data);
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
-  ngAfterViewInit(): void {
-  }
+ 
 
 
 
   ngOnInit(): void {
     this.setData();
   }
+
+  ngAfterViewInit(): void {
+  }
+
+  getMessageNoti(mssCode:string){
+    this.cache.message(mssCode).subscribe((mssg: any) => {
+      if(mssg){
+        this.mssgCodeNoty = mssg;
+      }
+    });
+  }
+
+  setData() {
+    this.tagName = this.data.tags;
+    this.shareControl = this.data.shareControl;
+    this.permissions = this.data.permissions;
+    this.formGroup = new FormGroup({
+      Tags: new FormControl(this.data.tags),
+      Category: new FormControl(this.data.category),
+      StartDate: new FormControl(this.data.startDate),
+      EndDate: new FormControl(this.data.endDate),
+      Subject: new FormControl(this.data.subject),
+      SubContent: new FormControl(this.data.subContent),
+      Contents: new FormControl(this.data.contents),
+      Image: new FormControl(this.data.image),
+      AllowShare: new FormControl(this.data.allowShare),
+      CreatePost: new FormControl(this.data.createPost),
+    });
+    this.getMessageNoti("SYS009");
+    this.changedt.detectChanges();
+
+  }
+  initForm() {
+    this.formGroup = new FormGroup({
+      Tags: new FormControl(''),
+      Category: new FormControl(null),
+      StartDate: new FormControl(new Date()),
+      EndDate: new FormControl(),
+      Subject: new FormControl(''),
+      SubContent: new FormControl(''),
+      Contents: new FormControl(''),
+      Image: new FormControl(''),
+      AllowShare: new FormControl(false),
+      CreatePost: new FormControl(false),
+    });
+    this.changedt.detectChanges();
+  }
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
-  clickInsertNews() {
+  clickUpdatePost() {
     this.data.shareControl = this.shareControl;
     this.data.permissions = this.permissions;
     this.data.tags = this.formGroup.controls['Tags'].value;
@@ -159,6 +215,10 @@ export class PopupEditComponent implements OnInit {
           }
         }
       });
+  }
+
+  clickApproPost() {
+    
   }
 
 
@@ -406,39 +466,7 @@ export class PopupEditComponent implements OnInit {
     }
     this.changedt.detectChanges();
   }
-  setData() {
-    this.tagName = this.data.tags;
-    this.shareControl = this.data.shareControl;
-    this.permissions = this.data.permissions;
-    this.formGroup = new FormGroup({
-      Tags: new FormControl(this.data.tags),
-      Category: new FormControl(this.data.category),
-      StartDate: new FormControl(this.data.startDate),
-      EndDate: new FormControl(this.data.endDate),
-      Subject: new FormControl(this.data.subject),
-      SubContent: new FormControl(this.data.subContent),
-      Contents: new FormControl(this.data.contents),
-      Image: new FormControl(this.data.image),
-      AllowShare: new FormControl(this.data.allowShare),
-      CreatePost: new FormControl(this.data.createPost),
-    });
-    this.changedt.detectChanges();
-  }
-  initForm() {
-    this.formGroup = new FormGroup({
-      Tags: new FormControl(''),
-      Category: new FormControl(null),
-      StartDate: new FormControl(new Date()),
-      EndDate: new FormControl(),
-      Subject: new FormControl(''),
-      SubContent: new FormControl(''),
-      Contents: new FormControl(''),
-      Image: new FormControl(''),
-      AllowShare: new FormControl(false),
-      CreatePost: new FormControl(false),
-    });
-    this.changedt.detectChanges();
-  }
+  
   clearValueForm() {
     this.formGroup.controls['Tags'].setValue("");
     this.formGroup.controls['Category'].setValue(null);
