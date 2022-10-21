@@ -187,8 +187,7 @@ export class NewsComponent extends UIComponent {
       option.FormModel = this.view.formModel;
       option.IsFull = true;
       this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", this.funcID, "", option);
-    }
-    
+    } 
   }
 
 

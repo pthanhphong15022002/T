@@ -2,11 +2,11 @@ import { Component, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CacheService, LayoutBaseComponent } from 'codx-core';
 @Component({
-  selector: 'lib-layout',
-  templateUrl: './layout3.component.html',
-  styleUrls: ['./layout3.component.scss'],
+  selector: 'lib-layout-approval',
+  templateUrl: './layout-approval.component.html',
+  styleUrls: ['./layout-approval.component.scss'],
 })
-export class Layout3Component extends LayoutBaseComponent {
+export class LayoutApprovalComponent extends LayoutBaseComponent {
   module = 'WP';
   override toolbar = true;
   override aside = false;
@@ -31,18 +31,19 @@ export class Layout3Component extends LayoutBaseComponent {
     });
   }
 
-  navigate(category, funcID = null) {
+  navigate(category, funcID) {
     this.category = category;
-    this.dt.detectChanges;
-    if(funcID){
-      this.codxService.navigate(funcID);
+    switch(category){
+      case "approvals":
+        this.codxService.navigate(funcID);
+        break;
+      case "settings":
+        this.codxService.navigate('','wp/news/settings/'+funcID);
+        break;
+      default:
+        this.codxService.navigate('','wp/news/'+funcID+'/'+this.category);
+        break;
     }
-    else
-    {
-      this.funcID = this.route.firstChild.snapshot.params["funcID"];
-      this.codxService.navigate('','wp/news/'+this.funcID+'/'+this.category);
-    }
-    this.dt.detectChanges;
   }
 
   onAfterViewInit(): void {}

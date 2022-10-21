@@ -2,11 +2,11 @@ import { Component, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, LayoutBaseComponent } from 'codx-core';
 @Component({
-  selector: 'lib-layout',
-  templateUrl: './layout2.component.html',
-  styleUrls: ['./layout2.component.scss'],
+  selector: 'lib-layout-news',
+  templateUrl: './layout-news.component.html',
+  styleUrls: ['./layout-news.component.scss'],
 })
-export class Layout2Component extends LayoutBaseComponent {
+export class LayoutNewsComponent extends LayoutBaseComponent {
   module = 'WP';
   override toolbar = false;
   override aside = false;
@@ -49,7 +49,7 @@ export class Layout2Component extends LayoutBaseComponent {
       });
     }
   }
-  navigate(category, funcID = null) {
+  navigate(category, funcID) {
     this.category = category;
     switch(category){
       case "approvals":
@@ -59,18 +59,8 @@ export class Layout2Component extends LayoutBaseComponent {
         this.codxService.navigate('','wp/news/settings/'+funcID);
         break;
       default:
-        this.funcID = this.route.firstChild.snapshot.params["funcID"];
-        this.codxService.navigate('','wp/news/'+this.funcID+'/'+this.category);
+        this.codxService.navigate('','wp/news/'+funcID+'/'+this.category);
         break;
     }
-    // if(funcID){
-    //   this.codxService.navigate(funcID);
-    // }
-    // else
-    // {
-    //   this.funcID = this.route.firstChild.snapshot.params["funcID"];
-    //   this.codxService.navigate('','wp/news/'+this.funcID+'/'+this.category);
-    // }
-    // this.dt.detectChanges;
   }
 }

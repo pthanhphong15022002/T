@@ -115,7 +115,7 @@
             >
               <codx-temp-full
                 [titleTmp]="titleTmp"
-                [baseHeaderRightTmp]="baseHeaderRightTmp"
+              
                 [desc]="item?.memo"
                 [footer]="footerBase"
                 [dataItem]="item"
@@ -131,7 +131,7 @@
                       <div class="steplist-item step-danger rounded p-4">
                         <codx-temp-full
                           [titleTmp]="titleTmp"
-                          [baseHeaderRightTmp]="baseHeaderRightTmp"
+                    
                           [desc]="item1?.memo"
                           [dataItem]="item1"
                         >
@@ -144,7 +144,7 @@
                                 cardCss="mb-5"
                                 [titleTmp]="titleTmp"
                                 [desc]="item2?.memo"
-                                [baseHeaderRightTmp]="baseHeaderRightTmp"
+                      
                                 [footer]="footerBase"
                                 [dataItem]="item2"
                               >
@@ -175,6 +175,29 @@
     >{{ " " + data?.stepNo }}
     <codx-label name="lblSplit" default=":"></codx-label
     >{{ " " + (data?.stepType == "P" ? data?.stepName : data?.stepName2) }}
+  </div>
+
+  <div>
+    <span
+      class="text-danger"
+      *ngIf="data.stepType == 'P' || data.stepType == 'A'"
+    >
+      <span>{{ data?.duration }} </span>
+      <span *ngIf="data.stepType == 'P'">
+        <codx-label name="lblDay" default="ngày"></codx-label>
+      </span>
+      <span *ngIf="data.stepType == 'A'">
+        <codx-label name="lblDuration" default="h/UV"></codx-label>
+      </span>
+    </span>
+    <codx-mfunc
+      type="hover"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 

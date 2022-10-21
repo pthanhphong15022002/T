@@ -125,9 +125,12 @@ export class ViewTagComponent extends UIComponent {
   }
 
   clickShowPopupSearch() {
-    let option = new DialogModel();
-    option.FormModel = this.view.formModel;
-    option.IsFull = true;
-    this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", { funcID: this.funcID }, "", option);
+    if(this.view){
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", this.view.funcID, "", option);
+    } 
   }
 }
