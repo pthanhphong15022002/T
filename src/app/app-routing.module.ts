@@ -119,6 +119,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'sv',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-sv/src/lib/codx-sv.module').then(
+            (m) => m.CodxSVModule
+          ),
+      },
+      {
         path: 'shared',
         canActivate: [AuthGuard],
         component: LayoutOnlyHeaderComponent,
