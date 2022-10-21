@@ -84,6 +84,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   dvlReCall: any;
   dvlStatusTM: any;
   formModel: any;
+  formModels: any;
   dialog!: DialogRef;
   name: any;
   ms020: any;
@@ -172,7 +173,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   getGridViewSetup(funcID: any) {
   
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
-      this.formModel = {
+      this.formModels = {
         entityName: fuc?.entityName,
         formName: fuc?.formName,
         funcID: funcID,
@@ -798,7 +799,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Gửi duyệt
       case 'ODT201': {
-        debugger;
         if(datas.bsCategory)
         {
           //Có thiết lập bước duyệt
@@ -820,7 +820,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             this.notifySvr.alertCode("OD024",config).subscribe(item=>{
               if(item.event.status == "Y") {
                 //Lấy processID mặc định theo entity
-                this.api.execSv("ES","ES","CategoriesBusiness","GetDefaulProcessIDAsync",this.formModel.entityName).subscribe((item:any)=>{
+                this.api.execSv("ES","ES","CategoriesBusiness","GetDefaulProcessIDAsync",this.formModels.entityName).subscribe((item:any)=>{
                   if(item)
                   {
                     this.approvalTrans(item?.processID,datas);
@@ -861,7 +861,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteDispatchByIDAsync';
-    opt.data = this.view.dataService.dataSelected;
+    opt.data = [this.view.dataService.dataSelected,this.view.formModel.entityName];
     return true;
   }
   checkOpenForm(val: any) {
@@ -952,7 +952,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
           x.functionID == 'ODT211' ||
           x.functionID == 'ODT112' ||
           x.functionID == 'SYS02' ||
-          x.functionID == 'SYS03'
+          x.functionID == 'SYS03' ||
+          x.functionID == 'ODT103' || 
+          x.functionID == 'ODT202'
       );
       for (var i = 0; i < completed.length; i++) {
         completed[i].disabled = true;

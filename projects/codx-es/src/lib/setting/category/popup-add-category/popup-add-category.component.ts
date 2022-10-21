@@ -127,6 +127,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.data.icon = 'icon-text_snippet';
       this.data.color = '#0078FF';
 
+      this.form?.formGroup?.patchValue({
+        signatureType: '1',
+        icon: 'icon-text_snippet',
+        color: '#0078FF',
+      });
+
       this.esService
         .getSettingByPredicate(
           'FormName=@0 and Category=@1',
