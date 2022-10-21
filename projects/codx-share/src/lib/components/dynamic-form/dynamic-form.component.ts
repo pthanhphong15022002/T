@@ -50,7 +50,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   onInit(): void {
-    debugger;
     this.route.params.subscribe((routeParams) => {
       this.layout.setLogo(null);
       this.layout.setUrl(null);
@@ -65,7 +64,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    debugger;
     this.views = [
       {
         type: ViewType.grid,
@@ -74,7 +72,7 @@ export class DynamicFormComponent extends UIComponent {
         model: {
           resources: this.columnsGrid,
           template2: this.morefunction,
-          frozenColumns: 1,
+          // frozenColumns: 1,
         },
       },
     ];
@@ -117,9 +115,7 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private addNew() {
-    debugger;
     this.viewBase.dataService.addNew().subscribe((res) => {
-      debugger;
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
@@ -204,7 +200,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private export(evt: any) {
-    debugger;
     var id = 'recID';
     this.cache.entity(this.viewBase.formModel.entityName).subscribe((res) => {
       if (res) {

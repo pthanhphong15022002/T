@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { Template } from '@syncfusion/ej2-angular-base';
-import { ApiHttpService, NotificationsService, ViewModel, ViewType } from 'codx-core';
+import { Dialog } from '@syncfusion/ej2-angular-popups';
+import { ApiHttpService, CodxListviewComponent, DialogData, DialogRef, ImageViewerComponent, NotificationsService, ViewModel, ViewType } from 'codx-core';
 import { ChatBoxInfo } from '../chat.models';
 
 @Component({
@@ -14,6 +15,15 @@ export class PopupGroupComponent implements OnInit {
   users: any = new Array();
   searchUser = "";
   public checkuserr: boolean = false;
+  
+  titlecreate = "Tạo Nhóm Chát";
+  namegroupmessage = 'Cần điền đầy đủ thông tin trước khi lưu';
+  usersmessage = 'Số thành viên phải trên 2 người';
+  create = "Thêm";
+
+
+  @ViewChild("imageGroup") imageGroup:ImageViewerComponent;
+  @ViewChild("listview") listview:CodxListviewComponent;
 
 
   views: Array<ViewModel> = [];
@@ -21,14 +31,23 @@ export class PopupGroupComponent implements OnInit {
   currView?: TemplateRef<any>;
   dData:any = {};
 
+  dialogRef:DialogRef = null
 
+  
 
-  constructor(private api: ApiHttpService,
-      private change: ChangeDetectorRef) {
+  constructor(
+    private api: ApiHttpService,
+      private change: ChangeDetectorRef,
+      @Optional() dialogRef:DialogRef,
+      @Optional() dialogData:DialogData,
+      private notificationsService: NotificationsService,
+      ) 
+  {
+      this.dialogRef = dialogRef;
       this.loadData();
   }
   
-  private notificationsService: NotificationsService;
+  //private notificationsService: NotificationsService;
   ngAfterViewInit(): void {
     
   }
@@ -41,7 +60,6 @@ export class PopupGroupComponent implements OnInit {
   selectUser(user) {
     /* this.userSelected = user;
     this.change.detectChanges(); */
-    debugger;
   } 
 
   loadData() {
@@ -55,21 +73,38 @@ export class PopupGroupComponent implements OnInit {
           pageLoading: true,
           searchText: this.searchUser
       };
-      this.api.exec<any>(
-          'ERM.Business.WP',
-          'ChatBusiness',
-          'MockSearchUsers', options).subscribe((res) => {
-              debugger;
-              if (res) 
-              {
-                this.users = res[0];
-                this.users.map((e) =>
-                {
-                  this.dData[e.userID] = e;
-                })
-              }
-              this.change.detectChanges();
-          });
+      // this.api.exec<any>(
+      //     'ERM.Business.WP',
+      //     'ChatBusiness',
+      //     'MockSearchUsers', options).subscribe((res) => {
+      //         debugger;
+      //         if (res) 
+      //         {
+      //           this.users = res[0];
+      //           this.users.map((e) =>
+      //           {
+      //             this.dData[e.userID] = e;
+      //           })
+      //         }
+      //         this.change.detectChanges();
+      //     });
+      // this.api.execSv(
+      //   "SYS",
+      //   'ERM.Business.CM',
+      //   'DataBusiness',
+      //   'LoadDataCbxAsync',
+      //    options).subscribe((res) => {
+      //       if (res) 
+      //       {
+      //         // this.users = res[0];
+      //         // this.users.map((e) =>
+      //         // {
+      //         //   this.dData[e.userID] = e;
+      //         // })
+      //         console.log(res)
+      //       }
+      //       this.change.detectChanges();
+      //   });
   }
   clickUser(data:any){
     data.checked = !data.checked;
@@ -82,6 +117,7 @@ export class PopupGroupComponent implements OnInit {
       this.userSelected = this.userSelected.filter(x=>x.userID != data.userID)
 
     } */
+    debugger
     if(data){
       
       if(data.checked == true){
@@ -93,7 +129,7 @@ export class PopupGroupComponent implements OnInit {
         // for(let datauser of this.userSelected){
         //   if(datauser.userID == data.userID) 
         // }
-        this.userSelected = this.userSelected.filter(x=>x.userID != data.userID)
+        this.userSelected = this.userSelected.filter(x=>x.UserID != data.UserID)
       }
     }
     
@@ -102,20 +138,43 @@ export class PopupGroupComponent implements OnInit {
   remoteuser(data:any){
     //this.userSelected = this.userSelected.filter(x=>x.userID != data.userID);
     this.clickUser(data);
-    const checked = data.checked; 
+    //const checked = data.checked; 
     //crrValue
   }
   clickCreateGroup(){
-    
     this.data.members = this.userSelected;
-    debugger
-    this.api.execSv("WP","ERM.Business.WP","ChatBusiness","AddGroupChatAsync",this.data).subscribe((res:boolean) => {
+
+    if(this.data.groupName == null){
+      //this.notificationsService.notify(this.namegroupmessage);
+      return;
+    }
+    if(this.data.members.length <= 1){
+      //this.notificationsService.notify(this.usersmessage);
+      return;
+    }
+
+    
+
+    this.api.execSv("WP","ERM.Business.WP","ChatBusiness","AddGroupChatAsync",this.data).subscribe((res:any) => {
       if(res){
-        this.notificationsService.notifyCode("CHAT001");
-        debugger
+        let groupID = res.groupID;
+        this.imageGroup.updateFileDirectReload(groupID).subscribe((res2) =>{
+          if(res2){
+            console.log(res2)
+          }
+        });
+        // this.notificationsService.notifyCode("CHAT001");
+        this.dialogRef.close();//close form
 
       }
     });
+    
+
+    console.log(this.listview)
+
+  }
+  onClose(){
+    this.dialogRef.close();//close form
 
   }
   ngOnChanges() {
@@ -124,6 +183,7 @@ export class PopupGroupComponent implements OnInit {
      console.log("load");
     }   
   onSearch(e) {
+    this.listview.dataService.search(e).subscribe();
     // if(e) {
     //   if (this.lstView) this.lstView.dataService.search(e).subscribe();
     //   this.detectorRef.detectChanges();
@@ -132,4 +192,5 @@ export class PopupGroupComponent implements OnInit {
   valueChange(e){
     this.data[e.field] = e.data;
   }
+  onSelectionChanged(event:any){}
 }

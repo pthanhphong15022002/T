@@ -336,7 +336,6 @@ export class IncommingAddComponent implements OnInit {
   }
   changeCbb(e:any)
   {
-    debugger;
     var data = e?.component?.itemsSelected;
     if(data && data[0]) this.dispatch.category = data[0].CategoryName;
   }
