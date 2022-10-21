@@ -73,6 +73,7 @@
           (valueChange)="valueChangeCbx($event)"
         >
         </codx-input>
+      
       </div>
       <div class="form-group" *ngIf="stepType != 'P'">
         <codx-label
@@ -125,16 +126,16 @@
       </div>
       <ng-container *ngIf="referenceText?.length > 0">
         <div *ngFor="let item of referenceText; let i = index" class="m-5">
-          <div class="text-hover-primary cursor-pointer"  [ngbPopover]="deleteReference"
-          placement="left"
-          #p="ngbPopover"
-          (mouseenter)="showPoppoverDeleteRef(p, i)"
-          autoClose="outside"
-          placement="right">
+          <div class="text-hover-primary cursor-pointer" >
             <span>{{ i + 1 }}</span
             ><span>
               <codx-label name="lblSymboy" default="."></codx-label> </span
-            ><span>{{ item }}</span>
+            ><span  [ngbPopover]="deleteReference"
+            placement="left"
+            #p="ngbPopover"
+            (mouseenter)="showPoppoverDeleteRef(p, i)"
+            autoClose="outside"
+            placement="right">{{ item }}</span>
           </div>
         </div>
       </ng-container>
@@ -371,6 +372,19 @@
   </ng-template>
 
   <ng-template #deleteReference>
-
+    <ng-container>
+      <a
+        class="d-flex align-item-center"
+        (click)="clickDelete(crrIndex)"
+        style="cursor: pointer"
+      >
+        <span class="icon-close icon-16 text-danger"></span>
+        <codx-label
+          class="text-danger"
+          name="Delete"
+          default="Xóa"
+        ></codx-label>
+      </a>
+    </ng-container>
   </ng-template>
 </codx-form>
