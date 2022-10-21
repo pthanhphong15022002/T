@@ -829,13 +829,13 @@ export class CodxEsService {
     );
   }
 
-  getSFByID(data): Observable<any> {
-    return this.api.execSv(
+  getSFByID(sfRecID) {
+    return this.api.execSv<any>(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetByIDAsync',
-      data
+      sfRecID
     );
   }
 
@@ -917,6 +917,16 @@ export class CodxEsService {
       'SignFilesBusiness',
       'CreateTemplateBySignFileAsync',
       [recID, templateName]
+    );
+  }
+
+  saveSignAreasTemplate(sfRecID: string, tmpRecID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CancelSignfileAsync',
+      [sfRecID, tmpRecID]
     );
   }
 

@@ -178,6 +178,8 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       type: '0',
       signatureType: this.data?.signatureType,
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
+      confirmControl: this.data?.confirmControl,
+      allowEditAreas: this.data?.allowEditAreas,
     };
 
     this.openPopupAddAppStep(data);
@@ -194,10 +196,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
     };
     this.openPopupAddAppStep(data);
-  }
-
-  updateMssgDelete(mssgCode) {
-    this.mssgDelete = mssgCode;
   }
 
   delete(approvalStep) {

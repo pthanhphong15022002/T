@@ -9,6 +9,7 @@
         <div class="step-title text-gray-800 fw-bold fs-4">
           {{ item.stepType | vll: "ES002":"text" | async }}
         </div>
+        <div class="text-gray-400 fs-5">- {{ item.stepName }}</div>
       </div>
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item.approvers">
@@ -179,6 +180,7 @@
         <div class="step-title text-gray-800 fw-bold fs-4">
           {{ item.stepType | vll: "ES002":"text" | async }}
         </div>
+        <div class="text-gray-400 fs-5">- {{ item.stepName }}</div>
       </div>
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item.approvers">

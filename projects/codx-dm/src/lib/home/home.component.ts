@@ -17,6 +17,7 @@ import {
   ScrollComponent,
   DialogModel,
   Filters,
+  DataRequest,
 } from 'codx-core';
 import { CodxDMService } from '../codx-dm.service';
 import { FolderInfo } from '@shared/models/folder.model';
@@ -27,6 +28,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { ActivatedRoute } from '@angular/router';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { AnimationSettingsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
+import { mode } from 'crypto-js';
 
 @Component({
   selector: 'home',
@@ -610,6 +612,7 @@ item: any;
        
         this.data = [];
         this.dmSV.folderID = id;
+        this.dmSV.folderId.next(id);
         this.folderService.options.srtColumns = this.sortColumn;
         this.folderService.options.srtDirections = this.sortDirection;
         this.folderService.options.funcID = this.view.funcID;
@@ -669,21 +672,24 @@ item: any;
 
   ngAfterViewInit(): void {
     this.cache.valueList("SYS025").subscribe(item=>{
-      this.sys025 = item;
-      this.views[0].text = item.datas[3].text;
-      this.views[0].icon = item.datas[3].icon;
-      this.views[2].text = item.datas[4].text;
-      this.views[2].icon = item.datas[4].icon;
-      this.views[3].text = item.datas[0].text;
-      this.views[3].icon = item.datas[0].icon;
-      this.orgViews[1].text = item.datas[3].text;
-      this.orgViews[1].icon = item.datas[3].icon;
-      this.orgViews[2].text = item.datas[4].text;
-      this.orgViews[2].icon = item.datas[4].icon;
-      this.orgViews[3].text = item.datas[0].text;
-      this.orgViews[3].icon = item.datas[0].icon;
-      this.view.views = this.views;
-      this.changeDetectorRef.detectChanges();
+      if(item)
+      {
+        this.sys025 = item;
+        this.views[0].text = item.datas[3].text;
+        this.views[0].icon = item.datas[3].icon;
+        this.views[2].text = item.datas[4].text;
+        this.views[2].icon = item.datas[4].icon;
+        this.views[3].text = item.datas[0].text;
+        this.views[3].icon = item.datas[0].icon;
+        this.orgViews[1].text = item.datas[3].text;
+        this.orgViews[1].icon = item.datas[3].icon;
+        this.orgViews[2].text = item.datas[4].text;
+        this.orgViews[2].icon = item.datas[4].icon;
+        this.orgViews[3].text = item.datas[0].text;
+        this.orgViews[3].icon = item.datas[0].icon;
+        this.view.views = this.views;
+        this.changeDetectorRef.detectChanges();
+      }
     })
     this.views = [
       {
@@ -960,7 +966,12 @@ item: any;
       if (item.text == "Search")
         item.hide = false;
     });
-    this.fileService.searchFile(this.textSearchAll, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
+    var model = new DataRequest();
+    model.funcID = this.view.formModel.funcID;
+    model.page = this.dmSV.page;
+    model.pageSize = this.dmSV.pageSize;
+    model.entityName = this.view.formModel.entityName;
+    this.fileService.searchFile(this.textSearchAll, model).subscribe(item => {
       if (item != null) {
         if(!isScroll)
         {
@@ -1016,23 +1027,23 @@ item: any;
           this.predicates = predicates;
           this.values = values;
           this.searchAdvance = true;
-          this.search();
-          // this.fileService.searchFileAdv(text, predicates, values, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
-          //   if (item != null) {
-          //    
-          //     this.dmSV.listFiles = item.data;
-          //     this.totalSearch = item.total;
-          //     this.data = [...this.data, ...this.dmSV.listFiles];
-          //     this.getTotalPage(item.total);
-          //     this.changeDetectorRef.detectChanges();
-          //   }
-          //   else {
-          //    
-          //     this.totalSearch = 0;
-          //     this.dmSV.totalPage = 0;
-          //     this.changeDetectorRef.detectChanges();
-          //   }
-          // });
+          //this.search();
+          this.fileService.searchFileAdv(text, predicates, values, this.dmSV.page, this.dmSV.pageSize,this.searchAdvance).subscribe(item => {
+            if (item != null) {
+             
+              this.dmSV.listFiles = item.data;
+              this.totalSearch = item.total;
+              this.data = [...this.data, ...this.dmSV.listFiles];
+              this.getTotalPage(item.total);
+              this.changeDetectorRef.detectChanges();
+            }
+            else {
+             
+              this.totalSearch = 0;
+              this.dmSV.totalPage = 0;
+              this.changeDetectorRef.detectChanges();
+            }
+          });
         }
       }
       catch (ex) {
@@ -1077,8 +1088,8 @@ item: any;
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
-        this.getDataFolder("");
-        this.getDataFile("");
+        this.getDataFolder(this.dmSV.folderID);
+        this.getDataFile(this.dmSV.folderID);
         this.changeDetectorRef.detectChanges();
       }
       else this.search();

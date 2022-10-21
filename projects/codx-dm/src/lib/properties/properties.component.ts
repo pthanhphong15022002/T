@@ -173,6 +173,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   getThumbnail(data) {
+    debugger;
     if (data.hasThumbnail)
       return environment.urlUpload + "/" + data.thumbnail;
     else
@@ -277,12 +278,6 @@ export class PropertiesComponent implements OnInit {
         this.getRating(res.views);
         var files = this.dmSV.listFiles;
         if (files != null) {
-          let index = files.findIndex(d => d.recID.toString() === id);
-          if (index != -1) {
-            var thumbnail = files[index].thumbnail;
-            files[index] = res;
-            files[index].thumbnail = thumbnail;
-          }
           this.dmSV.listFiles = files;
           this.dmSV.ChangeData.next(true);
         }

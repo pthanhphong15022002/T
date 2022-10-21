@@ -58,3 +58,17 @@
         padding-right: 15px;
     }
 }
+
+/***/
+.popup-task-detail {
+    codx-views>.container-fluid {
+        height: calc(100vh - 250px) !important;
+    }
+
+    .toolbar {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+
+}
