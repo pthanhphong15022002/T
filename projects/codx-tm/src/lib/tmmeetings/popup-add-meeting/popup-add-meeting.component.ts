@@ -277,15 +277,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.meeting.startDate <= new Date()) {
-      this.notiService.notify(
-        'Thời gian diễn ra cuộc họp phải lớn hơn thời gian hiện tại'
-      );
+    this.notiService.notifyCode("CO002")
       return;
     }
     if (this.meeting.endDate <= new Date()) {
-      this.notiService.notify(
-        'Thời gian kết thúc cuộc họp phải lớn hơn thời gian hiện tại !'
-      );
+      this.notiService.notifyCode("CO002")
       return;
     }
     if (this.meeting.meetingType == '1') {
@@ -758,42 +754,20 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (data) {
           this.dayOnWeeks = data;
           var current_day = date.getDay();
-          // var day_name = '';
-          // switch (current_day) {
-          //   case 0:
-          //     day_name = '1';
-          //     break;
-          //   case 1:
-          //     day_name = '2';
-          //     break;
-          //   case 2:
-          //     day_name = '3';
-          //     break;
-          //   case 3:
-          //     day_name = '4';
-          //     break;
-          //   case 4:
-          //     day_name = '5';
-          //     break;
-          //   case 5:
-          //     day_name = '6';
-          //     break;
-          //   case 6:
-          //     day_name = '7';
-          // }
           var endShiftType1 = '';
           var starrShiftType2 = '';
           for (var i = 0; i < this.dayOnWeeks.length; i++) {
             var day = this.dayOnWeeks[i];
-            if (current_day == day.weekday && day.shiftType == '1') {
-              this.startTimeWork = day.startTime.substring(0, 5);
-              endShiftType1 = day.endTime.substring(0, 5);
+            if (day.shiftType == '1') {
+              this.startTimeWork = day.startTime;
+              endShiftType1 = day.endTime;
             }
-            if (current_day == day.weekday && day.shiftType == '2') {
-              this.endTimeWork = day.endTime.substring(0, 5);
-              starrShiftType2 = day.startTime.substring(0, 5);
+            if (day.shiftType == '2') {
+              this.endTimeWork = day.endTime
+              starrShiftType2 = day.startTime
             }
           }
+          
           this.startTimeWork = this.startTimeWork
             ? this.startTimeWork
             : starrShiftType2;

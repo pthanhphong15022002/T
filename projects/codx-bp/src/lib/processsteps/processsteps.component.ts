@@ -87,7 +87,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.dataObj = {processID : this.process?.recID} ;
 
     this.dataObj = {processID : this.recIDProcess}   //tesst
-    
+
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null)
     if(! this.dataObj?.processID){
@@ -203,7 +203,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
         [
-          this.view.dataService.dataSelected,
           'add',
           this.titleAction,
           this.stepType,
@@ -249,7 +248,31 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     });
   }
 
-  edit(data) {}
+  edit(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfc.openSide(
+          PopupAddProcessStepsComponent,
+          ['edit', this.titleAction,this.view.dataService.dataSelected?.stepType],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+        });
+      });
+  }
 
   copy(data) {}
 

@@ -27,7 +27,6 @@
     .view-details-content {
         // max-width: 1200px;
         // margin: 0 auto;
-        border: 1px aqua solid;
         margin: 0 20px;
     }
 
@@ -58,4 +57,18 @@
     .add-text-note {
         padding-right: 15px;
     }
+}
+
+/***/
+.popup-task-detail {
+    codx-views>.container-fluid {
+        height: calc(100vh - 250px) !important;
+    }
+
+    .toolbar {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+
 }

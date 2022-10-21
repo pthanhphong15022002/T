@@ -114,10 +114,10 @@ export class TMMeetingsComponent
 
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.api.execSv('CO',
-      'CO',
-      'MeetingsBusiness',
-      'SetAutoStatusMeetingAsync').subscribe();
+    // this.api.execSv('CO',
+    //   'CO',
+    //   'MeetingsBusiness',
+    //   'SetAutoStatusMeetingAsync').subscribe();
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {

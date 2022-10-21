@@ -6,7 +6,24 @@
   [autoLoad]="false"
   >
 </codx-views>
+<div class="more-function">
+  <div class="d-flex flex-column">
+      <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+      <span class="postnews mt-3" *ngIf="userPermission && userPermission.create">
+          <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+          <div class="d-flex btn-postnews">
+
+              <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
+                      class="icon-video_call fs-1"></i></a>
+              <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
+                      class="icon-post_add fs-1"></i></a>
+          </div>
+      </span>
+  </div>
+</div>
+
 <ng-template #panelContent>
+  
     <div class="row">
         <div class="col-8">
           <div class="row fw-bolder er text-primary fs-3 mb-5">
