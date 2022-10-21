@@ -1,26 +1,14 @@
-<codx-views #view 
-entityName="HR_Employees" 
-idField="employeeID" 
-[views]="views"
-[viewActiveType]="'16'"
-[autoLoad]="false"
->
+<codx-views #view entityName="HR_Employees" idField="employeeID" [views]="views" [viewActiveType]="'16'"
+  [autoLoad]="false">
 </codx-views>
 
 <ng-template #panelContent>
   <div class="page-pw h-100">
-    <div class="pw-profile" 
-      style="background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
+    <div class="pw-profile" style="background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
       ">
       <div class="d-flex align-items-center avatar">
-        <codx-img 
-          class="me-4 pic-emloyee" 
-          [funcId]="functionID"
-          [width]="100" 
-          [objectId]="employeeInfo?.employeeID"
-          [objectType]="'HR_Employees'" 
-          [objectName]="employeeInfo?.employeeName"
-          [isAllowEdit]="true" 
+        <codx-img class="me-4 pic-emloyee" [funcId]="functionID" [width]="100" [objectId]="employeeInfo?.employeeID"
+          [objectType]="'HR_Employees'" [objectName]="employeeInfo?.employeeName" [isAllowEdit]="true"
           [updateDirect]="true">
         </codx-img>
         <div class="d-flex flex-column">
@@ -56,7 +44,7 @@ idField="employeeID"
             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
               <ng-container *ngFor="let item of moreFunc">
                 <codx-button ngbDropdownItem>
-                  <span (click)="scrollToElement(item.functionID)" >{{
+                  <span (click)="scrollToElement(item.functionID)">{{
                     item.defaultName
                     }}</span>
                 </codx-button>
@@ -65,10 +53,9 @@ idField="employeeID"
           </div>
         </div>
 
-        <div class="pw-content w-100 pw-lg hover-scroll-y" data-kt-scroll="true"
-          data-kt-scroll-activate="{default: true}" data-kt-scroll-max-height="auto"
-          data-kt-scroll-dependencies=".pw-profile,.pw-menu" data-kt-scroll-wrappers=".employee-container"
-          data-kt-scroll-offset="0px">
+        <div class="pw-content w-100 pw-lg scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-max-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+          data-kt-scroll-wrappers=".employee-container" data-kt-scroll-offset="0px">
           <div class="user-content flex-row-fluid" (sectionChange)="onSectionChange($event)">
             <ng-container>
               <!-- thong tin chung -->
@@ -525,38 +512,29 @@ idField="employeeID"
                     <span class="icon-edit icon-16"></span>
                   </a>
                 </div>
-                <div class="border rounded-2 p-6" >
+                <div class="border rounded-2 p-6">
                   <div class="row" *ngIf="skillEmployee">
                     <div class="col-6 pe-4">
-                        <ng-container *ngFor="let data of skillEmployee">
-                          <div>
-                            <div class="fw-bold text-dark mb-1">
-                              {{ data.competenceName }}
-                            </div>
-                            <div class="bg-success-o-60">
-                                <ng-container *ngIf="parameter">
-                                  <ejs-slider
-                                    [type]="minType" 
-                                    [min]="0" 
-                                    [max]="parameter.maxLevelSkill? parameter.maxLevelSkill : 10 "
-                                    [value]="data.valueX"
-                                    [readonly]="true" 
-                                    >
-                                  </ejs-slider>
-                                </ng-container>
-                            </div>
+                      <ng-container *ngFor="let data of skillEmployee">
+                        <div>
+                          <div class="fw-bold text-dark mb-1">
+                            {{ data.competenceName }}
                           </div>
-                        </ng-container>
+                          <div class="bg-success-o-60">
+                            <ng-container *ngIf="parameter">
+                              <ejs-slider [type]="minType" [min]="0"
+                                [max]="parameter.maxLevelSkill? parameter.maxLevelSkill : 10 " [value]="data.valueX"
+                                [readonly]="true">
+                              </ejs-slider>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </ng-container>
                     </div>
-                    <div class="col-6" *ngIf="skillEmployee" >
-                      <ejs-chart
-                        [primaryXAxis]="primaryXAxis"
-                        [primaryYAxis]="primaryYAxis">
+                    <div class="col-6" *ngIf="skillEmployee">
+                      <ejs-chart [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis">
                         <e-series-collection>
-                          <e-series
-                            [dataSource]="skillEmployee" 
-                            name="Employee" type="Radar"
-                            xName="competenceName" 
+                          <e-series [dataSource]="skillEmployee" name="Employee" type="Radar" xName="competenceName"
                             yName="valueX">
                           </e-series>
                         </e-series-collection>
@@ -565,27 +543,20 @@ idField="employeeID"
                   </div>
                   <div class="row">
                     <ng-container *ngIf="editMode">
-                      <div class="col-xl-4 col-lg-4 col-md-4 mb-4" >
+                      <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
                         <button class="btn rounded-2 bg-light bg-gradient border" (click)="clickOpenPopupAddSkill()">
                           <span class="icon-add icon-18"></span>
-                          <span class="text-primary" >
+                          <span class="text-primary">
                             <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
                             </codx-label>
                           </span>
                         </button>
                       </div>
                       <ng-container *ngIf="showCBB">
-                        <codx-combobox-popup
-                          comboboxName="Skills"
-                          field="skill"
-                          [multiple]="true"
-                          [width]="width"
-                          [height]="height"
-                          (clickSave)="saveAddSkill($event)"
-                          title="Kỹ năng"
-                        >
+                        <codx-combobox-popup comboboxName="Skills" field="skill" [multiple]="true" [width]="width"
+                          [height]="height" (clickSave)="saveAddSkill($event)" title="Kỹ năng">
                         </codx-combobox-popup>
-                      </ng-container>                      
+                      </ng-container>
                     </ng-container>
                   </div>
                 </div>
@@ -615,7 +586,7 @@ idField="employeeID"
                   <div class="user-process process-v swiper-wrapper">
                     <ng-container swiperSlide *ngIf="editMode">
                       <ng-container>
-                        <div class="col-xl-4 col-lg-4 col-md-4 mb-4" >
+                        <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
                           <div class="d-flex">
                             <div class="d-flex align-items-center user-item add-process">
                               <span class="icon-add icon-18"></span>
@@ -625,7 +596,7 @@ idField="employeeID"
                               </a>
                             </div>
                           </div>
-                        </div>                      
+                        </div>
                       </ng-container>
                     </ng-container>
 
