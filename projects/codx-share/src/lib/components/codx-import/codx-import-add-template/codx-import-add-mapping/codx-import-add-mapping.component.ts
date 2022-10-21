@@ -683,7 +683,8 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
                 var result = this.grid.dataSource;
                 for (var i = 0; i < (result as any).length; i++) {
                   delete result[i].recID;
-                  result[i].sessionID = this.mappingTemplate;
+                  debugger;
+                  result[i].sessionID = item2?.recID;
                   result[i].mappingTemplate =
                     '00000000-0000-0000-0000-000000000000';
                 }
