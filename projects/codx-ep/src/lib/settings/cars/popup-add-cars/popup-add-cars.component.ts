@@ -83,6 +83,7 @@ export class PopupAddCarsComponent extends UIComponent {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
+        device.icon = item.icon;        
         if (!this.isAdd) {
           this.data.equipments.forEach((item) => {
             if (item.equipmentID == device.id) {
@@ -111,7 +112,7 @@ export class PopupAddCarsComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 430);
+    var dialog = this.callfc.openForm(template, '', 550, 350);
     this.detectorRef.detectChanges();
   }
 
