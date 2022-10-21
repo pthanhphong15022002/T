@@ -601,7 +601,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   onSaveProcessTemplateID(dialogTmp: DialogRef) {
     if (this.processID != '') {
-      if (!this.isAddNew || this.isSaved) {
+      if ((!this.isAddNew || this.isSaved) && this.eSign == true) {
         this.notify.alertCode('ES002').subscribe((x) => {
           if (x.event.status == 'Y') {
             this.esService.deleteStepByTransID(this.data.recID).subscribe();
