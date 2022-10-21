@@ -1140,7 +1140,7 @@ export class CodxEsService {
       'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
-      'UpdateApprovalTransStatusAsync',
+      'SignAsync',
       data
     );
   }
