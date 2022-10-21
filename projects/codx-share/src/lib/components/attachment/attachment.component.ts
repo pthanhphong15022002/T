@@ -492,13 +492,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   getFolderPath() {
-    debugger;
     if (this.folderId == '') {
       this.folderService
         .getFoldersByFunctionID(this.functionID)
         .subscribe(async (res) => {
           if (res != null) {
-            debugger;
             this.listRemoteFolder = res;
             this.atSV.currentNode = '';
             this.atSV.folderId.next(res[0].folderId);
@@ -2806,7 +2804,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   public async handleFileInput(files: any[], drag = false) {
-    debugger;
     var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);

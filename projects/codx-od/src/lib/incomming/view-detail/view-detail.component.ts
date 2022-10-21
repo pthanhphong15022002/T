@@ -799,7 +799,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       }
       //Gửi duyệt
       case 'ODT201': {
-        debugger;
         if(datas.bsCategory)
         {
           //Có thiết lập bước duyệt
@@ -862,7 +861,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteDispatchByIDAsync';
-    opt.data = this.view.dataService.dataSelected;
+    opt.data = [this.view.dataService.dataSelected,this.view.formModel.entityName];
     return true;
   }
   checkOpenForm(val: any) {

@@ -41,7 +41,6 @@ export class PopupGroupComponent implements OnInit {
   selectUser(user) {
     /* this.userSelected = user;
     this.change.detectChanges(); */
-    debugger;
   } 
 
   loadData() {
@@ -59,7 +58,6 @@ export class PopupGroupComponent implements OnInit {
           'ERM.Business.WP',
           'ChatBusiness',
           'MockSearchUsers', options).subscribe((res) => {
-              debugger;
               if (res) 
               {
                 this.users = res[0];
@@ -108,11 +106,9 @@ export class PopupGroupComponent implements OnInit {
   clickCreateGroup(){
     
     this.data.members = this.userSelected;
-    debugger
     this.api.execSv("WP","ERM.Business.WP","ChatBusiness","AddGroupChatAsync",this.data).subscribe((res:boolean) => {
       if(res){
         this.notificationsService.notifyCode("CHAT001");
-        debugger
 
       }
     });
