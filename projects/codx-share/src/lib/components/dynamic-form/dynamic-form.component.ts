@@ -74,7 +74,7 @@ export class DynamicFormComponent extends UIComponent {
         model: {
           resources: this.columnsGrid,
           template2: this.morefunction,
-          frozenColumns: 1,
+          // frozenColumns: 1,
         },
       },
     ];
