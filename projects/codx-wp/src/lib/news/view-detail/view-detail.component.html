@@ -61,8 +61,8 @@
 
                             </div>
                             <ng-contianer *ngIf="data?.newsType == NEWSTYPE.VIDEO;else news">
-                                <wp-video [ObjectID]="data.recID" [ObjectType]="'WP_News'">
-                                </wp-video>
+                                <wp-view-video [ObjectID]="data.recID" [ObjectType]="'WP_News'">
+                                </wp-view-video>
                             </ng-contianer>
                             <ng-template #news>
                                 <div class="py-3" [innerHTML]="data?.subContent"></div>

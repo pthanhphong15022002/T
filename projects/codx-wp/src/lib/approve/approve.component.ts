@@ -277,7 +277,8 @@ export class ApproveComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        if (this.entityName == "WP_News") {
+        if (this.entityName == "WP_News") 
+        {
           option.IsFull = true;
           this.callFuc.openForm(PopupEditComponent, 'Cập nhật bài viết', 0, 0, this.funcID, data, '', option);
         }
