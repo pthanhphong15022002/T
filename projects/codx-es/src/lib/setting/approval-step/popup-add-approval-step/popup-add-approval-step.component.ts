@@ -104,7 +104,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.dataEdit = data?.data.dataEdit;
     this.defaultSignType = data?.data?.signatureType;
 
-    this.allowEditAreas = data?.data?.signatureType;
+    this.allowEditAreas = data?.data?.allowEditAreas;
     this.confirmControl = data?.data?.confirmControl;
 
     this.eSign = data?.data?.eSign ?? false;
