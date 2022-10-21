@@ -203,14 +203,18 @@
           <!-- vân chỉnh ở chỗ này giúp e cái checkbox -->
 
           <div class="w-30px setting-btnright ms-2">
-            <a [routerLink]="
-            data.reference ? '../../../' + data.reference : 'detail'
-          " [state]="{
-            keepPage: true,
-            setting: setting | group: data.recID:'2',
-            function: function,
-            dataValue: dataValue[data.fieldName]
-          }" *ngIf="data.displayMode === '1'">
+            <a
+              [routerLink]="
+                data.reference ? '../../../' + data.reference : 'detail'
+              "
+              [state]="{
+                keepPage: true,
+                setting: setting | group: data.recID:'2',
+                function: function,
+                dataValue: dataValue[data.fieldName]
+              }"
+              *ngIf="data.displayMode === '1'"
+            >
               <span class="w-30px d-flex justify-content-center"
                 ><span class="icon-keyboard_arrow_right icon-22"></span></span
             ></a>
@@ -257,6 +261,7 @@
                 [isAllowEdit]="true"
                 [objectId]="data.recID"
                 [objectType]="function.entityName"
+                [funcId]="function.functionID"
               ></codx-img>
             </ng-container>
           </div>

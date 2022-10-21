@@ -193,67 +193,156 @@ export class PopupSignForApprovalComponent extends UIComponent {
       dialogADR.closed.subscribe((res) => {
         console.log('res.event', res.event);
         if (res.event) {
-          this.pdfView
-            .signPDF(mode, this.dialogSignFile.value.comment)
-            .then((value) => {
-              if (value) {
-                let result = {
-                  result: true,
-                  mode: mode,
-                };
-                this.notify.notifyCode('RS002');
-                this.canOpenSubPopup = false;
-                this.dialog && this.dialog.close(result);
-              } else {
-                this.canOpenSubPopup = false;
-                let result = {
-                  result: false,
-                  mode: mode,
-                };
-                this.notify.notifyCode('SYS021');
-                this.dialog && this.dialog.close(result);
+          switch (this.pdfView.signerInfo.signType) {
+            case '2': {
+              this.pdfView
+                .signPDF(mode, this.dialogSignFile.value.comment)
+                .then((value) => {
+                  if (value) {
+                    let result = {
+                      result: true,
+                      mode: mode,
+                    };
+                    this.notify.notifyCode('RS002');
+                    this.canOpenSubPopup = false;
+                    this.dialog && this.dialog.close(result);
+                  } else {
+                    this.canOpenSubPopup = false;
+                    let result = {
+                      result: false,
+                      mode: mode,
+                    };
+                    this.notify.notifyCode('SYS021');
+                    this.dialog && this.dialog.close(result);
+                  }
+                });
+              break;
+            }
+
+            case '1': {
+              switch (this.signerInfo.supplier) {
+                //usb
+                case '5': {
+                  this.esService
+                    .getSignContracts(
+                      this.sfRecID,
+                      this.pdfView.curFileID,
+                      this.pdfView.curFileUrl,
+                      this.stepNo
+                    )
+                    .subscribe(async (lstContract) => {
+                      if (lstContract) {
+                        let finalContract = await this.signContract(
+                          lstContract,
+                          0,
+                          this.dialogSignFile.value.comment
+                        );
+                      }
+                    });
+                  break;
+                }
               }
-            });
+              break;
+            }
+          }
         }
       });
     } else {
-      this.pdfView.signPDF(mode, '').then((value) => {
-        if (value) {
-          let result = {
-            result: true,
-            mode: mode,
-          };
-          this.notify.notifyCode('RS002');
-          this.canOpenSubPopup = false;
-          this.dialog && this.dialog.close(result);
-        } else {
-          this.canOpenSubPopup = false;
-          let result = {
-            result: false,
-            mode: mode,
-          };
-          this.notify.notifyCode('SYS021');
-          this.dialog && this.dialog.close(result);
+      switch (this.pdfView.signerInfo.signType) {
+        case '2': {
+          this.pdfView.signPDF(mode, '').then((value) => {
+            if (value) {
+              let result = {
+                result: true,
+                mode: mode,
+              };
+              this.notify.notifyCode('RS002');
+              this.canOpenSubPopup = false;
+              this.dialog && this.dialog.close(result);
+            } else {
+              this.canOpenSubPopup = false;
+              let result = {
+                result: false,
+                mode: mode,
+              };
+              this.notify.notifyCode('SYS021');
+              this.dialog && this.dialog.close(result);
+            }
+          });
+          break;
         }
-      });
+
+        case '1': {
+          switch (this.signerInfo.supplier) {
+            //usb
+            case '5': {
+              this.esService
+                .getSignContracts(
+                  this.sfRecID,
+                  this.pdfView.curFileID,
+                  this.pdfView.curFileUrl,
+                  this.stepNo
+                )
+                .subscribe(async (lstContract) => {
+                  if (lstContract) {
+                    let finalContract = await this.signContract(
+                      lstContract,
+                      0,
+                      this.dialogSignFile.value.comment
+                    );
+                  }
+                });
+              break;
+            }
+          }
+          break;
+        }
+      }
     }
   }
 
   clickUSB() {
-    let signatureBase64 = '';
-    let x = 0;
-    let y = 0;
-    let w = 0;
-    let h = 0;
-    let page = 0;
+    this.esService
+      .getSignContracts(
+        this.sfRecID,
+        this.pdfView.curFileID,
+        this.pdfView.curFileUrl,
+        this.stepNo
+      )
+      .subscribe(async (lstContract) => {
+        if (lstContract) {
+          let finalContract = await this.signContract(lstContract, 0, '');
+        }
+      });
+  }
 
-    this.esService.getPDFBase64(this.pdfView.curFileID).subscribe((data) => {
-      this.http
-        .post('http://localhost:6543/DigitalSignature/Sign', data)
-        .subscribe((o) => {
-          console.log(o);
-        });
-    });
+  async signContract(lstContract, idx: number, comment) {
+    //chua ki xong
+    this.http
+      .post('http://localhost:6543/DigitalSignature/Sign', lstContract[idx])
+      .subscribe((res: any) => {
+        idx += 1;
+        //ky xong
+        if (idx == lstContract.length) {
+          this.esService
+            .saveUSBSignPDF(
+              this.transRecID,
+              this.sfRecID,
+              this.pdfView.curFileID,
+              res.fileBase64ContentSigned,
+              comment
+            )
+            .subscribe((saveEvent) => {
+              console.log('save', saveEvent);
+
+              return lstContract;
+            });
+        } else {
+          lstContract[idx - 1] = res;
+          lstContract[idx].fileBase64Content = res.fileBase64ContentSigned;
+          lstContract = this.signContract(lstContract, idx, comment);
+        }
+      });
   }
 
   changeActiveOpenPopup(e) {
