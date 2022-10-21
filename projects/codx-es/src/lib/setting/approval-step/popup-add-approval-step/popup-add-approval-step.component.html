@@ -115,7 +115,7 @@
           [imageId]="item.approver"
           [subTitle]=""
           [title]="item.name"
-          [subTitle]="item.position ?? 'Vị trí công việc'"
+          [subTitle]="item.position ?? ''"
           [imageObjType]="'AD_Users'"
           [imageWidth]="35"
           [titleLine]="3"
@@ -194,16 +194,16 @@
         #checkbox
         type="switch"
         id="switch"
-        [checked]="data.editSignAreas"
+        [checked]="allowEditAreas"
         labelPosition="After"
-        field="editSignAreas"
+        field="allowEditAreas"
         class="test-switch"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
       <label class="ms-2">
         <codx-label
-          fiedName="EditSignAreas"
+          fiedName="AllowEditAreas"
           [formModel]="formModel"
         ></codx-label>
       </label>

@@ -389,7 +389,7 @@
                             ? approver.fullName
                             : (approver.roleType | vll: 'ES014':'text' | async)
                         "
-                        [subTitle]="approver.position ?? 'Vị trí công việc'"
+                        [subTitle]="approver.position ?? ''"
                         [baseHeaderRightTmp]="footer"
                         [dataItem]="approver"
                       >

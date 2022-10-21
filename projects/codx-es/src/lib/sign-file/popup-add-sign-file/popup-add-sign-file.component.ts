@@ -199,10 +199,6 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.processTab >= 3) {
-      this.mssgDelete = 'ES003';
-      this.viewApprovalStep?.updateMssgDelete('ES003');
-    }
     ScrollComponent.reinitialization();
   }
 
@@ -270,6 +266,11 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.data = res;
                     if (this.data?.files?.length > 0) {
                       this.eSign = this.data.files[0].eSign;
+                      if (this.data.files[0].areas?.length > 0) {
+                        if (this.eSign == true) {
+                          this.mssgDelete = 'ES003';
+                        }
+                      }
                     }
                     if (this.data?.files?.length == 1) {
                       let title = JSON.parse(
