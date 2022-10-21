@@ -776,33 +776,31 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
 
-  validateStartEndTime(tmpStartTime: any, tmpEndTime: any) {
-    if (tmpStartTime && tmpStartTime) {
-      let beginHour = tmpStartTime.split(':')[0];
-      let beginMinute = parseInt(tmpStartTime.split(':')[1]);
-      let endHour = parseInt(tmpEndTime.split(':')[0]);
-      let endMinute = parseInt(tmpEndTime.split(':')[1]);
+  validateStartEndTime(StartTime: any, EndTime: any) {
+    if (StartTime!=null && StartTime!=null) {
+      let tempStartTime = StartTime.split(':');
+      let tempEndTime = EndTime.split(':');
       let tmpDay = new Date(this.data?.bookingOn);
 
-      if (!isNaN(beginHour) && !isNaN(beginMinute)) {
+      if (!isNaN(tempStartTime)) {
         this.data.startDate = new Date(
           tmpDay.getFullYear(),
           tmpDay.getMonth(),
           tmpDay.getDate(),
-          beginHour,
-          beginMinute,
+          tempStartTime[0],
+          tempStartTime[1],
           0
         );
       }
 
-      if (!isNaN(endHour) && !isNaN(endMinute)) {
+      if (!isNaN(tempEndTime)) {
         let tmpDay = new Date(this.data?.bookingOn);
         this.data.endDate = new Date(
           tmpDay.getFullYear(),
           tmpDay.getMonth(),
           tmpDay.getDate(),
-          endHour,
-          endMinute,
+          tempEndTime[0],
+          tempEndTime[1],
           0
         );
       }
