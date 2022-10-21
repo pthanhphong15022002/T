@@ -14,6 +14,10 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout.component';
 import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { AddSurveyComponent } from './add-survey/add-survey.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
 
 export const routes: Routes = [
   {
@@ -21,8 +25,8 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'home/:funcID',
-        // component: '',
+        path: 'surveys/:funcID',
+        component: AddSurveyComponent,
       },
     ],
   },
@@ -30,6 +34,8 @@ export const routes: Routes = [
 
 const Component: Type<any>[] = [
   LayoutComponent,
+  HomeComponent,
+  AddSurveyComponent,
 ];
 
 @NgModule({
@@ -42,6 +48,8 @@ const Component: Type<any>[] = [
     CodxShareModule,
     CoreModule,
     NgbModule,
+    InPlaceEditorModule,
+    DragDropModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],

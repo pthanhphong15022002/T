@@ -8,8 +8,8 @@ import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
 export class LayoutComponent extends LayoutBaseComponent {
   module = 'SV';
   dialog!: DialogRef;
-  override aside = true;
-  override asideFixed = true;
+  override aside = false;
+  override asideFixed = false;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   constructor(inject: Injector) {
     super(inject);
