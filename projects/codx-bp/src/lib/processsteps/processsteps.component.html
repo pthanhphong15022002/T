@@ -1,36 +1,13 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [className]="className"
-  [method]="method"
-  [views]="views"
-  [button]="button"
-  (buttonClick)="click($event)"
-  [dataObj]="dataObj"
-  [moreFuncs]="moreFuncs"
-  [autoLoad]="true"
-  [idField]="idField"
-  (onDragDrop)="onDragDrop($event)"
-  (viewChanged)="viewChanged($event)"
->
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [className]="className" [method]="method" [views]="views" [button]="button" (buttonClick)="click($event)"
+  [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" [idField]="idField" (onDragDrop)="onDragDrop($event)"
+  (viewChanged)="viewChanged($event)">
 </codx-views>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img
-    cardCss="border h-100"
-    imageObjType="AD_Users"
-    (clickMF)="clickMF($event, data)"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
-    [typeMF]="'hover'"
-    [title]="data?.stepName"
-    [formModel]="view.formModel"
-    [setting]="setting"
-    [footer]="cardImgFooter"
-    [dataItem]="data"
-  >
+  <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2" [typeMF]="'hover'" [title]="data?.stepName"
+    [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter" [dataItem]="data">
   </codx-card-img>
 </ng-template>
 
@@ -47,24 +24,20 @@
         <div class="d-flex flex-wrap mb-2">
           <div class="d-flex align-items-center me-4">
             <span class="fw-bolb">
-              <codx-label
-                name="lblVersionNo"
-                [formName]="'ProcessRevisions'"
-                [gridViewName]="'grvProcessRevisions'"
-                default="Phiên bản:"
-              >
+              <codx-label name="lblVersionNo" [formName]="'ProcessRevisions'" [gridViewName]="'grvProcessRevisions'"
+                default="Phiên bản:">
               </codx-label>
             </span>
             <span class="text-dark" #versionNo>{{
               process?.versionNo
-                | formatvalue
-                  : view.formModel
-                  : "versionNo"
-                  : versionNo
-                  : "ProcessRevisions"
-                  : "grvProcessRevisions"
-                | async
-            }}</span>
+              | formatvalue
+              : view.formModel
+              : "versionNo"
+              : versionNo
+              : "ProcessRevisions"
+              : "grvProcessRevisions"
+              | async
+              }}</span>
           </div>
           <div class="d-flex align-items-center">
             <span class="fw-bolb">
@@ -73,14 +46,14 @@
             </span>
             <span class="text-dark" #activedOn>
               {{
-                process?.activedOn
-                  | formatvalue
-                    : view.formModel
-                    : "activedOn"
-                    : activedOn
-                    : "Processes"
-                    : "grvProcesses"
-                  | async
+              process?.activedOn
+              | formatvalue
+              : view.formModel
+              : "activedOn"
+              : activedOn
+              : "Processes"
+              : "grvProcesses"
+              | async
               }}
             </span>
           </div>
@@ -88,94 +61,62 @@
         <div class="d-flex flex-wrap mb-2">
           <div class="d-flex align-items-center me-4">
             <span>
-              <codx-label
-                name="lblPhases"
-                default="Theo dõi quá trình tuyển dụng từ khi "
-              ></codx-label>
+              <codx-label name="lblPhases" default="Theo dõi quá trình tuyển dụng từ khi "></codx-label>
               &nbsp;
             </span>
             <ng-container *ngFor="let item of listPhaseName; let i = index">
-              <span>{{ item }}</span
-              ><span
-                *ngIf="i < listPhaseName.length - 1"
-                class="text-danger"
-                style="font-size: 20px"
-              >
+              <span>{{ item }}</span><span *ngIf="i < listPhaseName.length - 1" class="text-danger"
+                style="font-size: 20px">
                 <codx-label name="lblIcon" default=">"></codx-label>
               </span>
             </ng-container>
           </div>
         </div>
       </div>
+
       <!-- drop -->
       <ng-container>
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
-          <ng-container *ngFor="let item of dataTreeProcessStep">
-            <!-- <div class="card-survey">
-              <div
-                class="col-lg-8 control-section inplace-editor-control-section form-layout"
-                #formlayout
-                id="inplace-editor-control"
-              >
-                <div class="content-wrapper">
-                  <form id="formId" class="form-horizontal example-box"> -->
-            <div class="mb-5" cdkDrag>
-              <div class="card card-steplist">
-                <div
-                  class="steplist-hearder border border-gray-200 rounded px-6 py-4"
-                >
-                  <codx-temp-full
-                    [titleTmp]="titleTmp"
-                    [desc]="item?.memo"
-                    [footer]="footerBase"
-                    [dataItem]="item"
-                  >
-                  </codx-temp-full>
-                </div>
-                <div cdkDropList class="list" (cdkDropListDropped)="dropStepChild($event, item.recID)">
+          <!-- <ng-container *ngFor="let item of dataTreeProcessStep"> -->
+          <div class="mb-5" *ngFor="let item of dataTreeProcessStep" cdkDrag>
+            <div class="card card-steplist">
+              <div class="steplist-hearder border border-gray-200 rounded px-6 py-4">
+                <codx-temp-full [titleTmp]="titleTmp" [desc]="item?.memo" [footer]="footerBase" [dataItem]="item">
+                </codx-temp-full>
+              </div>
                 <ng-container *ngIf="item?.items?.length > 0">
-                  <ng-container *ngFor="let item1 of item.items">
-                    <div id="kt_docs_card_collapsible" class="collapse show">
-                      <div class="card-body p-0">
-                        <div class="steplist ps-6 pt-4">
-                          <div class="steplist-item step-danger rounded p-4">
-                            <codx-temp-full
-                              [titleTmp]="titleTmp"
-                              [desc]="item1?.memo"
-                              [dataItem]="item1"
-                            >
-                            </codx-temp-full>
+                  <div cdkDropList class="list" (cdkDropListDropped)="dropStepChild($event, item.recID)">
 
-                            <ng-container *ngIf="item?.items?.length > 0">
-                              <ng-container *ngFor="let item2 of item1.items">
-                                <div
-                                  class="steplist-item step-items rounded p-4"
-                                >
-                                  <codx-temp-full
-                                    cardCss="mb-5"
-                                    [titleTmp]="titleTmp"
-                                    [desc]="item2?.memo"
-                                    [footer]="footerBase"
-                                    [dataItem]="item2"
-                                  >
-                                  </codx-temp-full>
-                                </div>
-                              </ng-container>
+                  <!-- <ng-container *ngFor="let item1 of item.items"> -->
+                  <div id="kt_docs_card_collapsible" class="collapse show" *ngFor="let item1 of item.items" cdkDrag>
+                    <div class="card-body p-0">
+                      <div class="steplist ps-6 pt-4 ">
+                        <!-- <div class="example-handle" cdkDragHandle>
+                          <span class="icon-reorder"></span>
+                        </div> -->
+                        <div class="steplist-item step-danger rounded p-4">
+                          <codx-temp-full [titleTmp]="titleTmp" [desc]="item1?.memo" [dataItem]="item1">
+                          </codx-temp-full>
+
+                          <ng-container *ngIf="item?.items?.length > 0">
+                            <ng-container *ngFor="let item2 of item1.items">
+                              <div class="steplist-item step-items rounded p-4">
+                                <codx-temp-full cardCss="mb-5" [titleTmp]="titleTmp" [desc]="item2?.memo"
+                                  [footer]="footerBase" [dataItem]="item2">
+                                </codx-temp-full>
+                              </div>
                             </ng-container>
-                          </div>
+                          </ng-container>
                         </div>
                       </div>
                     </div>
-                  </ng-container>
+                  </div>
+                </div>
+                  <!-- </ng-container> -->
                 </ng-container>
-                </div>
-              </div>
             </div>
-            <!-- </form>
-                </div>
-              </div> -->
-            <!-- </div> -->
-          </ng-container>
+          </div>
+          <!-- </ng-container> -->
         </div>
       </ng-container>
     </div>
@@ -183,24 +124,18 @@
 </ng-template>
 
 <ng-template #titleTmp let-data>
-  <div
-    class="fw-bold line-clamp line-clamp-1 {{
+  <div class="fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
-    }}"
-  >
-    <codx-label name="lblStepNo" default="Bước"></codx-label
-    >{{ " " + data?.stepNo }}
-    <codx-label name="lblSplit" default=":"></codx-label
-    >{{ " " + (data?.stepType == "P" ? data?.stepName : data?.stepName2) }}
+    }}">
+    <codx-label name="lblStepNo" default="Bước"></codx-label>{{ " " + data?.stepNo }}
+    <codx-label name="lblSplit" default=":"></codx-label>{{ " " + (data?.stepType == "P" ? data?.stepName :
+    data?.stepName2) }}
   </div>
-  <div class="example-handle" cdkDragHandle>
-      <span class="icon-reorder"></span>
-    </div>
+  <!-- <div class="example-handle" cdkDragHandle>
+    <span class="icon-reorder"></span>
+  </div> -->
   <div>
-    <span
-      class="text-danger"
-      *ngIf="data.stepType == 'P' || data.stepType == 'A'"
-    >
+    <span class="text-danger" *ngIf="data.stepType == 'P' || data.stepType == 'A'">
       <span>{{ data?.duration }} </span>
       <span *ngIf="data.stepType == 'P'">
         <codx-label name="lblDay" default="ngày"></codx-label>
@@ -209,80 +144,43 @@
         <codx-label name="lblDuration" default="h/UV"></codx-label>
       </span>
     </span>
-    <codx-mfunc
-      type="hover"
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      [isBookMark]="false"
-      [dataItem]="data"
-    >
+    <codx-mfunc type="hover" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
+      [dataItem]="data">
     </codx-mfunc>
   </div>
 </ng-template>
 
 <ng-template #footerBase let-data>
   <ng-container [ngTemplateOutlet]="content"></ng-container>
-  <div
-    *ngIf="
+  <div *ngIf="
       data?.attachments > 0 && data.stepType != 'P' && data.stepType != 'A'
-    "
-    class="d-flex align-items-center justify-content-between mt-4"
-  >
+    " class="d-flex align-items-center justify-content-between mt-4">
     <div class="d-flex align-items-center mb-2">
       <div class="fw-bold text-primary">
-        <codx-label
-          fiedName="lblAttachments"
-          [formModel]="view.formModel"
-          default="Tài liệu "
-        >
+        <codx-label fiedName="lblAttachments" [formModel]="view.formModel" default="Tài liệu ">
         </codx-label>
       </div>
     </div>
   </div>
 
-  <codx-attachment
-    #attachment
-    [objectType]="view.formModel.entityName"
-    [objectId]="data?.recID"
-    hideFolder="1"
-    hideImageUpload="1"
-    hideImageThumb="0"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="inline"
-    allowMultiFile="1"
-    [formModel]="view.formModel"
-    [functionID]="funcID"
-    displayThumb="full"
-  >
+  <codx-attachment #attachment [objectType]="view.formModel.entityName" [objectId]="data?.recID" hideFolder="1"
+    hideImageUpload="1" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+    [formModel]="view.formModel" [functionID]="funcID" displayThumb="full">
   </codx-attachment>
 
   <div class="mt-5">
-    <codx-imgs
-      [width]="25"
-      objectId="ADMIN;HPHOA;HPHOA1;PMNHI"
-      objectType="AD_Users"
-      [numberImages]="3"
-    >
+    <codx-imgs [width]="25" objectId="ADMIN;HPHOA;HPHOA1;PMNHI" objectType="AD_Users" [numberImages]="3">
     </codx-imgs>
   </div>
 
   <ng-template #content>
-    <ng-container
-      *ngIf="data?.reference != null && data?.reference.split(';').length > 0"
-    >
+    <ng-container *ngIf="data?.reference != null && data?.reference.split(';').length > 0">
       <div class="Activities mb-3">
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.reference.split(';')">
             <div>
-              <codx-input
-                type="checkbox"
-                [label]="item"
-                [checked]="false"
-                labelPosition="After"
-                [disabled]="false"
-                class="test-check me-4 mb-2"
-              ></codx-input>
+              <codx-input type="checkbox" [label]="item" [checked]="false" labelPosition="After" [disabled]="false"
+                class="test-check me-4 mb-2"></codx-input>
             </div>
           </ng-container>
         </div>
@@ -293,10 +191,7 @@
 
 <ng-template #baseHeaderRightTmp let-data>
   <div>
-    <span
-      class="text-danger"
-      *ngIf="data.stepType == 'P' || data.stepType == 'A'"
-    >
+    <span class="text-danger" *ngIf="data.stepType == 'P' || data.stepType == 'A'">
       <span>{{ data?.duration }} </span>
       <span *ngIf="data.stepType == 'P'">
         <codx-label name="lblDay" default="ngày"></codx-label>
@@ -305,13 +200,8 @@
         <codx-label name="lblDuration" default="h/UV"></codx-label>
       </span>
     </span>
-    <codx-mfunc
-      type="hover"
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      [isBookMark]="false"
-      [dataItem]="data"
-    >
+    <codx-mfunc type="hover" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
+      [dataItem]="data">
     </codx-mfunc>
   </div>
 </ng-template>

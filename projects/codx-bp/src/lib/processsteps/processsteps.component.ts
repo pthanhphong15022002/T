@@ -350,7 +350,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   //#endregion
   //view Temp drop
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.dataTreeProcessStep, event.previousIndex, event.currentIndex);
   }
 
   dropStepChild(event: CdkDragDrop<string[]>, parentID) {
