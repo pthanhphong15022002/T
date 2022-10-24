@@ -907,3 +907,7 @@ codx-tag .codx-tag:hover {
     }
   }
 }
+
+[data-kt-aside-minimize=on] .aside:not(:hover) .aside-menu .menu-title {
+  display: none !important;
+}
