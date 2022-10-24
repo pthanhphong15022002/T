@@ -160,6 +160,10 @@ export class TaskExtendsComponent
         ) {
           x.disabled = true;
         }
+        //giao viec bo
+        if (x.functionID == 'SYS005') {
+          x.disabled = true;
+        }
       });
     }
   }
