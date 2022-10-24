@@ -32,7 +32,7 @@
                                     [value]='item.description'>
                                 </ejs-inplaceeditor>
                             </div>
-                        </div>
+                        </div> 
                         <div cdkDropList class="list" (cdkDropListDropped)="dropAnswer($event, item.id)">
                             <div class="box" *ngFor="let x of item.answer" cdkDrag>
                                 <div class="has-action-menu">
