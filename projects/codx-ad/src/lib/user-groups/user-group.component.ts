@@ -110,7 +110,7 @@ export class UserGroupsComponent extends UIComponent {
           .stopUser(data)
           .subscribe((res) => {
             if (res) {
-              this.view.dataService.remove(res).subscribe();
+              // this.view.dataService.remove(res).subscribe();
               this.detectorRef.detectChanges();
             }
           });
