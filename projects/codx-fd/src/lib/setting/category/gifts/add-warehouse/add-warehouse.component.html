@@ -9,7 +9,7 @@
         <div class="form-group mt-3">
             <codx-label name="lblCurrentOnhand" [formModel]="formModel" default="Tồn kho hiện tại"></codx-label>
             <codx-input type="number" class="form-control" placeholder="" formControlName='onhand'
-                [crrValue]="dataUpdate.onhand">
+                [crrValue]="dataUpdate.onhand" [disabled]="true">
             </codx-input>
         </div>
         <div class="form-group mt-3">

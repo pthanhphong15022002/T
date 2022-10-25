@@ -8,7 +8,7 @@
   [data]="approvalTrans"
 >
   <ng-template #body>
-    <div class="reason form-group" *ngIf="mode != 1">
+    <div class="reason form-group" *ngIf="mode != 5">
       <codx-label
         fiedName="ResourceName"
         [formModel]="formModel"
@@ -36,7 +36,7 @@
       </codx-input>
     </div>
 
-    <div class="attachment" *ngIf="mode == 1">
+    <div class="attachment" *ngIf="mode == 5">
       <codx-attachment
         #attachment
         [objectType]="'ES_SignFiles'"
@@ -58,13 +58,13 @@
   <ng-template #footer>
     <div
       [class]="
-        mode == 1
+        mode == 5
           ? 'justify-content-between card-footer d-flex'
           : 'justify-content-end card-footer d-flex'
       "
     >
       <button
-        *ngIf="mode == 1"
+        *ngIf="mode == 5"
         type="button"
         class="btn btn-primary"
         (click)="popupUploadFile()"

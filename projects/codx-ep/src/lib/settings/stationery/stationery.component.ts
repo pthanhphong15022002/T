@@ -84,9 +84,11 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     },
   ];
 
-  constructor(private injector: Injector, 
-    private epService: CodxEpService,    
-    private changeDetectorRef: ChangeDetectorRef,) {
+  constructor(
+    private injector: Injector,
+    private epService: CodxEpService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -216,6 +218,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  changeDataMF(e: any, data: any) {}
+
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
       let dataSelected = this.view.dataService.dataSelected;
@@ -249,26 +253,25 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          let dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddStationeryComponent,
-            [dataSelected, false],
-            option
-          );    
-          this.dialog.closed.subscribe((x) => {
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {
-              });
-            }
-          });     
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let dataSelected = this.view?.dataService?.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          PopupAddStationeryComponent,
+          [dataSelected, false],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (x?.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe((res) => {});
+          }
         });
+      });
   }
 
   delete(data?) {

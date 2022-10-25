@@ -166,6 +166,7 @@ export class EditPatternComponent implements OnInit {
         }
       });
       this.listFile = files;
+      console.log("check listFile", this.listFile)
     }
   }
 
