@@ -116,7 +116,7 @@ export class CalendarNotesComponent
   setColor() {
     // var colorWP: HTMLElement = document.querySelector('.note-content');
     // this.dataPara;
-    // debugger;
+    //
     // if (colorWP) {
     //   colorWP.setAttribute(
     //     'style',

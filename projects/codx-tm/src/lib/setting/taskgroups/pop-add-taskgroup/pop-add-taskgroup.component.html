@@ -108,6 +108,24 @@
           default="Công việc do cá nhân tự tạo được duyệt bởi người giao việc" formName="TaskGroups"
           gridViewName="grvTaskGroups">
         </codx-label>
+        <div *ngIf="
+        this.taskGroups.verifyByType != 'R' &&
+        this.taskGroups.verifyByType != 'P' &&
+        this.taskGroups.verifyByType != 'U'
+      ">
+          <codx-vll [name]="'TM006'" [field]="'verifyControl'" [value]="verifyName" [showText]="true"
+            [showBgColor]="false" class="fw-normal text-gray-500">
+          </codx-vll>
+        </div>
+        <div class="fw-normal text-gray-500" *ngIf="
+        this.taskGroups.verifyByType == 'R' ||
+        this.taskGroups.verifyByType == 'P' ||
+        this.taskGroups.verifyByType == 'U'
+      ">
+          {{verifyName}}
+        </div>
+        <!-- <div class="fw-normal text-gray-500">{{verifyName}}
+        </div> -->
       </div>
     </div>
     <div class="col-4">
@@ -136,6 +154,24 @@
           default="Công việc hoàn tất được đánh giá bởi người giao việc" formName="TaskGroups"
           gridViewName="grvTaskGroups">
         </codx-label>
+        <div *ngIf="
+        this.taskGroups.approveBy != 'R' &&
+        this.taskGroups.approveBy != 'P' &&
+        this.taskGroups.approveBy != 'U'
+      ">
+          <codx-vll [name]="'TM014'" [field]="'approveControl'" [value]="approveName" [showText]="true"
+            [showBgColor]="false" class="fw-normal text-gray-500">
+          </codx-vll>
+        </div>
+        <div class="fw-normal text-gray-500" *ngIf="
+        this.taskGroups.approveBy == 'R' ||
+        this.taskGroups.approveBy == 'P' ||
+        this.taskGroups.approveBy == 'U'
+      ">
+          {{approveName}}
+        </div>
+        <!-- <div class="fw-normal text-gray-500">{{approveName}}
+        </div> -->
       </div>
     </div>
     <div class="col-4">

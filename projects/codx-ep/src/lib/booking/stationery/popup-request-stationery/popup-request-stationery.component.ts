@@ -256,9 +256,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let itemData = this.dialogAddBookingStationery.value;
     this.addQuota();
     this.groupByWareHouse();
-    debugger;
+
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAddNew, null, this.lstStationery, null]; 
+    option.data = [itemData, this.isAddNew, null, this.lstStationery, null];
     return true;
   }
 
@@ -319,8 +319,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   addQuota() {
     this.cart.map((item) => {
-      item.quantity = item?.quantity * this.qtyEmp,
-      this.lstStationery.push(item);
+      (item.quantity = item?.quantity * this.qtyEmp),
+        this.lstStationery.push(item);
     });
 
     return this.lstStationery;

@@ -128,7 +128,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       fontSize: '13',
       fontColor: 'black',
       fontFormat: 'B',
-    }
+    };
   }
 
   onInit(): void {
@@ -156,8 +156,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   add() {
-    this.surveys.title = 'Đăng ký sự kiện';
-    this.surveys.memo = 'Đăng ký sự kiện';
+    this.surveys.title = 'Khảo sát địa điểm team building';
+    this.surveys.memo = 'Mẫu không có mô tả';
     this.api
       .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
         this.surveys,
@@ -165,7 +165,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         this.isModeAdd,
       ])
       .subscribe((res) => {
-        debugger;
         if (res) {
         }
       });
