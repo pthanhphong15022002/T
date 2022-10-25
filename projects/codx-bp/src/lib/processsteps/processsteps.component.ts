@@ -122,54 +122,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       .getListFunctionMenuCreatedStepAsync(this.funcID)
       .subscribe((datas) => {
         var items = [];
-        if(datas && datas.length >0){
-          items =datas ;
+        if (datas && datas.length > 0) {
+          items = datas;
         }
         this.button = {
           id: 'btnAdd',
           items: items,
-          //[
-          //   {
-          //     id: 'P',
-          //     icon: 'icon-list-checkbox',
-          //     text: 'Phase',
-          //   },
-          //   {
-          //     id: 'A',
-          //     icon: 'icon-list-checkbox',
-          //     text: 'Activity',
-          //   },
-          //   {
-          //     id: 'T',
-          //     icon: 'icon-add_task',
-          //     text: 'Tasks',
-          //   },
-          //   {
-          //     id: 'E',
-          //     icon: 'icon-email',
-          //     text: 'Email',
-          //   },
-          //   {
-          //     id: 'M',
-          //     icon: 'icon-calendar_today',
-          //     text: 'Calendar',
-          //   },
-          //   {
-          //     id: 'Q',
-          //     icon: 'icon-question_answer',
-          //     text: 'Questionarie',
-          //   },
-          //   {
-          //     id: 'I',
-          //     icon: 'icon-list-checkbox',
-          //     text: 'Interview',
-          //   },
-          //   {
-          //     id: 'C',
-          //     icon: 'icon-list-checkbox',
-          //     text: 'Check list',
-          //   },
-          // ],
         };
       });
   }
@@ -333,18 +291,32 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
-    this.titleAction = evt.text;
-    if (evt.id == 'btnAdd') this.stepType = 'P';
-    else this.stepType = evt.id;
-    this.add();
-    // switch (evt.id) {
-    //   case 'btnAdd':
-    //   case 'A':
-    //   case 'P':
-    //   case 'Q':
-    //     this.add();
-    //     break;
-    // }
+    if (evt.id == 'btnAdd') {
+      this.stepType = 'P';
+      var p = this.button.items.find((x) => (x.id = this.stepType));
+      if (!p) return;
+      this.titleAction =
+        evt.text +
+        ' ' +
+        p?.text.charAt(0).toLocaleLowerCase() +
+        p?.text.slice(1);
+      this.add();
+    } else {
+      this.stepType = evt.id;
+      var customName = '';
+      this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+        if (mf) { 
+          var mfAdd = mf.find(f=>f.functionID=='SYS01') ;
+          if(mfAdd)
+          customName = mfAdd?.customName + ' ';
+        }
+        this.titleAction =
+          customName +
+          evt?.text.charAt(0).toLocaleLowerCase() +
+          evt?.text.slice(1);
+        this.add();
+      });
+    }
   }
 
   receiveMF(e: any) {
