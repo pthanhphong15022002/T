@@ -18,7 +18,7 @@ export class BP_Processes {
   revisionID : string ;
   versionNo : string ;
   versionOn : Date
-  versions : string ;
+  versions :  BP_ProcessRevisions[];
   phases : number ;
   activities : number;
   views :number ;
@@ -70,7 +70,15 @@ export class BP_ProcessSteps {
   owners :Array<BP_ProcessOwners> ;
 }
 export class BP_ProcessRevisions{
-
+  recID: string;
+  versionNo: string;
+  activedOn: Date;
+  comment: string;
+  approveStatus: string;
+  approvedBy: string;
+  approvedOn: Date;
+  createdOn: Date;
+  createdBy: string;
 }
 export class BP_ProcessOwners {
   id : string ;

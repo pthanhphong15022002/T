@@ -56,6 +56,8 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   justView = false;
   isAddNew: boolean = true;
 
+  positionDefault: string = '';
+
   data: any = {}; // object category
 
   model: any;
@@ -95,6 +97,13 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.cache
+      .gridViewSetup('ApprovalSteps_Approvers', 'grvApprovalSteps_Approvers')
+      .subscribe((grv) => {
+        if (grv) {
+          this.positionDefault = grv['Position']['headerText'];
+        }
+      });
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
