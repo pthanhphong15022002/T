@@ -134,8 +134,8 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
       switch(data?.status){
         case "3":
         event.forEach(func => {
-          if(func.functionID == "EPT40202" 
-          ||func.functionID == "EPT40203" 
+          if( 
+          func.functionID == "EPT40203" 
           ||func.functionID == "EPT40206"
           || func.functionID == "EPT40204")
           {
