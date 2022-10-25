@@ -222,7 +222,7 @@ export class ViewDetailComponent implements OnInit {
         this.delete(datas);
         break;
       case 'SYS04':
-        this.assign(datas);
+        this.copy(datas);
         break;
       case 'EST01101': //hủy yeu cau duyệt
         this.beforeCancel(datas);
@@ -283,6 +283,43 @@ export class ViewDetailComponent implements OnInit {
           } else {
             this.view.dataService.update(res.event).subscribe();
           }
+        }
+      });
+    });
+  }
+
+  copy(datas) {
+    this.view.dataService.dataSelected = datas;
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (!res) return;
+
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+
+      let dialogAdd = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        'Sao chép',
+        700,
+        650,
+        this.funcID,
+        {
+          isAddNew: true,
+          dataSelected: res,
+          formModel: this.view?.formModel,
+          option: option,
+          type: 'copy',
+          oldSfRecID: datas.recID,
+        },
+        '',
+        dialogModel
+      );
+      dialogAdd.closed.subscribe((res) => {
+        if (!res.event) {
+          this.esService.deleteStepByTransID(res.recID).subscribe();
         }
       });
     });

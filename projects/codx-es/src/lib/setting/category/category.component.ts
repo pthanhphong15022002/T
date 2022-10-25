@@ -269,18 +269,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       this.dialog.closed.subscribe((x) => {
         if (!res?.event) this.viewBase.dataService.clear();
         if (x.event == null) {
-          //this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
           this.viewBase.dataService
             .remove(this.viewBase.dataService.dataSelected)
             .subscribe();
         }
-        // else
-        //   this.viewBase.dataService.add(x.event, 0).subscribe((item) => {
-        //     this.viewBase.dataService.onAction.next({
-        //       type: 'update',
-        //       data: x.event,
-        //     });
-        //   });
       });
     });
   }
@@ -339,10 +331,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         this.delete(event);
         break;
       //Copy
-      case 'SYS04': {
+      case 'SYS04':
         this.copy(event);
         break;
-      }
     }
   }
 
