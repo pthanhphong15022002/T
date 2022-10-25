@@ -162,7 +162,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
 
   loadData() {
     this.api
-      .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
+      .execSv<any>('FD', 'ERM.Business.FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
         this.options,
         this.type,
       ])
