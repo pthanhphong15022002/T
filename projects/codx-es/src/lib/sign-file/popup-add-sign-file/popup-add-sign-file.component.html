@@ -149,6 +149,7 @@
             <!-- <div class="stepper-line w-35px mx-1"></div> -->
           </div>
           <div
+            *ngIf="eSign == true"
             [ngClass]="
               isAddNew ? 'stepper-item' : 'stepper-item approve-disabled'
             "
@@ -256,10 +257,12 @@
           <a
             class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
             (click)="release()"
+            [ngClass]="user.userID == data.owner ? '' : 'disabled'"
             [style.visibility]="
               currentTab == 3 &&
               data.files?.length > 0 &&
-              data.approveStatus == '1'
+              data.approveStatus == '1' &&
+              user.userID == data.owner
                 ? 'visible'
                 : 'hidden'
             "
@@ -383,6 +386,7 @@
                         [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
                         (valueChange)="valueChange($event)"
+                        [disabled]="disableCateID"
                       >
                       </codx-input>
                     </div>
@@ -477,6 +481,7 @@
                 "
                 [recID]="data.recID"
                 [type]="'1'"
+                [eSign]="eSign"
                 [mssgDelete]="mssgDelete"
                 (addEditItem)="dataStepChange($event)"
               >
@@ -526,6 +531,7 @@
 
           <div *ngIf="currentTab == 0"></div>
           <button
+            *ngIf="!(currentTab == 2 && eSign == false)"
             type="button"
             class="btn btn-primary"
             (click)="continue(currentTab)"
@@ -544,6 +550,77 @@
               default="Tiếp tục"
             ></codx-label>
           </button>
+
+          <div class="d-flex" *ngIf="eSign == false && currentTab == 2">
+            <ng-container>
+              <div ngbDropdown class="dropdown">
+                <button
+                  class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4 d-flex align-items-center"
+                  type="button"
+                  aria-expanded="false"
+                >
+                  <span (click)="saveAndClose()">
+                    <codx-label
+                      class="me-3"
+                      name="lblSave"
+                      [formModel]="formModelCustom"
+                      default="Lưu"
+                    ></codx-label>
+                  </span>
+                  <span
+                    ngbDropdownToggle
+                    id="dropdownMenuButton1"
+                    class="icon-keyboard_arrow_down icon-16 ms-1"
+                  ></span>
+                </button>
+                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                  <li>
+                    <a
+                      ngbDropdownItem
+                      (click)="openTemplateName(addTemplateName)"
+                      class="cursor-pointer"
+                    >
+                      <div class="d-flex flex-column">
+                        <span class="text-dark">
+                          <codx-label
+                            name="lblSaveNewTemplate"
+                            [formModel]="formModelCustom"
+                            default="Lưu thành quy trình mẫu"
+                          ></codx-label>
+                        </span>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      ngbDropdownItem
+                      (click)="updateApproveTemplate()"
+                      class="cursor-pointer"
+                    >
+                      <div class="d-flex flex-column">
+                        <codx-label
+                          name="lblUpdateApproval"
+                          [formModel]="formModelCustom"
+                          default="Cập nhật vào quy trình mẫu"
+                        >
+                        </codx-label>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <a
+                class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+                (click)="release()"
+              >
+                <codx-label
+                  Name="lblAprrove"
+                  [formModel]="dialog.formModel"
+                  default="Gửi duyệt"
+                ></codx-label>
+              </a>
+            </ng-container>
+          </div>
         </div>
       </div>
     </div>

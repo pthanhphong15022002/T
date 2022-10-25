@@ -13,8 +13,7 @@
       <div class="form-group col-5">
         <codx-label fiedName="Ranking" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">
-          >
+        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">          
         </codx-input>
       </div>
 
@@ -91,7 +90,8 @@
         <div class="d-flex" *ngFor="let item of tmplstDevice">
           <span class="d-flex align-items-center me-2 mb-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
             <span class="me-1"
-            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
+            [className]="item.icon"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
             </span>{{ item.text }}
           </span>
         </div>
@@ -134,7 +134,7 @@
           </button>
         </div>
         <div class="text-dark-50">
-          <codx-label name="lblChooseEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+          <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
             [formModel]="form.formModel"></codx-label>
         </div>
       </div>
@@ -144,7 +144,8 @@
         <div class="d-flex flex-stack">
           <div class="d-flex">
             <span class="text-dark me-2 p-1"
-            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted',item.id=='1' ? 'icon-wifi' : item.id=='2' ? 'icon-personal_video' : item.id=='3' ? 'icon-mic_none' : item.id=='4' ? 'icon-switch_video' : ' icon-thermostat']">
+            [className]="item.icon"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
             </span>
             <div class="d-flex flex-column justify-content-center">
               <span href="#" class="text-dark fw-bolder">{{
@@ -161,12 +162,7 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="modal-footer" (click)="dialog.close()">
-      <button type="button" class="btn btn-primary">
-        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
-      </button>
-    </div>
+    </div>    
   </ng-template>
 
 </codx-form>

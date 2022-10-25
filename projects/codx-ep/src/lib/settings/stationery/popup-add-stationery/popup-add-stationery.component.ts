@@ -33,7 +33,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   dialogAddStationery: FormGroup;
   color: any;
   returnData;
-  columnGrid;
+  columnsGrid;
   title: string = '';
   titleAction: string = 'Thêm mới';
   tabInfo: any[] = [
@@ -79,6 +79,20 @@ export class PopupAddStationeryComponent extends UIComponent {
 
   onInit(): void {
     this.initForm();
+    this.columnsGrid = [
+      // {
+      //   field: 'noName',
+      //   headerText: 'Phân loại',
+      //   template: this.itemCategory,
+      //   width: 200,
+      // },
+      // {
+      //   field: 'competenceID',
+      //   headerText: 'Người nhận/gửi',
+      //   template: this.itemSenderOrReceiver,
+      //   width: 200,
+      // },
+    ];
     this.epService
       .getQuotaByResourceID(this.data.resourceID)
       .subscribe((res) => {
@@ -91,6 +105,11 @@ export class PopupAddStationeryComponent extends UIComponent {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item: any) => {
         this.dialogAddStationery = item;
+        this.dialogAddStationery.patchValue({
+          reservedQty: 0,
+          currentQty: 0,
+          availableQty: 0,
+        });
         this.isAfterRender = true;
       });
   }
@@ -112,38 +131,34 @@ export class PopupAddStationeryComponent extends UIComponent {
       index = null;
     }
     this.dialog.dataService
-    .save((opt: any) => this.beforeSave(opt),index)
-    .subscribe(async (res) => {
-      if (res.save || res.update) {          
-        if (!res.save) {
-          this.returnData = res.update;
-        } else {
-          this.returnData = res.save;
-        }
-        if(this.returnData?.recID)
-        {
-          if(this.imageUpload?.imageUpload?.item) {
-            this.imageUpload
-            .updateFileDirectReload(this.returnData.recID)
-            .subscribe((result) => {
-              if (result) {
-                //xử lí nếu upload ảnh thất bại
-                //...                
-              }
-              this.dialog && this.dialog.close(this.returnData);
-            });  
-          }          
-          else 
-          {
-            this.dialog && this.dialog.close(this.returnData);
+      .save((opt: any) => this.beforeSave(opt), index)
+      .subscribe(async (res) => {
+        if (res.save || res.update) {
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
           }
-        } 
-      }
-      else{ 
-        //Trả lỗi từ backend.         
-        return;
-      }
-    });
+          if (this.returnData?.recID) {
+            if (this.imageUpload?.imageUpload?.item) {
+              this.imageUpload
+                .updateFileDirectReload(this.returnData.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    //xử lí nếu upload ảnh thất bại
+                    //...
+                  }
+                  this.dialog && this.dialog.close(this.returnData);
+                });
+            } else {
+              this.dialog && this.dialog.close(this.returnData);
+            }
+          }
+        } else {
+          //Trả lỗi từ backend.
+          return;
+        }
+      });
   }
 
   valueChange(event) {

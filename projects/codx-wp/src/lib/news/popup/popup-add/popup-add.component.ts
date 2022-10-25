@@ -17,39 +17,29 @@ import { WP_News } from '../../../models/WP_News.model';
   encapsulation: ViewEncapsulation.None
 })
 export class PopupAddComponent implements OnInit {
-  dateStart: Date;
-  dateEnd: Date;
-  subContent: string;
-  isVideo = true;
-  newsType: any;
-  formGroup: FormGroup;
-  user: any;
-
-  popupFiled = 1;
-  popupContent = 2;
-  objectID = '';
+  
+  user: any = null;
+  objectID:string = '';
   dialogData: any;
-  dialogRef: DialogRef;
+  dialogRef: DialogRef = null;
+  isVideo:boolean = true;
+  newsType: any;
+  formGroup: FormGroup = null;
   startDate: Date;
   endDate: Date;
-  tagName = "";
-  objectType = "";
+  tagName:string = "";
+  objectType:string = "";
   shareControl: string = "";
-  userRecevier: any;
-  recevierID = "";
-  recevierName = "";
-
+  mssgCodeNoty:any = null;
   fileUpload: any[] = [];
   fileImage: any = null;
   fileVideo: any = null;
-  myPermission: Permission = null;
-  apprPermission: Permission = null;
   shareIcon: string = "";
   shareText: string = "";
-  shareWith: String = "";
+  shareWith: string = "";
   permissions: Permission[] = [];
   messageImage: string = "";
-
+  paramerters:any = null;
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -83,7 +73,7 @@ export class PopupAddComponent implements OnInit {
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
-  @ViewChild('codxATMImage') codxATMImage: AttachmentComponent;
+  @ViewChild('codxATM') codxATM: AttachmentComponent;
   @ViewChild('codxATMVideo') codxATMVideo: AttachmentComponent;
   constructor(
     private api: ApiHttpService,
@@ -121,13 +111,37 @@ export class PopupAddComponent implements OnInit {
       this.shareText = modShare.text;
       this.shareControl = this.SHARECONTROLS.EVERYONE;
     });
-    this.tagName = "";
-    this.shareWith = "";
-    this.objectType = "";
+    let formName = "WPParameters";
+    let category = "1";
+    this.getParameterAsync(formName,category);
     this.initForm();
   }
 
-  mssgCodeNoty:any = null;
+  getParameterAsync(formName:string, category:string){
+    if(formName && category){
+      this.api.execSv("SYS","ERM.Business.SYS","SettingValuesBusiness","GetParameterAsync",[formName,category])
+      .subscribe((res:any) => {
+        if(res){
+          let jsParam = JSON.parse(res);
+          console.log(jsParam);
+          this.paramerters = res;
+        }
+      })
+    }
+  }
+  initForm() {
+    this.formGroup = new FormGroup({
+      Tags: new FormControl(''),
+      Category: new FormControl(null),
+      StartDate: new FormControl(new Date()),
+      EndDate: new FormControl(),
+      Subject: new FormControl(''),
+      SubContent: new FormControl(''),
+      Contents: new FormControl(''),
+      AllowShare: new FormControl(false),
+      CreatePost: new FormControl(false),
+    });
+  }
   getMessage(mssCode:string){
     this.cache.message(mssCode).subscribe((mssg: any) => {
       if(mssg){
@@ -169,45 +183,51 @@ export class PopupAddComponent implements OnInit {
       let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Video đính kèm");
       this.notifSV.notify(mssgCode);
     }
-    let tmpNews = new WP_News();
-    tmpNews = this.formGroup.value;
-    tmpNews.newsType = this.newsType;
-    tmpNews.shareControl = this.shareControl;
-    tmpNews.objectType = this.objectType;
-    tmpNews.permissions = this.permissions;
-    this.fileUpload = [];
-    this.fileUpload.push(this.fileImage);
-    if(this.newsType == this.NEWSTYPE.VIDEO)
-    {
-      this.fileUpload.push(this.fileVideo);
-    }
+    let data = new WP_News();
+    data = this.formGroup.value;
+    data.newsType = this.newsType;
+    data.shareControl = this.shareControl;
+    data.objectType = this.objectType;
+    data.permissions = this.permissions;
+    let mode = "add";
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'InsertNewsAsync',
-        tmpNews
+        [data,mode]
       )
       .subscribe(async (res: any) => {
         if (res) {
-          let data = res;
+          let result = res;
+          if(this.newsType == this.NEWSTYPE.POST){
+            this.fileUpload.push(this.fileImage);
+          }
+          else(this.newsType == this.NEWSTYPE.VIDEO)
+          {
+            this.fileUpload.push(this.fileVideo);
+          }
           if (this.fileUpload.length > 0) {
-            this.codxATMImage.objectId = data.recID;
-            this.dmSV.fileUploadList = this.fileUpload;
-            (await this.codxATMImage.saveFilesObservable()).subscribe(
+            this.codxATM.objectId = result.recID;
+            this.codxATM.fileUploadList = this.fileUpload;
+            (await this.codxATM.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
                   this.notifSV.notifyCode('SYS006');
-                  this.dialogRef.close(data);
+                  this.dialogRef.close(result);
                 }
               }
             );
           }
+          else 
+          {
+            this.notifSV.notifyCode('SYS006');
+            this.dialogRef.close(result);
+          }
         }
       });
   }
-
   approPost() {
     if (!this.formGroup.controls['Category'].value) {
       let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Loại bài viết");
@@ -239,42 +259,47 @@ export class PopupAddComponent implements OnInit {
       let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Video đính kèm");
       this.notifSV.notify(mssgCode);
     }
-    let tmpNews = new WP_News();
-    tmpNews = this.formGroup.value;
-    tmpNews.newsType = this.newsType;
-    tmpNews.shareControl = this.shareControl;
-    tmpNews.objectType = this.objectType;
-    tmpNews.permissions = this.permissions;
-    this.fileUpload = [];
-    this.fileUpload.push(this.fileImage);
-    if(this.newsType == this.NEWSTYPE.VIDEO)
-    {
-      this.fileUpload.push(this.fileVideo);
-    }
-    
+    let data = new WP_News();
+    data = this.formGroup.value;
+    data.newsType = this.newsType;
+    data.shareControl = this.shareControl;
+    data.objectType = this.objectType;
+    data.permissions = this.permissions;
+    let mode = "submit";
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'InsertNewsAsync',
-        tmpNews
+        [data,mode]
       )
       .subscribe(async (res: any) => {
         if (res) {
-          let data = res;
+          let result = res;
+          if(this.newsType == this.NEWSTYPE.POST){
+            this.fileUpload.push(this.fileImage);
+          }
+          else(this.newsType == this.NEWSTYPE.VIDEO)
+          {
+            this.fileUpload.push(this.fileVideo);
+          }
           if (this.fileUpload.length > 0) {
-            this.codxATMImage.objectId = data.recID;
-            this.codxATMImage.fileUploadList = this.fileUpload;
-            (await this.codxATMImage.saveFilesObservable()).subscribe(
+            this.codxATM.objectId = result.recID;
+            this.codxATM.fileUploadList = this.fileUpload;
+            (await this.codxATM.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
                   this.notifSV.notifyCode('SYS006');
-                  this.dialogRef.close(data);
+                  this.dialogRef.close(result);
                 }
               }
             );
           }
+        }
+        else
+        {
+          this.notifSV.notifyCode('SYS023');
         }
       });
   }
@@ -378,20 +403,6 @@ export class PopupAddComponent implements OnInit {
         }
     });
   }
-  
-  initForm() {
-    this.formGroup = new FormGroup({
-      Tags: new FormControl(''),
-      Category: new FormControl(null),
-      StartDate: new FormControl(new Date()),
-      EndDate: new FormControl(),
-      Subject: new FormControl(''),
-      SubContent: new FormControl(''),
-      Contents: new FormControl(''),
-      AllowShare: new FormControl(false),
-      CreatePost: new FormControl(false),
-    });
-  }
   clearValueForm() {
     this.formGroup.controls['Tags'].setValue("");
     this.formGroup.controls['Category'].setValue(null);
@@ -416,7 +427,6 @@ export class PopupAddComponent implements OnInit {
       this.fileUpload = [];
     }
   }
-
   addFiles(files: any) {
     if (files && files.data.length > 0) {
       files.data.map(f => {
@@ -436,42 +446,13 @@ export class PopupAddComponent implements OnInit {
       this.changedt.detectChanges();
     }
   }
-
-  addImage(files) {
-    if (files && files.data.length > 0) {
-      let file = files.data[0];
-      if (file.mimeType.indexOf("image") >= 0) {
-        file['referType'] = this.FILE_REFERTYPE.IMAGE;
-        this.fileImage = file;
-        this.fileUpload.push(file);
-        this.changedt.detectChanges();
-      }
-      else {
-        this.notifSV.notify("Vui lòng chọn file image.")
-      }
-    }
-  }
-  addVideo(files) {
-    if (files && files.data.length > 0) {
-      let file = files.data[0];
-      if (file.mimeType.indexOf("video") >= 0) {
-        file['referType'] = this.FILE_REFERTYPE.VIDEO;
-        this.fileVideo = file;
-        this.fileUpload.push(file);
-        this.changedt.detectChanges();
-      }
-      else {
-        this.notifSV.notify("Vui lòng chọn file video.")
-      }
-    }
-  }
   clickClosePopup() {
     this.dialogRef.close();
   }
   clickUploadImage() {
-    this.codxATMImage.uploadFile();
+    this.codxATM.uploadFile();
   }
   clickUploadVideo() {
-    this.codxATMImage.uploadFile();
+    this.codxATM.uploadFile();
   }
 }

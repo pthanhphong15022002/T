@@ -109,15 +109,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
           //alert('Từ chối');
           this.approve(datas,"4")
         }
-        break;
-      case 'EPT40106':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          //alert('Làm lại');
-          this.approve(datas,"2")
-        }
-        break;
+        break;      
       default:
         '';
         break;
@@ -141,11 +133,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
                 data.status="4";
-              }
-              if(status=="2"){
-                this.notificationsService.notifyCode('ES007');//làm lại
-                data.status="2"
-              }                
+              }                           
               this.updateStatus.emit(data);
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -160,6 +148,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
         event.forEach(func => {
           if(func.functionID == "EPT40102" 
           ||func.functionID == "EPT40103" 
+          ||func.functionID == "EPT40106" 
           || func.functionID == "EPT40104")
           {
             func.disabled=true;

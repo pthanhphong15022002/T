@@ -127,6 +127,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.data.icon = 'icon-text_snippet';
       this.data.color = '#0078FF';
 
+      this.form?.formGroup?.patchValue({
+        signatureType: '1',
+        icon: 'icon-text_snippet',
+        color: '#0078FF',
+      });
+
       this.esService
         .getSettingByPredicate(
           'FormName=@0 and Category=@1',
@@ -135,11 +141,16 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         .subscribe((setting) => {
           if (setting?.dataValue) {
             this.settingDataValue = JSON.parse(setting.dataValue);
+            console.log(this.settingDataValue);
             if (this.settingDataValue) {
               for (const key in this.settingDataValue) {
                 console.log(key);
                 let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
                 this.data[fieldName] = this.settingDataValue[key];
+                if (key == 'AllowEditAreas') {
+                  this.data[fieldName] =
+                    this.settingDataValue[key] == '0' ? false : true;
+                }
               }
             }
             console.log(this.data);
@@ -216,13 +227,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res.update || res.save) {
           this.isSaved = true;
-          if (res.update) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.update)
-              .subscribe();
-          }
+          // if (res.update) {
+          //   (this.dialog.dataService as CRUDService)
+          //     .update(res.update)
+          //     .subscribe();
+          // }
           if (isClose) {
-            this.dialog && this.dialog.close();
+            this.dialog && this.dialog.close(res?.update);
           }
         }
       });

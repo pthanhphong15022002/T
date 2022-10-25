@@ -76,6 +76,23 @@
           <div class="form-group col-12">
             <codx-label
               class="fw-bold"
+              fiedName="Location"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              ControlName="location"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-12">
+            <codx-label
+              class="fw-bold"
               fiedName="Owner"
               [formModel]="form.formModel"
             >
@@ -127,7 +144,7 @@
                 <span class="me-2 fw-bold text-black-50">Màu sắc: </span>
                 <codx-colorpicker
                   field="color"
-                  mode="Palette"
+                  mode="Picker"
                   [value]="data?.color ? data?.color : '#fff'"
                   (valueChange)="valueChange($event)"
                 ></codx-colorpicker>
@@ -152,16 +169,38 @@
   </ng-template>
 
   <ng-template #tabQuotaInfo>
-    <div class="d-flex justify-content-between" *ngFor="let item of quota">
-      <div>
-        <span>{{ item?.quantity }}</span>
-        <span>{{ " / " }}</span>
-        <span>{{ item?.ruleType | vll: "EP013":"text" | async }}</span>
-      </div>
-      <div>
-        <span>{{ item?.objectID | vll: "EP015":"text" | async }}</span>
-      </div>
-    </div>
+    <table class="table bg-header">
+      <thead>
+        <tr class="border-bottom">
+          <th scope="col">
+            <codx-label
+              class="fw-bold"
+              name="lblQuota"
+              default="Định mức"
+            ></codx-label>
+          </th>
+          <th scope="col" class="text-center">
+            <codx-label
+              class="fw-bold"
+              name="lblEmpLevel"
+              default="Cấp bậc nhân viên"
+            ></codx-label>
+          </th>
+          <th scope="col" class="w-10 text-center"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of quota">
+          <td>
+            {{ item?.quantity }}{{ " / "
+            }}{{ item?.ruleType | vll: "EP013":"text" | async }}
+          </td>
+          <td class="text-center">
+            {{ item?.objectType | vll: "EP015":"text" | async }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </ng-template>
 
   <ng-template #tabMoreInfo>
@@ -187,7 +226,7 @@
             >
             </codx-label>
             <codx-input
-              [min]="0"
+              [disabled]="true"
               ControlName="availableQty"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
@@ -202,7 +241,7 @@
             >
             </codx-label>
             <codx-input
-              [min]="0"
+              [disabled]="true"
               ControlName="reservedQty"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
@@ -216,7 +255,7 @@
             >
             </codx-label>
             <codx-input
-              [min]="0"
+              [disabled]="true"
               ControlName="currentQty"
               [formModel]="form.formModel"
               [Group]="form.formGroup"

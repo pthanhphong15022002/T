@@ -1,0 +1,81 @@
+<ng-container *ngIf="user">
+  <div class="d-flex flex-column flex-root">
+    <div class="page d-flex flex-row flex-column-fluid">
+      <codx-aside *ngIf="asideDisplay"> </codx-aside>
+      <div class="wrapper d-flex flex-column flex-row-fluid">
+        <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
+          [headerRightBar]="headerRightBar" #codxHeader>
+        </codx-header>
+        <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
+        </codx-wrapper> -->
+        <codx-wrapper class="d-flex flex-column flex-column-fluid">
+        </codx-wrapper>
+      </div>
+    </div>
+  </div>
+
+  <codx-scripts-init></codx-scripts-init>
+  <codx-scroll-top></codx-scroll-top>
+
+  <!-- begin:: Drawers -->
+  <codx-messenger-drawer></codx-messenger-drawer>
+  <!-- <codx-user-drawer></codx-user-drawer> -->
+  <!-- end:: Drawers -->
+
+  <!-- begin:: TOPBAR -->
+  <ng-template #headerRightBar>
+    <!-- CHAT -->
+    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
+      <!-- <codx-chat-list></codx-chat-list> -->
+    </div>
+    <!-- NOTES -->
+    <!-- <div class="d-flex align-items-center">
+      <div class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
+        <span [inlineSVG]="
+            './assets/themes/sys/default/img/header_notes.svg'
+          " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+      </div>
+    </div> -->
+    <!-- NOTIFICATIONS -->
+    <!-- <codx-notify-drawer></codx-notify-drawer> -->
+
+    <!-- CUSTOMIZE -->
+    <div class="d-flex align-items-center">
+      <div class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
+        <span class="icon-color_lens icon-24" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+      </div>
+    </div>
+    <!-- CUSTOMIZE -->
+
+    <!-- VIEW -->
+    <div class="d-flex align-items-center">
+      <div class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
+        <span class="icon-remove_red_eye icon-24" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+      </div>
+    </div>
+    <!-- VIEW -->
+
+    <!-- Quick links -->
+    <erm-quick-links-inner [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+      [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
+      [buttonHeightClass]="codxService.toolbarButtonHeightClass"></erm-quick-links-inner>
+    <!-- End: Quick links -->
+    <!-- begin::User -->
+    <codx-user-inner [user]="user" (onAvatarChanged)="this.reloadAvatar($event)"
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"></codx-user-inner>
+    <!-- end::User -->
+
+    <ng-container *ngIf="headerLeft === 'menu'">
+      <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
+        <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+          id="kt_header_menu_mobile_toggle">
+          <span [inlineSVG]="'./assets/media/icons/duotune/text/txt001.svg'" class="svg-icon svg-icon-1"></span>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+  <!-- end::TOPBAR -->
+</ng-container>

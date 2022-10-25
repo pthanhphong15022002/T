@@ -99,10 +99,10 @@ export class EditSkillComponent implements OnInit {
          {
           let skill = {
             RecID: Guid.newGuid(),
-            CompetenceID: element.CompetenceID,
-            CompetenceName: element.CompetenceName,
-            ValueX: 0,
-            Rating: "0"
+            competenceID: element.CompetenceID,
+            competenceName: element.CompetenceName,
+            valueX: 0,
+            rating: "0"
           }
           this.skillEmployee.push(skill);
          }

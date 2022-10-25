@@ -24,6 +24,7 @@ import {
 } from 'codx-core';
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
+import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
 import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
 @Component({
@@ -45,6 +46,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   lstApproveMode: any;
   currentApproveMode: string;
+
+  confirmControl: string = '0';
+  allowEditAreas: boolean;
 
   dialog: DialogRef;
   lstStep;
@@ -99,6 +103,10 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.isAdd = data?.data.isAdd;
     this.dataEdit = data?.data.dataEdit;
     this.defaultSignType = data?.data?.signatureType;
+
+    this.allowEditAreas = data?.data?.signatureType;
+    this.confirmControl = data?.data?.confirmControl;
+
     this.eSign = data?.data?.eSign ?? false;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
@@ -123,14 +131,6 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     });
   }
 
-  valueChange(event) {
-    if (event?.field && event?.component && event?.data != '') {
-      this.data[event?.field] = event.data;
-      this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
-      this.cr.detectChanges();
-    }
-  }
-
   initForm() {
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -147,8 +147,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
                 this.data.transID = this.transId;
                 this.data.signatureType = this.defaultSignType;
                 this.dialogApprovalStep.patchValue(this.data);
-                // this.dialogApprovalStep.patchValue({ stepNo: this.stepNo });
-                // this.dialogApprovalStep.patchValue({ transID: this.transId });
+
                 this.esService.getNewDefaultEmail().subscribe((emailTmp) => {
                   this.data.emailTemplates = emailTmp;
                   this.dialogApprovalStep.patchValue({
@@ -167,6 +166,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           );
           if (this.lstApprover?.length > 0) {
             this.lstApprover.forEach((element) => {
+              this.confirmControl = element?.confirmControl ?? '0';
+              this.allowEditAreas = element?.allowEditAreas ?? false;
+
               if (element.roleType == 'PE') element.write = true;
               else element.write = false;
 
@@ -188,6 +190,42 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       });
   }
 
+  valueChange(event) {
+    if (event?.field && event?.component && event?.data != '') {
+      if (event.field == 'allowEditAreas') {
+        this.allowEditAreas = event.data;
+      } else if (event.field == 'stepType') {
+        this.data[event?.field] = event.data;
+        this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+        if (this.data.stepName == '' || this.data.stepName == null) {
+          let vllName = this.eSign == true ? 'ES002' : 'ES026';
+          this.cache.valueList(vllName).subscribe((res) => {
+            if (res?.datas) {
+              let i = res.datas.findIndex((p) => p.value == event.data);
+              this.data.stepName = res.datas[i]?.text;
+              this.dialogApprovalStep.patchValue({
+                stepName: this.data.stepName,
+              });
+              this.cr.detectChanges();
+            }
+          });
+        }
+      } else {
+        this.data[event?.field] = event.data;
+        this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+      }
+
+      this.cr.detectChanges();
+    }
+  }
+
+  changeConfirm(event) {
+    if (event?.field && event?.field == 'confirmControl' && event?.component) {
+      this.confirmControl = event?.data ? '1' : '0';
+      this.cr.detectChanges();
+    }
+  }
+
   MFClick(event, data) {
     //delete
     if (event?.functionID == 'SYS02') {
@@ -200,15 +238,22 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
+      //edit PA
+      if (event?.functionID == 'SYS03') {
+        // this.notifySvr.alertCode('SYS030').subscribe((x) => {
+        //   if (x.event.status == 'Y') {
+        //     let i = this.lstApprover.indexOf(data);
+        //     if (i != -1) {
+        //       this.lstApprover.splice(i, 1);
+        //     }
+        //   }
+        // });
+      }
     }
   }
 
   onSaveForm() {
     this.isSaved = true;
-
-    console.log(this.dialogApprovalStep.value);
-    console.log(this.data);
-
     if (this.dialogApprovalStep.invalid == true) {
       this.esService.notifyInvalid(this.dialogApprovalStep, this.formModel);
       return;
@@ -227,6 +272,12 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         });
       return;
     }
+    this.lstApprover.forEach((appr) => {
+      appr.confirmControl = this.confirmControl;
+      appr.allowEditAreas = this.allowEditAreas;
+    });
+    console.log(this.lstApprover);
+
     this.dialogApprovalStep.patchValue({
       approveMode: this.currentApproveMode,
       approvers: this.lstApprover,
@@ -255,6 +306,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showIsTemplate: true,
         showIsPublish: true,
         showSendLater: true,
+        showFrom: true,
       };
 
       this.callfc.openForm(
@@ -319,11 +371,19 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           let i = this.lstApprover.findIndex(
             (p) => p.approver == element?.objectType
           );
-          if (i == -1) {
+          if (element?.objectType == 'PA') {
+            //loại đối tác mở popup
             let appr = new Approvers();
-            if (appr.roleType == 'PE') {
-              appr.write = true;
-            }
+            appr.write = true;
+
+            let popupApprover = this.callfc.openForm(
+              PopupAddApproverComponent,
+              '',
+              550,
+              screen.height
+            );
+          } else if (i == -1) {
+            let appr = new Approvers();
             appr.roleType = element?.objectType;
             appr.name = element?.objectName;
             appr.approver = element?.objectType;

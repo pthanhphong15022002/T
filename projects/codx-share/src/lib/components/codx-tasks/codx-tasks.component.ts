@@ -113,7 +113,6 @@ export class CodxTasksComponent
   eventStatus: any;
   itemSelected: any;
   user: any;
-  // funcID: string;
   gridView: any;
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
@@ -145,8 +144,7 @@ export class CodxTasksComponent
   listViewModel = [];
   dataReferences = [];
   titleAction = '';
-  // predicateSchedule: any;
-  // dataValueSchedule: any;
+  moreFunction = [];
 
   constructor(
     inject: Injector,
@@ -165,20 +163,17 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
-
-    // this.api.execSv<any>('TM',
-    // 'TM',
-    // 'TaskBusiness',
-    // 'AutoUpdateIsOverDueAsync').subscribe();
   }
 
   //#region Init
   onInit(): void {
-    // this.modelResource = new ResourceModel();
-    // this.modelResource.assemblyName = 'TM';
-    // this.modelResource.className = 'TaskBusiness';
-    // this.modelResource.service = 'TM';
-    // this.modelResource.method = 'GetUserByTasksAsync';
+    if (this.funcID == 'TMT0203') {
+      this.vllStatus = this.vllStatusAssignTasks;
+    } else {
+      this.vllStatus = this.vllStatusTasks;
+    }
+    this.projectID = this.dataObj?.projectID;
+    this.viewMode = this.dataObj?.viewMode;
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011') {
@@ -216,6 +211,19 @@ export class CodxTasksComponent
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
 
+    if (this.funcID != 'TMT0201') {
+      if (this.funcID == 'TMT0203') {
+        this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
+        this.requestSchedule.dataValue = '2;' + this.user.userID;
+      } else {
+        this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+        this.requestSchedule.dataValue = '1;2';
+      }
+    } else {
+      this.requestSchedule.predicate = '';
+      this.requestSchedule.dataValue = '';
+    }
+
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
     this.requestTree.assemblyName = 'TM';
@@ -223,6 +231,9 @@ export class CodxTasksComponent
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
     this.getParams();
+
+    this.dataObj = JSON.stringify(this.dataObj);
+    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -242,13 +253,7 @@ export class CodxTasksComponent
     //     })
     //   }
     // })
-    if (this.funcID == 'TMT0203') {
-      this.vllStatus = this.vllStatusAssignTasks;
-    } else {
-      this.vllStatus = this.vllStatusTasks;
-    }
-    this.projectID = this.dataObj?.projectID;
-    this.viewMode = this.dataObj?.viewMode;
+
     this.views = [
       {
         type: ViewType.list,
@@ -319,16 +324,6 @@ export class CodxTasksComponent
         sameData: false,
         text: 'Cây',
         icon: 'icon-account_tree',
-        // request: {
-        //   idField: 'recID',
-        //   parentIDField: 'ParentID',
-        //   service: 'TM',
-        //   assemblyName: 'TM',
-        //   className: 'TaskBusiness',
-        //   method: 'GetTasksAsync',
-        //   autoLoad: true,
-        //   dataObj: null,
-        // },
         model: {
           panelLeftRef: this.treeView,
         },
@@ -350,7 +345,6 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      // option.zIndex = 5000;
       if (this.projectID)
         this.view.dataService.dataSelected.projectID = this.projectID;
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
@@ -516,21 +510,6 @@ export class CodxTasksComponent
           this.detail.taskID = this.itemSelected.taskID;
           this.detail.getTaskDetail();
         }
-        //cai này cần dùng khi TMT0202
-        // let listTask = e?.event[1];
-        // let newTasks = [];
-        // for (var i = 0; i < listTask.length; i++) {
-        //   if (listTask[i].taskID == data.taskID) {
-        //     this.view.dataService.update(listTask[i]).subscribe();
-        //     this.view.dataService.setDataSelected(listTask[i]);
-        //   } else newTasks.push(listTask[i]);
-        // }
-        // if (newTasks.length > 0) {
-        //   this.view.dataService.data = newTasks.concat(
-        //     this.dialog.dataService.data
-        //   );
-        //   this.view.dataService.afterSave.next(newTasks);
-        // }
         this.detectorRef.detectChanges();
       }
     });
@@ -899,75 +878,7 @@ export class CodxTasksComponent
   }
   //#endregion
   //#region Event
-  changeView(evt: any) {
-    // let idx = -1;
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    // idx = this.viewsActive.findIndex((x) => x.id === '8');
-    if (this.funcID != 'TMT0201') {
-      if (this.funcID == 'TMT0203') {
-        this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
-        this.requestSchedule.dataValue = '2;' + this.user.userID;
-      } else {
-        this.requestSchedule.predicate = 'Category=@0 or Category=@1';
-        this.requestSchedule.dataValue = '1;2';
-
-        this.dataObj = null;
-      }
-    }
-    //   if (idx > -1) return;
-    //   var schedule = {
-    //     id: '8',
-    //     type: ViewType.schedule,
-    //     active: false,
-    //     sameData: false,
-    //     request: this.requestSchedule,
-    //     request2: this.modelResource,
-    //     model: {
-    //       eventModel: this.fields,
-    //       resourceModel: this.resourceField,
-    //       template4: this.resourceHeader,
-    //       template: this.eventTemplate,
-    //       template3: this.cellTemplate,
-    //       statusColorRef: this.vllStatus,
-    //     },
-    //   };
-    //   this.viewsActive.push(schedule);
-    // } else {
-    //   if (idx > -1) this.viewsActive.splice(idx, 1);
-    // }
-
-    // idx = this.viewsActive.findIndex((x) => x.id === '16');
-    // if (this.funcID == 'TMT0203') {
-    //   if (idx > -1) return;
-    //   var tree = {
-    //     id: '16',
-    //     type: ViewType.content,
-    //     active: false,
-    //     sameData: false,
-    //     text: 'Cây',
-    //     icon: 'icon-account_tree',
-    //     // request: {
-    //     //   idField: 'recID',
-    //     //   parentIDField: 'ParentID',
-    //     //   service: 'TM',
-    //     //   assemblyName: 'TM',
-    //     //   className: 'TaskBusiness',
-    //     //   method: 'GetTasksAsync',
-    //     //   autoLoad: true,
-    //     //   dataObj: null,
-    //     // },
-    //     model: {
-    //       // template: this.treeView,
-    //       panelLeftRef: this.treeView
-    //     },
-    //   };
-    //   this.viewsActive.push(tree);
-    // } else {
-    //   if (idx > -1) this.viewsActive.splice(idx, 1);
-    // }
-  }
+  changeView(evt: any) {}
 
   requestEnded(evt: any) {}
 
@@ -979,6 +890,18 @@ export class CodxTasksComponent
           this.view.dataService.update(data);
         }
       });
+    ///chắc chắn phải sửa
+    // this.cache.functionList(this.funcID).subscribe((f) => {
+    //   if (f)
+    //     this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+    //       if (res) {
+    //       this.moreFunction = res;
+    //       if(this.moreFunction.length=0) return ;
+    //       var moreFun = this.moreFunction.find(x=>UrlUtil.getUrl('defaultValue', x?.url)==data.status && UrlUtil.getUrl('defaultField', x?.url)=="Status" )
+    //       if(moreFun) return this.changeStatusTask(moreFun,data)
+    //      }
+    //     });
+    // });
   }
 
   //update Status of Tasks
@@ -1487,10 +1410,8 @@ export class CodxTasksComponent
         ) {
           x.disabled = true;
         }
-        //an giao viec 
-        if (
-          x.functionID =='SYS005'
-        ) {
+        //an giao viec
+        if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
       });

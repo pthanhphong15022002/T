@@ -46,15 +46,13 @@
       >
       </codx-label>
     </div>
-    <div class="action-menu">
-      <codx-mfunc
-        [formModel]="viewBase.formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-        [dataItem]="data"
-      >
-      </codx-mfunc>
-    </div>
+    <codx-mfunc
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="hover"
+      [dataItem]="data"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 
@@ -73,6 +71,25 @@
       class="fs-3 align-self-start rounded-circle p-3 m-1"
     ></i>
   </div>
+</ng-template>
+
+<ng-template #eSign let-data>
+  <!-- <codx-input
+    type="checkbox"
+    class="check-add me-2"
+    name="select"
+    [crrValue]="data.eSign"
+    [disabled]="true"
+  >
+  </codx-input> -->
+  <codx-input
+    #checkbox
+    type="switch"
+    id="switch"
+    [checked]="data.eSign"
+    [disabled]="true"
+  >
+  </codx-input>
 </ng-template>
 
 <!-- <ng-template #color let-data>

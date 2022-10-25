@@ -149,11 +149,18 @@ export class EmployeesComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '800px'; 
-      this.callfc.openSide(
+      let popup = this.callfc.openSide(
         PopupAddEmployeesComponent,
         "add",
         option
       );
+      popup.closed.subscribe((res:any) => {
+        if(res && res.event){
+          let data = res.event;
+          this.view.dataService.add(data,0).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      })
     }
   }
   click(evt: ButtonModel) {

@@ -57,6 +57,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   showEmojiPicker = false;
   dataVll = [];
   title: string = '';
+  strEmtyData: string = '';
+
   searchField = '';
   checkFormAddPost = false;
   predicateWP: string = '';
@@ -131,9 +133,15 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         this.dt.detectChanges();
       }
     });
-    this.cache.message('WP011').subscribe((mssg: any) => {
-      if (mssg) {
-        this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
+    this.cache.message('WP011').subscribe((mssg1: any) => {
+      if (mssg1) {
+        this.title = Util.stringFormat(mssg1.defaultName, this.user.userName);
+        this.dt.detectChanges();
+      }
+    });
+    this.cache.message('WP035').subscribe((mssg2: any) => {
+      if (mssg2) {
+        this.strEmtyData = mssg2.defaultName;
         this.dt.detectChanges();
       }
     });
@@ -152,7 +160,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
               }
             });
           this.formModel = new FormModel();
-          this.formModel.funcID = "WP";
+          this.formModel.funcID = funcID;
           this.formModel.formName = func.formName;
           this.formModel.gridViewName = func.gridViewName;
           this.formModel.entityName = func.entityName;
@@ -325,7 +333,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file: any) {
+  clickViewDetail(file: any) 
+  {
     if (!file) return;
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;

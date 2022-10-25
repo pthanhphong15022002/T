@@ -1,12 +1,29 @@
-<codx-views #view 
+<codx-views
+  #view
   idField="recID"
   [entityName]="entityName" 
   [views]="views" 
-  [predicate]="predicate"
-  [dataValue]="dataValue"
-  [autoLoad]="false">
+  [autoLoad]="false"
+  >
 </codx-views>
+<div class="more-function">
+  <div class="d-flex flex-column">
+      <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
+      <span class="postnews mt-3" *ngIf="userPermission && userPermission.create">
+          <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+          <div class="d-flex btn-postnews">
+
+              <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
+                      class="icon-video_call fs-1"></i></a>
+              <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
+                      class="icon-post_add fs-1"></i></a>
+          </div>
+      </span>
+  </div>
+</div>
+
 <ng-template #panelContent>
+  
     <div class="row">
         <div class="col-8">
           <div class="row fw-bolder er text-primary fs-3 mb-5">
@@ -17,24 +34,27 @@
           </div>
           <div class="row">
             <codx-listview
+              #listview
               [itemTemplate]="itemTemplate"
               service="WP"
               [funcId]="funcID" 
               [entityName]="entityName"
               [predicate]="predicate"
-              [dataValue]="dataValue" >
+              [dataValue]="dataValue"
+              [predicates]="predicates"
+              [dataValues]="dataValues">
             </codx-listview>
           </div>
         </div>
         <div class="col-4">
           <div class="w-350px min-w-350px ms-5 news-right">
               <div class="fw-bolder er text-primary fs-3 mb-5 border-bottom border-gray pb-2">
-                  <codx-label fromName="News" name="lblTopview" default="Xem nhiều nhất"></codx-label>
+                  <codx-label [formModel]="view.formModel" name="lblTopview" default="Xem nhiều nhất"></codx-label>
               </div>
               <ng-container *ngFor="let item of listViews; index as i">
                   <div [class]="(i == 0 || i == listViews.length - 1)?'my-2':'my-4'"
                       (click)="clickViewDeital(item)">
-                      <div class="row">
+                      <div class="row cursor-pointer">
                           <div class="col-3">
                               <codx-img [width]="70" imageType="square" [cssClass]="'img'" [objectId]="item.recID"
                                   [objectType]="'WP_News'">
@@ -56,32 +76,84 @@
                   </div>
               </ng-container>
               <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
-                  <codx-label formName="News" name="lblTags" default="Tag #"></codx-label>
+                  <codx-label [formModel]="view.formModel" name="lblTags" default="Tag #"></codx-label>
                   <div class="badge-group">
-                      <span *ngFor="let tag of listTag" class="badge badge-danger" [style.background]="tag.color"
+                    <ng-container *ngFor="let tag of listTag">
+                      <span class="badge badge-danger cursor-pointer" 
+                          [style.background]="tag.color"
                           (click)="clickTag(tag)">
                           {{tag.text}}
                       </span>
+                    </ng-container>
                   </div>
               </div>
           </div>
         </div>
     </div>
+    <ng-container *ngFor="let item of listViews; index as i">
+      <div
+        [class]="i == 0 || i == listViews.length - 1 ? 'my-2' : 'my-4'"
+        (click)="clickViewDeital(item)"
+      >
+        <div class="row">
+          <div class="col-3">
+            <codx-img
+              [width]="70"
+              imageType="square"
+              [cssClass]="'img'"
+              [objectId]="item.recID"
+              [objectType]="'WP_News'"
+            >
+            </codx-img>
+          </div>
+          <div class="col-9">
+            <div class="fs-5 fw-bold news-title">
+              {{ item.subContent | maxlenght: 75 }}
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <div class="fs-7 d-flex flex-center">
+                <span class="icon-visibility icon-18 text-gray-500"></span>
+                <span class="text-gray-500 ms-1">{{ item.views }}</span>
+              </div>
+              <div class="fs-7 text-gray-500">
+                {{ item.createdOn | fmDT }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <div
+      class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray"
+    >
+      <codx-label formName="News" name="lblTags" default="Tag #"></codx-label>
+      <div class="badge-group">
+        <span
+          *ngFor="let tag of listTag"
+          class="badge badge-danger"
+          [style.background]="tag.color"
+          (click)="clickTag(tag)"
+        >
+          {{ tag.text }}
+        </span>
+      </div>
+    </div>
 </ng-template>
 <ng-template #itemTemplate let-data>
   <div class="row my-2" (click)="clickViewDeital(data)">
     <div class="col-2">
-      <codx-img 
-        [objectId]="data.recID" 
+      <codx-img
+        [objectId]="data.recID"
         [objectType]="entityName"
-        [imageType]="'square'" 
-        [width]="100">
+        [imageType]="'square'"
+        [width]="100"
+      >
       </codx-img>
     </div>
     <div class="col-10">
-      <codx-temp-full 
+      <codx-temp-full
         [dataItem]="data"
-        [typeMF]="'hover'" 
+        [typeMF]="'hover'"
         [resourceObjType]="entityName"
         imgCss="me-2"
         cardCss="card-template border-bottom px-2 py-3"
@@ -89,11 +161,9 @@
         [desc]="data.subContent"
         [descLine]="2"
         [date]="data.createdOn"
-        [bookmark]="false">
+        [bookmark]="false"
+      >
       </codx-temp-full>
     </div>
   </div>
 </ng-template>
-
-
-

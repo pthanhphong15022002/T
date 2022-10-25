@@ -3,11 +3,7 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <codx-label
-            name="lblTitleSignFile"
-            default="Thêm mới đăng ký"
-            [formModel]="formModel"
-          ></codx-label>
+          <codx-label name="lblTitleSignFile" [default]="title" [formModel]="formModel"></codx-label>
         </h2>
       </div>
       <div class="d-flex align-items-center stepper">
@@ -15,20 +11,12 @@
           <div class="stepper-item" [ngClass]="{ active: currentTab >= 1 }">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
-                <i
-                  class="stepper-default icon-24 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
-                ></i>
-                <div
-                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
-                >
+                <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
-                <div
-                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
-                >
+                <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
@@ -37,20 +25,12 @@
           <div class="stepper-item" [ngClass]="{ active: currentTab === 2 }">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
-                <i
-                  class="stepper-default icon-24 icon-radio_button_checked"
-                ></i>
-                <i
-                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
-                ></i>
-                <div
-                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
-                >
+                <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
-                <div
-                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
-                >
+                <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
                   <span class="icon-check icon-18"></span>
                 </div>
               </div>
@@ -72,20 +52,15 @@
             <div class="d-flex justify-content-between container mb-10 mt-10">
               <ul class="nav">
                 <li class="nav-item">
-                  <span
-                    class="nav-link fw-bold cursor-pointer"
-                    [ngClass]="{ active: !groupID }"
-                    (click)="filterStationery()"
-                    ><codx-label name="lblAll" default="Tất cả"></codx-label
-                  ></span>
+                  <span class="nav-link fw-bold cursor-pointer" [ngClass]="{ active: !groupID }"
+                    (click)="filterStationery()">
+                    <codx-label name="lblAll" default="Tất cả"></codx-label>
+                  </span>
                 </li>
                 <li class="nav-item" *ngFor="let item of groupStationery">
-                  <span
-                    class="nav-link fw-bold cursor-pointer active"
-                    [ngClass]="{ active: item?.resourceID == groupID }"
-                    (click)="filterStationery(item?.resourceID)"
-                    >{{ item?.resourceName }}</span
-                  >
+                  <span class="nav-link fw-bold cursor-pointer active"
+                    [ngClass]="{ active: item?.resourceID == groupID }" (click)="filterStationery(item?.resourceID)">{{
+                    item?.resourceName }}</span>
                 </li>
               </ul>
               <div class="d-flex">
@@ -97,23 +72,16 @@
 
                 <button (click)="changeTab(2)">
                   <i class="icon-double_arrow"></i>
-                  <span>Tiếp theo</span>
+                  <span>
+                    <codx-label name="lblContinue" default="Tiếp theo"></codx-label>
+                  </span>
                 </button>
               </div>
             </div>
             <div class="container h-75">
-              <codx-listview
-                #listView
-                [type]="'cardView'"
-                [service]="'EP'"
-                [assemblyName]="'EP'"
-                [entityName]="'EP_Resources'"
-                [className]="'ResourcesBusiness'"
-                [method]="'GetListAsync'"
-                [predicate]="'ResourceType=@0'"
-                [dataValue]="6"
-                [itemTemplate]="templateListCard"
-              >
+              <codx-listview #listView [type]="'cardView'" [service]="'EP'" [assemblyName]="'EP'"
+                [entityName]="'EP_Resources'" [className]="'ResourcesBusiness'" [method]="'GetListAsync'"
+                [predicate]="'ResourceType=@0'" [dataValue]="6" [itemTemplate]="templateListCard">
               </codx-listview>
             </div>
           </ng-container>
@@ -124,13 +92,8 @@
 </div>
 
 <ng-template #templateListCard let-data>
-  <codx-card-img
-    cardCss="border w-200px h-100"
-    [imageObjType]="'EP_Stationery'"
-    [imageId]="data?.recID"
-    [rootData]="data"
-    [footer]="cardItemFooter"
-  >
+  <codx-card-img cardCss="border w-200px h-100" [imageObjType]="'EP_Stationery'" [imageId]="data?.recID"
+    [rootData]="data" [footer]="cardItemFooter" [imageWidth]="600">
   </codx-card-img>
 </ng-template>
 
@@ -149,22 +112,15 @@
           <span>{{ data?.currentQty }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
-          <span
-            class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
-          ></span>
+          <span class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"></span>
           <span>{{ data?.reservedQty }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
-          <span
-            class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
-          ></span>
+          <span class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"></span>
           <span>{{ data?.availableQty }}</span>
         </div>
       </div>
-      <div
-        class="symbol-group symbol-hover justify-content-end cursor-pointer"
-        (click)="addCart($event, data)"
-      >
+      <div class="symbol-group symbol-hover justify-content-end cursor-pointer" (click)="addCart($event, data)">
         <span class="icon-shopping_cart icon-20 text-gray-400 cart"></span>
       </div>
     </div>
@@ -172,161 +128,118 @@
 </ng-template>
 
 <ng-template #addNewRequest let-dialogSaveToTemplate>
-  <div *ngIf="isAfterRender && formModel" class="row" style="height: 99%">
+  <div *ngIf="isAfterRender && dialogAddBookingStationery" class="row" style="height: 99%">
     <div class="left col-6">
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-start mb-4">
+        <h3 class="h3-title">
+          <codx-label name="lblInfoRequest" default="Thông tin yêu cầu" [formModel]="formModel"></codx-label>
+        </h3>
+      </div>
+      <div class="d-flex justify-content-between mb-4">
         <div class="d-flex">
-          <codx-img
-            [objectId]="user?.userID"
-            [objectName]="user?.userName"
-            [objectType]="'AD_Users'"
-          ></codx-img>
-          <div>
-            <div>{{ user?.userName }}</div>
-            <div>{{ user?.employee?.positionName }}</div>
+          <codx-img [objectId]="user?.userID" [objectName]="user?.userName" [objectType]="'AD_Users'"></codx-img>
+          <div class="ms-2">
+            <div class="fw-bold text-start">{{ user?.userName }}</div>
+            <div class="fw-bold text-black-50">
+              {{ user?.employee?.positionName }}
+            </div>
           </div>
         </div>
-        <div
-          *ngIf="!isAddNew"
-          class="badge border-0 me-2"
-          [style.background-color]="'4' | vll: 'VL003':'color' | async"
-          [style.color]="'4' | vll: 'VL003':'textColor' | async"
-        >
-          {{ "4" | vll: "VL003":"text" | async }}
-        </div>
+        <codx-vll [name]="'VL003'" [value]="dialogAddBookingStationery?.value.status" [showText]="true"
+          [showBgColor]="true" class="badge badge-light badge-square badge-md fs-7 p-2">
+        </codx-vll>
       </div>
       <div class="row">
-        <div class="form-group col-4">
-          <codx-label
-            fiedName="BookingOn"
-            [formModel]="formModel"
-            default="Ngày yêu cầu"
-          >
-          </codx-label>
-          <codx-input
-            field="bookingOn"
-            [formModel]="formModel"
-            [Group]="dialogAddBookingStationery"
-          >
-          </codx-input>
+        <div class="row">
+          <div class="form-group col-4">
+            <codx-label class="d-flex justify-content-start" fiedName="BookingOn" [formModel]="formModel">
+            </codx-label>
+            <!-- <codx-input
+              type="datetime"
+              format="d"
+              field="bookingOn"
+              [crrValue]="dialogAddBookingStationery.value.bookingOn"             
+              (valueChange)="valueBookingOnChange($event)"
+            >
+            </codx-input> -->
+            <codx-input ControlName="bookingOn" [formModel]="formModel" [Group]="dialogAddBookingStationery"
+              >
+            </codx-input>
+          </div>
+          <div class="d-flex align-items-center form-group col-4">
+            <codx-input type="radio" name="category" field="category" [checked]="radioPersonalCheck"
+              [crrValue]="radioPersonalCheck" (valueChange)="valueChange($event)">
+            </codx-input>            
+            <codx-label class="ms-6 mt-6" fiedName="Category" [default]="requestType[0].text" [formModel]="formModel">
+            </codx-label>
+          </div>
+          <div class="d-flex align-items-center form-group col-4">
+            <codx-input type="radio" name="category" field="category"[checked]="radioGroupCheck"
+            [crrValue]="radioGroupCheck" (valueChange)="valueChange($event)">
+            </codx-input>
+            <codx-label class="ms-6 mt-6" fiedName="Category" [default]="requestType[1].text" [formModel]="formModel">
+            </codx-label>
+          </div>
         </div>
-        <div class="form-group d-flex col-4 align-items-center">
-          <codx-input
-            type="radio"
-            [crrValue]="data?.recID"
-            name="requestBy"
-            ControlName="recID"
-          >
-          </codx-input>
-          <codx-label
-            name="lblPersonalRequest"
-            default="Yêu cầu theo cá nhân"
-            [formModel]="formModel"
-          ></codx-label>
+        <div class="row">
+          <div class="form-group col-6">
+            <codx-label class="d-flex justify-content-start" fiedName="BUID" [formModel]="formModel">
+            </codx-label>
+            <codx-input [disabled]="dialogAddBookingStationery?.value.category === '1'" type="combobox" field="bUID"
+              refValue="BusinessUnits" [crrValue]="dialogAddBookingStationery?.value.bUID"
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+          <div class="form-group col-6">
+            <codx-label class="d-flex justify-content-start" name="lblQtyEmp" default="Số lượng nhân viên">
+            </codx-label>
+            <codx-input [disabled]="dialogAddBookingStationery?.value.category === '1'" type="text" [crrValue]="qtyEmp">
+            </codx-input>
+          </div>
         </div>
-        <div class="form-group col-4">
-          <codx-input
-            type="radio"
-            [crrValue]="data?.recID"
-            name="requestBy"
-            ControlName="recID"
-          >
-          </codx-input>
-          <codx-label
-            name="lblDeptRequest"
-            default="Yêu cầu theo phòng"
-            [formModel]="formModel"
-          ></codx-label>
+        <div class="row">
+          <div class="form-group col-12">
+            <codx-label class="d-flex justify-content-start" fiedName="ReasonID" [formModel]="formModel">
+            </codx-label>
+            <codx-input ControlName="reasonID" [formModel]="formModel" [Group]="dialogAddBookingStationery">
+            </codx-input>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-6">
-          <codx-label
-            name="lblEmpQty"
-            [formModel]="formModel"
-            default="Đơn vị/Phòng ban"
-          >
-          </codx-label>
-          <codx-input type="combobox" field="bUID" refValue="BusinessUnits">
-          </codx-input>
-        </div>
-        <div class="form-group col-6">
-          <codx-label
-            fiedName="BUID"
-            [formModel]="formModel"
-            default="Số lượng nhân viên"
-          >
-          </codx-label>
-          <codx-input type="text"> </codx-input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-12">
-          <codx-label
-            fiedName="ReasonID"
-            [formModel]="formModel"
-            default="Lý do đăng ký"
-          >
-          </codx-label>
-          <codx-input
-            ControlName="reasonID"
-            [formModel]="formModel"
-            [Group]="dialogAddBookingStationery"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-12">
-          <codx-label fiedName="Note" [formModel]="formModel"> </codx-label>
-          <codx-input
-            ControlName="note"
-            [formModel]="formModel"
-            [Group]="dialogAddBookingStationery"
-          >
-          </codx-input>
+        <div class="row">
+          <div class="form-group col-12">
+            <codx-label class="d-flex justify-content-start" fiedName="Note" [formModel]="formModel">
+            </codx-label>
+            <codx-input ControlName="note" [formModel]="formModel" [Group]="dialogAddBookingStationery">
+            </codx-input>
+          </div>
         </div>
       </div>
     </div>
-    <div class="vr px-0"></div>
-    <div class="right col-5">
-      <codx-label
-        class="fw-bold text-left"
-        name="lblStationeryList"
-        default="Danh sách văn phòng phẩm"
-      ></codx-label>
-      <div *ngFor="let item of cart; trackBy: itemByRecID">
-        <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-100">
-          <div class="d-flex flex-row">
-            <div class="me-2">
-              <codx-img
-                [objectId]="item.recID"
-                imageType="square"
-                width="35"
-                objectType="EP_Stationery"
-              ></codx-img>
-            </div>
-            <div class="ms-2">
-              <span class="fw-bold">{{ item.resourceName }}</span>
+    <div class="right col-6 border-start">
+      <div class="d-flex justify-content-start">
+        <codx-label class="fw-bold" name="lblStationeryList" default="Danh sách văn phòng phẩm"></codx-label>
+      </div>
+      <div style="overflow-y: auto; max-height: 750px">
+        <div *ngFor="let item of cart; trackBy: itemByRecID">
+          <div class="d-flex mb-4 mt-4 pe-2 justify-content-between w-100">
+            <div class="d-flex flex-row">
+              <div class="me-2">
+                <codx-img [objectId]="item.recID" imageType="square" width="35" objectType="EP_Stationery"></codx-img>
+              </div>
+              <div class="ms-2">
+                <div class="d-flex justify-content-start">
+                  <span class="fw-bold">{{ item?.resourceName }}</span>
+                </div>
 
-              <div class="d-flex flex-row flex-grow-1">
-                <codx-label
-                  default="Đơn vị tính:"
-                  name="lblQuantity"
-                  class="text-gray-600"
-                ></codx-label>
-                <span class="d-block ms-2 fw-bold">{{ item.umid }}</span>
+                <div class="d-flex flex-row flex-grow-1">
+                  <codx-label class="text-gray-600" fiedName="BUID" [formModel]="formModel"></codx-label>:
+                  <span class="d-block ms-2 fw-bold">{{ item?.umid }}</span>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div class="d-flex align-items-center me-3">
-            <codx-label
-              default="Số lượng:"
-              name="lblQuantity"
-              class="text-gray-600"
-            ></codx-label>
-            <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+            <codx-input class="me-2" [cusButton]="true" [min]="1" [max]="50" type="number" field="quantity"
+              [crrValue]="item?.quantity" (valueChange)="valueChangeQtyStationery($event, item?.resourceID)">
+            </codx-input>
           </div>
         </div>
       </div>
@@ -334,26 +247,14 @@
   </div>
   <div class="d-flex justify-content-between">
     <button class="btn btn-outline-primary" (click)="changeTab(1)">
-      <codx-label
-        name="lblBack"
-        default="Quay lại"
-        [formModel]="formModel"
-      ></codx-label>
+      <codx-label name="lblBack" default="Quay lại" [formModel]="formModel"></codx-label>
     </button>
     <div class="btn-group">
       <button class="btn btn-outline-primary me-2">
-        <codx-label
-          name="lblApprove"
-          default="Gửi duyệt"
-          [formModel]="formModel"
-        ></codx-label>
+        <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
       </button>
       <button class="btn btn-primary" (click)="onSaveForm()">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="formModel"
-        ></codx-label>
+        <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </button>
     </div>
   </div>

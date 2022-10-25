@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
 import { VALUECELL } from '@syncfusion/ej2-pivotview/src/common/base/css-constant';
@@ -11,7 +11,8 @@ import { WP_News } from '../../../models/WP_News.model';
 @Component({
   selector: 'lib-popup-edit',
   templateUrl: './popup-edit.component.html',
-  styleUrls: ['./popup-edit.component.scss']
+  styleUrls: ['./popup-edit.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PopupEditComponent implements OnInit {
 
@@ -23,26 +24,28 @@ export class PopupEditComponent implements OnInit {
   popupFiled = 1;
   popupContent = 2;
   objectID = '';
-  dialogData:any;
+  dialogData: any;
   dialogRef: DialogRef;
   startDate: Date;
   endDate: Date;
   tagName = "";
   objectType = "";
-  shareControl:string =  "";
+  shareControl: string = "";
   userRecevier: any;
   recevierID = "";
   recevierName = "";
-  data:any;
-  fileUpload:any[] = [];
-  fileImage:any = null;
-  fileVideo:any = null;
-  myPermission:Permission = null;
-  apprPermission:Permission = null;
-  shareIcon:string = "";
-  shareText:string = "";
-  shareWith:String = "";
-  permissions:Permission[] = [];
+  data: any;
+  fileUpload: any[] = [];
+  fileImage: any = null;
+  fileVideo: any = null;
+  myPermission: Permission = null;
+  apprPermission: Permission = null;
+  shareIcon: string = "";
+  shareText: string = "";
+  shareWith: String = "";
+  permissions: Permission[] = [];
+  mssgCodeNoty:any = null;
+  headerText:string ="";
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -51,8 +54,8 @@ export class PopupEditComponent implements OnInit {
     OWNER: "1",
     MYGROUP: "2",
     MYTEAM: "3",
-    MYDEPARMENTS:"4",
-    MYDIVISION:"5",
+    MYDEPARMENTS: "4",
+    MYDIVISION: "5",
     MYCOMPANY: "6",
     ADMINISTRATOR: "7",
     EVERYONE: "9",
@@ -63,7 +66,7 @@ export class PopupEditComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
-  MEMBERTYPE ={
+  MEMBERTYPE = {
     CREATED: "1",
     SHARE: "2",
     TAGS: "3"
@@ -71,9 +74,16 @@ export class PopupEditComponent implements OnInit {
   FILE_REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
-    APPLICATION :'application'
+    APPLICATION: 'application'
   }
-
+  APPROVE_STATUS = {
+    NEW: "1",
+    REDO: "2",
+    SUBMITED: "3",
+    REJECTED:"4",
+    APPROVETED:"5",
+    CANCELLED:"6"
+  }
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('codxAttachment') codxAttachment: AttachmentComponent;
@@ -86,9 +96,9 @@ export class PopupEditComponent implements OnInit {
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
-    private cache:CacheService,
-    private dmSV:CodxDMService,
-    @Optional() dd? : DialogData,
+    private cache: CacheService,
+    private dmSV: CodxDMService,
+    @Optional() dd?: DialogData,
     @Optional() dialogRef?: DialogRef
 
   ) {
@@ -97,18 +107,49 @@ export class PopupEditComponent implements OnInit {
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
-  ngAfterViewInit(): void {
-  }
+ 
 
 
 
   ngOnInit(): void {
     this.setData();
   }
+
+  ngAfterViewInit(): void {
+  }
+
+  getMessageNoti(mssCode:string){
+    this.cache.message(mssCode).subscribe((mssg: any) => {
+      if(mssg){
+        this.mssgCodeNoty = mssg;
+      }
+    });
+  }
+
+  setData() {
+    this.tagName = this.data.tags;
+    this.shareControl = this.data.shareControl;
+    this.permissions = this.data.permissions;
+    this.formGroup = new FormGroup({
+      Tags: new FormControl(this.data.tags),
+      Category: new FormControl(this.data.category),
+      StartDate: new FormControl(this.data.startDate),
+      EndDate: new FormControl(this.data.endDate),
+      Subject: new FormControl(this.data.subject),
+      SubContent: new FormControl(this.data.subContent),
+      Contents: new FormControl(this.data.contents),
+      Image: new FormControl(this.data.image),
+      AllowShare: new FormControl(this.data.allowShare),
+      CreatePost: new FormControl(this.data.createPost),
+    });
+    this.getMessageNoti("SYS009");
+    this.changedt.detectChanges();
+
+  }
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
-  clickInsertNews() {
+  clickUpdatePost() {
     this.data.shareControl = this.shareControl;
     this.data.permissions = this.permissions;
     this.data.tags = this.formGroup.controls['Tags'].value;
@@ -120,42 +161,29 @@ export class PopupEditComponent implements OnInit {
     this.data.contents = this.formGroup.controls['Contents'].value;
     this.data.allowShare = this.formGroup.controls['AllowShare'].value;
     this.data.createPost = this.formGroup.controls['CreatePost'].value;
-    if(this.data.allowShare){
-      this.data.permissions.map((p:Permission)=>{p.share = true});
-    }
-    else{
-      this.data.permissions.map((p:Permission)=>{p.share = false});
-    }
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'UpdateNewsAsync',
-        this.data
+        [this.data]
       )
       .subscribe(async (res: any) => {
         if (res) {
-          let result = res;
-          if(this.fileUpload.length > 0){
+          if (this.fileUpload.length > 0) {
             this.deleteFileByObjectID(this.data.recID);
             this.dmSV.fileUploadList = [...this.fileUpload];
-            (await (this.codxAttm.saveFilesObservable())).subscribe((res2:any) =>
-            { 
-              if(res2)
+            (await (this.codxAttm.saveFilesObservable())).subscribe((res2: any) => {
+              if (res2) 
               {
-                this.initForm();
-                this.shareControl = this.SHARECONTROLS.EVERYONE;
                 this.notifSV.notifyCode('SYS007');
-
                 this.dialogRef.close();
               }
             });
           }
-          else
+          else 
           {
-            this.initForm();
-            this.shareControl = this.SHARECONTROLS.EVERYONE;
             this.notifSV.notifyCode('SYS007');
             this.dialogRef.close();
           }
@@ -163,19 +191,37 @@ export class PopupEditComponent implements OnInit {
       });
   }
 
-
-  deleteFileByObjectID(recID:string){
-    if(recID){
+  clickApproPost() {
+    if(this.data)
+    {
       this.api.execSv(
-      "DM",
-      "ERM.Business.DM",
-      "FileBussiness",
-      "DeleteByObjectIDAsync",
-      [recID, 'WP_Comments', true]).subscribe();
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "SubmitNewsAsync",
+        [this.data.recID])
+        .subscribe((res:any[]) => {
+          if(res && res[0]){
+            this.data = res[1];
+            this.dialogRef.close(this.data);
+          }
+        });
     }
   }
-  insertWPComment(data: WP_News){
-    if(data.createPost){
+
+
+  deleteFileByObjectID(recID: string) {
+    if (recID) {
+      this.api.execSv(
+        "DM",
+        "ERM.Business.DM",
+        "FileBussiness",
+        "DeleteByObjectIDAsync",
+        [recID, 'WP_Comments', true]).subscribe();
+    }
+  }
+  insertWPComment(data: WP_News) {
+    if (data.createPost) {
       var post = new WP_Comments();
       post.category = "4";
       post.refID = data.recID;
@@ -185,21 +231,20 @@ export class PopupEditComponent implements OnInit {
       post.permissions = data.permissions;
       post.approveControl = "0";
       post.createdBy = data.createdBy;
-      this.api.execSv("WP","ERM.Business.WP","CommentsBusiness","PublishPostAsync", [post, null]).subscribe();
+      this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post, null]).subscribe();
     }
   }
   valueChange(event: any) {
-    if(!event || event.data == "" || !event.data){
+    if (!event || event.data == "" || !event.data) {
       return;
     }
     let field = event.field;
     let value = event.data;
     let obj = {};
-    switch(field)
-    {
+    switch (field) {
       case 'StartDate':
         this.startDate = value.fromDate;
-        if(this.endDate < this.startDate){
+        if (this.endDate < this.startDate) {
           this.notifSV.notifyCode("WP011");
           this.endDate = null;
           obj[field] = null;
@@ -210,18 +255,18 @@ export class PopupEditComponent implements OnInit {
         break;
       case 'EndDate':
         this.endDate = value.fromDate;
-        if(this.endDate < this.startDate){
+        if (this.endDate < this.startDate) {
           this.notifSV.notifyCode("WP011");
           this.endDate = null;
           obj[field] = null;
         }
-        else  {
+        else {
           obj[field] = this.endDate;
         }
         break;
       default:
         obj[field] = value;
-        break; 
+        break;
     }
     this.formGroup.patchValue(obj);
     this.changedt.detectChanges();
@@ -232,7 +277,7 @@ export class PopupEditComponent implements OnInit {
     }
     let data = event[0];
     let countPermission = 0;
-    if(this.shareControl){
+    if (this.shareControl) {
       this.permissions = [];
       this.permissions.push(this.myPermission);
       this.permissions.push(this.apprPermission);
@@ -409,39 +454,7 @@ export class PopupEditComponent implements OnInit {
     }
     this.changedt.detectChanges();
   }
-  setData(){
-    this.tagName = this.data.tags;
-    this.shareControl = this.data.shareControl;
-    this.permissions = this.data.permissions;
-    this.formGroup = new FormGroup({
-      Tags: new FormControl(this.data.tags),
-      Category: new FormControl(this.data.category),
-      StartDate: new FormControl(this.data.startDate),
-      EndDate: new FormControl(this.data.endDate),
-      Subject: new FormControl(this.data.subject),
-      SubContent: new FormControl(this.data.subContent),
-      Contents: new FormControl(this.data.contents),
-      Image: new FormControl(this.data.image),
-      AllowShare: new FormControl(this.data.allowShare),
-      CreatePost: new FormControl(this.data.createPost),
-    });
-    this.changedt.detectChanges();
-  }
-  initForm() {
-    this.formGroup = new FormGroup({
-      Tags: new FormControl(''),
-      Category: new FormControl(null),
-      StartDate: new FormControl(new Date()),
-      EndDate: new FormControl(),
-      Subject: new FormControl(''),
-      SubContent: new FormControl(''),
-      Contents: new FormControl(''),
-      Image: new FormControl(''),
-      AllowShare: new FormControl(false),
-      CreatePost: new FormControl(false),
-    });
-    this.changedt.detectChanges();
-  }
+  
   clearValueForm() {
     this.formGroup.controls['Tags'].setValue("");
     this.formGroup.controls['Category'].setValue(null);
@@ -455,29 +468,28 @@ export class PopupEditComponent implements OnInit {
     this.formGroup.controls['CreatePost'].setValue(false);
     this.changedt.detectChanges();
   }
-  PopoverEmpEnter(p:any){
+  PopoverEmpEnter(p: any) {
     p.open();
   }
-  PopoverEmpLeave(p:any){
+  PopoverEmpLeave(p: any) {
     p.close();
   }
-  removeFile(file){
-    if(file){
+  removeFile(file) {
+    if (file) {
       this.fileUpload = [];
     }
   }
 
-  addFiles(file:any){
-    if(file && file.data.length > 0 ){
+  addFiles(file: any) {
+    if (file && file.data.length > 0) {
       file.data.map(f => {
-        if(f.mimeType.indexOf("image") >= 0 ){
+        if (f.mimeType.indexOf("image") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
         }
-        else if(f.mimeType.indexOf("video") >= 0)
-        {
+        else if (f.mimeType.indexOf("video") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.VIDEO;
         }
-        else{
+        else {
           f['referType'] = this.FILE_REFERTYPE.APPLICATION;
         }
       });
@@ -487,10 +499,10 @@ export class PopupEditComponent implements OnInit {
       this.changedt.detectChanges();
     }
   }
-  addImage(files:any){
-    if(files && files.data.length > 0 ){
+  addImage(files: any) {
+    if (files && files.data.length > 0) {
       let file = files.data[0];
-      if(file.mimeType.indexOf("image") >= 0 ){
+      if (file.mimeType.indexOf("image") >= 0) {
         file['referType'] = this.FILE_REFERTYPE.IMAGE;
         this.fileImage = file;
         this.fileUpload.push(file);
@@ -499,27 +511,26 @@ export class PopupEditComponent implements OnInit {
       else this.notifSV.notify("Vui lòng chọn file image.");
     }
   }
-  addVideo(files:any){
-    if(files && files.data.length > 0 ){
+  addVideo(files: any) {
+    if (files && files.data.length > 0) {
       let file = files.data[0];
-         if(file.mimeType.indexOf("video") >= 0)
-        {
-          file['referType'] = this.FILE_REFERTYPE.VIDEO;
-          this.fileVideo = file;
-          this.fileUpload.push(file);
-          this.changedt.detectChanges();
-        }
-        else{
-          this.notifSV.notify("Vui lòng chọn file video.");
-        }
+      if (file.mimeType.indexOf("video") >= 0) {
+        file['referType'] = this.FILE_REFERTYPE.VIDEO;
+        this.fileVideo = file;
+        this.fileUpload.push(file);
+        this.changedt.detectChanges();
+      }
+      else {
+        this.notifSV.notify("Vui lòng chọn file video.");
+      }
     }
   }
-  clickClosePopup(){
+  clickClosePopup() {
     this.dialogRef.close();
   }
 
 
-  clickUploadFile(){
+  clickUploadFile() {
     this.codxAttm.uploadFile();
   }
 

@@ -1,7 +1,12 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule, Type } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders,
+  NgModule,
+  Type,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CoreModule } from '@core/core.module';
@@ -19,10 +24,10 @@ import { ChatListComponent } from './chatting/chat-list/chat-list.component';
 import { ChatBoxComponent } from './chatting/chatbox/chat-box.component';
 import { ChattingComponent } from './chatting/chatting.component';
 import { ListChatBoxComponent } from './chatting/list-chat-box/list-chat-box.component';
+import { PopupGroupComponent } from './chatting/popup-group/popup-group.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { AddNoteComponent } from './dashboard/home/add-note/add-note.component';
 import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
@@ -44,79 +49,88 @@ import { ViewDetailComponent } from './news/view-detail/view-detail.component';
 import { ViewTagComponent } from './news/view-tag/view-tag.component';
 import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { Layout2Component } from './_layout2/layout2.component';
-import { Layout3Component } from './_layout3/layout3.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { LayoutNewsComponent } from './layout-news/layout-news.component';
+import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
+import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 
 export const routes: Routes = [
-  
-
   {
-    path:"portal",
-    component:DashboardComponent,
-    children:
-    [
+    path: 'portal',
+    component: LayoutPortalComponent,
+    children: [
       {
-        path:":funcID",
-        component:HomeComponent
+        path: ':funcID',
+        component: HomeComponent,
       },
-      
     ],
   },
   {
-    path:"chat",
-    component:DashboardComponent,
-    children:
-    [
+    path: 'chat',
+    component: LayoutPortalComponent,
+    children: [
       {
-        path:":funcID",
-        component:ChattingComponent
+        path: ':funcID',
+        component: ChattingComponent,
       },
-      
     ],
   },
   {
-    path:"news",
-    component:Layout2Component,
-    children:
-    [
+    path: 'news',
+    component: LayoutNewsComponent,
+    children: [
+      {
+        path: 'settings/:funcID',
+        loadChildren: () =>
+          import(
+            'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
+          ).then((m) => m.DynamicSettingModule),
+      },
       {
         path: ':funcID/tag/:tagName',
-        component: ViewTagComponent
+        component: ViewTagComponent,
       },
       {
-        path:":funcID/:category",
-        component: NewsComponent
+        path: ':funcID/:category',
+        component: NewsComponent,
       },
       {
-        path:":funcID/:category/:recID",
-        component: ViewDetailComponent
+        path: ':funcID/:category/:recID',
+        component: ViewDetailComponent,
       },
       {
-        path:':funcID',
-        redirectTo: 'WPT02P/home',
-        pathMatch: 'full'
-      }
-    ]
+        path: ':funcID',
+        redirectTo: 'WPT02/home',
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: 'companyinfo',
     component: LayoutComponent,
     children: [
       {
-        path: ':funcID',
-        component: CompanyInforComponent
+        path: 'settings/:funcID',
+        loadChildren: () =>
+          import(
+            'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
+          ).then((m) => m.DynamicSettingModule),
       },
-    ]
+      {
+        path: ':funcID',
+        component: CompanyInforComponent,
+      },
+    ],
   },
   {
-    path:'approvals',
-    component: Layout3Component,
-    children:[
+    path: 'approvals',
+    component: LayoutApprovalComponent,
+    children: [
       {
-        path:':funcID',
-        component: ApproveComponent,     
+        path: ':funcID',
+        component: ApproveComponent,
       },
-    ]
+    ],
   },
   {
     path: 'orgchartportal',
@@ -125,87 +139,27 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: OrgorganizationComponent,
-      }
+      },
     ],
   },
   {
-    path:'wp/portal/wp',
+    path: 'wp/portal/wp',
     redirectTo: 'portal/WP',
-    pathMatch: "full"
+    pathMatch: 'full',
   },
   {
-    path:"",
-    redirectTo:"portal/WP",
-    pathMatch:"full"
+    path: '',
+    redirectTo: 'portal/WP',
+    pathMatch: 'full',
   },
- 
-  // {
-  //   path: 'news',
-  //   component: Layout2Component,
-  //   children: [
-  //     {
-  //       path: ':funcID/tag/:tagName',
-  //       component: ViewTagComponent
-  //     },
-  //     {
-  //       path: ':funcID/:category',
-  //       component: NewsComponent
-  //     },
-      
-  //     {
-  //       path: ':funcID/:category/:recID',
-  //       component: ViewDetailComponent
-  //     },
-      
-  //     {
-  //       path: '**',
-  //       redirectTo: 'WPT02P/home',
-  //       pathMatch: 'full'
-  //     }
-  //   ]
-  // },
-  // {
-  //   path:'approvals',
-  //   component: Layout3Component,
-  //   children:[
-  //     {
-  //       path:':funcID',
-  //       component: ApproveComponent,     
-  //     },
-  //     {
-  //       path: '**',
-  //       redirectTo: 'approvals/WPT0211',
-  //       pathMatch: 'full'
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: 'portal',
-  //   component: DashboardComponent,
-  //   children: [
-  //     {
-  //       path: ':funcID',
-  //       component: HomeComponent
-  //     },
-  //     {
-  //       path: '**',
-  //       redirectTo: 'portal/WP',
-  //       pathMatch: 'full'
-  //     }
-  //   ],
-  // },
-  // {
-  //   path: '',
-  //   redirectTo: 'portal/WP',
-  //   pathMatch: 'full'
-  // }
+
 ];
 
 const Component: Type<any>[] =
   [
     LayoutComponent,
-    Layout2Component,
-    Layout3Component,
+    LayoutNewsComponent,
+    LayoutApprovalComponent,
     CodxWpComponent,
     NewsComponent,
     PopupAddComponent,
@@ -214,7 +168,7 @@ const Component: Type<any>[] =
     PopupEditComponent,
     ApproveComponent,
     ApproveDetailComponent,
-    DashboardComponent,
+    LayoutPortalComponent,
     HomeComponent,
     AddNoteComponent,
     SaveNoteComponent,
@@ -233,8 +187,8 @@ const Component: Type<any>[] =
     PopupSearchPostComponent,
     ChatListComponent,
     ChatBoxComponent,
-    ListChatBoxComponent
-
+    ListChatBoxComponent,
+    PopupGroupComponent,
   ];
 
 @NgModule({
@@ -250,13 +204,9 @@ const Component: Type<any>[] =
     CoreModule,
     PickerModule,
     RouterModule.forChild(routes),
-
   ],
-  exports: [
-    RouterModule,
-    ListPostComponent
-  ],
-  declarations: [Component,ChattingComponent, LayoutComponent],
+  exports: [RouterModule, ListPostComponent],
+  declarations: [Component, ChattingComponent, LayoutComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWpModule {

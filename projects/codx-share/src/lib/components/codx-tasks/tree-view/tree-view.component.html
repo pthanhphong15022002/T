@@ -10,7 +10,8 @@
       <div class="d-flex align-items-center w-100">
         <div class="w-30px min-w-30px me-2">
           <button type="button" class="btn btn-icon btn-sm btn-white" *ngIf="item?.isAssign">
-            <span id="{{item.taskID}}" class="icon-18 icon-add_box align-datas-start"></span>
+            <span id="{{ item.taskID }}"
+              class="icon-18  align-datas-start {{item.isCollapse?'icon-indeterminate_check_box' : 'icon-add_box'}}"></span>
             <!-- <span  class="icon-18 icon-add_circle me-2 align-datas-start"></span> -->
           </button>
         </div>
@@ -36,38 +37,43 @@
             </div>
           </div>
         </div>
-        <div class="w-30px min-w-30px">
+        <div class="w-45px min-w-45px">
+          <span [ngClass]="item?.isTimeOut?'icon-notifications expired':''" [ngbPopover]="popOverDue"
+            #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()"
+            placement="top right bottom"></span>
           <span class="priority mb-1 max-h-70px" [class]="item?.priority | vll: vllPriority:'icon' | async"
-            [style.color]="item?.priority | vll: vllPriority:'textColor' | async"></span>
+            [style.color]="
+              item?.priority | vll: vllPriority:'textColor' | async
+            " [ngbPopover]="popDetailPriority" #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()"
+            (mouseleave)="p.close()" placement="top right bottom"></span>
         </div>
         <div class="w-125px min-w-125px d-flex align-items-center">
           <div [class]="
-          'd-flex align-items-center me-3' +
-          ' ' +
-          (item?.comments ? 'text-success' : 'text-gray-600')
-        ">
+              'd-flex align-items-center me-3' +
+              ' ' +
+              (item?.comments ? 'text-success' : 'text-gray-600')
+            ">
             <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
             <span class="ms-1"> {{ item?.comments }}</span>
           </div>
           <div [class]="
-          'd-flex align-items-center me-3' +
-          ' ' +
-          (item?.todo ? 'text-success' : 'text-gray-600')
-        ">
+              'd-flex align-items-center me-3' +
+              ' ' +
+              (item?.todo ? 'text-success' : 'text-gray-600')
+            ">
             <span class="text-hover-primary icon-check-correct icon-16"></span>
             <span class="ms-1"> {{ item?.todo }}</span>
           </div>
           <div [class]="
-          'd-flex align-items-center' +
-          ' ' +
-          (item?.attachments ? 'text-success' : 'text-gray-600')
-        ">
+              'd-flex align-items-center' +
+              ' ' +
+              (item?.attachments ? 'text-success' : 'text-gray-600')
+            ">
             <span class="text-hover-primary icon-attach_file icon-16"></span>
             <span>
               {{ item?.attachments }}
             </span>
           </div>
-
         </div>
         <div class="w-50px min-w-50px pe-6">
           <div class="d-flex flex-column justify-content-start">
@@ -99,6 +105,19 @@
   </ng-template>
 
   <ng-template #tempHtmlNoData>
-    <codx-label name="lblNoMemo" [formModel]="formModel" default="Không có mô tả" ></codx-label> 
+    <codx-label name="lblNoMemo" [formModel]="formModel" default="Không có mô tả"></codx-label>
   </ng-template>
+
+  <ng-template #popDetailPriority>
+    <span>
+      <codx-label name="Priority" formModel="f" default="Độ ưu tiên:"></codx-label>
+    </span><span>
+      {{ item?.priority | vll: vllPriority:"text" | async }}
+    </span>
+  </ng-template>
+
+  <ng-template #popOverDue>
+    <codx-label name="lblOverDue" [formModel]="formModel" default="Đã quá hạn!"></codx-label>
+  </ng-template>
+
 </ng-template>

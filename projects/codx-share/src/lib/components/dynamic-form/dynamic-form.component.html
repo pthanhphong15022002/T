@@ -13,14 +13,22 @@
 </codx-views>
 
 <ng-template #morefunction let-data>
-  <div class="has-action-menu" style="height: 30px">
+  <div class="" style="height: 30px">
     <!-- <div class="action-menu"> -->
     <codx-mfunc
       [dataItem]="data"
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
-      type="hover"
+      type="view"
     ></codx-mfunc>
     <!-- </div> -->
   </div>
+
+  <!-- <codx-mfunc 
+  [dataItem]="data"
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="view"
+      >
+</codx-mfunc> -->
 </ng-template>

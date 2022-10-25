@@ -1,15 +1,21 @@
-<codx-form #form headerText="{{titleDialog}}" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
+<codx-form #form [headerText]="data.processName" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
     [dialog]="dialog" class="dialog-property">
     <ng-template #header>
         <div class="offcanvas-header w-100">
             <div class="btn-extand d-flex align-items-center"
                 [ngClass]="!hideExtend?'justify-content-end':'justify-content-end'">
                 <ng-container *ngIf="!hideExtend">
-                    <span [style.marginLeft]="'52%'">Thông tin mở rộng</span>
+                    <span [style.marginLeft]="'52%'">
+                        <codx-label fiedName="InfoExpand" default="Thông tin mở rộng">
+                        </codx-label>
+                        </span>
                 </ng-container>
                 <a class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
                     (click)="extendShow()">
-                    <span *ngIf="hideExtend" class="text-dark me-2">{{titleExpand}}</span>
+                    <span *ngIf="hideExtend" class="text-dark me-2">
+                        <codx-label fiedName="Expand" [formModel]="form.formModel" default="Mở rộng">
+                        </codx-label>
+                    </span>
                     <span class="icon-login icon-20 ext_button"></span>
                 </a>
             </div>
@@ -18,269 +24,277 @@
     <ng-template #body>
         <div class="offcanvas-content offcanvas-extend fixed-extend">
             <div class="d-flex">
-        <div class="card-body">
-            <div class="mb-5">
-                <h4 class="fw-bold text-gray-900 mb-104">
-                    <codx-label fiedName="Memo" [formModel]="form.formModel" default="Thông tin">
-                    </codx-label>
-                </h4>
-                <div class="d-flex flex-wrap mb-2">
-                    <div class="d-flex align-items-center me-4">
-                        <span class="fw-bolb w-100px">
-                            <codx-label name="" default="Người tạo:">
+                <div class="card-body">
+                    <div class="mb-5">
+                        <h4 class="fw-bold text-gray-900 mb-104">
+                            <codx-label fiedName="Info" [formModel]="form.formModel" default="Thông tin">
                             </codx-label>
-                        </span>
-                        <span class="text-dark">{{data.userName}}</span>
+                        </h4>
+                        <div class="d-flex flex-wrap mb-2">
+                            <div class="d-flex align-items-center me-4">
+                                <span class="fw-bolb w-100px">
+                                    <codx-label name="" default="Người tạo:">
+                                    </codx-label>
+                                </span>
+                                <span class="text-dark">{{data.userName}}</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="me-1 icon-16 icon-access_alarm"></span><span>{{data.activedOn |
+                                    fmDT}}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap mb-2">
+                            <div class="d-flex align-items-center me-4">
+                                <span class="fw-bolb w-100px">
+                                    <codx-label name="" default="Phiên bản:">
+                                    </codx-label>
+                                </span>
+                                <span class="text-dark">{{ data.versionNo }}</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="me-1 icon-16 icon-access_alarm"></span><span>{{data.activedOn |
+                                    fmDT}}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap mb-2">
+                            <div class="d-flex align-items-center me-4">
+                                <span class="fw-bolb w-100px">
+                                    <codx-label name="" default="Chủ qui trình:">
+                                    </codx-label>
+                                </span>
+                                <span class="text-dark">Phạm Hữu Thời</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <span class="me-1 icon-16 icon-access_alarm"></span><span>{{data.activedOn | fmDT}}</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-wrap mb-2">
-                    <div class="d-flex align-items-center me-4">
-                        <span class="fw-bolb w-100px">
-                            <codx-label name="" default="Phiên bản:">
+                    <div class="mb-5">
+                        <h4 class="fw-bold text-gray-900 mb-4">
+                            <codx-label fiedName="Rating" [formModel]="form.formModel" default="Đánh giá">
                             </codx-label>
-                        </span>
-                        <span class="text-dark">{{ data.versionNo }}</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <span class="me-1 icon-16 icon-access_alarm"></span><span>{{data.activedOn | fmDT}}</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-wrap mb-2">
-                    <div class="d-flex align-items-center me-4">
-                        <span class="fw-bolb w-100px">
-                            <codx-label name="" default="Chủ qui trình:">
-                            </codx-label>
-                        </span>
-                        <span class="text-dark">Phạm Hữu Thời</span>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-5">
-                <h4 class="fw-bold text-gray-900 mb-4">Đánh giá</h4>
-                <div class="d-flex flex-stack w-100 me-2">
-                    <!--begin::Section-->
-                    <div class="d-flex flex-column flex-center">
-                        <span class="text-warning fw-bolder d-block fs-3x">3.5</span>
-                        <div class="rating">
-                            <div class="rating-label checked">
-                                <i class="icon-star "></i>
-                            </div>
-                            <div class="rating-label checked">
-                                <i class="icon-star "></i>
-                            </div>
-                            <div class="rating-label checked">
-                                <i class="icon-star "></i>
-                            </div>
-                            <div class="rating-label checked">
-                                <i class="icon-star_half "></i>
-                            </div>
-                            <div class="rating-label checked">
-                                <i class="icon-star_border "></i>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center ">
-                            <span class="me-1">200</span><span class="line-clamp">đánh giá</span>
-                        </div>
-                    </div>
-                    <!--end::Section-->
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-end align-items-start flex-wrap">
-                            <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                                <div class="d-flex align-items-center me-3">
-                                    <span class="me-1">5</span>
-                                    <div class="rating-label">
-                                        <i class="icon-star icon-16"></i>
+                        </h4>
+                        <div class="d-flex flex-stack w-100 me-2">
+                            <!--begin::Section-->
+                            <div class="d-flex flex-column flex-center">
+                                <span class="text-warning fw-bolder d-block fs-3x">3.5</span>
+                                <div class="rating">
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star_half "></i>
+                                    </div>
+                                    <div class="rating-label checked">
+                                        <i class="icon-star_border "></i>
                                     </div>
                                 </div>
-                                <div class="progress h-6px w-100 me-3">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="d-flex align-items-center ">
+                                    <span class="me-1">200</span><span class="line-clamp">đánh giá</span>
                                 </div>
-                                <span class="text-primary fw-bold">50%</span>
                             </div>
-                            <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                                <div class="d-flex align-items-center me-3">
-                                    <span class="me-1">4</span>
-                                    <div class="rating-label">
-                                        <i class="icon-star icon-16"></i>
+                            <!--end::Section-->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-end align-items-start flex-wrap">
+                                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                        <div class="d-flex align-items-center me-3">
+                                            <span class="me-1">5</span>
+                                            <div class="rating-label">
+                                                <i class="icon-star icon-16"></i>
+                                            </div>
+                                        </div>
+                                        <div class="progress h-6px w-100 me-3">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span class="text-primary fw-bold">50%</span>
+                                    </div>
+                                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                        <div class="d-flex align-items-center me-3">
+                                            <span class="me-1">4</span>
+                                            <div class="rating-label">
+                                                <i class="icon-star icon-16"></i>
+                                            </div>
+                                        </div>
+                                        <div class="progress h-6px w-100 me-3">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span class="text-primary fw-bold">50%</span>
+                                    </div>
+                                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                        <div class="d-flex align-items-center me-3">
+                                            <span class="me-1">3</span>
+                                            <div class="rating-label">
+                                                <i class="icon-star icon-16"></i>
+                                            </div>
+                                        </div>
+                                        <div class="progress h-6px w-100 me-3">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span class="text-primary fw-bold">50%</span>
+                                    </div>
+                                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                        <div class="d-flex align-items-center me-3">
+                                            <span class="me-1">2</span>
+                                            <div class="rating-label">
+                                                <i class="icon-star icon-16"></i>
+                                            </div>
+                                        </div>
+                                        <div class="progress h-6px w-100 me-3">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span class="text-primary fw-bold">50%</span>
+                                    </div>
+                                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                                        <div class="d-flex align-items-center me-3">
+                                            <span class="me-1">1</span>
+                                            <div class="rating-label">
+                                                <i class="icon-star icon-16"></i>
+                                            </div>
+                                        </div>
+                                        <div class="progress h-6px w-100 me-3">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span class="text-primary fw-bold">50%</span>
                                     </div>
                                 </div>
-                                <div class="progress h-6px w-100 me-3">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <span class="text-primary fw-bold">50%</span>
                             </div>
-                            <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                                <div class="d-flex align-items-center me-3">
-                                    <span class="me-1">3</span>
-                                    <div class="rating-label">
-                                        <i class="icon-star icon-16"></i>
+                        </div>
+                    </div>
+                    <div class="separator  my-2"></div>
+                    <div class="mb-4">
+                        <div class="d-flex flex-stack flex-wrap">
+                            <div class="d-flex align-items-center py-1">
+                                <div class="d-flex flex-column">
+                                    <div class="text-dark fw-bold">Đánh giá tài liệu này</div>
+                                    <div class="text-gray-700">
+                                        Cho người khác biết suy nghĩ của bạn ....
                                     </div>
                                 </div>
-                                <div class="progress h-6px w-100 me-3">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <span class="text-primary fw-bold">50%</span>
                             </div>
-                            <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                                <div class="d-flex align-items-center me-3">
-                                    <span class="me-1">2</span>
+                            <div class="d-flex align-items-center py-1">
+                                <div class="rating  px-4 me-2">
                                     <div class="rating-label">
-                                        <i class="icon-star icon-16"></i>
+                                        <i class="icon-star_outline "></i>
+                                    </div>
+                                    <div class="rating-label">
+                                        <i class="icon-star_outline "></i>
+                                    </div>
+                                    <div class="rating-label ">
+                                        <i class="icon-star_outline "></i>
+                                    </div>
+                                    <div class="rating-label ">
+                                        <i class="icon-star_outline "></i>
+                                    </div>
+                                    <div class="rating-label ">
+                                        <i class="icon-star_outline "></i>
                                     </div>
                                 </div>
-                                <div class="progress h-6px w-100 me-3">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <span class="text-primary fw-bold">50%</span>
                             </div>
-                            <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                                <div class="d-flex align-items-center me-3">
-                                    <span class="me-1">1</span>
-                                    <div class="rating-label">
-                                        <i class="icon-star icon-16"></i>
+                        </div>
+                        <div class="position-relative cmt  cmt-cmt c3 w-100">
+                            <codx-input type="text" [disabled]="false" class="test-textbox rounded-3"
+                                placeholder="textbox" value="123">
+                            </codx-input>
+                        </div>
+                    </div>
+                    <!--begin::Wrapper-->
+                    <div class="mb-4">
+                        <!--begin::Foot-->
+                        <div class="d-flex flex-stack flex-wrap mb-5">
+                            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+                                [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+                            </codx-temp-full>
+                            <div class="d-flex align-items-center text-center">
+                                <div class="d-flex flex-column">
+                                    <div class="text-gray-600 fs-7">1 tháng trước</div>
+                                    <div class="rating">
+                                        <div class="rating-label checked">
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <div class="rating-label checked">
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <div class="rating-label checked">
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <div class="rating-label checked">
+                                            <i class="icon-star_half "></i>
+                                        </div>
+                                        <div class="rating-label checked">
+                                            <i class="icon-star_border "></i>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="progress h-6px w-100 me-3">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <span class="text-primary fw-bold">50%</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="separator  my-2"></div>
-            <div class="mb-4">
-                <div class="d-flex flex-stack flex-wrap">
-                    <div class="d-flex align-items-center py-1">
-                        <div class="d-flex flex-column">
-                            <div class="text-dark fw-bold">Đánh giá tài liệu này</div>
-                            <div class="text-gray-700">
-                                Cho người khác biết suy nghĩ của bạn ....
-                            </div>
+                        <!--end::Foot-->
+                        <!--begin::Message-->
+                        <div class="fs-5 fw-normal text-gray-800">I’ve been doing some ajax request, to populate a
+                            inside drawer, the
+                            content of that drawer has a sub menu, that you are using in list and all card toolbar.
                         </div>
+                        <!--end::Message-->
                     </div>
-                    <div class="d-flex align-items-center py-1">
-                        <div class="rating  px-4 me-2">
-                            <div class="rating-label">
-                                <i class="icon-star_outline "></i>
-                            </div>
-                            <div class="rating-label">
-                                <i class="icon-star_outline "></i>
-                            </div>
-                            <div class="rating-label ">
-                                <i class="icon-star_outline "></i>
-                            </div>
-                            <div class="rating-label ">
-                                <i class="icon-star_outline "></i>
-                            </div>
-                            <div class="rating-label ">
-                                <i class="icon-star_outline "></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="position-relative cmt  cmt-cmt c3 w-100">
-                    <codx-input type="text" [disabled]="false" class="test-textbox rounded-3" placeholder="textbox"
-                        value="123">
-                    </codx-input>
-                </div>
-            </div>
-            <!--begin::Wrapper-->
-            <div class="mb-4">
-                <!--begin::Foot-->
-                <div class="d-flex flex-stack flex-wrap mb-5">
-                    <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
-                        [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
-                    </codx-temp-full>
-                    <div class="d-flex align-items-center text-center">
-                        <div class="d-flex flex-column">
-                            <div class="text-gray-600 fs-7">1 tháng trước</div>
-                            <div class="rating">
-                                <div class="rating-label checked">
-                                    <i class="icon-star "></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="icon-star "></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="icon-star "></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="icon-star_half "></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="icon-star_border "></i>
+                    <!--end::Wrapper-->
+                    <div class="separator my-2"></div>
+                    <!--begin::Wrapper-->
+                    <div class="mb-4">
+                        <!--begin::Foot-->
+                        <div class="d-flex flex-stack flex-wrap mb-5">
+                            <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
+                                [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
+                            </codx-temp-full>
+                            <div class="d-flex align-items-center text-center">
+                                <div class="d-flex flex-column">
+                                    <div class="text-gray-600 fs-7">2 tháng trước</div>
+                                    <div class="rating">
+                                        <div class="rating-label checked">
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <div class="rating-label checked">
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <div class="rating-label checked">
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <div class="rating-label checked">
+                                            <i class="icon-star_half "></i>
+                                        </div>
+                                        <div class="rating-label checked">
+                                            <i class="icon-star_border "></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <!--end::Foot-->
-                <!--begin::Message-->
-                <div class="fs-5 fw-normal text-gray-800">I’ve been doing some ajax request, to populate a
-                    inside drawer, the
-                    content of that drawer has a sub menu, that you are using in list and all card toolbar.
-                </div>
-                <!--end::Message-->
-            </div>
-            <!--end::Wrapper-->
-            <div class="separator my-2"></div>
-            <!--begin::Wrapper-->
-            <div class="mb-4">
-                <!--begin::Foot-->
-                <div class="d-flex flex-stack flex-wrap mb-5">
-                    <codx-temp-full [imageId]="'ADMIN'" imageObjType="AD_Users" [imageWidth]="35"
-                        [title]="'Lê Phạm Hoài Thương'" [desc]="'HR Manager'">
-                    </codx-temp-full>
-                    <div class="d-flex align-items-center text-center">
-                        <div class="d-flex flex-column">
-                            <div class="text-gray-600 fs-7">2 tháng trước</div>
-                            <div class="rating">
-                                <div class="rating-label checked">
-                                    <i class="icon-star "></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="icon-star "></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="icon-star "></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="icon-star_half "></i>
-                                </div>
-                                <div class="rating-label checked">
-                                    <i class="icon-star_border "></i>
-                                </div>
-                            </div>
+                        <!--end::Foot-->
+                        <!--begin::Message-->
+                        <div class="fs-5 fw-normal text-gray-800">I’ve been doing some ajax request, to populate a
+                            inside drawer, the
+                            content of that drawer has a sub menu, that you are using in list and all card toolbar.
                         </div>
+                        <!--end::Message-->
                     </div>
+                    <!--end::Wrapper-->
                 </div>
-                <!--end::Foot-->
-                <!--begin::Message-->
-                <div class="fs-5 fw-normal text-gray-800">I’ve been doing some ajax request, to populate a
-                    inside drawer, the
-                    content of that drawer has a sub menu, that you are using in list and all card toolbar.
-                </div>
-                <!--end::Message-->
-            </div>
-            <!--end::Wrapper-->
-        </div>
-        <div [ngStyle]="{'display': hideExtend ? 'none' : 'block'}" [attr.disabled]="hideExtend ? true : null"
+                <div [ngStyle]="{'display': hideExtend ? 'none' : 'block'}" [attr.disabled]="hideExtend ? true : null"
                     class="extend-more pl-5 w-350px min-w-350px dm-tab-properties ms-3 border-left">
                     <ejs-tab>
                         <e-tabitems>
                             <e-tabitem>
                                 <ng-template #headerText>
-                                    <div>{{titleVersion}}</div>
+                                    <div>
+                                        <codx-label name="Version" default="Phiên bản">
+                                        </codx-label>
+                                    </div>
                                 </ng-template>
                                 <!-- <ng-template #content>
                                     <div class="pt-5 extend-more-content pe-3">
@@ -311,7 +325,10 @@
                             </e-tabitem>
                             <e-tabitem>
                                 <ng-template #headerText>
-                                    <div>{{titleHistory}}</div>
+                                    <div>
+                                        <codx-label name="History" default="Lịch sử">
+                                        </codx-label>
+                                    </div>
                                 </ng-template>
                                 <ng-template #content>
                                     <div class="pt-5 extend-more-content pe-3">
@@ -342,13 +359,13 @@
 
                     </ejs-tab>
                 </div>
-                </div>
-                </div>
+            </div>
+        </div>
     </ng-template>
 </codx-form>
 
 <ng-template #defaulEmpt>
-    <div class="container">
+    <div class="container h-100">
         <div class="list-empty card card-flush h-100">
             <div class="d-flex flex-column flex-center justify-content-center">
                 <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />

@@ -69,11 +69,13 @@ export class PdfComponent
   //Input
   @Input() recID = '';
   @Input() isEditable = true;
+  @Input() isConfirm = false;
   @Input() hasPermission = false;
   @Input() isApprover;
   @Input() stepNo = -1;
   @Input() inputUrl = null;
   @Input() transRecID = null;
+  @Input() oSignFile = {};
   @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
@@ -131,6 +133,10 @@ export class PdfComponent
   lstAreas: Array<tmpSignArea> = [];
   lstCA;
   lstCACollapseState: Array<any> = [];
+
+  lstSignDateType = [];
+  curSignDateType;
+
   curSelectedAnnotID;
   curSelectedPageGroup;
   formAnnot: FormGroup;
@@ -201,20 +207,14 @@ export class PdfComponent
   onInit() {
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
-        console.log('format', res);
-
         this.signPerRow = res.SignPerRow;
         this.align = res.Align;
         this.direction = res.Direction;
         this.areaControl = res.AreaControl == '1';
         this.isAwait = res.Await == '1';
-        console.log('lang', this.user.language);
-
         this.labels = res.Label.filter((label) => {
           return label.Language == this.user.language;
         });
-        console.log('labels', this.labels);
-
         this.detectorRef.detectChanges();
       });
 
@@ -285,6 +285,14 @@ export class PdfComponent
         this.detectorRef.detectChanges();
       });
 
+      this.cache.valueList('ES027').subscribe((res) => {
+        res?.datas?.forEach((type) => {
+          this.lstSignDateType.push(type);
+        });
+        this.curSignDateType = this.lstSignDateType[0];
+        this.detectorRef.detectChanges();
+      });
+
       this.formAnnot = new FormGroup({
         content: new FormControl(),
         fontStyle: new FormControl(this.curAnnotFontStyle),
@@ -320,37 +328,39 @@ export class PdfComponent
         .getElementById('delete-btn')
         ?.addEventListener('click', (e: any) => {
           this.contextMenu.style.display = 'none';
-          this.esService
-            .deleteAreaById([
-              this.recID,
-              this.fileInfo.fileID,
-              this.curSelectedArea.id(),
-            ])
-            .subscribe((res) => {
-              if (res) {
-                // this.lstAreas = this.lstAreas.filter((area) => {
-                //   return area.recID != this.curSelectedArea.id();
-                // });
-                this.esService
-                  .getSignAreas(
-                    this.recID,
-                    this.fileInfo.fileID,
-                    this.isApprover,
-                    this.user.userID
-                  )
-                  .subscribe((res) => {
-                    if (res) {
-                      this.lstAreas = res;
-                      this.detectorRef.detectChanges();
-                    }
-                  });
-                this.curSelectedArea.destroy();
-                this.tr.remove();
-              }
-            });
+          this.removeArea();
         });
       this.detectorRef.detectChanges();
     }
+  }
+
+  //remove area
+  removeArea() {
+    this.esService
+      .deleteAreaById([
+        this.recID,
+        this.fileInfo.fileID,
+        this.curSelectedArea.id(),
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.esService
+            .getSignAreas(
+              this.recID,
+              this.fileInfo.fileID,
+              this.isApprover,
+              this.user.userID
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.lstAreas = res;
+                this.detectorRef.detectChanges();
+              }
+            });
+          this.curSelectedArea.destroy();
+          this.tr.remove();
+        }
+      });
   }
 
   //go to
@@ -411,9 +421,6 @@ export class PdfComponent
         this.isUnd = area.fontFormat?.includes('underline') ? true : false;
         this.curAnnotFontSize = area.fontSize;
         this.curAnnotFontStyle = area.fontStyle;
-
-        // this.tr.draggable(area.isLock == false ? !area.allowEditAreas ? false :  true);
-        // this.tr.nodes([this.curSelectedArea]);
         this.curSelectedAnnotID = area.recID;
         this.detectorRef.detectChanges();
       }
@@ -446,10 +453,10 @@ export class PdfComponent
 
   //sign pdf
   signPDF(mode, comment): any {
-    if (this.transRecID) {
+    if (this.isEditable && this.transRecID) {
       return new Promise<any>((resolve, rejects) => {
         this.esService
-          .updateSignFileTrans(
+          .SignAsync(
             this.stepNo,
             this.isAwait,
             this.user.userID,
@@ -642,7 +649,7 @@ export class PdfComponent
             lstAreaOnPage?.forEach((area) => {
               let isRender = false;
               if (
-                (!this.isApprover && !area.isLock) ||
+                (area.labelType != '8' && !this.isApprover && !area.isLock) ||
                 (this.isApprover &&
                   area.signer == this.curSignerID &&
                   area.stepNo == this.stepNo)
@@ -657,7 +664,7 @@ export class PdfComponent
                     this.addArea(
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature,
+                      ).signature1,
                       'img',
                       area.labelType,
                       this.isEditable
@@ -676,7 +683,7 @@ export class PdfComponent
                     this.addArea(
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature,
+                      ).signature2,
                       'img',
                       area.labelType,
                       this.isEditable
@@ -769,7 +776,6 @@ export class PdfComponent
             });
             stage.add(layer);
           }
-
           //stage event
           stage.on('mouseenter', (mouseover: any) => {
             if (this.needAddKonva) {
@@ -1083,6 +1089,44 @@ export class PdfComponent
   changeConfirmState(e: any) {
     this.confirmChange.emit(e.data);
   }
+  changeSignature_StampImg(area: tmpSignArea) {
+    switch (area.labelType) {
+      case 'S1':
+        if (!this.signerInfo?.signature1) {
+          // thiet lap chu ki nhay
+          let setupShowForm = new SetupShowSignature();
+          setupShowForm.showSignature1 = true;
+          this.addSignature(setupShowForm);
+          return;
+        }
+        this.url = this.signerInfo?.signature1
+          ? this.signerInfo?.signature1
+          : '';
+        break;
+      case 'S2':
+        if (!this.signerInfo?.signature2) {
+          // thiet lap chu ki nhay
+          let setupShowForm = new SetupShowSignature();
+          setupShowForm.showSignature2 = true;
+          this.addSignature(setupShowForm);
+          return;
+        }
+        this.url = this.signerInfo?.signature2
+          ? this.signerInfo?.signature2
+          : '';
+        break;
+      case 'S3':
+        if (!this.signerInfo?.stamp) {
+          // thiet lap con dau
+          let setupShowForm = new SetupShowSignature();
+          setupShowForm.showStamp = true;
+          this.addSignature(setupShowForm);
+          return;
+        }
+        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
+        break;
+    }
+  }
 
   gotLstCA = false;
   changeLeftTab(e) {
@@ -1110,66 +1154,70 @@ export class PdfComponent
 
   chooseSignDate = true;
   changeAnnotPro(type, recID) {
-    switch (type.toString()) {
-      case '6': {
-        this.curSelectedArea.text(this.formAnnot.value.content);
-        this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
-        this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
-        let style = 'normal';
-        if (this.isBold && this.isItalic) {
-          style.replace('normal', '');
-          style = 'bold italic';
-        } else if (this.isBold) {
-          style.replace('normal', '');
-          style = 'bold';
-        } else if (this.isItalic) {
-          style.replace('normal', '');
-          style = 'italic';
-        }
-
-        this.curSelectedArea.attrs.fontStyle = style;
-        this.curSelectedArea.attrs.textDecoration = this.isUnd
-          ? 'line-through'
-          : '';
-        this.curSelectedArea.draw();
-        this.tr.forceUpdate();
-        //save to db
-        let y = this.curSelectedArea.position().y;
-        let x = this.curSelectedArea.position().x;
-        let w = this.xScale;
-        let h = this.yScale;
-        let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
-
-        let tmpArea: tmpSignArea = {
-          signer: tmpName.Signer,
-          labelType: tmpName.LabelType,
-          labelValue: this.curSelectedArea.attrs.text,
-          isLock: this.curSelectedArea.draggable(),
-          allowEditAreas: this.signerInfo.allowEditAreas,
-          signDate: false,
-          dateFormat: '1',
-          location: {
-            top: y / this.yScale,
-            left: x / this.xScale,
-            width: w / this.xScale,
-            height: h / this.yScale,
-            pageNumber: this.curPage - 1,
-          },
-          stepNo: tmpName.StepNo,
-          fontStyle: this.curSelectedArea.attrs.fontFamily,
-          fontFormat:
-            this.curSelectedArea.attrs.fontStyle +
-            this.curSelectedArea.attrs.textDecoration,
-          fontSize: this.curSelectedArea.attrs.fontSize,
-          signatureType: 2,
-          comment: '',
-          createdBy: tmpName.Signer,
-          modifiedBy: tmpName.Signer,
-          recID: this.curSelectedArea.attrs.id,
-        };
-        this.saveToDB(tmpArea);
-      }
+    // switch (type.toString()) {
+    if (this.imgConfig.includes(type)) {
     }
+
+    // [3, 4, 5, 6, 7]
+    else {
+      this.curSelectedArea.text(this.formAnnot.value.content);
+      this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
+      this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
+      let style = 'normal';
+      if (this.isBold && this.isItalic) {
+        style.replace('normal', '');
+        style = 'bold italic';
+      } else if (this.isBold) {
+        style.replace('normal', '');
+        style = 'bold';
+      } else if (this.isItalic) {
+        style.replace('normal', '');
+        style = 'italic';
+      }
+
+      this.curSelectedArea.attrs.fontStyle = style;
+      this.curSelectedArea.attrs.textDecoration = this.isUnd
+        ? 'line-through'
+        : '';
+      this.curSelectedArea.draw();
+      this.tr.forceUpdate();
+      //save to db
+      let y = this.curSelectedArea.position().y;
+      let x = this.curSelectedArea.position().x;
+      let w = this.xScale;
+      let h = this.yScale;
+      let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
+
+      let tmpArea: tmpSignArea = {
+        signer: tmpName.Signer,
+        labelType: tmpName.LabelType,
+        labelValue: this.curSelectedArea.attrs.text,
+        isLock: this.curSelectedArea.draggable(),
+        allowEditAreas: this.signerInfo.allowEditAreas,
+        signDate: false,
+        dateFormat: '1',
+        location: {
+          top: y / this.yScale,
+          left: x / this.xScale,
+          width: w / this.xScale,
+          height: h / this.yScale,
+          pageNumber: this.curPage - 1,
+        },
+        stepNo: tmpName.StepNo,
+        fontStyle: this.curSelectedArea.attrs.fontFamily,
+        fontFormat:
+          this.curSelectedArea.attrs.fontStyle +
+          this.curSelectedArea.attrs.textDecoration,
+        fontSize: this.curSelectedArea.attrs.fontSize,
+        signatureType: 2,
+        comment: '',
+        createdBy: tmpName.Signer,
+        modifiedBy: tmpName.Signer,
+        recID: this.curSelectedArea.attrs.id,
+      };
+      this.saveToDB(tmpArea);
+    }
+    // }
   }
 
   changeQRRenderState(e) {
@@ -1237,52 +1285,12 @@ export class PdfComponent
     }
 
     this.crrType = type;
-    // switch (type?.value) {
-    //   case 'S1':
-    //     if (!this.signerInfo?.signature1) {
-    //       let setupShowForm = new SetupShowSignature();
-    //       switch (this.signerInfo?.stepType) {
-    //         case 'S': // ký chính
-    //           setupShowForm.showSignature1 = true;
-    //           this.addSignature(setupShowForm);
-    //           return;
-    //       }
-    //     }
-    //     // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-    //     break;
-    //   case 'S2':
-    //     if (!this.signerInfo?.signature2) {
-    //       let setupShowForm = new SetupShowSignature();
-    //       switch (this.signerInfo?.stepType) {
-    //         case 'S': // ký nháy
-    //           setupShowForm.showSignature2 = true;
-    //           this.addSignature(setupShowForm);
-    //           return;
-    //       }
-    //     }
-    //     // this.url = this.signerInfo?.signature ? this.signerInfo?.signature : '';
-    //     break;
-    //   case 'S3':
-    //     if (!this.signerInfo?.stamp) {
-    //       let setupShowForm = new SetupShowSignature();
-
-    //       setupShowForm.showStamp = true;
-
-    //       this.addSignature(setupShowForm);
-    //       return;
-    //     }
-    //     this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
-    //     break;
-    // }
 
     if (this.isEditable) {
       this.holding = type?.value;
       switch (type?.value) {
         case 'S1':
-          if (
-            !this.signerInfo?.signature1 &&
-            this.signerInfo?.stepType == 'S'
-          ) {
+          if (!this.signerInfo?.signature1) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showSignature1 = true;
@@ -1294,10 +1302,7 @@ export class PdfComponent
             : '';
           break;
         case 'S2':
-          if (
-            !this.signerInfo?.signature2 &&
-            this.signerInfo?.stepType == 'S'
-          ) {
+          if (!this.signerInfo?.signature2) {
             // thiet lap chu ki nhay
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showSignature2 = true;
@@ -1309,7 +1314,7 @@ export class PdfComponent
             : '';
           break;
         case 'S3':
-          if (!this.signerInfo?.stamp && this.signerInfo?.stepType == 'S') {
+          if (!this.signerInfo?.stamp) {
             // thiet lap con dau
             let setupShowForm = new SetupShowSignature();
             setupShowForm.showStamp = true;
@@ -1348,7 +1353,7 @@ export class PdfComponent
           let stampDialog = this.callfc.openForm(
             PopupSelectLabelComponent,
             '',
-            700,
+            900,
             700,
             this.funcID,
             {
@@ -1357,7 +1362,10 @@ export class PdfComponent
             }
           );
           stampDialog.closed.subscribe((res) => {
-            if (res.event) {
+            if (
+              res.event &&
+              !this.lstAreas.find((area) => area.labelType == '9')
+            ) {
               let curLabelUrl = res.event.Image;
               this.url = '';
               if (curLabelUrl && curLabelUrl != '') {
@@ -1372,10 +1380,8 @@ export class PdfComponent
                 );
               }
             }
-            return;
           });
-
-          break;
+          return;
         }
         default:
           this.url = '';
@@ -1483,6 +1489,13 @@ export class PdfComponent
     }
   }
   changeSigner(e: any) {
+    //reset
+    if (this.needAddKonva) {
+      this.url = '';
+      this.holding = 0;
+      this.needAddKonva?.destroy();
+      this.needAddKonva = null;
+    }
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;
@@ -1491,19 +1504,24 @@ export class PdfComponent
   }
 
   changeSuggestState(e: any) {
-    this.needSuggest = e.data;
-    if (this.needSuggest) {
-      this.curPage = this.pageMax;
+    if (this.isEditable) {
+      this.needSuggest = e.data;
+      if (this.needSuggest) {
+        this.curPage = this.pageMax;
+      }
+      this.detectorRef.detectChanges();
     }
   }
 
   changeAutoSignState(e: any, mode: number) {
-    if (e.data && !this.autoSignState) {
-      this.curPage = this.pageMax;
-      this.autoSign();
+    if (this.isEditable) {
+      if (e.data && !this.autoSignState) {
+        this.curPage = this.pageMax;
+        this.autoSign();
+      }
+      this.autoSignState = e.data;
+      this.detectorRef.detectChanges();
     }
-    this.autoSignState = e.data;
-    this.detectorRef.detectChanges();
   }
 
   autoSign() {
@@ -1566,18 +1584,18 @@ export class PdfComponent
       let url = '';
       let labelType = '';
       switch (person.stepType) {
-        case 'S1': //chu ky chinh
-          url = person.signature;
+        case 'S': //chu ky chinh
+          url = person.signature1;
           labelType = person.stepType;
           break;
-        case 'S2': //chu ky nhay
-          url = person.signature;
-          labelType = person.stepType;
-          break;
-        case 'S3': //con dau
-          url = person.stamp;
-          labelType = person.stepType;
-          break;
+        // case 'S2': //chu ky nhay
+        //   url = person.signature2;
+        //   labelType = person.stepType;
+        //   break;
+        // case 'S3': //con dau
+        //   url = person.stamp;
+        //   labelType = person.stepType;
+        //   break;
         default:
           break;
       }
@@ -1597,7 +1615,7 @@ export class PdfComponent
             Type: 'img',
             PageNumber: this.curPage - 1,
             StepNo: person.stepNo,
-            LabelType: labelType,
+            LabelType: 'S1',
             LabelValue: url,
           };
           let imgArea = new Konva.Image({
@@ -1621,7 +1639,7 @@ export class PdfComponent
 
           let tmpArea: tmpSignArea = {
             signer: person.authorID,
-            labelType: labelType,
+            labelType: 'S1',
             labelValue: url,
             isLock: false,
             allowEditAreas: this.signerInfo.allowEditAreas,
@@ -1703,7 +1721,9 @@ export class PdfComponent
 
   //test func
   show(e: any) {
-    this.signPDF('1', 'da xem');
+    this.esService.testFont('Nguyễn Hoàng Bửu').subscribe((res) => {
+      console.log('done', res);
+    });
   }
 }
 //create new guid

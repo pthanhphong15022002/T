@@ -180,7 +180,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
       }
 
-      // replace chuỗi và dấu phân cách
+      // replace dấu phân cách và chuỗi
       stringFormat = stringFormat
         .replace(/-/g, this.data?.separator == null ? '' : this.data?.separator)
         .replace(
@@ -194,6 +194,12 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           this.vllDateFormat[indexDF].text == 'None'
             ? ''
             : this.vllDateFormat[indexDF].text;
+      }
+      if (dateFormat == '') {
+        let sIndex = stringFormat.indexOf('Ngày');
+        if (stringFormat[sIndex] == this.data?.separator) {
+          //alert('1111111111');
+        }
       }
       stringFormat = stringFormat.replace('Ngày', dateFormat);
 

@@ -169,7 +169,11 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           list[i].disabled = true;
           if (value.status == '5') list[i].disabled = true;
           else if (
-            ((datas?.stepType == 'S1' || datas?.stepType == 'S2' || datas?.stepType == 'S3' || datas?.stepType == 'S') && list[i].functionID == 'SYS202') ||
+            ((datas?.stepType == 'S1' ||
+              datas?.stepType == 'S2' ||
+              datas?.stepType == 'S3' ||
+              datas?.stepType == 'S') &&
+              list[i].functionID == 'SYS202') ||
             ((datas?.stepType == 'A1' ||
               datas?.stepType == 'R' ||
               datas?.stepType == 'C') &&
@@ -212,6 +216,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
 
+        console.log('oTrans', data);
+
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         let dialogApprove = this.callfunc.openForm(
@@ -228,6 +234,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             stepType: data.stepType,
             stepNo: data.stepNo,
             transRecID: data.recID,
+            oTrans: data,
           },
           '',
           dialogModel

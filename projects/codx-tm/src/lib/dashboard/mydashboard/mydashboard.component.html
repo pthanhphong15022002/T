@@ -5,24 +5,15 @@
     <div class="w-100 me-4">
       <div class="row m-0 bg-body rounded-2 mb-3 p-3">
         <div class="col-4 px-2">
-          <div
-            class="d-flex justify-content-between p-3"
-            style="background-color: #d8fffd"
-          >
+          <div class="d-flex justify-content-between p-3" style="background-color: #d8fffd">
             <div class="d-flex justify-content-between">
-              <div
-                class="icon-28 icon-access_time me-2"
-                style="color: rgb(6, 221, 184)"
-              ></div>
+              <div class="icon-28 icon-access_time me-2" style="color: rgb(6, 221, 184)"></div>
               <div>
                 <div class="text-gray-600">
                   <codx-label name="lblTask" default="Công việc"></codx-label>
                 </div>
                 <div class="text-dark fw-bold">
-                  <codx-label
-                    name="lblOverdueTask"
-                    default="Đã quá hạn"
-                  ></codx-label>
+                  <codx-label name="lblOverdueTask" default="Đã quá hạn"></codx-label>
                 </div>
               </div>
             </div>
@@ -33,24 +24,15 @@
         </div>
 
         <div class="col-4 pe-0">
-          <div
-            class="d-flex justify-content-between p-3"
-            style="background-color: #daecff"
-          >
+          <div class="d-flex justify-content-between p-3" style="background-color: #daecff">
             <div class="d-flex justify-content-between">
-              <div
-                class="icon-28 icon-access_time me-2"
-                style="color: rgb(0, 93, 199)"
-              ></div>
+              <div class="icon-28 icon-access_time me-2" style="color: rgb(0, 93, 199)"></div>
               <div>
                 <div class="text-gray-600">
                   <codx-label name="lblTask" default="Công việc"></codx-label>
                 </div>
                 <div class="text-dark fw-bold">
-                  <codx-label
-                    name="lblNewTask"
-                    default="Chưa thực hiện"
-                  ></codx-label>
+                  <codx-label name="lblNewTask" default="Chưa thực hiện"></codx-label>
                 </div>
               </div>
             </div>
@@ -61,24 +43,15 @@
         </div>
 
         <div class="col-4 pe-0">
-          <div
-            class="d-flex justify-content-between p-3"
-            style="background-color: #fff8e6"
-          >
+          <div class="d-flex justify-content-between p-3" style="background-color: #fff8e6">
             <div class="d-flex justify-content-between">
-              <div
-                class="icon-28 icon-access_time me-2"
-                style="color: rgb(255, 128, 8)"
-              ></div>
+              <div class="icon-28 icon-access_time me-2" style="color: rgb(255, 128, 8)"></div>
               <div>
                 <div class="text-gray-600">
                   <codx-label name="lblTask" default="Công việc"></codx-label>
                 </div>
                 <div class="text-dark fw-bold">
-                  <codx-label
-                    name="lblPostponeTask"
-                    default="Hoãn lại"
-                  ></codx-label>
+                  <codx-label name="lblPostponeTask" default="Hoãn lại"></codx-label>
                 </div>
               </div>
             </div>
@@ -90,91 +63,44 @@
       </div>
       <div class="d-flex mb-3">
         <div class="rounded-2 bg-body" style="width: 50%">
-          <ejs-accumulationchart
-            id="chart-task-group"
-            width="80%"
-            [legendSettings]="legendSettings2"
-            [tooltip]="tooltip"
-          >
+          <ejs-accumulationchart id="chart-task-group" width="80%" [legendSettings]="legendSettings2"
+            [tooltip]="tooltip">
             <e-accumulation-series-collection>
-              <e-accumulation-series
-                [dataSource]="data?.tasksByGroup"
-                xName="taskGroupName"
-                yName="qty"
-                radius="70%"
-                innerRadius="80%"
-              ></e-accumulation-series>
+              <e-accumulation-series [dataSource]="data?.tasksByGroup" xName="taskGroupName" yName="qty" radius="70%"
+                innerRadius="80%"></e-accumulation-series>
             </e-accumulation-series-collection>
           </ejs-accumulationchart>
         </div>
         <div class="bg-body rounded-2" style="width: 50%">
           <div class="row">
             <div class="col-5">
-              <ejs-circulargauge
-                style="display: block"
-                id="range-container"
-                width="80%"
-              >
+              <ejs-circulargauge style="display: block" id="range-container" width="80%">
                 <e-axes>
-                  <e-axis
-                    minimum="0"
-                    radius="100%"
-                    maximum="100"
-                    startAngle="0"
-                    endAngle="360"
-                    [majorTicks]="majorTicks"
-                    [labelStyle]="labelStyle"
-                    [lineStyle]="lineStyle"
-                    [minorTicks]="minorTicks"
-                  >
+                  <e-axis minimum="0" radius="100%" maximum="100" startAngle="0" endAngle="360"
+                    [majorTicks]="majorTicks" [labelStyle]="labelStyle" [lineStyle]="lineStyle"
+                    [minorTicks]="minorTicks">
                     <e-ranges>
-                      <e-range
-                        start="0"
-                        end="100"
-                        radius="100%"
-                        color="#F0F0F0"
-                        startWidth="10"
-                        endWidth="10"
-                      ></e-range>
-                      <e-range
-                        start="0"
-                        end="100"
-                        radius="70%"
-                        color="#F0F0F0"
-                        startWidth="10"
-                        endWidth="10"
-                      ></e-range>
+                      <e-range start="0" end="100" radius="100%" color="#F0F0F0" startWidth="10" endWidth="10">
+                      </e-range>
+                      <e-range start="0" end="100" radius="70%" color="#F0F0F0" startWidth="10" endWidth="10"></e-range>
                     </e-ranges>
                     <e-pointers>
-                      <e-pointer
-                        [value]="data?.rateDoneTask"
-                        type="RangeBar"
-                        radius="100%"
-                        color="#357cd2"
-                        roundedCornerRadius="10"
-                      ></e-pointer>
-                      <e-pointer
-                        [value]="data?.rateDoneTaskOnTime"
-                        type="RangeBar"
-                        radius="70%"
-                        color="#20bdae"
-                        roundedCornerRadius="10"
-                      ></e-pointer>
+                      <e-pointer [value]="data?.rateDoneTask" type="RangeBar" radius="100%" color="#357cd2"
+                        roundedCornerRadius="10"></e-pointer>
+                      <e-pointer [value]="data?.rateDoneTaskOnTime" type="RangeBar" radius="70%" color="#20bdae"
+                        roundedCornerRadius="10"></e-pointer>
                     </e-pointers>
                   </e-axis>
                 </e-axes>
               </ejs-circulargauge>
             </div>
             <div class="col-7">
-              <div
-                class="rateDoneTask_wrap"
-                style="
+              <div class="rateDoneTask_wrap" style="
                   position: relative;
                   top: 50%;
                   left: 50%;
                   transform: translate(-50%, -50%);
-                "
-              >
+                ">
                 <div>
                   <div class="d-flex justify-content-start">
                     <div class="label1"></div>
@@ -204,48 +130,19 @@
         <div class="fs-4 fw-bold mt-4">
           Thống kê công việc hoàn thành và số giờ thực hiện
         </div>
-        <ejs-chart
-          style="display: block"
-          background="transparent"
-          id="chartbar"
-          [primaryXAxis]="columnXAxis"
-          [primaryYAxis]="columnYAxis"
-          [legendSettings]="legendSettings1"
-          height="80%"
-          width="100%"
-        >
+        <ejs-chart style="display: block" background="transparent" id="chartbar" [primaryXAxis]="columnXAxis"
+          [primaryYAxis]="columnYAxis" [legendSettings]="legendSettings1" height="80%" width="100%">
           <e-axes>
-            <e-axis
-              rowIndex="0"
-              name="WorkHours"
-              opposedPosition="true"
-              labelFormat=""
-              [minimum]="0"
-              [maximum]="100"
-              [interval]="8"
-            >
+            <e-axis rowIndex="0" name="WorkHours" opposedPosition="true" labelFormat="" [minimum]="0" [maximum]="100"
+              [interval]="8">
             </e-axis>
           </e-axes>
           <e-series-collection>
-            <e-series
-              fill="#005DC7"
-              [dataSource]="data?.dataBarChart?.barChart"
-              type="Column"
-              name="Tasks"
-              xName="label"
-              yName="value"
-              [cornerRadius]="radius"
-            >
+            <e-series fill="#005DC7" [dataSource]="data?.dataBarChart?.barChart" type="Column" name="Tasks"
+              xName="label" yName="value" [cornerRadius]="radius">
             </e-series>
-            <e-series
-              fill="#F9D923"
-              [dataSource]="data?.dataBarChart?.lineChart"
-              type="Line"
-              name="WorkHours"
-              yName="value"
-              xName="label"
-              yAxisName="WorkHours"
-            >
+            <e-series fill="#F9D923" [dataSource]="data?.dataBarChart?.lineChart" type="Line" name="WorkHours"
+              yName="value" xName="label" yAxisName="WorkHours">
             </e-series>
           </e-series-collection>
         </ejs-chart>
@@ -253,21 +150,11 @@
     </div>
     <div class="w-300px min-w-300px bg-body rounded-2">
       <div class="taskbox-user">
-        <selectweek
-          #selectweek
-          (onChangeValue)="onChangeValueSelectedWeek($event)"
-        ></selectweek>
+        <selectweek #selectweek (onChangeValue)="onChangeValueSelectedWeek($event)"></selectweek>
         <div class="taskbox-list">
-          <div
-            class="d-flex p-3 flex-grow-1 task-item"
-            *ngFor="let task of data?.tasksOfDay"
-          >
-            <codx-img
-              class="symbol symbol-40px symbol-circle me-3"
-              objectType="AD_Users"
-              [objectId]="task?.id"
-              [objectName]="task?.name"
-            ></codx-img>
+          <div class="d-flex p-3 flex-grow-1 task-item" *ngFor="let task of data?.tasksOfDay">
+            <codx-img class="symbol symbol-40px symbol-circle me-3" objectType="AD_Users" [objectId]="task?.id"
+              [objectName]="task?.name"></codx-img>
             <div class="d-flex flex-column flex-grow-1">
               <div class="text-dark fw-bold">
                 {{ user?.userName }}
@@ -277,16 +164,11 @@
                 {{ task?.taskName }}
               </div>
               <div class="d-flex justify-content-start">
-                <div
-                  class="badge badge-light-primary me-2"
-                  [style.border-color]="
+                <div class="badge badge-light-primary me-2" [style.border-color]="
                     task.status | vll: 'L0614':'color' | async
-                  "
-                  [style.background-color]="
+                  " [style.background-color]="
                     task.status | vll: 'L0614':'color' | async
-                  "
-                  [style.color]="task.status | vll: 'L0614':'textColor' | async"
-                >
+                  " [style.color]="task.status | vll: 'L0614':'textColor' | async">
                   {{ task.status | vll: "L0614":"text" | async }}
                 </div>
                 <div class="fs-7">{{ task.dueDate | date }}</div>

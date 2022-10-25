@@ -1,3 +1,4 @@
+import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import {
   Component,
   ViewEncapsulation,
@@ -12,9 +13,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class TasksComponent implements OnInit {
   funcID: any;
-  constructor(private activedRouter: ActivatedRoute) {
+  constructor(private activedRouter: ActivatedRoute, private tmService: CodxTMService) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.tmService.menuClick.subscribe(res => {
+      if (res && res.func) {
+        if (this.funcID != res.func.functionID)
+          this.funcID = res.func.functionID;
+        this.tmService.menuClick.next(null);
+      }
+    })
+  }
 }

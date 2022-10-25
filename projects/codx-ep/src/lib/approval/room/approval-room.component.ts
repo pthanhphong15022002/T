@@ -162,29 +162,18 @@ export class ApprovalRoomsComponent extends UIComponent {
     // }
     switch (funcID) {
       case 'EPT40101':
-      case 'EPT40201':
-      case 'EPT40301':
         {
           //alert('Duyệt');
           this.approve(datas,"5")
         }
         break;      
       case 'EPT40105':
-      case 'EPT40205':
-      case 'EPT40305':
         {
           //alert('Từ chối');
           this.approve(datas,"4")
         }
         break;
-      case 'EPT40106':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          //alert('Làm lại');
-          this.approve(datas,"2")
-        }
-        break;
+      
       default:
         '';
         break;
@@ -208,11 +197,7 @@ export class ApprovalRoomsComponent extends UIComponent {
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
                 data.status="4";
-              }
-              if(status=="2"){
-                this.notificationsService.notifyCode('ES007');//làm lại
-                data.status="2"
-              }                
+              }                          
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -227,6 +212,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         event.forEach(func => {
           if(func.functionID == "EPT40102" 
           ||func.functionID == "EPT40103" 
+          ||func.functionID == "EPT40106" 
           || func.functionID == "EPT40104")
           {
             func.disabled=true;

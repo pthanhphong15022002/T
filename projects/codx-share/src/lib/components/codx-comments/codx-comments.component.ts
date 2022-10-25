@@ -1,12 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { WPService } from '@core/services/signalr/apiwp.service';
 import { Post } from '@shared/models/post';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util } from 'codx-core';
-import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { CacheService, ApiHttpService, AuthService, NotificationsService, CallFuncService, Util, DialogModel } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from '../attachment/attachment.component';
-import { CodxFilesComponent } from '../codx-files/codx-files.component';
 import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.component';
 
 @Component({
@@ -17,6 +13,7 @@ import { PopupVoteComponent } from '../treeview-comment/popup-vote/popup-vote.co
 })
 export class CodxCommentsComponent implements OnInit {
   @Input() data :any = null;
+  @Input() post:any = null;
   @Input() parentID: string = null;
   @Input() refID: string = null;
   @Input() funcID:string ="";
@@ -29,7 +26,7 @@ export class CodxCommentsComponent implements OnInit {
   @Output() evtSendComment = new EventEmitter;
   @Output() evtDeleteComment = new EventEmitter;
   @Output() evtLoadSubComment = new EventEmitter;
-
+  @Output() evtViewDetail = new EventEmitter;
   //
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   user:any
@@ -88,32 +85,33 @@ export class CodxCommentsComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
-
   sendComment(){
     if (!this.message.trim() && !this.fileUpload) {
       this.notifySvr.notifyCode('E0315');
       return;
     }
-    let tmpPost = new Post()
+    let comment = new Post()
     if(this.data){
-      tmpPost = this.data;
+      comment = this.data;
     }
-    tmpPost.content = this.message;
-    tmpPost.refType = "WP_Comments";
-    tmpPost.refID = this.refID;
+    comment.content = this.message;
+    comment.refType = "WP_Comments";
+    comment.refID = this.refID;
     if(this.parentID){
-      tmpPost.parentID = this.parentID;
+      comment.parentID = this.parentID;
     }
-    else {
-      tmpPost.parentID = tmpPost.refID;
+    else 
+    {
+      comment.parentID = comment.refID;
     }
+    let parent = this.new ? this.post:null;
     this.api
       .execSv<any>(
         'WP',
         'ERM.Business.WP',
         'CommentsBusiness',
         'PublishCommentAsync',
-        [tmpPost]
+        [comment,parent]
       )
       .subscribe(async (res) => {
         if (res) 
@@ -291,7 +289,7 @@ export class CodxCommentsComponent implements OnInit {
       "ERM.Business.WP",
       "VotesBusiness",
       "VotePostAsync",
-      [data.recID, voteType])
+      [data, voteType])
       .subscribe((res: any) => {
         if (res) {
           data.votes = res[0];
@@ -320,4 +318,12 @@ export class CodxCommentsComponent implements OnInit {
     }
     this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
+
+
+  clickViewDetail(file:any){
+    // if(this.evtViewDetail){
+    //   this.evtViewDetail.emit(file);
+    // }
+  }
+
 }

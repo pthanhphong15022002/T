@@ -975,6 +975,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               height: 200, //Kích thước của file ảnh Thum bề dọc
             },
             IsPublic: true,
+            ThumbConstraints:"30,60,120,300,500,600"
           },
         }
       );
@@ -1012,6 +1013,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             height: 200, //Kích thước của file ảnh Thum bề dọc
           },
           IsPublic: true,
+          ThumbConstraints:"30,60,120,300,500,600"
         },
       })
     );
@@ -1160,7 +1162,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (fileItem.fileSize % chunSizeInfBytes > 0) {
         numOfChunks++;
       }
-
       //api/lv-docs/files/upload
       for (var i = 0; i < numOfChunks; i++) {
         var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
@@ -1170,15 +1171,22 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var fileChunk = new File([blogPart], uploadFile.name, {
           type: uploadFile.type,
         }); //Gói lại thành 1 file chunk để upload
-        var uploadChunk = await lvFileClientAPI.formPostWithToken(
-          `api/${appName}/files/upload`,
-          {
-            FilePart: fileChunk,
-            UploadId: fileItem.uploadId,
-            Index: i,
-          }
-        );
-        console.log(uploadChunk);
+        try
+        {
+          var uploadChunk = await lvFileClientAPI.formPostWithToken(
+            `api/${appName}/files/upload`,
+            {
+              FilePart: fileChunk,
+              UploadId: fileItem.uploadId,
+              Index: i,
+            }
+          );
+          console.log(uploadChunk);
+        }
+        catch(ex)
+        {
+          console.log(ex)
+        }
       }
     } catch (ex) {
       fileItem.uploadId = '0';

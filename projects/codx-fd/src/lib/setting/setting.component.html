@@ -245,8 +245,8 @@
                                         </div>
                                     </div>
                                     <div class="w-150px d-flex align-items-center ml-4">
-                                        <codx-input type="number" min="1" class="form-control" disabled="true"
-                                            [crrValue]="parameter?.SelectTopEmp" name="number" placeholder="">
+                                        <codx-input type="text" min="1" class="form-control" disabled="true"
+                                            [crrValue]="parameter?.SelectTopEmp" placeholder="">
                                         </codx-input>
                                         <span class="icon-edit-one text-hover-primary icon-20"
                                             (click)="open(content, 'SelectTopEmp')"></span>
@@ -271,8 +271,8 @@
                                     </div>
                                 </div>
                                 <div class="w-150px d-flex align-items-center ml-4">
-                                    <codx-input type="number" min="1" class="form-control" disabled="true"
-                                        [crrValue]="parameter?.SelectTopByCard" name="number" placeholder="">
+                                    <codx-input type="text" min="1" class="form-control" disabled="true"
+                                        [crrValue]="parameter?.SelectTopByCard" placeholder="">
                                     </codx-input>
                                     <span class="icon-edit-one text-hover-primary icon-20"
                                         (click)="open(content, 'SelectTopByCard')"></span>
@@ -296,8 +296,8 @@
                                     </div>
                                 </div>
                                 <div class="w-150px d-flex align-items-center ml-4">
-                                    <codx-input type="number" min="1" class="form-control" disabled="true"
-                                        [crrValue]="parameter?.SelectTopBehaviors" name="number" placeholder="">
+                                    <codx-input type="text" min="1" class="form-control" disabled="true"
+                                        [crrValue]="parameter?.SelectTopBehaviors" placeholder="">
                                     </codx-input>
                                     <span class="icon-edit-one text-hover-primary icon-20"
                                         (click)="open(content, 'SelectTopBehaviors')"></span>
@@ -318,8 +318,7 @@
             <codx-label name="lblUpdate" [formName]="" [gridViewName]="functionList?.gridViewName" default='Cập nhật'>
             </codx-label>
         </h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <i class="icon-close icon-20 text-dark text-hover-primary"></i>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
         </button>
     </div>
     <div class="modal-body">
@@ -331,8 +330,9 @@
                     </codx-label>
                 </label>
                 <div class="col-9">
-                    <input type="number" onkeypress="event.charCode >= 48 && event.charCode <= 57" id="myId"
-                        class="form-control" name="number" placeholder="1" />
+                    <codx-input type="number" onkeypress="event.charCode >= 48 && event.charCode <= 57" id="myId" field=""
+                        class="form-control" [crrValue]="modelForm.number" placeholder="1" (valueChange)="valueChangeStatistical($event)">
+                    </codx-input>
                 </div>
             </div>
         </form>

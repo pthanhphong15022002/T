@@ -24,28 +24,14 @@
     </div>
 </div>
 
-<ng-template #itemTemplate let-data>
-    <!-- <div class="row my-2">
-        <div class="col-3">
-            <codx-img [objectId]="data.recID" [objectType]="entityName" [width]="200"></codx-img>
-        </div>
-        <div class="col-8">
-            <codx-temp-full 
-                [dataItem]="data"
-                [content]="data.subject"
-                [desc]="data.subContent"
-                cardCss="card-template border-bottom px-2 py-3"
-                [resourceObjType]="entityName"
-                [bookmark]="false" 
-                [titleLine]="2"   >
-            </codx-temp-full>
-        </div>
-    </div> -->
+<ng-template #itemTemplate let-data>    
     <div (click)="clickViewDetail(data)" class="row my-4">
         <div class="col-4">
           <codx-img [width]="180" 
+            [isDefaulImg]="true"
             [cssClass]="'image-150 w-100'" 
-            imageType="square" [objectId]="data.recID"
+            imageType="square" 
+            [objectId]="data.recID"
             objectType="WP_News">
           </codx-img>
         </div>

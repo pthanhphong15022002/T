@@ -1,20 +1,24 @@
 import {
   ChangeDetectorRef,
   Component,
+  ComponentRef,
   OnInit,
   TemplateRef,
+  Type,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   ApiHttpService,
   CacheService,
   CodxService,
   LayoutService,
+  PageTitleService,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CatagoryComponent } from './catagory/catagory.component';
 
 @Component({
   selector: 'codx-setting-paramater',
@@ -30,13 +34,17 @@ export class DynamicSettingComponent implements OnInit {
   valuelist = {};
   view: ViewsComponent;
   loaded = false;
+  components = new Map<string, ComponentRef<CatagoryComponent>>();
+  currentView!: CatagoryComponent;
   @ViewChild('template') template: TemplateRef<any>;
+  @ViewChild('content', { read: ViewContainerRef, static: false })
+  content!: ViewContainerRef;
   constructor(
     private layout: LayoutService,
+    private pageTitle: PageTitleService,
     private cacheService: CacheService,
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxService: CodxService
   ) {}
 
   ngOnInit(): void {}
@@ -54,45 +62,71 @@ export class DynamicSettingComponent implements OnInit {
     ];
   }
 
-  navigate(evt: any, catagory: string) {
-    let categoryAdd = '';
-    if (catagory === '2') categoryAdd = '7';
+  loadContent(evt: any, catagory: string){
     this.loaded = false;
     var res = this.valuelist as any;
     if (res && res.datas) {
       this.catagory = catagory;
-      var url = this.view?.function?.url;
-      var state = {
-        setting: this.dataSetting[this.catagory],
-        function: this.view.function,
-        valuelist: this.valuelist,
-        settingMore: this.dataSetting[categoryAdd],
-      };
-      const ds = (res.datas as any[]).find((item) => item.value == catagory);
-      var path = window.location.pathname;
-      if (path.endsWith('/' + ds.default)) {
-        history.pushState(state, '', path);
+      let componentRef: ComponentRef<CatagoryComponent>;
+    
+      this.hideCurrentView();
+      this.acitveMenuView();
+      if (this.components.has(catagory)) {
+        componentRef = this.components.get(catagory)!;
+        componentRef.location.nativeElement.classList.remove(
+          'animate__slideOutLeft',
+          'd-none'
+        );
+        componentRef.location.nativeElement.classList.add(
+          'animate__slideInRight'
+        );
+        this.currentView = componentRef.instance;
+        return;
       } else {
-        url += '/' + ds.default;
-        this.codxService.navigate('', url, null, state);
+        let component: Type<any> = CatagoryComponent;
+        componentRef = this.content.createComponent<CatagoryComponent>(component);
+        componentRef.location.nativeElement.classList.add(
+          'd-block',
+          'animate__animated',
+          'animate__slideInRight'
+        );
+        componentRef.instance.category = this.catagory;
+        componentRef.instance.setting = this.dataSetting[this.catagory];
+        componentRef.instance.function =this.view.function;
+        componentRef.instance.valuelist = this.valuelist;
+
+        this.components.set(this.catagory, componentRef);
+        this.currentView = componentRef.instance;
+        this.changeDetectorRef.detectChanges();
       }
-      this.loaded = true;
     }
-    this.changeDetectorRef.detectChanges();
-    console.log(evt);
+  }
+  
+  private hideCurrentView() {
+    if (this.currentView?.category) {
+      var curRef = this.components.get(this.currentView.category)!;
+      if (curRef?.location?.nativeElement) {
+        curRef.location.nativeElement.classList.remove('animate__slideInRight');
+        curRef.location.nativeElement.classList.add(
+          'animate__slideOutLeft',
+          'd-none'
+        );
+      }
+    }
   }
 
+  private acitveMenuView() {
+    // this.views?.filter(function (v) {
+    //   if (v.type == view.type) v.active = true;
+    //   else v.active = false;
+    // });
+  }
+  
   viewChanged(evt: any, view: ViewsComponent) {
     this.view = view;
-    var module = view.function!.module;
     var formName = view.function!.formName;
-    //this.layout.setLogo(null);
-    this.cacheService.functionList(module).subscribe((f) => {
-      if (f) {
-        // this.layout.setUrl(f.url);
-        // this.layout.setLogo(f.smallIcon);
-      }
-    });
+    this.layout.setLogo(null);
+    this.pageTitle.setBreadcrumbs([]);
     this.loadSetting(formName);
   }
 
@@ -109,31 +143,14 @@ export class DynamicSettingComponent implements OnInit {
         if (res) {
           this.dataSetting = res;
           this.itemMenu = Object.keys(res);
+          this.catagory = this.itemMenu[0];
         }
         this.changeDetectorRef.detectChanges();
-
-        var path = window.location.pathname;
-        var arrPath = path.split('/');
-        var catagory = arrPath[arrPath.length - 1];
         this.cacheService.valueList(this.listName).subscribe((res) => {
           if (res && res.datas) {
             this.valuelist = res;
-            const ds = (res.datas as any[]).find(
-              (item) => item.default == catagory
-            );
-            if (ds) {
-              var ele = document.querySelector(
-                '.aside-menu .menu-item[data-id="' + ds.value + '"]'
-              );
-              var e = ele as HTMLElement;
-              e.click();
-            } else {
-              var items = document.querySelectorAll(
-                '.aside-menu .menu-item[data-id]'
-              );
-              var item = items[0] as HTMLElement;
-              if (item) item.click();
-            }
+
+            this.loadContent(null, this.catagory);
           }
         });
       });

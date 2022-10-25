@@ -40,6 +40,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('process', { static: true }) process;
   @ViewChild('editCategory') editCategory: PopupAddCategoryComponent;
   @ViewChild('icon', { static: true }) icon: TemplateRef<any>;
+  @ViewChild('eSign', { static: true }) eSign: TemplateRef<any>;
   @ViewChild('color', { static: true }) color: TemplateRef<any>;
   @ViewChild('memo', { static: true }) memo: TemplateRef<any>;
   @ViewChild('parentID', { static: true }) parentID: TemplateRef<any>;
@@ -152,6 +153,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               width: 180,
             },
             {
+              field: 'eSign',
+              headerText: gv ? gv['ESign'].headerText || 'ESign' : 'ESign',
+              template: this.eSign,
+              width: 80,
+            },
+            {
               field: 'processID',
               headerText: 'Quy trình duyệt',
               template: this.process,
@@ -223,7 +230,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.formModel;
-      this.dialog = this.callfunc.openSide(
+      let popupAdd = this.callfunc.openSide(
         PopupAddCategoryComponent,
         {
           data: this.viewBase.dataService.dataSelected,
@@ -232,6 +239,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         },
         option
       );
+
+      popupAdd.closed.subscribe((res) => {
+        if (!res?.event) this.viewBase.dataService.clear();
+      });
     });
   }
 
@@ -247,7 +258,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           option.Width = '550px';
           option.DataService = this.viewBase?.dataService;
           option.FormModel = this.viewBase?.formModel;
-          this.dialog = this.callfunc.openSide(
+          let popupEdit = this.callfunc.openSide(
             PopupAddCategoryComponent,
             {
               data: evt?.data,
@@ -256,6 +267,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             },
             option
           );
+          popupEdit.closed.subscribe((res) => {
+            if (!res?.event) this.viewBase.dataService.clear();
+          });
         });
     }
   }

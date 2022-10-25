@@ -829,13 +829,13 @@ export class CodxEsService {
     );
   }
 
-  getSFByID(data): Observable<any> {
-    return this.api.execSv(
+  getSFByID(sfRecID) {
+    return this.api.execSv<any>(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetByIDAsync',
-      data
+      sfRecID
     );
   }
 
@@ -857,6 +857,17 @@ export class CodxEsService {
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'GetCAInPDFByBytesAsync',
+      data
+    );
+  }
+
+  saveUSBSignPDF(transRecID, sfID, fileID, fileBase64Content, cmt) {
+    let data = [transRecID, sfID, fileID, fileBase64Content, cmt];
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'SaveUSBSignedPDF',
       data
     );
   }
@@ -920,6 +931,16 @@ export class CodxEsService {
     );
   }
 
+  saveSignAreasTemplate(sfRecID: string, tmpRecID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CancelSignfileAsync',
+      [sfRecID, tmpRecID]
+    );
+  }
+
   updateApproveTemplate(sfID: string, processID: string): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -938,6 +959,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'AddImgToPDFAsync',
       data
+    );
+  }
+
+  cancelSignfile(sfRecID: string, comment: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'CancelSignfileAsync',
+      [sfRecID, comment]
     );
   }
   //#endregion
@@ -961,6 +992,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'AddQRBeforeReleaseAsync',
       [sfRecID]
+    );
+  }
+
+  testFont(content: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'testFontAsync',
+      [content]
     );
   }
 
@@ -989,6 +1030,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'GetViewByTransIDAsync',
       [recID]
+    );
+  }
+
+  getApprovalTransActive(sfRecID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetTransActiveAsync',
+      [sfRecID]
     );
   }
 
@@ -1104,13 +1155,13 @@ export class CodxEsService {
     );
   }
 
-  updateSignFileTrans(stepNo, isAwait, userID, sfID, mode, comment) {
+  SignAsync(stepNo, isAwait, userID, sfID, mode, comment) {
     let data = [stepNo, isAwait, userID, sfID, mode, comment];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
-      'UpdateApprovalTransStatusAsync',
+      'SignAsync',
       data
     );
   }
@@ -1138,13 +1189,13 @@ export class CodxEsService {
     );
   }
   //#endregion
-  getPDFBase64(fileID): Observable<any> {
-    let data = [fileID];
+  getSignContracts(sfID, fileID, fileUrl, stepNo): Observable<any> {
+    let data = [sfID, fileID, fileUrl, stepNo];
     return this.api.execSv(
-      'DM',
-      'ERM.Business.DM',
-      'FileBussiness',
-      'GetPDFFileBase64Async',
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetSignContracts',
       data
     );
   }

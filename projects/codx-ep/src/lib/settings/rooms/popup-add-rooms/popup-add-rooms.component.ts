@@ -81,6 +81,7 @@ export class PopupAddRoomsComponent extends UIComponent {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
+        device.icon= item.icon;
         if (!this.isAdd) {
           this.data.equipments.forEach((item) => {
             if (item.equipmentID == device.id) {
@@ -111,7 +112,7 @@ export class PopupAddRoomsComponent extends UIComponent {
     }
   }
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 430);
+    var dialog = this.callfc.openForm(template, '', 550, 350);
     this.detectorRef.detectChanges();
   }
   onSaveForm() {
@@ -146,7 +147,7 @@ export class PopupAddRoomsComponent extends UIComponent {
       .subscribe(async (res) => {
         if (res.save || res.update) {          
           if (!res.save) {
-            this.returnData = res.update;
+            this.returnData = res.update;            
           } else {
             this.returnData = res.save;
           }

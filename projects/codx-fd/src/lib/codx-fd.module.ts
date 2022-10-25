@@ -214,7 +214,6 @@ const Component: Type<any>[] = [
     HttpClientModule,
     CodxCoreModule,
     CodxShareModule,
-    CodxWpModule,
     CoreModule,
     NgbModule,
     AccumulationChartModule,

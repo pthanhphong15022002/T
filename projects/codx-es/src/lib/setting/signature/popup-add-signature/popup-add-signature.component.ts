@@ -83,8 +83,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.data.oTPPin = this.data?.otpPin;
 
     //delete otp
-    delete this.data?.otpControl;
-    delete this.data?.otpPin;
+    // delete this.data?.otpControl;
+    // delete this.data?.otpPin;
 
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog?.formModel;
@@ -143,8 +143,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           }
         });
       } else if (event?.field == 'signatureType') {
-        console.log(this.data);
-
         if (event?.data == '2') {
           this.data.supplier = null;
           this.form?.formGroup.patchValue({ supplier: null });
@@ -158,6 +156,14 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   beforeSave(option: RequestOption) {
+    //set gia trị data oTP != otp
+    this.data.otpControl = this.data.oTPControl;
+    this.data.otpPin = this.data.oTPPin;
+
+    //delete oTP
+    delete this.data?.oTPControl;
+    delete this.data?.oTPPin;
+
     let itemData = this.data;
     if (this.isAdd) {
       option.methodName = 'AddNewAsync';
@@ -308,8 +314,6 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   popupUploadFile(evt: any) {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa');
-
     this.attachment.uploadFile();
   }
 

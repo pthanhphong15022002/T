@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FileUpload } from '@shared/models/file.model';
-import { DialogData, DialogRef } from 'codx-core';
+import { CacheService, DialogData, DialogRef } from 'codx-core';
 
 @Component({
   selector: 'lib-properties',
@@ -9,15 +9,10 @@ import { DialogData, DialogRef } from 'codx-core';
 })
 export class PropertiesComponent implements OnInit {
 
-  titleDialog = 'Thông tin';
-  titleExpand = 'Mở rộng';
   dialog: any;
   data: any;
   hideExtend = true;
-  titleVersion = 'Phiên bản';
-  titleHistory = 'Lịch sử';
   fileEditing: FileUpload;
-
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,

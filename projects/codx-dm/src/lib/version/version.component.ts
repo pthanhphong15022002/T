@@ -266,7 +266,8 @@ export class VersionComponent implements OnInit {
             'width': 200, //Kích thước của file ảnh Thum bề ngang
             'height': 200//Kích thước của file ảnh Thum bề dọc
           },
-          "IsPublic": true          
+          "IsPublic": true,
+          ThumbConstraints:"30,60,120,300,500,600"         
         }
       });
       
@@ -450,6 +451,7 @@ export class VersionComponent implements OnInit {
               height: 200, //Kích thước của file ảnh Thum bề dọc
             },
             IsPublic: true,
+            ThumbConstraints:"30,60,120,300,500,600"
           },
         }
       );

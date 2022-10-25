@@ -287,7 +287,7 @@
             </e-items>
           </ejs-toolbar>
         </div>
-        <ng-container *ngIf="isApprover" [ngTemplateOutlet]="confirmCheckbox">
+        <ng-container *ngIf="isConfirm" [ngTemplateOutlet]="confirmCheckbox">
         </ng-container>
       </div>
       <ngx-extended-pdf-viewer
@@ -313,6 +313,7 @@
         [enablePinchOnMobile]="false"
         (currentZoomFactor)="('1')"
         pageViewMode="vertical"
+        (textLayerRendered)="getTextLayerInfo($event)"
       >
       </ngx-extended-pdf-viewer>
 
@@ -389,7 +390,7 @@
                             ? approver.fullName
                             : (approver.roleType | vll: 'ES014':'text' | async)
                         "
-                        [subTitle]="approver.position ?? 'Vị trí công việc'"
+                        [subTitle]="approver.position ?? ''"
                         [baseHeaderRightTmp]="footer"
                         [dataItem]="approver"
                       >
@@ -416,6 +417,7 @@
                     (click)="changeAnnotationItem(action)"
                   >
                     <codx-card-center
+                      *ngIf="!isApprover || (isApprover && index != 8)"
                       cardCss="border h-100 w-125px pt-4 pb-2 "
                       icoCss="icon-30 mb-1 {{ action?.icon }}"
                       content="{{ action?.text }}"
@@ -432,7 +434,7 @@
                       type="switch"
                       labelPosition="After"
                       field=""
-                      [disabled]="isEditable"
+                      [disabled]="!isEditable"
                       [crrValue]="needSuggest"
                       (valueChange)="changeSuggestState($event)"
                     >
@@ -455,7 +457,7 @@
                     <codx-input
                       type="switch"
                       field="autoSignLastLine"
-                      [disabled]="isEditable"
+                      [disabled]="!isEditable"
                       [(crrValue)]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
@@ -532,7 +534,7 @@
                         "
                         [formGroup]="formAnnot"
                       >
-                        <div
+                        <!-- <div
                           class="qr-switch"
                           *ngIf="!isApprover && area.labelType == 8"
                         >
@@ -549,7 +551,7 @@
                             >
                             </codx-label>
                           </codx-input>
-                        </div>
+                        </div> -->
                         <div
                           class="text-content form-control my-2 ms-12"
                           *ngIf="area.labelType == 6"
@@ -591,13 +593,13 @@
                         <div class="d-flex my-2 ms-12">
                           <div
                             class="text-format d-flex align-items-center"
-                            *ngIf="area.labelType != 8"
+                            *ngIf="!imgConfig.includes(area.labelType)"
                           >
                             <ejs-dropdownlist
                               class="me-2 min-w-70px"
                               id="fontStylesDropdownList"
                               [dataSource]="lstAnnotFontStyle"
-                              [(value)]="curAnnotFontStyle"
+                              [value]="curAnnotFontStyle"
                               formControlName="fontStyle"
                             >
                             </ejs-dropdownlist>
@@ -605,14 +607,14 @@
                               class="me-2 w-100px"
                               id="fontSizesDropdownList"
                               [dataSource]="lstAnnotFontSize"
-                              [(value)]="curAnnotFontSize"
+                              [value]="curAnnotFontSize"
                               formControlName="fontSize"
                             >
                             </ejs-dropdownlist>
                           </div>
                           <div
                             class="btn-format d-flex align-items-center"
-                            *ngIf="area.labelType != 8"
+                            *ngIf="!imgConfig.includes(area.labelType)"
                           >
                             <button
                               type="button"
@@ -682,6 +684,32 @@
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button
+                            type="button"
+                            class="btn btn-sm btn-primary"
+                            (click)="removeArea()"
+                          >
+                            <codx-label
+                              name="lblSave"
+                              default="Xóa"
+                              [formModel]=""
+                            ></codx-label>
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-primary"
+                            *ngIf="
+                              imgConfig.includes(area.labelType) && isApprover
+                            "
+                            (click)="changeSignature_StampImg(area)"
+                          >
+                            <codx-label
+                              name="lblSave"
+                              default="Thay đổi"
+                              [formModel]=""
+                            ></codx-label>
+                          </button>
+                          <button
+                            *ngIf="!imgConfig.includes(area.labelType)"
                             type="button"
                             class="btn btn-sm btn-primary"
                             (click)="changeAnnotPro(area.labelType, area.recID)"
@@ -769,12 +797,13 @@
       (valueChange)="changeConfirmState($event)"
     >
     </codx-input>
-    <codx-label
+    {{ "ES011" | mssg | async }}
+    <!-- <codx-label
       name="lblConfirmSeen"
       [formModel]=""
       [default]="'Xác nhận đã xem văn bản'"
       class="text-header"
-    ></codx-label>
+    ></codx-label> -->
   </div>
 </ng-template>
 

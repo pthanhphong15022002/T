@@ -35,7 +35,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   ];
   dialogRef: any;
   employee: HR_Employees;
-  defaultEmployeeIDD:string = "";
+  defaultEmployeeID:string = "";
   readOnly = false;
   showAssignTo = false;
   isSaving: boolean = false;
@@ -87,7 +87,10 @@ export class PopupAddEmployeesComponent implements OnInit {
       if (this.action === 'copy') {
         this.titleAction = 'Sao chép';
       }
-      this.data = JSON.parse(JSON.stringify(this.dialogRef.dataService.dataSelected));
+      if(this.dialogRef.dataService.dataSelected){
+        this.data = JSON.parse(JSON.stringify(this.dialogRef.dataService.dataSelected));
+        this.employee = this.data;
+      }
       this.employee = this.data;
     }
     this.initForm();
@@ -135,8 +138,12 @@ export class PopupAddEmployeesComponent implements OnInit {
         .subscribe((res:any) =>{
           if(res)
           {
-            this.defaultEmployeeIDD = res;
-            this.employee.employeeID = this.defaultEmployeeIDD;
+            this.defaultEmployeeID = res;
+            this.employee.employeeID = this.defaultEmployeeID;
+          }
+          else
+          {
+            this.notifiSV.notifyCode("SYS020");
           }
         })
     }
@@ -232,16 +239,29 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
   OnSaveForm() {
-    this.dialogRef.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
-        // if (res) {
-        //   this.dialog.close(res);
-        // }
-        this.dialogRef.close(res)
-      });
+    // this.dialogRef.dataService
+    //   .save((option: any) => this.beforeSave(option))
+    //   .subscribe((res) => {
+    //     this.dialogRef.close(res)
+    //   });
+    this.addEmployeeAsync(this.employee);
   }
 
+
+
+  addEmployeeAsync(employee:any){
+    if(employee){
+      this.api.execSv("HR",
+      "ERM.Business.HR",
+      "EmployeesBusiness",
+      "AddEmployeeAsync",[employee,this.functionID])
+      .subscribe((res:any) => {
+        if(res){
+          this.dialogRef.close(res);
+        }
+      })
+    }
+  }
 
   valueChange(event:any){
     console.log(event);

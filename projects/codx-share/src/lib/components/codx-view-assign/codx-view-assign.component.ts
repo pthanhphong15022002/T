@@ -18,7 +18,8 @@ import { FormModel } from 'codx-core';
 export class CodxViewAssignComponent implements OnInit, OnChanges {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
-  @Input() vllStatus = 'TMT004';
+  vllStatusAssign = 'TM007';
+  vllStatus = 'TM004';
   dialog: any;
   isClose = true;
   isShow = false;
@@ -31,18 +32,21 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   selectionChange(parent) {
-    var id = parent?.data.taskID;
-    var element = document.getElementById(id);
-    if (element) {
-      this.isClose = element.classList.contains('icon-add_box');
-      this.isShow = element.classList.contains('icon-indeterminate_check_box');
-      if (this.isClose) {
-        element.classList.remove('icon-add_box');
-        element.classList.add('icon-indeterminate_check_box');
-      } else if (this.isShow) {
-        element.classList.remove('icon-indeterminate_check_box');
-        element.classList.add('icon-add_box');
-      }
-    }
+    // var id = parent?.data.taskID;
+    // var element = document.getElementById(id);
+    // if (element) {
+    //   this.isClose = element.classList.contains('icon-add_box');
+    //   this.isShow = element.classList.contains('icon-indeterminate_check_box');
+    //   if (this.isClose) {
+    //     element.classList.remove('icon-add_box');
+    //     element.classList.add('icon-indeterminate_check_box');
+    //   } else if (this.isShow) {
+    //     element.classList.remove('icon-indeterminate_check_box');
+    //     element.classList.add('icon-add_box');
+    //   }
+    // }
+  }
+  clickTemp(e){
+    e.stopPropagation() ;
   }
 }

@@ -1,5 +1,5 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
-  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)"
+  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)" [openMore]="true"
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
@@ -141,7 +141,7 @@
         <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
           <div class="symbol-group-badge" *ngIf="curUser != null">
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [width]="30" [objectId]="curUser?.userId" objectType="AD_Users"></codx-img>
+              <codx-img [width]="30" [objectId]="curUser?.userID" objectType="AD_Users"></codx-img>
               <span
                 class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"></span>
             </div>
@@ -149,14 +149,14 @@
 
           <div class="symbol-group-badge" *ngIf="attendeesList != null && attendeesList?.length >= 1">
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [width]="30" [objectId]="attendeesList[0]?.userId" objectType="AD_Users"></codx-img>
+              <codx-img [width]="30" [objectId]="attendeesList[0]?.userID" objectType="AD_Users"></codx-img>
               <span
                 class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
             </div>
           </div>
           <div class="symbol-group-badge" *ngIf="attendeesList?.length >= 2">
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [width]="30" [objectId]="attendeesList[1]?.userId" objectType="AD_Users"></codx-img>
+              <codx-img [width]="30" [objectId]="attendeesList[1]?.userID" objectType="AD_Users"></codx-img>
               <span
                 class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
             </div>
@@ -192,6 +192,14 @@
 
   <ng-template #tabPeopleInfo>
     <ng-container *ngIf="form && form.formGroup">
+      <div class="d-flex justify-content-end me-2">
+        <ng-container *ngFor="let item of listRoles">
+          <div class="d-flex align-items-center ms-4">
+            <span inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
+            <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+          </div>
+        </ng-container>
+      </div>
       <div class="d-flex justify-content-between align-items-center mb-4" id="PeopleInfo">
         <div class="fs-5 fw-bold">
           <codx-label name="lblPeopleInfo" default="Người tham dự">
@@ -212,7 +220,7 @@
       </div>
       <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [width]="30" [objectId]="curUser?.userId" objectType="AD_Users"></codx-img>
+          <codx-img [width]="30" [objectId]="curUser?.userID" objectType="AD_Users"></codx-img>
           <span class="symbol-badge badge badge-sm badge-circle bg-danger top-100 start-100 text-white fs-8">A</span>
         </div>
 
@@ -235,7 +243,7 @@
 
       <div class="d-flex align-items-center mb-4" *ngFor="let item of attendeesList">
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [width]="30" [objectId]="item.userId" objectType="AD_Users"></codx-img>
+          <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
           <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
         </div>
 
@@ -260,7 +268,7 @@
           <!-- <span class="text-muted text-center"> {{item.modifiedOn}} </span> -->
         </div>
       </div>
-      <div class="form-group d-flex flex-row justify-content-center">
+      <!-- <div class="form-group d-flex flex-row justify-content-center">
         <div
           class="note-bar d-flex flex-row justify-content-center align-items-center rounded-right rounded-left shadow p-2">
           <div>
@@ -276,10 +284,9 @@
             <span class="mx-2">{{ "3" | vll: "EP009":"text" | async }}</span>
           </div>
         </div>
-      </div>
+      </div> -->
     </ng-container>
   </ng-template>
-
   <ng-template #tabStationery>
     <div class="form-group row d-flex flex-row justify-content-start align-items-center">
       <div class="col-4">
@@ -387,12 +394,13 @@
       </div>
     </ng-container>
   </ng-template>
+  
   <ng-template #popupDevice let-dialog>
     <div class="modal-header">
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
           <h2 id="modal-basic-title">
-            <codx-label name="lblEquipment" default="Thiết bị" [formModel]="form.formModel"></codx-label>
+            <codx-label name = "lblEquipment" default="Cài đặt thiết bị" ></codx-label>
           </h2>
           <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
             (click)="dialog.close()">
@@ -400,8 +408,8 @@
           </button>
         </div>
         <div class="text-dark-50">
-          <codx-label name="lblChooseEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong xe"
-            [formModel]="dialog.formModel"></codx-label>
+          <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+          ></codx-label>
         </div>
       </div>
     </div>
@@ -412,7 +420,7 @@
             <span class="me-1 ps-2" [className]="item.icon"
               [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"></span>
             <div class="d-flex flex-column justify-content-center">
-              <span href="#" class="text-dark fw-bolder">{{ item?.text }}</span>
+              <span href="#" class="ms-2 text-dark fw-bolder">{{ item?.text }}</span>
             </div>
           </div>
           <div class="d-flex justify-content-end">
@@ -425,11 +433,6 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer" (click)="dialog.close()">
-      <button type="button" class="btn btn-primary">
-        <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
-      </button>
-    </div>
   </ng-template>
 
   <ng-template #addLink let-dialog>
@@ -437,7 +440,7 @@
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
           <h2 id="modal-basic-title">
-            <codx-label name="lblOnlineUrl" default="Họp trực tuyến" [formModel]="form.formModel"></codx-label>
+            <codx-label name="lblOnlineUrl" default="Họp trực tuyến" ></codx-label>
           </h2>
           <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
             (click)="dialog.close()">
@@ -446,7 +449,7 @@
         </div>
         <div class="text-dark-50">
           <codx-label name="lblOnlineUrlSetting" default="Thiết lập đường dẫn"
-            [formModel]="dialog.formModel"></codx-label>
+            ></codx-label>
         </div>
       </div>
     </div>
@@ -464,7 +467,7 @@
     <div class="card-footer" (click)="dialog.close()">
       <div class="form-group d-flex justify-content-end flex-row">
         <button type="button" class="btn btn-primary">
-          <codx-label name="lblSave" default="Lưu" [formModel]="dialog.formModel"></codx-label>
+          <codx-label name="lblSave" default="Lưu"></codx-label>
         </button>
       </div>
     </div>
