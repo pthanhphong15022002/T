@@ -289,7 +289,7 @@ export class CodxCommentsComponent implements OnInit {
       "ERM.Business.WP",
       "VotesBusiness",
       "VotePostAsync",
-      [data.recID, voteType])
+      [data, voteType])
       .subscribe((res: any) => {
         if (res) {
           data.votes = res[0];

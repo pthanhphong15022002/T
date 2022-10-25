@@ -6,8 +6,10 @@ import {
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import { UIComponent } from 'codx-core';
-import { SV_Format } from '../model/SV_Format';
-import { SV_Survey } from '../model/SV_Survey';
+import { SV_Answers } from '../model/SV_Answers';
+import { SV_Formats } from '../model/SV_Formats';
+import { SV_Questions } from '../model/SV_Questions';
+import { SV_Surveys } from '../model/SV_Surveys';
 
 @Component({
   selector: 'app-add-survey',
@@ -17,8 +19,10 @@ import { SV_Survey } from '../model/SV_Survey';
   providers: [RteService, MultiSelectService],
 })
 export class AddSurveyComponent extends UIComponent implements OnInit {
-  survey: SV_Survey = new SV_Survey();
-  format: SV_Format = new SV_Format();
+  surveys: any = new Array();
+  formats: any = new Array();
+  questions: any = new Array();
+  answers: any = new Array();
   isModeAdd = true;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
@@ -62,55 +66,62 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         },
       ],
     },
-    {
-      id: '2',
-      text: 'TypeScript',
-      pic: 'typescript',
-      description:
-        'It is a typed superset of Javascript that compiles to plain JavaScript.',
-      answer: [
-        {
-          text: 'A',
-        },
-        {
-          text: 'B',
-        },
-      ],
-    },
-    {
-      id: '3',
-      text: 'Angular',
-      pic: 'angular',
-      description:
-        'It is a TypeScript-based open-source web application framework.',
-      answer: [
-        {
-          text: 'A',
-        },
-        {
-          text: 'B',
-        },
-      ],
-    },
-    {
-      id: '4',
-      text: 'React',
-      pic: 'react',
-      description:
-        'A JavaScript library for building user interfaces. It can also render on the server using Node.',
-    },
-    {
-      text: 'Vue',
-      pic: 'vue',
-      description:
-        'A progressive framework for building user interfaces. it is incrementally adoptable.',
-    },
   ];
 
   dataAnswer: any = new Array();
 
   constructor(inject: Injector) {
     super(inject);
+    // this.answers.seqNo = 0;
+    // this.answers.answer = 'NVA';
+    // this.answers.other = true;
+    // this.answers.isColumn = false;
+    // this.answers.hasPicture = false;
+    // this.questions.question = 'Bạn tên gì nhỉ???';
+    // this.questions.answers = this.answers;
+    // this.questions.seqNo = 0;
+    this.questions = [
+      {
+        seqNo: 0,
+        question: 'Bạn tên gì???',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'NVA',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+          {
+            seqNo: 1,
+            answer: 'NVB',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 1,
+        question: 'Bạn ở đâu???',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'VN',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+          {
+            seqNo: 1,
+            answer: 'US',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+    ];
   }
 
   onInit(): void {
@@ -121,11 +132,11 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.questions, event.previousIndex, event.currentIndex);
   }
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
-    var index = this.data.findIndex((x) => x.id == idParent);
-    this.dataAnswer = this.data[index].answer;
+    var index = this.questions.findIndex((x) => x.seqNo == idParent);
+    this.dataAnswer = this.questions[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
   }
 
@@ -138,13 +149,13 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   add() {
-    this.survey.title = 'Lời mời dự tiệc';
-    this.survey.memo = 'Tiệc đám cưới anh Võ Văn Quang ^.^';
+    this.surveys.title = 'Lời mời dự tiệc';
+    this.surveys.memo = 'Tiệc đám cưới anh Võ Văn Quang ^.^';
     this.api
       .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
-        this.survey,
-        this.format,
-        this.isModeAdd,  
+        this.surveys,
+        this.formats,
+        this.isModeAdd,
       ])
       .subscribe((res) => {
         debugger;

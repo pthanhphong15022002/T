@@ -11,7 +11,7 @@ import {
   CallFuncService,
   DialogData,
   DialogModel,
-  DialogRef
+  DialogRef,
 } from 'codx-core';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
@@ -68,11 +68,11 @@ export class CatagoryComponent implements OnInit {
       this.dialog.closed.subscribe((res) => {
         this.dialog = null;
       });
-    }else{
+    } else {
       this.lstFuncID = [];
       this.autoDefault = null;
       this.dataValue = {};
-      if(this.setting){
+      if (this.setting) {
         this.groupSetting = this.setting.filter((x) => {
           return (
             x.controlType && x.controlType.toLowerCase() === 'groupcontrol'
@@ -363,17 +363,24 @@ export class CatagoryComponent implements OnInit {
       } else {
         var dt = this.settingValue.find((x) => x.category == this.category);
         if (this.category == '1') {
-          this.dataValue[field] = value;
-          if (!this.dialog) {
-            dt.dataValue = JSON.stringify(this.dataValue);
-            this.api
-              .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-              .subscribe((res) => {
-                if (res) {
-                }
-                this.changeDetectorRef.detectChanges();
-                console.log(res);
-              });
+          if (data.displayMode !== '4' && data.displayMode !== '5') {
+            this.dataValue[field] = value;
+            if (!this.dialog) {
+              dt.dataValue = JSON.stringify(this.dataValue);
+              this.api
+                .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+                .subscribe((res) => {
+                  if (res) {
+                  }
+                  this.changeDetectorRef.detectChanges();
+                  console.log(res);
+                });
+            }
+          } else {
+            var settingChild = this.setting.find(
+              (item) => item.refLineID === data.recID
+            );
+            var a = settingChild;
           }
         }
       }

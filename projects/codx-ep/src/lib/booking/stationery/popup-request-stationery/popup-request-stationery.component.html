@@ -66,7 +66,7 @@
               <div class="d-flex">
                 <div id="ex4">
                   <span class="p1 fa-stack fa-2x has-badge">
-                    <i class="p3 icon-shopping_cart">{{ cartQty }}</i>
+                    <i class="p3 icon-shopping_cart">{{ this.cart.length }}</i>
                   </span>
                 </div>
 
@@ -158,7 +158,7 @@
               type="datetime"
               format="d"
               field="bookingOn"
-              [crrValue]="dialogAddBookingStationery.value.bookingOn"             
+              [crrValue]="dialogAddBookingStationery.value.bookingOn"
               (valueChange)="valueBookingOnChange($event)"
             >
             </codx-input> -->

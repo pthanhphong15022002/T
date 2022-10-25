@@ -313,6 +313,7 @@
         [enablePinchOnMobile]="false"
         (currentZoomFactor)="('1')"
         pageViewMode="vertical"
+        (textLayerRendered)="getTextLayerInfo($event)"
       >
       </ngx-extended-pdf-viewer>
 
@@ -433,7 +434,7 @@
                       type="switch"
                       labelPosition="After"
                       field=""
-                      [disabled]="isEditable"
+                      [disabled]="!isEditable"
                       [crrValue]="needSuggest"
                       (valueChange)="changeSuggestState($event)"
                     >
@@ -456,7 +457,7 @@
                     <codx-input
                       type="switch"
                       field="autoSignLastLine"
-                      [disabled]="isEditable"
+                      [disabled]="!isEditable"
                       [(crrValue)]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
@@ -696,7 +697,10 @@
                           <button
                             type="button"
                             class="btn btn-sm btn-primary"
-                            *ngIf="imgConfig.includes(area.labelType)"
+                            *ngIf="
+                              imgConfig.includes(area.labelType) && isApprover
+                            "
+                            (click)="changeSignature_StampImg(area)"
                           >
                             <codx-label
                               name="lblSave"

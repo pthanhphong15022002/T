@@ -94,7 +94,7 @@ export class PopupADRComponent extends UIComponent {
       (this.approvalTrans.comment == null || this.approvalTrans.comment == '')
     ) {
       let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
-      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+      this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
 

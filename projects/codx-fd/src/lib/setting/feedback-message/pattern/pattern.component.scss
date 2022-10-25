@@ -44,3 +44,7 @@
 .border-5px {
   border-radius: 5px
 }
+
+.container-fluid .p-0 {
+  height: fit-content !important;
+}

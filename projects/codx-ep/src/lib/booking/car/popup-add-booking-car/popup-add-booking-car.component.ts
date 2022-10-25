@@ -105,6 +105,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   editCarDevice = null;
   tmpTitle = '';
   tempArray = [];
+  listRoles:any;
   calendarStartTime:any;
   calendarEndTime:any;
   endHour:any;
@@ -200,7 +201,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
       });
     this.initForm();
     
-     
+    
+
     this.cacheService.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -328,14 +330,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.notificationsService.notifyCode('TM036');
       return;
     }
-    // if(this.data.attendees>this.carCapacity){
-    //    this.notificationsService.alertCode('EP010').subscribe((x) => {
-    //     if (x.event.status == 'N') {
-    //       return;
-    //     }
-    //   });
-    // }
-    
+    this.lstEquipment=[];
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
@@ -343,6 +338,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       tempEquip.isPicked = element.isSelected;
       this.lstEquipment.push(tempEquip);
     });
+    this.attendeesList=[];
     this.attendeesList.push(this.curUser);
     this.lstPeople.forEach((people) => {
       this.attendeesList.push(people);
@@ -355,48 +351,65 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.resourceType = '2';    
     this.data.equipments = this.lstEquipment;
 
-    this.dialogRef.dataService
-        .save((opt: any) => this.beforeSave(opt))
-        .subscribe((res) => {
-          if (res.save || res.update) {
-            if (!res.save) {
-              this.returnData = res.update;
-            } else {
-              this.returnData = res.save;
-            }
-            if (approval) {
-              this.codxEpService
-                .getCategoryByEntityName(this.formModel.entityName)
-                .subscribe((res: any) => {
-                  this.codxEpService
-                    .release(
-                      this.returnData,
-                      res.processID,
-                      'EP_Bookings',
-                      this.formModel.funcID
-                    )
-                    .subscribe((res) => {
-                      if (res?.msgCodeError == null && res?.rowCount) {
-                        this.notificationsService.notifyCode('ES007');
-                        this.returnData.status="3";
-                        (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe(); 
-                        this.dialogRef && this.dialogRef.close();
-                      } else {
-                        this.notificationsService.notifyCode(res?.msgCodeError);
-                        // Thêm booking thành công nhưng gửi duyệt thất bại
-                        this.dialogRef && this.dialogRef.close();
-                      }
-                    });
-                });
-            }
-            else{
-              this.dialogRef && this.dialogRef.close();
-            }  
-          } else {
-            return;
-          }
-        });
+    if(this.data.attendees>this.carCapacity){
+       this.notificationsService.alertCode('EP010').subscribe((x) => {
+        if (x.event.status == 'N') {
+          return;
+        }
+        else{
+          this.startSave(approval);
+        }
+      });
+    }
+    else{
+      this.startSave(approval);
+    }
     this.detectorRef.detectChanges();
+  }
+  startSave(approval){
+    this.dialogRef.dataService
+    .save((opt: any) => this.beforeSave(opt), 0,null,null,!approval)
+    .subscribe((res) => {
+      if (res.save || res.update) {
+        if (!res.save) {
+          this.returnData = res.update;
+        } else {
+          this.returnData = res.save;
+        }
+        if (approval) {
+          this.codxEpService
+            .getCategoryByEntityName(this.formModel.entityName)
+            .subscribe((res: any) => {
+              this.codxEpService
+                .release(
+                  this.returnData,
+                  res.processID,
+                  'EP_Bookings',
+                  this.formModel.funcID
+                )
+                .subscribe((res) => {
+                  if (res?.msgCodeError == null && res?.rowCount) {
+                    this.notificationsService.notifyCode('ES007');
+                    this.returnData.status="3";
+                    (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe(); 
+                    this.dialogRef && this.dialogRef.close();
+                  } else {
+                    this.notificationsService.notifyCode(res?.msgCodeError);
+                    // Thêm booking thành công nhưng gửi duyệt thất bại
+                    this.dialogRef && this.dialogRef.close();
+                  }
+                });
+            });
+            
+          this.dialogRef && this.dialogRef.close();
+        }
+        else{
+          this.dialogRef && this.dialogRef.close();
+        }  
+      } else {
+        return;
+      }
+    });
   }
   valueChange(event) {
     if (event?.field) {
@@ -526,24 +539,24 @@ export class PopupAddBookingCarComponent extends UIComponent {
     //   let temp= this.data.startDate;
     //   this.data.startDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.startHour,this.startMinutes);
     // }
-    let tmpDate = new Date();
-    let startDate= this.data.startDate;
-    if (new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),0,0,0,0) > new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0,0)) {
-      this.checkLoopS = !this.checkLoopS;
-      if (!this.checkLoopS) {
-        this.notificationsService.notifyCode('TM036');        
-      }
-      return;
-    }    
-    if(this.data.startDate && this.data.endDate){
-      if(!this.timeCheck(this.data.startDate,this.data.endDate)){
-        this.checkLoopS = !this.checkLoopS;
-        if (!this.checkLoopS) {
-          this.notificationsService.notifyCode('TM036');          
-        }
-        return;
-      };
-    }
+    // let tmpDate = new Date();
+    // let startDate= this.data.startDate;
+    // if (new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),0,0,0,0) > new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0,0)) {
+    //   this.checkLoopS = !this.checkLoopS;
+    //   if (!this.checkLoopS) {
+    //     this.notificationsService.notifyCode('TM036');        
+    //   }
+    //   return;
+    // }    
+    // if(this.data.startDate && this.data.endDate){
+    //   if(!this.timeCheck(this.data.startDate,this.data.endDate)){
+    //     this.checkLoopS = !this.checkLoopS;
+    //     if (!this.checkLoopS) {
+    //       this.notificationsService.notifyCode('TM036');          
+    //     }
+    //     return;
+    //   };
+    // }
     
   }
   endDateChange(evt: any) {
@@ -552,30 +565,30 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     this.data.endDate = new Date(evt.data.fromDate);  
 
-    let tmpDate = new Date();
-    let endDate= this.data.endDate;
-    if (new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),0,0,0,0) > new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),0,0,0,0)) {
-        this.checkLoopE = !this.checkLoopE;
-      if (!this.checkLoopE) {
-        this.notificationsService.notifyCode('TM036');        
-      }
-      return;
-    }
-    if(this.data.startDate && this.data.endDate){
-      if(!this.timeCheck(this.data.startDate,this.data.endDate)){
-        this.checkLoopE = !this.checkLoopE;
-        if (!this.checkLoopE) {
-          this.notificationsService.notifyCode('TM036');
-        }
-        return;
-      };
-    }
+    // let tmpDate = new Date();
+    // let endDate= this.data.endDate;
+    // if (new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),0,0,0,0) > new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),0,0,0,0)) {
+    //     this.checkLoopE = !this.checkLoopE;
+    //   if (!this.checkLoopE) {
+    //     this.notificationsService.notifyCode('TM036');        
+    //   }
+    //   return;
+    // }
+    // if(this.data.startDate && this.data.endDate){
+    //   if(!this.timeCheck(this.data.startDate,this.data.endDate)){
+    //     this.checkLoopE = !this.checkLoopE;
+    //     if (!this.checkLoopE) {
+    //       this.notificationsService.notifyCode('TM036');
+    //     }
+    //     return;
+    //   };
+    // }
   }
   openPopupCbb() {
     this.isPopupCbb = true;
   }
   valueCbxUserChange(event) {
-    this.cbbData=event;  
+    //this.cbbData=event.id; gán data đã chọn cho combobox
     if (event?.dataSelected) {      
       this.lstPeople = [];
       event.dataSelected.forEach((people) => {
@@ -592,10 +605,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         }
       });
       if (this.lstPeople.length > 0) {
-        this.data.attendees = this.lstPeople.length + 1; 
-        if(this.data.attendees>this.carCapacity){
-          this.notificationsService.notifyCode('EP010');
-        }       
+        this.data.attendees = this.lstPeople.length + 1;               
       }
       this.isPopupCbb = false;
       this.detectorRef.detectChanges();

@@ -107,7 +107,7 @@
         (click)="testdata(controlShare)"
       ></div>
     </div>
-    <ng-container *ngFor="let item of lstApprover">
+    <ng-container *ngFor="let item of lstApprover; let index = index">
       <div class="d-flex align-items-center w-100">
         <codx-temp-full
           cardCss="card-template mb-4"
@@ -120,7 +120,7 @@
           [imageWidth]="35"
           [titleLine]="3"
           [formModel]="formModel"
-          (clickMF)="MFClick($event, item)"
+          (clickMF)="MFClick($event, item, index)"
           [dataItem]="item"
           typeMF="hover"
         >
@@ -137,13 +137,13 @@
           imgCss="w-30px p-3 me-3 user-mini-icon"
           [imageWidth]="30"
           [subTitle]="item.approver | vll: 'ES014':'text' | async"
-          [title]="item.approver | vll: 'ES014':'text' | async"
+          [title]="item.name ?? (item.approver | vll: 'ES014':'text' | async)"
           [subTitle]="
             item.position ?? (item.approver | vll: 'ES014':'text' | async)
           "
           [titleLine]="3"
           [formModel]="formModel"
-          (clickMF)="MFClick($event, item)"
+          (clickMF)="MFClick($event, item, index)"
           [dataItem]="item"
           typeMF="hover"
         >
