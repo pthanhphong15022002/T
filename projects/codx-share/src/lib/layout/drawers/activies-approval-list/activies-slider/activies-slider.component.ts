@@ -33,7 +33,7 @@ export class ActiviesSliderComponent implements OnInit {
     this.api.execSv(
       'BG',
       'ERM.Business.BG',
-      'NotificationBusiness',
+      'NotificationBusinesss',
       'GetApprovalAsync',
       [this.pageIndex]
     ).subscribe((res:any[]) => {
