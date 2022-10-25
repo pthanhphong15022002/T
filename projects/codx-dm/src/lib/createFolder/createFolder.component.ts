@@ -220,6 +220,7 @@ export class CreateFolderComponent implements OnInit {
   titleSetting = 'Thiết lập';
   titleLevel = 'Cấp thư mục';
   titleCreateSubFolder = 'Tạo thư mục cấp con tự động';
+  titleAvatar = "Hiển thị hình ảnh tập tin"
   titleSecurityControl = 'Bảo mật';
   copymessage = 'Bạn có muốn lưu lên không ?';
   renamemessage = 'Bạn có muốn lưu với tên {0} không ?';

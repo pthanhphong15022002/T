@@ -153,7 +153,10 @@ export class IncommingComponent
     this.request.method = 'GetListByStatusAsync';
     this.request.idField = 'recID';
   }
-
+  clickTest()
+  {
+    this.api.execSv("DM","DM","FileBussiness","CreateFolderAsync",["BC","ChungTest","ESS21"]).subscribe();
+  }
   ngAfterViewInit(): void {
     this.views = [
       {
