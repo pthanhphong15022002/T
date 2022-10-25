@@ -45,7 +45,6 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   urlTxt:any;
   linkFile:any;
   isShow = false;
-  office365:any;
   isOffice=false;
   public urlSafe: any;
   @Input() id: string;
@@ -252,7 +251,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     
    
    
-    if(this.data?.extension.includes("doc") && this.office365 == "")
+    if(this.data?.extension.includes("doc"))
     {
       this.isShow = true;
       let http: XMLHttpRequest = new XMLHttpRequest();
@@ -273,7 +272,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
       //this.container.documentEditor.documentName = this.data?.fileName; 
       http.send(JSON.stringify(content));
     }
-    else if(this.data?.extension.includes("xls") && this.office365 == "")
+    else if(this.data?.extension.includes("xls"))
     {
       let that = this;
       fetch(this.linkFile) // fetch the remote url
@@ -330,7 +329,6 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   }
 
   ngOnInit(): void {
-    this.office365 = environment.office365;
     this.data = this.dataFile;
     if(this.data)this.getData(); 
   }
@@ -351,9 +349,6 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
         this.changeDetectorRef.detectChanges();
       }
     })
-    //this.systemDialogService.onOpenViewFileDialog.subscribe((o) => {
-    //   if (o == null) return;
-  
     this.ext = (this.data.extension || "").toLocaleLowerCase();
     this.fullName = this.data.fileName;
     this.fMoreAction = this.data.moreAction;
@@ -366,38 +361,21 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
     if (this.ext == ".mp4") {
       this.isVideo = true;
-      this.srcVideo = `${environment.urlFile}/${this.data.pathDisk}`;
-      //this.srcVideo = `${environment.apiUrl}/api/dm/filevideo/${this.id}?access_token=${this.auth.userValue.token}`;
+      this.srcVideo = `${environment.urlUpload}/${this.data.pathDisk}`;
     } else if (this.ext == ".png"
       || this.ext == ".jpeg"
       || this.ext == ".jpg"
       || this.ext == ".bmp"
     ) {
-      // this.data.thumbnail;// 
       this.isImg = true;     
-     ; //`${environment.apiUrl}/api/dm/files/GetImage?id=${this.id}&access_token=${this.auth.userValue.token}`;
     }
     else if (this.ext == ".pdf") {
       this.isPdf = true;
-      //this.document = this.id;
-    //  this.service = `${environment.apiUrl}/api/dm/files/${this.id}`;
-      // this.pdfviewer.load(this.id, '');
-      //this.changeDetectorRef.detectChanges();
-      // this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
-      //   this.document = item;
-      // });
     }
     else if(environment.office365) 
       this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(`${environment.office365}`+`${environment.urlUpload}`+"/"+this.data?.pathDisk);
     else
       this.viewFile(this.id);
-    // let diaglog = this.callfc.openForm(this.contentViewFileDialog, o.fileName, 1000, 800, null, "");
-    // diaglog.close(res => {
-    //   this.viewFile(this.iD);
-    //   return this.closeOpenForm(res);
-    // });
-    //  })
-    // }
     if (!window["librOfficeMessage"]) {
       window.removeEventListener("message", window["librOfficeMessage"], false);
     }
