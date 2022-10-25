@@ -128,7 +128,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       fontSize: '13',
       fontColor: 'black',
       fontFormat: 'B',
-    }
+    };
   }
 
   onInit(): void {
@@ -165,7 +165,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         this.isModeAdd,
       ])
       .subscribe((res) => {
-        debugger;
         if (res) {
         }
       });

@@ -155,7 +155,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
-    debugger;
   }
 
   valueChangeRefrence(e) {
