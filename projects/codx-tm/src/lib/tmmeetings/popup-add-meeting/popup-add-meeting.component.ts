@@ -304,40 +304,41 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       return;
     }
     this.listTime.forEach((res) => {
-      var startDate =
-        this.addZero(new Date(res.startDate).getHours()) +
-        ':' +
-        this.addZero(new Date(res.startDate).getMinutes());
-      var endDate =
-        this.addZero(new Date(res.endDate).getHours()) +
-        ':' +
-        this.addZero(new Date(res.endDate).getMinutes());
-      var startDateMT = moment(res.startDate).format('MM/DD/YYYY');
-      console.log(this.startTime);
-      console.log(this.endTime);
-      console.log(this.meeting.startDate);
-      if (
-        startDateMT === moment(this.meeting.startDate).format('MM/DD/YYYY') &&
-        startDate === this.startTime &&
-        endDate === this.endTime
-      ) {
-        this.timeBool = true;
+      console.log(this.toTimeSpan(new Date(res.startDate).getHours()));
+      console.log(this.toTimeSpan(new Date(res.endDate).getHours()));
+      console.log(this.toTimeSpan(new Date(res.startDate).getDate()));
 
-        return;
-      } else {
-        this.timeBool = false;
+      var startTime =
+        this.toTimeSpan(new Date(res.startDate).getHours()) +
+        this.toTimeSpan(new Date(res.startDate).getMinutes());
+      var endTime =
+        this.toTimeSpan(new Date(res.endDate).getHours()) +
+        this.toTimeSpan(new Date(res.endDate).getMinutes());
+      var startDate = this.toTimeSpan(new Date(res.startDate).getDate());
+      if (
+        startDate == this.toTimeSpan(new Date(this.meeting.startDate).getDate)
+      ) {
+        if (
+          this.toTimeSpan(this.startTime) >= startTime &&
+          this.toTimeSpan(this.endDate) <= endTime
+        ) {
+          this.timeBool = true;
+          return;
+        } else {
+          this.timeBool = false;
+        }
       }
     });
     if (this.timeBool == true) {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notiService
-        .alert(
-          'Thông báo',
-          'Đã trùng lịch bạn có muốn thêm lịch này không',
-          config
-        )
-        .closed.subscribe((x) => {});
+      // var config = new AlertConfirmInputConfig();
+      // config.type = 'YesNo';
+      // this.notiService
+      //   .alert(
+      //     'Thông báo',
+      //     'Đã trùng lịch bạn có muốn thêm lịch này không',
+      //     config
+      //   )
+      //   .closed.subscribe((x) => {});
       //đợi mess code
       this.notiService.notify(
         'Đã trùng thời gian họp đã có, vui lòng chọn thời gian khác!'
@@ -356,6 +357,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       if (this.action === 'add' || this.action === 'copy') this.onAdd();
       else this.onUpdate();
     }
+  }
+
+  toTimeSpan(t) {
+    var time = Date.parse(t.toString());
+    return time;
   }
 
   addZero(i) {
