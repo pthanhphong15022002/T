@@ -48,3 +48,7 @@ lib-systemsettings .e-tab .e-tab-header.e-vertical:before {
 .e-tab .e-tab-header.e-vertical:before {
     box-shadow: none;
 }
+
+.e-content.e-lib {
+    height: 100% !important;
+}

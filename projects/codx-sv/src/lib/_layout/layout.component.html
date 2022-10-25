@@ -29,19 +29,34 @@
       <!-- <codx-chat-list></codx-chat-list> -->
     </div>
     <!-- NOTES -->
-    <div class="d-flex align-items-center">
-      <!-- begin::Menu wrapper -->
+    <!-- <div class="d-flex align-items-center">
       <div class="btn btn-icon btn-active-light-primary position-relative"
         [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
-        <!-- <span [ngClass]="codxService.toolbarButtonIconSizeClass"></span> -->
         <span [inlineSVG]="
             './assets/themes/sys/default/img/header_notes.svg'
           " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
       </div>
-      <!-- end::Menu wrapper -->
-    </div>
+    </div> -->
     <!-- NOTIFICATIONS -->
-    <codx-notify-drawer></codx-notify-drawer>
+    <!-- <codx-notify-drawer></codx-notify-drawer> -->
+
+    <!-- CUSTOMIZE -->
+    <div class="d-flex align-items-center">
+      <div class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
+        <span class="icon-color_lens icon-24" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+      </div>
+    </div>
+    <!-- CUSTOMIZE -->
+
+    <!-- VIEW -->
+    <div class="d-flex align-items-center">
+      <div class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
+        <span class="icon-remove_red_eye icon-24" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+      </div>
+    </div>
+    <!-- VIEW -->
 
     <!-- Quick links -->
     <erm-quick-links-inner [buttonMarginClass]="codxService.toolbarButtonMarginClass"

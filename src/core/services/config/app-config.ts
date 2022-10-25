@@ -9,4 +9,5 @@ export abstract class AppConfig {
   urlFile: string;
   appName: string;
   reportUrl: string;
+  office365: string
 }

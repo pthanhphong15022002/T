@@ -53,14 +53,16 @@
                                         <li>
                                             <a (click)="checkNumberNotePin(item)" ngbDropdownItem
                                                 href="javascript:void(0)">
-                                                <span [class]="'icon-push_pin'" [style.color]="pinMF?.color"></span>
+                                                <span [class]="'icon-push_pin me-1'"
+                                                    [style.color]="pinMF?.color"></span>
                                                 <span class="show-customName">{{pinMF?.customName}}</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a (click)="openFormNoteBooks(item)" ngbDropdownItem
                                                 href="javascript:void(0)">
-                                                <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
+                                                <span [class]="saveMF?.largeIcon" class="me-1"
+                                                    [style.color]="saveMF?.color"></span>
                                                 <span class="show-customName">{{saveMF?.customName}}</span>
                                             </a>
                                         </li>
@@ -98,14 +100,16 @@
                                         <li>
                                             <a (click)="checkNumberNotePin(item)" ngbDropdownItem
                                                 href="javascript:void(0)">
-                                                <span [class]="'icon-push_pin'" [style.color]="pinMF?.color"></span>
+                                                <span [class]="'icon-push_pin me-1'"
+                                                    [style.color]="pinMF?.color"></span>
                                                 <span class="show-customName">{{pinMF?.customName}}</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a (click)="openFormNoteBooks(item)" ngbDropdownItem
                                                 href="javascript:void(0)">
-                                                <span [class]="saveMF?.largeIcon" [style.color]="saveMF?.color"></span>
+                                                <span [class]="saveMF?.largeIcon" class="me-1"
+                                                    [style.color]="saveMF?.color"></span>
                                                 <span class="show-customName">{{saveMF?.customName}}</span>
                                             </a>
                                         </li>
@@ -206,7 +210,8 @@
     <div *ngIf="CO_MeetingsParam != null">
         <div class="flex">
             <div class="w-5px">
-                <li [style.background-color]="CO_MeetingsParam?.ShowColor" [style.color]="CO_MeetingsParam?.ShowColor"></li>
+                <li [style.background-color]="CO_MeetingsParam?.ShowColor" [style.color]="CO_MeetingsParam?.ShowColor">
+                </li>
             </div>
             <div class="show-event">
                 <codx-label name="lblMeeting" formName="CO_Meetings" default="Lịch họp cá nhân"></codx-label>

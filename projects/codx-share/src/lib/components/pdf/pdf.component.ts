@@ -453,7 +453,7 @@ export class PdfComponent
 
   //sign pdf
   signPDF(mode, comment): any {
-    if (this.transRecID) {
+    if (this.isEditable && this.transRecID) {
       return new Promise<any>((resolve, rejects) => {
         this.esService
           .SignAsync(
@@ -1089,6 +1089,44 @@ export class PdfComponent
   changeConfirmState(e: any) {
     this.confirmChange.emit(e.data);
   }
+  changeSignature_StampImg(area: tmpSignArea) {
+    switch (area.labelType) {
+      case 'S1':
+        if (!this.signerInfo?.signature1) {
+          // thiet lap chu ki nhay
+          let setupShowForm = new SetupShowSignature();
+          setupShowForm.showSignature1 = true;
+          this.addSignature(setupShowForm);
+          return;
+        }
+        this.url = this.signerInfo?.signature1
+          ? this.signerInfo?.signature1
+          : '';
+        break;
+      case 'S2':
+        if (!this.signerInfo?.signature2) {
+          // thiet lap chu ki nhay
+          let setupShowForm = new SetupShowSignature();
+          setupShowForm.showSignature2 = true;
+          this.addSignature(setupShowForm);
+          return;
+        }
+        this.url = this.signerInfo?.signature2
+          ? this.signerInfo?.signature2
+          : '';
+        break;
+      case 'S3':
+        if (!this.signerInfo?.stamp) {
+          // thiet lap con dau
+          let setupShowForm = new SetupShowSignature();
+          setupShowForm.showStamp = true;
+          this.addSignature(setupShowForm);
+          return;
+        }
+        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
+        break;
+    }
+  }
 
   gotLstCA = false;
   changeLeftTab(e) {
@@ -1315,7 +1353,7 @@ export class PdfComponent
           let stampDialog = this.callfc.openForm(
             PopupSelectLabelComponent,
             '',
-            700,
+            900,
             700,
             this.funcID,
             {
@@ -1324,7 +1362,10 @@ export class PdfComponent
             }
           );
           stampDialog.closed.subscribe((res) => {
-            if (res.event) {
+            if (
+              res.event &&
+              !this.lstAreas.find((area) => area.labelType == '9')
+            ) {
               let curLabelUrl = res.event.Image;
               this.url = '';
               if (curLabelUrl && curLabelUrl != '') {
@@ -1339,10 +1380,8 @@ export class PdfComponent
                 );
               }
             }
-            return;
           });
-
-          break;
+          return;
         }
         default:
           this.url = '';
@@ -1465,19 +1504,24 @@ export class PdfComponent
   }
 
   changeSuggestState(e: any) {
-    this.needSuggest = e.data;
-    if (this.needSuggest) {
-      this.curPage = this.pageMax;
+    if (this.isEditable) {
+      this.needSuggest = e.data;
+      if (this.needSuggest) {
+        this.curPage = this.pageMax;
+      }
+      this.detectorRef.detectChanges();
     }
   }
 
   changeAutoSignState(e: any, mode: number) {
-    if (e.data && !this.autoSignState) {
-      this.curPage = this.pageMax;
-      this.autoSign();
+    if (this.isEditable) {
+      if (e.data && !this.autoSignState) {
+        this.curPage = this.pageMax;
+        this.autoSign();
+      }
+      this.autoSignState = e.data;
+      this.detectorRef.detectChanges();
     }
-    this.autoSignState = e.data;
-    this.detectorRef.detectChanges();
   }
 
   autoSign() {
@@ -1540,18 +1584,18 @@ export class PdfComponent
       let url = '';
       let labelType = '';
       switch (person.stepType) {
-        case 'S1': //chu ky chinh
+        case 'S': //chu ky chinh
           url = person.signature1;
           labelType = person.stepType;
           break;
-        case 'S2': //chu ky nhay
-          url = person.signature2;
-          labelType = person.stepType;
-          break;
-        case 'S3': //con dau
-          url = person.stamp;
-          labelType = person.stepType;
-          break;
+        // case 'S2': //chu ky nhay
+        //   url = person.signature2;
+        //   labelType = person.stepType;
+        //   break;
+        // case 'S3': //con dau
+        //   url = person.stamp;
+        //   labelType = person.stepType;
+        //   break;
         default:
           break;
       }
@@ -1571,7 +1615,7 @@ export class PdfComponent
             Type: 'img',
             PageNumber: this.curPage - 1,
             StepNo: person.stepNo,
-            LabelType: labelType,
+            LabelType: 'S1',
             LabelValue: url,
           };
           let imgArea = new Konva.Image({
@@ -1595,7 +1639,7 @@ export class PdfComponent
 
           let tmpArea: tmpSignArea = {
             signer: person.authorID,
-            labelType: labelType,
+            labelType: 'S1',
             labelValue: url,
             isLock: false,
             allowEditAreas: this.signerInfo.allowEditAreas,

@@ -192,6 +192,14 @@
 
   <ng-template #tabPeopleInfo>
     <ng-container *ngIf="form && form.formGroup">
+      <div class="d-flex justify-content-end me-2">
+        <ng-container *ngFor="let item of listRoles">
+          <div class="d-flex align-items-center ms-4">
+            <span inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
+            <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+          </div>
+        </ng-container>
+      </div>
       <div class="d-flex justify-content-between align-items-center mb-4" id="PeopleInfo">
         <div class="fs-5 fw-bold">
           <codx-label name="lblPeopleInfo" default="Người tham dự">
@@ -260,7 +268,7 @@
           <!-- <span class="text-muted text-center"> {{item.modifiedOn}} </span> -->
         </div>
       </div>
-      <div class="form-group d-flex flex-row justify-content-center">
+      <!-- <div class="form-group d-flex flex-row justify-content-center">
         <div
           class="note-bar d-flex flex-row justify-content-center align-items-center rounded-right rounded-left shadow p-2">
           <div>
@@ -276,10 +284,9 @@
             <span class="mx-2">{{ "3" | vll: "EP009":"text" | async }}</span>
           </div>
         </div>
-      </div>
+      </div> -->
     </ng-container>
   </ng-template>
-
   <ng-template #tabStationery>
     <div class="form-group row d-flex flex-row justify-content-start align-items-center">
       <div class="col-4">

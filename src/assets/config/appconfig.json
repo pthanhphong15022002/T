@@ -8,5 +8,6 @@
   "urlTenant": "",
   "urlThumbnail": "http://172.16.1.210:8011",
   "urlFile": "http://172.16.1.210:8011",
-  "appName": "hps-file-test"
+  "appName": "hps-file-test",
+  "office365": "https://view.officeapps.live.com/op/view.aspx?src="
 }
