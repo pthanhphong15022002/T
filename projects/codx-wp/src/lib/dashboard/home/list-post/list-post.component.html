@@ -31,7 +31,8 @@
         [itemTemplate]="tmpPortal" 
         [itemTemplateLoading]="templateloading" 
         [emptyTemplate]="empty"
-        [predicate]="predicateWP ? predicateWP : ''" 
+        [predicates]="predicateWP ? predicateWP : ''" 
+        [dataValues]="dataValueWP ? dataValueWP : ''"
         [formModel]="formModel">
       </codx-listview>
     </ng-container>

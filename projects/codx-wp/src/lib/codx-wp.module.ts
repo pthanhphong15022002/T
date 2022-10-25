@@ -49,10 +49,7 @@ import { ViewDetailComponent } from './news/view-detail/view-detail.component';
 import { ViewTagComponent } from './news/view-tag/view-tag.component';
 import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { TestSurveyComponent } from './test-survey/test-survey.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
-import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
@@ -155,16 +152,6 @@ export const routes: Routes = [
     redirectTo: 'portal/WP',
     pathMatch: 'full',
   },
-  {
-    path: 'survey',
-    component: LayoutOnlyHeaderComponent,
-    children: [
-      {
-        path: 'test',
-        component: TestSurveyComponent,
-      },
-    ],
-  },
 
 ];
 
@@ -202,7 +189,6 @@ const Component: Type<any>[] =
     ChatBoxComponent,
     ListChatBoxComponent,
     PopupGroupComponent,
-    TestSurveyComponent,
   ];
 
 @NgModule({
@@ -217,8 +203,6 @@ const Component: Type<any>[] =
     NgbModule,
     CoreModule,
     PickerModule,
-    InPlaceEditorModule,
-    DragDropModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule, ListPostComponent],
