@@ -1,10 +1,4 @@
-<codx-form
-  headerText="{{ title }}"
-  subHeaderText=""
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialogRef"
->
+<codx-form headerText="{{ title }}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialogRef">
   <ng-template #body>
     <div *ngIf="skillEmployee">
       <ng-container *ngFor="let skill of skillEmployee">
@@ -12,12 +6,7 @@
           <div class="fw-bold text-dark mb-1">{{ skill.competenceName }}</div>
           <div class="d-flex align-items-center mt-2">
             <span class="w-250px">
-              <ejs-slider
-                [type]="minType"
-                [min]="0"
-                [max]="10"
-                [tooltip]="tooltip" 
-                [value]="skill.valueX"
+              <ejs-slider [type]="minType" [min]="0" [max]="10" [tooltip]="tooltip" [value]="skill.valueX"
                 (valueChange)="sliderChange($event,skill)">
               </ejs-slider>
             </span>
@@ -25,31 +14,22 @@
               <i class="icon-close icon-18 text-danger"></i>
             </span>
           </div>
-          
+
         </div>
       </ng-container>
     </div>
   </ng-template>
   <ng-template #footer>
     <div class="process-item d-flex mb-4 mt-6">
-      <div
-        class="d-flex align-items-center user-item add-process"
-      >
-        <span class="icon-add icon-18"></span>
-        <a class="text-primary" (click)="popupAddSkill()">
+      <div class="add-process">
+        <button class="btn btn-sm btn-light" (click)="popupAddSkill()">
+          <i class="icon-add icon-16 ms-n2"></i>
           <codx-label name="lblAdd" formName="Employees" default="Thêm mới">
           </codx-label>
-        </a>
+        </button>
         <ng-container *ngIf="showCBB">
-          <codx-combobox-popup
-            comboboxName="Skills"
-            field="skill"
-            [multiple]="true"
-            [width]="width"
-            [height]="height"
-            (clickSave)="addSkill($event)"
-            title="Kỹ năng"
-          >
+          <codx-combobox-popup comboboxName="Skills" field="skill" [multiple]="true" [width]="width" [height]="height"
+            (clickSave)="addSkill($event)" title="Kỹ năng">
           </codx-combobox-popup>
         </ng-container>
       </div>

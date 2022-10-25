@@ -14,6 +14,7 @@ export const environment = {
   urlTenant: '',
   urlThumbnail: '',
   urlFile: '',
+  office365: '',
   appName: '', // Tam thoi de hard
   StoreNames: {
     FormLabels: 'FormLabels',
