@@ -4,11 +4,9 @@
   [funcID]="funcID"
   autoLoad="false"
   [service]="service"
-  [assemblyName]="assemblyName"
-  [className]="className"
-  [method]="method"
-  [entityName]="functionList.entityName"
+  [entityName]="'SV_Surveys'"
   idField="recID"
+  [selectedFirst]="true"
 ></codx-views>
 
 <ng-template #panelLeftRef>
@@ -44,5 +42,5 @@
   </div>
 </ng-template>
 <ng-template #lstView let-data>
-  <div class="body-survey">{{ data.memo }}</div>
+  {{ data.memo }}
 </ng-template>

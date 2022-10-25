@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
   OnInit,
@@ -26,14 +27,14 @@ export class HomeComponent extends UIComponent implements OnInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('lstView') lstView: TemplateRef<any>;
 
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, private change: ChangeDetectorRef) {
     super(injector);
     this.router.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if(res) this.functionList = res;
-    })
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
 
   onInit(): void {}
@@ -52,12 +53,18 @@ export class HomeComponent extends UIComponent implements OnInit {
       {
         id: '2',
         type: ViewType.list,
-        active: true,
+        // active: true,
         sameData: true,
         model: {
           template: this.lstView,
         },
       },
     ];
+    this.view.dataService.requestEnd = (t, data) => {
+      if (t == 'loaded') {
+        console.log('check listSurvey', this.view.dataService.data);
+      }
+    };
+    this.change.detectChanges();
   }
 }
