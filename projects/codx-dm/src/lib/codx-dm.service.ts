@@ -17,7 +17,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
-  ApiHttpService
+  ApiHttpService,
 } from 'codx-core';
 import {
   FileInfo,
@@ -125,11 +125,10 @@ export class CodxDMService {
   moveable = false;
   itemRight: ItemRight;
   path: string;
-  
+
   // public confirmationDialogService: ConfirmationDialogService;
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
-
 
   public ChangeDataViewFile = new BehaviorSubject<any>(null);
   isChangeDataViewFile = this.ChangeDataViewFile.asObservable();
@@ -166,7 +165,6 @@ export class CodxDMService {
 
   public breadcumb = new BehaviorSubject<string[]>(null);
   isBreadcum = this.breadcumb.asObservable();
-
 
   public breadcumbTree = new BehaviorSubject<string[]>(null);
   isBreadcumTree = this.breadcumbTree.asObservable();
@@ -305,7 +303,7 @@ export class CodxDMService {
     this.disableInput.next(true);
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   getRight(folder: FolderInfo) {
     this.parentCreate = folder.create;
@@ -338,7 +336,7 @@ export class CodxDMService {
         (folder.folderName.trim().toLocaleLowerCase() ==
           this.FOLDER_NAME.trim().toLocaleLowerCase() ||
           folder.folderName.trim().toLocaleLowerCase() ==
-          this.user.userID.trim().toLocaleLowerCase()) &&
+            this.user.userID.trim().toLocaleLowerCase()) &&
         (folder.level == '1' || folder.level == '2')
       ) {
         this.disableUpload.next(true);
@@ -453,7 +451,7 @@ export class CodxDMService {
   openItem(data: any) {
     if (data.fileName == undefined) {
       if (!data.read) {
-        this.notificationsService.notifyCode("DM059");
+        this.notificationsService.notifyCode('DM059');
         return;
       }
 
@@ -497,13 +495,11 @@ export class CodxDMService {
     } else {
       // open file
       if (!data.read) {
-        this.notificationsService.notify("DM059");
+        this.notificationsService.notify('DM059');
         return;
       }
       var dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-
-     
     }
   }
 
@@ -546,7 +542,11 @@ export class CodxDMService {
                     list.splice(index, 1); //remove element from array
                     //this.changeData(null, list, id);
                     this.listFiles = list;
-                    this.notificationsService.notifyCode("DM046" , 0 , this.user?.userName)
+                    this.notificationsService.notifyCode(
+                      'DM046',
+                      0,
+                      this.user?.userName
+                    );
                     this.ChangeData.next(true);
                     //  this.changeDetectorRef.detectChanges();
                   }
@@ -555,14 +555,14 @@ export class CodxDMService {
                     this.updateHDD.next(i);
                     //   this.changeDetectorRef.detectChanges();
                   });
-
-
                 });
             } else {
               this.folderService
                 .deleteFolderToTrash(id, false)
                 .subscribe(async (res) => {
-                  this.listFolder = this.listFolder.filter(x=>x.recID != id);
+                  this.listFolder = this.listFolder.filter(
+                    (x) => x.recID != id
+                  );
                   this.nodeDeleted.next(id);
                   this.fileService.getTotalHdd().subscribe((i) => {
                     this.updateHDD.next(i);
@@ -792,7 +792,7 @@ export class CodxDMService {
             //   break;
             case 'DMT0209': //properties
             case 'DMT0222': //properties file
-            //debugger;
+              //
               if (!data.read) e[i].isblur = true; // duoc view
               break;
             // case "DMT0224": // in folder
@@ -989,13 +989,11 @@ export class CodxDMService {
   getType(item: any, ret: string) {
     var type = 'folder';
     if (ret == 'name') {
-      if (item.extension)
-        type = 'file';
+      if (item.extension) type = 'file';
     } else {
       // entity
       type = 'DM_FolderInfo';
-      if (!item.folderName && item.extension)
-        type = 'DM_FileInfo';
+      if (!item.folderName && item.extension) type = 'DM_FileInfo';
     }
 
     return type;
@@ -1163,11 +1161,22 @@ export class CodxDMService {
       case 'DMT0210': //view file
         var dialogModel = new DialogModel();
         dialogModel.IsFull = true;
-        this.fileService.getFile(data.recID).subscribe(data => {
-          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data, this.formModel], "", dialogModel);
+        this.fileService.getFile(data.recID).subscribe((data) => {
+          this.callfc.openForm(
+            ViewFileDialogComponent,
+            data.fileName,
+            1000,
+            800,
+            '',
+            [data, this.formModel],
+            '',
+            dialogModel
+          );
           var files = this.listFiles;
           if (files != null) {
-            let index = files.findIndex(d => d.recID.toString() === data.recID);
+            let index = files.findIndex(
+              (d) => d.recID.toString() === data.recID
+            );
             if (index != -1) {
               //var thumnail = files[index].thumbnail;
               files[index] = data;
@@ -1177,7 +1186,7 @@ export class CodxDMService {
           }
         });
         break;
-      case "DMT0211": // download
+      case 'DMT0211': // download
         // const downloadFile = (url, filename = '') => {
         //   if (filename.length === 0) filename = url.split('/').pop();
         //   const req = new XMLHttpRequest();
@@ -1205,25 +1214,25 @@ export class CodxDMService {
         //   req.send();
         // };
 
-        this.fileService.getFile(data.recID).subscribe(file => {
+        this.fileService.getFile(data.recID).subscribe((file) => {
           var id = file.recID;
           var that = this;
           if (this.checkDownloadRight(file)) {
-            this.fileService.downloadFile(id).subscribe(async res => {
+            this.fileService.downloadFile(id).subscribe(async (res) => {
               if (res) {
-                let blob = await fetch(res).then(r => r.blob());
+                let blob = await fetch(res).then((r) => r.blob());
                 let url = window.URL.createObjectURL(blob);
-                var link = document.createElement("a");
-                link.setAttribute("href", url);
-                link.setAttribute("download", data.fileName);
-                link.style.display = "none";
+                var link = document.createElement('a');
+                link.setAttribute('href', url);
+                link.setAttribute('download', data.fileName);
+                link.style.display = 'none';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
               }
               var files = this.listFiles;
               if (files != null) {
-                let index = files.findIndex(d => d.recID.toString() === id);
+                let index = files.findIndex((d) => d.recID.toString() === id);
                 if (index != -1) {
                   files[index].countDownload = files[index].countDownload + 1;
                 }
@@ -1231,14 +1240,13 @@ export class CodxDMService {
                 this.ChangeData.next(true);
               }
             });
-          }
-          else {
+          } else {
             this.notificationsService.notify(this.titleNoRight);
           }
         });
         break;
 
-      case "DMT0222": // properties file
+      case 'DMT0222': // properties file
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1248,18 +1256,18 @@ export class CodxDMService {
         this.callfc.openSide(PropertiesComponent, data, option);
         break;
 
-      case "DMT0234": // khoi phuc thu muc
-      case "DMT0235": // khoi phuc file
+      case 'DMT0234': // khoi phuc thu muc
+      case 'DMT0235': // khoi phuc file
         this.restoreFile(data, type);
         break;
 
-      case "DMT0206":  // xoa thu muc
-      case "DMT0219": // xoa file
+      case 'DMT0206': // xoa thu muc
+      case 'DMT0219': // xoa file
         this.deleteFile(data, type);
         break;
 
-      case "DMT0202": // chinh sua thu muc
-      case "DMT0209": // properties folder
+      case 'DMT0202': // chinh sua thu muc
+      case 'DMT0209': // properties folder
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1270,71 +1278,139 @@ export class CodxDMService {
         this.callfc.openSide(CreateFolderComponent, data, option);
         break;
 
-      case "DMT0213":  // chinh sua file
-        this.callfc.openForm(EditFileComponent, "", 800, 800, "", ["", data], "");
+      case 'DMT0213': // chinh sua file
+        this.callfc.openForm(
+          EditFileComponent,
+          '',
+          800,
+          800,
+          '',
+          ['', data],
+          ''
+        );
         break;
 
-      case "DMT0207":  // permission
-      case "DMT0220":
-        {
-          if (type == "file" || this.type == "DM_FileInfo") {
-            this.api
-              .execSv("DM", 'DM', 'FileBussiness', 'GetFilesByIDAsync', data.recID)
-              .subscribe((item: any) => {
-                this.dataFileEditing = item;
-                this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1", data.recID, view, type], "").closed.subscribe(item => {
+      case 'DMT0207': // permission
+      case 'DMT0220': {
+        if (type == 'file' || this.type == 'DM_FileInfo') {
+          this.api
+            .execSv(
+              'DM',
+              'DM',
+              'FileBussiness',
+              'GetFilesByIDAsync',
+              data.recID
+            )
+            .subscribe((item: any) => {
+              this.dataFileEditing = item;
+              this.callfc
+                .openForm(
+                  RolesComponent,
+                  '',
+                  950,
+                  650,
+                  '',
+                  ['1', data.recID, view, type],
+                  ''
+                )
+                .closed.subscribe((item) => {
                   if (item?.event)
                     view?.dataService.update(item.event).subscribe();
                 });
-              });
-          }
-          else {
-            this.api
-              .execSv("DM", 'DM', 'FolderBussiness', 'GetFolderByIdAsync', data.recID)
-              .subscribe((item: any) => {
-                this.dataFileEditing = item;
-                this.callfc.openForm(RolesComponent, "", 950, 650, "", ["1", data.recID, view, type], "").closed.subscribe(item => {
+            });
+        } else {
+          this.api
+            .execSv(
+              'DM',
+              'DM',
+              'FolderBussiness',
+              'GetFolderByIdAsync',
+              data.recID
+            )
+            .subscribe((item: any) => {
+              this.dataFileEditing = item;
+              this.callfc
+                .openForm(
+                  RolesComponent,
+                  '',
+                  950,
+                  650,
+                  '',
+                  ['1', data.recID, view, type],
+                  ''
+                )
+                .closed.subscribe((item) => {
                   if (item?.event)
                     view?.dataService.update(item.event).subscribe();
                 });
-              });
-          }
-          break;
-
+            });
         }
+        break;
+      }
 
-
-      case "DMT0205": // bookmark folder
-      case "DMT0223": // unbookmark folder
-      case "DMT0217": // bookmark file
-      case "DMT0225":
+      case 'DMT0205': // bookmark folder
+      case 'DMT0223': // unbookmark folder
+      case 'DMT0217': // bookmark file
+      case 'DMT0225':
         this.setBookmark(data, type);
         break;
 
-      case "DMT0204": // di chuyen
-      case "DMT0216": // di chuyen
+      case 'DMT0204': // di chuyen
+      case 'DMT0216': // di chuyen
         var title = `${this.titleCopy} ${type}`;
-        this.callfc.openForm(MoveComponent, "", 950, 650, "", [type, data, title, true], "");
+        this.callfc.openForm(
+          MoveComponent,
+          '',
+          950,
+          650,
+          '',
+          [type, data, title, true],
+          ''
+        );
         break;
 
-      case "DMT0214": //"copy": // copy file hay thu muc
+      case 'DMT0214': //"copy": // copy file hay thu muc
         var title = `${this.titleCopy}`;
-        this.callfc.openForm(CopyComponent, "", 950, 650, "", [type, data, title, true], "");
+        this.callfc.openForm(
+          CopyComponent,
+          '',
+          950,
+          650,
+          '',
+          [type, data, title, true],
+          ''
+        );
         break;
 
-      case "DMT0203": //"rename": // copy file hay thu muc
-      case "DMT0215":
+      case 'DMT0203': //"rename": // copy file hay thu muc
+      case 'DMT0215':
         var title = `${this.titleRename}`;
-        this.callfc.openForm(CopyComponent, "", 450, 100, "", [type, data, title, false], "");
+        this.callfc.openForm(
+          CopyComponent,
+          '',
+          450,
+          100,
+          '',
+          [type, data, title, false],
+          ''
+        );
         break;
 
-      case "DMT0218": /// version file
-        this.callfc.openForm(VersionComponent, "", 650, 600, "", [FormModel, data], "");
+      case 'DMT0218': /// version file
+        this.callfc.openForm(
+          VersionComponent,
+          '',
+          650,
+          600,
+          '',
+          [FormModel, data],
+          ''
+        );
         break;
 
       //request permisssion
-      case "DMT0221":
-      case "DMT0208":
+      case 'DMT0221':
+      case 'DMT0208':
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1346,8 +1422,8 @@ export class CodxDMService {
         break;
 
       // share
-      case "DMT0201":
-      case "DMT0212":
+      case 'DMT0201':
+      case 'DMT0212':
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1365,49 +1441,59 @@ export class CodxDMService {
 
   async restoreFile(data: any, type: string): Promise<void> {
     if (type === 'file') {
-      this.fileService.restoreFile(data.recID, data.fileName).subscribe(async res => {
-        if (res.status == 0) {
-          let list = this.listFiles;
-          let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
-          if (index > -1) {
-            list.splice(index, 1);//remove element from array
-            this.listFiles = list;
-            //   this.notificationsService.notify(res.message);
-            this.ChangeData.next(true);
+      this.fileService
+        .restoreFile(data.recID, data.fileName)
+        .subscribe(async (res) => {
+          if (res.status == 0) {
+            let list = this.listFiles;
+            let index = list.findIndex(
+              (d) => d.recID.toString() === data.recID.toString()
+            ); //find index in your array
+            if (index > -1) {
+              list.splice(index, 1); //remove element from array
+              this.listFiles = list;
+              //   this.notificationsService.notify(res.message);
+              this.ChangeData.next(true);
+            }
           }
-        }
 
-        if (res.status == 6) {
-          var config = new AlertConfirmInputConfig();
-          config.type = "YesNo";
-          this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => {
-            if (x.event.status == "Y") {
-              this.fileService.restoreFile(data.recID, res.data.fileName, "1").subscribe(async item => {
-                if (item.status == 0) {
-                  let list = this.listFiles;
-                  let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
-                  if (index > -1) {
-                    list.splice(index, 1);//remove element from array
-                    this.listFiles = list;
-                    this.notificationsService.notify(item.message);
-                    this.ChangeData.next(true);
-                  }
+          if (res.status == 6) {
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notificationsService
+              .alert(this.title, res.message, config)
+              .closed.subscribe((x) => {
+                if (x.event.status == 'Y') {
+                  this.fileService
+                    .restoreFile(data.recID, res.data.fileName, '1')
+                    .subscribe(async (item) => {
+                      if (item.status == 0) {
+                        let list = this.listFiles;
+                        let index = list.findIndex(
+                          (d) => d.recID.toString() === data.recID.toString()
+                        ); //find index in your array
+                        if (index > -1) {
+                          list.splice(index, 1); //remove element from array
+                          this.listFiles = list;
+                          this.notificationsService.notify(item.message);
+                          this.ChangeData.next(true);
+                        }
+                      }
+                    });
                 }
               });
-            }
-          });
-        }
-        else {
-          this.notificationsService.notify(res.message);
-        }
-      });
-    }
-    else {
-      this.folderService.restoreFolder(data.recID).subscribe(async res => {
+          } else {
+            this.notificationsService.notify(res.message);
+          }
+        });
+    } else {
+      this.folderService.restoreFolder(data.recID).subscribe(async (res) => {
         if (res.status == 0) {
           let list = this.listFolder;
           //list = list.filter(item => item.recID != id);
-          let index = list.findIndex(d => d.recID.toString() === data.recID.toString()); //find index in your array
+          let index = list.findIndex(
+            (d) => d.recID.toString() === data.recID.toString()
+          ); //find index in your array
           if (index > -1) {
             list.splice(index, 1);
             this.listFolder = list;
@@ -1460,7 +1546,8 @@ export class CodxDMService {
     var item2 = '';
 
     if (!folder.icon)
-      item1 = '<img class="h-13px" src="../../../assets/themes/dm/default/img/icon-folder.svg">';
+      item1 =
+        '<img class="h-13px" src="../../../assets/themes/dm/default/img/icon-folder.svg">';
     else {
       if (folder.icon.indexOf('.') == -1)
         item1 = `<i class="${folder.icon}" role="presentation"></i>`;
@@ -1582,7 +1669,7 @@ export class CodxDMService {
             .closed.subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.fileService
-                  .copyFile(id, fullName, toselectId, 1,1)
+                  .copyFile(id, fullName, toselectId, 1, 1)
                   .subscribe(async (item) => {
                     if (item.status == 0) {
                       let list = this.listFiles;
@@ -1631,7 +1718,7 @@ export class CodxDMService {
           var config = new AlertConfirmInputConfig();
           config.type = 'YesNo';
           this.notificationsService
-            .alert(this.title,res.message,config)
+            .alert(this.title, res.message, config)
             .closed.subscribe((x) => {
               if (x.event.status == 'Y') {
                 this.folderService

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
   OnInit,
@@ -6,7 +7,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxListviewComponent, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'app-home',
@@ -24,16 +25,16 @@ export class HomeComponent extends UIComponent implements OnInit {
   functionList: any;
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('lstView') lstView: TemplateRef<any>;
+  @ViewChild('lstView') lstView: CodxListviewComponent;
 
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, private change: ChangeDetectorRef) {
     super(injector);
     this.router.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if(res) this.functionList = res;
-    })
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
 
   onInit(): void {}
@@ -49,15 +50,11 @@ export class HomeComponent extends UIComponent implements OnInit {
           panelLeftRef: this.panelLeftRef,
         },
       },
-      {
-        id: '2',
-        type: ViewType.list,
-        active: true,
-        sameData: true,
-        model: {
-          template: this.lstView,
-        },
-      },
     ];
+    this.change.detectChanges();
+  }
+
+  clickMF(e, data) {
+
   }
 }

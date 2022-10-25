@@ -3,12 +3,8 @@
   [views]="views"
   [funcID]="funcID"
   autoLoad="false"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [className]="className"
-  [method]="method"
-  [entityName]="functionList.entityName"
   idField="recID"
+  [selectedFirst]="true"
 ></codx-views>
 
 <ng-template #panelLeftRef>
@@ -42,7 +38,47 @@
       </div>
     </div>
   </div>
+  <div class="p-6 bg-body rounded-4 list-survey">
+    <div class="title-add-survey">
+      <codx-label
+        fiedName=""
+        formModel=""
+        default="Biểu mẫu gần đây"
+      ></codx-label>
+    </div>
+    <div class="d-flex flex-column-fluid home-notebooks hover-scroll-overlay-y">
+      <codx-listview
+        #lstView
+        [itemTemplate]="templateListCard"
+        type="cardView"
+        [funcID]="funcID"
+        [service]="service"
+        [entityName]="functionList?.entityName"
+      >
+      </codx-listview>
+    </div>
+  </div>
 </ng-template>
-<ng-template #lstView let-data>
-  <div class="body-survey">{{ data.memo }}</div>
+
+<ng-template #templateListCard let-item>
+  <div>
+    <codx-card-img
+      cardCss="border card-img-mwp rounded-3 img-storage w-225px h-225px"
+      (clickMF)="clickMF($event, item)"
+      [imageId]="item.recID"
+      imgCss="h-140px mb-2"
+      icoTitleCss="icon-assignment icon-16"
+      [title]="item.title"
+      cssTitle="line-clamp line-clamp-1"
+      [imgOn]="item?.modifiedOn"
+      [desc2]="item.memo"
+      cssDes2="line-clamp line-clamp-2"
+      imageWidth="223"
+      [imageObjType]="functionList?.entityName"
+      [formModel]=""
+      [dataItem]="item"
+      [imageObjName]="item.title"
+    >
+    </codx-card-img>
+  </div>
 </ng-template>

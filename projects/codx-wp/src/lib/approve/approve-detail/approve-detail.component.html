@@ -10,41 +10,15 @@
         <div class="d-flex flex-row-reverse">
             <div class="navbar p-0">
                 <ng-container *ngFor="let item of moreFC">
-                    <div class="nav-item">
-                        <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
-                            (click)="clickApprovePost(item.functionID)">
-                            <span>
-                                <i class="icon-close me-1 text-danger fs-1 fw-bolder"></i>
-                            </span>
+                    <a class="nav-link  d-flex align-items-center" href="javascript:;"
+                        (click)="clickUpdatePost(item.functionID)">
+                        <span [style.color]="item.color" class="fw-bolder ms-1">
+                            <i [style.color]="item.color" [ngClass]="item.largeIcon"></i>
                             <span>{{item.customName}}</span>
-                            
-                        </a>
-                    </div>
-                </ng-container>
-                <!-- <div class="nav-item">
-                    <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
-                        (click)="clickApprovePost(data,cancelApprove)">
-                        <span>
-                            <i class="icon-close me-1 text-danger fs-1 fw-bolder"></i>
                         </span>
-                        <span></span>
-                        
                     </a>
-                </div>
-                <div class="nav-item">
-                    <a class="nav-link text-body d-flex align-items-center" href="javascript:;"
-                        (click)="clickApprovePost(data,remakeApprove)">
-                        <span><i class="icon-keyboard_return me-1 text-warning fs-1 fw-bolder"></i></span>
-                        <codx-label [formModel]="formModel" name="" default="LÀM LẠI"></codx-label>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a class="nav-link text-body d-flex align-items-center pe-0" href="javascript:;"
-                        (click)="clickApprovePost(data,acceptApprove)">
-                        <span><i class="icon-check me-1 text-success fs-1 fw-bolder"></i></span>
-                        <codx-label [formModel]="formModel" name="" default="DUYỆT"></codx-label>
-                    </a>
-                </div> -->
+                </ng-container>
+                
             </div>
         </div>
     </ng-container>

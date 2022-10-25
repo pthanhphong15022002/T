@@ -306,7 +306,6 @@ export class CatagoryComponent implements OnInit {
     var fieldName = data.fieldName;
     var field = evt.field;
     var value = evt.data;
-
     if (autoDefault) {
       if (typeof value == 'string') {
         value = value === '1';
@@ -361,26 +360,53 @@ export class CatagoryComponent implements OnInit {
             console.log(res);
           });
       } else {
+        if (this.dataValue[field] == value) return;
         var dt = this.settingValue.find((x) => x.category == this.category);
         if (this.category == '1') {
           if (data.displayMode !== '4' && data.displayMode !== '5') {
             this.dataValue[field] = value;
-            if (!this.dialog) {
-              dt.dataValue = JSON.stringify(this.dataValue);
-              this.api
-                .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-                .subscribe((res) => {
-                  if (res) {
-                  }
-                  this.changeDetectorRef.detectChanges();
-                  console.log(res);
-                });
-            }
           } else {
-            var settingChild = this.setting.find(
-              (item) => item.refLineID === data.recID
+            let fID = '',
+              id = '',
+              fName = '',
+              name = '',
+              fType = '',
+              type = '';
+            var settingChild = this.setting.filter((item: any) => {
+              if (item.refLineID === data.recID) {
+                if (item.dataFormat === 'ID') fID = item.fieldName;
+                if (item.dataFormat === 'Name') fName = item.fieldName;
+                if (item.dataFormat === 'Type') fType = item.fieldName;
+                return item;
+              }
+            });
+            if (Array.isArray(value)) {
+              value.forEach((element, i) => {
+                let space = '';
+                if (i > 0) space = ';';
+                id += space + (element.id || '');
+                name += space + (element.text || element.objectName || '');
+                type += space + (element.objectType || '');
+              });
+            }
+            if (fID) this.dataValue[fID] = id;
+            if (fName) this.dataValue[fName] = name;
+            if (fType) this.dataValue[fType] = type;
+            var ele = document.querySelector(
+              '.share-object-name[data-recid="' + data.recID + '"]'
             );
-            var a = settingChild;
+            if (ele) ele.innerHTML = name;
+          }
+          if (!this.dialog) {
+            dt.dataValue = JSON.stringify(this.dataValue);
+            this.api
+              .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+              .subscribe((res) => {
+                if (res) {
+                }
+                this.changeDetectorRef.detectChanges();
+                console.log(res);
+              });
           }
         }
       }

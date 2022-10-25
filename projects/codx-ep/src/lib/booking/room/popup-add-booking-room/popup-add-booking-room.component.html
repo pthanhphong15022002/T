@@ -220,9 +220,10 @@
       </div>
       <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [width]="30" [objectId]="curUser?.userID" objectType="AD_Users"></codx-img>
-          <span class="symbol-badge badge badge-sm badge-circle bg-danger top-100 start-100 text-white fs-8">A</span>
+          <codx-img [width]="30" [objectId]="curUser?.userID" objectType="AD_Users"></codx-img>          
+          <span class="symbol-badge top-100 start-100 text-white fs-8" inlineSVG="./assets/themes/co/default/img/{{ curUser.icon }}"></span>
         </div>
+        
 
         <div class="d-flex flex-column flex-grow-1">
           <div class="text-dark fw-bold fs-6 fw-bolder">
@@ -230,7 +231,7 @@
           </div>
           <div>
             <span class="text-muted">{{
-              curUser.roleType | vll: "EP009":"text" | async
+              curUser.roleName
               }}</span>
           </div>
         </div>
@@ -244,8 +245,17 @@
       <div class="d-flex align-items-center mb-4" *ngFor="let item of attendeesList">
         <div class="symbol symbol-30px symbol-circle me-4">
           <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
-          <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
-        </div>
+          <span 
+            popoverClass="userPopoverClass"
+            [ngbPopover]="popoverSelectRoles"
+            placement="right"
+            #p="ngbPopover"
+            (mouseenter)="showPopover(p, item.userID)"
+            autoClose="outside"
+            class="symbol-badge top-100 start-100 text-white fs-8" inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
+            
+          <!-- <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span> -->
+        </div>        
 
         <div class="d-flex flex-column flex-grow-1">
           <div class="text-dark fw-bold fs-6 fw-bolder">
@@ -260,6 +270,12 @@
 
         <div class="d-flex flex-column justify-content-center align-items-center">
           <div *ngIf="!item.optional">
+            <!-- <codx-input
+              type="checkbox"
+              [checked]="item.isChecked"
+              (valueChange)="attendeesCheckChange(item.userID)"
+            >
+            </codx-input> -->
             <span class="badge badge-light-success fs-7 fw-bold mb-1">{{ "0" | vll: "EP017":"text" | async}}</span>
           </div>
           <div *ngIf="item.optional">
@@ -473,3 +489,20 @@
     </div>
   </ng-template>
 </codx-layout-add>
+
+<ng-template #popoverSelectRoles>
+  <div class="d-flex flex-column mb-1 w-150px">
+    <ng-container *ngFor="let item of listRoles">
+      <div
+        class="d-flex align-items-center btn btn-sm btn-white"
+        (click)="selectRoseType(idUserSelected, item.value)"
+        style="cursor: pointer"
+      >
+        <span inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
+        <div class="fs-7 ms-2 text-gray-600">
+          {{ item.text }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

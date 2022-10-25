@@ -3,6 +3,12 @@
   idField="recID" 
   [views]="views" 
   [selectedFirst]="true"
+  [service]="'WP'"
+  [assemblyName]="'ERM.Business.WP'"
+  [className]="'NewsBusiness'"
+  [method]="'GetDataApprovalAsync'"
+  [predicates]="predicates"
+  [dataValues]="dataValues"
   (selectedChange)="selectedChange($event)" 
   (buttonClick)="clickBtnAdd()">
 </codx-views>
@@ -26,7 +32,7 @@
         [entityName]="entityName" 
         [dataService]="view.dataService"
         [funcID]="funcID" 
-        (evtApproval)="clickApprovePost($event)" 
+        (evtUpdateApproval)="updateApprovePost($event)" 
         [formModel]="view.formModel">
       </approve-view-detail>
   </div>
