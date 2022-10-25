@@ -158,9 +158,7 @@ export class ApprovalCarsComponent extends UIComponent {
           this.approve(datas,"5")
         }
         break;      
-      case 'EPT40205':
-      case 'EPT40205':
-      case 'EPT40305':
+      case "EPT40202":
         {
           //alert('Từ chối');
           this.approve(datas,"4")
@@ -210,8 +208,7 @@ export class ApprovalCarsComponent extends UIComponent {
       switch(data?.status){
         case "3":
         event.forEach(func => {
-          if(func.functionID == "EPT40202" 
-          ||func.functionID == "EPT40203"
+          if(func.functionID == "EPT40203"
           ||func.functionID == "EPT40206" 
           || func.functionID == "EPT40204")
           {

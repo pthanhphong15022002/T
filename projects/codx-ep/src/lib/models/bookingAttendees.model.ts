@@ -3,6 +3,9 @@ export class BookingAttendees {
     userName: string;
     roleType: string;
     status: string;
-    optional: boolean;
+    optional: boolean;    
+    icon: string;
+    roleName:string;
+    isChecked:boolean;
     //modifiedOn: string;
   }

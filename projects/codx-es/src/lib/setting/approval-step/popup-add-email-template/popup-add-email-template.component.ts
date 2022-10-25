@@ -86,6 +86,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
 
   width: any = 'auto';
 
+  files: any; //param list file
+
   show = false;
 
   public cssClass: string = 'e-list-template';
@@ -111,6 +113,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.showIsTemplate = data.data?.showIsTemplate ?? true;
     this.showSendLater = data.data?.showSendLater ?? true;
     this.showFrom = data.data?.showFrom ?? true;
+    this.files = data?.data?.files;
 
     this.renderer.listen('window', 'click', (e: Event) => {
       if (this.isInside == false && this.show == true) {
