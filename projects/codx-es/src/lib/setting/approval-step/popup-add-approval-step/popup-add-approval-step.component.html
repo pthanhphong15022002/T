@@ -113,9 +113,8 @@
           cardCss="card-template mb-4"
           *ngIf="item.roleType?.length == 1"
           [imageId]="item.approver"
-          [subTitle]=""
           [title]="item.name"
-          [subTitle]="item.position ?? ''"
+          [subTitle]="item.position ?? positionDefault"
           [imageObjType]="'AD_Users'"
           [imageWidth]="35"
           [titleLine]="3"
@@ -139,7 +138,9 @@
           [subTitle]="item.approver | vll: 'ES014':'text' | async"
           [title]="item.name ?? (item.approver | vll: 'ES014':'text' | async)"
           [subTitle]="
-            item.position ?? (item.approver | vll: 'ES014':'text' | async)
+            item.position ??
+            (item.approver | vll: 'ES014':'text' | async) ??
+            positionDefault
           "
           [titleLine]="3"
           [formModel]="formModel"

@@ -209,6 +209,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           showIsTemplate: true,
           showIsPublish: true,
           showSendLater: true,
+          files: null,
         };
 
         this.callfunc.openForm(
