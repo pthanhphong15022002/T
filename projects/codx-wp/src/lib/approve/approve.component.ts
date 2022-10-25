@@ -24,8 +24,8 @@ export class ApproveComponent extends UIComponent {
   entityName:string = "";
   predicate:string = "";
   dataValue:string = "";
-  predicates:string = 'ApproveStatus=@0';
-  dataValues:string = '3';
+  predicates:string = '';
+  dataValues:string = '';
   funcID:string = "";
   functionName:string = "";
   user: any;
@@ -50,7 +50,7 @@ export class ApproveComponent extends UIComponent {
       value: "3",
       total: 0,
       predicate: "ApproveStatus=@0",
-      datavalue: "3;5",
+      datavalue: "3",
       active: false
     },
     {
@@ -78,7 +78,7 @@ export class ApproveComponent extends UIComponent {
       total: 0,
       predicate: "",
       datavalue: "",
-      active: false
+      active: true
     },
   ]
   constructor
@@ -86,18 +86,29 @@ export class ApproveComponent extends UIComponent {
       private notifySvr: NotificationsService,
       private auth: AuthService,
       private callFuc: CallFuncService,
-      private route: ActivatedRoute,
       private injector: Injector
     ) {
     super(injector);
   }
   onInit(): void {
     this.user = this.auth.userValue;
-    this.route.params.subscribe((param) => {
+    this.router.params.subscribe((param) => {
       this.funcID = param["funcID"];
-      this.getGridViewSetUp();
-      this.loadDataTab(this.predicate, this.dataValue, this.entityName);
-      this.detectorRef.detectChanges();
+      this.cache.functionList(this.funcID).subscribe((func: any) => 
+      {
+        if(func)
+        {
+          this.functionName = func.customName;
+          this.cache.gridViewSetup(func.formName, func.gridViewName).
+          subscribe((grd: any) => {
+            if (grd) 
+            {
+              this.gridViewSetUp = grd;
+            }
+          });
+        }
+      });
+      this.loadDataTab(this.funcID);
     });
   }
   ngAfterViewInit(): void {
@@ -113,94 +124,69 @@ export class ApproveComponent extends UIComponent {
     }];
   }
 
-  getDataAsync(){
-    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetDataApprovalAsync",[this.funcID,"",""]).subscribe((res:any[]) =>{
-      if(res){
-
-      }
-    })
-  }
-  getGridViewSetUp() {
-    this.cache.functionList(this.funcID).subscribe((func: any) => 
-    {
-      if(func)
+  getGridViewSetUp(funcID:string) {
+    if(funcID){
+      this.cache.functionList(funcID).subscribe((func: any) => 
       {
-        this.functionName = func.customName;
-        this.cache.gridViewSetup(func.formName, func.gridViewName).
-        subscribe((grd: any) => {
-          if (grd) 
-          {
-            this.gridViewSetUp = grd;
-          }
-        });
-      }
-      
-    });
-  }
-  loadDataTab(predicate: string, dataValue: string, entityName: string) {
-    let model = new DataRequest();
-    model.predicate = predicate;
-    model.dataValue = dataValue;
-    model.entityName = entityName;
-    model.srtColumns = 'CreatedOn';
-    model.srtDirections = 'desc';
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetApprovalPostAsync", model).subscribe(
-      (res: any[]) => {
-        if (res.length > 0) {
-          this.tabAsside.map((tab: any) => {
-            if (tab.value == "0") {
-              tab.total = res.length;
-              tab.active = true;
+        if(func)
+        {
+          this.functionName = func.customName;
+          this.cache.gridViewSetup(func.formName, func.gridViewName).
+          subscribe((grd: any) => {
+            if (grd) 
+            {
+              this.gridViewSetUp = grd;
             }
-            else tab.total = res.filter((x: any) => x == tab.value).length;
-          })
-          this.detectorRef.detectChanges();
+          });
         }
-        else {
-          this.tabAsside.map((tab: any) => tab.total = 0);
-          this.detectorRef.detectChanges();
-        }
-      }
-    );
+      });
+    }
+    
+  }
+  loadDataTab(funcID:string) {
+    if(funcID){
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "GetDataByApproSatusAsync",
+        [funcID] )
+        .subscribe(
+       (res: any) => {
+         if (res) {
+           this.tabAsside.map((tab: any) => {
+            tab.total = res[tab.value];
+           });
+         }
+         this.detectorRef.detectChanges();
+       }
+     );
+    }
   }
   loadDataAsync(predicate: string, dataValue: string) {
-    this.view.entityName = this.entityName;
-    if (predicate && dataValue) {
-      this.view.dataService.setPredicates([predicate], [dataValue]).subscribe();
-    }
-    else {
-      this.view.dataService.setPredicates([], []).subscribe();
-    }
+    this.view.dataService.setPredicates([], []).subscribe();
   }
   selectedChange(event: any) {
     if (!event.data) return;
     this.selectedID = event.data.recID;
     this.detectorRef.detectChanges();
   }
-  clickApprovePost(event: any) {
-    let approveStatus = event.approveStatus;
-    let data = event.data;
-    switch (approveStatus) {
-      case this.acceptApprove:
-        this.notifySvr.alertCode("WP004").subscribe((evt: any) => {
-          if (evt.event.status == 'Y') {
-            this.approvePost(data, approveStatus);
-          }
-        });
-        break;
-      case this.cancelApprove:
-        this.notifySvr.alertCode("WP006").subscribe((evt: any) => {
-          if (evt.event.status == 'Y')
-            this.cancelPost(data, approveStatus);
-        });
-        break;
-      default:
-        this.notifySvr.alertCode("WP008").subscribe((evt: any) => {
-          if (evt.event.status == 'Y') {
-            this.remakePost(data, approveStatus);
-          }
-        });
-        break;
+  updateApprovePost(event: any) {
+    if(event && event.status && event.data)
+    {
+      let oldValue = event.oldValue;
+      let newValue = event.newValue;
+      let data = event.data;
+      this.tabAsside.forEach((e:any) => {
+        if(e.value == oldValue){
+          e.total = e.total - 1;
+        }
+        if(e.value == newValue){
+          e.total = e.total + 1;
+        }
+      })
+      this.view.dataService.update(data).subscribe();
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -257,14 +243,7 @@ export class ApproveComponent extends UIComponent {
   }
 
   clickTabApprove(item = null, predicate: string, dataValue: string) {
-    if (!item) {
-      this.tabAsside[0].active = true;
-    }
-    else {
-      this.tabAsside.map(x => { if (x.name != item.name) x.active = false; })
-      item.active = true;
-    }
-    this.loadDataAsync(predicate, dataValue);
+    this.view.dataService.setPredicates([predicate],[dataValue]).subscribe();
   }
 
   clickMF(event: any, data: any) 
