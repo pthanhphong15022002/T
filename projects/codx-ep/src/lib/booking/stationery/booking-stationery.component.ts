@@ -151,7 +151,7 @@ export class BookingStationeryComponent
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+      option.FormModel = this.formModel;
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       this.callfc.openForm(
