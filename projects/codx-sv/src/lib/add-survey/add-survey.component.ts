@@ -47,10 +47,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     rte: { required: [true, 'Enter valid comments'] },
   };
 
-  constructor(inject: Injector) {
-    super(inject);
-  }
-
   data: any = [
     {
       id: '1',
@@ -113,7 +109,13 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   dataAnswer: any = new Array();
 
-  onInit(): void {}
+  constructor(inject: Injector) {
+    super(inject);
+  }
+
+  onInit(): void {
+    this.add();
+  }
   valueChange(e) {
     console.log(e);
   }
@@ -139,10 +141,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.survey.title = 'Lời mời dự tiệc';
     this.survey.memo = 'Tiệc đám cưới anh Võ Văn Quang ^.^';
     this.api
-      .exec('ERM.Business.SV', 'SurveyBusiness', 'SaveAsync', [
+      .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
         this.survey,
         this.format,
-        this.isModeAdd,
+        this.isModeAdd,  
       ])
       .subscribe((res) => {
         debugger;

@@ -1,16 +1,16 @@
-<codx-views #view service="TM" entityName="TM_TaskExtends" idField="taskID" assemblyName="ERM.Business.TM"
+<codx-views #view service="TM" entityName="TM_TaskExtends" idField="taskID" assemblyName="ERM.Business.TM" 
   className="TaskExtendsBusiness" method="GetListTaskExtendsAsync" [views]="views" (requestEnded)="requestEnded($event)"
   (selectedChange)="selectedChange($event)" [selectedFirst]="true" [autoLoad]="true">
 </codx-views>
 
 <ng-template #panelRight>
-  <share-view-detail #detail [formModel]="view.formModel" [taskID]="taskExtends?.taskID" [taskExtends]="taskExtends" 
+  <share-view-detail #detail [formModel]="view.formModel" [taskID]="taskExtends?.taskID" [taskExtends]="taskExtends" [showMoreFunc]="true"
     [vllStatus]="vllStatus" [vllExtendStatus]="vllExtendStatus" (clickMoreFunction)="receiveMF($event)">
   </share-view-detail>
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template list-task border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"
+  <codx-temp-full cardCss="card-template list-task border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"  [hideMF]="false"
     (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" [imageId]="data.createdBy" imageObjType="AD_Users"
     [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.reason"
     [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">
