@@ -225,7 +225,7 @@ export class UserComponent extends UIComponent {
         data.stop = true;
         this.codxAdService.stopUser(data).subscribe((res) => {
           if (res) {
-            this.view.dataService.remove(res).subscribe();
+            // this.view.dataService.remove(res).subscribe();
             this.detectorRef.detectChanges();
           }
         });

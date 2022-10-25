@@ -24,7 +24,11 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
-import { BP_Processes } from '../models/BP_Processes.model';
+import {
+  BP_Processes,
+  BP_ProcessOwners,
+  BP_ProcessSteps,
+} from '../models/BP_Processes.model';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
@@ -101,9 +105,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.request.service = 'BP';
     this.request.assemblyName = 'BP';
     this.request.className = 'ProcessStepsBusiness';
-    this.request.method = 'GetProcessStepsAsync';
+    // this.request.method = 'GetProcessStepsAsync';
+    this.request.method = 'GetProcessStepsWithKanbanAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = { processID: this.process?.recID }; ///de test
+    this.request.dataObj = { isKanban: '1' }; ///de test
 
     //tam test
     this.resourceKanban = new ResourceModel();
@@ -271,7 +276,33 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
   }
 
-  copy(data) {}
+  copy(data) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService.copy().subscribe((res) => {
+      if (res) {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = 'Auto';
+        this.dialog = this.callfc.openSide(
+          PopupAddProcessStepsComponent,
+          [
+            'copy',
+            this.titleAction,
+            this.view.dataService.dataSelected?.stepType,
+          ],
+          option
+        );
+      }
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
+      });
+    });
+  }
 
   delete(data) {
     this.view.dataService.dataSelected = data;
@@ -331,8 +362,21 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     }
   }
 
-  onDragDrop(e: any) {
-    console.log(e);
+  
+  onActions(e: any) {
+    switch (e.type) {
+      case 'drop':
+        this.onDragDrop(e.data);
+        break;
+    }
+  }
+
+  onDragDrop(data) {
+  this.api.exec("BP","ProcessStepsBusiness","UpdateProcessStepWithKanbanAsync").subscribe(res=>{
+    if(res){
+      this.view.dataService.update(data) ;
+    }
+  })
   }
 
   viewChanged(e) {
@@ -350,12 +394,24 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   //#endregion
   //view Temp drop
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.dataTreeProcessStep, event.previousIndex, event.currentIndex);
   }
 
   dropStepChild(event: CdkDragDrop<string[]>, parentID) {
     var index = this.data.findIndex((x) => x.id == parentID);
     this.dataChild = this.data[index].items;
     moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
+  }
+
+  checkAttachment(data) {
+    if (data?.attachments > 0) return true;
+    if (data?.items.length > 0) {
+      var check = false;
+      data?.items.forEach((obj)=>{
+        if (obj.attachments > 0) check= true;
+      });
+      return check
+    }
+    return false;
   }
 }

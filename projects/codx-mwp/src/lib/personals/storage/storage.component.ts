@@ -231,7 +231,7 @@ export class StorageComponent
       entityName: 'WP_Comments',
       entityPermission: 'WP_Comments',
       gridViewName: 'grvWPComments',
-      formName: 'WPComments',
+      formName: 'WPComments', 
       funcID: 'WP',
     };
     this.a = this.detail.createComponent(ListPostComponent);

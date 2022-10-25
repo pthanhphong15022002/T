@@ -68,7 +68,6 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     VIDEO:"2"
   }
   data: any;
-  vllL1901:string = "L1901";
   acceptApprove = "5";
   cancelApprove  = "4";
   remakeApprove = "2";
@@ -76,6 +75,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   service = "WP";
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness";
+  moreFC:any = null;
   constructor(private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private callFuc:CallFuncService,
@@ -84,30 +84,23 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     private sanitizer: DomSanitizer
 
     ) { }
+  
+
+  ngOnInit(): void {
+    this.getPostInfor();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.objectID?.currentValue && (changes.objectID?.currentValue != changes.objectID?.previousValue)){
       this.getPostInfor();
     }
   }
-
-  ngOnInit(): void {
-    this.getValueListShare(this.vllL1901);
-    this.getPostInfor();
-  }
-
-  dVllL1901: any = {};
-  getValueListShare(valueList:string){
-    if(valueList)
-    {
-      this.cache.valueList(valueList).subscribe((vll:any) =>{
-        if(vll)
-        {
-          this.dVllL1901["0"] = null;
-          vll.datas.forEach(element => {
-            this.dVllL1901[element.value + ""] = element;
-          });
-        }
-      });
+  getMorefunction(formName:string,gridViewName:string){
+    if(formName && gridViewName){
+      this.cache.moreFunction(formName,gridViewName).subscribe((res:any) =>{
+        this.moreFC = res;
+        this.dt.detectChanges();
+      })
     }
   }
   getPostInfor(){
@@ -115,17 +108,40 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       this.data = null;
       return;
     }
-    this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetPostInfoAsync",[this.objectID,this.entityName])
-    .subscribe((res) => {
-      if(res){
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetPostInfoAsync",
+      [this.objectID,this.entityName])
+    .subscribe((res:any) => {
+      if(res)
+      {
         this.data = res;
         this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
         this.dt.detectChanges();
       }
     })
   }
-  clickApprovePost(data:any,approveStatus:any){
-    this.evtApproval.emit({data:data,approveStatus:approveStatus})
+  clickApprovePost(event:any)
+  {
+    if(event)
+    { let approveStatus = "";
+      switch(event){
+        case "WPT02121":
+          approveStatus = "5"
+          break;
+        case "WPT02122":
+          approveStatus = "2"
+          break;
+        case "WPT02123":
+          approveStatus = "4"
+          break;
+        default:
+          break;  
+      }
+      this.evtApproval.emit({data:this.data,approveStatus:approveStatus});
+    }
   }
 
   approvePost(e:any,data:any,approveStatus:any){

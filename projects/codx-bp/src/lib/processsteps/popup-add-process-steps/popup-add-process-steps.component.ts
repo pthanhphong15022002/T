@@ -15,7 +15,10 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
-import { BP_ProcessSteps } from '../../models/BP_Processes.model';
+import {
+  BP_ProcessOwners,
+  BP_ProcessSteps,
+} from '../../models/BP_Processes.model';
 
 @Component({
   selector: 'lib-popup-add-process-steps',
@@ -28,6 +31,8 @@ export class PopupAddProcessStepsComponent implements OnInit {
   dialog!: DialogRef;
   formModel: FormModel;
   processSteps: BP_ProcessSteps;
+  owners: Array<BP_ProcessOwners> = [];
+
   user: any;
   data: any;
   funcID: any;
@@ -46,7 +51,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   textChange = '';
   popover: any;
   crrIndex = 0;
-  grvSetup :any
+  grvSetup: any;
 
   constructor(
     private bpService: CodxBpService,
@@ -193,7 +198,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
   valueChangeSwitch(e) {}
 
-  eventApply(e) {}
   //endregion
   convertReference() {
     switch (this.processSteps.stepType) {
@@ -203,5 +207,21 @@ export class PopupAddProcessStepsComponent implements OnInit {
         }
         break;
     }
+  }
+
+  eventApply(e) {
+    if (!e || e?.data.length == 0) return;
+    var dataSelected = e?.data;
+    dataSelected.forEach((dt) => {
+      var index = this.owners.findIndex((obj) => obj.objectID == dt.objectID);
+      if (index == -1) {
+        var owner = new BP_ProcessOwners();
+        owner.objectType = dt.objectType;
+        owner.objectID = dt.objectID;
+        owner.processID = this.processSteps.processID;
+        owner.stepID = this.processSteps.recID;
+        this.owners.push(owner);
+      }
+    });
   }
 }
