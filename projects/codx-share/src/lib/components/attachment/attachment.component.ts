@@ -82,7 +82,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
   numberDes = 0;
-
   urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
@@ -124,6 +123,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() showMessage = '1';
   @Input() hideMoreF = '1';
   @Input() displayThumb: string;
+  ////////////////////////////////////////////////////
+  @Input() fdID :any ="";//Folder ID truyền vào  
+  @Input() fdName :any ="";//Folder Name truyền vào
+  @Input() parentID : any = "";// FolderID của Cấp cha chứa thư mục
+  /////////////////////////////////////////////////////
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -417,7 +421,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     this.fileService.getTotalHdd().subscribe((item) => {
       if (item) {
         this.infoHDD.totalHdd = item?.totalHdd;
-        this.infoHDD.totalUsed = item?.totalUsed;
+        this.infoHDD.totalUsed = item?.TotalUsedBytes;
       }
       //  totalUsed: any;
       // totalHdd: any;
@@ -551,38 +555,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       [this.functionID],
       ''
     );
-    // this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
-    //   if (res != null) {
-    //     this.listRemoteFolder = res;
-    //     this.listNodeAdd = res;
-    //     if (res[0].history != null) {
-    //       var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
-    //       if (listFolder[0] != null && listFolder[0].folderPath != "") {
-    //         var list = listFolder[0].folderPath.split(";");
-    //         this.loadChildNode(res[0], 0, list);
-    //       }
-    //     }
-    //     this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
-    //     this.changeDetectorRef.detectChanges();
-    //     this.remotePermission = res[0].permissions;
-    //   }
-    // });
-
-    // let option = new SidebarModel();
-    // option.DataService = this.view?.currentView?.dataService;
-    // option.FormModel = this.view?.currentView?.formModel;
-    // option.Width = '800px';
-
-    // this.dialog.closed.subscribe(e => {
-    //   console.log(e);
-    // })
-
-    /* this.callfc.openForm(this.openFolder, "Chọn thư mục", 400, null, null, "").subscribe((dialog: Dialog)=>{
-      let that = this;
-      dialog.close = function(e) {
-        return that.closeOpenForm(e);
-      }
-    });   */
   }
 
   closeOpenForm(e: any) {
@@ -653,7 +625,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     }
 
     if (total > 1) {
-      return this.fileService.addMultiFileObservable(this.fileUploadList).pipe(
+      return this.fileService.addMultiFileObservable(this.fileUploadList,this.isDM,this.fdID,this.fdName,this.parentID).pipe(
         map((res) => {
           if (res != null) {
             var newlist = res.filter((x) => x.status == 6);
@@ -705,7 +677,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                             this.fileUploadList[i].reWrite = true;
                           }
                           this.fileService
-                            .addMultiFileObservable(this.fileUploadList)
+                            .addMultiFileObservable(this.fileUploadList,this.isDM,this.fdID,this.fdName,this.parentID)
                             .pipe()
                             .subscribe((result) => {
                               var mess = '';
@@ -776,10 +748,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async onMultiFileSave() {
     if (this.data == undefined) this.data = [];
-
     let total = this.fileUploadList.length;
     var toltalUsed = 0; //bytes
-    var remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
+    var remainingStorage = -1;
+    if(this.infoHDD.totalHdd >= 0) remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
     var that = this;
     await this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
@@ -793,12 +765,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
           false
         );
     }
-    if (toltalUsed > remainingStorage)
+    debugger;
+    if (remainingStorage >= 0 && toltalUsed > remainingStorage )
       return this.notificationsService.notifyCode('DM053');
     this.atSV.fileListAdded = [];
     if (total > 1) {
       var done = this.fileService
-        .addMultiFile(this.fileUploadList, this.isDM)
+        .addMultiFile(this.fileUploadList, this.isDM,this.fdID,this.fdName , this.parentID)
         .toPromise()
         .then((res) => {
           if (res != null) {
@@ -902,7 +875,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                             this.description[i];
                         }
                         this.fileService
-                          .addMultiFile(this.fileUploadList, this.isDM)
+                          .addMultiFile(this.fileUploadList, this.isDM,this.fdID,this.fdName,this.parentID)
                           .toPromise()
                           .then((result) => {
                             var mess = '';
@@ -1054,7 +1027,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
 
         if (isAddFile)
-          return this.fileService.addFileObservable(fileItem, this.isDM).pipe(
+          return this.fileService.addFileObservable(fileItem, this.isDM, this.fdID , this.fdName,this.parentID).pipe(
             map((item) => {
               if (item.status == 0) {
                 if (this.showMessage == '1')
@@ -2813,9 +2786,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
     this.getFolderPath();
-    //console.log(files);
     var addedList = [];
-
     for (var i = 0; i < files.length; i++) {
       if (
         files[i].size >= this.maxFileSizeUpload &&

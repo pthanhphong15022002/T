@@ -118,53 +118,60 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
 
-    this.button = {
-      id: 'btnAdd',
-      //setcung tam đoi thuong
-      // P;Phase;A;Activity;T;Task;E;Email;E;Calendar;Q;QuEstionarie;I;Interview;C;Check list
-      items: [
-        {
-          id: 'P',
-          icon: 'icon-list-checkbox',
-          text: 'Phase',
-        },
-        {
-          id: 'A',
-          icon: 'icon-list-checkbox',
-          text: 'Activity',
-        },
-        {
-          id: 'T',
-          icon: 'icon-add_task',
-          text: 'Tasks',
-        },
-        {
-          id: 'E',
-          icon: 'icon-email',
-          text: 'Email',
-        },
-        {
-          id: 'M',
-          icon: 'icon-calendar_today',
-          text: 'Calendar',
-        },
-        {
-          id: 'Q',
-          icon: 'icon-question_answer',
-          text: 'Questionarie',
-        },
-        {
-          id: 'I',
-          icon: 'icon-list-checkbox',
-          text: 'Interview',
-        },
-        {
-          id: 'C',
-          icon: 'icon-list-checkbox',
-          text: 'Check list',
-        },
-      ],
-    };
+    this.bpService
+      .getListFunctionMenuCreatedStepAsync(this.funcID)
+      .subscribe((datas) => {
+        var items = [];
+        if(datas && datas.length >0){
+          items =datas ;
+        }
+        this.button = {
+          id: 'btnAdd',
+          items: items,
+          //[
+          //   {
+          //     id: 'P',
+          //     icon: 'icon-list-checkbox',
+          //     text: 'Phase',
+          //   },
+          //   {
+          //     id: 'A',
+          //     icon: 'icon-list-checkbox',
+          //     text: 'Activity',
+          //   },
+          //   {
+          //     id: 'T',
+          //     icon: 'icon-add_task',
+          //     text: 'Tasks',
+          //   },
+          //   {
+          //     id: 'E',
+          //     icon: 'icon-email',
+          //     text: 'Email',
+          //   },
+          //   {
+          //     id: 'M',
+          //     icon: 'icon-calendar_today',
+          //     text: 'Calendar',
+          //   },
+          //   {
+          //     id: 'Q',
+          //     icon: 'icon-question_answer',
+          //     text: 'Questionarie',
+          //   },
+          //   {
+          //     id: 'I',
+          //     icon: 'icon-list-checkbox',
+          //     text: 'Interview',
+          //   },
+          //   {
+          //     id: 'C',
+          //     icon: 'icon-list-checkbox',
+          //     text: 'Check list',
+          //   },
+          // ],
+        };
+      });
   }
 
   ngAfterViewInit(): void {
@@ -362,7 +369,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     }
   }
 
-  
   onActions(e: any) {
     switch (e.type) {
       case 'drop':
@@ -372,11 +378,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onDragDrop(data) {
-  this.api.exec("BP","ProcessStepsBusiness","UpdateProcessStepWithKanbanAsync").subscribe(res=>{
-    if(res){
-      this.view.dataService.update(data) ;
-    }
-  })
+    this.api
+      .exec('BP', 'ProcessStepsBusiness', 'UpdateProcessStepWithKanbanAsync')
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.update(data);
+        }
+      });
   }
 
   viewChanged(e) {
@@ -394,7 +402,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   //#endregion
   //view Temp drop
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.dataTreeProcessStep, event.previousIndex, event.currentIndex);
+    moveItemInArray(
+      this.dataTreeProcessStep,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
 
   dropStepChild(event: CdkDragDrop<string[]>, parentID) {
@@ -407,10 +419,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     if (data?.attachments > 0) return true;
     if (data?.items.length > 0) {
       var check = false;
-      data?.items.forEach((obj)=>{
-        if (obj.attachments > 0) check= true;
+      data?.items.forEach((obj) => {
+        if (obj.attachments > 0) check = true;
       });
-      return check
+      return check;
     }
     return false;
   }
