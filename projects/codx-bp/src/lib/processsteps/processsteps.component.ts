@@ -275,6 +275,34 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       .delete([data], true, (opt) => this.beforeDel(opt))
       .subscribe((res) => {
         if (res) {
+          switch (data.stepType) {
+            case 'P':
+              this.view.dataService.delete(data);
+              break;
+            case 'A':
+              this.view.dataService.data.forEach((obj) => {
+                var index = -1;
+                if (obj.items.length > 0)
+                  index = obj.items?.findIndex((x) => x.recID == data.recID);
+                if (index != -1) obj.items.splice(index, 1);
+              });
+              break;
+            default:
+              this.view.dataService.data.forEach((obj) => {
+                var index = -1;
+                if (obj.items.length > 0)
+                  obj.items.forEach((child) => {
+                    var index = -1;
+                    if (child.items.length > 0)
+                      index = child.items?.findIndex(
+                        (x) => x.recID == data.recID
+                      );
+                    if (index != -1) child.items.splice(index, 1);
+                  });
+              });
+              break;
+          }
+
           this.dataTreeProcessStep = this.view.dataService.data;
           this.changeDetectorRef.detectChanges();
         }
@@ -305,10 +333,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.stepType = evt.id;
       var customName = '';
       this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-        if (mf) { 
-          var mfAdd = mf.find(f=>f.functionID=='SYS01') ;
-          if(mfAdd)
-          customName = mfAdd?.customName + ' ';
+        if (mf) {
+          var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+          if (mfAdd) customName = mfAdd?.customName + ' ';
         }
         this.titleAction =
           customName +
