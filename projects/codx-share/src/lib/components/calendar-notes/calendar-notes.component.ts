@@ -27,6 +27,7 @@ import {
   ChangeDetectorRef,
   AfterViewInit,
   Injector,
+  TemplateRef,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
@@ -80,6 +81,7 @@ export class CalendarNotesComponent
   dialog: DialogRef;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
+  @ViewChild('dataPara') dataPara: TemplateRef<any>;
   @ViewChild('calendar') calendar: any;
   constructor(
     private injector: Injector,
@@ -109,6 +111,31 @@ export class CalendarNotesComponent
   onInit(): void {
     this.getMaxPinNote();
     this.loadData();
+  }
+
+  setColor() {
+    // var colorWP: HTMLElement = document.querySelector('.note-content');
+    // this.dataPara;
+    // debugger;
+    // if (colorWP) {
+    //   colorWP.setAttribute(
+    //     'style',
+    //     `background-color: ${this.WP_NotesParam.ShowBackground};
+    //     border-left: 3px ${this.WP_NotesParam.ShowColor} solid;`
+    //   );
+    // }
+    // var colorTM: HTMLElement = document.querySelector('.task-content');
+    // colorTM.setAttribute(
+    //   'style',
+    //   `background-color: ${this.TM_TasksParam.ShowBackground};
+    //   border-left: 3px ${this.TM_TasksParam.ShowColor} solid;`
+    // );
+    // var colorCO: HTMLElement = document.querySelector('.meeting-content');
+    // colorCO.setAttribute(
+    //   'style',
+    //   `background-color: ${this.CO_MeetingsParam.ShowBackground};
+    //   border-left: 3px ${this.CO_MeetingsParam.ShowColor} solid;`
+    // );
   }
 
   loadData() {
@@ -204,8 +231,7 @@ export class CalendarNotesComponent
 
   ngAfterViewInit() {
     this.lstView.dataService.requestEnd = (t, data) => {
-      if (t == 'loaded') {
-      }
+      if (t == 'loaded') this.setColor();
     };
   }
 
@@ -247,7 +273,7 @@ export class CalendarNotesComponent
       let obj = { date: date };
       var eleEvent = htmlEle.querySelector('.week-item-event');
       eleEvent.innerHTML = '';
-      this.setEvent(eleEvent, obj); 
+      this.setEvent(eleEvent, obj);
     }
   }
 
@@ -413,12 +439,12 @@ export class CalendarNotesComponent
       if (this.typeCalendar == 'week') {
         spanWP.setAttribute(
           'style',
-          `width: 6px;height: 6px;background-color: orange;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+          `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
       } else {
         spanWP.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: orange;border-radius: 50%;'
+          `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
         );
       }
       flex.append(spanWP);
@@ -428,12 +454,12 @@ export class CalendarNotesComponent
       if (this.typeCalendar == 'week') {
         spanTM.setAttribute(
           'style',
-          'width: 6px;background-color: red;height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
+          `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
       } else {
         spanTM.setAttribute(
           'style',
-          'width: 6px;background-color: red;height: 6px;border-radius: 50%;'
+          `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;border-radius: 50%;`
         );
       }
       flex.append(spanTM);
@@ -443,12 +469,12 @@ export class CalendarNotesComponent
       if (this.typeCalendar == 'week') {
         spanCO.setAttribute(
           'style',
-          'width: 6px;background-color: #1E90FF;height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
+          `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
       } else {
         spanCO.setAttribute(
           'style',
-          'width: 6px;background-color: #1E90FF;height: 6px;border-radius: 50%;'
+          `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;border-radius: 50%;`
         );
       }
       flex.append(spanCO);
@@ -463,28 +489,28 @@ export class CalendarNotesComponent
       if (this.typeCalendar == 'week') {
         spanWP.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: orange;border-radius: 50%'
+          `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
         );
         spanTM.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: red;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
+          `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
         spanCO.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: #1E90FF;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
+          `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
       } else {
         spanWP.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: orange;border-radius: 50%'
+          `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
         );
         spanTM.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: red;border-radius: 50%;margin-left: 2px'
+          `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px`
         );
         spanCO.setAttribute(
           'style',
-          'width: 6px;height: 6px;background-color: #1E90FF;border-radius: 50%;margin-left: 2px;margin-top: 0px;'
+          `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
         );
       }
       flex.append(spanWP);

@@ -99,7 +99,6 @@ public layoutColor: string;
 
 
   onInit(): void {
-    // build view by layout config settings
     this.asideDisplay = this.layout.getProp('aside.display') as boolean;
     this.asideCSSClasses = this.layout.getStringCSSClasses('aside');
     this.contentContainerClasses = this.layout.getStringCSSClasses('contentContainer');
@@ -110,18 +109,6 @@ public layoutColor: string;
       this.submenu = res;
       this.changeDetectorRef.detectChanges();
     });
-
-    
-    // this.dmSV.isSetRight.subscribe(res => {      
-    //   if (this.dmSV.parentCreate) {
-    //     this.disableInput = false;
-    //   }
-    //   else
-    //     this.disableInput = true;
-
-    //   this.changeDetectorRef.detectChanges();
-    // });
-
     this.dmSV.isDisableInput.subscribe(res => {    
       if (res != null) {
         this.disableInput = res;
@@ -131,14 +118,9 @@ public layoutColor: string;
 
     this.dmSV.isUpdateHDD.subscribe(item => {     
       this.getHDDInformaton(item);
-      //document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',(item));        
     });
-   
-
   }
-
   setClassActive() {    
-    //alert(this.submenu);
     var css = "btn btn-light-default btn-icon btn-md";    
     if (this.submenu != "") {
       //var no = parseInt(this.submenu);
@@ -159,7 +141,6 @@ public layoutColor: string;
     this.dmSV.menuActive.next(title);
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id); 
-
     this.folderService.options.funcID = id;
     this.folderService.options.favoriteID = subid;
     this.folderService.getFolders('').subscribe(async list => {
@@ -182,17 +163,10 @@ public layoutColor: string;
   getHDDInformaton(item: any) {
     
     if (item != null) {
-      
-      
-
       this.itemHdd = item;
-      this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
+      this.percentUsed = 100 * (item.totalUsedBytes / item.totalHdd);
       this.titleHddUsed_small  = this.percentUsed.toFixed(1);
-       this.titleHddHdd_small = (100 * ((item.totalHdd - item.totalUsed) / item.totalHdd)).toFixed(1);
-       /* this.totalUsed_small = item.totalUsed;
-       this.totalHdd_small = item.totalHdd; */
-      //this.percentUsed = this.percentUsed.toFixed(0);
-      //console.log(this.percentUsed);
+       this.titleHddHdd_small = (100 * ((item.totalHdd - item.totalUsedBytes) / item.totalHdd)).toFixed(1);
       this.titleHddUsed = item.messageHddUsed;
       this.changeDetectorRef.detectChanges();
       
@@ -223,9 +197,6 @@ public layoutColor: string;
         
       ];
       }
-      
-
-      
     }
    
   }
@@ -248,6 +219,7 @@ public layoutColor: string;
     
   public pielegendSettings: Object = {
     visible: false,
+    background: 'transparent'
   };
   public dataLabel: Object = {
     visible: true,
@@ -279,31 +251,31 @@ public layoutColor: string;
         }
       }
     }
-// document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',()=>{
+  document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',()=>{
 
-//   if(this.showtitle==false)
-//     {
-      
-//     /* this.titleHddUsed_small = this.percentUsed ;
-//     this.changeDetectorRef.detectChanges(); */
-//     this.showtitle = true;
-//     }else{
-//       //debugger;
-//     /* this.titleHddUsed_small = this.percentUsed ;
-//     this.changeDetectorRef.detectChanges(); */
-//       this.showtitle = false;
-//       /* if (item != null) { */
-//         //this.itemHdd = item;
+    if(this.showtitle==false)
+      {
         
-//         //this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
-//         //console.log(this.percentUsed);
-//         //this.titleHddUsed_small = 100 * (item.totalUsed / item.totalHdd);
-//         //this.titleHddUsed = item.messageHddUsed;
-        
-//       //} 
-//     }
-// //console.log('abc123')
-// });
+      /* this.titleHddUsed_small = this.percentUsed ;
+      this.changeDetectorRef.detectChanges(); */
+      this.showtitle = true;
+      }else{
+        //debugger;
+      /* this.titleHddUsed_small = this.percentUsed ;
+      this.changeDetectorRef.detectChanges(); */
+        this.showtitle = false;
+        /* if (item != null) { */
+          //this.itemHdd = item;
+          
+          //this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
+          //console.log(this.percentUsed);
+          //this.titleHddUsed_small = 100 * (item.totalUsed / item.totalHdd);
+          //this.titleHddUsed = item.messageHddUsed;
+          
+        //} 
+      }
+  //console.log('abc123')
+  });
 // bắt sự kiện class
     // this.renderer.listen('button.btn-minimize', 'click', (event) => {
     //   console.log(event);

@@ -96,7 +96,7 @@ export class Approvers {
   position: string = null;
   email: string = null;
   phone: string = null;
-  leadTime: any = null;
+  leadTime: any = 0;
   allowEditAreas: boolean;
   confirmControl: string;
   comment: string = null;

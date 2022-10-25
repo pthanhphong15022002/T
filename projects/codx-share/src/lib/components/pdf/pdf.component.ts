@@ -178,7 +178,7 @@ export class PdfComponent
   isUnd = false;
 
   //auto sign
-  needSuggest: boolean = false;
+  needSuggest: boolean = true;
   autoSignState: boolean = false;
   signPerRow;
   direction;
