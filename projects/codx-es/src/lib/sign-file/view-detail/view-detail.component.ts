@@ -365,7 +365,6 @@ export class ViewDetailComponent implements OnInit {
         if (res) {
           datas.approveStatus = '0';
           this.view.dataService.update(datas).subscribe();
-          alert('Thanh Cong');
         }
       });
   }
