@@ -1,5 +1,11 @@
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
-import { CacheService, CallFuncService, DialogModel, UIComponent, FormModel } from 'codx-core';
+import {
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  UIComponent,
+  FormModel,
+} from 'codx-core';
 import {
   AfterViewInit,
   Component,
@@ -14,7 +20,6 @@ import {
   NotificationsService,
   SidebarModel,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
@@ -48,9 +53,9 @@ export class BookingStationeryComponent
   idField = 'recID';
   predicate = 'ResourceType=@0';
   datavalue = '6';
-  funcIDName='';
-  popupTitle='';
-  formModel:FormModel;
+  funcIDName = '';
+  popupTitle = '';
+  formModel: FormModel;
   itemDetail;
 
   constructor(
@@ -58,18 +63,17 @@ export class BookingStationeryComponent
     private callFuncService: CallFuncService,
     private codxEpService: CodxEpService,
     private cacheService: CacheService,
-    private notificationsService: NotificationsService,
-    ) {
+    private notificationsService: NotificationsService
+  ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
-        
       }
     });
-    this.cache.functionList(this.funcID).subscribe(res => {
-      if (res) {            
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
         this.funcIDName = res.customName.toString().toLowerCase();
       }
     });
@@ -98,7 +102,7 @@ export class BookingStationeryComponent
   }
 
   click(evt: any) {
-    this.popupTitle=evt?.text + " " + this.funcIDName;
+    this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
         this.addNewRequest();
@@ -109,9 +113,8 @@ export class BookingStationeryComponent
     }
   }
   clickMF(event, data) {
-    this.popupTitle=event?.text + " " + this.funcIDName;
-    switch (event?.functionID) {     
-
+    this.popupTitle = event?.text + ' ' + this.funcIDName;
+    switch (event?.functionID) {
       case 'SYS02': //Xoa
         this.delete(data);
         break;
@@ -138,20 +141,20 @@ export class BookingStationeryComponent
           isAddNew: true,
           formModel: this.view?.formModel,
           option: option,
-          title:this.popupTitle,
+          title: this.popupTitle,
         },
         '',
         dialogModel
       );
     });
   }
-  edit(evt:any) {
+  edit(evt: any) {
     if (evt) {
     this.view.dataService.dataSelected = evt;
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+      option.FormModel = this.formModel;
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
       this.callfc.openForm(
@@ -190,7 +193,7 @@ export class BookingStationeryComponent
   //       700,
   //       650,
   //       this.funcID,
-  //       [this.dataSelected, true],        
+  //       [this.dataSelected, true],
   //     );
   //   });
   // }
@@ -217,20 +220,21 @@ export class BookingStationeryComponent
   // }
   delete(evt?) {
     let deleteItem = this.view.dataService.dataSelected;
-    if (evt) { deleteItem = evt; }
+    if (evt) {
+      deleteItem = evt;
+    }
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
-      if(!res){
-        this.notificationsService.notifyCode("SYS022");
+      if (!res) {
+        this.notificationsService.notifyCode('SYS022');
       }
     });
-  } 
+  }
 
   closeEditForm(evt?: any) {
     if (evt) {
       this.dialog && this.dialog.close();
     }
   }
-
 
   getDetailBooking(id: any) {
     this.api

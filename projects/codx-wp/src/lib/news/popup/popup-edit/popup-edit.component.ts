@@ -45,7 +45,7 @@ export class PopupEditComponent implements OnInit {
   shareWith: String = "";
   permissions: Permission[] = [];
   mssgCodeNoty:any = null;
-
+  headerText:string ="";
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -104,7 +104,6 @@ export class PopupEditComponent implements OnInit {
   ) {
 
     this.data = dd.data;
-    console.log(this.data);
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
@@ -147,21 +146,6 @@ export class PopupEditComponent implements OnInit {
     this.changedt.detectChanges();
 
   }
-  initForm() {
-    this.formGroup = new FormGroup({
-      Tags: new FormControl(''),
-      Category: new FormControl(null),
-      StartDate: new FormControl(new Date()),
-      EndDate: new FormControl(),
-      Subject: new FormControl(''),
-      SubContent: new FormControl(''),
-      Contents: new FormControl(''),
-      Image: new FormControl(''),
-      AllowShare: new FormControl(false),
-      CreatePost: new FormControl(false),
-    });
-    this.changedt.detectChanges();
-  }
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
@@ -177,39 +161,29 @@ export class PopupEditComponent implements OnInit {
     this.data.contents = this.formGroup.controls['Contents'].value;
     this.data.allowShare = this.formGroup.controls['AllowShare'].value;
     this.data.createPost = this.formGroup.controls['CreatePost'].value;
-    if (this.data.allowShare) {
-      this.data.permissions.map((p: Permission) => { p.share = true });
-    }
-    else {
-      this.data.permissions.map((p: Permission) => { p.share = false });
-    }
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'UpdateNewsAsync',
-        this.data
+        [this.data]
       )
       .subscribe(async (res: any) => {
         if (res) {
-          let result = res;
           if (this.fileUpload.length > 0) {
             this.deleteFileByObjectID(this.data.recID);
             this.dmSV.fileUploadList = [...this.fileUpload];
             (await (this.codxAttm.saveFilesObservable())).subscribe((res2: any) => {
-              if (res2) {
-                this.initForm();
-                this.shareControl = this.SHARECONTROLS.EVERYONE;
+              if (res2) 
+              {
                 this.notifSV.notifyCode('SYS007');
-
                 this.dialogRef.close();
               }
             });
           }
-          else {
-            this.initForm();
-            this.shareControl = this.SHARECONTROLS.EVERYONE;
+          else 
+          {
             this.notifSV.notifyCode('SYS007');
             this.dialogRef.close();
           }
@@ -218,7 +192,21 @@ export class PopupEditComponent implements OnInit {
   }
 
   clickApproPost() {
-    
+    if(this.data)
+    {
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "SubmitNewsAsync",
+        [this.data.recID])
+        .subscribe((res:any[]) => {
+          if(res && res[0]){
+            this.data = res[1];
+            this.dialogRef.close(this.data);
+          }
+        });
+    }
   }
 
 

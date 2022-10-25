@@ -10,7 +10,7 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full cardCss="card-template list-task border-bottom px-2 py-3" (clickMF)="clickMF($event,data)"  [hideMF]="false"
+  <codx-temp-full cardCss="card-template list-task border-bottom px-2 py-3" (clickMF)="clickMF($event,data)" 
     (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" [imageId]="data.createdBy" imageObjType="AD_Users"
     [title]="data.userNameCreate" [subTitle]="data.positionNameCreate" [content]="data.reason"
     [formModel]="view.formModel" [footer]="footerList" [dataItem]="data">

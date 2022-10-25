@@ -176,14 +176,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           panelRightRef: this.panelRight,
         },
       },
-      {
-        sameData: true,
-        type: ViewType.content,
-        active: false,
-        model: {
-          panelLeftRef: this.chart,
-        },
-      },
+      // {
+      //   sameData: true,
+      //   type: ViewType.content,
+      //   active: false,
+      //   model: {
+      //     panelLeftRef: this.chart,
+      //   },
+      // },
     ];
     this.detectorRef.detectChanges();
   }

@@ -63,7 +63,7 @@ export class ProcessesComponent
   values: any;
   searchAdvance: boolean;
   viewActive: any;
-  titleUpdateFolder = 'Cập nhật thư mục';
+  // titleUpdateFolder = 'Cập nhật thư mục';
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -81,7 +81,7 @@ export class ProcessesComponent
 
   constructor(
     inject: Injector,
-    private bpService :CodxBpService,
+    private bpService: CodxBpService,
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
@@ -144,7 +144,7 @@ export class ProcessesComponent
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
     this.changeDetectorRef.detectChanges();
-  } 
+  }
 
   search(isScroll = false) {
     // this.views.forEach(item => {
@@ -160,7 +160,7 @@ export class ProcessesComponent
     //       view.active = true;
     //       this.view.viewChange(view);
     //     }
-       
+
     //     // this.dmSV.listFiles = item.data;
     //     this.totalSearch = item.total;
     //     this.dmSV.listFiles = [...this.dmSV.listFiles, ...item.data];
@@ -336,19 +336,22 @@ export class ProcessesComponent
       case 'SYS02':
         this.delete(data);
         break;
-      // case 'BPT11':
-      //   this.properties(data);
-      //   break;
+      case 'BPT106':
+        this.properties(data);
+        break;
+      case 'BPT102':
+        this.reName(data);
+        break;
     }
   }
 
-  properties(e: any, data?: any) {
+  properties(data?: any) {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     // let data = {} as any;
-    data.title = this.titleUpdateFolder;
+    // data.title = this.titleUpdateFolder;
     data.id = data.recID;
     this.callfc.openSide(PropertiesComponent, data, option);
   }
@@ -422,8 +425,8 @@ export class ProcessesComponent
 
 
   //tesst
-  clickProscessTessttttttttttttttt(data){
+  clickProscessTessttttttttttttttt(data) {
     this.bpService.viewProcesses.next(data);
-    this.codxService.navigate('','bp/processstep/BPT11');
+    this.codxService.navigate('', 'bp/processstep/BPT11');
   }
 }

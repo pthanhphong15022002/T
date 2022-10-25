@@ -66,7 +66,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   showPlan: boolean = true;
 
   cart = [];
-  cartQty = 0;
 
   lstStationery = [];
 
@@ -81,7 +80,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   qtyEmp: number = 1;
   title:'';
   dialogAddBookingStationery: FormGroup;
-  
+
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -97,8 +96,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.data = data?.data?.option?.DataService.dataSelected || {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
-    this.title=data?.data?.title;
-    this.dialog.dataService=this.option.DataService;
+    this.title = data?.data?.title;
+    this.dialog.dataService = this.option.DataService;
   }
 
   onInit(): void {
@@ -182,7 +181,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   valueChange(event) {
-    
     if (event?.field) {
       if (event.data instanceof Object) {
         this.data[event.field] = event.data.value;
@@ -216,9 +214,13 @@ export class PopupRequestStationeryComponent extends UIComponent {
   valueBookingOnChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
-        this.dialogAddBookingStationery.patchValue({[event.field]:event.data.value});
+        this.dialogAddBookingStationery.patchValue({
+          [event.field]: event.data.value,
+        });
       } else {
-        this.dialogAddBookingStationery.patchValue({[event.field]:event.data});
+        this.dialogAddBookingStationery.patchValue({
+          [event.field]: event.data,
+        });
       }
     }
     this.detectorRef.detectChanges();
@@ -300,7 +302,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
         }
       });
     } else {
-      this.cartQty = this.cartQty + 1;
       tmpResource.quantity = 1;
       this.cart.push(tmpResource);
       this.notificationsService.notifyCode('SYS006');

@@ -34,6 +34,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   isAfterRender: boolean = false;
   isConfirm = true;
   isApprover = true;
+  otpControl: string = ''; //'1':SMS;2:Email;3:OTP
   stepNo: number;
   dialog: DialogRef;
   data;
@@ -108,10 +109,23 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   confirmOTPPin() {
     if (this.confirmValue != '') {
-      if (this.confirmValue === this.signerInfo.otpPin) {
+      if (this.otpControl == '1' || this.otpControl == '2') {
+        this.esService
+          .confirmOTPPin(this.oApprovalTrans.recID, this.confirmValue)
+          .subscribe((res) => {
+            if (res) {
+              this.approve(this.mode, this.title, this.subTitle);
+            } else {
+              this.notify.notifyCode('ES014');
+            }
+          });
+      } else if (
+        this.otpControl == '3' &&
+        this.confirmValue === this.signerInfo.otpPin
+      ) {
         this.approve(this.mode, this.title, this.subTitle);
       } else {
-        this.notify.notify('Giá trị không hợp lệ!');
+        this.notify.notifyCode('ES014');
       }
     } else {
       this.notify.notify('Nhập giá trị');
@@ -142,13 +156,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
     let title = '';
     let subTitle = 'Comment khi duyệt';
     switch (mode) {
-      case 1:
+      case 5:
         title = 'Duyệt';
         break;
-      case 2:
+      case 4:
         title = 'Từ chối';
         break;
-      case 3:
+      case 2:
         title = 'Làm lại';
         break;
       default:
@@ -156,7 +170,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
     this.title = title;
     this.subTitle = subTitle;
-    if (this.data.stepType == 'S' && this.signerInfo?.otpControl == '3') {
+    if (
+      this.data.stepType == 'S' &&
+      (this.signerInfo?.otpControl == '1' ||
+        this.signerInfo?.otpControl == '2' ||
+        this.signerInfo?.otpControl == '3')
+    ) {
+      this.otpControl = this.signerInfo.otpControl;
       this.openConfirm();
     } else {
       this.approve(mode, title, subTitle);
@@ -164,6 +184,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   openConfirm() {
+    if (this.otpControl == '2') {
+      this.esService.createOTPPin(this.oApprovalTrans.recID, 1).subscribe();
+    }
     let dialogOtpPin = this.callfc.openForm(
       this.popupOTPPin,
       '',
@@ -241,6 +264,23 @@ export class PopupSignForApprovalComponent extends UIComponent {
                           0,
                           this.dialogSignFile.value.comment
                         );
+                        if (finalContract) {
+                          let result = {
+                            result: true,
+                            mode: mode,
+                          };
+                          this.notify.notifyCode('RS002');
+                          this.canOpenSubPopup = false;
+                          this.dialog && this.dialog.close(result);
+                        } else {
+                          this.canOpenSubPopup = false;
+                          let result = {
+                            result: false,
+                            mode: mode,
+                          };
+                          this.notify.notifyCode('SYS021');
+                          this.dialog && this.dialog.close(result);
+                        }
                       }
                     });
                   break;
@@ -294,6 +334,23 @@ export class PopupSignForApprovalComponent extends UIComponent {
                       0,
                       this.dialogSignFile.value.comment
                     );
+                    if (finalContract) {
+                      let result = {
+                        result: true,
+                        mode: mode,
+                      };
+                      this.notify.notifyCode('RS002');
+                      this.canOpenSubPopup = false;
+                      this.dialog && this.dialog.close(result);
+                    } else {
+                      this.canOpenSubPopup = false;
+                      let result = {
+                        result: false,
+                        mode: mode,
+                      };
+                      this.notify.notifyCode('SYS021');
+                      this.dialog && this.dialog.close(result);
+                    }
                   }
                 });
               break;
@@ -322,31 +379,33 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   async signContract(lstContract, idx: number, comment) {
     //chua ki xong
-    this.http
-      .post('http://localhost:6543/DigitalSignature/Sign', lstContract[idx])
-      .subscribe((res: any) => {
-        idx += 1;
-        //ky xong
-        if (idx == lstContract.length) {
-          this.esService
-            .saveUSBSignPDF(
-              this.transRecID,
-              this.sfRecID,
-              this.pdfView.curFileID,
-              res.fileBase64ContentSigned,
-              comment
-            )
-            .subscribe((saveEvent) => {
-              console.log('save', saveEvent);
-
-              return lstContract;
-            });
-        } else {
-          lstContract[idx - 1] = res;
-          lstContract[idx].fileBase64Content = res.fileBase64ContentSigned;
-          lstContract = this.signContract(lstContract, idx, comment);
-        }
-      });
+    return new Promise<any>((resolve, rejects) => {
+      this.http
+        .post('http://localhost:6543/DigitalSignature/Sign', lstContract[idx])
+        .subscribe((res: any) => {
+          idx += 1;
+          //ky xong
+          if (idx == lstContract.length) {
+            this.esService
+              .saveUSBSignPDF(
+                this.transRecID,
+                this.sfRecID,
+                this.pdfView.curFileID,
+                res.fileBase64ContentSigned,
+                comment
+              )
+              .subscribe((saveEvent) => {
+                console.log('save', saveEvent);
+                resolve(saveEvent);
+                return saveEvent;
+              });
+          } else {
+            lstContract[idx - 1] = res;
+            lstContract[idx].fileBase64Content = res.fileBase64ContentSigned;
+            lstContract = this.signContract(lstContract, idx, comment);
+          }
+        });
+    });
   }
 
   changeActiveOpenPopup(e) {

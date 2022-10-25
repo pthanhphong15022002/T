@@ -63,6 +63,8 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   dialog!: DialogRef;
   funcList: any = {};
 
+  formModel: FormModel;
+
   constructor(
     private callfunc: CallFuncService,
     private cr: ChangeDetectorRef,
@@ -79,7 +81,11 @@ export class SignatureComponent implements OnInit, AfterViewInit {
 
   views: Array<ViewModel> = [];
   moreFunc: Array<ButtonModel> = [];
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.esService.getFormModel(this.funcID).then((fm) => {
+      if (fm) this.formModel = fm;
+    });
+  }
 
   button: ButtonModel;
   funcID: string;
@@ -225,6 +231,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         option
       );
       dialogAdd.closed.subscribe((x) => {
+        if (!x?.event) this.viewBase.dataService.clear();
         if (x.event == null && this.viewBase.dataService.hasSaved)
           this.viewBase.dataService
             .delete([this.viewBase.dataService.dataSelected])
@@ -261,6 +268,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
             option
           );
           dialogEdit.closed.subscribe((x) => {
+            if (!x?.event) this.viewBase.dataService.clear();
             if (x.event) {
               x.event.modifiedOn = new Date();
               this.viewBase.dataService.update(x.event).subscribe((res) => {
@@ -282,6 +290,39 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     });
   }
 
+  copy(evt) {
+    this.viewBase.dataService.dataSelected = evt?.data;
+    this.viewBase.dataService.copy(0).subscribe((res: any) => {
+      this.viewBase.dataService.dataSelected.recID = res?.recID;
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
+      this.dialog = this.callfunc.openSide(
+        PopupAddSignatureComponent,
+        {
+          isAdd: false,
+          headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+          type: 'copy',
+        },
+        option
+      );
+      this.dialog.closed.subscribe((x) => {
+        if (!x?.event) this.viewBase.dataService.clear();
+        if (x.event == null && this.viewBase.dataService.hasSaved)
+          this.viewBase.dataService
+            .delete([this.viewBase.dataService.dataSelected])
+            .subscribe((x) => {
+              this.cr.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.viewBase.dataService.update(x.event).subscribe();
+        }
+      });
+    });
+  }
+
   closeEditForm(event) {
     //this.dialog && this.dialog.close();
   }
@@ -295,6 +336,11 @@ export class SignatureComponent implements OnInit, AfterViewInit {
       case 'SYS02':
         this.delete(event);
         break;
+      //Copy
+      case 'SYS04': {
+        this.copy(event);
+        break;
+      }
     }
   }
 }

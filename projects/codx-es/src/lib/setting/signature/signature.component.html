@@ -19,16 +19,28 @@
 </codx-views>
 
 <ng-template #signatureType let-data>
-  <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
-    data.signatureType | vll: "ES001":"text" | async
-  }}</span>
+  <codx-vll
+    [showText]="true"
+    [showBgColor]="true"
+    [formModel]="formModel"
+    [field]="'SignatureType'"
+    [value]="data.signatureType"
+    class="badge badge-light badge-square badge-md fs-7"
+  >
+  </codx-vll>
 </ng-template>
 
 <ng-template #supplier let-data>
   <div class="d-flex justify-content-center has-action-menu">
-    <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
-      data.supplier | vll: "ES006":"text" | async
-    }}</span>
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      [formModel]="formModel"
+      [field]="'Supplier'"
+      [value]="data.supplier"
+      class="badge badge-light badge-square badge-md fs-7"
+    >
+    </codx-vll>
     <codx-mfunc
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
@@ -116,9 +128,15 @@
 
 <ng-template #oTPControl let-data>
   <div class="d-flex justify-content-center has-action-menu">
-    <span class="badge badge-light-success fs-7 fw-bold mb-5 mt-5">{{
-      data.otpControl | vll: "ES005":"text" | async
-    }}</span>
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      [formModel]="formModel"
+      [field]="'OTPControl'"
+      [value]="data.otpControl"
+      class="badge badge-light badge-square badge-md fs-7"
+    >
+    </codx-vll>
     <codx-mfunc
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
