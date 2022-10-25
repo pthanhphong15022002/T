@@ -42,7 +42,8 @@ import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popu
 })
 export class TMMeetingsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @Input() meeting = new CO_Meetings();
   @Input() funcID: string;
   @Input() dataObj?: any;
@@ -101,7 +102,6 @@ export class TMMeetingsComponent
   heightWin: any;
   widthWin: any;
 
-
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -139,7 +139,6 @@ export class TMMeetingsComponent
   }
 
   onInit(): void {
-
     this.button = {
       id: 'btnAdd',
     };
@@ -189,7 +188,7 @@ export class TMMeetingsComponent
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
-          template: this.eventTemplate,
+          // template: this.eventTemplate,
           // template4: this.resourceHeader,// schenmoi can
           template6: this.mfButton, //header
           template2: this.headerTemp,
@@ -236,7 +235,7 @@ export class TMMeetingsComponent
       });
     }
   }
-  //#region schedule 
+  //#region schedule
 
   fields = {
     id: 'meetingID',
@@ -651,6 +650,7 @@ export class TMMeetingsComponent
         this.onDragDrop(e.data);
         break;
       case 'dbClick':
+      case 'edit': 
         this.viewDetail(e?.data);
         break;
     }

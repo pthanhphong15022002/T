@@ -42,6 +42,7 @@ export class BP_Processes {
 export class BP_ProcessSteps {
   id : string ;
   recID : string ;
+  processID :string ;
   parentID: string;
   stepNo : number ;
   stepName :string ;
@@ -66,6 +67,7 @@ export class BP_ProcessSteps {
   createdBy : string ;
   modifiedOn : Date ;
   modifiedBy : string ;
+  owners :Array<BP_ProcessOwners> ;
 }
 export class BP_ProcessRevisions{
 
@@ -73,11 +75,11 @@ export class BP_ProcessRevisions{
 export class BP_ProcessOwners {
   id : string ;
   recID : string ;
-  parentID: string;
+  processID: string;
   stepID : string ;
   objectType: string ;
   objectID :string ;
-  rACID :string ;
+  rAIC :string ;
   note :string ;
   createdOn : Date ;
   createdBy : string ;

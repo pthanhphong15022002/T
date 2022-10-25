@@ -246,13 +246,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.groupByWareHouse();
 
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAddNew, null, null, this.lstStationery];
+    option.data = [itemData, this.isAddNew, null,null,this.lstStationery];
     return true;
   }
 
   onSaveForm() {
-    //this.data.reasonID='RS-001';//Dev Test
-    //this.dialogAddBookingStationery.patchValue(this.data);
     if (this.dialogAddBookingStationery.invalid == true) {
       this.epService.notifyInvalid(
         this.dialogAddBookingStationery,
@@ -310,8 +308,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  addQuota() {
-    
+  addQuota() {    
     this.cart.map((item) => {
       this.lstStationery.push({
         id: item?.resourceID,
