@@ -7,7 +7,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxListviewComponent, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +25,7 @@ export class HomeComponent extends UIComponent implements OnInit {
   functionList: any;
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('lstView') lstView: TemplateRef<any>;
+  @ViewChild('lstView') lstView: CodxListviewComponent;
 
   constructor(private injector: Injector, private change: ChangeDetectorRef) {
     super(injector);
@@ -50,21 +50,11 @@ export class HomeComponent extends UIComponent implements OnInit {
           panelLeftRef: this.panelLeftRef,
         },
       },
-      {
-        id: '2',
-        type: ViewType.list,
-        // active: true,
-        sameData: true,
-        model: {
-          template: this.lstView,
-        },
-      },
     ];
-    this.view.dataService.requestEnd = (t, data) => {
-      if (t == 'loaded') {
-        console.log('check listSurvey', this.view.dataService.data);
-      }
-    };
     this.change.detectChanges();
+  }
+
+  clickMF(e, data) {
+
   }
 }

@@ -156,8 +156,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   add() {
-    this.surveys.title = 'Đăng ký sự kiện';
-    this.surveys.memo = 'Đăng ký sự kiện';
+    this.surveys.title = 'Khảo sát địa điểm team building';
+    this.surveys.memo = 'Mẫu không có mô tả';
     this.api
       .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
         this.surveys,
