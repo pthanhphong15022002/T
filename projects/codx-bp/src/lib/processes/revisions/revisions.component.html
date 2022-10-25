@@ -1,6 +1,6 @@
 <codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialog"
   [formModel]="dialog.formModel" [data]="data"></codx-form>
-<ng-template #body>
+<!-- <ng-template #body>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" default="Qui trình tuyển dụng">
     </codx-label>
@@ -36,5 +36,20 @@
       <codx-label default="01/01/2022"></codx-label>
     </div>
   </div>
+</ng-template> -->
+<ng-template #body>
+  <div class="form-group">
+    <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Mã version">
+    </codx-label>
+    <codx-input field="versionNo" type="text" [placeholder]="'Mã version'" [crrValue]="process.versionNo" (valueChange)="valueChange($event)">
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label fiedName="Comment" [formModel]="form.formModel" default="Mô tả">
+    </codx-label>
+    <codx-input field="comment" type="textarea" [placeholder]="'Mô tả'" [crrValue]="comment" (valueChange)="valueChange($event)">
+    </codx-input>
+  </div>
 </ng-template>
+
 <ng-template #footer></ng-template>
