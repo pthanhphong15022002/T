@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
-import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent } from 'codx-core';
+import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService } from 'codx-core';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
 
@@ -25,7 +25,7 @@ export class NewsComponent extends UIComponent {
   className: string = "NewsBusiness"
   predicate: string = "";
   dataValue: string = "5;null;2;";
-  news: any[] = [];
+  arrPost: any[] = [];
   videos: any[] = [];
   lstGroup: any[] = [];
   isAllowNavigationArrows = false;
@@ -54,7 +54,8 @@ export class NewsComponent extends UIComponent {
 
   constructor
   (
-    private injector: Injector
+    private injector: Injector,
+    private notifySV:NotificationsService
   ) 
   { 
     super(injector)
@@ -125,7 +126,7 @@ export class NewsComponent extends UIComponent {
         .subscribe((res: any[]) => {
           if (res.length > 0 && res[0] && res[1] && res[2]) 
           {
-            this.news = res[0]; 
+            this.arrPost = res[0]; 
             this.videos = res[1]; 
             this.lstGroup = res[2]; 
             if(this.videos.length > 3)
@@ -166,13 +167,38 @@ export class NewsComponent extends UIComponent {
       option.IsFull = true;
       let modal = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
       modal.closed.subscribe((res: any) => {
-        if (res?.event) {
+        if (res && res.event) {
           let data = res.event;
-          if (data.newsType == this.NEWSTYPE.POST) {
-            this.news.pop();
-            this.news.unshift(data);
-            this.detectorRef.detectChanges();
+          switch(data.newsType)
+          {
+            case this.NEWSTYPE.POST:
+              let arrPostNew = [];
+              if(this.arrPost.length > 0)
+              {
+                arrPostNew = [...this.arrPost];
+              }
+              arrPostNew.unshift(data);
+              if(arrPostNew.length > 4){
+                arrPostNew.pop();
+              }
+              this.arrPost = [...arrPostNew];
+              
+              break;
+            case this.NEWSTYPE.VIDEO:
+              let arrVideoNew = [];
+              if(this.videos.length > 0)
+              {
+                arrVideoNew = [...this.videos];
+              }
+              arrVideoNew.unshift(data);
+              this.videos = [...arrVideoNew];
+              
+              break;
+            default:
+              break;
           }
+          this.notifySV.notifyCode('SYS006');
+          this.detectorRef.detectChanges();
         }
       });
     }

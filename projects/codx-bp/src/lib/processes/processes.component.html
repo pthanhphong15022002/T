@@ -136,11 +136,11 @@
         </codx-mfunc>
       </div>
     </td>
-    <td class="rowphoto">
+    <!-- <td class="rowphoto">
       <div class="padding">
         <i class="icon-create icon-18" (click)="revisions(data)"></i>
       </div>
-    </td>
+    </td> -->
   </tr>
 </ng-template>
 <!-- view-list -->
@@ -315,7 +315,7 @@
 </ng-template>
 
 <ng-template #viewReName let-dialog="dialogPopupReName">
-  <codx-form 
+  <codx-form
     headerText="{{ titleReName }}"
     [body]="bodyFormReName"
     [footer]="footerFormReName"
@@ -340,7 +340,7 @@
   >
     <codx-label
       name="lblSave"
-      default="Lưu"      
+      default="Lưu"
     ></codx-label>
   </button>
 </ng-template>

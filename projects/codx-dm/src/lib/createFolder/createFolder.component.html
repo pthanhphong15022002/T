@@ -233,6 +233,27 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                  <div class="text-dark-75">{{ titleAvatar }}</div>
+                  <div class="d-flex align-items-center">
+                    <span class="switch pt-1 switch-icon me-2">
+                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="createSubFolder"
+                        field="createSubFolder" [disabled]="
+                          this.updateRight == false || this.propertiesFolder
+                        " (valueChange)="
+                          onSaveRightChanged($event, 'checkFolder')
+                        "></codx-input>
+                      <!-- <label>
+                                                <input type="checkbox" name="select" #checkFolder
+                                                    [checked]="createSubFolder" id="checkFolder"
+                                                    [disabled]="this.updateRight == false || this.propertiesFolder"
+                                                    (change)="onSaveRightChanged(checkFolder.checked, 'checkFolder')" />
+                                                <span></span>
+                                            </label> -->
+                    </span>
+                    <div class="w-80px"></div>
+                  </div>
+                </div>
                 <div *ngIf="this.createSubFolder" class="mt-6">
                   <table class="table w-100">
                     <thead>

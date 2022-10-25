@@ -146,6 +146,15 @@ export class PopupAddSignFileComponent implements OnInit {
       this.data.permissions;
       this.esService.getFormModel('EST011').then((formModel) => {
         this.formModelCustom = formModel;
+        this.cache
+          .gridViewSetup(
+            this.formModelCustom.formName,
+            this.formModelCustom.gridViewName
+          )
+          .subscribe((grv) => {
+            if (grv) this.gvSetup = grv;
+            console.log(this.gvSetup);
+          });
 
         let sf = this.esService
           .getSFByID(this.oSignFile.recID)

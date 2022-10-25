@@ -232,18 +232,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.tmSv.getSprints(iterationID).subscribe((res) => {
       if (res) {
         this.master = res;
-        this.api
-          .execSv<any[]>(
-            'DM',
-            'DM',
-            'FileBussiness',
-            'GetFilesByObjectIDAsync',
-            [iterationID]
-          )
-          .subscribe((res) => {
-            if (res && res.length > 0) this.showLabelAttachment = true;
-            else this.showLabelAttachment = false;
-          });
+        this.showLabelAttachment = this.master.attachments > 0? true : false ;
         if (this.master.resources) this.getListUser(this.master.resources);
         else this.listUserDetail = [];
         this.changeDetectorRef.detectChanges();
