@@ -11,11 +11,9 @@ export class CodxBpService {
   viewProcesses = new BehaviorSubject<any>(null);
   constructor(private api : ApiHttpService) { } 
 
-    //Send Email
-    sendMail(recID : string , infor : tmpInforSentEMail  )
+    getListFunctionMenuCreatedStepAsync(funcID )
     {
-      // return this.api.exec<any>('OD' ,'DispatchesBusiness', 'SendMailDispatchAsync' , [recID , infor] )
-      
+      return this.api.exec<any>('BP' ,'ProcessStepsBusiness', 'GetListFunctionMenuCreatedStepAsync' , funcID )
     }
 
     getListProcessSteps(gridModel)
@@ -29,4 +27,6 @@ export class CodxBpService {
      return this.api.exec<any>('BP' ,'ProcessStepsBusiness', 'AddProcessStepAsync' , data )
       
     }
+
+
 }

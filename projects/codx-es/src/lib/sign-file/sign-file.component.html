@@ -11,7 +11,7 @@
     "
     [status]="data?.approveStatus"
     [icoStyle]="setStyles(data.color)"
-    [statusVll]="'ES003'"
+    [statusVll]="lstReferValue['ApproveStatus']"
     [date]="data.createdOn"
     [resources]="data.createdBy != undefined ? data.createdBy : ''"
     [resourceObjType]="'AD_Users'"
@@ -37,6 +37,51 @@
   >
   </lib-view-detail>
 </ng-template>
+
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    (clickMF)="openFormFuncID($event, data)"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [icoStatus2]="data?.security"
+    [statusVll]="lstReferValue['ApproveStatus']"
+    [icoStatus]="data?.urgency"
+    [title]="data?.categoryName"
+    [status]="data?.approveStatus"
+    [date]="data?.createdOn"
+    [rootData]="data"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="cardImgFooter"
+    [dataItem]="data"
+  >
+  </codx-card-img>
+</ng-template>
+
+<ng-template #cardImgFooter let-data let-setting="setting">
+  <div class="d-flex flex-column flex-grow-1 mt-2">
+    <div
+      class="d-flex align-items-center mb-2"
+      [innerHTML]="
+        convertHtmlAgency(
+          data.agencyName,
+          this.grvSetup?.AgencyName?.headerText
+        )
+      "
+    ></div>
+    <div class="d-flex justify-content-end">
+      <codx-imgs
+        [objectId]="data.createdBy != undefined ? data.createdBy : ''"
+        objectType="AD_Users"
+        [numberImages]="4"
+        [width]="30"
+      >
+      </codx-imgs>
+    </div>
+  </div>
+</ng-template>
+
 <codx-views
   #view
   [views]="views"
@@ -53,6 +98,7 @@
   [selectedFirst]="true"
   [idField]="idField"
   (requestEnded)="closeAddForm($event)"
+  (viewChanged)="viewChange($event)"
 >
 </codx-views>
 

@@ -10,11 +10,9 @@ export const environment = {
   pdfUrl: 'http://172.16.7.34:8015/api/pdf',
   shopping: 'http://172.16.7.34:8111/Shopping',
   urlUpload: 'http://172.16.1.210:8011',
-  urlTenant: '',
-  urlThumbnail: 'http://172.16.1.210:8011',
-  urlFile: 'http://172.16.1.210:8011',
-  reportUrl: '',
+  office365: "https://view.officeapps.live.com/op/view.aspx?src=",
   appName: 'hps-file-test', // Tam thoi de hard
+  reportUrl: '',
   StoreNames: {
     FormLabels: 'FormLabels',
     GridViewSetups: 'GridViewSetups',

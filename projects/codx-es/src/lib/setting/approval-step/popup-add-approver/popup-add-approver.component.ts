@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DialogRef, FormModel } from 'codx-core';
+import { DialogData, DialogRef, FormModel } from 'codx-core';
 import { CodxEsService } from 'projects/codx-es/src/public-api';
 
 @Component({
@@ -13,22 +13,33 @@ export class PopupAddApproverComponent implements OnInit {
   formModel: FormModel;
   dialog: DialogRef;
   data: any = {};
+  lstApprover: any = [];
   isAddNew: boolean = true;
   isAfterRender: boolean = false;
-  headerText = 'Thiết lập số tự động';
+  headerText = 'Thông tin đối tác';
   subHeaderText = '';
+
   constructor(
     private cr: ChangeDetectorRef,
-    private esService: CodxEsService
-  ) {}
+    private esService: CodxEsService,
+    @Optional() data?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.data = JSON.parse(JSON.stringify(data?.data?.approverData));
+    this.lstApprover = data?.data?.lstApprover;
+    this.dialog = dialog;
+    this.isAddNew = data?.data?.isAddNew;
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.initForm();
+  }
 
   initForm() {
     this.formModel = new FormModel();
-    this.formModel.entityName = 'AD_AutoNumbers';
-    this.formModel.formName = 'AutoNumbers';
-    this.formModel.gridViewName = 'grvAutoNumbers';
+    this.formModel.entityName = 'ES_ApprovalSteps_Approvers';
+    this.formModel.formName = 'ApprovalSteps_Approvers';
+    this.formModel.gridViewName = 'grvApprovalSteps_Approvers';
     this.dialog.formModel = this.formModel;
 
     this.esService.setCacheFormModel(this.formModel);
@@ -38,6 +49,8 @@ export class PopupAddApproverComponent implements OnInit {
         console.log(fg);
         if (fg) {
           this.fgroupApprover = fg;
+          this.formModel.currentData = this.data;
+          this.fgroupApprover.patchValue(this.data);
           this.isAfterRender = true;
         }
       });
@@ -51,5 +64,22 @@ export class PopupAddApproverComponent implements OnInit {
     }
   }
 
-  onSaveForm() {}
+  onSaveForm() {
+    if (this.fgroupApprover.invalid) {
+      this.esService.notifyInvalid(this.fgroupApprover, this.formModel);
+      return;
+    }
+    let lstExisted = this.lstApprover.filter(
+      (p) => p.email == this.data?.email
+    );
+    if (this.isAddNew && lstExisted.length > 0) {
+      return;
+    }
+
+    if (!this.isAddNew && lstExisted.length > 1) {
+      return;
+    }
+
+    this.dialog && this.dialog.close(this.data);
+  }
 }

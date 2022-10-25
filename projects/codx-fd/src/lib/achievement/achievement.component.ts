@@ -117,7 +117,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
     this.options.entityPermission = 'FD_KudosTrans';
     this.options.gridViewName = 'grvKudosTrans';
     this.options.formName = 'KudosTrans';
-    this.options.funcID = this.funcID;
+    this.options.funcID = this.funcID; 
     this.setPredicate();
   }
 
@@ -162,7 +162,7 @@ export class AchievementComponent extends UIComponent implements OnInit {
 
   loadData() {
     this.api
-      .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
+      .execSv<any>('FD', 'ERM.Business.FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
         this.options,
         this.type,
       ])

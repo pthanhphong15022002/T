@@ -32,10 +32,16 @@
         "></div>
       <div [innerHtml]="convertHtmlAgency(data)"></div>
     </div>
-    <div *ngIf="data?.isOnline">
-      <i class="icon-insert_link text-primary text-hover-primary icon-24"></i>
+    <div *ngIf="data?.isOnline" [ngbPopover]="popoverLinks"
+    #p1="ngbPopover" [openDelay]="500" (mouseenter)="p1.open()" (mouseleave)="p1.close()" placement="right left">
+      <i class="icon-insert_link text-primary text-hover-primary icon-24" ></i>
     </div>
   </div>
+  <ng-template #popoverLinks >
+    <span>
+      <codx-label name="lblLinkOnlineMeeting" [formModel]="view.formModel" default="Link họp online"></codx-label>
+    </span>
+  </ng-template>
 </ng-template>
 
 <ng-template #footer let-data>
@@ -53,11 +59,18 @@
 
     </div>
   </div>
-  <div class="footer-att" *ngIf="data.attachments > 0">
+  <div class="footer-att" *ngIf="data.attachments > 0" [ngbPopover]="popperAttachment"
+    #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
     <span class="icon-attach_file icon-18"> </span>
     <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
       {{ data.attachments }}</span>
   </div>
+
+  <ng-template #popperAttachment >
+    <span>
+      <codx-label name="lblAttachment" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
+    </span>
+  </ng-template>
 </ng-template>
 <!-- cardCenter -->
 

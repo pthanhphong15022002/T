@@ -87,6 +87,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     // delete this.data?.otpPin;
 
     this.isAdd = data?.data?.isAdd;
+    this.type = data?.data?.type;
     this.formModel = this.dialog?.formModel;
     this.headerText = data?.data?.headerText;
     this.funcID = this.router.snapshot.params['funcID'];
@@ -168,7 +169,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     if (this.isAdd) {
       option.methodName = 'AddNewAsync';
     } else {
-      option.methodName = 'EditAsync';
+      if (this.type == 'copy') {
+        option.methodName = 'AddNewAsync';
+      } else option.methodName = 'EditAsync';
     }
 
     option.data = [itemData];
@@ -288,7 +291,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   openPopup(content) {
     if (this.data.fullName == '' || this.data.fullName == null) {
       this.notification.notifyCode(
-        'SYS028',
+        'SYS009',
         0,
         '"' + this.grvSetup['FullName'].headerText + '"'
       );

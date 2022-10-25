@@ -93,7 +93,6 @@
             </div>
           </div>
         </div>
-        <button (click)="reName(data)"></button>
       </div>
     </td>
     <td class="rowphoto" placement="left">
@@ -127,12 +126,12 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <button (click)="properties($event, data)"></button>
         <codx-mfunc
           [formModel]="view.formModel"
           (clickMF)="clickMF($event, data)"
           [isBookMark]="false"
           [dataItem]="data"
+          type="hover"
         >
         </codx-mfunc>
       </div>

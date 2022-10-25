@@ -1,4 +1,7 @@
-<div class="codx-approval step-signature-temp" *ngIf="process?.length > 0 && approveStatus == '1'">
+<div
+  class="codx-approval step-signature-temp"
+  *ngIf="process?.length > 0 && approveStatus == '1'"
+>
   <ng-container *ngFor="let item of process; let index = index">
     <div class="codx-approval-step pb-3 step-approve">
       <div class="codx-approval-header d-flex align-items-center mb-3">
@@ -6,47 +9,77 @@
         <div class="step-title text-gray-700 fw-bold fs-5">
           {{ item.stepType | vll: "ES002":"text" | async }}
         </div>
-        <div class="text-gray-500 fs-5"> - {{ item.stepName }}</div>
+        <div class="text-gray-500 fs-5">
+          - {{ item.stepName ?? item.stepNote }}
+        </div>
       </div>
       <div class="codx-approval-content ms-16">
         <ng-container *ngFor="let approver of item.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
-            <codx-temp-full *ngIf="approver.roleType?.length == 1" [imageId]="approver.approver"
-              [imageObjType]="'AD_Users'" [imageWidth]="35" [title]="
+            <codx-temp-full
+              *ngIf="approver.roleType?.length == 1"
+              [imageId]="approver.approver"
+              [imageObjType]="'AD_Users'"
+              [imageWidth]="35"
+              [title]="
                 approver.name ??
                 approver.approverName ??
                 (approver.approver | vll: 'ES014':'text' | async)
-              " [desc]="approver.position ?? approver.approverPosition">
+              "
+              [desc]="
+                approver.position ??
+                approver.approverPosition ??
+                positionDefault
+              "
+            >
             </codx-temp-full>
-            <codx-temp-full *ngIf="approver.roleType?.length > 1" [imageSrc]="
+            <codx-temp-full
+              *ngIf="approver.roleType?.length > 1"
+              [imageSrc]="
                 './assets/themes/sys/default/img/' +
                 (item.icon ? item.icon : 'share_default.svg')
-              " imgCss="w-30px p-3 me-3 user-mini-icon" [imageWidth]="20"
+              "
+              imgCss="w-30px p-3 me-3 user-mini-icon"
+              [imageWidth]="20"
               [title]="approver.approver | vll: 'ES014':'text' | async"
-              [desc]="approver.approver | vll: 'ES014':'text' | async">
+              [desc]="approver.approver | vll: 'ES014':'text' | async"
+            >
             </codx-temp-full>
             <div class="d-flex align-items-center ms-6 flex-column flex-column">
               <div class="d-flex align-items-center ms-6 flex-column">
                 <span class="badge badge-light ms-6">
-                  <codx-label default="Chờ giải quyêt" name="lblStatusNew"></codx-label>
+                  <codx-label
+                    default="Chờ giải quyêt"
+                    name="lblStatusNew"
+                  ></codx-label>
                 </span>
                 <div class="text-dark fs-7"></div>
               </div>
             </div>
           </div>
-          <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="approver.leadtime != 0">
+          <div
+            class="d-flex align-items-center justify-content-between mb-3"
+            *ngIf="approver.leadtime != 0"
+          >
             <div class="d-flex w-250px">
               <div class="progress h-6px w-100 me-3">
-                <div role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" class="progress-bar"
+                <div
+                  role="progressbar"
+                  aria-valuenow="40"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  class="progress-bar"
                   [ngClass]="
                     approver?.leadtime < approver?.duration
                       ? 'bg-danger'
                       : 'bg-success'
-                  " [style]="
+                  "
+                  [style]="
                     'width:' +
                     getPercent(approver?.leadtime, approver?.duration) +
                     '%'
-                  "></div>
+                  "
+                ></div>
               </div>
             </div>
             <ng-container>
@@ -61,7 +94,8 @@
                     :
                   </span>
                   <span class="text-gray-600">
-                    {{ approver?.leadtime | number: ".2-2" }} h</span>
+                    {{ approver?.leadtime | number: ".2-2" }} h</span
+                  >
                 </div>
 
                 |
@@ -71,7 +105,9 @@
                     </codx-label>
                     :
                   </span>
-                  <span class="text-gray-600">{{ approver?.duration ?? 0 | number: ".2-2" }} h</span>
+                  <span class="text-gray-600"
+                    >{{ approver?.duration ?? 0 | number: ".2-2" }} h</span
+                  >
                 </div>
               </div>
             </ng-container>
@@ -139,7 +175,10 @@
   </ng-container>
 </div>
 
-<div class="codx-approval step-signature-temp" *ngIf="process?.length > 0 && approveStatus != '1'">
+<div
+  class="codx-approval step-signature-temp"
+  *ngIf="process?.length > 0 && approveStatus != '1'"
+>
   <ng-container *ngFor="let item of process; let index = index">
     <div class="codx-approval-step pb-3 step-approve">
       <div class="codx-approval-header d-flex align-items-center mb-4">
@@ -147,24 +186,49 @@
         <div class="step-title text-gray-800 fw-bold fs-4">
           {{ item.stepType | vll: "ES002":"text" | async }}
         </div>
-        <div class="text-gray-400 fs-5">- {{ item.stepName }}</div>
+        <div class="text-gray-400 fs-5">
+          - {{ item.stepName ?? item.stepNote }}
+        </div>
       </div>
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
-            <codx-temp-full [imageId]="approver.approver" [imageObjType]="'AD_Users'" [imageWidth]="35" [title]="
+            <codx-temp-full
+              [imageId]="approver.approver"
+              [imageObjType]="'AD_Users'"
+              [imageWidth]="35"
+              [title]="
                 approver.name ??
                 approver.approverName ??
                 (approver.approver | vll: 'ES014':'text' | async)
-              " [desc]="approver.position ?? approver.approverPosition">
+              "
+              [desc]="
+                approver.position ??
+                approver.approverPosition ??
+                positionDefault
+              "
+            >
             </codx-temp-full>
             <div class="d-flex align-items-center ms-6 flex-column flex-column">
-              <codx-vll *ngIf="approver.status != '1'" [value]="approver.status" [name]="'ES003'" [showIcon]="true"
-                [showText]="true" [showBgColor]="true" class="badge">
+              <codx-vll
+                *ngIf="approver.status != '1'"
+                [value]="approver.status"
+                [name]="'ES003'"
+                [showIcon]="true"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge"
+              >
               </codx-vll>
-              <div *ngIf="approver.status == '1'" class="d-flex align-items-center ms-6 flex-column">
+              <div
+                *ngIf="approver.status == '1'"
+                class="d-flex align-items-center ms-6 flex-column"
+              >
                 <span class="badge badge-light ms-6">
-                  <codx-label default="Chờ giải quyêt" name="lblStatusNew"></codx-label>
+                  <codx-label
+                    default="Chờ giải quyêt"
+                    name="lblStatusNew"
+                  ></codx-label>
                 </span>
                 <div class="text-dark fs-7"></div>
               </div>
@@ -174,19 +238,29 @@
               </div>
             </div>
           </div>
-          <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="approver.leadtime != 0">
+          <div
+            class="d-flex align-items-center justify-content-between mb-3"
+            *ngIf="approver.leadtime != 0"
+          >
             <div class="d-flex w-250px">
               <div class="progress h-6px w-100 me-3">
-                <div role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" class="progress-bar"
+                <div
+                  role="progressbar"
+                  aria-valuenow="40"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  class="progress-bar"
                   [ngClass]="
                     approver?.leadtime < approver?.duration
                       ? 'bg-danger'
                       : 'bg-success'
-                  " [style]="
+                  "
+                  [style]="
                     'width:' +
                     getPercent(approver?.leadtime, approver?.duration) +
                     '%'
-                  "></div>
+                  "
+                ></div>
               </div>
             </div>
             <ng-container>
@@ -201,7 +275,8 @@
                     :
                   </span>
                   <span class="text-gray-600">
-                    {{ approver?.leadtime | number: ".2-2" }} h</span>
+                    {{ approver?.leadtime | number: ".2-2" }} h</span
+                  >
                 </div>
 
                 |
@@ -211,7 +286,9 @@
                     </codx-label>
                     :
                   </span>
-                  <span class="text-gray-600">{{ approver?.duration ?? 0 | number: ".2-2" }} h</span>
+                  <span class="text-gray-600"
+                    >{{ approver?.duration ?? 0 | number: ".2-2" }} h</span
+                  >
                 </div>
               </div>
             </ng-container>
