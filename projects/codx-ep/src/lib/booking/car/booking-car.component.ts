@@ -179,15 +179,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           panelRightRef: this.panelRight,
         },
       },
-      {
-        sameData: true,
-        id: '3',
-        type: ViewType.chart,
-        active: true,
-        model: {
-          panelLeftRef: this.chart,
-        },
-      },
+      // {
+      //   sameData: true,
+      //   id: '3',
+      //   type: ViewType.chart,
+      //   active: true,
+      //   model: {
+      //     panelLeftRef: this.chart,
+      //   },
+      // },
     ];
     this.detectorRef.detectChanges();
   }
