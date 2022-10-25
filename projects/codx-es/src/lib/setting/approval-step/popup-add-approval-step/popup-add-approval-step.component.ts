@@ -49,6 +49,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   confirmControl: string = '0';
   allowEditAreas: boolean;
+  positionDefault: string = '';
 
   dialog: DialogRef;
   lstStep;
@@ -132,6 +133,13 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   initForm() {
+    this.cache
+      .gridViewSetup('ApprovalSteps_Approvers', 'grvApprovalSteps_Approvers')
+      .subscribe((grv) => {
+        if (grv) {
+          this.positionDefault = grv['Position']['headerText'];
+        }
+      });
     this.esService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
