@@ -94,8 +94,13 @@
                             <img class="w-100 h-200px" [src]="fileImage.data || fileImage.avatar" alt="">
                         </ng-container>
                         <ng-template #haveImage>
-                            <codx-img [objectId]="data.recID" [objectType]="data.entityName" [width]="150"
-                                [imageType]="'square'"></codx-img>
+                            <codx-img 
+                                [objectId]="data.recID"
+                                [objectType]="'WP_News'" 
+                                [width]="300"
+                                [isDefaulImg]="true"
+                                [imageType]="'square'">
+                            </codx-img>
                         </ng-template>
                     </div>
                     <div class="d-none">
@@ -144,28 +149,33 @@
                         </video>
                     </ng-container>
                     <ng-template #haveVideo>
-                        <wp-video [ObjectID]="data.recID" [ObjectType]="'WP_News'">
-                        </wp-video>
+                        <wp-view-video [ObjectID]="data.recID" [ObjectType]="'WP_News'">
+                        </wp-view-video>
                     </ng-template>
                 </div>
             </ng-template>
         </div>
     </div>
     <!-- footer -->
-    <div class="card-footer px-0">
-        <div class="d-flex align-items-center justify-content-end">
-            <div class="ms-3">
-                <button (click)="clickInsertNews()" type="button" class="btn btn-primary">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Cập nhật"></codx-label>
-                </button>
+    <ng-container *ngIf="data.approveStatus != APPROVE_STATUS.APPROVETED">
+        <div class="card-footer px-0">
+            <div class="d-flex align-items-center justify-content-end">
+                <div>
+                    <button (click)="clickUpdatePost()" type="button" class="btn btn-primary">
+                        <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Cập nhật"></codx-label>
+                    </button>
+                </div>
+                <ng-container *ngIf="data.approveStatus == APPROVE_STATUS.NEW">
+                    <div class="ms-3">
+                        <button (click)="clickApproPost()" type="button" class="btn btn-primary">
+                            <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Phát hành"></codx-label>
+                        </button>
+                    </div>
+                </ng-container>
             </div>
-            <!-- <div>
-                <button type="button" class="btn btn-primary">
-                    <codx-label [formModel]="dialogRef.formModel" name="lblSave" default="Phát hành"></codx-label>
-                </button>
-            </div> -->
         </div>
-    </div>
+    </ng-container>
+    
 </div>
 <!-- templateshare -->
 <ng-template #controlShare let-dialog>

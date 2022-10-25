@@ -492,13 +492,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   getFolderPath() {
-    debugger;
     if (this.folderId == '') {
       this.folderService
         .getFoldersByFunctionID(this.functionID)
         .subscribe(async (res) => {
           if (res != null) {
-            debugger;
             this.listRemoteFolder = res;
             this.atSV.currentNode = '';
             this.atSV.folderId.next(res[0].folderId);
@@ -1173,15 +1171,22 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var fileChunk = new File([blogPart], uploadFile.name, {
           type: uploadFile.type,
         }); //Gói lại thành 1 file chunk để upload
-        var uploadChunk = await lvFileClientAPI.formPostWithToken(
-          `api/${appName}/files/upload`,
-          {
-            FilePart: fileChunk,
-            UploadId: fileItem.uploadId,
-            Index: i,
-          }
-        );
-        console.log(uploadChunk);
+        try
+        {
+          var uploadChunk = await lvFileClientAPI.formPostWithToken(
+            `api/${appName}/files/upload`,
+            {
+              FilePart: fileChunk,
+              UploadId: fileItem.uploadId,
+              Index: i,
+            }
+          );
+          console.log(uploadChunk);
+        }
+        catch(ex)
+        {
+          console.log(ex)
+        }
       }
     } catch (ex) {
       fileItem.uploadId = '0';
@@ -2806,7 +2811,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   public async handleFileInput(files: any[], drag = false) {
-    debugger;
     var count = this.fileUploadList.length;
     this.getFolderPath();
     //console.log(files);

@@ -1,29 +1,25 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { A } from '@angular/cdk/keycodes';
-import {
-  Component,
-  Injector,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   MultiSelectService,
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
-import { TextBoxModel } from '@syncfusion/ej2-angular-inputs';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import { UIComponent } from 'codx-core';
+import { SV_Format } from '../model/SV_Format';
+import { SV_Survey } from '../model/SV_Survey';
 
 @Component({
-  selector: 'lib-test-survey',
-  templateUrl: './test-survey.component.html',
-  styleUrls: ['./test-survey.component.scss'],
+  selector: 'app-add-survey',
+  templateUrl: './add-survey.component.html',
+  styleUrls: ['./add-survey.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [RteService, MultiSelectService],
 })
-export class TestSurveyComponent extends UIComponent implements OnInit {
+export class AddSurveyComponent extends UIComponent implements OnInit {
+  survey: SV_Survey = new SV_Survey();
+  format: SV_Format = new SV_Format();
+  isModeAdd = true;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -33,7 +29,15 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
   public descriptionEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
-      items: ['Bold', 'Italic', 'Underline', 'ClearFormat', 'CreateLink', 'NumberFormatList', 'BulletFormatList'],
+      items: [
+        'Bold',
+        'Italic',
+        'Underline',
+        'ClearFormat',
+        'CreateLink',
+        'NumberFormatList',
+        'BulletFormatList',
+      ],
     },
   };
   public titleRule: { [name: string]: { [rule: string]: Object } } = {
@@ -42,10 +46,6 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
   public commentRule: { [name: string]: { [rule: string]: Object } } = {
     rte: { required: [true, 'Enter valid comments'] },
   };
-
-  constructor(inject: Injector) {
-    super(inject);
-  }
 
   data: any = [
     {
@@ -109,16 +109,17 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
 
   dataAnswer: any = new Array();
 
-  onInit(): void {}
+  constructor(inject: Injector) {
+    super(inject);
+  }
+
+  onInit(): void {
+    this.add();
+  }
   valueChange(e) {
     console.log(e);
   }
 
-  items = [
-    { value: 'Oranges', disabled: false },
-    { value: 'Bananas', disabled: true },
-    { value: 'Mangoes', disabled: false },
-  ];
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.data, event.previousIndex, event.currentIndex);
   }
@@ -134,5 +135,21 @@ export class TestSurveyComponent extends UIComponent implements OnInit {
 
   public focusOut(target: HTMLElement): void {
     target.parentElement.classList.remove('e-input-focus');
+  }
+
+  add() {
+    this.survey.title = 'Lời mời dự tiệc';
+    this.survey.memo = 'Tiệc đám cưới anh Võ Văn Quang ^.^';
+    this.api
+      .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
+        this.survey,
+        this.format,
+        this.isModeAdd,  
+      ])
+      .subscribe((res) => {
+        debugger;
+        if (res) {
+        }
+      });
   }
 }

@@ -173,7 +173,6 @@ export class PropertiesComponent implements OnInit {
   }
 
   getThumbnail(data) {
-    debugger;
     if (data.hasThumbnail)
       return environment.urlUpload + "/" + data.thumbnail;
     else

@@ -35,7 +35,8 @@ export class NewsComponent extends UIComponent {
   mssgWP026:string = "";
   mssgWP027:string = "";
   pageSlider:any[] = [];
-
+  newDate:any = new Date();
+  userPermission:any = null;
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -82,7 +83,7 @@ export class NewsComponent extends UIComponent {
     ];
     this.detectorRef.detectChanges();
   }
-  userPermission:any = null;
+  
   getUserPermission(funcID:string){
     if(funcID){
       funcID  = funcID + "P";
@@ -90,7 +91,6 @@ export class NewsComponent extends UIComponent {
       .subscribe((res:any) => {
         if(res){
           this.userPermission = res;
-          console.log(res);
           this.detectorRef.detectChanges();
         }
       });
@@ -143,8 +143,6 @@ export class NewsComponent extends UIComponent {
         });
     }
   }
-
-
   clickViewDetail(data: any) {
     if(data && data.recID)
     {
@@ -179,7 +177,6 @@ export class NewsComponent extends UIComponent {
       });
     }
   }
-
   clickShowPopupSearch() {
     if(this.view){
       let option = new DialogModel();

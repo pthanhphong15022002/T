@@ -656,7 +656,7 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.api.execSv("SYS",
     "ERM.Business.SYS",
     "SettingValuesBusiness",
-    "GetParameterByHRAsync",
+    "GetParameterAsync",
     [formName,category]).subscribe((res:any) => {
       if(res)
       {

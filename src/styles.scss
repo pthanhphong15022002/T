@@ -896,3 +896,19 @@ codx-tag .codx-tag:hover {
 .card .card-footer.fillter-card-footer {
   padding: 1rem 1.5rem !important;
 }
+
+.aside-detail {
+  codx-vll {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-right: 7px;
+    }
+  }
+}
+
+
+.login-container .errorMessage {
+  margin-left: 8px;
+}

@@ -85,7 +85,6 @@
         </div>
         <div
           class="d-flex align-items-top ms-4 min-w-300px justify-content-end"
-          *ngIf="!isGroup"
         >
           <ng-container
             *ngIf="data.controlType && data.controlType != 'GroupControl'"
@@ -247,12 +246,11 @@
               <codx-input
                 type="Share"
                 [refValue]="data.referdValue || 'L1901'"
-                [field]="data.fieldName"
+                field="popup"
                 [dataShared]="[]"
                 [showInput]="false"
                 [listCombobox]="data.reference"
                 [multiple]="data.displayMode === '5'"
-                (valueChange)="valueChange($event, data, null)"
               >
               </codx-input>
             </ng-container>
@@ -287,8 +285,8 @@
 </ng-template>
 
 <ng-template #footer>
-  <div class="d-flex flex-stack" *ngIf="dialog">
-    <div class="right justify-content-end">
+  <div class="d-flex flex-stack justify-content-end" *ngIf="dialog">
+    <div class="right">
       <button type="button" class="btn btn-primary" (click)="click($event)">
         <codx-label name="lblSave" formName="Settings" default="Lưu">
         </codx-label>

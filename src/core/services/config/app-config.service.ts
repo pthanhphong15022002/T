@@ -25,6 +25,7 @@ export class AppConfigService extends AppConfig {
       environment.urlFile = res.urlFile;
       environment.appName = res.appName;
       environment.reportUrl = res.reportUrl;
+      environment.office365 = res.office365;
     }));
   }
 }
