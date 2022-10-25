@@ -173,7 +173,6 @@ const Component: Type<any>[] =
     AddNoteComponent,
     SaveNoteComponent,
     PostComponent,
-    ListPostComponent,
     PopupAddPostComponent,
     PopupSavePostComponent,
     MyTeamComponent,
@@ -189,6 +188,7 @@ const Component: Type<any>[] =
     ChatBoxComponent,
     ListChatBoxComponent,
     PopupGroupComponent,
+    ListPostComponent
   ];
 
 @NgModule({
@@ -205,7 +205,7 @@ const Component: Type<any>[] =
     PickerModule,
     RouterModule.forChild(routes),
   ],
-  exports: [RouterModule, ListPostComponent],
+  exports: [RouterModule],
   declarations: [Component, ChattingComponent, LayoutComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

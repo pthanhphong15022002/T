@@ -92,16 +92,16 @@ export class Approvers {
   recID: string;
   roleType: string;
   approver: string;
-  name: string;
-  position: string;
-  email: string;
-  phone: string;
-  leadTime: any;
+  name: string = null;
+  position: string = null;
+  email: string = null;
+  phone: string = null;
+  leadTime: any = 0;
   allowEditAreas: boolean;
   confirmControl: string;
-  comment: string;
+  comment: string = null;
   icon: string = null;
-  createdOn: any;
+  createdOn: any = new Date();
   delete: boolean = true;
   write: boolean = false;
 }

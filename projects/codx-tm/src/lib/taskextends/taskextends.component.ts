@@ -151,7 +151,7 @@ export class TaskExtendsComponent
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
-        if (x.functionID == 'SYS04') {
+        if (x.functionID == 'SYS04'|| x.functionID == 'SYS03'||x.functionID == 'SYS02') {
           x.disabled = true;
         }
         if (
