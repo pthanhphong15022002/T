@@ -690,7 +690,7 @@ export class PopupAddSignFileComponent implements OnInit {
           }
         });
     } else {
-      this.notify.notifyCode('SYS028');
+      this.notify.notifyCode('SYS009');
     }
   }
 

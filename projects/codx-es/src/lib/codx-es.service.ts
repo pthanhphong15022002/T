@@ -141,7 +141,7 @@ export class CodxEsService {
             );
           } else {
             this.notificationsService.notifyCode(
-              'SYS028',
+              'SYS009',
               0,
               '"' + headerText + '"'
             );
@@ -731,6 +731,16 @@ export class CodxEsService {
       'HRBusiness',
       'GetInfoApproverAsync',
       [lstAprrover]
+    );
+  }
+
+  copyApprovalStep(oldTransID: string, newTransID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'CopyApprovalStepAsync',
+      [oldTransID, newTransID]
     );
   }
 

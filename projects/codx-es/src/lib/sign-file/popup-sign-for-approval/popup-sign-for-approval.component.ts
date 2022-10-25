@@ -109,10 +109,23 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   confirmOTPPin() {
     if (this.confirmValue != '') {
-      if (this.confirmValue === this.signerInfo.otpPin) {
+      if (this.otpControl == '1' || this.otpControl == '2') {
+        this.esService
+          .confirmOTPPin(this.oApprovalTrans.recID, this.confirmValue)
+          .subscribe((res) => {
+            if (res) {
+              this.approve(this.mode, this.title, this.subTitle);
+            } else {
+              this.notify.notifyCode('ES014');
+            }
+          });
+      } else if (
+        this.otpControl == '3' &&
+        this.confirmValue === this.signerInfo.otpPin
+      ) {
         this.approve(this.mode, this.title, this.subTitle);
       } else {
-        this.notify.notify('Giá trị không hợp lệ!');
+        this.notify.notifyCode('ES014');
       }
     } else {
       this.notify.notify('Nhập giá trị');
@@ -172,7 +185,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   openConfirm() {
     if (this.otpControl == '2') {
-      //this.esService.createOTPPin(this.oApprovalTrans.recID, 1).subscribe();
+      this.esService.createOTPPin(this.oApprovalTrans.recID, 1).subscribe();
     }
     let dialogOtpPin = this.callfc.openForm(
       this.popupOTPPin,

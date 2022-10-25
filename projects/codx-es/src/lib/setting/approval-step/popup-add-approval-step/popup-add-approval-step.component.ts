@@ -226,7 +226,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  MFClick(event, data) {
+  MFClick(event, data, index) {
     //delete
     if (event?.functionID == 'SYS02') {
       this.notifySvr.alertCode('SYS030').subscribe((x) => {
@@ -238,17 +238,27 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           }
         }
       });
-      //edit PA
-      if (event?.functionID == 'SYS03') {
-        // this.notifySvr.alertCode('SYS030').subscribe((x) => {
-        //   if (x.event.status == 'Y') {
-        //     let i = this.lstApprover.indexOf(data);
-        //     if (i != -1) {
-        //       this.lstApprover.splice(i, 1);
-        //     }
-        //   }
-        // });
-      }
+    }
+    //edit PA
+    else if (event?.functionID == 'SYS03') {
+      let popupApprover = this.callfc.openForm(
+        PopupAddApproverComponent,
+        '',
+        550,
+        screen.height,
+        '',
+        {
+          approverData: data,
+          lstApprover: this.lstApprover,
+          isAddNew: false,
+        }
+      );
+
+      popupApprover.closed.subscribe((res) => {
+        if (res.event) {
+          this.lstApprover[index] = res.event;
+        }
+      });
     }
   }
 
@@ -264,7 +274,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.notifySvr.notifyCode(
-              'SYS028',
+              'SYS009',
               0,
               '"' + res['Approvers'].headerText + '"'
             );
@@ -375,13 +385,28 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             //loại đối tác mở popup
             let appr = new Approvers();
             appr.write = true;
+            appr.roleType = element.objectType;
+            appr.approver = element.objectType;
+            appr.icon = element?.icon;
 
             let popupApprover = this.callfc.openForm(
               PopupAddApproverComponent,
               '',
               550,
-              screen.height
+              screen.height,
+              '',
+              {
+                approverData: appr,
+                lstApprover: this.lstApprover,
+                isAddNew: true,
+              }
             );
+
+            popupApprover.closed.subscribe((res) => {
+              if (res.event) {
+                this.lstApprover.push(res.event);
+              }
+            });
           } else if (i == -1) {
             let appr = new Approvers();
             appr.roleType = element?.objectType;

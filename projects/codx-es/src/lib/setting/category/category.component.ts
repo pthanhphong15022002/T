@@ -246,6 +246,45 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     });
   }
 
+  copy(evt) {
+    this.viewBase.dataService.dataSelected = evt?.data;
+    this.viewBase.dataService.copy().subscribe((res: any) => {
+      if (!res) return;
+      this.viewBase.dataService.dataSelected = res;
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.viewBase?.dataService;
+      option.FormModel = this.viewBase?.formModel;
+      this.dialog = this.callfunc.openSide(
+        PopupAddCategoryComponent,
+        {
+          data: evt?.data,
+          isAdd: false,
+          headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+          type: 'copy',
+          oldRecID: evt?.data?.recID,
+        },
+        option
+      );
+      this.dialog.closed.subscribe((x) => {
+        if (!res?.event) this.viewBase.dataService.clear();
+        if (x.event == null) {
+          //this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
+          this.viewBase.dataService
+            .remove(this.viewBase.dataService.dataSelected)
+            .subscribe();
+        }
+        // else
+        //   this.viewBase.dataService.add(x.event, 0).subscribe((item) => {
+        //     this.viewBase.dataService.onAction.next({
+        //       type: 'update',
+        //       data: x.event,
+        //     });
+        //   });
+      });
+    });
+  }
+
   edit(evt?) {
     if (evt?.data) {
       this.viewBase.dataService.dataSelected = evt?.data;
@@ -291,12 +330,19 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   clickMF(event, data) {
     event.data = data;
     switch (event?.functionID) {
+      //edit
       case 'SYS03':
         this.edit(event);
         break;
+      //delete
       case 'SYS02':
         this.delete(event);
         break;
+      //Copy
+      case 'SYS04': {
+        this.copy(event);
+        break;
+      }
     }
   }
 
