@@ -19,7 +19,7 @@ import { SV_Surveys } from '../model/SV_Surveys';
   providers: [RteService, MultiSelectService],
 })
 export class AddSurveyComponent extends UIComponent implements OnInit {
-  surveys: any = new Array();
+  surveys: SV_Surveys = new SV_Surveys();
   formats: any = new Array();
   questions: any = new Array();
   answers: any = new Array();
@@ -122,10 +122,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         ],
       },
     ];
+    this.formats = {
+      item: 'Title',
+      fontStyle: 'Arial',
+      fontSize: '13',
+      fontColor: 'black',
+      fontFormat: 'B',
+    }
   }
 
   onInit(): void {
-    this.add();
+    // this.add();
   }
   valueChange(e) {
     console.log(e);
@@ -149,8 +156,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   add() {
-    this.surveys.title = 'Lời mời dự tiệc';
-    this.surveys.memo = 'Tiệc đám cưới anh Võ Văn Quang ^.^';
+    this.surveys.title = 'Đăng ký sự kiện';
+    this.surveys.memo = 'Đăng ký sự kiện';
     this.api
       .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
         this.surveys,

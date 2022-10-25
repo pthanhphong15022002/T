@@ -246,7 +246,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
   getExtension(thumbnail, ext) {
     if (thumbnail != "" && thumbnail != undefined)
-      return `${environment.urlThumbnail}/${thumbnail}`;
+      return `${environment.urlUpload}/${thumbnail}`;
     else {
       ext = ext.substring(1);
       ext = ext.toLocaleLowerCase();

@@ -10,7 +10,7 @@
                         <div class="d-flex align-items-top">
                             <div class="me-3 w-150px">
                                 <codx-dropdown-calendar [cssClass]="'w-200'" [cssPopup]="'h-400px w-500px border'"
-                                (change)="dateChange($event)"></codx-dropdown-calendar>
+                                    (change)="dateChange($event)"></codx-dropdown-calendar>
                             </div>
                             <div class="me-3 left-5">
                                 <div class="d-flex flex-column mb-3" #Organize>
@@ -22,8 +22,7 @@
                                         </codx-input>
                                         <div class="organize left-5">
                                             <codx-input class="form-control" type="combobox" field="Organize"
-                                                [refValue]="cbb"
-                                                (valueChange)="valueChange($event, 'Organize')">
+                                                [refValue]="cbb" (valueChange)="valueChange($event, 'Organize')">
                                             </codx-input>
                                         </div>
                                     </div>
@@ -168,8 +167,8 @@
                                     <div class="top-pic w-100">
                                         <div>
                                             <codx-img [objectId]="lstRate[1]?.userID"
-                                                [objectName]="lstRate[1]?.employeeName" objectType="AD_Users"
-                                                width="40">
+                                                [objectName]="lstRate[1]?.employeeName" objectType="AD_Users" width="40"
+                                                *ngIf="lstRate[1]?.userID">
                                             </codx-img>
                                         </div>
                                     </div>
@@ -184,7 +183,8 @@
                                     <div class="top-pic w-100">
                                         <div>
                                             <codx-img [width]="50" [objectId]="lstRate[0]?.userID"
-                                                [objectName]="lstRate[0]?.employeeName" objectType="AD_Users">
+                                                [objectName]="lstRate[0]?.employeeName" objectType="AD_Users"
+                                                *ngIf="lstRate[0]?.userID">
                                             </codx-img>
                                         </div>
                                     </div>
@@ -199,7 +199,8 @@
                                     <div class="top-pic w-100">
                                         <div>
                                             <codx-img [width]="40" [objectId]="lstRate[2]?.userID"
-                                                [objectName]="lstRate[2]?.employeeName" objectType="AD_Users">
+                                                [objectName]="lstRate[2]?.employeeName" objectType="AD_Users"
+                                                *ngIf="lstRate[2]?.userID">
                                             </codx-img>
                                         </div>
                                     </div>
@@ -230,7 +231,7 @@
     <div class="d-flex align-items-center user-card list-item mb-4" (click)="openViewDetailCoins(item?.userID)">
         <div class="symbol symbol-40 symbol-circle with-number me-4">
             <codx-img class="symbol symbol-40 symbol-circle me-2" [objectId]="item?.userID"
-                [objectName]="item?.employeeName" objectType="AD_Users">
+                [objectName]="item?.employeeName" objectType="AD_Users" *ngIf="item?.userID">
             </codx-img>
             <div *ngIf="item?.rate == 1">
                 <span class="list-number top-premium" style="background-color: palevioletred; color: white;">{{
