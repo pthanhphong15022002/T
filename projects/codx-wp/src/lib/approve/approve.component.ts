@@ -27,6 +27,7 @@ export class ApproveComponent extends UIComponent {
   predicates:string = 'ApproveStatus=@0';
   dataValues:string = '3';
   funcID:string = "";
+  functionName:string = "";
   user: any;
   dataDetail: any;
   option:string = "";
@@ -49,7 +50,7 @@ export class ApproveComponent extends UIComponent {
       value: "3",
       total: 0,
       predicate: "ApproveStatus=@0",
-      datavalue: "3",
+      datavalue: "3;5",
       active: false
     },
     {
@@ -94,20 +95,6 @@ export class ApproveComponent extends UIComponent {
     this.user = this.auth.userValue;
     this.route.params.subscribe((param) => {
       this.funcID = param["funcID"];
-      this.entityName = "WP_News";
-      this.dataValue = this.user.userID;
-      switch (this.funcID) {
-        case "WPT0211":
-          this.predicate = "CreatedBy=@0 && Stop=false";
-          break;
-        case "WPT0212":
-          this.predicate = "Approver=@0 && Stop=false";
-          break;
-        default:
-          this.entityName = 'WP_Comments'
-          this.predicate = "Approver=@0 && Stop=false"
-          break;
-      }
       this.getGridViewSetUp();
       this.loadDataTab(this.predicate, this.dataValue, this.entityName);
       this.detectorRef.detectChanges();
@@ -126,16 +113,28 @@ export class ApproveComponent extends UIComponent {
     }];
   }
 
+  getDataAsync(){
+    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","GetDataApprovalAsync",[this.funcID,"",""]).subscribe((res:any[]) =>{
+      if(res){
+
+      }
+    })
+  }
   getGridViewSetUp() {
     this.cache.functionList(this.funcID).subscribe((func: any) => 
     {
-      this.cache.gridViewSetup(func.formName, func.gridViewName).
+      if(func)
+      {
+        this.functionName = func.customName;
+        this.cache.gridViewSetup(func.formName, func.gridViewName).
         subscribe((grd: any) => {
           if (grd) 
           {
             this.gridViewSetUp = grd;
           }
         });
+      }
+      
     });
   }
   loadDataTab(predicate: string, dataValue: string, entityName: string) {
@@ -268,44 +267,65 @@ export class ApproveComponent extends UIComponent {
     this.loadDataAsync(predicate, dataValue);
   }
 
-  clickMF(event: any, data: any) {
-    switch (event.functionID) {
-      case 'SYS02':
-        this.deletedPost(data);
-        break;
-      case 'SYS03':
-        let option = new DialogModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        if (this.entityName == "WP_News") 
-        {
-          option.IsFull = true;
-          this.callFuc.openForm(PopupEditComponent, 'Cập nhật bài viết', 0, 0, this.funcID, data, '', option);
-        }
-        else {
-          this.api.execSv(this.service, this.assemblyName, "CommentsBusiness", "GetPostByIDAsync", data.recID)
-            .subscribe((res: any) => {
-              if (res) {
-                let obj = {
-                  post: res,
-                  status: 'edit',
-                  headerText: 'Chỉnh sửa bài viết',
-                };
-                let option = new DialogModel();
-                option.DataService = this.view.dataService;
-                option.FormModel = this.view.formModel;
-                this.callfc.openForm(PopupAddPostComponent, '', 700, 550, '', obj, '', option).closed.subscribe((data: any) => {
-                  if (data.result) {
-                    console.log(data);
-                  }
-                })
+  clickMF(event: any, data: any) 
+  {
+    if(event.functionID && event.text)
+    {
+      let moreFuncID = event.functionID;
+      let action = event.text;
+      let headerText = this.functionName + " " + action;
+      switch (moreFuncID) {
+        case 'SYS02':
+          this.deletedPost(data);
+          break;
+        case 'SYS03':
+          let option = new DialogModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          if (this.entityName == "WP_News") 
+          {
+            option.IsFull = true;
+            let popup = this.callFuc.openForm(PopupEditComponent, headerText, 0, 0, this.funcID, data, '', option);
+            popup.closed.subscribe((data: any) => {
+              if (data.event) 
+              {
+                let dataUpdate = data.event;
+                this.view.dataService.update(dataUpdate).subscribe();
               }
             });
-        }
-        break;
-      default:
-        break;
+          }
+          else {
+            this.api.execSv(
+              this.service,
+              this.assemblyName,
+              "CommentsBusiness",
+              "GetPostByIDAsync",
+              data.recID)
+              .subscribe((res: any) => {
+                if (res) {
+                  let obj = {
+                    post: res,
+                    status: 'edit',
+                    headerText: headerText,
+                  };
+                  let option = new DialogModel();
+                  option.DataService = this.view.dataService;
+                  option.FormModel = this.view.formModel;
+                  let popup =  this.callfc.openForm(PopupAddPostComponent,headerText, 700, 550, '', obj, '', option);
+                  popup.closed.subscribe((data: any) => {
+                    if (data.result) {
+                      console.log(data);
+                    }
+                  });
+                }
+              });
+          }
+          break;
+        default:
+          break;
+      }
     }
+    
   }
 
   beforDeletedPost(option: RequestOption, data: any) {
