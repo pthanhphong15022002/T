@@ -217,11 +217,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
           if (
             document
               .getElementsByName('UploadFiles')
-              [i].getAttribute('idbutton') == null
+            [i].getAttribute('idbutton') == null
           ) {
             document
               .getElementsByName('UploadFiles')
-              [i].setAttribute('idbutton', this.idBrowse);
+            [i].setAttribute('idbutton', this.idBrowse);
             break;
           }
         }
@@ -327,7 +327,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (status === 'File uploaded successfully') {
       this.uploadObj.remove(
         this.filesDetails[
-          this.filesList.indexOf(args.currentTarget.parentElement)
+        this.filesList.indexOf(args.currentTarget.parentElement)
         ]
       );
     } else {
@@ -475,7 +475,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         pathFolder,
         pathID
       )
-      .subscribe((item) => {});
+      .subscribe((item) => { });
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async (res) => {
@@ -975,7 +975,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               height: 200, //Kích thước của file ảnh Thum bề dọc
             },
             IsPublic: true,
-            ThumbConstraints:"30,60,120,300,500,600"
+            ThumbConstraints: "30,60,120,300,500,600"
           },
         }
       );
@@ -1013,7 +1013,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             height: 200, //Kích thước của file ảnh Thum bề dọc
           },
           IsPublic: true,
-          ThumbConstraints:"30,60,120,300,500,600"
+          ThumbConstraints: "30,60,120,300,500,600"
         },
       })
     );
@@ -1318,7 +1318,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       });
   }
 
-  closeFileDialog(form): void {}
+  closeFileDialog(form): void { }
 
   arrayBufferToBase64(buffer) {
     var binary = '';
@@ -2806,7 +2806,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
     this.getFolderPath();
-    //console.log(files);
     var addedList = [];
 
     for (var i = 0; i < files.length; i++) {
