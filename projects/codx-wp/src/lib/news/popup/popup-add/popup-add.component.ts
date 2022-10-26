@@ -113,7 +113,6 @@ export class PopupAddComponent implements OnInit {
     });
     let formName = "WPParameters";
     let category = "1";
-    this.getParameterAsync(formName,category);
     this.initForm();
   }
 
@@ -201,11 +200,8 @@ export class PopupAddComponent implements OnInit {
       .subscribe(async (res: any) => {
         if (res) {
           let result = res;
-          if(this.newsType == this.NEWSTYPE.POST){
-            this.fileUpload.push(this.fileImage);
-          }
-          else(this.newsType == this.NEWSTYPE.VIDEO)
-          {
+          this.fileUpload.push(this.fileImage);
+          if(this.newsType == this.NEWSTYPE.VIDEO){
             this.fileUpload.push(this.fileVideo);
           }
           if (this.fileUpload.length > 0) {
@@ -276,33 +272,28 @@ export class PopupAddComponent implements OnInit {
       )
       .subscribe(async (res: any) => {
         if (res) {
-          // let result = res;
-          // if(this.newsType == this.NEWSTYPE.POST){
-          //   this.fileUpload.push(this.fileImage);
-          // }
-          // else(this.newsType == this.NEWSTYPE.VIDEO)
-          // {
-          //   this.fileUpload.push(this.fileVideo);
-          // }
-          // if (this.fileUpload.length > 0) {
-          //   this.codxATM.objectId = result.recID;
-          //   this.codxATM.fileUploadList = this.fileUpload;
-          //   (await this.codxATM.saveFilesObservable()).subscribe(
-          //     (res2: any) => {
-          //       if (res2) {
-          //         this.notifSV.notifyCode('SYS006');
-          //         this.dialogRef.close(result);
-          //       }
-          //     }
-          //   );
-          // }
-          // else
-          // {
-          //   this.notifSV.notifyCode('SYS006');
-          //   this.dialogRef.close(result);
-          // }
-
-          this.dialogRef.close(res);
+          let result = res;
+          this.fileUpload.push(this.fileImage);
+          if(this.newsType == this.NEWSTYPE.VIDEO){
+            this.fileUpload.push(this.fileVideo);
+          }
+          if (this.fileUpload.length > 0) {
+            this.codxATM.objectId = result.recID;
+            this.codxATM.fileUploadList = this.fileUpload;
+            (await this.codxATM.saveFilesObservable()).subscribe(
+              (res2: any) => {
+                if (res2) {
+                  this.notifSV.notifyCode('SYS006');
+                  this.dialogRef.close(result);
+                }
+              }
+            );
+          }
+          else
+          {
+            this.notifSV.notifyCode('SYS006');
+            this.dialogRef.close(result);
+          }
         }
         else
         {

@@ -77,12 +77,12 @@
       </div>
       <div class="form-group" *ngIf="stepType != 'P'">
         <codx-label
-          name="StepName2"
+          name="StepName"
           [formModel]="form.formModel"
           default="Tên bước công đoạn"
         ></codx-label>
         <codx-input
-          field="stepName2"
+          field="stepName"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="valueChange($event)"

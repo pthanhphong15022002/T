@@ -89,6 +89,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   //#region method
 
   async saveData() {
+    this.processSteps.owners = this.owners;
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -108,7 +109,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     if (this.action == 'edit') {
     } else {
       op.method = 'AddProcessStepAsync';
-      data = [this.processSteps];
+      data = [this.processSteps ,this.owners];
     }
 
     op.data = data;
@@ -127,7 +128,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     //       } else this.dialog.close();
     //     });
     // } else {
-    this.bpService.addProcessStep(this.processSteps).subscribe((data) => {
+    this.bpService.addProcessStep([this.processSteps,this.owners]).subscribe((data) => {
       if (data) {
         this.dialog.close(data);
       } else this.dialog.close();
@@ -212,13 +213,14 @@ export class PopupAddProcessStepsComponent implements OnInit {
     if (!e || e?.data.length == 0) return;
     var dataSelected = e?.data;
     dataSelected.forEach((dt) => {
-      var index = this.owners.findIndex((obj) => obj.objectID == dt.objectID);
+      var index = -1;
+      if (this.owners.length > 0)
+        index = this.owners.findIndex((obj) => obj.objectID == dt.id);
       if (index == -1) {
         var owner = new BP_ProcessOwners();
         owner.objectType = dt.objectType;
-        owner.objectID = dt.objectID;
-        owner.processID = this.processSteps.processID;
-        owner.stepID = this.processSteps.recID;
+        owner.objectID = dt.id;
+        owner.rAIC = 'R';
         this.owners.push(owner);
       }
     });

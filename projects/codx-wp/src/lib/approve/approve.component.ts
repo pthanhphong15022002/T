@@ -177,14 +177,19 @@ export class ApproveComponent extends UIComponent {
       let oldValue = event.oldValue;
       let newValue = event.newValue;
       let data = event.data;
-      this.tabAsside.forEach((e:any) => {
-        if(e.value == oldValue){
+      this.tabAsside.map((e:any) => {
+        if(e.value == oldValue)
+        {
           e.total = e.total - 1;
+          return ;
         }
+      });
+      this.tabAsside.map((e:any) => {
         if(e.value == newValue){
           e.total = e.total + 1;
+          return;
         }
-      })
+      });
       this.view.dataService.update(data).subscribe();
       this.detectorRef.detectChanges();
     }

@@ -83,8 +83,6 @@ export class BP_ProcessRevisions{
 export class BP_ProcessOwners {
   id : string ;
   recID : string ;
-  processID: string;
-  stepID : string ;
   objectType: string ;
   objectID :string ;
   rAIC :string ;
