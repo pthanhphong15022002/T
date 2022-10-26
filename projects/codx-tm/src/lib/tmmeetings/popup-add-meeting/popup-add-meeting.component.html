@@ -279,7 +279,18 @@
       </ng-container> -->
     </div>
   </ng-container>
-  <div class="py-2 mt-2">
+  <ng-container >
+    <div class="d-flex align-items-center justify-content-between mt-4" *ngIf="showLabelAttachment"
+    style="float: left; clear: left">
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+      <div class="fw-bold text-primary">
+        <codx-label name="lblAttachments" [formModel]="form.formModel" default="Tài liệu đính kèm">
+        </codx-label>
+      </div>
+    </div>
+  </div>
+  <div>
     <codx-attachment
       #attachment
       [objectType]="dialog.formModel.entityName"
@@ -299,6 +310,7 @@
     >
     </codx-attachment>
   </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #tabResources>

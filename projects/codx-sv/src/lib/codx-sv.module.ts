@@ -18,6 +18,7 @@ import { HomeComponent } from './home/home.component';
 import { AddSurveyComponent } from './add-survey/add-survey.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
+import { LayoutHomeComponent } from './_layout-home/layout-home.component';
 
 export const routes: Routes = [
   {
@@ -25,8 +26,18 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'surveys/:funcID',
+        path: 'pop-add-survey',
         component: AddSurveyComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutHomeComponent,
+    children: [
+      {
+        path: 'surveys/:funcID',
+        component: HomeComponent,
       },
     ],
   },
@@ -34,6 +45,7 @@ export const routes: Routes = [
 
 const Component: Type<any>[] = [
   LayoutComponent,
+  LayoutHomeComponent,
   HomeComponent,
   AddSurveyComponent,
 ];
@@ -62,10 +74,10 @@ export class CodxSVModule {
   ): ModuleWithProviders<CodxCoreModule> {
     return {
       ngModule: CodxCoreModule,
-      providers: [ 
+      providers: [
         HttpClientModule,
         { provide: EnvironmentConfig, useValue: config },
       ],
     };
   }
-}   
+}

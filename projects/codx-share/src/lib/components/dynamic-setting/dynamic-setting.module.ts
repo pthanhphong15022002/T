@@ -12,6 +12,7 @@ import { GroupPipe } from './pipes/group-filter.pipe';
 import { FormatPipe } from './pipes/format-string.pipe';
 import { SubCategoryComponent } from './sub-category/sub-category.component';
 import { InputTypePipe } from './pipes/input-type.pipe';
+import { ShareSettingPipe } from './pipes/shareSetting.pipe';
 
 export const routes: Routes = [
   {
@@ -32,7 +33,12 @@ export const routes: Routes = [
 
 const T_Component: Type<any>[] = [CatagoryComponent, SubCategoryComponent];
 
-const T_Pipe: Type<any>[] = [GroupPipe, FormatPipe, InputTypePipe];
+const T_Pipe: Type<any>[] = [
+  GroupPipe,
+  FormatPipe,
+  InputTypePipe,
+  ShareSettingPipe,
+];
 
 @NgModule({
   declarations: [T_Component, T_Pipe],

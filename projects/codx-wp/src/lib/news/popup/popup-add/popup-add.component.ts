@@ -113,7 +113,6 @@ export class PopupAddComponent implements OnInit {
     });
     let formName = "WPParameters";
     let category = "1";
-    this.getParameterAsync(formName,category);
     this.initForm();
   }
 
@@ -201,11 +200,8 @@ export class PopupAddComponent implements OnInit {
       .subscribe(async (res: any) => {
         if (res) {
           let result = res;
-          if(this.newsType == this.NEWSTYPE.POST){
-            this.fileUpload.push(this.fileImage);
-          }
-          else(this.newsType == this.NEWSTYPE.VIDEO)
-          {
+          this.fileUpload.push(this.fileImage);
+          if(this.newsType == this.NEWSTYPE.VIDEO){
             this.fileUpload.push(this.fileVideo);
           }
           if (this.fileUpload.length > 0) {
@@ -277,11 +273,8 @@ export class PopupAddComponent implements OnInit {
       .subscribe(async (res: any) => {
         if (res) {
           let result = res;
-          if(this.newsType == this.NEWSTYPE.POST){
-            this.fileUpload.push(this.fileImage);
-          }
-          else(this.newsType == this.NEWSTYPE.VIDEO)
-          {
+          this.fileUpload.push(this.fileImage);
+          if(this.newsType == this.NEWSTYPE.VIDEO){
             this.fileUpload.push(this.fileVideo);
           }
           if (this.fileUpload.length > 0) {
@@ -295,6 +288,11 @@ export class PopupAddComponent implements OnInit {
                 }
               }
             );
+          }
+          else
+          {
+            this.notifSV.notifyCode('SYS006');
+            this.dialogRef.close(result);
           }
         }
         else

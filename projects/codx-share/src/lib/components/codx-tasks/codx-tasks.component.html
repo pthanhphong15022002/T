@@ -333,7 +333,7 @@
   </div>
   <ng-template #popDetailPriority>
     <span>
-      <codx-label name="Priority" [formModel]="view.formModel" default="Độ ưu tiên:"></codx-label>
+      <codx-label fiedName="lblPriority" [formModel]="view.formModel" default="Độ ưu tiên:"></codx-label>
     </span><span>
       {{ data?.priority | vll: vllPriority:"text" | async }}
     </span>
