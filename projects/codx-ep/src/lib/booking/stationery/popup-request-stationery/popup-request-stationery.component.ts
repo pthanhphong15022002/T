@@ -263,7 +263,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.groupByWareHouse();
     this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAddNew, null, null, this.lstStationery];
+    //option.data = [itemData, this.isAddNew, null, null, this.lstStationery];
+    option.data = [itemData, this.isAddNew, null, this.lstStationery, null];
     return true;
   }
 
@@ -363,10 +364,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   addQuota() {
     this.cart.map((item) => {
-      this.lstStationery.push({
-        id: item.resourceID,
-        quantity: item?.quantity * this.qtyEmp,
-      });
+      // this.lstStationery.push({
+      //   id: item.resourceID,
+      //   quantity: item?.quantity * this.qtyEmp,
+      // });
+      this.lstStationery.push(item);
     });
 
     return this.lstStationery;
