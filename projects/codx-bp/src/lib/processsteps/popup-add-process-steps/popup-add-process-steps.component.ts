@@ -73,15 +73,12 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     if (this.stepType) this.processSteps.stepType = this.stepType;
-    // this.stepType = 'T'; //thêm để test
+   
     this.dialog = dialog;
 
     this.funcID = this.dialog.formModel.funcID;
     this.title = this.titleActon;
 
-    // this.cache.gridViewSetup("BPTasks","grvBPTasks").subscribe(res=>{
-    //   this.grvSetup =res
-    // })
   }
 
   ngOnInit(): void {}
@@ -231,36 +228,16 @@ export class PopupAddProcessStepsComponent implements OnInit {
         owner.objectID = dt.id;
         owner.rAIC = 'R';
         this.owners.push(owner);
-        switch (dt.objectType) {
-          case 'U':
-            listUser.push(owner.objectType);
-            break;
-          case 'O':
-          case 'D':
-            //lam sau 
-            break ;
-        }
+        this.listOwnerDetails.push({
+          id: dt.id,
+          name: dt.text,
+        });
       }
     });
-    this.getListUser(listUser);
   }
   onDeleteOwner(objectID, index) {
     this.listOwnerDetails.splice(index, 1);
     var i = this.owners.findIndex((x) => x.objectID == objectID);
     if (i != -1) this.owners.slice(i, 1);
-  }
-
-  getListUser(listUser) {
-    this.api
-      .execSv<any>(
-        'HR',
-        'ERM.Business.HR',
-        'EmployeesBusiness',
-        'GetListEmployeesByUserIDAsync',
-        JSON.stringify(listUser.split(';'))
-      )
-      .subscribe((res) => {
-        this.listOwnerDetails = this.listOwnerDetails.concat(res);
-      });
   }
 }
