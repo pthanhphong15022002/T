@@ -278,6 +278,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           switch (data.stepType) {
             case 'P':
               this.view.dataService.delete(data);
+              this.listPhaseName.splice(data.stepNo-1,1)
               break;
             case 'A':
               this.view.dataService.data.forEach((obj) => {
