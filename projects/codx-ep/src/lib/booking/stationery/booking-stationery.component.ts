@@ -139,7 +139,7 @@ export class BookingStationeryComponent
         this.funcID,
         {
           isAddNew: true,
-          formModel: this.view?.formModel,
+          formModel: this.formModel,
           option: option,
           title: this.popupTitle,
         },
@@ -165,7 +165,7 @@ export class BookingStationeryComponent
         this.funcID,
         {
           isAddNew: false,
-          formModel: this.view?.formModel,
+          formModel: this.formModel,
           option: option,
           title:this.popupTitle,
         },

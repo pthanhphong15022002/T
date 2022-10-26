@@ -22,6 +22,7 @@ import {
   UserModel,
   AuthStore,
   RequestModel,
+  CRUDService,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -80,17 +81,18 @@ export class PopupRequestStationeryComponent extends UIComponent {
   qtyEmp: number = 1;
   title: '';
   dialogAddBookingStationery: FormGroup;
+  returnData;
 
   constructor(
     private injector: Injector,
     private auth: AuthStore,
     private epService: CodxEpService,
     private notificationsService: NotificationsService,
-    @Optional() dialogRef: DialogRef,
+    @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
     super(injector);
-    this.dialog = dialogRef;
+    this.dialog = dialog;
     this.formModel = data?.data?.formModel;
     this.funcID = this.formModel?.funcID;
     this.data = data?.data?.option?.DataService.dataSelected || {};
@@ -115,7 +117,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     });
 
     this.initForm();
-    this.filterStationery();
 
     if (!this.isAddNew) {
       this.radioPersonalCheck = true;
@@ -157,6 +158,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogAddBookingStationery = item;
+        this.dialogAddBookingStationery.addControl(
+          'recID',
+          new FormControl(this.data.recID)
+        );
         if (this.data) {
           if (this.isAddNew) {
             this.dialogAddBookingStationery.patchValue({
@@ -256,13 +261,13 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let itemData = this.dialogAddBookingStationery.value;
     this.addQuota();
     this.groupByWareHouse();
-
+    this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
     option.methodName = 'AddEditItemAsync';
-    option.data = [itemData, this.isAddNew, null, this.lstStationery, null];
+    option.data = [itemData, this.isAddNew, null, null, this.lstStationery];
     return true;
   }
 
-  onSaveForm() {
+  onSaveForm(approval: boolean = false) {
     if (this.dialogAddBookingStationery.invalid == true) {
       this.epService.notifyInvalid(
         this.dialogAddBookingStationery,
@@ -270,9 +275,48 @@ export class PopupRequestStationeryComponent extends UIComponent {
       );
     }
     this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), 0)
+      .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe((res) => {
-        this.dialog.close();
+        debugger;
+        if (res.save || res.update) {
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if (approval) {
+            this.epService
+              .getCategoryByEntityName(this.formModel.entityName)
+              .subscribe((category: any) => {
+                this.epService
+                  .release(
+                    this.returnData,
+                    category.processID,
+                    'EP_Bookings',
+                    this.formModel.funcID
+                  )
+                  .subscribe((res) => {
+                    if (res?.msgCodeError == null && res?.rowCount) {
+                      this.notificationsService.notifyCode('ES007');
+                      this.returnData.status = '3';
+                      (this.dialog.dataService as CRUDService)
+                        .update(this.returnData)
+                        .subscribe();
+                      this.dialog && this.dialog.close();
+                    } else {
+                      this.notificationsService.notifyCode(res?.msgCodeError);
+                      // Thêm booking thành công nhưng gửi duyệt thất bại
+                      this.dialog && this.dialog.close();
+                    }
+                  });
+              });
+            this.dialog && this.dialog.close();
+          } else {
+            this.dialog && this.dialog.close();
+          }
+        } else {
+          return;
+        }
       });
   }
 
@@ -319,8 +363,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   addQuota() {
     this.cart.map((item) => {
-      (item.quantity = item?.quantity * this.qtyEmp),
-        this.lstStationery.push(item);
+      this.lstStationery.push({
+        id: item.resourceID,
+        quantity: item?.quantity * this.qtyEmp,
+      });
     });
 
     return this.lstStationery;
