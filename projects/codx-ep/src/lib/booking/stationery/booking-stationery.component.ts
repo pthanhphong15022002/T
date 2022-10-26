@@ -181,9 +181,9 @@ export class BookingStationeryComponent
       );
     });
   }
-}
-  setPopupTitle(mfunc){
-    this.popupTitle = mfunc + " " + this.funcIDName;
+  }
+  setPopupTitle(mfunc) {
+    this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
 
   // addNewRequest(evt?) {

@@ -972,7 +972,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     //data?.isblur = true
   }
   //Gửi duyệt
-  release(data: any) {
+  release(data: any,processID:any) {
     this.api
       .execSv(
         this.view.service,
@@ -981,7 +981,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         'ReleaseAsync',
         [
           data?.recID,
-          '3B7EEF22-780C-4EF7-ABA9-BFF0EA7FE9D3',
+          processID,
           this.view.formModel.entityName,
           this.formModel.funcID,
           '<div>' + data?.title + '</div>',
@@ -1064,7 +1064,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         //this.callfunc.openForm();
       } else if (res2?.eSign == false)
         //xét duyệt
-        this.release(datas);
+        this.release(datas,processID);
     });
   }
   handleViewFile(e: any) {
