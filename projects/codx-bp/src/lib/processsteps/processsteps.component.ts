@@ -492,4 +492,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     }
     return false;
   }
+
+  getOwnerID(listOwner){
+    var arrOwner = [] ;
+    listOwner.forEach(x=>arrOwner.push(x?.objectID)) ;
+    return arrOwner.join(";")
+  }
 }

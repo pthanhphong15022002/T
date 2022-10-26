@@ -341,10 +341,10 @@
   >
   </codx-attachment>
 
-  <div class="mt-5">
+  <div class="mt-5" *ngIf="data?.owners">
     <codx-imgs
       [width]="25"
-      objectId="ADMIN;HPHOA;HPHOA1;PMNHI"
+      [objectId]="getOwnerID(data?.owners)"
       objectType="AD_Users"
       [numberImages]="3"
     >
