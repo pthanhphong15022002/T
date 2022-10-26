@@ -27,6 +27,7 @@ import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 import { Equipments } from '../../../models/equipments.model';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
+import { I } from '@angular/cdk/keycodes';
 
 export class Device {
   id;
@@ -184,10 +185,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           ':' +
           ('0' + crrMinute.toString()).slice(-2);
     }
-    this.cache.valueList('CO001').subscribe((res) => {
+    this.cache.valueList('EP009').subscribe((res) => {
       if (res && res?.datas.length > 0) {
-        console.log(res.datas);
-        this.listRoles = res.datas;
+        let tmpArr=[];
+        tmpArr=res.datas;
+        tmpArr.forEach(item=>{
+          if(item.value!='4'){
+            this.listRoles.push(item);
+          }
+        })
+        
         if (this.isAdd) {
           let people = this.authService.userValue;
           this.curUser.userID = people.userID;
@@ -196,12 +203,52 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.curUser.roleType = '1';
           this.curUser.optional = false;
           this.listRoles.forEach(element => {
-            if(element.value=='A'){
+            if(element.value == this.curUser.roleType){
               this.curUser.icon=element.icon;
               this.curUser.roleName=element.text;
             }
           });
           this.changeDetectorRef.detectChanges();
+        }
+        else{
+          this.apiHttpService
+        .callSv(
+          'EP',
+          'ERM.Business.EP',
+          'BookingAttendeesBusiness',
+          'GetAsync',
+          [this.data.recID]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.peopleAttend = res.msgBodyData[0];
+            this.peopleAttend.forEach((people) => {
+              let tempAttender = new BookingAttendees();
+              tempAttender.userID = people.userID;
+              tempAttender.userName = people.userName;
+              tempAttender.status = people.status;
+              tempAttender.roleType = people.roleType;
+              tempAttender.optional = people.optional;
+              this.listRoles.forEach(element => {
+                if(element.value==tempAttender.roleType){
+                  tempAttender.icon=element.icon;
+                  tempAttender.roleName=element.text;
+                }
+              });
+              if (tempAttender.userID != this.authService.userValue.userID) {
+                this.attendeesList.push(tempAttender);
+              }
+              if (tempAttender.userID == this.authService.userValue.userID) {
+                this.curUser = tempAttender;
+              } else if (people.optional == false) {
+                this.lstUser.push(tempAttender);
+              } else {
+                this.lstUserOptional.push(tempAttender);
+              }
+            });
+            this.changeDetectorRef.detectChanges();
+          }
+        });
         }
       }
     });
@@ -307,44 +354,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
     
     if (!this.isAdd) {
-      this.apiHttpService
-        .callSv(
-          'EP',
-          'ERM.Business.EP',
-          'BookingAttendeesBusiness',
-          'GetAsync',
-          [this.data.recID]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.peopleAttend = res.msgBodyData[0];
-            this.peopleAttend.forEach((people) => {
-              let tempAttender = new BookingAttendees();
-              tempAttender.userID = people.userID;
-              tempAttender.userName = people.userName;
-              tempAttender.status = people.status;
-              tempAttender.roleType = people.roleType;
-              tempAttender.optional = people.optional;
-              this.listRoles.forEach(element => {
-                if(element.value=='P'){//sửa thành roleType
-                  tempAttender.icon=element.icon;
-                  tempAttender.roleName=element.text;
-                }
-              });
-              if (tempAttender.userID != this.authService.userValue.userID) {
-                this.attendeesList.push(tempAttender);
-              }
-              if (tempAttender.userID == this.authService.userValue.userID) {
-                this.curUser = tempAttender;
-              } else if (people.optional == false) {
-                this.lstUser.push(tempAttender);
-              } else {
-                this.lstUserOptional.push(tempAttender);
-              }
-            });
-            this.changeDetectorRef.detectChanges();
-          }
-        });
+      
 
       this.apiHttpService
         .callSv('EP', 'ERM.Business.EP', 'BookingItemsBusiness', 'GetAsync', [
@@ -835,7 +845,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempAttender.roleType = '3';
         tempAttender.optional = true;
         this.listRoles.forEach(element => {
-          if(element.value=='P'){//sửa thành roleType
+          if(element.value==tempAttender.roleType){
             tempAttender.icon=element.icon;
             tempAttender.roleName=element.text;
           }
@@ -873,7 +883,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempAttender.roleType = '3';
         tempAttender.optional = false;
         this.listRoles.forEach(element => {
-          if(element.value=='P'){//sửa thành roleType
+          if(element.value==tempAttender.roleType){
             tempAttender.icon=element.icon;
             tempAttender.roleName=element.text;
           }
@@ -964,8 +974,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     
   }
   //////////////////////////
-  attendeesCheckChange(userID:any){
-    
+  attendeesCheckChange(event:any, userID:any){
+    this.attendeesList.forEach(attender=>{
+      if(attender.userID==userID){
+        attender.roleType= event.data
+      }
+    })
   }
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
@@ -978,6 +992,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (res.userID == idUserSelected) 
       {        
         res.roleType = value;
+        this.listRoles.forEach(role=>{
+          if(role?.value==res?.roleType){
+            res.icon=role.icon;
+          }
+        })
       }
     });
     this.changeDetectorRef.detectChanges();

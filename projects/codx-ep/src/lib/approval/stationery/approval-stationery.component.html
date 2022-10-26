@@ -38,6 +38,7 @@
     [titleLine]="2"
     [dataItem]="data"
     [formModel]="view.formModel"
+    (changeDataMF)="changeDataMF($event, data)"
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
     [dataItem]="data"
