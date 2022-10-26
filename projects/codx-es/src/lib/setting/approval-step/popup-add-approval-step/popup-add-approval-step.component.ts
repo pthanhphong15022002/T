@@ -177,7 +177,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
               this.confirmControl = element?.confirmControl ?? '0';
               this.allowEditAreas = element?.allowEditAreas ?? false;
 
-              if (element.roleType == 'PE') element.write = true;
+              if (element.roleType == 'PA') element.write = true;
               else element.write = false;
 
               element.delete = true;

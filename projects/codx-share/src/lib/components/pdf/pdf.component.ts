@@ -76,6 +76,7 @@ export class PdfComponent
   @Input() inputUrl = null;
   @Input() transRecID = null;
   @Input() oSignFile = {};
+  @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
@@ -205,6 +206,13 @@ export class PdfComponent
   hideThumbnail: boolean = false;
 
   onInit() {
+    // if (this.isPublic) {
+    //   this.headerRightName = [
+    //     { text: 'Thông tin người kí' },
+    //     { text: 'Trao đổi' },
+    //     { text: 'Hướng dẫn ký số' },
+    //   ];
+    // }
     if (this.inputUrl == null) {
       this.esService.getSignFormat().subscribe((res: any) => {
         this.signPerRow = res.SignPerRow;
@@ -385,6 +393,8 @@ export class PdfComponent
   }
 
   goToSelectedAnnotation(area: tmpSignArea) {
+    console.log('area', area);
+
     if (this.curPage != area.location.pageNumber + 1) {
       this.curPage = area.location.pageNumber + 1;
     }
@@ -1091,40 +1101,37 @@ export class PdfComponent
   }
   changeSignature_StampImg(area: tmpSignArea) {
     switch (area.labelType) {
-      case 'S1':
-        if (!this.signerInfo?.signature1) {
-          // thiet lap chu ki nhay
-          let setupShowForm = new SetupShowSignature();
-          setupShowForm.showSignature1 = true;
-          this.addSignature(setupShowForm);
-          return;
-        }
+      case 'S1': {
+        // thiet lap chu ki nhay
+        let setupShowForm = new SetupShowSignature();
+        setupShowForm.showSignature1 = true;
+        this.addSignature(setupShowForm);
+        return;
         this.url = this.signerInfo?.signature1
           ? this.signerInfo?.signature1
           : '';
         break;
-      case 'S2':
-        if (!this.signerInfo?.signature2) {
-          // thiet lap chu ki nhay
-          let setupShowForm = new SetupShowSignature();
-          setupShowForm.showSignature2 = true;
-          this.addSignature(setupShowForm);
-          return;
-        }
+      }
+      case 'S2': {
+        // thiet lap chu ki nhay
+        let setupShowForm = new SetupShowSignature();
+        setupShowForm.showSignature2 = true;
+        this.addSignature(setupShowForm);
+        return;
         this.url = this.signerInfo?.signature2
           ? this.signerInfo?.signature2
           : '';
         break;
-      case 'S3':
-        if (!this.signerInfo?.stamp) {
-          // thiet lap con dau
-          let setupShowForm = new SetupShowSignature();
-          setupShowForm.showStamp = true;
-          this.addSignature(setupShowForm);
-          return;
-        }
+      }
+      case 'S3': {
+        // thiet lap con dau
+        let setupShowForm = new SetupShowSignature();
+        setupShowForm.showStamp = true;
+        this.addSignature(setupShowForm);
+        return;
         this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
         break;
+      }
     }
   }
 
@@ -1290,38 +1297,34 @@ export class PdfComponent
       this.holding = type?.value;
       switch (type?.value) {
         case 'S1':
-          if (!this.signerInfo?.signature1) {
-            // thiet lap chu ki nhay
-            let setupShowForm = new SetupShowSignature();
-            setupShowForm.showSignature1 = true;
-            this.addSignature(setupShowForm);
-            return;
-          }
-          this.url = this.signerInfo?.signature1
-            ? this.signerInfo?.signature1
-            : '';
+          // if (!this.signerInfo?.signature1) {
+          //   // thiet lap chu ki nhay
+          //   let setupShowForm = new SetupShowSignature();
+          //   setupShowForm.showSignature1 = true;
+          //   this.addSignature(setupShowForm);
+          //   return;
+          // }
+          this.url = this.signerInfo?.signature1 ?? '';
           break;
         case 'S2':
-          if (!this.signerInfo?.signature2) {
-            // thiet lap chu ki nhay
-            let setupShowForm = new SetupShowSignature();
-            setupShowForm.showSignature2 = true;
-            this.addSignature(setupShowForm);
-            return;
-          }
-          this.url = this.signerInfo?.signature2
-            ? this.signerInfo?.signature2
-            : '';
+          // if (!this.signerInfo?.signature2) {
+          //   // thiet lap chu ki nhay
+          //   let setupShowForm = new SetupShowSignature();
+          //   setupShowForm.showSignature2 = true;
+          //   this.addSignature(setupShowForm);
+          //   return;
+          // }
+          this.url = this.signerInfo?.signature2 ?? '';
           break;
         case 'S3':
-          if (!this.signerInfo?.stamp) {
-            // thiet lap con dau
-            let setupShowForm = new SetupShowSignature();
-            setupShowForm.showStamp = true;
-            this.addSignature(setupShowForm);
-            return;
-          }
-          this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
+          // if (!this.signerInfo?.stamp) {
+          //   // thiet lap con dau
+          //   let setupShowForm = new SetupShowSignature();
+          //   setupShowForm.showStamp = true;
+          //   this.addSignature(setupShowForm);
+          //   return;
+          // }
+          this.url = this.signerInfo?.stamp ?? '';
           break;
 
         case '3':
@@ -1400,7 +1403,7 @@ export class PdfComponent
           );
         } else {
           this.addArea(
-            this.signerInfo.fullName,
+            this.signerInfo.fullName + '-' + type.text,
             'text',
             type?.value,
             true,
