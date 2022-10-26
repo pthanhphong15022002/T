@@ -13,3 +13,8 @@
     z-index: 99;
     box-shadow: 2px 2px 6px #444;
 }
+
+.history-box {
+    max-height: 200px;
+    overflow: auto;
+}

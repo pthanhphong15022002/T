@@ -24,7 +24,7 @@
     <div class="w-150px min-w-150px">
       <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail"
         #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
-        placement="bottom" autoClose="outside">
+        placement="bottom right top" autoClose="outside">
         <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <div class="d-flex">
@@ -180,7 +180,7 @@
 
 <ng-template #popDetailPriority>
   <span>
-    <codx-label name="Priority" [formModel]="formModel" default="Độ ưu tiên:"></codx-label>
+    <codx-label name="lblPriority" [formModel]="formModel" default="Độ ưu tiên:"></codx-label>
   </span><span>
     {{data?.priority | vll: vllPriority:"text" | async}}
   </span>

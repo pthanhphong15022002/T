@@ -144,6 +144,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.resources = [];
     } else if (this.action == 'edit') {
       // this.setTimeEdit();
+      this.showLabelAttachment = this.meeting?.attachments > 0? true : false ;
       this.resources = this.meeting.resources;
       if (this.resources?.length > 0) {
         this.resources.forEach((obj) => this.listUserID.push(obj.resourceID));

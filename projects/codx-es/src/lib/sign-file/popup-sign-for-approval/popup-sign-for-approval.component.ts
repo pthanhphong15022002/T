@@ -115,17 +115,14 @@ export class PopupSignForApprovalComponent extends UIComponent {
           .subscribe((res) => {
             if (res) {
               this.approve(this.mode, this.title, this.subTitle);
-            } else {
-              this.notify.notifyCode('ES014');
             }
           });
-      } else if (
-        this.otpControl == '3' &&
-        this.confirmValue === this.signerInfo.otpPin
-      ) {
-        this.approve(this.mode, this.title, this.subTitle);
-      } else {
-        this.notify.notifyCode('ES014');
+      } else if (this.otpControl == '3') {
+        if (this.confirmValue === this.signerInfo.otpPin) {
+          this.approve(this.mode, this.title, this.subTitle);
+        } else {
+          this.notify.notifyCode('ES014');
+        }
       }
     } else {
       this.notify.notify('Nhập giá trị');

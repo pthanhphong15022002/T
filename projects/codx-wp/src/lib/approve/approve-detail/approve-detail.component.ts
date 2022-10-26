@@ -20,7 +20,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   @Input() entityName: any;
   @Input() formModel : any;
   @Input() dataService:CRUDService;
-  @Output() evtApproval = new EventEmitter();
+  @Output() evtUpdateApproval = new EventEmitter();
   tabAsside = [
     {
       name:"await",
@@ -88,6 +88,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
 
   ngOnInit(): void {
     this.getPostInfor();
+    this.getMorefunction(this.funcID);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -95,12 +96,19 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       this.getPostInfor();
     }
   }
-  getMorefunction(formName:string,gridViewName:string){
-    if(formName && gridViewName){
-      this.cache.moreFunction(formName,gridViewName).subscribe((res:any) =>{
-        this.moreFC = res;
-        this.dt.detectChanges();
-      })
+  getMorefunction(funcID:string){
+    if(funcID){
+      this.cache.functionList(funcID).subscribe((func:any) =>{
+        if(func){
+          let formnName = func.formName;
+          let gridViewName = func.gridViewName;
+          this.cache.moreFunction(formnName,gridViewName).subscribe((moreFunc:any) =>{
+            this.moreFC = moreFunc;
+            console.log(moreFunc)
+            this.dt.detectChanges();
+          });
+        }
+      });
     }
   }
   getPostInfor(){
@@ -123,42 +131,68 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       }
     })
   }
-  clickApprovePost(event:any)
+  clickUpdatePost(action:string)
   {
-    if(event)
-    { let approveStatus = "";
-      switch(event){
+    if(action)
+    { 
+      let recID = this.data.recID;
+      let funcID = this.funcID;
+      let approveStatus = "";
+      let mssgCode = "";
+      switch(action){
         case "WPT02121":
-          approveStatus = "5"
+          approveStatus = "5";
+          mssgCode = "WP005";
+          this.notifySvr.alertCode("WP004").subscribe((evt: any) => {
+            if (evt.event.status == 'Y'){
+              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
+            }
+          });
           break;
         case "WPT02122":
-          approveStatus = "2"
+          approveStatus = "2";
+          mssgCode = "WP009";
+          this.notifySvr.alertCode("WP008").subscribe((evt: any) => {
+            if (evt.event.status == 'Y'){
+              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
+            }
+          });
           break;
         case "WPT02123":
-          approveStatus = "4"
+          approveStatus = "4";
+          mssgCode = "WP007";
+          this.notifySvr.alertCode("WP006").subscribe((evt: any) => {
+            if (evt.event.status == 'Y'){
+              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
+            }
+          });
           break;
         default:
           break;  
       }
-      this.evtApproval.emit({data:this.data,approveStatus:approveStatus});
     }
   }
 
-  approvePost(e:any,data:any,approveStatus:any){
-    if(e.event.status == "Y"){
-      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-        (res) => 
-        {
-          if(res)
+  updateApprovalSatusAsync(recID:string,funcID:string,approveStatus:string,mssgCode:string){
+    if(recID && funcID && approveStatus && mssgCode){
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "UpdateAprovalStatusAsync",
+        [recID,funcID,approveStatus])
+        .subscribe((res:boolean) => 
           {
-            this.data = null;
-            this.tabAsside[0].total--;
-            this.tabAsside[1].total++;
-            this.notifySvr.notifyCode("WP005");
-            this.dt.detectChanges();
+            if(res)
+            {
+              let oldValue = this.data.approveStatus;
+              this.data.approveStatus = approveStatus;
+              this.notifySvr.notifyCode("WP005");
+              this.evtUpdateApproval.emit({data:this.data,oldValue:oldValue,newValue:approveStatus});
+              this.dt.detectChanges();
+            }
           }
-        }
-      );
+        );
     }
   }
 

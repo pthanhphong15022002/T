@@ -64,6 +64,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   peopleAttend = [];
   tempArray = [];
   calendarID: any;
+  popover: any;
+  idUserSelected: string;
   roomCapacity = null;
   returnData: any;
   checkLoopS = true;
@@ -124,7 +126,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   ];
   lstEquipment = [];
 
-  listRoles: any;
+  listRoles = [];
   funcID: string;
   isAdd = false;
   range: any;
@@ -185,6 +187,21 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
         this.listRoles = res.datas;
+        if (this.isAdd) {
+          let people = this.authService.userValue;
+          this.curUser.userID = people.userID;
+          this.curUser.userName = people.userName;
+          this.curUser.status = '1';
+          this.curUser.roleType = '1';
+          this.curUser.optional = false;
+          this.listRoles.forEach((element) => {
+            if (element.value == 'A') {
+              this.curUser.icon = element.icon;
+              this.curUser.roleName = element.text;
+            }
+          });
+          this.changeDetectorRef.detectChanges();
+        }
       }
     });
     this.api
@@ -294,15 +311,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       }
     }
-    if (this.isAdd) {
-      let people = this.authService.userValue;
-      this.curUser.userID = people.userID;
-      this.curUser.userName = people.userName;
-      this.curUser.status = '1';
-      this.curUser.roleType = '1';
-      this.curUser.optional = false;
-      this.changeDetectorRef.detectChanges();
-    }
+
     if (!this.isAdd) {
       this.apiHttpService
         .callSv(
@@ -322,6 +331,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               tempAttender.status = people.status;
               tempAttender.roleType = people.roleType;
               tempAttender.optional = people.optional;
+              this.listRoles.forEach((element) => {
+                if (element.value == 'P') {
+                  //sửa thành roleType
+                  tempAttender.icon = element.icon;
+                  tempAttender.roleName = element.text;
+                }
+              });
               if (tempAttender.userID != this.authService.userValue.userID) {
                 this.attendeesList.push(tempAttender);
               }
@@ -840,6 +856,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempAttender.status = '1';
         tempAttender.roleType = '3';
         tempAttender.optional = true;
+        this.listRoles.forEach((element) => {
+          if (element.value == 'P') {
+            //sửa thành roleType
+            tempAttender.icon = element.icon;
+            tempAttender.roleName = element.text;
+          }
+        });
         this.lstUserOptional.push(tempAttender);
       });
       for (let i = 0; i < this.lstUserOptional.length; ++i) {
@@ -872,6 +895,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempAttender.status = '1';
         tempAttender.roleType = '3';
         tempAttender.optional = false;
+        this.listRoles.forEach((element) => {
+          if (element.value == 'P') {
+            //sửa thành roleType
+            tempAttender.icon = element.icon;
+            tempAttender.roleName = element.text;
+          }
+        });
         this.lstUser.push(tempAttender);
       });
 
@@ -956,6 +986,23 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     });
   }
   //////////////////////////
+  attendeesCheckChange(userID: any) {}
+  showPopover(p, userID) {
+    if (this.popover) this.popover.close();
+    if (userID) this.idUserSelected = userID;
+    p.open();
+    this.popover = p;
+  }
+  selectRoseType(idUserSelected, value) {
+    this.attendeesList.forEach((res) => {
+      if (res.userID == idUserSelected) {
+        res.roleType = value;
+      }
+    });
+    this.changeDetectorRef.detectChanges();
+
+    this.popover.close();
+  }
   eventApply(e) {
     var listUserID = '';
     var listDepartmentID = '';

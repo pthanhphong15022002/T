@@ -139,7 +139,7 @@ export class BookingStationeryComponent
         this.funcID,
         {
           isAddNew: true,
-          formModel: this.view?.formModel,
+          formModel: this.formModel,
           option: option,
           title: this.popupTitle,
         },
@@ -150,33 +150,35 @@ export class BookingStationeryComponent
   }
   edit(evt: any) {
     if (evt) {
-    this.view.dataService.dataSelected = evt;
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      this.callfc.openForm(
-        PopupRequestStationeryComponent,
-        this.popupTitle,
-        700,
-        650,
-        this.funcID,
-        {
-          isAddNew: false,
-          formModel: this.view?.formModel,
-          option: option,
-          title:this.popupTitle,
-        },
-        '',
-        dialogModel
-      );
-    });
+      this.view.dataService.dataSelected = evt;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          this.callfc.openForm(
+            PopupRequestStationeryComponent,
+            this.popupTitle,
+            700,
+            650,
+            this.funcID,
+            {
+              isAddNew: false,
+              formModel: this.formModel,
+              option: option,
+              title: this.popupTitle,
+            },
+            '',
+            dialogModel
+          );
+        });
+    }
   }
-}
-  setPopupTitle(mfunc){
-    this.popupTitle = mfunc + " " + this.funcIDName;
+  setPopupTitle(mfunc) {
+    this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
 
   // addNewRequest(evt?) {

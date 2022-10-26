@@ -63,8 +63,9 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   fieldValue = '';
   listCombobox = {};
   showInput = true;
-  titleAction=''
-
+  titleAction = '';
+  verifyName = '';
+  approveName = '';
   constructor(
     private authStore: AuthStore,
     private cache: CacheService,
@@ -93,9 +94,9 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res && res.stop) {
           this.showInput = false;
-          if(this.action=='add'|| this.action=='copy'){
-            this.data.taskGroupID ='' ;
-            this.taskGroups.taskGroupID =''
+          if (this.action == 'add' || this.action == 'copy') {
+            this.data.taskGroupID = '';
+            this.taskGroups.taskGroupID = '';
           }
         } else {
           this.showInput = true;
@@ -122,6 +123,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     this.changDetec.detectChanges();
     // this.openForm(this.taskGroups, false);
     this.getGridViewSetUp();
+    if (this.action === 'edit') this.valueName();
   }
 
   onDeleteTodo(index) {
@@ -222,17 +224,48 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
         case 'U':
           verifyByType += e[0].objectType;
           verifyBy += e[0].id;
+          this.api
+            .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUser', verifyBy)
+            .subscribe((res) => {
+              if (res) {
+                console.log(res);
+                this.verifyName = res.userName;
+              }
+            });
           break;
         case 'R':
           verifyByType += e[0].objectType;
           verifyBy += e[0].id;
+          this.api
+            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetOneAsync', verifyBy)
+            .subscribe((res) => {
+              if (res) {
+                console.log(res);
+                this.verifyName = res.roleName;
+              }
+            });
           break;
         case 'P':
           verifyByType += e[0].objectType;
           verifyBy += e[0].id;
+          this.api
+            .execSv<any>(
+              'HR',
+              'HR',
+              'PositionsBusiness',
+              'GetOneAsync',
+              verifyBy
+            )
+            .subscribe((res) => {
+              if (res) {
+                console.log(res);
+                this.verifyName = res.positionName;
+              }
+            });
           break;
         case 'TL':
           verifyByType += e[0].objectType;
+          this.verifyName = verifyByType;
           break;
       }
       if (verifyByType) this.taskGroups.verifyByType = verifyByType;
@@ -241,21 +274,53 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       switch (e[0].objectType) {
         case 'S':
           approveBy += e[0].objectType;
+          this.approveName = approveBy;
           break;
         case 'R':
           approveBy += e[0].objectType;
           approves += e[0].id;
+          this.api
+            .execSv<any>('SYS', 'AD', 'RolesBusiness', 'GetOneAsync', approves)
+            .subscribe((res) => {
+              if (res) {
+                console.log(res);
+                this.approveName = res.roleName;
+              }
+            });
           break;
         case 'P':
           approveBy += e[0].objectType;
           approves += e[0].id;
+          this.api
+            .execSv<any>(
+              'HR',
+              'HR',
+              'PositionsBusiness',
+              'GetOneAsync',
+              approves
+            )
+            .subscribe((res) => {
+              if (res) {
+                console.log(res);
+                this.approveName = res.positionName;
+              }
+            });
           break;
         case 'TL':
           approveBy += e[0].objectType;
+          this.approveName = approveBy;
           break;
         case 'U':
           approveBy += e[0].objectType;
           approves += e[0].id;
+          this.api
+            .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUser', approves)
+            .subscribe((res) => {
+              if (res) {
+                console.log(res);
+                this.approveName = res.userName;
+              }
+            });
           break;
       }
       if (approveBy) {
@@ -265,8 +330,118 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     }
   }
 
-  valueCbx1(e) {
-    console.log(e);
+  valueName() {
+    //verify
+    if (
+      this.taskGroups.verifyByType !== 'R' &&
+      this.taskGroups.verifyByType !== 'P' &&
+      this.taskGroups.verifyByType !== 'U'
+    ) {
+      this.verifyName = this.taskGroups.verifyByType;
+    } else {
+      if (this.taskGroups.verifyByType === 'U') {
+        this.api
+          .execSv<any>(
+            'SYS',
+            'AD',
+            'UsersBusiness',
+            'GetUser',
+            this.taskGroups.verifyBy
+          )
+          .subscribe((res) => {
+            if (res) {
+              console.log(res);
+              this.verifyName = res.userName;
+            }
+          });
+      } else if (this.taskGroups.verifyByType === 'P') {
+        this.api
+          .execSv<any>(
+            'HR',
+            'HR',
+            'PositionsBusiness',
+            'GetOneAsync',
+            this.taskGroups.verifyBy
+          )
+          .subscribe((res) => {
+            if (res) {
+              console.log(res);
+              this.verifyName = res.positionName;
+            }
+          });
+      } else {
+        this.api
+          .execSv<any>(
+            'SYS',
+            'AD',
+            'RolesBusiness',
+            'GetOneAsync',
+            this.taskGroups.verifyBy
+          )
+          .subscribe((res) => {
+            if (res) {
+              console.log(res);
+              this.verifyName = res.roleName;
+            }
+          });
+      }
+    }
+
+    //approve
+    if (
+      this.taskGroups.approveBy !== 'R' &&
+      this.taskGroups.approveBy !== 'P' &&
+      this.taskGroups.approveBy !== 'U'
+    ) {
+      this.approveName = this.taskGroups.approveBy;
+    } else {
+      if (this.taskGroups.approveBy === 'U') {
+        this.api
+          .execSv<any>(
+            'SYS',
+            'AD',
+            'UsersBusiness',
+            'GetUser',
+            this.taskGroups.approvers
+          )
+          .subscribe((res) => {
+            if (res) {
+              console.log(res);
+              this.approveName = res.userName;
+            }
+          });
+      } else if (this.taskGroups.approveBy === 'P') {
+        this.api
+          .execSv<any>(
+            'HR',
+            'HR',
+            'PositionsBusiness',
+            'GetOneAsync',
+            this.taskGroups.approvers
+          )
+          .subscribe((res) => {
+            if (res) {
+              console.log(res);
+              this.approveName = res.positionName;
+            }
+          });
+      } else {
+        this.api
+          .execSv<any>(
+            'SYS',
+            'AD',
+            'RolesBusiness',
+            'GetOneAsync',
+            this.taskGroups.approvers
+          )
+          .subscribe((res) => {
+            if (res) {
+              console.log(res);
+              this.approveName = res.roleName;
+            }
+          });
+      }
+    }
   }
 
   closePanel() {

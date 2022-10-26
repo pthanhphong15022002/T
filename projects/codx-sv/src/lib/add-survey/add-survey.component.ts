@@ -19,7 +19,7 @@ import { SV_Surveys } from '../model/SV_Surveys';
   providers: [RteService, MultiSelectService],
 })
 export class AddSurveyComponent extends UIComponent implements OnInit {
-  surveys: any = new Array();
+  surveys: SV_Surveys = new SV_Surveys();
   formats: any = new Array();
   questions: any = new Array();
   answers: any = new Array();
@@ -51,22 +51,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     rte: { required: [true, 'Enter valid comments'] },
   };
 
-  data: any = [
-    {
-      id: '1',
-      text: 'Mẫu không có tiêu đề',
-      pic: 'javascript',
-      description: 'Mô tả biểu mẫu',
-      answer: [
-        {
-          text: 'A',
-        },
-        {
-          text: 'B',
-        },
-      ],
-    },
-  ];
+  data: any = {
+    text: 'Mẫu không có tiêu đề',
+    description: 'Mô tả biểu mẫu',
+  };
 
   dataAnswer: any = new Array();
 
@@ -83,18 +71,11 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.questions = [
       {
         seqNo: 0,
-        question: 'Bạn tên gì???',
+        question: 'Câu hỏi 1',
         answers: [
           {
             seqNo: 0,
-            answer: 'NVA',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-          {
-            seqNo: 1,
-            answer: 'NVB',
+            answer: 'Tùy chọn 1',
             other: true,
             isColumn: false,
             hasPicture: false,
@@ -103,18 +84,128 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       },
       {
         seqNo: 1,
-        question: 'Bạn ở đâu???',
+        question: 'Câu hỏi 2',
         answers: [
           {
             seqNo: 0,
-            answer: 'VN',
+            answer: 'Tùy chọn 1',
             other: true,
             isColumn: false,
             hasPicture: false,
           },
+        ],
+      },
+      {
+        seqNo: 2,
+        question: 'Câu hỏi 3',
+        answers: [
           {
-            seqNo: 1,
-            answer: 'US',
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 3,
+        question: 'Câu hỏi 4',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 4,
+        question: 'Câu hỏi 5',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 5,
+        question: 'Câu hỏi 6',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 6,
+        question: 'Câu hỏi 7',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 7,
+        question: 'Câu hỏi 8',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 8,
+        question: 'Câu hỏi 9',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 9,
+        question: 'Câu hỏi 10',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+      },
+      {
+        seqNo: 10,
+        question: 'Câu hỏi 11',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
             other: true,
             isColumn: false,
             hasPicture: false,
@@ -122,10 +213,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         ],
       },
     ];
+    this.formats = {
+      item: 'Title',
+      fontStyle: 'Arial',
+      fontSize: '13',
+      fontColor: 'black',
+      fontFormat: 'B',
+    };
   }
 
   onInit(): void {
-    this.add();
+    // this.add();
   }
   valueChange(e) {
     console.log(e);
@@ -149,8 +247,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   add() {
-    this.surveys.title = 'Lời mời dự tiệc';
-    this.surveys.memo = 'Tiệc đám cưới anh Võ Văn Quang ^.^';
+    this.surveys.title = 'Khảo sát địa điểm team building';
+    this.surveys.memo = 'Mẫu không có mô tả';
     this.api
       .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
         this.surveys,
@@ -158,9 +256,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         this.isModeAdd,
       ])
       .subscribe((res) => {
-        debugger;
         if (res) {
         }
+      });
+  }
+
+  scroll(el: HTMLElement) {
+    if (el)
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
       });
   }
 }

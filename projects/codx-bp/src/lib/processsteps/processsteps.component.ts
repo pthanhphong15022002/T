@@ -118,53 +118,18 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
 
-    this.button = {
-      id: 'btnAdd',
-      //setcung tam đoi thuong
-      // P;Phase;A;Activity;T;Task;E;Email;E;Calendar;Q;QuEstionarie;I;Interview;C;Check list
-      items: [
-        {
-          id: 'P',
-          icon: 'icon-list-checkbox',
-          text: 'Phase',
-        },
-        {
-          id: 'A',
-          icon: 'icon-list-checkbox',
-          text: 'Activity',
-        },
-        {
-          id: 'T',
-          icon: 'icon-add_task',
-          text: 'Tasks',
-        },
-        {
-          id: 'E',
-          icon: 'icon-email',
-          text: 'Email',
-        },
-        {
-          id: 'M',
-          icon: 'icon-calendar_today',
-          text: 'Calendar',
-        },
-        {
-          id: 'Q',
-          icon: 'icon-question_answer',
-          text: 'Questionarie',
-        },
-        {
-          id: 'I',
-          icon: 'icon-list-checkbox',
-          text: 'Interview',
-        },
-        {
-          id: 'C',
-          icon: 'icon-list-checkbox',
-          text: 'Check list',
-        },
-      ],
-    };
+    this.bpService
+      .getListFunctionMenuCreatedStepAsync(this.funcID)
+      .subscribe((datas) => {
+        var items = [];
+        if (datas && datas.length > 0) {
+          items = datas;
+        }
+        this.button = {
+          id: 'btnAdd',
+          items: items,
+        };
+      });
   }
 
   ngAfterViewInit(): void {
@@ -310,6 +275,35 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       .delete([data], true, (opt) => this.beforeDel(opt))
       .subscribe((res) => {
         if (res) {
+          switch (data.stepType) {
+            case 'P':
+              this.view.dataService.delete(data);
+              this.listPhaseName.splice(data.stepNo-1,1)
+              break;
+            case 'A':
+              this.view.dataService.data.forEach((obj) => {
+                var index = -1;
+                if (obj.items.length > 0)
+                  index = obj.items?.findIndex((x) => x.recID == data.recID);
+                if (index != -1) obj.items.splice(index, 1);
+              });
+              break;
+            default:
+              this.view.dataService.data.forEach((obj) => {
+                var index = -1;
+                if (obj.items.length > 0)
+                  obj.items.forEach((child) => {
+                    var index = -1;
+                    if (child.items.length > 0)
+                      index = child.items?.findIndex(
+                        (x) => x.recID == data.recID
+                      );
+                    if (index != -1) child.items.splice(index, 1);
+                  });
+              });
+              break;
+          }
+
           this.dataTreeProcessStep = this.view.dataService.data;
           this.changeDetectorRef.detectChanges();
         }
@@ -326,18 +320,31 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
-    this.titleAction = evt.text;
-    if (evt.id == 'btnAdd') this.stepType = 'P';
-    else this.stepType = evt.id;
-    this.add();
-    // switch (evt.id) {
-    //   case 'btnAdd':
-    //   case 'A':
-    //   case 'P':
-    //   case 'Q':
-    //     this.add();
-    //     break;
-    // }
+    if (evt.id == 'btnAdd') {
+      this.stepType = 'P';
+      var p = this.button.items.find((x) => (x.id = this.stepType));
+      if (!p) return;
+      this.titleAction =
+        evt.text +
+        ' ' +
+        p?.text.charAt(0).toLocaleLowerCase() +
+        p?.text.slice(1);
+      this.add();
+    } else {
+      this.stepType = evt.id;
+      var customName = '';
+      this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+        if (mf) {
+          var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+          if (mfAdd) customName = mfAdd?.customName + ' ';
+        }
+        this.titleAction =
+          customName +
+          evt?.text.charAt(0).toLocaleLowerCase() +
+          evt?.text.slice(1);
+        this.add();
+      });
+    }
   }
 
   receiveMF(e: any) {
@@ -362,7 +369,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     }
   }
 
-  
   onActions(e: any) {
     switch (e.type) {
       case 'drop':
@@ -372,11 +378,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onDragDrop(data) {
-  this.api.exec("BP","ProcessStepsBusiness","UpdateProcessStepWithKanbanAsync").subscribe(res=>{
-    if(res){
-      this.view.dataService.update(data) ;
-    }
-  })
+    this.api
+      .exec('BP', 'ProcessStepsBusiness', 'UpdateProcessStepWithKanbanAsync',[data?.recID,data.parentID,null])  //tam truyen stepNo null roi tính sau;
+      .subscribe((res) => {
+        if (res) {
+          ///xử lý sau
+        }
+      });
   }
 
   viewChanged(e) {
@@ -392,26 +400,102 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   //#endregion
-  //view Temp drop
+  //view Temp drop chưa save=== làm sau
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.dataTreeProcessStep, event.previousIndex, event.currentIndex);
+    if(event.previousIndex== event.currentIndex) return ;
+    var ps = this.dataTreeProcessStep[event.previousIndex] ;
+    if(ps){
+       this.bpService.updateStepNo([ps.recID,event.currentIndex]).subscribe(res=>{
+        if(res){
+          var stepNoNew = event.currentIndex +1 ;
+          var stepNoOld = ps.stepNo ;
+          this.dataTreeProcessStep[event.previousIndex].stepNo = stepNoNew ;
+          if(stepNoOld > stepNoNew){
+            this.dataTreeProcessStep.forEach(obj=>{
+              if(obj.recID!=ps.recID && obj.stepNo>=stepNoNew && obj.stepNo< stepNoOld ){
+                obj.stepNo++ ;
+              }
+            })
+          }else{
+            this.dataTreeProcessStep.forEach(obj=>{
+              if(obj.recID!=ps.recID && obj.stepNo<=stepNoNew && obj.stepNo > stepNoOld ){
+                obj.stepNo-- ;
+              }
+            })
+          }
+         
+          moveItemInArray(
+            this.dataTreeProcessStep,
+            event.previousIndex,
+            event.currentIndex
+          );
+          moveItemInArray(
+            this.listPhaseName,
+            event.previousIndex,
+            event.currentIndex
+          );
+          this.view.dataService.data =  this.dataTreeProcessStep ;
+          this.changeDetectorRef.detectChanges();
+        }
+       })
+    }
   }
 
-  dropStepChild(event: CdkDragDrop<string[]>, parentID) {
-    var index = this.data.findIndex((x) => x.id == parentID);
-    this.dataChild = this.data[index].items;
-    moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
+  dropStepChild(event: CdkDragDrop<string[]>, currentID) {
+    if(event.previousIndex== event.currentIndex) return ;
+    var index = this.dataTreeProcessStep.findIndex((x) => x.recID == currentID);
+    if(index==-1) return ;
+    this.dataChild = this.dataTreeProcessStep[index].items;
+   
+    var ps = this.dataChild[event.previousIndex] ;
+    if(ps){
+       this.bpService.updateStepNo([ps.recID,event.currentIndex]).subscribe(res=>{
+        if(res){
+          var stepNoNew = event.currentIndex +1 ;
+          var stepNoOld = ps.stepNo ;
+          this.dataChild[event.previousIndex].stepNo = stepNoNew ;
+          if(stepNoOld > stepNoNew){
+            this.dataChild.forEach(obj=>{
+              if(obj.recID!=ps.recID && obj.stepNo>=stepNoNew && obj.stepNo< stepNoOld ){
+                obj.stepNo++ ;
+              }
+            })
+          }else{
+            this.dataChild.forEach(obj=>{
+              if(obj.recID!=ps.recID && obj.stepNo<=stepNoNew && obj.stepNo > stepNoOld ){
+                obj.stepNo-- ;
+              }
+            })
+          }
+          moveItemInArray(
+            this.dataChild,
+            event.previousIndex,
+            event.currentIndex
+          );
+
+          this.dataTreeProcessStep[index].items =  this.dataChild,
+          this.view.dataService.data =  this.dataTreeProcessStep ;
+          this.changeDetectorRef.detectChanges();
+        }
+       })
+    }
   }
 
   checkAttachment(data) {
     if (data?.attachments > 0) return true;
     if (data?.items.length > 0) {
       var check = false;
-      data?.items.forEach((obj)=>{
-        if (obj.attachments > 0) check= true;
+      data?.items.forEach((obj) => {
+        if (obj.attachments > 0) check = true;
       });
-      return check
+      return check;
     }
     return false;
+  }
+
+  getOwnerID(listOwner){
+    var arrOwner = [] ;
+    listOwner.forEach(x=>arrOwner.push(x?.objectID)) ;
+    return arrOwner.join(";")
   }
 }

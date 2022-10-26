@@ -21,13 +21,20 @@ import {
 } from 'codx-core';
 import { CodxDMService } from '../codx-dm.service';
 import { FolderInfo } from '@shared/models/folder.model';
-import { DialogAttachmentType, FileInfo, ItemInterval } from '@shared/models/file.model';
+import {
+  DialogAttachmentType,
+  FileInfo,
+  ItemInterval,
+} from '@shared/models/file.model';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
 import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
-import { AnimationSettingsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
+import {
+  AnimationSettingsModel,
+  DialogComponent,
+} from '@syncfusion/ej2-angular-popups';
 import { mode } from 'crypto-js';
 
 @Component({
@@ -48,7 +55,7 @@ export class HomeComponent extends UIComponent {
   @ViewChild('view') codxview!: any;
   @ViewChild('Dialog') public Dialog: DialogComponent;
   animationSettings: AnimationSettingsModel = { effect: 'None' };
-  viewActive : any;
+  viewActive: any;
   currView?: TemplateRef<any>;
   path: string;
   button?: ButtonModel;
@@ -65,7 +72,7 @@ export class HomeComponent extends UIComponent {
   titleCreatedBy = 'Người tạo';
   titleCreatedOn = 'Ngày tạo';
   titleLength = 'Dung lượng';
-  titleDisc = "Mô tả";
+  titleDisc = 'Mô tả';
   sortColumn: string;
   sortDirection: string;
   textSearch: string;
@@ -74,7 +81,7 @@ export class HomeComponent extends UIComponent {
   predicates: any;
   values: any;
   searchAdvance: boolean;
-  sys025:any;
+  sys025: any;
   //icon Sort
   itemSelected: any;
   dataFile: any;
@@ -89,7 +96,7 @@ export class HomeComponent extends UIComponent {
   user: any;
   dialog!: DialogRef;
   interval: ItemInterval[];
-item: any;
+  item: any;
 
   // @ViewChild('attachment') attachment: AttachmentComponent
   constructor(
@@ -120,29 +127,16 @@ item: any;
         this.folderService.options.srtDirections = this.sortDirection;
         this.fileService.options.funcID = this.view.funcID;
         this.fileService.options.page = this.dmSV.page;
-        this.fileService
-          .GetFiles(this.dmSV.folderID)
-          .subscribe(async (res) => {
-            if (res != null) {
-              this.dmSV.listFiles = this.dmSV.listFiles.concat(res[0]);
-              this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-              // if (this.sortDirection == null || this.sortDirection == "asc") {
-              //   if (res[0] != null)
-              //     this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
-              //   else
-              //     this.data = this.dmSV.listFolder;
-              // }
-              // else
-              //   this.data = [...this.dmSV.listFiles, ...this.dmSV.listFolder];
-              //this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
-              this.dmSV.totalPage = parseInt(res[1]);
-            }
-           
-            this.changeDetectorRef.detectChanges();
-          });
-      }
-      else
-        this.search(true);
+        this.fileService.GetFiles(this.dmSV.folderID).subscribe(async (res) => {
+          if (res != null) {
+            this.dmSV.listFiles = this.dmSV.listFiles.concat(res[0]);
+            this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
+            this.dmSV.totalPage = parseInt(res[1]);
+          }
+
+          this.changeDetectorRef.detectChanges();
+        });
+      } else this.search(true);
     }
   }
 
@@ -197,70 +191,75 @@ item: any;
     this.path = this.getPath();
     this.button = {
       id: 'btnUpload',
-      text: 'Tải lên'
+      text: 'Tải lên',
     };
 
-    this.route.queryParams
-      .subscribe(params => {
-        if (params?.id) {
-          var dialogModel = new DialogModel();
-          dialogModel.IsFull = true;
-          this.fileService.getFile(params?.id).subscribe(data => {
-            if (data.read) {
-              this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data, this.codxview], "", dialogModel);
-              var files = this.listFiles;
-              if (files != null) {
-                let index = files.findIndex(d => d.recID.toString() === data.recID);
-                if (index != -1) {
-                  files[index] = data;
-                }
-                this.listFiles = files;
-                this.dmSV.ChangeData.next(true);
+    this.route.queryParams.subscribe((params) => {
+      if (params?.id) {
+        var dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        this.fileService.getFile(params?.id).subscribe((data) => {
+          if (data.read) {
+            this.callfc.openForm(
+              ViewFileDialogComponent,
+              data.fileName,
+              1000,
+              800,
+              '',
+              [data, this.codxview],
+              '',
+              dialogModel
+            );
+            var files = this.listFiles;
+            if (files != null) {
+              let index = files.findIndex(
+                (d) => d.recID.toString() === data.recID
+              );
+              if (index != -1) {
+                files[index] = data;
               }
+              this.listFiles = files;
+              this.dmSV.ChangeData.next(true);
             }
-            else {
-              this.notificationsService.notify(this.titleAccessDeniedFile);
-            }
-          });
-        }
+          } else {
+            this.notificationsService.notify(this.titleAccessDeniedFile);
+          }
+        });
       }
-      );
+    });
 
     this.dmSV.isDisableUpload.subscribe((res) => {
-      if (res != null) {
+      if (res) {
         this.button.disabled = res;
         this.changeDetectorRef.detectChanges();
       }
     });
 
-    this.dmSV.isNodeSelect.subscribe(res => {
-      if (res != null) {
+    this.dmSV.isNodeSelect.subscribe((res) => {
+      if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
-          if (res.recID)
-            tree.getCurrentNode(res.recID);
-          else
-            tree.getCurrentNode(res);
+          if (res.recID) tree.getCurrentNode(res.recID);
+          else tree.getCurrentNode(res);
         }
       }
     });
 
-    this.dmSV.isNodeDeleted.subscribe(res => {
+    this.dmSV.isNodeDeleted.subscribe((res) => {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
-
-          //this.dmSV.folderId.next("");
-          //this.dmSV.folderID = "";
+         debugger;
           tree.removeNodeTree(res);
           var breadcumb = [];
           var breadcumbLink = [];
           breadcumb.push(this.dmSV.menuActive.getValue());
-          tree.textField = "folderName";
+          tree.textField = 'folderName';
           var list = tree.arrBreadCumb;
           if (list && list.length > 0) {
-            var index = list.findIndex(x => x.id == res);
-            this.codxview.dataService.data = this.codxview.dataService.data.filter(x=>x.id != res);
+            var index = list.findIndex((x) => x.id == res);
+            this.codxview.dataService.data =
+              this.codxview.dataService.data.filter((x) => x.id != res);
             if (index >= 0) {
               list = list.slice(index + 1);
               if (list.length > 0) {
@@ -270,29 +269,31 @@ item: any;
                   breadcumb.push(list[i].text);
                   breadcumbLink.push(list[i].id);
                 }
-
+              } else {
+                this.dmSV.folderId.next('');
+                this.dmSV.folderID = '';
               }
-              else {
-                this.dmSV.folderId.next("");
-                this.dmSV.folderID = "";
-              }
-              //this.dmSV.page = 1;
-              // this.data = [];
-              // this.getDataFile(this.dmSV.folderID);
-              // this.getDataFolder(this.dmSV.folderID);
               this.dmSV.breadcumbLink = breadcumbLink;
               this.dmSV.breadcumb.next(breadcumb);
             }
           }
+
+          if (breadcumbLink.length <= 1) {
+            this.dmSV.page = 1;
+            this.getDataFolder(this.dmSV.folderID);
+            this.getDataFile(this.dmSV.folderID);
+          }
         }
-        this.data = this.data.filter(x=>x.recID != res);
-        this.view.dataService.data = this.view.dataService.data.filter(x=>x.recID != res);
+        this.data = this.data.filter((x) => x.recID != res);
+        this.view.dataService.data = this.view.dataService.data.filter(
+          (x) => x.recID != res
+        );
         this.changeDetectorRef.detectChanges();
         this._beginDrapDrop();
       }
     });
 
-    this.dmSV.isNodeChange.subscribe(res => {
+    this.dmSV.isNodeChange.subscribe((res) => {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree != null) tree.setNodeTree(res);
@@ -300,12 +301,12 @@ item: any;
       }
     });
 
-    this.dmSV.isSetThumbnailWait.subscribe(item => {
+    this.dmSV.isSetThumbnailWait.subscribe((item) => {
       if (item != null) {
         this.displayThumbnail(item.recID, item.thumbnail);
       }
     });
-    this.dmSV.isRefreshTree.subscribe(res => {
+    this.dmSV.isRefreshTree.subscribe((res) => {
       if (res) {
         var ele = document.getElementsByClassName('collapse');
         for (var i = 0; i < ele.length; i++) {
@@ -322,25 +323,23 @@ item: any;
           ele[0].classList.add('icon-arrow_right');
           ele[0].classList.remove('icon-arrow_drop_down');
         }
-        this.dmSV.folderId.next("");
-        this.dmSV.folderID = "";
+        this.dmSV.folderId.next('');
+        this.dmSV.folderID = '';
         this.dmSV.page = 1;
         this.dmSV.listFolder = this.view.dataService.data;
         this.fileService.options.page = 1;
         this.fileService.options.funcID = this.view.funcID;
-       
-        this.fileService.GetFiles("").subscribe(async res => {
+
+        this.fileService.GetFiles('').subscribe(async (res) => {
           if (res) {
             this.dmSV.listFiles = res[0];
             this.dmSV.totalPage = parseInt(res[1]);
-          }
-          else {
+          } else {
             this.dmSV.listFiles = [];
           }
 
           this.data = [...this.dmSV.listFolder, ...res[0]];
 
-         
           this.changeDetectorRef.detectChanges();
         });
 
@@ -357,22 +356,24 @@ item: any;
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
+        debugger;
         var result = this.dmSV.listFolder;
-        if(this.dmSV.listFiles && this.dmSV.listFiles.length >0)
+        if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
           result = result.concat(this.dmSV.listFiles);
         this.data = result;
-        this.data = [...this.data]
+        this.data = [...this.data];
         this.changeDetectorRef.detectChanges();
       }
     });
     this.dmSV.isAddFolder.subscribe((item) => {
       if (item) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree)
-          tree.setNodeTree(item);
+        if (tree) tree.setNodeTree(item);
         this.changeDetectorRef.detectChanges();
         this.data = [];
         var a = { data: item };
+        if(this.view.dataService.data.length == 0)
+          this.view.dataService.data.push(item);
         // var breadcumb = [];
         // var breadcumbLink = [];
         // tree.textField = "folderName";
@@ -404,27 +405,29 @@ item: any;
         this.changeDetectorRef.detectChanges();
       }
     });
-
   }
-  public trackItem (index: number, item: any) {
-    if(item.folderName)
-      return item.folderName;
+  public trackItem(index: number, item: any) {
+    if (item.folderName) return item.folderName;
     return null;
   }
   classFile(item, className) {
-    if (item.folderName != null)
-      return className;
-    else
-      return `${className} noDrop`;
+    if (item.folderName != null) return className;
+    else return `${className} noDrop`;
   }
 
   _beginDrapDrop() {
     var that = this;
     setTimeout(() => {
-      var root = document.getElementsByClassName("menu-nav");
+      var root = document.getElementsByClassName('menu-nav');
       if (root != null && root.length > 0) {
-        for (let index = 0; index < root[0].getElementsByClassName("menu-item").length; index++) {
-          that.initDrapDropFileFolder(root[0].getElementsByClassName("menu-item")[index]);
+        for (
+          let index = 0;
+          index < root[0].getElementsByClassName('menu-item').length;
+          index++
+        ) {
+          that.initDrapDropFileFolder(
+            root[0].getElementsByClassName('menu-item')[index]
+          );
         }
       }
     }, 1000);
@@ -432,17 +435,16 @@ item: any;
 
   initDrapDropFileFolder(element) {
     var that = this;
-    if (element && !element.getAttribute("_drapdrop")) {
-      element.setAttribute("_drapdrop", "1");
+    if (element && !element.getAttribute('_drapdrop')) {
+      element.setAttribute('_drapdrop', '1');
       var ondragstart = function (event) {
-        var j = JSON.stringify(
-          {
-            "folderName": element.innerText,
-            "recID": element.querySelector("a").classList[0]
-          });
+        var j = JSON.stringify({
+          folderName: element.innerText,
+          recID: element.querySelector('a').classList[0],
+        });
         event.originalEvent.dataTransfer.setData('data', j);
-        event.originalEvent.dataTransfer["simple"] = "filefolder";
-        event.originalEvent.dataTransfer.effectAllowed = "move";
+        event.originalEvent.dataTransfer['simple'] = 'filefolder';
+        event.originalEvent.dataTransfer.effectAllowed = 'move';
       };
       var ondragover = (event) => {
         event.preventDefault();
@@ -457,50 +459,66 @@ item: any;
         //   $(event.currentTarget).css("border-style", "none");
       };
       var ondrop = (event) => {
-
         event.preventDefault();
         event.stopPropagation();
         //  $(event.currentTarget).css("border-style", "none");
-        var s = event.originalEvent.dataTransfer.getData("data");
+        var s = event.originalEvent.dataTransfer.getData('data');
         if (s) {
           var obj = JSON.parse(s);
-          if (obj.recID != element.querySelector("a").classList[0]) {
+          if (obj.recID != element.querySelector('a').classList[0]) {
             if (obj.fileName) {
-              that.dmSV.copyFileTo(obj.recID, obj.fileName, element.querySelector("a").classList[0]);
-            }
-            else {
-              that.dmSV.copyFolderTo(obj.recID, obj.folderName, element.querySelector("a").classList[0]);
+              that.dmSV.copyFileTo(
+                obj.recID,
+                obj.fileName,
+                element.querySelector('a').classList[0]
+              );
+            } else {
+              that.dmSV.copyFolderTo(
+                obj.recID,
+                obj.folderName,
+                element.querySelector('a').classList[0]
+              );
             }
           }
         }
       };
 
-      element.removeEventListener("ondragstart", ondragstart);
-      element.removeEventListener("ondragover", ondragover);
-      element.removeEventListener("ondragleave", ondragleave);
-      element.removeEventListener("ondrop", ondrop);
-      element.addEventListener("ondragstart", ondragstart);
-      element.addEventListener("ondragover", ondragover);
-      element.addEventListener("ondragleave", ondragleave);
-      element.addEventListener("ondrop", ondrop);
+      element.removeEventListener('ondragstart', ondragstart);
+      element.removeEventListener('ondragover', ondragover);
+      element.removeEventListener('ondragleave', ondragleave);
+      element.removeEventListener('ondrop', ondrop);
+      element.addEventListener('ondragstart', ondragstart);
+      element.addEventListener('ondragover', ondragover);
+      element.addEventListener('ondragleave', ondragleave);
+      element.addEventListener('ondrop', ondrop);
     }
   }
 
   fileFolderDropped($event) {
     if ($event.source.recID != $event.target.recID) {
       if ($event.source.fileName) {
-        this.dmSV.copyFileTo($event.source.recID, $event.source.fileName, $event.target.recID);
-      }
-      else {
-        this.dmSV.copyFolderTo($event.source.recID, $event.source.folderName, $event.target.recID);
+        this.dmSV.copyFileTo(
+          $event.source.recID,
+          $event.source.fileName,
+          $event.target.recID
+        );
+      } else {
+        this.dmSV.copyFolderTo(
+          $event.source.recID,
+          $event.source.folderName,
+          $event.target.recID
+        );
       }
     }
   }
 
   fileUploadDropped($event) {
-    if (this.dmSV.idMenuActive == "DMT02" || this.dmSV.idMenuActive == "DMT03") {
+    if (
+      this.dmSV.idMenuActive == 'DMT02' ||
+      this.dmSV.idMenuActive == 'DMT03'
+    ) {
       this.attachment.fileUploadList = [];
-      this.attachment.handleFileInput($event, true).then(r => {
+      this.attachment.handleFileInput($event, true).then((r) => {
         this.attachment.onMultiFileSave();
       });
     }
@@ -533,7 +551,7 @@ item: any;
   }
 
   async saveFile1() {
-    (await (this.attachment1.saveFilesObservable())).subscribe((item) => {
+    (await this.attachment1.saveFilesObservable()).subscribe((item) => {
       console.log(item);
     });
     this.attachment.saveFiles();
@@ -574,15 +592,24 @@ item: any;
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
     let item = $data.data;
+    debugger;
     if (item?.read) {
       if (item.extension) {
         var dialogModel = new DialogModel();
         dialogModel.IsFull = true;
-        this.fileService.getFile(id).subscribe(data => {
-          this.callfc.openForm(ViewFileDialogComponent, data.fileName, 1000, 800, "", [data, this.view?.currentView?.formModel], "", dialogModel);
+        this.fileService.getFile(id).subscribe((data) => {
+          this.callfc.openForm(
+            ViewFileDialogComponent,
+            data.fileName,
+            1000,
+            800,
+            '',
+            [data, this.view?.currentView?.formModel],
+            '',
+            dialogModel
+          );
         });
-      }
-      else {
+      } else {
         var breadcumb = [];
         var breadcumbLink = [];
         this.dmSV.page = 1;
@@ -591,7 +618,7 @@ item: any;
         this.dmSV.listFiles = [];
         var treeView = this.codxview?.currentView?.currentComponent?.treeView;
         if (treeView) {
-          treeView.textField = "folderName";
+          treeView.textField = 'folderName';
           var list = treeView.getBreadCumb(id);
           breadcumb.push(this.dmSV.menuActive.getValue());
           breadcumbLink.push(this.dmSV.idMenuActive);
@@ -603,13 +630,13 @@ item: any;
           this.dmSV.breadcumb.next(breadcumb);
         }
         if (breadcumb.length == 0) {
-          id = ""
+          id = '';
         }
         this.dmSV.folderName = item.folderName;
         this.dmSV.parentFolderId = item.parentId;
         this.dmSV.level = item.level;
         this.dmSV.getRight(item);
-       
+
         this.data = [];
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
@@ -620,24 +647,22 @@ item: any;
           if (res != null) {
             this.dmSV.listFolder = res[0];
             this.listFolders = res[0];
-            this.data =   this.dmSV.listFolder.concat(this.dmSV.listFiles);
+            this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
             var tree = this.codxview?.currentView?.currentComponent?.treeView;
             item.items = [];
-            if (tree)
-              tree.addChildNodes(item, res[0]);
+            if (tree) tree.addChildNodes(item, res[0]);
             this.changeDetectorRef.detectChanges();
             this._beginDrapDrop();
           }
         });
         this.fileService.options.page = 1;
         this.fileService.options.funcID = this.view.funcID;
-        this.fileService.GetFiles(id).subscribe(async res => {
+        this.fileService.GetFiles(id).subscribe(async (res) => {
           if (res != null) {
             this.dmSV.listFiles = res[0];
             this.dmSV.totalPage = parseInt(res[1]);
             this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-          }
-          else {
+          } else {
             this.dmSV.listFiles = [];
           }
 
@@ -647,33 +672,19 @@ item: any;
           // else
           //   this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles,];
 
-         
           this.changeDetectorRef.detectChanges();
         });
       }
-
     } else {
-      if (item?.read)
-        this.notificationsService.notify(this.titleAccessDenied);
-      if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
-        this.dmSV.disableInput.next(true);
-        this.dmSV.disableUpload.next(true);
-      }
-      else {
-        this.dmSV.disableInput.next(false);
-        this.dmSV.disableUpload.next(false);
-      }
+      if (item?.read) this.notificationsService.notify(this.titleAccessDenied);
     }
   }
 
-  loading() {
-
-  }
+  loading() {}
 
   ngAfterViewInit(): void {
-    this.cache.valueList("SYS025").subscribe(item=>{
-      if(item)
-      {
+    this.cache.valueList('SYS025').subscribe((item) => {
+      if (item) {
         this.sys025 = item;
         this.views[0].text = item.datas[3].text;
         this.views[0].icon = item.datas[3].icon;
@@ -690,12 +701,12 @@ item: any;
         this.view.views = this.views;
         this.changeDetectorRef.detectChanges();
       }
-    })
+    });
     this.views = [
       {
         id: '1',
         icon: this.sys025?.datas[3].icon,
-        text: "card",
+        text: 'card',
         type: ViewType.tree_card,
         active: true,
         sameData: true,
@@ -724,7 +735,7 @@ item: any;
       {
         id: '1',
         icon: this.sys025?.datas[4].icon,
-        text: "smallcard",
+        text: 'smallcard',
         type: ViewType.tree_smallcard,
         active: false,
         sameData: true,
@@ -738,7 +749,7 @@ item: any;
       {
         id: '1',
         icon: this.sys025?.datas[0].icon,
-        text: "list",
+        text: 'list',
         type: ViewType.tree_list,
         sameData: true,
         active: false,
@@ -747,7 +758,7 @@ item: any;
           panelRightRef: this.templateRight,
           template2: this.templateList,
           resizable: false,
-        }
+        },
       },
     ];
     this.orgViews = [
@@ -769,7 +780,7 @@ item: any;
       {
         id: '1',
         icon: this.sys025?.datas[3].icon,
-        text: "card",
+        text: 'card',
         type: ViewType.tree_card,
         active: true,
         sameData: true,
@@ -784,7 +795,7 @@ item: any;
       {
         id: '1',
         icon: this.sys025?.datas[4].icon,
-        text: "smallcard",
+        text: 'smallcard',
         type: ViewType.tree_smallcard,
         active: false,
         sameData: true,
@@ -798,7 +809,7 @@ item: any;
       {
         id: '1',
         icon: this.sys025?.datas[0].icon,
-        text: "list",
+        text: 'list',
         type: ViewType.tree_list,
         active: false,
         sameData: true,
@@ -807,12 +818,14 @@ item: any;
           panelRightRef: this.templateRight,
           template2: this.templateList,
           resizable: false,
-        }
-    }];
-    this.viewActive = this.views.filter(x=>x.active == true)[0];
+        },
+      },
+    ];
+    this.viewActive = this.views.filter((x) => x.active == true)[0];
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
+    this.getDataFile('');
 
     //   console.log(this.button);
   }
@@ -820,16 +833,15 @@ item: any;
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
-   
+
     //  this.data = [];
     //  this.changeDetectorRef.detectChanges();
   }
   viewChanging(event) {
-    if(event.text != "Search" && this.view.formModel.funcID != 'DMT02')
-    {
+    if (event.text != 'Search' && this.view.formModel.funcID != 'DMT02') {
       this.data = [];
       this.dmSV.page = 1;
-      var id = !this.dmSV.folderID ? "":this.dmSV.folderID;
+      var id = !this.dmSV.folderID ? '' : this.dmSV.folderID;
       this.getDataFile(id);
     }
   }
@@ -857,7 +869,7 @@ item: any;
     if (this.interval == null) this.interval = [];
     var files = this.dmSV.listFiles;
     var index = setInterval(async () => {
-      this.fileService.UpdateThumbnail(id).subscribe(item => {
+      this.fileService.UpdateThumbnail(id).subscribe((item) => {
         if (item == true) {
           let index = files.findIndex((d) => d.recID.toString() === id);
           if (index != -1) {
@@ -873,7 +885,7 @@ item: any;
             this.interval.splice(indexInterval, 1);
           }
         }
-      })
+      });
       // let url = `${this.dmSV.urlThumbnail}/${thumnbail}`;
       // try {
       //   let blob = await fetch(url).then(r => r.blob());
@@ -915,79 +927,64 @@ item: any;
     this.sortColumn = $event.field;
     this.sortDirection = $event.dir;
     this.dmSV.listFiles = [];
-   
+    this.dmSV.page = 1;
     this.folderService.options.srtColumns = this.sortColumn;
     this.folderService.options.srtDirections = this.sortDirection;
+    this.fileService.options.srtColumns = this.sortColumn;
+    this.fileService.options.srtDirections = this.sortDirection;
     this.fileService.options.funcID = this.view.funcID;
     this.data = [];
-    if (this.dmSV.folderID != "") {
-      this.folderService.getFolders(this.dmSV.folderID).subscribe(async (res) => {
-        if (res != null) {
-          var data = res[0];
-          this.dmSV.listFolder = data;
-        }
-      });
-    }
-
-    this.fileService.options.page = this.dmSV.page;
-    this.fileService
-      .GetFiles(this.dmSV.folderID)
-      .subscribe(async (res) => {
-        if (res != null) {
-          this.dmSV.listFiles = res[0];
-          this.data = this.dmSV.listFolder.concat(res[0]);
-          // if (this.sortDirection == null || this.sortDirection == "asc") {
-          //   //  this.data = [...this.dmSV.listFolder, ...res[0]];
-          //   if (res[0] != null)
-          //     this.data = [...this.dmSV.listFolder, ...res[0]];
-          //   else
-          //     this.data = this.dmSV.listFolder;
-          // }
-          // else
-          //   this.data = [...this.dmSV.listFiles, ...this.dmSV.listFolder];
-          this.dmSV.totalPage = parseInt(res[1]);
-        }
-       
+    this.folderService.getFolders(this.dmSV.folderID).subscribe(async (res) => {
+      if (res) {
+        this.dmSV.listFolder = res[0];
+        this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
         this.changeDetectorRef.detectChanges();
-      });
-    //  console.log($event);
+      }
+    });
+    this.fileService.options.page = this.dmSV.page;
+    this.fileService.GetFiles(this.dmSV.folderID).subscribe((res) => {
+      if (res) {
+        this.dmSV.listFiles = res[0];
+        this.data = this.dmSV.listFolder.concat(res[0]);
+        this.dmSV.totalPage = parseInt(res[1]);
+      }
+
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   getTotalPage(total) {
     let pages = total / this.dmSV.pageSize;
-    if (pages * this.dmSV.pageSize < total)
-      pages++;
+    if (pages * this.dmSV.pageSize < total) pages++;
     this.dmSV.totalPage = pages;
   }
 
   search(isScroll = false) {
-    this.views.forEach(item => {
+    this.views.forEach((item) => {
       item.hide = true;
-      if (item.text == "Search")
-        item.hide = false;
+      if (item.text == 'Search') item.hide = false;
     });
+
     var model = new DataRequest();
     model.funcID = this.view.formModel.funcID;
     model.page = this.dmSV.page;
     model.pageSize = this.dmSV.pageSize;
-    model.entityName = this.view.formModel.entityName;
-    this.fileService.searchFile(this.textSearchAll, model).subscribe(item => {
+    model.entityName = this.view.formModel.entityPer;
+    this.fileService.searchFile(this.textSearchAll, model).subscribe((item) => {
       if (item != null) {
-        if(!isScroll)
-        {
-          var view = this.views.filter(x=>x.text == "Search")[0];
+        if (!isScroll) {
+          var view = this.views.filter((x) => x.text == 'Search')[0];
           view.active = true;
           this.view.viewChange(view);
         }
-       
+
         // this.dmSV.listFiles = item.data;
         this.totalSearch = item.total;
         this.dmSV.listFiles = [...this.dmSV.listFiles, ...item.data];
         this.data = [...this.data, ...this.dmSV.listFiles];
         this.getTotalPage(item.total);
         this.changeDetectorRef.detectChanges();
-      }
-      else {
+      } else {
         //this.dmSV.loadedFile = true;
         this.totalSearch = 0;
         this.dmSV.totalPage = 0;
@@ -997,12 +994,9 @@ item: any;
   }
 
   filterChange($event) {
-    if(!$event)
-    {
+    if (!$event) {
       //alert("aa");
-    }
-    else
-    {
+    } else {
       try {
         this.data = [];
         this.isSearch = true;
@@ -1017,8 +1011,8 @@ item: any;
           var values = $event.values;
           //$event.paras;
           var list = [];
-          var item = new Filters;
-          $event?.filter.forEach(ele => {
+          var item = new Filters();
+          $event?.filter.forEach((ele) => {
             item = ele as Filters;
             list.push(Object.assign({}, item));
           });
@@ -1028,26 +1022,30 @@ item: any;
           this.values = values;
           this.searchAdvance = true;
           //this.search();
-          this.fileService.searchFileAdv(text, predicates, values, this.dmSV.page, this.dmSV.pageSize,this.searchAdvance).subscribe(item => {
-            if (item != null) {
-             
-              this.dmSV.listFiles = item.data;
-              this.totalSearch = item.total;
-              this.data = [...this.data, ...this.dmSV.listFiles];
-              this.getTotalPage(item.total);
-              this.changeDetectorRef.detectChanges();
-            }
-            else {
-             
-              this.totalSearch = 0;
-              this.dmSV.totalPage = 0;
-              this.changeDetectorRef.detectChanges();
-            }
-          });
+          this.fileService
+            .searchFileAdv(
+              text,
+              predicates,
+              values,
+              this.dmSV.page,
+              this.dmSV.pageSize,
+              this.searchAdvance
+            )
+            .subscribe((item) => {
+              if (item != null) {
+                this.dmSV.listFiles = item.data;
+                this.totalSearch = item.total;
+                this.data = [...this.data, ...this.dmSV.listFiles];
+                this.getTotalPage(item.total);
+                this.changeDetectorRef.detectChanges();
+              } else {
+                this.totalSearch = 0;
+                this.dmSV.totalPage = 0;
+                this.changeDetectorRef.detectChanges();
+              }
+            });
         }
-      }
-      catch (ex) {
-       
+      } catch (ex) {
         this.totalSearch = 0;
         this.changeDetectorRef.detectChanges();
         console.log(ex);
@@ -1061,7 +1059,7 @@ item: any;
       this.data = [];
       this.dmSV.listFiles = [];
       this.dmSV.listFolder = [];
-     
+
       if (this.codxview.currentView.viewModel.model != null)
         this.codxview.currentView.viewModel.model.panelLeftHide = true;
       this.isSearch = true;
@@ -1069,33 +1067,26 @@ item: any;
       this.dmSV.page = 1;
       this.fileService.options.page = this.dmSV.page;
       this.textSearchAll = this.textSearch;
-      this.predicates = "FileName.Contains(@0)";
+      this.predicates = 'FileName.Contains(@0)';
       this.values = this.textSearch;
       this.searchAdvance = false;
-     
-      if(this.textSearch == null || this.textSearch == "")
-      {
-        this.views.forEach(item => {
+
+      if (this.textSearch == null || this.textSearch == '') {
+        this.views.forEach((item) => {
           item.active = false;
           item.hide = false;
-          if (item.text == "Search")
-            item.hide = true;
-          if(item.text == this.viewActive.text)
-            item.active = true
+          if (item.text == 'Search') item.hide = true;
+          if (item.text == this.viewActive.text) item.active = true;
         });
-        if(this.view.funcID == "DMT02" || this.view.funcID == "DMT03")
-        {
+        if (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03') {
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
         this.getDataFolder(this.dmSV.folderID);
         this.getDataFile(this.dmSV.folderID);
         this.changeDetectorRef.detectChanges();
-      }
-      else this.search();
-    }
-    catch (ex) {
-     
+      } else this.search();
+    } catch (ex) {
       this.totalSearch = 0;
       this.changeDetectorRef.detectChanges();
       console.log(ex);
@@ -1104,34 +1095,30 @@ item: any;
 
   requestEnded(e: any) {
     this.isSearch = false;
-    if (e.type === "read") {
+    if (e.type === 'read') {
       //this.data = [];
       this.clearWaitingThumbnail();
       // this.dmSV.listFolder = [];
       this.dmSV.listFiles = [];
-      this.fileService.getTotalHdd().subscribe(item => {
+      this.fileService.getTotalHdd().subscribe((item) => {
         //  totalUsed: any;
         // totalHdd: any;
         this.dmSV.updateHDD.next(item);
-      })
+      });
       this.changeDetectorRef.detectChanges();
       this.dmSV.page = 1;
       //this.isSearch = false;
       this.folderService.options.funcID = this.view.funcID;
       if (this.dmSV.idMenuActive != this.view.funcID) {
-        if (e.data != null) {
-          this.data = [...this.data, ...e.data];
+        if (e.data) {
+          this.data = [...e.data, ...this.data];
           this.dmSV.listFolder = e.data;
-        }
-        else
-          this.dmSV.listFolder = [];
-
+          //this.data = this.dmSV.listFolder.concat(this.listFiles);
+        } else this.dmSV.listFolder = [];
       }
-      this.view.views.forEach(item => {
-        if (item.text != "Search")
-          item.hide = false;
-        else
-          item.hide = true;
+      this.view.views.forEach((item) => {
+        if (item.text != 'Search') item.hide = false;
+        else item.hide = true;
       });
 
       if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
@@ -1140,17 +1127,19 @@ item: any;
 
         this.dmSV.deniedRight();
         this.dmSV.disableInput.next(true);
-        this.dmSV.disableUpload.next(true);
-      }
-      else {
-        if (this.codxview?.currentView?.viewModel && this.codxview?.currentView?.viewModel?.model != null)
+        this.button.disabled = true;
+      } else {
+        if (
+          this.codxview?.currentView?.viewModel &&
+          this.codxview?.currentView?.viewModel?.model != null
+        )
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         this.dmSV.parentApproval = false;
         this.dmSV.parentPhysical = false;
         this.dmSV.parentCopyrights = false;
-        this.dmSV.parentApprovers = "";
-        this.dmSV.parentRevisionNote = "";
-        this.dmSV.parentLocation = "";
+        this.dmSV.parentApprovers = '';
+        this.dmSV.parentRevisionNote = '';
+        this.dmSV.parentLocation = '';
         this.dmSV.parentCopyrights = false;
         this.dmSV.parentCreate = true;
         this.dmSV.parentFull = true;
@@ -1162,14 +1151,14 @@ item: any;
         this.dmSV.parentUpload = true;
         this.dmSV.parentUpdate = true;
         this.dmSV.disableInput.next(false);
-        this.dmSV.disableUpload.next(false);
-        //this.data = [...e?.data]
+        this.button.disabled = false;
       }
 
       this.changeDetectorRef.detectChanges();
       this._beginDrapDrop();
       this.dmSV.folderId.next('');
-      this.dmSV.folderID = "";
+      this.dmSV.folderID = '';
+
       this.dmSV.menuIdActive.next(this.view.funcID);
       this.dmSV.idMenuActive = this.view.funcID;
       var breadcumb = [];
@@ -1178,65 +1167,52 @@ item: any;
       this.dmSV.breadcumb.next(breadcumb);
 
       switch (this.view.funcID) {
-        case "DMT05":
+        case 'DMT05':
           breadcumb.push(this.dmSV.titleShareBy);
           break;
-        case "DMT06":
+        case 'DMT06':
           breadcumb.push(this.dmSV.titleRequestShare);
           break;
-        case "DMT07":
+        case 'DMT07':
           breadcumb.push(this.dmSV.titleRequestBy);
           break;
       }
-
+      if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
+        this.dmSV.disableInput.next(true);
+        this.button.disabled = true;
+      } else {
+        this.button.disabled = false;
+        this.dmSV.disableInput.next(false);
+      }
     }
   }
   getDataFile(id: any) {
     this.fileService.options.funcID = this.view.funcID;
     this.dmSV.listFiles = [];
-   
-    // this.data = [];
-    this.changeDetectorRef.detectChanges();
     this.folderService.options.srtColumns = this.sortColumn;
     this.folderService.options.srtDirections = this.sortDirection;
     this.fileService.options.funcID = this.view.funcID;
     this.fileService.options.page = this.dmSV.page;
-    this.fileService
-      .GetFiles(id)
-      .subscribe(async (res) => {
-        if (res != null) {
-          this.dmSV.listFiles = res[0];
-          this.dmSV.totalPage = parseInt(res[1]);
-          this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
-        }
-        else {
-          this.dmSV.listFiles = [];
-        }
-
-        // if (this.sortDirection == null || this.sortDirection == "asc") {
-        //   if (res[0] != null)
-        //     this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
-        //   else
-        //     this.data = this.dmSV.listFolder;
-        // }
-        // else
-        //   this.data = [...this.dmSV.listFolder, ...this.dmSV.listFiles];
-       
+    this.fileService.GetFiles(id).subscribe((res) => {
+      if (res) {
+        this.dmSV.listFiles = res[0];
+        this.dmSV.totalPage = parseInt(res[1]);
+        this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
         this.changeDetectorRef.detectChanges();
-        ScrollComponent.reinitialization();
-      });
+      }
+      ScrollComponent.reinitialization();
+    });
   }
   getDataFolder(id: any) {
     this.dmSV.listFolder = [];
     this.folderService.options.srtColumns = this.sortColumn;
     this.folderService.options.srtDirections = this.sortDirection;
     this.folderService.options.funcID = this.view.funcID;
-    this.folderService.getFolders(id).subscribe(async (res) => {
-      if (res != null) {
-        this.listFolders = res[0];
-        this.data = res[0].concat(this.dmSV.listFiles);
-        //this.data = [...data, ...this.dmSV.listFiles];
+    this.folderService.getFolders(id).subscribe((res) => {
+      if (res) {
         this.dmSV.listFolder = res[0];
+        this.listFolders = res[0];
+        this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
         this.changeDetectorRef.detectChanges();
         this._beginDrapDrop();
       }
@@ -1244,17 +1220,15 @@ item: any;
   }
   public dlgBtnClick = (): void => {
     this.Dialog.hide();
-  }
+  };
   viewFile(e: any) {
     this.dataFile = e;
     this.visible = true;
   }
-  dbView(data:any)
-  {
-    if(data.recID && data.fileName != null)
-    {
+  dbView(data: any) {
+    if (data.recID && data.fileName != null) {
       if (!data.read) {
-        this.notificationsService.notifyCode("DM059");
+        this.notificationsService.notifyCode('DM059');
         return null;
       }
       this.fileService.getFile(data.recID).subscribe((data) => {
