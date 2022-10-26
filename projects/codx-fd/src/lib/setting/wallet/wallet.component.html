@@ -108,8 +108,10 @@
                                             <codx-input type="text" class="form-control w-50px" placeholder=""
                                                 [crrValue]="quantity.DefaultCoins" [disabled]="true">
                                             </codx-input>
-                                            <span class="icon-edit-one text-hover-primary icon-20"
-                                                (click)="openFormChangeCoin(changeCoin, 'DefaultCoins')"></span>
+                                            <div class="w-30px setting-btnright ms-2">
+                                                <span class="icon-edit-one text-hover-primary icon-18"
+                                                    (click)="openFormChangeCoin(changeCoin, 'DefaultCoins')"></span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -135,13 +137,14 @@
                                         <div class="d-flex align-items-center ml-4">
                                             <span class="switch switch-sm ml-3">
                                                 <codx-input type="switch" class="test-check"
-                                                    field="MaxCoinsForEGiftControl"
-                                                    (valueChange)="valueChange($event)"
+                                                    field="MaxCoinsForEGiftControl" (valueChange)="valueChange($event)"
                                                     [checked]="quantity.MaxCoinsForEGiftControl == '0' ? false : true">
                                                 </codx-input>
                                             </span>
-                                            <span class="icon-edit-one text-hover-primary icon-20 w-20px h-20px ml-3"
-                                                (click)="open(content, 2)"></span>
+                                            <div class="w-30px setting-btnright ms-2">
+                                                <span class="icon-edit-one text-hover-primary icon-18"
+                                                    (click)="open(content, 2)"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
@@ -204,8 +207,8 @@
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <span class="switch switch-sm ml-3">
-                                                <codx-input type="switch" class="test-check"
-                                                    field="ActiveCoCoins" (valueChange)="valueChange($event)"
+                                                <codx-input type="switch" class="test-check" field="ActiveCoCoins"
+                                                    (valueChange)="valueChange($event)"
                                                     [checked]="quantity.ActiveCoCoins == '0' ? false : true" label="">
                                                 </codx-input>
                                             </span>
@@ -236,15 +239,17 @@
                                             <codx-input type="text" class="form-control w-50px" [disabled]="true"
                                                 [crrValue]="quantity.DefaultCoCoins" placeholder="">
                                             </codx-input>
-                                            <span class="icon-edit-one text-hover-primary icon-20"
-                                                (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'DefaultCoCoins')"></span>
+                                            <div class="w-30px setting-btnright ms-2">
+                                                <span class="icon-edit-one text-hover-primary icon-18"
+                                                    (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'DefaultCoCoins')"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
                                         *ngIf="field && field.hasOwnProperty('ExchangeRateCoinsControl')">
                                         <div class="d-flex flex-column flex-grow-1">
                                             <div class="text-dark fw-bold fs-6">
-                                            {{title.ExchangeRateCoinsControl}}
+                                                {{title.ExchangeRateCoinsControl}}
                                             </div>
                                             <div class="text-gray-500">
                                                 <codx-label fiedName="AcceptExchangeCoin"
@@ -269,8 +274,10 @@
                                                     [disabled]="disableGroupFund" label="">
                                                 </codx-input>
                                             </span>
-                                            <span class="icon-edit-one text-hover-primary icon-20 w-20px h-20px ml-3"
-                                                (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'ExchangeRateCoins')"></span>
+                                            <div class="w-30px setting-btnright ms-2">
+                                                <span class="icon-edit-one text-hover-primary icon-18"
+                                                    (click)="!disableGroupFund && openFormChangeCoin(changeCoin, 'ExchangeRateCoins')"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-start py-4" *ngIf="scheduledTasks_CoCoin">
@@ -291,14 +298,15 @@
                                         </div>
                                         <div class="d-flex align-items-center ml-4">
                                             <span class="switch switch-sm ml-3">
-                                                <codx-input type="switch" class="test-check"
-                                                    field="ResetCoCoinsControl"
+                                                <codx-input type="switch" class="test-check" field="ResetCoCoinsControl"
                                                     (valueChange)="valueChangePolicyCoin('4')"
                                                     [checked]="!scheduledTasks_CoCoin?.stop" label="">
                                                 </codx-input>
                                             </span>
-                                            <span class="icon-edit-one text-hover-primary icon-20 w-20px h-20px ml-3"
-                                                (click)="openPopupSettingCycleRun('4')"></span>
+                                            <div class="w-30px setting-btnright ms-2">
+                                                <span class="icon-edit-one text-hover-primary icon-18"
+                                                    (click)="openPopupSettingCycleRun('4')"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
@@ -350,8 +358,10 @@
                                             <codx-input type="text" class="form-control w-50px" [disabled]="true"
                                                 [crrValue]="quantity.DefaultMyKudos">
                                             </codx-input>
-                                            <span class="icon-edit-one text-hover-primary icon-20"
-                                                (click)="openFormChangeCoin(changeCoin, 'DefaultMyKudos')"></span>
+                                            <div class="w-30px setting-btnright ms-2">
+                                                <span class="icon-edit-one text-hover-primary icon-18"
+                                                    (click)="openFormChangeCoin(changeCoin, 'DefaultMyKudos')"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-start py-4 border-bottom border-light"
@@ -379,8 +389,10 @@
                                                     [checked]="!scheduledTasks_KuDos?.stop" label="">
                                                 </codx-input>
                                             </span>
-                                            <span class="icon-edit-one text-hover-primary icon-20 w-20px h-20px ml-3"
-                                                (click)="openPopupSettingCycleRun('5')"></span>
+                                            <div class="w-30px setting-btnright ms-2">
+                                                <span class="icon-edit-one text-hover-primary icon-18"
+                                                    (click)="openPopupSettingCycleRun('5')"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
