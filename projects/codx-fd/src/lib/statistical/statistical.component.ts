@@ -76,8 +76,8 @@ export class StatisticalComponent extends UIComponent implements OnInit {
 
   readonly TYPE_Ballot = {
     ALL: '0',
-    Ballot_RECEIVED: '1',
-    Ballot_SENDED: '2',
+    Ballot_RECEIVED: '2',
+    Ballot_SENDED: '1',
   };
   TYPE_TIME = {
     TEMP: '',
@@ -405,7 +405,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
             i++;
           });
           this.lstBehavior = listBehavior;
-          console.log('check lstTotalCoin', this.lstTotalCoin);
         }
       });
   }
@@ -456,6 +455,7 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       chartDatasTemp.push(arr[0]);
     }
     this.chart_Datas = chartDatasTemp;
+    console.log('check chart_Datas', this.chart_Datas);
   }
   getLabelName(key) {
     let oData = _.filter(this.dataStore, function (o) {
@@ -502,9 +502,11 @@ export class StatisticalComponent extends UIComponent implements OnInit {
           dtReceived.push(arrReceived[0]);
           dtSended.push(arrSended[0]);
         });
-        this.dataReceived = dtReceived;
-        this.dataSended = dtSended;
       });
+    this.dataReceived = dtReceived;
+    this.dataSended = dtSended;
+    console.log('check dataReceived', this.dataReceived);
+    console.log('check dataSended', this.dataSended);
     this.changeDf.detectChanges();
   }
 

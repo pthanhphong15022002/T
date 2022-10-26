@@ -249,8 +249,7 @@ export class HomeComponent extends UIComponent {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
-          //this.dmSV.folderId.next("");
-          //this.dmSV.folderID = "";
+         debugger;
           tree.removeNodeTree(res);
           var breadcumb = [];
           var breadcumbLink = [];
@@ -279,7 +278,7 @@ export class HomeComponent extends UIComponent {
             }
           }
 
-          if (breadcumbLink.length == 1) {
+          if (breadcumbLink.length <= 1) {
             this.dmSV.page = 1;
             this.getDataFolder(this.dmSV.folderID);
             this.getDataFile(this.dmSV.folderID);
@@ -357,6 +356,7 @@ export class HomeComponent extends UIComponent {
 
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
+        debugger;
         var result = this.dmSV.listFolder;
         if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
           result = result.concat(this.dmSV.listFiles);
@@ -372,6 +372,8 @@ export class HomeComponent extends UIComponent {
         this.changeDetectorRef.detectChanges();
         this.data = [];
         var a = { data: item };
+        if(this.view.dataService.data.length == 0)
+          this.view.dataService.data.push(item);
         // var breadcumb = [];
         // var breadcumbLink = [];
         // tree.textField = "folderName";
@@ -590,6 +592,7 @@ export class HomeComponent extends UIComponent {
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
     let item = $data.data;
+    debugger;
     if (item?.read) {
       if (item.extension) {
         var dialogModel = new DialogModel();

@@ -584,25 +584,15 @@ export class CreateFolderComponent implements OnInit {
         if (res.status == 0) {
           var folders = this.dmSV.listFolder;
           if (folders == null) folders = [];
-          //  if ((res.data.level != '1' && this.dmSV.idMenuActive == 'DMT02') ||
-          //    (res.data.level != '3' && this.dmSV.idMenuActive == 'DMT03'))
-          //that.dmSV.isTree = true;
           folders.push(Object.assign({}, res.data));
           that.dmSV.listFolder = folders;
           that.dmSV.ChangeData.next(true);
           that.dmSV.addFolder.next(res.data);
-          //  that.dmSV.changeData(folders, null, this.dmSV.getFolderId());
-          //  that.dmSV.changeAddFolder(res.data);
           that.changeDetectorRef.detectChanges();
-          //  that.dmSV.isTree = false;
-          //  this.modalService.dismissAll();
           this.dialog.close();
         } else {
-          // $('#folderName').addClass('form-control is-invalid');
-          // $('#folderName').focus();
           this.message = res.message;
           this.errorshow = true;
-          // $('#folderError').html(res.message);
           this.changeDetectorRef.detectChanges();
         }
 

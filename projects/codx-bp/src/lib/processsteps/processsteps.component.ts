@@ -379,10 +379,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   onDragDrop(data) {
     this.api
-      .exec('BP', 'ProcessStepsBusiness', 'UpdateProcessStepWithKanbanAsync')
+      .exec('BP', 'ProcessStepsBusiness', 'UpdateProcessStepWithKanbanAsync',[data?.recID,data.parentID,null])  //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.update(data);
+          ///xử lý sau
         }
       });
   }
