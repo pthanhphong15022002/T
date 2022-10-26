@@ -31,41 +31,44 @@
     [dataItem]="data"
   >
   </codx-card-img>
-</ng-template>
 
-<ng-template #cardImgFooter let-data let-setting="setting">
-  <div class="d-flex bg-footer bg-light-warning">
-    <div class="d-flex flex-column w-100 p-3">
-      <div class="d-flex align-items-center">
-        <div class="d-flex align-items-center card-icon-nowrap me-1">
-          <span class="me-1 icon-16 icon-access_alarm"></span
-          ><span class="fw-bolb">
-            <codx-label name="lblTime" default="Thời gian:"></codx-label>
-          </span>
+  <ng-template #cardImgFooter>
+    <div class="d-flex bg-footer bg-light-warning">
+      <div class="d-flex flex-column w-100 p-3">
+        <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center card-icon-nowrap me-1">
+            <span class="me-1 icon-16 icon-access_alarm"></span
+            ><span class="fw-bolb">
+              <codx-label name="lblTime" default="Thời gian:"></codx-label>
+            </span>
+          </div>
+          <div class="badge badge-white my-1 me-3">{{ data?.duration }}</div>
         </div>
-        <div class="badge badge-white my-1 me-3">{{ data?.duration }}</div>
-      </div>
-      <div class="d-flex align-items-center card-icon-nowrap me-1">
-        <span class="me-1 icon-person_pin_circle"></span
-        ><span class="fw-bolb"
-          ><codx-label
-            name="lblRecruitmentStaff"
-            default="Nhân viên tuyển dụng"
-          ></codx-label
-        ></span>
-      </div>
-      <div class="d-flex align-items-center mt-2">
-        <codx-imgs
-          [width]="25"
-          objectId="ADMIN;HPHOA;HPHOA1;PMNHI"
-          objectType="AD_Users"
-          [numberImages]="2"
-        >
-        </codx-imgs>
+        <div class="d-flex align-items-center card-icon-nowrap me-1">
+          <span class="me-1 icon-person_pin_circle"></span
+          ><span class="fw-bolb"
+            ><codx-label
+              name="lblRecruitmentStaff"
+              default="Nhân viên tuyển dụng"
+            ></codx-label
+          ></span>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+          <codx-imgs
+            [width]="25"
+            objectId="ADMIN;HPHOA;HPHOA1;PMNHI"
+            objectType="AD_Users"
+            [numberImages]="3"
+          >
+          </codx-imgs>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 </ng-template>
+
+
+
 
 <ng-template #cardTitleTmp let-data>
   <div class="box-body">
