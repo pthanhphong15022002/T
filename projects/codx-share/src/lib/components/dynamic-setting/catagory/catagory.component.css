@@ -11,10 +11,7 @@ codx-header>div>.d-flex.align-items-center.flex-grow-0 a {
     height: 20px !important;
 }
 
-.setting-btnright .share-box.border {
-    border: 0 !important;
-    justify-content: center !important;
-}
+
 
 lib-catagory .card-body {
     padding: 0 !important;

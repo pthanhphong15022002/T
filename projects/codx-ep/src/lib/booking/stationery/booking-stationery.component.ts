@@ -5,6 +5,7 @@ import {
   DialogModel,
   UIComponent,
   FormModel,
+  AuthService,
 } from 'codx-core';
 import {
   AfterViewInit,
@@ -63,7 +64,8 @@ export class BookingStationeryComponent
     private callFuncService: CallFuncService,
     private codxEpService: CodxEpService,
     private cacheService: CacheService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private authService: AuthService,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -150,32 +152,35 @@ export class BookingStationeryComponent
   }
   edit(evt: any) {
     if (evt) {
-      this.view.dataService.dataSelected = evt;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          let dialogModel = new DialogModel();
-          dialogModel.IsFull = true;
-          this.callfc.openForm(
-            PopupRequestStationeryComponent,
-            this.popupTitle,
-            700,
-            650,
-            this.funcID,
-            {
-              isAddNew: false,
-              formModel: this.formModel,
-              option: option,
-              title: this.popupTitle,
-            },
-            '',
-            dialogModel
-          );
-        });
-    }
+      if(this.authService.userValue.userID!=evt?.owner)
+      {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
+    this.view.dataService.dataSelected = evt;
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      this.callfc.openForm(
+        PopupRequestStationeryComponent,
+        this.popupTitle,
+        700,
+        650,
+        this.funcID,
+        {
+          isAddNew: false,
+          formModel: this.formModel,
+          option: option,
+          title:this.popupTitle,
+        },
+        '',
+        dialogModel
+      );
+    });
+  }
   }
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
@@ -224,6 +229,11 @@ export class BookingStationeryComponent
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
+      if(this.authService.userValue.userID!=evt?.owner)
+      {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
     }
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
       if (!res) {

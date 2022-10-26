@@ -13,6 +13,7 @@ import {
   FormModel,
   CallFuncService,
   NotificationsService,
+  AuthService,
 } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
@@ -67,7 +68,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     private injector: Injector,
     private codxEpService: CodxEpService,
     private callFuncService: CallFuncService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private authService: AuthService,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -244,6 +246,11 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   edit(obj?) {
     if (obj) {
+      if(this.authService.userValue.userID!=obj.owner)
+      {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
       this.viewBase.dataService.dataSelected = obj;
       this.viewBase.dataService
         .edit(this.viewBase?.dataService?.dataSelected)
@@ -265,6 +272,11 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
+      if(this.authService.userValue.userID!=evt?.owner)
+      {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
     }
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
       if (!res) {

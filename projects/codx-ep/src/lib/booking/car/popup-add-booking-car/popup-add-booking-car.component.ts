@@ -105,7 +105,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   editCarDevice = null;
   tmpTitle = '';
   tempArray = [];
-  listRoles:any;
+  listRoles=[];
   calendarStartTime:any;
   calendarEndTime:any;
   endHour:any;
@@ -199,6 +199,66 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+
+      this.cache.valueList('EP010').subscribe((res) => {
+        if (res && res?.datas.length > 0) {
+          let tmpArr=[];
+          tmpArr=res.datas;
+          tmpArr.forEach(item=>{
+            if(item.value!='4'){
+              this.listRoles.push(item);
+            }
+          })
+          if(this.isAdd){
+            let people = this.authService.userValue;
+            this.tempAtender = {
+              userID: people.userID,
+              userName: people.userName,
+              status: '1',
+              objectType: 'AD_Users',
+              roleType: '1',
+              objectID: undefined,
+            };
+            this.curUser = this.tempAtender;
+          }
+          if (!this.isAdd) {
+            this.codxEpService
+              .getBookingAttendees(this.data.recID)
+              .subscribe((res) => {
+                if (res) {
+                  this.attendees = res.msgBodyData[0];
+                  this.attendees.forEach((people) => {
+                    this.tempAtender = {
+                      userID: people.userID,
+                      userName: people.userName,
+                      status: people.status,
+                      objectType: 'AD_Users',
+                      roleType: people.roleType,
+                      objectID: undefined,
+                    };
+                    if (
+                      this.tempAtender.userID == this.authService.userValue.userID
+                    ) {
+                      this.curUser = this.tempAtender;
+                    } else if (this.tempAtender.roleType == '2') {
+                      this.driver = this.tempAtender;
+                      this.driver.objectID = people.note;
+                      this.driver.objectType = 'EP_Drivers';
+                    } else {
+                      this.lstPeople.push(this.tempAtender);
+                    }
+                  });
+                  if (this.driver != null) {
+                    this.driverCheck = true;
+                  } else {
+                    this.driverCheck = false;
+                  }
+                  this.detectorRef.detectChanges();
+                }
+              });
+          }
+        }
+      });
     this.initForm();
     
     
@@ -234,55 +294,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.bookingOn = new Date();
       this.data.startDate=null;
       this.data.endDate=null;
-      let people = this.authService.userValue;
-      this.tempAtender = {
-        userID: people.userID,
-        userName: people.userName,
-        status: '1',
-        objectType: 'AD_Users',
-        roleType: '1',
-        objectID: undefined,
-      };
-      this.curUser = this.tempAtender;
-
       this.detectorRef.detectChanges();
     }
-    if (!this.isAdd) {
-      this.codxEpService
-        .getBookingAttendees(this.data.recID)
-        .subscribe((res) => {
-          if (res) {
-            this.attendees = res.msgBodyData[0];
-            this.attendees.forEach((people) => {
-              this.tempAtender = {
-                userID: people.userID,
-                userName: people.userName,
-                status: people.status,
-                objectType: 'AD_Users',
-                roleType: people.roleType,
-                objectID: undefined,
-              };
-              if (
-                this.tempAtender.userID == this.authService.userValue.userID
-              ) {
-                this.curUser = this.tempAtender;
-              } else if (this.tempAtender.roleType == '2') {
-                this.driver = this.tempAtender;
-                this.driver.objectID = people.note;
-                this.driver.objectType = 'EP_Drivers';
-              } else {
-                this.lstPeople.push(this.tempAtender);
-              }
-            });
-            if (this.driver != null) {
-              this.driverCheck = true;
-            } else {
-              this.driverCheck = false;
-            }
-            this.detectorRef.detectChanges();
-          }
-        });
-    }
+    
   }
 
   initForm() {
