@@ -46,6 +46,7 @@ import { BookingCarViewDetailComponent } from './booking/car/view-detail/booking
 import { ApprovalStationeryViewDetailComponent } from './approval/stationery/approval-stationery-view-detail/approval-stationery-view-detail.component';
 import { HistoryCardsComponent } from './settings/historyCards/historyCards.component';
 import { CardTransComponent } from './booking/cardTran/cardTrans.component';
+import { MeetingComponent } from './meeting/meeting.component';
 
 const routes: Route[] = [
   {
@@ -168,7 +169,7 @@ const Components: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [Components],
+  declarations: [Components, MeetingComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
