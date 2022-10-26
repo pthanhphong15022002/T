@@ -52,7 +52,6 @@ export class PostsComponent implements OnInit {
     a.instance.isShowCreate = false;
     a.instance.formModel = this.formModel;
   }
-
   removePost(e) {
     
   }
