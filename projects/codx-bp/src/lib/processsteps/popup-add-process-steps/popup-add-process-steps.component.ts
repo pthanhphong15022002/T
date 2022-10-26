@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
   DialogData,
@@ -52,9 +53,12 @@ export class PopupAddProcessStepsComponent implements OnInit {
   popover: any;
   crrIndex = 0;
   grvSetup: any;
+  listOwnerID = [];
+  listOwnerDetails = [];
 
   constructor(
     private bpService: CodxBpService,
+    private api: ApiHttpService,
     private authStore: AuthStore,
     private cache: CacheService,
     private changeDef: ChangeDetectorRef,
@@ -109,7 +113,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     if (this.action == 'edit') {
     } else {
       op.method = 'AddProcessStepAsync';
-      data = [this.processSteps ,this.owners];
+      data = [this.processSteps, this.owners];
     }
 
     op.data = data;
@@ -128,11 +132,13 @@ export class PopupAddProcessStepsComponent implements OnInit {
     //       } else this.dialog.close();
     //     });
     // } else {
-    this.bpService.addProcessStep([this.processSteps,this.owners]).subscribe((data) => {
-      if (data) {
-        this.dialog.close(data);
-      } else this.dialog.close();
-    });
+    this.bpService
+      .addProcessStep([this.processSteps, this.owners])
+      .subscribe((data) => {
+        if (data) {
+          this.dialog.close(data);
+        } else this.dialog.close();
+      });
     // }
   }
 
@@ -212,17 +218,49 @@ export class PopupAddProcessStepsComponent implements OnInit {
   eventApply(e) {
     if (!e || e?.data.length == 0) return;
     var dataSelected = e?.data;
+    var listUser = [];
     dataSelected.forEach((dt) => {
       var index = -1;
       if (this.owners.length > 0)
-        index = this.owners.findIndex((obj) => obj.objectID == dt.id);
+        index = this.owners.findIndex(
+          (obj) => obj.objectID == dt.id && obj.objectType == dt.objectType
+        );
       if (index == -1) {
         var owner = new BP_ProcessOwners();
         owner.objectType = dt.objectType;
         owner.objectID = dt.id;
         owner.rAIC = 'R';
         this.owners.push(owner);
+        switch (dt.objectType) {
+          case 'U':
+            listUser.push(owner.objectType);
+            break;
+          case 'O':
+          case 'D':
+            //lam sau 
+            break ;
+        }
       }
     });
+    this.getListUser(listUser);
+  }
+  onDeleteOwner(objectID, index) {
+    this.listOwnerDetails.splice(index, 1);
+    var i = this.owners.findIndex((x) => x.objectID == objectID);
+    if (i != -1) this.owners.slice(i, 1);
+  }
+
+  getListUser(listUser) {
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(listUser.split(';'))
+      )
+      .subscribe((res) => {
+        this.listOwnerDetails = this.listOwnerDetails.concat(res);
+      });
   }
 }
