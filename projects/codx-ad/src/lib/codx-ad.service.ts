@@ -201,13 +201,13 @@ export class CodxAdService {
       .subscribe();
   }
 
-  stopUser(data, isAdd, lstURoles, stop) {
+  stopUser(data) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
       'UsersBusiness',
-      'UpdateUserAsync',
-      [data, isAdd, lstURoles, stop]
+      'UpdateStopAsync',
+      [data]
     );
   }
 

@@ -56,6 +56,8 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   justView = false;
   isAddNew: boolean = true;
 
+  positionDefault: string = '';
+
   data: any = {}; // object category
 
   model: any;
@@ -95,6 +97,13 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.cache
+      .gridViewSetup('ApprovalSteps_Approvers', 'grvApprovalSteps_Approvers')
+      .subscribe((grv) => {
+        if (grv) {
+          this.positionDefault = grv['Position']['headerText'];
+        }
+      });
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
@@ -178,6 +187,8 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       type: '0',
       signatureType: this.data?.signatureType,
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
+      confirmControl: this.data?.confirmControl,
+      allowEditAreas: this.data?.allowEditAreas,
     };
 
     this.openPopupAddAppStep(data);
@@ -194,10 +205,6 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
     };
     this.openPopupAddAppStep(data);
-  }
-
-  updateMssgDelete(mssgCode) {
-    this.mssgDelete = mssgCode;
   }
 
   delete(approvalStep) {

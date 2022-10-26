@@ -107,20 +107,19 @@
         (click)="testdata(controlShare)"
       ></div>
     </div>
-    <ng-container *ngFor="let item of lstApprover">
+    <ng-container *ngFor="let item of lstApprover; let index = index">
       <div class="d-flex align-items-center w-100">
         <codx-temp-full
           cardCss="card-template mb-4"
           *ngIf="item.roleType?.length == 1"
           [imageId]="item.approver"
-          [subTitle]=""
           [title]="item.name"
-          [subTitle]="item.position ?? 'Vị trí công việc'"
+          [subTitle]="item.position ?? positionDefault"
           [imageObjType]="'AD_Users'"
           [imageWidth]="35"
           [titleLine]="3"
           [formModel]="formModel"
-          (clickMF)="MFClick($event, item)"
+          (clickMF)="MFClick($event, item, index)"
           [dataItem]="item"
           typeMF="hover"
         >
@@ -137,13 +136,15 @@
           imgCss="w-30px p-3 me-3 user-mini-icon"
           [imageWidth]="30"
           [subTitle]="item.approver | vll: 'ES014':'text' | async"
-          [title]="item.approver | vll: 'ES014':'text' | async"
+          [title]="item.name ?? (item.approver | vll: 'ES014':'text' | async)"
           [subTitle]="
-            item.position ?? (item.approver | vll: 'ES014':'text' | async)
+            item.position ??
+            (item.approver | vll: 'ES014':'text' | async) ??
+            positionDefault
           "
           [titleLine]="3"
           [formModel]="formModel"
-          (clickMF)="MFClick($event, item)"
+          (clickMF)="MFClick($event, item, index)"
           [dataItem]="item"
           typeMF="hover"
         >
@@ -194,16 +195,16 @@
         #checkbox
         type="switch"
         id="switch"
-        [checked]="data.editSignAreas"
+        [checked]="allowEditAreas"
         labelPosition="After"
-        field="editSignAreas"
+        field="allowEditAreas"
         class="test-switch"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
       <label class="ms-2">
         <codx-label
-          fiedName="EditSignAreas"
+          fiedName="AllowEditAreas"
           [formModel]="formModel"
         ></codx-label>
       </label>
@@ -252,24 +253,24 @@
         </codx-input>
       </div>
       <div class="form-group col-6">
-        <codx-label fiedName="CancelControl" [formModel]="formModel">
-        </codx-label>
-        <codx-input
-          [formModel]="formModel"
-          [Group]="dialogApprovalStep"
-          field="cancelControl"
-        >
-        </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-6">
         <codx-label fiedName="RejectControl" [formModel]="formModel">
         </codx-label>
         <codx-input
           [formModel]="formModel"
           [Group]="dialogApprovalStep"
           field="rejectControl"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6">
+        <codx-label fiedName="CancelControl" [formModel]="formModel">
+        </codx-label>
+        <codx-input
+          [formModel]="formModel"
+          [Group]="dialogApprovalStep"
+          field="cancelControl"
         >
         </codx-input>
       </div>

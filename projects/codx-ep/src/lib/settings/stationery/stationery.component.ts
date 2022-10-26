@@ -28,14 +28,14 @@ import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-st
   styleUrls: ['./stationery.component.scss'],
 })
 export class StationeryComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('resourceID') resourceID: TemplateRef<any>;
-  @ViewChild('resourceName') resourceName: TemplateRef<any>;
-  @ViewChild('productImg') productImg: TemplateRef<any>;
-  @ViewChild('color') color: TemplateRef<any>;
-  @ViewChild('groupID') groupID: TemplateRef<any>;
-  @ViewChild('note') note: TemplateRef<any>;
-  @ViewChild('quantity') quantity: TemplateRef<any>;
-  @ViewChild('owner') owner: TemplateRef<any>;
+  // @ViewChild('resourceID') resourceID: TemplateRef<any>;
+  // @ViewChild('resourceName') resourceName: TemplateRef<any>;
+  // @ViewChild('productImg') productImg: TemplateRef<any>;
+  // @ViewChild('color') color: TemplateRef<any>;
+  // @ViewChild('groupID') groupID: TemplateRef<any>;
+  // @ViewChild('note') note: TemplateRef<any>;
+  // @ViewChild('quantity') quantity: TemplateRef<any>;
+  // @ViewChild('owner') owner: TemplateRef<any>;
   @ViewChild('columnsList') columnsList: TemplateRef<any>;
   @ViewChild('templateListCard') templateListCard: TemplateRef<any>;
   viewType = ViewType;
@@ -84,9 +84,11 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     },
   ];
 
-  constructor(private injector: Injector, 
-    private epService: CodxEpService,    
-    private changeDetectorRef: ChangeDetectorRef,) {
+  constructor(
+    private injector: Injector,
+    private epService: CodxEpService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -104,40 +106,40 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.grvStationery = gv;
-          this.columnsGrid = [
-            {
-              headerText: gv['ResourceID'].headerText,
-              template: this.resourceID,
-            },
-            {
-              headerText: gv['ResourceName'].headerText,
-              template: this.resourceName,
-            },
-            {
-              headerText: gv['Icon'].headerText,
-              template: this.productImg,
-            },
-            {
-              headerText: gv['Color'].headerText,
-              template: this.color,
-            },
-            {
-              headerText: gv['GroupID'].headerText,
-              template: this.groupID,
-            },
-            {
-              headerText: gv['Note'].headerText,
-              template: this.note,
-            },
-            {
-              headerText: 'Số lượng', //gv['Quantity'].headerText,
-              template: this.quantity,
-            },
-            {
-              headerText: gv['Owner'].headerText,
-              template: this.owner,
-            },
-          ];
+          // this.columnsGrid = [
+          //   {
+          //     headerText: gv['ResourceID'].headerText,
+          //     template: this.resourceID,
+          //   },
+          //   {
+          //     headerText: gv['ResourceName'].headerText,
+          //     template: this.resourceName,
+          //   },
+          //   {
+          //     headerText: gv['Icon'].headerText,
+          //     template: this.productImg,
+          //   },
+          //   {
+          //     headerText: gv['Color'].headerText,
+          //     template: this.color,
+          //   },
+          //   {
+          //     headerText: gv['GroupID'].headerText,
+          //     template: this.groupID,
+          //   },
+          //   {
+          //     headerText: gv['Note'].headerText,
+          //     template: this.note,
+          //   },
+          //   {
+          //     headerText: 'Số lượng', //gv['Quantity'].headerText,
+          //     template: this.quantity,
+          //   },
+          //   {
+          //     headerText: gv['Owner'].headerText,
+          //     template: this.owner,
+          //   },
+          // ];
           this.views = [
             // {
             //   type: ViewType.grid,
@@ -216,6 +218,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  changeDataMF(e: any, data: any) {}
+
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
       let dataSelected = this.view.dataService.dataSelected;
@@ -249,26 +253,25 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          let dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddStationeryComponent,
-            [dataSelected, false],
-            option
-          );    
-          this.dialog.closed.subscribe((x) => {
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {
-              });
-            }
-          });     
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let dataSelected = this.view?.dataService?.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          PopupAddStationeryComponent,
+          [dataSelected, false],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (x?.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe((res) => {});
+          }
         });
+      });
   }
 
   delete(data?) {

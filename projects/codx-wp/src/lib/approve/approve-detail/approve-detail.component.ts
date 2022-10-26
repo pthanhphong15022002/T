@@ -20,7 +20,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   @Input() entityName: any;
   @Input() formModel : any;
   @Input() dataService:CRUDService;
-  @Output() evtApproval = new EventEmitter();
+  @Output() evtUpdateApproval = new EventEmitter();
   tabAsside = [
     {
       name:"await",
@@ -68,7 +68,6 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     VIDEO:"2"
   }
   data: any;
-  vllL1901:string = "L1901";
   acceptApprove = "5";
   cancelApprove  = "4";
   remakeApprove = "2";
@@ -76,6 +75,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   service = "WP";
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness";
+  moreFC:any = null;
   constructor(private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private callFuc:CallFuncService,
@@ -84,27 +84,28 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     private sanitizer: DomSanitizer
 
     ) { }
+  
+
+  ngOnInit(): void {
+    this.getPostInfor();
+    this.getMorefunction(this.funcID);
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.objectID?.currentValue && (changes.objectID?.currentValue != changes.objectID?.previousValue)){
       this.getPostInfor();
     }
   }
-
-  ngOnInit(): void {
-    this.getValueListShare(this.vllL1901);
-    this.getPostInfor();
-  }
-
-  dVllL1901: any = {};
-  getValueListShare(valueList:string){
-    if(valueList)
-    {
-      this.cache.valueList(valueList).subscribe((vll:any) =>{
-        if(vll)
-        {
-          this.dVllL1901["0"] = null;
-          vll.datas.forEach(element => {
-            this.dVllL1901[element.value + ""] = element;
+  getMorefunction(funcID:string){
+    if(funcID){
+      this.cache.functionList(funcID).subscribe((func:any) =>{
+        if(func){
+          let formnName = func.formName;
+          let gridViewName = func.gridViewName;
+          this.cache.moreFunction(formnName,gridViewName).subscribe((moreFunc:any) =>{
+            this.moreFC = moreFunc;
+            console.log(moreFunc)
+            this.dt.detectChanges();
           });
         }
       });
@@ -115,34 +116,83 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       this.data = null;
       return;
     }
-    this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","GetPostInfoAsync",[this.objectID,this.entityName])
-    .subscribe((res) => {
-      if(res){
+    this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "NewsBusiness",
+      "GetPostInfoAsync",
+      [this.objectID,this.entityName])
+    .subscribe((res:any) => {
+      if(res)
+      {
         this.data = res;
         this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
         this.dt.detectChanges();
       }
     })
   }
-  clickApprovePost(data:any,approveStatus:any){
-    this.evtApproval.emit({data:data,approveStatus:approveStatus})
+  clickUpdatePost(action:string)
+  {
+    if(action)
+    { 
+      let recID = this.data.recID;
+      let funcID = this.funcID;
+      let approveStatus = "";
+      let mssgCode = "";
+      switch(action){
+        case "WPT02121":
+          approveStatus = "5";
+          mssgCode = "WP005";
+          this.notifySvr.alertCode("WP004").subscribe((evt: any) => {
+            if (evt.event.status == 'Y'){
+              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
+            }
+          });
+          break;
+        case "WPT02122":
+          approveStatus = "2";
+          mssgCode = "WP009";
+          this.notifySvr.alertCode("WP008").subscribe((evt: any) => {
+            if (evt.event.status == 'Y'){
+              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
+            }
+          });
+          break;
+        case "WPT02123":
+          approveStatus = "4";
+          mssgCode = "WP007";
+          this.notifySvr.alertCode("WP006").subscribe((evt: any) => {
+            if (evt.event.status == 'Y'){
+              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
+            }
+          });
+          break;
+        default:
+          break;  
+      }
+    }
   }
 
-  approvePost(e:any,data:any,approveStatus:any){
-    if(e.event.status == "Y"){
-      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-        (res) => 
-        {
-          if(res)
+  updateApprovalSatusAsync(recID:string,funcID:string,approveStatus:string,mssgCode:string){
+    if(recID && funcID && approveStatus && mssgCode){
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "UpdateAprovalStatusAsync",
+        [recID,funcID,approveStatus])
+        .subscribe((res:boolean) => 
           {
-            this.data = null;
-            this.tabAsside[0].total--;
-            this.tabAsside[1].total++;
-            this.notifySvr.notifyCode("WP005");
-            this.dt.detectChanges();
+            if(res)
+            {
+              let oldValue = this.data.approveStatus;
+              this.data.approveStatus = approveStatus;
+              this.notifySvr.notifyCode("WP005");
+              this.evtUpdateApproval.emit({data:this.data,oldValue:oldValue,newValue:approveStatus});
+              this.dt.detectChanges();
+            }
           }
-        }
-      );
+        );
     }
   }
 

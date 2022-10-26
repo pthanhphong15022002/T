@@ -110,7 +110,7 @@
                                 [imageId]="approver.approver"
                                 [title]="approver.name"
                                 [subTitle]="
-                                  approver.position ?? 'Vị trí công việc'
+                                  approver.position ?? positionDefault
                                 "
                                 [status]="lstStep.status"
                                 [imageObjType]="'AD_Users'"
@@ -295,7 +295,7 @@
                           *ngIf="approver.roleType?.length == 1"
                           [imageId]="approver.approver"
                           [title]="approver.name"
-                          [subTitle]="approver.position ?? 'Vị trí công việc'"
+                          [subTitle]="approver.position ?? positionDefault"
                           [status]="lstStep.status"
                           [imageObjType]="'AD_Users'"
                           [modeImgs]="true"

@@ -17,13 +17,16 @@ import {
   CodxListviewComponent,
   DialogModel,
   DialogRef,
+  FormModel,
   NotificationsService,
+  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { convertHtmlAgency } from 'projects/codx-od/src/lib/function/default.function';
 import { CodxEsService } from '../codx-es.service';
 import { PopupAddSignatureComponent } from '../setting/signature/popup-add-signature/popup-add-signature.component';
 import { PopupAddSignFileComponent } from './popup-add-sign-file/popup-add-sign-file.component';
@@ -54,6 +57,7 @@ export class SignFileComponent extends UIComponent {
   @ViewChild('paneLeft') panelLeft: TemplateRef<any>;
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
   @ViewChild('itemTemplate') template: TemplateRef<any>;
+  @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
   autoLoad = true;
   taskViewStt;
@@ -62,7 +66,14 @@ export class SignFileComponent extends UIComponent {
   preStepNo;
   button;
 
+  request: ResourceModel;
+  resourceKanban?: ResourceModel;
+  convertHtmlAgency = convertHtmlAgency;
+
   funcID: string;
+  formModel: FormModel;
+  grvSetup: any = {};
+
   service = 'ES';
   assemblyName = 'ES';
   entity = 'ES_SignFiles';
@@ -79,7 +90,43 @@ export class SignFileComponent extends UIComponent {
   buttons: Array<ButtonModel> = [];
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
 
+  lstReferValue;
+
   onInit(): void {
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+
+    this.request = new ResourceModel();
+    this.request.service = this.service;
+    this.request.assemblyName = this.assemblyName;
+    this.request.className = this.className;
+    this.request.method = 'LoadDataAsync';
+    this.request.idField = this.idField;
+
+    this.esService.getFormModel(this.funcID).then((fm) => {
+      if (fm) {
+        this.formModel = fm;
+
+        this.cache
+          .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+          .subscribe((grv) => {
+            if (grv) {
+              this.grvSetup = grv;
+            }
+          });
+        this.esService
+          .getComboboxName(this.formModel.formName, this.formModel.gridViewName)
+          .then((cbxName) => {
+            if (cbxName) {
+              this.lstReferValue = cbxName;
+            }
+          });
+      }
+    });
+
     this.taskViewStt = '1';
     this.preStepNo = 0;
     this.button = {
@@ -98,6 +145,7 @@ export class SignFileComponent extends UIComponent {
     this.view.dataService.methodDelete = 'DeleteSignFileAsync';
     this.views = [
       {
+        id: '1',
         type: ViewType.listdetail,
         sameData: true,
         active: true,
@@ -106,6 +154,17 @@ export class SignFileComponent extends UIComponent {
           panelLeftRef: this.panelLeft,
           panelRightRef: this.panelRight,
           contextMenu: '',
+        },
+      },
+      {
+        id: '2',
+        type: ViewType.kanban,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
         },
       },
     ];
@@ -213,5 +272,17 @@ export class SignFileComponent extends UIComponent {
     // }
   }
 
-  viewChange(e: any) {}
+  openFormFuncID(val: any, data: any) {
+    this.viewdetail.openFormFuncID(val, data);
+  }
+
+  changeDataMF(e: any, data: any) {}
+
+  viewChange(e: any) {
+    var funcID = e?.component?.instance?.funcID;
+    this.esService.getFormModel(funcID).then((fm) => {
+      if (fm) {
+      }
+    });
+  }
 }

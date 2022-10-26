@@ -94,7 +94,7 @@ export class UserGroupsComponent extends UIComponent {
       // case 'SYS02':
       //   this.delete(data);
       //   break;
-      case 'ADS0501':
+      case 'ADS0601':
         this.stop(data);
         break;
     }
@@ -107,10 +107,10 @@ export class UserGroupsComponent extends UIComponent {
       if (x.event.status == 'Y') {
         data.stop = true;
         this.codxAdService
-          .stopUser(data, false, null, data.stop)
+          .stopUser(data)
           .subscribe((res) => {
             if (res) {
-              this.view.dataService.remove(res).subscribe();
+              // this.view.dataService.remove(res).subscribe();
               this.detectorRef.detectChanges();
             }
           });

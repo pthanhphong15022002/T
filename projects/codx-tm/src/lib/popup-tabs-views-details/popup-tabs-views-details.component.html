@@ -1,4 +1,4 @@
-<div class="stepper-body no-header page-viewdetail">
+<div class="stepper-body popup-task-detail no-header page-viewdetail">
   <div class="my-3 mx-6 sprints-task-header">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
@@ -21,7 +21,7 @@
     </div>
   </div>
   <!-- </div> -->
-  <div class="w-100 bg-gray-100 pt-2 view-details-main">
+  <div class="w-100 bg-gray-100 pt-1 view-details-main">
     <div class="view-details-header rounded-3 bg-body scroll-y px-6 mt-3">
       <div class="d-flex align-items-center justify-content-between mt-4">
         <div class="d-flex flex-column">
@@ -49,7 +49,7 @@
         </div>
       </div>
 
-      <div class="d-flex mt-4 tab-header">
+      <div class="d-flex tab-header">
         <ng-container *ngFor="let item of tabControl; let i = index">
           <a [class]="
               'tab-item text-dark fw-bold' +
@@ -81,9 +81,9 @@
         </ng-container>
         <ng-container *ngIf="name == 'Tasks'">
           <ng-container *ngIf="dataObj">
-            <codx-tasks-share  [dataObj]="dataObj" [showButtonAdd]="showButtonAdd"
-            [showMoreFunc]="showMoreFunc" [funcID]="'TMT03011'">
-          </codx-tasks-share>
+            <codx-tasks-share [dataObj]="dataObj" [showButtonAdd]="showButtonAdd" [showMoreFunc]="showMoreFunc"
+              [funcID]="'TMT03011'">
+            </codx-tasks-share>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'History'">

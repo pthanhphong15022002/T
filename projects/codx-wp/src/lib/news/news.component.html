@@ -1,10 +1,10 @@
 <div class="codx-news">
-  <codx-views #codxViews [funcID]="funcID" idField="recID" [views]="views">
+  <codx-views #view  idField="recID" [views]="views">
   </codx-views>
   <div class="more-function">
     <div class="d-flex flex-column">
       <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary"><i class="icon-search fs-1"></i></a>
-      <span class="postnews mt-3">
+      <span class="postnews mt-3" *ngIf="userPermission && userPermission.create">
         <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
         <div class="d-flex btn-postnews">
 
@@ -15,72 +15,73 @@
         </div>
       </span>
     </div>
-  </div>
+  </div> 
+  
 </div>
 
 <ng-template #panelLeftRef>
   <div class="fix-container rounded-4 position-relative">
-    <div class="row" *ngIf="news[0]">
+    <div class="row" *ngIf="arrPost[0]">
       <div class="fw-bold text-dark fs-2 mt-5 mb-5 border-bottom border-gray">
-        <codx-label [formModel]="codxViews.formModel" name="lblNews" default="Tin mới nhất"></codx-label>
+        <codx-label [formModel]="view.formModel" name="lblNews" default="Tin mới nhất"></codx-label>
       </div>
     </div>
 
     <div class="row ">
       <div class="col-6 hot-left">
-        <ng-container *ngIf="news[0];else tmpEmptyNews1">
-          <div (click)="clickViewDetail(news[0])">
+        <ng-container *ngIf="arrPost[0];else tmpEmptyNews1">
+          <div (click)="clickViewDetail(arrPost[0])">
             <div class="cursor-pointer">
               <codx-img imageType="square" [isDefaulImg]="true" [cssClass]="'image-300 w-100 pic-newshot'" [width]="480"
-                [objectId]="news[0].recID" [objectType]="entityName">
+                [objectId]="arrPost[0].recID" [objectType]="entityName">
               </codx-img>
             </div>
             <div class="fs-4 fw-bolder mt-2 news-title cursor-pointer">
-              {{ news[0].subject | maxlenght:150}}
+              {{ arrPost[0].subject | maxlenght:150}}
             </div>
           </div>
           <div class="text-gray-700 mt-1">
-            {{news[0].subContent | maxlenght:500}}
+            {{arrPost[0].subContent | maxlenght:500}}
           </div>
           <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">
-            {{ news[0].createdOn | fmDT }}
+            {{ arrPost[0].createdOn | fmDT }}
           </div>
         </ng-container>
       </div>
       <div class="col-6 hot-right">
-        <div *ngIf="news[1];else tmpEmptyNews2" class="row mb-5" (click)="clickViewDetail(news[1])">
+        <div *ngIf="arrPost[1];else tmpEmptyNews2" class="row mb-5" (click)="clickViewDetail(arrPost[1])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
-              <codx-img imageType="square" [isDefaulImg]="true" [width]="180" [cssClass]="'image w-100'" [objectId]="news[1].recID"
+              <codx-img imageType="square" [isDefaulImg]="true" [width]="180" [cssClass]="'image w-100'" [objectId]="arrPost[1].recID"
                 [objectType]="entityName">
               </codx-img>
               <div class="position-absolute bottom-0 end-0">
                 <span class="badge badge-danger">
                   <!-- <codx-label formName="News" name="lblCategory" [default]="news[1].category"></codx-label> -->
-                  {{news[1].category | vll:"WP002":"text"| async}}
+                  {{arrPost[1].category | vll:"WP002":"text"| async}}
                 </span>
               </div>
             </div>
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ news[1].subject | maxlenght:100}}
+              {{ arrPost[1].subject | maxlenght:100}}
             </div>
             <div class="text-gray-700 news-des line-clamp line-clamp-3">
-              {{news[1].subContent | maxlenght:300}}
+              {{arrPost[1].subContent | maxlenght:300}}
             </div>
-            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ news[1].createdOn | fmDT }}</div>
+            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ arrPost[1].createdOn | fmDT }}</div>
           </div>
         </div>
-        <div *ngIf="news[2];else tmpEmptyNews2" class="row mb-5" (click)="clickViewDetail(news[2])">
+        <div *ngIf="arrPost[2];else tmpEmptyNews2" class="row mb-5" (click)="clickViewDetail(arrPost[2])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
-              <codx-img [width]="180" [isDefaulImg]="true" imageType="square" [cssClass]="'image w-100'" [objectId]="news[2].recID"
+              <codx-img [width]="180" [isDefaulImg]="true" imageType="square" [cssClass]="'image w-100'" [objectId]="arrPost[2].recID"
                 [objectType]="entityName"></codx-img>
               <div class="position-absolute bottom-0 end-0">
                 <span class="badge badge-danger">
                   <!-- <codx-label formName="News" name="lblCategory" [default]="news[2].category"></codx-label> -->
-                  {{news[2].category | vll:"WP002":"text"| async}}
+                  {{arrPost[2].category | vll:"WP002":"text"| async}}
 
                 </span>
               </div>
@@ -88,23 +89,23 @@
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ news[2].subject | maxlenght:70}}
+              {{ arrPost[2].subject | maxlenght:70}}
             </div>
             <div class="text-gray-700 news-des line-clamp line-clamp-3">
-              {{news[2].subContent | maxlenght:300}}
+              {{arrPost[2].subContent | maxlenght:300}}
             </div>
-            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ news[2].createdOn | fmDT }}</div>
+            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ arrPost[2].createdOn | fmDT }}</div>
           </div>
         </div>
-        <div *ngIf="news[3];else tmpEmptyNews2" class="row mb-1" (click)="clickViewDetail(news[3])">
+        <div *ngIf="arrPost[3];else tmpEmptyNews2" class="row mb-1" (click)="clickViewDetail(arrPost[3])">
           <div class="col-4">
             <div class="w-100 position-relative cursor-pointer">
-              <codx-img [width]="180" [isDefaulImg]="true" imageType="square" [cssClass]="'image w-100'" [objectId]="news[3].recID"
+              <codx-img [width]="180" [isDefaulImg]="true" imageType="square" [cssClass]="'image w-100'" [objectId]="arrPost[3].recID"
                 [objectType]="entityName"></codx-img>
               <div class="position-absolute bottom-0 end-0">
                 <span class="badge badge-danger">
                   <!-- <codx-label formName="News" name="lblCategory" [default]="news[3].category"></codx-label> -->
-                  {{news[3].category | vll:"WP002":"text"| async}}
+                  {{arrPost[3].category | vll:"WP002":"text"| async}}
 
                 </span>
               </div>
@@ -112,12 +113,12 @@
           </div>
           <div class="col-8">
             <div class="fs-5 fw-bold news-title cursor-pointer">
-              {{ news[3].subject | maxlenght:70}}
+              {{ arrPost[3].subject | maxlenght:70}}
             </div>
             <div class="text-gray-700 news-des line-clamp line-clamp-3">
-              {{news[3].subContent | maxlenght:300}}
+              {{arrPost[3].subContent | maxlenght:300}}
             </div>
-            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ news[3].createdOn | fmDT }}</div>
+            <div class="d-flex justify-content-end fs-7 text-gray-400 mt-1">{{ arrPost[3].createdOn | fmDT }}</div>
           </div>
         </div>
       </div>
@@ -172,7 +173,7 @@
         <ng-container *ngIf="lstGroup.length > 0">
           <div class="row">
             <span class="fw-bolder fs-5">
-              <codx-label [formModel]="codxView.formModel" name="lblHeaderGroup" default="Tin cũ hơn"></codx-label>
+              <codx-label [formModel]="view.formModel" name="lblHeaderGroup" default="Tin cũ hơn"></codx-label>
             </span>
           </div>
           <ng-container *ngFor="let item of lstGroup">
@@ -198,8 +199,14 @@
 <ng-template #itemTemplate let-item>
   <div (click)="clickViewDetail(item)" class="row my-4">
     <div class="col-2">
-      <codx-img [width]="180" [isDefaulImg]="true" [cssClass]="'image-150 w-100'" imageType="square" [objectId]="item.recID"
-        objectType="WP_News"></codx-img>
+      <codx-img [width]="180" 
+        [imgOn]="newDate"
+        [isDefaulImg]="true" 
+        [cssClass]="'image-150 w-100'" 
+        imageType="square" 
+        [objectId]="item.recID"
+        objectType="WP_News">
+      </codx-img>
     </div>
     <div class="col-10">
       <div class="fs-5 mt-2 fw-bolder">{{item.subject}}</div>

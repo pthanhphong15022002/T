@@ -11,9 +11,7 @@ export const environment = {
   pdfUrl: '',
   librOfficeUrl: '',
   urlUpload: '',
-  urlTenant: '',
-  urlThumbnail: '',
-  urlFile: '',
+  office365: '',
   appName: '', // Tam thoi de hard
   StoreNames: {
     FormLabels: 'FormLabels',

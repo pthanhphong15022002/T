@@ -24,6 +24,26 @@ import { CodxEsService } from '../../codx-es.service';
 })
 export class PopupADRComponent extends UIComponent {
   @ViewChild('attachment') attachment: AttachmentComponent;
+  approveControl: string; //'1':Ko comment;'2':ko bat buoc; '3': bat buoc
+  okClick = false;
+  data;
+  title: string;
+  subTitle: string;
+  mode;
+  funcID;
+  recID;
+
+  dialog;
+  approvalTrans: any = {};
+  grvSetup: any = {};
+
+  formModel: FormModel;
+  dialogSignFile: FormGroup;
+  controlName;
+
+  cbxName;
+
+  user;
 
   constructor(
     private inject: Injector,
@@ -38,26 +58,15 @@ export class PopupADRComponent extends UIComponent {
     this.dialog = dialog;
     this.data = dt.data;
     this.user = this.authStore.get();
+    this.cache
+      .gridViewSetup(
+        this.data.formModel.formName,
+        this.data.formModel.gridViewName
+      )
+      .subscribe((grv) => {
+        if (grv) this.grvSetup = grv;
+      });
   }
-
-  okClick = false;
-  data;
-  title: string;
-  subTitle: string;
-  mode;
-  funcID;
-  recID;
-
-  dialog;
-  approvalTrans: any = {};
-
-  formModel: FormModel;
-  dialogSignFile: FormGroup;
-  controlName;
-
-  cbxName;
-
-  user;
 
   onInit(): void {
     this.title = this.data.title;
@@ -68,6 +77,8 @@ export class PopupADRComponent extends UIComponent {
     this.formModel = this.data.formModel;
     this.formModel.currentData = this.approvalTrans;
     this.dialogSignFile = this.data.formGroup;
+    this.approveControl = this.data?.approveControl ?? '2';
+
     this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
 
     this.detectorRef.detectChanges();
@@ -78,9 +89,16 @@ export class PopupADRComponent extends UIComponent {
   changeReason(e) {}
 
   saveDialog() {
-    if (this.formModel.currentData.comment != '') {
-      this.dialog.close(this.mode);
+    if (
+      this.approveControl == '3' &&
+      (this.approvalTrans.comment == null || this.approvalTrans.comment == '')
+    ) {
+      let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
+      this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
+      return;
     }
+
+    this.dialog.close(this.mode);
   }
 
   popupUploadFile() {

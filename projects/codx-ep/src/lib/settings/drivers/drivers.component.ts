@@ -93,7 +93,8 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       this.vllDevices.forEach((item) => {
         let device = new Device();
         device.id = item.value;
-        device.text = item.text;       
+        device.text = item.text;   
+        device.icon=item.icon;    
         this.carsEquipments.push(device);
         this.carsEquipments = JSON.parse(JSON.stringify(this.carsEquipments));
       });
@@ -177,7 +178,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
         }
       })
     });
-    var dialog = this.callfc.openForm(template, '', 550, 430);
+    var dialog = this.callfc.openForm(template, '', 550, 350);
     this.detectorRef.detectChanges();
   }
   clickMF(event, data) {

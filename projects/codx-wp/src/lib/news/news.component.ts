@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, Injector, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
-import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel } from 'codx-core';
+import { ViewModel, ViewsComponent, CodxListviewComponent, ApiHttpService, CodxService, CallFuncService, CacheService, ViewType, DialogModel, UIComponent, NotificationsService } from 'codx-core';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
 
@@ -9,11 +9,11 @@ import { PopupSearchComponent } from './popup/popup-search/popup-search.componen
   selector: 'lib-news',
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.scss'],
-  encapsulation: ViewEncapsulation.None, // e gắn tạm để tạm thời kg mất css nha chị Vân
+  encapsulation: ViewEncapsulation.None, 
 })
 
 
-export class NewsComponent implements OnInit {
+export class NewsComponent extends UIComponent {
 
   @HostBinding('class') get class() {
     return "bg-body h-100 news-main card-body hover-scroll-overlay-y";
@@ -25,7 +25,7 @@ export class NewsComponent implements OnInit {
   className: string = "NewsBusiness"
   predicate: string = "";
   dataValue: string = "5;null;2;";
-  news: any[] = [];
+  arrPost: any[] = [];
   videos: any[] = [];
   lstGroup: any[] = [];
   isAllowNavigationArrows = false;
@@ -35,7 +35,8 @@ export class NewsComponent implements OnInit {
   mssgWP026:string = "";
   mssgWP027:string = "";
   pageSlider:any[] = [];
-
+  newDate:any = new Date();
+  userPermission:any = null;
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -50,25 +51,25 @@ export class NewsComponent implements OnInit {
   }
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('codxViews') codxView: ViewsComponent;
 
-  constructor(
-    private api: ApiHttpService,
-    public codxService: CodxService,
-    private route: ActivatedRoute,
-    private changedt: ChangeDetectorRef,
-    private callfc: CallFuncService,
-    private cache: CacheService,
-
-  ) { }
-  ngOnInit(): void {
-    this.route.params.subscribe((param) => {
+  constructor
+  (
+    private injector: Injector,
+    private notifySV:NotificationsService
+  ) 
+  { 
+    super(injector)
+  }
+  onInit(): void {
+    this.router.params.subscribe((param) => {
       if (param) {
         this.funcID = param["funcID"];
         this.category = param["category"];
         this.loadDataAsync(this.funcID, this.category);
+        this.getUserPermission(this.funcID);
       }
     });
+
     this.getMessageDefault();
   }
   ngAfterViewInit(): void {
@@ -81,8 +82,22 @@ export class NewsComponent implements OnInit {
         }
       }
     ];
-    this.changedt.detectChanges();
+    this.detectorRef.detectChanges();
   }
+  
+  getUserPermission(funcID:string){
+    if(funcID){
+      funcID  = funcID + "P";
+      this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcID])
+      .subscribe((res:any) => {
+        if(res){
+          this.userPermission = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+  }
+  
   getMessageDefault() {
     this.cache.message("WP025").subscribe((mssg: any) => {
       if (mssg && mssg?.defaultName) {
@@ -101,36 +116,38 @@ export class NewsComponent implements OnInit {
     });
   }
   loadDataAsync(funcID: string, category: string) {
-    this.api.execSv(
-      this.service,
-      this.assemblyName,
-      this.className,
-      "GetDatasNewsAsync",
-      [funcID, category])
-      .subscribe((res: any[]) => {
-        if (res.length > 0 && res[0] && res[1] && res[2]) 
-        {
-          this.news = res[0]; 
-          this.videos = res[1]; 
-          this.lstGroup = res[2]; 
-          if(this.videos.length > 3)
+    if(funcID && category){
+      this.api.execSv(
+        this.service,
+        this.assemblyName,
+        this.className,
+        "GetDatasNewsAsync",
+        [funcID, category])
+        .subscribe((res: any[]) => {
+          if (res.length > 0 && res[0] && res[1] && res[2]) 
           {
-            let page = Math.floor(this.videos.length/3);
-            for (let index = 1; index <= page; index++) 
+            this.arrPost = res[0]; 
+            this.videos = res[1]; 
+            this.lstGroup = res[2]; 
+            if(this.videos.length > 3)
             {
-              this.pageSlider.push(index);
-            }; 
-            this.isAllowNavigationArrows = true;
-            
+              let page = Math.floor(this.videos.length/3);
+              for (let index = 1; index <= page; index++) 
+              {
+                this.pageSlider.push(index);
+              }; 
+              this.isAllowNavigationArrows = true;
+              
+            }
+            this.detectorRef.detectChanges();
           }
-          this.changedt.detectChanges();
-        }
-      });
+        });
+    }
   }
-
-
   clickViewDetail(data: any) {
-    this.api
+    if(data && data.recID)
+    {
+      this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
@@ -139,32 +156,61 @@ export class NewsComponent implements OnInit {
         data.recID
       )
       .subscribe();
-    this.codxService.navigate('', '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+      this.codxService.navigate('', '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
+    }
   }
   clickShowPopupCreate(newsType: string) {
-    let option = new DialogModel();
-    option.DataService = this.codxView.dataService;
-    option.FormModel = this.codxView.formModel;
-    option.IsFull = true;
-    let modal = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
-    modal.closed.subscribe((res: any) => {
-      if (res?.event) {
-        let data = res.event;
-        if (data.newsType == this.NEWSTYPE.POST) {
-          this.news.pop();
-          this.news.unshift(data);
-          this.changedt.detectChanges();
+    if(this.view && newsType){
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      let modal = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
+      modal.closed.subscribe((res: any) => {
+        if (res && res.event) {
+          let data = res.event;
+          switch(data.newsType)
+          {
+            case this.NEWSTYPE.POST:
+              let arrPostNew = [];
+              if(this.arrPost.length > 0)
+              {
+                arrPostNew = [...this.arrPost];
+              }
+              arrPostNew.unshift(data);
+              if(arrPostNew.length > 4){
+                arrPostNew.pop();
+              }
+              this.arrPost = [...arrPostNew];
+              
+              break;
+            case this.NEWSTYPE.VIDEO:
+              let arrVideoNew = [];
+              if(this.videos.length > 0)
+              {
+                arrVideoNew = [...this.videos];
+              }
+              arrVideoNew.unshift(data);
+              this.videos = [...arrVideoNew];
+              
+              break;
+            default:
+              break;
+          }
+          this.notifySV.notifyCode('SYS006');
+          this.detectorRef.detectChanges();
         }
-      }
-    })
+      });
+    }
   }
-
   clickShowPopupSearch() {
-    let option = new DialogModel();
-    option.DataService = this.codxView.dataService;
-    option.FormModel = this.codxView.formModel;
-    option.IsFull = true;
-    this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", this.funcID, "", option);
+    if(this.view){
+      let option = new DialogModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      this.callfc.openForm(PopupSearchComponent, "", 0, 0, "", this.funcID, "", option);
+    } 
   }
 
 

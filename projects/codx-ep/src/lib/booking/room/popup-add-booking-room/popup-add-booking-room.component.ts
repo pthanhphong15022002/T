@@ -53,7 +53,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   formModel: FormModel;
   dialogRef: DialogRef;
   modelPage: ModelPage;
-
+  resources: BookingAttendees[] = [];
   bookingAttendees = new BookingAttendees();
   curUser = new BookingAttendees();
   isPopupStationeryCbb = false;
@@ -63,6 +63,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   peopleAttend = [];
   tempArray = [];
   calendarID: any;
+  popover:any;
+  idUserSelected:string;
   roomCapacity = null;
   returnData: any;
   checkLoopS = true;
@@ -91,13 +93,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   tmpEndDate: any;
   isFullDay = false;
   resource!: any;
+  busyAttendees:string;
   isPopupUserCbb = false;
   isPopupOptionalUserCbb = false;
   tempDate = new Date();
   lstDevices = [];
   tmplstDevice = [];
-  // subHeaderText = 'Đặt phòng họp';
-  // titleAction = 'Thêm mới';
   tmpTitle = '';
   title = '';
   tabInfo: any[] = [
@@ -123,6 +124,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     },
   ];
   lstEquipment = [];
+  
+  listRoles=[];
   funcID: string;
   isAdd = false;
   range: any;
@@ -147,12 +150,123 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
     if (this.isAdd) {
-      this.data.bookingOn = null;
+      this.data.bookingOn = new Date();
       this.data.attendees = 1;
+    }
+    else{
+      let tmpStartTime = new Date(this.data?.startDate);
+        let tmpEndTime = new Date(this.data?.endDate);
+        this.startTime =
+          ('0' + tmpStartTime.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
+        this.endTime =
+          ('0' + tmpEndTime.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
     }
   }
 
   onInit(): void {
+    if(this.isAdd){
+      let tmpDate = new Date();
+      let crrMinute = tmpDate.getMinutes();
+      let crrHour =tmpDate.getHours();
+      if(crrMinute<30){
+        crrMinute= 30;        
+      }
+      else{
+        crrMinute=0;
+        crrHour=crrHour+1;
+      }
+      this.startTime =
+          ('0' + crrHour.toString()).slice(-2) +
+          ':' +
+          ('0' + crrMinute.toString()).slice(-2);
+    }
+    this.cache.valueList('CO001').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        console.log(res.datas);
+        this.listRoles = res.datas;
+        if (this.isAdd) {
+          let people = this.authService.userValue;
+          this.curUser.userID = people.userID;
+          this.curUser.userName = people.userName;
+          this.curUser.status = '1';
+          this.curUser.roleType = '1';
+          this.curUser.optional = false;
+          this.listRoles.forEach(element => {
+            if(element.value=='A'){
+              this.curUser.icon=element.icon;
+              this.curUser.roleName=element.text;
+            }
+          });
+          this.changeDetectorRef.detectChanges();
+        }
+      }
+    });
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'EPParameters'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = JSON.parse(
+            res.msgBodyData[0].dataValue
+          )?.CalendarID;
+          if (this.calendarID) {
+            this.api
+              .exec<any>(
+                APICONSTANT.ASSEMBLY.BS,
+                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
+                'GetDayShiftAsync',
+                [this.calendarID]
+              )
+              .subscribe((res) => {
+                res.forEach((day) => {
+                  if (day?.shiftType == '1') {
+                    let tmpstartTime = day?.startTime.split(':');
+                    this.calendarStartTime = tmpstartTime[0] + ':' + tmpstartTime[1];
+                    
+                  } else if (day?.shiftType == '2') {
+                    let tmpEndTime = day?.endTime.split(':');
+                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
+                    if(this.isAdd){
+                      this.endTime=this.calendarEndTime;
+                    }
+                  }
+                });
+              });
+          } else {
+            this.api
+              .execSv(
+                'SYS',
+                'ERM.Business.SYS',
+                'SettingValuesBusiness',
+                'GetByModuleAsync',
+                'Calendar'
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  let tempStartTime = JSON.parse(res.dataValue)[0]?.StartTime.split(':');
+                  this.calendarStartTime = tempStartTime[0] + ':' + tempStartTime[1];
+                  let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(':');
+                  this.calendarEndTime = endTime[0] + ':' + endTime[1];
+                  if(this.isAdd){
+                    this.endTime=this.calendarEndTime;
+                  }
+                }
+              });
+          }
+
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+      
     this.initForm();
     // xử lí thiết bị
     this.cacheService.valueList('EP012').subscribe((res) => {
@@ -182,44 +296,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
     });
 
-    if (this.data) {
-      if (this.data.hours == 24) {
-        this.isFullDay = true;
-      } else {
-        this.isFullDay = false;
-      }
-
-      if (this.isAdd) {
-        this.data.attendees = 1;
-        this.endTime = null;
-        this.startTime = null;
-      }
+    if (this.data) {      
       if (!this.isAdd) {
-        if (this.data?.hours == 24) {
-          this.isFullDay = true;
+        
+        if(this.startTime==this.calendarStartTime && this.endTime==this.calendarEndTime){
+          this.isFullDay=true;          
           this.changeDetectorRef.detectChanges();
         }
-        let tmpStartTime = new Date(this.data?.startDate);
-        let tmpEndTime = new Date(this.data?.endDate);
-        this.startTime =
-          ('0' + tmpStartTime.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
-        this.endTime =
-          ('0' + tmpEndTime.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
       }
     }
-    if (this.isAdd) {
-      let people = this.authService.userValue;
-      this.curUser.userID = people.userID;
-      this.curUser.userName = people.userName;
-      this.curUser.status = '1';
-      this.curUser.roleType = '1';
-      this.curUser.optional = false;
-      this.changeDetectorRef.detectChanges();
-    }
+    
     if (!this.isAdd) {
       this.apiHttpService
         .callSv(
@@ -239,6 +325,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               tempAttender.status = people.status;
               tempAttender.roleType = people.roleType;
               tempAttender.optional = people.optional;
+              this.listRoles.forEach(element => {
+                if(element.value=='P'){//sửa thành roleType
+                  tempAttender.icon=element.icon;
+                  tempAttender.roleName=element.text;
+                }
+              });
               if (tempAttender.userID != this.authService.userValue.userID) {
                 this.attendeesList.push(tempAttender);
               }
@@ -282,66 +374,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
-    this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'EPParameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = JSON.parse(
-            res.msgBodyData[0].dataValue
-          )?.CalendarID;
-          if (this.calendarID) {
-            this.api
-              .exec<any>(
-                APICONSTANT.ASSEMBLY.BS,
-                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
-                'GetDayShiftAsync',
-                [this.calendarID]
-              )
-              .subscribe((res) => {
-                res.forEach((day) => {
-                  if (day?.shiftType == '1') {
-                    let tmpstartTime = day?.startTime.split(':');
-                    this.calendarStartTime =
-                      tmpstartTime[0] + ':' + tmpstartTime[1];
-                  } else if (day?.shiftType == '2') {
-                    let tmpEndTime = day?.endTime.split(':');
-                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
-                  }
-                });
-              });
-          } else {
-            this.api
-              .execSv(
-                'SYS',
-                'ERM.Business.SYS',
-                'SettingValuesBusiness',
-                'GetByModuleAsync',
-                'Calendar'
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  let tempStartTime = JSON.parse(
-                    res.dataValue
-                  )[0]?.StartTime.split(':');
-                  this.calendarStartTime =
-                    tempStartTime[0] + ':' + tempStartTime[1];
-                  let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
-                    ':'
-                  );
-                  this.calendarEndTime = endTime[0] + ':' + endTime[1];
-                }
-              });
-          }
-
-          this.changeDetectorRef.detectChanges();
-        }
-      });
   }
 
   initForm() {
@@ -417,13 +449,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.notificationsService.notifyCode('EP002');
       return;
     }
-    // if(this.data.attendees>this.roomCapacity){
-    //    this.notificationsService.alertCode('EP004').subscribe((x) => {
-    //     if (x.event.status == 'N') {
-    //       return;
-    //     }
-    //   });
-    // }
     this.tmpAttendeesList = [];
     this.attendeesList.forEach((item) => {
       this.tmpAttendeesList.push(item);
@@ -441,222 +466,116 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.resourceType = '1';
     this.data.requester = this.curUser.userName;
     this.data.status = '1';
-    this.dialogRef.dataService
-    .save((opt: any) => this.beforeSave(opt), 0)
-    .subscribe(async (res) => {
-      if (res.save || res.update) {
-        if (!res.save) {
-          this.returnData = res.update;
-        } else {
-          this.returnData = res.save;
-        }
-        if (
-          this.returnData?.recID &&
-          this.returnData?.attachments > 0
-        ) {
-          this.attachment.objectId = this.returnData?.recID;
-          (await this.attachment.saveFilesObservable()).subscribe(
-            (item2: any) => {
-              if (item2?.status == 0) {
-                this.fileAdded(item2);
-              }
-            }
-          );
-        }
-        if (approval) {
-          (
-            await this.codxEpService.getCategoryByEntityName(
-              this.formModel.entityName
-            )
-          ).subscribe((res: any) => {
-            this.codxEpService
-              .release(
-                this.returnData,
-                res.processID,
-                'EP_Bookings',
-                this.formModel.funcID
-              )
-              .subscribe((res) => {
-                if (res?.msgCodeError == null && res?.rowCount) {
-                  this.notificationsService.notifyCode('ES007');
-                  this.returnData.status = '3';
-                  (this.dialogRef.dataService as CRUDService)
-                    .update(this.returnData)
-                    .subscribe();
-                  this.dialogRef && this.dialogRef.close();
-                } else {
-                  this.notificationsService.notifyCode(
-                    res?.msgCodeError
-                  );
-                  return;
-                }
-              });
-          });
-        } else {
-          this.dialogRef && this.dialogRef.close();
-        }
-      } else {
-        //this.notificationsService.notifyCode('SYS01');
-        return;
-      }
-    });
-    // this.api
-    //   .callSv(
-    //     'EP',
-    //     'ERM.Business.EP',
-    //     'BookingsBusiness',
-    //     'BookingAttendeesValidatorAsync',
-    //     [
-    //       this.tmpAttendeesList,
-    //       this.data.startDate.toUTCString(),
-    //       this.data.endDate.toUTCString(),
-    //     ]
-    //   )
-    //   .subscribe((res) => {
-    //     if (res != null && res.msgBodyData[0].length > 0) {
-    //       let busyAttendees = '';
-    //       res.msgBodyData[0].forEach((item) => {
-    //         busyAttendees += item.objectName + ',';
-    //       });
-    //       //this.notificationsService.notifyCode(
-    //       //   'EP005',
-    //       //   0,
-    //       //   '"' + busyAttendees + '"'
-    //       // );
-    //       //this.notificationsService.notifyCode('EP005');
-    //       //thông báo lỗi trùng lịch họp người tham gia
-
-    //       this.notificationsService
-    //         .alertCode('EP005', null, '"' + busyAttendees + '"')
-    //         .subscribe((x) => {
-    //           if (x.event.status == 'N') {
-    //             return;
-    //           } else {
-    //             this.dialogRef.dataService
-    //               .save((opt: any) => this.beforeSave(opt), 0)
-    //               .subscribe(async (res) => {
-    //                 if (res.save || res.update) {
-    //                   if (!res.save) {
-    //                     this.returnData = res.update;
-    //                   } else {
-    //                     this.returnData = res.save;
-    //                   }
-    //                   if (
-    //                     this.returnData?.recID &&
-    //                     this.returnData?.attachments > 0
-    //                   ) {
-    //                     this.attachment.objectId = this.returnData?.recID;
-    //                     (await this.attachment.saveFilesObservable()).subscribe(
-    //                       (item2: any) => {
-    //                         if (item2?.status == 0) {
-    //                           this.fileAdded(item2);
-    //                         }
-    //                       }
-    //                     );
-    //                   }
-    //                   if (approval) {
-    //                     (
-    //                       await this.codxEpService.getCategoryByEntityName(
-    //                         this.formModel.entityName
-    //                       )
-    //                     ).subscribe((res: any) => {
-    //                       this.codxEpService
-    //                         .release(
-    //                           this.returnData,
-    //                           res.processID,
-    //                           'EP_Bookings',
-    //                           this.formModel.funcID
-    //                         )
-    //                         .subscribe((res) => {
-    //                           if (res?.msgCodeError == null && res?.rowCount) {
-    //                             this.notificationsService.notifyCode('ES007');
-    //                             this.returnData.status = '3';
-    //                             (this.dialogRef.dataService as CRUDService)
-    //                               .update(this.returnData)
-    //                               .subscribe();
-    //                             this.dialogRef && this.dialogRef.close();
-    //                           } else {
-    //                             this.notificationsService.notifyCode(
-    //                               res?.msgCodeError
-    //                             );
-    //                             return;
-    //                           }
-    //                         });
-    //                     });
-    //                   } else {
-    //                     this.dialogRef && this.dialogRef.close();
-    //                   }
-    //                 } else {
-    //                   //this.notificationsService.notifyCode('SYS01');
-    //                   return;
-    //                 }
-    //               });
-    //           }
-    //         });
-    //     } else {
-    //       this.dialogRef.dataService
-    //         .save((opt: any) => this.beforeSave(opt), 0)
-    //         .subscribe(async (res) => {
-    //           if (res.save || res.update) {
-    //             if (!res.save) {
-    //               this.returnData = res.update;
-    //             } else {
-    //               this.returnData = res.save;
-    //             }
-    //             if (
-    //               this.returnData?.recID &&
-    //               this.returnData?.attachments > 0
-    //             ) {
-    //               this.attachment.objectId = this.returnData?.recID;
-    //               (await this.attachment.saveFilesObservable()).subscribe(
-    //                 (item2: any) => {
-    //                   if (item2?.status == 0) {
-    //                     this.fileAdded(item2);
-    //                   }
-    //                 }
-    //               );
-    //             }
-    //             if (approval) {
-    //               (
-    //                 await this.codxEpService.getCategoryByEntityName(
-    //                   this.formModel.entityName
-    //                 )
-    //               ).subscribe((res: any) => {
-    //                 this.codxEpService
-    //                   .release(
-    //                     this.returnData,
-    //                     res.processID,
-    //                     'EP_Bookings',
-    //                     this.formModel.funcID
-    //                   )
-    //                   .subscribe((res) => {
-    //                     if (res?.msgCodeError == null && res?.rowCount) {
-    //                       this.notificationsService.notifyCode('ES007');
-    //                       this.returnData.status = '3';
-    //                       (this.dialogRef.dataService as CRUDService)
-    //                         .update(this.returnData)
-    //                         .subscribe();
-    //                       this.dialogRef && this.dialogRef.close();
-    //                     } else {
-    //                       this.notificationsService.notifyCode(
-    //                         res?.msgCodeError
-    //                       );
-    //                       return;
-    //                     }
-    //                   });
-    //               });
-    //             } else {
-    //               this.dialogRef && this.dialogRef.close();
-    //             }
-    //           } else {
-    //             //this.notificationsService.notifyCode('SYS01');
-    //             return;
-    //           }
-    //         });
-    //     }
-    //   });
+    
+    if(this.data.attendees>this.roomCapacity){
+      this.notificationsService.alertCode('EP004').subscribe((x) => {
+       if (x.event.status == 'N') {
+         return;
+       }
+       else{
+        this.attendeesValidateStep(approval);
+       }
+     });     
+    }
+    else{
+      this.attendeesValidateStep(approval);
+    }  
   }
 
+  attendeesValidateStep(approval){
+    this.api
+    .callSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'BookingAttendeesValidatorAsync',
+      [
+        this.tmpAttendeesList,
+        this.data.startDate.toUTCString(),
+        this.data.endDate.toUTCString(),
+      ]
+    )
+    .subscribe((res) => {
+      if (res != null && res.msgBodyData[0].length > 0) {
+        this.busyAttendees = '';
+        res.msgBodyData[0].forEach((item) => {
+          this.busyAttendees += item.objectName + ', ';
+        });
+        this.notificationsService
+        .alertCode('EP005', null, '"' + this.busyAttendees + '"')
+        .subscribe((x) => {
+          if (x.event.status == 'N') {
+            return;
+          } 
+          else {
+            this.startSave(approval);
+          }        
+        });  
+      }
+      else{
+        this.startSave(approval);
+      }
+
+    }); 
+  }
+  startSave(approval){
+    this.dialogRef.dataService
+      .save((opt: any) => this.beforeSave(opt), 0,null,null,!approval)
+      .subscribe(async (res) => {
+        if (res.save || res.update) {
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if (this.returnData?.recID && this.returnData?.attachments > 0) {
+            this.attachment.objectId = this.returnData?.recID;
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (item2: any) => {
+                if (item2?.status == 0) {
+                  this.fileAdded(item2);
+                }
+              }
+            );
+          }
+          if (approval) {
+            (
+              await this.codxEpService.getCategoryByEntityName(
+                this.formModel.entityName
+              )
+            ).subscribe((res: any) => {
+              this.codxEpService
+                .release(
+                  this.returnData,
+                  res.processID,
+                  'EP_Bookings',
+                  this.formModel.funcID
+                )
+                .subscribe((res) => {
+                  if (res?.msgCodeError == null && res?.rowCount) {
+                    this.notificationsService.notifyCode('ES007');
+                    this.returnData.status = '3';
+                    (this.dialogRef.dataService as CRUDService)
+                      .update(this.returnData)
+                      .subscribe();
+                    this.dialogRef && this.dialogRef.close();
+                  } else {
+                    this.notificationsService.notifyCode(res?.msgCodeError);
+                    // Thêm booking thành công nhưng gửi duyệt thất bại
+                    this.dialogRef && this.dialogRef.close();
+                  }
+                });
+            });
+            this.dialogRef && this.dialogRef.close();
+          } else {
+            this.dialogRef && this.dialogRef.close();
+          }
+        } else {
+          return;
+        }
+      });
+  }
+  
   valueChange(event) {
     if (event?.field) {
       if (event.data instanceof Object) {
@@ -685,7 +604,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 400);
+    var dialog = this.callfc.openForm(template, '', 550, 350);
     this.changeDetectorRef.detectChanges();
   }
   //Date time validate
@@ -711,16 +630,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.changeDetectorRef.detectChanges();
     }
   }
-
+  
   bookingOnCheck() {
     let selectDate = new Date(this.data.bookingOn);
     let tmpCrrDate = new Date();
     let crrDate = new Date(
       tmpCrrDate.getFullYear(),
       tmpCrrDate.getMonth(),
-      tmpCrrDate.getDate()
+      tmpCrrDate.getDate(),0,0,0,0
     );
-    if (selectDate < crrDate) {
+    if (new Date(selectDate.getFullYear(),selectDate.getMonth(),selectDate.getDate(),0,0,0,0) < crrDate) {
       this.bookingOnValid = true;
       return false;
     } else {
@@ -747,10 +666,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.changeDetectorRef.detectChanges();
     }
     if (!this.validateStartEndTime(this.startTime, this.endTime)) {
-      this.checkLoop = !this.checkLoop;
-      if (!this.checkLoop) {
-        this.notificationsService.notifyCode('EP002');
-      }
+      // this.checkLoop = !this.checkLoop;
+      // if (!this.checkLoop) {
+      //   this.notificationsService.notifyCode('EP002');
+      // }
       return;
     }
   }
@@ -761,10 +680,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.changeDetectorRef.detectChanges();
     }
     if (!this.validateStartEndTime(this.startTime, this.endTime)) {
-      this.checkLoop = !this.checkLoop;
-      if (!this.checkLoop) {
-        this.notificationsService.notifyCode('EP002');
-      }
+      // this.checkLoop = !this.checkLoop;
+      // if (!this.checkLoop) {
+      //   this.notificationsService.notifyCode('EP002');
+      // }
       return;
     }
   }
@@ -776,45 +695,52 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
   }
 
-  validateStartEndTime(tmpStartTime: any, tmpEndTime: any) {
-    if (tmpStartTime && tmpStartTime) {
-      let beginHour = tmpStartTime.split(':')[0];
-      let beginMinute = parseInt(tmpStartTime.split(':')[1]);
-      let endHour = parseInt(tmpEndTime.split(':')[0]);
-      let endMinute = parseInt(tmpEndTime.split(':')[1]);
-      let tmpDay = new Date(this.data?.bookingOn);
+  validateStartEndTime(startTime: any, endTime: any) {
+    if (startTime!=null && endTime!=null) {
+      let tempStartTime = startTime.split(':');
+      let tempEndTime = endTime.split(':');
+      let tmpDay = this.data.bookingOn;
 
-      if (!isNaN(beginHour) && !isNaN(beginMinute)) {
         this.data.startDate = new Date(
           tmpDay.getFullYear(),
           tmpDay.getMonth(),
           tmpDay.getDate(),
-          beginHour,
-          beginMinute,
+          tempStartTime[0],
+          tempStartTime[1],
           0
         );
-      }
 
-      if (!isNaN(endHour) && !isNaN(endMinute)) {
-        let tmpDay = new Date(this.data?.bookingOn);
         this.data.endDate = new Date(
           tmpDay.getFullYear(),
           tmpDay.getMonth(),
           tmpDay.getDate(),
-          endHour,
-          endMinute,
+          tempEndTime[0],
+          tempEndTime[1],
           0
         );
-      }
 
-      if (
-        this.data.startDate <= new Date() ||
-        this.data.endDate <= new Date()
-      ) {
-        return false;
-      }
+      // if (
+      //   this.data.startDate <= new Date() ||
+      //   this.data.endDate <= new Date()
+      // ) {
+      //   return false;
+      // }
       if (this.data.startDate >= this.data.endDate) {
-        return false;
+        let tmpStartT=new Date(this.data.startDate);
+        let tmpEndH=tmpStartT.getHours();
+        let tmpEndM=tmpStartT.getMinutes();
+        if(tmpEndM<30){
+          tmpEndM=30;
+        }
+        else{
+          tmpEndH=tmpEndH+1;
+          tmpEndM=0;
+        }        
+        this.data.endTime=new Date(tmpStartT.getFullYear(),tmpStartT.getMonth(),tmpStartT.getDate(),tmpEndH,tmpEndM,0,0);
+        this.endTime =
+          ('0' + tmpEndH.toString()).slice(-2) +
+          ':' +
+          ('0' + tmpEndM.toString()).toString().slice(-2);
       }
       this.changeDetectorRef.detectChanges();
     }
@@ -887,10 +813,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
       }
     });
-    this.data.attendees = this.attendeesList.length + 1;
-    if (this.data.attendees > this.roomCapacity) {
-      this.notificationsService.notifyCode('EP004');
-    }
+    this.data.attendees = this.attendeesList.length + 1;    
     this.changeDetectorRef.detectChanges();
   }
 
@@ -911,6 +834,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempAttender.status = '1';
         tempAttender.roleType = '3';
         tempAttender.optional = true;
+        this.listRoles.forEach(element => {
+          if(element.value=='P'){//sửa thành roleType
+            tempAttender.icon=element.icon;
+            tempAttender.roleName=element.text;
+          }
+        });
         this.lstUserOptional.push(tempAttender);
       });
       for (let i = 0; i < this.lstUserOptional.length; ++i) {
@@ -943,6 +872,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempAttender.status = '1';
         tempAttender.roleType = '3';
         tempAttender.optional = false;
+        this.listRoles.forEach(element => {
+          if(element.value=='P'){//sửa thành roleType
+            tempAttender.icon=element.icon;
+            tempAttender.roleName=element.text;
+          }
+        });
         this.lstUser.push(tempAttender);
       });
 
@@ -971,7 +906,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
             tmpDevice.id = item.EquipmentID;
-            tmpDevice.isSelected = false;
+            tmpDevice.isSelected = true;
             this.vllDevices.forEach((vlItem) => {
               if (tmpDevice.id == vlItem.value) {
                 tmpDevice.text = vlItem.text;
@@ -1012,13 +947,148 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     });
 
     this.changeDetectorRef.detectChanges();
+    this.isPopupStationeryCbb = false;
   }
 
   valueQuantityChange(event?) {
     this.lstStationery.forEach((item) => {
       if (item.id == event?.field) {
         item.quantity = event?.data;
+      }      
+    });
+
+    this.lstStationery=this.lstStationery.filter(item => {
+      return item.quantity !=0; 
+    });
+           
+    
+  }
+  //////////////////////////
+  attendeesCheckChange(userID:any){
+    
+  }
+  showPopover(p, userID) {
+    if (this.popover) this.popover.close();
+    if (userID) this.idUserSelected = userID;
+    p.open();
+    this.popover = p;
+  }
+  selectRoseType(idUserSelected, value) {
+    this.attendeesList.forEach((res) => {
+      if (res.userID == idUserSelected) 
+      {        
+        res.roleType = value;
       }
     });
+    this.changeDetectorRef.detectChanges();
+
+    this.popover.close();
   }
+  eventApply(e) {
+    var listUserID = '';
+    var listDepartmentID = '';
+    var listUserIDByOrg = '';
+    var type = 'U';
+    e?.data?.forEach((obj) => {
+      type = obj.objectType;
+      switch (obj.objectType) {
+        case 'U':
+          listUserID += obj.id + ';';
+          break;
+        case 'O':
+        case 'D':
+          listDepartmentID += obj.id + ';';
+          break;
+      }
+    });
+    if (listUserID != '') {
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+      //this.valueUser(listUserID);
+    }
+
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    // if (listDepartmentID != '') {
+    //   this.tmSv
+    //     .getListUserIDByListOrgIDAsync([listDepartmentID, type])
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         listUserIDByOrg += res;
+    //         if (listUserID != '') listUserIDByOrg += ';' + listUserID;
+    //         this.valueUser(listUserIDByOrg);
+    //       }
+    //     });
+    // }
+  }
+
+  // valueUser(resourceID) {
+  //   if (resourceID != '') {
+  //     if (this.resources != null) {
+  //       var user = this.resources;
+  //       var array = resourceID.split(';');
+  //       var id = '';
+  //       var arrayNew = [];
+  //       user.forEach((e) => {
+  //         id += e.resourceID + ';';
+  //       });
+  //       if (id != '') {
+  //         id = id.substring(0, id.length - 1);
+
+  //         array.forEach((element) => {
+  //           if (!id.split(';').includes(element)) arrayNew.push(element);
+  //         });
+  //       }
+  //       if (arrayNew.length > 0) {
+  //         resourceID = arrayNew.join(';');
+  //         id += ';' + resourceID;
+  //         this.getListUser(resourceID);
+  //       }
+  //     } else {
+  //       this.getListUser(resourceID);
+  //     }
+  //   }
+  // }
+
+  // getListUser(resource) {
+  //   while (resource.includes(' ')) {
+  //     resource = resource.replace(' ', '');
+  //   }
+  //   var arrUser = resource.split(';');
+  //   this.listUserID = this.listUserID.concat(arrUser);
+  //   this.api
+  //     .execSv<any>(
+  //       'HR',
+  //       'ERM.Business.HR',
+  //       'EmployeesBusiness',
+  //       'GetListEmployeesByUserIDAsync',
+  //       JSON.stringify(resource.split(';'))
+  //     )
+  //     .subscribe((res) => {
+  //       if (res && res.length > 0) {
+  //         for (var i = 0; i < res.length; i++) {
+  //           let emp = res[i];
+  //           var tmpResource = new CO_Resources();
+  //           if (emp.userID == this.user.userID) {
+  //             tmpResource.resourceID = emp?.userID;
+  //             tmpResource.resourceName = emp?.userName;
+  //             tmpResource.positionName = emp?.positionName;
+  //             tmpResource.roleType = 'A';
+  //             tmpResource.taskControl = true;
+  //             this.resources.push(tmpResource);
+  //           } else {
+  //             tmpResource.resourceID = emp?.userID;
+  //             tmpResource.resourceName = emp?.userName;
+  //             tmpResource.positionName = emp?.positionName;
+  //             tmpResource.roleType = 'P';
+  //             tmpResource.taskControl = true;
+  //             this.resources.push(tmpResource);
+  //           }
+  //           this.meeting.resources = this.resources;
+  //         }
+  //       }
+  //     });
+  // }
 }

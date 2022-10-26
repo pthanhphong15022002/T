@@ -1,11 +1,14 @@
-<codx-form #form headerText="{{title}}" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
+<codx-form #form [headerText]="data.processName" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
     [dialog]="dialog" class="dialog-property">
     <ng-template #header>
         <div class="offcanvas-header w-100">
             <div class="btn-extand d-flex align-items-center"
                 [ngClass]="!hideExtend?'justify-content-end':'justify-content-end'">
                 <ng-container *ngIf="!hideExtend">
-                    <span [style.marginLeft]="'52%'">Thông tin mở rộng</span>
+                    <span [style.marginLeft]="'52%'">
+                        <codx-label fiedName="InfoExpand" default="Thông tin mở rộng">
+                        </codx-label>
+                        </span>
                 </ng-container>
                 <a class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
                     (click)="extendShow()">
@@ -24,7 +27,7 @@
                 <div class="card-body">
                     <div class="mb-5">
                         <h4 class="fw-bold text-gray-900 mb-104">
-                            <codx-label fiedName="Memo" [formModel]="form.formModel" default="Thông tin">
+                            <codx-label fiedName="Info" [formModel]="form.formModel" default="Thông tin">
                             </codx-label>
                         </h4>
                         <div class="d-flex flex-wrap mb-2">
@@ -64,7 +67,10 @@
                         </div>
                     </div>
                     <div class="mb-5">
-                        <h4 class="fw-bold text-gray-900 mb-4">Đánh giá</h4>
+                        <h4 class="fw-bold text-gray-900 mb-4">
+                            <codx-label fiedName="Rating" [formModel]="form.formModel" default="Đánh giá">
+                            </codx-label>
+                        </h4>
                         <div class="d-flex flex-stack w-100 me-2">
                             <!--begin::Section-->
                             <div class="d-flex flex-column flex-center">

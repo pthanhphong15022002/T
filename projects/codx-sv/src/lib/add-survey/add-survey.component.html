@@ -1,0 +1,98 @@
+<div class="page-add-survey">
+  <div class="box">
+    <div class="card-survey">
+      <div class="col-lg-8 control-section inplace-editor-control-section form-layout" #formlayout
+        id="inplace-editor-control">
+        <div class="content-wrapper">
+          <form id="formId" class="form-horizontal example-box">
+            <!-- <div class="form-group">
+              <label
+                class="col-sm-6 control-label"
+                style="text-align: left; font-size: 14px"
+              >
+                Title</label
+              >
+              <ejs-inplaceeditor
+                #inplaceTitleEditor
+                mode="Inline"
+                emptyText="Enter your question title"
+                name="Title"
+                [validationRules]="titleRule"
+                data-underline="false"
+                [model]="titleEditorModel"
+                [value]="item.text"
+                (change)="valueChange($event)"
+              >
+              </ejs-inplaceeditor>
+            </div> -->
+            <div class="form-group">
+              <div class="title-des">
+                <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Enter your comment"
+                  submitOnEnter="false" type="RTE" name="rte" data-underline="false" [model]="titleEditorModel"
+                  [validationRules]="commentRule" [value]="data.text">
+                </ejs-inplaceeditor>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="title-des">
+                <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Mô tả biểu mẫu" submitOnEnter="false"
+                  type="RTE" name="rte" data-underline="false" [model]="descriptionEditorModel"
+                  [validationRules]="commentRule" [value]="data.description">
+                </ejs-inplaceeditor>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+    <div class="example-boundary d-flex w-100">
+      <div class="d-flex flex-column">
+        <div class="box" *ngFor="let item of questions" cdkDragBoundary=".example-boundary" cdkDrag>
+          <div class="card-survey">
+            <div class="col-lg-8 control-section inplace-editor-control-section form-layout" #formlayout
+              id="inplace-editor-control">
+              <div class="content-wrapper">
+                <form id="formId" class="form-horizontal example-box">
+                  <div class="example-handle" cdkDragHandle>
+                    <span class="icon-reorder"></span>
+                  </div>
+                  <div class="form-group">
+                    <div class="title-des">
+                      <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Enter your comment"
+                        submitOnEnter="false" type="RTE" name="rte" data-underline="false" [model]="titleEditorModel"
+                        [validationRules]="commentRule" [value]="item.question">
+                      </ejs-inplaceeditor>
+                    </div>
+                  </div>
+                  <div cdkDropList class="list answer" (cdkDropListDropped)="dropAnswer($event, item.seqNo)">
+                    <div class="box" *ngFor="let x of item.answers" cdkDragBoundary=".answer" cdkDrag>
+                      <div class="has-action-menu">
+                        <div class="d-flex">
+                          <div class="action-menu">
+                            <div class="example-handle-answer" cdkDragHandle>
+                              <span class="icon-reorder"></span>
+                            </div>
+                          </div>
+                          <div class="d-flex size-input">
+                            <span class="icon-radio_button_unchecked icon-radio"></span>
+                            <div class="e-input-group">
+                              <input class="e-input" type="text" placeholder="Normal" (focus)="focusIn($event.target)"
+                                (blur)="focusOut($event.target)" [value]="x.answer" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="moreFC"></div>
+    </div>
+  </div>
+</div>

@@ -5,7 +5,7 @@
         <h2 class="h2-title">
           <codx-label
             name="lblTitleSignFile"
-            default="Thêm mới đăng ký"
+            [default]="title"
             [formModel]="formModel"
           ></codx-label>
         </h2>
@@ -76,8 +76,9 @@
                     class="nav-link fw-bold cursor-pointer"
                     [ngClass]="{ active: !groupID }"
                     (click)="filterStationery()"
-                    ><codx-label name="lblAll" default="Tất cả"></codx-label
-                  ></span>
+                  >
+                    <codx-label name="lblAll" default="Tất cả"></codx-label>
+                  </span>
                 </li>
                 <li class="nav-item" *ngFor="let item of groupStationery">
                   <span
@@ -91,13 +92,18 @@
               <div class="d-flex">
                 <div id="ex4">
                   <span class="p1 fa-stack fa-2x has-badge">
-                    <i class="p3 icon-shopping_cart">{{ cartQty }}</i>
+                    <i class="p3 icon-shopping_cart">{{ this.cart.length }}</i>
                   </span>
                 </div>
 
                 <button (click)="changeTab(2)">
                   <i class="icon-double_arrow"></i>
-                  <span>Tiếp theo</span>
+                  <span>
+                    <codx-label
+                      name="lblContinue"
+                      default="Tiếp theo"
+                    ></codx-label>
+                  </span>
                 </button>
               </div>
             </div>
@@ -130,6 +136,7 @@
     [imageId]="data?.recID"
     [rootData]="data"
     [footer]="cardItemFooter"
+    [imageWidth]="600"
   >
   </codx-card-img>
 </ng-template>
@@ -172,7 +179,11 @@
 </ng-template>
 
 <ng-template #addNewRequest let-dialogSaveToTemplate>
-  <div *ngIf="isAfterRender && formModel" class="row" style="height: 99%">
+  <div
+    *ngIf="isAfterRender && dialogAddBookingStationery"
+    class="row"
+    style="height: 99%"
+  >
     <div class="left col-6">
       <div class="d-flex justify-content-start mb-4">
         <h3 class="h3-title">
@@ -186,14 +197,30 @@
       <div class="d-flex justify-content-between mb-4">
         <div class="d-flex">
           <codx-img
-            [objectId]="user?.userID"
-            [objectName]="user?.userName"
+            [objectId]="
+              isAddNew ? user?.userID : dialogAddBookingStationery?.value?.owner
+            "
+            [objectName]="
+              isAddNew
+                ? user?.userName
+                : dialogAddBookingStationery?.value?.requester
+            "
             [objectType]="'AD_Users'"
           ></codx-img>
           <div class="ms-2">
-            <div class="fw-bold text-start">{{ user?.userName }}</div>
+            <div class="fw-bold text-start">
+              {{
+                isAddNew
+                  ? user?.userName
+                  : dialogAddBookingStationery?.value?.requester
+              }}
+            </div>
             <div class="fw-bold text-black-50">
-              {{ user?.employee?.positionName }} Thư ký trung tâm - NDX
+              {{
+                isAddNew
+                  ? user?.employee?.positionName
+                  : dialogAddBookingStationery?.value?.positionName
+              }}
             </div>
           </div>
         </div>
@@ -215,11 +242,18 @@
               [formModel]="formModel"
             >
             </codx-label>
-            <codx-input
+            <!-- <codx-input
               type="datetime"
               format="d"
               field="bookingOn"
-              (valueChange)="valueChange($event)"
+              [crrValue]="dialogAddBookingStationery.value.bookingOn"
+              (valueChange)="valueBookingOnChange($event)"
+            >
+            </codx-input> -->
+            <codx-input
+              ControlName="bookingOn"
+              [formModel]="formModel"
+              [Group]="dialogAddBookingStationery"
             >
             </codx-input>
           </div>
@@ -228,7 +262,8 @@
               type="radio"
               name="category"
               field="category"
-              [checked]="dialogAddBookingStationery?.value.category === '1'"
+              [checked]="radioPersonalCheck"
+              [crrValue]="radioPersonalCheck"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -237,14 +272,16 @@
               fiedName="Category"
               [default]="requestType[0].text"
               [formModel]="formModel"
-            ></codx-label>
+            >
+            </codx-label>
           </div>
           <div class="d-flex align-items-center form-group col-4">
             <codx-input
               type="radio"
               name="category"
               field="category"
-              [checked]="dialogAddBookingStationery?.value.category === '2'"
+              [checked]="radioGroupCheck"
+              [crrValue]="radioGroupCheck"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -253,7 +290,8 @@
               fiedName="Category"
               [default]="requestType[1].text"
               [formModel]="formModel"
-            ></codx-label>
+            >
+            </codx-label>
           </div>
         </div>
         <div class="row">
@@ -265,6 +303,7 @@
             >
             </codx-label>
             <codx-input
+              [disabled]="dialogAddBookingStationery?.value.category === '1'"
               type="combobox"
               field="bUID"
               refValue="BusinessUnits"
@@ -280,7 +319,12 @@
               default="Số lượng nhân viên"
             >
             </codx-label>
-            <codx-input type="text" [crrValue]="qtyEmp"> </codx-input>
+            <codx-input
+              [disabled]="dialogAddBookingStationery?.value.category === '1'"
+              type="text"
+              [crrValue]="qtyEmp"
+            >
+            </codx-input>
           </div>
         </div>
         <div class="row">
@@ -292,9 +336,11 @@
             >
             </codx-label>
             <codx-input
-              ControlName="reasonID"
-              [formModel]="formModel"
-              [Group]="dialogAddBookingStationery"
+              type="combobox"
+              field="reasonID"
+              refValue="Reasons_BookingStationery"
+              [crrValue]="data.reasonID"
+              (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>
@@ -378,7 +424,7 @@
       ></codx-label>
     </button>
     <div class="btn-group">
-      <button class="btn btn-outline-primary me-2">
+      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
         <codx-label
           name="lblApprove"
           default="Gửi duyệt"

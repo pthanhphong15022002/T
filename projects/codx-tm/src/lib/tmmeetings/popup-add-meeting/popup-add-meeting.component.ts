@@ -144,6 +144,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.resources = [];
     } else if (this.action == 'edit') {
       // this.setTimeEdit();
+      this.showLabelAttachment = this.meeting?.attachments > 0? true : false ;
       this.resources = this.meeting.resources;
       if (this.resources?.length > 0) {
         this.resources.forEach((obj) => this.listUserID.push(obj.resourceID));
@@ -277,15 +278,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.meeting.startDate <= new Date()) {
-      this.notiService.notify(
-        'Thời gian diễn ra cuộc họp phải lớn hơn thời gian hiện tại'
-      );
+    this.notiService.notifyCode("CO002")
       return;
     }
     if (this.meeting.endDate <= new Date()) {
-      this.notiService.notify(
-        'Thời gian kết thúc cuộc họp phải lớn hơn thời gian hiện tại !'
-      );
+      this.notiService.notifyCode("CO002")
       return;
     }
     if (this.meeting.meetingType == '1') {
@@ -304,40 +301,41 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       return;
     }
     this.listTime.forEach((res) => {
-      var startDate =
-        this.addZero(new Date(res.startDate).getHours()) +
-        ':' +
-        this.addZero(new Date(res.startDate).getMinutes());
-      var endDate =
-        this.addZero(new Date(res.endDate).getHours()) +
-        ':' +
-        this.addZero(new Date(res.endDate).getMinutes());
-      var startDateMT = moment(res.startDate).format('MM/DD/YYYY');
-      console.log(this.startTime);
-      console.log(this.endTime);
-      console.log(this.meeting.startDate);
-      if (
-        startDateMT === moment(this.meeting.startDate).format('MM/DD/YYYY') &&
-        startDate === this.startTime &&
-        endDate === this.endTime
-      ) {
-        this.timeBool = true;
+      console.log(this.toTimeSpan(new Date(res.startDate).getHours()));
+      console.log(this.toTimeSpan(new Date(res.endDate).getHours()));
+      console.log(this.toTimeSpan(new Date(res.startDate).getDate()));
 
-        return;
-      } else {
-        this.timeBool = false;
+      var startTime =
+        this.toTimeSpan(new Date(res.startDate).getHours()) +
+        this.toTimeSpan(new Date(res.startDate).getMinutes());
+      var endTime =
+        this.toTimeSpan(new Date(res.endDate).getHours()) +
+        this.toTimeSpan(new Date(res.endDate).getMinutes());
+      var startDate = this.toTimeSpan(new Date(res.startDate).getDate());
+      if (
+        startDate == this.toTimeSpan(new Date(this.meeting.startDate).getDate)
+      ) {
+        if (
+          this.toTimeSpan(this.startTime) >= startTime &&
+          this.toTimeSpan(this.endDate) <= endTime
+        ) {
+          this.timeBool = true;
+          return;
+        } else {
+          this.timeBool = false;
+        }
       }
     });
     if (this.timeBool == true) {
-      var config = new AlertConfirmInputConfig();
-      config.type = 'YesNo';
-      this.notiService
-        .alert(
-          'Thông báo',
-          'Đã trùng lịch bạn có muốn thêm lịch này không',
-          config
-        )
-        .closed.subscribe((x) => {});
+      // var config = new AlertConfirmInputConfig();
+      // config.type = 'YesNo';
+      // this.notiService
+      //   .alert(
+      //     'Thông báo',
+      //     'Đã trùng lịch bạn có muốn thêm lịch này không',
+      //     config
+      //   )
+      //   .closed.subscribe((x) => {});
       //đợi mess code
       this.notiService.notify(
         'Đã trùng thời gian họp đã có, vui lòng chọn thời gian khác!'
@@ -356,6 +354,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       if (this.action === 'add' || this.action === 'copy') this.onAdd();
       else this.onUpdate();
     }
+  }
+
+  toTimeSpan(t) {
+    var time = Date.parse(t.toString());
+    return time;
   }
 
   addZero(i) {
@@ -758,42 +761,20 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (data) {
           this.dayOnWeeks = data;
           var current_day = date.getDay();
-          // var day_name = '';
-          // switch (current_day) {
-          //   case 0:
-          //     day_name = '1';
-          //     break;
-          //   case 1:
-          //     day_name = '2';
-          //     break;
-          //   case 2:
-          //     day_name = '3';
-          //     break;
-          //   case 3:
-          //     day_name = '4';
-          //     break;
-          //   case 4:
-          //     day_name = '5';
-          //     break;
-          //   case 5:
-          //     day_name = '6';
-          //     break;
-          //   case 6:
-          //     day_name = '7';
-          // }
           var endShiftType1 = '';
           var starrShiftType2 = '';
           for (var i = 0; i < this.dayOnWeeks.length; i++) {
             var day = this.dayOnWeeks[i];
-            if (current_day == day.weekday && day.shiftType == '1') {
-              this.startTimeWork = day.startTime.substring(0, 5);
-              endShiftType1 = day.endTime.substring(0, 5);
+            if (day.shiftType == '1') {
+              this.startTimeWork = day.startTime;
+              endShiftType1 = day.endTime;
             }
-            if (current_day == day.weekday && day.shiftType == '2') {
-              this.endTimeWork = day.endTime.substring(0, 5);
-              starrShiftType2 = day.startTime.substring(0, 5);
+            if (day.shiftType == '2') {
+              this.endTimeWork = day.endTime
+              starrShiftType2 = day.startTime
             }
           }
+          
           this.startTimeWork = this.startTimeWork
             ? this.startTimeWork
             : starrShiftType2;

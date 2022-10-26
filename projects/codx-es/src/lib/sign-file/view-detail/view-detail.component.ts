@@ -12,6 +12,7 @@ import {
   CallFuncService,
   DialogModel,
   DialogRef,
+  NotificationsService,
   RequestOption,
   SidebarModel,
   ViewsComponent,
@@ -32,6 +33,7 @@ export class ViewDetailComponent implements OnInit {
     private esService: CodxEsService,
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
+    private notify: NotificationsService,
     private router: ActivatedRoute
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
@@ -56,8 +58,13 @@ export class ViewDetailComponent implements OnInit {
   dialog: DialogRef;
   lstStep = [];
   transID: string;
+  comment: string = ''; //Comment khi yêu cầy hủy
+  cancelControl: string = ''; //Yêu cầu khi hủy duyệt
+  oCancelSF: any; // object cancel
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
+  @ViewChild('addCancelComment') addCancelComment;
+
   ngOnInit(): void {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
@@ -215,7 +222,10 @@ export class ViewDetailComponent implements OnInit {
         this.delete(datas);
         break;
       case 'SYS04':
-        this.assign(datas);
+        this.copy(datas);
+        break;
+      case 'EST01101': //hủy yeu cau duyệt
+        this.beforeCancel(datas);
         break;
     }
   }
@@ -278,6 +288,43 @@ export class ViewDetailComponent implements OnInit {
     });
   }
 
+  copy(datas) {
+    this.view.dataService.dataSelected = datas;
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (!res) return;
+
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+
+      let dialogAdd = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        'Sao chép',
+        700,
+        650,
+        this.funcID,
+        {
+          isAddNew: true,
+          dataSelected: res,
+          formModel: this.view?.formModel,
+          option: option,
+          type: 'copy',
+          oldSfRecID: datas.recID,
+        },
+        '',
+        dialogModel
+      );
+      dialogAdd.closed.subscribe((res) => {
+        if (!res.event) {
+          this.esService.deleteStepByTransID(res.recID).subscribe();
+        }
+      });
+    });
+  }
+
   beforeDel(opt: RequestOption) {
     opt.methodName = 'DeleteSignFileAsync';
     opt.data = this.view.dataService.dataSelected.recID;
@@ -290,6 +337,35 @@ export class ViewDetailComponent implements OnInit {
       .delete([datas], true, (opt) => this.beforeDel(opt))
       .subscribe((item: any) => {
         if (item) {
+        }
+      });
+  }
+
+  beforeCancel(datas: any) {
+    this.esService.getApprovalTransActive(datas.recID).subscribe((lstTrans) => {
+      if (lstTrans && lstTrans?.length > 0) {
+        this.cancelControl = lstTrans[0]?.cancelControl;
+        if (this.cancelControl == '0') {
+        } else if (this.cancelControl == '1') {
+          this.cancel(datas);
+        } else if (this.cancelControl == '2' || this.cancelControl == '3') {
+          this.oCancelSF = datas;
+          this.callfunc.openForm(this.addCancelComment, '', 650, 380);
+        }
+        console.log(lstTrans);
+        return;
+      }
+    });
+  }
+
+  cancel(datas: any) {
+    this.esService
+      .cancelSignfile(datas?.recID, this.comment)
+      .subscribe((res) => {
+        if (res) {
+          datas.approveStatus = '0';
+          this.view.dataService.update(datas).subscribe();
+          this.notify.notifyCode('RS002');
         }
       });
   }
@@ -325,4 +401,38 @@ export class ViewDetailComponent implements OnInit {
 
   fileAdded($event) {}
   getfileCount($event) {}
+
+  valueChange(event) {
+    if (event?.field && event?.component) {
+      if (event?.field == 'comment') {
+        this.comment = event?.data;
+      }
+    }
+  }
+
+  saveComment(popupComment: DialogRef) {
+    if (!this.oCancelSF) {
+      return;
+    }
+    if (this.cancelControl == '2') {
+      //comment khong bat buoc
+      this.cancel(this.oCancelSF);
+      this.comment = '';
+      popupComment && popupComment.close();
+    } else if (this.cancelControl == '3') {
+      //comment bat buoc
+      if (this.comment == '') {
+        this.notify.notifyCode('ES012');
+        return;
+      }
+      this.cancel(this.oCancelSF);
+      this.comment = '';
+      popupComment && popupComment.close();
+    }
+  }
+
+  closeDialogCancel(popupComment: DialogRef) {
+    this.comment = '';
+    popupComment && popupComment.close();
+  }
 }

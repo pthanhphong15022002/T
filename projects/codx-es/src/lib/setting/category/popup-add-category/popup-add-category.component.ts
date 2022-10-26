@@ -65,6 +65,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   settingDataValue: any;
   havaESign: boolean = false;
 
+  type: string;
+  parentRecID: string;
+  oldRecID: string;
+
   constructor(
     private esService: CodxEsService,
     private cache: CacheService,
@@ -80,6 +84,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
     this.headerText = data?.data?.headerText;
+    this.type = data?.data?.type;
+    this.oldRecID = data?.data?.oldRecID;
   }
 
   ngAfterViewInit(): void {
@@ -88,6 +94,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.setApprovalStep(null);
       if (this.isSaved) {
         this.esService.deleteCategory(this.data.categoryID);
+      }
+      if (this.type == 'copy' && !this.isSaved) {
+        this.esService.deleteStepByTransID(this.data?.recID).subscribe();
       }
       if (!this.isSaved && this.isAddAutoNumber) {
         //delete autoNumer đã thiết lập
@@ -108,6 +117,15 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    //copy
+    if (this.type == 'copy') {
+      //New list step
+      this.esService
+        .copyApprovalStep(this.oldRecID, this.data.recID)
+        .subscribe((res) => {
+          console.log(res);
+        });
+    }
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((grv) => {
@@ -127,6 +145,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.data.icon = 'icon-text_snippet';
       this.data.color = '#0078FF';
 
+      this.form?.formGroup?.patchValue({
+        signatureType: '1',
+        icon: 'icon-text_snippet',
+        color: '#0078FF',
+      });
+
       this.esService
         .getSettingByPredicate(
           'FormName=@0 and Category=@1',
@@ -135,11 +159,16 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         .subscribe((setting) => {
           if (setting?.dataValue) {
             this.settingDataValue = JSON.parse(setting.dataValue);
+            console.log(this.settingDataValue);
             if (this.settingDataValue) {
               for (const key in this.settingDataValue) {
                 console.log(key);
                 let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
                 this.data[fieldName] = this.settingDataValue[key];
+                if (key == 'AllowEditAreas') {
+                  this.data[fieldName] =
+                    this.settingDataValue[key] == '0' ? false : true;
+                }
               }
             }
             console.log(this.data);
@@ -193,7 +222,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     if (this.isAdd && this.isSaved == false) {
       option.methodName = 'AddNewAsync';
     } else {
-      option.methodName = 'EditCategoryAsync';
+      if (this.isSaved == false && this.type == 'copy') {
+        option.methodName = 'AddNewAsync';
+      } else option.methodName = 'EditCategoryAsync';
     }
     option.data = [itemData];
     return true;
@@ -206,7 +237,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
     if (this.viewAutoNumber == '') {
       let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
-      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+      this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
 
@@ -215,14 +246,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {
         if (res.update || res.save) {
+          let resData = res.save;
+          if (res.update) resData = res.update;
           this.isSaved = true;
-          // if (res.update) {
-          //   (this.dialog.dataService as CRUDService)
-          //     .update(res.update)
-          //     .subscribe();
-          // }
           if (isClose) {
-            this.dialog && this.dialog.close(res?.update);
+            this.dialog && this.dialog.close(resData);
           }
         }
       });
@@ -231,7 +259,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   openAutoNumPopup() {
     if (this.data.categoryID == '' || this.data.categoryID == null) {
       let headerText = this.grvSetup['CategoryID']?.headerText ?? 'CategoryID';
-      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+      this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
     let popupAutoNum = this.cfService.openForm(
@@ -260,12 +288,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
     if (this.data.categoryID == '' || this.data.categoryID == null) {
       let headerText = this.grvSetup['CategoryID']?.headerText ?? 'CategoryID';
-      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+      this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
     if (this.viewAutoNumber == '') {
       let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
-      this.notify.notifyCode('SYS028', 0, '"' + headerText + '"');
+      this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
     if (this.isAdd) {

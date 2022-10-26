@@ -40,7 +40,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     this.api.execSv(
       'BG',
       'ERM.Business.BG',
-      'NotificationBusiness',
+      'NotificationBusinesss',
       'GetAsync',
       [this.pageIndex]
     ).subscribe((res:any[]) => {

@@ -21,18 +21,8 @@
           <div class="d-flex justify-content-start">
             <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
               <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
-                <span class="me-1 ps-2" [ngClass]="[
-                    item.isSelected ? 'text-primary' : 'text-muted',
-                    item.id == '1'
-                      ? 'icon-wifi'
-                      : item.id == '2'
-                      ? 'icon-personal_video'
-                      : item.id == '3'
-                      ? 'icon-mic_none'
-                      : item.id == '4'
-                      ? 'icon-switch_video'
-                      : ' icon-thermostat'
-                  ]">
+                <span class="me-1 ps-2"  [className]="item.icon"
+                [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
                 </span>{{ item.text }}
                 <!-- <i class="icon-panorama_fish_eye"></i> -->
               </li>
@@ -321,58 +311,43 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #popupDevice let-dialog>
   <div class="modal-header">
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex justify-content-between align-items-center">
         <h2 id="modal-basic-title">
-          <codx-label default="Chọn thiết bị" name="lblEquipment" [formModel]="dialog.formModel"></codx-label>
+          <codx-label name = "lblEquipment" default="Cài đặt thiết bị" ></codx-label>
         </h2>
-        <button type="button" class="btn btn-xs btn-icon btn-active-color-primary btn-light btn-hover-primary"
-          aria-label="Close" (click)="dialog.close()">
+        <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+          (click)="dialog.close()">
           <span class="icon-close icon-20 text-dark text-hover-primary"></span>
         </button>
       </div>
       <div class="text-dark-50">
-        <codx-label default="Chọn các thiết bị đã tích hợp sẵn trong xe" name="lblChooseEquipments"
-          [formModel]="dialog.formModel"></codx-label>
+        <codx-label name="lblChooseCarEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong xe"
+        ></codx-label>
       </div>
     </div>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" *ngIf="tmplstDevice != null">
     <div class="py-2" *ngFor="let item of tmplstDevice">
       <div class="d-flex flex-stack">
         <div class="d-flex">
-          <span class="text-dark me-2 p-1" [ngClass]="[
-              item.isSelected ? 'text-primary' : 'text-muted',
-              item.id == '1'
-                ? 'icon-wifi'
-                : item.id == '2'
-                ? 'icon-personal_video'
-                : item.id == '3'
-                ? 'icon-mic_none'
-                : item.id == '4'
-                ? 'icon-switch_video'
-                : ' icon-thermostat'
-            ]">
-          </span>
+          <span class="me-1 ps-2" [className]="item.icon"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"></span>
           <div class="d-flex flex-column justify-content-center">
-            <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
+            <span href="#" class="ms-2 text-dark fw-bolder">{{ item?.text }}</span>
           </div>
         </div>
         <div class="d-flex justify-content-end">
           <div class="form-check form-check-solid form-switch">
             <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
-              [checked]="item.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
+              [checked]="item?.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
             <label class="form-check-label" for="googleswitch"></label>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="modal-footer" (click)="dialog.close()">
-    <button type="button" class="btn btn-primary">
-      <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
-    </button>
   </div>
 </ng-template>

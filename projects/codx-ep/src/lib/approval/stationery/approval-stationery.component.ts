@@ -85,28 +85,16 @@ export class ApprovalStationeryComponent
     //   datas = this.view.dataService.data[index];
     // }
     switch (funcID) {
-      case 'EPT40101':
-      case 'EPT40201':
       case 'EPT40301':
         {
           //alert('Duyệt');
           this.approve(datas,"5")
         }
         break;      
-      case 'EPT40105':
-      case 'EPT40205':
       case 'EPT40305':
         {
           //alert('Từ chối');
           this.approve(datas,"4")
-        }
-        break;
-      case 'EPT40106':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          //alert('Làm lại');
-          this.approve(datas,"2")
         }
         break;
       default:
@@ -132,11 +120,7 @@ export class ApprovalStationeryComponent
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
                 data.status="4";
-              }
-              if(status=="2"){
-                this.notificationsService.notifyCode('ES007');//làm lại
-                data.status="2"
-              }                
+              }              
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -149,9 +133,10 @@ export class ApprovalStationeryComponent
       switch(data?.status){
         case "3":
         event.forEach(func => {
-          if(func.functionID == "EPT40102" 
-          ||func.functionID == "EPT40103" 
-          || func.functionID == "EPT40104")
+          if(func.functionID == "EPT40302" 
+          ||func.functionID == "EPT40303" 
+          ||func.functionID == "EPT40306" 
+          || func.functionID == "EPT40304")
           {
             func.disabled=true;
           }
@@ -159,12 +144,12 @@ export class ApprovalStationeryComponent
         break;
         case "4":
           event.forEach(func => {
-            if(func.functionID == "EPT40102" 
-            ||func.functionID == "EPT40103" 
-            || func.functionID == "EPT40104"
-            ||func.functionID == "EPT40105" 
-            ||func.functionID == "EPT40106" 
-            || func.functionID == "EPT40101"
+            if(func.functionID == "EPT40302" 
+            ||func.functionID == "EPT40303" 
+            || func.functionID == "EPT40304"
+            ||func.functionID == "EPT40305" 
+            ||func.functionID == "EPT40306" 
+            || func.functionID == "EPT40301"
             )
             {
               func.disabled=true;
@@ -173,12 +158,12 @@ export class ApprovalStationeryComponent
         break;
         case "5":
           event.forEach(func => {
-            if(func.functionID == "EPT40102" 
-            ||func.functionID == "EPT40103" 
-            || func.functionID == "EPT40104"
-            ||func.functionID == "EPT40105" 
-            ||func.functionID == "EPT40106" 
-            || func.functionID == "EPT40101"
+            if(func.functionID == "EPT40302" 
+            ||func.functionID == "EPT40303" 
+            || func.functionID == "EPT40304"
+            ||func.functionID == "EPT40305" 
+            ||func.functionID == "EPT40306" 
+            || func.functionID == "EPT40301"
             )
             {
               func.disabled=true;
@@ -187,12 +172,12 @@ export class ApprovalStationeryComponent
         break;
         case "2":
           event.forEach(func => {
-            if(func.functionID == "EPT40102" 
-            ||func.functionID == "EPT40103" 
-            || func.functionID == "EPT40104"
-            ||func.functionID == "EPT40105" 
-            ||func.functionID == "EPT40106" 
-            || func.functionID == "EPT40101"
+            if(func.functionID == "EPT40302" 
+            ||func.functionID == "EPT40303" 
+            || func.functionID == "EPT40304"
+            ||func.functionID == "EPT40305" 
+            ||func.functionID == "EPT40306" 
+            || func.functionID == "EPT40301"
             )
             {
               func.disabled=true;
@@ -218,15 +203,15 @@ export class ApprovalStationeryComponent
       recID = event.recID;
       this.itemDetail = event;
     }
-    this.getDetailBooking(recID);
+    this.getDetailApprovalBooking(recID);
   }
 
-  getDetailBooking(id: any) {
+  getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(
         'EP',
         'BookingsBusiness',
-        'GetBookingByIDAsync',
+        'GetApprovalBookingByIDAsync',
         [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
       )
       .subscribe((res) => {
@@ -236,7 +221,6 @@ export class ApprovalStationeryComponent
         }
       });
   }
-
 
   setStyles(resourceType) {
     let styles = {};

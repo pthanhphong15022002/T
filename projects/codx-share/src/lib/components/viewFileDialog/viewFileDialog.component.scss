@@ -104,8 +104,8 @@ ngb-modal-window {
 //     border-radius: 0.25rem;
 // }
 
-#dm_viewFile {
-    height: calc(100% - 35px) !important;
+#dm_viewFile{
+    height: calc(100% - 36px) !important;
     //overflow: auto;
     // iframe{
     //     height: calc(100vh - 120px)!important;
@@ -114,17 +114,14 @@ ngb-modal-window {
 
 #viewfiledalog {
     height: 100%;
-    align-items: center;
-    justify-content: center;
-    display: flex;
 }
 
 #viewfiledalog img,
 #viewfiledalog video {
-    width: auto !important;
-    height: auto !important;
-    max-width: 100%;
-    max-height: 100%;
+    // width: auto !important;
+    // height: auto !important;
+    // max-width: 100%;
+    // max-height: 100%;
 }
 
 #viewfiledalog video.viewfileiframe {

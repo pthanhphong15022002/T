@@ -144,6 +144,7 @@ export class CodxTasksComponent
   listViewModel = [];
   dataReferences = [];
   titleAction = '';
+  moreFunction = [];
 
   constructor(
     inject: Injector,
@@ -217,7 +218,6 @@ export class CodxTasksComponent
       } else {
         this.requestSchedule.predicate = 'Category=@0 or Category=@1';
         this.requestSchedule.dataValue = '1;2';
-        this.dataObj = null;
       }
     } else {
       this.requestSchedule.predicate = '';
@@ -232,8 +232,8 @@ export class CodxTasksComponent
     this.requestTree.idField = 'taskID';
     this.getParams();
 
+    this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
-
   }
 
   ngAfterViewInit(): void {
@@ -890,6 +890,18 @@ export class CodxTasksComponent
           this.view.dataService.update(data);
         }
       });
+    ///chắc chắn phải sửa
+    // this.cache.functionList(this.funcID).subscribe((f) => {
+    //   if (f)
+    //     this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+    //       if (res) {
+    //       this.moreFunction = res;
+    //       if(this.moreFunction.length=0) return ;
+    //       var moreFun = this.moreFunction.find(x=>UrlUtil.getUrl('defaultValue', x?.url)==data.status && UrlUtil.getUrl('defaultField', x?.url)=="Status" )
+    //       if(moreFun) return this.changeStatusTask(moreFun,data)
+    //      }
+    //     });
+    // });
   }
 
   //update Status of Tasks

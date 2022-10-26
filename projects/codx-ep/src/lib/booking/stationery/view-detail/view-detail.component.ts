@@ -1,8 +1,11 @@
+import { mergeMap } from 'rxjs';
 import {
   Component,
+  EventEmitter,
   Injector,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -20,6 +23,9 @@ export class BookingStationeryViewDetailComponent
 {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('attachment') attachment;
+  @Output('edit') edit: EventEmitter<any> = new EventEmitter();  
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter(); 
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter(); 
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -33,10 +39,7 @@ export class BookingStationeryViewDetailComponent
   itemDetailStt: any;
   active = 1;
 
-  constructor(
-    private injector: Injector,
-    private codxEpService: CodxEpService
-  ) {
+  constructor(private injector: Injector, private epService: CodxEpService) {
     super(injector);
   }
 
@@ -57,6 +60,16 @@ export class BookingStationeryViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            this.epService
+              .getEmployeeByOrgUnitID(this.itemDetail?.buid)
+              .subscribe((res) => {
+                if (res) {
+                  this.itemDetail.empQty = res;
+                } else {
+                  this.itemDetail.empQty = 1;
+                }
+                this.detectorRef.detectChanges();
+              });
             this.detectorRef.detectChanges();
           }
         });
@@ -66,61 +79,30 @@ export class BookingStationeryViewDetailComponent
     this.active = 1;
   }
 
-  openFormFuncID(value, datas: any = null) {
-    let funcID = value?.functionID;
-    switch (funcID) {
-      case 'EPT40101':
-      case 'EPT40201':
-      case 'EPT40301':
-        {
-          alert('Duyệt');
-        }
+  childClickMF(event, data) {   
+    switch (event?.functionID) {
+      case 'SYS02': //Xoa
+        this.lviewDelete(data);
         break;
-      case 'EPT40102':
-      case 'EPT40201':
-      case 'EPT40301':
-        {
-          alert('Ký');
-        }
-        break;
-      case 'EPT40103':
-      case 'EPT40203':
-      case 'EPT40303':
-        {
-          alert('Đồng thuận');
-        }
-        break;
-      case 'EPT40104':
-      case 'EPT40204':
-      case 'EPT40304':
-        {
-          alert('Đóng dấu');
-        }
-        break;
-      case 'EPT40105':
-      case 'EPT40205':
-      case 'EPT40305':
-        {
-          alert('Từ chối');
-        }
-        break;
-      case 'EPT40106':
-      case 'EPT40206':
-      case 'EPT40306':
-        {
-          alert('Làm lại');
-        }
-        break;
-      default:
-        '';
+
+      case 'SYS03': //Sua.
+        this.lviewEdit(data,event.text);
         break;
     }
   }
-
-  changeDataMF(event, data: any) {
-    console.log(event);
-    console.log(data);
+  lviewEdit(data?,mfuncName?) {
+    if (data) {         
+      this.setPopupTitle.emit(mfuncName);  
+      this.edit.emit(data);
+    }
   }
+  lviewDelete(data?) {
+    if (data) {      
+      this.delete.emit(data);
+    }
+  }
+
+  changeDataMF(event, data: any) {}
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
@@ -158,6 +140,4 @@ export class BookingStationeryViewDetailComponent
       )[0].style.height = main - header - 27 + 'px';
     }
   }
-
-  
 }

@@ -50,7 +50,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   onInit(): void {
-    debugger;
     this.route.params.subscribe((routeParams) => {
       this.layout.setLogo(null);
       this.layout.setUrl(null);
@@ -65,7 +64,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    debugger;
     this.views = [
       {
         type: ViewType.grid,
@@ -117,9 +115,7 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private addNew() {
-    debugger;
     this.viewBase.dataService.addNew().subscribe((res) => {
-      debugger;
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '550px';
@@ -137,15 +133,16 @@ export class DynamicFormComponent extends UIComponent {
         option
       );
       //Xử lý riêng của OD
-      if(this.viewBase?.currentView?.formModel?.funcID == "ODS21")
-        dialog.closed.subscribe(item=>{
+      if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
+        dialog.closed.subscribe((item) => {
           var dt = item?.event?.save;
-          if(dt && !dt?.error && dt?.data && dt?.data?.approval)
-          {
+          if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
-            this.api.execSv("ES","ES","CategoriesBusiness","ExistAsync",dt?.data).subscribe();
+            this.api
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', dt?.data)
+              .subscribe();
           }
-        })
+        });
     });
   }
 
@@ -204,7 +201,6 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private export(evt: any) {
-    debugger;
     var id = 'recID';
     this.cache.entity(this.viewBase.formModel.entityName).subscribe((res) => {
       if (res) {

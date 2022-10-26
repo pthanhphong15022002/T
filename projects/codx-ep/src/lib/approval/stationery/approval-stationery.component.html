@@ -50,8 +50,9 @@
     #viewdetail
     [itemDetail]="itemDetail"
     [funcID]="funcID"
-    [formModel]="view?.formModel"
+    [formModel]="formModel"
     [view]="view"
-    (uploaded)="getDetailBooking($event)"
+    (updateStatus)="updateStatus($event)"
+    (uploaded)="getDetailApprovalBooking($event)"
   ></approval-stationery-view-detail>
 </ng-template>

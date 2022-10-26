@@ -1,18 +1,48 @@
 export class BP_Processes {
+  recID :string ;
+  category  :string ;
   processNo: string;
   processName: string;
   processName2: string;
   processType: string;
   memo: string;
   groupID: string;
+  status : string;
+  flowchart: string
   activedOn: Date;
   expiredOn: Date;
+  stopOn :Date ;
+  note :string ;
+  url :string;
+  revision :boolean ;
+  revisionID : string ;
+  versionNo : string ;
+  versionOn : Date
+  versions :  BP_ProcessRevisions[];
+  phases : number ;
+  activities : number;
+  views :number ;
   attachments: number;
+  comments : number;
+  rattings :string ;
+  positionID :string ;
+  deptID :string ;
+  divisionID :string ;
+  companyID:string ;
+  owner :string ;
+  bUID :string ;
+  approvedOn :Date;
+  approvedBy :string;
+  createdOn :Date
+  createdBy :string
+  modifiedOn :Date
+  modifiedBy :string
 }
 
 export class BP_ProcessSteps {
   id : string ;
   recID : string ;
+  processID :string ;
   parentID: string;
   stepNo : number ;
   stepName :string ;
@@ -37,18 +67,25 @@ export class BP_ProcessSteps {
   createdBy : string ;
   modifiedOn : Date ;
   modifiedBy : string ;
+  owners :Array<BP_ProcessOwners> ;
 }
 export class BP_ProcessRevisions{
-
+  recID: string;
+  versionNo: string;
+  activedOn: Date;
+  comment: string;
+  approveStatus: string;
+  approvedBy: string;
+  approvedOn: Date;
+  createdOn: Date;
+  createdBy: string;
 }
 export class BP_ProcessOwners {
   id : string ;
   recID : string ;
-  parentID: string;
-  stepID : string ;
   objectType: string ;
   objectID :string ;
-  rACID :string ;
+  rAIC :string ;
   note :string ;
   createdOn : Date ;
   createdBy : string ;

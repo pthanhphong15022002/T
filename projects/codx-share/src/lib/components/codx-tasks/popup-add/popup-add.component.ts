@@ -390,19 +390,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo = res[2];
         this.listTaskResources = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
-        this.api
-          .execSv<any[]>(
-            'DM',
-            'DM',
-            'FileBussiness',
-            'GetFilesByObjectIDAsync',
-            [this.task.recID]
-          )
-          .subscribe((res) => {
-            if (res && res.length > 0) this.showLabelAttachment = true;
-            else this.showLabelAttachment = false;
-          });
-
+        this.showLabelAttachment = this.task.attachments > 0? true : false ;
         if (this.action == 'edit' && this.task.category == '2') {
           this.disableDueDate = true;
           if (this.param?.EditControl == '0') this.readOnly = true;

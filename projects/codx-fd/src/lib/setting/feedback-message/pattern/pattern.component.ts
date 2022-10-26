@@ -50,10 +50,7 @@ export class PatternComponent extends UIComponent implements OnInit {
     private callfunc: CallFuncService
   ) {
     super(injector);
-    this.router.params.subscribe((params) => {
-      if (params) this.funcID = params['funcID'];
-    });
-    this.cache.functionList(this.funcID).subscribe((res) => {
+    this.cache.functionList('FDS026').subscribe((res) => {
       if (res) this.functionList = res;
     });
     this.getCardType('FDS026');
