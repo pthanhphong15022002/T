@@ -14,6 +14,9 @@ import {
   NotificationsService,
   CodxService,
   CacheService,
+  MenuComponent,
+  ApiHttpService,
+  AuthStore,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 
@@ -43,9 +46,11 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
+    private authstore: AuthStore,
     private tenantStore: TenantStore,
     private notifyService: NotificationsService,
-    private cache: CacheService
+    private cache: CacheService,
+    private api: ApiHttpService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) this.functionList = res;
@@ -65,6 +70,15 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewInit() {
+    MenuComponent.reinitialization();
+  }
+
+  mouseEnter(ele: any, sub: any) {
+    // let menuInstance = MenuComponent.getInstance(ele);
+    // if (menuInstance) menuInstance.show(ele);
+  }
+
   logout() {
     this.auth.logout();
     document.location.reload();
@@ -72,7 +86,42 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   selectLanguage(lang: string) {
     this.setLanguage(lang);
-    // document.location.reload();
+    var l = this.language.lang.toUpperCase();
+    this.api
+      .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [
+        l,
+        '',
+      ])
+      .subscribe((res: UserModel) => {
+        this.auth.userSubject.next(res);
+        //this.auth.startRefreshTokenTimer();
+        this.authstore.set(res);
+        document.location.reload();
+      });
+    this.cache.systemSetting().subscribe((systemSetting: any) => {
+      systemSetting.language = this.language.lang.toUpperCase();
+      var user = this.authstore.get();
+      // this.user$.subscribe((user) => {
+      //   user.language = this.language.lang.toUpperCase();
+      //   this.auth.userSubject.next(user);
+      //   //this.auth.startRefreshTokenTimer();
+      //   this.authstore.set(user);
+      // });
+      this.api
+        .execAction('AD_SystemSettings', [systemSetting], 'UpdateAsync')
+        .subscribe((res) => {
+          if (res) {
+            user.language = this.language.lang.toUpperCase();
+            //this.auth.stopRefreshTokenTimer();
+            //this.authstore.remove();
+            //this.auth.userValue = null;
+            this.auth.userSubject.next(user);
+            //this.auth.startRefreshTokenTimer();
+            this.authstore.set(user);
+            document.location.reload();
+          }
+        });
+    });
   }
 
   setLanguage(lang?: string) {
@@ -123,9 +172,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   changePass() {
-    this.tenant
+    this.tenant;
     var url = `auth/login`;
-    this.codxService.navigate(null, url, {id: 'changePass'})
+    this.codxService.navigate(null, url, { id: 'changePass' });
   }
 }
 
