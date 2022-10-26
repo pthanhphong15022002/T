@@ -493,7 +493,7 @@ export class MoveComponent implements OnInit {
             if (index > -1) {
               list.splice(index, 1);//remove element from array
               that.dmSV.listFolder = list;
-             // that.changeDetectorRef.detectChanges();
+              that.changeDetectorRef.detectChanges();
             }
           }
           this.dmSV.addFolder.next(res.data); // them node con

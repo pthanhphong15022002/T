@@ -572,7 +572,7 @@
                               'fst-italic': isItalic,
                               'text-decoration-underline': isUnd
                             }"
-                            [defaultValue]="'area.labelValue'"
+                            [defaultValue]="area.labelValue"
                           />
                         </div>
 
@@ -584,7 +584,7 @@
                             class="me-2 min-w-70px"
                             id="dateFormatsDropdownList"
                             [dataSource]="lstAnnotDateFormat"
-                            [(value)]="curAnnotDateFormat"
+                            [value]="curAnnotDateFormat"
                             formControlName="dateFormat"
                           >
                           </ejs-dropdownlist>
@@ -654,32 +654,42 @@
                           </div>
                         </div>
                         <div class="d-flex ms-12" *ngIf="area.labelType == 5">
+                          <!-- <div
+                            class="date-type-space"
+                            *ngFor="
+                              let dateType of lstSignDateType;
+                              let index = index
+                            "
+                          > -->
                           <codx-input
                             class="me-4 date-Type"
                             name="date-Type"
                             type="radio"
-                            [(checked)]="chooseSignDate"
+                            [checked]="!useSignDate"
                             labelPosition="After"
-                          >
-                          </codx-input
-                          ><codx-label
-                            name="lblReleaseDay"
-                            default="Ngày phát hành"
-                            [formModel]=""
-                          ></codx-label>
-                          <codx-input
-                            class="me-4 date-Type"
-                            type="radio"
-                            name="date-Type"
-                            [(checked)]="!chooseSignDate"
-                            labelPosition="After"
+                            (valueChange)="changeUseCreatedDate()"
                           >
                           </codx-input>
                           <codx-label
-                            name="lblSignDate"
-                            default="Ngày ký"
+                            [name]="'lblSignDateType0'"
+                            [default]="lstSignDateType[0]"
                             [formModel]=""
                           ></codx-label>
+                          <codx-input
+                            class="me-4 date-Type"
+                            name="date-Type"
+                            type="radio"
+                            [checked]="useSignDate"
+                            labelPosition="After"
+                            (valueChange)="changeUseSignDate()"
+                          >
+                          </codx-input
+                          ><codx-label
+                            [name]="'lblSignDateType1'"
+                            [default]="lstSignDateType[1]"
+                            [formModel]=""
+                          ></codx-label>
+                          <!-- </div> -->
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button

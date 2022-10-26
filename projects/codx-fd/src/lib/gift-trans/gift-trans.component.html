@@ -1,56 +1,29 @@
-<codx-views #view 
-[views]="views" 
-[idField]="'recID'" 
-[button]="buttonAdd" 
-[autoLoad]="true"
-[selectedFirst]="true"
-(selectedChange)="selectedChange($event)"
-[entityName]="entityName"
-(buttonClick)="clickShowAssideRight()">
-</codx-views> 
+<codx-views #view [views]="views" [idField]="'recID'" [button]="buttonAdd" [autoLoad]="true" [selectedFirst]="true"
+    (selectedChange)="selectedChange($event)" [entityName]="entityName" (buttonClick)="clickShowAssideRight()">
+</codx-views>
 
 <ng-template #panelLefRef>
 </ng-template>
 <ng-template #itemTemplate let-data>
     <ng-container *ngIf="data.transType == '1'; else transType2">
-        <codx-temp-full 
-            [dataItem]="data"
-            cardCss="card-template border-bottom px-2 pt-4 pb-2" 
-            [typeMF]="'hover'" 
-            [formModel]="view.formModel"
-            (clickMF)="clickMF($event,data)"
-            [imageId]="data.itemID"
-            imageObjType="AD_Users"
-            imgCss="me-2"
-            [title]="data.userName"
-            [desc]="data.transType | vll:'L1422':'text' | async"
-            [status]="data.status"
-            [statusVll]="'L1428'"
-            [date]="data.createdOn"
-            [bookmark]="false">
+        <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3" [typeMF]="'hover'"
+            [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.itemID"
+            imageObjType="AD_Users" imgCss="me-3" [title]="data.userName"
+            [desc]="data.transType | vll:'L1422':'text' | async" [status]="data.status" [statusVll]="'L1428'"
+            [date]="data.createdOn" [bookmark]="false">
         </codx-temp-full>
     </ng-container>
     <ng-template #transType2>
-        <codx-temp-full 
-            [dataItem]="data"
-            cardCss="card-template border-bottom px-2 pt-4 pb-2" 
-            [typeMF]="'hover'" 
-            [formModel]="view.formModel"
-            (clickMF)="clickMF($event,data)"
-            [imageId]="data.itemID"
-            imageObjType="AD_Users"
-            imgCss="me-2"
-            [title]="data.userName"
-            [desc]="data.transType | vll:'L1437':'text' | async"
-            [status]="data.status"
-            [statusVll]="'L1428'"
-            [date]="data.createdOn"
-            [bookmark]="false">
+        <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3" [typeMF]="'hover'"
+            [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.itemID"
+            imageObjType="AD_Users" imgCss="me-3" [title]="data.userName"
+            [desc]="data.transType | vll:'L1437':'text' | async" [status]="data.status" [statusVll]="'L1428'"
+            [date]="data.createdOn" [bookmark]="false">
         </codx-temp-full>
     </ng-template>
-    
+
 </ng-template>
 
 <ng-template #panelRightRef>
-    <fd-detail-gift [objectID]="selectedGiftID" [formModel]="view.formModel"></fd-detail-gift>  
+    <fd-detail-gift [objectID]="selectedGiftID" [formModel]="view.formModel"></fd-detail-gift>
 </ng-template>

@@ -33,7 +33,6 @@ export class PopupSelectLabelComponent extends UIComponent {
     // { idx: 2, image: 'assets\\img\\Labels\\Express.jpg' },
   ];
 
-  tabs = ['Mặc định', 'Upload'];
   onInit(): void {
     this.title = this.data.title;
     this.labels = this.data.labels;
