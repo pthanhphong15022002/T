@@ -1,7 +1,14 @@
 .page-add-survey {
-  .card-survey {
-    width: 768px !important;
-    margin: auto;
+  width: 800px !important;
+  margin: auto;
+  position: relative;
+
+  .moreFC {
+    width: 40px !important;
+    position: absolute;
+    right: 0;
+    margin-right: -40px;
+    top: 0
   }
 
   .border-left {
