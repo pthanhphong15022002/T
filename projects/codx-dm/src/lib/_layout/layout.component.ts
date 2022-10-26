@@ -107,11 +107,11 @@ db.DM_FolderInfo.updateMany(
       //  totalUsed: any;
       // totalHdd: any;
       this.getHDDInformaton(item);
-      if (document.body.getElementsByClassName('btn-minimize')[0])
-        document.body
-          .getElementsByClassName('btn-minimize')[0]
-          .addEventListener('click', item);
-    });
+      if(document.body.getElementsByClassName('btn-minimize')[0])
+        document.body.getElementsByClassName('btn-minimize')[0].addEventListener('click',()=>{
+          this.showtitle = !this.showtitle;
+        });      
+    })
 
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
@@ -285,34 +285,6 @@ db.DM_FolderInfo.updateMany(
         }
       }
     }
-    document.body
-      .getElementsByClassName('btn-minimize')[0]
-      .addEventListener('click', () => {
-        if (this.showtitle == false) {
-          /* this.titleHddUsed_small = this.percentUsed ;
-      this.changeDetectorRef.detectChanges(); */
-          this.showtitle = true;
-        } else {
-          //
-          /* this.titleHddUsed_small = this.percentUsed ;
-      this.changeDetectorRef.detectChanges(); */
-          this.showtitle = false;
-          /* if (item != null) { */
-          //this.itemHdd = item;
-
-          //this.percentUsed = 100 * (item.totalUsed / item.totalHdd);
-          //console.log(this.percentUsed);
-          //this.titleHddUsed_small = 100 * (item.totalUsed / item.totalHdd);
-          //this.titleHddUsed = item.messageHddUsed;
-
-          //}
-        }
-        //console.log('abc123')
-      });
-    // bắt sự kiện class
-    // this.renderer.listen('button.btn-minimize', 'click', (event) => {
-    //   console.log(event);
-    // });
   }
 
   disable() {

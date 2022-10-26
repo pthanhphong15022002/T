@@ -784,8 +784,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           false
         );
     }
-
-    if (remainingStorage >= 0 && toltalUsed > remainingStorage)
+    if (remainingStorage >= 0 && toltalUsed > remainingStorage )
       return this.notificationsService.notifyCode('DM053');
     this.atSV.fileListAdded = [];
     if (total > 1) {
