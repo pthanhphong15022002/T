@@ -3,10 +3,7 @@
     <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
             <div class="me-4">
-                <codx-label 
-                    class="fw-bolder fs-1" 
-                    [formModel]="dialogRef.formModel" 
-                    name="lblHeaderText"
+                <codx-label class="fw-bolder fs-1" [formModel]="dialogRef.formModel" name="lblHeaderText"
                     default="Soạn thảo văn bản">
                 </codx-label>
             </div>
@@ -87,8 +84,7 @@
                         </codx-label>
                         <div class="w-100 px-9 bg-gray-100 rounded-2 py-4 150px" (click)="clickUploadImage()">
                             <div class="d-flex justify-content-center" *ngIf="fileImage;else defaultImage">
-                                <img class="pic-news w-100 h-150px" [src]="fileImage.avatar || fileImage.thumbnail"
-                                    alt="">
+                                <img class="pic-news h-150px" [src]="fileImage.avatar || fileImage.thumbnail" alt="">
                             </div>
                             <ng-template #defaultImage>
                                 <div class="text-center d-flex flex-column justify-content-center">
@@ -103,18 +99,10 @@
                                 </div>
                             </ng-template>
                             <div class="d-none">
-                                <codx-attachment #codxATM
-                                    [functionID]="dialogRef?.formModel.funcID"
-                                    [objectType]="'WP_News'"
-                                    [allowMultiFile]="0" 
-                                    [showMessage]="0"
-                                    [hideImageUpload]="'1'" 
-                                    [hideUploadBtn]="1" 
-                                    [hideBtnSave]="1"
-                                    [hideImageThumb]="1"
-                                    [hideUploadBtn]="1" 
-                                    [showMessage]="0" 
-                                    (fileCount)="addFiles($event)">
+                                <codx-attachment #codxATM [functionID]="dialogRef?.formModel.funcID"
+                                    [objectType]="'WP_News'" [allowMultiFile]="0" [showMessage]="0"
+                                    [hideImageUpload]="'1'" [hideUploadBtn]="1" [hideBtnSave]="1" [hideImageThumb]="1"
+                                    [hideUploadBtn]="1" [showMessage]="0" (fileCount)="addFiles($event)">
                                 </codx-attachment>
                             </div>
                         </div>
@@ -151,13 +139,8 @@
                         <codx-label class="fw-bold" [formModel]="dialogRef.formModel" name="lblContents"
                             default="Nội dung">
                         </codx-label>
-                        <codx-input [height]="'100%'" 
-                            type="textarea" 
-                            class="test-textarea" 
-                            field="textarea"
-                            field="Contents" 
-                            [crrValue]="formGroup.controls['Contents'].value" 
-                            placeholder="Nội dung"
+                        <codx-input [height]="'100%'" type="textarea" class="test-textarea" field="textarea"
+                            field="Contents" [crrValue]="formGroup.controls['Contents'].value" placeholder="Nội dung"
                             (valueChange)="valueChange($event)" ngDefaultControl>
                         </codx-input>
                     </div>
