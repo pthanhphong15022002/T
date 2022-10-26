@@ -1,42 +1,44 @@
-.body-survey {
-  background-color: #e6fff7 !important;
-  height: 264px !important;
-  padding-left: 15% !important;
-  padding-right: 15% !important;
-}
+.survey-home {
+  .body-survey {
+    background-color: #e6fff7 !important;
+    height: 264px !important;
+    padding-left: 15% !important;
+    padding-right: 15% !important;
+  }
 
-.list-survey {
+  .list-survey {
     background-color: white !important;
-}
+  }
 
-.title-add-survey {
-  font-size: 16px;
-  font-weight: 400;
-  width: fit-content;
-  // line-height: 64px;
-  // margin: 0 auto;
-}
+  .title-add-survey {
+    font-size: 16px;
+    font-weight: 400;
+    width: fit-content;
+    // line-height: 64px;
+    // margin: 0 auto;
+  }
 
-.card-survey {
-  width: 173px;
-  height: 130px;
-  background-color: white;
-  margin-right: 10px;
-  align-content: center;
-  cursor: pointer;
-}
+  .card-survey {
+    width: 173px;
+    height: 130px;
+    background-color: white;
+    margin-right: 10px;
+    align-content: center;
+    cursor: pointer;
+  }
 
-.card-survey:hover {
-  border-color: aqua !important;
-}
+  .card-survey:hover {
+    border-color: aqua !important;
+  }
 
-.upper-part {
-  height: 100% !important;
-  width: fit-content;
-  margin: auto;
-}
+  .upper-part {
+    height: 100% !important;
+    width: fit-content;
+    margin: auto;
+  }
 
-img {
-  width: 173px;
-  height: 130px;
+  img {
+    width: 173px;
+    height: 130px;
+  }
 }
