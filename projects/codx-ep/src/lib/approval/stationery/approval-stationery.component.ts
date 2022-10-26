@@ -203,15 +203,15 @@ export class ApprovalStationeryComponent
       recID = event.recID;
       this.itemDetail = event;
     }
-    this.getDetailBooking(recID);
+    this.getDetailApprovalBooking(recID);
   }
 
-  getDetailBooking(id: any) {
+  getDetailApprovalBooking(id: any) {
     this.api
       .exec<any>(
         'EP',
         'BookingsBusiness',
-        'GetBookingByIDAsync',
+        'GetApprovalBookingByIDAsync',
         [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
       )
       .subscribe((res) => {
@@ -221,7 +221,6 @@ export class ApprovalStationeryComponent
         }
       });
   }
-
 
   setStyles(resourceType) {
     let styles = {};

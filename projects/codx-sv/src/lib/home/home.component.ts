@@ -57,4 +57,8 @@ export class HomeComponent extends UIComponent implements OnInit {
   clickMF(e, data) {
 
   }
+
+  add() {
+    this.codxService.navigate('', 'sv/pop-add-survey');
+  }
 }

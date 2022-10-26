@@ -405,7 +405,6 @@ export class StatisticalComponent extends UIComponent implements OnInit {
             i++;
           });
           this.lstBehavior = listBehavior;
-          console.log('check lstTotalCoin', this.lstTotalCoin);
         }
       });
   }

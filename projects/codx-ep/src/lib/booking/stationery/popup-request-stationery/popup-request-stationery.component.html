@@ -336,9 +336,11 @@
             >
             </codx-label>
             <codx-input
-              ControlName="reasonID"
-              [formModel]="formModel"
-              [Group]="dialogAddBookingStationery"
+              type="combobox"
+              field="reasonID"
+              refValue="Reasons_BookingStationery"
+              [crrValue]="data.reasonID"
+              (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>
@@ -422,7 +424,7 @@
       ></codx-label>
     </button>
     <div class="btn-group">
-      <button class="btn btn-outline-primary me-2">
+      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
         <codx-label
           name="lblApprove"
           default="Gửi duyệt"
