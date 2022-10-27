@@ -1,5 +1,4 @@
-<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views"
-    [autoLoad]="false">
+<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #templateLeft>
@@ -14,11 +13,10 @@
 <!-- <app-systemdialog></app-systemdialog> -->
 <ng-template #itemSenderOrReceiver let-dataItem>
     <div class="d-flex align-items-center">
-        <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.userID" objectType="AD_Users"
-           >
+        <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.userID" objectType="AD_Users">
         </codx-img>
         <div class="d-flex flex-column">
-            <div class="text-dark font-size-lg">{{dataItem.userName}}</div>
+            <div class="text-dark fs-6">{{dataItem.userName}}</div>
             <div class="text-dark-50">{{dataItem.positionName}}</div>
         </div>
     </div>
@@ -40,7 +38,7 @@
         <img class="symbol symbol-24 symbol-circle me-3 w-25px h-25px"
             src="../../../assets/demos/svg/{{dataItem.cardType| vll:'L1422':'icon'|async}}">
         <div class="d-flex flex-column">
-            <div class="text-dark font-size-lg"> {{dataItem?.cardType | vll:'L1422':'text'|async}}</div>
+            <div class="text-dark fs-6"> {{dataItem?.cardType | vll:'L1422':'text'|async}}</div>
             <div class="text-dark-50">
                 <codx-label name="lblCountCard" formName="FD_KudosTrans" default="Số phiếu"></codx-label>
                 : {{dataItem.cardNo}}
@@ -55,7 +53,7 @@
             src="../../../assets/demos/svg/{{dataItem.transType| vll:'L1422':'icon'|async}}">
 
         <div class="d-flex flex-column">
-            <div class="text-dark font-size-lg">{{dataItem.transType| vll:'L1422':'text'|async}}</div>
+            <div class="text-dark fs-6">{{dataItem.transType| vll:'L1422':'text'|async}}</div>
         </div>
     </div>
 </ng-template>
