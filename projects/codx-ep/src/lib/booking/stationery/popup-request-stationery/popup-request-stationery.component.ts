@@ -282,12 +282,25 @@ export class PopupRequestStationeryComponent extends UIComponent {
         if (res.save || res.update) {
           if (!res.save) {
             this.returnData = res.update;
+            this.returnData.forEach((item) => {
+              if (item.recID == this.data.recID) {
+                (this.dialog.dataService as CRUDService)
+                  .update(item)
+                  .subscribe();
+              } else {
+                (this.dialog.dataService as CRUDService)
+                  .add(item, 0)
+                  .subscribe();
+              }
+            });
           } else {
             this.returnData = res.save;
+
+            this.returnData.forEach((item) => {
+              (this.dialog.dataService as CRUDService).update(item).subscribe();
+            });
           }
-          this.returnData.forEach((item) => {
-            (this.dialog.dataService as CRUDService).update(item).subscribe();
-          });
+
           // if (approval) {
           //   this.epService
           //     .getCategoryByEntityName(this.formModel.entityName)

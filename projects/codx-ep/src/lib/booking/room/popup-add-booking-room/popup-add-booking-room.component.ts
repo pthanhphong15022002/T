@@ -130,6 +130,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   funcID: string;
   isAdd = false;
   range: any;
+  optionalData;
   saveAndApprove = false;
   constructor(
     private injector: Injector,
@@ -147,13 +148,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
+    this.optionalData= dialogData?.data[3];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
     if (this.isAdd) {
-      this.data.bookingOn = new Date();
+      if(this.optionalData!=null){
+        this.data.bookingOn=this.optionalData.startDate;
+      }
+      else{
+        this.data.bookingOn = new Date();
+      }
       this.data.attendees = 1;
-    } else {
+    } else if(!this.isAdd){
       let tmpStartTime = new Date(this.data?.startDate);
       let tmpEndTime = new Date(this.data?.endDate);
       this.startTime =
@@ -164,25 +171,159 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         ('0' + tmpEndTime.getHours()).toString().slice(-2) +
         ':' +
         ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
-    }
+    }    
   }
 
   onInit(): void {
-    if (this.isAdd) {
-      let tmpDate = new Date();
-      let crrMinute = tmpDate.getMinutes();
-      let crrHour = tmpDate.getHours();
-      if (crrMinute < 30) {
-        crrMinute = 30;
-      } else {
-        crrMinute = 0;
-        crrHour = crrHour + 1;
+    //Lấy giờ làm việc
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetByModuleAsync',
+        'EPParameters'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.calendarID = JSON.parse(
+            res.msgBodyData[0].dataValue
+          )?.CalendarID;
+          if (this.calendarID) {
+            this.api
+              .exec<any>(
+                APICONSTANT.ASSEMBLY.BS,
+                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
+                'GetDayShiftAsync',
+                [this.calendarID]
+              )
+              .subscribe((res) => {
+                res.forEach((day) => {
+                  if (day?.shiftType == '1') {
+                    let tmpstartTime = day?.startTime.split(':');
+                    this.calendarStartTime =
+                      tmpstartTime[0] + ':' + tmpstartTime[1];
+                    if (this.isAdd) {
+                      this.startTime = this.calendarStartTime;
+                    }
+                  } else if (day?.shiftType == '2') {
+                    let tmpEndTime = day?.endTime.split(':');
+                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
+                    if (this.isAdd) {
+                      this.endTime = this.calendarEndTime;
+                    }
+                  }
+                });
+              });
+          } else {
+            this.api
+              .execSv(
+                'SYS',
+                'ERM.Business.SYS',
+                'SettingValuesBusiness',
+                'GetByModuleAsync',
+                'Calendar'
+              )
+              .subscribe((res: any) => {
+                if (res) {
+                  let tempStartTime = JSON.parse(
+                    res.dataValue
+                  )[0]?.StartTime.split(':');
+                  this.calendarStartTime =
+                    tempStartTime[0] + ':' + tempStartTime[1];
+                    if (this.isAdd) {
+                      this.startTime = this.calendarStartTime;
+                    }
+                  let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
+                    ':'
+                  );
+                  this.calendarEndTime = endTime[0] + ':' + endTime[1];
+                  if (this.isAdd) {
+                    this.endTime = this.calendarEndTime;
+                  }
+                }
+              });
+          }
+
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    //Thêm lấy thời gian hiện tại làm thông tin đặt phòng khi thêm mới
+    // if (this.isAdd && this.optionalData!=null) {
+    //   let tmpDate = new Date();
+    //   let crrMinute = tmpDate.getMinutes();
+    //   let crrHour = tmpDate.getHours();
+    //   if (crrMinute < 30) {
+    //     crrMinute = 30;
+    //   } else {
+    //     crrMinute = 0;
+    //     crrHour = crrHour + 1;
+    //   }
+    //   this.startTime =
+    //     ('0' + crrHour.toString()).slice(-2) +
+    //     ':' +
+    //     ('0' + crrMinute.toString()).slice(-2);
+    // }
+    this.cacheService.valueList('EP012').subscribe((res) => {
+      this.vllDevices = res.datas;
+      this.vllDevices.forEach((item) => {
+        let device = new Device();
+        device.id = item.value;
+        device.text = item.text;
+        device.icon = item.icon;
+        this.lstDeviceRoom.push(device);
+      });
+      if (
+        !this.isAdd &&
+        this.data?.equipments != null &&
+        this.optionalData == null
+      ) {
+        this.data?.equipments.forEach((equip) => {
+          let tmpDevice = new Device();
+          tmpDevice.id = equip.equipmentID;
+          tmpDevice.isSelected = equip.isPicked;
+          this.lstDeviceRoom.forEach((vlDevice) => {
+            if (tmpDevice.id == vlDevice.id) {
+              tmpDevice.text = vlDevice.text;
+              tmpDevice.icon = vlDevice.icon;
+            }
+          });
+          this.tmplstDevice.push(tmpDevice);
+        });
       }
-      this.startTime =
-        ('0' + crrHour.toString()).slice(-2) +
+      if (this.isAdd && this.optionalData != null) {
+        this.data.resourceID = this.optionalData.resourceId;
+        let equips = [];
+        equips = this.optionalData.resource.equipments;
+        equips.forEach((equip) => {
+          let tmpDevice = new Device();
+          tmpDevice.id = equip.equipmentID;
+          tmpDevice.isSelected = true;
+          this.lstDeviceRoom.forEach((vlDevice) => {
+            if (tmpDevice.id == vlDevice.id) {
+              tmpDevice.text = vlDevice.text;
+              tmpDevice.icon = vlDevice.icon;
+            }
+          });
+          this.tmplstDevice.push(tmpDevice);
+        });        
+        this.data.bookingOn = this.optionalData.startDate;
+        let tmpStartTime=this.optionalData.startDate;
+        let tmpEndTime=this.optionalData.endDate;
+        this.startTime =
+        ('0' + tmpStartTime.getHours()).toString().slice(-2) +
         ':' +
-        ('0' + crrMinute.toString()).slice(-2);
-    }
+        ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
+      this.endTime =
+        ('0' + tmpEndTime.getHours()).toString().slice(-2) +
+        ':' +
+        ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
+        this.detectorRef.detectChanges();
+      }
+      this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
+    });
+    this.detectorRef.detectChanges();
+    // Lấy list role người tham gia
     this.cache.valueList('EP009').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         let tmpArr=[];
@@ -192,7 +333,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.listRoles.push(item);
           }
         })
-        
+        //thêm người đặt(người dùng hiên tại) khi thêm mới
         if (this.isAdd) {
           let people = this.authService.userValue;
           this.curUser.userID = people.userID;
@@ -209,6 +350,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.changeDetectorRef.detectChanges();
         }
         else{
+          //lấy ds người tham gia khi sửa
           this.apiHttpService
         .callSv(
           'EP',
@@ -250,101 +392,36 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       }
     });
-    this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'EPParameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = JSON.parse(
-            res.msgBodyData[0].dataValue
-          )?.CalendarID;
-          if (this.calendarID) {
-            this.api
-              .exec<any>(
-                APICONSTANT.ASSEMBLY.BS,
-                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
-                'GetDayShiftAsync',
-                [this.calendarID]
-              )
-              .subscribe((res) => {
-                res.forEach((day) => {
-                  if (day?.shiftType == '1') {
-                    let tmpstartTime = day?.startTime.split(':');
-                    this.calendarStartTime =
-                      tmpstartTime[0] + ':' + tmpstartTime[1];
-                  } else if (day?.shiftType == '2') {
-                    let tmpEndTime = day?.endTime.split(':');
-                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
-                    if (this.isAdd) {
-                      this.endTime = this.calendarEndTime;
-                    }
-                  }
-                });
-              });
-          } else {
-            this.api
-              .execSv(
-                'SYS',
-                'ERM.Business.SYS',
-                'SettingValuesBusiness',
-                'GetByModuleAsync',
-                'Calendar'
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  let tempStartTime = JSON.parse(
-                    res.dataValue
-                  )[0]?.StartTime.split(':');
-                  this.calendarStartTime =
-                    tempStartTime[0] + ':' + tempStartTime[1];
-                  let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
-                    ':'
-                  );
-                  this.calendarEndTime = endTime[0] + ':' + endTime[1];
-                  if (this.isAdd) {
-                    this.endTime = this.calendarEndTime;
-                  }
-                }
-              });
-          }
-
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+    
 
     this.initForm();
     // xử lí thiết bị
-    this.cacheService.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
-      this.vllDevices.forEach((item) => {
-        let device = new Device();
-        device.id = item.value;
-        device.text = item.text;
-        device.icon = item.icon;
-        this.lstDeviceRoom.push(device);
-      });
+    // this.cacheService.valueList('EP012').subscribe((res) => {
+    //   this.vllDevices = res.datas;
+    //   this.vllDevices.forEach((item) => {
+    //     let device = new Device();
+    //     device.id = item.value;
+    //     device.text = item.text;
+    //     device.icon = item.icon;
+    //     this.lstDeviceRoom.push(device);
+    //   });
 
-      if (!this.isAdd && this.data?.equipments != null) {
-        this.data?.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceRoom.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
-          });
-          this.tmplstDevice.push(tmpDevice);
-        });
-      }
-      this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
-    });
+    //   if (!this.isAdd && this.data?.equipments != null) {
+    //     this.data?.equipments.forEach((equip) => {
+    //       let tmpDevice = new Device();
+    //       tmpDevice.id = equip.equipmentID;
+    //       tmpDevice.isSelected = equip.isPicked;
+    //       this.lstDeviceRoom.forEach((vlDevice) => {
+    //         if (tmpDevice.id == vlDevice.id) {
+    //           tmpDevice.text = vlDevice.text;
+    //           tmpDevice.icon = vlDevice.icon;
+    //         }
+    //       });
+    //       this.tmplstDevice.push(tmpDevice);
+    //     });
+    //   }
+    //   this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
+    // });
 
     if (this.data) {
       if (!this.isAdd) {
@@ -358,9 +435,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     }
 
-    if (!this.isAdd) {
-      
-
+    if (!this.isAdd) { 
       this.apiHttpService
         .callSv('EP', 'ERM.Business.EP', 'BookingItemsBusiness', 'GetAsync', [
           this.data.recID,
@@ -469,6 +544,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmpAttendeesList.push(item);
     });
     this.tmpAttendeesList.push(this.curUser);
+    this.tmplstDevice=[];
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
@@ -761,7 +837,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           tmpEndH = tmpEndH + 1;
           tmpEndM = 0;
         }
-        this.data.endTime = new Date(
+        this.data.endDate = new Date(
           tmpStartT.getFullYear(),
           tmpStartT.getMonth(),
           tmpStartT.getDate(),
@@ -773,7 +849,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.endTime =
           ('0' + tmpEndH.toString()).slice(-2) +
           ':' +
-          ('0' + tmpEndM.toString()).toString().slice(-2);
+          ('0' + tmpEndM.toString()).slice(-2);
       }
       this.changeDetectorRef.detectChanges();
     }
@@ -997,7 +1073,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   attendeesCheckChange(event:any, userID:any){
     this.attendeesList.forEach(attender=>{
       if(attender.userID==userID){
-        attender.roleType= event.data
+        attender.optional= event.data
       }
     })
   }
