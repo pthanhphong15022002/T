@@ -89,6 +89,7 @@
             [refID]="data.recID" 
             [new]="false" 
             [formModel]="formModel"
+            (evtViewDetail)="clickViewDetailComment($event)"
             (evtDeleteComment)="deleteComment($event)"
             (evtReplyTo)="replyTo($event)"
             >
@@ -121,6 +122,7 @@
                 [refID]="data.recID" 
                 [new]="false" 
                 [formModel]="formModel" 
+                (evtViewDetail)="clickViewDetailComment($event)"
                 (evtDeleteComment)="deleteComment($event)"
                 (evtReplyTo)="replyTo($event)">
             </codx-comments>

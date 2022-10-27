@@ -1,9 +1,9 @@
-.tag-img {
-    width: 16px;
-}
 
-.icon-removePost {
-    color: rgb(246, 78, 96);
+.fd_cards{
+    width: 100%;
+    height: 350px;
+    border-bottom: 1px solid gray;
+    padding: 16px;
 }
 
 .tmpshare {
@@ -17,4 +17,9 @@
 .history-box {
     max-height: 200px;
     overflow: auto;
+}
+.fd_histories{
+    width: 100%;
+    height: 350px;
+    padding: 16px;
 }

@@ -3,12 +3,10 @@
     idField="positionID" 
     entityName="HR_Positions" 
     [views]="views"
-    [selectedFirst]="true" 
     (selectedChange)="onSelectionChanged($event)" 
     [button]="button" 
     (buttonClick)="click($event)"
-    [itemSelected]="itemSelected"
-    [viewActiveType]="1" >
+    [itemSelected]="itemSelected">
 </codx-views>
 
 <ng-template #templateTree let-data>
@@ -31,9 +29,6 @@
                 entityName="HR_Positions" [predicate]="predicate" [dataService]="dtService" [selectFirst]="false"
                 [dataValue]="dataValue" (clickMF)="clickMF($event)" [typeMF]="'hover'" [formModel]="view.formModel">
             </codx-listview>
-            <!-- <positions-listview 
-                [dataValue]="dataValue" [formModel]="view.formModel">
-            </positions-listview> -->
         </div>
     </div>
 </ng-template>
@@ -162,114 +157,6 @@
             type="hover">
         </codx-mfunc>
     </div>
-<!-- <div class="px-5">
-        <div class="d-flex justify-content-between align-items-center border-bottom px-2 py-3">
-            <div class="justify-content-start">
-                <codx-temp-full cardCss="card-template"
-                    [subTitle]="(data.orgUnitID||'') + (data.departmentID ? ' | ' + data.departmentID: '') + (data.divisionID ? ' | ' + data.divisionID: '')"
-                    [title]="data.positionName" [titleLine]="data.orgUnitID" [typeMF]="'hover'" [dataItem]="data"
-                    [desc]="'Báo cáo trực tiếp: ' + data.reportTo" [formModel]="view.formModel"
-                    [desc2]="'Báo cáo gián tiếp: ' + (data.reportTo2 || '')" (clickMF)="clickMF($event,data)">
-                </codx-temp-full>
-            </div>
-
-            <div class="d-flex flex-wrap">
-                <div class="d-flex pos-group">
-                    <div class="d-flex flex-column align-items-center pos-item">
-                        <div class="align-items-center1 fs-7">
-                            <codx-label name="lblJobName" formName="Positions" default="Nhóm chức danh: ">
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                                <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
-                            </span>
-                        </div>
-                        <div class="align-items-center1 fs-7">
-                            <codx-label name="lbljobGroup" formName="Positions" default="Chức vụ: ">
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                                <span #jobGroupID>{{ data.jobGroupID | formatvalue:
-                                    view.formModel:"jobGroupID":jobGroupID | async }}</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex flex-wrap">
-                <div class="d-flex pos-group">
-                    <div class="d-flex flex-column align-items-center pos-item w-100px" #h
-                        (click)="loadEmployByCountStatus(h,data.positionID,'')">
-                        <div class="pos-number text-gray-500 fs-2 fw-bold">{{data.headcounts}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label name="lblHeadcounts" formName="Positions" default="Định biên">
-                            </codx-label>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column align-items-center pos-item w-100px">
-                        <div class="pos-number text-primary fs-2 fw-bold">{{data.currentcounts}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label name="lblCurrentcounts" formName="Positions" default="Chính thức">
-                            </codx-label>
-                        </div>
-                        <div *ngIf="data.currentcounts>0" class="symbol-group symbol-hover mt-2">
-                            <codx-img [width]="30" [objectId]="data.currentEmpID" objectType="HR_Employees"
-                                [numberImages]="2" placement="bottom" container="body" autoClose="outside"
-                                [openDelay]="500" (click)="loadEmployByCountStatus(popEmpList,data.positionID,'50;60')"
-                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover">
-                            </codx-img>
-                            <div *ngIf="data.currentcounts>1"
-                                (click)="loadEmployByCountStatus(popEmpList,data.positionID,'50;60')"
-                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
-                                autoClose="outside"
-                                class="symbol w-30px h-30px symbol-circle border-white bg-light justify-content-center d-flex align-items-center">
-                                {{data.currentcounts-1}}+</div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column align-items-center pos-item w-100px">
-                        <div class="pos-number text-warning fs-2 fw-bold">{{data.onboard}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label name="lblOnboard" formName="Positions" default="Onboard">
-                            </codx-label>
-                        </div>
-                        <div *ngIf="data.onboard>0" class="symbol-group symbol-hover mt-2">
-                            <codx-img [width]="30" [objectId]="data.onboardEmpID" objectType="HR_Employees"
-                                [numberImages]="2" placement="bottom" container="body" autoClose="outside"
-                                [openDelay]="500">
-                            </codx-img>
-                            <div *ngIf="data.onboard>1"
-                                (click)="loadEmployByCountStatus(popEmpList,data.positionID,'20;30')"
-                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
-                                autoClose="outside"
-                                class="symbol w-30px h-30px symbol-circle border-white bg-light justify-content-center d-flex align-items-center">
-                                {{data.onboard-1}}+</div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column align-items-center pos-item w-100px">
-                        <div class="pos-number text-danger fs-2 fw-bold">{{data.offboard}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label name="lblOffboard" formName="Positions" default="Offboard">
-                            </codx-label>
-                        </div>
-                        <div *ngIf="data.offboard>0" class="symbol-group symbol-hover mt-2">
-                            <codx-img [width]="30" [objectId]="data.offboardEmpID" objectType="HR_Employees"
-                                [numberImages]="7" placement="bottom" container="body" autoClose="outside"
-                                [openDelay]="500">
-                            </codx-img>
-                            <div *ngIf="data.offboard>1"
-                                (mouseenter)="loadEmployByCountStatus(popEmpList,data.positionID,'70')"
-                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
-                                class="symbol w-30px h-30px border-white symbol-circle">
-                                {{data.offboard-1}}+
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </ng-template>
 
 <ng-template #popEmpList>

@@ -245,7 +245,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     post.shareControl = this.shareControl;
     post.objectType = this.objectType;
     post.category = this.CATEGORY.POST;
-    post.approveControl = "0";
+    post.approveControl = "0"; // không qua xét duyệt
     post.refType = this.entityName;
     post.permissions = this.permissions;
     post.listTag = this.tags;

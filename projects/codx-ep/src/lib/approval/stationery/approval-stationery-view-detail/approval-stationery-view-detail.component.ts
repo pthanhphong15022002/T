@@ -109,63 +109,18 @@ export class ApprovalStationeryViewDetailComponent
         }
       });
   }
-  changeDataMF(event, data: any) {
-    if (event != null && data != null) {
-      switch (data?.status) {
-        case '3':
-          event.forEach((func) => {
-            if (
-              func.functionID == 'EPT40102' ||
-              func.functionID == 'EPT40103' ||
-              func.functionID == 'EPT40106' ||
-              func.functionID == 'EPT40104'
-            ) {
-              func.disabled = true;
-            }
-          });
-          break;
-        case '4':
-          event.forEach((func) => {
-            if (
-              func.functionID == 'EPT40102' ||
-              func.functionID == 'EPT40103' ||
-              func.functionID == 'EPT40104' ||
-              func.functionID == 'EPT40105' ||
-              func.functionID == 'EPT40106' ||
-              func.functionID == 'EPT40101'
-            ) {
-              func.disabled = true;
-            }
-          });
-          break;
-        case '5':
-          event.forEach((func) => {
-            if (
-              func.functionID == 'EPT40102' ||
-              func.functionID == 'EPT40103' ||
-              func.functionID == 'EPT40104' ||
-              func.functionID == 'EPT40105' ||
-              func.functionID == 'EPT40106' ||
-              func.functionID == 'EPT40101'
-            ) {
-              func.disabled = true;
-            }
-          });
-          break;
-        case '2':
-          event.forEach((func) => {
-            if (
-              func.functionID == 'EPT40102' ||
-              func.functionID == 'EPT40103' ||
-              func.functionID == 'EPT40104' ||
-              func.functionID == 'EPT40105' ||
-              func.functionID == 'EPT40106' ||
-              func.functionID == 'EPT40101'
-            ) {
-              func.disabled = true;
-            }
-          });
-          break;
+  changeDataMF(event, data:any) {        
+    if(event!=null && data!=null){
+      event.forEach(func => {        
+        func.disabled=true;        
+      });
+      if(data.status=='3'){
+        event.forEach(func => {
+          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ || func.functionID == "EPT40303"/*MF Cấp phát*/ )
+          {
+            func.disabled=false;
+          }
+        });  
       }
     }
   }

@@ -7,6 +7,7 @@
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
   (clickMF)="clickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
 >
   <ng-template #header>
     <div class="d-flex justify-content-between">
