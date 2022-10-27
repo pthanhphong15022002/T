@@ -289,4 +289,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     }
     console.log("check questions", this.questions)
   }
+
+  scrollWindow() {
+    debugger
+  }
+  
 }

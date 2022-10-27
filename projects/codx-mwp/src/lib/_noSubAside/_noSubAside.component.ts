@@ -11,7 +11,7 @@ export class NoSubAsideComponent extends LayoutBaseComponent {
 
   module = 'MWP';
   override aside = true;
-  override asideFixed = true;
+  override asideFixed = false;
   // toolbar = false;
   constructor(
     inject: Injector,
