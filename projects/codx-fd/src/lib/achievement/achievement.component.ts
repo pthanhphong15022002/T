@@ -229,6 +229,8 @@ export class AchievementComponent extends UIComponent implements OnInit {
               //t.lstDataChart.push(obj);
             });
           }
+          console.log("check dataProcess", this.dataProcess)
+          console.log("check dataTable", this.dataTable)
           if (this.lstDataChart.length > 0) this.ishide = false;
           this.setHeightList();
           this.dt.detectChanges();
