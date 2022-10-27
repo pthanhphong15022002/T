@@ -60,10 +60,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
       name: 'tabMoreInfo',
     },
   ];
-  tempDriver:any;
-  returnData:any;
+  tempDriver: any;
+  returnData: any;
   title = '';
-  cbbData:any;
+  cbbData: any;
   driverCheck = false;
   useCard = false;
   isSaveSuccess = false;
@@ -88,7 +88,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     objectType: string;
     objectID: any;
   };
-  carCapacity=0;
+  carCapacity = 0;
   attendeesList = [];
   checkLoopS = true;
   checkLoopE = true;
@@ -105,14 +105,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
   editCarDevice = null;
   tmpTitle = '';
   tempArray = [];
-  listRoles=[];
-  calendarStartTime:any;
-  calendarEndTime:any;
-  endHour:any;
-  startHour:any; 
-  endMinutes:any;
-  startMinutes:any;  
-  calendarID:any;
+  listRoles = [];
+  optionalData: any;
+  calendarStartTime: any;
+  calendarEndTime: any;
+  calEndHour: any;
+  calStartHour: any;
+  calEndMinutes: any;
+  calStartMinutes: any;
+  calendarID: any;
   isPopupCbb = false;
   constructor(
     private injector: Injector,
@@ -127,12 +128,66 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
+    this.optionalData = dialogData?.data[3];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
     this.data.requester = this.authService?.userValue?.userName;
+    
   }
   onInit(): void {
+    this.cacheService.valueList('EP012').subscribe((res) => {
+      this.vllDevices = res.datas;
+      this.vllDevices.forEach((item) => {
+        let device = new Device();
+        device.id = item.value;
+        device.text = item.text;
+        device.icon = item.icon;
+        this.lstDeviceCar.push(device);
+      });
+      if (
+        !this.isAdd &&
+        this.data?.equipments != null &&
+        this.optionalData == null
+      ) {
+        this.data?.equipments.forEach((equip) => {
+          let tmpDevice = new Device();
+          tmpDevice.id = equip.equipmentID;
+          tmpDevice.isSelected = equip.isPicked;
+          this.lstDeviceCar.forEach((vlDevice) => {
+            if (tmpDevice.id == vlDevice.id) {
+              tmpDevice.text = vlDevice.text;
+              tmpDevice.icon = vlDevice.icon;
+            }
+          });
+          this.tmplstDevice.push(tmpDevice);
+        });
+      }
+      if (this.isAdd && this.optionalData != null) {
+        this.data.resourceID = this.optionalData.resourceId;
+        let equips = [];
+        equips = this.optionalData.resource.equipments;
+        equips.forEach((equip) => {
+          let tmpDevice = new Device();
+          tmpDevice.id = equip.equipmentID;
+          tmpDevice.isSelected = true;
+          this.lstDeviceCar.forEach((vlDevice) => {
+            if (tmpDevice.id == vlDevice.id) {
+              tmpDevice.text = vlDevice.text;
+              tmpDevice.icon = vlDevice.icon;
+            }
+          });
+          this.tmplstDevice.push(tmpDevice);
+        });
+        this.data.startDate = this.optionalData.startDate;
+        this.data.endDate = this.optionalData.startDate;
+        this.detectorRef.detectChanges();
+        this.driverChangeWithCar(this.optionalData?.resourceId);
+      }
+      this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
+    });
+    this.detectorRef.detectChanges();
+
     this.api
       .callSv(
         'SYS',
@@ -155,20 +210,40 @@ export class PopupAddBookingCarComponent extends UIComponent {
                 [this.calendarID]
               )
               .subscribe((res) => {
-                let tmpDateTime=new Date();
+                let tmpDateTime = new Date();
                 res.forEach((day) => {
                   if (day?.shiftType == '1') {
                     let tmpstartTime = day?.startTime.split(':');
-                    this.calendarStartTime = tmpstartTime[0] + ':' + tmpstartTime[1];
-                      if(this.isAdd){
-                        this.data.startDate = new Date(tmpDateTime.getFullYear(),tmpDateTime.getMonth(),tmpDateTime.getDate(),tmpstartTime[0],tmpstartTime[1],0);
-                      }
+                    this.calendarStartTime =
+                      tmpstartTime[0] + ':' + tmpstartTime[1];
+                    if (this.isAdd) {
+                      this.data.startDate = new Date(
+                        tmpDateTime.getFullYear(),
+                        tmpDateTime.getMonth(),
+                        tmpDateTime.getDate(),
+                        tmpstartTime[0],
+                        tmpstartTime[1],
+                        0
+                      );
+                    }
+                    this.calEndHour = tmpstartTime[0];
+                    this.calEndMinutes = tmpstartTime[1];
+                    
                   } else if (day?.shiftType == '2') {
                     let tmpEndTime = day?.endTime.split(':');
                     this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
-                    if(this.isAdd){
-                      this.data.endDate = new Date(tmpDateTime.getFullYear(),tmpDateTime.getMonth(),tmpDateTime.getDate(),tmpEndTime[0],tmpEndTime[1],0);
+                    if (this.isAdd ) {
+                      this.data.endDate = new Date(
+                        tmpDateTime.getFullYear(),
+                        tmpDateTime.getMonth(),
+                        tmpDateTime.getDate(),
+                        tmpEndTime[0],
+                        tmpEndTime[1],
+                        0
+                      );
                     }
+                    this.calEndHour = tmpEndTime[0];
+                    this.calEndMinutes = tmpEndTime[1];                    
                   }
                 });
               });
@@ -183,16 +258,39 @@ export class PopupAddBookingCarComponent extends UIComponent {
               )
               .subscribe((res: any) => {
                 if (res) {
-                  let tempStartTime = JSON.parse(res.dataValue)[0]?.StartTime.split(':');
-                  this.calendarStartTime = tempStartTime[0] + ':' + tempStartTime[1];
-                  let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(':');
+                  let tempStartTime = JSON.parse(
+                    res.dataValue
+                  )[0]?.StartTime.split(':');
+                  this.calendarStartTime =
+                    tempStartTime[0] + ':' + tempStartTime[1];
+                  let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
+                    ':'
+                  );
                   this.calendarEndTime = tempEndTime[0] + ':' + tempEndTime[1];
-                  let tmpDateTime= new Date()
-                  if(this.isAdd){
-                    this.data.startDate = new Date(tmpDateTime.getFullYear(),tmpDateTime.getMonth(),tmpDateTime.getDate(),tempStartTime[0],tempStartTime[1],0);
-                    this.data.startDate = new Date(tmpDateTime.getFullYear(),tmpDateTime.getMonth(),tmpDateTime.getDate(),tempEndTime[0],tempEndTime[1],0);
-                    
+                  let tmpDateTime = new Date();
+                  if (this.isAdd && this.optionalData == null) {
+                    this.data.startDate = new Date(
+                      tmpDateTime.getFullYear(),
+                      tmpDateTime.getMonth(),
+                      tmpDateTime.getDate(),
+                      tempStartTime[0],
+                      tempStartTime[1],
+                      0
+                    );
+                    this.data.endDate = new Date(
+                      tmpDateTime.getFullYear(),
+                      tmpDateTime.getMonth(),
+                      tmpDateTime.getDate(),
+                      tempEndTime[0],
+                      tempEndTime[1],
+                      0
+                    );
                   }
+                  this.calStartHour = tempStartTime[0];
+                  this.calStartMinutes = tempStartTime[1];
+                  this.calEndHour = tempEndTime[0];
+                  this.calEndMinutes = tempEndTime[1];
+                  
                 }
               });
           }
@@ -200,103 +298,71 @@ export class PopupAddBookingCarComponent extends UIComponent {
         }
       });
 
-      this.cache.valueList('EP010').subscribe((res) => {
-        if (res && res?.datas.length > 0) {
-          let tmpArr=[];
-          tmpArr=res.datas;
-          tmpArr.forEach(item=>{
-            if(item.value!='4'){
-              this.listRoles.push(item);
-            }
-          })
-          if(this.isAdd){
-            let people = this.authService.userValue;
-            this.tempAtender = {
-              userID: people.userID,
-              userName: people.userName,
-              status: '1',
-              objectType: 'AD_Users',
-              roleType: '1',
-              objectID: undefined,
-            };
-            this.curUser = this.tempAtender;
-          }
-          if (!this.isAdd) {
-            this.codxEpService
-              .getBookingAttendees(this.data.recID)
-              .subscribe((res) => {
-                if (res) {
-                  this.attendees = res.msgBodyData[0];
-                  this.attendees.forEach((people) => {
-                    this.tempAtender = {
-                      userID: people.userID,
-                      userName: people.userName,
-                      status: people.status,
-                      objectType: 'AD_Users',
-                      roleType: people.roleType,
-                      objectID: undefined,
-                    };
-                    if (
-                      this.tempAtender.userID == this.authService.userValue.userID
-                    ) {
-                      this.curUser = this.tempAtender;
-                    } else if (this.tempAtender.roleType == '2') {
-                      this.driver = this.tempAtender;
-                      this.driver.objectID = people.note;
-                      this.driver.objectType = 'EP_Drivers';
-                    } else {
-                      this.lstPeople.push(this.tempAtender);
-                    }
-                  });
-                  if (this.driver != null) {
-                    this.driverCheck = true;
-                  } else {
-                    this.driverCheck = false;
-                  }
-                  this.detectorRef.detectChanges();
-                }
-              });
-          }
-        }
-      });
-    this.initForm();
     
-    
-
-    this.cacheService.valueList('EP012').subscribe((res) => {
-      this.vllDevices = res.datas;
-      this.vllDevices.forEach((item) => {
-        let device = new Device();
-        device.id = item.value;
-        device.text = item.text;
-        device.icon = item.icon;
-        this.lstDeviceCar.push(device);
-      });
-
-      if (!this.isAdd && this.data?.equipments != null) {
-        this.data?.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceCar.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
-          });
-          this.tmplstDevice.push(tmpDevice);
+    this.cache.valueList('EP010').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        let tmpArr = [];
+        tmpArr = res.datas;
+        tmpArr.forEach((item) => {
+          this.listRoles.push(item);
         });
+        if (this.isAdd) {
+          let people = this.authService.userValue;
+          this.tempAtender = {
+            userID: people.userID,
+            userName: people.userName,
+            status: '1',
+            objectType: 'AD_Users',
+            roleType: '1',
+            objectID: undefined,
+          };
+          this.curUser = this.tempAtender;
+        }
+        if (!this.isAdd) {
+          this.codxEpService
+            .getBookingAttendees(this.data.recID)
+            .subscribe((res) => {
+              if (res) {
+                this.attendees = res.msgBodyData[0];
+                this.attendees.forEach((people) => {
+                  this.tempAtender = {
+                    userID: people.userID,
+                    userName: people.userName,
+                    status: people.status,
+                    objectType: 'AD_Users',
+                    roleType: people.roleType,
+                    objectID: undefined,
+                  };
+                  if (
+                    this.tempAtender.userID == this.authService.userValue.userID
+                  ) {
+                    this.curUser = this.tempAtender;
+                  } else if (this.tempAtender.roleType == '2') {
+                    this.driver = this.tempAtender;
+                    this.driver.objectID = people.note;
+                    this.driver.objectType = 'EP_Drivers';
+                  } else {
+                    this.lstPeople.push(this.tempAtender);
+                  }
+                });
+                if (this.driver != null) {
+                  this.driverCheck = true;
+                } else {
+                  this.driverCheck = false;
+                }
+                this.detectorRef.detectChanges();
+              }
+            });
+        }
       }
-      this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
     });
+
+    this.initForm();
     if (this.isAdd) {
       this.data.attendees = 1;
-      this.data.bookingOn = new Date();
-      this.data.startDate=null;
-      this.data.endDate=null;
+      this.data.bookingOn = this.data.startDate;
       this.detectorRef.detectChanges();
     }
-    
   }
 
   initForm() {
@@ -320,7 +386,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     return true;
   }
 
-  onSaveForm(approval:boolean=false) {
+  onSaveForm(approval: boolean = false) {
     this.fGroupAddBookingCar.patchValue(this.data);
     if (this.fGroupAddBookingCar.invalid == true) {
       this.codxEpService.notifyInvalid(
@@ -344,7 +410,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.notificationsService.notifyCode('TM036');
       return;
     }
-    this.lstEquipment=[];
+    this.lstEquipment = [];
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
@@ -352,7 +418,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       tempEquip.isPicked = element.isSelected;
       this.lstEquipment.push(tempEquip);
     });
-    this.attendeesList=[];
+    this.attendeesList = [];
     this.attendeesList.push(this.curUser);
     this.lstPeople.forEach((people) => {
       this.attendeesList.push(people);
@@ -362,70 +428,69 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.bookingOn = this.data.startDate;
     this.data.category = '2';
     this.data.status = '1';
-    this.data.resourceType = '2';    
+    this.data.resourceType = '2';
     this.data.equipments = this.lstEquipment;
 
-    if(this.data.attendees>this.carCapacity){
-       this.notificationsService.alertCode('EP010').subscribe((x) => {
+    if (this.data.attendees > this.carCapacity) {
+      this.notificationsService.alertCode('EP010').subscribe((x) => {
         if (x.event.status == 'N') {
           return;
-        }
-        else{
+        } else {
           this.startSave(approval);
         }
       });
-    }
-    else{
+    } else {
       this.startSave(approval);
     }
     this.detectorRef.detectChanges();
   }
-  startSave(approval){
+  startSave(approval) {
     this.dialogRef.dataService
-    .save((opt: any) => this.beforeSave(opt), 0,null,null,!approval)
-    .subscribe((res) => {
-      if (res.save || res.update) {
-        if (!res.save) {
-          this.returnData = res.update;
+      .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
+      .subscribe((res) => {
+        if (res.save || res.update) {
+          if (!res.save) {
+            this.returnData = res.update;
+          } else {
+            this.returnData = res.save;
+          }
+          if (approval) {
+            this.codxEpService
+              .getCategoryByEntityName(this.formModel.entityName)
+              .subscribe((res: any) => {
+                this.codxEpService
+                  .release(
+                    this.returnData,
+                    res.processID,
+                    'EP_Bookings',
+                    this.formModel.funcID
+                  )
+                  .subscribe((res) => {
+                    if (res?.msgCodeError == null && res?.rowCount) {
+                      this.notificationsService.notifyCode('ES007');
+                      this.returnData.status = '3';
+                      this.returnData.write = false;
+                      this.returnData.delete = false;
+                      (this.dialogRef.dataService as CRUDService)
+                        .update(this.returnData)
+                        .subscribe();
+                      this.dialogRef && this.dialogRef.close();
+                    } else {
+                      this.notificationsService.notifyCode(res?.msgCodeError);
+                      // Thêm booking thành công nhưng gửi duyệt thất bại
+                      this.dialogRef && this.dialogRef.close();
+                    }
+                  });
+              });
+
+            this.dialogRef && this.dialogRef.close();
+          } else {
+            this.dialogRef && this.dialogRef.close();
+          }
         } else {
-          this.returnData = res.save;
+          return;
         }
-        if (approval) {
-          this.codxEpService
-            .getCategoryByEntityName(this.formModel.entityName)
-            .subscribe((res: any) => {
-              this.codxEpService
-                .release(
-                  this.returnData,
-                  res.processID,
-                  'EP_Bookings',
-                  this.formModel.funcID
-                )
-                .subscribe((res) => {
-                  if (res?.msgCodeError == null && res?.rowCount) {
-                    this.notificationsService.notifyCode('ES007');
-                    this.returnData.status="3";
-                    this.returnData.write=false;
-                    this.returnData.delete=false;
-                    (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe(); 
-                    this.dialogRef && this.dialogRef.close();
-                  } else {
-                    this.notificationsService.notifyCode(res?.msgCodeError);
-                    // Thêm booking thành công nhưng gửi duyệt thất bại
-                    this.dialogRef && this.dialogRef.close();
-                  }
-                });
-            });
-            
-          this.dialogRef && this.dialogRef.close();
-        }
-        else{
-          this.dialogRef && this.dialogRef.close();
-        }  
-      } else {
-        return;
-      }
-    });
+      });
   }
   valueChange(event) {
     if (event?.field) {
@@ -442,7 +507,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       var cbxCar = event.component.dataService.data;
       cbxCar.forEach((element) => {
         if (element.ResourceID == event.data) {
-          this.carCapacity=element.Capacity;
+          this.carCapacity = element.Capacity;
           this.useCard = element.UseCard;
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
@@ -475,7 +540,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
           objectID: res.msgBodyData[0].recID,
         };
         this.driver = this.tempAtender;
-        this.tempDriver=this.driver;
+        this.tempDriver = this.driver;
         this.driverValidator(
           this.tempDriver.userID,
           this.data.startDate,
@@ -498,15 +563,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.codxEpService
         .driverValidator(
           driverID,
-          new Date(startDate),
-          new Date(endDate),
+          new Date(startDate).toUTCString(),
+          new Date(endDate).toUTCString(),
           recID
         )
         .subscribe((res) => {
           if (res && res.msgBodyData[0] != null) {
             this.driverCheck = res.msgBodyData[0];
-            if(res.msgBodyData[0]){              
-              this.driver=this.tempDriver;
+            if (res.msgBodyData[0]) {
+              this.driver = this.tempDriver;
             }
             if (!res.msgBodyData[0]) {
               this.driver = null;
@@ -531,10 +596,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.initForm();
     this.closeEdit.emit(data);
   }
-  timeCheck(startTime:Date, endTime:Date) { 
-    
+  timeCheck(startTime: Date, endTime: Date) {
     if (endTime <= startTime) {
-      return false;      
+      return false;
     }
     if (this.tempDriver != null) {
       this.driverValidator(
@@ -551,42 +615,62 @@ export class PopupAddBookingCarComponent extends UIComponent {
       return;
     }
     this.data.startDate = new Date(evt.data.fromDate);
-    // if(this.data.startDate.getHours()==0 && this.data.startDate.getMinutes()==0){
-    //   let temp= this.data.startDate;
-    //   this.data.startDate = new Date(temp.getFullYear(),temp.getMonth(),temp.getDate(),this.startHour,this.startMinutes);
+    // if (
+    //   this.data.startDate.getHours() == 0 &&
+    //   this.data.startDate.getMinutes() == 0
+    // ) {
+    //   let temp = this.data.startDate;
+    //   this.data.startDate = new Date(
+    //     temp.getFullYear(),
+    //     temp.getMonth(),
+    //     temp.getDate(),
+    //     this.calStartHour,
+    //     this.calStartMinutes
+    //   );
     // }
     // let tmpDate = new Date();
     // let startDate= this.data.startDate;
     // if (new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),0,0,0,0) > new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0,0)) {
     //   this.checkLoopS = !this.checkLoopS;
     //   if (!this.checkLoopS) {
-    //     this.notificationsService.notifyCode('TM036');        
+    //     this.notificationsService.notifyCode('TM036');
     //   }
     //   return;
-    // }    
+    // }
     // if(this.data.startDate && this.data.endDate){
     //   if(!this.timeCheck(this.data.startDate,this.data.endDate)){
     //     this.checkLoopS = !this.checkLoopS;
     //     if (!this.checkLoopS) {
-    //       this.notificationsService.notifyCode('TM036');          
+    //       this.notificationsService.notifyCode('TM036');
     //     }
     //     return;
     //   };
     // }
-    
   }
   endDateChange(evt: any) {
     if (!evt.field || !evt.data) {
       return;
     }
-    this.data.endDate = new Date(evt.data.fromDate);  
-
+    this.data.endDate = new Date(evt.data.fromDate);
+    // if (
+    //   this.data.endDate.getHours() == 0 &&
+    //   this.data.endDate.getMinutes() == 0
+    // ) {
+    //   let temp = this.data.endDate;
+    //   this.data.endDate = new Date(
+    //     temp.getFullYear(),
+    //     temp.getMonth(),
+    //     temp.getDate(),
+    //     this.calEndHour,
+    //     this.calEndMinutes
+    //   );
+    // }
     // let tmpDate = new Date();
     // let endDate= this.data.endDate;
     // if (new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),0,0,0,0) > new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),0,0,0,0)) {
     //     this.checkLoopE = !this.checkLoopE;
     //   if (!this.checkLoopE) {
-    //     this.notificationsService.notifyCode('TM036');        
+    //     this.notificationsService.notifyCode('TM036');
     //   }
     //   return;
     // }
@@ -605,7 +689,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
   valueCbxUserChange(event) {
     //this.cbbData=event.id; gán data đã chọn cho combobox
-    if (event?.dataSelected) {      
+    if (event?.dataSelected) {
       this.lstPeople = [];
       event.dataSelected.forEach((people) => {
         this.tempAtender = {
@@ -621,7 +705,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         }
       });
       if (this.lstPeople.length > 0) {
-        this.data.attendees = this.lstPeople.length + 1;               
+        this.data.attendees = this.lstPeople.length + 1;
       }
       this.isPopupCbb = false;
       this.detectorRef.detectChanges();
