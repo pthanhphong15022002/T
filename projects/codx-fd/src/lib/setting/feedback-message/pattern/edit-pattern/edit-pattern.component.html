@@ -37,7 +37,7 @@
                     <div class="d-block align-items-center">
                         <div class="symbol-list d-flex flex-wrap patternt">
                             <div class="pattern-teams">
-                                <div class="symbol symbol-50 symbol-circle me-5 mb-4"
+                                <div class="symbol symbol-50 symbol-circle me-3 mb-3"
                                     *ngFor="let item of vll; index as i">
                                     <div class="pattern-item">
                                         <span class="symbol-label cursor-pointer" #colordf
@@ -45,13 +45,13 @@
                                             [style.background-color]="item?.text"></span>
                                     </div>
                                 </div>
-                                <div class="symbol symbol-50 symbol-circle symbol-light me-5 mb-4" #group3>
+                                <div class="symbol symbol-50 symbol-circle symbol-light me-3 mb-3" #group3>
                                     <codx-input datatype="colorpicker" class="form-control symbol-label w-50"
                                         field="backgroundColor" (valueChange)="valueChangeColor($event)"
                                         [crrValue]="pattern?.backgroundColor">
                                     </codx-input>
                                 </div>
-                                <div class="symbol symbol-50 symbol-circle symbol-light me-5 mb-4 cursor-pointer">
+                                <div class="symbol symbol-50 symbol-circle symbol-light me-3 mb-3 cursor-pointer">
                                     <label class="symbol-label pointer mb-0" data-action="change" data-toggle="tooltip"
                                         title="" data-original-title="Change avatar">
                                         <span class="far fa-image" style="font-size: 18px;" (click)="uploadFile()">
@@ -113,7 +113,7 @@
         </div>
     </ng-template>
     <ng-template #footer>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-primary ms-1" (click)="savePattern()">
                 <codx-label name="Save" [formModel]="formModel" default="Lưu"></codx-label>
             </button>
