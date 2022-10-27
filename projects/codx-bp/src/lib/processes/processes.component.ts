@@ -214,7 +214,7 @@ export class ProcessesComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
         ['add', this.titleAction],
