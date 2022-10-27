@@ -190,11 +190,14 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     console.log(event);
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
       case 'SYS03':
         this.edit(data);
         break;
-      case 'SYS02':
-        this.delete(data);
+      case 'SYS04':
+        this.copy(data);
         break;
     }
   }
@@ -266,6 +269,32 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  copy(obj?) {
+    if (obj) {
+      this.view.dataService.dataSelected = obj;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.view?.dataService?.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          this.dialog = this.callfc.openSide(
+            PopupAddCarsComponent,
+            [this.view.dataService.dataSelected, true, this.popupTitle],
+            option
+          );
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {});
+            }
+          });
+        });
+    }
+  }
+
   delete(obj?) {
     this.view.dataService.methodDelete = 'DeleteResourceAsync';
     if (obj) {
@@ -284,36 +313,5 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
         }
       });
     }
-  }
-
-  copy(evt) {
-    this.view.dataService.dataSelected = evt?.data;
-    this.view.dataService.copy().subscribe((res: any) => {
-      if (!res) return;
-      this.view.dataService.dataSelected = res;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      this.dialog = this.callfc.openSide(
-        PopupAddCarsComponent,
-        {
-          data: evt?.data,
-          isAdd: false,
-          //headerText: evt.text + ' ' + this.funcList?.customName ?? '',
-          type: 'copy',
-          oldRecID: evt?.data?.recID,
-        },
-        option
-      );
-      this.dialog.closed.subscribe((x) => {
-        if (!res?.event) this.view.dataService.clear();
-        if (x.event == null) {
-          this.view.dataService
-            .remove(this.view.dataService.dataSelected)
-            .subscribe();
-        }
-      });
-    });
   }
 }
