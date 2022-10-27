@@ -195,7 +195,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
 
   }
-
   openCreateModal() {
     var obj = {
       status: 'create',
@@ -239,7 +238,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       option
     );
   }
-
   openModalShare(data: any) {
     if (!data) return;
     var obj = {
@@ -281,7 +279,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
   showListTag(item: any) {
     if (!item || !item.listTag) return;
     item.isShowTag = true;

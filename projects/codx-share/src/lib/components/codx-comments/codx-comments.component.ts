@@ -236,7 +236,6 @@ export class CodxCommentsComponent implements OnInit {
                 total: res
               }
               this.evtDeleteComment.emit(obj);
-              this.notifySvr.notifyCode("WP033");
             }
             else
             {
@@ -321,9 +320,9 @@ export class CodxCommentsComponent implements OnInit {
 
 
   clickViewDetail(file:any){
-    // if(this.evtViewDetail){
-    //   this.evtViewDetail.emit(file);
-    // }
+    if(this.evtViewDetail){
+      this.evtViewDetail.emit(file);
+    }
   }
 
 }
