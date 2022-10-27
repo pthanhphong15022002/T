@@ -57,16 +57,16 @@
                         </ul>
                     </div>
                 </div>
-                <div class="bg-body rounded-3 p-6 flex-grow-1 h-100 overflow-auto" data-spy="scroll"
+                <div class="bg-body rounded-3 p-6 flex-grow-1 h-100 card-body scroll-y aqua" data-spy="scroll"
                     data-target="#erm_content" data-offset="0">
                     <div class="main-detail d-flex flex-column flex-grow-1 data-scroll">
                         <div class="list-group" id="notificationFeedback" [attr.data-index]=1 #notificationFeedback>
-                            <h4 class="list-header mt-2 mb-6">
+                            <h3 class="list-header mt-2 mb-6">
                                 <codx-label name="lblFeedbackMessage" [formName]="functionList?.formName"
                                     [gridViewName]="functionList?.gridViewName" default='Thông điệp phản hồi'>
                                 </codx-label>
-                            </h4>
-                            <div class="list-content" *ngFor="let item of func['FDS01']">
+                            </h3>
+                            <div class="list-content py-5 border-bottom" *ngFor="let item of func['FDS01']">
                                 <div class="d-flex justify-content-between list-item" style="cursor: pointer;"
                                     (click)="LoadDetail(item)">
                                     <div class="d-flex flex-column">
@@ -82,12 +82,12 @@
                             </div>
                         </div>
                         <div class="list-group" id="itemCategory" [attr.data-index]=2 #itemCategory>
-                            <h4 class="list-header mt-6 mb-6">
+                            <h3 class="list-header mt-6 mb-6">
                                 <codx-label name="lblCategory" [formName]="functionList?.formName"
                                     [gridViewName]="functionList?.gridViewName" default='Danh mục'>
                                 </codx-label>
-                            </h4>
-                            <div class="list-content" *ngFor="let item of funcChildFDS02$|async">
+                            </h3>
+                            <div class="list-content py-5 border-bottom" *ngFor="let item of funcChildFDS02$|async">
                                 <div class="d-flex align-items-top list-item" style="cursor: pointer;"
                                     (click)="LoadCategory(item)">
                                     <span class="icon-settings icon-18 text-gray-700 me-3"></span>
@@ -105,12 +105,12 @@
                         </div>
 
                         <div class="list-group" id="itemWallet" [attr.data-index]=3 #itemWallet>
-                            <h4 class="list-header mt-6 mb-6">
+                            <h3 class="list-header mt-6 mb-6">
                                 <codx-label name="lblWallet" [formName]="functionList?.formName"
                                     [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
                                 </codx-label>
-                            </h4>
-                            <div class="list-content" *ngFor="let item of func['FDS03']">
+                            </h3>
+                            <div class="list-content py-5 border-bottom" *ngFor="let item of func['FDS03']">
                                 <div class="d-flex justify-content-between list-item" style="cursor: pointer;"
                                     (click)="LoadWallet(item)">
                                     <div class="d-flex align-items-center mb-2">
@@ -126,12 +126,12 @@
                         </div>
 
                         <div class="list-group" id="itemeankDedication" [attr.data-index]=4 #itemRankDedication>
-                            <h4 class="list-header mt-6 mb-6">
+                            <h3 class="list-header mt-6 mb-6">
                                 <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
                                     [gridViewName]="functionList?.gridViewName" default='Hạng cống hiến'>
                                 </codx-label>
-                            </h4>
-                            <div class="list-content">
+                            </h3>
+                            <div class="list-content py-5 border-bottom">
                                 <span class=" icon-settings icon-18 text-gray-700 me-3"
                                     style="cursor: pointer;float: right;" (click)="LoadDedicationRank('FDS04')"></span>
                                 <div class="row">
@@ -181,7 +181,7 @@
                                     [gridViewName]="functionList?.gridViewName" default='Thống kê'>
                                 </codx-label>
                             </h4>
-                            <div class="list-content">
+                            <div class="list-content py-5 border-bottom">
                                 <div class="d-flex justify-content-between list-item">
                                     <span class="icon-settings icon-18 text-gray-700 me-3"></span>
                                     <div class="d-flex flex-column flex-grow-1">
