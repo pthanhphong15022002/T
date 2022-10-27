@@ -99,7 +99,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
-        device.icon=item.icon;
+        device.icon = item.icon;
         this.carsEquipments.push(device);
         this.carsEquipments = JSON.parse(JSON.stringify(this.carsEquipments));
       });
@@ -284,5 +284,36 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
         }
       });
     }
+  }
+
+  copy(evt) {
+    this.view.dataService.dataSelected = evt?.data;
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (!res) return;
+      this.view.dataService.dataSelected = res;
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      this.dialog = this.callfc.openSide(
+        PopupAddCarsComponent,
+        {
+          data: evt?.data,
+          isAdd: false,
+          //headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+          type: 'copy',
+          oldRecID: evt?.data?.recID,
+        },
+        option
+      );
+      this.dialog.closed.subscribe((x) => {
+        if (!res?.event) this.view.dataService.clear();
+        if (x.event == null) {
+          this.view.dataService
+            .remove(this.view.dataService.dataSelected)
+            .subscribe();
+        }
+      });
+    });
   }
 }

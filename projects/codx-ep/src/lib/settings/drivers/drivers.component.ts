@@ -282,5 +282,4 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
-  
 }
