@@ -57,16 +57,16 @@
                         </ul>
                     </div>
                 </div>
-                <div class="bg-body rounded-3 p-6 flex-grow-1 h-100 overflow-auto" data-spy="scroll"
+                <div class="bg-body rounded-3 p-6 ps-7 w-100 h-100 card-body scroll-y" data-spy="scroll"
                     data-target="#erm_content" data-offset="0">
-                    <div class="main-detail d-flex flex-column flex-grow-1 data-scroll">
+                    <div class="main-detail d-flex flex-column w-100 data-scroll">
                         <div class="list-group" id="notificationFeedback" [attr.data-index]=1 #notificationFeedback>
-                            <h4 class="list-header mt-2 mb-6">
+                            <h3 class="list-header mt-2 mb-6">
                                 <codx-label name="lblFeedbackMessage" [formName]="functionList?.formName"
                                     [gridViewName]="functionList?.gridViewName" default='Thông điệp phản hồi'>
                                 </codx-label>
-                            </h4>
-                            <div class="list-content" *ngFor="let item of func['FDS01']">
+                            </h3>
+                            <div class="list-content py-4 border-bottom" *ngFor="let item of func['FDS01']">
                                 <div class="d-flex justify-content-between list-item" style="cursor: pointer;"
                                     (click)="LoadDetail(item)">
                                     <div class="d-flex flex-column">
@@ -74,43 +74,43 @@
                                             {{item.customName}}</div>
                                         <div class="text-gray-600">{{item.description}}</div>
                                     </div>
-                                    <div class="w-30px setting-btnright ms-2">
+                                    <div class="setting-btnright">
                                         <span class="icon-keyboard_arrow_right icon-20"></span>
                                     </div>
                                 </div>
-                                <hr />
+
                             </div>
                         </div>
                         <div class="list-group" id="itemCategory" [attr.data-index]=2 #itemCategory>
-                            <h4 class="list-header mt-6 mb-6">
+                            <h3 class="list-header mt-6 mb-6">
                                 <codx-label name="lblCategory" [formName]="functionList?.formName"
                                     [gridViewName]="functionList?.gridViewName" default='Danh mục'>
                                 </codx-label>
-                            </h4>
-                            <div class="list-content" *ngFor="let item of funcChildFDS02$|async">
+                            </h3>
+                            <div class="list-content py-4 border-bottom" *ngFor="let item of funcChildFDS02$|async">
                                 <div class="d-flex align-items-top list-item" style="cursor: pointer;"
                                     (click)="LoadCategory(item)">
                                     <span class="icon-settings icon-18 text-gray-700 me-3"></span>
-                                    <div class="d-flex flex-column flex-grow-1">
+                                    <div class="d-flex flex-column w-100">
                                         <div class="fw-bold text-dark mb-2">
                                             {{item.customName}}</div>
                                         <div class="text-gray-600">{{item.description}}</div>
                                     </div>
-                                    <div class="w-30px setting-btnright ms-2">
+                                    <div class="setting-btnright">
                                         <span class="icon-keyboard_arrow_right icon-20"></span>
                                     </div>
                                 </div>
-                                <hr />
+
                             </div>
                         </div>
 
                         <div class="list-group" id="itemWallet" [attr.data-index]=3 #itemWallet>
-                            <h4 class="list-header mt-6 mb-6">
+                            <h3 class="list-header mt-6 mb-6">
                                 <codx-label name="lblWallet" [formName]="functionList?.formName"
                                     [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
                                 </codx-label>
-                            </h4>
-                            <div class="list-content" *ngFor="let item of func['FDS03']">
+                            </h3>
+                            <div class="list-content py-4 border-bottom" *ngFor="let item of func['FDS03']">
                                 <div class="d-flex justify-content-between list-item" style="cursor: pointer;"
                                     (click)="LoadWallet(item)">
                                     <div class="d-flex align-items-center mb-2">
@@ -118,7 +118,7 @@
                                         <div class="fw-bold text-dark"> {{item.customName}}
                                         </div>
                                     </div>
-                                    <div class="w-30px setting-btnright ms-2">
+                                    <div class="setting-btnright">
                                         <span class="icon-keyboard_arrow_right icon-20"></span>
                                     </div>
                                 </div>
@@ -126,12 +126,12 @@
                         </div>
 
                         <div class="list-group" id="itemeankDedication" [attr.data-index]=4 #itemRankDedication>
-                            <h4 class="list-header mt-6 mb-6">
+                            <h3 class="list-header mt-6 mb-6">
                                 <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
                                     [gridViewName]="functionList?.gridViewName" default='Hạng cống hiến'>
                                 </codx-label>
-                            </h4>
-                            <div class="list-content">
+                            </h3>
+                            <div class="list-content py-4 border-bottom">
                                 <span class=" icon-settings icon-18 text-gray-700 me-3"
                                     style="cursor: pointer;float: right;" (click)="LoadDedicationRank('FDS04')"></span>
                                 <div class="row">
@@ -182,9 +182,9 @@
                                 </codx-label>
                             </h4>
                             <div class="list-content">
-                                <div class="d-flex justify-content-between list-item">
+                                <div class="d-flex justify-content-between py-4 border-bottom list-item">
                                     <span class="icon-settings icon-18 text-gray-700 me-3"></span>
-                                    <div class="d-flex flex-column flex-grow-1">
+                                    <div class="d-flex flex-column w-100">
                                         <div class="fw-bold text-dark mb-2">
                                             <codx-label name="lblFeedBackStatistic" [formName]="functionList?.formName"
                                                 [gridViewName]="functionList?.gridViewName" default='Thống kê phiếu
@@ -200,17 +200,16 @@
                                             </codx-label>
                                         </div>
                                     </div>
-                                    <div class="w-150px">
+                                    <div class="w-200px min-w-200px">
                                         <codx-input type="valuelist" class="cotrol-vll" placeholder="" refValue="L1440"
                                             field="SumaryCards" (valueChange)="valueChange($event)"
                                             [crrValue]="parameter?.SumaryCards">
                                         </codx-input>
                                     </div>
                                 </div>
-                                <hr />
-                                <div class="d-flex justify-content-between list-item">
+                                <div class="d-flex justify-content-between py-4 border-bottom list-item">
                                     <span class="icon-settings icon-18 text-gray-700 me-3"></span>
-                                    <div class="d-flex flex-column flex-grow-1">
+                                    <div class="d-flex flex-column w-100">
                                         <div class="fw-bold text-dark mb-2">
                                             <codx-label name="lblRankDedication" [formName]="functionList?.formName"
                                                 [gridViewName]="functionList?.gridViewName" default='Danh sách xếp hạng
@@ -225,17 +224,16 @@
                                             </codx-label>
                                         </div>
                                     </div>
-                                    <div class="w-150px">
+                                    <div class="w-200px min-w-200px">
                                         <codx-input type="valuelist" class="cotrol-vll" placeholder="" refValue="L1440"
                                             field="ListRanking" (valueChange)="valueChange($event)"
                                             [crrValue]="parameter?.ListRanking">
                                         </codx-input>
                                     </div>
                                 </div>
-                                <hr />
-                                <div class="d-flex justify-content-between list-item">
+                                <div class="d-flex justify-content-between py-4 border-bottom list-item">
                                     <span class="icon-settings icon-18 text-gray-700 me-3"></span>
-                                    <div class="d-flex flex-column flex-grow-1">
+                                    <div class="d-flex flex-column w-100">
                                         <div class="fw-bold text-dark mb-2">
                                             <codx-label name="lblSelectTopEmp" [formName]="functionList?.formName"
                                                 [gridViewName]="functionList?.gridViewName"
@@ -249,72 +247,71 @@
                                             </codx-label>
                                         </div>
                                     </div>
-                                    <div class="w-150px d-flex align-items-center ml-4">
+                                    <div class="w-200px min-w-200px d-flex align-items-center ms-4">
                                         <codx-input type="text" min="1" class="form-control" disabled="true"
                                             [crrValue]="parameter?.SelectTopEmp" placeholder="">
                                         </codx-input>
-                                        <div class="w-30px setting-btnright ms-2">
+                                        <div class="setting-btnright">
                                             <span class="icon-edit-one text-hover-primary icon-18"
                                                 (click)="open(content, 'SelectTopEmp')"></span>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-flex justify-content-between py-4 border-bottom list-item">
+                                    <span class="icon-settings icon-18 text-gray-700 me-3"></span>
+                                    <div class="d-flex flex-column w-100">
+                                        <div class="fw-bold text-dark mb-2">
+                                            <codx-label name="lblSelectTopByCard" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName"
+                                                default='Top nhân viên theo từng loại phiếu'>
+                                            </codx-label>
+                                        </div>
+                                        <div class="text-gray-600">
+                                            <codx-label name="lblSelectTopByCard2" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName"
+                                                default='Top nhân viên theo từng loại phiếu'>
+                                            </codx-label>
+                                        </div>
+                                    </div>
+                                    <div class="w-200px min-w-200px d-flex align-items-center ms-4">
+                                        <codx-input type="text" min="1" class="form-control" disabled="true"
+                                            [crrValue]="parameter?.SelectTopByCard" placeholder="">
+                                        </codx-input>
+                                        <div class="setting-btnright">
+                                            <span class="icon-edit-one text-hover-primary icon-18"
+                                                (click)="open(content, 'SelectTopByCard')"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between py-4 list-item">
+                                    <span class="icon-settings icon-18 text-gray-700 me-3"></span>
+                                    <div class="d-flex flex-column w-100">
+                                        <div class="fw-bold text-dark mb-2">
+                                            <codx-label name="lblSelectTopBehaviors" [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName"
+                                                default='Top hành vi được chọn nhiều nhất'>
+                                            </codx-label>
+                                        </div>
+                                        <div class="text-gray-600">
+                                            <codx-label name="lblSelectTopBehaviors2"
+                                                [formName]="functionList?.formName"
+                                                [gridViewName]="functionList?.gridViewName"
+                                                default='Top hành vi được chọn nhiều nhất'>
+                                            </codx-label>
+                                        </div>
+                                    </div>
+                                    <div class="w-200px min-w-200px d-flex align-items-center ms-4">
+                                        <codx-input type="text" min="1" class="form-control" disabled="true"
+                                            [crrValue]="parameter?.SelectTopBehaviors" placeholder="">
+                                        </codx-input>
+                                        <div class="setting-btnright">
+                                            <span class="icon-edit-one text-hover-primary icon-18"
+                                                (click)="open(content, 'SelectTopBehaviors')"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <hr />
-                            <div class="d-flex justify-content-between list-item">
-                                <span class="icon-settings icon-18 text-gray-700 me-3"></span>
-                                <div class="d-flex flex-column flex-grow-1">
-                                    <div class="fw-bold text-dark mb-2">
-                                        <codx-label name="lblSelectTopByCard" [formName]="functionList?.formName"
-                                            [gridViewName]="functionList?.gridViewName"
-                                            default='Top nhân viên theo từng loại phiếu'>
-                                        </codx-label>
-                                    </div>
-                                    <div class="text-gray-600">
-                                        <codx-label name="lblSelectTopByCard2" [formName]="functionList?.formName"
-                                            [gridViewName]="functionList?.gridViewName"
-                                            default='Top nhân viên theo từng loại phiếu'>
-                                        </codx-label>
-                                    </div>
-                                </div>
-                                <div class="w-150px d-flex align-items-center ml-4">
-                                    <codx-input type="text" min="1" class="form-control" disabled="true"
-                                        [crrValue]="parameter?.SelectTopByCard" placeholder="">
-                                    </codx-input>
-                                    <div class="w-30px setting-btnright ms-2">
-                                        <span class="icon-edit-one text-hover-primary icon-18"
-                                            (click)="open(content, 'SelectTopByCard')"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="d-flex justify-content-between list-item">
-                                <span class="icon-settings icon-18 text-gray-700 me-3"></span>
-                                <div class="d-flex flex-column flex-grow-1">
-                                    <div class="fw-bold text-dark mb-2">
-                                        <codx-label name="lblSelectTopBehaviors" [formName]="functionList?.formName"
-                                            [gridViewName]="functionList?.gridViewName"
-                                            default='Top hành vi được chọn nhiều nhất'>
-                                        </codx-label>
-                                    </div>
-                                    <div class="text-gray-600">
-                                        <codx-label name="lblSelectTopBehaviors2" [formName]="functionList?.formName"
-                                            [gridViewName]="functionList?.gridViewName"
-                                            default='Top hành vi được chọn nhiều nhất'>
-                                        </codx-label>
-                                    </div>
-                                </div>
-                                <div class="w-150px d-flex align-items-center ml-4">
-                                    <codx-input type="text" min="1" class="form-control" disabled="true"
-                                        [crrValue]="parameter?.SelectTopBehaviors" placeholder="">
-                                    </codx-input>
-                                    <div class="w-30px setting-btnright ms-2">
-                                        <span class="icon-edit-one text-hover-primary icon-18"
-                                            (click)="open(content, 'SelectTopBehaviors')"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
                         </div>
                     </div>
                 </div>
