@@ -17,6 +17,7 @@
 [selectedFirst]="true"
 [autoLoad]="true"
 [viewActiveType]="viewType.schedule"
+(onActions)="onActionClick($event)"
 >
 </codx-views>
 
@@ -216,7 +217,6 @@
   [date]="data?.createdOn"
   [imageId]="data?.createdBy"
   imageObjType="AD_Users"
-  [hideMF]="true"
   [resources]="data?.bookingAttendees"
   
   [titleLine]="2"
@@ -224,6 +224,7 @@
   [formModel]="formModel"
   [footer]="footerTmp"
   (clickMF)="clickMF($event, data)"
+  (changeDataMF)="changeDataMF($event, data)"  
   typeMF="hover"
   [dataItem]="data"
     
@@ -250,12 +251,13 @@
 <!-- Other -->
 
 <ng-template #mfButton let-data>
-  <div class="mt-2 me-2">
+  <div class="mt-1 me-1">
     <codx-mfunc
       [dataItem]="data"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
+      (changeDataMF)="changeDataMF($event, data)"  
     ></codx-mfunc>
   </div>
 </ng-template>
