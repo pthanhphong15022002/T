@@ -4,11 +4,11 @@
             <div class="container">
                 <div class="d-flex">
                     <div class="aside-detail flex-row-auto w-300px">
-                        <div class="aside-menu mr-6">
+                        <div class="aside-menu me-6">
                             <ul class="menu-nav">
                                 <li class="menu-item" (click)="redirectPage('notificationFeedback', 1)">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-near_me icon-20 mr-2"></i>
+                                        <i class="icon-near_me icon-20 me-2"></i>
                                         <codx-label name="lblFeedbackMessage" [formName]="functionList?.formName"
                                             [gridViewName]="functionList?.gridViewName" default='Thông điệp phản hồi'>
                                         </codx-label>
@@ -16,7 +16,7 @@
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemCategory', 2)">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-format_list_bulleted icon-20 mr-2"></i>
+                                        <i class="icon-format_list_bulleted icon-20 me-2"></i>
                                         <codx-label name="lblCategory" [formName]="functionList?.formName"
                                             [gridViewName]="functionList?.gridViewName" default='Danh mục'>
                                         </codx-label>
@@ -24,7 +24,7 @@
                                 </li>
                                 <li class="menu-item menu-item-active">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-account_balance_wallet icon-20 mr-2"></i>
+                                        <i class="icon-account_balance_wallet icon-20 me-2"></i>
                                         <codx-label name="lblWallet" [formName]="functionList?.formName"
                                             [gridViewName]="functionList?.gridViewName" default='Ví nhân viên'>
                                         </codx-label>
@@ -32,7 +32,7 @@
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemRankDedication', 3)">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-credit_card icon-20 mr-2"></i>
+                                        <i class="icon-credit_card icon-20 me-2"></i>
                                         <codx-label name="lblDedicateRank" [formName]="functionList?.formName"
                                             [gridViewName]="functionList?.gridViewName" default='Hạng cống hiến'>
                                         </codx-label>
@@ -40,7 +40,7 @@
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemStatistical', 4)">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-bar_chart icon-20 mr-2"></i>
+                                        <i class="icon-bar_chart icon-20 me-2"></i>
                                         <codx-label name="lblStatistical" [formName]="functionList?.formName"
                                             [gridViewName]="functionList?.gridViewName" default='Thống kê'>
                                         </codx-label>
@@ -49,17 +49,17 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="d-flex flex-column flex-grow-1 h-100vh">
+                    <div class="d-flex flex-column flex-grow-1 h-100">
                         <div class="list-group">
                             <div class="list-content">
                                 <div class="d-flex justify-content-between mb-6">
-                                    <span class="icon-arrow_back icon-22 mr-5 text-hover-primary"
+                                    <span class="icon-arrow_back icon-22 me-5 text-hover-primary"
                                         (click)="backLocation()"></span>
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="fs-3 fw-bold text-dark mb-1">
                                             {{policy?.policyName}}</div>
                                         <div class="text-gray-500">{{policy?.memo}}</div>
-                                        <div class="text-primary-30 font-italic">
+                                        <div class="text-primary font-italic text-italic aqua">
                                             <codx-label fiedName="" [formName]="functionList?.formName"
                                                 [gridViewName]="functionList?.gridViewName" default="(*) Lưu ý: Chức danh nhân viên bỏ trống sẽ áp
                                                 dụng cho tất cả các chức danh không được thiết lập">
@@ -73,7 +73,8 @@
                                             <tr>
                                                 <th scope="col">
                                                     <codx-label fiedName="" [formName]="functionList?.formName"
-                                                        [gridViewName]="functionList?.gridViewName" default="Chức danh">
+                                                        [gridViewName]="functionList?.gridViewName"
+                                                        default="Chức danh">
                                                     </codx-label>
                                                 </th>
                                                 <th scope="col">
@@ -92,9 +93,9 @@
                                         <tbody>
                                             <tr *ngFor="let item of lstPolicyLine">
                                                 <td>{{item.itemSelectName}}</td>
-                                                <td class="w-150px fs-lg fw-bold">
+                                                <td class="w-150px fs-6 fw-bold">
                                                     <div class="d-flex" #ele>
-                                                        <span class="mr-1 oparator"
+                                                        <span class="me-1 oparator"
                                                             [style.color]="item.value < 0 ? 'red' : 'green'">
                                                             {{item.value
                                                             < 0 ? "-" : "+" }}</span>{{item.value < 0 ? item.value * -1
@@ -103,17 +104,17 @@
                                                 <td class="w-100px">
                                                     <div ngbDropdown class="dropdown" container="body">
                                                         <a href="javascript:void(0)"
-                                                            class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                                                            class="btn btn-clean btn-light-primary btn-sm btn-icon"
                                                             ngbDropdownToggle id="dropdownMenuButton1"
                                                             aria-expanded="false">
-                                                            <i class="icon-more_vert icon-20 text-dark-75"></i>
+                                                            <i class="icon-more_vert icon-20 text-gray-700"></i>
                                                         </a>
                                                         <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                                             <li>
                                                                 <a (click)="open(content, item, false)" ngbDropdownItem
                                                                     href="javascript:void(0)">
                                                                     <span [class]="'icon-create icon-18'"></span>
-                                                                    <span class="ml-3">
+                                                                    <span class="ms-3">
                                                                         <codx-label name="lblUpdate" [formModel]=""
                                                                             default='Chỉnh sửa'>
                                                                         </codx-label>
@@ -124,7 +125,7 @@
                                                                 <a (click)="deletePolicyLine(item.recID)"
                                                                     ngbDropdownItem href="javascript:void(0)">
                                                                     <span class="icon-delete icon-18"></span>
-                                                                    <span class="ml-3">
+                                                                    <span class="ms-3">
                                                                         <codx-label fiedName="Delete"
                                                                             [formName]="functionList?.formName"
                                                                             [gridViewName]="functionList?.gridViewName"

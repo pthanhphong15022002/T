@@ -4,12 +4,12 @@
             <div class="container">
                 <div class="d-flex">
                     <div class="aside-detail flex-row-auto w-300px">
-                        <div class="aside-menu mr-6">
+                        <div class="aside-menu me-6">
                             <ul class="menu-nav">
                                 <li class="menu-item " [class.menu-item-active]="tabActive == 1"
                                     (click)="redirectPage('notificationFeedback')">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-near_me icon-20 mr-2"></i>
+                                        <i class="icon-near_me icon-20 me-2"></i>
                                         <codx-label name="lblFeedbackMessage" [formModel]=""
                                             default='Thông điệp phản hồi'>
                                         </codx-label>
@@ -17,7 +17,7 @@
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemCategory')">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-format_list_bulleted icon-20 mr-2"></i>
+                                        <i class="icon-format_list_bulleted icon-20 me-2"></i>
                                         <codx-label name="lblCategory" [formModel]="" default='Danh mục'>
                                         </codx-label>
                                     </a>
@@ -25,21 +25,21 @@
                                 <li class="menu-item " (click)="redirectPage('itemWallet')"
                                     [class.menu-item-active]="tabActive == 3">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-account_balance_wallet icon-20 mr-2"></i>
+                                        <i class="icon-account_balance_wallet icon-20 me-2"></i>
                                         <codx-label name="lblWallet" [formModel]="" default='Ví nhân viên'>
                                         </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemRankDedication')">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-credit_card icon-20 mr-2"></i>
+                                        <i class="icon-credit_card icon-20 me-2"></i>
                                         <codx-label name="lblDedicateRank" [formModel]="" default='Hạng cống hiến'>
                                         </codx-label>
                                     </a>
                                 </li>
                                 <li class="menu-item" (click)="redirectPage('itemStatistical')">
                                     <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-bar_chart icon-20 mr-2"></i>
+                                        <i class="icon-bar_chart icon-20 me-2"></i>
                                         <codx-label name="lblStatistical" [formModel]="" default='Thống kê'>
                                         </codx-label>
                                     </a>
@@ -51,7 +51,7 @@
                         <div class="list-group">
                             <div class="list-content">
                                 <div class="d-flex justify-content-between mb-6" *ngIf="policy">
-                                    <span class="icon-arrow_back icon-22 mr-5 text-hover-primary"
+                                    <span class="icon-arrow_back icon-22 me-5 text-hover-primary"
                                         onclick="history.back()"></span>
                                     <div class="d-flex flex-column flex-grow-1">
                                         <div class="fs-3 fw-bold text-dark mb-1">
@@ -76,7 +76,7 @@
                                                 <td>{{item.name}}</td>
                                                 <td class="w-50px font-size-lg fw-bold">
                                                     <div class="d-flex" #ele>
-                                                        <span class="mr-1 oparator"
+                                                        <span class="me-1 oparator"
                                                             [style.color]="item.value < 0 ? 'red' : 'green'">
                                                             {{item.value
                                                             < 0 ? "-" : "+" }}</span>{{item.value < 0 ? item.value * -1
@@ -96,7 +96,7 @@
                                                                     <a (click)="open(content, item.id, item.value)"
                                                                         ngbDropdownItem href="javascript:void(0)">
                                                                         <span [class]="'icon-create icon-18'"></span>
-                                                                        <span class="ml-3">
+                                                                        <span class="ms-3">
                                                                             <codx-label name="lblUpdate" [formModel]=""
                                                                                 default='Chỉnh sửa'>
                                                                             </codx-label>
