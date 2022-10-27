@@ -308,6 +308,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
+          console.log("check res", res)
           this.lstRate = res[0];
           this.L1422 = res[1]?.datas;
           this.data_Receiver = res[2];
@@ -408,6 +409,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
         }
       }
     }
+    console.log("check interval", this.interval)
   }
 
   valueChange(e, f) {
@@ -638,7 +640,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
         { month: 11, value: 0 },
         { month: 12, value: 0 },
       ];
-      var label = e.key;
+      var label = e.key ? e.key : 'Không có dữ liệu';
       e.value.forEach((res) => {
         var month = res.key1.month;
         var total = res.total;
@@ -661,6 +663,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
         });
       });
       this.chartDatas_Line.push({ data, label });
+      console.log("check chartDatas_Line", this.chartDatas_Line)
     });
     this.caculateY();
     this.primaryYAxis = {
@@ -675,6 +678,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
       minorTickLines: { width: 0 },
       labelFormat: '{value}',
     };
+    console.log('check primaryYAxis', this.primaryYAxis)
     this.changedr.detectChanges();
   }
 

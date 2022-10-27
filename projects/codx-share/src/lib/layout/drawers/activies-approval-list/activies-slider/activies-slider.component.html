@@ -1,8 +1,4 @@
-<codx-form 
-  [subHeader]="subheader"
-  [body]="body" 
-  (onScroll)="onScroll($event)" 
-  [headerText]="'Yêu cầu xét duyệt'" 
+<codx-form [subHeader]="subheader" [body]="body" (onScroll)="onScroll($event)" [headerText]="'Yêu cầu xét duyệt'"
   [dialog]="dialog">
 </codx-form>
 <ng-template #subheader>
@@ -21,32 +17,32 @@
 <ng-template #body>
   <div class="p-2">
     <ng-container *ngFor="let item of lstApproval">
-        <div class="d-flex p-4 my-2">
-          <div class="">
-            <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+      <div class="d-flex p-4 my-2">
+        <div class="">
+          <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+        </div>
+        <div class="ms-4">
+          <div class="fw-bolder">{{item.textValue}}</div>
+          <div>{{item.title}}</div>
+          <div>
+            <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
           </div>
-          <div class="ms-4">
-            <div class="fw-bolder">{{item.textValue}}</div>
-            <div>{{item.title}}</div>
+          <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
             <div>
-              <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+              <button type="button" class="btn btn-sm btn-light-primary">
+                <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
+              </button>
+              <button type="button" class="btn btn-outline-danger min-w-90px ms-4">
+                <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
+              </button>
             </div>
-            <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
-              <div>
-                <button type="button" class="btn btn-outline-success min-w-90px">
-                  <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
-                </button>
-                <button type="button" class="btn btn-outline-danger min-w-90px ms-4">
-                  <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
-                </button>
-              </div>
-              <div>
-                <codx-label [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
-              </div>
+            <div>
+              <codx-label [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
             </div>
           </div>
         </div>
-        
+      </div>
+
     </ng-container>
   </div>
 </ng-template>
@@ -56,7 +52,7 @@
       <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
     </div>
     <div class="col-10">
-      <div [innerHTML]="item.textValue">        
+      <div [innerHTML]="item.textValue">
       </div>
       <div>
         <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>

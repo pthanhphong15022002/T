@@ -5,6 +5,7 @@ import {
   DialogModel,
   UIComponent,
   FormModel,
+  AuthService,
 } from 'codx-core';
 import {
   AfterViewInit,
@@ -63,7 +64,8 @@ export class BookingStationeryComponent
     private callFuncService: CallFuncService,
     private codxEpService: CodxEpService,
     private cacheService: CacheService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private authService: AuthService,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -139,7 +141,7 @@ export class BookingStationeryComponent
         this.funcID,
         {
           isAddNew: true,
-          formModel: this.view?.formModel,
+          formModel: this.formModel,
           option: option,
           title: this.popupTitle,
         },
@@ -150,6 +152,11 @@ export class BookingStationeryComponent
   }
   edit(evt: any) {
     if (evt) {
+      if(this.authService.userValue.userID!=evt?.owner)
+      {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
     this.view.dataService.dataSelected = evt;
     this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
       let option = new SidebarModel();
@@ -165,7 +172,7 @@ export class BookingStationeryComponent
         this.funcID,
         {
           isAddNew: false,
-          formModel: this.view?.formModel,
+          formModel: this.formModel,
           option: option,
           title:this.popupTitle,
         },
@@ -174,9 +181,9 @@ export class BookingStationeryComponent
       );
     });
   }
-}
-  setPopupTitle(mfunc){
-    this.popupTitle = mfunc + " " + this.funcIDName;
+  }
+  setPopupTitle(mfunc) {
+    this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
 
   // addNewRequest(evt?) {
@@ -222,6 +229,11 @@ export class BookingStationeryComponent
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
+      if(this.authService.userValue.userID!=evt?.owner)
+      {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
     }
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
       if (!res) {

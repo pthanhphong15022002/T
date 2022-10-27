@@ -15,7 +15,10 @@ import { CodxEpService } from '../../../codx-ep.service';
   templateUrl: 'approval-stationery-view-detail.component.html',
   styleUrls: ['approval-stationery-view-detail.component.scss'],
 })
-export class ApprovalStationeryViewDetailComponent extends UIComponent implements OnChanges {
+export class ApprovalStationeryViewDetailComponent
+  extends UIComponent
+  implements OnChanges
+{
   @Input() itemDetail: any;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @Input() funcID;
@@ -30,25 +33,25 @@ export class ApprovalStationeryViewDetailComponent extends UIComponent implement
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
-    private codxEpService: CodxEpService,
-    ) {
+    private codxEpService: CodxEpService
+  ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
   }
 
   onInit(): void {
-    throw new Error('Method not implemented.');
+    this.itemDetailStt = 1;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&
       changes.itemDetail?.previousValue?.recID !=
         changes.itemDetail?.currentValue?.recID
     ) {
       this.api
-        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
+        .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
           changes.itemDetail?.currentValue?.recID,
+          changes.itemDetail?.currentValue?.approvalTransRecID,
         ])
         .subscribe((res) => {
           if (res) {
@@ -56,7 +59,6 @@ export class ApprovalStationeryViewDetailComponent extends UIComponent implement
             this.detectorRef.detectChanges();
           }
         });
-
       this.detectorRef.detectChanges();
     }
     this.setHeight();
@@ -64,119 +66,61 @@ export class ApprovalStationeryViewDetailComponent extends UIComponent implement
   }
 
   clickMF(value, datas: any = null) {
-    
     let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
+
     switch (funcID) {
-      case 'EPT40101':
-      case 'EPT40201':
       case 'EPT40301':
         {
           //alert('Duyệt');
-          this.approve(datas,"5")
+          this.approve(datas, '5');
         }
-        break;      
-      case 'EPT40105':
-      case 'EPT40205':
-      case 'EPT40305':
+        break;
+
+      case 'EPT40302':
         {
           //alert('Từ chối');
-          this.approve(datas,"4")
+          this.approve(datas, '4');
         }
-        break;      
+        break;
       default:
         '';
         break;
     }
   }
-  approve(data:any, status:string){
+  approve(data: any, status: string) {
     this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res: any) => {
-        this.codxEpService
-          .approve(            
-            data?.approvalTransRecID,//ApprovelTrans.RecID
-            status,
-          )
-          .subscribe(async (res:any) => {
-            if (res?.msgCodeError == null && res?.rowCount>=0) {
-              if(status=="5"){
-                this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.status="5"
-              }
-              if(status=="4"){
-                this.notificationsService.notifyCode('ES007');//bị hủy
-                data.status="4";
-              }                           
-              this.updateStatus.emit(data);
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);
-            }
-          });
+      .approve(
+        data?.approvalTransRecID, //ApprovelTrans.RecID
+        status
+      )
+      .subscribe(async (res: any) => {
+        if (res?.msgCodeError == null && res?.rowCount >= 0) {
+          if (status == '5') {
+            this.notificationsService.notifyCode('ES007'); //đã duyệt
+            data.status = '5';
+          }
+          if (status == '4') {
+            this.notificationsService.notifyCode('ES007'); //bị hủy
+            data.status = '4';
+          }
+          this.updateStatus.emit(data);
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
+        }
       });
   }
-  changeDataMF(event, data:any) {    
+  changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
-      switch(data?.status){
-        case "3":
+      event.forEach(func => {        
+        func.disabled=true;        
+      });
+      if(data.status=='3'){
         event.forEach(func => {
-          if(func.functionID == "EPT40102" 
-          ||func.functionID == "EPT40103" 
-          ||func.functionID == "EPT40106" 
-          || func.functionID == "EPT40104")
+          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ || func.functionID == "EPT40303"/*MF Cấp phát*/ )
           {
-            func.disabled=true;
+            func.disabled=false;
           }
-        });
-        break;
-        case "4":
-          event.forEach(func => {
-            if(func.functionID == "EPT40102" 
-            ||func.functionID == "EPT40103" 
-            || func.functionID == "EPT40104"
-            ||func.functionID == "EPT40105" 
-            ||func.functionID == "EPT40106" 
-            || func.functionID == "EPT40101"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
-        case "5":
-          event.forEach(func => {
-            if(func.functionID == "EPT40102" 
-            ||func.functionID == "EPT40103" 
-            || func.functionID == "EPT40104"
-            ||func.functionID == "EPT40105" 
-            ||func.functionID == "EPT40106" 
-            || func.functionID == "EPT40101"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
-        case "2":
-          event.forEach(func => {
-            if(func.functionID == "EPT40102" 
-            ||func.functionID == "EPT40103" 
-            || func.functionID == "EPT40104"
-            ||func.functionID == "EPT40105" 
-            ||func.functionID == "EPT40106" 
-            || func.functionID == "EPT40101"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
+        });  
       }
     }
   }

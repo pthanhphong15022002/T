@@ -626,9 +626,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // openInputMemo2() {
-  //   this.openMemo2 = !this.openMemo2;
-  // }
 
   eventApply(e: any) {
     var assignTo = '';

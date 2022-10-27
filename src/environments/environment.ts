@@ -13,6 +13,17 @@ export const environment = {
   urlUpload: '',
   office365: '',
   appName: '', // Tam thoi de hard
+
+  SureMeet: {
+    baseUrl: 'https://api.suremeet.vn/',
+    tokenUrl: 'api/auth/token',
+    addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
+    connectMettingUrl: 'PublicMeeting/Verify',
+    client_id: 'portal',
+    client_secret: 'lacviet@2022@$%!$$!(@',
+    app_id: 'demo.suremeet@gmail.com',
+    app_secret: '123456',
+  },
   StoreNames: {
     FormLabels: 'FormLabels',
     GridViewSetups: 'GridViewSetups',
