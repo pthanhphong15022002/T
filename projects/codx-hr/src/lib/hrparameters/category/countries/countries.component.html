@@ -1,6 +1,6 @@
 <codx-views #view funcID="HRS0203" service="BS" entityName="BS_Countries" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="" assemblyName="ERM.Business.BS" className="CountriesBusiness"
-    method="GetListCountriesAsync"  (viewChanged)="changeView($event)" [pageSize]="15"
+    method="GetListCountriesAsync" (viewChanged)="changeView($event)" [pageSize]="15"
     (requestEnded)="requestEnded($event)" [selectedFirst]="true">
 </codx-views>
 
@@ -8,7 +8,7 @@
     <div class="d-flex align-items-center" #itemCreateBy>
         <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
         </codx-img>
-        <div class="text-dark font-size-lg">{{dataItem.createName}}</div>
+        <div class="text-dark fs-6">{{dataItem.createName}}</div>
     </div>
 </ng-template>
 

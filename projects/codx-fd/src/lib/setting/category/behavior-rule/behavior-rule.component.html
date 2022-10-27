@@ -1,35 +1,15 @@
-<codx-views
-  [views]="views"
-  #view
-  [funcID]="funcID"
-  [entityName]="'BS_Competences'"
-  (buttonClick)="add($event)"
-  [button]="button"
-  service="BS"
-  assemblyName="ERM.Business.BS"
-  className="CompetencesBusiness"
-  method="LoadDataCompetencesAsync"
-  [predicate]="'Category=@0 and IsGroup = @1'"
-  [dataValue]="'1;true'"
-  entityName="BS_Competences"
-  (onLoading)="onLoading($event)" 
-></codx-views>
+<codx-views [views]="views" #view [funcID]="funcID" [entityName]="'BS_Competences'" (buttonClick)="add($event)"
+  [button]="button" service="BS" assemblyName="ERM.Business.BS" className="CompetencesBusiness"
+  method="LoadDataCompetencesAsync" [predicate]="'Category=@0 and IsGroup = @1'" [dataValue]="'1;true'"
+  entityName="BS_Competences" (onLoading)="onLoading($event)"></codx-views>
 
 <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
-    <div class="h-30 w-30">
-      <codx-img
-        class="symbol symbol-30px symbol-circle me-4"
-        [objectId]="dataItem.createdBy"
-        [width]="30"
-        objectType="AD_Users"
-      >
+    <div class="me-3">
+      <codx-img class="" [objectId]="dataItem.createdBy" [width]="30" objectType="AD_Users">
       </codx-img>
     </div>
-    <div
-      *ngIf="dataItem.createName == null; else other"
-      class="text-dark font-size-lg"
-    >
+    <div *ngIf="dataItem.createName == null; else other" class="text-dark fs-6">
       {{ userName }}
     </div>
     <ng-template #other>
@@ -49,12 +29,7 @@
 <ng-template #createdOn let-item>
   <div class="d-flex has-action-menu">
     <span>{{ item.createdOn | fmDT }}</span>
-    <codx-mfunc
-      [dataItem]="item"
-      [formModel]="view?.formModel"
-      (clickMF)="clickMF($event, item)"
-      type="hover"
-    >
+    <codx-mfunc [dataItem]="item" [formModel]="view?.formModel" (clickMF)="clickMF($event, item)" type="hover">
     </codx-mfunc>
   </div>
 </ng-template>

@@ -340,10 +340,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   copy(evt?) {
     if (evt) {
-      if (this.authService.userValue.userID != evt?.owner) {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
+      
       this.view.dataService.dataSelected = evt;
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
