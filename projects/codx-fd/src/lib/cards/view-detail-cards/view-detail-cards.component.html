@@ -3,22 +3,45 @@
     <div class="w-100 d-flex flex-column" id="erm_content">
         <div class="container p-2">
             <div class="d-flex">
-                <div class="row h-500px min-h-500px me-4 d-flex justify-content-center text-center p-6" 
+                <ng-container *ngIf="data.pattern">
+                    <div class="fd-card-detail-background">
+                        <ng-contaier *ngIf="data.pattern.backgroundColor;else haveCardPattern">
+                            <div class="w-100 h-100" [style.background]="data.backgroundColor"></div>
+                        </ng-contaier>
+                        <ng-template #haveCardPattern>
+                            <codx-img 
+                                [objectId]="data.pattern.recID" 
+                                [objectName]="'FD_Patterns'"
+                                [width]="800"
+                                [isDefaulImg]="true"
+                                [imageType]="'square'">
+                            </codx-img>
+                        </ng-template>
+                    </div>
+                    <div class="fd-card-detail-content">
+
+                    </div>
+                </ng-container>
+                <!-- <div class="row h-500px min-h-500px me-4 d-flex justify-content-center text-center p-6" 
                     [style.background]="data.backgroundColor">
                     <div class="card-title fw-bolder display-6"
                         [style.color]="data.headerColor">
                         {{data?.cardType | vll:'L1422':'text'|async}}
                     </div>
                     <div class="d-flex align-items-center justify-content-center">
-                        <codx-img class="symbol symbol-40 symbol-circle"
-                            [objectId]="data.senderID" objectType="AD_Users"
+                        <codx-img
+                            [objectId]="data.senderID" 
+                            objectType="AD_Users"
+                            [isDefaulImg]="true"
                             [width]="35">
                         </codx-img>
                         <span class="pic-send mx-3">
                             <img alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
                         </span>
-                        <codx-img class="symbol symbol-40 symbol-circle"
-                            [objectId]="data.receiverID" objectType="AD_Users"
+                        <codx-img 
+                            [objectId]="data.receiverID" 
+                            objectType="AD_Users"
+                            [isDefaulImg]="true"
                             [width]="35">
                         </codx-img>
                     </div>
@@ -47,7 +70,7 @@
                 <div class="flex-grow-1 w-350px min-w-350px">
                     <div>
                         <div class="text-primary fw-bolder">
-                            <codx-label formName="" name="lblSender" default="Người gửi"></codx-label>
+                            <codx-label [formModel]="formModel" name="lblSender" default="Người gửi"></codx-label>
                         </div>
                         <ng-container *ngIf="data.sender">
                             <div class="d-flex justify-content-between mb-2">
@@ -126,7 +149,7 @@
                         <div class="modal-card-sms mt-3">
                             <span [innerHTML]="data.situation"></span>
                         </div>
-                </div>    
+                </div>     -->
             </div>
             <div class="mt-6 clear">
                 <div class="text-primary fw-bolder mb-4"><codx-label formName="" name="lblShare" default="Chia sẻ"></codx-label></div>

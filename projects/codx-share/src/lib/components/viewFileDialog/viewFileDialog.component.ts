@@ -237,20 +237,9 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   }
 
   viewFile(id) {
-    // if ($("#viewfiledalog").find('iframe').length == 0) return;
-    // $("#viewfiledalog").find('iframe')[0].style.display = "none";
     this.tenant = this.auth.userValue.tenant;
     this.access_token = this.auth.userValue.token;
-    //alert(1);
-    // if ( this.srcVideo == "" && this.linkViewImage == "") { 
-    //   this.fileService.GetPathServer(this.data.pathDisk).subscribe(item => {
-    //     this.src = `${environment.librOfficeUrl}?WOPISrc=${item}`;  
-    //   });
-    // } 
-    //https://view.officeapps.live.com/op/embed.aspx?src=http://writing.engr.psu.edu/workbooks/formal_report_template.doc  
-    
-   
-   
+
     if(this.data?.extension.includes("doc"))
     {
       this.isShow = true;
@@ -288,13 +277,6 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     {
       this.urlTxt = this.sanitizer.bypassSecurityTrustResourceUrl(this.linkFile);
     }
-    // if ( this.srcVideo == "" && this.linkViewImage == "") {
-      // setTimeout(() => {
-      //   (        
-      //       document.getElementById("frmFile") as HTMLFormElement).submit();
-      //       //$("#viewfiledalog").find("form")[0]["submit"]();
-      // }, 100);
-   // }
   }
 
   _animalOpen(name, num, callback?) {
@@ -335,7 +317,6 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   getData()
   {
     this.id = this.dataFile?.recID;
-    //if (this.systemDialogService.onOpenViewFileDialog.observers.length == 0) {
     let baseurlExcel: string = environment.apiUrl+'/api/documenteditor/openexcel';
     baseurlExcel += "?sk="+ btoa(this.auth.userValue.userID+"|"+this.auth.userValue.securityKey);
     this.openUrl = baseurlExcel;

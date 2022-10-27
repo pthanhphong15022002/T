@@ -13,6 +13,7 @@ import { ApiHttpService, AuthService, CacheService, CallFuncService, DialogModel
 import { PopupVoteComponent } from './popup-vote/popup-vote.component';
 import { AttachmentComponent } from '../attachment/attachment.component';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
+import { ViewFileDialogComponent } from '../viewFileDialog/viewFileDialog.component';
 @Component({
   selector: 'treeview-comment',
   templateUrl: './treeview-comment.component.html',
@@ -28,6 +29,7 @@ export class TreeviewCommentComponent implements OnInit {
   @Input() dataComment: any = null;
   @Output() pushComment = new EventEmitter;
   @Output() voteCommentEvt = new EventEmitter;
+
 
   @ViewChild('codxATM') codxATM :AttachmentComponent;
   @ViewChild('codxFile') codxFile : ImageGridComponent;
@@ -383,5 +385,14 @@ export class TreeviewCommentComponent implements OnInit {
   removeFile(file: any) {
     this.fileUpload = this.fileUpload.filter((f: any) => { return f.fileName != file.fileName });
     this.dt.detectChanges();
+  }
+
+  clickViewDetailComment(file:any){
+    console.log(file);
+    // if(file){
+    //   let dialog = new DialogModel();
+    //   dialog.IsFull = true;
+    //   this.callFuc.openForm(ViewFileDialogComponent,"",0,0,"",file,"",dialog);
+    // }
   }
 }

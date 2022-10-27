@@ -6,7 +6,7 @@
           <div class="fw-bold text-dark mb-1">{{ skill.competenceName }}</div>
           <div class="d-flex align-items-center mt-2">
             <span class="w-250px">
-              <ejs-slider [type]="minType" [min]="0" [max]="10" [tooltip]="tooltip" [value]="skill.valueX"
+              <ejs-slider [type]="minType" [min]="0" [max]="10"  [value]="skill.valueX"
                 (valueChange)="sliderChange($event,skill)">
               </ejs-slider>
             </span>

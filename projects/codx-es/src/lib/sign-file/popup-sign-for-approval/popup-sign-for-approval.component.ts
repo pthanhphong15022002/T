@@ -359,20 +359,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
   }
 
-  clickUSB() {
-    this.esService
-      .getSignContracts(
-        this.sfRecID,
-        this.pdfView.curFileID,
-        this.pdfView.curFileUrl,
-        this.stepNo
-      )
-      .subscribe(async (lstContract) => {
-        if (lstContract) {
-          let finalContract = await this.signContract(lstContract, 0, '');
-        }
-      });
-  }
+  clickUSB() {}
 
   async signContract(lstContract, idx: number, comment) {
     //chua ki xong

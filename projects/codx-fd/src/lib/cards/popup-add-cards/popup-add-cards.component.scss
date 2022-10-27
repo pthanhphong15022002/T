@@ -9,3 +9,40 @@
 .icon-check_circle::before{
     width: 28px;
 }
+
+.fd-parttern-item {
+    width: 100px;
+    height: 150px;
+}
+.fd-parttern-item > codx-img > div{
+    width: 100px;
+    height: 150px;
+    border: 1px solid rgb(233, 232, 232);
+}
+.fd-parttern-item > codx-img > div > img{
+    width: 100% !important;
+    height: 100% !important;
+}
+.fd-preview-card{
+    width: 350px;
+    height: 500px;
+}
+.fd-preview-card-background{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.fd-preview-card-background > codx-img > div {
+    width: 350px;
+    height: 500px;
+}
+.fd-preview-card-background > codx-img > div > img {
+    width: 100% !important;
+    height: 100% !important;
+}
+.fd-review-card-content{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}

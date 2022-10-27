@@ -9,9 +9,9 @@
       <div class="d-flex justify-content-between align-items-center">
         <codx-label fiedName="ResourceID" [formModel]="form.formModel">
         </codx-label>
-        <span class="label-status text-primary">{{
+        <!-- <span class="label-status text-primary">{{
           data?.status | vll: "VL003":"text" | async
-          }}</span>
+          }}</span> -->
       </div>
       <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
         (valueChange)="valueCbxCarChange($event)">
@@ -132,6 +132,7 @@
           <button class="btn btn-sm btn-icon " (click)="openPopupCbb()">
             <span class="icon-group_add icon-18 text-primary"></span>
           </button> 
+          
         </div>
       </div>
       <ng-container *ngIf="isPopupCbb">
@@ -174,15 +175,27 @@
 </ng-template>
 
 <ng-template #tabPeopleInfo>
+  <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row justify-content-start">
+      <ng-container *ngFor="let item of listRoles">
+        <div class="d-flex align-items-center justify-content-start me-4">
+          <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
+          <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+        </div>
+      </ng-container>
+    </div>
+    <button class="btn btn-sm btn-outline btn-outline-secondary d-flex flex-row align-items-center" (click)="openPopupCbb()">
+      <span class="icon-group_add icon-18 me-2 text-gray-800"></span>
+      <codx-label name="lblChooseCarAttendees" class="fw-bold text-gray-800" default="Chọn người đi cùng"></codx-label>
+    </button> 
+  </div>
+  
   <div class="d-flex justify-content-between align-items-center mb-2" id="PeopleInfo">
+    
     <div class="mb-3 fs-5 fw-bold">
-      <codx-label name="lblPeopleInfo" default="Người đi cùng"> </codx-label>
+      <codx-label name="lblPeopleInfo" default="Người đi cùng"></codx-label>
     </div>
-    <div class="d-flex flex-row text-end align-items-end">
-      <button class="btn btn-sm btn-icon " (click)="openPopupCbb()">
-        <span class="icon-group_add icon-18 text-primary"></span>
-      </button> 
-    </div>
+    
   </div>
   <div class="d-flex align-items-center mb-4" *ngIf="driver != null">
     <div class="symbol symbol-30px symbol-circle me-4">

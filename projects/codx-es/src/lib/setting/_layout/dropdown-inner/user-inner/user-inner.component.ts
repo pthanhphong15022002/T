@@ -1,5 +1,19 @@
-import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
-import { UserModel, AuthService, TenantStore, NotificationsService, CodxService } from 'codx-core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  UserModel,
+  AuthService,
+  TenantStore,
+  NotificationsService,
+  CodxService,
+  MenuComponent,
+} from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 
 @Component({
@@ -8,7 +22,8 @@ import { Observable, of, Subscription } from 'rxjs';
   styleUrls: ['./user-inner.component.scss'],
 })
 export class UserInnerComponent implements OnInit, OnDestroy {
-  @HostBinding('class') class = `menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-325px`;
+  @HostBinding('class')
+  class = `menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-325px`;
   @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
   @Output() onAvatarChanged = new EventEmitter<any>();
   tenant?: string;
@@ -23,14 +38,22 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     public codxService: CodxService,
     private auth: AuthService,
     private tenantStore: TenantStore,
-    private notifyService: NotificationsService,
-  ) { }
+    private notifyService: NotificationsService
+  ) {}
 
   ngOnInit(): void {
     this.user$ = this.auth.userSubject.asObservable();
     this.tenant = this.tenantStore.get()?.tenant;
     this.setLanguage(this.auth.userValue?.language?.toLowerCase());
-    this.selectTheme('default');//(this.auth.userValue.theme.toLowerCase());
+    this.selectTheme('default'); //(this.auth.userValue.theme.toLowerCase());
+  }
+
+  ngAfterViewInit() {
+    MenuComponent.createInstances('[data-kt-menu="true"]');
+    //     var menuElement = document.querySelector("#kt_menu");
+    // var menu = KTMenu.getInstance(menuElement);
+    // var item = document.querySelector("#kt_menu_item"); // .menu-item
+    // menu.show(item);
   }
 
   logout() {
@@ -80,7 +103,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       .pipe()
       .subscribe((data) => {
         if (data) {
-          if (!data.isError) this.notifyService.notifyCode("SYS017");
+          if (!data.isError) this.notifyService.notifyCode('SYS017');
           else this.notifyService.notify(data.error);
         }
       });
@@ -111,7 +134,7 @@ const languages: LanguageFlag[] = [
     name: 'Việt Nam',
     flag: './assets/media/flags/vietnam.svg',
     enable: true,
-  }
+  },
 ];
 
 const langDefault = languages[0];
@@ -140,7 +163,7 @@ const themeDatas: ThemeFlag[] = [
     id: 'pink',
     name: 'Pink',
     color: '#f70f8f',
-  }
+  },
 ];
 
 const themeDefault = themeDatas[0];

@@ -1,8 +1,8 @@
-<div class="fs-4 fw-bold text-dark mb-6 mt-6" *ngIf="isShowPolicyCard">
+<div class="fs-4 fw-bold text-dark mb-3 mt-9" *ngIf="isShowPolicyCard">
     <codx-label name="lblPolicyCard" [formModel]="formModel" [default]="'Chính sách phiếu'"></codx-label>
 </div>
 <ng-container *ngIf="data">
-    <div class="list-setting ml-10 policyCard" *ngFor="let item of data">
+    <div class="list-setting ms-10 policyCard" *ngFor="let item of data">
         <div class="d-flex align-items-start py-4 border-bottom border-light" *ngIf="item.fieldName == 'HasPoints'">
             <div class="d-flex flex-column flex-grow-1">
                 <div class="text-dark fw-bold fs-6">
@@ -12,7 +12,7 @@
                     {{item.description}}
                 </div>
             </div>
-            <div class="ml-4 d-flex justify-content-between">
+            <div class="ms-4 d-flex justify-content-between">
                 <span class="switch switch-sm">
                     <codx-input type="switch" class="test-check" field="HasPoints"
                         (valueChange)="valueChangeSwitch($event)" [checked]="quantity.HasPoints === '1' ? true : false">
@@ -30,7 +30,7 @@
                     {{item.description}}
                 </div>
             </div>
-            <div class="ml-4 d-flex align-items-center">
+            <div class="ms-4 d-flex align-items-center">
                 <span class="switch switch-sm">
                     <codx-input type="switch" class="test-check" field="HasGifts"
                         (valueChange)="valueChangeSwitch($event)" [checked]="quantity.HasGifts === '1' ? true:false"
@@ -50,7 +50,7 @@
                     {{item.description}}
                 </div>
             </div>
-            <div class="d-flex align-items-center ml-4">
+            <div class="d-flex align-items-center ms-4">
                 <ng-template #UserGroups let-modal>
                     <codx-combobox-popup [comboboxName]="item.fieldName" [field]="'cbbUser'" [multiple]="true"
                         [width]="700" [height]="600" [value]="" [formModel]="formModel"
@@ -59,7 +59,7 @@
                 </ng-template>
 
                 <div class="d-flex align-items-center">
-                    <span class="switch switch-sm ml-3">
+                    <span class="switch switch-sm ms-3">
                         <codx-input type="switch" class="test-check" field="ApprovalControl"
                             (valueChange)="valueChangeSwitch($event)"
                             [checked]="quantity.ApprovalControl === '1' ? true : false"
@@ -85,8 +85,8 @@
                     {{quantity?.MaxSendPeriod|vll:"L1435":"text"|async}}
                 </div>
             </div>
-            <div class="d-flex align-items-center ml-4">
-                <span class="switch switch-sm ml-3">
+            <div class="d-flex align-items-center ms-4">
+                <span class="switch switch-sm ms-3">
                     <codx-input type="switch" class="test-check" field="MaxSendControl"
                         (valueChange)="valueChangeSwitch($event)"
                         [checked]="quantity.MaxSendControl == '1' ? true : false">
@@ -109,8 +109,8 @@
                     {{quantity?.MaxReceivePeriod|vll:"L1435":"text"|async}}
                 </div>
             </div>
-            <div class="d-flex align-items-center ml-4">
-                <span class="switch switch-sm ml-3">
+            <div class="d-flex align-items-center ms-4">
+                <span class="switch switch-sm ms-3">
                     <codx-input type="switch" class="test-check" field="MaxReceiveControl"
                         (valueChange)="valueChangeSwitch($event)"
                         [checked]="quantity.MaxReceiveControl === '1' ? true : false">
@@ -133,8 +133,8 @@
                     {{quantity.MaxPoints}} {{'xu' | lang:'PolicyCard':'lblCoin' | async}}
                     {{quantity?.MaxPointPeriod|vll:"L1435":"text"|async}}</div>
             </div>
-            <div class="d-flex align-items-center ml-4">
-                <span class="switch switch-sm ml-3">
+            <div class="d-flex align-items-center ms-4">
+                <span class="switch switch-sm ms-3">
                     <codx-input type="switch" class="test-check" field="MaxPointControl"
                         (valueChange)="valueChangeSwitch($event)"
                         [checked]="quantity.MaxPointControl === '1' ? true:false">
@@ -155,8 +155,8 @@
                     {{quantity.MaxPointPerOnce}} {{'xu mỗi phiếu' | lang:'PolicyCard':'lblCoinVotes' | async}}
                 </div>
             </div>
-            <div class="d-flex align-items-center ml-4">
-                <span class="switch switch-sm ml-3">
+            <div class="d-flex align-items-center ms-4">
+                <span class="switch switch-sm ms-3">
                     <codx-input type="switch" class="test-check" field="MaxPointPerOnceControl"
                         (valueChange)="valueChangeSwitch($event)"
                         [checked]="quantity.MaxPointPerOnceControl === '1' ? true : false">
@@ -176,7 +176,7 @@
                     {{item.description}}
                 </div>
             </div>
-            <div class="ml-4">
+            <div class="ms-4">
                 <div class="lv-control">
                     <codx-input type="valuelist" class="control-vll w-250px" placeholder="" refValue="L1439"
                         field="edit" [crrValue]="quantity.RuleSelected"
@@ -195,7 +195,7 @@
                     {{item.description}}
                 </div>
             </div>
-            <div class="ml-4">
+            <div class="ms-4">
                 <div class="lv-control">
                     <codx-input type="valuelist" class="control-vll w-250px" placeholder=""
                         [refValue]="valueListNameCoin" field="PolicyControl" [crrValue]="quantity.PolicyControl"

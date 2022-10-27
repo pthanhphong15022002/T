@@ -32,7 +32,6 @@ import { AddNoteComponent } from './dashboard/home/add-note/add-note.component';
 import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
-import { ListPostComponent } from './dashboard/home/list-post/list-post.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add.component';
 
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
@@ -188,7 +187,6 @@ const Component: Type<any>[] =
     ChatBoxComponent,
     ListChatBoxComponent,
     PopupGroupComponent,
-    ListPostComponent
   ];
 
 @NgModule({
