@@ -1,13 +1,13 @@
 <codx-views #view [funcID]="'FDS'" [views]="views" [autoLoad]="false"></codx-views>
 <ng-template #panelLeftRef>
-    <div class="content h-100 d-flex flex-column flex-column-fluid p-0" id="kt_content">
+    <div class="content h-100 d-flex flex-column flex-column-fluid p-0">
         <div id="erm_content" class="d-flex flex-column-fluid h-100">
             <div class="d-flex container h-100">
                 <div class="aside-detail flex-row-auto w-250px me-6">
                     <div class="aside-menu me-6">
                         <ul class="menu-nav">
                             <li class="menu-item menu-item-active" (click)="redirectPage('notificationFeedback', 1)">
-                                <a class="menu-link d-flex align-items-center">
+                                <a class="menu-link d-flex align-items-center fw-bold text-dark">
                                     <i class="icon-near_me icon-20 me-2"></i>
                                     <codx-label name="lblFeedbackMessage" [formName]="formName"
                                         [gridViewName]="gridViewName" default='Thông điệp phản hồi'>
@@ -15,7 +15,7 @@
                                 </a>
                             </li>
                             <li class="menu-item" (click)="redirectPage('itemCategory', 2)">
-                                <a class="menu-link d-flex align-items-center">
+                                <a class="menu-link d-flex align-items-center fw-bold text-dark">
                                     <i class="icon-format_list_bulleted icon-20 me-2"></i>
                                     <codx-label name="lblCategory" [formName]="formName" [gridViewName]="gridViewName"
                                         default='Danh mục'>
@@ -23,7 +23,7 @@
                                 </a>
                             </li>
                             <li class="menu-item " (click)="redirectPage('itemWallet', 3)">
-                                <a class="menu-link d-flex align-items-center">
+                                <a class="menu-link d-flex align-items-center fw-bold text-dark">
                                     <i class="icon-account_balance_wallet icon-20 me-2"></i>
                                     <codx-label name="lblWallet" [formName]="formName" [gridViewName]="gridViewName"
                                         default='Ví nhân viên'>
@@ -31,7 +31,7 @@
                                 </a>
                             </li>
                             <li class="menu-item" (click)="redirectPage('itemRankDedication', 4)">
-                                <a class="menu-link d-flex align-items-center">
+                                <a class="menu-link d-flex align-items-center fw-bold text-dark">
                                     <i class="icon-credit_card icon-20 me-2"></i>
                                     <codx-label name="lblDedicateRank" [formName]="formName"
                                         [gridViewName]="gridViewName" default='Hạng cống hiến'>
@@ -39,7 +39,7 @@
                                 </a>
                             </li>
                             <li class="menu-item" (click)="redirectPage('itemStatistical', 5)">
-                                <a class="menu-link d-flex align-items-center">
+                                <a class="menu-link d-flex align-items-center fw-bold text-dark">
                                     <i class="icon-bar_chart icon-20 me-2"></i>
                                     <codx-label name="lblStatistical" [formName]="formName"
                                         [gridViewName]="gridViewName" default='Thống kê'>
@@ -49,14 +49,14 @@
                         </ul>
                     </div>
                 </div>
-                <div class="bg-body rounded-3 p-6 flex-grow-1 h-100 overflow-auto">
-                    <div class="main-detail d-flex flex-column flex-grow-1 data-scroll">
+                <div class="bg-body rounded-3 p-6 ps-7 w-100 h-100 card-body scroll-y red">
+                    <div class="main-detail d-flex flex-column w-100 data-scroll">
                         <div class="list-group">
                             <div class="list-content">
                                 <div class="d-flex mb-6">
                                     <span class="icon-arrow_back icon-22 me-5 text-hover-primary"
                                         onclick="history.back()"></span>
-                                    <div class="d-flex flex-column flex-grow-1">
+                                    <div class="d-flex flex-column w-100">
                                         <div class="fs-3 fw-bold text-gray-700 mb-3">
                                             {{datafuntion?.customName}}
                                         </div>
