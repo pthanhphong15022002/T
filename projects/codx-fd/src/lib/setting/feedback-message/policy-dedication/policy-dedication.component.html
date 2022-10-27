@@ -20,13 +20,13 @@
             <div class="text-gray-500">{{item.memo}}</div>
         </div>
         <div class="d-flex align-items-center ms-4">
-            <span class="switch switch-sm ms-3">
+            <span class="pt-1">
                 <codx-input type="switch" class="test-check" ngDefaultControl [field]="item.recID"
                     (valueChange)="onSaveStatusPolicy($event, item)" [checked]="item.actived" label="">
                 </codx-input>
             </span>
             <span class="setting-btnright">
-                <span class="icon-keyboard_arrow_right icon-22"
+                <span class="icon-keyboard_arrow_right icon-20"
                     (click)="item.actived && LoadDetailPolicy(item.recID)"></span>
             </span>
         </div>

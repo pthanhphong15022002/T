@@ -81,7 +81,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center ms-4">
-                                        <span class="switch switch-sm ms-3">
+                                        <span class="pt-1">
                                             <codx-input type="switch" class="test-check" field="stop"
                                                 (valueChange)=" valueChange($event)" [checked]="!scheduledTasks?.stop">
                                             </codx-input>
@@ -100,13 +100,13 @@
                                         <div class="text-gray-500">{{item.memo}}</div>
                                     </div>
                                     <div class="d-flex align-items-center ms-4">
-                                        <span class="switch switch-sm ms-3">
+                                        <span class="pt-1">
                                             <codx-input type="switch" class="test-check" [field]="item.recID"
                                                 (valueChange)="onSaveStatusPolicy($event, item)"
                                                 [checked]="item.actived">
                                             </codx-input>
                                         </span>
-                                        <span class="w-20px h-20px ms-3 d-flex justify-content-center">
+                                        <span class="setting-btnright">
                                             <span class="icon-keyboard_arrow_right icon-20" style="cursor: pointer;"
                                                 (click)="item.actived && LoadDetailPolicy(item.category,item.recID)"></span>
                                         </span>
