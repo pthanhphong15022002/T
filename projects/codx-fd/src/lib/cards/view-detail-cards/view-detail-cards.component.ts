@@ -47,6 +47,7 @@ export class ViewDetailCardsComponent implements OnInit,OnChanges {
       .execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID])
       .subscribe((res) => {
         if (res) {
+          console.log(res);
           this.data = res;
           this.dt.detectChanges();
         } 

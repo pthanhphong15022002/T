@@ -28,7 +28,6 @@ import { Equipments } from '../../../models/equipments.model';
 import { APICONSTANT } from '@shared/constant/api-const';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
 import { MeetingComponent } from '../../../meeting/meeting.component';
-import { I } from '@angular/cdk/keycodes';
 
 export class Device {
   id;
@@ -566,6 +565,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   if (res?.msgCodeError == null && res?.rowCount) {
                     this.notificationsService.notifyCode('ES007');
                     this.returnData.status = '3';
+                    this.returnData.write=false;
+                    this.returnData.delete=false;
                     (this.dialogRef.dataService as CRUDService)
                       .update(this.returnData)
                       .subscribe();

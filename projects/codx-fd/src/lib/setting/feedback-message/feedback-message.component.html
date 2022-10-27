@@ -3,12 +3,12 @@
     <div class="content h-100 d-flex flex-column flex-column-fluid p-0" id="kt_content">
         <div id="erm_content" class="d-flex flex-column-fluid h-100">
             <div class="d-flex container h-100">
-                <div class="aside-detail flex-row-auto w-250px me-6"> 
+                <div class="aside-detail flex-row-auto w-250px me-6">
                     <div class="aside-menu me-6">
                         <ul class="menu-nav">
                             <li class="menu-item menu-item-active" (click)="redirectPage('notificationFeedback', 1)">
                                 <a class="menu-link d-flex align-items-center">
-                                    <i class="icon-near_me icon-20 mr-2"></i>
+                                    <i class="icon-near_me icon-20 me-2"></i>
                                     <codx-label name="lblFeedbackMessage" [formName]="formName"
                                         [gridViewName]="gridViewName" default='Thông điệp phản hồi'>
                                     </codx-label>
@@ -16,7 +16,7 @@
                             </li>
                             <li class="menu-item" (click)="redirectPage('itemCategory', 2)">
                                 <a class="menu-link d-flex align-items-center">
-                                    <i class="icon-format_list_bulleted icon-20 mr-2"></i>
+                                    <i class="icon-format_list_bulleted icon-20 me-2"></i>
                                     <codx-label name="lblCategory" [formName]="formName" [gridViewName]="gridViewName"
                                         default='Danh mục'>
                                     </codx-label>
@@ -24,7 +24,7 @@
                             </li>
                             <li class="menu-item " (click)="redirectPage('itemWallet', 3)">
                                 <a class="menu-link d-flex align-items-center">
-                                    <i class="icon-account_balance_wallet icon-20 mr-2"></i>
+                                    <i class="icon-account_balance_wallet icon-20 me-2"></i>
                                     <codx-label name="lblWallet" [formName]="formName" [gridViewName]="gridViewName"
                                         default='Ví nhân viên'>
                                     </codx-label>
@@ -32,7 +32,7 @@
                             </li>
                             <li class="menu-item" (click)="redirectPage('itemRankDedication', 4)">
                                 <a class="menu-link d-flex align-items-center">
-                                    <i class="icon-credit_card icon-20 mr-2"></i>
+                                    <i class="icon-credit_card icon-20 me-2"></i>
                                     <codx-label name="lblDedicateRank" [formName]="formName"
                                         [gridViewName]="gridViewName" default='Hạng cống hiến'>
                                     </codx-label>
@@ -40,7 +40,7 @@
                             </li>
                             <li class="menu-item" (click)="redirectPage('itemStatistical', 5)">
                                 <a class="menu-link d-flex align-items-center">
-                                    <i class="icon-bar_chart icon-20 mr-2"></i>
+                                    <i class="icon-bar_chart icon-20 me-2"></i>
                                     <codx-label name="lblStatistical" [formName]="formName"
                                         [gridViewName]="gridViewName" default='Thống kê'>
                                     </codx-label>
@@ -54,13 +54,13 @@
                         <div class="list-group">
                             <div class="list-content">
                                 <div class="d-flex mb-6">
-                                    <span class="icon-arrow_back icon-22 mr-5 text-hover-primary"
+                                    <span class="icon-arrow_back icon-22 me-5 text-hover-primary"
                                         onclick="history.back()"></span>
                                     <div class="d-flex flex-column flex-grow-1">
-                                        <div class="fs-3 fw-bold text-dark-75 mb-3">
+                                        <div class="fs-3 fw-bold text-gray-700 mb-3">
                                             {{datafuntion?.customName}}
                                         </div>
-                                        <div class="text-dark-75"> {{datafuntion?.description}}</div>
+                                        <div class="text-gray-700"> {{datafuntion?.description}}</div>
                                     </div>
                                 </div>
                                 <hr />

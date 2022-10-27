@@ -211,6 +211,7 @@ const T_Component: Type<any>[] = [
   LayoutPanelComponent,
   CodxAttachmentTempComponent,
   CodxAssignTempComponent,
+  ListPostComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
