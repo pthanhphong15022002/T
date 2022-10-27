@@ -5,6 +5,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -20,6 +21,7 @@ import { CodxFdService } from '../../codx-fd.service';
   selector: 'lib-feedback-message',
   templateUrl: './feedback-message.component.html',
   styleUrls: ['./feedback-message.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class FeedbackMessageComponent extends UIComponent implements OnInit {
   datafuntion = null;

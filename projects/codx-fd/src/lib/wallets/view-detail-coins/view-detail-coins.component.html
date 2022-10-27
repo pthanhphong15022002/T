@@ -1,65 +1,86 @@
-<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views"
-    [autoLoad]="false">
+<codx-views
+  #view
+  [funcID]="'FDR03'"
+  service="FD"
+  assemblyName="ERM.Business.FD"
+  className="KudosTransBusiness"
+  method="HistoryWalletByModelAsync"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  entityName="FD_KudosTrans"
+  [views]="views"
+  idField="recID"
+  (onLoading)="onLoading($event)"
+>
 </codx-views>
-
-<ng-template #templateLeft>
-    <div class="list-table">
-        <codx-gridview [columnsGrid]="columnsGrid" service="FD" assemblyName="ERM.Business.FD"
-            className="KudosTransBusiness" method="HistoryWalletAsync" [predicate]="predicate" [dataValue]="dataValue"
-            entityName="FD_KudosTrans" [pageSize]="15" [height]="'520'" [headerStyle]="headerStyle"
-            [columnStyle]="columnStyle" currentValue="1" [favoriteID]="favoriteID">
-        </codx-gridview>
-    </div>
-</ng-template>
-<!-- <app-systemdialog></app-systemdialog> -->
 <ng-template #itemSenderOrReceiver let-dataItem>
-    <div class="d-flex align-items-center">
-        <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.userID" objectType="AD_Users"
-           >
-        </codx-img>
-        <div class="d-flex flex-column">
-            <div class="text-dark font-size-lg">{{dataItem.userName}}</div>
-            <div class="text-dark-50">{{dataItem.positionName}}</div>
-        </div>
+  <div class="d-flex align-items-center">
+    <codx-img
+      class="symbol symbol-24 symbol-circle me-3"
+      [objectId]="dataItem.userID"
+      objectType="AD_Users"
+    >
+    </codx-img>
+    <div class="d-flex flex-column">
+      <div class="text-dark font-size-lg">{{ dataItem.userName }}</div>
+      <div class="text-dark-50">{{ dataItem.positionName }}</div>
     </div>
+  </div>
 </ng-template>
 <ng-template #coins let-item>
-    <div class="d-flex flex-column">
-        <div [ngClass]="item?.coins > 0 ? 'text-success':'text-danger'">{{item?.coins > 0?"+":""}}{{item?.coins}} xu
-        </div>
-        <!-- <div [ngClass]="item?.coins > 0 ? 'text-success':'text-danger'"></div> -->
+  <div class="d-flex flex-column">
+    <div [ngClass]="item?.coins > 0 ? 'text-success' : 'text-danger'">
+      {{ item?.coins > 0 ? "+" : "" }}{{ item?.coins }} xu
     </div>
+    <!-- <div [ngClass]="item?.coins > 0 ? 'text-success':'text-danger'"></div> -->
+  </div>
 </ng-template>
 <ng-template #createdOn let-item>
-    <div>
-        {{item.createdOn | date: 'dd/MM/yyy'}}
-    </div>
+  <div>
+    {{ item.createdOn | date: "dd/MM/yyy" }}
+  </div>
 </ng-template>
 <ng-template #itemReference let-dataItem>
-    <div class="d-flex align-items-center" *ngIf="dataItem.cardType">
-        <img class="symbol symbol-24 symbol-circle me-3 w-25px h-25px"
-            src="../../../assets/demos/svg/{{dataItem.cardType| vll:'L1422':'icon'|async}}">
-        <div class="d-flex flex-column">
-            <div class="text-dark font-size-lg"> {{dataItem?.cardType | vll:'L1422':'text'|async}}</div>
-            <div class="text-dark-50">
-                <codx-label name="lblCountCard" formName="FD_KudosTrans" default="Số phiếu"></codx-label>
-                : {{dataItem.cardNo}}
-            </div>
-        </div>
+  <div class="d-flex align-items-center" *ngIf="dataItem.cardType">
+    <img
+      class="symbol symbol-24 symbol-circle me-3 w-25px h-25px"
+      src="../../../assets/demos/svg/{{
+        dataItem.cardType | vll: 'L1422':'icon' | async
+      }}"
+    />
+    <div class="d-flex flex-column">
+      <div class="text-dark font-size-lg">
+        {{ dataItem?.cardType | vll: "L1422":"text" | async }}
+      </div>
+      <div class="text-dark-50">
+        <codx-label
+          name="lblCountCard"
+          formName="FD_KudosTrans"
+          default="Số phiếu"
+        ></codx-label>
+        : {{ dataItem.cardNo }}
+      </div>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #itemCategory let-dataItem>
-    <div class="d-flex align-items-center">
-        <img class="symbol symbol-24 symbol-circle me-3 w-25px h-25px"
-            src="../../../assets/demos/svg/{{dataItem.transType| vll:'L1422':'icon'|async}}">
+  <div class="d-flex align-items-center">
+    <img
+      class="symbol symbol-24 symbol-circle me-3 w-25px h-25px"
+      src="../../../assets/demos/svg/{{
+        dataItem.transType | vll: 'L1422':'icon' | async
+      }}"
+    />
 
-        <div class="d-flex flex-column">
-            <div class="text-dark font-size-lg">{{dataItem.transType| vll:'L1422':'text'|async}}</div>
-        </div>
+    <div class="d-flex flex-column">
+      <div class="text-dark font-size-lg">
+        {{ dataItem.transType | vll: "L1422":"text" | async }}
+      </div>
     </div>
+  </div>
 </ng-template>
 <ng-template #itemContent let-dataItem>
-    <!-- <read-more [content]="dataItem.content" [limit]="200" [completeWords]="true"></read-more> -->
-    <span [innerHTML]="dataItem.content"></span>
+  <!-- <read-more [content]="dataItem.content" [limit]="200" [completeWords]="true"></read-more> -->
+  <span [innerHTML]="dataItem.content"></span>
 </ng-template>

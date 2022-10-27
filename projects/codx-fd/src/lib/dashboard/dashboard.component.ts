@@ -11,13 +11,13 @@ import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewMo
   encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent extends UIComponent  {
-  dataServiceWP:CRUDService = null;
+  dataServiceWP:CRUDService;
   predicate = `Category =@0 && Stop=false`;
   dataValue = "3";
   predicateCoins = `Owner =@0   `;
   dataValueCoins = "";
-  predicateWP: string = "Category =@0 && Stop=false";
-  dataValueWP: string = "3";
+  predicateWP = "Category =@0 && Stop=false";
+  dataValueWP = "3";
   memberType = "3";
   arrVll = ["L1422", "L1419"];
   reciver = [];
@@ -26,18 +26,9 @@ export class DashboardComponent extends UIComponent  {
   views: Array<ViewModel> = [];
   buttonAdd: ButtonModel;
   user = null;
-  pagination = {
-    clickable: true,
-    renderBullet: function (index, className) {
-      return '<span style="cursor: pointer;" class="' + className + '"></span>';
-    },
-  };
 
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('listview') listview: ViewsComponent;
-  dataRef: Post;
-  isLoading = true;
-  crrId = "";
   constructor(
     private injector: Injector,
     private dt: ChangeDetectorRef,

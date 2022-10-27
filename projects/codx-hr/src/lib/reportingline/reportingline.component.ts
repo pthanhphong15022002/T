@@ -57,7 +57,6 @@ export class ReportinglineComponent extends UIComponent {
 
   onInit(): void {
     this.funcID = this.router.snapshot.params['funcID'];
-    
   }
 
   searchName(e) {
@@ -96,7 +95,7 @@ export class ReportinglineComponent extends UIComponent {
       {
         id: '2',
         type: ViewType.tree_card,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           resizable: true,

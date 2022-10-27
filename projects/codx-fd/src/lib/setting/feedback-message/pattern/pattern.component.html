@@ -2,9 +2,9 @@
 </codx-views>
 
 <ng-template #panelLeftRef>
-    <div class="ml-20 mr-6 gift-list">
+    <div class="ms-20 me-6 gift-list">
         <div class="d-flex">
-            <div class="gift-card w-100px card-with-dropdown-item ms-12"
+            <div class="gift-card w-100px card-with-dropdown-item ms-9"
                 *ngFor="let item of lstPattern; trackBy: trackByfn; let i = index">
                 <div class="card-img has-action-menu cursor-pointer" #elm
                     *ngIf="i < lstPattern.length - 1; else template">
@@ -12,7 +12,7 @@
                         <div class="d-flex align-items-center">
                             <a class="action-item" (click)="openFormEdit(item, i, elm)">
                                 <div class="d-flex align-items-center btn-tooltip">
-                                    <span class="icon-edit icon-20 ml-2 mr-2"></span>
+                                    <span class="icon-edit icon-20 ms-2 me-2"></span>
                                     <span class="tooltiptext">
                                         <codx-label name="lblEdit" [formModel]="" default='Edit'>
                                         </codx-label>
@@ -21,7 +21,7 @@
                             </a>
                             <a class="action-item" (click)="delete(item, i)">
                                 <div class="d-flex align-items-center btn-tooltip">
-                                    <span class="icon-close icon-20 text-danger ml-2 mr-2"></span>
+                                    <span class="icon-close icon-20 text-danger ms-2 me-2"></span>
                                     <span class="tooltiptext">
                                         <codx-label name="lblDelete" [formModel]="" default='Delete'>
                                         </codx-label>
@@ -52,15 +52,14 @@
                         </div>
                     </ng-container>
                     <ng-template #otherColor>
-                        <span
-                            class="font-size-h3 font-weight-boldest img-pat-edit noimage symbol-label text-white border-5px"
+                        <span class="fs-4 fw-bold img-pat-edit noimage symbol-label text-white border-5px"
                             [style.background-color]="item.backgroundColor" style="
                         background-image: none;
                         width: 100px !important;
                         height: 150px !important;
                         "></span>
                     </ng-template>
-                    <span class="icon-check text-white default" *ngIf="item.isDefault"></span>
+                    <span class="icon-check text-white default icon-16" *ngIf="item.isDefault"></span>
                 </div>
                 <ng-template #template>
                     <div class="card-img create-card cursor-pointer">
@@ -69,16 +68,22 @@
                         </a>
                     </div>
                 </ng-template>
-                <div class="mt-3 mb-2 text-dark font-weight-bold text-center card-name">
+                <div class="mt-3 mb-2 text-dark fw-bold text-center card-name">
                     {{ item.patternName }}
                 </div>
-                <div class="d-flex mt-1">
-                    <span class="pic-color mr-2" [style.background-color]="item.textColor"></span>
-                    <span class="font-size-sm text-muted">Color Text</span>
+                <div class="d-flex align-items-center mt-1" *ngIf="item.textColor">
+                    <span class="pic-color me-2" [style.background-color]="item.textColor"></span>
+                    <span class="fs-7 text-gray-600">
+                        <codx-label fiedName="ColorText" [formModel]="view?.formModel" default="Color Text">
+                        </codx-label>
+                    </span>
                 </div>
-                <div class="d-flex mt-1">
-                    <span class="pic-color mr-2" [style.background-color]="item.headerColor"></span>
-                    <span class="font-size-sm text-muted">Color Header</span>
+                <div class="d-flex align-items-center mt-1" *ngIf="item.headerColor">
+                    <span class="pic-color me-2" [style.background-color]="item.headerColor"></span>
+                    <span class="fs-7 text-gray-600">
+                        <codx-label fiedName="ColorHeader" [formModel]="view?.formModel" default="Color Header">
+                        </codx-label>
+                    </span>
                 </div>
             </div>
         </div>

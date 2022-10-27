@@ -81,7 +81,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   qtyEmp: number = 1;
   title: '';
   dialogAddBookingStationery: FormGroup;
-  returnData;
+  returnData = [];
 
   constructor(
     private injector: Injector,
@@ -285,36 +285,41 @@ export class PopupRequestStationeryComponent extends UIComponent {
           } else {
             this.returnData = res.save;
           }
-          if (approval) {
-            this.epService
-              .getCategoryByEntityName(this.formModel.entityName)
-              .subscribe((category: any) => {
-                this.epService
-                  .release(
-                    this.returnData,
-                    category.processID,
-                    'EP_Bookings',
-                    this.formModel.funcID
-                  )
-                  .subscribe((res) => {
-                    if (res?.msgCodeError == null && res?.rowCount) {
-                      this.notificationsService.notifyCode('ES007');
-                      this.returnData.status = '3';
-                      (this.dialog.dataService as CRUDService)
-                        .update(this.returnData)
-                        .subscribe();
-                      this.dialog && this.dialog.close();
-                    } else {
-                      this.notificationsService.notifyCode(res?.msgCodeError);
-                      // Thêm booking thành công nhưng gửi duyệt thất bại
-                      this.dialog && this.dialog.close();
-                    }
-                  });
-              });
-            this.dialog && this.dialog.close();
-          } else {
-            this.dialog && this.dialog.close();
-          }
+          this.returnData.forEach((item) => {
+            (this.dialog.dataService as CRUDService).update(item).subscribe();
+          });
+          // if (approval) {
+          //   this.epService
+          //     .getCategoryByEntityName(this.formModel.entityName)
+          //     .subscribe((category: any) => {
+          //       this.epService
+          //         .release(
+          //           this.returnData,
+          //           category.processID,
+          //           'EP_Bookings',
+          //           this.formModel.funcID
+          //         )
+          //         .subscribe((res) => {
+          //           if (res?.msgCodeError == null && res?.rowCount) {
+          //             this.notificationsService.notifyCode('ES007');
+          //             this.returnData.status = '3';
+          //            this.returnData.write=false;
+          //            this.returnData.delete=false;
+          //             (this.dialog.dataService as CRUDService)
+          //               .update(this.returnData)
+          //               .subscribe();
+          //             this.dialog && this.dialog.close();
+          //           } else {
+          //             this.notificationsService.notifyCode(res?.msgCodeError);
+          //             // Thêm booking thành công nhưng gửi duyệt thất bại
+          //             this.dialog && this.dialog.close();
+          //           }
+          //         });
+          //     });
+          //   this.dialog && this.dialog.close();
+          // } else {
+          this.dialog && this.dialog.close();
+          // }
         } else {
           return;
         }
