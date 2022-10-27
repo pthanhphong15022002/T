@@ -303,6 +303,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
           //           if (res?.msgCodeError == null && res?.rowCount) {
           //             this.notificationsService.notifyCode('ES007');
           //             this.returnData.status = '3';
+          //            this.returnData.write=false;
+          //            this.returnData.delete=false;
           //             (this.dialog.dataService as CRUDService)
           //               .update(this.returnData)
           //               .subscribe();

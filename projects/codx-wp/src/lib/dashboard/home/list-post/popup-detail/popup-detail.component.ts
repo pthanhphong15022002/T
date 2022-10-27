@@ -51,7 +51,8 @@ export class PopupDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getValueIcon("L1480");
-    this.getPostByID(this.file.objectID,this.file.recID,this.file.referType);
+    let objectID = this.file.objectID ? this.file.objectID : this.file.objectId; 
+    this.getPostByID(objectID,this.file.recID,this.file.referType);
   }
   getValueIcon(vll:string){
     if(vll)
