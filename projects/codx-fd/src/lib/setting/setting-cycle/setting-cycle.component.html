@@ -7,29 +7,29 @@
                         [checked]="scheduledTasks?.occurrenceOption == '1'" name="radio" />
                     <span></span>
                 </label>
-                <span class="ml-3">
+                <span class="ms-3">
                     <codx-label fiedName="Date" [formModel]="form?.formModel" default="Ngày"></codx-label>
                 </span>
             </div>
             <div class="d-flex align-items-center">
-                <div class="mr-3">
+                <div class="me-3">
                     <codx-input type="text" [crrValue]="scheduledTasks.dayOfMonth"
                         (valueChange)="valueChangeInputDay($event)"
                         [attr.disabled]="scheduledTasks?.occurrenceOption !== '1' ? '' : null"
                         class="form-control w-50px" placeholder="0">
                     </codx-input>
                 </div>
-                <div class="text-dark font-weight-bold">
+                <div class="text-dark fs-bold">
                     <codx-label fiedName="InDate" [formModel]="form?.formModel" default="trong tháng"></codx-label>
                 </div>
             </div>
-            <div class="w-150px d-flex align-items-center ml-6">
+            <div class="w-150px d-flex align-items-center ms-6">
                 <label class="radio">
                     <input type="radio" [checked]="scheduledTasks?.occurrenceOption == '3'"
                         (change)="handleChange($event.target)" name="radio" />
                     <span></span>
                 </label>
-                <span class="text-dark font-weight-bold ml-3">
+                <span class="text-dark fs-bold ms-3">
                     <codx-label fiedName="LastDayOfMonth" [formModel]="form?.formModel" default="Ngày cuối tháng">
                     </codx-label>
                 </span>
@@ -38,7 +38,7 @@
         <div class="d-flex align-items-start mt-4">
             <div class="d-flex flex-column box-month">
                 <div class="d-flex mt-3">
-                    <button type="button" class="btn btn-light btn-sm mr-1"
+                    <button type="button" class="btn btn-light btn-sm me-1"
                         *ngFor="let item of monthActive | slice:0:6;let i = index"
                         [style.background-color]="item == '1'?'#57C5F7':'white'" (click)="changeMonthActive(i)">
                         <codx-label fiedName="Month" [formModel]="form?.formModel" default="Tháng">
@@ -47,7 +47,7 @@
                     </button>
                 </div>
                 <div class="d-flex mt-3">
-                    <button type="button" class="btn btn-light btn-sm mr-1"
+                    <button type="button" class="btn btn-light btn-sm me-1"
                         *ngFor="let item of monthActive | slice:6:12;let i = index"
                         [style.background-color]="item == '1'?'#57C5F7':'white'" (click)="changeMonthActive(i+6)">
                         <codx-label fiedName="Month" [formModel]="form?.formModel" default="Tháng">

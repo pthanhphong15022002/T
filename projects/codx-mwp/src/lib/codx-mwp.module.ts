@@ -70,30 +70,16 @@ export const routes: Routes = [
       },
     ],
   },
-  {
-    path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'notedetails/:funcID',
-        component: DetailNoteBooksComponent,
-      },
-    ],
-  },
-  {
-    path: '',
-    component: NoSubAsideComponent,
-    children: [
-      {
-        path: 'personals/:funcID',
-        component: PersonalsComponent,
-      },
-      // {
-      //   path: 'tasks/:funcID',
-      //   component: TasksComponent,
-      // },
-    ],
-  },
+  // {
+  //   path: '',
+  //   component: LayoutNoAsideComponent,
+  //   children: [
+  //     {
+  //       path: 'notedetails/:funcID',
+  //       component: DetailNoteBooksComponent,
+  //     },
+  //   ],
+  // },
   {
     path: '',
     component: LayoutNoToolbarComponent,
@@ -101,6 +87,14 @@ export const routes: Routes = [
       {
         path: 'employeeinfomation/:funcID',
         component: EmployeeInfomationComponent,
+      },
+      {
+        path: 'personals/:funcID',
+        component: PersonalsComponent,
+      },
+      {
+        path: 'notedetails/:funcID',
+        component: DetailNoteBooksComponent,
       },
     ],
   },

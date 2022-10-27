@@ -45,4 +45,8 @@ export class CodxBpService {
       data
     );
   }
+  updateDataDrapDrop(data) {
+    return this.api
+    .exec<any>('BP', 'ProcessStepsBusiness', 'UpdateProcessStepWithKanbanAsync', data)
+  } 
 }

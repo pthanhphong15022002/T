@@ -18,9 +18,9 @@
         <div class="d-flex justify-content-between align-items-center">
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
           </codx-label>
-          <span class="label-status text-primary">{{
+          <!-- <span class="label-status text-primary">{{
             data?.status | vll: "VL003":"text" | async
-          }}</span>
+            }}</span> -->
         </div>
         <codx-input
           ControlName="resourceID"
@@ -228,14 +228,12 @@
           >
           </codx-label>
           <div class="d-flex flex-row text-end align-items-end">
-            <div class="mx-2">
-              <button
-                class="btn btn-sm btn-icon btn-light-secondary"
-                (click)="openOptionalUserPopup()"
-              >
+            <!-- <div class="mx-2">
+              <button class="btn btn-sm btn-icon btn-light-secondary" (click)="openOptionalUserPopup()">
                 <span class="icon-group_add icon-18"></span>
               </button>
-            </div>
+
+            </div> -->
             <div class="mx-2">
               <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
                 <span class="icon-group_add text-primary icon-18"></span>
@@ -368,30 +366,21 @@
 
   <ng-template #tabPeopleInfo>
     <ng-container *ngIf="form && form.formGroup">
-      <div class="d-flex justify-content-end me-2">
-        <ng-container *ngFor="let item of listRoles">
-          <div class="d-flex align-items-center ms-4">
-            <span
-              inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"
-            ></span>
-            <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
-          </div>
-        </ng-container>
-      </div>
-      <div
-        class="d-flex justify-content-between align-items-center mb-4"
-        id="PeopleInfo"
-      >
-        <div class="fs-5 fw-bold">
-          <codx-label name="lblPeopleInfo" default="Người tham dự">
-          </codx-label>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex flex-row justify-content-start">
+          <ng-container *ngFor="let item of listRoles">
+            <div class="d-flex align-items-center justify-content-start me-4">
+              <span
+                inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
+              ></span>
+              <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+            </div>
+          </ng-container>
         </div>
+
         <div class="d-flex flex-row text-end align-items-end">
-          <div class="mx-2">
-            <button
-              class="btn btn-sm btn-icon btn-light-secondary"
-              (click)="openOptionalUserPopup()"
-            >
+          <!-- <div class="mx-2">
+            <button class="btn btn-sm btn-icon btn-light-secondary" (click)="openOptionalUserPopup()">
               <span class="icon-group_add icon-18"></span>
             </button>
           </div>
@@ -399,10 +388,35 @@
             <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
               <span class="icon-group_add text-primary icon-18"></span>
             </button>
-          </div>
+          </div> -->
+          <button
+            class="btn btn-sm btn-outline btn-outline-secondary d-flex flex-row align-items-center"
+            (click)="openUserPopup()"
+          >
+            <span class="icon-group_add icon-18 me-2 text-gray-800"></span>
+            <codx-label
+              name="lblChooseRoomAttendees"
+              class="fw-bold text-gray-800"
+              default="Chọn người tham dự"
+            ></codx-label>
+          </button>
         </div>
       </div>
-      <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
+      <div
+        class="d-flex justify-content-between align-items-center mt-4 mb-2"
+        id="PeopleInfo"
+      >
+        <div class="fw-bold">
+          <codx-label name="lblPeopleInfo" default="Người tham dự">
+          </codx-label>
+        </div>
+        <div class="fw-bold">
+          <span>
+            {{ "1" | vll: "EP017":"text" | async }}
+          </span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb-4 pb-2" *ngIf="curUser != null">
         <div class="symbol symbol-30px symbol-circle me-4">
           <codx-img
             [width]="30"
@@ -411,7 +425,7 @@
           ></codx-img>
           <span
             class="symbol-badge top-100 start-100 text-white fs-8"
-            inlineSVG="./assets/themes/co/default/img/{{ curUser.icon }}"
+            inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"
           ></span>
         </div>
 
@@ -425,17 +439,21 @@
         </div>
 
         <div
-          class="d-flex flex-column justify-content-center align-items-center"
+          class="d-flex flex-column justify-content-center align-items-center me-5"
         >
-          <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-            "0" | vll: "EP017":"text" | async
-          }}</span>
+          <codx-input
+            type="checkbox"
+            [checked]="curUser.optional"
+            (valueChange)="attendeesCheckChange($event, curUser.userID)"
+          >
+          </codx-input>
+          <!-- <span class="badge badge-light-success fs-7 fw-bold mb-1" >{{"0" | vll: "EP017":"text" | async}}</span> -->
           <!-- <span class="text-muted text-center"> {{curUser?.modifiedOn}} </span> -->
         </div>
       </div>
 
       <div
-        class="d-flex align-items-center mb-4"
+        class="d-flex align-items-center mb-4 pb-2"
         *ngFor="let item of attendeesList"
       >
         <div class="symbol symbol-30px symbol-circle me-4">
@@ -452,7 +470,7 @@
             (mouseenter)="showPopover(p, item.userID)"
             autoClose="outside"
             class="symbol-badge top-100 start-100 text-white fs-8"
-            inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"
+            inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
           ></span>
 
           <!-- <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span> -->
@@ -470,24 +488,20 @@
         </div>
 
         <div
-          class="d-flex flex-column justify-content-center align-items-center"
+          class="d-flex flex-column justify-content-center align-items-center me-5"
         >
-          <div *ngIf="!item.optional">
-            <!-- <codx-input
-              type="checkbox"
-              [checked]="item.isChecked"
-              (valueChange)="attendeesCheckChange(item.userID)"
-            >
-            </codx-input> -->
-            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
-              "0" | vll: "EP017":"text" | async
-            }}</span>
-          </div>
-          <div *ngIf="item.optional">
-            <span class="badge badge-light-danger badge- fs-7 fw-bold mb-1">{{
-              item.optional | vll: "EP017":"text" | async
-            }}</span>
-          </div>
+          <codx-input
+            type="checkbox"
+            [checked]="item.optional"
+            (valueChange)="attendeesCheckChange($event, item.userID)"
+          >
+          </codx-input>
+          <!-- <div class="d-flex flex-column justify-content-center align-items-center" *ngIf="!item.optional">            
+            <span class="badge badge-light-success fs-7 fw-bold mb-1">{{ "0" | vll: "EP017":"text" | async}}</span>
+          </div> -->
+          <!-- <div *ngIf="item.optional">
+            <span class="badge badge-light-danger badge- fs-7 fw-bold mb-1">{{item.optional| vll: "EP017":"text" | async}}</span>
+          </div> -->
           <!-- <span class="text-muted text-center"> {{item.modifiedOn}} </span> -->
         </div>
       </div>
@@ -783,7 +797,7 @@
         (click)="selectRoseType(idUserSelected, item.value)"
         style="cursor: pointer"
       >
-        <span inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
+        <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
         <div class="fs-7 ms-2 text-gray-600">
           {{ item.text }}
         </div>

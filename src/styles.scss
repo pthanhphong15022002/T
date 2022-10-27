@@ -48,6 +48,8 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   --primary: #3699ff;
   --primary-active: #187DE4;
   --primary-inverse: #FFFFFF;
+  --primary-light: #D3E8FF;
+
 
   --bs-body-line-height: 1.4;
 
@@ -347,6 +349,33 @@ img.w-20px.h-20px {
     }
 
   }
+}
+
+lib-nosubaside .aside-menu .menu .menu-item .menu-link {
+  padding: 8px 10px;
+  margin: 4px 15px;
+  border-radius: 4px;
+}
+
+lib-nosubaside[data-kt-aside-minimize=on] .aside-menu .menu .menu-item .menu-link {
+  margin: 4px 10px;
+}
+
+lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
+
+  background-color: var(--primary-active) !important;
+  //background-color: #16a3e2e3 !important;
+
+}
+
+.aside-menu .menu .menu-item .menu-link:hover {
+  cursor: pointer !important;
+}
+
+
+lib-nosubaside .aside-menu .menu .menu-item .menu-link.active .menu-title,
+lib-nosubaside .aside-menu .menu .menu-item .menu-link:hover .menu-title {
+  color: var(--primary-inverse) !important;
 }
 
 codx-aside .menu-item .menu-heading {
@@ -911,4 +940,16 @@ codx-tag .codx-tag:hover {
 
 .login-container .errorMessage {
   margin-left: 8px;
+}
+
+.setting-btnright {
+  width: 30px;
+  min-width: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.setting-btnright .share-box.border {
+  border: 0 !important;
+  justify-content: center !important;
 }

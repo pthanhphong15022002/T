@@ -1,154 +1,148 @@
-<div class="d-flex flex-row flex-column-fluid page page-detail">
-    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-        <div id="erm_content" class="d-flex flex-column-fluid setting2">
-            <div class="container">
-                <div class="d-flex">
-                    <div class="aside-detail flex-row-auto w-300px">
-                        <div class="aside-menu mr-6">
-                            <ul class="menu-nav">
-                                <li class="menu-item " [class.menu-item-active]="tabActive == 1"
-                                    (click)="redirectPage('notificationFeedback')">
-                                    <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-near_me icon-20 mr-2"></i>
-                                        <codx-label name="lblFeedbackMessage" [formModel]=""
-                                            default='Thông điệp phản hồi'>
-                                        </codx-label>
-                                    </a>
-                                </li>
-                                <li class="menu-item" (click)="redirectPage('itemCategory')">
-                                    <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-format_list_bulleted icon-20 mr-2"></i>
-                                        <codx-label name="lblCategory" [formModel]="" default='Danh mục'>
-                                        </codx-label>
-                                    </a>
-                                </li>
-                                <li class="menu-item " (click)="redirectPage('itemWallet')"
-                                    [class.menu-item-active]="tabActive == 3">
-                                    <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-account_balance_wallet icon-20 mr-2"></i>
-                                        <codx-label name="lblWallet" [formModel]="" default='Ví nhân viên'>
-                                        </codx-label>
-                                    </a>
-                                </li>
-                                <li class="menu-item" (click)="redirectPage('itemRankDedication')">
-                                    <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-credit_card icon-20 mr-2"></i>
-                                        <codx-label name="lblDedicateRank" [formModel]="" default='Hạng cống hiến'>
-                                        </codx-label>
-                                    </a>
-                                </li>
-                                <li class="menu-item" (click)="redirectPage('itemStatistical')">
-                                    <a class="menu-link d-flex align-items-center">
-                                        <i class="icon-bar_chart icon-20 mr-2"></i>
-                                        <codx-label name="lblStatistical" [formModel]="" default='Thống kê'>
-                                        </codx-label>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column flex-grow-1 h-100vh">
-                        <div class="list-group">
-                            <div class="list-content">
-                                <div class="d-flex justify-content-between mb-6" *ngIf="policy">
-                                    <span class="icon-arrow_back icon-22 mr-5 text-hover-primary"
-                                        onclick="history.back()"></span>
-                                    <div class="d-flex flex-column flex-grow-1">
-                                        <div class="fs-3 fw-bold text-dark mb-1">
-                                            {{policy?.policyName}}</div>
-                                        <div class="text-dark-50">{{policy?.memo}}</div>
-                                    </div>
-                                </div>
-                                <div class="list-ranking mt-10">
-                                    <table class="table list-ranking">
-                                        <thead>
-                                            <tr *ngIf="policy">
-                                                <th scope="col">{{policy?.itemType|vll:"L1432":"text"|async}}</th>
-                                                <th scope="col">
-                                                    <codx-label name="lblPoint" [formModel]="" default='Điểm'>
-                                                    </codx-label>
-                                                </th>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let item of lstPolicyLine">
-                                                <td>{{item.name}}</td>
-                                                <td class="w-50px font-size-lg fw-bold">
-                                                    <div class="d-flex" #ele>
-                                                        <span class="mr-1 oparator"
-                                                            [style.color]="item.value < 0 ? 'red' : 'green'">
-                                                            {{item.value
-                                                            < 0 ? "-" : "+" }}</span>{{item.value < 0 ? item.value * -1
-                                                                    : item.value}} </div>
-                                                </td>
-                                                <td class="w-50px">
-                                                    <div class="d-flex align-items-center">
-                                                        <div ngbDropdown class="dropdown" container="body">
-                                                            <a href="javascript:void(0)"
-                                                                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                                                                ngbDropdownToggle id="dropdownMenuButton1"
-                                                                aria-expanded="false">
-                                                                <i class="icon-more_vert icon-20 text-dark-75"></i>
-                                                            </a>
-                                                            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                                                <li>
-                                                                    <a (click)="open(content, item.id, item.value)"
-                                                                        ngbDropdownItem href="javascript:void(0)">
-                                                                        <span [class]="'icon-create icon-18'"></span>
-                                                                        <span class="ml-3">
-                                                                            <codx-label name="lblUpdate" [formModel]=""
-                                                                                default='Chỉnh sửa'>
-                                                                            </codx-label>
-                                                                        </span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <hr />
-                                </div>
+<div class="content d-flex flex-column flex-column-fluid p-0 h-100">
+    <div id="erm_content" class="d-flex flex-column-fluid setting2 aqua h-100">
+        <div class="d-flex container h-100">
+            <div class="aside-detail flex-row-auto w-250px me-6">
+                <div class="aside-menu me-6">
+                    <ul class="menu-nav">
+                        <li class="menu-item " [class.menu-item-active]="tabActive == 1"
+                            (click)="redirectPage('notificationFeedback')">
+                            <a class="menu-link d-flex align-items-center fw-bold text-dark">
+                                <i class="icon-near_me icon-20 me-2"></i>
+                                <codx-label name="lblFeedbackMessage" [formModel]="" default='Thông điệp phản hồi'>
+                                </codx-label>
+                            </a>
+                        </li>
+                        <li class="menu-item" (click)="redirectPage('itemCategory')">
+                            <a class="menu-link d-flex align-items-center fw-bold text-dark">
+                                <i class="icon-format_list_bulleted icon-20 me-2"></i>
+                                <codx-label name="lblCategory" [formModel]="" default='Danh mục'>
+                                </codx-label>
+                            </a>
+                        </li>
+                        <li class="menu-item " (click)="redirectPage('itemWallet')"
+                            [class.menu-item-active]="tabActive == 3">
+                            <a class="menu-link d-flex align-items-center fw-bold text-dark">
+                                <i class="icon-account_balance_wallet icon-20 me-2"></i>
+                                <codx-label name="lblWallet" [formModel]="" default='Ví nhân viên'>
+                                </codx-label>
+                            </a>
+                        </li>
+                        <li class="menu-item" (click)="redirectPage('itemRankDedication')">
+                            <a class="menu-link d-flex align-items-center fw-bold text-dark">
+                                <i class="icon-credit_card icon-20 me-2"></i>
+                                <codx-label name="lblDedicateRank" [formModel]="" default='Hạng cống hiến'>
+                                </codx-label>
+                            </a>
+                        </li>
+                        <li class="menu-item" (click)="redirectPage('itemStatistical')">
+                            <a class="menu-link d-flex align-items-center fw-bold text-dark">
+                                <i class="icon-bar_chart icon-20 me-2"></i>
+                                <codx-label name="lblStatistical" [formModel]="" default='Thống kê'>
+                                </codx-label>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bg-body rounded-3 p-6 ps-7 w-100 h-100 card-body scroll-y">
+                <div class="list-group">
+                    <div class="list-content">
+                        <div class="d-flex justify-content-between mb-6" *ngIf="policy">
+                            <span class="icon-arrow_back icon-22 me-5 text-hover-primary"
+                                onclick="history.back()"></span>
+                            <div class="d-flex flex-column flex-grow-1">
+                                <div class="fs-3 fw-bold text-dark mb-1">
+                                    {{policy?.policyName}}</div>
+                                <div class="text-dark-50">{{policy?.memo}}</div>
                             </div>
+                        </div>
+                        <div class="list-ranking mt-10">
+                            <table class="table list-ranking">
+                                <thead>
+                                    <tr *ngIf="policy">
+                                        <th scope="col">{{policy?.itemType|vll:"L1432":"text"|async}}</th>
+                                        <th scope="col">
+                                            <codx-label name="lblPoint" [formModel]="" default='Điểm'>
+                                            </codx-label>
+                                        </th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of lstPolicyLine">
+                                        <td>{{item.name}}</td>
+                                        <td class="w-50px font-size-lg fw-bold">
+                                            <div class="d-flex" #ele>
+                                                <span class="me-1 oparator"
+                                                    [style.color]="item.value < 0 ? 'red' : 'green'">
+                                                    {{item.value
+                                                    < 0 ? "-" : "+" }}</span>{{item.value < 0 ? item.value * -1 :
+                                                            item.value}} </div>
+                                        </td>
+                                        <td class="w-50px">
+                                            <div class="d-flex align-items-center">
+                                                <div ngbDropdown class="dropdown" container="body">
+                                                    <a href="javascript:void(0)"
+                                                        class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                                                        ngbDropdownToggle id="dropdownMenuButton1"
+                                                        aria-expanded="false">
+                                                        <i class="icon-more_vert icon-20 text-dark-75"></i>
+                                                    </a>
+                                                    <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                                                        <li>
+                                                            <a (click)="open(content, item.id, item.value)"
+                                                                ngbDropdownItem href="javascript:void(0)">
+                                                                <span [class]="'icon-create icon-18'"></span>
+                                                                <span class="ms-3">
+                                                                    <codx-label name="lblUpdate" [formModel]=""
+                                                                        default='Chỉnh sửa'>
+                                                                    </codx-label>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
                 </div>
-                <ng-template #content let-modal>
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="modal-basic-title">
-                                <codx-label name="lblUpdatePoint" [formModel]="" default='Chỉnh sửa số điểm'>
-                                </codx-label>
-                            </h4>
-                            <button type="button" class="btn-close" aria-label="Close"
-                                (click)="modal.dismiss('Cross click')">
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group row mt-3">
-                                <label class="col-3 col-form-label">
-                                    <codx-label name="lblPoint" [formModel]="" default='Điểm'>
-                                    </codx-label>
-                                </label>
-                                <div class="col-9" #ele>
-                                    <codx-input type="number" [ele]="ele" [attr.data-id]="id" class="form-control"
-                                        (valueChange)="valueChange($event, ele)" field="{{id}}" [crrValue]="value">
-                                    </codx-input>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" (click)="save(modal)">
-                                <codx-label name="lblSave" [formModel]="" default='Lưu'>
-                                </codx-label>
-                            </button>
-                        </div>
-                    </div>
-                </ng-template>
             </div>
         </div>
+        <ng-template #content let-modal>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">
+                        <codx-label name="lblUpdatePoint" [formModel]="" default='Chỉnh sửa số điểm'>
+                        </codx-label>
+                    </h4>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row mt-3">
+                        <label class="col-3 col-form-label">
+                            <codx-label name="lblPoint" [formModel]="" default='Điểm'>
+                            </codx-label>
+                        </label>
+                        <div class="col-9" #ele>
+                            <codx-input type="number" [ele]="ele" [attr.data-id]="id" class="form-control"
+                                (valueChange)="valueChange($event, ele)" field="{{id}}" [crrValue]="value">
+                            </codx-input>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="save(modal)">
+                        <codx-label name="lblSave" [formModel]="" default='Lưu'>
+                        </codx-label>
+                    </button>
+                </div>
+            </div>
+        </ng-template>
     </div>
 </div>

@@ -325,6 +325,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
   }
 
   maxTotal = 0;
+  minTotal = 0;
   interval = 0;
   //Initializing Primary X Axis
   public primaryXAxis: Object = {
@@ -429,7 +430,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
       default:
         break;
     }
-    if (e.field != 'vllOrganize' || f != 'vllOrganize' && e.data) {
+    if (e.field != 'vllOrganize' || (f != 'vllOrganize' && e.data)) {
       if (f == 'Employee' || f == 'Organize') {
         if (e?.data) {
           this.setPredicate();
@@ -623,6 +624,9 @@ export class WalletsComponent extends UIComponent implements OnInit {
 
   getDataSet_Line() {
     this.chartDatas_Line = [];
+    var value = 0;
+    var minimum = 0;
+    var maximum = 0;
     this.data_Line.forEach((e) => {
       var data = [
         { month: 1, value: 0 },
@@ -638,35 +642,42 @@ export class WalletsComponent extends UIComponent implements OnInit {
         { month: 11, value: 0 },
         { month: 12, value: 0 },
       ];
-      var label = e.key;
-      e.value.forEach((res) => {
-        var month = res.key1.month;
-        var total = res.total;
-
-        if (e.value.length > 1) {
-          for (let i = 1; i <= e.value.length; i++) {
-            if (e.value[0]?.total >= total) {
-              this.maxTotal = e.value[0]?.total;
-            } else this.maxTotal = total;
+      var label = e.key ? e.key : 'Không có dữ liệu';
+      if (e.value.length > 0) {
+        e.value.forEach((res, index) => {
+          var month = res.key1.month;
+          var total = res.total;
+          if (e.value[index].total < 0) {
+            if ((e.value.length = 1)) minimum = e.value[index].total;
+            else {
+              if (e.value[index].total < e.value[index + 1]?.total)
+                minimum = e.value[index].total;
+            }
+          } else {
+            if ((e.value.length = 1)) maximum = e.value[index].total;
+            else {
+              if (e.value[index].total > e.value[index + 1]?.total)
+                maximum = e.value[index].total;
+            }
           }
-        } else {
-          if (this.maxTotal < total) {
-            this.maxTotal = total;
-          }
-        }
-
-        data.filter(function (dt) {
-          if (dt.month == month) dt.value = total;
-          return dt;
+          data.filter(function (dt) {
+            if (dt.month == month) dt.value = total;
+            return dt;
+          });
         });
-      });
+      } else {
+        minimum = 0;
+        maximum = 0;
+      }
       this.chartDatas_Line.push({ data, label });
     });
+    this.minTotal = minimum;
+    this.maxTotal = maximum;
     this.caculateY();
     this.primaryYAxis = {
       title: '',
       lineStyle: { width: 0 },
-      minimum: 0,
+      minimum: this.minTotal,
       maximum: this.maxTotal,
       interval: this.interval,
       majorTickLines: { width: 0 },
