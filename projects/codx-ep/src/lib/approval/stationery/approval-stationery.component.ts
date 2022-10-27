@@ -128,62 +128,18 @@ export class ApprovalStationeryComponent
           });
       });
   }
-  changeDataMF(event, data:any) {    
+  changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
-      switch(data?.status){
-        case "3":
+      event.forEach(func => {        
+        func.disabled=true;        
+      });
+      if(data.status=='3'){
         event.forEach(func => {
-          if(func.functionID == "EPT40302" 
-          ||func.functionID == "EPT40303" 
-          ||func.functionID == "EPT40306" 
-          || func.functionID == "EPT40304")
+          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ || func.functionID == "EPT40303"/*MF Cấp phát*/ )
           {
-            func.disabled=true;
+            func.disabled=false;
           }
-        });
-        break;
-        case "4":
-          event.forEach(func => {
-            if(func.functionID == "EPT40302" 
-            ||func.functionID == "EPT40303" 
-            || func.functionID == "EPT40304"
-            ||func.functionID == "EPT40305" 
-            ||func.functionID == "EPT40306" 
-            || func.functionID == "EPT40301"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
-        case "5":
-          event.forEach(func => {
-            if(func.functionID == "EPT40302" 
-            ||func.functionID == "EPT40303" 
-            || func.functionID == "EPT40304"
-            ||func.functionID == "EPT40305" 
-            ||func.functionID == "EPT40306" 
-            || func.functionID == "EPT40301"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
-        case "2":
-          event.forEach(func => {
-            if(func.functionID == "EPT40302" 
-            ||func.functionID == "EPT40303" 
-            || func.functionID == "EPT40304"
-            ||func.functionID == "EPT40305" 
-            ||func.functionID == "EPT40306" 
-            || func.functionID == "EPT40301"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
+        });  
       }
     }
   }

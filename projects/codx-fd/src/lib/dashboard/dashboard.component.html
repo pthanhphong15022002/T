@@ -9,9 +9,9 @@
                     [formModel]="view.formModel">
                 </app-list-post>
             </div>
-            <div class="home-right w-350px min-w-350px ms-6 border-left">
-                <div class="card-box border-bottom mb-6">
-                    <div class="box-header d-flex justify-content-between align-items-center mb-4">
+            <div class="home-right w-350px min-w-350px ms-6">
+                <div class="fd_cards">
+                    <div class="">
                         <h4 class="box-title">
                             <codx-label [formModel]="view.formModel" name="lblFeedbackMessage"
                                 default="Thông điệp phản hồi">
@@ -20,28 +20,31 @@
                     </div>
                     <div class="box-body">
                         <div class="ps-6">
-                            <ng-container *ngFor="let item of lstCountCard">
-                                <div class="d-flex align-items-center justify-content-between mb-4">
-                                    <div class="text-dark fw-bolder">
-                                        <codx-label [formModel]="view.formModel" [default]="item.Text">
-                                        </codx-label>
-                                    </div>
-                                    <div class="d-flex w-100px justify-content-end">
-                                        <div class="d-flex align-items-center me-6">
-                                            <span class="text-dark me-2">{{item.CountRecvive}}</span>
-                                            <span class="icon-doc_in icon-18 text-primary"></span>
+                            <ng-container *ngIf="lstCountCard.length > 0;else emptyTemplate">
+                                <ng-container *ngFor="let item of lstCountCard">
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div class="text-dark fw-bolder">
+                                            <codx-label [formModel]="view.formModel"
+                                                [default]="item.Text">
+                                            </codx-label>
                                         </div>
-                                        <div class="d-flex align-items-center">
-                                            <span class="text-dark me-2">{{item.CountSend}}</span>
-                                            <span class="icon-doc_out icon-16 text-warning"></span>
+                                        <div class="d-flex w-100px justify-content-end">
+                                            <div class="d-flex align-items-center me-6">
+                                                <span class="text-dark me-2">{{item.CountRecvive}}</span>
+                                                <span class="icon-doc_in icon-18 text-primary"></span>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <span class="text-dark me-2">{{item.CountSend}}</span>
+                                                <span class="icon-doc_out icon-16 text-warning"></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </ng-container>
                             </ng-container>
                         </div>
                     </div>
                 </div>
-                <div class="card-box mt-6">
+                <div class="fd_histores mt-6">
                     <div class="box-header d-flex align-items-center justify-content-between mb-5">
                         <h4 class="box-title mb-0">
                             <codx-label name="lblEmpWalletHistory" default="Giao dịch phát sinh gần nhất"
@@ -102,3 +105,10 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template #emptyTemplate>
+    <div class="h-100 w-100">
+        <img class="w-100 h-100" src="../assets/themes/sys/default/img/DataEmpty.svg" />
+    </div>
+</ng-template>
+
