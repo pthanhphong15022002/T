@@ -516,8 +516,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               event.currentIndex
             );
 
-            (this.dataTreeProcessStep[index].items = this.dataChild),
-              (this.view.dataService.data = this.dataTreeProcessStep);
+            this.dataTreeProcessStep[index].items = this.dataChild
+            this.view.dataService.data = this.dataTreeProcessStep
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -527,11 +527,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   dropChildToParent(event: CdkDragDrop<string[]>, parentID) {
     var parentIDfrom = event.previousContainer.id;
 
-    var indexPrevious= this.dataTreeProcessStep.findIndex((x) => x.recID == parentIDfrom);
+    var indexPrevious = this.dataTreeProcessStep.findIndex(
+      (x) => x.recID == parentIDfrom
+    );
     if (indexPrevious == -1) return;
     var previousDataChild = this.dataTreeProcessStep[indexPrevious].items;
 
-    var indexCrr= this.dataTreeProcessStep.findIndex((x) => x.recID == parentID);
+    var indexCrr = this.dataTreeProcessStep.findIndex(
+      (x) => x.recID == parentID
+    );
     if (indexCrr == -1) return;
     var crrDataChild = this.dataTreeProcessStep[indexCrr].items;
 
@@ -544,28 +548,28 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           if (res) {
             var stepNoNew = event.currentIndex + 1;
             var stepNoOld = psMoved.stepNo;
-          
-            previousDataChild.splice(event.previousIndex,1)
-           
+            psMoved.parentID = parentID;
+            psMoved.stepNo = stepNoNew;
+
+            previousDataChild.splice(event.previousIndex, 1);
+
             previousDataChild.forEach((obj) => {
-                if (
-                  obj.stepNo > stepNoOld
-                ) {
-                  obj.stepNo--;
-                }
-              });
-            
+              if (obj.stepNo > stepNoOld) {
+                obj.stepNo--;
+              }
+            });
 
             crrDataChild.forEach((obj) => {
-                if (
-                  obj.recID != psMoved.recID &&
-                  obj.stepNo <= stepNoNew &&
-                  obj.stepNo > stepNoOld
-                ) {
-                  obj.stepNo--;
-                }
-              });
-          
+              if (obj.stepNo >= stepNoNew) {
+                obj.stepNo++;
+              }
+            });
+            crrDataChild.push(psMoved);
+
+            crrDataChild.sort(function (a, b) {
+              return a.stepNo - b.stepNo;
+            });
+
             transferArrayItem(
               previousDataChild,
               crrDataChild,
@@ -573,6 +577,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               event.currentIndex
             );
 
+            this.dataTreeProcessStep[indexPrevious].items = previousDataChild
+            this.dataTreeProcessStep[indexCrr].items =crrDataChild
+
+            this.view.dataService.data = this.dataTreeProcessStep
             this.changeDetectorRef.detectChanges();
           }
         });

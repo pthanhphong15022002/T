@@ -52,7 +52,7 @@
                         </div>
                     </ng-container>
                     <ng-template #otherColor>
-                        <span class="fs-4 fw-bold img-pat-edit noimage symbol-label text-white border-5px"
+                        <span class="img-pat-edit noimage symbol-label text-white rounded-2"
                             [style.background-color]="item.backgroundColor" style="
                         background-image: none;
                         width: 100px !important;
@@ -62,7 +62,7 @@
                     <span class="icon-check text-white default icon-16" *ngIf="item.isDefault"></span>
                 </div>
                 <ng-template #template>
-                    <div class="card-img create-card cursor-pointer">
+                    <div class="card-img create-card cursor-pointer rounded-2">
                         <a id="create_card_toggle" (click)="openFormAdd()">
                             <img alt="" src="../assets/demos/card/card-add.png" />
                         </a>
