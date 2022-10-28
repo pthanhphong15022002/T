@@ -1,4 +1,4 @@
-<div class="page-add-survey">
+<div class="page-add-survey" onscroll="scrollWindow()">
   <div class="box">
     <div class="card-survey">
       <div
@@ -72,11 +72,15 @@
       <div class="d-flex flex-column">
         <div
           class="box"
-          *ngFor="let item of questions"
+          *ngFor="let item of questions; index as i"
           cdkDragBoundary=".example-boundary"
           cdkDrag
         >
-          <div class="card-survey">
+          <div
+            class="card-survey"
+            [id]="'card-survey' + i"
+            (click)="scroll(moreFC, i)"
+          >
             <div
               class="col-lg-8 control-section inplace-editor-control-section form-layout"
               #formlayout
@@ -145,27 +149,29 @@
               </div>
             </div>
           </div>
+          <div #moreFC [id]="i">
+            <div class="moreFC rounded-4" *ngIf="item.activeMF">
+              <div class="icon-MF">
+                <span class="icon-add_circle_outline icon-24"></span>
+              </div>
+              <div class="icon-MF">
+                <span class="icon-input icon-24"></span>
+              </div>
+              <div class="icon-MF">
+                <span class="icon-format_size icon-24"></span>
+              </div>
+              <div class="icon-MF">
+                <span class="icon-image icon-24"></span>
+              </div>
+              <div class="icon-MF">
+                <span class="icon-video_library icon-24"></span>
+              </div>
+              <div class="icon-MF">
+                <span class="icon-calendar_view_day icon-dns icon-24"></span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="moreFC rounded-4">
-        <div class="icon-MF">
-          <span class="icon-add_circle_outline icon-24"></span>
-        </div>
-        <div class="icon-MF">
-          <span class="icon-input icon-24"></span>
-        </div>
-        <div class="icon-MF">
-          <span class="icon-format_size icon-24"></span>
-        </div>
-        <div class="icon-MF">
-          <span class="icon-image icon-24"></span>
-        </div>
-        <div class="icon-MF">
-          <span class="icon-video_library icon-24"></span>
-        </div>
-        <!-- <div class="icon-MF">
-          <span class="icon-add_circle_outline icon-24"></span>
-        </div> -->
       </div>
     </div>
   </div>

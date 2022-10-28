@@ -1,7 +1,10 @@
 <div class="container h-100" *ngIf="dataReferences.length == 0">
   <div class="list-empty card card-flush h-100">
     <div class="d-flex flex-column flex-center justify-content-center">
-      <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+      <img
+        src="../assets/themes/sys/default/img/DataEmpty.svg"
+        class="w-200px"
+      />
       <div class="fs-5 text-dark fw-bold mt-2 text-center">
         {{ "SYS011" | mssg | async }}
       </div>
@@ -15,14 +18,24 @@
         <div class="d-flex align-items-start">
           <div class="d-flex align-items-top w-100 pe-9">
             <div class="me-2">
-              <codx-vll [name]="vllRefType" [value]="data.refType" [showIcon]="true" [showBgColor]="true"
-                class="h-20px pic-ref">
+              <codx-vll
+                [name]="vllRefType"
+                [value]="data.refType"
+                [showIcon]="true"
+                [showBgColor]="true"
+                class="h-20px pic-ref"
+              >
               </codx-vll>
             </div>
             <div class="d-flex flex-column flex-grow-1">
               <div class="d-flex align-items-center">
                 <span>
-                  <codx-vll [name]="vllRefType" [value]="data.refType" [showText]="true" class="text-gray-600 fw-bold">
+                  <codx-vll
+                    [name]="vllRefType"
+                    [value]="data.refType"
+                    [showText]="true"
+                    class="text-gray-600 fw-bold"
+                  >
                   </codx-vll>
                 </span>
               </div>
@@ -39,7 +52,8 @@
           <div class="me-3">
             <span class="icon-calendar_today icon-14 text-gray-600 me-1"></span>
             <span class="text-gray-600" #createdOn>
-              {{ data?.createdOn | date: "dd/MM/yyyy" }}</span>
+              {{ data?.createdOn | date: "dd/MM/yyyy" }}</span
+            >
           </div>
           <div class="me-3">
             <span class="icon-account_circle icon-14 me-1 text-gray-600"></span>
@@ -47,28 +61,17 @@
           </div>
         </div>
         <div class="d-flex">
-          <!-- <span class="d-flex align-items-center position-relative me-4">
-          <span class="icon-mode_comment icon-20 text-gray-400"></span>
-          <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
-            data?.comments ? data?.comments :'0'  }}</span>
-            </span>
-   
-        <span class="d-flex align-items-center position-relative me-4">
-          <span class="icon-attach_file icon-20 text-gray-400"></span>
-          <span
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6">{{
-            data?.attachments ?data?.attachments :'0'  }}</span>
-        </span> -->
-
           <span class="me-4">
-            <codx-comment-temp [objectID]="data.recIDReferences"></codx-comment-temp>
+            <codx-comment-temp
+              [objectID]="data.recIDReferences"
+            ></codx-comment-temp>
           </span>
           <span class="me-4">
-            <codx-attachment-temp [objectID]="data.recIDReferences" [formModel]="formModel"></codx-attachment-temp>
+            <codx-attachment-temp
+              [objectID]="data.recIDReferences"
+              [formModel]="formModel"
+            ></codx-attachment-temp>
           </span>
-
-          <codx-user-temp [objectID]="data.recIDReferences"></codx-user-temp>
         </div>
       </div>
     </div>
