@@ -20,6 +20,7 @@ import {
   ApiHttpService,
   AuthService,
   AuthStore,
+  CacheRouteReuseStrategy,
   NotificationsService,
   TenantStore,
   UrlUtil,
@@ -62,6 +63,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private auth: AuthStore
   ) {
     const tenant = this.tenantStore.getName();
+    CacheRouteReuseStrategy.clear();
+    
     // redirect to home if already logged in
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {

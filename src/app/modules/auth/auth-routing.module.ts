@@ -17,12 +17,12 @@ const routes: Routes = [
       {
         path: 'login',
         component: LoginComponent,
-        data: { returnUrl: window.location.pathname }
+        data: { returnUrl: window.location.pathname, noReuse: true }
       },
       {
         path: 'forgotpassword',
         component: ForgotPasswordComponent,
-        data: { returnUrl: window.location.pathname }
+        data: { returnUrl: window.location.pathname, noReuse: true }
       },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: '**', redirectTo: 'login', pathMatch: 'full' },
