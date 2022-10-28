@@ -12,26 +12,26 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'login',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'login',
         component: LoginComponent,
-        data: { returnUrl: window.location.pathname }
+        data: { returnUrl: window.location.pathname },
       },
       {
         path: 'forgotpassword',
         component: ForgotPasswordComponent,
-        data: { returnUrl: window.location.pathname }
+        data: { returnUrl: window.location.pathname },
       },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: '**', redirectTo: 'login', pathMatch: 'full' },
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AuthRoutingModule { }
+export class AuthRoutingModule {}

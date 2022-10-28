@@ -17,6 +17,7 @@ import {
 import { FormGroup, FormControl } from '@angular/forms';
 import {
   AuthStore,
+  ImageViewerComponent,
   NotificationsService,
   ScrollComponent,
   UIComponent,
@@ -63,6 +64,7 @@ export class PdfComponent
     pdfDefaultOptions.annotationEditorEnabled = true;
     super(inject);
     this.user = this.authStore.get();
+
     this.funcID = this.router.snapshot.params['funcID'];
   }
 
@@ -76,7 +78,9 @@ export class PdfComponent
   @Input() inputUrl = null;
   @Input() transRecID = null;
   @Input() oSignFile = {};
+
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
+  @Input() approver: string = ''; // ký ngoài hệ thống
   @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
@@ -89,7 +93,7 @@ export class PdfComponent
   //core
   dialog: import('codx-core').DialogRef;
   funcID;
-  user;
+  user: any = {};
 
   //virtual layer for sign areas
   url: string = '';
@@ -111,6 +115,7 @@ export class PdfComponent
 
   //page
   pageMax;
+  getSignAreas;
   pageStep;
   curPage = 1;
 
@@ -206,6 +211,9 @@ export class PdfComponent
   hideThumbnail: boolean = false;
 
   onInit() {
+    if (this.isPublic) {
+      this.user.userID = this.approver;
+    }
     // if (this.isPublic) {
     //   this.headerRightName = [
     //     { text: 'Thông tin người kí' },
@@ -607,6 +615,16 @@ export class PdfComponent
   //          <pageNumber, Layer>
   pageW = 0;
   pageH = 0;
+
+  checkIsUrl(string: string) {
+    let url;
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;
+    }
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  }
   pageRendered(e: any) {
     if (this.inputUrl == null) {
       let rendedPage = Array.from(
@@ -683,11 +701,15 @@ export class PdfComponent
 
                 switch (area.labelType) {
                   case 'S1': {
-                    this.addArea(
+                    let url =
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature1,
-                      'img',
+                      ).signature1 ?? area.labelValue;
+
+                    let isUrl = this.checkIsUrl(url);
+                    this.addArea(
+                      url,
+                      isUrl ? 'img' : 'text',
                       area.labelType,
                       this.isEditable
                         ? !this.isEditable
@@ -702,11 +724,14 @@ export class PdfComponent
                     break;
                   }
                   case 'S2': {
-                    this.addArea(
+                    let url =
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature2,
-                      'img',
+                      ).signature2 ?? area.labelValue;
+                    let isUrl = this.checkIsUrl(url);
+                    this.addArea(
+                      url,
+                      isUrl ? 'img' : 'text',
                       area.labelType,
                       this.isEditable
                         ? !this.isEditable
@@ -721,11 +746,14 @@ export class PdfComponent
                     break;
                   }
                   case 'S3': {
-                    this.addArea(
+                    let url =
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).stamp,
-                      'img',
+                      ).stamp ?? area.labelValue;
+                    let isUrl = this.checkIsUrl(url);
+                    this.addArea(
+                      url,
+                      isUrl ? 'img' : 'text',
                       area.labelType,
                       this.isEditable
                         ? !this.isEditable
@@ -1118,9 +1146,46 @@ export class PdfComponent
   }
 
   changeConfirmState(e: any) {
+    this.checkedConfirm = e.data;
     this.confirmChange.emit(e.data);
   }
   changeSignature_StampImg(area: tmpSignArea) {
+    switch (area.labelType) {
+      case 'S1': {
+        // thiet lap chu ki nhay
+        let setupShowForm = new SetupShowSignature();
+        setupShowForm.showSignature1 = true;
+        this.addSignature(setupShowForm);
+        return;
+        this.url = this.signerInfo?.signature1
+          ? this.signerInfo?.signature1
+          : '';
+        break;
+      }
+      case 'S2': {
+        // thiet lap chu ki nhay
+        let setupShowForm = new SetupShowSignature();
+        setupShowForm.showSignature2 = true;
+        this.addSignature(setupShowForm);
+        return;
+        this.url = this.signerInfo?.signature2
+          ? this.signerInfo?.signature2
+          : '';
+        break;
+      }
+      case 'S3': {
+        // thiet lap con dau
+        let setupShowForm = new SetupShowSignature();
+        setupShowForm.showStamp = true;
+        this.addSignature(setupShowForm);
+        return;
+        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
+        break;
+      }
+    }
+  }
+
+  changeSignature_StampImg_Public(area: tmpSignArea) {
     switch (area.labelType) {
       case 'S1': {
         // thiet lap chu ki nhay
@@ -1743,12 +1808,19 @@ export class PdfComponent
     );
   }
 
-  //test func
-  show(e: any) {
-    this.esService.testFont('Nguyễn Hoàng Bửu').subscribe((res) => {
-      console.log('done', res);
-    });
+  //#region Public Signing
+  currentTab: number;
+  checkedConfirm: boolean = false;
+  @ViewChild('imgSignature1', { static: false })
+  imgSignature1: ImageViewerComponent;
+  @ViewChild('imgSignature2', { static: false })
+  imgSignature2: ImageViewerComponent;
+  @ViewChild('imgStamp', { static: false }) imgStamp: ImageViewerComponent;
+
+  changeTab(currTab) {
+    this.currentTab = currTab;
   }
+  //#endregion
 }
 //create new guid
 class Guid {

@@ -394,7 +394,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             let appr = new Approvers();
             appr.write = true;
             appr.roleType = element.objectType;
-            appr.approver = element.objectType;
+            //appr.approver = element.objectType;
             appr.icon = element?.icon;
 
             let popupApprover = this.callfc.openForm(
