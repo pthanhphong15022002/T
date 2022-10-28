@@ -502,8 +502,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             if (x.event == null) {
               //this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
               this.view.dataService
-                .remove(this.view.dataService.dataSelected)
+                .remove(res?.recID)
                 .subscribe();
+                this.view.dataService.onAction.next({ type: 'update', data: datas });
             } else this.view.dataService.add(x.event, 0).subscribe(item=>{
               this.view.dataService.onAction.next({ type: 'update', data: x.event });
             });

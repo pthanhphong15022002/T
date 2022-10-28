@@ -1,7 +1,4 @@
-import { fieldAdv } from './../../../../../../codx-share/src/lib/components/viewFileDialog/alertRule.model';
-import { title } from 'process';
-import { switchMap } from 'rxjs/operators';
-import { CodxEpService, GridModels } from './../../../codx-ep.service';
+import { CodxEpService } from './../../../codx-ep.service';
 import {
   Component,
   Injector,
@@ -9,7 +6,7 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import {
   DialogData,
   DialogRef,
@@ -21,7 +18,6 @@ import {
   NotificationsService,
   UserModel,
   AuthStore,
-  RequestModel,
   CRUDService,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
@@ -263,7 +259,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.groupByWareHouse();
     this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
     option.methodName = 'AddEditItemAsync';
-    //option.data = [itemData, this.isAddNew, null, null, this.lstStationery];
     option.data = [itemData, this.isAddNew, null, this.lstStationery, null];
     return true;
   }
@@ -275,6 +270,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
         this.formModel
       );
     }
+    this.dialogAddBookingStationery.patchValue({'title': this.dialogAddBookingStationery.value.note})
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe((res) => {

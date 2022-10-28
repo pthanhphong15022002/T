@@ -1,26 +1,39 @@
-<codx-form headerText="" #form [body]="body" [showHeader]="dialog" [dialog]="dialog!" [footer]="footer">
+<codx-form
+  headerText=""
+  #form
+  [body]="body"
+  [showHeader]="dialog"
+  [dialog]="dialog!"
+  [footer]="footer"
+>
 </codx-form>
 
 <ng-template #body>
   <div class="list-group">
     <h3 class="list-header mb-5">{{ title }}</h3>
     <div class="list-content">
-      <ng-container *ngIf="groupSetting && groupSetting.length > 0; else noGroup">
+      <ng-container
+        *ngIf="groupSetting && groupSetting.length > 0; else noGroup"
+      >
         <ng-container *ngFor="let item of groupSetting">
-          <ng-container *ngTemplateOutlet="
+          <ng-container
+            *ngTemplateOutlet="
               template;
               context: { $implicit: item, isGroup: true }
-            ">
+            "
+          >
           </ng-container>
           <ng-container *ngIf="item.displayMode !== '1'">
             <ng-container *ngFor="let itemchild of setting | group: item.recID">
-              <ng-container *ngTemplateOutlet="
+              <ng-container
+                *ngTemplateOutlet="
                   template;
                   context: {
                     $implicit: itemchild,
                     collapse: item.displayMode === '3'
                   }
-                ">
+                "
+              >
               </ng-container>
             </ng-container>
           </ng-container>
@@ -28,95 +41,157 @@
       </ng-container>
       <ng-template #noGroup>
         <ng-container *ngFor="let item of setting">
-          <ng-container *ngTemplateOutlet="
+          <ng-container
+            *ngTemplateOutlet="
               template;
               context: { $implicit: item, collapse: item.displayMode === '3' }
-            ">
+            "
+          >
           </ng-container>
         </ng-container>
       </ng-template>
     </div>
   </div>
   <ng-template #template let-data let-collapse="collapse" let-isGroup="isGroup">
-    <div class="list-item" [ngClass]="collapse ? ' d-none' : ''" [attr.data-group]="data.refLineID">
+    <div
+      class="list-item"
+      [ngClass]="collapse ? ' d-none' : ''"
+      [attr.data-group]="data.refLineID"
+    >
       <div class="d-flex justify-content-between">
         <div class="w-40px min-w-40px" *ngIf="!isGroup">
-          <ng-container *ngIf="data.icon && data.icon.includes('.svg'); else icon">
-            <span [inlineSVG]="'./assets/themes/sys/default/img/' + data.icon" class="svg-icon"></span>
+          <ng-container
+            *ngIf="data.icon && data.icon.includes('.svg'); else icon"
+          >
+            <span
+              [inlineSVG]="'./assets/themes/sys/default/img/' + data.icon"
+              class="svg-icon"
+            ></span>
           </ng-container>
           <ng-template #icon>
             <span [ngClass]="data.icon" class="icon-16"></span>
           </ng-template>
         </div>
         <div class="d-flex flex-column w-100">
-          <div class="fw-bold text-dark" [ngClass]="isGroup ? 'category-title fs-4' : ''">
+          <div
+            class="fw-bold text-dark"
+            [ngClass]="isGroup ? 'category-title fs-4' : ''"
+          >
             {{ data.tilte }}
           </div>
           <div class="text-gray-500 pt-1">
             {{ data.description }}
           </div>
         </div>
-        <div class="d-flex align-items-top ms-4 min-w-300px justify-content-end">
-          <ng-container *ngIf="data.controlType && data.controlType != 'GroupControl'">
-            <codx-input [style]="
+        <div
+          class="d-flex align-items-top ms-4 min-w-300px justify-content-end"
+        >
+          <ng-container
+            *ngIf="data.controlType && data.controlType != 'GroupControl'"
+          >
+            <codx-input
+              [style]="
                 data.controlType == 'TextBox' || data.controlType == 'Combobox'
                   ? 'width: 200px'
                   : ''
-              " [type]="data | type" [name]="data.controlType" placeholder="" ngDefaultControl
-              [refType]="data.referedType" [refValue]="data.referedValue || data.referdValue" [loadFull]="true"
-              [field]="data.fieldName" [checked]="
+              "
+              [type]="data | type"
+              [name]="data.controlType"
+              placeholder=""
+              ngDefaultControl
+              [refType]="data.referedType"
+              [refValue]="data.referedValue || data.referdValue"
+              [loadFull]="true"
+              [field]="data.fieldName"
+              [checked]="
                 autoDefault && autoDefault[data.fieldName]
                   ? !autoDefault[data.fieldName].stop
                   : dataValue[data.fieldName] == '1'
-              " [crrValue]="
+              "
+              [crrValue]="
                 autoDefault && autoDefault[data.fieldName]
                   ? !autoDefault[data.fieldName].stop
                   : dataValue[data.fieldName] || ''
-              " (valueChange)="valueChange($event, data, autoDefault)">
+              "
+              (valueChange)="valueChange($event, data, autoDefault)"
+            >
             </codx-input>
           </ng-container>
 
           <ng-container *ngIf="data.category == '2' && !data.isCustomize">
             <span class="me-2">
-              <codx-input type="Switch" name="Switch" placeholder="" [field]="data.fieldName" [crrValue]="
+              <codx-input
+                type="Switch"
+                name="Switch"
+                placeholder=""
+                [field]="data.fieldName"
+                [crrValue]="
                   autoDefault && autoDefault[data.fieldName]
                     ? !autoDefault[data.fieldName].stop
                     : false
-                " (valueChange)="valueChange($event, data, autoDefault)">
+                "
+                (valueChange)="valueChange($event, data, autoDefault)"
+              >
               </codx-input>
             </span>
-            <codx-label name="lblUseAutoNumber" formName="Settings" default="Sử dụng số tự động">
+            <codx-label
+              name="lblUseAutoNumber"
+              formName="Settings"
+              default="Sử dụng số tự động"
+            >
             </codx-label>
             <span class="ms-3">
-              <a href="javascript:void(0)" (click)="
+              <a
+                href="javascript:void(0)"
+                (click)="
                   autoDefault &&
                     autoDefault[data.fieldName] &&
                     openPopup($event, data, 'cpnAutoNumbers')
-                "><span class="w-30px d-flex justify-content-center"><span
-                    class="icon-edit-one icon-20"></span></span></a>
+                "
+                ><span class="w-30px d-flex justify-content-center"
+                  ><span class="icon-edit-one icon-20"></span></span
+              ></a>
             </span>
           </ng-container>
 
           <ng-container *ngIf="data.category == '5'">
             <div class="d-flex align-items-top me-3">
               <span class="me-2">
-                <codx-input type="checkbox" name="checkbox" class="check-circle" placeholder="" field="isAlert"
+                <codx-input
+                  type="checkbox"
+                  name="checkbox"
+                  class="check-circle"
+                  placeholder=""
+                  field="isAlert"
                   [crrValue]="
                     alertRules && alertRules[data.fieldName]
                       ? alertRules[data.fieldName].isAlert
                       : false
-                  " (valueChange)="valueChange($event, data, null)">
+                  "
+                  (valueChange)="valueChange($event, data, null)"
+                >
                 </codx-input>
               </span>
-              <codx-label name="lblAlert" formName="Settings" default="Thông báo">
+              <codx-label
+                name="lblAlert"
+                formName="Settings"
+                default="Thông báo"
+              >
               </codx-label>
               <span class="me-2 ms-6">
-                <codx-input type="checkbox" name="checkbox" placeholder="" class="check-circle" field="isMail"
+                <codx-input
+                  type="checkbox"
+                  name="checkbox"
+                  placeholder=""
+                  class="check-circle"
+                  field="isMail"
                   [crrValue]="
                     alertRules && alertRules[data.fieldName]
                       ? alertRules[data.fieldName].isMail
                       : false
-                  " (valueChange)="valueChange($event, data, null)">
+                  "
+                  (valueChange)="valueChange($event, data, null)"
+                >
                 </codx-input>
               </span>
               <codx-label name="lblEmail" formName="Settings" default="Email">
@@ -125,48 +200,92 @@
           </ng-container>
 
           <div class="setting-btnright">
-            <a [routerLink]="
+            <a
+              [routerLink]="
                 data.reference ? '../../../' + data.reference : 'detail'
-              " [state]="{
+              "
+              [state]="{
                 keepPage: true,
                 setting: setting | group: data.recID:'2',
                 function: function,
                 dataValue: dataValue[data.fieldName]
-              }" *ngIf="data.displayMode === '1'">
-              <span class="w-30px d-flex justify-content-center"><span
-                  class="icon-keyboard_arrow_right icon-22"></span></span></a>
-            <a href="javascript:void(0)" (click)="openPopup($event, data)" *ngIf="data.displayMode === '2'"><span
-                class="w-30px d-flex justify-content-center"><span class="icon-18" [ngClass]="
+              }"
+              *ngIf="data.displayMode === '1'"
+            >
+              <span class="w-30px d-flex justify-content-center"
+                ><span class="icon-keyboard_arrow_right icon-22"></span></span
+            ></a>
+            <a
+              href="javascript:void(0)"
+              (click)="openPopup($event, data)"
+              *ngIf="data.displayMode === '2'"
+              ><span class="w-30px d-flex justify-content-center"
+                ><span
+                  class="icon-18"
+                  [ngClass]="
                     data.category == '5' ? 'icon-email' : 'icon-edit-one'
-                  "></span></span></a>
-            <a href="javascript:void(0)" *ngIf="data.displayMode === '3'"
-              (click)="collapseItem($event, data.recID)"><span class="w-30px d-flex justify-content-center"><span
-                  class="icon-keyboard_arrow_right icon-22" [attr.data-id]="data.recID"></span></span></a>
-            <ng-container *ngIf="data.displayMode === '4' || data.displayMode === '5'">
-              <codx-input type="Share" [refValue]="data.referdValue || 'L1901'" [field]="data.fieldName"
-                [dataShared]="[]" [showInput]="false" [listCombobox]="data.reference"
-                [multiple]="data.displayMode === '5'" (valueChange)="valueChange($event, data, null)">
+                  "
+                ></span></span
+            ></a>
+            <a
+              href="javascript:void(0)"
+              *ngIf="data.displayMode === '3'"
+              (click)="collapseItem($event, data.recID)"
+              ><span class="w-30px d-flex justify-content-center"
+                ><span
+                  class="icon-keyboard_arrow_right icon-22"
+                  [attr.data-id]="data.recID"
+                ></span></span
+            ></a>
+            <ng-container
+              *ngIf="data.displayMode === '4' || data.displayMode === '5'"
+            >
+              <codx-input
+                type="Share"
+                [refValue]="data.referdValue || 'L1901'"
+                [field]="data.fieldName"
+                [dataShared]="[]"
+                [showInput]="false"
+                [listCombobox]="data.reference"
+                [multiple]="data.displayMode === '5'"
+                (valueChange)="valueChange($event, data, null)"
+              >
               </codx-input>
             </ng-container>
 
             <ng-container *ngIf="data.displayMode === '6'">
-              <codx-img [updateDirect]="true" [isAllowEdit]="true" [objectId]="data.recID"
-                [objectType]="function.entityName"></codx-img>
+              <codx-img
+                [updateDirect]="true"
+                [isAllowEdit]="true"
+                [objectId]="data.recID"
+                [objectType]="function.entityName"
+                (dataChanged)="changeLabelImg($event)"
+              ></codx-img>
             </ng-container>
           </div>
         </div>
       </div>
-      <div class="d-flex mt-3" *ngIf="data.displayMode === '4' || data.displayMode === '5'">
+      <div
+        class="d-flex mt-3"
+        *ngIf="data.displayMode === '4' || data.displayMode === '5'"
+      >
         <div class="ms-20 me-9 text-dark fw-bold minw-200px w-200px">
-          <codx-label name="lblShareID" formName="Settings" default="Người xét duyệt">
+          <codx-label
+            name="lblShareID"
+            formName="Settings"
+            default="Người xét duyệt"
+          >
           </codx-label>
         </div>
-        <div class="text-gray-600 share-object-name" [attr.data-recid]="data.recID">
+        <div
+          class="text-gray-600 share-object-name"
+          [attr.data-recid]="data.recID"
+        >
           {{
-          (data.recID | shareSetting: setting:dataValue)?.objectName == "null"
-          ? ""
-          : (data.recID | shareSetting: setting:dataValue)?.objectName ||
-          (data.recID | shareSetting: setting:dataValue)?.objectID
+            (data.recID | shareSetting: setting:dataValue)?.objectName == "null"
+              ? ""
+              : (data.recID | shareSetting: setting:dataValue)?.objectName ||
+                (data.recID | shareSetting: setting:dataValue)?.objectID
           }}
         </div>
       </div>
