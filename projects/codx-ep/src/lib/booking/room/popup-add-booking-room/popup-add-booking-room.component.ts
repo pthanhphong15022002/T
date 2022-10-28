@@ -459,7 +459,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 id: stationery.itemID,
                 text: stationery.itemName,
                 quantity: stationery.quantity,
-                objectType: 'EP_Stationery',
+                objectType: 'EP_Resources',
                 objectID: stationery.itemRecID,
                 umid: stationery.umid,
               };
@@ -1054,7 +1054,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         quantity: this.data.attendees,
         text: item.ResourceName,
         umid: item.UMID,
-        objectType: 'EP_Stationery',
+        objectType: 'EP_Resources',
         objectID: item.RecID,
       };
       this.lstStationery.push(tempStationery);

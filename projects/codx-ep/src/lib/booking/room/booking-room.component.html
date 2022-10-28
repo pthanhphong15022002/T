@@ -24,12 +24,7 @@
 <!-- Schedule view -->
 <ng-template #resourceHeader let-data>
   <div class="d-flex flex-row ms-5 align-items-center">
-    <codx-img
-      [objectId]="data?.resourceData?.recID"
-      [imageType]="'square'"
-      width="50"
-      [objectType]="'EP_Rooms'"
-    ></codx-img>
+    <codx-img [objectId]="data?.resourceData?.recID" [imageType]="'square'" width="50" [objectType]="'EP_Resources'"></codx-img>  
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{ data?.resourceData?.resourceName }}</span>
       <div class="d-flex flex-row">
@@ -80,13 +75,13 @@
 </ng-template>
 
 <ng-template #contentTmp let-data>
-  <div class="d-flex">
+  <div class="d-flex justify-content-between">
     <span class="border-start fw-bold border-4 border-danger fs-3 ps-2"
       >{{ data?.title }}
     </span>
-    <button
+    <!-- <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-primary "
       (click)="
         connectToMeeting(
           data.title,
@@ -100,7 +95,7 @@
       "
     >
       <codx-label name="lblCreateAndMeetingNow" default="Họp ngay"></codx-label>
-    </button>
+    </button> -->
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
@@ -192,7 +187,7 @@
               [objectId]="item.recID"
               imageType="square"
               width="35"
-              objectType="EP_Stationery"
+              objectType="EP_Resources"
             ></codx-img>
           </div>
           <div class="">

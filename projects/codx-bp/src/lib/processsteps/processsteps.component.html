@@ -229,7 +229,7 @@
                     [cdkDropListData]="item?.items || []"
                     (cdkDropListDropped)="drop($event, item.recID)"
                   >
-                    <ng-container *ngIf="item?.items?.length == 0">
+                    <ng-container *ngIf="!item?.items||item?.items?.length == 0">
                       <div
                         class="card card-steplist p-0"
                         cdkDrag
