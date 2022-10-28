@@ -115,6 +115,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   calEndMinutes: any;
   calStartMinutes: any;
   calendarID: any;
+  isCopy = false;
   isPopupCbb = false;
   constructor(
     private injector: Injector,
@@ -130,6 +131,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
+    this.isCopy =dialogData?.data[4];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
@@ -138,6 +140,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.bookingOn=this.optionalData.startDate;
     }
     else if(this.isAdd && this.optionalData==null){
+      this.data.bookingOn=new Date();
+    }
+    if(this.isCopy){
       this.data.bookingOn=new Date();
     }
     
@@ -351,7 +356,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   } else if (this.tempAtender.roleType == '2') {
                     this.driver = this.tempAtender;
                     this.driver.objectID = people.note;
-                    this.driver.objectType = 'EP_Drivers';
+                    this.driver.objectType = 'EP_Resources';
                   } else {
                     this.lstPeople.push(this.tempAtender);
                   }
@@ -369,7 +374,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     });
 
     this.initForm();
-    if (this.isAdd) {
+    if (this.isAdd && !this.isCopy) {
       this.data.attendees = 1;
       this.data.bookingOn = this.data.startDate;
       this.detectorRef.detectChanges();

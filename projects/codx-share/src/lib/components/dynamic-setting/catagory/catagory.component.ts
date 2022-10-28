@@ -53,12 +53,14 @@ export class CatagoryComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
+    debugger
     if (data) {
       this.setting = data.data?.setting;
 
       this.valuelist = data.data?.valuelist;
       this.category = data.data?.category;
       this.function = data.data?.function;
+    
       //this.loadSettingValue();
     }
   }
@@ -108,16 +110,13 @@ export class CatagoryComponent implements OnInit {
 
         // this.cacheService.functionList(this.lstFuncID)
         this.labels = format?.Label.filter((label) => {
-          console.log('label', label);
-
           return label.Language == this.function?.language;
         });
-        console.log('labels', this.labels);
 
         this.changeDetectorRef.detectChanges();
       });
   }
-
+  changeLabelImg(data, e: any) {}
   openPopup(evt: any, item: any, reference: string = '') {
     let value = item.fieldName,
       recID = item.recID;
@@ -412,9 +411,7 @@ export class CatagoryComponent implements OnInit {
       }
     }
   }
-  changeLabelImg(e: any) {
-    console.log('change label', e);
-  }
+
   click($event: any) {
     var dt = this.settingValue.find((x) => x.category == this.category);
     dt.dataValue = JSON.stringify(this.dataValue);
@@ -427,5 +424,9 @@ export class CatagoryComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
         console.log(res);
       });
+  }
+  checkA(e:any)
+  {
+    debugger;
   }
 }

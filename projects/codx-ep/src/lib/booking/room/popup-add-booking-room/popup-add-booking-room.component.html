@@ -211,8 +211,9 @@
           *ngIf="data?.online && data.onlineUrl"
         >
           <button
+          
             (click)="connectMeetingNow()"
-            class="text-decoration-underline"
+            class="text-decoration-underline border-0 fw-bold bg-transparent text-primary text-start"
           >
             {{ data?.onlineUrl }}
           </button>
@@ -563,7 +564,7 @@
             [objectId]="item.objectID"
             imageType="square"
             width="50"
-            objectType="EP_Stationery"
+            objectType="EP_Resources"
           ></codx-img>
         </div>
         <div class="flex-grow-2">
