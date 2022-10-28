@@ -1,3 +1,4 @@
+import { T } from '@angular/cdk/keycodes';
 import {
   Component,
   EventEmitter,
@@ -114,6 +115,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   calEndMinutes: any;
   calStartMinutes: any;
   calendarID: any;
+  isCopy = false;
   isPopupCbb = false;
   constructor(
     private injector: Injector,
@@ -129,10 +131,20 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
+    this.isCopy =dialogData?.data[4];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
     this.data.requester = this.authService?.userValue?.userName;
+    if(this.isAdd && this.optionalData!=null){
+      this.data.bookingOn=this.optionalData.startDate;
+    }
+    else if(this.isAdd && this.optionalData==null){
+      this.data.bookingOn=new Date();
+    }
+    if(this.isCopy){
+      this.data.bookingOn=new Date();
+    }
     
   }
   onInit(): void {
@@ -182,7 +194,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.data.startDate = this.optionalData.startDate;
         this.data.endDate = this.optionalData.startDate;
         this.detectorRef.detectChanges();
-        this.driverChangeWithCar(this.optionalData?.resourceId);
       }
       this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
     });
@@ -210,7 +221,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                 [this.calendarID]
               )
               .subscribe((res) => {
-                let tmpDateTime = new Date();
+                let tmpDateTime = this.data.bookingOn;
                 res.forEach((day) => {
                   if (day?.shiftType == '1') {
                     let tmpstartTime = day?.startTime.split(':');
@@ -246,6 +257,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
                     this.calEndMinutes = tmpEndTime[1];                    
                   }
                 });
+                if(this.isAdd && this.optionalData){
+                  this.driverChangeWithCar(this.optionalData.resourceId);
+                }
               });
           } else {
             this.api
@@ -290,7 +304,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   this.calStartMinutes = tempStartTime[1];
                   this.calEndHour = tempEndTime[0];
                   this.calEndMinutes = tempEndTime[1];
-                  
+                  if(this.isAdd && this.optionalData){
+                    this.driverChangeWithCar(this.optionalData.resourceId);
+                  }
                 }
               });
           }
@@ -340,7 +356,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   } else if (this.tempAtender.roleType == '2') {
                     this.driver = this.tempAtender;
                     this.driver.objectID = people.note;
-                    this.driver.objectType = 'EP_Drivers';
+                    this.driver.objectType = 'EP_Resources';
                   } else {
                     this.lstPeople.push(this.tempAtender);
                   }
@@ -358,11 +374,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
     });
 
     this.initForm();
-    if (this.isAdd) {
+    if (this.isAdd && !this.isCopy) {
       this.data.attendees = 1;
       this.data.bookingOn = this.data.startDate;
       this.detectorRef.detectChanges();
     }
+    
   }
 
   initForm() {
@@ -423,7 +440,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.lstPeople.forEach((people) => {
       this.attendeesList.push(people);
     });
-    this.attendeesList.push(this.driver);
+    if(this.driver!=null){
+      this.attendeesList.push(this.driver);
+    }
     this.data.stopOn = this.data.endDate;
     this.data.bookingOn = this.data.startDate;
     this.data.category = '2';

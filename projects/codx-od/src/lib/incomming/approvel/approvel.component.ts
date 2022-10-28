@@ -46,8 +46,7 @@ export class ODApprovelComponent
   ngOnInit(): void {
     this.router.params.subscribe((params) => {
       this.funcID = params['funcID'];
-      if(params['id']) this.getDtDis(params['id']);
-      //this.getGridViewSetup(funcId);
+      if(params['id']) this.getGridViewSetup(this.funcID , params['id']);
     });
   }
 
@@ -55,9 +54,8 @@ export class ODApprovelComponent
    
   }
  
-  getGridViewSetup(funcID:any)
+  getGridViewSetup(funcID:any, id:any)
   {
-    debugger;
     this.cache.functionList(funcID).subscribe((fuc) => {
       this.formModel = 
       {
@@ -66,28 +64,16 @@ export class ODApprovelComponent
         funcID : funcID,
         gridViewName : fuc?.gridViewName
       }
-      this.view.formModel = this.formModel;
-      this.cache
-        .gridViewSetup(fuc?.formName, fuc?.gridViewName)
-        .subscribe((grd) => {
-          this.gridViewSetup = grd;
-        })
+      this.getDtDis(id);
     });
-    this.cache.message("OD020").subscribe(item=>{
-      this.ms020 = item;
-    })
-    this.cache.message("OD021").subscribe(item=>{
-      this.ms021 = item;
-    })
-    this.cache.valueList("OD008").subscribe((item) => {
-      this.dvlRelType = item;
-    })
+  
   }
   getDtDis(id: any) {
     this.data = null;
     if(id)
     {
-      this.odService.getDetailDispatch(id,this.formModel?.entityName).subscribe((item) => {
+
+      this.odService.getDetailDispatch(id,this.formModel?.entityName,true).subscribe((item) => {
         //this.getChildTask(id);
         if (item) {
           this.data = formatDtDis(item);

@@ -1,0 +1,28 @@
+.user-mini-group {
+  padding-bottom: 0;
+}
+
+.user-mini-group {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 4px;
+  min-height: 30px;
+  margin-top: 3px;
+}
+
+.user-mini-item {
+  border-radius: 20px;
+  background-color: #f0f1f2;
+  padding: 2px 5px 2px 2px;
+  margin: 0 4px 0 0;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 260px;
+  overflow: hidden;
+  height: 24px;
+}
+
+.user-mini-item .fw-bold.line-clamp {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+}
