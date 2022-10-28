@@ -105,7 +105,6 @@ export class ReportinglineComponent extends UIComponent {
     this.view.dataService.parentIdField = 'ReportTo';
     this.detectorRef.detectChanges();
   }
-  
   changeView(event: any) {
     this.currView = null;
     if (event.view && event.view?.model?.template2) {
@@ -113,20 +112,18 @@ export class ReportinglineComponent extends UIComponent {
     }
     this.detectorRef.detectChanges();
   }
-
   orgChartViewInit(component:any){
     if(component){
       this.detailComponent = component;
     }
   }
-
   doubleClickItem(data:any){
     if(data){
       let option = new DialogModel();
       option.DataService = this.view.dataService as CRUDService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
-      this.callfc.openForm(ReportinglineDetailComponent,"",0,0,"",null,"",option);
+      this.callfc.openForm(ReportinglineDetailComponent,"",0,0,"",data,"",option);
     }
   }
   searchName(e) {
@@ -144,12 +141,8 @@ export class ReportinglineComponent extends UIComponent {
     });
     this.listEmployeeSearch = listEmployeeSearch;
   }
-
   action(e){
-    debugger
   }
-  
-
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS03':
@@ -163,9 +156,6 @@ export class ReportinglineComponent extends UIComponent {
         break;
     }
   }
-
-  
-
   edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -178,7 +168,6 @@ export class ReportinglineComponent extends UIComponent {
       this.dialog = this.callfc.openSide(PopupAddPositionsComponent, 'edit', option);
     });
   }
-
   copy(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -191,7 +180,6 @@ export class ReportinglineComponent extends UIComponent {
       this.dialog = this.callfc.openSide(PopupAddPositionsComponent, 'copy', option);
     });
   }
-
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'Delete';
@@ -200,7 +188,6 @@ export class ReportinglineComponent extends UIComponent {
     opt.data = itemSelected.positionID;
     return true;
   }
-
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
@@ -213,25 +200,8 @@ export class ReportinglineComponent extends UIComponent {
       );
 
   }
-
-  // loadEmployByCountStatus(p, posID, status) {
-  //   this.listEmployee = [];
-  //   this.listEmployeeSearch = [];
-  //   var stt = status.split(';');
-  //   this.codxHr.loadEmployByCountStatus(posID, stt)
-  //     .subscribe(response => {
-  //       this.listEmployee = response;
-  //       this.listEmployeeSearch = response;
-  //       this.countResource = response.length;
-  //       p.open();
-  //       this.popover = p;
-  //     });
-  // }
-
   loadEmployByCountStatus(){
-
   }
-
   selectedChange(evt: any) {
     // this.itemSelected = val.data;
     // this.dt.detectChanges();
@@ -240,7 +210,6 @@ export class ReportinglineComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -248,7 +217,6 @@ export class ReportinglineComponent extends UIComponent {
         break;
     }
   }
-
   btnClick(){
     if(this.view)
     {
@@ -313,7 +281,6 @@ export class ReportinglineComponent extends UIComponent {
     }
     console.log(event);
   }
-
   loadEOrgChartListChild(orgUnitID): Observable<any> {
     return this.api
       .call(
