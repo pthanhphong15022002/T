@@ -351,6 +351,8 @@ export class StatisticalComponent extends UIComponent implements OnInit {
       this.ballot_RECEIVED = !this.ballot_RECEIVED;
       this.ballot_SENDED = false;
     }
+    if (this.ballot_RECEIVED == false && this.ballot_SENDED == false)
+      typeBallot = '0';
     this.typeBallot = typeBallot;
     this.reloadAllChart();
   }

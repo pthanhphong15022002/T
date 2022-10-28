@@ -18,7 +18,7 @@
                         (valueChange)="valueChangeSwitch($event)" [checked]="quantity.HasPoints === '1' ? true : false">
                     </codx-input>
                 </span>
-                <span class="w-30px h-20px d-flex justify-content-center"></span>
+                <span class="setting-btnright"></span>
             </div>
         </div>
         <div class="d-flex align-items-start py-4 border-bottom border-light" *ngIf="item.fieldName == 'HasGifts'">
@@ -37,7 +37,7 @@
                         label="">
                     </codx-input>
                 </span>
-                <span class="w-30px h-20px d-flex justify-content-center"></span>
+                <span class="setting-btnright"></span>
             </div>
         </div>
         <div class="d-flex align-items-start py-4 border-bottom border-light"
@@ -59,7 +59,7 @@
                 </ng-template>
 
                 <div class="d-flex align-items-center">
-                    <span class="switch switch-sm ms-3">
+                    <span class="pt-1">
                         <codx-input type="switch" class="test-check" field="ApprovalControl"
                             (valueChange)="valueChangeSwitch($event)"
                             [checked]="quantity.ApprovalControl === '1' ? true : false"
@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center ms-4">
-                <span class="switch switch-sm ms-3">
+                <span class="pt-1">
                     <codx-input type="switch" class="test-check" field="MaxSendControl"
                         (valueChange)="valueChangeSwitch($event)"
                         [checked]="quantity.MaxSendControl == '1' ? true : false">
@@ -110,7 +110,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center ms-4">
-                <span class="switch switch-sm ms-3">
+                <span class="pt-1">
                     <codx-input type="switch" class="test-check" field="MaxReceiveControl"
                         (valueChange)="valueChangeSwitch($event)"
                         [checked]="quantity.MaxReceiveControl === '1' ? true : false">
@@ -134,7 +134,7 @@
                     {{quantity?.MaxPointPeriod|vll:"L1435":"text"|async}}</div>
             </div>
             <div class="d-flex align-items-center ms-4">
-                <span class="switch switch-sm ms-3">
+                <span class="pt-1">
                     <codx-input type="switch" class="test-check" field="MaxPointControl"
                         (valueChange)="valueChangeSwitch($event)"
                         [checked]="quantity.MaxPointControl === '1' ? true:false">
@@ -156,7 +156,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center ms-4">
-                <span class="switch switch-sm ms-3">
+                <span class="pt-1">
                     <codx-input type="switch" class="test-check" field="MaxPointPerOnceControl"
                         (valueChange)="valueChangeSwitch($event)"
                         [checked]="quantity.MaxPointPerOnceControl === '1' ? true : false">

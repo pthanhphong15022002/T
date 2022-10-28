@@ -77,6 +77,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   reportUUID: any = 'TMR01';
   itemDetail;
   funcIDName;
+  optionalData;
   formModel: FormModel;
   constructor(
     private injector: Injector,
@@ -229,6 +230,34 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       //   break;
     }
   }
+  changeDataMF(event, data:any) {        
+    if(event!=null && data!=null){
+      event.forEach(func => {        
+        func.disabled=true;        
+      });
+      if(data.status=='1'){
+        event.forEach(func => {
+          if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "SYS04"/*MF chép*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+    }
+  }
+  onActionClick(evt?){
+    if(evt.type=='add'){
+      this.addNew(evt.data);
+    }
+  }
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
@@ -262,8 +291,15 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
-
+  
   addNew(evt?) {
+    if(evt!=null)
+    {
+      this.optionalData=evt;
+    }
+    else{
+      this.optionalData=null;
+    }
     this.view.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
@@ -272,7 +308,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingRoomComponent,
-        [this.dataSelected, true, this.popupTitle],
+        [this.dataSelected, true,this.popupTitle,this.optionalData],
         option
       );
     });
@@ -304,10 +340,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   copy(evt?) {
     if (evt) {
-      if (this.authService.userValue.userID != evt?.owner) {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
+      
       this.view.dataService.dataSelected = evt;
       this.view.dataService
         .edit(this.view.dataService.dataSelected)

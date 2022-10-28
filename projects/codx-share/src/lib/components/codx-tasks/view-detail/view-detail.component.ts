@@ -208,7 +208,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region  tree
   loadTreeView() {
     this.dataTree = [];
-    if (!this.itemSelected || !this.itemSelected?.taskID) return;
+    if (!this.itemSelected || !this.itemSelected?.taskID || !this.itemSelected.isAssign ) return;
     this.api
       .execSv<any>(
         'TM',

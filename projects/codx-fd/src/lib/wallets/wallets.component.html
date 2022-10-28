@@ -8,37 +8,20 @@
           <div class="w-100 pr-6 mt-3 left-20 pd-r-10">
             <div class="d-flex align-items-top">
               <div class="me-3 w-150px">
-                <codx-dropdown-calendar
-                  [cssClass]="'w-200'"
-                  [cssPopup]="'h-400px w-500px border'"
-                  (change)="dateChange($event)"
-                ></codx-dropdown-calendar>
+                <codx-dropdown-calendar [cssClass]="'w-200'" [cssPopup]="'h-400px w-500px border'"
+                  (change)="dateChange($event)"></codx-dropdown-calendar>
               </div>
               <div class="me-3 left-5">
                 <div class="d-flex flex-column mb-3" #Organize>
-                  <codx-label
-                    name="lblOrganize"
-                    formName="FD_KudosTrans"
-                    default="Cơ cấu tổ chức"
-                  >
+                  <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức">
                   </codx-label>
                   <div class="d-flex header-combo">
-                    <codx-input
-                      class="form-control"
-                      type="valuelist"
-                      field="vllOrganize"
-                      refValue="L1483"
-                      (valueChange)="valueChange($event, 'vllOrganize')"
-                    >
+                    <codx-input class="form-control" type="valuelist" field="vllOrganize" refValue="L1483"
+                      (valueChange)="valueChange($event, 'vllOrganize')">
                     </codx-input>
                     <div class="organize left-5">
-                      <codx-input
-                        class="form-control"
-                        type="combobox"
-                        field="Organize"
-                        [refValue]="cbb"
-                        (valueChange)="valueChange($event, 'Organize')"
-                      >
+                      <codx-input class="form-control" type="combobox" field="Organize" [refValue]="cbb"
+                        (valueChange)="valueChange($event, 'Organize')">
                       </codx-input>
                     </div>
                   </div>
@@ -46,56 +29,27 @@
               </div>
               <div class="me-3 w-200px left-5">
                 <div class="d-flex flex-column mb-3" #Employee>
-                  <codx-label
-                    name="lblEmployee"
-                    formName="FD_KudosTrans"
-                    default="Nhân viên"
-                  >
+                  <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Nhân viên">
                   </codx-label>
-                  <codx-input
-                    class="form-control"
-                    type="combobox"
-                    field="Employee"
-                    refValue="Employees"
-                    (valueChange)="valueChange($event, 'Employee')"
-                  >
+                  <codx-input class="form-control" type="combobox" field="Employee" refValue="Employees"
+                    (valueChange)="valueChange($event, 'Employee')">
                   </codx-input>
                 </div>
               </div>
             </div>
-            <div class="d-flex">
+            <div class="d-flex ballot">
               <div class="chart chart-circle pr-9 chart-received">
                 <div style="display: block">
                   <ng-container *ngIf="chartDatas.length !== 0">
-                    <codx-label
-                      name="lblCoinsReceived"
-                      formName="FD_KudosTrans"
-                      default="Xu nhận"
-                      class="lbl-coin"
-                    ></codx-label>
-                    <ejs-accumulationchart
-                      background="transparent"
-                      id="doughnut-container-received"
-                      #pieReceived
-                      style="display: block"
-                      width="200"
-                      height="200"
-                      selectionMode="Point"
-                      [tooltip]="tooltip"
-                      [legendSettings]="legendSettings"
-                    >
+                    <codx-label name="lblCoinsReceived" formName="FD_KudosTrans" default="Xu nhận" class="lbl-coin">
+                    </codx-label>
+                    <ejs-accumulationchart background="transparent" id="doughnut-container-received" #pieReceived
+                      style="display: block" width="365" height="150" selectionMode="Point" [tooltip]="tooltip"
+                      [legendSettings]="legendSettings">
                       <e-accumulation-series-collection>
-                        <e-accumulation-series
-                          name=""
-                          [palettes]="colorReceived"
-                          [dataSource]="chartDatas_Received"
-                          xName="key"
-                          yName="value"
-                          [startAngle]="startAngle"
-                          [endAngle]="endAngle"
-                          innerRadius="90%"
-                          legendShape="Rectangle"
-                        >
+                        <e-accumulation-series name="" [palettes]="colorReceived" [dataSource]="chartDatas_Received"
+                          xName="key" yName="value" [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="90%"
+                          legendShape="Rectangle">
                         </e-accumulation-series>
                       </e-accumulation-series-collection>
                     </ejs-accumulationchart>
@@ -104,32 +58,13 @@
                     </div>
                   </ng-container>
                   <ng-container *ngIf="chartDatas.length == 0">
-                    <codx-label
-                      name="lblCoinsReceived"
-                      formName="FD_KudosTrans"
-                      default="Xu nhận"
-                      class="lbl-coin"
-                    ></codx-label>
-                    <ejs-accumulationchart
-                      background="transparent"
-                      id="doughnut-container-received"
-                      #pieReceived
-                      style="display: block"
-                      width="200"
-                      height="200"
-                      selectionMode="Point"
-                    >
+                    <codx-label name="lblCoinsReceived" formName="FD_KudosTrans" default="Xu nhận" class="lbl-coin">
+                    </codx-label>
+                    <ejs-accumulationchart background="transparent" id="doughnut-container-received" #pieReceived
+                      style="display: block" width="365" height="150" selectionMode="Point">
                       <e-accumulation-series-collection>
-                        <e-accumulation-series
-                          name=""
-                          [palettes]="colors_empty"
-                          [dataSource]="chartDatas_empty"
-                          xName="label"
-                          yName="value"
-                          [startAngle]="startAngle"
-                          [endAngle]="endAngle"
-                          innerRadius="90%"
-                        >
+                        <e-accumulation-series name="" [palettes]="colors_empty" [dataSource]="chartDatas_empty"
+                          xName="key" yName="value" [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="90%">
                         </e-accumulation-series>
                       </e-accumulation-series-collection>
                     </ejs-accumulationchart>
@@ -139,67 +74,30 @@
               <div class="chart chart-circle pr-6 pl-3 chart-sended">
                 <div style="display: block">
                   <ng-container *ngIf="chartDatas_Send.length !== 0">
-                    <codx-label
-                      name="lblCoinsSended"
-                      formName="FD_KudosTrans"
-                      default="Xu cho"
-                      class="lbl-coin"
-                    ></codx-label>
-                    <ejs-accumulationchart
-                      background="transparent"
-                      id="doughnut-container-send"
-                      #pieSend
-                      style="display: block"
-                      width="200"
-                      height="200"
-                      selectionMode="Point"
-                      [legendSettings]="legendSettings"
-                    >
+                    <codx-label name="lblCoinsSended" formName="FD_KudosTrans" default="Xu cho" class="lbl-coin">
+                    </codx-label>
+                    <ejs-accumulationchart background="transparent" id="doughnut-container-send" #pieSend
+                      style="display: block" width="365" height="150" selectionMode="Point"
+                      [legendSettings]="legendSettings">
                       <e-accumulation-series-collection>
-                        <e-accumulation-series
-                          name=""
-                          [palettes]="colorSend"
-                          [dataSource]="chartDatas_Send"
-                          xName="label"
-                          yName="value"
-                          [startAngle]="startAngle"
-                          [endAngle]="endAngle"
-                          innerRadius="90%"
-                          legendShape="Rectangle"
-                        >
+                        <e-accumulation-series name="" [palettes]="colorSend" [dataSource]="chartDatas_Send" xName="key"
+                          yName="value" [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="90%"
+                          legendShape="Rectangle">
                         </e-accumulation-series>
                       </e-accumulation-series-collection>
                     </ejs-accumulationchart>
-                    <div class="total-coins-received">
+                    <div class="total-coins-sended">
                       <span>{{ totalDataSended }} xu</span>
                     </div>
                   </ng-container>
                   <ng-container *ngIf="chartDatas_Send.length == 0">
-                    <codx-label
-                      name="lblCoinsSended"
-                      formName="FD_KudosTrans"
-                      default="Xu cho"
-                      class="lbl-coin"
-                    ></codx-label>
-                    <ejs-accumulationchart
-                      background="transparent"
-                      id="doughnut-container-send"
-                      #pieSend
-                      width="200"
-                      height="200"
-                      selectionMode="Point"
-                    >
+                    <codx-label name="lblCoinsSended" formName="FD_KudosTrans" default="Xu cho" class="lbl-coin">
+                    </codx-label>
+                    <ejs-accumulationchart background="transparent" id="doughnut-container-send" #pieSend width="365"
+                      height="150" selectionMode="Point">
                       <e-accumulation-series-collection>
-                        <e-accumulation-series
-                          name=""
-                          [palettes]="colors_empty"
-                          [dataSource]="chartDatas_empty"
-                          xName="key"
-                          yName="value"
-                          [startAngle]="startAngle"
-                          [endAngle]="endAngle"
-                          innerRadius="90%"
-                        >
+                        <e-accumulation-series name="" [palettes]="colors_empty" [dataSource]="chartDatas_empty"
+                          xName="key" yName="value" [startAngle]="startAngle" [endAngle]="endAngle" innerRadius="90%">
                         </e-accumulation-series>
                       </e-accumulation-series-collection>
                     </ejs-accumulationchart>
@@ -207,82 +105,45 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="box-wallets" *ngIf="data_Line.length == 0">
+            <div class="box-wallets" *ngIf="data_Line.length == 0">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="text-dark font-size-h4 fw-bold">
-                  <codx-label
-                    name="lblEmployee"
-                    formName="FD_KudosTrans"
-                    default="Biến động số dư theo ví bộ phận"
-                  ></codx-label>
+                  <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Biến động số dư theo ví bộ phận">
+                  </codx-label>
                 </div>
               </div>
               <div class="list-table list-achiev mt-3">
                 <div class="control-section">
-                  <div align="center">
-                    <ejs-chart
-                      style="display: block"
-                      [chartArea]=""
-                      [width]="width"
-                      align="center"
-                      id="chartcontainer"
-                      [primaryXAxis]="primaryXAxis"
-                      [primaryYAxis]="primaryYAxis"
-                      [tooltip]="tooltip"
-                    >
+                  <div class="align-content-center">
+                    <ejs-chart style="display: block; height: 349px !important" [chartArea]="" [width]="width"
+                      class="align-content-center" id="chartcontainer" [primaryXAxis]="primaryXAxis"
+                      [primaryYAxis]="primaryYAxis" [tooltip]="tooltip">
                       <e-series-collection>
-                        <e-series
-                          [dataSource]=""
-                          type="Line"
-                          xName="month"
-                          yName="value"
-                          [name]="'empty'"
-                          width="2"
-                          [marker]="marker"
-                          dashArray="5,1"
-                        >
+                        <e-series [dataSource]="" type="Line" xName="month" yName="value" [name]="'empty'" width="2"
+                          [marker]="marker" dashArray="5,1">
                         </e-series>
                       </e-series-collection>
                     </ejs-chart>
                   </div>
                 </div>
               </div>
-            </div> -->
-            <div class="box-wallets" *ngIf="data_Line.length !== 0">
+            </div>
+            <div class="box-wallets" *ngIf="data_Line.length > 0">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="text-dark font-size-h4 fw-bold">
-                  <codx-label
-                    name="lblEmployee"
-                    formName="FD_KudosTrans"
-                    default="Biến động số dư theo ví bộ phận"
-                  ></codx-label>
+                  <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Biến động số dư theo ví bộ phận">
+                  </codx-label>
                 </div>
               </div>
               <div class="list-table list-achiev mt-3">
                 <div class="control-section">
                   <div class="align-content-center">
-                    <ejs-chart
-                      style="display: block"
-                      [chartArea]=""
-                      [width]="width"
-                      class="align-content-center"
-                      id="chartcontainer"
-                      [primaryXAxis]="primaryXAxis"
-                      [primaryYAxis]="primaryYAxis"
-                      [tooltip]="tooltip"
-                    >
+                    <ejs-chart style="display: block; height: 349px !important" [chartArea]="" [width]="width"
+                      class="align-content-center" id="chartcontainer" [primaryXAxis]="primaryXAxis"
+                      [primaryYAxis]="primaryYAxis" [tooltip]="tooltip">
                       <e-series-collection>
-                        <e-series
-                          *ngFor="let item of chartDatas_Line"
-                          [dataSource]="item.data"
-                          type="Line"
-                          xName="month"
-                          yName="value"
-                          [name]="item.label"
-                          width="2"
-                          [marker]="marker"
-                          dashArray="5,1"
-                        >
+                        <e-series *ngFor="let item of chartDatas_Line" [dataSource]="item.data" type="Line"
+                          xName="month" yName="value" [name]="item.label" width="2" [marker]="marker" dashArray="5,1">
                         </e-series>
                       </e-series-collection>
                     </ejs-chart>
@@ -294,20 +155,12 @@
           </div>
           <div class="min-w-400px w-400px pl-3">
             <div class="master-more">
-              <div
-                class="d-flex align-items-center mb-3 top-champion"
-                *ngIf="reloadTop && lstRate"
-              >
+              <div class="d-flex align-items-center mb-3 top-champion" *ngIf="reloadTop && lstRate">
                 <div class="top-item top2">
                   <div class="top-pic w-100">
                     <div>
-                      <codx-img
-                        [objectId]="lstRate[1]?.userID"
-                        [objectName]="lstRate[1]?.employeeName"
-                        objectType="AD_Users"
-                        width="40"
-                        *ngIf="lstRate[1]?.userID"
-                      >
+                      <codx-img [objectId]="lstRate[1]?.userID" [objectName]="lstRate[1]?.employeeName"
+                        objectType="AD_Users" width="40" *ngIf="lstRate[1]?.userID">
                       </codx-img>
                     </div>
                   </div>
@@ -315,7 +168,7 @@
                     <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[1]?.employeeName }}
                     </div>
-                    <div class="text-dark-50">
+                    <div class="text-gray-500">
                       {{ lstRate[1]?.totalCoreEmp }}
                     </div>
                   </div>
@@ -323,13 +176,8 @@
                 <div class="top-item top1">
                   <div class="top-pic w-100">
                     <div>
-                      <codx-img
-                        [width]="50"
-                        [objectId]="lstRate[0]?.userID"
-                        [objectName]="lstRate[0]?.employeeName"
-                        objectType="AD_Users"
-                        *ngIf="lstRate[0]?.userID"
-                      >
+                      <codx-img [width]="50" [objectId]="lstRate[0]?.userID" [objectName]="lstRate[0]?.employeeName"
+                        objectType="AD_Users" *ngIf="lstRate[0]?.userID">
                       </codx-img>
                     </div>
                   </div>
@@ -337,7 +185,7 @@
                     <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[0]?.employeeName }}
                     </div>
-                    <div class="text-dark-50">
+                    <div class="text-gray-500">
                       {{ lstRate[0]?.totalCoreEmp }}
                     </div>
                   </div>
@@ -345,13 +193,8 @@
                 <div class="top-item top3">
                   <div class="top-pic w-100">
                     <div>
-                      <codx-img
-                        [width]="40"
-                        [objectId]="lstRate[2]?.userID"
-                        [objectName]="lstRate[2]?.employeeName"
-                        objectType="AD_Users"
-                        *ngIf="lstRate[2]?.userID"
-                      >
+                      <codx-img [width]="40" [objectId]="lstRate[2]?.userID" [objectName]="lstRate[2]?.employeeName"
+                        objectType="AD_Users" *ngIf="lstRate[2]?.userID">
                       </codx-img>
                     </div>
                   </div>
@@ -359,14 +202,14 @@
                     <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[2]?.employeeName }}
                     </div>
-                    <div class="text-dark-50">
+                    <div class="text-gray-500">
                       {{ lstRate[2]?.totalCoreEmp }}
                     </div>
                   </div>
                 </div>
               </div>
               <div class="list-performance pt-2">
-                <codx-listview
+                <!-- <codx-listview
                   #listview
                   service="FD"
                   assemblyName="ERM.Business.FD"
@@ -378,7 +221,44 @@
                   [itemTemplate]="TemplateList"
                   [height]="heightList"
                 >
-                </codx-listview>
+                </codx-listview> -->
+                <div *ngFor="let item of lstRate">
+                  <div class="d-flex align-items-center user-card list-item mb-4"
+                    (click)="openViewDetailCoins(item?.userID)">
+                    <div class="symbol symbol-40 symbol-circle with-number me-4">
+                      <codx-img class="symbol symbol-40 symbol-circle me-2" [objectId]="item?.userID"
+                        [objectName]="item?.employeeName" objectType="AD_Users" *ngIf="item?.userID">
+                      </codx-img>
+                      <div *ngIf="item?.rate == 1">
+                        <span class="list-number top-premium" style="background-color: palevioletred; color: white">{{
+                          item?.rate }}</span>
+                      </div>
+                      <div *ngIf="item?.rate == 2">
+                        <span class="list-number top-premium" style="background-color: orange; color: white">{{
+                          item?.rate }}</span>
+                      </div>
+                      <div *ngIf="item?.rate == 3">
+                        <span class="list-number top-premium" style="background-color: aqua; color: white">{{ item?.rate
+                          }}</span>
+                      </div>
+                      <div *ngIf="item?.rate > 3">
+                        <span class="list-number top-premium" style="background-color: cornflowerblue; color: white">{{
+                          item?.rate }}</span>
+                      </div>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1 left-15">
+                      <div class="text-dark fw-bold">
+                        {{ item?.employeeName }}
+                      </div>
+                      <div class="text-gray-500">{{ item?.orgUnitName }}</div>
+                    </div>
+                    <div class="d-flex flex-column pr-3">
+                      <div class="text-dark font-size-h5 text-right fw-bold mt-1">
+                        {{ item?.totalCoreEmp }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -388,7 +268,7 @@
   </div>
 </ng-template>
 
-<ng-template #TemplateList let-item>
+<!-- <ng-template #TemplateList let-item>
   <div
     class="d-flex align-items-center user-card list-item mb-4"
     (click)="openViewDetailCoins(item?.userID)"
@@ -435,7 +315,7 @@
       <div class="text-dark fw-bold">
         {{ item?.employeeName }}
       </div>
-      <div class="text-dark-50">{{ item?.orgUnitName }}</div>
+      <div class="text-gray-500">{{ item?.orgUnitName }}</div>
     </div>
     <div class="d-flex flex-column pr-3">
       <div class="text-dark font-size-h5 text-right fw-bold mt-1">
@@ -443,4 +323,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->

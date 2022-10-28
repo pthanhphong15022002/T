@@ -45,6 +45,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   predicate = 'ResourceType=@0';
   dataValue = '2';
+  optionalData:any;
   viewType = ViewType;
   formModel: FormModel;
   modelResource?: ResourceModel;
@@ -193,7 +194,34 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     ];
     this.detectorRef.detectChanges();
   }
-
+  onActionClick(evt?){
+    if(evt.type=='add'){
+      this.addNew(evt.data);
+    }
+  }
+  changeDataMF(event, data:any) {        
+    if(event!=null && data!=null){
+      event.forEach(func => {        
+        func.disabled=true;        
+      });
+      if(data.status=='1'){
+        event.forEach(func => {
+          if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "SYS04"/*MF chép*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+    }
+  }
   click(evt: ButtonModel) {
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
@@ -231,6 +259,13 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew(evt?: any) {
+    if(evt!=null)
+    {
+      this.optionalData=evt;
+    }
+    else{
+      this.optionalData=null;
+    }
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
@@ -238,7 +273,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle],
+        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle,this.optionalData],
         option
       );
     });
@@ -269,11 +304,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   copy(obj?) {
-    if (obj) {
-      if (this.authService.userValue.userID != obj.owner) {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
+    if (obj) {      
       this.viewBase.dataService.dataSelected = obj;
       this.viewBase.dataService
         .edit(this.viewBase?.dataService?.dataSelected)

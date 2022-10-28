@@ -16,7 +16,8 @@
   (selectedChange)="changeItemDetail($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
-  [viewActiveType]="viewType.schedule"
+  [viewActiveType]="viewType.schedule"  
+  (onActions)="onActionClick($event)"
 >
 </codx-views>
 
@@ -147,6 +148,7 @@
       [formModel]="formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
+      (changeDataMF)="changeDataMF($event, data)"  
     ></codx-mfunc>
   </div>
 </ng-template>
