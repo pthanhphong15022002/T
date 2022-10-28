@@ -254,8 +254,6 @@ export class CreateFolderComponent implements OnInit {
   fieldUpdate = '';
   showPopup = false;
   constructor(
-    private domSanitizer: DomSanitizer,
-    private tenantService: TenantService,
     private folderService: FolderService,
     private api: ApiHttpService,
     public dmSV: CodxDMService,
@@ -266,7 +264,6 @@ export class CreateFolderComponent implements OnInit {
     private notificationsService: NotificationsService,
     // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -476,6 +473,9 @@ export class CreateFolderComponent implements OnInit {
       case 'assign':
         this.assign = value;
         break;
+      case 'titleAvatar':
+        this.fileEditing.viewThumb = value;
+        break;
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -569,7 +569,7 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.revision = this.revision;
     this.fileEditing.physical = this.physical;
     this.fileEditing.copyrightsControl = this.copyrightsControl;
-    this.fileEditing.folderId = this.dmSV.getFolderId();
+    this.fileEditing.folderID = this.dmSV.getFolderId();
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
     this.fileEditing.hasSubFolder = this.createSubFolder;

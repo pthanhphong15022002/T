@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css'],
+  styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent extends LayoutBaseComponent {
   

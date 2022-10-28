@@ -330,7 +330,7 @@ export class VersionComponent implements OnInit {
     this.fileEditing.data = '';
     this.fileEditing.reWrite = false;
     this.fileEditing.item = file;
-    this.fileEditing.folderId = this.dmSV.folderId.getValue();   
+    this.fileEditing.folderID = this.dmSV.folderId.getValue();   
     this.updateversion = true;
     this.changeDetectorRef.detectChanges();
     return false;

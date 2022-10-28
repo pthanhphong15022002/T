@@ -8,7 +8,7 @@
         </codx-img>
         <div class="d-flex flex-column">
             <div class="text-dark font-size-lg">{{ dataItem.userName }}</div>
-            <div class="text-dark-50">{{ dataItem.positionName }}</div>
+            <div class="text-gray-500">{{ dataItem.positionName }}</div>
         </div>
     </div>
 </ng-template>
@@ -34,7 +34,7 @@
             <div class="text-dark font-size-lg">
                 {{ dataItem?.cardType | vll: "L1422":"text" | async }}
             </div>
-            <div class="text-dark-50">
+            <div class="text-gray-500">
                 <codx-label name="lblCountCard" formName="FD_KudosTrans" default="Số phiếu"></codx-label>
                 : {{ dataItem.cardNo }}
             </div>

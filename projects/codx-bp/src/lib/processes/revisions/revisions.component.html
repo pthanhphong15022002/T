@@ -41,15 +41,23 @@
   <div class="form-group">
     <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Mã version">
     </codx-label>
-    <codx-input field="versionNo" type="text" [placeholder]="'Mã version'" [crrValue]="process.versionNo" (valueChange)="valueChange($event)">
+    <codx-input field="versionNo" type="text" [placeholder]="'Mã version'" [crrValue]="process.versionNo"
+      (valueChange)="valueChange($event)">
     </codx-input>
   </div>
   <div class="form-group">
     <codx-label fiedName="Comment" [formModel]="form.formModel" default="Mô tả">
     </codx-label>
-    <codx-input field="comment" type="textarea" [placeholder]="'Mô tả'" [crrValue]="comment" (valueChange)="valueChange($event)">
+    <codx-input field="comment" type="textarea" [placeholder]="'Mô tả'" [crrValue]="comment"
+      (valueChange)="valueComment($event)">
     </codx-input>
   </div>
 </ng-template>
 
-<ng-template #footer></ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+      <codx-label name="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>

@@ -1,31 +1,11 @@
-
-<codx-views #view  
-    [views]="views" 
-    [idField]="'recID'"
-    [autoLoad]="true"
-    [button]="buttonAdd" 
-    [entityName]="'FD_Cards'" 
-    [selectedFirst]="true"
-    (selectedChange)="selectedItem($event)"
-    (buttonClick)="clickShowAssideRight()">
+<codx-views #view [views]="views" [idField]="'recID'" [autoLoad]="true" [button]="buttonAdd" [entityName]="'FD_Cards'"
+    [selectedFirst]="true" (selectedChange)="selectedItem($event)" (buttonClick)="clickShowAssideRight()">
 </codx-views>
 <ng-template #itemTemplate let-data>
-    <codx-temp-full 
-        [dataItem]="data"
-        [typeMF]="'hover'" 
-        [formModel]="view.formModel"
-        imgCss="me-2"
-        [typeMF]="'hover'" 
-        (clickMF)="clickMF($event,data)"
-        [imageId]="data.sender"
-        imageObjType="AD_Users"
-        cardCss="card-template border-bottom px-2 py-3" 
-        [title]="data.senderName"
-        [desc]="data.situation"
-        [date]="data.createdOn"
-        [status]="data.status"
-        [statusVll]="'L1420'"
-        [bookmark]="false">
+    <codx-temp-full [dataItem]="data" [typeMF]="'hover'" [formModel]="view.formModel" imgCss="me-2" [typeMF]="'hover'"
+        (clickMF)="clickMF($event,data)" [imageId]="data.sender" imageObjType="AD_Users"
+        cardCss="card-template border-bottom p-3" [title]="data.senderName" [desc]="data.situation"
+        [date]="data.createdOn" [status]="data.status" [statusVll]="'L1420'" [bookmark]="false">
     </codx-temp-full>
 </ng-template>
 
@@ -33,5 +13,3 @@
 <ng-template #panelRightRef>
     <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL"></lib-view-detail-cards>
 </ng-template>
-
-

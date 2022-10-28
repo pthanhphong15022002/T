@@ -25,6 +25,7 @@ import {
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { PropertiesComponent } from '../properties/properties.component';
+import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
 import { RevisionsComponent } from './revisions/revisions.component';
 
@@ -240,19 +241,21 @@ export class ProcessesComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessesComponent,
-          ['edit', this.titleAction],
+          ['edit',this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
+          console.log(e);
+          if (e && e.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.detectorRef.detectChanges();
+          }
+        })
       });
   }
 
@@ -262,7 +265,7 @@ export class ProcessesComponent
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = 'Auto';
+      option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
         ['copy', this.titleAction],
@@ -285,8 +288,8 @@ export class ProcessesComponent
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
   }
@@ -295,7 +298,7 @@ export class ProcessesComponent
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteProcessesAsync';
 
-    opt.data = itemSelected.processNo;
+    opt.data = itemSelected.recID;
     return true;
   }
   //#endregion
@@ -340,7 +343,10 @@ export class ProcessesComponent
         this.reName(data);
         break;
       case 'BPT103':
-        this.revisions(e.data,data);
+        this.revisions(e.data, data);
+        break;
+      case 'BPT104':
+        this.permission(data);
         break;
     }
   }
@@ -363,10 +369,10 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  revisions(more,data) {
+  revisions(more, data) {
     var obj = {
       more: more,
-      data: data
+      data: data,
     };
     this.dialog = this.callfc.openForm(
       RevisionsComponent,
@@ -382,6 +388,17 @@ export class ProcessesComponent
         this.detectorRef.detectChanges();
       }
     });
+  }
+
+  permission(data){
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    // let data = {} as any;
+    // data.title = this.titleUpdateFolder;
+    data.id = data.recID;
+    this.callfc.openSide(PopupAddPermissionComponent, data, option);
   }
 
   valueChange(e) {
@@ -419,7 +436,6 @@ export class ProcessesComponent
 
     return desc + '</div>';
   }
-
 
   //#endregion
 

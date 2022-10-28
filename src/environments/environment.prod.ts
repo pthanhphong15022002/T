@@ -12,6 +12,16 @@ export const environment = {
   urlUpload: 'http://172.16.1.210:8011',
   office365: "https://view.officeapps.live.com/op/view.aspx?src=",
   appName: 'hps-file-test', // Tam thoi de hard
+  SureMeet: {
+    baseUrl: 'https://api.suremeet.vn/',
+    tokenUrl: 'api/auth/token',
+    addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
+    connectMettingUrl: 'PublicMeeting/Verify',
+    client_id: 'portal',
+    client_secret: 'lacviet@2022@$%!$$!(@',
+    app_id: 'demo.suremeet@gmail.com',
+    app_secret: '123456',
+  },
   reportUrl: '',
   StoreNames: {
     FormLabels: 'FormLabels',
