@@ -44,24 +44,26 @@
           </div>
           <div class="badge badge-white my-1 me-3">{{ data?.duration }}</div>
         </div>
-        <div class="d-flex align-items-center card-icon-nowrap me-1">
-          <span class="me-1 icon-person_pin_circle"></span
-          ><span class="fw-bolb"
-            ><codx-label
-              name="lblRecruitmentStaff"
-              default="Nhân viên tuyển dụng"
-            ></codx-label
-          ></span>
-        </div>
-        <div class="d-flex align-items-center mt-2">
-          <codx-imgs
-            [width]="25"
-            objectId="ADMIN;HPHOA;HPHOA1;PMNHI"
-            objectType="AD_Users"
-            [numberImages]="3"
-          >
-          </codx-imgs>
-        </div>
+        <ng-container *ngIf="data?.owners != null && data?.owners.length > 0">
+          <div class="d-flex align-items-center card-icon-nowrap me-1">
+            <span class="me-1 icon-person_pin_circle"></span
+            ><span class="fw-bolb"
+              ><codx-label
+                name="lblRecruitmentStaff"
+                default="Nhân viên tuyển dụng"
+              ></codx-label
+            ></span>
+          </div>
+          <div class="d-flex align-items-center mt-2">
+            <codx-imgs
+              [width]="25"
+              [objectId]="getOwnerID(data?.owners)"
+              objectType="AD_Users"
+              [numberImages]="3"
+            >
+            </codx-imgs>
+          </div>
+        </ng-container>
       </div>
     </div>
   </ng-template>
@@ -200,9 +202,15 @@
       <!-- drop -->
       <ng-container>
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event, null)">
-          <div cdkDropListGroup>   
+          <div cdkDropListGroup>
             <ng-container *ngFor="let item of dataTreeProcessStep">
-              <div class="mb-5"   id="{{item.recID}}" cdkDrag [cdkDragDisabled]="lockParent" [cdkDragStartDelay] = "100" >
+              <div
+                class="mb-5"
+                cdkDrag
+                [cdkDragDisabled]="lockParent"
+                [cdkDragStartDelay]="100"
+                [cdkDragData]="item"
+              >
                 <div class="card card-steplist">
                   <div
                     class="steplist-hearder border border-gray-200 rounded px-6 py-4"
@@ -215,16 +223,30 @@
                     >
                     </codx-temp-full>
                   </div>
-                  <div 
-                    id="{{item.recID}}"
+                  <div
                     cdkDropList
                     class="list"
                     [cdkDropListData]="item?.items || []"
                     (cdkDropListDropped)="drop($event, item.recID)"
                   >
+                    <ng-container *ngIf="item?.items?.length == 0">
+                      <div
+                        class="card card-steplist p-0"
+                        cdkDrag
+                        [cdkDragStartDelay]="100"
+                        [cdkDragData]="null"
+                      >
+                       <h3>Thêm công việc để hoàn thiện quy trình ---Kéo công việc vào đây !-Test đừng ai bắt lỗi , please ! ^^! </h3>
+                      </div>
+                    </ng-container>
                     <ng-container *ngIf="item?.items?.length > 0">
                       <ng-container *ngFor="let item1 of item.items">
-                        <div class="card card-steplist p-0" cdkDrag [cdkDragStartDelay] = "100" >
+                        <div
+                          class="card card-steplist p-0"
+                          cdkDrag
+                          [cdkDragStartDelay]="100"
+                          [cdkDragData]="item1"
+                        >
                           <div class="ps-6 pt-4">
                             <div class="steplist-item step-danger rounded p-4">
                               <codx-temp-full
@@ -240,7 +262,6 @@
                                     class="steplist-item step-items rounded p-4"
                                   >
                                     <codx-temp-full
-                                      cardCss="mb-5"
                                       [titleTmp]="titleTmp"
                                       [desc]="item2?.memo"
                                       [footer]="footerBase"
@@ -278,9 +299,10 @@
     >{{ " " + data?.stepName }}
   </div>
 
-  <div 
+  <div
     *ngIf="data.stepType == 'P' || data.stepType == 'A'"
-    class="example-handle" (click)="handelChild(data?.parentID)"
+    class="example-handle"
+    (click)="handelChild(data?.parentID)"
     cdkDragHandle
   >
     <span class="icon-reorder"></span>
@@ -346,7 +368,7 @@
   >
   </codx-attachment>
 
-  <div class="mt-5" *ngIf="data?.owners">
+  <div class="mt-5" *ngIf="data?.owners != null && data?.owners.length > 0">
     <codx-imgs
       [width]="25"
       [objectId]="getOwnerID(data?.owners)"
@@ -404,67 +426,3 @@
     </codx-mfunc>
   </div>
 </ng-template>
-
-<!-- <ng-template #test>
-  <div cdkDropListGroup>
-    <div class="example-container">
-      <h2>To do</h2>
-
-      <div
-        cdkDropList
-        [cdkDropListData]="todo"
-        class="example-list"
-        (cdkDropListDropped)="dropTest($event)"
-      >
-        <div class="example-box" *ngFor="let item of todo" cdkDrag>
-          {{ item }}
-        </div>
-      </div>
-    </div>
-
-    <div class="example-container">
-      <h2>Done</h2>
-
-      <div
-        cdkDropList
-        [cdkDropListData]="done"
-        class="example-list"
-        (cdkDropListDropped)="dropTest($event)"
-      >
-        <div class="example-box" *ngFor="let item of done" cdkDrag>
-          {{ item }}
-        </div>
-      </div>
-    </div>
-
-    <div class="example-container">
-      <h2>Done</h2>
-
-      <div
-        cdkDropList
-        [cdkDropListData]="from"
-        class="example-list"
-        (cdkDropListDropped)="dropTest($event)"
-      >
-        <div class="example-box" *ngFor="let item of from" cdkDrag>
-          {{ item }}
-        </div>
-      </div>
-    </div>
-
-    <div class="example-container">
-      <h2>To</h2>
-
-      <div
-        cdkDropList
-        [cdkDropListData]="to"
-        class="example-list"
-        (cdkDropListDropped)="dropTest($event)"
-      >
-        <div class="example-box" *ngFor="let item of to" cdkDrag>
-          {{ item }}
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template> -->

@@ -144,7 +144,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.resources = [];
     } else if (this.action == 'edit') {
       // this.setTimeEdit();
-      this.showLabelAttachment = this.meeting?.attachments > 0? true : false ;
+      this.showLabelAttachment = this.meeting?.attachments > 0 ? true : false;
       this.resources = this.meeting.resources;
       if (this.resources?.length > 0) {
         this.resources.forEach((obj) => this.listUserID.push(obj.resourceID));
@@ -278,11 +278,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.meeting.startDate <= new Date()) {
-    this.notiService.notifyCode("CO002")
+      this.notiService.notifyCode('CO002');
       return;
     }
     if (this.meeting.endDate <= new Date()) {
-      this.notiService.notifyCode("CO002")
+      this.notiService.notifyCode('CO002');
       return;
     }
     if (this.meeting.meetingType == '1') {
@@ -301,47 +301,64 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       return;
     }
     this.listTime.forEach((res) => {
-      console.log(this.toTimeSpan(new Date(res.startDate).getHours()));
-      console.log(this.toTimeSpan(new Date(res.endDate).getHours()));
-      console.log(this.toTimeSpan(new Date(res.startDate).getDate()));
+      if(this.timeBool){
+        return
+      }
+      var d1 = new Date(res.startDate).toLocaleDateString();
+      var d2 = new Date(this.meeting.endDate).toLocaleDateString();
+      if (d1 === d2) {
+        var startTime =
+          new Date(res.startDate).getHours() * 60 +
+          new Date(res.startDate).getMinutes();
+        var endTime =
+          new Date(res.endDate).getHours() * 60 +
+          new Date(res.endDate).getMinutes();
 
-      var startTime =
-        this.toTimeSpan(new Date(res.startDate).getHours()) +
-        this.toTimeSpan(new Date(res.startDate).getMinutes());
-      var endTime =
-        this.toTimeSpan(new Date(res.endDate).getHours()) +
-        this.toTimeSpan(new Date(res.endDate).getMinutes());
-      var startDate = this.toTimeSpan(new Date(res.startDate).getDate());
-      if (
-        startDate == this.toTimeSpan(new Date(this.meeting.startDate).getDate)
-      ) {
+        var startDate =
+          new Date(this.meeting.startDate).getHours() * 60 +
+          new Date(this.meeting.startDate).getMinutes();
+        var endDate =
+          new Date(this.meeting.endDate).getHours() * 60 +
+          new Date(this.meeting.endDate).getMinutes();
+
         if (
-          this.toTimeSpan(this.startTime) >= startTime &&
-          this.toTimeSpan(this.endDate) <= endTime
+          (startTime <= startDate && startDate < endTime) ||
+          (endDate > startTime && endDate <= endTime) || (startTime >= startDate && endDate >= endTime)
         ) {
           this.timeBool = true;
           return;
-        } else {
+        }
+        else {
           this.timeBool = false;
         }
       }
+
     });
-    if (this.timeBool == true) {
-      // var config = new AlertConfirmInputConfig();
-      // config.type = 'YesNo';
-      // this.notiService
-      //   .alert(
-      //     'Thông báo',
-      //     'Đã trùng lịch bạn có muốn thêm lịch này không',
-      //     config
-      //   )
-      //   .closed.subscribe((x) => {});
-      //đợi mess code
-      this.notiService.notify(
-        'Đã trùng thời gian họp đã có, vui lòng chọn thời gian khác!'
-      );
-      return;
+    if(this.action === 'add' || this.action === 'copy'){
+      if (this.timeBool == true) {
+        // var config = new AlertConfirmInputConfig();
+        // config.type = 'YesNo';
+        // this.notiService
+        //   .alert(
+        //     'Thông báo',
+        //     'TM063',
+        //     config
+        //   )
+        //   .closed.subscribe((x) => {
+        //     if (x.event.status == 'Y'){
+
+        //     }else{
+        //       this.dialog.close();
+        //     }
+        //   });
+        //đợi mess code
+        this.notiService.notify(
+          'Đã trùng thời gian họp đã có, vui lòng chọn thời gian khác!'
+        );
+        return;
+      }
     }
+
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -357,7 +374,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   toTimeSpan(t) {
-    var time = Date.parse(t.toString());
+    var time = new Date(t).toLocaleTimeString();
     return time;
   }
 
@@ -770,11 +787,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               endShiftType1 = day.endTime;
             }
             if (day.shiftType == '2') {
-              this.endTimeWork = day.endTime
-              starrShiftType2 = day.startTime
+              this.endTimeWork = day.endTime;
+              starrShiftType2 = day.startTime;
             }
           }
-          
+
           this.startTimeWork = this.startTimeWork
             ? this.startTimeWork
             : starrShiftType2;

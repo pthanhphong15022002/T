@@ -264,13 +264,13 @@
           <ejs-toolbar class="border-start">
             <e-items>
               <e-item
-                *ngIf="isEditable"
+                *ngIf="hasPermission"
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="print"
               >
               </e-item>
+              <!-- *ngIf="hasPermission" -->
               <e-item
-                *ngIf="isEditable"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
