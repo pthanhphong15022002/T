@@ -67,11 +67,14 @@ export class PopRolesComponent implements OnInit {
     this.dialogSecond = dialog;
     this.data = dt?.data.data;
     this.formType = dt?.data.formType;
-    if (dt?.data.data?.length > 0)
-      this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
+    if (dt?.data.data?.length > 0) {
+      if (dt?.data?.userID)
+        this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
+    }
   }
   ngOnInit(): void {
-    if (this.data?.length > 0) this.listChooseRole = JSON.parse(JSON.stringify(this.data));
+    if (this.data?.length > 0)
+      this.listChooseRole = JSON.parse(JSON.stringify(this.data));
     this.loadData();
   }
 

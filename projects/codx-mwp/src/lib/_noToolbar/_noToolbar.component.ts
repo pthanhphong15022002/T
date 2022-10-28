@@ -10,7 +10,7 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
 @Component({
   selector: 'lib-layoutNoToolbar',
   templateUrl: './_noToolbar.component.html',
-  styleUrls: ['./_noToolbar.component.css'],
+  styleUrls: ['./_noToolbar.component.scss'],
 })
 export class LayoutNoToolbarComponent extends LayoutBaseComponent {
   module = 'MWP';

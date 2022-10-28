@@ -211,15 +211,16 @@ export class PopupAddComponent implements OnInit {
               (res2: any) => {
                 if (res2) {
                   this.notifSV.notifyCode('SYS006');
-                  this.dialogRef.close(result);
+                  this.dialogRef.close();
                 }
               }
             );
           }
           else 
           {
+
             this.notifSV.notifyCode('SYS006');
-            this.dialogRef.close(result);
+            this.dialogRef.close();
           }
         }
       });
@@ -283,7 +284,6 @@ export class PopupAddComponent implements OnInit {
             (await this.codxATM.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
-                  this.notifSV.notifyCode('SYS006');
                   this.dialogRef.close(result);
                 }
               }
@@ -291,13 +291,8 @@ export class PopupAddComponent implements OnInit {
           }
           else
           {
-            this.notifSV.notifyCode('SYS006');
             this.dialogRef.close(result);
           }
-        }
-        else
-        {
-          this.notifSV.notifyCode('SYS023');
         }
       });
   }
