@@ -17,7 +17,7 @@
                 <div class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="w-50px">
-                            <codx-label name="lblFromDate" [formModel]="formModel" [default]="isShare ? 'Đến' : 'Cho'"
+                            <codx-label fiedName="fromTo" [formModel]="formModel" [default]="isShare ? 'Đến' : 'Cho'"
                                 class="fw-bold"></codx-label>:
                         </div>
                         <div class="send-group">
@@ -60,7 +60,7 @@
                 <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="w-50px">
-                            <codx-label name="lblFromDate" [formModel]="formModel" default="Đến" class="fw-bold">
+                            <codx-label [fiedName]="'formTo'" [formModel]="formModel" default="Đến" class="fw-bold">
                             </codx-label>
                         </div>
                         <div class="send-group">
@@ -99,7 +99,7 @@
                 <div class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="w-50px">
-                            <codx-label name="lblFromDate" [formModel]="formModel" default="Cc" class="fw-bold">
+                            <codx-label [fiedName]="'ccTo'" [formModel]="formModel" default="Cc" class="fw-bold">
                             </codx-label>
                         </div>
                         <div class="send-group">
@@ -139,7 +139,7 @@
                 <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom py-1">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="w-50px">
-                            <codx-label name="lblFromDate" [formModel]="formModel" default="Bcc" class="fw-bold">
+                            <codx-label fiedName="bccTo" [formModel]="formModel" default="Bcc" class="fw-bold">
                             </codx-label>
                         </div>
                         <div class="send-group">
@@ -198,7 +198,7 @@
             </div>
             <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-2 mt-6">
                 <div class="text-dark-75">
-                    <codx-label name="lblShare" [formModel]="formModel" default="Cho phép chia sẻ lại cho người khác?"
+                    <codx-label [fiedName]="'isShare'" [formModel]="formModel" default="Cho phép chia sẻ lại cho người khác?"
                         class="ms-1 fw-bold"></codx-label>
                 </div>
                 <div class="d-flex">
@@ -210,7 +210,7 @@
             </div>
             <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-6">
                 <div class="text-dark-75">
-                    <codx-label name="lblDownload" [formModel]="formModel"
+                    <codx-label fiedName="lblDownload" [formModel]="formModel"
                         default="Cho phép dowlnload hoặc in tài liệu?" class="ms-1 fw-bold"></codx-label>
                 </div>
                 <div class="d-flex">
@@ -271,7 +271,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
                         <div class="col-4 pt-2">
-                            <codx-label name="lblFromDate" [formModel]="formModel" default="Từ ngày"
+                            <codx-label name="fromDate" [formModel]="formModel" default="Từ ngày"
                                 class="text-dark fw-bold"></codx-label>
                         </div>
                         <div class="col-8">
@@ -284,7 +284,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
                         <div class="col-4 pt-2">
-                            <codx-label name="lblToDate" [formModel]="formModel" default="Đến ngày"
+                            <codx-label name="toDate" [formModel]="formModel" default="Đến ngày"
                                 class="text-dark fw-bold"></codx-label>
                         </div>
                         <div class="col-8">

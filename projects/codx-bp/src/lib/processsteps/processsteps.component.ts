@@ -28,6 +28,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { debug } from 'console';
 import { CodxBpService } from '../codx-bp.service';
 import {
   BP_Processes,
@@ -516,71 +517,70 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               event.currentIndex
             );
 
-            this.dataTreeProcessStep[index].items = this.dataChild
-            this.view.dataService.data = this.dataTreeProcessStep
+            this.dataTreeProcessStep[index].items = this.dataChild;
+            this.view.dataService.data = this.dataTreeProcessStep;
             this.changeDetectorRef.detectChanges();
           }
         });
     }
   }
 
-  dropChildToParent(event: CdkDragDrop<string[]>, parentID) {
-    var parentIDfrom = event.previousContainer.id;
+  dropChildToParent(event: CdkDragDrop<string[]>, crrParentID) {
+    var psMoved = event.item?.data;
 
     var indexPrevious = this.dataTreeProcessStep.findIndex(
-      (x) => x.recID == parentIDfrom
+      (x) => x.recID == psMoved.parentID
     );
     if (indexPrevious == -1) return;
     var previousDataChild = this.dataTreeProcessStep[indexPrevious].items;
 
     var indexCrr = this.dataTreeProcessStep.findIndex(
-      (x) => x.recID == parentID
+      (x) => x.recID == crrParentID
     );
     if (indexCrr == -1) return;
     var crrDataChild = this.dataTreeProcessStep[indexCrr].items;
-
-    var psMoved = previousDataChild[event.previousIndex];
+    var stepNoNew = crrDataChild.length>0? event.currentIndex + 1 : 1
+    var stepNoOld = psMoved.stepNo;
 
     if (psMoved) {
       this.bpService
-        .updateDataDrapDrop([psMoved?.recID, parentID, event.currentIndex])
+        .updateDataDrapDrop([psMoved?.recID, crrParentID, stepNoNew])
         .subscribe((res) => {
           if (res) {
-            var stepNoNew = event.currentIndex + 1;
-            var stepNoOld = psMoved.stepNo;
-            psMoved.parentID = parentID;
+            psMoved.parentID = crrParentID;
             psMoved.stepNo = stepNoNew;
 
             previousDataChild.splice(event.previousIndex, 1);
+            if (previousDataChild.length > 0) {
+              previousDataChild.forEach((obj) => {
+                if (obj.stepNo > stepNoOld) {
+                  obj.stepNo--;
+                }
+              });
+            }
+            if (crrDataChild.length > 0) {
+              crrDataChild.forEach((obj) => {
+                if (obj.stepNo >= stepNoNew) {
+                  obj.stepNo++;
+                }
+              });
+            }
 
-            previousDataChild.forEach((obj) => {
-              if (obj.stepNo > stepNoOld) {
-                obj.stepNo--;
-              }
-            });
-
-            crrDataChild.forEach((obj) => {
-              if (obj.stepNo >= stepNoNew) {
-                obj.stepNo++;
-              }
-            });
             crrDataChild.push(psMoved);
-
             crrDataChild.sort(function (a, b) {
               return a.stepNo - b.stepNo;
             });
 
-            transferArrayItem(
-              previousDataChild,
-              crrDataChild,
-              event.previousIndex,
-              event.currentIndex
-            );
+            this.dataTreeProcessStep[indexPrevious].items = previousDataChild;
+            this.dataTreeProcessStep[indexCrr].items = crrDataChild;
+            this.view.dataService.data = this.dataTreeProcessStep;
 
-            this.dataTreeProcessStep[indexPrevious].items = previousDataChild
-            this.dataTreeProcessStep[indexCrr].items =crrDataChild
-
-            this.view.dataService.data = this.dataTreeProcessStep
+            // transferArrayItem(
+            //   event.previousContainer.data,
+            //   event.container.data,
+            //   event.previousIndex,
+            //   event.currentIndex
+            // );
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -604,28 +604,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     listOwner.forEach((x) => arrOwner.push(x?.objectID));
     return arrOwner.join(';');
   }
-
-  // test
-  todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
-  to = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
-
-  done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
-  from = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
-
-  dropTest(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
+  change(e) {
+    debugger;
   }
 }

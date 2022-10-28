@@ -208,11 +208,11 @@
         </div>
         <ng-container
           class="d-flex align-items-center fw-bold"
-          *ngIf="data?.online"
+          *ngIf="data?.online && data.onlineUrl"
         >
-          <a href="{{ data?.onlineUrl }}" class="text-decoration-underline">{{
-            data?.onlineUrl
-          }}</a>
+          <button (click)="meetingNow()" class="text-decoration-underline">
+            {{ data?.onlineUrl }}
+          </button>
         </ng-container>
       </div>
 
@@ -370,12 +370,14 @@
         <div class="d-flex flex-row justify-content-start">
           <ng-container *ngFor="let item of listRoles">
             <div class="d-flex align-items-center justify-content-start me-4">
-              <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
+              <span
+                inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
+              ></span>
               <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
             </div>
           </ng-container>
         </div>
-        
+
         <div class="d-flex flex-row text-end align-items-end">
           <!-- <div class="mx-2">
             <button class="btn btn-sm btn-icon btn-light-secondary" (click)="openOptionalUserPopup()">
@@ -387,67 +389,92 @@
               <span class="icon-group_add text-primary icon-18"></span>
             </button>
           </div> -->
-          <button class="btn btn-sm btn-outline btn-outline-secondary d-flex flex-row align-items-center" (click)="openUserPopup()">
+          <button
+            class="btn btn-sm btn-outline btn-outline-secondary d-flex flex-row align-items-center"
+            (click)="openUserPopup()"
+          >
             <span class="icon-group_add icon-18 me-2 text-gray-800"></span>
-            <codx-label name="lblChooseRoomAttendees" class="fw-bold text-gray-800" default="Chọn người tham dự"></codx-label>
-          </button> 
+            <codx-label
+              name="lblChooseRoomAttendees"
+              class="fw-bold text-gray-800"
+              default="Chọn người tham dự"
+            ></codx-label>
+          </button>
         </div>
       </div>
-      <div class="d-flex justify-content-between align-items-center mt-4 mb-2" id="PeopleInfo">
+      <div
+        class="d-flex justify-content-between align-items-center mt-4 mb-2"
+        id="PeopleInfo"
+      >
         <div class="fw-bold">
           <codx-label name="lblPeopleInfo" default="Người tham dự">
           </codx-label>
         </div>
         <div class="fw-bold">
           <span>
-            {{"1"| vll: "EP017":"text" | async}}
+            {{ "1" | vll: "EP017":"text" | async }}
           </span>
         </div>
       </div>
-      <div class="d-flex align-items-center mb-4 pb-2 " *ngIf="curUser != null">
+      <div class="d-flex align-items-center mb-4 pb-2" *ngIf="curUser != null">
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [width]="30" [objectId]="curUser?.userID" objectType="AD_Users"></codx-img>          
-          <span class="symbol-badge top-100 start-100 text-white fs-8" inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"></span>
+          <codx-img
+            [width]="30"
+            [objectId]="curUser?.userID"
+            objectType="AD_Users"
+          ></codx-img>
+          <span
+            class="symbol-badge top-100 start-100 text-white fs-8"
+            inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"
+          ></span>
         </div>
-        
 
         <div class="d-flex flex-column flex-grow-1">
           <div class="text-dark fw-bold fs-6 fw-bolder">
             {{ curUser?.userName }}
           </div>
           <div>
-            <span class="text-muted">{{
-              curUser.roleName
-              }}</span>
+            <span class="text-muted">{{ curUser.roleName }}</span>
           </div>
         </div>
 
-        <div class="d-flex flex-column justify-content-center align-items-center me-5">
+        <div
+          class="d-flex flex-column justify-content-center align-items-center me-5"
+        >
           <codx-input
-              type="checkbox"
-              [checked]="curUser.optional"
-              (valueChange)="attendeesCheckChange($event,curUser.userID)"
-            >
-            </codx-input>
+            type="checkbox"
+            [checked]="curUser.optional"
+            (valueChange)="attendeesCheckChange($event, curUser.userID)"
+          >
+          </codx-input>
           <!-- <span class="badge badge-light-success fs-7 fw-bold mb-1" >{{"0" | vll: "EP017":"text" | async}}</span> -->
           <!-- <span class="text-muted text-center"> {{curUser?.modifiedOn}} </span> -->
         </div>
       </div>
 
-      <div class="d-flex align-items-center mb-4 pb-2 " *ngFor="let item of attendeesList">
+      <div
+        class="d-flex align-items-center mb-4 pb-2"
+        *ngFor="let item of attendeesList"
+      >
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
-          <span 
+          <codx-img
+            [width]="30"
+            [objectId]="item.userID"
+            objectType="AD_Users"
+          ></codx-img>
+          <span
             popoverClass="userPopoverClass"
             [ngbPopover]="popoverSelectRoles"
             placement="right"
             #p="ngbPopover"
             (mouseenter)="showPopover(p, item.userID)"
             autoClose="outside"
-            class="symbol-badge top-100 start-100 text-white fs-8" inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
-            
+            class="symbol-badge top-100 start-100 text-white fs-8"
+            inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
+          ></span>
+
           <!-- <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span> -->
-        </div>        
+        </div>
 
         <div class="d-flex flex-column flex-grow-1">
           <div class="text-dark fw-bold fs-6 fw-bolder">
@@ -460,13 +487,15 @@
           </div>
         </div>
 
-        <div class="d-flex flex-column justify-content-center align-items-center me-5">
+        <div
+          class="d-flex flex-column justify-content-center align-items-center me-5"
+        >
           <codx-input
-              type="checkbox"
-              [checked]="item.optional"
-              (valueChange)="attendeesCheckChange($event,item.userID)"
-            >
-            </codx-input>
+            type="checkbox"
+            [checked]="item.optional"
+            (valueChange)="attendeesCheckChange($event, item.userID)"
+          >
+          </codx-input>
           <!-- <div class="d-flex flex-column justify-content-center align-items-center" *ngIf="!item.optional">            
             <span class="badge badge-light-success fs-7 fw-bold mb-1">{{ "0" | vll: "EP017":"text" | async}}</span>
           </div> -->
@@ -475,7 +504,6 @@
           </div> -->
           <!-- <span class="text-muted text-center"> {{item.modifiedOn}} </span> -->
         </div>
-        
       </div>
       <!-- <div class="form-group d-flex flex-row justify-content-center">
         <div
@@ -745,6 +773,7 @@
 
   <ng-template #addLink let-dialog>
     <lib-meeting
+      #suremeet
       [dialog]="dialog"
       [meetingTitle]="data.title"
       [meetingDescription]="data.memo"
@@ -753,6 +782,9 @@
       [meetingDuration]="60"
       [meetingPassword]="null"
       [meetingUrl]="data.onlineUrl"
+      [userName]="'ABC'"
+      [mail]="'abc@gmail.com'"
+      [isManager]="true"
     ></lib-meeting>
   </ng-template>
 </codx-layout-add>

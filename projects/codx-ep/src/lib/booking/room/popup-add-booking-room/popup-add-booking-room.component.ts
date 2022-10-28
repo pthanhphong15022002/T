@@ -50,6 +50,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Input() data!: any;
+  suremeet!: MeetingComponent;
   fGroupAddBookingRoom: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
@@ -1205,4 +1206,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   //       }
   //     });
   // }
+
+  meetingNow() {
+    console.log('meeting', this.suremeet);
+    this.suremeet?.createAndMeetingNow();
+  }
 }

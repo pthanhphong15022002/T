@@ -43,6 +43,8 @@ import { PopupAddOrganizationComponent } from './organization/popup-add-organiza
 import { TimeAgoPipe } from './pipe/time-ago.pipe';
 import { OrgchartDetailComponent } from './reportingline/orgchart-detail/orgchart-detail.component';
 import { PopupAddPositionsComponent } from './reportingline/popup-add-positions/popup-add-positions.component';
+import { ReportinglineDetailComponent } from './reportingline/reportingline-detail/reportingline-detail.component';
+import { ReportinglineOrgChartComponent } from './reportingline/reportingline-orgchart/reportingline-orgchart.component';
 import { ReportinglineComponent } from './reportingline/reportingline.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
@@ -183,7 +185,9 @@ const T_Component: Type<any>[] = [
   OrgchartDetailComponent,
   PopupAddOrganizationComponent,
   PopupAddPositionsComponent,
-  TimeAgoPipe
+  TimeAgoPipe,
+  ReportinglineOrgChartComponent,
+  ReportinglineDetailComponent
 ];
 @NgModule({
   imports: [

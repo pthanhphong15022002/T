@@ -120,23 +120,23 @@ export class EmployeesComponent extends UIComponent {
       {
         id: '1',
         type: ViewType.grid,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           panelLeftRef: this.panelLeftRef,
           resources: this.columnsGrid,
         },
       },
-      {
-        id: '2',
-        type: ViewType.card,
-        active: true,
-        sameData: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-          template: this.cardTemp,
-        },
-      },
+      // {
+      //   id: '2',
+      //   type: ViewType.card,
+      //   active: false,
+      //   sameData: true,
+      //   model: {
+      //     panelLeftRef: this.panelLeftRef,
+      //     template: this.cardTemp,
+      //   },
+      // },
     ];
     this.view.dataService.methodUpdate = 'UpdateAsync';
     this.detectorRef.detectChanges();
@@ -403,30 +403,31 @@ export class EmployeesComponent extends UIComponent {
   }
 
   clickMF(e: any, data?: any) {
-    this.itemSelected = data;
-    switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'HR0031': /// cần biến cố định để truyền vào đây !!!!
-        this.updateStatus(data);
-        break;
-      case 'HR0032':
-        this.viewEmployeeInfo(e.data, data);
-        break;
-      case 'SYS002':
-        this.exportFile();
-        break;
-    }
+    console.log(data);
+    // this.itemSelected = data;
+    // switch (e.functionID) {
+    //   case 'SYS01':
+    //     this.add();
+    //     break;
+    //   case 'SYS02':
+    //     this.delete(data);
+    //     break;
+    //   case 'SYS03':
+    //     this.edit(data);
+    //     break;
+    //   case 'SYS04':
+    //     this.copy(data);
+    //     break;
+    //   case 'HR0031': /// cần biến cố định để truyền vào đây !!!!
+    //     this.updateStatus(data);
+    //     break;
+    //   case 'HR0032':
+    //     this.viewEmployeeInfo(e.data, data);
+    //     break;
+    //   case 'SYS002':
+    //     this.exportFile();
+    //     break;
+    // }
   }
 
   doubleClick(data) {

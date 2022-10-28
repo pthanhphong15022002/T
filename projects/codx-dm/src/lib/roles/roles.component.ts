@@ -571,7 +571,7 @@ export class RolesComponent implements OnInit {
           }
           else {
             this.fileEditing.folderName = this.folderName;
-            this.fileEditing.folderId = this.dmSV.getFolderId();
+            this.fileEditing.folderID = this.dmSV.getFolderId();
             this.fileEditing.recID = this.id;
             this.folderService.updateFolder(this.fileEditing).subscribe(res => {
               if (res)
@@ -625,7 +625,7 @@ export class RolesComponent implements OnInit {
       }
       else {
         // this.fileEditing.folderName = this.folderName;
-        this.fileEditing.folderId = this.dmSV.getFolderId();
+        this.fileEditing.folderID = this.dmSV.getFolderId();
         // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
         // });
         this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
