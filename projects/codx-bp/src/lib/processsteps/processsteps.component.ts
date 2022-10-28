@@ -286,7 +286,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 }
                 this.view.dataService.data[parentIndexOld] = phaseOld;
               } else {
-                //edit !P !A hơi bị nhằn  xem đổi công đoạn không đổi là nhằn thấy mẹ gọi lại hàm load tree luôn
+                //edit !P !A hơi bị nhằn  
               }
             } else {
               this.view.dataService.update(processStep).subscribe();
