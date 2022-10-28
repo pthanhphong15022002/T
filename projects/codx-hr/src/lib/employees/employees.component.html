@@ -9,8 +9,7 @@
   className="EmployeesBusiness"
   method="GetModelFormEmployAsync" 
   [selectedFirst]="true" 
-  [itemSelected]="itemSelected"
-  [viewActiveType]="'1'">
+  [itemSelected]="itemSelected">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -78,7 +77,7 @@
 </ng-template>
 
 <ng-template #itemAction let-data>
-    <codx-mfunc 
+    <codx-mfunc
       [formModel]="view.formModel" 
       [itemSelected]="itemSelected" 
       (clickMF)="clickMF($event, data)"

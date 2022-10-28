@@ -1,11 +1,4 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  service="FD"
-  entityName="FD_KudosTrans"
-  [views]="views"
-  [autoLoad]="false"
->
+<codx-views #view [funcID]="funcID" service="FD" entityName="FD_KudosTrans" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #templateLeft>
@@ -16,38 +9,20 @@
           <div class="w-100 pr-9">
             <div class="d-flex align-items-top">
               <div class="me-3 w-150px mt-6">
-                <codx-dropdown-calendar
-                  [cssClass]="'w-100'"
-                  [cssPopup]="'h-400px w-500px border'"
-                  (change)="dateChange($event)"
-                ></codx-dropdown-calendar>
+                <codx-dropdown-calendar [cssClass]="'w-100'" [cssPopup]="'h-400px w-500px border'"
+                  (change)="dateChange($event)"></codx-dropdown-calendar>
               </div>
               <div class="me-3 left-5">
                 <div class="d-flex flex-column" #Organize>
-                  <codx-label
-                    name="lblOrganize"
-                    formName="FD_KudosTrans"
-                    default="Cơ cấu tổ chức"
-                    class="fw-bold"
-                  >
+                  <codx-label name="lblOrganize" formName="FD_KudosTrans" default="Cơ cấu tổ chức" class="fw-bold">
                   </codx-label>
                   <div class="d-flex header-combo">
-                    <codx-input
-                      class="form-control me-2"
-                      type="valuelist"
-                      field="vllOrganize"
-                      refValue="L1483"
-                      (valueChange)="valueChange($event)"
-                    >
+                    <codx-input class="form-control me-2" type="valuelist" field="vllOrganize" refValue="L1483"
+                      (valueChange)="valueChange($event)">
                     </codx-input>
                     <div class="organize left-5">
-                      <codx-input
-                        class="form-control"
-                        type="combobox"
-                        field="Organize"
-                        [refValue]="cbb"
-                        (valueChange)="valueChange($event)"
-                      >
+                      <codx-input class="form-control" type="combobox" field="Organize" [refValue]="cbb"
+                        (valueChange)="valueChange($event)">
                       </codx-input>
                     </div>
                   </div>
@@ -55,36 +30,20 @@
               </div>
               <div class="me-3 w-200px left-5">
                 <div class="d-flex flex-column" #Employee>
-                  <codx-label
-                    name="lblEmployee"
-                    formName="FD_KudosTrans"
-                    default="Nhân viên"
-                    class="fw-bold"
-                  >
+                  <codx-label name="lblEmployee" formName="FD_KudosTrans" default="Nhân viên" class="fw-bold">
                   </codx-label>
-                  <codx-input
-                    class="form-control"
-                    type="combobox"
-                    field="Employee"
-                    refValue="Employees"
-                    (valueChange)="valueChange($event)"
-                  >
+                  <codx-input class="form-control" type="combobox" field="Employee" refValue="Employees"
+                    (valueChange)="valueChange($event)">
                   </codx-input>
                 </div>
               </div>
             </div>
             <div class="d-flex align-items-center mt-3 mb-3 chart-circle">
-              <div
-                class="d-flex me-9 pd-r-30"
-                *ngFor="let item of chartLabels; let i = index"
-              >
-                <span
-                  class="square-status"
-                  [style.background-color]="colors[0].backgroundColor[i]"
-                ></span>
+              <div class="d-flex me-9 pd-r-30" *ngFor="let item of chartLabels; let i = index">
+                <span class="square-status" [style.background-color]="colors[0].backgroundColor[i]"></span>
                 <span class="text-dark-75 ms-2 left-5">{{
                   item ? item : "..."
-                }}</span>
+                  }}</span>
               </div>
             </div>
             <div class="row">
@@ -102,28 +61,18 @@
             <div class="mt-6">
               <div class="box-wallets">
                 <div class="text-dark font-size-h4">
-                  <codx-label
-                    name="lbl"
-                    formName="FD_KudosTrans"
-                    default="Bảng thành tích theo bộ phận"
-                    class="fw-bold"
-                  ></codx-label>
+                  <codx-label name="lbl" formName="FD_KudosTrans" default="Bảng thành tích theo bộ phận"
+                    class="fw-bold"></codx-label>
                 </div>
 
                 <!-- <span class="icon-open_in_new icon-20 ms-2"></span> -->
 
                 <div class="d-flex align-items-center mt-3">
-                  <div
-                    class="d-flex me-9 pd-r-30"
-                    *ngFor="let item of dataProcess"
-                  >
-                    <span
-                      class="square-status"
-                      [style.background-color]="item.color"
-                    ></span>
+                  <div class="d-flex me-9 pd-r-30" *ngFor="let item of dataProcess">
+                    <span class="square-status" [style.background-color]="item.color"></span>
                     <span class="text-dark-75 ms-2 left-5">{{
                       item.breakName
-                    }}</span>
+                      }}</span>
                   </div>
                 </div>
                 <hr class="gray" />
@@ -144,71 +93,44 @@
                           </div>
                         </td>
                         <div *ngIf="dataProcess">
-                          <td
-                            *ngFor="let itemline of dataProcess; let i = index"
-                          >
+                          <td *ngFor="let itemline of dataProcess; let i = index">
                             <div class="d-flex flex-column">
                               <div class="d-flex justify-content-center">
                                 <span>
-                                  <img
-                                    alt="Pic"
-                                    src="../../../../../src/assets/Icons_Final/{{
+                                  <img alt="Pic" src="../../../../../src/assets/Icons_Final/{{
                                       itemline.image
-                                    }}"
-                                    *ngIf="itemline.image; else imageviewer"
-                                  />
+                                    }}" *ngIf="itemline.image; else imageviewer" />
                                   <ng-template #imageviewer>
-                                    <codx-img
-                                      [objectId]="itemline?.recID"
-                                      objectType="BS_FDRangeLines"
-                                      funcId="FDS04"
-                                      [objectName]="itemline.breakName"
-                                    >
+                                    <codx-img [objectId]="itemline?.recID" objectType="BS_FDRangeLines" funcId="FDS04"
+                                      [objectName]="itemline.breakName">
                                     </codx-img>
                                   </ng-template>
                                 </span>
-                                <span
-                                  class="text-dark font-size-h4 fw-bold ms-1"
-                                  >{{
-                                    item.dicLine[itemline.breakName].countEmp
-                                  }}</span
-                                >
+                                <span class="text-dark font-size-h4 fw-bold ms-1">{{
+                                  item.dicLine[itemline.breakName].countEmp
+                                  }}</span>
                               </div>
-                              <div
-                                class="symbol-group symbol-hover mt-1 justify-content-center"
-                              >
-                                <ng-container
-                                  *ngFor="
+                              <div class="symbol-group symbol-hover mt-1 justify-content-center">
+                                <ng-container *ngFor="
                                     let employee of item.dicLine[
                                       itemline.breakName
                                     ].lstEmployee;
                                     let i = index
-                                  "
-                                >
+                                  ">
                                   <div class="" *ngIf="i < 3">
-                                    <codx-img
-                                      class="symbol symbol-24 symbol-circle"
-                                      [objectId]="employee.employeeID"
-                                      objectType="AD_Users"
-                                      *ngIf="employee"
-                                      [objectName]="employee.employeeName"
-                                    >
+                                    <codx-img class="symbol symbol-24 symbol-circle" [objectId]="employee.employeeID"
+                                      objectType="AD_Users" *ngIf="employee" [objectName]="employee.employeeName">
                                     </codx-img>
                                   </div>
                                 </ng-container>
-                                <div
-                                  class="symbol symbol-24 symbol-circle symbol-light"
-                                  *ngIf="
+                                <div class="symbol symbol-24 symbol-circle symbol-light" *ngIf="
                                     item.dicLine[itemline.breakName].countEmp >
                                     3
-                                  "
-                                >
-                                  <span class="symbol-label fw-bold"
-                                    >+{{
-                                      item.dicLine[itemline.breakName]
-                                        .countEmp - 3
-                                    }}</span
-                                  >
+                                  ">
+                                  <span class="symbol-label fw-bold">+{{
+                                    item.dicLine[itemline.breakName]
+                                    .countEmp - 3
+                                    }}</span>
                                 </div>
                               </div>
                             </div>
@@ -223,20 +145,12 @@
           </div>
           <div class="min-w-400px w-400px pl-3">
             <div class="master-more">
-              <div
-                class="d-flex align-items-top mt-3 top-champion"
-                *ngIf="reloadTop && lstRate"
-              >
+              <div class="d-flex align-items-top mt-3 top-champion" *ngIf="reloadTop && lstRate">
                 <div class="top-item top2">
                   <div class="top-pic w-100">
                     <div class="">
-                      <codx-img
-                        [objectId]="lstRate[1]?.userID"
-                        [objectName]="lstRate[1]?.employeeName"
-                        objectType="AD_Users"
-                        width="40"
-                        *ngIf="lstRate[1]?.userID"
-                      >
+                      <codx-img [objectId]="lstRate[1]?.userID" [objectName]="lstRate[1]?.employeeName"
+                        objectType="AD_Users" width="40" *ngIf="lstRate[1]?.userID">
                       </codx-img>
                     </div>
                   </div>
@@ -244,7 +158,7 @@
                     <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[1]?.employeeName }}
                     </div>
-                    <div class="text-dark-50">
+                    <div class="text-gray-500">
                       {{ lstRate[1]?.totalCoreEmp }}
                     </div>
                   </div>
@@ -252,13 +166,8 @@
                 <div class="top-item top1">
                   <div class="top-pic w-100">
                     <div class="">
-                      <codx-img
-                        [objectId]="lstRate[0]?.userID"
-                        [objectName]="lstRate[0]?.employeeName"
-                        objectType="AD_Users"
-                        width="50"
-                        *ngIf="lstRate[0]?.userID"
-                      >
+                      <codx-img [objectId]="lstRate[0]?.userID" [objectName]="lstRate[0]?.employeeName"
+                        objectType="AD_Users" width="50" *ngIf="lstRate[0]?.userID">
                       </codx-img>
                     </div>
                   </div>
@@ -266,7 +175,7 @@
                     <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[0]?.employeeName }}
                     </div>
-                    <div class="text-dark-50">
+                    <div class="text-gray-500">
                       {{ lstRate[0]?.totalCoreEmp }}
                     </div>
                   </div>
@@ -274,13 +183,8 @@
                 <div class="top-item top3">
                   <div class="top-pic w-100">
                     <div class="">
-                      <codx-img
-                        [objectId]="lstRate[2]?.userID"
-                        [objectName]="lstRate[2]?.employeeName"
-                        objectType="AD_Users"
-                        width="40"
-                        *ngIf="lstRate[2]?.userID"
-                      >
+                      <codx-img [objectId]="lstRate[2]?.userID" [objectName]="lstRate[2]?.employeeName"
+                        objectType="AD_Users" width="40" *ngIf="lstRate[2]?.userID">
                       </codx-img>
                     </div>
                   </div>
@@ -288,7 +192,7 @@
                     <div class="text-dark font-size-sm fw-bold">
                       {{ lstRate[2]?.employeeName }}
                     </div>
-                    <div class="text-dark-50">
+                    <div class="text-gray-500">
                       {{ lstRate[2]?.totalCoreEmp }}
                     </div>
                   </div>
@@ -296,68 +200,41 @@
               </div>
               <div class="process-performance" style="display: flex">
                 <div class="bg-platinum"></div>
-                <div
-                  class="process-item"
-                  *ngFor="let item of dataProcess; let i = index"
-                >
-                  <div
-                    class="process-bar"
-                    [style.background-color]="dataProcess[i + 1]?.color"
-                    [style.width]="item.width + '%'"
-                  ></div>
+                <div class="process-item" *ngFor="let item of dataProcess; let i = index">
+                  <div class="process-bar" [style.background-color]="dataProcess[i + 1]?.color"
+                    [style.width]="item.width + '%'"></div>
                   <div class="process-value" [style.width]="item.width + '%'">
                     <div class="text-dark font-size-sm">
-                      <span
-                        style="cursor: pointer"
-                        (click)="
+                      <span style="cursor: pointer" (click)="
                           ReloadListByRank(
                             item?.breakValue,
                             dataProcess[dataProcess.length - 2]?.breakValue
                           )
-                        "
-                        >{{ item?.breakName }}</span
-                      >
+                        ">{{ item?.breakName }}</span>
                     </div>
                     <div class="text-muted">
-                      <span
-                        style="cursor: pointer"
-                        (click)="
+                      <span style="cursor: pointer" (click)="
                           ReloadListByRank(
                             item?.breakValue,
                             dataProcess[dataProcess.length - 2]?.breakValue
                           )
-                        "
-                        >{{ item?.breakValue }}</span
-                      >
+                        ">{{ item?.breakValue }}</span>
                     </div>
                   </div>
                   <div class="process-number" [style.width]="item.width + '%'">
-                    <span
-                      style="cursor: pointer"
-                      (click)="
+                    <span style="cursor: pointer" (click)="
                         ReloadListByRank(
                           item?.breakValue,
                           dataProcess[dataProcess.length - 2]?.breakValue
                         )
-                      "
-                      >{{ item?.countEmp }}</span
-                    >
+                      ">{{ item?.countEmp }}</span>
                   </div>
                 </div>
               </div>
               <div class="list-performance">
-                <codx-listview
-                  #listview
-                  service="FD"
-                  assemblyName="ERM.Business.FD"
-                  className="KudosTransBusiness"
-                  method="GetDataAchievementAsync"
-                  [predicate]="options.predicate"
-                  [dataValue]="options.dataValue"
-                  entityName="FD_KudosTrans"
-                  [itemTemplate]="TemplateList"
-                  [height]="heightList"
-                >
+                <codx-listview #listview service="FD" assemblyName="ERM.Business.FD" className="KudosTransBusiness"
+                  method="GetDataAchievementAsync" [predicate]="options.predicate" [dataValue]="options.dataValue"
+                  entityName="FD_KudosTrans" [itemTemplate]="TemplateList" [height]="heightList">
                 </codx-listview>
               </div>
             </div>
@@ -370,14 +247,9 @@
 
 <ng-template #TemplateList let-item>
   <div class="d-flex align-items-center user-card list-item mb-3">
-    <div class="symbol symbol-40 symbol-circle with-number me-4">
-      <codx-img
-        class="symbol symbol-40 symbol-circle me-2"
-        [objectId]="item?.userID"
-        [objectName]="item?.employeeName"
-        objectType="AD_Users"
-        *ngIf="item?.userID"
-      >
+    <div class="me-4">
+      <codx-img [width]="40" [objectId]="item?.userID" [objectName]="item?.employeeName" objectType="AD_Users"
+        *ngIf="item?.userID">
       </codx-img>
       <span class="list-number top-premium">{{ item?.rate }}</span>
     </div>
@@ -385,12 +257,12 @@
       <div class="text-dark fw-bold">
         {{ item?.employeeName }}
       </div>
-      <div class="text-dark-50">{{ item?.orgUnitName }}</div>
+      <div class="text-gray-500">{{ item?.orgUnitName }}</div>
     </div>
     <div class="d-flex flex-column pr-3">
       <span class="label label-inline label-light-primary">{{
         item.textRate
-      }}</span>
+        }}</span>
       <div class="text-dark font-size-h4 text-right fw-bold mt-1">
         {{ item?.totalCoreEmp }}
       </div>

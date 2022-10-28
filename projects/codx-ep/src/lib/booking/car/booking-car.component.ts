@@ -304,11 +304,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   copy(obj?) {
-    if (obj) {
-      if (this.authService.userValue.userID != obj.owner) {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
+    if (obj) {      
       this.viewBase.dataService.dataSelected = obj;
       this.viewBase.dataService
         .edit(this.viewBase?.dataService?.dataSelected)

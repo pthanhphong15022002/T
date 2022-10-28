@@ -1,0 +1,11 @@
+.rpldetail_btn_edit {
+    color: blue;
+    border: 1px solid lightblue;
+    padding: 6px;
+    text-align: center;
+}
+
+/* .rpldetail_btn_edit:hover {
+    background-color: rgb(144, 229, 255);
+    color: white;
+} */

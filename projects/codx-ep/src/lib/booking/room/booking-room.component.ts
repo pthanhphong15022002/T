@@ -73,7 +73,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   funcID: string;
   popupTitle = '';
   lstPined: any = [];
-  titleCollapse: string = 'Đóng hộp tham số';
   reportUUID: any = 'TMR01';
   itemDetail;
   funcIDName;
@@ -225,9 +224,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'btnAdd':
         this.addNew();
         break;
-      // case 'btnAddReport':
-      //   this.addReport();
-      //   break;
     }
   }
   changeDataMF(event, data: any) {
@@ -274,21 +270,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         break;
     }
   }
-  // addReport() {
-  //   let option = new DialogModel();
-  //   option.DataService = this.view.dataService;
-  //   option.FormModel = this.view.formModel;
-  //   this.callfc.openForm(
-  //     PopupAddReportComponent,
-  //     '',
-  //     screen.width,
-  //     screen.height,
-  //     this.funcID,
-  //     null,
-  //     '',
-  //     option
-  //   );
-  // }
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
@@ -339,10 +320,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   copy(evt?) {
     if (evt) {
-      if (this.authService.userValue.userID != evt?.owner) {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
+      
       this.view.dataService.dataSelected = evt;
       this.view.dataService
         .edit(this.view.dataService.dataSelected)

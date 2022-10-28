@@ -418,7 +418,7 @@ export class EditFileComponent implements OnInit {
     }
     else {
       this.fileEditing.folderName = this.folderName;
-      this.fileEditing.folderId = this.dmSV.getFolderId();
+      this.fileEditing.folderID = this.dmSV.getFolderId();
       this.fileEditing.recID = this.id;
       // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
       // });

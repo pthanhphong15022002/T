@@ -557,6 +557,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       tempEquip.isPicked = element.isSelected;
       this.lstEquipment.push(tempEquip);
     });
+    this.data.equipments=[];
     this.data.equipments = this.lstEquipment;
     this.data.category = '1';
     this.data.resourceType = '1';
