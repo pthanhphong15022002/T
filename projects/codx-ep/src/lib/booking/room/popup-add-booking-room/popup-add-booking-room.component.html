@@ -210,7 +210,10 @@
           class="d-flex align-items-center fw-bold"
           *ngIf="data?.online && data.onlineUrl"
         >
-          <button (click)="meetingNow()" class="text-decoration-underline">
+          <button
+            (click)="connectMeetingNow()"
+            class="text-decoration-underline"
+          >
             {{ data?.onlineUrl }}
           </button>
         </ng-container>

@@ -412,7 +412,9 @@ export class CatagoryComponent implements OnInit {
       }
     }
   }
-
+  changeLabelImg(e: any) {
+    console.log('change label', e);
+  }
   click($event: any) {
     var dt = this.settingValue.find((x) => x.category == this.category);
     dt.dataValue = JSON.stringify(this.dataValue);

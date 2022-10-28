@@ -230,31 +230,32 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       //   break;
     }
   }
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      event.forEach(func => {        
-        func.disabled=true;        
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        func.disabled = true;
       });
-      if(data.status=='1'){
-        event.forEach(func => {
-          if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
-          {
-            func.disabled=false;
+      if (data.status == '1') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "SYS04"/*MF chép*/)
-          {
-            func.disabled=false;
+        });
+      } else {
+        event.forEach((func) => {
+          if (func.functionID == 'SYS04' /*MF chép*/) {
+            func.disabled = false;
           }
-        });  
+        });
       }
     }
   }
-  onActionClick(evt?){
-    if(evt.type=='add'){
+  onActionClick(evt?) {
+    if (evt.type == 'add') {
       this.addNew(evt.data);
     }
   }
@@ -291,14 +292,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
-  
+
   addNew(evt?) {
-    if(evt!=null)
-    {
-      this.optionalData=evt;
-    }
-    else{
-      this.optionalData=null;
+    if (evt != null) {
+      this.optionalData = evt;
+    } else {
+      this.optionalData = null;
     }
     this.view.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.view.dataService.dataSelected;
@@ -308,7 +307,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingRoomComponent,
-        [this.dataSelected, true,this.popupTitle,this.optionalData],
+        [this.dataSelected, true, this.popupTitle, this.optionalData],
         option
       );
     });
@@ -377,5 +376,38 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
+
+  connectToMeeting(
+    meetingTitle: string,
+    meetingDescription: string,
+    meetingDuration: number,
+    meetingPassword: string,
+    userName: string,
+    mail: string,
+    isManager: boolean,
+    meetingUrl?: string,
+    meetingStartDate?: string,
+    meetingStartTime?: string
+  ) {
+    this.codxEpService
+      .connectMeetingNow(
+        meetingTitle,
+        meetingDescription,
+        meetingDuration,
+        meetingPassword,
+        userName,
+        '@',
+        isManager,
+        meetingUrl,
+        meetingStartDate,
+        meetingStartTime
+      )
+      .then((url) => {
+        if (url) {
+          window.open(url, '_blank');
+        }
+      });
+  }
+
   closeAddForm(event) {}
 }
