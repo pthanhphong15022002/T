@@ -609,7 +609,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     await this.dmSV.getToken();
     let ret = new Observable<any[]>();
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectId = this.objectId;
+      this.fileUploadList[i].objectID = this.objectId;
       // await this.serviceAddFile(fileItem);
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
@@ -774,7 +774,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var that = this;
     await this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectId = this.objectId;
+      this.fileUploadList[i].objectID = this.objectId;
       this.fileUploadList[i].description = this.description[i];
 
       toltalUsed += this.fileUploadList[i].fileSize;
@@ -962,7 +962,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
     try {
       fileItem.uploadId = '';
-      fileItem.objectId = this.objectId;
+      fileItem.objectID = this.objectId;
       var appName = environment.appName; // Tam thoi de hard
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = fileItem.item.rawFile;
@@ -1581,18 +1581,18 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.createdOn = this.getNow();
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
-        fileUpload.objectId = this.objectId;
+        fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
         fileUpload.fileName = files[i].name;
 
         /* fileUpload.description = files[i].description; */
 
-        fileUpload.funcId = this.functionID;
+        fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.reWrite = false;
         fileUpload.data = item;
         fileUpload.item = files[i];
-        fileUpload.folderId = this.folderId;
+        fileUpload.folderID = this.folderId;
         fileUpload.permissions = this.remotePermission;
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
@@ -2872,20 +2872,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.mimeType = this.GetMimeType(files[i].type);
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
-        fileUpload.objectId = this.objectId;
+        fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
         fileUpload.fileName = files[i].name;
 
         fileUpload.description = files[i].description; //
 
-        fileUpload.funcId = this.functionID;
+        fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;
         fileUpload.reWrite = false;
         fileUpload.data = '';
         fileUpload.item = files[i];
         //fileUpload.folderId = this.folderId;
-        fileUpload.folderId = this.dmSV.folderId.getValue();
+        fileUpload.folderID = this.dmSV.folderId.getValue();
         //fileUpload.permissions = this.remotePermission;
         //  if (this.parentFolder != null && this.parentFolder.permissions != null)
         //    fileUpload.permissions = JSON.parse(JSON.stringify(this.parentFolder.permissions));//Object.assign({}, this.parentFolder.permissions);

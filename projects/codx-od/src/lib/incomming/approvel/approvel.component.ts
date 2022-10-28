@@ -57,6 +57,7 @@ export class ODApprovelComponent
  
   getGridViewSetup(funcID:any)
   {
+    debugger;
     this.cache.functionList(funcID).subscribe((fuc) => {
       this.formModel = 
       {
