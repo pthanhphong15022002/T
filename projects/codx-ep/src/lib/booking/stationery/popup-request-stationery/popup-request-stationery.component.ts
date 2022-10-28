@@ -278,46 +278,62 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe((res) => {
-        debugger;
         if (res.save || res.update) {
           if (!res.save) {
             this.returnData = res.update;
+            this.returnData.forEach((item) => {
+              if (item.recID == this.data.recID) {
+                (this.dialog.dataService as CRUDService)
+                  .update(item)
+                  .subscribe();
+              } else {
+                (this.dialog.dataService as CRUDService)
+                  .add(item, 0)
+                  .subscribe();
+              }
+            });
           } else {
             this.returnData = res.save;
+
+            this.returnData.forEach((item) => {
+              (this.dialog.dataService as CRUDService).update(item).subscribe();
+            });
           }
-          this.returnData.forEach((item) => {
-            (this.dialog.dataService as CRUDService).update(item).subscribe();
-          });
-          // if (approval) {
-          //   this.epService
-          //     .getCategoryByEntityName(this.formModel.entityName)
-          //     .subscribe((category: any) => {
-          //       this.epService
-          //         .release(
-          //           this.returnData,
-          //           category.processID,
-          //           'EP_Bookings',
-          //           this.formModel.funcID
-          //         )
-          //         .subscribe((res) => {
-          //           if (res?.msgCodeError == null && res?.rowCount) {
-          //             this.notificationsService.notifyCode('ES007');
-          //             this.returnData.status = '3';
-          //             (this.dialog.dataService as CRUDService)
-          //               .update(this.returnData)
-          //               .subscribe();
-          //             this.dialog && this.dialog.close();
-          //           } else {
-          //             this.notificationsService.notifyCode(res?.msgCodeError);
-          //             // Thêm booking thành công nhưng gửi duyệt thất bại
-          //             this.dialog && this.dialog.close();
-          //           }
-          //         });
-          //     });
-          //   this.dialog && this.dialog.close();
-          // } else {
-          this.dialog && this.dialog.close();
-          // }
+
+          if (approval) {
+            this.epService
+              .getCategoryByEntityName(this.formModel.entityName)
+              .subscribe((category: any) => {
+                this.returnData.forEach((item) => {
+                  this.epService
+                    .release(
+                      item,
+                      category.processID,
+                      'EP_Bookings',
+                      this.formModel.funcID
+                    )
+                    .subscribe((res) => {
+                      if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                        this.notificationsService.notifyCode('ES007');
+                        item.status = '3';
+                        item.write = false;
+                        item.delete = false;
+                        (this.dialog.dataService as CRUDService)
+                          .update(item)
+                          .subscribe();
+                        this.dialog && this.dialog.close();
+                      } else {
+                        this.notificationsService.notifyCode(res?.msgCodeError);
+                        // Thêm booking thành công nhưng gửi duyệt thất bại
+                        this.dialog && this.dialog.close();
+                      }
+                    });
+                });
+              });
+            this.dialog && this.dialog.close();
+          } else {
+            this.dialog && this.dialog.close();
+          }
         } else {
           return;
         }

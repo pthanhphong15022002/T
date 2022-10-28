@@ -77,63 +77,62 @@ export class ViewDetailCoinsComponent extends UIComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.funcID = params['funcID'];
     });
+    this.getQueryParams();
   }
 
   onInit(): void {
-    this.getQueryParams();
+  }
+
+  ngAfterViewInit() {}
+
+  onLoading(e) {
     this.columnsGrid = [
       {
         field: 'noName',
-        headerText: 'Phân loại',
+        headerText: 'Phân loại', //Chưa có ngôn ngữ trong gridViewSetup
         template: this.itemCategory,
         width: 200,
       },
       {
         field: 'competenceID',
-        headerText: 'Người nhận/gửi',
+        headerText: 'Người nhận/gửi', //Chưa có ngôn ngữ trong gridViewSetup
         template: this.itemSenderOrReceiver,
         width: 200,
       },
-      { field: 'content', headerText: 'Nội dung', template: this.itemContent },
+      {
+        field: 'content',
+        headerText: 'Nội dung', //Chưa có ngôn ngữ trong gridViewSetup
+        template: this.itemContent,
+      },
       {
         field: 'memo',
-        headerText: 'Tham chiếu',
+        headerText: 'Tham chiếu', //Chưa có ngôn ngữ trong gridViewSetup
         template: this.itemReference,
         width: 250,
       },
       {
         field: 'createName',
-        headerText: 'Ngày tạo',
+        headerText: 'Ngày tạo', //Chưa có ngôn ngữ trong gridViewSetup
         template: this.createdOn,
         width: 100,
       },
       {
         field: 'createdOnFormat',
-        headerText: 'Xu',
+        headerText: 'Xu', //Chưa có ngôn ngữ trong gridViewSetup
         template: this.coins,
         width: 100,
       },
     ];
-    this.layoutService.isSetValueFavorite.pipe(take(2)).subscribe((value) => {
-      if (value) {
-        this.favoriteID = value;
-        this.changedr.detectChanges();
-      }
-    });
-  }
-
-  ngAfterViewInit() {
     this.views = [
       {
-        type: ViewType.content,
-        active: true,
+        type: ViewType.grid,
         sameData: true,
+        active: false,
         model: {
-          panelLeftRef: this.templateLeft,
+          resources: this.columnsGrid,
         },
       },
     ];
-    // this.userPermission = this.view.userPermission;
     this.changedr.detectChanges();
   }
 

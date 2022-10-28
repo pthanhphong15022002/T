@@ -1,4 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { X } from '@angular/cdk/keycodes';
 import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   MultiSelectService,
@@ -81,6 +82,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 1,
@@ -94,6 +96,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 2,
@@ -107,6 +110,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 3,
@@ -120,6 +124,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: true,
       },
       {
         seqNo: 4,
@@ -133,6 +138,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 5,
@@ -146,6 +152,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 6,
@@ -159,6 +166,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 7,
@@ -172,6 +180,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 8,
@@ -185,6 +194,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 9,
@@ -198,6 +208,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 10,
@@ -211,6 +222,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
     ];
     this.formats = {
@@ -261,12 +273,25 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       });
   }
 
-  scroll(el: HTMLElement) {
-    if (el)
-      el.scrollIntoView({
+  scroll(el: HTMLElement, index) {
+    if (el) {
+      el.scroll({
+        // behavior: 'smooth',
+        // block: 'start',
+        // inline: 'nearest',
+        top: 100,
+        left: 100,
         behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
       });
+      var indexT = this.questions.findIndex((x) => x.activeMF == true);
+      this.questions[indexT].activeMF = false;
+      this.questions[index].activeMF = true;
+    }
+    console.log("check questions", this.questions)
   }
+
+  scrollWindow() {
+    debugger
+  }
+  
 }

@@ -7,8 +7,8 @@
   [footer]="footer"
   [dialog]="dialog"
   (buttonClick)="buttonClick($event)"
-  [tabContent]="[tabGeneralInfo, tabQuotaInfo, tabMoreInfo]"
   (setTitle)="setTitle($event)"
+  [tabContent]="[tabGeneralInfo, tabQuotaInfo, tabMoreInfo]"
   [data]="data"
   *ngIf="isAfterRender"
 >
