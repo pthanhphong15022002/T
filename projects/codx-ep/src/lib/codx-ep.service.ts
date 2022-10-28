@@ -286,7 +286,7 @@ export class CodxEpService {
           if (res) {
             gridViewSetup = res;
             this.notificationsService.notifyCode(
-              'SYS028',
+              'SYS009',
               0,
               '"' + gridViewSetup[fieldName].headerText + '"'
             );
@@ -294,7 +294,7 @@ export class CodxEpService {
         });
     } else {
       this.notificationsService.notifyCode(
-        'E0001',
+        'SYS009',
         0,
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
