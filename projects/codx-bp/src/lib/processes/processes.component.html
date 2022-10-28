@@ -12,7 +12,7 @@
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  idField="processNo"
+  idField="recID"
   (onDragDrop)="onDragDrop($event)"
   [autoSearch]="false"
   (searchChanged)="searchChange($event)"
@@ -99,7 +99,7 @@
       <div class="padding justify-content-start" style="margin-top: 10px">
         <codx-temp-full
           cardCss="card-template"
-          [imageId]="data.userID"
+          [imageId]="data.owner"
           imageObjType="AD_Users"
           [titleTmp]="titleTmp"
           [desc]="convertHtmlAgency(data.positionName)"
@@ -111,7 +111,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        {{ data.VersionNo }}
+        {{ data.versionNo }}
       </div>
     </td>
     <td class="rowphoto">
