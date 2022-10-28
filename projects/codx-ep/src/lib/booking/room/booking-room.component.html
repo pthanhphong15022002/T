@@ -147,12 +147,12 @@
               <span href="#" class=" fw-bold">{{ item.itemName }}</span>
             </div>
             <div class="d-flex flex-row flex-grow-1">
-              <codx-label
-                
-                default="Đơn vị tính:"
+              <codx-label                
+                default="Đơn vị tính"
                 name="lblQuantity"
                 class="text-gray-600"
               ></codx-label>
+              <span>:</span>
               <span class="d-block ms-2 fw-bold">{{item.umid}}</span>
             </div>
           </div>
@@ -160,10 +160,11 @@
 
         <div class="d-flex align-items-center me-3">
           <codx-label
-            default="Số lượng:"
+            default="Số lượng"
             name="lblQuantity"
             class="text-gray-600"
           ></codx-label>
+          <span>:</span>
           <span class="ms-2 fw-bold">{{item.quantity}}</span>
         </div>
       </div>
