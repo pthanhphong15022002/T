@@ -53,12 +53,14 @@ export class CatagoryComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
+    debugger
     if (data) {
       this.setting = data.data?.setting;
 
       this.valuelist = data.data?.valuelist;
       this.category = data.data?.category;
       this.function = data.data?.function;
+    
       //this.loadSettingValue();
     }
   }
@@ -425,5 +427,9 @@ export class CatagoryComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
         console.log(res);
       });
+  }
+  checkA(e:any)
+  {
+    debugger;
   }
 }
