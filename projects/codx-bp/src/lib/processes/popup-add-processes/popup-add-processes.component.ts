@@ -23,6 +23,7 @@ export class PopupAddProcessesComponent implements OnInit {
   fieldValue = '';
   funcID: any;
   showLabelAttachment = false;
+  isHaveFile = false;
 
   constructor(
     private cache: CacheService,
@@ -84,8 +85,10 @@ export class PopupAddProcessesComponent implements OnInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        this.attachment?.clearData();
-        this.dialog.close();
+        if(res){
+          this.attachment?.clearData();
+          this.dialog.close();
+        }
       });
   }
   async onSave() {
@@ -114,8 +117,15 @@ export class PopupAddProcessesComponent implements OnInit {
 
   }
 
-  addFile(e) {}
-  getfileCount(e) {}
+  addFile(e) {
+    this.attachment.uploadFile();
+
+  }
+  getfileCount(e) {
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+  }
   fileAdded(e) {}
   openShare(share: any, isOpen) {
     if (isOpen == true) {
