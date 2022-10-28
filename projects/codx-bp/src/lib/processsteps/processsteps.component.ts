@@ -3,7 +3,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { I } from '@angular/cdk/keycodes';
+import { I, V } from '@angular/cdk/keycodes';
 import {
   Component,
   Input,
@@ -21,6 +21,7 @@ import {
   DataRequest,
   DialogRef,
   LayoutService,
+  NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -89,14 +90,17 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     private layout: LayoutService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
+    private notiService: NotificationsService
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     this.bpService.viewProcesses.subscribe((res) => (this.process = res));
-    this.dataObj = { processID: this.process?.recID };
+    this.dataObj = {
+      processID: this.process?.recID ? this.process?.recID : '',
+    };
 
     this.dataObj = { processID: this.recIDProcess }; //tesst
 
@@ -117,13 +121,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.request.idField = 'recID';
     this.request.dataObj = { isKanban: '1' }; ///de test
 
-    //tam test
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
     this.resourceKanban.assemblyName = 'BP';
     this.resourceKanban.className = 'ProcessStepsBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    // this.resourceKanban.dataObj = this.dataObj ; đợi Hảo
+    this.resourceKanban.dataObj = this.dataObj;
 
     this.bpService
       .getListFunctionMenuCreatedStepAsync(this.funcID)
@@ -228,7 +231,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
           [
@@ -244,6 +247,59 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               [this.view.dataService.dataSelected],
               false
             );
+          else {
+            var processStep = e?.event;
+            if (data.items?.length > 0) processStep.items = data.items;
+            var index = -1;
+            if (processStep.stepType != 'P') {
+              //edit activity
+              if (processStep.stepType == 'A') {
+                var parentIndexOld = this.view.dataService.data.findIndex(
+                  (x) => x.recID == data.parentID
+                );
+                if (parentIndexOld == -1) return;
+                var phaseOld = this.view.dataService.data[parentIndexOld];
+                if (phaseOld?.items.length > 0) {
+                  index = phaseOld?.items.findIndex(
+                    (x) => x.recID == data?.recID
+                  );
+                }
+                if (index == -1) return;
+                //khong doi parent
+                if (processStep.parentID == data.parentID) {
+                  phaseOld.items[index] = processStep;
+                } else {
+                  // doi parent
+                  phaseOld.splice(index,1)
+                  if(index<phaseOld.length-1){
+                    for(var i= index ;i< phaseOld.length ;i++){
+                      phaseOld[i].stepNo--
+                    }
+                  }
+                  var parentIndexNew = this.view.dataService.data.findIndex(
+                    (x) => x.recID == processStep.parentID
+                  );
+                  if (parentIndexNew != -1){
+                    this.view.dataService.data[parentIndexNew].items.push(processStep);
+                  }
+
+                }
+                this.view.dataService.data[parentIndexOld] = phaseOld;
+              } else {
+                //edit !P !A hơi bị nhằn  xem đổi công đoạn không đổi là nhằn thấy mẹ gọi lại hàm load tree luôn
+              }
+            } else {
+              this.view.dataService.update(processStep).subscribe();
+              index = this.listPhaseName.findIndex(
+                (x) => x == data?.processName
+              );
+              if (index != -1)
+                this.listPhaseName[index] = processStep.processName;
+            }
+            this.dataTreeProcessStep = this.view.dataService.data;
+            this.notiService.notifyCode('SYS007');
+            this.changeDetectorRef.detectChanges();
+          }
         });
       });
   }
@@ -255,7 +311,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
           [
@@ -272,7 +328,34 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             [this.view.dataService.dataSelected],
             false
           );
-      });
+          else {
+            var processStep = e?.event;
+            if (processStep.stepType != 'P') {
+              if (processStep.stepType == 'A') {
+                this.view.dataService.data.forEach((obj) => {
+                  if (obj.recID == processStep?.parentID) {
+                    obj.items.push(processStep);
+                  }
+                });
+              } else {
+                this.view.dataService.data.forEach((obj) => {
+                  if (obj.items.length > 0) {
+                    obj.items.forEach((dt) => {
+                      if (dt.recID == processStep?.parentID) {
+                        dt.items.push(processStep);
+                      }
+                    });
+                  }
+                });
+              }
+            } else {
+              this.view.dataService.data.push(processStep);
+              this.listPhaseName.push(processStep.stepName);
+            }
+            this.dataTreeProcessStep = this.view.dataService.data;
+            this.changeDetectorRef.detectChanges();
+          }
+      }); 
     });
   }
 
@@ -300,12 +383,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 var index = -1;
                 if (obj.items.length > 0)
                   obj.items.forEach((child) => {
-                    var index = -1;
                     if (child.items.length > 0)
                       index = child.items?.findIndex(
                         (x) => x.recID == data.recID
                       );
-                    if (index != -1) child.items.splice(index, 1);
+                    if (index != -1) {
+                      child.items.splice(index, 1);
+                      index = -1;
+                    }
                   });
               });
               break;
@@ -390,6 +475,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           ///xử lý sau
+          this.notiService.notifyCode('SYS007');
+        } else {
+          this.notiService.notifyCode(' SYS021');
         }
       });
   }
@@ -468,8 +556,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               event.previousIndex,
               event.currentIndex
             );
+
             this.view.dataService.data = this.dataTreeProcessStep;
+            this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+          } else {
+            this.notiService.notifyCode(' SYS021');
           }
         });
     }
@@ -519,7 +611,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
             this.dataTreeProcessStep[index].items = this.dataChild;
             this.view.dataService.data = this.dataTreeProcessStep;
+
+            this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+          } else {
+            this.notiService.notifyCode(' SYS021');
           }
         });
     }
@@ -539,7 +635,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     );
     if (indexCrr == -1) return;
     var crrDataChild = this.dataTreeProcessStep[indexCrr].items;
-    var stepNoNew = crrDataChild.length>0? event.currentIndex + 1 : 1
+    var stepNoNew = crrDataChild.length > 0 ? event.currentIndex + 1 : 1;
     var stepNoOld = psMoved.stepNo;
 
     if (psMoved) {
@@ -581,7 +677,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             //   event.previousIndex,
             //   event.currentIndex
             // );
+            this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+          } else {
+            this.notiService.notifyCode(' SYS021');
           }
         });
     }
@@ -600,11 +699,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   getOwnerID(listOwner) {
-    var arrOwner = [];
-    listOwner.forEach((x) => arrOwner.push(x?.objectID));
+    // var arrOwner = [];
+    // listOwner.forEach((x) => arrOwner.push(x?.objectID));
+    var arrOwner = listOwner.map(function (obj) {
+      return obj?.objectID;
+    });
     return arrOwner.join(';');
-  }
-  change(e) {
-    debugger;
   }
 }
