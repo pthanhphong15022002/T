@@ -214,7 +214,7 @@ export class ProcessesComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
         ['add', this.titleAction],
@@ -240,7 +240,7 @@ export class ProcessesComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessesComponent,
           ['edit', this.titleAction],
@@ -262,7 +262,7 @@ export class ProcessesComponent
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = 'Auto';
+      option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
         ['copy', this.titleAction],
@@ -285,8 +285,8 @@ export class ProcessesComponent
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
   }
@@ -295,7 +295,7 @@ export class ProcessesComponent
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteProcessesAsync';
 
-    opt.data = itemSelected.processNo;
+    opt.data = itemSelected.recID;
     return true;
   }
   //#endregion
@@ -340,7 +340,10 @@ export class ProcessesComponent
         this.reName(data);
         break;
       case 'BPT103':
-        this.revisions(e.data,data);
+        this.revisions(e.data, data);
+        break;
+      case 'BPT104':
+        this.permission(e.data, data);
         break;
     }
   }
@@ -363,10 +366,31 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  revisions(more,data) {
+  revisions(more, data) {
     var obj = {
       more: more,
-      data: data
+      data: data,
+    };
+    this.dialog = this.callfc.openForm(
+      RevisionsComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  permission(more, data){
+    var obj = {
+      more: more,
+      data: data,
     };
     this.dialog = this.callfc.openForm(
       RevisionsComponent,
@@ -419,7 +443,6 @@ export class ProcessesComponent
 
     return desc + '</div>';
   }
-
 
   //#endregion
 

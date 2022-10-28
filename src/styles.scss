@@ -943,7 +943,10 @@ codx-tag .codx-tag:hover {
 }
 
 .setting-btnright {
+  width: 30px;
   min-width: 30px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .setting-btnright .share-box.border {

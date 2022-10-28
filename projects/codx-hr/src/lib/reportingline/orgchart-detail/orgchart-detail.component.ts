@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { ConnectorModel, Diagram, DiagramTools, NodeModel, SnapConstraints, SnapSettingsModel } from '@syncfusion/ej2-angular-diagrams';
 import { ApiHttpService } from 'codx-core';
@@ -8,9 +8,9 @@ import { ApiHttpService } from 'codx-core';
   templateUrl: './orgchart-detail.component.html',
   styleUrls: ['./orgchart-detail.component.css']
 })
-export class OrgchartDetailComponent implements OnInit {
+export class OrgchartDetailComponent implements OnInit,AfterViewInit {
   @Input() onlyDepartment?: boolean;
-
+  @Output() evtAfterViewInit = new EventEmitter;
   datasetting: any = null;
   tool: DiagramTools = DiagramTools.ZoomPan;
   layout: Object = {
@@ -36,6 +36,9 @@ export class OrgchartDetailComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngAfterViewInit(): void {
+    this.evtAfterViewInit.emit(this);
+  }
   loadEmploy(el) {
     var dataset = el[0].dataset;
     this._loadEmploy(el, dataset.orgid, dataset.status);

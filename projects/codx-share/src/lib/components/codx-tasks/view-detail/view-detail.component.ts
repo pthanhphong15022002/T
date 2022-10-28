@@ -19,6 +19,7 @@ import {
   FormModel,
 } from 'codx-core';
 import { tmpReferences } from '../model/task.model';
+import { CRUDService } from 'codx-core/public-api';
 
 @Component({
   selector: 'share-view-detail',
@@ -37,6 +38,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllExtendStatus?: any;
   @Input() vllApproveStatus?: any;
   @Input() showMoreFunc?: any;
+  @Input() dataService: CRUDService;
   dataTree?: any[];
   dataReferences?: any[];
   @Input() taskID: string;
@@ -206,7 +208,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region  tree
   loadTreeView() {
     this.dataTree = [];
-    if (!this.itemSelected || !this.itemSelected?.taskID) return;
+    if (!this.itemSelected || !this.itemSelected?.taskID || !this.itemSelected.isAssign ) return;
     this.api
       .execSv<any>(
         'TM',

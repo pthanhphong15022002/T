@@ -93,7 +93,7 @@ export class RoomsComponent extends UIComponent {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
-        device.icon=item.icon;
+        device.icon = item.icon;
         this.roomEquipments.push(device);
         this.roomEquipments = JSON.parse(JSON.stringify(this.roomEquipments));
       });
@@ -186,11 +186,14 @@ export class RoomsComponent extends UIComponent {
     console.log(event);
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
       case 'SYS03':
         this.edit(data);
         break;
-      case 'SYS02':
-        this.delete(data);
+      case 'SYS04':
+        this.copy(data);
         break;
     }
   }
@@ -251,6 +254,33 @@ export class RoomsComponent extends UIComponent {
           this.dialog = this.callfc.openSide(
             PopupAddRoomsComponent,
             [this.view.dataService.dataSelected, false, this.popupTitle],
+            option
+          );
+          this.dialog.closed.subscribe((res) => {
+            if (res?.event) {
+              res.event.modifiedOn = new Date();
+              //this.view.dataService.update(res.event).subscribe((res) => {});
+            }
+            this.view.dataService.clear();
+          });
+        });
+    }
+  }
+
+  copy(obj?) {
+    if (obj) {
+      this.view.dataService.dataSelected = obj;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.view?.dataService?.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          this.dialog = this.callfc.openSide(
+            PopupAddRoomsComponent,
+            [this.view.dataService.dataSelected, true, this.popupTitle],
             option
           );
           this.dialog.closed.subscribe((res) => {

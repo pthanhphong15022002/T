@@ -346,14 +346,6 @@ export class HomeComponent extends UIComponent {
         //this.data = this.view.dataService.data
       }
     });
-    // this.dmSV.isFolderId.subscribe(res => {
-    //   if (res != null) {
-    //     var tree = this.codxview.currentView.currentComponent.treeView;
-    //     if (tree != null)
-    //       tree.getCurrentNode(res);
-    //   }
-    // });
-
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
         debugger;
@@ -374,21 +366,6 @@ export class HomeComponent extends UIComponent {
         var a = { data: item };
         if(this.view.dataService.data.length == 0)
           this.view.dataService.data.push(item);
-        // var breadcumb = [];
-        // var breadcumbLink = [];
-        // tree.textField = "folderName";
-        // var list = this.codxview.currentView.currentComponent.treeView.getBreadCumb(item?.recID);
-        //
-
-        // breadcumbLink.push(this.dmSV.idMenuActive);
-        // for (var i = list.length - 1; i >= 0; i--) {
-        //   breadcumb.push(list[i].text);
-        //   breadcumbLink.push(list[i].id);
-        // }
-        // this.dmSV.breadcumbLink = breadcumbLink;
-        // this.dmSV.breadcumb.next(breadcumb);
-        // this.dmSV.folderId.next(item?.recID);
-        // this.dmSV.folderID = item?.recID;
         var ele = document.getElementsByClassName('item-selected');
         if (ele.length > 0) ele[0].classList.remove('item-selected');
         var ele2 = document.getElementsByClassName(item?.recID);

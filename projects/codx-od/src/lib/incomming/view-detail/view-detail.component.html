@@ -109,7 +109,7 @@
             </div>
           </a>
           <ng-template ngbNavContent>
-            <ng-container *ngIf="data?.listInformationRel; else defaulEmpt">
+            <ng-container *ngIf="data?.listInformationRel && data?.listInformationRel.length>0; else defaulEmpt">
               <ng-container *ngFor="let item of data?.listInformationRel">
                 <div class="list-item has-action-menu-od mb-6">
                   <div class="d-flex align-items-start">
