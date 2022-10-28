@@ -9,3 +9,5 @@ export class DynamicSettingService {
   setting: any = {};
   constructor() {}
 }
+
+export const UrlUpload: string = 'http://172.16.1.210:8011';

@@ -1,0 +1,111 @@
+<codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="dialog.formModel" #form>
+  <ng-template #body>
+    <div class="offcanvas-wrapper">
+      <div class="request-to mt-4">
+        <div class="d-flex justify-content-between border-bottom py-1">
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="w-50px">
+              <codx-label name="lblFrom" [formModel]="form.formModel" [default]="'Từ'" class="fw-bold"></codx-label>:
+            </div>
+            <div class="send-group">
+              aaa
+            </div>
+          </div>
+          <div class="d-flex">
+            <codx-input type="share" field="addUser" refValue="TM003" [showInput]="false"
+              (valueChange)="onUserEvent($event, 'from')">
+            </codx-input>
+
+          </div>
+        </div>
+        <div class="d-flex justify-content-between border-bottom py-1">
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="w-50px">
+              <codx-label name="lblFromDate" [formModel]="form.formModel" [default]="'Cho'" class="fw-bold">
+              </codx-label>:
+            </div>
+            <div class="send-group">
+              aaa
+            </div>
+          </div>
+          <div class="d-flex">
+            <codx-input type="share" field="addUser" refValue="TM003" [showInput]="false"
+              (valueChange)="onUserEvent($event, 'by')">
+            </codx-input>
+
+          </div>
+        </div>
+        <div class="d-flex justify-content-between border-bottom py-1">
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="w-50px">
+              <codx-label name="lblTo" [formModel]="form.formModel" [default]="'Đến'" class="fw-bold"></codx-label>:
+            </div>
+            <div class="send-group">
+              aaa
+            </div>
+          </div>
+          <div class="d-flex">
+            <codx-input type="share" field="addUser" refValue="TM003" [showInput]="false"
+              (valueChange)="onUserEvent($event, 'to')">
+            </codx-input>
+
+          </div>
+        </div>
+        <div class="d-flex justify-content-between border-bottom py-1">
+          <div class="d-flex align-items-center flex-grow-1">
+            <div class="w-50px">
+              <codx-label name="lblCc" [formModel]="form.formModel" [default]="'Cc'" class="fw-bold"></codx-label>:
+            </div>
+            <div class="send-group">
+              aaa
+            </div>
+          </div>
+          <div class="d-flex">
+            <codx-input type="share" field="addUser" refValue="TM003" [showInput]="false"
+              (valueChange)="onUserEvent($event, 'cc')">
+            </codx-input>
+
+          </div>
+        </div>
+      </div>
+      <div class="request-box mt-4">
+
+        <codx-input type="text" tyle="width:100%" [crrValue]="requestTitle" [placeholder]="'Nhập lý do'"
+          [class]="validate('requestTitle')" (valueChange)="txtValue($event, 'requestTitle')"></codx-input>
+      </div>
+      <div class="request-box mt-4">
+        <codx-input class="form-control" [placeholder]="" [class]="validate('shareContent')" type="textarea"
+          style="width:100%; height: 400px;" [crrValue]="shareContent" (valueChange)="txtValue($event, 'shareContent')">
+        </codx-input>
+      </div>
+      <div class="row mt-5">
+        <div class="col-xl-6 col-lg-6 col-md-6">
+          <div class="form-group row">
+            <div class="col-8">
+              <codx-input placeholder="startDate..." class="form-control test-datetime" type="datetime"
+                style="width:100%" format="d" [crrValue]="startDate" (valueChange)="txtValue($event, 'startDate')">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6">
+          <div class="form-group row">
+
+            <div class="col-8">
+              <codx-input placeholder="endDate..." class="form-control test-datetime" type="datetime"
+                style="width:100%;" format="d" [crrValue]="endDate" (valueChange)="txtValue($event, 'endDate')">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
+        <codx-label name="lblSend" [formModel]="form.formModel" default="Gửi" class="ms-1 fw-bold"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>
