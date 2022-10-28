@@ -221,11 +221,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
           if (
             document
               .getElementsByName('UploadFiles')
-              [i].getAttribute('idbutton') == null
+            [i].getAttribute('idbutton') == null
           ) {
             document
               .getElementsByName('UploadFiles')
-              [i].setAttribute('idbutton', this.idBrowse);
+            [i].setAttribute('idbutton', this.idBrowse);
             break;
           }
         }
@@ -331,7 +331,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (status === 'File uploaded successfully') {
       this.uploadObj.remove(
         this.filesDetails[
-          this.filesList.indexOf(args.currentTarget.parentElement)
+        this.filesList.indexOf(args.currentTarget.parentElement)
         ]
       );
     } else {
@@ -479,7 +479,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         pathFolder,
         pathID
       )
-      .subscribe((item) => {});
+      .subscribe((item) => { });
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async (res) => {
@@ -784,7 +784,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
           false
         );
     }
-
     if (remainingStorage >= 0 && toltalUsed > remainingStorage)
       return this.notificationsService.notifyCode('DM053');
     this.atSV.fileListAdded = [];
@@ -1334,7 +1333,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       });
   }
 
-  closeFileDialog(form): void {}
+  closeFileDialog(form): void { }
 
   arrayBufferToBase64(buffer) {
     var binary = '';

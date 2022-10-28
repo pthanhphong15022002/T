@@ -1,4 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { X } from '@angular/cdk/keycodes';
 import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   MultiSelectService,
@@ -51,22 +52,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     rte: { required: [true, 'Enter valid comments'] },
   };
 
-  data: any = [
-    {
-      id: '1',
-      text: 'Mẫu không có tiêu đề',
-      pic: 'javascript',
-      description: 'Mô tả biểu mẫu',
-      answer: [
-        {
-          text: 'A',
-        },
-        {
-          text: 'B',
-        },
-      ],
-    },
-  ];
+  data: any = {
+    text: 'Mẫu không có tiêu đề',
+    description: 'Mô tả biểu mẫu',
+  };
 
   dataAnswer: any = new Array();
 
@@ -83,43 +72,157 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.questions = [
       {
         seqNo: 0,
-        question: 'Bạn tên gì???',
+        question: 'Câu hỏi 1',
         answers: [
           {
             seqNo: 0,
-            answer: 'NVA',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-          {
-            seqNo: 1,
-            answer: 'NVB',
+            answer: 'Tùy chọn 1',
             other: true,
             isColumn: false,
             hasPicture: false,
           },
         ],
+        activeMF: false,
       },
       {
         seqNo: 1,
-        question: 'Bạn ở đâu???',
+        question: 'Câu hỏi 2',
         answers: [
           {
             seqNo: 0,
-            answer: 'VN',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-          {
-            seqNo: 1,
-            answer: 'US',
+            answer: 'Tùy chọn 1',
             other: true,
             isColumn: false,
             hasPicture: false,
           },
         ],
+        activeMF: false,
+      },
+      {
+        seqNo: 2,
+        question: 'Câu hỏi 3',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: false,
+      },
+      {
+        seqNo: 3,
+        question: 'Câu hỏi 4',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: true,
+      },
+      {
+        seqNo: 4,
+        question: 'Câu hỏi 5',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: false,
+      },
+      {
+        seqNo: 5,
+        question: 'Câu hỏi 6',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: false,
+      },
+      {
+        seqNo: 6,
+        question: 'Câu hỏi 7',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: false,
+      },
+      {
+        seqNo: 7,
+        question: 'Câu hỏi 8',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: false,
+      },
+      {
+        seqNo: 8,
+        question: 'Câu hỏi 9',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: false,
+      },
+      {
+        seqNo: 9,
+        question: 'Câu hỏi 10',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: false,
+      },
+      {
+        seqNo: 10,
+        question: 'Câu hỏi 11',
+        answers: [
+          {
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: true,
+            isColumn: false,
+            hasPicture: false,
+          },
+        ],
+        activeMF: false,
       },
     ];
     this.formats = {
@@ -169,4 +272,26 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         }
       });
   }
+
+  scroll(el: HTMLElement, index) {
+    if (el) {
+      el.scroll({
+        // behavior: 'smooth',
+        // block: 'start',
+        // inline: 'nearest',
+        top: 100,
+        left: 100,
+        behavior: 'smooth',
+      });
+      var indexT = this.questions.findIndex((x) => x.activeMF == true);
+      this.questions[indexT].activeMF = false;
+      this.questions[index].activeMF = true;
+    }
+    console.log("check questions", this.questions)
+  }
+
+  scrollWindow() {
+    debugger
+  }
+  
 }

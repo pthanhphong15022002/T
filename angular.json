@@ -150,37 +150,6 @@
         }
       }
     },
-    "tm": {
-      "projectType": "library",
-      "root": "projects/tm",
-      "sourceRoot": "projects/tm/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "projects/tm/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/tm/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/tm/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/tm/src/test.ts",
-            "tsConfig": "projects/tm/tsconfig.spec.json",
-            "karmaConfig": "projects/tm/karma.conf.js"
-          }
-        }
-      }
-    },
     "codx-tm": {
       "projectType": "library",
       "root": "projects/codx-tm",
@@ -580,37 +549,6 @@
             "main": "projects/codx-bp/src/test.ts",
             "tsConfig": "projects/codx-bp/tsconfig.spec.json",
             "karmaConfig": "projects/codx-bp/karma.conf.js"
-          }
-        }
-      }
-    },
-    "test": {
-      "projectType": "library",
-      "root": "projects/test",
-      "sourceRoot": "projects/test/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "project": "projects/test/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/test/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/test/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/test/src/test.ts",
-            "tsConfig": "projects/test/tsconfig.spec.json",
-            "karmaConfig": "projects/test/karma.conf.js"
           }
         }
       }

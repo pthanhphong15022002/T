@@ -1,4 +1,9 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import { I } from '@angular/cdk/keycodes';
 import {
   Component,
   Input,
@@ -23,6 +28,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { debug } from 'console';
 import { CodxBpService } from '../codx-bp.service';
 import {
   BP_Processes,
@@ -75,6 +81,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   data: any; //them de test
   //view file
   dataChild = [];
+  lockParent = false;
 
   constructor(
     inject: Injector,
@@ -116,7 +123,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.resourceKanban.assemblyName = 'BP';
     this.resourceKanban.className = 'ProcessStepsBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
+    // this.resourceKanban.dataObj = this.dataObj ; đợi Hảo
 
     this.bpService
       .getListFunctionMenuCreatedStepAsync(this.funcID)
@@ -278,6 +285,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           switch (data.stepType) {
             case 'P':
               this.view.dataService.delete(data);
+              this.listPhaseName.splice(data.stepNo - 1, 1);
               break;
             case 'A':
               this.view.dataService.data.forEach((obj) => {
@@ -377,11 +385,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onDragDrop(data) {
-    this.api
-      .exec('BP', 'ProcessStepsBusiness', 'UpdateProcessStepWithKanbanAsync')
+    this.bpService
+      .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.update(data);
+          ///xử lý sau
         }
       });
   }
@@ -399,19 +407,184 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   //#endregion
-  //view Temp drop
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(
-      this.dataTreeProcessStep,
-      event.previousIndex,
-      event.currentIndex
-    );
+  //view Temp drop chưa save=== làm sau
+  handelChild(parentID) {
+    if (parentID) this.lockParent = true;
+    else this.lockParent = false;
   }
 
-  dropStepChild(event: CdkDragDrop<string[]>, parentID) {
-    var index = this.data.findIndex((x) => x.id == parentID);
-    this.dataChild = this.data[index].items;
-    moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
+  drop(event: CdkDragDrop<string[]>, currentID) {
+    if (event.previousContainer === event.container) {
+      if (currentID) {
+        this.dropStepChild(event, currentID);
+      } else {
+        this.dropPhase(event);
+      }
+    } else {
+      this.dropChildToParent(event, currentID);
+    }
+  }
+
+  dropPhase(event: CdkDragDrop<string[]>) {
+    if (event.previousIndex == event.currentIndex) return;
+    var ps = this.dataTreeProcessStep[event.previousIndex];
+    if (ps) {
+      this.bpService
+        .updateStepNo([ps.recID, event.currentIndex])
+        .subscribe((res) => {
+          if (res) {
+            var stepNoNew = event.currentIndex + 1;
+            var stepNoOld = ps.stepNo;
+            this.dataTreeProcessStep[event.previousIndex].stepNo = stepNoNew;
+            if (stepNoOld > stepNoNew) {
+              this.dataTreeProcessStep.forEach((obj) => {
+                if (
+                  obj.recID != ps.recID &&
+                  obj.stepNo >= stepNoNew &&
+                  obj.stepNo < stepNoOld
+                ) {
+                  obj.stepNo++;
+                }
+              });
+            } else {
+              this.dataTreeProcessStep.forEach((obj) => {
+                if (
+                  obj.recID != ps.recID &&
+                  obj.stepNo <= stepNoNew &&
+                  obj.stepNo > stepNoOld
+                ) {
+                  obj.stepNo--;
+                }
+              });
+            }
+
+            moveItemInArray(
+              this.dataTreeProcessStep,
+              event.previousIndex,
+              event.currentIndex
+            );
+            moveItemInArray(
+              this.listPhaseName,
+              event.previousIndex,
+              event.currentIndex
+            );
+            this.view.dataService.data = this.dataTreeProcessStep;
+            this.changeDetectorRef.detectChanges();
+          }
+        });
+    }
+  }
+
+  dropStepChild(event: CdkDragDrop<string[]>, currentID) {
+    if (event.previousIndex == event.currentIndex) return;
+    var index = this.dataTreeProcessStep.findIndex((x) => x.recID == currentID);
+    if (index == -1) return;
+    this.dataChild = this.dataTreeProcessStep[index].items;
+
+    var ps = this.dataChild[event.previousIndex];
+    if (ps) {
+      this.bpService
+        .updateStepNo([ps.recID, event.currentIndex])
+        .subscribe((res) => {
+          if (res) {
+            var stepNoNew = event.currentIndex + 1;
+            var stepNoOld = ps.stepNo;
+            this.dataChild[event.previousIndex].stepNo = stepNoNew;
+            if (stepNoOld > stepNoNew) {
+              this.dataChild.forEach((obj) => {
+                if (
+                  obj.recID != ps.recID &&
+                  obj.stepNo >= stepNoNew &&
+                  obj.stepNo < stepNoOld
+                ) {
+                  obj.stepNo++;
+                }
+              });
+            } else {
+              this.dataChild.forEach((obj) => {
+                if (
+                  obj.recID != ps.recID &&
+                  obj.stepNo <= stepNoNew &&
+                  obj.stepNo > stepNoOld
+                ) {
+                  obj.stepNo--;
+                }
+              });
+            }
+            moveItemInArray(
+              this.dataChild,
+              event.previousIndex,
+              event.currentIndex
+            );
+
+            this.dataTreeProcessStep[index].items = this.dataChild;
+            this.view.dataService.data = this.dataTreeProcessStep;
+            this.changeDetectorRef.detectChanges();
+          }
+        });
+    }
+  }
+
+  dropChildToParent(event: CdkDragDrop<string[]>, crrParentID) {
+    var psMoved = event.item?.data;
+
+    var indexPrevious = this.dataTreeProcessStep.findIndex(
+      (x) => x.recID == psMoved.parentID
+    );
+    if (indexPrevious == -1) return;
+    var previousDataChild = this.dataTreeProcessStep[indexPrevious].items;
+
+    var indexCrr = this.dataTreeProcessStep.findIndex(
+      (x) => x.recID == crrParentID
+    );
+    if (indexCrr == -1) return;
+    var crrDataChild = this.dataTreeProcessStep[indexCrr].items;
+    var stepNoNew = crrDataChild.length>0? event.currentIndex + 1 : 1
+    var stepNoOld = psMoved.stepNo;
+
+    if (psMoved) {
+      this.bpService
+        .updateDataDrapDrop([psMoved?.recID, crrParentID, stepNoNew])
+        .subscribe((res) => {
+          if (res) {
+            psMoved.parentID = crrParentID;
+            psMoved.stepNo = stepNoNew;
+
+            previousDataChild.splice(event.previousIndex, 1);
+            if (previousDataChild.length > 0) {
+              previousDataChild.forEach((obj) => {
+                if (obj.stepNo > stepNoOld) {
+                  obj.stepNo--;
+                }
+              });
+            }
+            if (crrDataChild.length > 0) {
+              crrDataChild.forEach((obj) => {
+                if (obj.stepNo >= stepNoNew) {
+                  obj.stepNo++;
+                }
+              });
+            }
+
+            crrDataChild.push(psMoved);
+            crrDataChild.sort(function (a, b) {
+              return a.stepNo - b.stepNo;
+            });
+
+            this.dataTreeProcessStep[indexPrevious].items = previousDataChild;
+            this.dataTreeProcessStep[indexCrr].items = crrDataChild;
+            this.view.dataService.data = this.dataTreeProcessStep;
+
+            // transferArrayItem(
+            //   event.previousContainer.data,
+            //   event.container.data,
+            //   event.previousIndex,
+            //   event.currentIndex
+            // );
+            this.changeDetectorRef.detectChanges();
+          }
+        });
+    }
   }
 
   checkAttachment(data) {
@@ -424,5 +597,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       return check;
     }
     return false;
+  }
+
+  getOwnerID(listOwner) {
+    var arrOwner = [];
+    listOwner.forEach((x) => arrOwner.push(x?.objectID));
+    return arrOwner.join(';');
+  }
+  change(e) {
+    debugger;
   }
 }

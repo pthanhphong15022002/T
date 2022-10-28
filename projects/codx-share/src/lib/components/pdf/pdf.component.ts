@@ -133,6 +133,7 @@ export class PdfComponent
   lstAreas: Array<tmpSignArea> = [];
   lstCA;
   lstCACollapseState: Array<any> = [];
+  curSelectedCA;
 
   lstSignDateType = [];
   curSignDateType;
@@ -287,7 +288,7 @@ export class PdfComponent
 
       this.cache.valueList('ES027').subscribe((res) => {
         res?.datas?.forEach((type) => {
-          this.lstSignDateType.push(type);
+          this.lstSignDateType.push(type.text);
         });
         this.curSignDateType = this.lstSignDateType[0];
         this.detectorRef.detectChanges();
@@ -327,8 +328,10 @@ export class PdfComponent
       document
         .getElementById('delete-btn')
         ?.addEventListener('click', (e: any) => {
-          this.contextMenu.style.display = 'none';
-          this.removeArea();
+          if (this.contextMenu) {
+            this.contextMenu.style.display = 'none';
+            this.removeArea();
+          }
         });
       this.detectorRef.detectChanges();
     }
@@ -365,6 +368,9 @@ export class PdfComponent
 
   //go to
   goToSelectedCA(ca, idx) {
+    console.log('page size', this.pageH, this.pageW);
+
+    console.log('ca', ca);
     this.lstCACollapseState[idx].open = !this.lstCACollapseState[idx].open;
     this.curPage = this.lstCA[idx].signedPosPage;
     if (!ca.isVerified) {
@@ -372,6 +378,28 @@ export class PdfComponent
         !this.lstCACollapseState[idx].verifiedFailed;
     }
     this.curPage = ca.signedPosPage;
+    if (this.curSelectedCA) {
+      this.curSelectedCA.destroy();
+    }
+
+    let caW = ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
+    let caH = ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
+    let caRect = new Konva.Rect({
+      x: (ca.signedPosLeft / 0.75) * this.xScale,
+      y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
+      width: caW,
+      height: caH,
+      stroke: 'black',
+      strokeWidth: 1,
+    });
+    this.curSelectedCA = caRect;
+    this.tr.draggable(false);
+    this.tr.resizeEnabled(false);
+    this.tr.rotateEnabled(false);
+    this.tr.nodes([this.curSelectedCA]);
+    let layer = this.lstLayer.get(ca.signedPosPage);
+    layer.add(this.tr);
+    layer.draw();
   }
 
   goToPage(e) {
@@ -388,6 +416,8 @@ export class PdfComponent
     if (this.curPage != area.location.pageNumber + 1) {
       this.curPage = area.location.pageNumber + 1;
     }
+    console.log('area', area);
+
     this.curSelectedArea = this.lstLayer
       .get(area.location.pageNumber + 1)
       .children?.find((node) => {
@@ -421,7 +451,17 @@ export class PdfComponent
         this.isUnd = area.fontFormat?.includes('underline') ? true : false;
         this.curAnnotFontSize = area.fontSize;
         this.curAnnotFontStyle = area.fontStyle;
+        this.curAnnotDateFormat = area.dateFormat;
+        console.log('date format', this.curAnnotDateFormat);
+        this.useSignDate = area.signDate;
+        this.curSignDateType = area.signDate
+          ? this.lstSignDateType[1]
+          : this.lstSignDateType[0];
         this.curSelectedAnnotID = area.recID;
+        console.log('signdate', this.useSignDate);
+
+        console.log('curSignDateType format', this.curSignDateType);
+
         this.detectorRef.detectChanges();
       }
     }
@@ -523,8 +563,8 @@ export class PdfComponent
       labelValue: url,
       isLock: false,
       allowEditAreas: this.signerInfo.allowEditAreas,
-      signDate: false,
-      dateFormat: '1',
+      signDate: this.curSignDateType == this.lstSignDateType[0] ? false : true,
+      dateFormat: this.curAnnotDateFormat,
       location: {
         top: y / this.yScale,
         left: x / this.xScale,
@@ -657,8 +697,6 @@ export class PdfComponent
                 isRender = true;
               }
               if (isRender) {
-                console.log('area', area.labelType);
-
                 switch (area.labelType) {
                   case 'S1': {
                     this.addArea(
@@ -854,17 +892,19 @@ export class PdfComponent
 
           //left click
           stage.on('click', (click: any) => {
-            console.log('stage click', click);
-
             let layerChildren = this.lstLayer.get(e.pageNumber);
 
             if (click.target == stage) {
-              this.contextMenu.style.display = 'none';
+              if (this.contextMenu) {
+                this.contextMenu.style.display = 'none';
+              }
+              if (this.curSelectedCA) {
+                this.curSelectedCA = null;
+              }
               this.tr.remove();
               this.tr.nodes([]);
             } else {
               this.curSelectedArea = click.target;
-
               this.tr.resizeEnabled(
                 this.isEditable == false
                   ? false
@@ -884,7 +924,7 @@ export class PdfComponent
           //right click
           stage.on('contextmenu', (e: any) => {
             e.evt.preventDefault();
-            if (e.target === stage) {
+            if (e.target === stage && this.contextMenu) {
               this.contextMenu.style.display = 'none';
               return;
             }
@@ -1086,6 +1126,15 @@ export class PdfComponent
   }
 
   //change
+  useSignDate: boolean = true;
+  changeUseSignDate() {
+    this.curSignDateType = this.lstSignDateType[1];
+  }
+
+  changeUseCreatedDate() {
+    this.curSignDateType = this.lstSignDateType[0];
+  }
+
   changeConfirmState(e: any) {
     this.confirmChange.emit(e.data);
   }
@@ -1152,7 +1201,6 @@ export class PdfComponent
     }
   }
 
-  chooseSignDate = true;
   changeAnnotPro(type, recID) {
     // switch (type.toString()) {
     if (this.imgConfig.includes(type)) {
@@ -1160,7 +1208,11 @@ export class PdfComponent
 
     // [3, 4, 5, 6, 7]
     else {
-      this.curSelectedArea.text(this.formAnnot.value.content);
+      if (type != '5') {
+        this.curSelectedArea.text(this.formAnnot.value.content);
+      } else {
+        this.curSelectedArea.text(this.curSignDateType);
+      }
       this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
       this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
       let style = 'normal';
@@ -1181,6 +1233,7 @@ export class PdfComponent
         : '';
       this.curSelectedArea.draw();
       this.tr.forceUpdate();
+      this.tr.draw();
       //save to db
       let y = this.curSelectedArea.position().y;
       let x = this.curSelectedArea.position().x;
@@ -1194,8 +1247,11 @@ export class PdfComponent
         labelValue: this.curSelectedArea.attrs.text,
         isLock: this.curSelectedArea.draggable(),
         allowEditAreas: this.signerInfo.allowEditAreas,
-        signDate: false,
-        dateFormat: '1',
+        signDate:
+          tmpName.LabelType != '5'
+            ? false
+            : this.curSignDateType == this.lstSignDateType[1],
+        dateFormat: this.curAnnotDateFormat,
         location: {
           top: y / this.yScale,
           left: x / this.xScale,
@@ -1335,10 +1391,7 @@ export class PdfComponent
             : type?.text;
           break;
         case '5':
-          let selected = document.getElementsByClassName('date-Type').item(0);
-          console.log('selected', selected);
-
-          this.url = this.datePipe.transform(new Date(), 'M/d/yy, h:mm a');
+          this.url = this.curSignDateType;
           break;
         case '6':
           this.url = type?.text;
@@ -1487,6 +1540,8 @@ export class PdfComponent
           return;
       }
     }
+    this.tr.forceUpdate();
+    this.tr.draw();
   }
   changeSigner(e: any) {
     //reset

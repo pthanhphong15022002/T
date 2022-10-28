@@ -11,7 +11,8 @@
                                         <ng-container *ngIf="dt.recID;else imageSrc">
                                             <codx-img #uploadImage class="img-pat" [objectId]="pattern?.recID"
                                                 [funcId]="formModel?.functionID" [objectType]="formModel?.entityName"
-                                                [width]="164" cssClass="pic" imageType="square" [imgOn]="pattern?.modifiedOn">
+                                                [width]="164" cssClass="pic" imageType="square"
+                                                [imgOn]="pattern?.modifiedOn">
                                             </codx-img>
                                         </ng-container>
                                         <ng-template #imageSrc>
@@ -22,7 +23,7 @@
                             </div>
                         </ng-container>
                     </div>
-                    <span class="fs-3 font-weight-boldest img-pat-edit noimage symbol-label text-white"
+                    <span class="fs-3 fw-bold img-pat-edit noimage symbol-label text-white"
                         [style.background-color]="pattern?.backgroundColor" [hidden]="!pattern?.backgroundColor"
                         style="background-image: none;"></span>
                     <div class="ph-card-header fs-5 fw-bold header-pattern" [style.color]="pattern?.headerColor">
@@ -36,7 +37,7 @@
                     <div class="d-block align-items-center">
                         <div class="symbol-list d-flex flex-wrap patternt">
                             <div class="pattern-teams">
-                                <div class="symbol symbol-50 symbol-circle mr-5 mb-4"
+                                <div class="symbol symbol-50 symbol-circle me-3 mb-3"
                                     *ngFor="let item of vll; index as i">
                                     <div class="pattern-item">
                                         <span class="symbol-label cursor-pointer" #colordf
@@ -44,13 +45,13 @@
                                             [style.background-color]="item?.text"></span>
                                     </div>
                                 </div>
-                                <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4" #group3>
+                                <div class="symbol symbol-50 symbol-circle symbol-light me-3 mb-3" #group3>
                                     <codx-input datatype="colorpicker" class="form-control symbol-label w-50"
                                         field="backgroundColor" (valueChange)="valueChangeColor($event)"
                                         [crrValue]="pattern?.backgroundColor">
                                     </codx-input>
                                 </div>
-                                <div class="symbol symbol-50 symbol-circle symbol-light mr-5 mb-4 cursor-pointer">
+                                <div class="symbol symbol-50 symbol-circle symbol-light me-3 mb-3 cursor-pointer">
                                     <label class="symbol-label pointer mb-0" data-action="change" data-toggle="tooltip"
                                         title="" data-original-title="Change avatar">
                                         <span class="far fa-image" style="font-size: 18px;" (click)="uploadFile()">
@@ -91,16 +92,16 @@
             </div>
             <div class="form-group" #name>
                 <codx-label name="lblDescription" [formModel]="" default="Mô tả:"></codx-label>
-                <codx-input type="text" placeholder="Sunset Flower" [crrValue]="pattern?.patternName" field="patternName"
-                    [ele]="name" (valueChange)="valueChange($event)">
+                <codx-input type="text" placeholder="Sunset Flower" [crrValue]="pattern?.patternName"
+                    field="patternName" [ele]="name" (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
         </div>
         <div class="checkbox-list mt-3">
             <div #isDefault>
                 <codx-input type="checkbox" class="test-check" ngDefaultControl field="isDefault"
-                    (valueChange)="valueChange($event)" [checked]="pattern?.isDefault"
-                    [crrValue]="pattern?.isDefault" label="Mặc định chọn" labelPosition="After">
+                    (valueChange)="valueChange($event)" [checked]="pattern?.isDefault" [crrValue]="pattern?.isDefault"
+                    label="Mặc định chọn" labelPosition="After">
                 </codx-input>
             </div>
             <div #stop class="mt-2">
@@ -112,7 +113,7 @@
         </div>
     </ng-template>
     <ng-template #footer>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-end">
             <button type="button" class="btn btn-primary ms-1" (click)="savePattern()">
                 <codx-label name="Save" [formModel]="formModel" default="Lưu"></codx-label>
             </button>

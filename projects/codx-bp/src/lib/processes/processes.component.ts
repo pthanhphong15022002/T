@@ -333,6 +333,9 @@ export class ProcessesComponent
       case 'BPT106':
         this.properties(data);
         break;
+      case 'BPT101':
+          this.viewDetailProcessSteps(e?.data,data);
+          break;
       case 'BPT102':
         this.reName(data);
         break;
@@ -444,8 +447,9 @@ export class ProcessesComponent
   //#endregion
 
   //tesst
-  clickProscessTessttttttttttttttt(data) {
+  viewDetailProcessSteps(e,data) {
     this.bpService.viewProcesses.next(data);
+    // this.codxService.navigate('', e?.url); thuong chua add
     this.codxService.navigate('', 'bp/processstep/BPT11');
   }
 }

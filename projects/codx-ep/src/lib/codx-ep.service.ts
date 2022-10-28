@@ -196,8 +196,8 @@ export class CodxEpService {
 
   driverValidator(
     driverID: string,
-    startDate: Date,
-    endDate: Date,
+    startDate: any,
+    endDate: any,
     recID: any
   ) {
     return this.api.callSv(

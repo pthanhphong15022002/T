@@ -336,9 +336,11 @@
             >
             </codx-label>
             <codx-input
-              ControlName="reasonID"
-              [formModel]="formModel"
-              [Group]="dialogAddBookingStationery"
+              type="combobox"
+              field="reasonID"
+              refValue="Reasons_BookingStationery"
+              [crrValue]="data.reasonID"
+              (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>
@@ -383,7 +385,9 @@
               </div>
               <div class="ms-2">
                 <div class="d-flex justify-content-start">
-                  <span class="fw-bold">{{ item?.resourceName }}</span>
+                  <span class="fw-bold">{{
+                    item?.itemName ? item?.itemName : item?.resourceName
+                  }}</span>
                 </div>
 
                 <div class="d-flex flex-row flex-grow-1">
@@ -422,7 +426,7 @@
       ></codx-label>
     </button>
     <div class="btn-group">
-      <button class="btn btn-outline-primary me-2">
+      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
         <codx-label
           name="lblApprove"
           default="Gửi duyệt"

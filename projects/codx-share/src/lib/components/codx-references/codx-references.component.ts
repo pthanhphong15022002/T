@@ -47,35 +47,10 @@ export class CodxReferencesComponent implements OnInit,OnChanges {
   }
   
  
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+   }
 
   ngAfterViewInit(): void {
   }
 
-  uploadFile() {
-    this.attachment.uploadFile();
-  }
-
-  showComments() { }
-
-  selectedFiles(event: any) {
-    if (event.data.length > 0) {
-      let files = event.data;
-      files.map((e: any) => {
-        if (e.mimeType.indexOf('image') >= 0) {
-          e['referType'] = this.REFERTYPE.IMAGE;
-        } else if (e.mimeType.indexOf('video') >= 0) {
-          e['referType'] = this.REFERTYPE.VIDEO;
-        } else {
-          e['referType'] = this.REFERTYPE.APPLICATION;
-        }
-      });
-      this.lstFile = files;
-      this.dt.detectChanges();
-    }
-  }
-  removeFile(file: any) {
-    this.lstFile = this.lstFile.filter((e: any) => e.fileName != file.fileName);
-    this.dt.detectChanges();
-  }
 }

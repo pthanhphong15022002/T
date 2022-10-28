@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Permission } from '@shared/models/file.model';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
@@ -10,7 +10,8 @@ import { CardType, Valuelist } from '../../models/model';
 @Component({
   selector: 'lib-popup-add-cards',
   templateUrl: './popup-add-cards.component.html',
-  styleUrls: ['./popup-add-cards.component.scss']
+  styleUrls: ['./popup-add-cards.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PopupAddCardsComponent implements OnInit {
   funcID:string ="";
@@ -83,7 +84,7 @@ export class PopupAddCardsComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
-  @ViewChild("tmpViewCard") tmpViewCard : TemplateRef<any>;
+  @ViewChild("popupViewCard") popupViewCard : TemplateRef<any>;
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
@@ -193,7 +194,7 @@ export class PopupAddCardsComponent implements OnInit {
         if (res && res.length > 0)
         {
           this.lstPattern = res;
-          this.patternSelected = this.lstPattern.find((e:any)=>{return e.isDefault == true});
+          this.patternSelected = this.lstPattern.find((e:any)=> e.isDefault == true);
           this.dt.detectChanges();
         }
       });
@@ -340,22 +341,27 @@ export class PopupAddCardsComponent implements OnInit {
     }
     if(this.parameter)
     {
-        if (this.parameter.RuleSelected == '1') 
-        {
+      switch(this.parameter.RuleSelected){
+        case "0":
+          break;
+        case "1":
           if (!this.form.controls["behavior"].value) {
             let mssg  = Util.stringFormat(this.mssgNoti, "Qui tắc ứng xử");
             this.notifySV.notify(mssg);
             return;
           }
-        }
-        else if (this.parameter.RuleSelected == '2') 
-        {
+          break;
+        case "2":
           if (!this.form.controls["industry"].value) {
             let mssg  = Util.stringFormat(this.mssgNoti, "Hành vi ứng xử");
             this.notifySV.notify(mssg);
             return;
           }
-        }
+          break;
+        default:
+          break;
+      };
+        
     }
     if(!this.myWallet)
     {
@@ -498,8 +504,10 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  viewCard(){
-    this.callfc.openForm(this.tmpViewCard,"",350,500,"",null,"");
+  previewCard(){
+    if(this.popupViewCard){
+      this.callfc.openForm(this.popupViewCard,"",350,500,"",null,"");
+    }
   }
 
   closeViewCard(dialogRef:DialogRef){
@@ -526,23 +534,25 @@ export class PopupAddCardsComponent implements OnInit {
 
   // get gift infor
   getGiftInfor(giftID:string){
-    this.api.execSv(
-      "FD",
-      "ERM.Business.FD",
-      "GiftsBusiness",
-      "GetAsync",
-      [giftID]
-    ).subscribe((res:any)=>{
-      if(res)
-      {
-        if(res.availableQty <= 0){
-          this.notifySV.notify("Số dư quà tặng không đủ");
+    if(giftID){
+      this.api.execSv(
+        "FD",
+        "ERM.Business.FD",
+        "GiftsBusiness",
+        "GetAsync",
+        [giftID]
+      ).subscribe((res:any)=>{
+        if(res)
+        {
+          if(res.availableQty <= 0){
+            this.notifySV.notify("Số dư quà tặng không đủ");
+          }
+          else{
+            this.gift = res;
+            this.form.patchValue({giftID : giftID});
+          }
         }
-        else{
-          this.gift = res;
-          this.form.patchValue({giftID : giftID});
-        }
-      }
-    })
+      });
+    }
   }
 }
