@@ -56,7 +56,7 @@ export class EmployeesLeaveComponent implements OnInit {
       {
         id: '1',
         type: ViewType.grid,
-        active: false,
+        active: true,
         sameData: true,
         model: {
           resources: this.columnsGrid,
@@ -66,7 +66,7 @@ export class EmployeesLeaveComponent implements OnInit {
       {
         id: '2',
         type: ViewType.card,
-        active: true,
+        active: false,
         sameData: true,
         model: {
           template: this.cardTemp,

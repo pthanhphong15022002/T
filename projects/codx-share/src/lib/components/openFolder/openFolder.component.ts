@@ -306,7 +306,7 @@ export class OpenFolderComponent implements OnInit {
     let total = this.fileUploadList.length;
     var that = this;
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectId = this.objectId;
+      this.fileUploadList[i].objectID = this.objectId;
     }
     this.atSV.fileListAdded = [];
     if (total > 1) {
@@ -731,15 +731,15 @@ export class OpenFolderComponent implements OnInit {
         fileUpload.createdOn = this.getNow();
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
-        fileUpload.objectId = this.objectId;
+        fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
         fileUpload.fileName = files[i].name;
-        fileUpload.funcId = this.functionID;
+        fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.reWrite = false;
         fileUpload.data = item;
         fileUpload.item = files[i];
-        fileUpload.folderId = this.folderId;
+        fileUpload.folderID = this.folderId;
         fileUpload.permissions = this.remotePermission;
         this.fileUploadList.push(Object.assign({}, fileUpload));
 

@@ -1,7 +1,7 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay" [hasSecond]="false"> </codx-aside>
+      <codx-aside *ngIf="asideDisplay" [hasSecond]="false" class="wp-portal"> </codx-aside>
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="headerCSSClasses"
@@ -35,7 +35,6 @@
       [ngClass]="codxService.toolbarButtonMarginClass"
     >
       <!-- <codx-chat-list></codx-chat-list> -->
-      <!-- em rem lại do nó bị lỗi kg đọc dc userID dưới BE nha a, a check lại có gì mở ra lại giúp em nha -->
       <lib-chat-list></lib-chat-list>  
     </div>
     <!-- NOTES -->

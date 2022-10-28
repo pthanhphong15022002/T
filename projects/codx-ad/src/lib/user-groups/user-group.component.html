@@ -47,54 +47,78 @@
           </codx-temp-full>
         </div>
         <div class="d-flex flex-wrap">
-          <div class="flex">
-            <div
-              class=""
-              *ngIf="data.chooseRoles && data.chooseRoles.length <= 5"
+          <div
+            class="module"
+            *ngIf="data.chooseRoles && data.chooseRoles.length <= 5"
+          >
+            <ng-container
+              class="container"
+              *ngFor="let item of data.chooseRoles; index as num"
             >
-              <ng-container
-                class="container"
-                *ngFor="let item of data.chooseRoles; index as num"
-              >
-                <a class="me-2">
-                  <img
-                    class="w-30px"
-                    src="../../../{{ item.smallIcon }}"
-                    alt=""
-                    (click)="openPopup(data)"
-                  />
-                </a>
-              </ng-container>
-            </div>
-            <div
-              class=""
-              *ngIf="data.chooseRoles && data.chooseRoles.length > 5"
+              <a class="me-2">
+                <img
+                  [ngbPopover]="item.customName"
+                  triggers="mouseenter:mouseleave"
+                  placement="bottom"
+                  [autoClose]="'outside'"
+                  class="w-30px"
+                  src="../../../{{ item.smallIcon }}"
+                  alt=""
+                />
+              </a>
+            </ng-container>
+          </div>
+          <div class="" *ngIf="data.chooseRoles && data.chooseRoles.length > 5">
+            <ng-container
+              class="container"
+              *ngFor="let item of data.chooseRoles; index as num"
             >
-              <ng-container
-                class="container"
-                *ngFor="let item of data.chooseRoles; index as num"
+              <a *ngIf="num <= 5" class="symbol-label fs-4 me-2">
+                <img
+                  [ngbPopover]="item.customName"
+                  triggers="mouseenter:mouseleave"
+                  placement="bottom"
+                  [autoClose]="'outside'"
+                  class="w-30px"
+                  src="../../../{{ item.smallIcon }}"
+                  alt=""
+                />
+              </a>
+            </ng-container>
+            <ng-container>
+              <span
+                [ngbPopover]="manyModule"
+                triggers="mouseenter:mouseleave"
+                placement="bottom"
+                [autoClose]="'outside'"
+                class="btn btn-sm btn-icon btn-light-primary rounde-1 ms-1 w-30px h-30px"
+                container="body"
               >
-                <a *ngIf="num < 4" class="symbol-label fs-4 me-2">
-                  <img
-                    class="w-30px"
-                    src="../../../{{ item.smallIcon }}"
-                    alt=""
-                    (click)="openPopup(data)"
-                  />
-                </a>
-                <a *ngIf="num == 4" class="symbol-label fs-4 me-2">
-                  <img
-                    class="w-30px"
-                    src="../../../{{ item.smallIcon }}"
-                    alt=""
-                    (click)="openPopup(data)"
-                  />
-                  <span class="symbol-label fs-4">
-                    +{{ data.chooseRoles.length - 4 }}
-                  </span>
-                </a>
-              </ng-container>
-            </div>
+                +{{ data.chooseRoles && data.chooseRoles.length - 5 }}
+              </span>
+              <ng-template #manyModule>
+                <div *ngFor="let item of data.chooseRoles">
+                  <div class="d-flex align-items-center mb-4">
+                    <img
+                      class="w-30px me-3"
+                      src="../../../{{ item.smallIcon }}"
+                      alt=""
+                    />
+                    <div class="d-flex flex-column w-100">
+                      <div class="fw-bold text-dark">{{ item.customName }}</div>
+                      <div class="text-gray-500 fs-7">{{ item.roleName }}</div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+          </div>
+          <div class="d-flex flex-column text-right ms-6" *ngIf="data.stop">
+            <codx-label
+              fiedName="Stop"
+              [formModel]="view.formModel"
+              default="Ngưng sử dụng"
+            ></codx-label>
           </div>
         </div>
       </div>
