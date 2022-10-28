@@ -14,6 +14,7 @@ import { ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import {
   ApiHttpService,
   AuthService,
+  AuthStore,
   CacheService,
   CRUDService,
   DialogData,
@@ -50,7 +51,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Input() data!: any;
-  suremeet!: MeetingComponent;
   fGroupAddBookingRoom: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
@@ -133,6 +133,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   range: any;
   optionalData;
   saveAndApprove = false;
+  userInfo;
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
@@ -141,6 +142,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private apiHttpService: ApiHttpService,
+    private user: AuthStore,
 
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -149,19 +151,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data = dialogData?.data[0];
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
-    this.optionalData= dialogData?.data[3];
+    this.optionalData = dialogData?.data[3];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
+    this.userInfo = user.get();
     if (this.isAdd) {
-      if(this.optionalData!=null){
-        this.data.bookingOn=this.optionalData.startDate;
-      }
-      else{
+      if (this.optionalData != null) {
+        this.data.bookingOn = this.optionalData.startDate;
+      } else {
         this.data.bookingOn = new Date();
       }
       this.data.attendees = 1;
-    } else if(!this.isAdd){
+    } else if (!this.isAdd) {
       let tmpStartTime = new Date(this.data?.startDate);
       let tmpEndTime = new Date(this.data?.endDate);
       this.startTime =
@@ -172,7 +174,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         ('0' + tmpEndTime.getHours()).toString().slice(-2) +
         ':' +
         ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
-    }    
+    }
   }
 
   onInit(): void {
@@ -232,9 +234,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   )[0]?.StartTime.split(':');
                   this.calendarStartTime =
                     tempStartTime[0] + ':' + tempStartTime[1];
-                    if (this.isAdd) {
-                      this.startTime = this.calendarStartTime;
-                    }
+                  if (this.isAdd) {
+                    this.startTime = this.calendarStartTime;
+                  }
                   let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
                     ':'
                   );
@@ -307,18 +309,18 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             }
           });
           this.tmplstDevice.push(tmpDevice);
-        });        
+        });
         this.data.bookingOn = this.optionalData.startDate;
-        let tmpStartTime=this.optionalData.startDate;
-        let tmpEndTime=this.optionalData.endDate;
+        let tmpStartTime = this.optionalData.startDate;
+        let tmpEndTime = this.optionalData.endDate;
         this.startTime =
-        ('0' + tmpStartTime.getHours()).toString().slice(-2) +
-        ':' +
-        ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
-      this.endTime =
-        ('0' + tmpEndTime.getHours()).toString().slice(-2) +
-        ':' +
-        ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
+          ('0' + tmpStartTime.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
+        this.endTime =
+          ('0' + tmpEndTime.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
         this.detectorRef.detectChanges();
       }
       this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
@@ -327,13 +329,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     // Lấy list role người tham gia
     this.cache.valueList('EP009').subscribe((res) => {
       if (res && res?.datas.length > 0) {
-        let tmpArr=[];
-        tmpArr=res.datas;
-        tmpArr.forEach(item=>{
-          if(item.value!='4'){
+        let tmpArr = [];
+        tmpArr = res.datas;
+        tmpArr.forEach((item) => {
+          if (item.value != '4') {
             this.listRoles.push(item);
           }
-        })
+        });
         //thêm người đặt(người dùng hiên tại) khi thêm mới
         if (this.isAdd) {
           let people = this.authService.userValue;
@@ -342,58 +344,60 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.curUser.status = '1';
           this.curUser.roleType = '1';
           this.curUser.optional = false;
-          this.listRoles.forEach(element => {
-            if(element.value == this.curUser.roleType){
-              this.curUser.icon=element.icon;
-              this.curUser.roleName=element.text;
+          this.listRoles.forEach((element) => {
+            if (element.value == this.curUser.roleType) {
+              this.curUser.icon = element.icon;
+              this.curUser.roleName = element.text;
             }
           });
           this.changeDetectorRef.detectChanges();
-        }
-        else{
+        } else {
           //lấy ds người tham gia khi sửa
           this.apiHttpService
-        .callSv(
-          'EP',
-          'ERM.Business.EP',
-          'BookingAttendeesBusiness',
-          'GetAsync',
-          [this.data.recID]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.peopleAttend = res.msgBodyData[0];
-            this.peopleAttend.forEach((people) => {
-              let tempAttender = new BookingAttendees();
-              tempAttender.userID = people.userID;
-              tempAttender.userName = people.userName;
-              tempAttender.status = people.status;
-              tempAttender.roleType = people.roleType;
-              tempAttender.optional = people.optional;
-              this.listRoles.forEach(element => {
-                if(element.value==tempAttender.roleType){
-                  tempAttender.icon=element.icon;
-                  tempAttender.roleName=element.text;
-                }
-              });
-              if (tempAttender.userID != this.authService.userValue.userID) {
-                this.attendeesList.push(tempAttender);
-              }
-              if (tempAttender.userID == this.authService.userValue.userID) {
-                this.curUser = tempAttender;
-              } else if (people.optional == false) {
-                this.lstUser.push(tempAttender);
-              } else {
-                this.lstUserOptional.push(tempAttender);
+            .callSv(
+              'EP',
+              'ERM.Business.EP',
+              'BookingAttendeesBusiness',
+              'GetAsync',
+              [this.data.recID]
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.peopleAttend = res.msgBodyData[0];
+                this.peopleAttend.forEach((people) => {
+                  let tempAttender = new BookingAttendees();
+                  tempAttender.userID = people.userID;
+                  tempAttender.userName = people.userName;
+                  tempAttender.status = people.status;
+                  tempAttender.roleType = people.roleType;
+                  tempAttender.optional = people.optional;
+                  this.listRoles.forEach((element) => {
+                    if (element.value == tempAttender.roleType) {
+                      tempAttender.icon = element.icon;
+                      tempAttender.roleName = element.text;
+                    }
+                  });
+                  if (
+                    tempAttender.userID != this.authService.userValue.userID
+                  ) {
+                    this.attendeesList.push(tempAttender);
+                  }
+                  if (
+                    tempAttender.userID == this.authService.userValue.userID
+                  ) {
+                    this.curUser = tempAttender;
+                  } else if (people.optional == false) {
+                    this.lstUser.push(tempAttender);
+                  } else {
+                    this.lstUserOptional.push(tempAttender);
+                  }
+                });
+                this.changeDetectorRef.detectChanges();
               }
             });
-            this.changeDetectorRef.detectChanges();
-          }
-        });
         }
       }
     });
-    
 
     this.initForm();
     // xử lí thiết bị
@@ -436,7 +440,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     }
 
-    if (!this.isAdd) { 
+    if (!this.isAdd) {
       this.apiHttpService
         .callSv('EP', 'ERM.Business.EP', 'BookingItemsBusiness', 'GetAsync', [
           this.data.recID,
@@ -545,7 +549,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.tmpAttendeesList.push(item);
     });
     this.tmpAttendeesList.push(this.curUser);
-    this.tmplstDevice=[];
+    this.tmplstDevice = [];
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
@@ -553,6 +557,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       tempEquip.isPicked = element.isSelected;
       this.lstEquipment.push(tempEquip);
     });
+    this.data.equipments=[];
     this.data.equipments = this.lstEquipment;
     this.data.category = '1';
     this.data.resourceType = '1';
@@ -642,8 +647,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   if (res?.msgCodeError == null && res?.rowCount) {
                     this.notificationsService.notifyCode('ES007');
                     this.returnData.status = '3';
-                    this.returnData.write=false;
-                    this.returnData.delete=false;
+                    this.returnData.write = false;
+                    this.returnData.delete = false;
                     (this.dialogRef.dataService as CRUDService)
                       .update(this.returnData)
                       .subscribe();
@@ -943,10 +948,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempAttender.status = '1';
         tempAttender.roleType = '3';
         tempAttender.optional = true;
-        this.listRoles.forEach(element => {
-          if(element.value==tempAttender.roleType){
-            tempAttender.icon=element.icon;
-            tempAttender.roleName=element.text;
+        this.listRoles.forEach((element) => {
+          if (element.value == tempAttender.roleType) {
+            tempAttender.icon = element.icon;
+            tempAttender.roleName = element.text;
           }
         });
         this.lstUserOptional.push(tempAttender);
@@ -981,10 +986,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempAttender.status = '1';
         tempAttender.roleType = '3';
         tempAttender.optional = false;
-        this.listRoles.forEach(element => {
-          if(element.value==tempAttender.roleType){
-            tempAttender.icon=element.icon;
-            tempAttender.roleName=element.text;
+        this.listRoles.forEach((element) => {
+          if (element.value == tempAttender.roleType) {
+            tempAttender.icon = element.icon;
+            tempAttender.roleName = element.text;
           }
         });
         this.lstUser.push(tempAttender);
@@ -1071,12 +1076,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     });
   }
   //////////////////////////
-  attendeesCheckChange(event:any, userID:any){
-    this.attendeesList.forEach(attender=>{
-      if(attender.userID==userID){
-        attender.optional= event.data
+  attendeesCheckChange(event: any, userID: any) {
+    this.attendeesList.forEach((attender) => {
+      if (attender.userID == userID) {
+        attender.optional = event.data;
       }
-    })
+    });
   }
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
@@ -1088,11 +1093,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.attendeesList.forEach((res) => {
       if (res.userID == idUserSelected) {
         res.roleType = value;
-        this.listRoles.forEach(role=>{
-          if(role?.value==res?.roleType){
-            res.icon=role.icon;
+        this.listRoles.forEach((role) => {
+          if (role?.value == res?.roleType) {
+            res.icon = role.icon;
           }
-        })
+        });
       }
     });
     this.changeDetectorRef.detectChanges();
@@ -1207,8 +1212,22 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   //     });
   // }
 
-  meetingNow() {
-    console.log('meeting', this.suremeet);
-    this.suremeet?.createAndMeetingNow();
+  connectMeetingNow() {
+    this.codxEpService
+      .connectMeetingNow(
+        this.data.title,
+        this.data.memmo,
+        60,
+        null,
+        this.userInfo.userName,
+        'Dang Test',
+        true,
+        this.data.onlineUrl,
+        this.data.startDate,
+        this.startTime
+      )
+      .then((url) => {
+        window.open(url, '_blank');
+      });
   }
 }
