@@ -211,8 +211,9 @@
           *ngIf="data?.online && data.onlineUrl"
         >
           <button
+          
             (click)="connectMeetingNow()"
-            class="text-decoration-underline"
+            class="text-decoration-underline border-0 fw-bold bg-transparent text-primary text-start"
           >
             {{ data?.onlineUrl }}
           </button>
