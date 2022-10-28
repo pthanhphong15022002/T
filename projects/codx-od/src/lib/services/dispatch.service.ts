@@ -274,9 +274,9 @@ export class DispatchService implements OnDestroy {
     }
 
     //Lấy chi tiết 1 công văn
-    getDetailDispatch(recID:any , objectType:any)
+    getDetailDispatch(recID:any , objectType:any , isEntities=false)
     {
-       return this.api.exec<any>('OD', 'DispatchesBusiness', 'GetItemByIDAsync', [recID,objectType]);
+       return this.api.exec<any>('OD', 'DispatchesBusiness', 'GetItemByIDAsync', [recID,objectType,isEntities]);
     }
 
     //Xóa công văn
