@@ -2,103 +2,88 @@
     [data]="dataUpdate" #form>
     <ng-template #body>
         <div class="form-group">
-            <div class="font-w500 font-1rem">
-                <codx-label fiedName="GiftName" [formModel]="form.formModel" default="Tên quà tặng">
-                </codx-label>
-            </div>
+            <codx-label fiedName="GiftName" [formModel]="form.formModel" default="Tên quà tặng">
+            </codx-label>
             <codx-input (valueChange)="valueChange($event)" [Group]="form.formGroup" [formModel]="form.formModel"
                 field="giftName">
             </codx-input>
         </div>
-        <div class="form-group row mt-3">
-            <div class="col-lg-6 col-md-6">
-                <div class="font-w500 font-1rem">
-                    <codx-label fiedName="GiftCode" [formModel]="form.formModel" default="Mã quà tặng">
-                    </codx-label>
-                </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="GiftCode" [formModel]="form.formModel" default="Mã quà tặng">
+                </codx-label>
                 <codx-input [disabled]="isAddMode ? false : true" (valueChange)="valueChange($event)" field="giftID"
                     [Group]="form.formGroup" [formModel]="form.formModel">
                 </codx-input>
             </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="font-w500 font-1rem">
-                    <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quà tặng">
-                    </codx-label>
-                </div>
+            <div class="col-6">
+                <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quà tặng">
+                </codx-label>
                 <codx-input (valueChange)="changeCombobox($event)" class="form-control borderless p-0"
                     style="border: none;" [Group]="form.formGroup" [formModel]="form.formModel" field="groupID">
                 </codx-input>
             </div>
         </div>
-        <div class="form-group row mt-3">
-            <div class="col-lg-6 col-md-6">
-                <div class="font-w500 font-1rem">
-                    <codx-label fiedName="Owner" [formModel]="form.formModel" default="Chủ sở hữu">
-                    </codx-label>
-                </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="Owner" [formModel]="form.formModel" default="Chủ sở hữu">
+                </codx-label>
                 <codx-input (valueChange)="changeCombobox($event)" class="form-control borderless p-0"
                     style="border: none;" field="owner" [Group]="form.formGroup" [formModel]="form.formModel">
                 </codx-input>
             </div>
         </div>
-        <div class="form-group mt-3" style="width: 490px;">
-            <div class="font-w500 font-1rem">
-                <codx-label fiedName="Memo" [formModel]="formModel" default="Mô tả">
-                </codx-label>
-            </div>
+        <div class="form-group">
+            <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Mô tả">
+            </codx-label>
             <codx-input class="form-control text" rows="3" (valueChange)="valueChange($event)" [Group]="form.formGroup"
                 [formModel]="form.formModel" field="memo">
             </codx-input>
         </div>
-        <div class="form-group mt-3" style="width: 490px;">
-            <div class="font-w500 font-1rem">
-                <codx-label fiedName="Description" [formModel]="formModel" default="Mô tả khác">
-                </codx-label>
-            </div>
-            <codx-input class="w-490px test-textarea" [Group]="form.formGroup"
-                [formModel]="form.formModel" (valueChange)="valueChange($event)" field="description">
+        <div class="form-group">
+            <codx-label class="text-dark" fiedName="Description" [formModel]="formModel" default="Mô tả khác">
+            </codx-label>
+            <codx-input class="w-100 test-textarea" [Group]="form.formGroup" [formModel]="form.formModel"
+                (valueChange)="valueChange($event)" field="description">
             </codx-input>
         </div>
-        <div class="form-group row mt-3">
-            <div class="col-lg-6 col-md-6">
-                <div class="font-w500 font-1rem">
-                    <codx-label fiedName="Price" [formModel]="formModel" default="Đơn giá (xu)">
-                    </codx-label>
-                </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label class="text-dark" fiedName="Price" [formModel]="formModel" default="Đơn giá (xu)">
+                </codx-label>
                 <codx-input class="form-control" [Group]="form.formGroup" [formModel]="form.formModel"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" field="price"
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
         </div>
-        <div class="d-flex align-items-start pic-grif">
-            <div class="pic-edit mr-5 upload-img" style="border: none;">
-                <codx-img [funcId]="form.formModel.funcID" #imageUpLoad aria-disabled="true" [objectType]="formModel.entityName" [isAllowEdit]="true"
-                    [width]="90" [objectId]="dataUpdate.giftID">
+        <div class="d-flex align-items-start pic-grif mt-3">
+            <div class="pic-edit me-6 upload-img" style="border: none;">
+                <codx-img [funcId]="form.formModel.funcID" #imageUpLoad aria-disabled="true"
+                    [objectType]="formModel.entityName" [isAllowEdit]="true" [width]="70"
+                    [objectId]="dataUpdate.giftID">
                 </codx-img>
             </div>
             <div class="d-flex flex-column mt-4">
-                <div class="d-flex align-items-center mr-6">
-                    <span class="text-dark-75 mr-2">
-                        <codx-label fiedName="Storage" [formModel]="formModel" default="Tồn kho:">
+                <div class="d-flex align-items-center me-6">
+                    <span class="text-gray-700 me-2">
+                        <codx-label class="text-dark" fiedName="Storage" [formModel]="formModel" default="Tồn kho:">
                         </codx-label>
                     </span>
-                    <span class="text-dark font-weight-bold left-5">{{dataUpdate.onhand}}</span>
+                    <span class="text-dark fw-bold ms-2">{{dataUpdate.onhand}}</span>
                 </div>
-                <div class="d-flex align-items-center mr-6">
-                    <span class="text-dark-75 mr-2">
-                        <codx-label fiedName="Price" [formModel]="formModel" default="Đã giành hàng:">
+                <div class="d-flex align-items-center me-6">
+                    <span class="text-gray-700 me-2">
+                        <codx-label class="text-dark" fiedName="Price" [formModel]="formModel" default="Đã dành hàng:">
                         </codx-label>
                     </span>
-                    <span class="text-dark font-weight-bold left-5">{{
+                    <span class="text-dark fw-bold ms-2">{{
                         dataUpdate.reservedQty}}</span>
                 </div>
-                <div class="d-flex align-items-center mr-6">
-                    <span class="text-dark-75 mr-2">
-                        <codx-label fiedName="Price" [formModel]="formModel" default="Sẵn sàng xuất:">
-                        </codx-label>
-                    </span>
-                    <span class="text-dark font-weight-bold left-5">{{dataUpdate.availableQtyF}}</span>
+                <div class="d-flex align-items-center me-6">
+                    <codx-label class="text-dark" fiedName="Price" [formModel]="formModel" default="Sẵn sàng xuất:">
+                    </codx-label>
+                    <span class="text-dark fw-bold ms-2">{{dataUpdate.availableQtyF}}</span>
                 </div>
             </div>
         </div>

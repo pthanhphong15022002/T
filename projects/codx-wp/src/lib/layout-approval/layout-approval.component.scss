@@ -35,11 +35,6 @@
   display: block;
 }
 
-
-.isActive {
-  background-color: rgba(245, 248, 250, 0.8);
-  color: #005dc7 !important;
-}
 :host ::ng-deep{
 codx-page-title .breadcrumb{
   display: none;

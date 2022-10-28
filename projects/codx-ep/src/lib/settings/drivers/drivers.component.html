@@ -22,7 +22,7 @@
     <codx-img 
       [objectId]="data?.recID"       
       [funcId]="funcID"       
-      [objectType]="formModel?.entityName"
+      [objectType]="'EP_Resources'"
       [imageType]="'square'" 
       width="50" 
       [imgOn]="data.modifiedOn"
@@ -125,7 +125,7 @@
 
 <ng-template #carCol let-data>  
   <div class="d-flex flex-row align-items-center">
-    <codx-img [objectId]="data.carRecID" [imageType]="'square'" [funcId]="funcID"  [imgOn]="data.modifiedOn" [width]="50" [objectType]="'EP_Cars'"></codx-img>  
+    <codx-img [objectId]="data.carRecID" [imageType]="'square'" [imgOn]="data.modifiedOn" [width]="50" [objectType]="'EP_Resources'"></codx-img>  
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data?.carName}}</span>      
     </div>

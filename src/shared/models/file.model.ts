@@ -113,7 +113,7 @@ export class FileUpload {
     hasSubFolder: any;
     tags: any;
     subject: any;
-    objectId: any;
+    objectID: any;
     objectType: any;
     language: any;
     description: string;
@@ -124,7 +124,7 @@ export class FileUpload {
     copyRights: string;
     data: string;
     item: any;
-    folderId: string;
+    folderID: string;
     approval: any;
     revision: any;
     checkSecurity: any;
@@ -138,7 +138,7 @@ export class FileUpload {
     form: any; // share or request permission
     titleEmail: string;
     contentEmail: string;
-    funcId: string;
+    funcID: string;
     folderType: any;
     version: any;
     urlShare: string;
@@ -166,6 +166,7 @@ export class FileUpload {
     upload: any;
     assign: any;
     write: any;
+    viewThumb:any;
 }
 
 

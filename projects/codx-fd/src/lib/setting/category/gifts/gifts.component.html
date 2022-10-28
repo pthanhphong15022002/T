@@ -3,7 +3,7 @@
     [predicate]="predicate" [dataValue]="dataValue" idField="recID" [viewActiveType]="viewType.list">
 </codx-views>
 <ng-template #template let-data>
-    <div class="container-listview category-gift">
+    <div class="container-listview category-gift p-5">
         <div class="list-table" *ngIf="this.searchType == '0' || this.searchType == '1' ">
             <codx-temp-full [typeMF]="'hover'" [dataItem]="data" [formModel]="view.formModel"
                 (clickMF)="clickMF($event, data)" typeMF="hover" [titleTmp]="itemGift" [imgOn]="data.modifiedOn">
@@ -19,64 +19,66 @@
                 [objectId]="dataItem?.giftID">
             </codx-img>
         </div>
-        <div class="d-flex flex-column flex-grow-1 infor">
-            <div class="text-dark font-weight-bold font-size-h6">{{dataItem?.giftName}}</div>
-            <div class="d-flex align-items-center font-size-md">
-                <div class="d-flex text-dark mr-2">{{dataItem?.giftID}}</div>
-                <span class="text-muted font-size-sm">|</span>
-                <div class="d-flex ml-2">
-                    <span class="text-dark-50 mr-1 left-5">
+        <div class="d-flex flex-column w-100 infor">
+            <div class="text-dark fw-bold fs-5">{{dataItem?.giftName}}</div>
+            <div class="d-flex align-items-center">
+                <div class="d-flex text-dark me-2">{{dataItem?.giftID}}</div>
+                <span class="text-gray-400 fs-7">|</span>
+                <div class="d-flex ms-2">
+                    <span class="text-gray-500 me-1">
                         <codx-label name="lblGroup" [formName]="functionList?.formName" default="Nhóm:">
                         </codx-label>
                     </span>
-                    <span class="text-dark font-weight-bold left-5">{{dataItem?.groupName}}</span>
+                    <span class="text-dark fw-bold ms-2">{{dataItem?.groupName}}</span>
                 </div>
             </div>
             <div class="text-dark">
-                <span class="text-dark-50 mr-1 text-nowrap">
+                <span class="text-gray-500 me-1 text-nowrap">
                     <codx-label name="lblDescription" [formName]="functionList?.formName" default="Mô tả:">
                     </codx-label>
                 </span>
                 <span [innerHTML]="dataItem?.memo"></span>
             </div>
-            <div class="d-flex align-items-center">
-                <div class="d-flex align-items-center mr-4">
-                    <span class="text-dark-50 mr-1">
+            <div class="d-flex align-items-center mt-2">
+                <div class="d-flex align-items-center me-4">
+                    <span class="text-gray-500 me-1">
                         <codx-label name="lblStorage" [formName]="functionList?.formName" default="Tồn kho:">
                         </codx-label>
                     </span>
-                    <span class="text-primary font-size-h4 font-weight-bold left-5">{{dataItem?.onhand}}</span>
+                    <span class="text-primary fs-4 fw-bold ms-2">{{dataItem?.onhand}}</span>
                 </div>
-                <div class="d-flex align-items-center mr-4">
-                    <span class="text-dark-50 mr-1 left-10">
-                        <codx-label name="lbl" [formName]="functionList?.formName" default="Đã giành hàng:">
+                <div class="d-flex align-items-center me-4">
+                    <span class="text-gray-500 me-1 ms-3">
+                        <codx-label name="lbl" [formName]="functionList?.formName" default="Đã dành hàng:">
                         </codx-label>
                     </span>
-                    <span class="text-warning font-size-h4 font-weight-bold left-5">{{dataItem?.reservedQty}}</span>
+                    <span class="text-warning fs-4 fw-bold ms-2">{{dataItem?.reservedQty}}</span>
                 </div>
-                <div class="d-flex align-items-center mr-4">
-                    <span class="text-dark-50 mr-1 left-10">
+                <div class="d-flex align-items-center me-4">
+                    <span class="text-gray-500 me-1 ms-3">
                         <codx-label name="lblExport" [formName]="functionList?.formName" default="Sẵn sàng xuất:">
                         </codx-label>
                     </span>
-                    <span class="text-success font-size-h4 font-weight-bold left-5">{{dataItem?.availableQty}}</span>
+                    <span class="text-success fs-4 fw-bold ms-2">{{dataItem?.availableQty}}</span>
                 </div>
                 <div ngbDropdown container="body">
-                    <button type="button" class="btn btn-icon btn-sm" id="dropdownShowDescription" ngbDropdownToggle
-                        *ngIf="dataItem?.description != null && dataItem?.description.length > 0 ">
-                        <span class="icon-assignment icon-18 text-dark-75"></span>
-                    </button>
-                    <form class="px-4 py-3">
-                        <div ngbDropdownMenu aria-labelledby="dropdownShowDescription">
-                            <div [innerHTML]="dataItem?.description" class="w-500px p-6"></div>
-                        </div>
-                    </form>
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-icon btn-sm" id="dropdownShowDescription" ngbDropdownToggle
+                            *ngIf="dataItem?.description != null && dataItem?.description.length > 0 ">
+                            <span class="icon-assignment icon-18 text-dark-75"></span>
+                        </button>
+                        <form class="px-4 py-3">
+                            <div ngbDropdownMenu aria-labelledby="dropdownShowDescription">
+                                <div [innerHTML]="dataItem?.description" class="w-500px p-6"></div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-end w-100px">
-            <div class="font-size-h4 text-dark font-weight-bold">{{dataItem?.price}}</div>
-            <span class="text-warning ml-2 icon-20 icon-monetization_on"></span>
+            <div class="fs-4 text-dark fw-bold">{{dataItem?.price}}</div>
+            <span class="text-warning ms-2 icon-20 icon-monetization_on"></span>
         </div>
     </div>
 

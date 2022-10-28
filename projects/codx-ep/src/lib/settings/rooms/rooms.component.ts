@@ -305,7 +305,7 @@ export class RoomsComponent extends UIComponent {
               'ERM.Business.DM',
               'FileBussiness',
               'DeleteByObjectIDAsync',
-              [obj.recID, 'EP_Rooms', true]
+              [obj.recID, 'EP_Resources', true]
             )
             .subscribe();
           this.detectorRef.detectChanges();

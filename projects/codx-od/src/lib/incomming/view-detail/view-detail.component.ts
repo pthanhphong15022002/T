@@ -122,6 +122,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue) {
+      debugger;
       this.pfuncID = changes?.pfuncID?.currentValue;
       if (this.pfuncID) this.getGridViewSetup(this.pfuncID);
     }
@@ -135,11 +136,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
   ngOnInit(): void {
     this.active = 1;
-    this.formModel = this.view.formModel;
+    this.formModel = this.view?.formModel;
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
-    this.getDataValuelist();
+   
    
   }
  
@@ -171,7 +172,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     }
   }
   getGridViewSetup(funcID: any) {
-  
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
       this.formModels = {
         entityName: fuc?.entityName,
@@ -179,10 +179,12 @@ export class ViewDetailComponent implements OnInit, OnChanges {
         funcID: funcID,
         gridViewName: fuc?.gridViewName,
       };
+      if(!this.formModel) this.formModel = this.formModels;
       this.codxODService
         .loadGridView(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetup = grd;
+          this.getDataValuelist();
         });
     });
     this.codxODService.loadMessage('OD020').subscribe((item) => {
@@ -500,8 +502,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
             if (x.event == null) {
               //this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
               this.view.dataService
-                .remove(this.view.dataService.dataSelected)
+                .remove(res?.recID)
                 .subscribe();
+                this.view.dataService.onAction.next({ type: 'update', data: datas });
             } else this.view.dataService.add(x.event, 0).subscribe(item=>{
               this.view.dataService.onAction.next({ type: 'update', data: x.event });
             });
@@ -1072,7 +1075,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       var index = this.data.listInformationRel.findIndex(
         (x) => x.userID == this.userID && x.relationType != "1"
       );
-      this.data.listInformationRel[index].view = '3';
+      if(index>=0)
+        this.data.listInformationRel[index].view = '3';
     }
   }
 

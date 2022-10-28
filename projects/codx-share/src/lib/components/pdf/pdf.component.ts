@@ -300,14 +300,15 @@ export class PdfComponent
         fontSize: new FormControl(this.curAnnotFontSize),
         dateFormat: new FormControl(this.curAnnotDateFormat),
       });
-      this.tr = new Konva.Transformer({
-        rotateEnabled: false,
-      });
+
       //this.detectorRef.detectChanges();
     } else {
       this.curFileUrl = this.inputUrl;
       this.detectorRef.detectChanges();
     }
+    this.tr = new Konva.Transformer({
+      rotateEnabled: false,
+    });
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -393,13 +394,13 @@ export class PdfComponent
       strokeWidth: 1,
     });
     this.curSelectedCA = caRect;
-    this.tr.draggable(false);
-    this.tr.resizeEnabled(false);
-    this.tr.rotateEnabled(false);
-    this.tr.nodes([this.curSelectedCA]);
+    this.tr?.draggable(false);
+    this.tr?.resizeEnabled(false);
+    this.tr?.rotateEnabled(false);
+    this.tr?.nodes([this.curSelectedCA]);
     let layer = this.lstLayer.get(ca.signedPosPage);
-    layer.add(this.tr);
-    layer.draw();
+    layer?.add(this.tr);
+    layer?.draw();
   }
 
   goToPage(e) {
