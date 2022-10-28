@@ -113,7 +113,6 @@ export class PopupAddComponent implements OnInit {
     });
     let formName = "WPParameters";
     let category = "1";
-    this.getParameterAsync(formName,category);
     this.initForm();
   }
 
@@ -189,34 +188,39 @@ export class PopupAddComponent implements OnInit {
     data.shareControl = this.shareControl;
     data.objectType = this.objectType;
     data.permissions = this.permissions;
-    this.fileUpload = [];
-    this.fileUpload.push(this.fileImage);
-    if(this.newsType == this.NEWSTYPE.VIDEO)
-    {
-      this.fileUpload.push(this.fileVideo);
-    }
+    let mode = "add";
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'InsertNewsAsync',
-        [data]
+        [data,mode]
       )
       .subscribe(async (res: any) => {
         if (res) {
           let result = res;
+          this.fileUpload.push(this.fileImage);
+          if(this.newsType == this.NEWSTYPE.VIDEO){
+            this.fileUpload.push(this.fileVideo);
+          }
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = result.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             (await this.codxATM.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
-                  this.notifSV.notifyCode('WP024');
-                  this.dialogRef.close(result);
+                  this.notifSV.notifyCode('SYS006');
+                  this.dialogRef.close();
                 }
               }
             );
+          }
+          else 
+          {
+
+            this.notifSV.notifyCode('SYS006');
+            this.dialogRef.close();
           }
         }
       });
@@ -258,43 +262,37 @@ export class PopupAddComponent implements OnInit {
     data.shareControl = this.shareControl;
     data.objectType = this.objectType;
     data.permissions = this.permissions;
-    this.fileUpload = [];
-    this.fileUpload.push(this.fileImage);
-    if(this.newsType == this.NEWSTYPE.VIDEO)
-    {
-      this.fileUpload.push(this.fileVideo);
-    }
+    let mode = "submit";
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'InsertNewsAsync',
-        [data]
+        [data,mode]
       )
       .subscribe(async (res: any) => {
         if (res) {
           let result = res;
+          this.fileUpload.push(this.fileImage);
+          if(this.newsType == this.NEWSTYPE.VIDEO){
+            this.fileUpload.push(this.fileVideo);
+          }
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = result.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             (await this.codxATM.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
-                  this.notifSV.notifyCode('SYS006');
                   this.dialogRef.close(result);
-                }
-                else 
-                {
-                  this.notifSV.notifyCode('SYS023');
                 }
               }
             );
           }
-        }
-        else
-        {
-          this.notifSV.notifyCode('SYS023');
+          else
+          {
+            this.dialogRef.close(result);
+          }
         }
       });
   }

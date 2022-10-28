@@ -151,13 +151,17 @@ export class TaskExtendsComponent
   changeDataMF(e, data) {
     if (e) {
       e.forEach((x) => {
-        if (x.functionID == 'SYS04') {
+        if (x.functionID == 'SYS04'|| x.functionID == 'SYS03'||x.functionID == 'SYS02') {
           x.disabled = true;
         }
         if (
           (x.functionID == 'TMT04011' || x.functionID == 'TMT04012') &&
           data.status != '3'
         ) {
+          x.disabled = true;
+        }
+        //giao viec bo
+        if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
       });

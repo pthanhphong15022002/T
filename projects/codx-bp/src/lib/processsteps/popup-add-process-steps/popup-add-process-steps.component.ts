@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
   DialogData,
@@ -15,7 +16,10 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
-import { BP_ProcessSteps } from '../../models/BP_Processes.model';
+import {
+  BP_ProcessOwners,
+  BP_ProcessSteps,
+} from '../../models/BP_Processes.model';
 
 @Component({
   selector: 'lib-popup-add-process-steps',
@@ -28,6 +32,8 @@ export class PopupAddProcessStepsComponent implements OnInit {
   dialog!: DialogRef;
   formModel: FormModel;
   processSteps: BP_ProcessSteps;
+  owners: Array<BP_ProcessOwners> = [];
+
   user: any;
   data: any;
   funcID: any;
@@ -46,10 +52,13 @@ export class PopupAddProcessStepsComponent implements OnInit {
   textChange = '';
   popover: any;
   crrIndex = 0;
-  grvSetup :any
+  grvSetup: any;
+  listOwnerID = [];
+  listOwnerDetails = [];
 
   constructor(
     private bpService: CodxBpService,
+    private api: ApiHttpService,
     private authStore: AuthStore,
     private cache: CacheService,
     private changeDef: ChangeDetectorRef,
@@ -64,15 +73,12 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     if (this.stepType) this.processSteps.stepType = this.stepType;
-    // this.stepType = 'T'; //thêm để test
+   
     this.dialog = dialog;
 
     this.funcID = this.dialog.formModel.funcID;
     this.title = this.titleActon;
 
-    // this.cache.gridViewSetup("BPTasks","grvBPTasks").subscribe(res=>{
-    //   this.grvSetup =res
-    // })
   }
 
   ngOnInit(): void {}
@@ -84,6 +90,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   //#region method
 
   async saveData() {
+    this.processSteps.owners = this.owners;
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -103,7 +110,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     if (this.action == 'edit') {
     } else {
       op.method = 'AddProcessStepAsync';
-      data = [this.processSteps];
+      data = [this.processSteps, this.owners];
     }
 
     op.data = data;
@@ -122,11 +129,13 @@ export class PopupAddProcessStepsComponent implements OnInit {
     //       } else this.dialog.close();
     //     });
     // } else {
-    this.bpService.addProcessStep(this.processSteps).subscribe((data) => {
-      if (data) {
-        this.dialog.close(data);
-      } else this.dialog.close();
-    });
+    this.bpService
+      .addProcessStep([this.processSteps, this.owners])
+      .subscribe((data) => {
+        if (data) {
+          this.dialog.close(data);
+        } else this.dialog.close();
+      });
     // }
   }
 
@@ -150,7 +159,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
-    debugger;
   }
 
   valueChangeRefrence(e) {
@@ -193,7 +201,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
   valueChangeSwitch(e) {}
 
-  eventApply(e) {}
   //endregion
   convertReference() {
     switch (this.processSteps.stepType) {
@@ -203,5 +210,34 @@ export class PopupAddProcessStepsComponent implements OnInit {
         }
         break;
     }
+  }
+
+  eventApply(e) {
+    if (!e || e?.data.length == 0) return;
+    var dataSelected = e?.data;
+    var listUser = [];
+    dataSelected.forEach((dt) => {
+      var index = -1;
+      if (this.owners.length > 0)
+        index = this.owners.findIndex(
+          (obj) => obj.objectID == dt.id && obj.objectType == dt.objectType
+        );
+      if (index == -1) {
+        var owner = new BP_ProcessOwners();
+        owner.objectType = dt.objectType;
+        owner.objectID = dt.id;
+        owner.rAIC = 'R';
+        this.owners.push(owner);
+        this.listOwnerDetails.push({
+          id: dt.id,
+          name: dt.text,
+        });
+      }
+    });
+  }
+  onDeleteOwner(objectID, index) {
+    this.listOwnerDetails.splice(index, 1);
+    var i = this.owners.findIndex((x) => x.objectID == objectID);
+    if (i != -1) this.owners.slice(i, 1);
   }
 }

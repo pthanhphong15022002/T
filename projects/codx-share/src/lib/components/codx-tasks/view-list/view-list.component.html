@@ -7,13 +7,12 @@
     <div class="w-50px min-w-50px">
       <div class="d-flex align-items-center">
         <span [ngClass]="data?.isTimeOut?'icon-notifications expired':''" [ngbPopover]="popOverDue"
-        #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()"
-        placement="top right bottom" ></span>
+          #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()"
+          placement="top right bottom"></span>
         <span [class]="data?.priority | vll: vllPriority:'icon' | async" [style.color]="
                   data?.priority | vll: vllPriority:'textColor' | async
-                    "  [ngbPopover]="popDetailPriority"
-                    #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()"
-                    placement="top right bottom" >
+                    " [ngbPopover]="popDetailPriority" #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()"
+          (mouseleave)="p.close()" placement="top right bottom">
         </span>
       </div>
     </div>
@@ -25,13 +24,13 @@
     <div class="w-150px min-w-150px">
       <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail"
         #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
-        placement="bottom" autoClose="outside">
+        placement="bottom right top" autoClose="outside">
         <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <div class="d-flex">
             <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
             <div class="b text-start" *ngIf="data.memo" style="font-style: italic;color:#0000ff">
-              <codx-label name="lblNoMemo" default="Xem thêm..." ></codx-label> 
+              <codx-label name="lblNoMemo" default="Xem thêm..."></codx-label>
             </div>
           </div>
         </button>
@@ -42,7 +41,7 @@
           <div class="d-flex">
             <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
             <span *ngIf="!data.memo" class="b text-start">
-             <codx-label name="lblNoMemo" [formModel]="formModel" default="Không có mô tả" ></codx-label> 
+              <codx-label name="lblNoMemo" [formModel]="formModel" default="Không có mô tả"></codx-label>
             </span>
           </div>
         </button>
@@ -74,7 +73,9 @@
     </div> -->
     </div>
     <div class="w-100px min-w-100px">
-      <div class="text-gray-600 fs-7"><codx-label name="DueDate" [formModel]="formModel" default="Ngày hết hạn:"></codx-label></div>
+      <div class="text-gray-600 fs-7">
+        <codx-label name="DueDate" [formModel]="formModel" default="Ngày hết hạn:"></codx-label>
+      </div>
       <div class="text-dark" #duaDate>
         <!-- {{data.dueDate|date:'dd/MM/yyyy'}} -->
         {{data?.dueDate | formatvalue :formModel:"dueDate": duaDate : "Tasks": "grvTasks" | async }}
@@ -178,11 +179,15 @@
 </ng-template>
 
 <ng-template #popDetailPriority>
-  <span><codx-label name="Priority" [formModel]="formModel" default="Độ ưu tiên :"></codx-label></span><span>
+  <span>
+    <codx-label name="lblPriority" [formModel]="formModel" default="Độ ưu tiên:"></codx-label>
+  </span><span>
     {{data?.priority | vll: vllPriority:"text" | async}}
   </span>
 </ng-template>
 
 <ng-template #popOverDue>
-  <span><codx-label name="lblOverDue"[formModel]="formModel" default="Đã quá hạn !"></codx-label></span>
+  <span>
+    <codx-label name="lblOverDue" [formModel]="formModel" default="Đã quá hạn!"></codx-label>
+  </span>
 </ng-template>

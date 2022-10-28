@@ -264,13 +264,13 @@
           <ejs-toolbar class="border-start">
             <e-items>
               <e-item
-                *ngIf="isEditable"
+                *ngIf="hasPermission"
                 prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="print"
               >
               </e-item>
+              <!-- *ngIf="hasPermission" -->
               <e-item
-                *ngIf="isEditable"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
@@ -313,6 +313,7 @@
         [enablePinchOnMobile]="false"
         (currentZoomFactor)="('1')"
         pageViewMode="vertical"
+        (textLayerRendered)="getTextLayerInfo($event)"
       >
       </ngx-extended-pdf-viewer>
 
@@ -433,7 +434,7 @@
                       type="switch"
                       labelPosition="After"
                       field=""
-                      [disabled]="isEditable"
+                      [disabled]="!isEditable"
                       [crrValue]="needSuggest"
                       (valueChange)="changeSuggestState($event)"
                     >
@@ -456,7 +457,7 @@
                     <codx-input
                       type="switch"
                       field="autoSignLastLine"
-                      [disabled]="isEditable"
+                      [disabled]="!isEditable"
                       [(crrValue)]="autoSignState"
                       (valueChange)="changeAutoSignState($event, 0)"
                     ></codx-input>
@@ -572,7 +573,7 @@
                               'fst-italic': isItalic,
                               'text-decoration-underline': isUnd
                             }"
-                            [defaultValue]="'area.labelValue'"
+                            [defaultValue]="area.labelValue"
                           />
                         </div>
 
@@ -584,7 +585,7 @@
                             class="me-2 min-w-70px"
                             id="dateFormatsDropdownList"
                             [dataSource]="lstAnnotDateFormat"
-                            [(value)]="curAnnotDateFormat"
+                            [value]="curAnnotDateFormat"
                             formControlName="dateFormat"
                           >
                           </ejs-dropdownlist>
@@ -654,32 +655,42 @@
                           </div>
                         </div>
                         <div class="d-flex ms-12" *ngIf="area.labelType == 5">
+                          <!-- <div
+                            class="date-type-space"
+                            *ngFor="
+                              let dateType of lstSignDateType;
+                              let index = index
+                            "
+                          > -->
                           <codx-input
                             class="me-4 date-Type"
                             name="date-Type"
                             type="radio"
-                            [(checked)]="chooseSignDate"
+                            [checked]="!useSignDate"
                             labelPosition="After"
-                          >
-                          </codx-input
-                          ><codx-label
-                            name="lblReleaseDay"
-                            default="Ngày phát hành"
-                            [formModel]=""
-                          ></codx-label>
-                          <codx-input
-                            class="me-4 date-Type"
-                            type="radio"
-                            name="date-Type"
-                            [(checked)]="!chooseSignDate"
-                            labelPosition="After"
+                            (valueChange)="changeUseCreatedDate()"
                           >
                           </codx-input>
                           <codx-label
-                            name="lblSignDate"
-                            default="Ngày ký"
+                            [name]="'lblSignDateType0'"
+                            [default]="lstSignDateType[0]"
                             [formModel]=""
                           ></codx-label>
+                          <codx-input
+                            class="me-4 date-Type"
+                            name="date-Type"
+                            type="radio"
+                            [checked]="useSignDate"
+                            labelPosition="After"
+                            (valueChange)="changeUseSignDate()"
+                          >
+                          </codx-input
+                          ><codx-label
+                            [name]="'lblSignDateType1'"
+                            [default]="lstSignDateType[1]"
+                            [formModel]=""
+                          ></codx-label>
+                          <!-- </div> -->
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button
@@ -696,7 +707,10 @@
                           <button
                             type="button"
                             class="btn btn-sm btn-primary"
-                            *ngIf="imgConfig.includes(area.labelType)"
+                            *ngIf="
+                              imgConfig.includes(area.labelType) && isApprover
+                            "
+                            (click)="changeSignature_StampImg(area)"
                           >
                             <codx-label
                               name="lblSave"

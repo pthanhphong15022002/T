@@ -164,29 +164,9 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "RenameFileAsync", [id, fileName]);
     }
 
-    addMultiFileObservable(list: FileUpload[] , isDM: boolean = false): Observable<DataReturn[] | null> {
-        //var bytes = new Int8Array(data as ArrayBuffer); 
-        //  var item = this.arrayBufferToBase64(data);
-        // return this.api
-        // .execSv<Array<any>>(
-        //   this.service,
-        //   this.assemblyName,
-        //   this.className,
-        //   this.method,
-        //   this.request
-        // )
-        // .pipe(
-        //   finalize(() => {
-        //     /*  this.onScrolling = this.loading = false;
-        //     this.loaded = true; */
-        //   }),
-        //   map((response: any) => {
-        //     return response[0]
-        //   })
-        // );
-
+    addMultiFileObservable(list: FileUpload[] , isDM: boolean = false , folderID: string = "" , folderName: string = "" , parentID:string= ""): Observable<DataReturn[] | null> {
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM]).pipe(
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM,folderID,folderName,parentID]).pipe(
             map(data => {
                 return data;                
             }),
@@ -197,11 +177,11 @@ export class FileService implements OnDestroy {
         );
     }
 
-    addMultiFile(list: FileUpload[] , isDM: boolean = false): Observable<DataReturn[]> {
+    addMultiFile(list: FileUpload[] , isDM: boolean = false , folderID: string = "" , folderName: string = "", parentID:string= ""): Observable<DataReturn[]> {
         //var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM]);
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folderID , folderName,parentID]);
     }
 
     UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean): Observable<any> {
@@ -247,14 +227,14 @@ export class FileService implements OnDestroy {
     }
 
     //Observable<any>
-    addFile(file: FileUpload , isDM : boolean = false): Observable<any> {
+    addFile(file: FileUpload , isDM : boolean = false , folderID: string = "" , folderName: string = "" , parentID:string = ""): Observable<any> {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);        
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM]);
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folderID , folderName,parentID]);
     }
 
-    addFileObservable(file: FileUpload, isDM:boolean = false): Observable<any> {
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM]).pipe(
+    addFileObservable(file: FileUpload, isDM:boolean = false , folderID: string = "" , folderName: string = "", parentID:string = ""): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folderID , folderName,parentID]).pipe(
             map(data => {
                 return data;                
             }),

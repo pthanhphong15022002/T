@@ -28,14 +28,14 @@ export class PopupSelectLabelComponent extends UIComponent {
 
   curLabel;
   labels = [
-    { idx: 0, image: 'assets\\img\\Labels\\Urgent.jpg' },
-    { idx: 1, image: 'assets\\img\\Labels\\Illegal.jpg' },
-    { idx: 2, image: 'assets\\img\\Labels\\Express.jpg' },
+    // { idx: 0, image: 'assets\\img\\Labels\\Urgent.jpg' },
+    // { idx: 1, image: 'assets\\img\\Labels\\Illegal.jpg' },
+    // { idx: 2, image: 'assets\\img\\Labels\\Express.jpg' },
   ];
+
   onInit(): void {
     this.title = this.data.title;
     this.labels = this.data.labels;
-    console.log(this.labels);
 
     this.detectorRef.detectChanges();
   }

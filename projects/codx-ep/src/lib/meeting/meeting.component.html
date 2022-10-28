@@ -1,0 +1,67 @@
+<div class="modal-header">
+  <div class="d-flex flex-column flex-grow-1">
+    <div class="d-flex justify-content-between align-items-center">
+      <h2 id="modal-basic-title">
+        <codx-label name="lblOnlineUrl" default="Họp trực tuyến"></codx-label>
+      </h2>
+      <button
+        type="button"
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        aria-label="Close"
+        (click)="closeDialog(false)"
+      >
+        <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+      </button>
+    </div>
+    <div class="text-dark-50">
+      <codx-label
+        name="lblOnlineUrlSetting"
+        default="Thiết lập đường dẫn"
+      ></codx-label>
+    </div>
+  </div>
+</div>
+
+<div class="card-body">
+  <button>
+    <img
+      src="https://home.suremeet.vn/image/logo.png"
+      alt=""
+      width="50px"
+      height="50px"
+    />
+  </button>
+</div>
+<div class="card-body">
+  <div class="form-group"></div>
+  <div class="form-group">
+    <codx-label
+      fiedName="OnlineUrl"
+      default="Đường dẫn"
+      [formModel]="dialogRef.formModel"
+    ></codx-label>
+  </div>
+  <div class="form-group">
+    <codx-input
+      class="form-control"
+      type="text"
+      [disabled]="meetingUrl != null"
+      [crrValue]="meetingUrl"
+    >
+    </codx-input>
+  </div>
+</div>
+<div class="card-footer">
+  <div class="form-group d-flex justify-content-between">
+    <div class="d-flex">
+      <button type="button" class="btn btn-primary" (click)="createMeeting()">
+        <codx-label name="lblCreateMeeting" default="Tạo mới"></codx-label>
+      </button>
+    </div>
+    <div class="d-flex">
+      <button type="button" class="btn btn-primary" (click)="closeDialog(true)">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</div>

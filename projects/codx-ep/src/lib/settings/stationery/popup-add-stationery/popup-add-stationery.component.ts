@@ -35,7 +35,6 @@ export class PopupAddStationeryComponent extends UIComponent {
   returnData;
   columnsGrid;
   title: string = '';
-  titleAction: string = 'Thêm mới';
   tabInfo: any[] = [
     {
       icon: 'icon-info',
@@ -62,6 +61,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     { text: 'Định mức sử dụng', iconCss: 'icon-person_add' },
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
+  tmpTitle = '';
 
   constructor(
     private injector: Injector,
@@ -73,6 +73,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     super(injector);
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
+    this.tmpTitle = dt?.data[2];
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
   }
@@ -154,6 +155,7 @@ export class PopupAddStationeryComponent extends UIComponent {
               this.dialog && this.dialog.close(this.returnData);
             }
           }
+          this.dialog && this.dialog.close(this.returnData);
         } else {
           //Trả lỗi từ backend.
           return;
@@ -171,10 +173,10 @@ export class PopupAddStationeryComponent extends UIComponent {
     }
   }
 
+  buttonClick(e: any) {}
+
   setTitle(e: any) {
-    this.title = this.titleAction + ' ' + e.toString().toLowerCase();
+    this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
   }
-
-  buttonClick(e: any) {}
 }

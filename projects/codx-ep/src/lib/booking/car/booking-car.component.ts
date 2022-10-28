@@ -13,6 +13,7 @@ import {
   FormModel,
   CallFuncService,
   NotificationsService,
+  AuthService,
 } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
@@ -44,6 +45,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   idField = 'recID';
   predicate = 'ResourceType=@0';
   dataValue = '2';
+  optionalData:any;
   viewType = ViewType;
   formModel: FormModel;
   modelResource?: ResourceModel;
@@ -67,7 +69,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     private injector: Injector,
     private codxEpService: CodxEpService,
     private callFuncService: CallFuncService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private authService: AuthService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -179,19 +182,46 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           panelRightRef: this.panelRight,
         },
       },
-      {
-        sameData: true,
-        id: '3',
-        type: ViewType.chart,
-        active: true,
-        model: {
-          panelLeftRef: this.chart,
-        },
-      },
+      // {
+      //   sameData: true,
+      //   id: '3',
+      //   type: ViewType.chart,
+      //   active: true,
+      //   model: {
+      //     panelLeftRef: this.chart,
+      //   },
+      // },
     ];
     this.detectorRef.detectChanges();
   }
-
+  onActionClick(evt?){
+    if(evt.type=='add'){
+      this.addNew(evt.data);
+    }
+  }
+  changeDataMF(event, data:any) {        
+    if(event!=null && data!=null){
+      event.forEach(func => {        
+        func.disabled=true;        
+      });
+      if(data.status=='1'){
+        event.forEach(func => {
+          if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "SYS04"/*MF chép*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+    }
+  }
   click(evt: ButtonModel) {
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
@@ -229,6 +259,13 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew(evt?: any) {
+    if(evt!=null)
+    {
+      this.optionalData=evt;
+    }
+    else{
+      this.optionalData=null;
+    }
     this.viewBase.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';
@@ -236,7 +273,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle],
+        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle,this.optionalData],
         option
       );
     });
@@ -244,6 +281,10 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
 
   edit(obj?) {
     if (obj) {
+      if (this.authService.userValue.userID != obj.owner) {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
       this.viewBase.dataService.dataSelected = obj;
       this.viewBase.dataService
         .edit(this.viewBase?.dataService?.dataSelected)
@@ -261,10 +302,35 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         });
     }
   }
+
+  copy(obj?) {
+    if (obj) {      
+      this.viewBase.dataService.dataSelected = obj;
+      this.viewBase.dataService
+        .edit(this.viewBase?.dataService?.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.viewBase.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.viewBase?.dataService;
+          option.FormModel = this.formModel;
+          this.dialog = this.callFuncService.openSide(
+            PopupAddBookingCarComponent,
+            [this.viewBase.dataService.dataSelected, true, this.popupTitle],
+            option
+          );
+        });
+    }
+  }
+
   delete(evt?) {
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
+      if (this.authService.userValue.userID != evt?.owner) {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
     }
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
       if (!res) {
@@ -282,11 +348,14 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
       case 'SYS03':
         this.edit(data);
         break;
-      case 'SYS02':
-        this.delete(data);
+      case 'SYS04':
+        this.copy(data);
         break;
     }
   }

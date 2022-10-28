@@ -3,6 +3,12 @@
   idField="recID" 
   [views]="views" 
   [selectedFirst]="true"
+  [service]="'WP'"
+  [assemblyName]="'ERM.Business.WP'"
+  [className]="'NewsBusiness'"
+  [method]="'GetDataApprovalAsync'"
+  [predicates]="predicates"
+  [dataValues]="dataValues"
   (selectedChange)="selectedChange($event)" 
   (buttonClick)="clickBtnAdd()">
 </codx-views>
@@ -21,17 +27,21 @@
 </ng-template>
 <ng-template #panelRightRef>
   <div class="py-3 news-appr-right">
-    <approve-view-detail 
-      [objectID]="selectedID" 
-      [entityName]="entityName" 
-      [dataService]="view.dataService"
-      [funcID]="funcID" 
-      (evtApproval)="clickApprovePost($event)" 
-      [formModel]="view.formModel">
-    </approve-view-detail>
+      <approve-view-detail 
+        [objectID]="selectedID" 
+        [entityName]="entityName" 
+        [dataService]="view.dataService"
+        [funcID]="funcID" 
+        (evtUpdateApproval)="updateApprovePost($event)" 
+        [formModel]="view.formModel">
+      </approve-view-detail>
   </div>
 </ng-template>
-
+<ng-template #tmpEmpty>
+  <div class="w-100 h-100">
+    <img src="assets/themes/sys/default/img/DataEmpty.svg">
+  </div>
+</ng-template>
 <ng-template #itemTemplate let-data>
   <div class="news-listleft">
     <ng-container *ngIf="funcID == 'WPT0213';else wp_news">

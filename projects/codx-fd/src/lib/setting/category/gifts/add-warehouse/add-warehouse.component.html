@@ -4,18 +4,18 @@
         <div class="title">
             {{dataUpdate.giftName}}
         </div>
-        <br>
         <div [innerHTML]="dataUpdate.memo"></div>
         <div class="form-group mt-3">
             <codx-label name="lblCurrentOnhand" [formModel]="formModel" default="Tồn kho hiện tại"></codx-label>
             <codx-input type="number" class="form-control" placeholder="" formControlName='onhand'
-                [crrValue]="dataUpdate.onhand">
+                [crrValue]="dataUpdate.onhand" [disabled]="true">
             </codx-input>
         </div>
         <div class="form-group mt-3">
             <codx-label name="lblOldOnhand" [formModel]="formModel" default="Tồn kho mới"></codx-label>
-            <codx-input type="number" min="0" class="form-control" placeholder="" field="onhand" [crrValue]="dataUpdate.onhand"
-                onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="changeHand($event)">
+            <codx-input type="number" min="0" class="form-control" placeholder="" field="onhand"
+                [crrValue]="dataUpdate.onhand" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                (valueChange)="changeHand($event)">
             </codx-input>
         </div>
     </ng-template>

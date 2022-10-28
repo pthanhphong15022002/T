@@ -63,7 +63,7 @@ export class SettingComponent extends UIComponent implements OnInit {
     private at: ActivatedRoute,
     private fdsv: CodxFdService,
     private settingSV: SettingService,
-    private el: ElementRef
+    private modalService: NgbModal
   ) {
     super(injector);
     this.tenant = this.tenantStore.get()?.tenant;
@@ -192,29 +192,37 @@ export class SettingComponent extends UIComponent implements OnInit {
   }
 
   onSaveParameter(item) {
-    // return this.api
-    //   .callSv('SYS', 'ERM.Business.SYS', 'SettingValuesBusiness', 'SaveParamsOfPolicyAsync', [
-    //     'FDParameters',
-    //     null,
-    //     JSON.stringify(item),
-    //   ])
-    //   .subscribe((res) => {
-    //     if (res && res.msgBodyData[0]) {
-    //       if (res.msgBodyData[0] == true) {
-    //         return;
-    //       }
-    //     }
-    //   });
+    return this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'SaveParamsOfPolicyAsync',
+        ['FDParameters', null, JSON.stringify(item)]
+      )
+      .subscribe((res) => {
+        if (res && res.msgBodyData[0]) {
+          if (res.msgBodyData[0] == true) {
+            return;
+          }
+        }
+      });
+  }
+
+  valueChangeStatistical(e) {
+    if (e) {
+      this.modelForm.number = e.data;
+    }
   }
 
   open(content, typeContent) {
     this.modelForm.number = this.parameter[typeContent];
     this.modelForm.fieldName = typeContent;
-    // this.modalService.open(content, {
-    //   ariaLabelledBy: 'modal-basic-title',
-    //   centered: true,
-    //   size: 'sm',
-    // });
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      centered: true,
+      size: 'sm',
+    });
     this.changedr.detectChanges();
   }
 
@@ -223,7 +231,7 @@ export class SettingComponent extends UIComponent implements OnInit {
     item[this.modelForm.fieldName] = this.modelForm.number;
     this.parameter[this.modelForm.fieldName] = this.modelForm.number;
     this.onSaveParameter(item);
-    // this.modalService.dismissAll();
+    this.modalService.dismissAll();
   }
 
   onSectionChange(data: any) {

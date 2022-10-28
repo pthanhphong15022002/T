@@ -1,4 +1,4 @@
-export class SV_Format {
+export class SV_Formats {
   icon: string;
   fontSize: string;
   fontStyle: string;

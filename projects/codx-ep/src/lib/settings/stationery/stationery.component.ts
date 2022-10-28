@@ -43,7 +43,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   buttons: ButtonModel;
   moreFunc: Array<ButtonModel> = [];
   devices: any;
-  columnsGrid;
+  columnsGrid: any;
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
@@ -84,9 +84,14 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     },
   ];
 
-  constructor(private injector: Injector, 
-    private epService: CodxEpService,    
-    private changeDetectorRef: ChangeDetectorRef,) {
+  popupTitle: string = '';
+  funcIDName: string = '';
+
+  constructor(
+    private injector: Injector,
+    private epService: CodxEpService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
   }
@@ -94,6 +99,11 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   onInit(): void {
     this.epService.getFormModel(this.funcID).then((res) => {
       this.formModel = res;
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.funcIDName = res.customName.toString().toLowerCase();
+      }
     });
   }
 
@@ -104,49 +114,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
           this.grvStationery = gv;
-          // this.columnsGrid = [
-          //   {
-          //     headerText: gv['ResourceID'].headerText,
-          //     template: this.resourceID,
-          //   },
-          //   {
-          //     headerText: gv['ResourceName'].headerText,
-          //     template: this.resourceName,
-          //   },
-          //   {
-          //     headerText: gv['Icon'].headerText,
-          //     template: this.productImg,
-          //   },
-          //   {
-          //     headerText: gv['Color'].headerText,
-          //     template: this.color,
-          //   },
-          //   {
-          //     headerText: gv['GroupID'].headerText,
-          //     template: this.groupID,
-          //   },
-          //   {
-          //     headerText: gv['Note'].headerText,
-          //     template: this.note,
-          //   },
-          //   {
-          //     headerText: 'Số lượng', //gv['Quantity'].headerText,
-          //     template: this.quantity,
-          //   },
-          //   {
-          //     headerText: gv['Owner'].headerText,
-          //     template: this.owner,
-          //   },
-          // ];
           this.views = [
-            // {
-            //   type: ViewType.grid,
-            //   sameData: true,
-            //   active: false,
-            //   model: {
-            //     resources: this.columnsGrid,
-            //   },
-            // },
             {
               type: ViewType.card,
               sameData: true,
@@ -191,6 +159,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   click(evt: ButtonModel) {
+    this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
@@ -199,12 +168,16 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   clickMF(evt, data) {
+    this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
       case 'SYS03':
         this.edit(data);
         break;
-      case 'SYS02':
-        this.delete(data);
+      case 'SYS04':
+        this.copy(data);
         break;
       case 'EPS2301':
         break;
@@ -216,6 +189,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  changeDataMF(e: any, data: any) {}
+
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
       let dataSelected = this.view.dataService.dataSelected;
@@ -225,7 +200,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callfc.openSide(
         PopupAddStationeryComponent,
-        [dataSelected, true],
+        [dataSelected, true, this.popupTitle],
         option
       );
       this.dialog.closed.subscribe((x) => {
@@ -249,26 +224,52 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          let dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddStationeryComponent,
-            [dataSelected, false],
-            option
-          );    
-          this.dialog.closed.subscribe((x) => {
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {
-              });
-            }
-          });     
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let dataSelected = this.view?.dataService?.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          PopupAddStationeryComponent,
+          [dataSelected, false, this.popupTitle],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (x?.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe((res) => {});
+          }
         });
+      });
+  }
+
+  copy(data) {
+    if (data) {
+      data.uMID = data.umid;
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .copy(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let dataSelected = this.view?.dataService?.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          PopupAddStationeryComponent,
+          [dataSelected, true, this.popupTitle],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (x?.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe((res) => {});
+          }
+        });
+      });
   }
 
   delete(data?) {

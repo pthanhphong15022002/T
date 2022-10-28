@@ -74,7 +74,7 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
     private notificationsService: NotificationsService,
     public location: Location,
     private route: ActivatedRoute,
-    private fdSV: CodxFdService,
+    private fdSV: CodxFdService
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
@@ -280,8 +280,10 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
         option
       );
       this.dialog.closed.subscribe((e: any) => {
-        if (e?.event?.file) e.event.data.modifiedOn = new Date();
-        this.view.dataService.update(e.event?.data).subscribe();
+        if (e?.event?.file) {
+          e.event.data.modifiedOn = new Date();
+          this.view.dataService.update(e.event?.data).subscribe();
+        }
         this.changedr.detectChanges();
       });
     });
@@ -320,12 +322,13 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
         this.beforeDelete(option, this.view.dataService.dataSelected)
       )
       .subscribe((res: any) => {
-        if(res) this.fdSV.deleteFile(res.recID, this.view.formModel.entityName)
+        if (res)
+          this.fdSV.deleteFile(data.recID, this.view.formModel.entityName);
       });
   }
 
   beforeDelete(op: any, data) {
-    op.methodName = 'DeleteRangeLineAsync';
+    op.methodName = 'DeleteAsync';
     op.data = data;
     return true;
   }

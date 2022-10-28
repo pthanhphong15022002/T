@@ -67,10 +67,14 @@ export class PopRolesComponent implements OnInit {
     this.dialogSecond = dialog;
     this.data = dt?.data.data;
     this.formType = dt?.data.formType;
-    this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
+    if (dt?.data.data?.length > 0) {
+      if (dt?.data?.userID)
+        this.userID = JSON.parse(JSON.stringify(dt.data?.userID));
+    }
   }
   ngOnInit(): void {
-    this.listChooseRole = JSON.parse(JSON.stringify(this.data));
+    if (this.data?.length > 0)
+      this.listChooseRole = JSON.parse(JSON.stringify(this.data));
     this.loadData();
   }
 
@@ -221,15 +225,15 @@ export class PopRolesComponent implements OnInit {
         }
       });
       var lstTemp = JSON.parse(JSON.stringify(this.listChooseRole));
-      lstTemp.forEach(res => {
-        if(res.functionID == dataTemp.functionID) {
+      lstTemp.forEach((res) => {
+        if (res.functionID == dataTemp.functionID) {
           res.roleID = item.recIDofRole;
           res.recIDofRole = item.recIDofRole;
           res.roleName = item.roleName;
           res.color = item.color;
           res.userID = this.userID;
         }
-      })
+      });
       this.listChooseRole = lstTemp;
     }
   }

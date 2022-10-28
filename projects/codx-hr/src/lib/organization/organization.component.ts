@@ -101,18 +101,6 @@ export class OrgorganizationComponent extends UIComponent {
           template2: this.templateCard,
         },
       },
-      {
-        id: '3',
-        type: ViewType.tree_list, 
-        sameData: true,
-        active: false,
-        model: {
-          resizable: true,
-          template: this.templateTree,
-          panelRightRef: this.templateRight,
-          template2: this.templateCard,
-        },
-      }
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();

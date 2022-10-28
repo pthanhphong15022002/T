@@ -31,7 +31,7 @@
                         </codx-img>
                     </ng-container>
                     <ng-template #imageSrc>
-                        <img [src]="fileUpload.data || fileUpload.avatar" alt="" class="image">
+                        <img [src]="fileUpload.data || fileUpload.avatar" alt="" class="codx-comments-image" >
                     </ng-template>
                 </ng-container>
                 <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">

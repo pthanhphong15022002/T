@@ -6,17 +6,18 @@
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="clickMF($event)"
+  (clickMF)="clickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
 >
   <ng-template #header>
     <div class="d-flex justify-content-between">
-      <h3>{{itemDetail?.title}}</h3>
+      <h3>{{ itemDetail?.title }}</h3>
       <codx-vll
-      [name]="'VL003'"
-      [value]="itemDetail?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-light badge-square badge-md fs-7 p-2"
+        [name]="'VL003'"
+        [value]="itemDetail?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-square badge-md fs-7 p-2"
       >
       </codx-vll>
     </div>

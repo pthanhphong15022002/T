@@ -40,6 +40,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
+            [showSpinButton]="false"
           >
           </codx-input>
         </div>
@@ -77,12 +78,12 @@
       </div>
       <div class="form-group" *ngIf="stepType != 'P'">
         <codx-label
-          name="StepName2"
+          name="StepName"
           [formModel]="form.formModel"
           default="Tên bước công đoạn"
         ></codx-label>
         <codx-input
-          field="stepName2"
+          field="stepName"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
@@ -166,6 +167,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
+            [showSpinButton]="false"
           >
           </codx-input>
         </div>
@@ -277,15 +279,17 @@
             [disabled]="readOnly"
           ></codx-input>
         </div>
-        <div class="">
-          <ng-container *ngIf="listUser.length > 0">
-            <codx-imgs
-              class="flex symbol-40px"
-              [objectId]="listUser.join(';')"
-              objectType="AD_Users"
-              [numberImages]="5"
-            >
-            </codx-imgs>
+        <div *ngIf="listOwnerDetails.length > 0" class="mt-3">
+          <ng-container *ngFor="let item of listOwnerDetails; index as i">
+            <div class="d-flex justify-content-between user-mini-nav align-items-center"
+              style="background-color: #f4f7ff">
+              <span>
+                <codx-img [width]="25" class="me-2" [objectId]="item?.id" objectType="AD_Users">
+                </codx-img>
+              </span><span class="text-dark fw-bold"> {{ item?.name }} </span><span class="mt-1"><a
+                  (click)="onDeleteOwner(item?.id,i)" style="cursor: pointer">
+                  <span class="icon-close icon-16 text-danger ms-3"></span> </a></span>
+            </div>
           </ng-container>
         </div>
       </ng-container>

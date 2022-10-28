@@ -1,17 +1,17 @@
-<codx-views #view
-[views]="views" 
-[idField]="'recID'">
+<codx-views #view [views]="views" [idField]="'recID'">
 </codx-views>
 
 <ng-template #panelContent>
     <div class="page-home bg-body p-6 rounded-4">
         <div class="d-flex">
             <div class="home-center w-100">
-                <app-list-post [module]="'FD'" [dataService]="dataServiceWP" [isShowCreate]="false" [formModel]="view.formModel"></app-list-post>
+                <app-list-post [module]="'FD'" [dataService]="dataServiceWP" [isShowCreate]="false"
+                    [formModel]="view.formModel">
+                </app-list-post>
             </div>
-            <div class="home-right w-350px min-w-350px ms-6 border-left">
-                <div class="card-box border-bottom mb-6">
-                    <div class="box-header d-flex justify-content-between align-items-center mb-4">
+            <div class="home-right w-350px min-w-350px ms-6">
+                <div class="fd_cards">
+                    <div class="">
                         <h4 class="box-title">
                             <codx-label [formModel]="view.formModel" name="lblFeedbackMessage"
                                 default="Thông điệp phản hồi">
@@ -20,94 +20,31 @@
                     </div>
                     <div class="box-body">
                         <div class="ps-6">
-                            <ng-container *ngFor="let item of lstCountCard">
-                                <div class="d-flex align-items-center justify-content-between mb-4">
-                                    <div class="text-dark fw-bolder">
-                                        <codx-label [formModel]="view.formModel"
-                                            [default]="item.Text">
-                                        </codx-label>
-                                    </div>
-                                    <div class="d-flex w-100px justify-content-end">
-                                        <div class="d-flex align-items-center me-6">
-                                            <span class="text-dark me-2">{{item.CountRecvive}}</span>
-                                            <span class="icon-doc_in icon-18 text-primary"></span>
+                            <ng-container *ngIf="lstCountCard.length > 0;else emptyTemplate">
+                                <ng-container *ngFor="let item of lstCountCard">
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div class="text-dark fw-bolder">
+                                            <codx-label [formModel]="view.formModel"
+                                                [default]="item.Text">
+                                            </codx-label>
                                         </div>
-                                        <div class="d-flex align-items-center">
-                                            <span class="text-dark me-2">{{item.CountSend}}</span>
-                                            <span class="icon-doc_out icon-16 text-warning"></span>
+                                        <div class="d-flex w-100px justify-content-end">
+                                            <div class="d-flex align-items-center me-6">
+                                                <span class="text-dark me-2">{{item.CountRecvive}}</span>
+                                                <span class="icon-doc_in icon-18 text-primary"></span>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <span class="text-dark me-2">{{item.CountSend}}</span>
+                                                <span class="icon-doc_out icon-16 text-warning"></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </ng-container>
                             </ng-container>
-                            <!-- <div class="d-flex align-items-center justify-content-between mb-4">
-                                <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="view.formModel" name="lblCommendation"
-                                        default="Tuyên dương"></codx-label>
-                                </div>
-                                <div class="d-flex w-100px justify-content-end">
-                                    <div class="d-flex align-items-center me-6">
-                                        <span class="text-dark me-2">{{ reciver['1'] ?? 0}}</span>
-                                        <span class="icon-doc_in icon-18 text-primary"></span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <span class="text-dark me-2">{{sender['1'] ?? 0}}</span>
-                                        <span class="icon-doc_out icon-16 text-warning"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="view.formModel" name="lblThankYouNot"
-                                        default="Lời cảm ơn"></codx-label>
-                                </div>
-                                <div class="d-flex w-100px justify-content-end">
-                                    <div class="d-flex align-items-center me-6">
-                                        <span class="text-dark me-2">{{ reciver['2'] ?? 0}}</span>
-                                        <span class="icon-doc_in icon-18 text-primary"></span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <span class="text-dark me-2">{{sender['2'] ?? 0}}</span>
-                                        <span class="icon-doc_out icon-16 text-warning"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="view.formModel" name="" default="Góp ý thay đổi">
-                                    </codx-label>
-                                </div>
-                                <div class="d-flex w-100px justify-content-end">
-                                    <div class="d-flex align-items-center me-6">
-                                        <span class="text-dark me-2">{{ reciver['3'] ?? 0}}</span>
-                                        <span class="icon-doc_in icon-18 text-primary"></span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <span class="text-dark me-2">{{sender['3'] ?? 0}}</span>
-                                        <span class="icon-doc_out icon-16 text-warning"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <div class="text-dark fw-bolder">
-                                    <codx-label [formModel]="view.formModel" name="lblImprovement"
-                                        default="Đề xuất cải tiến">
-                                    </codx-label>
-                                </div>
-                                <div class="d-flex w-100px justify-content-end">
-                                    <div class="d-flex align-items-center me-6">
-                                        <span class="text-dark me-2">{{ reciver['4'] ?? 0}}</span>
-                                        <span class="icon-doc_in icon-18 text-primary"></span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <span class="text-dark me-2">{{sender['4'] ?? 0}}</span>
-                                        <span class="icon-doc_out icon-16 text-warning"></span>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
-                <div class="card-box mt-6">
+                <div class="fd_histores mt-6">
                     <div class="box-header d-flex align-items-center justify-content-between mb-5">
                         <h4 class="box-title mb-0">
                             <codx-label name="lblEmpWalletHistory" default="Giao dịch phát sinh gần nhất"
@@ -117,15 +54,9 @@
                     </div>
                     <div class="box-body">
                         <div class="history-box">
-                            <codx-listview
-                                #listviewCoins 
-                                [itemTemplate]="tmpHistoryCoins" 
-                                service="FD"
-                                assemblyName="ERM.Business.FD" 
-                                className="KudosTransBusiness"
-                                method="GetHistoryWalletAsync"
-                                [predicate]="null"
-                                [dataValue]="null"
+                            <codx-listview #listviewCoins [itemTemplate]="tmpHistoryCoins" service="FD"
+                                assemblyName="ERM.Business.FD" className="KudosTransBusiness"
+                                method="GetHistoryWalletAsync" [predicate]="null" [dataValue]="null"
                                 [entityName]="'FD_KudosTrans'">
                             </codx-listview>
                         </div>
@@ -136,7 +67,7 @@
     </div>
 </ng-template>
 <ng-template #tmpHistoryCoins let-item>
-    <div class="d-flex align-items-start wallet-item me-2">
+    <div class="d-flex align-items-start wallet-item rounded-2 p-2 mb-1">
         <div class="me-3 max-h-40">
             <ng-container *ngIf="item.transType == '1' || item.transType == '4' ; else fieldTransType">
                 <img class="w-40px" src="/assets/demos/svg/{{ item.refType | vll:'L1422' : 'icon' | async }}">
@@ -146,21 +77,13 @@
             </ng-template>
         </div>
         <div class="d-flex flex-column flex-grow-1">
-            <div class="text-dark fw-bolder">
-                <!-- <ng-container [ngSwitch]="item.transType">
-                    <ng-container *ngSwitchCase="'1'">
-                        <span>{{item.ReciverName}}</span>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="'1'">
-                        <span>{{item.ReciverName}}</span>
-                    </ng-container>
-                </ng-container> -->
+            <div class="text-dark fw-bold">
                 <span>{{item.title}}</span>
             </div>
-            <div class="text-dark-75 font-size-sm" *ngIf="item.refType">
+            <div class="text-gray-700 fs-7" *ngIf="item.refType">
                 {{item.refType| vll:'L1422':'text'|async}}
             </div>
-            <div class="text-muted font-size-sm">{{item?.createdOn | fmDT:'dmy'}}</div>
+            <div class="text-gray-400 fs-7">{{item?.createdOn | fmDT:'dmy'}}</div>
         </div>
         <div class="d-flex align-items-center text-center">
             <ng-container *ngIf="item.transType =='4';else elsTmp">
@@ -180,6 +103,12 @@
                 </span>
             </ng-template>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #emptyTemplate>
+    <div class="h-100 w-100">
+        <img class="w-100 h-100" src="../assets/themes/sys/default/img/DataEmpty.svg" />
     </div>
 </ng-template>
 

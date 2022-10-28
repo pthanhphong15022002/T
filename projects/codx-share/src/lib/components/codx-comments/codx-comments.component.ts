@@ -236,7 +236,6 @@ export class CodxCommentsComponent implements OnInit {
                 total: res
               }
               this.evtDeleteComment.emit(obj);
-              this.notifySvr.notifyCode("WP033");
             }
             else
             {
@@ -289,7 +288,7 @@ export class CodxCommentsComponent implements OnInit {
       "ERM.Business.WP",
       "VotesBusiness",
       "VotePostAsync",
-      [data.recID, voteType])
+      [data, voteType])
       .subscribe((res: any) => {
         if (res) {
           data.votes = res[0];
@@ -321,9 +320,9 @@ export class CodxCommentsComponent implements OnInit {
 
 
   clickViewDetail(file:any){
-    // if(this.evtViewDetail){
-    //   this.evtViewDetail.emit(file);
-    // }
+    if(this.evtViewDetail){
+      this.evtViewDetail.emit(file);
+    }
   }
 
 }

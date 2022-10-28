@@ -6,41 +6,42 @@
 //   width: 100px;
 //   height: 150px !important;
 // }
-.symbol.symbol-100px.symbol-3by2 {
-  height: 150px !important;
-  width: 100px !important;
-}
-.symbol.symbol-100px.symbol-3by2 .symbol-label {
-  height: 150px !important;
-  width: 100px !important;
-}
-.symbol.symbol-100px.symbol-3by2 > img {
-  height: 150px;
-  width: 100px;
-  max-width: none;
-}
+.gift-list {
+  .symbol.symbol-100px.symbol-3by2 {
+    height: 150px !important;
+    width: 100px !important;
+  }
 
-.pic-color {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  display: inline-block;
-  border: 1px solid #c5cacb;
-}
+  .symbol.symbol-100px.symbol-3by2 .symbol-label {
+    height: 150px !important;
+    width: 100px !important;
+  }
 
-.card-img {
-  height: 150px !important;
-}
+  .symbol.symbol-100px.symbol-3by2>img {
+    height: 150px;
+    width: 100px;
+    max-width: none;
+  }
 
-.icon-check {
-  position: absolute;
-  top: 4px;
-  right: 5px;
-  background-color: #03a9f4;
-  border-radius: 20px;
-  padding: 3px;
-}
+  .pic-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+  }
 
-.border-5px {
-  border-radius: 5px
+  .card-img {
+    height: 150px !important;
+  }
+
+  .icon-check {
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    background-color: #03a9f4;
+    border-radius: 20px;
+    padding: 3px;
+  }
+
+
 }

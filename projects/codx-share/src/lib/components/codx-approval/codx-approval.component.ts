@@ -240,17 +240,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           dialogModel
         );
         dialogApprove.closed.subscribe((x) => {
-          if (x.event && x.event?.result) {
-            if (x.event?.mode == 1) {
-              //Ký
-              data.status = '5';
-            } else if (x.event?.mode == 2) {
-              //Từ chối
-              data.status = '4';
-            } else if (x.event?.mode == 3) {
-              //làm lại
-              data.status = '2';
-            }
+          if (x.event?.result) {
+            data.status = x.event?.mode;
             this.view.dataService.update(data).subscribe();
             this.esService.setupChange.next(true);
           }

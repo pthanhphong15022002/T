@@ -11,6 +11,7 @@
     [vllStatus]="vllStatus"
     [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
+    [dataService]="view.dataService"
     (hoverPopover)="hoverPopover($event)"
   >
   </share-view-detail>
@@ -528,25 +529,25 @@
     </span>
   </div>
   <ng-template #popDetailPriority>
-    <span
-      ><codx-label
-        name="Priority"
+    <span>
+      <codx-label
+        fiedName="lblPriority"
         [formModel]="view.formModel"
-        default="Độ ưu tiên :"
-      ></codx-label></span
+        default="Độ ưu tiên:"
+      ></codx-label> </span
     ><span>
       {{ data?.priority | vll: vllPriority:"text" | async }}
     </span>
   </ng-template>
 
   <ng-template #popOverDue>
-    <span
-      ><codx-label
+    <span>
+      <codx-label
         name="lblOverDue"
         [formModel]="view.formModel"
-        default="Đã quá hạn !"
-      ></codx-label
-    ></span>
+        default="Đã quá hạn!"
+      ></codx-label>
+    </span>
   </ng-template>
 </ng-template>
 

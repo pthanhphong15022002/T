@@ -99,7 +99,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
-        device.icon=item.icon;
+        device.icon = item.icon;
         this.carsEquipments.push(device);
         this.carsEquipments = JSON.parse(JSON.stringify(this.carsEquipments));
       });
@@ -190,11 +190,14 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
     console.log(event);
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
       case 'SYS03':
         this.edit(data);
         break;
-      case 'SYS02':
-        this.delete(data);
+      case 'SYS04':
+        this.copy(data);
         break;
     }
   }
@@ -254,6 +257,32 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
           this.dialog = this.callfc.openSide(
             PopupAddCarsComponent,
             [this.view.dataService.dataSelected, false, this.popupTitle],
+            option
+          );
+          this.dialog.closed.subscribe((x) => {
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {});
+            }
+          });
+        });
+    }
+  }
+
+  copy(obj?) {
+    if (obj) {
+      this.view.dataService.dataSelected = obj;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.view?.dataService?.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          this.dialog = this.callfc.openSide(
+            PopupAddCarsComponent,
+            [this.view.dataService.dataSelected, true, this.popupTitle],
             option
           );
           this.dialog.closed.subscribe((x) => {

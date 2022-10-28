@@ -1,35 +1,73 @@
-<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
-  [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)" [openMore]="true"
-  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]" [data]="data">
+<codx-layout-add
+  #form
+  [title]="title"
+  [tabInfo]="tabInfo"
+  [formModel]="formModel"
+  [subHeader]=""
+  [subHeaderText]=""
+  [footer]="footer"
+  [dialog]="dialogRef"
+  (setTitle)="setTitle($event)"
+  [openMore]="true"
+  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]"
+  [data]="data"
+>
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
       <div class="form-group">
         <div class="d-flex justify-content-between align-items-center">
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
           </codx-label>
-          <span class="label-status text-primary">{{
+          <!-- <span class="label-status text-primary">{{
             data?.status | vll: "VL003":"text" | async
-            }}</span>
+            }}</span> -->
         </div>
-        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
-          (valueChange)="valueCbxRoomChange($event)">
+        <codx-input
+          ControlName="resourceID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueCbxRoomChange($event)"
+        >
         </codx-input>
         <div class="row">
-          <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
+          <div
+            *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
+            class="d-flex flex-row justify-content-between"
+          >
             <div class="d-flex justify-content-start">
-              <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
-                <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
-                  <span class="me-1 ps-2" [className]="item.icon" [ngClass]="[
+              <div
+                class="d-flex justify-content-start"
+                *ngFor="let item of tmplstDevice"
+              >
+                <li
+                  class="d-flex align-items-end me-2"
+                  [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'"
+                >
+                  <span
+                    class="me-1 ps-2"
+                    [className]="item.icon"
+                    [ngClass]="[
                       item.isSelected ? 'text-primary' : 'text-muted'
-                    ]">
-                  </span>{{ item.text }}
+                    ]"
+                  >
+                  </span
+                  >{{ item.text }}
                 </li>
               </div>
             </div>
-            <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
-              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
-                (click)="openPopupDevice(popupDevice)">
-                <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+            <span
+              class="text-end"
+              *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null"
+            >
+              <button
+                type="button"
+                class="btn btn-clean btn-sm btn-icon btn-icon-md"
+                data-dismiss="modal"
+                (click)="openPopupDevice(popupDevice)"
+              >
+                <i
+                  class="icon-select_all text-primary text-hover-primary-dark icon-24"
+                ></i>
               </button>
             </span>
           </div>
@@ -40,28 +78,67 @@
         <div class="col-4 form-group">
           <codx-label fiedName="BookingOn" [formModel]="form.formModel">
           </codx-label>
-          <codx-input field="bookingOn" [crrValue]="data.bookingOn" format="d" type="datetime" class="test-datetime"
-            (valueChange)="valueDateChange($event)">
+          <codx-input
+            field="bookingOn"
+            [crrValue]="data.bookingOn"
+            format="d"
+            type="datetime"
+            class="test-datetime"
+            (valueChange)="valueDateChange($event)"
+          >
           </codx-input>
         </div>
 
         <div class="col-3 form-group">
-          <codx-label name="lblStatTime" default="Từ giờ" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName">
+          <codx-label
+            name="lblStatTime"
+            default="Từ giờ"
+            [formName]="formModel.formName"
+            [gridViewName]="formModel.gridViewName"
+          >
           </codx-label>
-          <codx-input type="datetime" class="test-datetime" field="startTime" [crrValue]="startTime" format="t"
-            (valueChange)="valueStartTimeChange($event)" [disabled]="bookingOnValid">
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="startTime"
+            [crrValue]="startTime"
+            format="t"
+            (valueChange)="valueStartTimeChange($event)"
+            [disabled]="bookingOnValid"
+          >
           </codx-input>
         </div>
         <div class="col-3 form-group">
-          <codx-label name="lblEndTime" default="Đến giờ" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"></codx-label>
-            <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
-            (valueChange)="valueEndTimeChange($event)" [disabled]="bookingOnValid">
+          <codx-label
+            name="lblEndTime"
+            default="Đến giờ"
+            [formName]="formModel.formName"
+            [gridViewName]="formModel.gridViewName"
+          ></codx-label>
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="endTime"
+            [crrValue]="endTime"
+            format="t"
+            (valueChange)="valueEndTimeChange($event)"
+            [disabled]="bookingOnValid"
+          >
           </codx-input>
         </div>
 
         <div class="col-2 d-flex flex-column justify-content-center">
-          <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
-            (valueChange)="valueAllDayChange($event)" [disabled]="bookingOnValid" [checked]="isFullDay">
+          <codx-input
+            #checkbox
+            type="checkbox"
+            label="Cả ngày"
+            labelPosition="after"
+            field="day"
+            class="test-check"
+            (valueChange)="valueAllDayChange($event)"
+            [disabled]="bookingOnValid"
+            [checked]="isFullDay"
+          >
           </codx-input>
         </div>
       </div>
@@ -69,56 +146,97 @@
       <div class="form-group">
         <codx-label fiedName="ReasonID" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input
+          ControlName="reasonID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
         </codx-input>
       </div>
 
       <div class="form-group">
         <codx-label fiedName="Title" [formModel]="form.formModel"> </codx-label>
-        <codx-input ControlName="title" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+        <codx-input
+          ControlName="title"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
       </div>
 
       <div class="form-group">
         <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
-        <codx-input ControlName="memo" [formModel]="form.formModel" [Group]="form.formGroup" class="h-105px">
+        <codx-input
+          ControlName="memo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          class="h-105px"
+        >
         </codx-input>
       </div>
 
       <div class="d-flex flex-column form-group">
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center">
-            <codx-input #checkbox type="switch" field="online" [checked]="data?.online" [crrValue]="data?.online"
-              (valueChange)="valueChange($event)" labelPosition="After">
+            <codx-input
+              #checkbox
+              type="switch"
+              field="online"
+              [checked]="data?.online"
+              [crrValue]="data?.online"
+              (valueChange)="valueChange($event)"
+              labelPosition="After"
+            >
             </codx-input>
-            <span class="fw-bold ms-2 mt-2"><label for="switchOnl">
+            <span class="fw-bold ms-2 mt-2"
+              ><label for="switchOnl">
                 <codx-label fiedName="Online" [formModel]="form.formModel">
                 </codx-label>
               </label>
             </span>
           </div>
           <ng-container class="text-end align-items-end" *ngIf="data?.online">
-            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink()">
-              <i class="icon-insert_link text-primary text-hover-primary-dark icon-24"></i>
+            <button
+              type="button"
+              class="btn btn-clean btn-sm btn-icon btn-icon-md"
+              (click)="openPopupLink()"
+            >
+              <i
+                class="icon-insert_link text-primary text-hover-primary-dark icon-24"
+              ></i>
             </button>
           </ng-container>
         </div>
-        <ng-container class="d-flex align-items-center fw-bold" *ngIf="data?.online">
-          <a href="{{ data?.onlineUrl }}" class="text-decoration-underline">{{
-            data?.onlineUrl
-            }}</a>
+        <ng-container
+          class="d-flex align-items-center fw-bold"
+          *ngIf="data?.online && data.onlineUrl"
+        >
+          <button
+            (click)="connectMeetingNow()"
+            class="text-decoration-underline"
+          >
+            {{ data?.onlineUrl }}
+          </button>
         </ng-container>
       </div>
 
       <div class="d-flex flex-column mb-8">
-        <div class="d-flex justify-content-between align-items-center mb-2 form-group">
-          <codx-label name="lblAttendees" default="Người tham dự" [formName]="formModel.formName" [gridViewName]="formModel.gridViewName"> </codx-label>
+        <div
+          class="d-flex justify-content-between align-items-center mb-2 form-group"
+        >
+          <codx-label
+            name="lblAttendees"
+            default="Người tham dự"
+            [formName]="formModel.formName"
+            [gridViewName]="formModel.gridViewName"
+          >
+          </codx-label>
           <div class="d-flex flex-row text-end align-items-end">
-            <div class="mx-2">
+            <!-- <div class="mx-2">
               <button class="btn btn-sm btn-icon btn-light-secondary" (click)="openOptionalUserPopup()">
                 <span class="icon-group_add icon-18"></span>
               </button>
 
-            </div>
+            </div> -->
             <div class="mx-2">
               <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
                 <span class="icon-group_add text-primary icon-18"></span>
@@ -127,52 +245,98 @@
           </div>
         </div>
         <ng-container *ngIf="isPopupOptionalUserCbb">
-          <codx-combobox-popup [comboboxName]="'Users'" [field]="'cbbUser'" [multiple]="true" [width]="700"
-            [height]="600" [value]="" [formModel]="formModel" (clickSave)="valueCbxUserOptionalChange($event)">
+          <codx-combobox-popup
+            [comboboxName]="'Users'"
+            [field]="'cbbUser'"
+            [multiple]="true"
+            [width]="700"
+            [height]="600"
+            [value]=""
+            [formModel]="formModel"
+            (clickSave)="valueCbxUserOptionalChange($event)"
+          >
           </codx-combobox-popup>
         </ng-container>
 
         <ng-container *ngIf="isPopupUserCbb">
-          <codx-combobox-popup [comboboxName]="'Users'" [field]="'cbbUser'" [multiple]="true" [width]="700"
-            [height]="600" [value]="" [formModel]="formModel" (clickSave)="valueCbxUserChange($event)">
+          <codx-combobox-popup
+            [comboboxName]="'Users'"
+            [field]="'cbbUser'"
+            [multiple]="true"
+            [width]="700"
+            [height]="600"
+            [value]=""
+            [formModel]="formModel"
+            (clickSave)="valueCbxUserChange($event)"
+          >
           </codx-combobox-popup>
         </ng-container>
 
         <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
           <div class="symbol-group-badge" *ngIf="curUser != null">
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [width]="30" [objectId]="curUser?.userID" objectType="AD_Users"></codx-img>
+              <codx-img
+                [width]="30"
+                [objectId]="curUser?.userID"
+                objectType="AD_Users"
+              ></codx-img>
               <span
-                class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"></span>
+                class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"
+              ></span>
             </div>
           </div>
 
-          <div class="symbol-group-badge" *ngIf="attendeesList != null && attendeesList?.length >= 1">
+          <div
+            class="symbol-group-badge"
+            *ngIf="attendeesList != null && attendeesList?.length >= 1"
+          >
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [width]="30" [objectId]="attendeesList[0]?.userID" objectType="AD_Users"></codx-img>
+              <codx-img
+                [width]="30"
+                [objectId]="attendeesList[0]?.userID"
+                objectType="AD_Users"
+              ></codx-img>
               <span
-                class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+                class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"
+              ></span>
             </div>
           </div>
           <div class="symbol-group-badge" *ngIf="attendeesList?.length >= 2">
             <div class="symbol symbol-30px symbol-circle">
-              <codx-img [width]="30" [objectId]="attendeesList[1]?.userID" objectType="AD_Users"></codx-img>
+              <codx-img
+                [width]="30"
+                [objectId]="attendeesList[1]?.userID"
+                objectType="AD_Users"
+              ></codx-img>
               <span
-                class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"></span>
+                class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"
+              ></span>
             </div>
           </div>
 
           <div class="symbol-group-badge" *ngIf="attendeesList.length > 2">
-            <span class="symbol symbol-30px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-              <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ lstUser?.length +
-                lstUserOptional?.length - 2 }}</span>
+            <span
+              class="symbol symbol-30px symbol-circle"
+              data-bs-toggle="modal"
+              data-bs-target="#kt_modal_view_users"
+            >
+              <span
+                class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
+                >+{{ lstUser?.length + lstUserOptional?.length - 2 }}</span
+              >
             </span>
           </div>
         </div>
       </div>
       <div class="d-flex flex-column mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-2 form-group">
-          <codx-label default="Tài liệu tham khảo" name="lblAttachments" [formModel]="form.formModel">
+        <div
+          class="d-flex justify-content-between align-items-center mb-2 form-group"
+        >
+          <codx-label
+            default="Tài liệu tham khảo"
+            name="lblAttachments"
+            [formModel]="form.formModel"
+          >
           </codx-label>
           <!-- <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
               <span class="icon-cloud_upload btn-text-primary me-2"  (click)="popupUploadFile($event)" ></span>
@@ -180,10 +344,23 @@
             </a> -->
         </div>
         <div class="AttachmentFile-group flex-nowrap">
-          <codx-attachment #attachment [objectType]="formModel?.entityName" hideBtnSave="1" hideFolder="1"
-            hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
-            [objectId]="data?.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
-            (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">
+          <codx-attachment
+            #attachment
+            [objectType]="formModel?.entityName"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            hideImageUpload="0"
+            hideImageThumb="0"
+            [functionID]="funcID"
+            [objectId]="data?.recID"
+            [allowMultiFile]="0"
+            [idBrowse]="'add'"
+            displayThumb="full"
+            (fileAdded)="fileAdded($event)"
+            (fileCount)="fileCount($event)"
+          >
           </codx-attachment>
         </div>
       </div>
@@ -192,13 +369,20 @@
 
   <ng-template #tabPeopleInfo>
     <ng-container *ngIf="form && form.formGroup">
-      <div class="d-flex justify-content-between align-items-center mb-4" id="PeopleInfo">
-        <div class="fs-5 fw-bold">
-          <codx-label name="lblPeopleInfo" default="Người tham dự">
-          </codx-label>
+      <div class="d-flex justify-content-between">
+        <div class="d-flex flex-row justify-content-start">
+          <ng-container *ngFor="let item of listRoles">
+            <div class="d-flex align-items-center justify-content-start me-4">
+              <span
+                inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
+              ></span>
+              <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+            </div>
+          </ng-container>
         </div>
+
         <div class="d-flex flex-row text-end align-items-end">
-          <div class="mx-2">
+          <!-- <div class="mx-2">
             <button class="btn btn-sm btn-icon btn-light-secondary" (click)="openOptionalUserPopup()">
               <span class="icon-group_add icon-18"></span>
             </button>
@@ -207,13 +391,45 @@
             <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
               <span class="icon-group_add text-primary icon-18"></span>
             </button>
-          </div>
+          </div> -->
+          <button
+            class="btn btn-sm btn-outline btn-outline-secondary d-flex flex-row align-items-center"
+            (click)="openUserPopup()"
+          >
+            <span class="icon-group_add icon-18 me-2 text-gray-800"></span>
+            <codx-label
+              name="lblChooseRoomAttendees"
+              class="fw-bold text-gray-800"
+              default="Chọn người tham dự"
+            ></codx-label>
+          </button>
         </div>
       </div>
-      <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
+      <div
+        class="d-flex justify-content-between align-items-center mt-4 mb-2"
+        id="PeopleInfo"
+      >
+        <div class="fw-bold">
+          <codx-label name="lblPeopleInfo" default="Người tham dự">
+          </codx-label>
+        </div>
+        <div class="fw-bold">
+          <span>
+            {{ "1" | vll: "EP017":"text" | async }}
+          </span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb-4 pb-2" *ngIf="curUser != null">
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [width]="30" [objectId]="curUser?.userID" objectType="AD_Users"></codx-img>
-          <span class="symbol-badge badge badge-sm badge-circle bg-danger top-100 start-100 text-white fs-8">A</span>
+          <codx-img
+            [width]="30"
+            [objectId]="curUser?.userID"
+            objectType="AD_Users"
+          ></codx-img>
+          <span
+            class="symbol-badge top-100 start-100 text-white fs-8"
+            inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"
+          ></span>
         </div>
 
         <div class="d-flex flex-column flex-grow-1">
@@ -221,22 +437,46 @@
             {{ curUser?.userName }}
           </div>
           <div>
-            <span class="text-muted">{{
-              curUser.roleType | vll: "EP009":"text" | async
-              }}</span>
+            <span class="text-muted">{{ curUser.roleName }}</span>
           </div>
         </div>
 
-        <div class="d-flex flex-column justify-content-center align-items-center">
-          <span class="badge badge-light-success fs-7 fw-bold mb-1" >{{"0" | vll: "EP017":"text" | async}}</span>
+        <div
+          class="d-flex flex-column justify-content-center align-items-center me-5"
+        >
+          <codx-input
+            type="checkbox"
+            [checked]="curUser.optional"
+            (valueChange)="attendeesCheckChange($event, curUser.userID)"
+          >
+          </codx-input>
+          <!-- <span class="badge badge-light-success fs-7 fw-bold mb-1" >{{"0" | vll: "EP017":"text" | async}}</span> -->
           <!-- <span class="text-muted text-center"> {{curUser?.modifiedOn}} </span> -->
         </div>
       </div>
 
-      <div class="d-flex align-items-center mb-4" *ngFor="let item of attendeesList">
+      <div
+        class="d-flex align-items-center mb-4 pb-2"
+        *ngFor="let item of attendeesList"
+      >
         <div class="symbol symbol-30px symbol-circle me-4">
-          <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
-          <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
+          <codx-img
+            [width]="30"
+            [objectId]="item.userID"
+            objectType="AD_Users"
+          ></codx-img>
+          <span
+            popoverClass="userPopoverClass"
+            [ngbPopover]="popoverSelectRoles"
+            placement="right"
+            #p="ngbPopover"
+            (mouseenter)="showPopover(p, item.userID)"
+            autoClose="outside"
+            class="symbol-badge top-100 start-100 text-white fs-8"
+            inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
+          ></span>
+
+          <!-- <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span> -->
         </div>
 
         <div class="d-flex flex-column flex-grow-1">
@@ -246,21 +486,29 @@
           <div>
             <span class="text-muted">{{
               item.roleType | vll: "EP009":"text" | async
-              }}</span>
+            }}</span>
           </div>
         </div>
 
-        <div class="d-flex flex-column justify-content-center align-items-center">
-          <div *ngIf="!item.optional">
+        <div
+          class="d-flex flex-column justify-content-center align-items-center me-5"
+        >
+          <codx-input
+            type="checkbox"
+            [checked]="item.optional"
+            (valueChange)="attendeesCheckChange($event, item.userID)"
+          >
+          </codx-input>
+          <!-- <div class="d-flex flex-column justify-content-center align-items-center" *ngIf="!item.optional">            
             <span class="badge badge-light-success fs-7 fw-bold mb-1">{{ "0" | vll: "EP017":"text" | async}}</span>
-          </div>
-          <div *ngIf="item.optional">
+          </div> -->
+          <!-- <div *ngIf="item.optional">
             <span class="badge badge-light-danger badge- fs-7 fw-bold mb-1">{{item.optional| vll: "EP017":"text" | async}}</span>
-          </div>
+          </div> -->
           <!-- <span class="text-muted text-center"> {{item.modifiedOn}} </span> -->
         </div>
       </div>
-      <div class="form-group d-flex flex-row justify-content-center">
+      <!-- <div class="form-group d-flex flex-row justify-content-center">
         <div
           class="note-bar d-flex flex-row justify-content-center align-items-center rounded-right rounded-left shadow p-2">
           <div>
@@ -276,12 +524,13 @@
             <span class="mx-2">{{ "3" | vll: "EP009":"text" | async }}</span>
           </div>
         </div>
-      </div>
+      </div> -->
     </ng-container>
   </ng-template>
-
   <ng-template #tabStationery>
-    <div class="form-group row d-flex flex-row justify-content-start align-items-center">
+    <div
+      class="form-group row d-flex flex-row justify-content-start align-items-center"
+    >
       <div class="col-4">
         <codx-label fiedName="Attendees" [formModel]="form.formModel">
         </codx-label>
@@ -290,79 +539,135 @@
         <!-- <codx-input ControlName="attendees" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="valueAttendeesChange($event)">
         </codx-input> -->
-        <codx-input [cusButton]="true" 
-        [min]="1" 
-        [max]="50" 
-        type="number" 
-        field="attendees" 
-        [crrValue]="data?.attendees" 
-        (valueChange)="valueAttendeesChange($event)">
+        <codx-input
+          [cusButton]="true"
+          [min]="1"
+          [max]="50"
+          type="number"
+          field="attendees"
+          [crrValue]="data?.attendees"
+          (valueChange)="valueAttendeesChange($event)"
+        >
         </codx-input>
       </div>
     </div>
 
     <div class="separator my-5"></div>
-    <div class="d-flex flex-stack mb-4 form-group" *ngFor="let item of lstStationery">
+    <div
+      class="d-flex flex-stack mb-4 form-group"
+      *ngFor="let item of lstStationery"
+    >
       <div class="d-flex align-items-center me-3">
         <div class="pe-4">
-          <codx-img [objectId]="item.objectID" imageType="square" width="50" objectType="EP_Stationery"></codx-img>
+          <codx-img
+            [objectId]="item.objectID"
+            imageType="square"
+            width="50"
+            objectType="EP_Stationery"
+          ></codx-img>
         </div>
         <div class="flex-grow-2">
           <span class="text-gray-800 text-hover-primary fw-bolder lh-0">{{
             item.text
-            }}</span>
+          }}</span>
           <span class="text-gray-400 d-block fs-6">
-            <codx-label name="lblUMID" default="Đơn vị tính"></codx-label> 
-            : 
+            <codx-label name="lblUMID" default="Đơn vị tính"></codx-label>
+            :
             {{ item.umid }}
           </span>
         </div>
       </div>
       <div class="col-4">
-        <codx-input type="number" [cusButton]="true" class="test-number min-w-50px" [field]="item.id" 
-          [crrValue]="item.quantity" [min]="1" [max]="50" (valueChange)="valueQuantityChange($event)">
+        <codx-input
+          type="number"
+          [cusButton]="true"
+          class="test-number min-w-50px"
+          [field]="item.id"
+          [crrValue]="item.quantity"
+          [min]="1"
+          [max]="50"
+          (valueChange)="valueQuantityChange($event)"
+        >
         </codx-input>
       </div>
     </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4" id="Stationery">
-      <div class="d-flex flex-row text-end align-items-end"> 
-        <button class="btn btn-sm btn-outline btn-outline-secondary me-2 d-flex flex-row align-items-center" (click)="openStationeryPopup()">
+    <div
+      class="d-flex justify-content-between align-items-center mb-4"
+      id="Stationery"
+    >
+      <div class="d-flex flex-row text-end align-items-end">
+        <button
+          class="btn btn-sm btn-outline btn-outline-secondary me-2 d-flex flex-row align-items-center"
+          (click)="openStationeryPopup()"
+        >
           <span class="icon-layers icon-18 me-2 text-gray-800"></span>
-          <codx-label name="lblChooseStationery" class="fw-bold text-gray-800" default="Chọn văn phòng phẩm"></codx-label>
-        </button>       
-        
+          <codx-label
+            name="lblChooseStationery"
+            class="fw-bold text-gray-800"
+            default="Chọn văn phòng phẩm"
+          ></codx-label>
+        </button>
+
         <ng-container *ngIf="isPopupStationeryCbb">
-          <codx-combobox-popup [comboboxName]="'EP_Stationery'" [multiple]="true" [width]="700"
-            [height]="600" [value]="" (close)="closePopUpCbb()" (clickSave)="valueCbxStationeryChange($event)">
+          <codx-combobox-popup
+            [comboboxName]="'EP_Stationery'"
+            [multiple]="true"
+            [width]="700"
+            [height]="600"
+            [value]=""
+            (close)="closePopUpCbb()"
+            (clickSave)="valueCbxStationeryChange($event)"
+          >
           </codx-combobox-popup>
         </ng-container>
       </div>
     </div>
-    
   </ng-template>
 
   <ng-template #tabMoreInfo>
     <ng-container *ngIf="form && form.formGroup">
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Category"></codx-label>
-        <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="Category"
+        ></codx-label>
+        <codx-input
+          ControlName="category"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
         </codx-input>
       </div>
 
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="Note"> </codx-label>
-        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input
+          ControlName="note"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
         </codx-input>
       </div>
 
-      <div class="row form-group d-flex flex-row justify-content-start align-items-center">
+      <div
+        class="row form-group d-flex flex-row justify-content-start align-items-center"
+      >
         <div class="col-10">
-          <codx-label fiedName="Repeat" [formModel]="form.formModel"></codx-label>
+          <codx-label
+            fiedName="Repeat"
+            [formModel]="form.formModel"
+          ></codx-label>
         </div>
         <div class="col-2">
-          <codx-input #checkbox type="switch" field="repeat" [checked]="data?.repeat" [crrValue]="data?.repeat"
-            (valueChange)="valueChange($event)">
+          <codx-input
+            #checkbox
+            type="switch"
+            field="repeat"
+            [checked]="data?.repeat"
+            [crrValue]="data?.repeat"
+            (valueChange)="valueChange($event)"
+          >
           </codx-input>
         </div>
       </div>
@@ -372,36 +677,67 @@
   <ng-template #footer>
     <ng-container *ngIf="form && form.formGroup">
       <div class="d-flex justify-content-between">
-        <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
-          <span class="icon-cloud_upload btn-text-primary me-2" (click)="popupUploadFile($event)"></span>
-          <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="form.formModel"></codx-label>
+        <a
+          class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+        >
+          <span
+            class="icon-cloud_upload btn-text-primary me-2"
+            (click)="popupUploadFile($event)"
+          ></span>
+          <codx-label
+            fiedName="lblUploadFile"
+            default="Đính kèm"
+            [formModel]="form.formModel"
+          ></codx-label>
         </a>
         <div class="btn-group">
-          <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
-            <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
+          <button
+            class="btn btn-outline-primary me-2"
+            (click)="onSaveForm(true)"
+          >
+            <codx-label
+              name="lblApprove"
+              default="Gửi duyệt"
+              [formModel]="formModel"
+            ></codx-label>
           </button>
           <button class="btn btn-primary" (click)="onSaveForm()">
-            <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+            <codx-label
+              name="lblSave"
+              default="Lưu"
+              [formModel]="formModel"
+            ></codx-label>
           </button>
         </div>
       </div>
     </ng-container>
   </ng-template>
-  
+
   <ng-template #popupDevice let-dialog>
     <div class="modal-header">
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
           <h2 id="modal-basic-title">
-            <codx-label name = "lblEquipment" default="Cài đặt thiết bị" ></codx-label>
+            <codx-label
+              name="lblEquipment"
+              default="Cài đặt thiết bị"
+            ></codx-label>
           </h2>
-          <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-            (click)="dialog.close()">
-            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+          <button
+            type="button"
+            class="btn btn-xs btn-icon btn-light btn-hover-primary"
+            aria-label="Close"
+            (click)="dialog.close()"
+          >
+            <span
+              class="icon-close icon-20 text-dark text-hover-primary"
+            ></span>
           </button>
         </div>
         <div class="text-dark-50">
-          <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+          <codx-label
+            name="lblChooseRoomEquipments"
+            default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
           ></codx-label>
         </div>
       </div>
@@ -410,16 +746,26 @@
       <div class="py-2" *ngFor="let item of tmplstDevice">
         <div class="d-flex flex-stack">
           <div class="d-flex">
-            <span class="me-1 ps-2" [className]="item.icon"
-              [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"></span>
+            <span
+              class="me-1 ps-2"
+              [className]="item.icon"
+              [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"
+            ></span>
             <div class="d-flex flex-column justify-content-center">
-              <span href="#" class="ms-2 text-dark fw-bolder">{{ item?.text }}</span>
+              <span href="#" class="ms-2 text-dark fw-bolder">{{
+                item?.text
+              }}</span>
             </div>
           </div>
           <div class="d-flex justify-content-end">
             <div class="form-check form-check-solid form-switch">
-              <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
-                [checked]="item?.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
+              <codx-input
+                class="form-check-input w-35px h-20px"
+                type="switch"
+                id="googleswitch"
+                [checked]="item?.isSelected"
+                (valueChange)="checkedChange($event, item)"
+              ></codx-input>
               <label class="form-check-label" for="googleswitch"></label>
             </div>
           </div>
@@ -429,40 +775,36 @@
   </ng-template>
 
   <ng-template #addLink let-dialog>
-    <div class="modal-header">
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 id="modal-basic-title">
-            <codx-label name="lblOnlineUrl" default="Họp trực tuyến" ></codx-label>
-          </h2>
-          <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-            (click)="dialog.close()">
-            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
-          </button>
-        </div>
-        <div class="text-dark-50">
-          <codx-label name="lblOnlineUrlSetting" default="Thiết lập đường dẫn"
-            ></codx-label>
-        </div>
-      </div>
-    </div>
-
-    <div class="card-body">
-      <div class="form-group"></div>
-      <div class="form-group">
-        <codx-label fiedName="OnlineUrl" default="Đường dẫn" [formModel]="dialog.formModel"></codx-label>
-      </div>
-      <div class="form-group">
-        <codx-input class="form-control" ControlName="onlineUrl" [formModel]="form.formModel" [Group]="form.formGroup">
-        </codx-input>
-      </div>
-    </div>
-    <div class="card-footer" (click)="dialog.close()">
-      <div class="form-group d-flex justify-content-end flex-row">
-        <button type="button" class="btn btn-primary">
-          <codx-label name="lblSave" default="Lưu"></codx-label>
-        </button>
-      </div>
-    </div>
+    <lib-meeting
+      #suremeet
+      [dialog]="dialog"
+      [meetingTitle]="data.title"
+      [meetingDescription]="data.memo"
+      [meetingStartDate]="data.startDate"
+      [meetingStartTime]="startTime"
+      [meetingDuration]="60"
+      [meetingPassword]="null"
+      [meetingUrl]="data.onlineUrl"
+      [userName]="'ABC'"
+      [mail]="'abc@gmail.com'"
+      [isManager]="true"
+    ></lib-meeting>
   </ng-template>
 </codx-layout-add>
+
+<ng-template #popoverSelectRoles>
+  <div class="d-flex flex-column mb-1 w-150px">
+    <ng-container *ngFor="let item of listRoles">
+      <div
+        class="d-flex align-items-center btn btn-sm btn-white"
+        (click)="selectRoseType(idUserSelected, item.value)"
+        style="cursor: pointer"
+      >
+        <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
+        <div class="fs-7 ms-2 text-gray-600">
+          {{ item.text }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

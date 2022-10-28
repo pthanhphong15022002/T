@@ -141,7 +141,7 @@ export class CodxEsService {
             );
           } else {
             this.notificationsService.notifyCode(
-              'SYS028',
+              'SYS009',
               0,
               '"' + headerText + '"'
             );
@@ -734,6 +734,16 @@ export class CodxEsService {
     );
   }
 
+  copyApprovalStep(oldTransID: string, newTransID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'CopyApprovalStepAsync',
+      [oldTransID, newTransID]
+    );
+  }
+
   //#endregion
 
   //#region EmailTemplate
@@ -1045,6 +1055,28 @@ export class CodxEsService {
 
   //#endregion
 
+  //#region confirm otp
+  createOTPPin(tranRecID: string, time) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'CreateOTPPinAsync',
+      [tranRecID, time]
+    );
+  }
+
+  confirmOTPPin(tranRecID: string, value) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ConfirmOTPPinAsync',
+      [tranRecID, value]
+    );
+  }
+
+  //#endregion
   addOrEditSignArea(recID, fileID, area, areaID): Observable<any> {
     let data = [recID, fileID, area, areaID];
     return this.api.execSv(

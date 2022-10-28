@@ -194,19 +194,19 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
     this.modelForm.title = arrayTitle[typeContent];
     this.modelForm.type = typeContent;
     if (typeContent == 0) {
-      this.modelForm.quantity = this.data.MaxSends;
-      this.modelForm.cycle = this.data.MaxSendPeriod;
+      this.modelForm.quantity = this.quantity.MaxSends;
+      this.modelForm.cycle = this.quantity.MaxSendPeriod;
     }
     if (typeContent == 1) {
-      this.modelForm.quantity = this.data.MaxReceives;
-      this.modelForm.cycle = this.data.MaxReceivePeriod;
+      this.modelForm.quantity = this.quantity.MaxReceives;
+      this.modelForm.cycle = this.quantity.MaxReceivePeriod;
     }
     if (typeContent == 2) {
-      this.modelForm.quantity = this.data.MaxPoints;
-      this.modelForm.cycle = this.data.MaxPointPeriod;
+      this.modelForm.quantity = this.quantity.MaxPoints;
+      this.modelForm.cycle = this.quantity.MaxPointPeriod;
     }
     if (typeContent == 3) {
-      this.modelForm.quantity = this.data.MaxPointPerOnce;
+      this.modelForm.quantity = this.quantity.MaxPointPerOnce;
     }
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',

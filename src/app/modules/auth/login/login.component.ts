@@ -156,7 +156,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginForm = this.fb.group({
       email: [
         this.defaultAuth.email,
-        Validators.compose([Validators.required, Validators.email]),
+        Validators.compose([Validators.required]),
       ],
       password: [
         this.defaultAuth.password,
@@ -173,7 +173,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         email: [
           //this.defaultAuth.email,
           '',
-          Validators.compose([Validators.required, Validators.email]),
+          Validators.compose([Validators.required]),
         ],
         passwordOld: [
           //this.defaultAuth.password,
@@ -211,7 +211,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         email: [
           //this.defaultAuth.email,
           '',
-          Validators.compose([Validators.required, Validators.email]),
+          Validators.compose([Validators.required]),
         ],
         password: [
           //this.defaultAuth.password,
