@@ -120,7 +120,7 @@
           <codx-img
             [objectId]="data?.recID"
             [funcId]="funcID"
-            [objectType]="formModel?.entityName"
+            [objectType]="view.formModel?.entityName"
             [imageType]="'square'"
             width="50"
             [imgOn]="data.modifiedOn"
@@ -237,7 +237,7 @@
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="border w-250px h-100"
-    [imageObjType]="'EP_Stationery'"
+    [imageObjType]="view.formModel?.entityName"
     [imageWidth]="600"
     [imageId]="data?.recID"
     [hideMF]="false"

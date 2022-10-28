@@ -64,52 +64,53 @@
   </ng-template>
   <!-- end::TOPBAR -->
   <ng-template #headerBar>
-    <div class="menu d-flex align-items-center">
-      <div>
-        <div class="menu-item me-lg-1">
-          <a [class.isActive]="category == 'home'" routerlinkactive="active" class="menu-link py-3"
+    <ng-container *ngIf="valueList">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="me-4 cursor-pointer">
+          <span [class.text-primary]="category == 'home'" class="p-2"
             (click)="navigate('home','WPT02')">
-            <span class="menu-title">
               <codx-label formName="News" name="lblHome" default="Tất cả"></codx-label>
-            </span>
-          </a>
+          </span>
         </div>
-        <div class="menu-item me-lg-1" *ngFor="let vll of valueList">
-          <a [class.isActive]="category == vll.value" href="javascript:;" routerlinkactive="active"
-            class="menu-link py-3" (click)="navigate(vll.value,'WPT02')">
-            <span class="menu-title">{{vll.text}}</span>
-          </a>
+        <div class="me-4 cursor-pointer" *ngFor="let vll of valueList">
+          <span [class.text-primary]="category == vll.value" 
+            class="p-2 cursor-pointer"
+            class="menu-link py-3" 
+            (click)="navigate(vll.value,'WPT02')">
+            {{vll.text}}
+          </span>
         </div>
-
-        <div [class.isActive]="category == 'approvals'" class="menu-item me-lg-1" >
-          <div class="menu-link py-3" ngbDropdown>
-            <span  tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
-              <codx-label formName="News" name="lblADmin" default="Quản trị bài viết"></codx-label>
+        <div class="me-4 cursor-pointer">
+          <div class="" ngbDropdown>
+            <span class="p-2 cursor-pointer" tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
+              <codx-label [class.text-primary]="category == 'approvals'" formName="News" name="lblADmin" default="Quản trị bài viết"></codx-label>
             </span>
             <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
-              <a ngbDropdownItem (click)="navigate('approvals', 'WPT0211')" class="dropdown-item" href="javascript:;">
-                <codx-label formName="News" name="lblMyNews" default="Tin tức của tôi"></codx-label>
-              </a>
-              <a ngbDropdownItem (click)="navigate('approvals', 'WPT0212')" class="dropdown-item" href="javascript:;">
+              <span class="px-2" ngbDropdownItem 
+                (click)="navigate('approvals', 'WPT0211')" 
+                class="dropdown-item" 
+                href="javascript:;">
+                <codx-label [class.text-primary]="category == 'approvals'" formName="News" name="lblMyNews" default="Tin tức của tôi"></codx-label>
+              </span>
+              <!-- <a ngbDropdownItem (click)="navigate('approvals', 'WPT0212')" class="dropdown-item" href="javascript:;">
                 <codx-label formName="News" name="lblADMinNews" default="Xét duyệt tin tức - sự kiện"></codx-label>
               </a>
               <a ngbDropdownItem (click)="navigate('approvals', 'WPT0213')" class="dropdown-item" href="javascript:;">
                 <codx-label formName="News" name="lblADMinNews" default="Xét duyệt bài viết MXH"></codx-label>
-              </a>
+              </a> -->
             </div>
           </div>
         </div>
         <ng-container *ngIf="userPermission && userPermission.create">
-          <div class="menu-item me-lg-1">
-            <a [class.isActive]="category == 'settings'" routerlinkactive="active" class="menu-link py-3"
+          <div class="me-4 cursor-pointer">
+            <span  
+              class="p-2"
               (click)="navigate('settings','WPT022')">
-              <span class="menu-title">
-                <codx-label formName="News" name="lblSetting" default="Thiết lập"></codx-label>
-              </span>
-            </a>
+              <codx-label [class.text-primary]="category == 'settings'"  formName="News" name="lblSetting" default="Thiết lập"></codx-label>
+            </span>
           </div>
         </ng-container>
       </div>
-    </div>
+    </ng-container>
   </ng-template>
 </ng-container>

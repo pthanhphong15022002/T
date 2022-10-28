@@ -49,7 +49,7 @@ export class ApproveComponent extends UIComponent {
       text: "Chờ duyệt",
       value: "3",
       total: 0,
-      predicate: "ApproveStatus=@0",
+      predicate: "ApproveStatus = @0",
       datavalue: "3",
       active: false
     },
@@ -58,7 +58,7 @@ export class ApproveComponent extends UIComponent {
       text: "Đã duyệt",
       value: "5",
       total: 0,
-      predicate: "ApproveStatus=@0",
+      predicate: "ApproveStatus = @0",
       datavalue: "5",
       active: false
     },
@@ -67,7 +67,7 @@ export class ApproveComponent extends UIComponent {
       text: "Từ chối",
       value: "4",
       total: 0,
-      predicate: "ApproveStatus=@0",
+      predicate: "ApproveStatus = @0",
       datavalue: "4",
       active: false
     },

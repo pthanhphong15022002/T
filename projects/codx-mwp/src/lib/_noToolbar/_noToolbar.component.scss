@@ -8,3 +8,12 @@
     width: fit-content;
     display: block !important;
 } */
+
+.aside.aside-extended {
+    background-color: #f5f9fa;
+    width: 60px !important;
+}
+.header {
+    left: 60px !important;
+    width: calc(100% - 60px);
+}

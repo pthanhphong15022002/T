@@ -118,7 +118,7 @@
   </div>
   
   <div  *ngIf="data?.recID"  class="form-group upload-img">
-    <codx-img #imageUpLoad [width]="100" [objectType]="formModel?.entityName" imageType="square" aria-disabled="false" [isAllowEdit]="true"
+    <codx-img #imageUpLoad [width]="100" [objectType]="'EP_Resources'" imageType="square" aria-disabled="false" [isAllowEdit]="true"
         [funcId]="formModel?.funcID" [objectId]="data?.recID">
     </codx-img>
   </div>
