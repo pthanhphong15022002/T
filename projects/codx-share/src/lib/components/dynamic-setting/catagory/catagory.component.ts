@@ -108,16 +108,13 @@ export class CatagoryComponent implements OnInit {
 
         // this.cacheService.functionList(this.lstFuncID)
         this.labels = format?.Label.filter((label) => {
-          console.log('label', label);
-
           return label.Language == this.function?.language;
         });
-        console.log('labels', this.labels);
 
         this.changeDetectorRef.detectChanges();
       });
   }
-
+  changeLabelImg(data, e: any) {}
   openPopup(evt: any, item: any, reference: string = '') {
     let value = item.fieldName,
       recID = item.recID;
@@ -412,9 +409,7 @@ export class CatagoryComponent implements OnInit {
       }
     }
   }
-  changeLabelImg(e: any) {
-    console.log('change label', e);
-  }
+
   click($event: any) {
     var dt = this.settingValue.find((x) => x.category == this.category);
     dt.dataValue = JSON.stringify(this.dataValue);

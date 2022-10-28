@@ -254,13 +254,14 @@
             </ng-container>
 
             <ng-container *ngIf="data.displayMode === '6'">
-              <codx-img
+              <!-- <codx-img
                 [updateDirect]="true"
                 [isAllowEdit]="true"
                 [objectId]="data.recID"
+                [funcId]="function.functionID"
                 [objectType]="function.entityName"
-                (dataChanged)="changeLabelImg($event)"
-              ></codx-img>
+                (dataChanged)="changeLabelImg(data, $event)"
+              ></codx-img> -->
             </ng-container>
           </div>
         </div>
