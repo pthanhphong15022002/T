@@ -62,5 +62,6 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
         this.codxService.navigate('','wp/news/'+funcID+'/'+this.category);
         break;
     }
+    this.dt.detectChanges();
   }
 }
