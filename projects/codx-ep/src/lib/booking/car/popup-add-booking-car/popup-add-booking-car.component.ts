@@ -351,7 +351,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   } else if (this.tempAtender.roleType == '2') {
                     this.driver = this.tempAtender;
                     this.driver.objectID = people.note;
-                    this.driver.objectType = 'EP_Drivers';
+                    this.driver.objectType = 'EP_Resources';
                   } else {
                     this.lstPeople.push(this.tempAtender);
                   }
