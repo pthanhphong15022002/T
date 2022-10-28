@@ -1,0 +1,147 @@
+
+
+
+    <div class="w-100 h-100">
+        <div class="d-flex justify-content-between align-items-center p-2">
+            <div class="fs-1">
+                <span>
+                    <codx-label 
+                        class="fs-1 fw-bolder" 
+                        [formModel]="dialogRef.formModel" 
+                        name="" 
+                        default="Vị trí công việc">
+                    </codx-label>
+                </span>
+                <span class="mx-2">></span>
+                <span class="fw-bolder">Tên công việc</span>
+            </div>
+            <div>
+                <button class="btn" (click)="clickClosePopup()">
+                    <i class="icon-close"></i>
+                </button>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center w-100 h-100 bg-secondary p-4">
+            <div class="w-25 h-100 bg-body rounded p-6">
+                <div class="text-center">
+                    <span class="fs-3 fw-bolder">Tên công việc</span>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <div class="btn btn-sm btn-light-primary me-3 counter" 
+                        style="cursor: pointer" 
+                        data-toggle="tooltip"
+                        title="Định biên" data-status="">
+                        <i class="icon-account_tree icon-16 me-1"></i>
+                        <span class="fw-bold text-primary">0</span>
+                    </div>
+                    <div class="btn btn-sm btn-light-primary counter" 
+                        style="cursor: pointer" 
+                        data-toggle="tooltip"
+                        title="Chính thức" 
+                        data-status="">
+                        <i class="icon-perm_contact_calendar icon-16 me-1"></i>
+                        <span class="fw-bold text-primary">0</span>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4 px-3">
+                    <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="50">
+                      <h3 class="text-primary">0</h3>
+                      <span class="text-gray-600">Chính thức</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="30">
+                      <h3 class="text-success">0</h3>
+                      <span class="text-gray-600">Onboard</span>
+                    </div>
+                    <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="70">
+                      <h3 class="text-danger">0</h3>
+                      <span class="text-gray-600">Offboard</span>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <codx-img 
+                        [width]="40" 
+                        [objectId]="" 
+                        [isDefaulImg]="true"
+                        [objectName]=""
+                        [objectType]="'HR_Employees'">
+                    </codx-img>
+                </div>
+            </div>
+            <div class="w-75 ms-4 h-100">
+                <div class="bg-body rounded" style="height: 30%">
+                    <div class="">
+                        <div class="d-flex justify-content-between p-2">
+                            <span >
+                                <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Thông tin chung" ></codx-label>
+                            </span>
+                            <span>
+                                <button class="btn rpldetail_btn_edit">
+                                    <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Chỉnh sửa" ></codx-label>
+                                </button>
+                            </span>
+                        </div>
+                        <div class="ms-6 mt-2">
+                            <div>
+                                <div class="w-100">
+                                    <span class="w-150px fw-bolder">
+                                        <codx-label [classList]="'fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Chức danh công việc" ></codx-label>
+                                    </span>
+                                    <span class="w-150px fw-bolder">...</span>
+                                </div>
+                                <div class="w-100">
+                                    <span class="w-150px fw-bolder">
+                                        <codx-label [classList]="'fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Nhóm chức danh" ></codx-label>
+                                    </span>
+                                    <span class="w-150px fw-bolder">...</span>
+                                </div>
+                                <div class="w-100">
+                                    <span class="w-150px fw-bolder">
+                                        <codx-label [classList]="'fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Chức vụ" ></codx-label>
+                                    </span>
+                                    <span class="w-150px fw-bolder">...</span>
+                                </div>
+                                <div class="w-100">
+                                    <span class="w-150px fw-bolder">
+                                        <codx-label [classList]="'fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Phòng ban" ></codx-label>
+                                    </span>
+                                    <span class="w-150px fw-bolder">...</span>
+                                </div>
+                                <div class="w-100">
+                                    <span class="w-150px fw-bolder">
+                                        <codx-label [classList]="'fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Khối" ></codx-label>
+                                    </span>
+                                    <span class="w-150px fw-bolder">...</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="w-100">
+                                    <span class="w-150px fw-bolder">
+                                        <codx-label [classList]="'fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Báo cáo trực tiếp cho" ></codx-label>
+                                    </span>
+                                    <span class="w-150px fw-bolder">...</span>
+                                </div>
+                                <div class="w-100">
+                                    <span class="w-150px fw-bolder">
+                                        <codx-label [classList]="'fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Báo cáo gián tiếp cho" ></codx-label>
+                                    </span>
+                                    <span class="w-150px fw-bolder">...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-body rounded mt-4 " style="height: calc(70% - 1.25rem)">
+                    <div class="d-flex justify-content-between p-2">
+                        <span >
+                            <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Mô tả công việc" ></codx-label>
+                        </span>
+                        <span>
+                            <button class="btn rpldetail_btn_edit">
+                                <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Chỉnh sửa" ></codx-label>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

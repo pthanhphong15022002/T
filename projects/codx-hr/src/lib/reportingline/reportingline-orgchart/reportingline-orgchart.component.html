@@ -1,0 +1,151 @@
+<ng-container>
+    <div [ngbPopover]="popContent" autoClose="outside" popoverClass="empPopoverClass" [popoverTitle]="popTitle"
+      #p="ngbPopover" triggers="manual">
+      <ejs-diagram #diagram 
+        class="codx-orgchart" 
+        width="100%" 
+        height="500px" 
+        [getConnectorDefaults]="connDefaults"
+        [getNodeDefaults]="nodeDefaults" 
+        [layout]="layout" 
+        [tool]="tool" 
+        [snapSettings]="snapSettings"
+        [dataSourceSettings]="datasetting"
+        (click)="orgClick($event)">
+        <ng-template #nodeTemplate let-node>
+          <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
+            [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
+          </ng-container>
+        </ng-template>
+      </ejs-diagram>
+    </div>
+</ng-container>
+<ng-template #popEmpTitle>
+    <div class="orgChart-title">
+        <div class="d-flex align-items-top">
+            <div class="d-flex align-items-start user-card">
+              <codx-img class="me-3" 
+                [width]="40" 
+                [objectId]="employeeInfor.employeeID" 
+                [objectName]="employeeInfor.employeeName"
+                [objectType]="'HR_Employees'">
+              </codx-img>
+              <div class="d-flex flex-column flex-grow-1">
+                <div class="d-flex align-items-center">
+                  <div class="text-dark fw-bold mb-1">
+                    {{ employeeInfor.employeeName }}
+                  </div>
+                </div>
+                <div class="text-gray-700" *ngIf="employeeInfor.positionName">
+                  {{ employeeInfor.positionName }}
+                </div>
+      
+                <div class="text-gray-500 fw-normal" 
+                    *ngIf="employeeInfor.organizationName">
+                  {{ employeeInfor.organizationName }}
+                </div>
+      
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-column employee-add mt-2">
+            <div class="d-flex align-items-center mt-2">
+              <span class="icon-email icon-16 me-2"></span>
+              <div class="text-gray-500" *ngIf="employeeInfor.email != '---'">
+                {{ employeeInfor.email }}
+              </div>
+            </div>
+            <div class="d-flex align-items-center mt-2">
+              <span class="icon-phone_android icon-16 me-2"></span>
+              <div class="text-gray-500" *ngIf="employeeInfor.phone != '---'">
+                {{ employeeInfor.phone }}
+              </div>
+            </div>
+            <div class="d-flex align-items-top mt-2">
+              <span class="icon-place icon-16 me-2"></span>
+              <div class="text-gray-500" *ngIf="employeeInfor.street != '---'">
+                {{ employeeInfor.street }}
+              </div>
+            </div>
+          </div>
+    </div>
+  </ng-template>
+<ng-template #popEmpContent>
+    <div class="orgChart-boddy">
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center mt-2">
+              <span class="text-gray-500 me-2">Ngày sinh:</span>
+              <span class="text-dark" *ngIf="employeeInfor.birthday">{{ employeeInfor.birthday | fmDT}}</span>
+      
+            </div>
+            <div class="me-5 d-flex align-items-center mt-2">
+              <span class="text-gray-500 me-2">Ngày vào làm:</span>
+              <span class="text-dark" *ngIf="employeeInfor.joinedOn">{{
+                employeeInfor.joinedOn | date: "dd/MM/yyyy"
+                }}</span>
+      
+            </div>
+            <div class="me-5 d-flex align-items-center mt-2">
+              <span class="text-gray-500 me-2">Tình trạng:</span>
+              <span class="text-dark">{{
+                employeeInfor.status | vll: "L0225":"text" | async
+                }}</span>
+            </div>
+          </div>
+    </div>
+  </ng-template>
+  
+  
+  
+  <ng-template #popContent>
+    <div>
+      <div class="row">
+        <div *ngFor="let emp of employees" class="p-2 full rounded-2 codx-bghover cursor-pointer">
+          <div *ngIf="emp.employeeName" class="d-flex justify-content-between align-items-center cursor-pointer"
+            popoverClass="userPopoverClass" [ngbPopover]="popEmpContent" placement="right left"
+            [popoverTitle]="popEmpTitle" #pemp="ngbPopover" triggers="manual" (click)="showEmploy(pemp, emp)">
+            <div class="d-flex flex-column org-card flex-grow-1">
+              <div class="d-flex align-items-start">
+                <codx-img class="me-3" [width]="35" [objectId]="emp.employeeID" [objectName]="emp.employeeName"
+                  [objectType]="'HR_Employees'">
+                </codx-img>
+                <div class="d-flex flex-column flex-grow-1">
+                  <div class="text-dark fw-bold">{{ emp.employeeName }}</div>
+                  <div class="text-gray-500">{{ emp.positionName }}</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <a class="text-gray-500">
+                <span class="icon-keyboard_arrow_right icon-20"></span>
+              </a>
+            </div>
+          </div>
+          <div *ngIf="!emp.employeeName" class="d-flex justify-content-between align-items-top">
+            <div class="d-flex flex-column org-card flex-grow-1">
+              <div class="d-flex align-items-start">
+                <codx-img class="symbol symbol-40 symbol-circle me-3" [width]="40" [objectId]="''" [objectName]="''"
+                  [objectType]="'HR_Employees'">
+                </codx-img>
+                <div class="d-flex flex-column flex-grow-1">
+                  <div class="text-50 text-gray-500">Tên nhân viên</div>
+                  <div class="text-50 text-gray-500">Chức vụ</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #popTitle>
+    <div class="text-dark mb-2">Danh sách nhân viên</div>
+    <div>
+      <codx-searchbar (searchEvent)="onSearch($event)"></codx-searchbar>
+    </div>
+  </ng-template>
+
+  <ng-template #template>
+
+  </ng-template>
