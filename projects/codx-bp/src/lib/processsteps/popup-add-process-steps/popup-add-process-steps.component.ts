@@ -82,7 +82,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  
+  this.loadData()
   }
 
   loadData(){
@@ -99,6 +99,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   async saveData() {
     this.processSteps.owners = this.owners;
+    this.convertReference()
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
