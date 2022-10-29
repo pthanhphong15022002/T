@@ -25,6 +25,7 @@ import {
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { PropertiesComponent } from '../properties/properties.component';
+import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
 import { RevisionsComponent } from './revisions/revisions.component';
 
@@ -243,16 +244,18 @@ export class ProcessesComponent
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessesComponent,
-          ['edit', this.titleAction],
+          ['edit',this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
+          console.log(e);
+          if (e && e.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.detectorRef.detectChanges();
+          }
+        })
       });
   }
 
@@ -343,7 +346,7 @@ export class ProcessesComponent
         this.revisions(e.data, data);
         break;
       case 'BPT104':
-        this.permission(e.data, data);
+        this.permission(data);
         break;
     }
   }
@@ -387,25 +390,15 @@ export class ProcessesComponent
     });
   }
 
-  permission(more, data){
-    var obj = {
-      more: more,
-      data: data,
-    };
-    this.dialog = this.callfc.openForm(
-      RevisionsComponent,
-      '',
-      500,
-      350,
-      '',
-      obj
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        this.view.dataService.update(e?.event).subscribe();
-        this.detectorRef.detectChanges();
-      }
-    });
+  permission(data){
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    // let data = {} as any;
+    // data.title = this.titleUpdateFolder;
+    data.id = data.recID;
+    this.callfc.openSide(PopupAddPermissionComponent, data, option);
   }
 
   valueChange(e) {

@@ -1735,22 +1735,24 @@ export class PdfComponent
                   );
                 });
                 imgArea.draw();
-                this.curSelectedArea = this.lstLayer
-                  .get(tmpArea.location.pageNumber + 1)
-                  .find((child) => child.id() == tmpArea.recID);
-                this.esService
-                  .getSignAreas(
-                    this.recID,
-                    this.fileInfo.fileID,
-                    this.isApprover,
-                    this.user.userID
-                  )
-                  .subscribe((res) => {
-                    if (res) {
-                      this.lstAreas = res;
-                      this.detectorRef.detectChanges();
-                    }
-                  });
+                if (lstUnsign.length - 1 == idx) {
+                  this.curSelectedArea = this.lstLayer
+                    .get(tmpArea.location.pageNumber + 1)
+                    .find((child) => child.id() == tmpArea.recID);
+                  this.esService
+                    .getSignAreas(
+                      this.recID,
+                      this.fileInfo.fileID,
+                      this.isApprover,
+                      this.user.userID
+                    )
+                    .subscribe((res) => {
+                      if (res) {
+                        this.lstAreas = res;
+                        this.detectorRef.detectChanges();
+                      }
+                    });
+                }
               }
             });
         };

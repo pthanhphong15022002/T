@@ -211,8 +211,9 @@
           *ngIf="data?.online && data.onlineUrl"
         >
           <button
+          
             (click)="connectMeetingNow()"
-            class="text-decoration-underline"
+            class="text-decoration-underline border-0 fw-bold bg-transparent text-primary text-start"
           >
             {{ data?.onlineUrl }}
           </button>
@@ -611,7 +612,7 @@
 
         <ng-container *ngIf="isPopupStationeryCbb">
           <codx-combobox-popup
-            [comboboxName]="'EP_Resources'"
+            [comboboxName]="'EP_Stationery'"
             [multiple]="true"
             [width]="700"
             [height]="600"

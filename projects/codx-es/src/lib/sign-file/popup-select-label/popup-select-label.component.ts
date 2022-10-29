@@ -1,6 +1,13 @@
-import { Component, Injector, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { ImageElement } from '@syncfusion/ej2-angular-diagrams';
 import { UIComponent, AuthStore, DialogData, DialogRef } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxEsService } from '../../codx-es.service';
 
 @Component({
@@ -21,6 +28,8 @@ export class PopupSelectLabelComponent extends UIComponent {
     this.data = dt.data;
   }
 
+  @ViewChild('attachment') attachment: AttachmentComponent;
+
   data;
   title: string;
   funcID;
@@ -32,20 +41,37 @@ export class PopupSelectLabelComponent extends UIComponent {
     // { idx: 1, image: 'assets\\img\\Labels\\Illegal.jpg' },
     // { idx: 2, image: 'assets\\img\\Labels\\Express.jpg' },
   ];
-
+  folderID = 'label';
+  folderName = 'Nhãn đính kèm'; //chị Thương kêu gắn cứng đi em, chị lo
+  parentID = 'EST011';
   onInit(): void {
     this.title = this.data.title;
     this.labels = this.data.labels;
 
     this.detectorRef.detectChanges();
   }
-  closePopUp(isComplete) {
+  async closePopUp(isComplete) {
     if (isComplete) {
       this.dialog.close(this.curLabel);
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        console.log('saved file', res);
+      });
     } else this.dialog.close(null);
   }
 
   changeLabel(e: any) {
     this.curLabel = e;
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
+  }
+
+  fileAdded(e) {
+    console.log('add event', e);
+  }
+
+  fileSave(e) {
+    console.log('add save', e.data);
   }
 }
