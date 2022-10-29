@@ -20,6 +20,7 @@ import {
   ButtonModel,
   DataRequest,
   DialogRef,
+  FormModel,
   LayoutService,
   NotificationsService,
   RequestOption,
@@ -83,6 +84,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   //view file
   dataChild = [];
   lockParent = false;
+  childFunc =[] ;
+  formModel: FormModel;
 
   constructor(
     inject: Injector,
@@ -133,7 +136,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       .subscribe((datas) => {
         var items = [];
         if (datas && datas.length > 0) {
-          items = datas;
+          this.childFunc = datas
+          items = datas.map((obj)=>{
+            var menu ={
+              id : obj.id,
+              icon :obj.icon,
+              text :obj.text
+            }
+            return menu
+          });
         }
         this.button = {
           id: 'btnAdd',
@@ -176,6 +187,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
+      //option.FormModel = this.formModel;
       option.Width = '550px';
 
       this.view.dataService.dataSelected.processID = this.recIDProcess;
@@ -437,6 +449,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         this.add();
       });
     }
+
+   //test
+    this.formModel = this.view?.formModel
+    var funcMenu = this.childFunc.find(x=>x.id==this.stepType) ;
+    if(funcMenu){
+      this.formModel.formName = funcMenu.formName ;
+      this.formModel.gridViewName = funcMenu.gridViewName ;
+      this.formModel.funcID = funcMenu.funcID ;
+    }
   }
 
   receiveMF(e: any) {
@@ -446,6 +467,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     this.titleAction = e.text;
+    //test
+    this.formModel = this.view?.formModel
+    var funcMenu = this.childFunc.find(x=>x.id==this.data?.stepType) ;
+    if(funcMenu){
+      this.formModel.formName = funcMenu.formName ;
+      this.formModel.gridViewName = funcMenu.gridViewName ;
+      this.formModel.funcID = funcMenu.funcID ;
+    }
     switch (e.functionID) {
       case 'SYS01':
         this.add();

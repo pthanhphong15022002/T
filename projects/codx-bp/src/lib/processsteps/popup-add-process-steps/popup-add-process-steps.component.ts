@@ -81,7 +81,15 @@ export class PopupAddProcessStepsComponent implements OnInit {
     if(this.action =='edit') this.showLabelAttachment = this.processSteps.attachments > 0?true : false
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  
+  }
+
+  loadData(){
+    if(this.processSteps.stepType=="C"){
+        this.referenceText = this.processSteps?.reference?.split(";")
+    }
+  }
 
   //#region
 
@@ -120,17 +128,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
 
   addProcessStep() {
-    // if (this.stepType == 'P') {
-    //   var index = this.dialog.dataService?.data.length - 1;
-    //   this.dialog.dataService
-    //     .save((option: any) => this.beforeSave(option),)
-    //     .subscribe((res) => {
-    //       // this.attachment?.clearData();
-    //       if (res) {
-    //         this.dialog.close(res.save);
-    //       } else this.dialog.close();
-    //     });
-    // } else {
     this.bpService
       .addProcessStep([this.processSteps, this.owners])
       .subscribe((data) => {
