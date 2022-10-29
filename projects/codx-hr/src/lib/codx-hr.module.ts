@@ -13,6 +13,7 @@ import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
+import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
@@ -187,7 +188,7 @@ const T_Component: Type<any>[] = [
   PopupAddPositionsComponent,
   TimeAgoPipe,
   ReportinglineOrgChartComponent,
-  ReportinglineDetailComponent
+  ReportinglineDetailComponent,
 ];
 @NgModule({
   imports: [
@@ -199,6 +200,7 @@ const T_Component: Type<any>[] = [
     CodxCoreModule,
     RouterModule.forChild(routes),
     CoreModule,
+    SliderModule,
     CodxShareModule,
     ChartAllModule,
     DiagramAllModule,
