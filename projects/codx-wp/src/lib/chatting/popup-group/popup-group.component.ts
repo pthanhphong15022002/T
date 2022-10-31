@@ -123,7 +123,6 @@ export class PopupGroupComponent implements OnInit {
       this.userSelected = this.userSelected.filter(x=>x.userID != data.userID)
 
     } */
-    debugger;
     if (data) {
       if (data.checked == true) {
         data.menberType = '2';

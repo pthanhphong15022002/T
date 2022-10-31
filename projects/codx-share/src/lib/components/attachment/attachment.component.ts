@@ -1557,7 +1557,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async handleFileInput1(files: FileList) {
     var count = this.fileUploadList.length;
-    this.getFolderPath();
+    //this.getFolderPath();
     //console.log(files);
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(
@@ -2821,7 +2821,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
-    this.getFolderPath();
+    //this.getFolderPath();
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
       if (
