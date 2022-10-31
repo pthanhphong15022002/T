@@ -190,7 +190,7 @@ const Component: Type<any>[] =
     ChatBoxComponent,
     ListChatBoxComponent,
     PopupGroupComponent,
-    TestSurveyComponent,
+    // TestSurveyComponent,
     CodxChatComponent
   ];
 
@@ -208,7 +208,7 @@ const Component: Type<any>[] =
     PickerModule,
     RouterModule.forChild(routes),
   ],
-  exports: [RouterModule, ListPostComponent],
+  exports: [RouterModule],
   declarations: [Component, ChattingComponent, LayoutComponent, ChatVoteComponent, PopupViewImageComponent, ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
