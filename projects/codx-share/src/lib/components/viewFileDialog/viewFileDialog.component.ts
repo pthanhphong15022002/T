@@ -68,7 +68,10 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-   
+    if(data?.data)
+    {
+      this.dataFile = data.data
+    }
     // this.fileService.getFile(this.id).subscribe(item => {
     //   if (item != null) {
     //     this.data = item;
