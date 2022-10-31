@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, inject, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { UIComponent, FormModel, ViewType } from 'codx-core';
+import { UIComponent, FormModel, ViewType, ButtonModel } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
@@ -18,16 +18,15 @@ export class CardTransComponent
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_ResourceTrans';
-  predicate = 'ResourceType=@0';
   idField = 'recID';
   className = 'ResourceTransBusiness';
   method = 'GetListAsync';
-  dataValue='';
   viewType = ViewType;
   funcID:any;
   formModel:FormModel;
   columnGrids:any;
   views:any;
+  button:ButtonModel;
   id:any;
   constructor(
     private injector: Injector,
@@ -43,7 +42,11 @@ export class CardTransComponent
         this.formModel = res;
       }
     });
+    this.button={
+      id:'btnAdd',
+    }
   }
+  
 
   ngAfterViewInit(): void {}
   onLoading(evt: any) {
