@@ -193,7 +193,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       if (this.isAdd && this.optionalData != null) {
         this.data.resourceID = this.optionalData.resourceId;
         let equips = [];
-        equips = this.optionalData.resource.equipments;
+        equips = this.optionalData.resource?.equipments;
         equips.forEach((equip) => {
           let tmpDevice = new Device();
           tmpDevice.id = equip.equipmentID;
