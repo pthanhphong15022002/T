@@ -58,13 +58,15 @@ export class ViewApprovalProcessComponent implements OnInit {
           }
         });
       } else {
-        this.esService.getApprovalTrans(this.transID).subscribe((res) => {
-          if (res) {
-            this.process = res;
-            this.lstStep = [];
-            this.cr.detectChanges();
-          }
-        });
+        this.esService
+          .getApprovalTransByTransID(this.transID)
+          .subscribe((res) => {
+            if (res) {
+              this.process = res;
+              this.lstStep = [];
+              this.cr.detectChanges();
+            }
+          });
       }
     }
   }

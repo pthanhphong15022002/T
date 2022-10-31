@@ -228,9 +228,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
-      event.forEach((func) => {
-        func.disabled = true;
-      });
+      // event.forEach((func) => {
+      //   func.disabled = true;
+      // });
       if (data.status == '1') {
         event.forEach((func) => {
           if (

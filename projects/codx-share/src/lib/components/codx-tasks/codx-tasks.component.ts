@@ -870,7 +870,7 @@ export class CodxTasksComponent
       .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.update(data);
+          this.view.dataService.update(data).subscribe();
         }
       });
     ///chắc chắn phải sửa
