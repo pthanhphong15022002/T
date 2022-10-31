@@ -85,7 +85,7 @@ export class PopupAddRoomsComponent extends UIComponent {
         if (!this.isAdd) {
           this.data.equipments.forEach((item) => {
             if (item.equipmentID == device.id) {
-              device.isSelected = true;
+              device.isSelected = false;
             }
           });
         }
