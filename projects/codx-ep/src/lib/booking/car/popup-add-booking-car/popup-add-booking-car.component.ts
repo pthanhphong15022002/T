@@ -427,14 +427,16 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.notificationsService.notifyCode('TM036');
       return;
     }
-    this.lstEquipment = [];
+    let tmpEquip = [];
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
       tempEquip.createdBy = this.authService.userValue.userID;
       tempEquip.isPicked = element.isSelected;
-      this.lstEquipment.push(tempEquip);
-    });
+      tmpEquip.push(tempEquip);
+    });    
+    this.data.equipments = tmpEquip;
+    
     this.attendeesList = [];
     this.attendeesList.push(this.curUser);
     this.lstPeople.forEach((people) => {
@@ -448,7 +450,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.category = '2';
     this.data.status = '1';
     this.data.resourceType = '2';
-    this.data.equipments = this.lstEquipment;
 
     if (this.data.attendees > this.carCapacity) {
       this.notificationsService.alertCode('EP010').subscribe((x) => {

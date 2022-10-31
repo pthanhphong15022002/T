@@ -2,7 +2,9 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '
 import { SignalRService } from '@core/services/signalr/signalr.service';
 // import { CreateGroupComponent } from '@modules/wp/components/create-group/create-group.component';
 import { ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogModel, DialogRef } from 'codx-core';
+import { UpdateExtendComponent } from 'projects/codx-od/src/lib/incomming/update/update.component';
 import { ChatBoxInfo } from '../chat.models';
+import { ChatService } from '../chat.service';
 import { ChatBoxComponent } from '../chatbox/chat-box.component';
 import { ChattingComponent } from '../chatting.component';
 import { ListChatBoxComponent } from '../list-chat-box/list-chat-box.component';
@@ -20,12 +22,13 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   user: any;
   predicate:String = "UserID = @0 && LastMssgID != null";
   dataValue:String = "";
-  chatService: any;
+  formModel: any;
+  view: any;
   constructor(
     private api:ApiHttpService,
     authStore: AuthStore,
-    private callfc: CallFuncService,
-    private callFC:CallFuncService
+    private callFC:CallFuncService,
+    private chatService: ChatService,
   ) {
     this.user = authStore.get();
   }
@@ -102,9 +105,9 @@ export class ChatListComponent implements OnInit, AfterViewInit {
 
   }
 
-  receiveMessage() {
+  /* receiveMessage() {
 
-  }
+  } */
 
   openChatBox(data: any) {
     let opt = new ChatBoxInfo();
@@ -117,7 +120,23 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     opt.isMinimum = false;
     opt.numberNotRead = 1;
     opt.messageInfo = data.message;
-    this.chatService.openChatBox(opt);
+    //this.chatService.openChatBox(opt);
+    var option = new DialogModel();
+    //option.FormModel = ;
+        this.callFC
+          .openForm(
+            ChatBoxComponent,
+            null,
+            600,
+            700,
+            null,
+            { data: opt },
+            '',
+            option
+          )
+          .closed.subscribe((x) => {
+            if (x.event) this.view.dataService.update(x.event).subscribe();
+          });
   }
 
   getNumberMessageNotRead() {

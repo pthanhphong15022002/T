@@ -38,14 +38,17 @@ export class PopupAddStationeryComponent extends UIComponent {
   tabInfo: any[] = [
     {
       icon: 'icon-info',
+      text: 'Thông tin chung',
       name: 'lblGeneralInfo',
     },
     {
       icon: 'icon-person_add_alt_1',
+      text: 'Định mức sử dụng',
       name: 'lblQuotaInfo',
     },
     {
       icon: 'icon-tune',
+      text: 'Thông tin khác',
       name: 'lblMoreInfo',
     },
   ];

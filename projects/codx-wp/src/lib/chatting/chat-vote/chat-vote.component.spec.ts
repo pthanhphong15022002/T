@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailNoteBooksComponent } from './detail-note-books.component';
+import { ChatVoteComponent } from './chat-vote.component';
 
-describe('DetailGridComponent', () => {
-  let component: DetailNoteBooksComponent;
-  let fixture: ComponentFixture<DetailNoteBooksComponent>;
+describe('ChatVoteComponent', () => {
+  let component: ChatVoteComponent;
+  let fixture: ComponentFixture<ChatVoteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DetailNoteBooksComponent ]
+      declarations: [ ChatVoteComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetailNoteBooksComponent);
+    fixture = TestBed.createComponent(ChatVoteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

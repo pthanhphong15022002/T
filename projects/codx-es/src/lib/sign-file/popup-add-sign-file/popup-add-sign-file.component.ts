@@ -985,8 +985,14 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   saveAndClose() {
-    this.onSaveSignFile();
-    this.dialog && this.dialog.close(this.data);
+    this.esService.getSFByID(this.data?.recID).subscribe((res) => {
+      if (res?.signFile) {
+        this.data.files = res?.signFile?.files;
+        this.dialogSignFile.patchValue({ files: res?.signFile?.files });
+        this.onSaveSignFile();
+        this.dialog && this.dialog.close(this.data);
+      }
+    });
   }
 
   closeDialogTmp(dialogTmp: DialogRef) {

@@ -86,30 +86,45 @@ export class PopupAddOrganizationComponent
   }
 
   onSave() {
-    this.api
-      .execSv(
-        'HR',
-        'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
-        'UpdateAsync',
-        [this.data]
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          // if (this.detailComponent) {
-          //   if (this.detailComponent instanceof OrganizeDetailComponent) {
-          //     this.detailComponent.addItem(res);
-          //   }
-          // }
-          if (this.treeComponent) {
-            this.treeComponent.setNodeTree(this.data);
-          }
-          this.notifiSV.notifyCode('SYS006');
-          this.dialogRef.close(res);
-        } else {
-          this.notifiSV.notifyCode('SYS023');
+    this.dialogRef.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res?.save || res?.update) {
+          if (this.treeComponent) this.treeComponent.setNodeTree(this.data);
         }
       });
+    // this.api
+    //   .execSv(
+    //     'HR',
+    //     'ERM.Business.HR',
+    //     'OrganizationUnitsBusiness',
+    //     'UpdateAsync',
+    //     [this.data]
+    //   )
+    //   .subscribe((res: any) => {
+    //     if (res) {
+    //       // if (this.detailComponent) {
+    //       //   if (this.detailComponent instanceof OrganizeDetailComponent) {
+    //       //     this.detailComponent.addItem(res);
+    //       //   }
+    //       // }
+    //       if (this.treeComponent) {
+    //         this.treeComponent.setNodeTree(this.data);
+    //       }
+    //       this.notifiSV.notifyCode('SYS006');
+    //       this.dialogRef.close(res);
+    //     } else {
+    //       this.notifiSV.notifyCode('SYS023');
+    //     }
+    //   });
+  }
+
+  beforeSave(option: any) {
+    option.assemblyName = 'ERM.Business.HR';
+    option.className = 'OrganizationUnitsBusiness';
+    option.methodName = 'UpdateAsync';
+    option.data = [this.data];
+    return true;
   }
   paramaterHR: any = null;
   getParamerAsync(funcID: string) {

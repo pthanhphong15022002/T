@@ -209,7 +209,6 @@
               <e-item
                 id="viewThumbnail"
                 prefixIcon="icon-article icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                (click)="show($event)"
               >
               </e-item>
             </e-items>
@@ -348,7 +347,7 @@
         (selecting)="changeRightTab($event)"
       >
         <e-tabitems>
-          <e-tabitem *ngIf="isEditable">
+          <e-tabitem *ngIf="isEditable && !isPublic">
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight0"
@@ -386,9 +385,8 @@
                         [imageWidth]="35"
                         imgCss="me-2"
                         [title]="
-                          approver.roleType == 'U'
-                            ? approver.fullName
-                            : (approver.roleType | vll: 'ES014':'text' | async)
+                          approver.fullName ??
+                          (approver.roleType | vll: 'ES014':'text' | async)
                         "
                         [subTitle]="approver.position ?? ''"
                         [baseHeaderRightTmp]="footer"
@@ -593,6 +591,64 @@
                         <div class="d-flex my-2 ms-12">
                           <div
                             class="text-format d-flex align-items-center"
+                            *ngIf="imgConfig.includes(area.labelType)"
+                          >
+                            <img
+                              *ngIf="!isPublic"
+                              class="img"
+                              [src]="area.labelValue"
+                            />
+                            <codx-img
+                              *ngIf="isPublic && area.labelType == 'S1'"
+                              #imgSignature1
+                              class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                              [imageType]="'square'"
+                              [width]="80"
+                              [objectId]=""
+                              [objectType]=""
+                              data-kt-menu-trigger="click"
+                              data-kt-menu-attach="parent"
+                              data-kt-menu-placement="bottom-end"
+                              data-kt-menu-flip="bottom"
+                              [isAllowEdit]="true"
+                              [funcId]=""
+                            >
+                            </codx-img>
+                            <codx-img
+                              *ngIf="isPublic && area.labelType == 'S2'"
+                              #imgSignature2
+                              class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                              [imageType]="'square'"
+                              [width]="80"
+                              [objectId]=""
+                              [objectType]=""
+                              data-kt-menu-trigger="click"
+                              data-kt-menu-attach="parent"
+                              data-kt-menu-placement="bottom-end"
+                              data-kt-menu-flip="bottom"
+                              [isAllowEdit]="true"
+                              [funcId]=""
+                            >
+                            </codx-img>
+                            <codx-img
+                              *ngIf="isPublic && area.labelType == 'S3'"
+                              #imgStamp
+                              class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                              [imageType]="'square'"
+                              [width]="80"
+                              [objectId]=""
+                              [objectType]=""
+                              data-kt-menu-trigger="click"
+                              data-kt-menu-attach="parent"
+                              data-kt-menu-placement="bottom-end"
+                              data-kt-menu-flip="bottom"
+                              [isAllowEdit]="true"
+                              [funcId]=""
+                            >
+                            </codx-img>
+                          </div>
+                          <div
+                            class="text-format d-flex align-items-center"
                             *ngIf="!imgConfig.includes(area.labelType)"
                           >
                             <ejs-dropdownlist
@@ -708,13 +764,27 @@
                             type="button"
                             class="btn btn-sm btn-primary"
                             *ngIf="
-                              imgConfig.includes(area.labelType) && isApprover
+                              imgConfig.includes(area.labelType) && !isPublic
                             "
                             (click)="changeSignature_StampImg(area)"
                           >
                             <codx-label
-                              name="lblSave"
+                              name="lblChange"
                               default="Thay đổi"
+                              [formModel]=""
+                            ></codx-label>
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-primary"
+                            *ngIf="
+                              imgConfig.includes(area.labelType) && isPublic
+                            "
+                            (click)="changeSignature_StampImg_Public(area)"
+                          >
+                            <codx-label
+                              name="lblSave"
+                              default="OK"
                               [formModel]=""
                             ></codx-label>
                           </button>
@@ -742,6 +812,143 @@
                     </div>
                   </ng-template>
                 </ejs-listview>
+
+                <ng-container class="form-group mt-6" *ngIf="isPublic">
+                  <div class="text-center mb-6">
+                    <ul
+                      class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6"
+                    >
+                      <li class="nav-item m-0">
+                        <a
+                          class="nav-link text-center flex-center rounded-0 min-w-100px"
+                          [ngClass]="currentTab == 1 ? 'active' : ''"
+                          data-bs-toggle="tab"
+                          id="#pane_1"
+                          (click)="changeTab(1)"
+                        >
+                          <span class="d-flex flex-column">
+                            <span
+                              class="icon-text_format icon-24 m-auto mb-1"
+                            ></span>
+                            <span class="fs-6 fw-bold">
+                              <codx-label
+                                Name="lblVNPT"
+                                default="VNPT"
+                                [formModel]=""
+                              ></codx-label>
+                            </span>
+                            <span class="fs-6">
+                              <codx-label
+                                Name="lblDeveloping"
+                                default="Đang phát triển"
+                                [formModel]=""
+                              ></codx-label>
+                            </span>
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item m-0">
+                        <a
+                          class="nav-link text-center flex-center rounded-0 min-w-100px"
+                          [ngClass]="currentTab == 2 ? 'active' : ''"
+                          data-bs-toggle="tab"
+                          id="#pane_2"
+                          (click)="changeTab(2)"
+                        >
+                          <span class="d-flex flex-column">
+                            <span
+                              class="icon-gesture icon-24 m-auto mb-1"
+                            ></span>
+                            <span class="fs-6 fw-bold">
+                              <codx-label
+                                default="Viettel"
+                                name="lblViettel"
+                                [formModel]=""
+                              ></codx-label>
+                            </span>
+                            <span class="fs-6">
+                              <codx-label
+                                Name="lblDeveloping"
+                                default="Đang phát triển"
+                                [formModel]=""
+                              ></codx-label>
+                            </span>
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item m-0">
+                        <a
+                          class="nav-link text-center flex-center rounded-0 min-w-100px"
+                          [ngClass]="currentTab == 3 ? 'active' : ''"
+                          data-bs-toggle="tab"
+                          id="#pane_3"
+                          (click)="changeTab(3)"
+                        >
+                          <span class="d-flex flex-column">
+                            <span
+                              class="icon-looks_one icon-24 m-auto mb-1"
+                            ></span>
+                            <span class="fs-6 fw-bold">
+                              <codx-label
+                                Name="lblUsbToken"
+                                default="USB Token"
+                                [formModel]=""
+                              ></codx-label>
+                            </span>
+                            <span class="fs-6">
+                              <codx-label
+                                Name="lblDeveloping"
+                                default="Đang phát triển"
+                                [formModel]=""
+                              ></codx-label>
+                            </span>
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="d-flex justify-content-end">
+                    <div>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+                        [disabled]="!checkedConfirm"
+                      >
+                        <codx-vll
+                          [name]="'ES002'"
+                          [value]="signerInfo?.stepType"
+                          [showText]="true"
+                        >
+                        </codx-vll>
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
+                      [disabled]="!checkedConfirm"
+                    >
+                      <codx-label
+                        name="lblRedo"
+                        [formModel]=""
+                        default="Làm lại"
+                      ></codx-label>
+                    </button>
+
+                    <!-- <button
+                      type="button"
+                      class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
+                      [disabled]="!canOpenSubPopup"
+                      (click)="clickUSB()"
+                    >
+                      <codx-label
+                        name="lblDeny"
+                        [formModel]="formModel"
+                        default="USB"
+                      ></codx-label>
+                    </button> -->
+                  </div>
+                </ng-container>
               </ng-container>
             </ng-template>
           </e-tabitem>

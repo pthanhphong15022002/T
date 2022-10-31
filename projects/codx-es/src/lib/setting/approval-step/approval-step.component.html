@@ -106,7 +106,10 @@
                             >
                               <codx-temp-full
                                 cardCss="card-template px-2 pt-4 pb-2"
-                                *ngIf="approver.roleType?.length == 1"
+                                *ngIf="
+                                  approver.roleType?.length == 1 ||
+                                  approver.roleType == 'PA'
+                                "
                                 [imageId]="approver.approver"
                                 [title]="approver.name"
                                 [subTitle]="
@@ -123,7 +126,10 @@
 
                               <codx-temp-full
                                 cardCss="card-template px-2 pt-4 pb-2"
-                                *ngIf="approver.roleType.length > 1"
+                                *ngIf="
+                                  approver.roleType.length > 1 &&
+                                  approver.roleType != 'PA'
+                                "
                                 [imageSrc]="
                                   './assets/themes/sys/default/img/' +
                                   (item.icon ? item.icon : 'share_default.svg')
@@ -292,7 +298,10 @@
                       >
                         <codx-temp-full
                           cardCss="card-template px-2 pt-4 pb-2"
-                          *ngIf="approver.roleType?.length == 1"
+                          *ngIf="
+                            approver.roleType?.length == 1 ||
+                            approver.roleType == 'PA'
+                          "
                           [imageId]="approver.approver"
                           [title]="approver.name"
                           [subTitle]="approver.position ?? positionDefault"
@@ -307,7 +316,10 @@
 
                         <codx-temp-full
                           cardCss="card-template px-2 pt-4 pb-2"
-                          *ngIf="approver.roleType.length > 1"
+                          *ngIf="
+                            approver.roleType.length > 1 &&
+                            approver.roleType != 'PA'
+                          "
                           [imageSrc]="
                             './assets/themes/sys/default/img/' +
                             (item.icon ? item.icon : 'share_default.svg')

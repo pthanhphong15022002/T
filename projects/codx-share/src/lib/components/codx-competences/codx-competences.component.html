@@ -1,0 +1,105 @@
+<!-- <div class="container">
+    <div class="p-4">
+        <div class="d-flex align-items-center justify-content-between ">
+            <span>
+                <codx-label [classList]="'fw-bolder fs-3'" [formModel]="dialogRef.formModel" name="lblEditCompetence" default="Chỉnh sửa kỹ năng"></codx-label>
+            </span>
+            <span>
+                <button class="btn" (click)="clickClose()">
+                    <i class="icon-close"></i>
+                </button>
+            </span>
+        </div>
+        <div class="p-2">
+            <ng-container *ngFor="let skill of competences">
+                <div class="">
+                    <div class="fw-bold text-dark">{{skill.competenceName}}</div>
+                    <div>
+                        <ejs-slider 
+                            type="MinRange"
+                            [min]="0"
+                            [max]="10" 
+                            [width]="100"
+                            (valueChange)="valueSliderChange($event,skill)"
+                            [value]="skill.rating">
+                        </ejs-slider>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between w-100">
+        <div>
+            <button class="btn bg-light p-4" (click)="clickOpenCBBPopup()">
+                <i class="icon-add icon-16 me-2"></i>
+                <codx-label name="lblAddCompentence" [formModel]="dialogRef.formModel" default="Thêm mới">
+                </codx-label>
+            </button>
+            <ng-container *ngIf="isShowCBB">
+                <codx-combobox-popup 
+                    comboboxName="Skills" 
+                    [multiple]="true" 
+                    [width]="width"
+                    [height]="height" 
+                    (clickSave)="clickInsertCompetences($event)" 
+                    title="Kỹ năng">
+                </codx-combobox-popup>
+            </ng-container>
+        </div>
+        <div>
+            <button class="btn bg-primary p-4" (click)="clickSave()">
+                <i class="icon-add icon-16 me-2"></i>
+                <codx-label name="lblUpdateCompentence" [formModel]="dialogRef.formModel" default="Lưu">
+                </codx-label>
+            </button>
+        </div>
+    </div>
+</div>  -->
+
+<codx-form [dialog]="dialogRef" [body]="body" [footer]="footer" [headerText]="'Chỉnh sửa kỹ năng'"></codx-form>
+<ng-template #body>
+    <div class="p-4">
+        <ng-container *ngFor="let skill of competences">
+            <div class="row">
+                <div class="fw-bold text-dark">{{skill.competenceName}}</div>
+                <div>
+                    <ejs-slider 
+                        type="MinRange"
+                        [min]="0"
+                        [max]="parameter.MaxLevelSkills? parameter.MaxLevelSkills : 10" 
+                        [width]="250"
+                        (valueChange)="valueSliderChange($event,skill)"
+                        [value]="skill.rating">
+                    </ejs-slider>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-between w-100 mb-2">
+        <div>
+            <button class="btn bg-light p-4 min-w-150px" (click)="clickOpenCBBPopup()">
+                <i class="icon-add icon-16 me-2"></i>
+                <codx-label name="lblAddCompentence" [formModel]="dialogRef.formModel" default="Thêm mới">
+                </codx-label>
+            </button>
+            <ng-container *ngIf="isShowCBB">
+                <codx-combobox-popup 
+                    comboboxName="Skills" 
+                    [multiple]="true" 
+                    [width]="width"
+                    [height]="height" 
+                    (clickSave)="cbbClickSave($event)" 
+                    title="Kỹ năng">
+                </codx-combobox-popup>
+            </ng-container>
+        </div>
+        <div>
+            <button class="btn bg-primary p-4 min-w-150px" (click)="clickSave()">
+                <codx-label [classList]="'text-white'" name="lblUpdateCompentence" [formModel]="dialogRef.formModel" default="Lưu">
+                </codx-label>
+            </button>
+        </div>
+    </div>
+</ng-template>
