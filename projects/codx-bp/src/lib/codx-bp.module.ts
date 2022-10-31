@@ -23,6 +23,9 @@ import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-
 import { RevisionsComponent } from './processes/revisions/revisions.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { PropertiesComponent } from './properties/properties.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PopupAddPermissionComponent } from './processes/popup-add-permission/popup-add-permission.component';
+
 
 export const routes: Routes = [
   {
@@ -64,6 +67,7 @@ export const routes: Routes = [
     PopupAddProcessStepsComponent,
     RevisionsComponent,
     PropertiesComponent,
+    PopupAddPermissionComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -78,7 +82,7 @@ export const routes: Routes = [
     OverlayModule,
     TabModule,
     CommonModule,
-
+    DragDropModule
   ],
   exports: [CodxBpComponent],
 })

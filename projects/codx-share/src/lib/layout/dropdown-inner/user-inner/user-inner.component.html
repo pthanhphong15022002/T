@@ -1,30 +1,61 @@
 <div ngbDropdown class="d-block" buttonMarginClass>
   <button type="button" class="btn" ngbDropdownToggle>
-    <codx-img #imageViewer *ngIf="user" [ngClass]="codxService.toolbarUserAvatarHeightClass"
-      class="cursor-pointer symbol" funcId="AD006" [objectId]="user.userID" [objectName]="user.userName"
-      objectType="AD_Users" [width]="35" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-      data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom">
+    <codx-img
+      #imageViewer
+      *ngIf="user"
+      [ngClass]="codxService.toolbarUserAvatarHeightClass"
+      class="cursor-pointer symbol"
+      funcId="AD006"
+      [objectId]="user.userID"
+      [objectName]="user.userName"
+      objectType="AD_Users"
+      [width]="35"
+      data-kt-menu-trigger="click"
+      data-kt-menu-attach="parent"
+      data-kt-menu-placement="bottom-end"
+      data-kt-menu-flip="bottom"
+    >
     </codx-img>
   </button>
   <div ngbDropdownMenu class="w-250px">
     <ng-container *ngIf="user$ | async as _user">
       <div class="menu-item px-3">
         <div class="menu-content d-flex align-items-center px-3">
-          <codx-img class="symbol symbol-60px me-5" [objectId]="_user.userID" [objectName]="_user.userName"
-            objectType="AD_Users" funcId="AD006" [updateDirect]="true" [isAllowEdit]="true" [width]="60"
-            (reloadChanged)="avatarChanged($event)">
+          <codx-img
+            class="symbol symbol-60px me-5"
+            [objectId]="_user.userID"
+            [objectName]="_user.userName"
+            objectType="AD_Users"
+            funcId="AD006"
+            [updateDirect]="true"
+            [isAllowEdit]="true"
+            [width]="60"
+            (reloadChanged)="avatarChanged($event)"
+          >
           </codx-img>
           <div class="d-flex flex-column">
             <div class="fw-bolder d-flex align-items-center fs-5">
               {{ _user.userName }}
-              <span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">
-                <codx-label fiedName="IsOnline" [formModel]="formModel" default="Online"></codx-label>
+              <span
+                class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2"
+              >
+                <codx-label
+                  fiedName="IsOnline"
+                  [formModel]="formModel"
+                  default="Online"
+                ></codx-label>
               </span>
             </div>
-            <a class="fw-bold text-muted text-hover-primary fs-7 cursor-pointer" href="mailto:{{ _user.email}}">
+            <a
+              class="fw-bold text-muted text-hover-primary fs-7 cursor-pointer"
+              href="mailto:{{ _user.email }}"
+            >
               {{ _user.email }}
             </a>
-            <a class="fw-bold text-muted text-hover-primary fs-7 cursor-pointer" href="tel:{{ _user.mobile}}">
+            <a
+              class="fw-bold text-muted text-hover-primary fs-7 cursor-pointer"
+              href="tel:{{ _user.mobile }}"
+            >
               {{ _user.mobile }}
             </a>
           </div>
@@ -34,15 +65,26 @@
       <div class="separator my-2"></div>
 
       <div class="menu-item px-5">
-        <a [routerLink]="['/user/profile-overview']" [queryParams]="{funcID: 'POR004',type:'U', id:'admin' }"
-          class="menu-link px-5">
-          <codx-label fiedName="lblMyProfile" [formModel]="formModel" default="My Profile"></codx-label>
+        <a
+          [routerLink]="['/user/profile-overview']"
+          [queryParams]="{ funcID: 'POR004', type: 'U', id: 'admin' }"
+          class="menu-link px-5"
+        >
+          <codx-label
+            fiedName="lblMyProfile"
+            [formModel]="formModel"
+            default="My Profile"
+          ></codx-label>
         </a>
       </div>
 
       <div class="menu-item px-5">
         <a (click)="changePass()" class="menu-link px-5">
-          <codx-label fiedName="lblChangePass" [formModel]="formModel" default="Thay đổi mật khẩu"></codx-label>
+          <codx-label
+            fiedName="lblChangePass"
+            [formModel]="formModel"
+            default="Thay đổi mật khẩu"
+          ></codx-label>
         </a>
       </div>
 
@@ -50,15 +92,27 @@
 
       <div class="px-5">
         <span>
-          <codx-label fiedName="lblChangeTheme" [formModel]="formModel" default="Change theme"></codx-label>
+          <codx-label
+            fiedName="lblChangeTheme"
+            [formModel]="formModel"
+            default="Change theme"
+          ></codx-label>
         </span>
         <div class="mt-3 d-flex">
           <div class="theme-color">
             <div class="symbol-list d-flex flex-wrap mb-4">
-              <div *ngFor="let t of themes" class="symbol symbol-40px symbol-circle me-4 cursor-pointer"
-                (click)="selectTheme(t.id)" [ngbTooltip]="t.enable?'': 'Coming soon'">
+              <div
+                *ngFor="let t of themes"
+                class="symbol symbol-40px symbol-circle me-4 cursor-pointer"
+                (click)="selectTheme(t.id)"
+                [ngbTooltip]="t.enable ? '' : 'Coming soon'"
+              >
                 <span class="symbol-label" [style.background-color]="t.color">
-                  <i *ngIf="t.id === theme.id" class="fa-solid fa-check text-seconary fs-1" style="z-index:10;"></i>
+                  <i
+                    *ngIf="t.id === theme.id"
+                    class="fa-solid fa-check text-seconary fs-1"
+                    style="z-index: 10"
+                  ></i>
                 </span>
               </div>
             </div>
@@ -67,32 +121,47 @@
       </div>
       <div class="separator my-2"></div>
 
-      <div class="menu-item px-5" data-kt-menu-trigger="hover" data-kt-menu-placement="left-start"
-        data-kt-menu-flip="bottom">
+      <div
+        #ele
+        class="menu-item px-5"
+        data-kt-menu-trigger="hover"
+        data-kt-menu="true"
+        data-kt-menu-placement="left-start"
+        data-kt-menu-flip="bottom"
+        (mouseenter)="mouseEnter(ele, sub)"
+      >
         <a class="menu-link px-5 cursor-pointer">
           <span class="menu-title position-relative">
-            <codx-label fiedName="lblLanguage" [formModel]="formModel" default="Language"></codx-label>
-            <span class="
-                fs-8
-                rounded
-                bg-light
-                px-3
-                py-2
-                position-absolute
-                translate-middle-y
-                top-50
-                end-0
-              ">
+            <codx-label
+              fiedName="lblLanguage"
+              [formModel]="formModel"
+              default="Language"
+            ></codx-label>
+            <span
+              class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0"
+            >
               {{ language.name }}{{ " " }}
-              <img class="w-15px h-15px rounded-1 ms-2" [src]="language.flag" alt="metronic" />
+              <img
+                class="w-15px h-15px rounded-1 ms-2"
+                [src]="language.flag"
+                alt="metronic"
+              />
             </span>
           </span>
         </a>
 
-        <div class="menu-sub menu-sub-dropdown w-175px py-4">
-          <div *ngFor="let l of langs" class="menu-item px-3 cursor-pointer" (click)="selectLanguage(l.lang)"
-            data-toggle="tooltip" [title]="l.enable?'': 'Coming soon'">
-            <a class="menu-link d-flex px-5" [ngClass]="l.lang === language.lang ? 'active' : ''">
+        <div #sub class="menu-sub menu-sub-dropdown w-175px py-4">
+          <div
+            *ngFor="let l of langs"
+            class="menu-item px-3 cursor-pointer"
+            (click)="selectLanguage(l.lang)"
+            data-toggle="tooltip"
+            [title]="l.enable ? '' : 'Coming soon'"
+          >
+            <a
+              class="menu-link d-flex px-5"
+              [ngClass]="l.lang === language.lang ? 'active' : ''"
+            >
               <span class="symbol symbol-20px me-4">
                 <img class="rounded-1" [src]="l.flag" alt="metronic" />
               </span>
@@ -104,13 +173,21 @@
 
       <div class="menu-item px-5 my-1">
         <span (click)="clearCache()" class="menu-link px-5">
-          <codx-label fiedName="lblClearCache" [formModel]="formModel" default="Clear cache"></codx-label>
+          <codx-label
+            fiedName="lblClearCache"
+            [formModel]="formModel"
+            default="Clear cache"
+          ></codx-label>
         </span>
       </div>
 
       <div class="menu-item px-5">
         <a (click)="logout()" class="menu-link px-5 cursor-pointer">
-          <codx-label fiedName="lblSignOut" [formModel]="formModel" default="Sign Out"></codx-label>
+          <codx-label
+            fiedName="lblSignOut"
+            [formModel]="formModel"
+            default="Sign Out"
+          ></codx-label>
         </a>
       </div>
     </ng-container>

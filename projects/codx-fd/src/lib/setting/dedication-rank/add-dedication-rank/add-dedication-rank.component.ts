@@ -76,10 +76,11 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
 
   onSave() {
     var formGroup = this.form.formGroup.controls;
+    if (this.dataUpdate.color) formGroup.color.setValue(this.dataUpdate.color);
     if (
       formGroup.breakName.status == 'VALID' &&
       formGroup.breakValue.status == 'VALID' &&
-      this.dataUpdate.color
+      formGroup.color.status == 'VALID'
     ) {
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)

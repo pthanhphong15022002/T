@@ -1,6 +1,6 @@
-import { 
+import {
   Component,
-  ViewChild, 
+  ViewChild,
   OnInit,
   TemplateRef,
   Input,
@@ -25,7 +25,7 @@ import { PopupGroupComponent } from './popup-group/popup-group.component';
 
 //-----------
 import { Post } from '@shared/models/post';
-import { ApiHttpService, AuthStore} from 'codx-core';
+import { ApiHttpService, AuthStore } from 'codx-core';
 import { ChatService } from './chat.service';
 import { ChatBoxInfo } from './chat.models';
 import { group } from 'console';
@@ -38,11 +38,10 @@ import { environment } from 'src/environments/environment';
 import { PopupViewImageComponent } from './popup-view-image/popup-view-image.component';
 //------------
 
-
 @Component({
   selector: 'lib-chatting',
   templateUrl: './chatting.component.html',
-  styleUrls: ['./chatting.component.css']
+  styleUrls: ['./chatting.component.css'],
 })
 export class ChattingComponent extends UIComponent implements AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -99,8 +98,8 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   clickCheck = false;
   public searchCheck = false;
   titleRef = 'Đang trả lời ';
-  refName ='';
-  refID : any ;
+  refName = '';
+  refID: any;
   refContent = '';
 
   userId : any;
@@ -112,7 +111,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   tags = '';
   callFC: any;
 
-  datenow : any;
+  datenow: any;
 
   count = 0;
   public messageList: any[] = [] ;
@@ -121,19 +120,17 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   checkVoted = false;
   @Input() dVll: any = {};
   //------------
- 
 
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
   @ViewChild("panelRightRef") panelRightRef: TemplateRef<any>;
   @ViewChild("tmpSearch") tmpSearch: TemplateRef<any>;
-
   
   listFileUpload:any[] = [];
 
 
   views: Array<ViewModel> = [];
   currView?: TemplateRef<any>;
-  
+
   button?: ButtonModel;
   fileService: any;
   data: any[];
@@ -162,8 +159,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
     public dmSV: CodxDMService,
     private auth: AuthService,
 
-
-    private element: ElementRef,//
+    private element: ElementRef, //
     // private chatService: ChatService,//
     private changeDetectorRef: ChangeDetectorRef,//
     authStore: AuthStore,//
@@ -172,19 +168,21 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   ) 
   {
     super(inject);
-    this.user = authStore.get();//boxchat
+    this.user = authStore.get(); //boxchat
   }
   ngAfterViewInit(): void {
-    this.views = [{
-      type : ViewType.listdetail,
-      active:true,
-      sameData:true,
-      model:{
-        template: this.itemTemplate,
-        panelRightRef: this.panelRightRef,
-        panelLeftRef:this.tmpSearch
-      }
-    }]
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.panelRightRef,
+          panelLeftRef: this.tmpSearch,
+        },
+      },
+    ];
   }
   addEmoji(event: any){
     this.message += event.emoji.native;
@@ -192,8 +190,8 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     //this.api.execSv("WP","ERM.Business.WP","ChatBusiness","AddChatTestAsync").subscribe();
-    this.senderId = this.user.userID;//
-    this.senderName = this.user.userName;//
+    this.senderId = this.user.userID; //
+    this.senderName = this.user.userName; //
     // this.loadGroupInformation();//
     this.datenow = new Date();
     this.datenow = this.datenow.toLocaleString();
@@ -258,11 +256,20 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
       });
   } */
 
-  clikPopup(){
+  clikPopup() {
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
     dialogModel.FormModel = this.view.formModel;
-    this.callfc.openForm("CreateGroupComponent","Tao nhom chat",0,0,"",null,"",dialogModel);
+    this.callfc.openForm(
+      'CreateGroupComponent',
+      'Tao nhom chat',
+      0,
+      0,
+      '',
+      null,
+      '',
+      dialogModel
+    );
   }
   openFormUploadFile() {
     this.attachment.uploadFile();
@@ -298,21 +305,16 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
     // this.dmSV.page = 1;
     //this.getDataFile("");
   }
- 
+
   changeView(event) {
     //this.currView = null;
     //this.currView = event.view.model.template2;
-    
-    
     //  this.data = [];
     //  this.changeDetectorRef.detectChanges();
   }
-  onLoading($event): void {
-   
-  }
+  onLoading($event): void {}
 
   //============= show chat=================
-
   loadChatMessages() {
     this.api
       .exec<any>('ERM.Business.WP', 'ChatBusiness', 'LoadMessagesAsync', [
@@ -321,7 +323,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
         this.pageIndex,
       ])
       .subscribe((resp: any[]) => {
-        debugger;
+        //debugger;
         if (resp) {
           this.messageList = resp[0];
           let lastEle =
@@ -331,7 +333,8 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
 
           for (let i = 0; i < this.messageList.length; i++) {
             this.messageList[i].showImage = false;
-            if(this.receiverId_coppy !=  this.messageList[i].senderId) showImage = true;
+            if (this.receiverId_coppy != this.messageList[i].senderId)
+              showImage = true;
             if (this.messageList[i].senderId == this.senderId) {
               showImage = true;
             } else {
@@ -449,7 +452,7 @@ fileAdded(event: any) {
           //Xử lý gửi tin nhắn không thành công
           return;
         }
-        // debugger;
+        //
         // if (!this.groupId) {
         //   this.groupId = resp[1].groupID;
         //   this.groupType = resp[1].groupType;
@@ -461,7 +464,7 @@ fileAdded(event: any) {
         //   this.chatService.sendMessage(resp[0], 'SendMessageToGroup');
         // }
 
-        debugger;
+        //debugger;
         this.onCloseref();
           if (this.listFileUpload.length > 0) {
             this.attachment.objectId = resp[0].messageId;
@@ -499,10 +502,9 @@ fileAdded(event: any) {
         this.detectorRef.detectChanges();
         this.message="";
       });
-      
   }
 
-  clickrendo(event: any){
+  clickrendo(event: any) {
     this.clickCheck = true;
     this.refName = event.senderName;
     this.refContent = event.message;
@@ -564,7 +566,9 @@ fileAdded(event: any) {
     });
 
 
-  }
+        this.detectorRef.detectChanges();
+      };
+  
 groupName = "";
   historyItemClicked(data) {
     debugger;
@@ -626,13 +630,15 @@ groupName = "";
             this.groupId_coppy = this.groupId;
             this.count ++ ;
             
+          
+
+          this.senderId = sender.userID;
+          this.senderName = sender.userName;
+
           }
-        });
-
-
-   
-  }
-
+        })
+      }
+      
   votePost(data: any, voteType = null) {
     debugger;
     this.api.execSv(
@@ -677,10 +683,7 @@ groupName = "";
 
   ngOnChanges() {
     ///** WILL TRIGGER WHEN PARENT COMPONENT UPDATES '**
-  
-     console.log("load");
-    } 
-
+  }
 
     searchChanged(event){
       if(event){

@@ -110,7 +110,29 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       this.delete.emit(data);
     }
   }
-  changeDataMF(event, data: any) {}
+  changeDataMF(event, data:any) {        
+    if(event!=null && data!=null){
+      event.forEach(func => {        
+        func.disabled=true;        
+      });
+      if(data.status=='1'){
+        event.forEach(func => {
+          if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "SYS04"/*MF chép*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+    }
+  }
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;

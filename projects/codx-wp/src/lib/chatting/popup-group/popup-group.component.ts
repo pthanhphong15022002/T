@@ -8,13 +8,13 @@ import { ChatBoxInfo } from '../chat.models';
 @Component({
   selector: 'lib-popup-group',
   templateUrl: './popup-group.component.html',
-  styleUrls: ['./popup-group.component.scss']
+  styleUrls: ['./popup-group.component.scss'],
 })
 export class PopupGroupComponent implements OnInit {
   userSelected: any[] = [];
   data: ChatBoxInfo = new ChatBoxInfo();
   users: any = new Array();
-  searchUser = "";
+  searchUser = '';
   public checkuserr: boolean = false;
 
   mssgNoti:string = "";
@@ -25,7 +25,6 @@ export class PopupGroupComponent implements OnInit {
 
   
   @Output() evtNewGroup = new EventEmitter;//event truyền lại view chating
-
 
   views: Array<ViewModel> = [];
   changeDetectorRef: any;
@@ -104,8 +103,8 @@ export class PopupGroupComponent implements OnInit {
     //     'ERM.Business.WP',
     //     'ChatBusiness',
     //     'MockSearchUsers', options).subscribe((res) => {
-    //         debugger;
-    //         if (res) 
+    //
+    //         if (res)
     //         {
     //           this.users = res[0];
     //           this.users.map((e) =>
@@ -159,7 +158,7 @@ export class PopupGroupComponent implements OnInit {
   remoteuser(data: any) {
     //this.userSelected = this.userSelected.filter(x=>x.userID != data.userID);
     this.clickUser(data);
-    //const checked = data.checked; 
+    //const checked = data.checked;
     //crrValue
   }
   clickCreateGroup() {

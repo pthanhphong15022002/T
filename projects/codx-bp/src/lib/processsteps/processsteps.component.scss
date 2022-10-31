@@ -104,3 +104,126 @@
     }
   
 }
+
+.card-survey {
+    width: 768px !important;
+    margin: auto;
+  }
+  
+  .border-left {
+    width: 5px !important;
+  }
+  
+  .content-wrapper {
+    width: 768px !important;
+  }
+  
+  .border-0 {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  
+  .padding-card-survey {
+    padding: 1% 3%;
+  }
+  
+  .inplace-editor-control-section #formId {
+    padding-top: 20px;
+    margin-bottom: 45px;
+    border: 1px solid gray;
+    box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
+    border-radius: 5px;
+  }
+  
+  .inplace-editor-control-section .form-horizontal .form-group {
+    margin: 0 30px;
+  }
+  
+  .inplace-editor-control-section .form-horizontal .form-group>* {
+    width: 100%;
+  }
+  
+  .inplace-editor-control-section .form-horizontal .form-group:last-child {
+    padding-bottom: 40px;
+  }
+  
+  .inplace-editor-control-section .form-title {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .inplace-editor-control-section .submit {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+  }
+  
+  .inplace-editor-control-section.form-layout .control-wrapper .form-horizontal .control-label {
+    padding: 15px 15px 15px 0;
+    font-weight: 600;
+  }
+  
+  @media (max-width: 768px) {
+    .inplace-editor-control-section.form-layout .control-wrapper .form-horizontal .control-label {
+      padding-top: 7px;
+      margin-bottom: 0;
+    }
+  }
+  
+  /* <!-- custom code start --> */
+  .inplace-editor-control-section #confirmation {
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  /* <!-- custom code end --> */
+  .e-editable-action-buttons {
+    display: none;
+  }
+  
+  .example-handle {
+    color: #ccc;
+    cursor: move;
+    text-align: center;
+    margin-top: -10px;
+  }
+  
+  .example-handle-answer {
+    margin-left: 5px;
+    margin-top: 5px;
+    color: #ccc;
+    cursor: move;
+    padding-right: 5px;
+  }
+  
+  .action-menu {
+    position: unset;
+    top: 0px;
+    right: 0px;
+    opacity: 0;
+    z-index: 99;
+    background-color: #fff;
+    border-radius: 0px;
+    padding: 0px !important;
+    box-shadow: none;
+  }
+  
+  .has-action-menu {
+    padding-bottom: 10px;
+  }
+  
+  .size-input {
+    width: 100% !important;
+    height: 30px;
+  }
+  
+  .title-des {
+    text-align: left;
+    font-size: 14px;
+    margin-left: -7px;
+  }

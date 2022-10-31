@@ -7,8 +7,8 @@
   [footer]="footer"
   [dialog]="dialog"
   (buttonClick)="buttonClick($event)"
-  [tabContent]="[tabGeneralInfo, tabQuotaInfo, tabMoreInfo]"
   (setTitle)="setTitle($event)"
+  [tabContent]="[tabGeneralInfo, tabQuotaInfo, tabMoreInfo]"
   [data]="data"
   *ngIf="isAfterRender"
 >
@@ -130,7 +130,7 @@
               #imageUpLoad
               [width]="100"
               imageType="square"
-              [objectType]="formModel?.entityName"
+              [objectType]="'EP_Resources'"
               aria-disabled="false"
               [funcId]="formModel?.funcID"
               [isAllowEdit]="true"

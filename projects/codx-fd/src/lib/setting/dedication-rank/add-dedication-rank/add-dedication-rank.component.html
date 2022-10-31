@@ -2,7 +2,7 @@
     [formModel]="formModel" #form>
     <ng-template #body>
         <div class="form-group">
-            <codx-label fiedName="BreakName" [formModel]="form.formModel" class="font-1rem font-w550">
+            <codx-label class="text-dark" fiedName="BreakName" [formModel]="form.formModel">
             </codx-label>
             <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
                 field="breakName">
@@ -10,7 +10,7 @@
         </div>
         <div class="form-group row">
             <div class="col-6">
-                <codx-label fiedName="BreakValue" [formModel]="form.formModel" class="font-1rem font-w550">
+                <codx-label class="text-dark" fiedName="BreakValue" [formModel]="form.formModel">
                 </codx-label>
                 <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
                     onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="valueChange($event)"
@@ -18,28 +18,28 @@
                 </codx-input>
             </div>
             <div class="col-6">
-                <codx-label fiedName="Color" [formModel]="form.formModel" class="font-1rem font-w550">
+                <codx-label class="text-dark" fiedName="Color" [formModel]="form.formModel">
                 </codx-label>
-                <div class="input-group">
-                    <codx-input #colorPicker type="colorpicker" [showText]="false" [modeSwitcher]="true"
+                <div class="input-group w-100">
+                    <codx-input class="w-100" #colorPicker type="colorpicker" [showText]="true" [modeSwitcher]="true"
                         [crrValue]="dataUpdate.color" field="color" (valueChange)="valueChange($event)">
                     </codx-input>
                 </div>
             </div>
         </div>
-        <div class="form-group mt-3">
-            <codx-label fiedName="Note" [formModel]="form.formModel" class="font-1rem font-w550">
+        <div class="form-group">
+            <codx-label class="text-dark" fiedName="Note" [formModel]="form.formModel">
             </codx-label>
             <codx-input class="form-control test-textarea" rows="3" (valueChange)="valueChange($event)" field="note"
                 [Group]="form.formGroup" [formModel]="form.formModel">
             </codx-input>
         </div>
-        <div class="form-group mt-3">
-            <codx-label fiedName="Image" [formModel]="form.formModel" class="font-1rem font-w550">
+        <div class="form-group pt-2">
+            <codx-label class="text-dark" fiedName="Image" [formModel]="form.formModel">
             </codx-label>
-            <div class="upload-img">
+            <div class="upload-img mt-3">
                 <codx-img #imageUpload [objectId]="dataUpdate.recID" [objectName]="dataUpdate.breakName"
-                    [funcId]="form.formModel?.funcID" objectType="BS_RangeLines" [isAllowEdit]="true" [width]="50">
+                    [funcId]="form.formModel?.funcID" objectType="BS_FDRangeLines" [isAllowEdit]="true" [width]="50">
                 </codx-img>
             </div>
         </div>

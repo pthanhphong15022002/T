@@ -14,6 +14,11 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout.component';
 import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { AddSurveyComponent } from './add-survey/add-survey.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
+import { LayoutHomeComponent } from './_layout-home/layout-home.component';
 
 export const routes: Routes = [
   {
@@ -21,8 +26,18 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'home/:funcID',
-        // component: '',
+        path: 'pop-add-survey',
+        component: AddSurveyComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutHomeComponent,
+    children: [
+      {
+        path: 'surveys/:funcID',
+        component: HomeComponent,
       },
     ],
   },
@@ -30,6 +45,9 @@ export const routes: Routes = [
 
 const Component: Type<any>[] = [
   LayoutComponent,
+  LayoutHomeComponent,
+  HomeComponent,
+  AddSurveyComponent,
 ];
 
 @NgModule({
@@ -42,6 +60,8 @@ const Component: Type<any>[] = [
     CodxShareModule,
     CoreModule,
     NgbModule,
+    InPlaceEditorModule,
+    DragDropModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
@@ -54,10 +74,10 @@ export class CodxSVModule {
   ): ModuleWithProviders<CodxCoreModule> {
     return {
       ngModule: CodxCoreModule,
-      providers: [ 
+      providers: [
         HttpClientModule,
         { provide: EnvironmentConfig, useValue: config },
       ],
     };
   }
-}   
+}

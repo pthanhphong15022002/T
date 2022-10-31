@@ -18,7 +18,7 @@ export class BP_Processes {
   revisionID : string ;
   versionNo : string ;
   versionOn : Date
-  versions : string ;
+  versions :  BP_ProcessRevisions[];
   phases : number ;
   activities : number;
   views :number ;
@@ -42,6 +42,7 @@ export class BP_Processes {
 export class BP_ProcessSteps {
   id : string ;
   recID : string ;
+  processID :string ;
   parentID: string;
   stepNo : number ;
   stepName :string ;
@@ -66,18 +67,25 @@ export class BP_ProcessSteps {
   createdBy : string ;
   modifiedOn : Date ;
   modifiedBy : string ;
+  owners :Array<BP_ProcessOwners> ;
 }
 export class BP_ProcessRevisions{
-
+  recID: string;
+  versionNo: string;
+  activedOn: Date;
+  comment: string;
+  approveStatus: string;
+  approvedBy: string;
+  approvedOn: Date;
+  createdOn: Date;
+  createdBy: string;
 }
 export class BP_ProcessOwners {
   id : string ;
   recID : string ;
-  parentID: string;
-  stepID : string ;
   objectType: string ;
   objectID :string ;
-  rACID :string ;
+  rAIC :string ;
   note :string ;
   createdOn : Date ;
   createdBy : string ;

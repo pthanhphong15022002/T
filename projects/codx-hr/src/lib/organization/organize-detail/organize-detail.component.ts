@@ -28,7 +28,7 @@ import { CodxHrService } from '../../codx-hr.service';
 @Component({
   selector: 'lib-organize-detail',
   templateUrl: './organize-detail.component.html',
-  styleUrls: ['./organize-detail.component.css'],
+  styleUrls: ['./organize-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class OrganizeDetailComponent implements OnInit, OnChanges {

@@ -1,0 +1,14 @@
+#kt_aside_logo .aside-logo {
+  height: 50px !important;
+}
+
+
+.aside .aside-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    min-height: unset;
+    height: 50px !important;
+    padding: 0 20px;
+    padding-top: 20px;
+}

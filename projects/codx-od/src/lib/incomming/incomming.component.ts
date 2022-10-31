@@ -153,7 +153,6 @@ export class IncommingComponent
     this.request.method = 'GetListByStatusAsync';
     this.request.idField = 'recID';
   }
-
   ngAfterViewInit(): void {
     this.views = [
       {

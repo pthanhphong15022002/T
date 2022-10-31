@@ -815,7 +815,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
         if (listFileTemp) {
           this.ATM_IV.fileUploadList = listFileTemp;
           // this.ATM_IV.fileUploadList[0]['objectID'] = listFileTemp[0].objectID;
-          this.ATM_IV.fileUploadList[0].objectId = listFileTemp[0].objectID;
+          this.ATM_IV.fileUploadList[0].objectID = listFileTemp[0].objectID;
         }
         (await this.ATM_IV.saveFilesObservable()).subscribe((result: any) => {
           if (result) {

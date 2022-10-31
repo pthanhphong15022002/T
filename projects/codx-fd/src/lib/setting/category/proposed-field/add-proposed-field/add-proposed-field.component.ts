@@ -15,7 +15,7 @@ import {
 import { CodxFdService } from 'projects/codx-fd/src/public-api';
 
 @Component({
-  selector: 'lib-add-proposed-field',
+  selector: 'app-add-proposed-field',
   templateUrl: './add-proposed-field.component.html',
   styleUrls: ['./add-proposed-field.component.scss'],
 })

@@ -82,7 +82,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   titleMaxFileSiate = 'File {0} tải lên vượt quá dung lượng cho phép {1}MB';
   appName = 'hps-file-test';
   numberDes = 0;
-
   urlUpload = '';
   interval: ItemInterval[];
   intervalCount = 0;
@@ -124,6 +123,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() showMessage = '1';
   @Input() hideMoreF = '1';
   @Input() displayThumb: string;
+  ////////////////////////////////////////////////////
+  @Input() fdID: any = ''; //Folder ID truyền vào
+  @Input() fdName: any = ''; //Folder Name truyền vào
+  @Input() parentID: any = ''; // FolderID của Cấp cha chứa thư mục
+  /////////////////////////////////////////////////////
+  @Input() isSaveSelected = '0'; // Lưu khi chọn select file 0: false , 1 : true
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -217,11 +222,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
           if (
             document
               .getElementsByName('UploadFiles')
-              [i].getAttribute('idbutton') == null
+            [i].getAttribute('idbutton') == null
           ) {
             document
               .getElementsByName('UploadFiles')
-              [i].setAttribute('idbutton', this.idBrowse);
+            [i].setAttribute('idbutton', this.idBrowse);
             break;
           }
         }
@@ -327,7 +332,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (status === 'File uploaded successfully') {
       this.uploadObj.remove(
         this.filesDetails[
-          this.filesList.indexOf(args.currentTarget.parentElement)
+        this.filesList.indexOf(args.currentTarget.parentElement)
         ]
       );
     } else {
@@ -417,7 +422,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     this.fileService.getTotalHdd().subscribe((item) => {
       if (item) {
         this.infoHDD.totalHdd = item?.totalHdd;
-        this.infoHDD.totalUsed = item?.totalUsed;
+        this.infoHDD.totalUsed = item?.TotalUsedBytes;
       }
       //  totalUsed: any;
       // totalHdd: any;
@@ -475,7 +480,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         pathFolder,
         pathID
       )
-      .subscribe((item) => {});
+      .subscribe((item) => { });
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async (res) => {
@@ -551,38 +556,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       [this.functionID],
       ''
     );
-    // this.folderService.getFoldersByFunctionID(this.functionID).subscribe(async res => {
-    //   if (res != null) {
-    //     this.listRemoteFolder = res;
-    //     this.listNodeAdd = res;
-    //     if (res[0].history != null) {
-    //       var listFolder = res[0].history.filter(x => x.objectType == this.functionID && x.objectID == this.user.userID);
-    //       if (listFolder[0] != null && listFolder[0].folderPath != "") {
-    //         var list = listFolder[0].folderPath.split(";");
-    //         this.loadChildNode(res[0], 0, list);
-    //       }
-    //     }
-    //     this.callfc.openForm(OpenFolderComponent, this.titleDialog, 500, 500, "", null, "");
-    //     this.changeDetectorRef.detectChanges();
-    //     this.remotePermission = res[0].permissions;
-    //   }
-    // });
-
-    // let option = new SidebarModel();
-    // option.DataService = this.view?.currentView?.dataService;
-    // option.FormModel = this.view?.currentView?.formModel;
-    // option.Width = '800px';
-
-    // this.dialog.closed.subscribe(e => {
-    //   console.log(e);
-    // })
-
-    /* this.callfc.openForm(this.openFolder, "Chọn thư mục", 400, null, null, "").subscribe((dialog: Dialog)=>{
-      let that = this;
-      dialog.close = function(e) {
-        return that.closeOpenForm(e);
-      }
-    });   */
   }
 
   closeOpenForm(e: any) {
@@ -637,7 +610,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     await this.dmSV.getToken();
     let ret = new Observable<any[]>();
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectId = this.objectId;
+      this.fileUploadList[i].objectID = this.objectId;
       // await this.serviceAddFile(fileItem);
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
@@ -653,109 +626,127 @@ export class AttachmentComponent implements OnInit, OnChanges {
     }
 
     if (total > 1) {
-      return this.fileService.addMultiFileObservable(this.fileUploadList).pipe(
-        map((res) => {
-          if (res != null) {
-            var newlist = res.filter((x) => x.status == 6);
-            var newlistNot = res.filter((x) => x.status == -1);
-            var addList = res.filter((x) => x.status == 0 || x.status == 9);
+      return this.fileService
+        .addMultiFileObservable(
+          this.fileUploadList,
+          this.isDM,
+          this.fdID,
+          this.fdName,
+          this.parentID
+        )
+        .pipe(
+          map((res) => {
+            if (res != null) {
+              var newlist = res.filter((x) => x.status == 6);
+              var newlistNot = res.filter((x) => x.status == -1);
+              var addList = res.filter((x) => x.status == 0 || x.status == 9);
 
-            for (var i = 0; i < addList.length; i++) {
-              this.data.push(Object.assign({}, addList[i]));
-              this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
-            }
+              for (var i = 0; i < addList.length; i++) {
+                this.data.push(Object.assign({}, addList[i]));
+                this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
+              }
 
-            if (addList.length == this.fileUploadList.length) {
-              this.atSV.fileList.next(this.fileUploadList);
-              this.atSV.fileListAdded = addList;
-              if (this.showMessage == '1')
-                this.notificationsService.notify(this.title);
-              //this.closePopup();
-              this.fileUploadList = [];
-              return this.atSV.fileListAdded;
-            } else {
-              var item = newlist[0];
-              var newUploadList = [];
-              // copy list
-              for (var i = 0; i < this.fileUploadList.length; i++) {
-                var file = this.fileUploadList[i];
-                var index = newlist.findIndex(
-                  (x) => x.data.fileName == file.fileName
-                );
-                if (index > -1) {
-                  newUploadList.push(Object.assign({}, file));
+              if (addList.length == this.fileUploadList.length) {
+                this.atSV.fileList.next(this.fileUploadList);
+                this.atSV.fileListAdded = addList;
+                if (this.showMessage == '1')
+                  this.notificationsService.notify(this.title);
+                //this.closePopup();
+                this.fileUploadList = [];
+                return this.atSV.fileListAdded;
+              } else {
+                var item = newlist[0];
+                var newUploadList = [];
+                // copy list
+                for (var i = 0; i < this.fileUploadList.length; i++) {
+                  var file = this.fileUploadList[i];
+                  var index = newlist.findIndex(
+                    (x) => x.data.fileName == file.fileName
+                  );
+                  if (index > -1) {
+                    newUploadList.push(Object.assign({}, file));
+                  }
+                }
+                if (newlistNot.length > 0) {
+                  this.notificationsService.notify(newlistNot[0].message);
+                  //this.closePopup();
+                  return this.atSV.fileListAdded; //this.data;
+                } else {
+                  this.fileUploadList = newUploadList;
+                  var config = new AlertConfirmInputConfig();
+                  config.type = 'checkBox';
+                  return this.notificationsService
+                    .alert(this.titlemessage, item?.message, config)
+                    .closed.pipe(
+                      map((x) => {
+                        if (x.event.status == 'Y') {
+                          // save all
+                          if (x.event.data) {
+                            for (
+                              var i = 0;
+                              i < this.fileUploadList.length;
+                              i++
+                            ) {
+                              this.fileUploadList[i].reWrite = true;
+                            }
+                            this.fileService
+                              .addMultiFileObservable(
+                                this.fileUploadList,
+                                this.isDM,
+                                this.fdID,
+                                this.fdName,
+                                this.parentID
+                              )
+                              .pipe()
+                              .subscribe((result) => {
+                                var mess = '';
+                                for (var i = 0; i < result.length; i++) {
+                                  var f = result[i];
+                                  mess =
+                                    mess +
+                                    (mess != '' ? '<br/>' : '') +
+                                    f.message;
+                                  this.atSV.fileListAdded.push(
+                                    Object.assign({}, result[i])
+                                  );
+                                }
+                                if (this.showMessage == '1')
+                                  this.notificationsService.notify(mess);
+                                this.fileUploadList = [];
+                                return this.atSV.fileListAdded; //this.data;
+                                //this.closePopup();
+                              });
+                          } else {
+                            // save 1
+                            var index = this.fileUploadList.findIndex(
+                              (x) => x.fileName == item.data.fileName
+                            );
+                            this.fileUploadList[index].reWrite = true;
+                            this.onMultiFileSaveObservable();
+                          }
+                        } else if (x.event.status == 'N') {
+                          // cancel all
+                          if (x.event.data) {
+                            this.fileUploadList = [];
+                            return this.atSV.fileListAdded; //this.data;
+                            //this.closePopup();
+                          } else {
+                            // cancel 1
+                            var index = this.fileUploadList.findIndex(
+                              (x) => x.fileName == item.data.fileName
+                            );
+                            this.fileUploadList.splice(index, 1); //remove element from array
+                            if (this.fileUploadList.length > 0)
+                              this.onMultiFileSaveObservable();
+                          }
+                        }
+                      })
+                    );
                 }
               }
-              if (newlistNot.length > 0) {
-                this.notificationsService.notify(newlistNot[0].message);
-                //this.closePopup();
-                return this.atSV.fileListAdded; //this.data;
-              } else {
-                this.fileUploadList = newUploadList;
-                var config = new AlertConfirmInputConfig();
-                config.type = 'checkBox';
-                return this.notificationsService
-                  .alert(this.titlemessage, item?.message, config)
-                  .closed.pipe(
-                    map((x) => {
-                      if (x.event.status == 'Y') {
-                        // save all
-                        if (x.event.data) {
-                          for (var i = 0; i < this.fileUploadList.length; i++) {
-                            this.fileUploadList[i].reWrite = true;
-                          }
-                          this.fileService
-                            .addMultiFileObservable(this.fileUploadList)
-                            .pipe()
-                            .subscribe((result) => {
-                              var mess = '';
-                              for (var i = 0; i < result.length; i++) {
-                                var f = result[i];
-                                mess =
-                                  mess +
-                                  (mess != '' ? '<br/>' : '') +
-                                  f.message;
-                                this.atSV.fileListAdded.push(
-                                  Object.assign({}, result[i])
-                                );
-                              }
-                              if (this.showMessage == '1')
-                                this.notificationsService.notify(mess);
-                              this.fileUploadList = [];
-                              return this.atSV.fileListAdded; //this.data;
-                              //this.closePopup();
-                            });
-                        } else {
-                          // save 1
-                          var index = this.fileUploadList.findIndex(
-                            (x) => x.fileName == item.data.fileName
-                          );
-                          this.fileUploadList[index].reWrite = true;
-                          this.onMultiFileSaveObservable();
-                        }
-                      } else if (x.event.status == 'N') {
-                        // cancel all
-                        if (x.event.data) {
-                          this.fileUploadList = [];
-                          return this.atSV.fileListAdded; //this.data;
-                          //this.closePopup();
-                        } else {
-                          // cancel 1
-                          var index = this.fileUploadList.findIndex(
-                            (x) => x.fileName == item.data.fileName
-                          );
-                          this.fileUploadList.splice(index, 1); //remove element from array
-                          if (this.fileUploadList.length > 0)
-                            this.onMultiFileSaveObservable();
-                        }
-                      }
-                    })
-                  );
-              }
             }
-          }
-        })
-      );
+          })
+        );
     } else if (total == 1) {
       //return this.addFileLargeLong(this.fileUploadList[0]);
       return this.addFileObservable(this.fileUploadList[0]);
@@ -776,14 +767,15 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async onMultiFileSave() {
     if (this.data == undefined) this.data = [];
-
     let total = this.fileUploadList.length;
     var toltalUsed = 0; //bytes
-    var remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
+    var remainingStorage = -1;
+    if (this.infoHDD.totalHdd >= 0)
+      remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
     var that = this;
     await this.dmSV.getToken();
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectId = this.objectId;
+      this.fileUploadList[i].objectID = this.objectId;
       this.fileUploadList[i].description = this.description[i];
 
       toltalUsed += this.fileUploadList[i].fileSize;
@@ -793,12 +785,18 @@ export class AttachmentComponent implements OnInit, OnChanges {
           false
         );
     }
-    if (toltalUsed > remainingStorage)
+    if (remainingStorage >= 0 && toltalUsed > remainingStorage)
       return this.notificationsService.notifyCode('DM053');
     this.atSV.fileListAdded = [];
     if (total > 1) {
       var done = this.fileService
-        .addMultiFile(this.fileUploadList, this.isDM)
+        .addMultiFile(
+          this.fileUploadList,
+          this.isDM,
+          this.fdID,
+          this.fdName,
+          this.parentID
+        )
         .toPromise()
         .then((res) => {
           if (res != null) {
@@ -902,7 +900,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
                             this.description[i];
                         }
                         this.fileService
-                          .addMultiFile(this.fileUploadList, this.isDM)
+                          .addMultiFile(
+                            this.fileUploadList,
+                            this.isDM,
+                            this.fdID,
+                            this.fdName,
+                            this.parentID
+                          )
                           .toPromise()
                           .then((result) => {
                             var mess = '';
@@ -959,7 +963,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
     try {
       fileItem.uploadId = '';
-      fileItem.objectId = this.objectId;
+      fileItem.objectID = this.objectId;
       var appName = environment.appName; // Tam thoi de hard
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = fileItem.item.rawFile;
@@ -975,7 +979,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               height: 200, //Kích thước của file ảnh Thum bề dọc
             },
             IsPublic: true,
-            ThumbConstraints:"30,60,120,300,500,600"
+            ThumbConstraints: '30,60,120,300,500,600',
           },
         }
       );
@@ -1013,7 +1017,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             height: 200, //Kích thước của file ảnh Thum bề dọc
           },
           IsPublic: true,
-          ThumbConstraints:"30,60,120,300,500,600"
+          ThumbConstraints: '30,60,120,300,500,600',
         },
       })
     );
@@ -1054,30 +1058,38 @@ export class AttachmentComponent implements OnInit, OnChanges {
         }
 
         if (isAddFile)
-          return this.fileService.addFileObservable(fileItem, this.isDM).pipe(
-            map((item) => {
-              if (item.status == 0) {
-                if (this.showMessage == '1')
+          return this.fileService
+            .addFileObservable(
+              fileItem,
+              this.isDM,
+              this.fdID,
+              this.fdName,
+              this.parentID
+            )
+            .pipe(
+              map((item) => {
+                if (item.status == 0) {
+                  if (this.showMessage == '1')
+                    this.notificationsService.notify(item.message);
+                  this.fileUploadList[0].recID = item.data.recID;
+                  this.atSV.fileListAdded.push(Object.assign({}, item));
+                  this.data.push(Object.assign({}, item));
+                  this.fileUploadList = [];
+                  return item;
+                } else if (item.status == 6) {
+                  // ghi đè
+                  fileItem.recID = item.data.recID;
+                  return this.rewriteFileObservable(
+                    this.titlemessage,
+                    item.message,
+                    fileItem
+                  );
+                } else {
                   this.notificationsService.notify(item.message);
-                this.fileUploadList[0].recID = item.data.recID;
-                this.atSV.fileListAdded.push(Object.assign({}, item));
-                this.data.push(Object.assign({}, item));
-                this.fileUploadList = [];
-                return item;
-              } else if (item.status == 6) {
-                // ghi đè
-                fileItem.recID = item.data.recID;
-                return this.rewriteFileObservable(
-                  this.titlemessage,
-                  item.message,
-                  fileItem
-                );
-              } else {
-                this.notificationsService.notify(item.message);
-              }
-              return null;
-            })
-          );
+                }
+                return null;
+              })
+            );
         else {
           if (index != -1) this.fileUploadList[index] = fileItem;
           return null;
@@ -1171,8 +1183,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var fileChunk = new File([blogPart], uploadFile.name, {
           type: uploadFile.type,
         }); //Gói lại thành 1 file chunk để upload
-        try
-        {
+        try {
           var uploadChunk = await lvFileClientAPI.formPostWithToken(
             `api/${appName}/files/upload`,
             {
@@ -1182,10 +1193,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
             }
           );
           console.log(uploadChunk);
-        }
-        catch(ex)
-        {
-          console.log(ex)
+        } catch (ex) {
+          console.log(ex);
         }
       }
     } catch (ex) {
@@ -1325,7 +1334,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       });
   }
 
-  closeFileDialog(form): void {}
+  closeFileDialog(form): void { }
 
   arrayBufferToBase64(buffer) {
     var binary = '';
@@ -1573,18 +1582,18 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.createdOn = this.getNow();
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
-        fileUpload.objectId = this.objectId;
+        fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
         fileUpload.fileName = files[i].name;
 
         /* fileUpload.description = files[i].description; */
 
-        fileUpload.funcId = this.functionID;
+        fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.reWrite = false;
         fileUpload.data = item;
         fileUpload.item = files[i];
-        fileUpload.folderId = this.folderId;
+        fileUpload.folderID = this.folderId;
         fileUpload.permissions = this.remotePermission;
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
@@ -2813,9 +2822,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
     this.getFolderPath();
-    //console.log(files);
     var addedList = [];
-
     for (var i = 0; i < files.length; i++) {
       if (
         files[i].size >= this.maxFileSizeUpload &&
@@ -2866,20 +2873,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.mimeType = this.GetMimeType(files[i].type);
         fileUpload.type = files[i].type;
         fileUpload.objectType = this.objectType;
-        fileUpload.objectId = this.objectId;
+        fileUpload.objectID = this.objectId;
         fileUpload.fileSize = files[i].size;
         fileUpload.fileName = files[i].name;
 
         fileUpload.description = files[i].description; //
 
-        fileUpload.funcId = this.functionID;
+        fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;
         fileUpload.reWrite = false;
         fileUpload.data = '';
         fileUpload.item = files[i];
         //fileUpload.folderId = this.folderId;
-        fileUpload.folderId = this.dmSV.folderId.getValue();
+        fileUpload.folderID = this.dmSV.folderId.getValue();
         //fileUpload.permissions = this.remotePermission;
         //  if (this.parentFolder != null && this.parentFolder.permissions != null)
         //    fileUpload.permissions = JSON.parse(JSON.stringify(this.parentFolder.permissions));//Object.assign({}, this.parentFolder.permissions);
@@ -2914,7 +2921,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
     //  this.fileUploadList.next(this.fileUploadList);
     // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
-
+    if(this.isSaveSelected == "1")
+    {
+      this.onMultiFileSave();
+    }
     return false;
   }
 

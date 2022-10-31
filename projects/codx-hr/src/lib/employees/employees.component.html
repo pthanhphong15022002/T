@@ -9,8 +9,7 @@
   className="EmployeesBusiness"
   method="GetModelFormEmployAsync" 
   [selectedFirst]="true" 
-  [itemSelected]="itemSelected"
-  [viewActiveType]="'1'">
+  [itemSelected]="itemSelected">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -78,7 +77,7 @@
 </ng-template>
 
 <ng-template #itemAction let-data>
-    <codx-mfunc 
+    <codx-mfunc
       [formModel]="view.formModel" 
       [itemSelected]="itemSelected" 
       (clickMF)="clickMF($event, data)"
@@ -218,8 +217,8 @@
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-info">
       <div class="d-flex">
-        <span class="badge badge-success badge-sm badge-inline" [style.background]="data.statusColor">{{ data.statusName
-          }}
+        <span class="badge badge-success badge-sm badge-inline" [style.background]="data.statusColor">
+          {{ data.statusName}}
         </span>
       </div>
 
@@ -228,9 +227,11 @@
           <codx-label name="lblJoinedOn" formName="Employees" default="Ngày vào làm: ">
           </codx-label>
         </span>
-        <span class="text-gray-800">
-          <span #joinedOn>{{data.joinedOn | fmDT | formatvalue: view.formModel:"joinedOn":joinedOn| async}}</span>
-        </span>
+        <ng-container *ngIf="data.joinedOn">
+          <span class="text-gray-800">
+            <span #joinedOn>{{data.joinedOn  | formatvalue: view.formModel:"joinedOn":joinedOn | async}}</span>
+          </span>
+        </ng-container>
       </div>
       <div class="align-items-center fs-7">
         <span class="text-gray-600 me-1">

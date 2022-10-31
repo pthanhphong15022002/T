@@ -39,8 +39,8 @@
         </div>
         <div class="mt-4 mb-5">
           <button (click)="isShowAll(true)" type="button" class="btn btn-sm btn-primary pe-0">
-            {{ titleExpand
-            }}<i class="icon-keyboard_arrow_right icon-16 ms-2"></i>
+            <codx-label [default]="titleExpand" [fiedName]="'expand'"></codx-label>
+           <i class="icon-keyboard_arrow_right icon-16 ms-2"></i>
           </button>
         </div>
 
@@ -49,12 +49,12 @@
             <ul class="nav nav-tabs nav-tabs-line">
               <li class="nav-item">
                 <a class="nav-link active fw-bold" data-toggle="tab" (click)="onSetPermision(false)">
-                  <span class="nav-text">{{ titleShare }}</span>
+                  <codx-label [default]="titleShare" [fiedName]="'titleShare'"></codx-label>
                 </a>
               </li>
             </ul>
             <button type="button" (click)="openRight()" class="btn btn-sm btn-outline-primary">
-              {{ titleSelectObject }}
+              <codx-label [default]="titleSelectObject" [fiedName]="'titleSelectObject'"></codx-label>
             </button>
           </div>
           <div class="tab-content mt-2">
@@ -100,25 +100,18 @@
               </div>
               <div class="share-groups mt-6">
                 <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <div class="text-dark-75">{{ titleApprovar }}</div>
+                  <codx-label [default]="titleApprovar" [fiedName]="'titleApprovar'"></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
                       <codx-input class="test-check" type="switch" style="width: 100%" [crrValue]="approval"
                         field="approval" [disabled]="
                           this.updateRight == false || this.propertiesFolder
                         " (valueChange)="onSaveRightChanged($event, 'approval')"></codx-input>
-                      <!-- <label>
-                                                <input type="checkbox" name="checkApproval" #checkApproval
-                                                    [checked]="approval" id="checkApproval"
-                                                    [disabled]="this.updateRight == false || this.propertiesFolder"
-                                                    (change)="onSaveRightChanged(checkApproval.checked, 'approval')" />
-                                                <span></span>
-                                            </label>  [refValue]="gridViewSetup!=null?gridViewSetup['Owner']['referedValue']:null"  -->
                     </span>
                     <div class="w-80px">
                       <button type="button" [disabled]="disableRight('approval')" (click)="openApproval()"
                         class="btn btn-sm btn-outline-primary">
-                        {{ titleSetting }}
+                        <codx-label [default]="titleSetting" [fiedName]="'titleSetting'"></codx-label>
                       </button>
                       <ng-container *ngIf="showPopup">
                         <codx-combobox-popup comboboxName="ApproverGroups" [field]="approvers" [width]="width"
@@ -129,7 +122,7 @@
                   </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <div class="text-dark-75">{{ titleVersionControl }}</div>
+                  <codx-label [default]="titleVersionControl" [fiedName]="'titleVersionControl'"></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
                       <codx-input class="test-check" type="switch" style="width: 100%" [checked]="revision"
@@ -148,7 +141,7 @@
                   </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <div class="text-dark-75">{{ titleStoreControl }}</div>
+                  <codx-label [default]="titleStoreControl" [fiedName]="'titleStoreControl'"></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
                       <codx-input class="test-check" type="switch" style="width: 100%" [checked]="physical"
@@ -166,13 +159,13 @@
                     <div class="w-80px">
                       <button type="button" [disabled]="disableRight('physical')" (click)="openPhysical()"
                         class="btn btn-sm btn-outline-primary">
-                        {{ titleSetting }}
+                        <codx-label [default]="titleSetting" [fiedName]="'titleSetting'"></codx-label>
                       </button>
                     </div>
                   </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <div class="text-dark-75">{{ titleCopyrightsControl }}</div>
+                  <codx-label [default]="titleCopyrightsControl" [fiedName]="'titleCopyrightsControl'"></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
                       <codx-input class="test-check" type="switch" style="width: 100%" [checked]="copyrightsControl"
@@ -194,18 +187,32 @@
                   </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <div class="text-dark-75">{{ titleSecurityControl }}</div>
+                  <codx-label [default]="titleSecurityControl" [fiedName]="'titleSecurityControl'"></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
                       <codx-input class="test-check" type="switch" style="width: 100%" [checked]="security"
                         field="security" [disabled]="
                           this.updateRight == false || this.propertiesFolder
                         " (valueChange)="onSaveRightChanged($event, 'security')"></codx-input>
+                    </span>
+                    <div class="w-80px"></div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between share-item mt-4">
+                  <codx-label [default]="titleAvatar" fiedName="titleAvatar"></codx-label>
+                  <div class="d-flex align-items-center">
+                    <span class="switch pt-1 switch-icon me-2">
+                      <codx-input class="test-check" type="switch" style="width: 100%" [checked]="!this.fileEditing?.viewThumb?false:this.fileEditing?.viewThumb"
+                        field="createSubFolder" [disabled]="
+                          this.updateRight == false || this.propertiesFolder
+                        " (valueChange)="
+                          onSaveRightChanged($event, 'titleAvatar')
+                        "></codx-input>
                       <!-- <label>
-                                                <input type="checkbox" name="checkSecurity" #checkSecurity
-                                                    [checked]="security" id="checkSecurity"
+                                                <input type="checkbox" name="select" #checkFolder
+                                                    [checked]="createSubFolder" id="checkFolder"
                                                     [disabled]="this.updateRight == false || this.propertiesFolder"
-                                                    (change)="onSaveRightChanged(checkSecurity.checked, 'checkSecurity')" />
+                                                    (change)="onSaveRightChanged(checkFolder.checked, 'checkFolder')" />
                                                 <span></span>
                                             </label> -->
                     </span>
@@ -213,7 +220,7 @@
                   </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between share-item mt-4">
-                  <div class="text-dark-75">{{ titleCreateSubFolder }}</div>
+                  <codx-label [default]="titletitleCreateSubFolder" [fiedName]="'titletitleCreateSubFolder'"></codx-label>
                   <div class="d-flex align-items-center">
                     <span class="switch pt-1 switch-icon me-2">
                       <codx-input class="test-check" type="switch" style="width: 100%" [checked]="createSubFolder"
@@ -233,6 +240,7 @@
                     <div class="w-80px"></div>
                   </div>
                 </div>
+                
                 <div *ngIf="this.createSubFolder" class="mt-6">
                   <table class="table w-100">
                     <thead>
@@ -287,7 +295,7 @@
                         <td class="cursor-pointer" (click)="openSubFolder()" colspan="4">
                           <div class="d-flex align-items-center text-primary text-hover-primary">
                             <span class="icon-add_circle icon-16 me-1"></span>
-                            <span>{{titletitleCreateSubFolder}}</span>
+                            <codx-label [default]="titletitleCreateSubFolder" [fiedName]="'titletitleCreateSubFolder'"></codx-label>
                           </div>
                         </td>
                       </tr>

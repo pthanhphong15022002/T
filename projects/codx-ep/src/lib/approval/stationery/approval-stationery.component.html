@@ -38,6 +38,7 @@
     [titleLine]="2"
     [dataItem]="data"
     [formModel]="view.formModel"
+    (changeDataMF)="changeDataMF($event, data)"
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
     [dataItem]="data"
@@ -50,9 +51,9 @@
     #viewdetail
     [itemDetail]="itemDetail"
     [funcID]="funcID"
-    [formModel]="view?.formModel"
+    [formModel]="formModel"
     [view]="view"
     (updateStatus)="updateStatus($event)"
-    (uploaded)="getDetailBooking($event)"
+    (uploaded)="getDetailApprovalBooking($event)"
   ></approval-stationery-view-detail>
 </ng-template>

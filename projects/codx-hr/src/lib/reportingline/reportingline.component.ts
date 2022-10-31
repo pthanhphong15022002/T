@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { ApiHttpService, AuthService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, CRUDService, DialogRef, NotificationsService, RequestOption, ScrollComponent, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, ButtonModel, CallFuncService, CodxListviewComponent, CRUDService, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, ScrollComponent, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
+import { ReportinglineDetailComponent } from './reportingline-detail/reportingline-detail.component';
 
 @Component({
   selector: 'lib-reportingline',
@@ -19,6 +20,17 @@ export class ReportinglineComponent extends UIComponent {
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   @ViewChild('templateDetail') templateDetail: TemplateRef<any>;
   @ViewChild("listview") listview: CodxListviewComponent;
+  
+  
+  @ViewChild("tmpTree") tmpTree:TemplateRef<any>;
+  @ViewChild("tmpRightRef") tmpRightRef:TemplateRef<any>;
+  @ViewChild("tmpOrgchart") tmpOrgchart:TemplateRef<any>;
+  @ViewChild("tmpList") tmpList:TemplateRef<any>;
+  @ViewChild("codxListView") codxListView:CodxListviewComponent;
+
+
+
+
   @Input() showMoreFunc = true;
 
   views: Array<ViewModel> = [];
@@ -43,7 +55,9 @@ export class ReportinglineComponent extends UIComponent {
   dataValue: string = "";
   isLoaded: boolean = false;
   positionID: any;
-
+  currView:TemplateRef<any> = null;
+  detailComponent: any = null;
+  nodeSelected:any = null;
   constructor(
     private authStore: AuthService,
     private codxHr: CodxHrService,
@@ -57,9 +71,61 @@ export class ReportinglineComponent extends UIComponent {
 
   onInit(): void {
     this.funcID = this.router.snapshot.params['funcID'];
-    
   }
-
+  ngAfterViewInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+    this.views = [
+      {
+        id: '1',
+        type: ViewType.tree_orgchart,
+        active: true,
+        sameData: true,
+        model: {
+          resizable: true,
+          template: this.tmpTree,
+          panelRightRef: this.tmpRightRef,
+          template2: this.tmpOrgchart
+        }
+      },
+      {
+        id: '2',
+        type: ViewType.tree_list,
+        active: false,
+        sameData: true,
+        model: {
+          resizable: true,
+          template: this.templateTree,
+          panelRightRef: this.tmpRightRef,
+          template2: this.tmpList
+        }
+      }
+    ];
+    this.view.dataService.parentIdField = 'ReportTo';
+    this.detectorRef.detectChanges();
+  }
+  changeView(event: any) {
+    this.currView = null;
+    if (event.view && event.view?.model?.template2) {
+      this.currView = event.view.model.template2;
+    }
+    this.detectorRef.detectChanges();
+  }
+  orgChartViewInit(component:any){
+    if(component){
+      this.detailComponent = component;
+    }
+  }
+  doubleClickItem(data:any){
+    if(data){
+      let option = new DialogModel();
+      option.DataService = this.view.dataService as CRUDService;
+      option.FormModel = this.view.formModel;
+      option.IsFull = true;
+      this.callfc.openForm(ReportinglineDetailComponent,"",0,0,"",data,"",option);
+    }
+  }
   searchName(e) {
     var listEmployeeSearch = [];
     this.searchField = e;
@@ -75,40 +141,8 @@ export class ReportinglineComponent extends UIComponent {
     });
     this.listEmployeeSearch = listEmployeeSearch;
   }
-
-
-  ngAfterViewInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.treedetail,
-        active: true,
-        sameData: true,
-        model: {
-          resizable: true,
-          template: this.templateTree,
-          panelRightRef: this.itemViewList,
-        }
-      },
-      {
-        id: '2',
-        type: ViewType.tree_card,
-        active: true,
-        sameData: true,
-        model: {
-          resizable: true,
-          template: this.templateTree,
-          panelRightRef: this.itemViewList,
-        }
-      },
-    ];
-    this.view.dataService.parentIdField = 'ReportTo';
-    this.detectorRef.detectChanges();
+  action(e){
   }
-
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'SYS03':
@@ -122,9 +156,6 @@ export class ReportinglineComponent extends UIComponent {
         break;
     }
   }
-
-  
-
   edit(data?) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -137,7 +168,6 @@ export class ReportinglineComponent extends UIComponent {
       this.dialog = this.callfc.openSide(PopupAddPositionsComponent, 'edit', option);
     });
   }
-
   copy(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -150,7 +180,6 @@ export class ReportinglineComponent extends UIComponent {
       this.dialog = this.callfc.openSide(PopupAddPositionsComponent, 'copy', option);
     });
   }
-
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'Delete';
@@ -159,7 +188,6 @@ export class ReportinglineComponent extends UIComponent {
     opt.data = itemSelected.positionID;
     return true;
   }
-
   delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.delete([this.view.dataService.dataSelected], true, (opt,) =>
@@ -172,21 +200,8 @@ export class ReportinglineComponent extends UIComponent {
       );
 
   }
-
-  loadEmployByCountStatus(p, posID, status) {
-    this.listEmployee = [];
-    this.listEmployeeSearch = [];
-    var stt = status.split(';');
-    this.codxHr.loadEmployByCountStatus(posID, stt)
-      .subscribe(response => {
-        this.listEmployee = response;
-        this.listEmployeeSearch = response;
-        this.countResource = response.length;
-        p.open();
-        this.popover = p;
-      });
+  loadEmployByCountStatus(){
   }
-
   selectedChange(evt: any) {
     // this.itemSelected = val.data;
     // this.dt.detectChanges();
@@ -195,7 +210,6 @@ export class ReportinglineComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -203,7 +217,6 @@ export class ReportinglineComponent extends UIComponent {
         break;
     }
   }
-
   btnClick(){
     if(this.view)
     {
@@ -226,24 +239,48 @@ export class ReportinglineComponent extends UIComponent {
       })
     });
   }
-  onSelectionChanged(evt: any) {
-    ScrollComponent.reinitialization();
-    if (this.listview) {
-      if (!this.isLoaded)
-        this.listview.dataService.setPredicate(this.predicate, this.dataValue.split(';')).subscribe(res => {
-        });
+  onSelectionChanged(event: any) {
+    // ScrollComponent.reinitialization();
+    // if (this.listview) {
+    //   if (!this.isLoaded)
+    //     this.listview.dataService.setPredicate(this.predicate, this.dataValue.split(';'))
+    //     .subscribe();
+    //   else
+    //     this.isLoaded = false;
+    // } else 
+    // {
+    //   this.isLoaded = true;
+    //   if (event && event.data) {
+    //     this.predicate = "PositionID=@0";
+    //     this.dataValue = event.data.positionID;
+    //   }
+    //   this.detectorRef.detectChanges();
+    // }
+
+    if(event && event.data){
+      this.nodeSelected = event.data;
+      if(this.codxListView){
+        if(!this.isLoaded){
+          this.codxListView.dataService.setPredicate(this.predicate,this.dataValue.split(';')).subscribe(); 
+        }
+        else
+        {
+          this.isLoaded = false;
+        }
+      }
       else
-        this.isLoaded = false;
-    } else {
-      this.isLoaded = true;
-      if (evt && evt.data) {
-        this.predicate = "PositionID=@0";
-        this.dataValue = evt.data.positionID;
+      {
+        this.isLoaded = true;
+        if (this.nodeSelected.positionID) 
+        {
+          this.predicate = "PositionID = @0";
+          this.dataValue = event.data.positionID;
+        }
       }
       this.detectorRef.detectChanges();
     }
+    console.log(event);
   }
-
   loadEOrgChartListChild(orgUnitID): Observable<any> {
     return this.api
       .call(

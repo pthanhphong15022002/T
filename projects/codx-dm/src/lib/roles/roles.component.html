@@ -55,15 +55,15 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">{{titleFunction}}</th>
-                                <th scope="col">{{titleDescription}}</th>
-                                <th scope="col">{{titleAllow}}</th>
+                                <th scope="col"><codx-label [default]="titleFunction" [fiedName]="'titleFunction'"></codx-label></th>
+                                <th scope="col"><codx-label [default]="titleDescription" [fiedName]="'titleDescription'"></codx-label></th>
+                                <th scope="col"><codx-label [default]="titleAllow" [fiedName]="'titleAllow'"></codx-label></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleFullControl}}</td>
-                                <td>{{titleRightDescription}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleFunction" [fiedName]="'titleFunction'"></codx-label></td>
+                                <td><codx-label [default]="titleRightDescription" [fiedName]="'titleRightDescription'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="full"
                                         field="full" [disabled]="this.checkCurrentRightUpdate()"
@@ -72,8 +72,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleCreateFolder}}</td>
-                                <td>{{titleAllowCreateFolder}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleCreateFolder" [fiedName]="'titleCreateFolder'"></codx-label></td>
+                                <td><codx-label [default]="titleAllowCreateFolder" [fiedName]="'titleAllowCreateFolder'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="create"
                                         field="create" [disabled]="this.checkCurrentRightUpdate()"
@@ -81,8 +81,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleView}}</td>
-                                <td>{{titleViewDescription}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleView" [fiedName]="'titleView'"></codx-label></td>
+                                <td><codx-label [default]="titleViewDescription" [fiedName]="'titleViewDescription'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" field="read"
                                         [checked]="read" [disabled]="this.checkCurrentRightUpdate()"
@@ -90,8 +90,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleUpdate}}</td>
-                                <td>{{titleUpdateDescription}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleUpdate" [fiedName]="'titleUpdate'"></codx-label></td>
+                                <td><codx-label [default]="titleUpdateDescription" [fiedName]="'titleUpdateDescription'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" field="update"
                                         [checked]="update" [disabled]="this.checkCurrentRightUpdate()"
@@ -99,8 +99,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleDelete}}</td>
-                                <td>{{titleDeleteDesc}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleDelete" [fiedName]="'titleDelete'"></codx-label></td>
+                                <td><codx-label [default]="titleDeleteDesc" [fiedName]="'titleDeleteDesc'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete"
                                         field="delete" [disabled]="this.checkCurrentRightUpdate()"
@@ -108,8 +108,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleShare}}</td>
-                                <td>{{titleShareDesc}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleShare" [fiedName]="'titleShare'"></codx-label></td>
+                                <td><codx-label [default]="titleShareDesc" [fiedName]="'titleShareDesc'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="share"
                                         field="share" [disabled]="this.checkCurrentRightUpdate()"
@@ -117,8 +117,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleAssign}}</td>
-                                <td>{{titleAssignDesc}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleAssign" [fiedName]="'titleAssign'"></codx-label></td>
+                                <td><codx-label [default]="titleAssignDesc" [fiedName]="'titleAssignDesc'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" field="assign"
                                         [checked]="assign" [disabled]="this.checkCurrentRightUpdate()"
@@ -126,8 +126,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleUpload}}</td>
-                                <td>{{titleUploadDesc}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleUpload" [fiedName]="'titleUpload'"></codx-label></td>
+                                <td><codx-label [default]="titleUploadDesc" [fiedName]="'titleUploadDesc'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="upload"
                                         field="upload" [disabled]="this.checkCurrentRightUpdate()"
@@ -135,8 +135,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="font-size-lg text-dark">{{titleDownload}}</td>
-                                <td>{{titleDownloadDesc}}</td>
+                                <td class="font-size-lg text-dark"><codx-label [default]="titleDownload" [fiedName]="'titleDownload'"></codx-label></td>
+                                <td><codx-label [default]="titleDownloadDesc" [fiedName]="'titleDownloadDesc'"></codx-label></td>
                                 <td class="text-center">
                                     <codx-input class="test-check" type="switch" style="width:100%" [checked]="download"
                                         field="download" [disabled]="this.checkCurrentRightUpdate()"
@@ -149,7 +149,7 @@
                 <div class="row mt-2">
                     <div class="col-xl-4 col-lg-6 col-md-6">
                         <div class="form-group row mb-0 pl-3">
-                            <label class="col-12 pr-0 col-form-label">{{titleFromDate}}</label>
+                            <label class="col-12 pr-0 col-form-label"><codx-label [default]="titleFromDate" [fiedName]="'titleFromDate'"></codx-label></label>
                             <div class="col-12">
                                 <codx-input class="form-control test-datetime" type="dateTime" style="width:100%"
                                     format="d" [crrValue]="startDate" [disabled]="this.checkCurrentRightUpdate()"
@@ -159,7 +159,7 @@
                     </div>
                     <div class="col-xl-4 col-lg-6 col-md-6">
                         <div class="form-group row mb-0">
-                            <label class="col-12 pr-0 col-form-label">{{titleToDate}}</label>
+                            <label class="col-12 pr-0 col-form-label"><codx-label [default]="titleToDate" [fiedName]="'titleToDate'"></codx-label></label>
                             <div class="col-12">
                                 <codx-input class="form-control test-datetime" type="dateTime" style="width:100%"
                                     format="d" [crrValue]="endDate" [disabled]="this.checkCurrentRightUpdate()"

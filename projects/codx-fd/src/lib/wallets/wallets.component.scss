@@ -1,172 +1,185 @@
 .chart-get {
-    margin-left: -200px;
+  margin-left: -200px;
 }
 
 .total-coins-received {
-    margin-top: -110px;
-    margin-left: 81px;
-    font-size: 1.3rem;
+  margin-top: -89px;
+  margin-left: 113px;
+  font-size: 1.3rem;
+}
+
+.total-coins-sended {
+  margin-top: -89px;
+  margin-left: 112px;
+  font-size: 1.3rem;
 }
 
 .mt-9 {
-    margin-top: 100px !important;
-    height: 500px !important;
+  margin-top: 100px !important;
+  height: 500px !important;
 }
 
 .chart-received {
-    width: 363.25px;
+  width: 363.25px;
 }
 
 .chart-sended {
-    width: 363.25px;
+  width: 363.25px;
 }
 
 .lbl-coin {
-    color: gray;
-    font-size: 1.2rem;
-    margin-left: 150px;
-    font-weight: 600;
+  color: gray;
+  font-size: 1.2rem;
+  margin-left: 150px;
+  font-weight: 600;
 }
 
 .box-wallets {
-    border: 2px solid #eee;
-    border-radius: 4px !important;
-    padding: 10px 15px 0;
+  border: 2px solid #eee;
+  border-radius: 4px !important;
+  padding: 10px 15px 0;
 }
 
 .top-100 {
-    margin-top: 100px;
+  margin-top: 100px;
 }
 
 .w-0 {
-    width: 0px;
+  width: 0px;
 }
 
 .h-0 {
-    height: 0px;
+  height: 0px;
 }
 
 .white {
-    background-color: white;
-    color: white;
+  background-color: white;
+  color: white;
 }
 
 .p-a {
-    position: relative;
+  position: relative;
 }
 
 .list-performance {
-    min-height: 558px;
+  min-height: 558px;
 }
 
 .min-w-400px {
-    min-width: 400px !important
+  min-width: 400px !important;
 }
 
 .w-400px {
-    width: 400px !important
+  width: 400px !important;
 }
 
 .pl-3,
 .px-3 {
-    padding-left: 0.75rem !important
+  padding-left: 0.75rem !important;
 }
 
 .pd-r-0 {
-    padding-right: 0px;
+  padding-right: 0px;
 }
 
 .top-item {
-    width: 125px;
+  width: 125px;
 }
 
 .top1 .top-pic {
-    width: 76px;
-    height: 90px;
-    background: url("../../../../../src/assets/demos/svg/top1.svg") center top no-repeat;
+  width: 76px;
+  height: 90px;
+  background: url("../../../../../src/assets/demos/svg/top1.svg") center top
+    no-repeat;
 }
 
 .top2 {
-    padding-top: 55px !important;
+  padding-top: 55px !important;
 }
 
 .top2 .top-pic {
-    width: 80px;
-    height: 60px;
-    background: url("../../../../../src/assets/demos/svg/top2.svg") center top no-repeat;
+  width: 80px;
+  height: 60px;
+  background: url("../../../../../src/assets/demos/svg/top2.svg") center top
+    no-repeat;
 }
 
 .top3 {
-    padding-top: 55px !important;
+  padding-top: 55px !important;
 }
 
 .top3 .top-pic {
-    width: 80px;
-    height: 60px;
-    background: url("../../../../../src/assets/demos/svg/top3.svg") center top no-repeat;
+  width: 80px;
+  height: 60px;
+  background: url("../../../../../src/assets/demos/svg/top3.svg") center top
+    no-repeat;
 }
 
 .top2 .symbol,
 .top3 .symbol {
-    left: 41px;
-    top: 3px;
+  left: 41px;
+  top: 3px;
 }
 
 .top1 .symbol {
-    left: 36px;
-    top: 24px;
+  left: 36px;
+  top: 24px;
 }
 
 .top-name {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .modal-title .text-center {
-    text-align: center;
+  text-align: center;
 }
 
 .organize {
-    min-width: 177.84px !important;
+  min-width: 177.84px !important;
 }
 
 .text-dark-50 {
-    color: #666666 !important;
+  color: #666666 !important;
 }
 
 .top-champion {
-    height: 159px !important;
+  height: 159px !important;
 }
 
 .left-5 {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
 .with-number .list-number {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    width: 24px;
-    height: 24px;
-    border-radius: 24px;
-    line-height: 24px;
-    text-align: center;
-    color: #ffa800;
-    font-weight: 500;
-    background-color: #fff4de;
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 24px;
+  height: 24px;
+  border-radius: 24px;
+  line-height: 24px;
+  text-align: center;
+  color: #ffa800;
+  font-weight: 500;
+  background-color: #fff4de;
 }
 
 .left-15 {
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
 .left-20 {
-    margin-left: -20px;
+  margin-left: -20px;
 }
 
 .pd-r-10 {
-    padding-right: 10px;
+  padding-right: 10px;
 }
 
 .page-home {
-    padding-top: 5%;
+  padding-top: 5%;
+}
+
+.ballot {
+  height: 157px;
 }

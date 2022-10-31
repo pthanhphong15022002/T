@@ -16,6 +16,7 @@ import {
   ApiHttpService,
   ButtonModel,
   CacheService,
+  FormModel,
   ViewModel,
   ViewsComponent,
   ViewType,
@@ -38,7 +39,10 @@ export class CodxApprovalStepComponent
   @Input() transID: string = '';
   @Input() approveStatus: string = '';
 
+  formModel: FormModel;
   gridViewSetup: any = {};
+
+  positionDefault: string;
 
   process: any = [];
   // lstStep: any = [];
@@ -95,6 +99,20 @@ export class CodxApprovalStepComponent
   }
 
   ngOnInit(): void {
+    this.formModel = new FormModel();
+    this.formModel.formName = 'ApprovalSteps_Approvers';
+    this.formModel.entityName = 'ES_ApprovalSteps_Approvers';
+    this.formModel.gridViewName = 'grvApprovalSteps_Approvers';
+
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((grv) => {
+        if (grv) {
+          this.gridViewSetup = grv;
+          this.positionDefault = this.gridViewSetup['Position']['headerText'];
+        }
+        console.log(this.gridViewSetup);
+      });
     this.initForm();
   }
 

@@ -123,6 +123,7 @@ import { ChatListComponent } from './layout/components/chat-list/chat-list.compo
 import { ChatBoxComponent } from './layout/components/chatbox/chat-box.component';
 import { ListChatBoxComponent } from './layout/components/list-chat-box/list-chat-box.component';
 import { CodxAssignTempComponent } from './components/codx-assign-temp/codx-assign-temp.component';
+import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -209,7 +210,8 @@ const T_Component: Type<any>[] = [
   PopupAddChartComponent,
   LayoutPanelComponent,
   CodxAttachmentTempComponent,
-  CodxAssignTempComponent
+  CodxAssignTempComponent,
+  ListPostComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];

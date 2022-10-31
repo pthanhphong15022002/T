@@ -19,7 +19,6 @@
   <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
     data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
     data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
-    <ng-container>
       <codx-listview #listview 
         [dataService]="dataService" 
         [funcId]="'WP'" 
@@ -29,28 +28,12 @@
         [method]="method" 
         entityName="WP_Comments"
         [itemTemplate]="tmpPortal" 
-        [itemTemplateLoading]="templateloading" 
         [emptyTemplate]="empty"
-        [predicate]="predicateWP ? predicateWP : ''" 
+        [predicates]="predicateWP ? predicateWP : ''"
+        [dataValues]="dataValueWP ? dataValueWP : ''"
         [formModel]="formModel">
       </codx-listview>
-    </ng-container>
-    <!-- <ng-template #FD>
-      <codx-listview
-        #listview
-        [emptyTemplate]="empty"
-        [dataService]="dataService"
-        [itemTemplate]="tmpPortal"
-        [funcId]="'WP'"
-        entityName="WP_Comments"
-        [service]="service"
-        [assemblyName]="assemblyName"
-        [className]="className"
-        [method]="method"
-        [itemTemplateLoading]="templateloading"
-        [formModel]="formModel">
-      </codx-listview>
-    </ng-template> -->
+
   </div>
 </div>
 <ng-template #tmpPortal let-item>
@@ -271,7 +254,7 @@
     <!-- commemt -->
     <treeview-comment 
       [funcID]="listview.formModel.funcID" 
-      [fromModel]="listview.formModel" 
+      [formModel]="listview.formModel" 
       [objectType]="'WP_Comments'"
       [dataComment]="item" 
       [objectID]="item.recID">

@@ -13,6 +13,7 @@ import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
+import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/employee-infomation.component';
@@ -43,6 +44,8 @@ import { PopupAddOrganizationComponent } from './organization/popup-add-organiza
 import { TimeAgoPipe } from './pipe/time-ago.pipe';
 import { OrgchartDetailComponent } from './reportingline/orgchart-detail/orgchart-detail.component';
 import { PopupAddPositionsComponent } from './reportingline/popup-add-positions/popup-add-positions.component';
+import { ReportinglineDetailComponent } from './reportingline/reportingline-detail/reportingline-detail.component';
+import { ReportinglineOrgChartComponent } from './reportingline/reportingline-orgchart/reportingline-orgchart.component';
 import { ReportinglineComponent } from './reportingline/reportingline.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
@@ -183,7 +186,9 @@ const T_Component: Type<any>[] = [
   OrgchartDetailComponent,
   PopupAddOrganizationComponent,
   PopupAddPositionsComponent,
-  TimeAgoPipe
+  TimeAgoPipe,
+  ReportinglineOrgChartComponent,
+  ReportinglineDetailComponent,
 ];
 @NgModule({
   imports: [
@@ -195,6 +200,7 @@ const T_Component: Type<any>[] = [
     CodxCoreModule,
     RouterModule.forChild(routes),
     CoreModule,
+    SliderModule,
     CodxShareModule,
     ChartAllModule,
     DiagramAllModule,

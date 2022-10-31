@@ -1,15 +1,14 @@
 <codx-views #view funcID="HRS0202" service="BS" entityName="BS_Nationalities" [views]="views" [button]="button"
     (buttonClick)="click($event)" idField="" assemblyName="ERM.Business.BS" className="NationalitiesBusiness"
-    method="GetListNationalityAsync"  (viewChanged)="changeView($event)" [pageSize]="100"
+    method="GetListNationalityAsync" (viewChanged)="changeView($event)" [pageSize]="100"
     (requestEnded)="requestEnded($event)" [selectedFirst]="true">
 </codx-views>
 
 <ng-template #itemCreateBy let-dataItem>
     <div class="d-flex align-items-center" #itemCreateBy>
-        <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.createdBy"
-            objectType="AD_Users">
+        <codx-img class="symbol symbol-24 symbol-circle me-3" [objectId]="dataItem.createdBy" objectType="AD_Users">
         </codx-img>
-        <div class="text-dark font-size-lg">{{dataItem.createName}}</div>
+        <div class="text-dark fs-6">{{dataItem.createName}}</div>
     </div>
 </ng-template>
 

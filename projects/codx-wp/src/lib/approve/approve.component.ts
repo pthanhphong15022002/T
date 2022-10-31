@@ -24,9 +24,10 @@ export class ApproveComponent extends UIComponent {
   entityName:string = "";
   predicate:string = "";
   dataValue:string = "";
-  predicates:string = 'ApproveStatus=@0';
-  dataValues:string = '3';
+  predicates:string = '';
+  dataValues:string = '';
   funcID:string = "";
+  functionName:string = "";
   user: any;
   dataDetail: any;
   option:string = "";
@@ -48,7 +49,7 @@ export class ApproveComponent extends UIComponent {
       text: "Chờ duyệt",
       value: "3",
       total: 0,
-      predicate: "ApproveStatus=@0",
+      predicate: "ApproveStatus = @0",
       datavalue: "3",
       active: false
     },
@@ -57,7 +58,7 @@ export class ApproveComponent extends UIComponent {
       text: "Đã duyệt",
       value: "5",
       total: 0,
-      predicate: "ApproveStatus=@0",
+      predicate: "ApproveStatus = @0",
       datavalue: "5",
       active: false
     },
@@ -66,7 +67,7 @@ export class ApproveComponent extends UIComponent {
       text: "Từ chối",
       value: "4",
       total: 0,
-      predicate: "ApproveStatus=@0",
+      predicate: "ApproveStatus = @0",
       datavalue: "4",
       active: false
     },
@@ -77,7 +78,7 @@ export class ApproveComponent extends UIComponent {
       total: 0,
       predicate: "",
       datavalue: "",
-      active: false
+      active: true
     },
   ]
   constructor
@@ -85,32 +86,29 @@ export class ApproveComponent extends UIComponent {
       private notifySvr: NotificationsService,
       private auth: AuthService,
       private callFuc: CallFuncService,
-      private route: ActivatedRoute,
       private injector: Injector
     ) {
     super(injector);
   }
   onInit(): void {
     this.user = this.auth.userValue;
-    this.route.params.subscribe((param) => {
+    this.router.params.subscribe((param) => {
       this.funcID = param["funcID"];
-      this.entityName = "WP_News";
-      this.dataValue = this.user.userID;
-      switch (this.funcID) {
-        case "WPT0211":
-          this.predicate = "CreatedBy=@0 && Stop=false";
-          break;
-        case "WPT0212":
-          this.predicate = "Approver=@0 && Stop=false";
-          break;
-        default:
-          this.entityName = 'WP_Comments'
-          this.predicate = "Approver=@0 && Stop=false"
-          break;
-      }
-      this.getGridViewSetUp();
-      this.loadDataTab(this.predicate, this.dataValue, this.entityName);
-      this.detectorRef.detectChanges();
+      this.cache.functionList(this.funcID).subscribe((func: any) => 
+      {
+        if(func)
+        {
+          this.functionName = func.customName;
+          this.cache.gridViewSetup(func.formName, func.gridViewName).
+          subscribe((grd: any) => {
+            if (grd) 
+            {
+              this.gridViewSetUp = grd;
+            }
+          });
+        }
+      });
+      this.loadDataTab(this.funcID);
     });
   }
   ngAfterViewInit(): void {
@@ -126,82 +124,74 @@ export class ApproveComponent extends UIComponent {
     }];
   }
 
-  getGridViewSetUp() {
-    this.cache.functionList(this.funcID).subscribe((func: any) => 
-    {
-      this.cache.gridViewSetup(func.formName, func.gridViewName).
-        subscribe((grd: any) => {
-          if (grd) 
-          {
-            this.gridViewSetUp = grd;
-          }
-        });
-    });
-  }
-  loadDataTab(predicate: string, dataValue: string, entityName: string) {
-    let model = new DataRequest();
-    model.predicate = predicate;
-    model.dataValue = dataValue;
-    model.entityName = entityName;
-    model.srtColumns = 'CreatedOn';
-    model.srtDirections = 'desc';
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "GetApprovalPostAsync", model).subscribe(
-      (res: any[]) => {
-        if (res.length > 0) {
-          this.tabAsside.map((tab: any) => {
-            if (tab.value == "0") {
-              tab.total = res.length;
-              tab.active = true;
+  getGridViewSetUp(funcID:string) {
+    if(funcID){
+      this.cache.functionList(funcID).subscribe((func: any) => 
+      {
+        if(func)
+        {
+          this.functionName = func.customName;
+          this.cache.gridViewSetup(func.formName, func.gridViewName).
+          subscribe((grd: any) => {
+            if (grd) 
+            {
+              this.gridViewSetUp = grd;
             }
-            else tab.total = res.filter((x: any) => x == tab.value).length;
-          })
-          this.detectorRef.detectChanges();
+          });
         }
-        else {
-          this.tabAsside.map((tab: any) => tab.total = 0);
-          this.detectorRef.detectChanges();
-        }
-      }
-    );
+      });
+    }
+    
+  }
+  loadDataTab(funcID:string) {
+    if(funcID){
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "GetDataByApproSatusAsync",
+        [funcID] )
+        .subscribe(
+       (res: any) => {
+         if (res) {
+           this.tabAsside.map((tab: any) => {
+            tab.total = res[tab.value];
+           });
+         }
+         this.detectorRef.detectChanges();
+       }
+     );
+    }
   }
   loadDataAsync(predicate: string, dataValue: string) {
-    this.view.entityName = this.entityName;
-    if (predicate && dataValue) {
-      this.view.dataService.setPredicates([predicate], [dataValue]).subscribe();
-    }
-    else {
-      this.view.dataService.setPredicates([], []).subscribe();
-    }
+    this.view.dataService.setPredicates([], []).subscribe();
   }
   selectedChange(event: any) {
     if (!event.data) return;
     this.selectedID = event.data.recID;
     this.detectorRef.detectChanges();
   }
-  clickApprovePost(event: any) {
-    let approveStatus = event.approveStatus;
-    let data = event.data;
-    switch (approveStatus) {
-      case this.acceptApprove:
-        this.notifySvr.alertCode("WP004").subscribe((evt: any) => {
-          if (evt.event.status == 'Y') {
-            this.approvePost(data, approveStatus);
-          }
-        });
-        break;
-      case this.cancelApprove:
-        this.notifySvr.alertCode("WP006").subscribe((evt: any) => {
-          if (evt.event.status == 'Y')
-            this.cancelPost(data, approveStatus);
-        });
-        break;
-      default:
-        this.notifySvr.alertCode("WP008").subscribe((evt: any) => {
-          if (evt.event.status == 'Y') {
-            this.remakePost(data, approveStatus);
-          }
-        });
-        break;
+  updateApprovePost(event: any) {
+    if(event && event.status && event.data)
+    {
+      let oldValue = event.oldValue;
+      let newValue = event.newValue;
+      let data = event.data;
+      this.tabAsside.map((e:any) => {
+        if(e.value == oldValue)
+        {
+          e.total = e.total - 1;
+          return ;
+        }
+      });
+      this.tabAsside.map((e:any) => {
+        if(e.value == newValue){
+          e.total = e.total + 1;
+          return;
+        }
+      });
+      this.view.dataService.update(data).subscribe();
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -258,54 +248,68 @@ export class ApproveComponent extends UIComponent {
   }
 
   clickTabApprove(item = null, predicate: string, dataValue: string) {
-    if (!item) {
-      this.tabAsside[0].active = true;
-    }
-    else {
-      this.tabAsside.map(x => { if (x.name != item.name) x.active = false; })
-      item.active = true;
-    }
-    this.loadDataAsync(predicate, dataValue);
+    this.view.dataService.setPredicates([predicate],[dataValue]).subscribe();
   }
 
-  clickMF(event: any, data: any) {
-    switch (event.functionID) {
-      case 'SYS02':
-        this.deletedPost(data);
-        break;
-      case 'SYS03':
-        let option = new DialogModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        if (this.entityName == "WP_News") 
-        {
-          option.IsFull = true;
-          this.callFuc.openForm(PopupEditComponent, 'Cập nhật bài viết', 0, 0, this.funcID, data, '', option);
-        }
-        else {
-          this.api.execSv(this.service, this.assemblyName, "CommentsBusiness", "GetPostByIDAsync", data.recID)
-            .subscribe((res: any) => {
-              if (res) {
-                let obj = {
-                  post: res,
-                  status: 'edit',
-                  headerText: 'Chỉnh sửa bài viết',
-                };
-                let option = new DialogModel();
-                option.DataService = this.view.dataService;
-                option.FormModel = this.view.formModel;
-                this.callfc.openForm(PopupAddPostComponent, '', 700, 550, '', obj, '', option).closed.subscribe((data: any) => {
-                  if (data.result) {
-                    console.log(data);
-                  }
-                })
+  clickMF(event: any, data: any) 
+  {
+    if(event.functionID && event.text)
+    {
+      let moreFuncID = event.functionID;
+      let action = event.text;
+      let headerText = this.functionName + " " + action;
+      switch (moreFuncID) {
+        case 'SYS02':
+          this.deletedPost(data);
+          break;
+        case 'SYS03':
+          let option = new DialogModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          if (this.entityName == "WP_News") 
+          {
+            option.IsFull = true;
+            let popup = this.callFuc.openForm(PopupEditComponent, headerText, 0, 0, this.funcID, data, '', option);
+            popup.closed.subscribe((data: any) => {
+              if (data.event) 
+              {
+                let dataUpdate = data.event;
+                this.view.dataService.update(dataUpdate).subscribe();
               }
             });
-        }
-        break;
-      default:
-        break;
+          }
+          else {
+            this.api.execSv(
+              this.service,
+              this.assemblyName,
+              "CommentsBusiness",
+              "GetPostByIDAsync",
+              data.recID)
+              .subscribe((res: any) => {
+                if (res) {
+                  let obj = {
+                    post: res,
+                    status: 'edit',
+                    headerText: headerText,
+                  };
+                  let option = new DialogModel();
+                  option.DataService = this.view.dataService;
+                  option.FormModel = this.view.formModel;
+                  let popup =  this.callfc.openForm(PopupAddPostComponent,headerText, 700, 550, '', obj, '', option);
+                  popup.closed.subscribe((data: any) => {
+                    if (data.result) {
+                      console.log(data);
+                    }
+                  });
+                }
+              });
+          }
+          break;
+        default:
+          break;
+      }
     }
+    
   }
 
   beforDeletedPost(option: RequestOption, data: any) {

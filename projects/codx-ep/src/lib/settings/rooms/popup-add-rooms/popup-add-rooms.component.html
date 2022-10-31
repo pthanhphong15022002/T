@@ -13,8 +13,7 @@
       <div class="form-group col-5">
         <codx-label fiedName="Ranking" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">
-          >
+        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">          
         </codx-input>
       </div>
 
@@ -102,7 +101,7 @@
     <div *ngIf="data?.recID" class="form-group upload-img">      
       <codx-img #imageUpLoad 
         [width]="100" imageType="square" 
-        [objectType]="formModel?.entityName" aria-disabled="false"
+        [objectType]="'EP_Resources'" aria-disabled="false"
         [funcId]="formModel?.funcID" 
         [isAllowEdit]="true" 
         [objectId]="data?.recID">

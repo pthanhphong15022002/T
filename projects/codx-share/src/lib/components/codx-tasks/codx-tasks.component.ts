@@ -48,8 +48,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -144,6 +143,7 @@ export class CodxTasksComponent
   listViewModel = [];
   dataReferences = [];
   titleAction = '';
+  moreFunction = [];
 
   constructor(
     inject: Injector,
@@ -194,6 +194,7 @@ export class CodxTasksComponent
     this.resourceKanban.assemblyName = 'SYS';
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = "125125"
 
     this.request = new ResourceModel();
     this.request.service = 'TM';
@@ -230,30 +231,12 @@ export class CodxTasksComponent
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
     this.getParams();
-    
-    this.dataObj =JSON.stringify(this.dataObj) ;
-    this.detectorRef.detectChanges();
 
+    this.dataObj = JSON.stringify(this.dataObj);
+    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
-    ////cái này để show phân công- chưa có biến nào để xác định là Công việc của tôi hay Giao việc -Trao đổi lại
-    //chay code chet cho nhanh, muon dong thi bat len
-    // this.cache.functionList(this.funcID).subscribe(f => {
-    //   if (f) {
-    //     this.cache.gridViewSetup(f?.formName, f?.gridViewName).subscribe(res => {
-    //        if(res){
-    //         this.vllPriority = res['Priority']['referedValue']
-    //         this.vllStatus = res['Status']['referedValue']
-    //         this.vllApproveStatus = res['ApproveStatus']['referedValue']
-    //         this.vllConfirmStatus = res['ConfirmStatus']['referedValue']
-    //         this.vllVerifyStatus = res['VerifyStatus']['referedValue']
-    //         this.vllExtendStatus = res['ExtendStatus']['referedValue']
-    //        }
-    //     })
-    //   }
-    // })
-
     this.views = [
       {
         type: ViewType.list,
@@ -790,8 +773,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-              ? taskAction.startDate
-              : taskAction.createdOn
+                ? taskAction.startDate
+                : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -878,18 +861,30 @@ export class CodxTasksComponent
   }
   //#endregion
   //#region Event
-  changeView(evt: any) {}
+  changeView(evt: any) { }
 
-  requestEnded(evt: any) {}
+  requestEnded(evt: any) { }
 
   onDragDrop(data) {
     this.api
       .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.update(data);
+          this.view.dataService.update(data).subscribe();
         }
       });
+    ///chắc chắn phải sửa
+    // this.cache.functionList(this.funcID).subscribe((f) => {
+    //   if (f)
+    //     this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+    //       if (res) {
+    //       this.moreFunction = res;
+    //       if(this.moreFunction.length=0) return ;
+    //       var moreFun = this.moreFunction.find(x=>UrlUtil.getUrl('defaultValue', x?.url)==data.status && UrlUtil.getUrl('defaultField', x?.url)=="Status" )
+    //       if(moreFun) return this.changeStatusTask(moreFun,data)
+    //      }
+    //     });
+    // });
   }
 
   //update Status of Tasks

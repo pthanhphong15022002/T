@@ -158,9 +158,7 @@ export class ApprovalCarsComponent extends UIComponent {
           this.approve(datas,"5")
         }
         break;      
-      case 'EPT40205':
-      case 'EPT40205':
-      case 'EPT40305':
+      case "EPT40202":
         {
           //alert('Từ chối');
           this.approve(datas,"4")
@@ -204,63 +202,18 @@ export class ApprovalCarsComponent extends UIComponent {
     this.itemDetail = event?.data;
   }
 
-  changeDataMF(event, data:any) {
-    
+  changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
-      switch(data?.status){
-        case "3":
+      event.forEach(func => {        
+        func.disabled=true;        
+      });
+      if(data.status=='3'){
         event.forEach(func => {
-          if(func.functionID == "EPT40202" 
-          ||func.functionID == "EPT40203"
-          ||func.functionID == "EPT40206" 
-          || func.functionID == "EPT40204")
+          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
           {
-            func.disabled=true;
+            func.disabled=false;
           }
-        });
-        break;
-        case "4":
-          event.forEach(func => {
-            if(func.functionID == "EPT40202" 
-            ||func.functionID == "EPT40203" 
-            || func.functionID == "EPT40204"
-            ||func.functionID == "EPT40205" 
-            ||func.functionID == "EPT40206" 
-            || func.functionID == "EPT40201"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
-        case "5":
-          event.forEach(func => {
-            if(func.functionID == "EPT40202" 
-            ||func.functionID == "EPT40203" 
-            || func.functionID == "EPT40204"
-            ||func.functionID == "EPT40205" 
-            ||func.functionID == "EPT40206" 
-            || func.functionID == "EPT40201"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
-        case "2":
-          event.forEach(func => {
-            if(func.functionID == "EPT40202" 
-            ||func.functionID == "EPT40203" 
-            || func.functionID == "EPT40204"
-            ||func.functionID == "EPT40205" 
-            ||func.functionID == "EPT40206" 
-            || func.functionID == "EPT40201"
-            )
-            {
-              func.disabled=true;
-            }
-          });
-        break;
+        });  
       }
     }
   }

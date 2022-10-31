@@ -34,7 +34,7 @@ export class OrgorganizationComponent extends UIComponent {
   parentID: string = '';
   detailComponent: any;
   dataDetail: any[] = [];
-  dataCard: any[] = [];
+  dataCard: any = new Array();
   treeComponent?: CodxTreeviewComponent;
   currentView: any;
   currView?: TemplateRef<any>;
@@ -51,7 +51,7 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('templateDetail') templateOrgchart: TemplateRef<any>;
-  @ViewChild('templateCard') templateCard: TemplateRef<any>;
+  @ViewChild('templateListView') templateListView: TemplateRef<any>;
   constructor(inject: Injector, private hrservice: CodxHrService) {
     super(inject);
     this.dtService = new CRUDService(inject);
@@ -81,7 +81,7 @@ export class OrgorganizationComponent extends UIComponent {
         id: '1',
         type: ViewType.tree_orgchart,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           resizable: true,
           template: this.templateTree,
@@ -91,28 +91,16 @@ export class OrgorganizationComponent extends UIComponent {
       },
       {
         id: '2',
-        type: ViewType.tree_card, 
+        type: ViewType.tree_list,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           resizable: true,
           template: this.templateTree,
           panelRightRef: this.templateRight,
-          template2: this.templateCard,
+          template2: this.templateListView,
         },
       },
-      {
-        id: '3',
-        type: ViewType.tree_list, 
-        sameData: true,
-        active: false,
-        model: {
-          resizable: true,
-          template: this.templateTree,
-          panelRightRef: this.templateRight,
-          template2: this.templateCard,
-        },
-      }
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
@@ -145,52 +133,52 @@ export class OrgorganizationComponent extends UIComponent {
               )
                 return item;
             });
+            var data = JSON.parse(JSON.stringify(this.dataCard));
+            if (data.length > 1) {
+              var index = data.findIndex((x) => x.orgUnitType == '1');
+              var dataCompany = data[index];
+              data.splice(index, 1);
+              data.unshift(dataCompany);
+            }
+            this.dataCard = data;
           }
         });
       this.detectorRef.detectChanges();
     }
   }
 
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
+  btnClick(e) {
+    var headerText = '';
+    if (e.text) headerText = e.text;
+    // if (this.view) {
+    //   let option = new SidebarModel();
+    //   option.Width = '550px';
+    //   option.FormModel = this.view.formModel;
+    //   let funcID = this.view.function;
+    //   let currentView: any = null;
+    //   let modeView: any = null;
+    //   if (this.view.currentView) {
+    //     currentView = this.view.currentView;
+    //     option.DataService = currentView.dataService;
+    //     if (currentView.currentComponent) {
+    //       modeView = currentView.currentComponent.treeView;
+    //       if (modeView) {
+    //         this.treeComponent = modeView as CodxTreeviewComponent;
+    //       }
+    //     }
+    //   }
+    //   let data = {
+    //     function: funcID,
+    //     orgUnitID: this.orgUnitID,
+    //     detailComponent: this.detailComponent,
+    //     treeComponent: this.treeComponent,
+    //     headerText: headerText,
+    //   };
+    //   this.callfc.openSide(PopupAddOrganizationComponent, data, option);
+    // }
+    this.add(headerText);
   }
-
-  btnClick(){
-    if(this.view)
-    {
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.FormModel = this.view.formModel;
-      let funcID = this.view.function;
-      let currentView:any = null;
-      let modeView:any = null;
-      if(this.view.currentView){
-        currentView = this.view.currentView
-        option.DataService = currentView.dataService;
-        if(currentView.currentComponent) 
-        {
-          modeView = currentView.currentComponent.treeView
-          if(modeView){
-            this.treeComponent = modeView as CodxTreeviewComponent;
-          }
-        }
-      }
-      let data = 
-      {
-        function: funcID,
-        orgUnitID: this.orgUnitID,
-        detailComponent: this.detailComponent,
-        treeComponent: this.treeComponent,
-      };
-      this.callfc.openSide(PopupAddOrganizationComponent,data,option);
-    }
-    
-  }
-  add() {
+  add(headerText) {
     this.currentView = this.view.currentView;
     if (this.currentView)
       this.treeComponent = this.currentView.currentComponent?.treeView;
@@ -206,40 +194,32 @@ export class OrgorganizationComponent extends UIComponent {
           orgUnitID: this.orgUnitID,
           detailComponent: this.detailComponent,
           treeComponent: this.treeComponent,
+          headerText: headerText,
         },
         option
       );
+      dialog.closed.subscribe((res) => {
+        if (res.event) {
+          (this.view.dataService as CRUDService).add(res.event, 0).subscribe();
+        }
+      });
     });
   }
 
   clickMF(evt: any, data: any) {
     // this.itemSelected = data;
     // this.titleAction = evt.text;
-    switch (evt.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
+    switch (evt) {
       case 'SYS03':
-        //this.edit(data);
-        break;
-      case 'SYS04':
-        //this.copy(data);
+        // this.edit(data);
         break;
       case 'SYS02':
         //this.delete(data);
         break;
-      case 'TMT05011':
-        //this.viewDetail(e.data, data);
-        break;
-      case 'TMT05013':
-        // this.updateStatusMeeting(e.data, data);
-        break;
     }
   }
 
-  changeDataMF(e: any, data: any) {
-    // console.log(e, data);
-  }
+  changeDataMF(e: any, data: any) {}
 
   changeView(evt: any) {
     this.currView = null;
@@ -247,4 +227,6 @@ export class OrgorganizationComponent extends UIComponent {
       this.currView = evt.view.model.template2;
     }
   }
+
+  loadEmployList(e, orgid, status) {}
 }

@@ -1,5 +1,5 @@
 <codx-detail-tmp #itemDetailTemplate [formModel]="formModel" [dataItem]="itemDetail" [header]="header" [body]="body"
-  [footer]="!hideFooter ? footer : null" [hideMF]="hideMF" (clickMF)="childClickMF($event,itemDetail)"
+  [footer]="!hideFooter ? footer : null"  (clickMF)="childClickMF($event,itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)">
 
   <ng-template #subTitleHeader>
@@ -88,8 +88,12 @@
         <codx-label name="lblAttendees" default="Người tham gia" class="fw-bold"></codx-label>
         <span class="me-1 fw-bold">:</span>
         <div class="d-flex justify-content-end">
-          <codx-imgs [objectId]="itemDetail?.bookingAttendees" objectType="AD_Users" [numberImages]="6" [width]="30">
-          </codx-imgs>
+          <codx-imgs 
+          [objectId]="itemDetail?.bookingAttendees" 
+          objectType="AD_Users" 
+          [numberImages]="6" 
+          [width]="30">
+          </codx-imgs>          
         </div>
       </div>
     </div>
@@ -138,7 +142,7 @@
                 <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-50">
                   <div class="d-flex flex-row">
                     <div class="me-2">
-                      <codx-img [objectId]="item.recID" imageType="square" width="35" objectType="EP_Stationery">
+                      <codx-img [objectId]="item.recID" imageType="square" width="35" objectType="EP_Resources">
                       </codx-img>
                     </div>
                     <div class="ms-2">

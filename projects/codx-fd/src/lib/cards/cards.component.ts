@@ -29,7 +29,6 @@ export class CardsComponent extends UIComponent {
   selectedID:string = "";
   grdViewSetup:any = null;
   ratingVLL:string = "";
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
   constructor(
@@ -73,7 +72,6 @@ export class CardsComponent extends UIComponent {
         active: true,
         model: {
           template: this.itemTemplate,
-          panelLeftRef: this.panelLeftRef,
           panelRightRef: this.panelRightRef
         }
       }

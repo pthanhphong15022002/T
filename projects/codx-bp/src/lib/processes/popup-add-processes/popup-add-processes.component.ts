@@ -1,6 +1,6 @@
-import { BP_Processes } from './../../models/BP_Processes.model';
+import { BP_Processes, BP_ProcessRevisions } from './../../models/BP_Processes.model';
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef, CacheService, CallFuncService } from 'codx-core';
+import { DialogData, DialogRef, CacheService, CallFuncService, AuthStore } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -23,10 +23,13 @@ export class PopupAddProcessesComponent implements OnInit {
   fieldValue = '';
   funcID: any;
   showLabelAttachment = false;
-
+  isHaveFile = false;
+  revisions :  BP_ProcessRevisions[] = [];
+  user: any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -36,6 +39,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.titleAction = dt.data[1];
     this.action = dt.data[0];
     this.funcID = this.dialog.formModel.funcID;
+    this.user = this.authStore.get();
 
     this.cache
       .gridViewSetup(
@@ -58,6 +62,15 @@ export class PopupAddProcessesComponent implements OnInit {
     if (this.action == 'add' || this.action == 'copy') {
       op.method = 'AddProcessesAsync';
       op.className = 'ProcessesBusiness';
+
+      var versions = new BP_ProcessRevisions();
+      this.process.versionNo = 'V0.0';
+      versions.versionNo = this.process.versionNo;
+      versions.comment = 'Phiên bản đầu';
+      versions.createdOn = new Date();
+      versions.createdBy = this.user.userID;
+      this.revisions.push(versions) ;
+      this.process.versions = this.revisions;
       data = [this.process];
     } else if (this.action == 'edit') {
       op.method = 'UpdateProcessesAsync';
@@ -82,11 +95,13 @@ export class PopupAddProcessesComponent implements OnInit {
 
   onUpdate() {
     this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
+    .save((option: any) => this.beforeSave(option))
+    .subscribe((res) => {
+      if (res.update) {
         this.attachment?.clearData();
-        this.dialog.close();
-      });
+        this.dialog.close(res.update);
+      }
+    });
   }
   async onSave() {
     if (this.attachment?.fileUploadList?.length)
@@ -114,8 +129,28 @@ export class PopupAddProcessesComponent implements OnInit {
 
   }
 
-  addFile(e) {}
-  getfileCount(e) {}
+  eventApply(e){
+    console.log(e);
+    var data = e.data[0];
+    switch (data.objectType) {
+      case 'U':
+        this.process.owner = data.id;
+        break;
+    }
+
+  }
+
+
+
+  addFile(e) {
+    this.attachment.uploadFile();
+
+  }
+  getfileCount(e) {
+    if (e.data.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+  }
   fileAdded(e) {}
   openShare(share: any, isOpen) {
     if (isOpen == true) {

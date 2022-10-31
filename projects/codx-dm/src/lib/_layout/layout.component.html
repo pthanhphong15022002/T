@@ -16,50 +16,42 @@
         
       </ng-template>
       <ng-template #footer>
-        <div class="menu-item progress-line">
-          <div class="mt-2 mx-6 text-light fw-normal fs-7" *ngIf="showtitle; else elseT">
-          <div class="progress mx-6 mt-2" style="height: 6px">
-            <div role="progressbar" attr.aria-valuenow="{{percentUsed}}" aria-valuemin="0" aria-valuemax="100"
-              class="progress-bar" attr.style="width: {{percentUsed}}%"></div>
+        <div class="menu-item progress-line d-flex align-items-center justify-content-center w-100">
+          <div class="mt-2 mx-6  fs-7" *ngIf="showtitle; else elseT">
+            <ng-container *ngIf="itemHdd?.totalHdd >= 0">
+            <div class="progress my-2">
+              <div role="progressbar" attr.aria-valuenow="{{percentUsed}}" aria-valuemin="0" aria-valuemax="100"
+                class="progress-bar" attr.style="width: {{percentUsed}}%"></div>
+            </div>
+          </ng-container>
+            <span class="text-white fs-7">{{ titleHddUsed }}</span>
           </div>
-          
-            {{ titleHddUsed }}
-
-          </div>
-          <!-- <ng-template #tolTemplate>
-            {{ titleHddUsed }}
-          </ng-template> -->
           <ng-template #elseT>
-           <!--  aaaaaaa -->
-           <!-- <p style="font-size: 18 px ; color: white;" container="body" [ngbTooltip]="tolTemplate" contentType="template">Trống {{ titleHddUsed_small }} %</p> -->
-            
-           <div class="control-section">
-            <ejs-dashboardlayout [columns]="8" [cellSpacing]='cellSpacing' [cellAspectRatio]='cellAspectRatio'>
-              <e-panels >
-                <e-panel [sizeX]="3" [sizeY]="0" [row]="0" [col]="5">
-                    <ejs-accumulationchart style="height:60px; width: 60px;" [legendSettings]="pielegendSettings" [tooltip]="pieTooltipSetting" [enableAnimation]= 'animation'>
-                      <e-accumulation-annotations>
-                        <e-accumulation-annotation content='<div style=" font-size:10px; font-weight:200">{{titleHddUsed_small}}%</div>' region='Series'  x='50%' y='50%' >
-                        </e-accumulation-annotation>
-                    </e-accumulation-annotations>
-                      <e-accumulation-series-collection >
-                        <e-accumulation-series  [dataSource]='data' xName='Product' yName='Percentage' innerRadius="90%" radius="100%" [palettes]="palettes" [dataLabel]="dataLabel" [border]='border' >
-                        </e-accumulation-series>
-                      </e-accumulation-series-collection>
-                    </ejs-accumulationchart>
-                </e-panel>
-              </e-panels>
-            </ejs-dashboardlayout>
-          </div>
-        
-         
-          
+            <ng-container *ngIf="itemHdd?.totalHdd < 0 ; else elsChart">
+              <span class="text-white fs-7">{{itemHdd?.totalUsed + " " + itemHdd?.unit }}</span>
+            </ng-container>
+            <ng-template #elsChart>
+              <div class="control-section">
+                <ejs-dashboardlayout [columns]="8" [cellSpacing]='cellSpacing' [cellAspectRatio]='cellAspectRatio'>
+                  <e-panels >
+                    <e-panel [sizeX]="3" [sizeY]="0" [row]="0" [col]="5">
+                        <ejs-accumulationchart [background]="'transparent'" style="height:60px; width: 60px;background-color: transparent" [legendSettings]="pielegendSettings" [tooltip]="pieTooltipSetting" [enableAnimation]= 'animation'>
+                          <e-accumulation-annotations>
+                            <e-accumulation-annotation content='<div class="fs-8 text-white fw-normal" >{{titleHddUsed_small}}%</div>' region='Series'  x='50%' y='50%' >
+                            </e-accumulation-annotation>
+                        </e-accumulation-annotations>
+                          <e-accumulation-series-collection >
+                            <e-accumulation-series  [dataSource]='data' xName='Product' yName='Percentage' innerRadius="90%" radius="100%" [palettes]="palettes" [dataLabel]="dataLabel" [border]='border' >
+                            </e-accumulation-series>
+                          </e-accumulation-series-collection>
+                        </ejs-accumulationchart>
+                    </e-panel>
+                  </e-panels>
+                </ejs-dashboardlayout>
+              </div>
+            </ng-template>
           </ng-template>
         </div>
-        <!-- <div class="progress-circle d-flex align-items-center justify-content-center">
-          <div role="progressbar p-2" attr.aria-valuenow="{{percentUsed}}" aria-valuemin="0" aria-valuemax="100"
-            attr.style="--value: {{percentUsed}}"></div>
-        </div> -->
       </ng-template>
 
       <div class="wrapper d-flex flex-column flex-row-fluid">

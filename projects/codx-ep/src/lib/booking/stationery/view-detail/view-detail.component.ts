@@ -1,3 +1,4 @@
+import { mergeMap } from 'rxjs';
 import {
   Component,
   EventEmitter,
@@ -38,10 +39,7 @@ export class BookingStationeryViewDetailComponent
   itemDetailStt: any;
   active = 1;
 
-  constructor(
-    private injector: Injector,
-    private codxEpService: CodxEpService
-  ) {
+  constructor(private injector: Injector, private epService: CodxEpService) {
     super(injector);
   }
 
@@ -62,6 +60,16 @@ export class BookingStationeryViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
+            this.epService
+              .getEmployeeByOrgUnitID(this.itemDetail?.buid)
+              .subscribe((res) => {
+                if (res) {
+                  this.itemDetail.empQty = res;
+                } else {
+                  this.itemDetail.empQty = 1;
+                }
+                this.detectorRef.detectChanges();
+              });
             this.detectorRef.detectChanges();
           }
         });
@@ -94,10 +102,7 @@ export class BookingStationeryViewDetailComponent
     }
   }
 
-  changeDataMF(event, data: any) {
-    console.log(event);
-    console.log(data);
-  }
+  changeDataMF(event, data: any) {}
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
@@ -135,6 +140,4 @@ export class BookingStationeryViewDetailComponent
       )[0].style.height = main - header - 27 + 'px';
     }
   }
-
-  
 }

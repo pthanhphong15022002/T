@@ -117,7 +117,7 @@ export class PopupAddSprintsComponent implements OnInit {
   //#endregion
 
   //#region CRUD
-  saveData(id) {
+  async saveData(id) {
     if (
       this.master.iterationType == '1' &&
       (this.master.projectID == null || this.master.projectID.trim() == '')
@@ -135,8 +135,17 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
-    if (this.attachment?.fileUploadList?.length) this.attachment.saveFiles();
-    this.saveMaster(isAdd);
+    
+    if (this.attachment && this.attachment.fileUploadList.length)
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          this.master.attachments = Array.isArray(res) ? res.length : 1;
+          this.saveMaster(isAdd);
+        }
+      });
+    else {
+      this.saveMaster(isAdd);
+    }  
   }
 
   saveMaster(isAdd: boolean) {
@@ -223,18 +232,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.tmSv.getSprints(iterationID).subscribe((res) => {
       if (res) {
         this.master = res;
-        this.api
-          .execSv<any[]>(
-            'DM',
-            'DM',
-            'FileBussiness',
-            'GetFilesByObjectIDAsync',
-            [iterationID]
-          )
-          .subscribe((res) => {
-            if (res && res.length > 0) this.showLabelAttachment = true;
-            else this.showLabelAttachment = false;
-          });
+        this.showLabelAttachment = this.master.attachments > 0? true : false ;
         if (this.master.resources) this.getListUser(this.master.resources);
         else this.listUserDetail = [];
         this.changeDetectorRef.detectChanges();

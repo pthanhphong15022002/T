@@ -1,19 +1,12 @@
-<codx-form #form
+<codx-form
+  #form
+  [headerText]="header"
   [body]="body"
-  [subHeader]="subheader"
   [formModel]="dialogRef.formModel"
   [footer]="footer"
   [dialog]="dialogRef"
   [data]="data"
 >
-<ng-template #subheader>
-  <div class="w-100">
-    <div class="fw-bolder fs-1">
-      <codx-label [formModel]="dialogRef.formModel" name="lblHeader" [default]="'Thêm mới'"></codx-label>
-    </div>
-  </div>
-  
-</ng-template>
   <ng-template #body>
     <div class="row">
       <div class="col-6">
@@ -24,7 +17,7 @@
           ></codx-label>
           <codx-input
             [formModel]="dialogRef.formModel!"
-            [disabled]="paramaterHR?.stop?false:true"
+            [disabled]="paramaterHR?.stop ? false : true"
             [crrValue]="orgUnitID"
             (valueChange)="valueChange($event)"
             field="orgUnitID"

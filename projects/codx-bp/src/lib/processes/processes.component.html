@@ -12,7 +12,7 @@
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  idField="processNo"
+  idField="recID"
   (onDragDrop)="onDragDrop($event)"
   [autoSearch]="false"
   (searchChanged)="searchChange($event)"
@@ -72,7 +72,7 @@
   <tr>
     <td class="rowphoto">
       <div class="padding">
-        <div class="d-flex flex-column w-100 p-3" (click)="clickProscessTessttttttttttttttt(data)">
+        <div class="d-flex flex-column w-100 p-3" >
           <div class="fw-bold lh-base">{{ data.processName }}</div>
           <div class="d-flex flex-wrap justify-content-between">
             <div class="d-flex align-items-center">
@@ -93,14 +93,13 @@
             </div>
           </div>
         </div>
-        <button (click)="reName(data)"></button>
       </div>
     </td>
     <td class="rowphoto" placement="left">
       <div class="padding justify-content-start" style="margin-top: 10px">
         <codx-temp-full
           cardCss="card-template"
-          [imageId]="data.userID"
+          [imageId]="data.owner"
           imageObjType="AD_Users"
           [titleTmp]="titleTmp"
           [desc]="convertHtmlAgency(data.positionName)"
@@ -112,7 +111,7 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        {{ data.VersionNo }}
+        {{ data.versionNo }}
       </div>
     </td>
     <td class="rowphoto">
@@ -126,22 +125,22 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
-        <button (click)="properties($event, data)"></button>
+      <div class="padding has-action-menu">
         <codx-mfunc
           [formModel]="view.formModel"
           (clickMF)="clickMF($event, data)"
-          [isBookMark]="false"
+          [isBookMark]="true"
           [dataItem]="data"
+          type="hover"
         >
         </codx-mfunc>
       </div>
     </td>
-    <td class="rowphoto">
+    <!-- <td class="rowphoto">
       <div class="padding">
         <i class="icon-create icon-18" (click)="revisions(data)"></i>
       </div>
-    </td>
+    </td> -->
   </tr>
 </ng-template>
 <!-- view-list -->
@@ -316,7 +315,7 @@
 </ng-template>
 
 <ng-template #viewReName let-dialog="dialogPopupReName">
-  <codx-form 
+  <codx-form
     headerText="{{ titleReName }}"
     [body]="bodyFormReName"
     [footer]="footerFormReName"
@@ -340,8 +339,8 @@
     (click)="onSave()"
   >
     <codx-label
-      name="lblSave"
-      default="Lưu"      
+      fiedName="lblSave"
+      default="Lưu"
     ></codx-label>
   </button>
 </ng-template>

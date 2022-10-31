@@ -4,14 +4,16 @@
 >
   <ng-container *ngFor="let item of process; let index = index">
     <div class="codx-approval-step pb-3 step-approve">
-      <div class="codx-approval-header d-flex align-items-center mb-4">
+      <div class="codx-approval-header d-flex align-items-center mb-3">
         <div class="step-number border-success">{{ item.stepNo }}</div>
-        <div class="step-title text-gray-800 fw-bold fs-4">
+        <div class="step-title text-gray-700 fw-bold fs-5">
           {{ item.stepType | vll: "ES002":"text" | async }}
         </div>
-        <div class="text-gray-400 fs-5">- {{ item.stepName }}</div>
+        <div class="text-gray-500 fs-5">
+          - {{ item.stepName ?? item.stepNote }}
+        </div>
       </div>
-      <div class="codx-approval-content ms-17">
+      <div class="codx-approval-content ms-16">
         <ng-container *ngFor="let approver of item.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <codx-temp-full
@@ -24,7 +26,11 @@
                 approver.approverName ??
                 (approver.approver | vll: 'ES014':'text' | async)
               "
-              [desc]="approver.position ?? approver.approverPosition"
+              [desc]="
+                approver.position ??
+                approver.approverPosition ??
+                positionDefault
+              "
             >
             </codx-temp-full>
             <codx-temp-full
@@ -94,8 +100,8 @@
 
                 |
                 <div class="d-flex text-nowrap ms-3">
-                  <span class="fw-bold me-1"
-                    ><codx-label name="lblDuration" default="Thực tế">
+                  <span class="fw-bold me-1">
+                    <codx-label name="lblDuration" default="Thực tế">
                     </codx-label>
                     :
                   </span>
@@ -180,7 +186,9 @@
         <div class="step-title text-gray-800 fw-bold fs-4">
           {{ item.stepType | vll: "ES002":"text" | async }}
         </div>
-        <div class="text-gray-400 fs-5">- {{ item.stepName }}</div>
+        <div class="text-gray-400 fs-5">
+          - {{ item.stepName ?? item.stepNote }}
+        </div>
       </div>
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item.approvers">
@@ -194,7 +202,11 @@
                 approver.approverName ??
                 (approver.approver | vll: 'ES014':'text' | async)
               "
-              [desc]="approver.position ?? approver.approverPosition"
+              [desc]="
+                approver.position ??
+                approver.approverPosition ??
+                positionDefault
+              "
             >
             </codx-temp-full>
             <div class="d-flex align-items-center ms-6 flex-column flex-column">
@@ -269,8 +281,8 @@
 
                 |
                 <div class="d-flex text-nowrap ms-3">
-                  <span class="fw-bold me-1"
-                    ><codx-label name="lblDuration" default="Thực tế">
+                  <span class="fw-bold me-1">
+                    <codx-label name="lblDuration" default="Thực tế">
                     </codx-label>
                     :
                   </span>

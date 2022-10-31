@@ -25,9 +25,9 @@ import {
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { PropertiesComponent } from '../properties/properties.component';
+import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
 import { RevisionsComponent } from './revisions/revisions.component';
-
 
 @Component({
   selector: 'lib-processes',
@@ -36,7 +36,8 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
@@ -45,7 +46,8 @@ export class ProcessesComponent
   @ViewChild('itemVersionNo', { static: true })
   itemVersionNo: TemplateRef<any>;
   @ViewChild('itemActivedOn', { static: true }) itemActivedOn: TemplateRef<any>;
-  @ViewChild('templateListCard', { static: true }) templateListCard: TemplateRef<any>;
+  @ViewChild('templateListCard', { static: true })
+  templateListCard: TemplateRef<any>;
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('view') codxview!: any;
   @ViewChild('itemMemo', { static: true })
@@ -63,7 +65,7 @@ export class ProcessesComponent
   values: any;
   searchAdvance: boolean;
   viewActive: any;
-  titleUpdateFolder = 'Cập nhật thư mục';
+  // titleUpdateFolder = 'Cập nhật thư mục';
 
   views: Array<ViewModel> = [];
   button?: ButtonModel;
@@ -71,7 +73,7 @@ export class ProcessesComponent
   user: any;
   funcID: any;
   itemSelected: any;
-  titleReName = "Thay đổi tên";
+  titleReName = 'Thay đổi tên';
   dialogPopupReName: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
   @Input() process = new BP_Processes();
@@ -81,11 +83,11 @@ export class ProcessesComponent
 
   constructor(
     inject: Injector,
-    private bpService :CodxBpService,
+    private bpService: CodxBpService,
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -103,8 +105,6 @@ export class ProcessesComponent
       { headerTemplate: this.itemActivedOn, width: 200 },
       { headerTemplate: this.itemMemo, width: 300 },
       { field: '', headerText: '', width: 30 },
-      { field: '', headerText: '', width: 30 },
-
     ];
   }
 
@@ -144,7 +144,7 @@ export class ProcessesComponent
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
     this.changeDetectorRef.detectChanges();
-  } 
+  }
 
   search(isScroll = false) {
     // this.views.forEach(item => {
@@ -160,7 +160,6 @@ export class ProcessesComponent
     //       view.active = true;
     //       this.view.viewChange(view);
     //     }
-       
     //     // this.dmSV.listFiles = item.data;
     //     this.totalSearch = item.total;
     //     this.dmSV.listFiles = [...this.dmSV.listFiles, ...item.data];
@@ -187,28 +186,24 @@ export class ProcessesComponent
       // this.dmSV.page = 1;
       // this.fileService.options.page = this.dmSV.page;
       this.textSearchAll = this.textSearch;
-      this.predicates = "FileName.Contains(@0)";
+      this.predicates = 'FileName.Contains(@0)';
       this.values = this.textSearch;
       this.searchAdvance = false;
-      this.viewActive = this.views.filter(x => x.active == true)[0];
-      if (this.textSearch == null || this.textSearch == "") {
-        this.views.forEach(item => {
+      this.viewActive = this.views.filter((x) => x.active == true)[0];
+      if (this.textSearch == null || this.textSearch == '') {
+        this.views.forEach((item) => {
           item.active = false;
           item.hide = false;
-          if (item.text == "Search")
-            item.hide = true;
-          if (item.text == this.viewActive.text)
-            item.active = true
+          if (item.text == 'Search') item.hide = true;
+          if (item.text == this.viewActive.text) item.active = true;
         });
-        if (this.view.funcID == "BPT2") {
+        if (this.view.funcID == 'BPT2') {
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
         this.changeDetectorRef.detectChanges();
-      }
-      else this.search();
-    }
-    catch (ex) {
+      } else this.search();
+    } catch (ex) {
       this.changeDetectorRef.detectChanges();
       console.log(ex);
     }
@@ -220,7 +215,7 @@ export class ProcessesComponent
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+      option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
         ['add', this.titleAction],
@@ -246,19 +241,21 @@ export class ProcessesComponent
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
+        option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessesComponent,
-          ['edit', this.titleAction],
+          ['edit',this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
+          console.log(e);
+          if (e && e.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.detectorRef.detectChanges();
+          }
+        })
       });
   }
 
@@ -268,7 +265,7 @@ export class ProcessesComponent
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = 'Auto';
+      option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
         ['copy', this.titleAction],
@@ -291,8 +288,8 @@ export class ProcessesComponent
         this.beforeDel(opt)
       )
       .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
   }
@@ -301,7 +298,7 @@ export class ProcessesComponent
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteProcessesAsync';
 
-    opt.data = itemSelected.processNo;
+    opt.data = itemSelected.recID;
     return true;
   }
   //#endregion
@@ -336,19 +333,31 @@ export class ProcessesComponent
       case 'SYS02':
         this.delete(data);
         break;
-      // case 'BPT11':
-      //   this.properties(data);
-      //   break;
+      case 'BPT106':
+        this.properties(data);
+        break;
+      case 'BPT101':
+          this.viewDetailProcessSteps(e?.data,data);
+          break;
+      case 'BPT102':
+        this.reName(data);
+        break;
+      case 'BPT103':
+        this.revisions(e.data, data);
+        break;
+      case 'BPT104':
+        this.permission(data);
+        break;
     }
   }
 
-  properties(e: any, data?: any) {
+  properties(data?: any) {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     // let data = {} as any;
-    data.title = this.titleUpdateFolder;
+    // data.title = this.titleUpdateFolder;
     data.id = data.recID;
     this.callfc.openSide(PropertiesComponent, data, option);
   }
@@ -356,13 +365,40 @@ export class ProcessesComponent
   reName(data) {
     this.dataSelected = data;
     this.newName = data.processName;
-    this.crrRecID = data.recID
-    this.dialogPopupReName = this.callfc.openForm(
-      this.viewReName,
+    this.crrRecID = data.recID;
+    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
+  }
+
+  revisions(more, data) {
+    var obj = {
+      more: more,
+      data: data,
+    };
+    this.dialog = this.callfc.openForm(
+      RevisionsComponent,
       '',
       500,
-      10
+      350,
+      '',
+      obj
     );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  permission(data){
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    // let data = {} as any;
+    // data.title = this.titleUpdateFolder;
+    data.id = data.recID;
+    this.callfc.openSide(PopupAddPermissionComponent, data, option);
   }
 
   valueChange(e) {
@@ -370,15 +406,20 @@ export class ProcessesComponent
   }
 
   onSave() {
-    this.api.exec('BP', 'ProcessesBusiness', 'UpdateProcessNameAsync', [this.crrRecID, this.newName]).subscribe(res => {
-      if (res) {
-        this.dataSelected.processName = this.newName;
-        this.view.dataService.update(this.dataSelected).subscribe();
-        this.notification.notifyCode('SYS007');
-        this.changeDetectorRef.detectChanges();
-      }
-      this.dialogPopupReName.close();
-    })
+    this.api
+      .exec('BP', 'ProcessesBusiness', 'UpdateProcessNameAsync', [
+        this.crrRecID,
+        this.newName,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.dataSelected.processName = this.newName;
+          this.view.dataService.update(this.dataSelected).subscribe();
+          this.notification.notifyCode('SYS007');
+          this.changeDetectorRef.detectChanges();
+        }
+        this.dialogPopupReName.close();
+      });
   }
 
   onDragDrop(e: any) {
@@ -388,42 +429,20 @@ export class ProcessesComponent
   convertHtmlAgency(position: any) {
     var desc = '<div class="d-flex">';
     if (position)
-      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' + position + '</span></div>';
+      desc +=
+        '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' +
+        position +
+        '</span></div>';
 
     return desc + '</div>';
   }
 
-  revisions(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          RevisionsComponent,
-          ['edit', this.titleAction],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-        });
-      });
-  }
   //#endregion
 
-
   //tesst
-  clickProscessTessttttttttttttttt(data){
+  viewDetailProcessSteps(e,data) {
     this.bpService.viewProcesses.next(data);
-    this.codxService.navigate('','bp/processstep/BPT11');
+    // this.codxService.navigate('', e?.url); thuong chua add
+    this.codxService.navigate('', 'bp/processstep/BPT11');
   }
 }

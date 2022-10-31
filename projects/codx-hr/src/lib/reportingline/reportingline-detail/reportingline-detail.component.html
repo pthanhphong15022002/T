@@ -1,0 +1,219 @@
+
+<div class="w-100 h-100">
+    <div class="d-flex justify-content-between align-items-center p-2">
+        <div class="fs-1">
+            <span>
+                <codx-label 
+                    class="fs-1 fw-bolder" 
+                    [formModel]="dialogRef.formModel" 
+                    name="" 
+                    default="Vị trí công việc">
+                </codx-label>
+            </span>
+            <span class="mx-2">></span>
+            <span class="fw-bolder">{{data.positionName}}</span>
+        </div>
+        <div>
+            <button class="btn" (click)="clickClosePopup()">
+                <i class="icon-close"></i>
+            </button>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center w-100 h-100 bg-secondary p-4">
+        <div class="w-25 h-100 bg-body rounded p-6">
+            <div class="text-center">
+                <span class="fs-3 fw-bolder">{{data.positionName}}</span>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                <div class="btn btn-sm btn-light-primary me-3 counter" 
+                    style="cursor: pointer" 
+                    data-toggle="tooltip"
+                    title="Định biên" data-status="">
+                    <i class="icon-account_tree icon-16 me-1"></i>
+                    <span class="fw-bold text-primary">{{data.headCounts}}</span>
+                </div>
+                <div class="btn btn-sm btn-light-primary counter" 
+                    style="cursor: pointer" 
+                    data-toggle="tooltip"
+                    title="Chính thức" 
+                    data-status="">
+                    <i class="icon-perm_contact_calendar icon-16 me-1"></i>
+                    <span class="fw-bold text-primary">{{data.filledCounts}}</span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-4 px-3">
+                <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="50">
+                    <h3 class="text-primary">{{data.officialCounts}}</h3>
+                    <span class="text-gray-600">Chính thức</span>
+                </div>
+                <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="30">
+                    <h3 class="text-success">{{data.onBoard}}</h3>
+                    <span class="text-gray-600">Onboard</span>
+                </div>
+                <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="70">
+                    <h3 class="text-danger">{{data.offBoard}}</h3>
+                    <span class="text-gray-600">Offboard</span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                <codx-img 
+                    [width]="40" 
+                    [objectId]="" 
+                    [isDefaulImg]="true"
+                    [objectName]=""
+                    [objectType]="'HR_Employees'">
+                </codx-img>
+            </div>
+            <div class="mt-4">
+                <div [class.bg-primary]="tabSelected == 1" (click)="selectTab(1)" class="p-4 cursor-pointer ">
+                    <span>
+                        <img src="" style="width: 30px; height:30px">
+                    </span>
+                    <span class="ms-4">
+                        <span>Mô tả công việc</span>
+                        <span>JobDescription</span>
+                    </span>
+                </div>
+                <div [class.bg-primary]="tabSelected == 2" (click)="selectTab(2)" class="p-4 cursor-pointer">
+                    <span>
+                        <img src="" style="width: 30px; height:30px">
+                    </span>
+                    <span class="ms-4">
+                        <span>Kỹ năng</span>
+                        <span>Kỹ năng của vị trí</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="w-75 ms-4 h-100">
+            <div class="bg-body rounded" style="height: 30%">
+                <div class="">
+                    <div class="d-flex justify-content-between p-2">
+                        <span >
+                            <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Thông tin chung" ></codx-label>
+                        </span>
+                        <span>
+                            <button class="btn rpldetail_btn_edit">
+                                <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Chỉnh sửa" ></codx-label>
+                            </button>
+                        </span>
+                    </div>
+                    <div class="ms-12">
+                        <div>
+                            <div class="d-flex mb-2">
+                                <div class="min-w-150px ">
+                                    <codx-label [formModel]="dialogRef.formModel" name="" default="Mã chức danh công việc:" ></codx-label>
+                                </div>
+                                <div>{{data.positionID}}</div>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <div class="w-150px ">
+                                    <codx-label [formModel]="dialogRef.formModel" name="" default="Nhóm chức danh:" ></codx-label>
+                                </div>
+                                <div>{{data.jobID}}</div>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <div class="w-150px ">
+                                    <codx-label [formModel]="dialogRef.formModel" name="" default="Chức vụ:" ></codx-label>
+                                </div>
+                                <div>{{data.jobGroup}}</div>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <div class="w-150px ">
+                                    <codx-label [formModel]="dialogRef.formModel" name="" default="Bộ phận:" ></codx-label>
+                                </div>
+                                <div>{{data.orgUnitID}}</div>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <div class="w-150px ">
+                                    <codx-label [formModel]="dialogRef.formModel" name="" default="Phòng ban:" ></codx-label>
+                                </div>
+                                <div>{{data.departmentID}}</div>
+                            </div>
+                            <div class="d-flex">
+                                <div class="w-150px ">
+                                    <codx-label [formModel]="dialogRef.formModel" name="" default="Khối:" ></codx-label>
+                                </div>
+                                <div>{{data.divisionID}}</div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="d-flex mb-2">
+                                <div class="w-150px ">
+                                    <codx-label [formModel]="dialogRef.formModel" name="" default="Báo cáo trực tiếp cho:" ></codx-label>
+                                </div>
+                                <div>{{data.reportTo}}</div>
+                            </div>
+                            <div class="d-flex">
+                                <div class="w-150px ">
+                                    <codx-label [formModel]="dialogRef.formModel" name="" default="Báo cáo gián tiếp cho:" ></codx-label>
+                                </div>
+                                <div>{{data.reportTo2}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-body rounded mt-4 " style="height: calc(70% - 1.25rem); overflow-y: scroll;">
+                <div class="d-flex justify-content-between p-2">
+                    <span >
+                        <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Mô tả công việc" ></codx-label>
+                    </span>
+                    <span>
+                        <button class="btn rpldetail_btn_edit">
+                            <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Chỉnh sửa" ></codx-label>
+                        </button>
+                    </span>
+                </div>
+                <div class="ms-12 mt-4">
+                    <ng-container *ngTemplateOutlet="tabSelected == 1 ? tmpJobDescription: tmpSkill"></ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #tmpJobDescription>
+    <ng-container *ngIf="data.JobDescription">
+        <div [innerHTML]="data.JobDescription"></div>
+    </ng-container>
+</ng-template>
+<ng-template #tmpSkill>
+    <div class="border rounded-2 p-6">
+        <ng-container *ngIf="parameter">
+            <div class="row" *ngIf="positionSkill">
+                <div class="col-6 pe-4">
+                  <ng-container *ngFor="let skill of positionSkill">
+                    <div>
+                      <div class="fw-bold text-dark mb-1">
+                        {{skill.competenceName}}
+                      </div>
+                      <div class="bg-success-o-60">
+                        <ejs-slider 
+                            type="MinRange"
+                            [min]="0"
+                            [max]="10" 
+                            [value]="skill.value"
+                            [readonly]="true">
+                        </ejs-slider>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="col-6">
+                  <ejs-chart title="Kỹ năng" [primaryXAxis]="valueX" [primaryYAxis]="valueY">
+                    <e-series-collection>
+                      <e-series 
+                          [dataSource]="positionSkill" 
+                          type="Radar" 
+                          xName="competenceName"
+                          yName="value"
+                          drawType='Line'>
+                      </e-series>
+                    </e-series-collection>
+                  </ejs-chart>
+                </div>
+              </div>       
+        </ng-container>
+        
+      </div>
+</ng-template>

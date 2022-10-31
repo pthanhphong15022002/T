@@ -45,6 +45,8 @@ import { BookingRoomViewDetailComponent } from './booking/room/view-detail/booki
 import { BookingCarViewDetailComponent } from './booking/car/view-detail/booking-car-view-detail.component';
 import { ApprovalStationeryViewDetailComponent } from './approval/stationery/approval-stationery-view-detail/approval-stationery-view-detail.component';
 import { HistoryCardsComponent } from './settings/historyCards/historyCards.component';
+import { CardTransComponent } from './booking/cardTran/cardTrans.component';
+import { MeetingComponent } from './meeting/meeting.component';
 
 const routes: Route[] = [
   {
@@ -58,6 +60,10 @@ const routes: Route[] = [
       {
         path: 'bookingcars/:funcID',
         component: BookingCarComponent,
+      },      
+      {
+        path: 'cardtrans/:funcID',
+        component: CardTransComponent,
       },
       {
         path: 'bookingstationery/:funcID',
@@ -159,10 +165,11 @@ const Components: Type<any>[] = [
   ApprovalStationeryViewDetailComponent,
   BookingRoomViewDetailComponent,
   BookingCarViewDetailComponent,
+  CardTransComponent,
 ];
 
 @NgModule({
-  declarations: [Components],
+  declarations: [Components, MeetingComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,

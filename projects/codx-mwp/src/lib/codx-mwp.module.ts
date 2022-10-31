@@ -57,7 +57,6 @@ import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-n
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
-import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 
 export const routes: Routes = [
   {
@@ -72,35 +71,19 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: LayoutNoAsideComponent,
-    children: [
-      {
-        path: 'notedetails/:funcID',
-        component: DetailNoteBooksComponent,
-      },
-    ],
-  },
-  {
-    path: '',
-    component: NoSubAsideComponent,
-    children: [
-      {
-        path: 'personals/:funcID',
-        component: PersonalsComponent,
-      },
-      // {
-      //   path: 'tasks/:funcID',
-      //   component: TasksComponent,
-      // },
-    ],
-  },
-  {
-    path: '',
     component: LayoutNoToolbarComponent,
     children: [
       {
         path: 'employeeinfomation/:funcID',
         component: EmployeeInfomationComponent,
+      },
+      {
+        path: 'personals/:funcID',
+        component: PersonalsComponent,
+      },
+      {
+        path: 'notedetails/:funcID',
+        component: DetailNoteBooksComponent,
       },
     ],
   },
@@ -109,7 +92,6 @@ export const routes: Routes = [
 const Component: Type<any>[] = [
   LayoutComponent,
   LayoutNoToolbarComponent,
-  NoSubAsideComponent,
   EmployeeInfomationComponent,
   HomeComponent,
   PersonalsComponent,

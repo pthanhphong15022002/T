@@ -20,6 +20,7 @@ import {
   ApiHttpService,
   AuthService,
   AuthStore,
+  CacheRouteReuseStrategy,
   NotificationsService,
   TenantStore,
   UrlUtil,
@@ -38,6 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
   loginForm: FormGroup;
   changePassForm: FormGroup;
+  firstLoginForm: FormGroup;
   hasError: boolean;
   returnUrl: string;
   alerttext: string;
@@ -61,6 +63,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private auth: AuthStore
   ) {
     const tenant = this.tenantStore.getName();
+    CacheRouteReuseStrategy.clear();
+    
     // redirect to home if already logged in
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
@@ -131,6 +135,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.changePassForm.controls;
   }
 
+  get fl() {
+    return this.firstLoginForm.controls;
+  }
+
   checkPasswords: ValidatorFn = (
     group: AbstractControl
   ): ValidationErrors | null => {
@@ -148,7 +156,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginForm = this.fb.group({
       email: [
         this.defaultAuth.email,
-        Validators.compose([Validators.required, Validators.email]),
+        Validators.compose([Validators.required]),
       ],
       password: [
         this.defaultAuth.password,
@@ -165,7 +173,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         email: [
           //this.defaultAuth.email,
           '',
-          Validators.compose([Validators.required, Validators.email]),
+          Validators.compose([Validators.required]),
         ],
         passwordOld: [
           //this.defaultAuth.password,
@@ -175,6 +183,35 @@ export class LoginComponent implements OnInit, OnDestroy {
             Validators.minLength(3),
             Validators.maxLength(100),
           ]),
+        ],
+        password: [
+          //this.defaultAuth.password,
+          '',
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ]),
+        ],
+        confirmPassword: [
+          //this.defaultAuth.password,
+          '',
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(100),
+          ]),
+        ],
+      },
+      { validators: this.checkPasswords }
+    );
+
+    this.firstLoginForm = this.fb.group(
+      {
+        email: [
+          //this.defaultAuth.email,
+          '',
+          Validators.compose([Validators.required]),
         ],
         password: [
           //this.defaultAuth.password,
@@ -279,6 +316,41 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (!data1.isError) {
           const loginSubscr = this.authService
             .login(this.c.email.value, this.c.password.value)
+            .pipe()
+            .subscribe((data) => {
+              if (data) {
+                if (!data.isError) {
+                  if (this.returnUrl.indexOf(data.tenant) > 0)
+                    this.router.navigate([`${this.returnUrl}`]);
+                  else
+                    this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
+                } else {
+                  //$(this.error.nativeElement).html(data.error);
+                  this.notificationsService.notify(data.error);
+                }
+              }
+            });
+          this.unsubscribe.push(loginSubscr);
+        } else {
+          //$(this.error.nativeElement).html(data1.error);
+          this.notificationsService.notify(data1.error);
+        }
+      });
+  }
+
+  submitFirstLogin() {
+    if (this.fl.email.value.toString().trim() != this.email.trim()) {
+      this.notificationsService.notify('Email không phù hợp!');
+      return;
+    }
+    //$(this.error.nativeElement).html('');
+    const changepwSubscr = this.authService
+      .changepw(this.fl.email.value, '', this.fl.password.value)
+      .pipe()
+      .subscribe((data1) => {
+        if (!data1.isError) {
+          const loginSubscr = this.authService
+            .login(this.fl.email.value, this.fl.password.value)
             .pipe()
             .subscribe((data) => {
               if (data) {

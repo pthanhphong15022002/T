@@ -20,11 +20,9 @@ export class AppConfigService extends AppConfig {
       environment.pdfUrl = res.pdfUrl;
       environment.librOfficeUrl = res.librOfficeUrl;
       environment.urlUpload = res.urlUpload;
-      environment.urlTenant = res.urlTenant;
-      environment.urlThumbnail = res.urlThumbnail;
-      environment.urlFile = res.urlFile;
       environment.appName = res.appName;
       environment.reportUrl = res.reportUrl;
+      environment.office365 = res.office365;
     }));
   }
 }
