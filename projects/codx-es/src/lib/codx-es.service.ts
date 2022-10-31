@@ -1033,7 +1033,17 @@ export class CodxEsService {
     );
   }
 
-  getApprovalTrans(recID: string) {
+  getOneApprovalTrans(recID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetByRecIDAsync',
+      [recID]
+    );
+  }
+
+  getApprovalTransByTransID(recID: string) {
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

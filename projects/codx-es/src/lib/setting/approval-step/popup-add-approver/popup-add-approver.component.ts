@@ -80,6 +80,8 @@ export class PopupAddApproverComponent implements OnInit {
       return;
     }
 
+    this.data.approver = this.data.email;
+
     this.dialog && this.dialog.close(this.data);
   }
 }
