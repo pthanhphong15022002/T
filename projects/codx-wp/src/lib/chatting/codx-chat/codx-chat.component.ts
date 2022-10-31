@@ -50,7 +50,7 @@ export class CodxChatComponent implements OnInit {
       private dt:ChangeDetectorRef
     ){}
     ngOnInit(): void {
-       debugger;
+       //debugger;
       this.user = this.auth.userValue;
       // this.cache.valueList('L1480').subscribe((res) => {
       //   if (res) {
@@ -286,6 +286,7 @@ export class CodxChatComponent implements OnInit {
       if(this.evtClickImage){
         this.evtClickImage.emit(file);
       }
+      debugger;
     }
   
   

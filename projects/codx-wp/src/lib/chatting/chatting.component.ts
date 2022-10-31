@@ -63,9 +63,9 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   
   @Input() objectID: string = '';
 
-  titleAttach = "Đính Kèm";
+/*   titleAttach = "Đính Kèm";
   titleSendMail = "Gửi Mail";
-  titleShare = "Chia Sẻ";
+  titleShare = "Chia Sẻ"; */
   /* titleFunction = "Chức năng mở rộng"; */
   titleFunction = "Xóa";
   mesDelete = "Tin nhắn đã xóa";
@@ -93,10 +93,11 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   message: string;
   groupType: any;
 
-  pageSize = 40;
+  pageSize = 20;
   pageIndex = 0;
   isFull = false;
   clickCheck = false;
+  public searchCheck = false;
   titleRef = 'Đang trả lời ';
   refName ='';
   refID : any ;
@@ -158,7 +159,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
 
     ////private override api: ApiHttpService,//
     
-    private dmSV: CodxDMService,
+    public dmSV: CodxDMService,
     private auth: AuthService,
 
 
@@ -166,7 +167,8 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
     // private chatService: ChatService,//
     private changeDetectorRef: ChangeDetectorRef,//
     authStore: AuthStore,//
-    private dt:ChangeDetectorRef//vote
+
+    
   ) 
   {
     super(inject);
@@ -186,7 +188,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   }
   addEmoji(event: any){
     this.message += event.emoji.native;
-    this.dt.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
   onInit(): void {
     //this.api.execSv("WP","ERM.Business.WP","ChatBusiness","AddChatTestAsync").subscribe();
@@ -217,7 +219,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
           this.file_img_video.push(f);
         }
       });
-      this.dt.detectChanges();
+      this.changeDetectorRef.detectChanges();
     }
   }
 /*   getFileByObjectID() {
@@ -250,7 +252,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
             }
           });
           this.files = result;
-          this.evtGetFiles.emit(this.files); // Sr tk Lộc, tk Nguyên add thêm dòng này để lấy dữ liệu
+          this.evtGetFiles.emit(this.files); 
           this.dt.detectChanges();
         }
       });
@@ -282,11 +284,14 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   }
 
   openCreategroupForm() {
-     //this.callfc.openForm(CreateGroupComponent, "Tạo nhóm chat", 800, 600);
      let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
     dialogModel.FormModel = this.view.formModel;
-    this.callfc.openForm(PopupGroupComponent,"Tao nhom chat",0,0,"",null,"",dialogModel);
+    let dialog = this.callfc.openForm(PopupGroupComponent,"Tao nhom chat",0,0,"",null,"",dialogModel);
+    dialog.closed.subscribe((resp: any) => {
+      debugger;
+      this.chatMessages.push(resp);
+    })
   }
 
   viewChanging(event) {
@@ -307,68 +312,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   }
 
   //============= show chat=================
-//   loadGroupInformation(data: any) {
-//     let opt = new ChatBoxInfo();
-//     opt.ownerId = this.user.userID;
-//     opt.ownerName = this.user.userName;
-//     opt.colabId = data.userID;
-//     opt.colabName = data.userName;
-//     opt.groupId = data.groupId;
-//     opt.groupType = data.groupType;
-//     opt.isMinimum = false;
-//     opt.numberNotRead = 1;
-//     opt.messageInfo = data.message;
 
-// debugger;
-// /* if(opt.groupType != "1"){
-//   this.receiverId = this.groupId;
-// } */
-//     this.api.exec<any>('ERM.Business.WP', 'ChatBusiness', 'GetGroupInformationAsync', [opt.groupId, this.senderId, this.receiverId]
-//     /* [
-//         this.groupId,
-//         this.senderId,
-//         this.receiverId,
-//       ] */)
-//       .subscribe((resp: any) => {
-//         debugger;
-//         if (resp) {
-//           let sender;
-//           this.groupId = resp.groupID;
-//           this.groupType = resp.groupType;
-//           this.groupIdChange.emit(this.groupId);
-//           // let sender =
-//           //   resp.members[0].userID == this.user.userID
-//           //     ? resp.members[0]
-//           //     : resp.members[1];
-//           let receiver =
-//             resp.members[0].userID != this.user.userID
-//               ? resp.members[0]
-//               : resp.members[1];
-          
-//           // this.count = ;
-//           for(let i =0; i< resp.members.length; i++){
-//             if(resp.members[i].userID == this.user.userID) sender = resp.members[i]; 
-//           } 
-//           this.receiverId = receiver.userID;
-//           if(this.groupType == 1){
-//             this.receiverName = receiver.userName;
-//           }else{
-//             this.receiverName = resp.groupName;
-//           }
-          
-//           this.senderId = sender.userID;
-//           this.senderName = sender.userName;
-        
-//           this.tags = receiver.tags;
-//           // this.changeDetectorRef.detectChanges();
-//           this.loadChatMessages();
-//         }
-//       });
-      
-      
-//   }
-
-  //Load lịch sử tin nhắn
   loadChatMessages() {
     this.api
       .exec<any>('ERM.Business.WP', 'ChatBusiness', 'LoadMessagesAsync', [
@@ -412,6 +356,8 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
             this.isFull = true;
           }
           
+          
+        this.detectorRef.detectChanges();
           /* this.changeDetectorRef.detectChanges(); */
         }
       });
@@ -458,7 +404,7 @@ fileAdded(event: any) {
     this.filesAdd = this.filesAdd.concat(event.data);
     this.files = this.files.concat(event.data);
     this.addFile.emit(event.data);
-    this.dt.detectChanges();
+    this.changeDetectorRef.detectChanges();
 
   } else{
     this.messageType = "1";
@@ -468,20 +414,11 @@ fileAdded(event: any) {
   
 }
   async sendMessage() {
-    // (await this.attachment.saveFilesObservable()).subscribe(
-    //   (item2: any) => {
-    //     if (item2?.status == 0) {
-      
-    //     } else {
-
-    //     };
-    //   }
-    // );
+    
     //Gọi service gửi tin nhắn
     if(!this.clickCheck && this.messageType != "2") {
-      this.refID = null /* '00000000-0000-0000-0000-000000000000' */;
+      this.refID = '00000000-0000-0000-0000-000000000000';
       this.refContent = null;
-      this.messageType = "4";
     } 
     debugger;
     if(this.messageType == "1" || this.messageType == "4"){
@@ -489,7 +426,7 @@ fileAdded(event: any) {
         return;
       }
     }else if(this.messageType == "2"){
-      this.refID = null /* '00000000-0000-0000-0000-000000000000' */;
+      this.refID =  '00000000-0000-0000-0000-000000000000' ;
       this.refContent = null;
       if(!this.message) this.message = "";
     }
@@ -525,6 +462,7 @@ fileAdded(event: any) {
         // }
 
         debugger;
+        this.onCloseref();
           if (this.listFileUpload.length > 0) {
             this.attachment.objectId = resp[0].messageId;
             this.attachment.fileUploadList = [...this.listFileUpload];
@@ -569,6 +507,7 @@ fileAdded(event: any) {
     this.refName = event.senderName;
     this.refContent = event.message;
     this.refID = event.messageId;
+    this.messageType = "4";
   }
 
   onCloseref(){
@@ -584,27 +523,17 @@ fileAdded(event: any) {
 
   }
   clickImage(event: any){
-    var option = new DialogModel();
-
-    this.callFC
-          .openForm(
-            PopupViewImageComponent,
-            null,
-            0,
-            0,
-            null,
-            { data: event },
-            '',
-            option
-          )
-          .closed.subscribe((x) => {
-            if (x.event) this.view.dataService.update(x.event).subscribe();
-          });
+    let dialogModel = new DialogModel();
+    dialogModel.DataService = this.view.dataService;
+    dialogModel.FormModel = this.view.formModel;
+    this.callfc.openForm(PopupViewImageComponent,null,0,850,null,{ data: event },"",dialogModel);
+    
 
   }
   DelMessage(event: any){
-    debugger;
-    event;
+    
+    
+
     if(event.receiverId != null){
       this.userId = event.receiverId
     }else{
@@ -613,21 +542,24 @@ fileAdded(event: any) {
     this.messageType = "5";
     this.api
     .exec<Post>('ERM.Business.WP', 'ChatBusiness', 'DeleteMessageAsync', [
+      event.groupId,
       event.messageId,
       this.userId,
-      this.messageType
+      this.messageType,
+      this.pageSize,
+      this.pageIndex,
       
     ])
     .subscribe((resp: any) => {
       
-      if (resp == true) {
+      if (resp == false) {
         // //Xử lý xóa tin nhắn không thành công
-        // return;
-        //event.message = this.mesDelete;
+        return;
+        event.message = this.mesDelete;
       }
-      // this.chatMessages.push(resp[0]);
-      //this.chatMessages = this.chatMessages.filter(x=>x.messageId != event.messageId)
-      //this.chatMessages = this.chatMessages;
+
+      debugger;
+      
       this.detectorRef.detectChanges();
     });
 
@@ -636,42 +568,13 @@ fileAdded(event: any) {
 groupName = "";
   historyItemClicked(data) {
     debugger;
-    this.groupId = data.groupID;
     this.groupName = data.groupName;
-
-    //debugger
-    //this.openChatBox();
-
-
-
-    // this.loadGroupInformation({
-    //   userID: data.colabId,
-    //   userName: data.colabName,
-    //   groupId: data.groupID,
-    //   groupType: data.groupType,
-    //   message: data
-    // });
-
-      // let opt = new ChatBoxInfo();
-      // opt.ownerId = this.user.userID;
-      // opt.ownerName = this.user.userName;
-      // opt.colabId = data.colabId;
-      // opt.colabName = data.colabName;
-      // opt.groupId = data.groupID
-      // opt.groupType = data.groupType;
-      // opt.isMinimum = false;
-      // opt.numberNotRead = 1;
-      // opt.messageInfo = data;
-  
-      //this.: data.colabId
        
   this.groupId = data.groupID;
   this.groupType = data.groupType;
-  this.changeDetectorRef.detectChanges();
+  //this.changeDetectorRef.detectChanges();
 
-  /* if(opt.groupType != "1"){
-    this.receiverId = this.groupId;
-  } */
+  
       this.api.exec<any>('ERM.Business.WP', 'ChatBusiness', 'GetGroupInformationAsync', 
       [
         this.groupId, 
@@ -754,7 +657,7 @@ groupName = "";
             data.myVoted = true;
             this.checkVoted = true;
           }
-          this.dt.detectChanges();
+          this.changeDetectorRef.detectChanges();
         }
 
       });
@@ -771,20 +674,6 @@ groupName = "";
 
 
 
-  // openChatBox(data: any) {
-  //   let opt = new ChatBoxInfo();
-  //   opt.ownerId = this.user.userID;
-  //   opt.ownerName = this.user.userName;
-  //   opt.colabId = data.userID;
-  //   opt.colabName = data.userName;
-  //   opt.groupId = data.groupId;
-  //   opt.groupType = data.groupType;
-  //   opt.isMinimum = false;
-  //   opt.numberNotRead = 1;
-  //   opt.messageInfo = data.message;
-    
-  //   // this.chatService.openChatBox(opt);
-  // }
 
   ngOnChanges() {
     ///** WILL TRIGGER WHEN PARENT COMPONENT UPDATES '**
@@ -792,4 +681,17 @@ groupName = "";
      console.log("load");
     } 
 
+
+    searchChanged(event){
+      if(event){
+        this.searchCheck = true;
+        
+      }else{
+        this.searchCheck = false;
+        event = "";
+      }
+      this.view.dataService.search(event).subscribe();
+      
+      
+    }
 }

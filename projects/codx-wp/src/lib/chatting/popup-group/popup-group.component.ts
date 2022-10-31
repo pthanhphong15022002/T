@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Optional, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Post } from '@shared/models/post';
 import { Template } from '@syncfusion/ej2-angular-base';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, CacheService, CodxListviewComponent, DialogData, DialogRef, ImageViewerComponent, NotificationsService, ViewModel, ViewType } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CodxListviewComponent, DialogData, DialogRef, ImageViewerComponent, NotificationsService, UrlUtil, Util, ViewModel, ViewType } from 'codx-core';
 import { ChatBoxInfo } from '../chat.models';
 
 @Component({
@@ -16,15 +17,14 @@ export class PopupGroupComponent implements OnInit {
   searchUser = "";
   public checkuserr: boolean = false;
 
-  titlecreate = "Tạo Nhóm Chát";
-  namegroupmessage = 'Cần điền đầy đủ thông tin trước khi lưu';
-  usersmessage = 'Số thành viên phải trên 2 người';
-  create = "Thêm";
   mssgNoti:string = "";
 
 
   @ViewChild("imageGroup") imageGroup: ImageViewerComponent;
   @ViewChild("listview") listview: CodxListviewComponent;
+
+  
+  @Output() evtNewGroup = new EventEmitter;//event truyền lại view chating
 
 
   views: Array<ViewModel> = [];
@@ -34,8 +34,10 @@ export class PopupGroupComponent implements OnInit {
 
   dialogRef: DialogRef = null;
   dataRequest: any;
-
-
+  groupId: any;
+  senderId: any;
+  senderName: any;
+  Group: any;
 
   constructor(
     private api: ApiHttpService,
@@ -45,8 +47,12 @@ export class PopupGroupComponent implements OnInit {
     private notificationsService: NotificationsService,
     private cacheSer: CacheService,
     private dt: ChangeDetectorRef,
+  
+    authStore: AuthStore,//
   ) {
     this.dialogRef = dialogRef;
+    
+    this.users = authStore.get();//boxchat
     this.loadData();
   }
 
@@ -57,6 +63,7 @@ export class PopupGroupComponent implements OnInit {
         data.forEach(x => {
           x['checked'] = false;
         })
+        debugger;
         this.dataRequest = data;
       }
     }
@@ -64,7 +71,8 @@ export class PopupGroupComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  getMessageNoti(mssgCode:string){
+  /* getMessageNoti(mssgCode:string){
+    this.notificationsService.notifyCode("SYS009");
     this.cacheSer.message(mssgCode).subscribe((mssg:any) =>{
       debugger
       if(mssg && mssg?.defaultName){
@@ -72,7 +80,7 @@ export class PopupGroupComponent implements OnInit {
         this.dt.detectChanges();
       }
     })
-  }
+  } */
 
 
 
@@ -155,51 +163,95 @@ export class PopupGroupComponent implements OnInit {
     //crrValue
   }
   clickCreateGroup() {
+    //debugger;
     this.data.members = this.userSelected;
 
     if (this.data.groupName == null) {
       //this.notificationsService.notify(this.namegroupmessage);
-      debugger
-    this.getMessageNoti("SYS009");
-    this.dt.detectChanges();
+      
+      this.cacheSer.message
+      this.notificationsService.notifyCode("SYS009");
+      this.dt.detectChanges();
     
       return;
     }
     if (this.data.members.length < 2) {
       debugger
       //this.notificationsService.notify(this.usersmessage);
-      this.getMessageNoti("WP036");
+      this.notificationsService.notifyCode("WP036");
+      this.cacheSer.message("").subscribe((res)=>{
+      })
     this.dt.detectChanges();
       return;
     }
 
-
-
+    debugger;
+    this.senderId = this.users.userID;//
+    this.senderName = this.users.userName;//
     this.api.execSv("WP", "ERM.Business.WP", "ChatBusiness", "AddGroupChatAsync", this.data).subscribe((res: any) => {
       if (res) {
-        let groupID = res.groupID;
-        this.imageGroup.updateFileDirectReload(groupID).subscribe((res2) => {
+        debugger;
+        this.Group = res ;
+        this.groupId = res.groupID;
+        
+
+        this.imageGroup.updateFileDirectReload(this.groupId).subscribe((res2) => {
           if (res2) {
             console.log(res2)
           }
         });
+
+        this.api.exec<Post>('ERM.Business.WP', 'ChatBusiness', 'SendMessageAsync', {
+        groupId: this.groupId,
+        message: ".",
+        messageType: 1,
+        senderId: this.senderId,
+        senderName: this.senderName,
+        refContent: null,
+        refId: '00000000-0000-0000-0000-000000000000'
+      })
+      .subscribe(async (resp: any) => {
+        
+        if (!resp) {
+          //Xử lý gửi tin nhắn không thành công
+          return;
+        }
+        // debugger;
+        // if (!this.groupId) {
+        //   this.groupId = resp[1].groupID;
+        //   this.groupType = resp[1].groupType;
+        //   this.groupIdChange.emit(this.groupId);
+        // }
+        // if (this.groupType == '1') {
+        //   this.chatService.sendMessage(resp[0], 'SendMessageToUser');
+        // } else {subscribe(
+        //   this.chatService.sendMessage(resp[0], 'SendMessageToGroup');
+        // }
+
+      });
+
+
+      
+
         // this.notificationsService.notifyCode("CHAT001");
-        this.dialogRef.close();//close form
+        // if(this.evtNewGroup){
+        //   this.evtNewGroup.emit(res);
+        // }
+        debugger;
+        this.dialogRef.close(res);//close form
 
       }
     });
 
+    //send messager
+    
 
     console.log(this.listview)
-
   }
   onClose() {
-    this.dialogRef.close();//close form
-
+    this.dialogRef.close();
   }
   ngOnChanges() {
-    ///** WILL TRIGGER WHEN PARENT COMPONENT UPDATES '**
-
     console.log("load");
   }
   onSearch(e) {

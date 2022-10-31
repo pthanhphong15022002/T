@@ -19,9 +19,11 @@ export class PopupViewImageComponent implements OnInit {
   }
   constructor(
     @Optional() dt?: DialogData,
+    @Optional() dtr?: DialogRef,
   ) {
-    
-    this.fileUpload = dt?.data; }
+    //debugger;
+    this.dialogRef = dtr;
+    this.fileUpload = dt?.data.data; }
 
   ngOnInit(): void {
   }

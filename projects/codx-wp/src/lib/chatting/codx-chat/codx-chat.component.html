@@ -121,39 +121,7 @@
                     </ng-container>
                 </div>
             </ng-container>
-            <!-- <div class="d-flex justify-content-between align-items-center ms-1">
-                <div class="d-flex flex-grow-1 fs-7">
-                    <div class="btn-like delay-500 me-3">
-                        <div *ngIf="!data.myVotedType;else dataMyVoted">
-                            <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                <span class="text-gray-600">
-                                    <codx-label formName="WP_Comments" name="lblLike" default="Thích">
-                                    </codx-label>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="d-flex mod icon-like">
-                            <ng-container *ngFor="let item of lstData">
-                                <a class="mod-icon" (click)="votePost(data, item.value)">
-                                    <img src="/assets/themes/wp/default/img/{{item.icon}}"
-                                        alt="Kiwi standing on oval"></a>
-                            </ng-container>
-                        </div>
-                        <ng-template #dataMyVoted>
-                            <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                <span [style.color]="data.myVotedType | vll:'L1480':'textColor' | async">
-                                    {{data.myVotedType | vll:'L1480':'text' | async}}
-                                </span>
-                            </div>
-                        </ng-template>
-                    </div>
-                    <span class="d-flex align-items-center text-gray-600 text-hover-underline" (click)="replyTo(data)">
-                        <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời"></codx-label>
-                    </span>
-                </div>
-
-            </div> -->
-
+           
         </div>
     </div>
 
