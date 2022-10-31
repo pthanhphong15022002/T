@@ -105,13 +105,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
-    this.dataObj = { processID: this.recIDProcess }; //tesst
-
-    this.layout.setUrl(this.urlBack);
-    this.layout.setLogo(null);
+    // this.dataObj = { processID: this.recIDProcess }; //tesst
     if (!this.dataObj?.processID) {
       this.codxService.navigate('', this.urlBack);
+      this.codxService.navigate('', 'bp/processes/BPT1');
     }
+    this.layout.setUrl(this.urlBack);
+    this.layout.setLogo(null);
   }
 
   onInit(): void {
@@ -120,9 +120,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.request.assemblyName = 'BP';
     this.request.className = 'ProcessStepsBusiness';
     // this.request.method = 'GetProcessStepsAsync';
+    //this.request.dataObj = { isKanban: '1' }; ///de test
     this.request.method = 'GetProcessStepsWithKanbanAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = { isKanban: '1' }; ///de test
+    this.request.dataObj = {}; ///de test
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
@@ -326,8 +327,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
       if (index != -1) {
         var dataParents = obj.items[index];
-        var indexChild = dataParents.items.findIndex((dt) => 
-          dt.recID == processStep.recID
+        var indexChild = dataParents.items.findIndex(
+          (dt) => dt.recID == processStep.recID
         );
         if (indexChild != -1) {
           dataParents.items[indexChild] = processStep;

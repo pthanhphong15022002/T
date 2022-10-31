@@ -332,7 +332,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callFuncService.openSide(
             PopupAddBookingRoomComponent,
-            [this.view.dataService.dataSelected, true, this.popupTitle],
+            [this.view.dataService.dataSelected, true, this.popupTitle,null,true],
             option
           );
         });

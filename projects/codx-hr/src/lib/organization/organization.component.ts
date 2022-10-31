@@ -1,9 +1,11 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { TreeViewComponent } from '@syncfusion/ej2-angular-navigations';
@@ -25,7 +27,8 @@ import { PopupAddOrganizationComponent } from './popup-add-organization/popup-ad
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
-  styleUrls: ['./organization.component.css'],
+  styleUrls: ['./organization.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class OrgorganizationComponent extends UIComponent {
   views: Array<ViewModel> = [];
@@ -33,7 +36,7 @@ export class OrgorganizationComponent extends UIComponent {
   orgUnitID: string = '';
   parentID: string = '';
   detailComponent: any;
-  dataDetail: any[] = [];
+  dataDetail: any = new Array();
   dataCard: any = new Array();
   treeComponent?: CodxTreeviewComponent;
   currentView: any;
@@ -48,13 +51,21 @@ export class OrgorganizationComponent extends UIComponent {
   setupEmp?: any;
   start = '<span class="opacity-50">';
   end = '</span>';
+  funcID: any;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('templateDetail') templateOrgchart: TemplateRef<any>;
   @ViewChild('templateListView') templateListView: TemplateRef<any>;
-  constructor(inject: Injector, private hrservice: CodxHrService) {
+  constructor(
+    inject: Injector,
+    private hrservice: CodxHrService,
+    private change: ChangeDetectorRef
+  ) {
     super(inject);
     this.dtService = new CRUDService(inject);
+    this.router.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
   }
 
   onInit(): void {
@@ -150,34 +161,9 @@ export class OrgorganizationComponent extends UIComponent {
   btnClick(e) {
     var headerText = '';
     if (e.text) headerText = e.text;
-    // if (this.view) {
-    //   let option = new SidebarModel();
-    //   option.Width = '550px';
-    //   option.FormModel = this.view.formModel;
-    //   let funcID = this.view.function;
-    //   let currentView: any = null;
-    //   let modeView: any = null;
-    //   if (this.view.currentView) {
-    //     currentView = this.view.currentView;
-    //     option.DataService = currentView.dataService;
-    //     if (currentView.currentComponent) {
-    //       modeView = currentView.currentComponent.treeView;
-    //       if (modeView) {
-    //         this.treeComponent = modeView as CodxTreeviewComponent;
-    //       }
-    //     }
-    //   }
-    //   let data = {
-    //     function: funcID,
-    //     orgUnitID: this.orgUnitID,
-    //     detailComponent: this.detailComponent,
-    //     treeComponent: this.treeComponent,
-    //     headerText: headerText,
-    //   };
-    //   this.callfc.openSide(PopupAddOrganizationComponent, data, option);
-    // }
     this.add(headerText);
   }
+
   add(headerText) {
     this.currentView = this.view.currentView;
     if (this.currentView)
@@ -190,31 +176,104 @@ export class OrgorganizationComponent extends UIComponent {
       var dialog = this.callfc.openSide(
         PopupAddOrganizationComponent,
         {
-          function: this.view.function,
+          function: this.funcID,
           orgUnitID: this.orgUnitID,
           detailComponent: this.detailComponent,
           treeComponent: this.treeComponent,
           headerText: headerText,
+          isModeAdd: true,
         },
         option
       );
       dialog.closed.subscribe((res) => {
-        if (res.event) {
-          (this.view.dataService as CRUDService).add(res.event, 0).subscribe();
+        var data = res.event?.save;
+        if (data) {
+          this.dataCard.forEach((res) => {
+            if (res.orgUnitID == data.orgUnitID) res['modifiedOn'] = new Date();
+          });
         }
       });
     });
   }
 
+  edit(data, headerText) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.currentView = this.view.currentView;
+    if (this.currentView)
+      this.treeComponent = this.currentView.currentComponent?.treeView;
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe(() => {
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.formModel;
+        var dialog = this.callfc.openSide(
+          PopupAddOrganizationComponent,
+          {
+            function: this.view.function,
+            orgUnitID: this.orgUnitID,
+            detailComponent: this.detailComponent,
+            treeComponent: this.treeComponent,
+            headerText: headerText,
+            isModeAdd: false,
+          },
+          option
+        );
+        dialog.closed.subscribe((res) => {
+          var data = res.event?.update;
+          if (data && this.dataCard) {
+            // this.dataCard.forEach((x) => {
+            //   if (x.orgUnitID == data.orgUnitID) {
+            //     x.departmentName = data.departmentName;
+            //     x['modifiedOn'] = new Date();
+            //   }
+            // });
+            var index = this.dataCard.findIndex(
+              (x) => x.orgUnitID == data.orgUnitID
+            );
+            this.dataCard[index] = data;
+            this.dataCard[index]['modifiedOn'] = new Date();
+          }
+        });
+      });
+  }
+
+  delete(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (option: any) =>
+        this.beforeDelete(option, this.view.dataService.dataSelected)
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.dataCard = this.dataCard.filter(
+            (x) => x.orgUnitID != data.orgUnitID
+          );
+        }
+      });
+    this.change.detectChanges();
+  }
+
+  beforeDelete(op: any, data) {
+    op.assemblyName = 'ERM.Business.HR';
+    op.className = 'OrganizationUnitsBusiness';
+    op.methodName = 'DeleteAsync';
+    op.data = data?.orgUnitID;
+    return true;
+  }
+
   clickMF(evt: any, data: any) {
-    // this.itemSelected = data;
-    // this.titleAction = evt.text;
-    switch (evt) {
+    var headerText = '';
+    if (evt.text) headerText = evt.text;
+    switch (evt.functionID) {
       case 'SYS03':
-        // this.edit(data);
+        this.edit(data, headerText);
         break;
       case 'SYS02':
-        //this.delete(data);
+        this.delete(data);
         break;
     }
   }

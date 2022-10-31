@@ -291,7 +291,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   scrollWindow() {
-    debugger
   }
   
 }

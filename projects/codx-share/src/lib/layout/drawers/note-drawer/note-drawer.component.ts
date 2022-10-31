@@ -50,7 +50,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   typeList = 'note-drawer';
   header = 'Ghi chú';
   dialog: DialogRef;
-  predicate = 'CreatedBy=@0';
+  predicate = 'CreatedBy=@0 && isNote=true';
   dataValue = '';
   editMF: any;
   deleteMF: any;

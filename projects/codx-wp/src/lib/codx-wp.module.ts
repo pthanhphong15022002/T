@@ -189,7 +189,12 @@ const Component: Type<any>[] =
     ChatBoxComponent,
     ListChatBoxComponent,
     PopupGroupComponent,
-    CodxChatComponent
+    // TestSurveyComponent,
+    CodxChatComponent,
+    ChattingComponent, 
+    LayoutComponent,
+    ChatVoteComponent,
+    PopupViewImageComponent,
   ];
 
 @NgModule({
@@ -207,7 +212,7 @@ const Component: Type<any>[] =
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
-  declarations: [Component, ChattingComponent, LayoutComponent, ChatVoteComponent, PopupViewImageComponent, ],
+  declarations: [Component ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWpModule {
