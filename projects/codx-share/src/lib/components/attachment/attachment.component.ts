@@ -128,6 +128,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() fdName: any = ''; //Folder Name truyền vào
   @Input() parentID: any = ''; // FolderID của Cấp cha chứa thư mục
   /////////////////////////////////////////////////////
+  @Input() isSaveSelected = '0'; // Lưu khi chọn select file 0: false , 1 : true
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -2920,7 +2921,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
     //  this.fileUploadList.next(this.fileUploadList);
     // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
-
+    if(this.isSaveSelected == "1")
+    {
+      this.onMultiFileSave();
+    }
     return false;
   }
 

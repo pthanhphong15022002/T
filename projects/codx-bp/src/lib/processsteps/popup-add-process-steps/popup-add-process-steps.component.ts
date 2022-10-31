@@ -73,15 +73,23 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     if (this.stepType) this.processSteps.stepType = this.stepType;
-   
+    this.owners = this.processSteps.owners ? this.processSteps.owners : []
     this.dialog = dialog;
 
     this.funcID = this.dialog.formModel.funcID;
     this.title = this.titleActon;
-
+    if(this.action =='edit') this.showLabelAttachment = this.processSteps.attachments > 0?true : false
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  this.loadData()
+  }
+
+  loadData(){
+    if(this.processSteps.stepType=="C"){
+        this.referenceText = this.processSteps?.reference?.split(";")
+    }
+  }
 
   //#region
 
@@ -91,6 +99,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   async saveData() {
     this.processSteps.owners = this.owners;
+    this.convertReference()
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -108,6 +117,8 @@ export class PopupAddProcessStepsComponent implements OnInit {
   beforeSave(op) {
     var data = [];
     if (this.action == 'edit') {
+      op.method = 'UpdateProcessStepAsync';
+      data = [this.processSteps, this.owners];
     } else {
       op.method = 'AddProcessStepAsync';
       data = [this.processSteps, this.owners];
@@ -118,17 +129,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
 
   addProcessStep() {
-    // if (this.stepType == 'P') {
-    //   var index = this.dialog.dataService?.data.length - 1;
-    //   this.dialog.dataService
-    //     .save((option: any) => this.beforeSave(option),)
-    //     .subscribe((res) => {
-    //       // this.attachment?.clearData();
-    //       if (res) {
-    //         this.dialog.close(res.save);
-    //       } else this.dialog.close();
-    //     });
-    // } else {
     this.bpService
       .addProcessStep([this.processSteps, this.owners])
       .subscribe((data) => {
@@ -140,14 +140,23 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
 
   updateProcessStep() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option))
-      .subscribe((res) => {
+    //đang lỗi
+    // this.dialog.dataService
+    //   .save((option: any) => this.beforeSave(option))
+    //   .subscribe((res) => {
+    //     this.attachment?.clearData();
+    //     if (res) {
+    //       this.dialog.close(res.update);
+    //     } else this.dialog.close();
+    //   });
+    this.bpService
+    .updateProcessStep([this.processSteps,this.owners])
+    .subscribe((data) => {
+      if (data) {
         this.attachment?.clearData();
-        if (res) {
-          this.dialog.close(res.update);
-        } else this.dialog.close();
-      });
+        this.dialog.close(data);
+      } else this.dialog.close();
+    });
   }
   //#endregion
   //#region
@@ -240,4 +249,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
     var i = this.owners.findIndex((x) => x.objectID == objectID);
     if (i != -1) this.owners.slice(i, 1);
   }
+
+  
 }
