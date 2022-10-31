@@ -111,9 +111,9 @@ export class ApprovalStationeryViewDetailComponent
   }
   changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
-      event.forEach(func => {        
-        func.disabled=true;        
-      });
+      // event.forEach(func => {        
+      //   func.disabled=true;        
+      // });
       if(data.status=='3'){
         event.forEach(func => {
           if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ || func.functionID == "EPT40303"/*MF Cấp phát*/ )
