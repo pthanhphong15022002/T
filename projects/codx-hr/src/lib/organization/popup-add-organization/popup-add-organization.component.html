@@ -149,7 +149,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-primary" (click)="onSave()">
-        Lưu
+        <codx-label fiedName="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
       </button>
     </div>
   </ng-template>
