@@ -38,6 +38,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() recID: string = '';
   @Input() mssgDelete = '';
   @Input() eSign: boolean = false; //Quy trình ký số
+  @Input() signatureType; //Quy trình ký số
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -58,7 +59,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
 
   positionDefault: string = '';
 
-  data: any = {}; // object category
+  @Input() data: any = {}; // object category
 
   model: any;
 
@@ -185,7 +186,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       isAdd: true,
       dataEdit: null,
       type: '0',
-      signatureType: this.data?.signatureType,
+      signatureType: this.data?.signatureType ?? this.signatureType,
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
       confirmControl: this.data?.confirmControl,
       allowEditAreas: this.data?.allowEditAreas,

@@ -36,12 +36,13 @@ export class PopupAddOrganizationComponent
   user: any;
   functionID: string;
   option: any = {};
-  data: HR_OrganizationUnits = null;
+  data = null;
   parentID: string = '';
   function?: FunctionListModel;
   detailComponent: any;
   treeComponent?: CodxTreeviewComponent;
   formModel: any;
+  isModeAdd: any;
   constructor(
     private injector: Injector,
     private auth: AuthService,
@@ -55,18 +56,11 @@ export class PopupAddOrganizationComponent
     this.dialogRef = dialogRef;
     this.functionID = this.dialogRef.formModel.funcID;
     this.treeComponent = this.option.treeComponent;
+    this.isModeAdd = dt.data.isModeAdd;
     this.title = dt.data?.headerText;
-    // if (this.option) {
-    //   this.parentID = this.option.orgUnitID;
-    //   this.detailComponent = this.option.detailComponent;
-    //   this.treeComponent = this.option.treeComponent;
-    //   this.data.parentID = this.parentID;
-    //   this.function = this.option.function;
-    //   if (this.function)
-    //   {
-    //     this.title += ' ' + this.function.customName;
-    //   }
-    // }
+    this.data = JSON.parse(
+      JSON.stringify(this.dialogRef.dataService.dataSelected)
+    );
     this.cache
       .functionList(this.dialogRef.formModel.funcID)
       .subscribe((res) => {
@@ -81,42 +75,18 @@ export class PopupAddOrganizationComponent
   }
 
   onInit(): void {
-    this.data = new HR_OrganizationUnits();
-    this.getParamerAsync(this.functionID);
+    if (this.isModeAdd) this.data.orgUnitType = null;
   }
 
   onSave() {
     this.dialogRef.dataService
-      .save((option: any) => this.beforeSave(option))
+      .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res?.save || res?.update) {
           if (this.treeComponent) this.treeComponent.setNodeTree(this.data);
+          this.dialogRef.close(res);
         }
       });
-    // this.api
-    //   .execSv(
-    //     'HR',
-    //     'ERM.Business.HR',
-    //     'OrganizationUnitsBusiness',
-    //     'UpdateAsync',
-    //     [this.data]
-    //   )
-    //   .subscribe((res: any) => {
-    //     if (res) {
-    //       // if (this.detailComponent) {
-    //       //   if (this.detailComponent instanceof OrganizeDetailComponent) {
-    //       //     this.detailComponent.addItem(res);
-    //       //   }
-    //       // }
-    //       if (this.treeComponent) {
-    //         this.treeComponent.setNodeTree(this.data);
-    //       }
-    //       this.notifiSV.notifyCode('SYS006');
-    //       this.dialogRef.close(res);
-    //     } else {
-    //       this.notifiSV.notifyCode('SYS023');
-    //     }
-    //   });
   }
 
   beforeSave(option: any) {
@@ -125,71 +95,5 @@ export class PopupAddOrganizationComponent
     option.methodName = 'UpdateAsync';
     option.data = [this.data];
     return true;
-  }
-  paramaterHR: any = null;
-  getParamerAsync(funcID: string) {
-    if (funcID) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.AD',
-          'AutoNumberDefaultsBusiness',
-          'GenAutoDefaultAsync',
-          [funcID]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.paramaterHR = res;
-            if (this.paramaterHR.stop) return;
-            else {
-              let funcID = this.dialogRef.formModel.funcID;
-              let entityName = this.dialogRef.formModel.entityName;
-              let fieldName = 'orgUnitID';
-              if (funcID && entityName) {
-                this.getDefaultOrgUnitID(funcID, entityName, fieldName);
-              }
-            }
-          }
-        });
-    }
-  }
-  orgUnitID: String = '';
-  getDefaultOrgUnitID(
-    funcID: string,
-    entityName: string,
-    fieldName: string,
-    data: any = null
-  ) {
-    if (funcID && entityName && fieldName) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.AD',
-          'AutoNumbersBusiness',
-          'GenAutoNumberAsync',
-          [funcID, entityName, fieldName, null]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.orgUnitID = res;
-            this.data.OrgUnitID = res;
-            this.detectorRef.detectChanges();
-          }
-        });
-    }
-  }
-  valueChange(event: any) {
-    if (event && event?.data) {
-      let value = event.data;
-      let field = event.field;
-      switch (field) {
-        case 'orgUnitID':
-          this.data.OrgUnitID = value;
-          break;
-        default:
-          break;
-      }
-      this.detectorRef.detectChanges();
-    }
   }
 }

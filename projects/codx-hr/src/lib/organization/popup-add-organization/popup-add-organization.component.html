@@ -16,10 +16,9 @@
             fiedName="orgUnitID"
           ></codx-label>
           <codx-input
-            [formModel]="dialogRef.formModel!"
-            [disabled]="paramaterHR?.stop ? false : true"
-            [crrValue]="orgUnitID"
-            (valueChange)="valueChange($event)"
+            [disabled]="true"
+            [formModel]="dialogRef.formModel"
+            [Group]="form.formGroup"
             field="orgUnitID"
           ></codx-input>
         </div>
@@ -149,7 +148,11 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-primary" (click)="onSave()">
-        <codx-label fiedName="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+        <codx-label
+          fiedName="Save"
+          [formModel]="form.formModel"
+          default="Lưu"
+        ></codx-label>
       </button>
     </div>
   </ng-template>
