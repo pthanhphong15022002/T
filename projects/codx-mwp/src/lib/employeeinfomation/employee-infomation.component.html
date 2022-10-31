@@ -514,27 +514,30 @@
                 </div>
                 <div class="border rounded-2 p-6">
                   <div class="row" *ngIf="skillEmployee">
-                    <div class="col-6 pe-4">
+                    <div class="col-6">
                       <ng-container *ngFor="let data of skillEmployee">
-                        <div>
-                          <div class="fw-bold text-dark mb-1">
-                            {{ data.competenceName }}
-                          </div>
-                          <div class="bg-success-o-60">
-                            <ng-container *ngIf="parameter">
-                              <ejs-slider [cssClass]="'border-5'" [type]="minType" [min]="0"
-                                [max]="parameter.maxLevelSkill? parameter.maxLevelSkill : 10 " [value]="data.valueX"
-                                [readonly]="true">
-                              </ejs-slider>
-                            </ng-container>
-                          </div>
+                        <div class="row mb-4">
+                          <div class="fw-bold text-dark">{{ data.competenceName }}</div>
+                            <ejs-slider 
+                              [width]="300" 
+                              [type]="minType" 
+                              [min]="0"
+                              [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " 
+                              [value]="data.valueX"
+                              [readonly]="true">
+                            </ejs-slider>
                         </div>
                       </ng-container>
                     </div>
                     <div class="col-6" *ngIf="skillEmployee">
-                      <ejs-chart [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis">
+                      <ejs-chart 
+                        [primaryXAxis]="primaryXAxis"
+                        [primaryYAxis]="primaryYAxis">
                         <e-series-collection>
-                          <e-series [dataSource]="skillEmployee" name="Employee" type="Radar" xName="competenceName"
+                          <e-series 
+                            [dataSource]="skillEmployee" 
+                            type="Radar" 
+                            xName="competenceName"
                             yName="valueX">
                           </e-series>
                         </e-series-collection>

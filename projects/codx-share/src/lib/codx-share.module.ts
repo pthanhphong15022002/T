@@ -25,7 +25,7 @@ import {
   DateRangePickerModule,
 } from '@syncfusion/ej2-angular-calendars';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
-import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
+import { SliderModule, UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { FileImage } from './pipe/fileImage.pipe';
 import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
@@ -124,6 +124,7 @@ import { ChatBoxComponent } from './layout/components/chatbox/chat-box.component
 import { ListChatBoxComponent } from './layout/components/list-chat-box/list-chat-box.component';
 import { CodxAssignTempComponent } from './components/codx-assign-temp/codx-assign-temp.component';
 import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
+import { CodxCompetencesComponent } from './components/codx-competences/codx-competences.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -203,6 +204,7 @@ const T_Component: Type<any>[] = [
   ChatBoxComponent,
   ChatListComponent,
   ListChatBoxComponent,
+  CodxCompetencesComponent,
   //pdf
   PdfComponent,
   CodxDashboardComponent,
@@ -243,6 +245,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     ListViewAllModule,
     NgxExtendedPdfViewerModule,
     DashboardLayoutAllModule,
+    SliderModule,
   ],
   exports: [T_Component, T_Pipe],
 })

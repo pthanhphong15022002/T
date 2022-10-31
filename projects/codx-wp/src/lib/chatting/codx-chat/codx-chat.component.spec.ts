@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddUpdateNoteBookComponent } from './add-update-note-book.component';
+import { CodxChatComponent } from './codx-chat.component';
 
-describe('AddUpdateNoteBookComponent', () => {
-  let component: AddUpdateNoteBookComponent;
-  let fixture: ComponentFixture<AddUpdateNoteBookComponent>;
+describe('CodxChatComponent', () => {
+  let component: CodxChatComponent;
+  let fixture: ComponentFixture<CodxChatComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddUpdateNoteBookComponent ]
+      declarations: [ CodxChatComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddUpdateNoteBookComponent);
+    fixture = TestBed.createComponent(CodxChatComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
