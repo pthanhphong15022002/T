@@ -48,6 +48,7 @@ export class OrgorganizationComponent extends UIComponent {
   setupEmp?: any;
   start = '<span class="opacity-50">';
   end = '</span>';
+  funcID: any;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('templateDetail') templateOrgchart: TemplateRef<any>;
@@ -55,6 +56,9 @@ export class OrgorganizationComponent extends UIComponent {
   constructor(inject: Injector, private hrservice: CodxHrService) {
     super(inject);
     this.dtService = new CRUDService(inject);
+    this.router.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
   }
 
   onInit(): void {
@@ -196,25 +200,67 @@ export class OrgorganizationComponent extends UIComponent {
           treeComponent: this.treeComponent,
           headerText: headerText,
         },
-        option
       );
-      dialog.closed.subscribe((res) => {
-        if (res.event) {
-          (this.view.dataService as CRUDService).add(res.event, 0).subscribe();
-        }
-      });
     });
   }
 
+  edit(data, headerText) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.currentView = this.view.currentView;
+    if (this.currentView)
+      this.treeComponent = this.currentView.currentComponent?.treeView;
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe(() => {
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.formModel;
+        var dialog = this.callfc.openSide(
+          PopupAddOrganizationComponent,
+          {
+            function: this.view.function,
+            orgUnitID: this.orgUnitID,
+            detailComponent: this.detailComponent,
+            treeComponent: this.treeComponent,
+            headerText: headerText,
+          },
+          option
+        );
+        dialog.closed.subscribe((res) => {
+          if (res.event) {
+            // (this.view.dataService as CRUDService).add(res.event, 0).subscribe();
+          }
+        });
+      });
+  }
+
+  delete(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (option: any) =>
+        this.beforeDelete(option, this.view.dataService.dataSelected)
+      )
+      .subscribe((res: any) => {});
+  }
+
+  beforeDelete(op: any, data) {
+    op.methodName = 'DeleteAsync';
+    op.data = data?.orgUnitID;
+    return true;
+  }
+
   clickMF(evt: any, data: any) {
-    // this.itemSelected = data;
-    // this.titleAction = evt.text;
+    var headerText = '';
+    if (evt.text) headerText = evt.text;
     switch (evt) {
       case 'SYS03':
-        // this.edit(data);
+        this.edit(data, headerText);
         break;
       case 'SYS02':
-        //this.delete(data);
+        this.delete(data);
         break;
     }
   }

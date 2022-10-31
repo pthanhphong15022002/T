@@ -85,7 +85,7 @@ export class AddGiftsComponent extends UIComponent implements OnInit {
       formGroup.memo.status == 'VALID' &&
       formGroup.price.status == 'VALID'
     ) {
-      this.dialog.dataService
+      this.dialog.dataService 
         .save((option: any) => this.beforeSave(option, this.isAddMode), 0)
         .subscribe((res) => {
           if (res.save) {
