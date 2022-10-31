@@ -1705,24 +1705,8 @@ export class PdfComponent
       unsignIdx = unsignIdx.reverse();
     }
     lstUnsign.forEach((person, idx) => {
-      let url = '';
-      let labelType = '';
-      switch (person.stepType) {
-        case 'S': //chu ky chinh
-          url = person.signature1;
-          labelType = person.stepType;
-          break;
-        // case 'S2': //chu ky nhay
-        //   url = person.signature2;
-        //   labelType = person.stepType;
-        //   break;
-        // case 'S3': //con dau
-        //   url = person.stamp;
-        //   labelType = person.stepType;
-        //   break;
-        default:
-          break;
-      }
+      let url = person.signature1;
+      let labelType = 'S1';
       let layer = this.lstLayer.get(this.pageMax);
       layer = this.lstLayer.get(this.pageMax);
 
@@ -1747,7 +1731,7 @@ export class PdfComponent
             width: imgW,
             height: 100,
             x: unsignIdx[idx],
-            y: this.maxTop + 10,
+            y: this.maxTop + (idx % this.signPerRow) * 100 + 10,
             id: recID,
             name: JSON.stringify(tmpName),
             draggable: true,
