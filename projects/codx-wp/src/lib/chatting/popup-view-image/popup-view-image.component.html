@@ -1,0 +1,52 @@
+<div class="wrap-form">
+    <div class="row">
+
+
+        <!--  <h1> {{titlecreate}}</h1> -->
+
+
+        <div class="d-flex justify-content-between l-12">
+            
+            <span class="icon-close icon-24 text-dark-75 text-hover-primary ms-3" (click)="onClose()"></span>
+        </div>
+
+
+    </div>
+    <div class="row mt-5">
+        <div class="col-9" style="overflow-y: scroll;">
+            <ng-container *ngIf="fileUpload">
+                <div class="d-flex my-3" *ngFor="let item of fileUpload" >
+                    <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
+                        <ng-container *ngIf="item.recID;else imageSrc">
+                            <codx-img [recId]="item.recID" [objectId]="item.objectID" 
+                                cssClass="pic" imageType="square">
+                            </codx-img>
+                        </ng-container>
+                        <ng-template #imageSrc>
+                            <img [src]="item.data || item.avatar" alt="" class="image">
+                        </ng-template>
+                    </ng-container>
+                    <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
+                        <video #video controls class=" rounded min-h-250px">
+                            <source [src]="item.srcVideo || item.data" type="video/mp4">
+                        </video>
+                    </ng-container>
+                    <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
+                        <codx-temp-full imageSrc="{{item.extension | avtFile}}"
+                            imgCss=" me-3 cursor-pointer" title="{{item.fileName}}" [descLine]="1">
+                        </codx-temp-full>
+                    </ng-container>
+                </div>
+            </ng-container>
+            
+        </div>
+        <div class="col-3">
+            
+        </div>
+
+    </div>
+    
+</div>
+
+
+

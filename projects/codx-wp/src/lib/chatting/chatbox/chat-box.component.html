@@ -8,9 +8,20 @@
         <div class="d-flex align-items-center">
           <!--begin::Avatar-->
           <div class="symbol symbol-40px symbol-circle">
-            <codx-img [objectId]="receiverId" [objectName]="receiverName" objectType="AD_Users"
+            <!-- <codx-img [objectId]="receiverId" [objectName]="receiverName" objectType="AD_Users"
               class="symbol symbol-35px symbol-circle">
-            </codx-img>
+            </codx-img> -->
+            <ng-container *ngIf="groupType == '1'">
+              <codx-img [objectId]="receiverId" objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+              </codx-img>
+            </ng-container>
+
+            <ng-container *ngIf="groupType == '2'">
+              <div class="symbol symbol-35px symbol-circle">
+                <codx-img [objectId]="groupId" objectType="WP_Group" class="symbol symbol-30 symbol-circle me-3">
+                </codx-img>
+              </div>
+            </ng-container>
             <!-- <img
               alt="Pic"
               src="../../../assets/themes/wp/default/light/img/user_F1.svg"
@@ -53,11 +64,11 @@
         <div class="messages">
           <ng-container *ngFor="let item of chatMessages; let i = index">
             <!--begin::Message Out-->
-            <div class="d-flex flex-column mb-5 align-items-end"
+            <!-- <div class="d-flex flex-column mb-5 align-items-end"
               *ngIf="item.messageType == '1' && item.senderId == senderId">
               <div class="d-flex align-items-center flex-wrap gap-2">
                 <div class="d-flex">
-                  <!--begin::Star-->
+                  
                   <div class="dropdown">
                     <button class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" type="button"
                       id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -103,7 +114,248 @@
               <div class="mt-2 mess-rounded p-2 bg-primary text-white fw-bold font-size-lg text-right max-w-400px">
                 {{item.message}}
               </div>
+            </div> -->
+            
+            <div class="d-flex flex-column mb-5 align-items-end" *ngIf="item.senderId == senderId">
+              <div class="d-flex align-items-center flex-wrap gap-2">
+                <div class="d-flex">
+                  <!-- begin::Star
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" type="button"
+                      id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="icon-more_vert icon-20 text-dark-25"></span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-attach icon-18"></span>
+                          <span class="ms-3">Đính kèm</span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-share icon-18 text-warning"></span>
+                          <span class="ms-3">Gửi mail</span>
+                        </div>
+                      </a>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-share icon-18"></span>
+                          <span class="ms-3">Chia sẻ</span>
+                        </div>
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item">
+                        <div class="d-flex align-items-center">
+                          <span class="icon-list_alt icon-18"></span>
+                          <span class="ms-3">Chức năng mở rộng</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+
+                  <a href="#" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3">
+                    <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2"></span>
+                  </a>
+                  <a href="#" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3">
+                    <span class="icon-redo icon-18 ms-3 me-2 text-dark-25"></span>
+                  </a> -->
+                  <div class="has-action-menu">
+                    <div class="action-menu d-flex">
+                      <div class="d-flex align-items-center">
+                        
+                        <div ngbDropdown class="dropdown" container="body">
+                          <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                            ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                            <i class="icon-more_vert icon-20 text-dark-75"></i>
+                          </a>
+                          <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                            <!-- <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-attach icon-18"></span>
+                                <span class="ms-3">{{titleAttach}}</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-share icon-18 text-warning"></span>
+                                <span class="ms-3">{{titleSendMail}}</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-share icon-18"></span>
+                                <span class="ms-3">{{titleShare}}</span>
+                              </a>
+                            </li> -->
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)" (click)="DelMessage(item)">
+                                <span class="icon-list_alt icon-18"></span>
+                                <span class="ms-3" >{{titleFunction}}</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                        <a class="action-item">
+                          <div class="d-flex align-items-center btn-tooltip icon-18">
+                            <span class="icon-redo icon-18 ms-3 me-2 text-dark-25" (click)="clickrendo(item)"></span>
+                          </div>
+                        </a>
+                        <!-- <a class="action-item"> -->
+                          
+                          <div ngbDropdown class="dropdown" container="body">
+                            <a class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                              ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false" *ngIf="!item.myVotedType;else dataMyVoted">
+                              <i class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2"></i>
+                            </a>
+                             <!-- <div class="d-flex align-items-center btn-tooltip icon-18">
+                            <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2" (click)="clickvote(item)">
+                            <div class="btn-like delay-500 me-3"> -->
+                            
+
+                              
+                              <!-- <div *ngIf="!item.myVotedType;else dataMyVoted">
+                                <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                                    <span class="text-gray-600" >
+                                      <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2" (click)="clickvote(item)"> 
+                                        <codx-label formName="WP_Comments" name="lblLike" default="Thích">
+                                        </codx-label>
+                                    </span>
+                                </div>
+                            </div> -->
+                            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                            <div class="d-flex mod icon-like">
+                                <ng-container *ngFor="let itemm of lstData">
+                                    <a class="mod-icon" (click)="votePost(item, itemm.value)">
+                                        <img src="/assets/themes/wp/default/img/{{itemm.icon}}"
+                                            alt="Kiwi standing on oval"></a>
+                                </ng-container>
+                            </div>
+                          
+                            <ng-template #dataMyVoted>
+                                <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                                    <span [style.color]="item.myVotedType | vll:'L1480':'textColor' | async">
+                                        {{item.myVotedType | vll:'L1480':'text' | async}}
+                                    </span>
+                                </div>
+                            </ng-template>
+                          </ul>
+                              
+
+
+                           
+                            <!-- </div> -->
+                             <!-- </span> -->
+                          <!-- </div>  -->
+                          </div>
+                          <!-- ----------chat-vote--------- -->
+
+                          
+
+                          <!-- <div class="d-flex align-items-center btn-tooltip icon-18">
+                            <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2" (click)="clickvote(item)">
+                            <div class="btn-like delay-500 me-3">
+                            
+
+                              
+                              <div *ngIf="!item.myVotedType;else dataMyVoted">
+                                <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                                    <span class="text-gray-600" >
+                                      <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2" (click)="clickvote(item)"> 
+                                        <codx-label formName="WP_Comments" name="lblLike" default="Thích">
+                                        </codx-label>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="d-flex mod icon-like">
+                                <ng-container *ngFor="let item of lstData">
+                                    <a class="mod-icon" (click)="votePost(data, item.value)">
+                                        <img src="/assets/themes/wp/default/img/{{item.icon}}"
+                                            alt="Kiwi standing on oval"></a>
+                                </ng-container>
+                            </div>
+                            <ng-template #dataMyVoted>
+                                <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                                    <span [style.color]="item.myVotedType | vll:'L1480':'textColor' | async">
+                                        {{item.myVotedType | vll:'L1480':'text' | async}}
+                                    </span>
+                                </div>
+                            </ng-template>
+                              
+
+
+                           
+                            </div>
+                             </span>
+                          </div> -->
+                          <!-- ----------chat-vote--------- -->
+                        
+                        <!-- </a> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-2 mess-rounded p-2 bg-primary text-white fw-bold font-size-lg text-right max-w-400px">
+
+                <!-- ======================================= -->
+
+
+                <container-element [ngSwitch]="item.messageType">
+                  <some-element *ngSwitchCase="1">
+                    <span>{{item.message}}</span>
+                  </some-element>
+                  <some-element *ngSwitchCase="2">
+                    <span *ngIf="item.message">{{item.message}}</span>
+                        <lib-codx-chat>
+                          [funcID]="funcID" 
+                          [dVll]="dVll" 
+                          [objectType]="objectType" 
+                          [new]="true" 
+                          [post]="item"
+                          [formModel]="formModel"
+                          (evtSendComment)="sendComment($event)" 
+                          [parentID]="item.messageId" 
+                          [refID]="item.messageId">
+                        </lib-codx-chat>
+                  </some-element>
+                  <some-element *ngSwitchCase="3">
+                    <span></span>
+                  </some-element>
+                  <some-element *ngSwitchCase="4">
+                    <ng-container *ngIf="item.refContent"> <!--  -->
+                      <div class="border-refchat refchat-sender">
+                        {{item.refContent}}
+                      </div>
+                    </ng-container> 
+                    <span>{{item.message}}</span>
+                  </some-element>
+                  <some-element *ngSwitchCase="5">
+                    <span class="message-del">{{mesDelete}}</span>
+                  </some-element>
+                  <some-element *ngSwitchDefault> {{item.message}} </some-element>
+                </container-element>
+
+                <!-- ======================================= -->
+            
+                <ng-container >
+                  <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(item)">
+
+                      <div *ngFor="let vote of item.votes">
+                          <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                              alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
+                              <!-- <codx-vll [name]="'L1480'" [value]="vote.voteType" [showIcon]="true" [icoCss]="'width: 15px; height: 15x'"></codx-vll> -->
+                      </div>
+                      <div *ngIf="item.votes != null">
+                          <span class="ms-2">{{item.votes.length}}</span>
+                      </div>
+                  </div>
+              </ng-container>
+
+                <!-- <div class="text-gray-400">{{item.createdOn | date:'dd-MM-yyy HH:mm:ss'}}</div> -->
+              </div>
             </div>
+            
             <!--end::Message Out-->
 
             <div class="separator separator-content my-15" *ngIf="item.messageType == '3'">
@@ -111,7 +363,7 @@
             </div>
 
             <!--begin::Message In-->
-            <div class="d-flex align-items-start user-card py-2"
+            <!-- <div class="d-flex align-items-start user-card py-2"
               *ngIf="item.messageType == '1' && item.senderId != senderId">
               <div class="symbol symbol-35px symbol-circle me-4" *ngIf="item.showImage">
                 <img alt="Pic" src="../../../assets/themes/wp/default/light/img/user_F3.svg" />
@@ -124,14 +376,14 @@
 
               <div class="d-flex align-items-center flex-wrap gap-2">
                 <div class="d-flex">
-                  <!--begin::Star-->
+                  begin::Star
                   <a href="#" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3">
                     <span class="icon-redo icon-18 ms-3 me-2 text-dark-25"></span>
                   </a>
                   <a href="#" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3">
                     <span class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2"></span>
                   </a>
-                  <!-- <div class="dropdown">
+                  <div class="dropdown">
                     <button
                       class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3"
                       type="button"
@@ -172,11 +424,252 @@
                         </div>
                       </a>
                     </div>
-                  </div> -->
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            <div class="d-flex align-items-start user-card py-2" *ngIf="  item.senderId != senderId">
+
+              <div class="symbol symbol-35px symbol-circle me-4" *ngIf="item.showImage">
+                <ng-container>
+                  <codx-img [objectId]="item.senderId" objectType="AD_Users"
+                    class="symbol symbol-30 symbol-circle me-3">
+                  </codx-img>
+                  <!-- <codx-img [objectId]="item.senderId" [objectName]="receiverName" objectType="AD_Users"
+                        class="symbol symbol-35px symbol-circle">
+                      </codx-img> -->
+                </ng-container>
+
+                <!-- <img alt="Pic" src="../../../assets/themes/wp/default/light/img/user_F3.svg" /> -->
+              </div>
+              <!-- receiver -->
+              <div class="d-flex">
+                <div class="mt-2 rounded bg-light-info p-2 bg-light-primary text-dark max-w-400px">
+
+                  <!-- ======================================= -->
+
+
+                  <container-element [ngSwitch]="item.messageType">
+                    <some-element *ngSwitchCase="1">
+                      <span>{{item.message}}</span>
+                    </some-element>
+                    <some-element *ngSwitchCase="2">
+                      <ng-container class="">
+                        <span *ngIf="item.message">{{item.message}}</span>
+                        <lib-codx-chat>
+                          [funcID]="funcID" 
+                          [dVll]="dVll" 
+                          [objectType]="objectType" 
+                          [new]="true" 
+                          [post]="item"
+                          [formModel]="formModel"
+                          (evtSendComment)="sendComment($event)" 
+                          [parentID]="item.recID" 
+                          [refID]="item.recID">
+                        </lib-codx-chat>
+                      </ng-container>
+                      
+                    </some-element>
+                    <some-element *ngSwitchCase="3">
+                      <span></span>
+                    </some-element>
+                    <some-element *ngSwitchCase="4">
+                      <ng-container *ngIf="item.refContent"> 
+                        <div class="border-refchat refchat-sender">
+                          {{item.refContent}}
+                        </div>
+                      </ng-container> 
+                      <span>{{item.message}}</span>
+                    </some-element>
+                    <some-element *ngSwitchCase="5">
+                      <span class="message-del">{{mesDelete}}</span>
+                    </some-element>
+                    <some-element *ngSwitchDefault> {{item.message}} </some-element>
+                  </container-element>
+
+                  <!-- ======================================= -->
+
+                  <!-- <ng-container *ngIf="item.refContent">
+                    <div class="border-refchat refchat-sender">
+                      {{item.refContent}}
+                    </div>
+                  </ng-container> 
+                  
+                  <div *ngIf="item.deleted == false ;else other_content">
+                    {{item.message}}
+                  </div>
+                  <ng-template #other_content >
+                    <span class="message-del">{{item.message}}</span>
+                  </ng-template> -->
+
+
+
+                  <ng-container >
+                    <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(item)">
+  
+                        <div *ngFor="let vote of item.votes">
+                            <img src="/assets/themes/wp/default/img/{{(vote.voteType | vll:'L1480':'icon' | async)}}"
+                                alt="Kiwi standing on oval" style="width: 15px; height: 15x;">
+                                <!-- <codx-vll [name]="'L1480'" [value]="vote.voteType" [showIcon]="true" [icoCss]="'width: 15px; height: 15x'"></codx-vll> -->
+                        </div>
+                        <div *ngIf="item.votes != null">
+                            <span class="ms-2">{{item.votes.length}}</span>
+                        </div>
+                    </div>
+                </ng-container>
+                  
+                </div>
+                
+                
+                <div class="has-action-menu">
+                  <div class="action-menu d-flex">
+                    <div class="d-flex align-items-center" *ngIf="!item.myVotedType;else datafile">
+                      <a class="action-item">
+                        <div class="d-flex align-items-center btn-tooltip icon-18">
+                          <span class="icon-redo icon-18 ms-3 me-2 text-dark-25" (click)="clickrendo(item)"></span>
+                        </div>
+                      </a>
+                      <a class="action-item">
+
+                        <div ngbDropdown class="dropdown" container="body">
+                          <a class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                            ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false" *ngIf="!item.myVotedType;else dataMyVoted">
+                            <i class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2"></i>
+                          </a>
+                          <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                          <div class="d-flex mod icon-like">
+                              <ng-container *ngFor="let itemm of lstData">
+                                  <a class="mod-icon" (click)="votePost(item, itemm.value)">
+                                      <img src="/assets/themes/wp/default/img/{{itemm.icon}}"
+                                          alt="Kiwi standing on oval"></a>
+                              </ng-container>
+                          </div>
+                        
+                          <ng-template #dataMyVoted>
+                              <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                                  <span [style.color]="item.myVotedType | vll:'L1480':'textColor' | async">
+                                      {{item.myVotedType | vll:'L1480':'text' | async}}
+                                  </span>
+                              </div>
+                          </ng-template>
+                        </ul>
+                        </div>
+                      </a>
+
+                      <a class="action-item">
+                        <div class="d-flex align-items-center btn-tooltip icon-18">
+                          <span class="icon-cloud_download icon-18 ms-3 me-2 text-dark-25" ></span>
+                        </div>
+                      </a>
+
+                      <div ngbDropdown class="dropdown" container="body">
+                        <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                          ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                          <i class="icon-more_vert icon-20 text-dark-75"></i>
+                        </a>
+                        <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                          <!-- <li>
+                            <a ngbDropdownItem href="javascript:void(0)">
+                              <span class="icon-attach icon-18"></span>
+                              <span class="ms-3">{{titleAttach}}</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a ngbDropdownItem href="javascript:void(0)">
+                              <span class="icon-share icon-18 text-warning"></span>
+                              <span class="ms-3">{{titleSendMail}}</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a ngbDropdownItem href="javascript:void(0)">
+                              <span class="icon-share icon-18"></span>
+                              <span class="ms-3">{{titleShare}}</span>
+                            </a>
+                          </li> -->
+                          <li>
+                            <a ngbDropdownItem href="javascript:void(0)" >
+                              <span class="icon-list_alt icon-18"></span>
+                              <span class="ms-3" (click)="DelMessage(item)">{{titleFunction}}</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <ng-template class="d-flex align-items-center" #datafile>
+                        <a class="action-item">
+                          <div class="d-flex align-items-center btn-tooltip icon-18">
+                            <span class="icon-redo icon-18 ms-3 me-2 text-dark-25" (click)="clickrendo(item)"></span>
+                          </div>
+                        </a>
+                        <a class="action-item">
+                          <div ngbDropdown class="dropdown" container="body">
+                            <a class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                              ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false" *ngIf="!item.myVotedType;else dataMyVoted">
+                              <i class="icon-tag_faces icon-18 text-dark-25 ms-3 me-2"></i>
+                            </a>
+                            <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                            <div class="d-flex mod icon-like">
+                                <ng-container *ngFor="let itemm of lstData">
+                                    <a class="mod-icon" (click)="votePost(item, itemm.value)">
+                                        <img src="/assets/themes/wp/default/img/{{itemm.icon}}"
+                                            alt="Kiwi standing on oval"></a>
+                                </ng-container>
+                            </div>
+                          
+                            <ng-template #dataMyVoted>
+                                <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                                    <span [style.color]="item.myVotedType | vll:'L1480':'textColor' | async">
+                                        {{item.myVotedType | vll:'L1480':'text' | async}}
+                                    </span>
+                                </div>
+                            </ng-template>
+                          </ul>
+                          </div>
+                        </a>
+                        <a class="action-item">
+                          <div class="d-flex align-items-center btn-tooltip icon-18">
+                            <span class="icon-cloud_download icon-18 ms-3 me-2 text-dark-25" ></span>
+                          </div>
+                        </a>
+                        <div ngbDropdown class="dropdown" container="body">
+                          <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                            ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
+                            <i class="icon-more_vert icon-20 text-dark-75"></i>
+                          </a>
+                          <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                            <!-- <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-attach icon-18"></span>
+                                <span class="ms-3">{{titleAttach}}</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-share icon-18 text-warning"></span>
+                                <span class="ms-3">{{titleSendMail}}</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)">
+                                <span class="icon-share icon-18"></span>
+                                <span class="ms-3">{{titleShare}}</span>
+                              </a>
+                            </li> -->
+                            <li>
+                              <a ngbDropdownItem href="javascript:void(0)" >
+                                <span class="icon-list_alt icon-18"></span>
+                                <span class="ms-3" (click)="DelMessage(item)">{{titleFunction}}</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                    </ng-template>
+                  </div>
                 </div>
               </div>
             </div>
             <!--end::Message In-->
+
           </ng-container>
         </div>
         <!--end::Messages-->

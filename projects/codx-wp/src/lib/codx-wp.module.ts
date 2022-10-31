@@ -56,6 +56,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
+import { ChatVoteComponent } from './chatting/chat-vote/chat-vote.component';
+import { CodxChatComponent } from './chatting/codx-chat/codx-chat.component';
+import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
 
 export const routes: Routes = [
   {
@@ -203,6 +206,7 @@ const Component: Type<any>[] =
     ListChatBoxComponent,
     PopupGroupComponent,
     TestSurveyComponent,
+    CodxChatComponent
   ];
 
 @NgModule({
@@ -222,7 +226,7 @@ const Component: Type<any>[] =
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule, ListPostComponent],
-  declarations: [Component, ChattingComponent, LayoutComponent],
+  declarations: [Component, ChattingComponent, LayoutComponent, ChatVoteComponent, PopupViewImageComponent, ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWpModule {
