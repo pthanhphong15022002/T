@@ -101,8 +101,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   tempDate = new Date();
   lstDevices = [];
   tmplstDevice = [];
+  tmplstStationery=[];
   tmpTitle = '';
   title = '';
+  isCopy=false;
   tabInfo: any[] = [
     {
       icon: 'icon-info',
@@ -152,6 +154,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
+    this.isCopy = dialogData?.data[4];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
@@ -280,6 +283,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         !this.isAdd &&
         this.data?.equipments != null &&
         this.optionalData == null
+        
       ) {
         this.data?.equipments.forEach((equip) => {
           let tmpDevice = new Device();
@@ -294,6 +298,21 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.tmplstDevice.push(tmpDevice);
         });
       }
+      if(this.isCopy){
+        this.data.equipments.forEach((equip) => {
+          let tmpDevice = new Device();
+          tmpDevice.id = equip.equipmentID;
+          tmpDevice.isSelected = equip.isPicked;
+          this.lstDeviceRoom.forEach((vlDevice) => {
+            if (tmpDevice.id == vlDevice.id) {
+              tmpDevice.text = vlDevice.text;
+              tmpDevice.icon = vlDevice.icon;
+            }
+          });
+          this.tmplstDevice.push(tmpDevice);
+        });
+      }
+      this.detectorRef.detectChanges();
       if (this.isAdd && this.optionalData != null) {
         this.data.resourceID = this.optionalData.resourceId;
         let equips = [];
@@ -522,7 +541,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.isAdd,
       this.tmpAttendeesList,
       null,
-      this.lstStationery,
+      this.tmplstStationery,
     ];
     return true;
   }
@@ -544,21 +563,25 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.notificationsService.notifyCode('EP002');
       return;
     }
+    this.tmplstStationery=[];
+    this.lstStationery.forEach(item=>{
+      this.tmplstStationery.push(item)
+    })
     this.tmpAttendeesList = [];
     this.attendeesList.forEach((item) => {
       this.tmpAttendeesList.push(item);
     });
     this.tmpAttendeesList.push(this.curUser);
-    this.tmplstDevice = [];
+    let tmpEquip = [];
     this.tmplstDevice.forEach((element) => {
       let tempEquip = new Equipments();
       tempEquip.equipmentID = element.id;
       tempEquip.createdBy = this.authService.userValue.userID;
       tempEquip.isPicked = element.isSelected;
-      this.lstEquipment.push(tempEquip);
+      tmpEquip.push(tempEquip);
     });
     this.data.equipments=[];
-    this.data.equipments = this.lstEquipment;
+    this.data.equipments = tmpEquip;
     this.data.category = '1';
     this.data.resourceType = '1';
     this.data.requester = this.curUser.userName;

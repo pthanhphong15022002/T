@@ -7,24 +7,30 @@
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
           <codx-label
-            *ngIf="data?.approveStatus == 1 && isAddNew == true"
+            *ngIf="
+              data?.approveStatus == 1 && isAddNew == true && modeView != true
+            "
             name="lblTitleSignFile"
             default="Thêm mới tài liệu"
             [formModel]="formModelCustom"
           ></codx-label>
-          <codx-label
-            *ngIf="data?.approveStatus == 1 && isAddNew == false"
-            name="lblTitleEditSignFile"
-            default="Chỉnh sửa tài liệu"
-            [formModel]="formModelCustom"
-          ></codx-label>
+          <div
+            *ngIf="
+              data?.approveStatus == 1 && isAddNew == false && modeView != true
+            "
+          >
+            {{ headerText }}
+          </div>
+          <div *ngIf="modeView == true">{{ headerText }}</div>
 
-          <div *ngIf="data?.approveStatus != 1">{{ data?.title }}</div>
+          <div *ngIf="data?.approveStatus != 1 && modeView != true">
+            {{ data?.title }}
+          </div>
         </h2>
       </div>
       <div
         class="d-flex align-items-center stepper"
-        *ngIf="data?.approveStatus == 1"
+        *ngIf="data?.approveStatus == 1 && modeView != true"
       >
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div
@@ -191,7 +197,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-end">
-        <ng-container *ngIf="data?.approveStatus == 1">
+        <ng-container *ngIf="data?.approveStatus == 1 && modeView != true">
           <div
             ngbDropdown
             class="dropdown"
@@ -261,8 +267,7 @@
             [style.visibility]="
               currentTab == 3 &&
               data.files?.length > 0 &&
-              data.approveStatus == '1' &&
-              user.userID == data.owner
+              data.approveStatus == '1'
                 ? 'visible'
                 : 'hidden'
             "
@@ -492,6 +497,7 @@
                 [recID]="data.recID"
                 [type]="'1'"
                 [eSign]="eSign"
+                [signatureType]="signatureType"
                 [mssgDelete]="mssgDelete"
                 (addEditItem)="dataStepChange($event)"
               >
@@ -641,7 +647,9 @@
       <lib-pdf
         [recID]="data.recID"
         [isApprover]="false"
-        [isEditable]="data?.approveStatus == '1' ? true : false"
+        [isEditable]="
+          data?.approveStatus == '1' && modeView != true ? true : false
+        "
         (isAreaControl)="setValueAreaControl($event)"
       >
       </lib-pdf>

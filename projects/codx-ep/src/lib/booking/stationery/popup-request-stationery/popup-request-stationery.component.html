@@ -336,11 +336,9 @@
             >
             </codx-label>
             <codx-input
-              type="combobox"
-              field="reasonID"
-              refValue="Reasons_BookingStationery"
-              [crrValue]="data.reasonID"
-              (valueChange)="valueChange($event)"
+              ControlName="reasonID"
+              [formModel]="formModel"
+              [Group]="dialogAddBookingStationery"
             >
             </codx-input>
           </div>

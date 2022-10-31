@@ -177,7 +177,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
               this.confirmControl = element?.confirmControl ?? '0';
               this.allowEditAreas = element?.allowEditAreas ?? false;
 
-              if (element.roleType == 'PE') element.write = true;
+              if (element.roleType == 'PA') element.write = true;
               else element.write = false;
 
               element.delete = true;
@@ -394,7 +394,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             let appr = new Approvers();
             appr.write = true;
             appr.roleType = element.objectType;
-            appr.approver = element.objectType;
+            //appr.approver = element.objectType;
             appr.icon = element?.icon;
 
             let popupApprover = this.callfc.openForm(

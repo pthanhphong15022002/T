@@ -11,4 +11,5 @@ export class ChatBoxInfo{
     public messageInfo: any;
     public members: any = new Array();
     public menberType: string;
+  FormModel: any;
 }
