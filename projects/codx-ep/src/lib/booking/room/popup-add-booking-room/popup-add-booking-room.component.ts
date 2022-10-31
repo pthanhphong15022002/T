@@ -320,7 +320,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         equips.forEach((equip) => {
           let tmpDevice = new Device();
           tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = true;
+          tmpDevice.isSelected = false;
           this.lstDeviceRoom.forEach((vlDevice) => {
             if (tmpDevice.id == vlDevice.id) {
               tmpDevice.text = vlDevice.text;
@@ -1044,7 +1044,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           element.Equipments.forEach((item) => {
             let tmpDevice = new Device();
             tmpDevice.id = item.EquipmentID;
-            tmpDevice.isSelected = true;
+            tmpDevice.isSelected = false;
             this.vllDevices.forEach((vlItem) => {
               if (tmpDevice.id == vlItem.value) {
                 tmpDevice.text = vlItem.text;
