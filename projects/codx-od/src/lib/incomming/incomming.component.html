@@ -12,9 +12,10 @@
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark"
     [titleLine]="2" [icoDateCss]="checkDeadLine(data?.deadline)" [dataItem]="data" (changeDataMF)="changeDataMF($event,data)"
     [footer]="footerTmp"
+ 
     >
   </codx-temp-full>
-  <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
+  <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'"     [moreFuncCss]="'me-10'"-->
 </ng-template>
 <ng-template #panelRightRef>
   <app-view-detail #viewdetail [data]="lstDtDis" [dataItem]="dataItem" [gridViewSetup]="gridViewSetup" [view]="view"
