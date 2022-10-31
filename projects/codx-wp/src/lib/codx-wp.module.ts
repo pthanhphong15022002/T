@@ -48,10 +48,12 @@ import { ViewDetailComponent } from './news/view-detail/view-detail.component';
 import { ViewTagComponent } from './news/view-tag/view-tag.component';
 import { ViewVideoComponent } from './news/view-video/view-video.component';
 import { LayoutComponent } from './_layout/layout.component';
-import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
+import { ChatVoteComponent } from './chatting/chat-vote/chat-vote.component';
+import { CodxChatComponent } from './chatting/codx-chat/codx-chat.component';
+import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
 
 export const routes: Routes = [
   {
@@ -187,6 +189,12 @@ const Component: Type<any>[] =
     ChatBoxComponent,
     ListChatBoxComponent,
     PopupGroupComponent,
+    // TestSurveyComponent,
+    CodxChatComponent,
+    ChattingComponent, 
+    LayoutComponent,
+    ChatVoteComponent,
+    PopupViewImageComponent,
   ];
 
 @NgModule({
@@ -204,7 +212,7 @@ const Component: Type<any>[] =
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
-  declarations: [Component, ChattingComponent, LayoutComponent],
+  declarations: [Component ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxWpModule {

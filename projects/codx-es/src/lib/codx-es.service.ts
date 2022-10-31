@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { rejects } from 'assert';
 import {
   ApiHttpService,
@@ -981,6 +982,16 @@ export class CodxEsService {
       [sfRecID, comment]
     );
   }
+
+  bookmarkSingFile(sfRecID: string, lstBookmark: any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'BookmarkSignfileAsync',
+      [sfRecID, lstBookmark]
+    );
+  }
   //#endregion
 
   //#region ES_ApprovalTrans
@@ -1033,7 +1044,17 @@ export class CodxEsService {
     );
   }
 
-  getApprovalTrans(recID: string) {
+  getOneApprovalTrans(recID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetByRecIDAsync',
+      [recID]
+    );
+  }
+
+  getApprovalTransByTransID(recID: string) {
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

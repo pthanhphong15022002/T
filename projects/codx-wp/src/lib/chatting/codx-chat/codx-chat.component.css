@@ -1,0 +1,132 @@
+.contentediter {
+    height: 36px;
+    overflow-y: scroll;
+    color: #161719;
+}
+
+.flex {
+    display: flex;
+}
+
+.mod-icon {
+    padding: 6px 8px;
+}
+
+.comments {
+    background-color: #adb5bd26;
+    padding: 10px 15px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.comment-thumb {
+    position: absolute;
+    background-color: #fff;
+    right: 20px;
+    bottom: -14px;
+    padding: 6px 10px;
+    border-radius: 18px;
+    box-shadow: 0px 0px 6px 0px rgb(76 87 125 / 12%);
+}
+
+.btn-send {
+    position: absolute;
+    top: 0;
+    right: 8px;
+}
+
+.isHiden {
+    display: none;
+}
+
+.isShow {
+    display: block;
+}
+
+.feed-box input.codx-text {
+    border: 0;
+    padding-left: 0;
+    background-color: #f5f5f5;
+}
+
+/* // .btn-like,
+// .btn-com {
+//     height: 30px;
+//     line-height: 30px;
+// } */
+
+.btn-like {
+    height: 32px;
+    line-height: 32px;
+    position: relative;
+}
+
+.mod-icon img {
+    width: 30px;
+    height: auto;
+}
+
+
+/* // .comments {
+//     border: 1px aqua solid;
+// } */
+
+.icon-like {
+    visibility: hidden;
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    margin-left: -120px;
+    background-color: #ffffff;
+    box-shadow: 0px 10px 20px 0px rgb(82 63 105 / 10%);
+    padding: 5px;
+    border-radius: 6px;
+}
+
+.comment-like .icon-like {
+    margin-left: -75px;
+}
+
+.btn-like:hover .icon-like {
+    visibility: visible;
+}
+
+.feed-box .e-float-input {
+    background-color: transparent;
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+.feed-box {
+    border: 0;
+    height: 35px;
+    line-height: 33px;
+    background-color: #f5f5f5;
+    border-radius: 40px;
+}
+
+.edit-comment .e-float-input {
+    border-radius: 30px !important;
+}
+
+.edit-comment .form-control {
+    border-radius: 30px !important;
+    padding-right: 20px;
+}
+
+.file-view {
+    height: 50x;
+}
+
+/* // .image {
+//     width: 100px;
+//     height: 100px;
+// } */
+
+.icon-delete {
+    color: rgb(246, 78, 96);
+}
+
+.icon-edit {
+    color: rgb(0, 93, 199);
+}

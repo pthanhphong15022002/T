@@ -88,12 +88,14 @@ export class CodxApprovalStepComponent
           }
         });
       } else {
-        this.esService.getApprovalTrans(this.transID).subscribe((res) => {
-          if (res) {
-            this.process = res;
-            this.cr.detectChanges();
-          }
-        });
+        this.esService
+          .getApprovalTransByTransID(this.transID)
+          .subscribe((res) => {
+            if (res) {
+              this.process = res;
+              this.cr.detectChanges();
+            }
+          });
       }
     }
   }

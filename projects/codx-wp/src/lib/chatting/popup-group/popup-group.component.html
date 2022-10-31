@@ -1,23 +1,26 @@
 <div class="wrap-form">
+    <codx-views #view  idField="recID" [views]="views">
+    </codx-views>
     <div class="row">
-        
-           
-           <!--  <h1> {{titlecreate}}</h1> -->
-        
+
+
+         <h1> <codx-label [formModel]="view.formModel" name="lblCreateGr" default="Tạo Nhóm Chat"></codx-label> </h1>
+
 
         <div class="d-flex justify-content-between l-12">
-            <codx-img [objectId]="" #imageGroup [width]="40" [objectType]="'WP_Groups'" [funcId]="'WP'" [isAllowEdit]="true"></codx-img>
+            <codx-img [objectId]="" #imageGroup [width]="40" [objectType]="'WP_Groups'" [funcId]="'WP'"
+                [isAllowEdit]="true"></codx-img>
             <codx-input type="text" [crrValue]="data?.groupName" placeholder="Tên nhóm" class="form-control"
                 (valueChange)="valueChange($event)" field="groupName"></codx-input>
-                <span class="icon-close icon-24 text-dark-75 text-hover-primary ms-3" (click)="onClose()"></span>
+            <span class="icon-close icon-24 text-dark-75 text-hover-primary ms-3" (click)="onClose()"></span>
         </div>
-        
-        
+
+
     </div>
     <div class="row mt-5">
         <div class="col-8" style="overflow-y: scroll;">
             <div>
-                <label>Danh sách người dùng</label>
+                <codx-label [formModel]="view.formModel" name="lblListUser" default="Danh sách người dùng"></codx-label>
             </div>
             <!-- <div>
                 <input [(value)]="searchUser" class="form-control" placeholder="Tìm kiếm người dùng"/>
@@ -44,26 +47,40 @@
                 </ng-container>
             </div> -->
             <div class="h-300">
-                <codx-listview
-              #listview
-              [itemTemplate]="itemTemplate"
-              [comboboxName]="'Users'"
-              [funcId]="'WP'"
-              [entityName]="'AD_Users'"
-              [service]="'SYS'"
-              [assemblyName]="'ERM.Business.CM'"
-              [className]="'DataBusiness'"
-              [method]="'LoadDataCbxAsync'"
-              [enableCheck]="true"
-              [selectFirst]="false"
-              (onSelectionChanged)="onSelectionChanged($event)"
-            >
-            </codx-listview>
+                <div class="" style="width: 0px !important; height: 0px !important;">
+                    <codx-listview #listview [itemTemplate]="" [comboboxName]="'Users'" [funcId]="'WP'"
+                        [entityName]="'AD_Users'" [service]="'SYS'" [assemblyName]="'ERM.Business.CM'"
+                        [className]="'DataBusiness'" [method]="'LoadDataCbxAsync'" [enableCheck]="true"
+                        [selectFirst]="false" (onSelectionChanged)="onSelectionChanged($event)">
+                    </codx-listview>
+                </div>
+                <div *ngFor="let data of dataRequest">
+                    <div class="a" *ngIf="users.userID != data.UserID;else dataUser">
+                        <div (click)="clickUser(data)" class="item" style="display: flex;">
+                            <codx-img [objectId]="data.UserID" [objectType]="'AD_Users'"
+                                class="symbol symbol-30 symbol-circle me-3">
+                            </codx-img>
+                            <div style="flex: 1;">
+                                <div>{{data.UserName}}</div>
+                            </div>
+                            <div>
+                                <codx-input #input_user [id]="data.UserID" type="checkbox" name="{{data.UserID}}"
+                                    [checked]="data.checked">
+                                </codx-input>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template #dataUser>
+                        
+                    </ng-template>
+                </div>
             </div>
         </div>
         <div class="col-4">
             <div>
-                <label>Selected <span *ngIf="userSelected.length > 0">({{userSelected.length}})</span></label>
+                <!-- <label>{{select}}<span *ngIf="userSelected.length > 0">({{userSelected.length}})</span></label> -->
+                <codx-label [formModel]="view.formModel" name="lblSelected" default="Đã chọn "></codx-label>
+                <span *ngIf="userSelected.length > 0">({{userSelected.length}})</span>
             </div>
             <ng-container *ngFor="let item of userSelected">
                 <div style="display: flex;" class="">
@@ -71,7 +88,7 @@
                         class="symbol symbol-30 symbol-circle me-3">
                     </codx-img>
                     <div>
-                        <div >{{item.UserName}}</div>
+                        <div>{{item.UserName}}</div>
                     </div>
                     <div>
                         <!-- [class]="'e-checkbox-wrapper e-wrapper checkbox check-circle codx-checkbox e-checkbox-disabled'" -->
@@ -86,28 +103,25 @@
 
     </div>
     <div>
-        <button (click)="clickCreateGroup()" text="Them">
-            {{create}}
+        <button (click)="clickCreateGroup()">
+            <codx-label [formModel]="view.formModel" name="lblAddGr" default="Thêm"></codx-label>
         </button>
     </div>
 </div>
 
 
-<ng-template #itemTemplate let-data>
-    <div  class="a" *ngIf="users">
-                
-                    <div (click)="clickUser(data)" class="item" style="display: flex;">
-                        <codx-img [objectId]="data.UserID" [objectType]="'AD_Users'"
-                            class="symbol symbol-30 symbol-circle me-3">
-                        </codx-img>
-
-                        <div style="flex: 1;">
-                            <div>{{data.UserName}}</div>
-                        </div>
-                        <div>
-                            <codx-input type="checkbox" name="{{data.UserID}}" [crrValue]="data.checked">
-                            </codx-input>
-                        </div>
-                    </div>
+<!-- <ng-template #itemTemplate let-data>
+    <div class="a" *ngIf="users">
+        <div (click)="clickUser(data)" class="item" style="display: flex;">
+            <codx-img [objectId]="data.UserID" [objectType]="'AD_Users'" class="symbol symbol-30 symbol-circle me-3">
+            </codx-img>
+            <div style="flex: 1;">
+                <div>{{data.UserName}}</div>
+            </div>
+            <div>
+                <codx-input #input_user [id]="data.UserID" type="checkbox" name="{{data.UserID}}" [checked]="data.checked">
+                </codx-input>
+            </div>
+        </div>
     </div>
-</ng-template>
+</ng-template> -->

@@ -23,12 +23,17 @@
   </div>
   <div class="codx-temp-body">
     <lib-pdf
+      *ngIf="isAfterRender"
       #pdfView
-      (confirmChange)="changeConfirmState($event)"
       [isApprover]="true"
-      [recID]="'27aeeb52-4eb4-11ed-a543-d89ef34bb550'"
-      [stepNo]="1"
-      [isEditable]="false"
+      [isPublic]="true"
+      (confirmChange)="changeConfirmState($event)"
+      [isConfirm]="oApprovalTrans.confirmControl == '1' ? true : false"
+      [transRecID]="oApprovalTrans.recID"
+      [approver]="oApprovalTrans.approver"
+      [recID]="oApprovalTrans.transID"
+      [stepNo]="oApprovalTrans.stepNo"
+      [isEditable]="true"
       (isActiveToSign)="changeActiveOpenPopup($event)"
       (changeSignerInfo)="changeSignerInfo($event)"
     >

@@ -143,9 +143,9 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
   }
   changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
-      event.forEach(func => {        
-        func.disabled=true;        
-      });
+      // event.forEach(func => {        
+      //   func.disabled=true;        
+      // });
       if(data.status=='3'){
         event.forEach(func => {
           if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/ )

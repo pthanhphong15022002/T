@@ -17,7 +17,9 @@
         <ng-container *ngFor="let approver of item.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <codx-temp-full
-              *ngIf="approver.roleType?.length == 1"
+              *ngIf="
+                approver.roleType?.length == 1 || approver.roleType == 'PA'
+              "
               [imageId]="approver.approver"
               [imageObjType]="'AD_Users'"
               [imageWidth]="35"
@@ -34,7 +36,7 @@
             >
             </codx-temp-full>
             <codx-temp-full
-              *ngIf="approver.roleType?.length > 1"
+              *ngIf="approver.roleType?.length > 1 && approver.roleType != 'PA'"
               [imageSrc]="
                 './assets/themes/sys/default/img/' +
                 (item.icon ? item.icon : 'share_default.svg')

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NoteBooksComponent } from './note-books.component';
+import { PopupViewImageComponent } from './popup-view-image.component';
 
-describe('NoteBooksComponent', () => {
-  let component: NoteBooksComponent;
-  let fixture: ComponentFixture<NoteBooksComponent>;
+describe('PopupViewImageComponent', () => {
+  let component: PopupViewImageComponent;
+  let fixture: ComponentFixture<PopupViewImageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NoteBooksComponent ]
+      declarations: [ PopupViewImageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NoteBooksComponent);
+    fixture = TestBed.createComponent(PopupViewImageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

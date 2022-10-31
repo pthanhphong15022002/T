@@ -160,7 +160,7 @@ export const routes: Routes = [
         component: SosComponent,
       },
       {
-        path: 'externalsign',
+        path: 'signature/:id',
         component: ExternalSigningComponent,
       },
       {

@@ -536,10 +536,6 @@ export class TMMeetingsComponent
     return true;
   }
 
-  // viewDetail(func, meeting) {
-  //   // this.codxService.navigate('', func.url, {
-  //   //   meetingID: data.meetingID,
-  //   // })};
   viewDetail(meeting) {
     this.tmService.getMeetingID(meeting.meetingID).subscribe((data) => {
       var resourceTaskControl = [];
@@ -609,14 +605,6 @@ export class TMMeetingsComponent
   //#region double click  view detail
   doubleClick(data) {
     this.viewDetail(data);
-    // if (this.listMoreFunc.length > 0) {
-    //   this.listMoreFunc.forEach((obj) => {
-    //     if (obj.functionID == 'TMT05011') this.urlView = obj.url;
-    //   });
-    //   this.codxService.navigate('', this.urlView, {
-    //     meetingID: data.meetingID,
-    //   });
-    // }
   }
   //end region
 
@@ -639,7 +627,8 @@ export class TMMeetingsComponent
       .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'UpdateMeetingsAsync', data)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.update(data);
+          this.view.dataService.update(data).subscribe()
+          ;
         }
       });
   }

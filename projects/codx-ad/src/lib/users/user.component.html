@@ -130,9 +130,20 @@
           class="d-flex flex-column text-right ms-6"
           *ngIf="data.status == '0'"
         >
-          <span [style.color]="data?.status | vll: 'AD002':'textColor' | async">
-            {{ data?.status | vll: "AD002":"text" | async }}
-          </span>
+          <div *ngIf="!data.stop; else stopTrue">
+            <span
+              [style.color]="data?.status | vll: 'AD002':'textColor' | async"
+            >
+              {{ data?.status | vll: "AD002":"text" | async }}
+            </span>
+          </div>
+          <ng-template #stopTrue>
+            <codx-label
+              fiedName="Stop"
+              [formModel]="view.formModel"
+              default="Ngưng sử dụng"
+            ></codx-label>
+          </ng-template>
         </div>
       </div>
     </div>
