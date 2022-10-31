@@ -46,6 +46,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   linkFile:any;
   isShow = false;
   isOffice=false;
+  isClose = false;
   public urlSafe: any;
   @Input() id: string;
   @Input() ext: string;
@@ -71,6 +72,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     if(data?.data)
     {
       this.dataFile = data.data
+      this.isClose = true;
     }
     // this.fileService.getFile(this.id).subscribe(item => {
     //   if (item != null) {
@@ -390,5 +392,9 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
 
     };
     window.addEventListener("message", window["librOfficeMessage"], false);
+  }
+  close()
+  {
+    this.dialog.close();
   }
 }
