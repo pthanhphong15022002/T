@@ -122,7 +122,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     //this.request.dataObj = { isKanban: '1' }; ///de test
     this.request.method = 'GetProcessStepsWithKanbanAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = {}; ///de test
+    this.request.dataObj = this.dataObj; ///de test
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';

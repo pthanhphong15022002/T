@@ -63,7 +63,7 @@
                                 <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
                                     <ng-container *ngIf="item.recID;else imageSrc">
                                         <codx-img [recId]="item.recID" [objectId]="item.objectID" [width]="100"
-                                            cssClass="pic" imageType="square">
+                                            cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
                                         </codx-img>
                                     </ng-container>
                                     <ng-template #imageSrc>
@@ -156,7 +156,7 @@
                                             <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
                                                 <ng-container *ngIf="item.recID;else imageSrc">
                                                     <codx-img [recId]="item.recID" [objectId]="item.objectID"
-                                                        [width]="100" cssClass="pic" imageType="square">
+                                                        [width]="100" cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
                                                     </codx-img>
                                                 </ng-container>
                                                 <ng-template #imageSrc>
@@ -427,7 +427,7 @@
                                     <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
                                         <ng-container *ngIf="item.recID;else imageSrc">
                                             <codx-img [recId]="item.recID" [objectId]="item.objectID" [width]="100"
-                                                cssClass="pic" imageType="square">
+                                                cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
                                             </codx-img>
                                         </ng-container>
                                         <ng-template #imageSrc>

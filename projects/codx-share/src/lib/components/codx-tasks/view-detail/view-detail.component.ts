@@ -86,8 +86,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         if (res) {
           this.itemSelected = res;
-          this.itemSelected['memoHTML'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo)
-          this.itemSelected['memoHTML2'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo2)
+          // this.itemSelected['memoHTML'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo)
+          // this.itemSelected['memoHTML2'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo2)
           this.viewTags = this.itemSelected?.tags;
           this.changeDetectorRef.detectChanges();
           this.loadTreeView();

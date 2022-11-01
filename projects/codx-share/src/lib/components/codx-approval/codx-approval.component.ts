@@ -69,7 +69,9 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     private esService: CodxEsService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+ 
+  }
   ngAfterViewInit(): void {
     this.views = [
       {
