@@ -105,7 +105,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
-    // this.dataObj = { processID: this.recIDProcess }; //tesst
+    this.dataObj = { processID: this.recIDProcess }; //tesst
 
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null);
