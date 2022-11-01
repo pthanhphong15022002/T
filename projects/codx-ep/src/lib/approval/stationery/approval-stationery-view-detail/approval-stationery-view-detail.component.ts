@@ -116,11 +116,19 @@ export class ApprovalStationeryViewDetailComponent
       // });
       if(data.status=='3'){
         event.forEach(func => {
-          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ || func.functionID == "EPT40303"/*MF Cấp phát*/ )
+          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/  )
           {
             func.disabled=false;
           }
         });  
+      }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ )
+          {
+            func.disabled=true;
+          }
+        }); 
       }
     }
   }

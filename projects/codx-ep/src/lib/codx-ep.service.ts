@@ -238,6 +238,16 @@ export class CodxEpService {
     );
   }
 
+  getBookingByRecID(recID: string) {
+    return this.api
+      .exec<any>(
+        'EP',
+        'BookingsBusiness',
+        'GetBookingByIDAsync',
+        recID
+      )
+  }
+
   updateResource(model: any, isAdd: boolean) {
     return this.api.callSv(
       'EP',

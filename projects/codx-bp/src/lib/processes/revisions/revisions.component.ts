@@ -59,7 +59,15 @@ export class RevisionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    if(this.revisions){
+      var lastVersion = this.revisions[this.revisions.length - 1];
+      if(lastVersion.comment != ''){
+        this.comment = lastVersion.comment;
+      }else{
+        this.comment = '';
+      }
+    }
+    console.log(lastVersion);
   }
 
   //#region event

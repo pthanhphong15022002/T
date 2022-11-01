@@ -223,7 +223,7 @@
 
   .e-input-group {
     border: none;
-    width: 91% !important;
+    width: 80% !important;
   }
 
   .e-input-group-other {
@@ -304,6 +304,8 @@
     margin-top: 7px;
     padding-left: 3px;
     font-weight: 500;
+    color: #1a73e8;
+    cursor: pointer;
   }
 
   .split {
@@ -311,5 +313,22 @@
     height: 32px;
     margin: 0 16px;
     width: 0;
+  }
+
+  .pd-10 {
+    padding: 10px;
+  }
+
+  .pd-s-e-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .pd-t-10 {
+    padding-top: 10px;
+  }
+
+  .m-l-4 {
+    margin-left: 6%;
   }
 }

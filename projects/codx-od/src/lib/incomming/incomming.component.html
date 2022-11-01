@@ -5,7 +5,7 @@
         data.agencyName,
         this.gridViewSetup?.AgencyName?.headerText
       )
-    " 
+    "
     cardCss="card-template border-bottom px-2 pt-4 pb-2" [formModel]="view.formModel"
     [icoStatus]="data?.urgency"
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
@@ -29,8 +29,8 @@
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [statusVll]="gridViewSetup['Status']['referedValue']"
     [icoStatus]="data?.urgency" [title]="data?.title" [status]="data.status" [date]="data.createdOn"
     [rootData]="data" [formModel]="view.formModel"
-    [setting]="setting" 
-    [footer]="cardImgFooter" 
+    [setting]="setting"
+    [footer]="cardImgFooter"
     [dataItem]="data">
   </codx-card-img>
 </ng-template>

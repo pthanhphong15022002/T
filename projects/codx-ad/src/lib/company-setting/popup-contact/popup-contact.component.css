@@ -1,20 +1,11 @@
-.col-2, .col-10, .col-12 {
-  padding-top: 10px;
-  padding-bottom: 10px;
- }
- .contact-map {
-   display: -webkit-box;
-   display: -webkit-flex;
-   display: -ms-flexbox;
-   display: flex;
- }
+.contact-map {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
 
- .contact-map-size {
-   height: 380px;
-   width: 100%;
- }
- .font_size {
-  font-size: 14px;
-  padding-top: 18px;
-  font-family: Roboto, Helvetica, "sans-serif" !important;
+.contact-map-size {
+  height: 380px;
+  width: 100%;
 }
