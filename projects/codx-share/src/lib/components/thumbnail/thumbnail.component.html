@@ -1,19 +1,19 @@
 <div style="max-height: 100px; overflow-y: auto;">
   <ng-container *ngIf="files != null && files.length > 0">
-    <div *ngFor="let item of files" class="d-flex align-items-center has-action-menu-1">
+    <div *ngFor="let item of files" class="d-flex align-items-center has-action-menu-1 mb-3">
       <div *ngIf="(item.data != null) then data else nodata"></div>
       <ng-template #data>
         <div (dblclick)="openFile(item.data.recID)" class="cursor-pointer">
           <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
           <ng-template #simple>
-            <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}"
-              imgCss="w-20px me-3 cursor-pointer" title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-20px me-3 cursor-pointer"
+              title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
               [desc]="getSubTitle(item.data.recID)" [descLine]="1">
             </codx-temp-full>
           </ng-template>
           <ng-template #full>
-            <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}"
-              imgCss="w-20px me-3 cursor-pointer" title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-20px me-3 cursor-pointer"
+              title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
               subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.createdBy}}"
               [desc]="getSubTitle(item.data.recID)" [descLine]="1">
             </codx-temp-full>
@@ -21,7 +21,8 @@
         </div>
 
         <div class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer">
-          <div class="btn btn-sm btn-icon btn-white cursor-pointer " *ngIf="hideDelete=='1'" (click)="deleteFile(item.data.recID)">
+          <div class="btn btn-sm btn-icon btn-white cursor-pointer " *ngIf="hideDelete=='1'"
+            (click)="deleteFile(item.data.recID)">
             <i class="icon-close text-danger icon-16"></i>
           </div>
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="openFile(item.data.recID)">
@@ -88,20 +89,20 @@
         <div (dblclick)="openFile(item.recID)" class="cursor-pointer">
           <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
           <ng-template #simple>
-            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}"
-              imgCss="w-20px me-3 cursor-pointer" title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
-              [descLine]="1">
+            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-3 cursor-pointer"
+              title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})" [descLine]="1">
             </codx-temp-full>
           </ng-template>
           <ng-template #full>
-            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}"
-              imgCss="w-20px me-3 cursor-pointer" title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
+            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-20px me-3 cursor-pointer"
+              title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
               subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1">
             </codx-temp-full>
           </ng-template>
         </div>
         <div class="action-menu-1 d-flex align-items-center cursor-pointer">
-          <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="hideDelete=='1'" (click)="deleteFile(item.recID)">
+          <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="hideDelete=='1'"
+            (click)="deleteFile(item.recID)">
             <i class="icon-close text-danger icon-16"></i>
           </div>
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" (click)="openFile(item.recID)">
