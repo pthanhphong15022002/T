@@ -36,7 +36,7 @@
         (changeDataMF)="changeDataMF($event, data)"
         [moreFuncCss]="'me-8'"
         [dataItem]="data"
-        [typeMF]="'hover'"
+        [typeMF]="'hover'" 
       >
       </codx-card-center>
       <!--   [iconCss]="data.sharedByOther ? 'icon-share' : ' '"
@@ -44,20 +44,30 @@
     </div>
   </ng-container>
 
-  <!-- <ng-template #headerTmp let-data>
-    <div class="d-flex align-items-center justify-content-between">
-      <div></div>
-      <div *ngIf="!data?.sharedByOther" [ngbPopover]="popoverLinks"
+  <ng-template #headerTmp let-data>
+      <div
+      class="h-30px me-3"
+      style="position: relative"
+    >
+      <codx-img
+        [width]="55"
+        class=""
+        [objectId]="data.iterationID"
+        [objectName]="data.iterationName"
+        [objectType]="view.formModel.entityName"
+      >
+      </codx-img>
+      <div style="position: absolute; float: right; bottom: 0px"  *ngIf="!data?.sharedByOther" [ngbPopover]="popover"
       #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
         <i class="icon-share text-primary text-hover-primary icon-20 m-2" ></i>
       </div>
     </div>
-    <ng-template #popoverLinks >
+    <ng-template #popover >
       <span>
         <codx-label name="lblLinkOnlineMeeting" [formModel]="view.formModel" default="Link họp online"></codx-label>
       </span>
     </ng-template>
-  </ng-template> -->
+  </ng-template>
 </ng-template>
 
 <ng-template #cardImgFooter let-data>
