@@ -10,7 +10,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: calc(100vh - 232px);
+    height: calc(100vh - 202px);
+
 }
 
 .personal-container .pw-menu {
@@ -150,6 +151,7 @@ codx-card-img .card-icon-nowrap {
     white-space: normal !important;
 }
 
+/*
 .pw-storgae .home-notebooks,
 .pw-storgae .home-storage {
     height: calc(100vh - 350px) !important;
@@ -158,7 +160,7 @@ codx-card-img .card-icon-nowrap {
 .pw-storgae .home-img {
     height: calc(100vh - 300px) !important;
 }
-
+*/
 .pw-feed ejs-listview {
     background-color: transparent;
 }
@@ -170,4 +172,12 @@ codx-card-img .card-icon-nowrap {
 .pw-storgae .container-fluid {
     padding: 0 !important;
     margin-top: 10px;
+}
+
+.e-listview .e-content {
+    padding-bottom: 0;
+}
+
+.e-list-item:last-child {
+    margin-bottom: 0 !important;
 }

@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FileUpload, View } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
 import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { CodxBpService } from '../codx-bp.service';
 
 @Component({
   selector: 'lib-properties',
@@ -27,20 +28,71 @@ export class PropertiesComponent implements OnInit {
   hovered = 0;
   commenttext: string = "";
   id: string;
+  vlL1473: any;
+  requestTitle: string;
 
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private fileService: FileService,
     private notificationsService: NotificationsService,
+    private bpSV: CodxBpService,
+    private cache: CacheService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.data = data.data;
+    this.totalRating = 0;
   }
 
   ngOnInit(): void {
+    this.cache.valueList("L1473").subscribe(item => {
+      if (item && item.datas) {
+        this.vlL1473 = item.datas;
+      }
+      this.openProperties(this.data.recID);
+    });
+
+    //  document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 460px; z-index: 1000;");
+    this.changeDetectorRef.detectChanges();
+  }
+
+  openProperties(id): void {
+    this.id = id;
+    this.totalViews = 0;
+    this.readonly = false;
+    this.commenttext = '';
+    this.requestTitle = "";
+    this.changeDetectorRef.detectChanges();
+    // this.fileService.getFile(id, false).subscribe(async res => {
+    //   if (res != null) {
+    //     this.fileEditing = res;
+
+    //     if (this.fileEditing.version != null) {
+    //       this.fileEditing.version = this.fileEditing.version.replace('Ver ', 'V');
+    //     }
+    //     if (this.fileEditing.language) {
+    //       if (this.vlL1473 && this.vlL1473 && this.vlL1473.length) {
+    //         var lang = this.vlL1473.filter(x => x.value === this.fileEditing.language);
+    //         if (lang && lang[0]) {
+    //           this.fileEditing.language /* this.namelanguage */ = lang[0].text;
+    //         }
+    //       }
+    //     }
+
+    //     this.onUpdateTags();
+    //     this.currentRate = 1;
+    //     this.getRating(res.views);
+    //     // var files = this.dmSV.listFiles;
+    //     // if (files != null) {
+    //     //   this.dmSV.listFiles = files;
+    //       this.bpSV.ChangeData.next(true);
+    //     // }
+
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // });
   }
 
   extendShow(): void {
@@ -116,6 +168,13 @@ export class PropertiesComponent implements OnInit {
     }
     this.totalRating = parseFloat(this.totalRating.toFixed(2));
     this.styleRating = (this.totalRating * 2 * 10).toFixed(2).toString() + "%";
+  }
+
+  onUpdateTags() {
+    if (this.fileEditing.tags != null) {
+      var list = this.fileEditing.tags.split(";");
+      this.bpSV.listTags.next(list);
+    }
   }
 
   txtValue($event, type) {
