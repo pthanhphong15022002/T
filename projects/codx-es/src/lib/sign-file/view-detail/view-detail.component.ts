@@ -12,6 +12,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AuthStore,
+  CacheService,
   CallFuncService,
   DialogModel,
   DialogRef,
@@ -38,7 +39,8 @@ export class ViewDetailComponent implements OnInit {
     private callfunc: CallFuncService,
     private notify: NotificationsService,
     private router: ActivatedRoute,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private cache: CacheService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
@@ -155,6 +157,8 @@ export class ViewDetailComponent implements OnInit {
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {
           if (res) {
+            if (res.refType != null) {
+            }
             this.itemDetail = res;
             this.df.detectChanges();
           }

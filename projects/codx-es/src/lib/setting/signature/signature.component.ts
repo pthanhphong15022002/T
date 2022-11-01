@@ -14,6 +14,7 @@ import {
   CallFuncService,
   DialogRef,
   FormModel,
+  LayoutService,
   SidebarModel,
   ViewModel,
   ViewsComponent,
@@ -71,7 +72,8 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     private cacheSv: CacheService,
     private readonly auth: AuthService,
     private activedRouter: ActivatedRoute,
-    private esService: CodxEsService
+    private esService: CodxEsService,
+    private layout: LayoutService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
@@ -82,6 +84,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   views: Array<ViewModel> = [];
   moreFunc: Array<ButtonModel> = [];
   ngOnInit(): void {
+    this.layout.showIconBack = true;
     this.esService.getFormModel(this.funcID).then((fm) => {
       if (fm) this.formModel = fm;
     });
