@@ -8,7 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
 import {
+  AuthStore,
   CallFuncService,
   DialogModel,
   DialogRef,
@@ -34,9 +37,11 @@ export class ViewDetailComponent implements OnInit {
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private authStore: AuthStore
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
+    this.user = this.authStore.get();
   }
 
   @Input() itemDetail: any;
@@ -62,6 +67,8 @@ export class ViewDetailComponent implements OnInit {
   cancelControl: string = ''; //Yêu cầu khi hủy duyệt
   oCancelSF: any; // object cancel
 
+  user: any; //user loggin
+
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
 
@@ -83,7 +90,10 @@ export class ViewDetailComponent implements OnInit {
       this.initForm();
     } else {
       this.esService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) this.formModel = formModel;
+        if (formModel) {
+          this.formModel = formModel;
+          this.esService.setCacheFormModel(this.formModel);
+        }
         console.log(this.formModel);
 
         this.initForm();
@@ -201,6 +211,41 @@ export class ViewDetailComponent implements OnInit {
     this.itemDetailDataStt = stt;
   }
 
+  //#region MoreFunc viewDetai
+  changeDataMF(e: any, data: any) {
+    var bookmarked = false;
+    let lstBookmark = data?.bookmarks;
+    if (lstBookmark) {
+      let isbookmark = lstBookmark.filter(
+        (p) => p.objectID == this.user.userID
+      );
+      if (isbookmark?.length > 0) {
+        bookmarked = true;
+      }
+    }
+    var bm = e.filter(
+      (x: { functionID: string }) => x.functionID == 'EST01103'
+    );
+    var unbm = e.filter(
+      (x: { functionID: string }) => x.functionID == 'EST01104'
+    );
+
+    if (bookmarked == true) {
+      bm[0].disabled = true;
+      unbm[0].disabled = false;
+    } else {
+      unbm[0].disabled = true;
+      bm[0].disabled = false;
+    }
+
+    if (data.approveStatus == '0') {
+      var cancel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01101'
+      );
+      cancel[0].disabled = true;
+    }
+  }
+
   openFormFuncID(val: any, datas: any = null) {
     var funcID = val?.functionID;
     if (!datas) {
@@ -216,7 +261,7 @@ export class ViewDetailComponent implements OnInit {
 
     switch (val?.functionID) {
       case 'SYS03':
-        this.edit(datas);
+        this.edit(datas, val);
         break;
       case 'SYS02':
         this.delete(datas);
@@ -226,6 +271,15 @@ export class ViewDetailComponent implements OnInit {
         break;
       case 'EST01101': //hủy yeu cau duyệt
         this.beforeCancel(datas);
+        break;
+      case 'EST01102': //Xem van ban
+        this.viewFile(datas, val);
+        break;
+      case 'EST01103': //bookmark
+        this.bookmark(datas);
+        break;
+      case 'EST01104': //unBookmark
+        this.unBookmark(datas);
         break;
     }
   }
@@ -252,7 +306,7 @@ export class ViewDetailComponent implements OnInit {
     }
   }
 
-  edit(datas: any) {
+  edit(datas: any, mF: any) {
     this.view.dataService.edit(datas).subscribe((res: any) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -271,6 +325,7 @@ export class ViewDetailComponent implements OnInit {
           dataSelected: datas,
           formModel: this.view?.formModel,
           option: option,
+          headerText: mF?.text,
         },
         '',
         dialogModel
@@ -369,6 +424,59 @@ export class ViewDetailComponent implements OnInit {
         }
       });
   }
+
+  viewFile(datas: any, mF: any) {
+    this.view.dataService.edit(datas).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      let dialogAdd = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        mF?.text,
+        700,
+        650,
+        this.funcID,
+        {
+          modeView: true,
+          isAddNew: false,
+          dataSelected: datas,
+          formModel: this.view?.formModel,
+          option: option,
+          headerText: mF?.text,
+        },
+        '',
+        dialogModel
+      );
+    });
+  }
+
+  bookmark(datas: any) {
+    let bookmark = { objectID: this.user.userID };
+    if (!datas.bookmarks) {
+      datas.bookmarks = [];
+    }
+    datas.bookmarks.push(bookmark);
+
+    this.esService
+      .bookmarkSingFile(datas.recID, datas.bookmarks)
+      .subscribe((res) => {
+        if (res) {
+          this.notify.notifyCode('OD002');
+        } else {
+          this.notify.notifyCode('OD002');
+        }
+      });
+    console.log(datas);
+
+    //this.esService.bookmarkSingFile(datas.recID, )
+  }
+
+  unBookmark(datas: any) {}
+
+  //#endregion
 
   checkOpenForm(val: any) {
     // if(val == "ODT108" && this.checkUserPer?.created) return true;

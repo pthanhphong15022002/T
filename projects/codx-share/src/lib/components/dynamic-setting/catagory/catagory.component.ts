@@ -53,7 +53,6 @@ export class CatagoryComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    debugger
     if (data) {
       this.setting = data.data?.setting;
 
@@ -427,6 +426,5 @@ export class CatagoryComponent implements OnInit {
   }
   checkA(e:any)
   {
-    debugger;
   }
 }

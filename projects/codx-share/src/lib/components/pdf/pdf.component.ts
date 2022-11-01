@@ -731,7 +731,7 @@ export class PdfComponent
                     let url =
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature1 ?? area.labelValue;
+                      )?.signature1 ?? area.labelValue;
 
                     let isUrl = this.checkIsUrl(url);
                     this.addArea(
@@ -754,7 +754,7 @@ export class PdfComponent
                     let url =
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).signature2 ?? area.labelValue;
+                      )?.signature2 ?? area.labelValue;
                     let isUrl = this.checkIsUrl(url);
                     this.addArea(
                       url,
@@ -776,7 +776,7 @@ export class PdfComponent
                     let url =
                       this.lstSigners.find(
                         (signer) => signer.authorID == area.signer
-                      ).stamp ?? area.labelValue;
+                      )?.stamp ?? area.labelValue;
                     let isUrl = this.checkIsUrl(url);
                     this.addArea(
                       url,

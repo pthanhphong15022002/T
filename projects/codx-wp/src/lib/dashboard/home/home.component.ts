@@ -7,11 +7,12 @@ import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.
   selector: 'codx-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit {
 
   constructor(
-    private callFC:CallFuncService,
+    private callFC: CallFuncService,
     private page: PageTitleService,
     private cache: CacheService,
     private router: ActivatedRoute
@@ -20,18 +21,17 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.router.params.subscribe((params) => {
       let funcID = params['funcID'];
-      this.cache.functionList(funcID).subscribe(f=>{
-        if(f){
+      this.cache.functionList(funcID).subscribe(f => {
+        if (f) {
           this.page.setSubTitle(f.customName);
         }
       });
-    });    
+    });
   }
 
-  clickShowPopupSearch()
-  {
+  clickShowPopupSearch() {
     let option = new DialogModel();
     option.IsFull = true;
-    this.callFC.openForm(PopupSearchPostComponent,"",0,0,"",null,"",option);
+    this.callFC.openForm(PopupSearchPostComponent, "", 0, 0, "", null, "", option);
   }
 }

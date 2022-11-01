@@ -1,15 +1,17 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { X } from '@angular/cdk/keycodes';
-import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Injector,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   MultiSelectService,
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import { UIComponent } from 'codx-core';
-import { SV_Answers } from '../model/SV_Answers';
-import { SV_Formats } from '../model/SV_Formats';
-import { SV_Questions } from '../model/SV_Questions';
 import { SV_Surveys } from '../model/SV_Surveys';
 
 @Component({
@@ -237,6 +239,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   onInit(): void {
     // this.add();
   }
+
+  ngAfterViewInit() {
+    var html = document.querySelector('codx-wrapper');
+    if (html) {
+      html.addEventListener('scroll', (e) => {
+        var htmlMF = document.querySelector('.moreFC');
+        if (htmlMF) htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
+      });
+    }
+  }
+
   valueChange(e) {
     console.log(e);
   }
@@ -274,24 +287,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   scroll(el: HTMLElement, index) {
-    if (el) {
-      el.scroll({
-        // behavior: 'smooth',
-        // block: 'start',
-        // inline: 'nearest',
-        top: 100,
-        left: 100,
-        behavior: 'smooth',
-      });
-      var indexT = this.questions.findIndex((x) => x.activeMF == true);
-      this.questions[indexT].activeMF = false;
-      this.questions[index].activeMF = true;
-    }
-    console.log("check questions", this.questions)
+    var html = document.getElementById(`card-survey-${index}`);
+    var htmlE = html as HTMLElement;
+    var htmlMF = document.querySelector('.moreFC');
+    if (htmlMF)
+      htmlMF.setAttribute('style', `top: calc(${htmlE.offsetTop}px - 151px);`);
   }
-
-  scrollWindow() {
-    debugger
-  }
-  
 }

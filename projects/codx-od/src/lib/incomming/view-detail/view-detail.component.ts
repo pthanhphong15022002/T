@@ -122,7 +122,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.pfuncID?.currentValue != changes?.pfuncID?.previousValue) {
-      debugger;
       this.pfuncID = changes?.pfuncID?.currentValue;
       if (this.pfuncID) this.getGridViewSetup(this.pfuncID);
     }
