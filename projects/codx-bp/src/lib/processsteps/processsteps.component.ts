@@ -86,6 +86,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   lockParent = false;
   childFunc = [];
   formModel: FormModel;
+  formModelMenu :FormModel ;
 
   constructor(
     inject: Injector,
@@ -105,7 +106,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
-    // this.dataObj = { processID: this.recIDProcess }; //tesst
+    this.dataObj = { processID: this.recIDProcess }; //tesst
 
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null);
@@ -122,7 +123,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     //this.request.dataObj = { isKanban: '1' }; ///de test
     this.request.method = 'GetProcessStepsWithKanbanAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = {}; ///de test
+    this.request.dataObj = this.dataObj; ///de test
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
@@ -193,7 +194,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.view.dataService.dataSelected.processID = this.recIDProcess;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        ['add', this.titleAction, this.stepType],
+        ['add', this.titleAction, this.stepType,this.formModelMenu],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -251,6 +252,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             'edit',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
+            this.formModelMenu
           ],
           option
         );
@@ -353,6 +355,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             'copy',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
+            this.formModelMenu
           ],
           option
         );
@@ -473,14 +476,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     }
 
-    //test
-    // this.formModel = this.view?.formModel
-    // var funcMenu = this.childFunc.find(x=>x.id==this.stepType) ;
-    // if(funcMenu){
-    //   this.formModel.formName = funcMenu.formName ;
-    //   this.formModel.gridViewName = funcMenu.gridViewName ;
-    //   this.formModel.funcID = funcMenu.funcID ;
-    // }
+    // test
+    this.formModelMenu = this.view?.formModel
+    var funcMenu = this.childFunc.find(x=>x.id==this.stepType) ;
+    if(funcMenu){
+      this.formModelMenu.formName= funcMenu.formName ;
+      this.formModelMenu.gridViewName = funcMenu.gridViewName ;
+      this.formModelMenu.funcID = funcMenu.funcID ;
+    }
   }
 
   receiveMF(e: any) {
@@ -491,13 +494,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.itemSelected = data;
     this.titleAction = e.text;
     //test
-    // this.formModel = this.view?.formModel
-    // var funcMenu = this.childFunc.find(x=>x.id==this.data?.stepType) ;
-    // if(funcMenu){
-    //   this.formModel.formName = funcMenu.formName ;
-    //   this.formModel.gridViewName = funcMenu.gridViewName ;
-    //   this.formModel.funcID = funcMenu.funcID ;
-    // }
+    this.formModelMenu = this.view?.formModel
+    var funcMenu = this.childFunc.find(x=>x.id==this.stepType) ;
+    if(funcMenu){
+      this.formModelMenu.formName= funcMenu.formName ;
+      this.formModelMenu.gridViewName = funcMenu.gridViewName ;
+      this.formModelMenu.funcID = funcMenu.funcID ;
+    }
     switch (e.functionID) {
       case 'SYS01':
         this.add();

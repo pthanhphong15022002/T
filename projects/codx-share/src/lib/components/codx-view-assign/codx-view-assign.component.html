@@ -40,6 +40,12 @@
                 <span
                   *ngIf="data?.isTimeOut"
                   class="icon-notifications expired icon-16 ms-1"
+                  [ngbPopover]="popOverDue"
+                  #popOver="ngbPopover"
+                  [openDelay]="500"
+                  (mouseenter)="popOver.open()"
+                  (mouseleave)="popOver.close()"
+                  placement="top right"
                 ></span>
               </div>
               <div class="text-gray-700 text-italic fs-7">
@@ -98,4 +104,15 @@
       </div>
     </div>
   </ng-container>
+
+  <ng-template #popOverDue>
+    <span>
+      <codx-label
+        name="lblOverDue"
+        [formName]="'Tasks'"
+        [gridViewName]="'grvTasks'"
+        default="Đã quá hạn!"
+      ></codx-label>
+    </span>
+  </ng-template>
 </ng-template>

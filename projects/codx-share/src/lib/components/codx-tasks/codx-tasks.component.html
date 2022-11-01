@@ -48,7 +48,7 @@
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
     [hideMF]="!showMoreFunc"
-
+    [moreFuncCss]="'me-15'"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     [imageId]="data.createdBy"
