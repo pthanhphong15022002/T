@@ -1,18 +1,18 @@
 <ng-container>
-    <codx-views
-      #view
-      service="TM"
-      entityName="TM_Sprints"
-      idField="iterationID"
-      assemblyName="ERM.Business.TM"
-      className="SprintsBusiness"
-      method="GetListSprintAsync"
-      [views]="views"
-      [button]="button"
-      [autoLoad]="true"
-      (buttonClick)="click($event)"
-    >
-    </codx-views>
+  <codx-views
+    #view
+    service="TM"
+    entityName="TM_Sprints"
+    idField="iterationID"
+    assemblyName="ERM.Business.TM"
+    className="SprintsBusiness"
+    method="GetListSprintAsync"
+    [views]="views"
+    [button]="button"
+    [autoLoad]="true"
+    (buttonClick)="click($event)"
+  >
+  </codx-views>
 </ng-container>
 
 <ng-template #itemViewBoard let-data>
@@ -27,18 +27,47 @@
         [imageObjName]="data.iterationName"
         [imageObjType]="view.formModel.entityName"
         [imageWidth]="55"
-        [title]="placeholder(data.iterationName,view.formModel, 'IterationName') | async"
+        [title]="
+          placeholder(data.iterationName, view.formModel, 'IterationName')
+            | async
+        "
         [footer]="cardImgFooter"
         (clickMF)="clickMF($event, data)"
         (changeDataMF)="changeDataMF($event, data)"
+        [moreFuncCss]="'me-8'"
         [dataItem]="data"
-        [typeMF]="'hover'"
+        [typeMF]="'hover'" 
       >
       </codx-card-center>
-      <!--  [titleTmp]="titleTemp" //cai nay dùng core chung mơi hiẹn  [title]="placeholder(data.iterationName,view.formModel, 'IterationName') | async" [desc2]="placeholder(data.memo,view.formModel, 'Memo') | async"  [icoDescCss]="'icon-assignment ' + (data.projectName? '':'opacity-50' )  [desc]="placeholder(data.projectName,view.formModel, 'ProjectName') | async" "-->
+      <!--   [iconCss]="data.sharedByOther ? 'icon-share' : ' '"
+        [iconColorCss]="'blue'" [titleTmp]="titleTemp" //cai nay dùng core chung mơi hiẹn  [title]="placeholder(data.iterationName,view.formModel, 'IterationName') | async" [desc2]="placeholder(data.memo,view.formModel, 'Memo') | async"  [icoDescCss]="'icon-assignment ' + (data.projectName? '':'opacity-50' )  [desc]="placeholder(data.projectName,view.formModel, 'ProjectName') | async" "-->
     </div>
   </ng-container>
 
+  <ng-template #headerTmp let-data>
+      <div
+      class="h-30px me-3"
+      style="position: relative"
+    >
+      <codx-img
+        [width]="55"
+        class=""
+        [objectId]="data.iterationID"
+        [objectName]="data.iterationName"
+        [objectType]="view.formModel.entityName"
+      >
+      </codx-img>
+      <div style="position: absolute; float: right; bottom: 0px"  *ngIf="!data?.sharedByOther" [ngbPopover]="popover"
+      #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
+        <i class="icon-share text-primary text-hover-primary icon-20 m-2" ></i>
+      </div>
+    </div>
+    <ng-template #popover >
+      <span>
+        <codx-label name="lblLinkOnlineMeeting" [formModel]="view.formModel" default="Link họp online"></codx-label>
+      </span>
+    </ng-template>
+  </ng-template>
 </ng-template>
 
 <ng-template #cardImgFooter let-data>
@@ -61,4 +90,3 @@
     {{ data?.iterationName }}
   </div>
 </ng-template>
-

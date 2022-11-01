@@ -45,6 +45,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   @Output() selectedChange = new EventEmitter<any>();
   funcID: any;
   transID: any;
+  recID: any;
   views: Array<ViewModel> | any = [];
   button?: ButtonModel;
   gridViewSetup: any;
@@ -97,13 +98,16 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     if (dt?.data) {
       if (dt?.data[0]) {
         this.transID = dt.data[0].transID;
+        this.recID = dt.data[0].recID;
         this.dataItem = dt?.data[0];
       } else {
         this.transID = dt?.data?.transID;
+        this.recID = dt?.data?.recID;
         this.dataItem = dt?.data;
       }
     } else if (dt?.transID) {
       this.transID = dt.transID;
+      this.recID = dt?.recID;
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {

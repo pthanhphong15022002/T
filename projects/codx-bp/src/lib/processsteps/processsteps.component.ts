@@ -105,13 +105,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       processID: this.process?.recID ? this.process?.recID : '',
     };
 
-    // this.dataObj = { processID: this.recIDProcess }; //tesst
-    if (!this.dataObj?.processID) {
-      this.codxService.navigate('', this.urlBack);
-      this.codxService.navigate('', 'bp/processes/BPT1');
-    }
+    this.dataObj = { processID: this.recIDProcess }; //tesst
+
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null);
+    if (!this.dataObj?.processID)
+    this.codxService.navigate('', this.urlBack);
   }
 
   onInit(): void {

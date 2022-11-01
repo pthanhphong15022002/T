@@ -198,6 +198,7 @@ export class HomeComponent extends UIComponent {
       if (params?.id) {
         var dialogModel = new DialogModel();
         dialogModel.IsFull = true;
+        this.dmSV.folderId.next('');
         this.fileService.getFile(params?.id).subscribe((data) => {
           if (data.read) {
             this.callfc.openForm(
@@ -249,7 +250,6 @@ export class HomeComponent extends UIComponent {
       if (res) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (tree) {
-         debugger;
           tree.removeNodeTree(res);
           var breadcumb = [];
           var breadcumbLink = [];
@@ -348,7 +348,6 @@ export class HomeComponent extends UIComponent {
     });
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
-        debugger;
         var result = this.dmSV.listFolder;
         if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
           result = result.concat(this.dmSV.listFiles);
@@ -569,7 +568,6 @@ export class HomeComponent extends UIComponent {
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
     let item = $data.data;
-    debugger;
     if (item?.read) {
       if (item.extension) {
         var dialogModel = new DialogModel();
@@ -614,7 +612,6 @@ export class HomeComponent extends UIComponent {
         this.dmSV.level = item.level;
         this.dmSV.getRight(item);
 
-        this.data = [];
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
         this.folderService.options.srtColumns = this.sortColumn;
@@ -627,8 +624,8 @@ export class HomeComponent extends UIComponent {
             this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
             var tree = this.codxview?.currentView?.currentComponent?.treeView;
             item.items = [];
-            if (tree) tree.addChildNodes(item, res[0]);
-            this.changeDetectorRef.detectChanges();
+            //if (tree) tree.addChildNodes(item, res[0]);
+            //this.changeDetectorRef.detectChanges();
             this._beginDrapDrop();
           }
         });
@@ -653,6 +650,7 @@ export class HomeComponent extends UIComponent {
         });
       }
     } else {
+      //this.data = [];
       if (item?.read) this.notificationsService.notify(this.titleAccessDenied);
     }
   }
@@ -810,11 +808,10 @@ export class HomeComponent extends UIComponent {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
-
     //  this.data = [];
-    //  this.changeDetectorRef.detectChanges();
   }
   viewChanging(event) {
+ 
     if (event.text != 'Search' && this.view.formModel.funcID != 'DMT02') {
       this.data = [];
       this.dmSV.page = 1;

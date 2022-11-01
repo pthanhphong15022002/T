@@ -158,6 +158,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
     
     public dmSV: CodxDMService,
     private auth: AuthService,
+    //private callFC:CallFuncService,
 
     private element: ElementRef, //
     // private chatService: ChatService,//
@@ -694,7 +695,20 @@ groupName = "";
         event = "";
       }
       this.view.dataService.search(event).subscribe();
-      
-      
     }
+    /* searchMess(event){
+      if(event){
+        this.searchMessCheck = true;
+        event.searchMessCheck = true;
+        
+      }else{
+        this.searchMessCheck = false;
+        event = "";
+      }
+      this.view.dataService.search(event).subscribe();
+    } */
+    /* onClosearch(){
+
+      this.clickCheck = false;
+    } */
 }
