@@ -1313,6 +1313,26 @@ export class CodxEsService {
       [predicate, dataValue]
     );
   }
+
+  getEntity(entityName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'EntitiesBusiness',
+      'GetCacheEntityAsync',
+      [entityName]
+    );
+  }
+
+  getod(recID: string) {
+    return this.api.execSv<any>(
+      'OD',
+      'ERM.Business.OD',
+      'DispatchesBusiness',
+      'GetItemByIDAsync',
+      [recID]
+    );
+  }
 }
 export class LayoutModel {
   isChange: boolean = false;

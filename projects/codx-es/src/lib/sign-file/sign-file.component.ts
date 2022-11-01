@@ -315,7 +315,6 @@ export class SignFileComponent extends UIComponent {
   }
 
   isBookmark(data) {
-    debugger;
     let bookmarked = false;
     let lstBookmark = data?.bookmarks;
     if (lstBookmark) {
