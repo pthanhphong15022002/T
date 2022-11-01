@@ -214,7 +214,6 @@
             </e-items>
           </ejs-toolbar>
         </div>
-
         <div
           class="chooseSignFile w-100 d-flex justify-content-center align-items-center"
           #pdfToolbar
@@ -289,13 +288,14 @@
         <ng-container *ngIf="isConfirm" [ngTemplateOutlet]="confirmCheckbox">
         </ng-container>
       </div>
+      <!-- [customToolbar]="pdfToolbar" -->
       <ngx-extended-pdf-viewer
+        [showToolbar]="false"
         *ngIf="curFileUrl"
         #ngxPdfView
         [(src)]="curFileUrl"
         [(zoom)]="zoomValue"
         [(page)]="curPage"
-        [customToolbar]="pdfToolbar"
         [showHandToolButton]="false"
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
@@ -524,11 +524,12 @@
                       </codx-temp-full>
                       <div
                         [class.d-none]="
-                          inputUrl != null ||
-                          area.recID != curSelectedAnnotID ||
-                          area.labelType == '1' ||
-                          area.labelType == '2' ||
-                          area.isLock == true
+                          !isPublic &&
+                          (inputUrl != null ||
+                            area.recID != curSelectedAnnotID ||
+                            area.labelType == '1' ||
+                            area.labelType == '2' ||
+                            area.isLock == true)
                         "
                         [formGroup]="formAnnot"
                       >
@@ -594,13 +595,13 @@
                             *ngIf="imgConfig.includes(area.labelType)"
                           >
                             <img
+                              [id]="area.recID"
                               *ngIf="!isPublic"
                               class="img"
                               [src]="area.labelValue"
                             />
                             <codx-img
                               *ngIf="isPublic && area.labelType == 'S1'"
-                              #imgSignature1
                               class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                               [imageType]="'square'"
                               [width]="80"
@@ -612,38 +613,12 @@
                               data-kt-menu-flip="bottom"
                               [isAllowEdit]="true"
                               [funcId]=""
-                            >
-                            </codx-img>
-                            <codx-img
-                              *ngIf="isPublic && area.labelType == 'S2'"
-                              #imgSignature2
-                              class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                              [imageType]="'square'"
-                              [width]="80"
-                              [objectId]=""
-                              [objectType]=""
-                              data-kt-menu-trigger="click"
-                              data-kt-menu-attach="parent"
-                              data-kt-menu-placement="bottom-end"
-                              data-kt-menu-flip="bottom"
-                              [isAllowEdit]="true"
-                              [funcId]=""
-                            >
-                            </codx-img>
-                            <codx-img
-                              *ngIf="isPublic && area.labelType == 'S3'"
-                              #imgStamp
-                              class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                              [imageType]="'square'"
-                              [width]="80"
-                              [objectId]=""
-                              [objectType]=""
-                              data-kt-menu-trigger="click"
-                              data-kt-menu-attach="parent"
-                              data-kt-menu-placement="bottom-end"
-                              data-kt-menu-flip="bottom"
-                              [isAllowEdit]="true"
-                              [funcId]=""
+                              (handleInput)="
+                                changeSignature_StampImg_Area_Immediate(
+                                  area,
+                                  $event
+                                )
+                              "
                             >
                             </codx-img>
                           </div>
@@ -750,6 +725,7 @@
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button
+                            *ngIf="!isPublic"
                             type="button"
                             class="btn btn-sm btn-primary"
                             (click)="removeArea()"
@@ -995,8 +971,8 @@
   <codx-input
     type="number"
     id="pageNumber"
-    [min]="1"
-    [max]="pageMax"
+    min="1"
+    [(max)]="pageMax"
     [(crrValue)]="curPage"
     (valueChange)="goToPage($event)"
     [showSpinButton]="false"

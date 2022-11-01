@@ -34,6 +34,7 @@ export class CodxCommentHistoryComponent implements OnInit {
   message: string = "";
   lstFile: any[] = [];
   grdSetUp:any;
+  date = new Date();
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -148,18 +149,22 @@ export class CodxCommentHistoryComponent implements OnInit {
           this.codxATM.objectType = "BG_TrackLogs";
           this.lstFile.map((e:any) => {
             e.objectId = res1.recID;
-          })
-          this.codxATM.fileUploadList = this.lstFile;          
+          });
+          this.codxATM.fileUploadList = this.lstFile;  
           (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
             if(res2){
+              this.lstFile.unshift(res2.data);
               this.evtSend.emit(res1);
               this.notifySV.notifyCode("WP034"); 
-              this.clearData();   
+              this.clearData();  
+              this.lstFile = [...this.lstFile]; 
+              this.dt.detectChanges();
             }
           })
         }
         else
         {
+           
             this.evtSend.emit(res1);
             this.notifySV.notifyCode("WP034");
             this.clearData();   

@@ -37,6 +37,10 @@ export const routes: Routes = [
         component: ProcessesComponent,
       },
       {
+        path: 'approvals/:funcID',
+        component: ProcessesComponent,
+      },
+      {
         path: 'testhtml',
         component: TesthtmlComponent,
       },

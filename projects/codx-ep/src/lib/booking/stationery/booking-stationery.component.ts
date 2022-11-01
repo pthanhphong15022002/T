@@ -227,6 +227,10 @@ export class BookingStationeryComponent
 
   allocate(evt: any) {
     if (evt) {
+      this.view.dataService.dataSelected.issusStatus = '2';
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {});
     }
   }
 
