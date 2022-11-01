@@ -242,6 +242,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
+  
   getDetailBooking(id: any) {
     this.api
       .exec<any>(
