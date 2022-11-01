@@ -42,6 +42,7 @@ import {
   ES_SignFile,
   SetupShowSignature,
 } from 'projects/codx-es/src/lib/codx-es.model';
+import { text } from 'stream/consumers';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -120,7 +121,7 @@ export class PdfComponent
   curPage = 1;
 
   //zoom
-  zoomValue: any = 50;
+  zoomValue: any = 100;
   zoomFields = { text: 'show', value: 'realValue' };
   lstZoomValue = [
     { realValue: '25', show: 25 },
@@ -331,8 +332,6 @@ export class PdfComponent
       changes['inputUrl'] &&
       changes['inputUrl']?.currentValue != changes['inputUrl']?.previousValue
     ) {
-      console.log('changes', changes);
-
       this.curFileUrl = changes['inputUrl']?.currentValue;
       this.detectorRef.detectChanges();
     }
@@ -385,9 +384,6 @@ export class PdfComponent
 
   //go to
   goToSelectedCA(ca, idx) {
-    console.log('page size', this.pageH, this.pageW);
-
-    console.log('ca', ca);
     this.lstCACollapseState[idx].open = !this.lstCACollapseState[idx].open;
     this.curPage = this.lstCA[idx].signedPosPage;
     if (!ca.isVerified) {
@@ -430,13 +426,9 @@ export class PdfComponent
   }
 
   goToSelectedAnnotation(area: tmpSignArea) {
-    console.log('area', area);
-
     if (this.curPage != area.location.pageNumber + 1) {
       this.curPage = area.location.pageNumber + 1;
     }
-    console.log('area', area);
-
     this.curSelectedArea = this.lstLayer
       .get(area.location.pageNumber + 1)
       .children?.find((node) => {
@@ -471,16 +463,11 @@ export class PdfComponent
         this.curAnnotFontSize = area.fontSize;
         this.curAnnotFontStyle = area.fontStyle;
         this.curAnnotDateFormat = area.dateFormat;
-        console.log('date format', this.curAnnotDateFormat);
         this.useSignDate = area.signDate;
         this.curSignDateType = area.signDate
           ? this.lstSignDateType[1]
           : this.lstSignDateType[0];
         this.curSelectedAnnotID = area.recID;
-        console.log('signdate', this.useSignDate);
-
-        console.log('curSignDateType format', this.curSignDateType);
-
         this.detectorRef.detectChanges();
       }
     }
@@ -944,6 +931,8 @@ export class PdfComponent
               this.tr.nodes([]);
             } else {
               this.curSelectedArea = click.target;
+              console.log('cur click area', this.curSelectedArea);
+
               this.tr.resizeEnabled(
                 this.isEditable == false
                   ? false
@@ -1178,40 +1167,99 @@ export class PdfComponent
     this.checkedConfirm = e.data;
     this.confirmChange.emit(e.data);
   }
+
   changeSignature_StampImg(area: tmpSignArea) {
+    let setupShowForm = new SetupShowSignature();
+    let model = {
+      userID: area.signer,
+      signatureType: area.signatureType,
+    };
+    let data = {
+      data: model,
+      setupShowForm: setupShowForm,
+    };
+
     switch (area.labelType) {
       case 'S1': {
         // thiet lap chu ki nhay
-        let setupShowForm = new SetupShowSignature();
         setupShowForm.showSignature1 = true;
-        this.addSignature(setupShowForm);
-        return;
-        this.url = this.signerInfo?.signature1
-          ? this.signerInfo?.signature1
-          : '';
         break;
       }
       case 'S2': {
         // thiet lap chu ki nhay
-        let setupShowForm = new SetupShowSignature();
         setupShowForm.showSignature2 = true;
-        this.addSignature(setupShowForm);
-        return;
-        this.url = this.signerInfo?.signature2
-          ? this.signerInfo?.signature2
-          : '';
         break;
       }
       case 'S3': {
         // thiet lap con dau
-        let setupShowForm = new SetupShowSignature();
         setupShowForm.showStamp = true;
-        this.addSignature(setupShowForm);
-        return;
-        this.url = this.signerInfo?.stamp ? this.signerInfo?.stamp : '';
         break;
       }
     }
+    let popupSignature = this.callfc.openForm(
+      PopupSignatureComponent,
+      '',
+      800,
+      600,
+      '',
+      data
+    );
+    popupSignature.closed.subscribe((res) => {
+      if (res?.event[0]) {
+        area.labelValue = UrlUpload + '/' + res.event[0].pathDisk;
+        this.detectorRef.detectChanges();
+        this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
+      }
+    });
+  }
+
+  changeSignature_StampImg_Area_Immediate(curArea: tmpSignArea, file) {
+    let curLayer = this.lstLayer.get(curArea.location.pageNumber + 1);
+
+    const fileReader = new FileReader();
+    fileReader.onloadend = () => {
+      const img = document.createElement('img') as HTMLImageElement;
+      img.setAttribute('crossOrigin', 'anonymous');
+      img.referrerPolicy = 'noreferrer';
+      img.src = fileReader.result.toString();
+      let min = 0;
+      if (this.curSelectedArea?.attrs?.text) {
+        let textW = this.curSelectedArea.width();
+        let textH = this.curSelectedArea.height();
+        min = Math.min(textW, textH);
+      }
+      img.onload = () => {
+        let tmpName: tmpAreaName = {
+          Signer: curArea.signer,
+          Type: 'img',
+          PageNumber: this.curPage - 1,
+          StepNo: curArea.stepNo,
+          LabelType: curArea.labelType,
+          LabelValue: '',
+        };
+
+        let scale = Math.min(img.width, img.height) / min;
+        let imgArea = new Konva.Image({
+          image: img,
+          width: img.width / scale,
+          height: img.height / scale,
+          x: curArea.location.left * this.xScale,
+          y: curArea.location.top * this.yScale,
+          id: curArea.recID,
+          draggable: true,
+          name: JSON.stringify(tmpName),
+        });
+        imgArea?.scale({ x: this.xScale, y: this.yScale });
+        this.curSelectedArea.destroy();
+        this.curSelectedArea = imgArea;
+
+        this.tr?.nodes([this.curSelectedArea]);
+        curLayer.add(this.curSelectedArea);
+        curLayer?.add(this.tr);
+        curLayer?.draw();
+      };
+    };
+    fileReader.readAsDataURL(file);
   }
 
   changeSignature_StampImg_Public(area: tmpSignArea) {
@@ -1274,9 +1322,22 @@ export class PdfComponent
     }
   }
 
-  changeAnnotPro(type, recID) {
+  changeAnnotPro(type, recID, newUrl = null) {
     // switch (type.toString()) {
     if (this.imgConfig.includes(type)) {
+      if (!newUrl) return;
+      else {
+        let curArea = this.lstAreas.find((area) => area.recID == recID);
+
+        let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1);
+        let curKonva = curLayer?.children?.find(
+          (konva) => konva.id() == curArea.recID
+        ) as Konva.Image;
+        let curImgEle = document.getElementById(recID) as HTMLImageElement;
+        curKonva?.image(curImgEle);
+
+        this.curSelectedArea = curKonva;
+      }
     }
 
     // [3, 4, 5, 6, 7]
@@ -1304,49 +1365,56 @@ export class PdfComponent
       this.curSelectedArea.attrs.textDecoration = this.isUnd
         ? 'line-through'
         : '';
-      this.curSelectedArea.draw();
-      this.tr.forceUpdate();
-      this.tr.draw();
-      //save to db
-      let y = this.curSelectedArea.position().y;
-      let x = this.curSelectedArea.position().x;
-      let w = this.xScale;
-      let h = this.yScale;
-      let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
-
-      let tmpArea: tmpSignArea = {
-        signer: tmpName.Signer,
-        labelType: tmpName.LabelType,
-        labelValue: this.curSelectedArea.attrs.text,
-        isLock: this.curSelectedArea.draggable(),
-        allowEditAreas: this.signerInfo.allowEditAreas,
-        signDate:
-          tmpName.LabelType != '5'
-            ? false
-            : this.curSignDateType == this.lstSignDateType[1],
-        dateFormat: this.curAnnotDateFormat,
-        location: {
-          top: y / this.yScale,
-          left: x / this.xScale,
-          width: w / this.xScale,
-          height: h / this.yScale,
-          pageNumber: this.curPage - 1,
-        },
-        stepNo: tmpName.StepNo,
-        fontStyle: this.curSelectedArea.attrs.fontFamily,
-        fontFormat:
-          this.curSelectedArea.attrs.fontStyle +
-          this.curSelectedArea.attrs.textDecoration,
-        fontSize: this.curSelectedArea.attrs.fontSize,
-        signatureType: 2,
-        comment: '',
-        createdBy: tmpName.Signer,
-        modifiedBy: tmpName.Signer,
-        recID: this.curSelectedArea.attrs.id,
-      };
-      this.saveToDB(tmpArea);
     }
-    // }
+
+    this.curSelectedArea.draw();
+    this.tr.forceUpdate();
+    this.tr.draw();
+    //save to db
+    let y = this.curSelectedArea.position().y;
+    let x = this.curSelectedArea.position().x;
+    let w = this.xScale;
+    let h = this.yScale;
+    let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
+
+    let tmpArea: tmpSignArea = {
+      signer: tmpName.Signer,
+      labelType: tmpName.LabelType,
+      labelValue: this.imgConfig.includes(type)
+        ? newUrl
+        : this.curSelectedArea.attrs.text,
+      isLock: this.curSelectedArea.draggable(),
+      allowEditAreas: this.signerInfo.allowEditAreas,
+      signDate:
+        tmpName.LabelType != '5'
+          ? false
+          : this.curSignDateType == this.lstSignDateType[1],
+      dateFormat: this.imgConfig.includes(type) ? '' : this.curAnnotDateFormat,
+      location: {
+        top: y / this.yScale,
+        left: x / this.xScale,
+        width: w / this.xScale,
+        height: h / this.yScale,
+        pageNumber: this.curPage - 1,
+      },
+      stepNo: tmpName.StepNo,
+      fontStyle: this.imgConfig.includes(type)
+        ? ''
+        : this.curSelectedArea.attrs.fontFamily,
+      fontFormat: this.imgConfig.includes(type)
+        ? ''
+        : this.curSelectedArea.attrs.fontStyle +
+          this.curSelectedArea.attrs.textDecoration,
+      fontSize: this.imgConfig.includes(type)
+        ? ''
+        : this.curSelectedArea.attrs.fontSize,
+      signatureType: 2,
+      comment: '',
+      createdBy: tmpName.Signer,
+      modifiedBy: tmpName.Signer,
+      recID: this.curSelectedArea.attrs.id,
+    };
+    this.saveToDB(tmpArea);
   }
 
   changeQRRenderState(e) {
@@ -1725,7 +1793,7 @@ export class PdfComponent
 
         if (!url || url == '') {
           let textArea = new Konva.Text({
-            text: person.fullName,
+            text: person.fullName + ' - ' + this.vllActions[0]?.text,
             fontSize: 14,
             fontFamily: 'Arial',
             draggable: true,
@@ -1735,7 +1803,10 @@ export class PdfComponent
             x: unsignIdx[idx],
             y: this.maxTop + row * 100 + 10,
           });
-
+          textArea.scale({
+            x: this.xScale,
+            y: this.yScale,
+          });
           //save to db
           let y = textArea.position().y;
           let x = textArea.position().x;
@@ -1745,7 +1816,7 @@ export class PdfComponent
           let tmpArea: tmpSignArea = {
             signer: person.authorID,
             labelType: 'S1',
-            labelValue: url,
+            labelValue: person.fullName + ' - ' + this.vllActions[0]?.text,
             isLock: false,
             allowEditAreas: this.signerInfo.allowEditAreas,
             signDate: false,
@@ -1758,9 +1829,9 @@ export class PdfComponent
               pageNumber: this.curPage - 1,
             },
             stepNo: person.stepNo,
-            fontStyle: '',
-            fontFormat: '',
-            fontSize: 1,
+            fontStyle: 'Arial',
+            fontFormat: 'normal',
+            fontSize: 14,
             signatureType: 2,
             comment: '',
             createdBy: person.authorID,
@@ -1898,6 +1969,10 @@ export class PdfComponent
         }
       }
     });
+  }
+
+  show(area) {
+    let doc = document.getElementById(area.recID);
   }
 
   //pop up
