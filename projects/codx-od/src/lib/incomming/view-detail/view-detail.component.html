@@ -6,7 +6,7 @@
       <div class="w-100">
         <div>
           <codx-temp-full [title]="data?.title" [titleCss]="'fs-5'"
-            [desc]="convertHtmlAgency(data?.agencyName, data?.departmentName)" [bookmark]="false" [titleLine]="2">
+            [desc]="convertHtmlAgency(data?.agencyName, data?.deptName)" [bookmark]="false" [titleLine]="2">
           </codx-temp-full>
         </div>
         <div class="d-flex flex-wrap mt-2">
@@ -214,15 +214,15 @@
           [showBgColor]="true"
           class="badge badge-light badge-md fs-7 ms-2"
         ></codx-vll>
-        <div class="progress h-6px w-100 mt-2">
-          <div class="fs-7 text-gray-600 mb-1">
-            {{ data?.percentage.toFixed(2) }}%
-          </div>
+        <div class="fs-7 text-gray-600 mt-1">
+          {{ data?.percentage.toFixed(2) }}%
+        </div>
+        <div class="progress d-flex flex-column w-100 h-5px">
           <div class="progress w-100 h-5px">
             <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="data?.percentage"></div>
           </div>
         </div>
-        <div class="d-flex justify-content-between align-item-center mt-2">
+        <div class="d-flex justify-content-center align-item-center mt-2">
           <!-- <span class="icon-schedule icon-16 text-gray-600"></span> -->
           <span *ngIf="data?.isTimeOut" class="icon-notifications expired icon-16 ms-1"></span>
           <span class="ms-2 text-dark" #dueDate>{{

@@ -98,15 +98,16 @@
         (valueChange)="changeValueAgencyText($event)"
       >
       </codx-input> -->
+      <codx-label ></codx-label>
       <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')"
-        >Add</span
+        ><codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label></span
       >
     </div>
     <div class="align-items-start" style="display:flex" [hidden]="!showAgency">
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="departmentName"  style="width:100%"
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deptName"  style="width:100%"
       (valueChange)="changeValueDept($event)">
     </codx-input>
-      <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')"><codx-label [default]="'Thêm'"></codx-label></span>
+      <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')"><codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label></span>
     </div>
   </div>
   <div class="row mt-3">
@@ -246,7 +247,7 @@
   <div class="form-group">
     <codx-label
       [formModel]="form.formModel"
-      fiedName="DeptID"
+      fiedName="departmentID"
       class="fw-bold"
     ></codx-label>
     <div class="d-flex">
@@ -254,12 +255,12 @@
         type="Combobox"
         name="combobox"
         [refValue]="
-          gridViewSetup != null ? gridViewSetup['DeptID']['referedValue'] : null
+          gridViewSetup != null ? gridViewSetup['DepartmentID']['referedValue'] : null
         "
         refType="P"
-        field="deptID"
+        field="departmentID"
         [showInput]="true"
-        [crrValue]="dispatch?.deptID"
+        [crrValue]="dispatch?.departmentID"
         [ngClass]="'w-100'"
         (valueChange)="changeValueBUID($event)"
       >
