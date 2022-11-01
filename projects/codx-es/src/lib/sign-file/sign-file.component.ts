@@ -12,6 +12,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthStore,
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
@@ -44,10 +45,12 @@ export class SignFileComponent extends UIComponent {
     private df: ChangeDetectorRef,
     private notifySv: NotificationsService,
     private callfunc: CallFuncService,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
+    private authStore: AuthStore
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.user = this.authStore.get();
   }
   @ViewChild('popup', { static: true }) popup;
   @ViewChild('content', { static: true }) content;
@@ -65,6 +68,7 @@ export class SignFileComponent extends UIComponent {
   itemDetail;
   preStepNo;
   button;
+  user;
 
   request: ResourceModel;
   resourceKanban?: ResourceModel;
@@ -276,7 +280,54 @@ export class SignFileComponent extends UIComponent {
     this.viewdetail.openFormFuncID(val, data);
   }
 
-  changeDataMF(e: any, data: any) {}
+  changeDataMF(e: any, data: any) {
+    var bookmarked = false;
+    let lstBookmark = data?.bookmarks;
+    if (lstBookmark) {
+      let isbookmark = lstBookmark.filter(
+        (p) => p.objectID == this.user.userID
+      );
+      if (isbookmark?.length > 0) {
+        bookmarked = true;
+      }
+    }
+    var bm = e.filter(
+      (x: { functionID: string }) => x.functionID == 'EST01103'
+    );
+    var unbm = e.filter(
+      (x: { functionID: string }) => x.functionID == 'EST01104'
+    );
+
+    if (bookmarked == true) {
+      bm[0].disabled = true;
+      unbm[0].disabled = false;
+    } else {
+      unbm[0].disabled = true;
+      bm[0].disabled = false;
+    }
+
+    if (data.approveStatus == '0') {
+      var cancel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'EST01101'
+      );
+      cancel[0].disabled = true;
+    }
+  }
+
+  isBookmark(data) {
+    debugger;
+    let bookmarked = false;
+    let lstBookmark = data?.bookmarks;
+    if (lstBookmark) {
+      let isbookmark = lstBookmark.filter(
+        (p) => p.objectID == this.user.userID
+      );
+      if (isbookmark?.length > 0) {
+        bookmarked = true;
+      }
+    }
+    return bookmarked;
+  }
 
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;

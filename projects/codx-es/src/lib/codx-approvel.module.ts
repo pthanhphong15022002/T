@@ -31,6 +31,10 @@ const routes: Routes = [
         path: 'bookingrooms/:funcID/:id',
         component: ESApprovelComponent,
       },
+      {
+        path: 'bookingstationery/:funcID/:id',
+        component: ESApprovelComponent,
+      },
     ],
   },
 ];
