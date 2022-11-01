@@ -23,9 +23,10 @@ export class BookingStationeryViewDetailComponent
 {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('attachment') attachment;
-  @Output('edit') edit: EventEmitter<any> = new EventEmitter();  
-  @Output('delete') delete: EventEmitter<any> = new EventEmitter(); 
-  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter(); 
+  @Output('edit') edit: EventEmitter<any> = new EventEmitter();
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
+    new EventEmitter();
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -79,25 +80,36 @@ export class BookingStationeryViewDetailComponent
     this.active = 1;
   }
 
-  childClickMF(event, data) {   
+  childClickMF(event, data) {
     switch (event?.functionID) {
       case 'SYS02': //Xoa
         this.lviewDelete(data);
         break;
-
       case 'SYS03': //Sua.
-        this.lviewEdit(data,event.text);
+        this.lviewEdit(data, event.text);
+        break;
+      case 'SYS04': //Copy.
+        this.lviewEdit(data, event.text);
         break;
     }
+  
   }
-  lviewEdit(data?,mfuncName?) {
-    if (data) {         
-      this.setPopupTitle.emit(mfuncName);  
+  lviewEdit(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
       this.edit.emit(data);
     }
   }
+
+  lviewCopy(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
+      this.edit.emit(data);
+    }
+  }
+
   lviewDelete(data?) {
-    if (data) {      
+    if (data) {
       this.delete.emit(data);
     }
   }
