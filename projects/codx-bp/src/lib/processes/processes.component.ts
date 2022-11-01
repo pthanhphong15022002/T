@@ -348,6 +348,8 @@ export class ProcessesComponent
       case 'BPT104':
         this.permission(data);
         break;
+      case 'BPT105':
+        this.share(data);
     }
   }
 
@@ -395,10 +397,19 @@ export class ProcessesComponent
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
+    data.id = data.recID;
+    this.callfc.openSide(PopupAddPermissionComponent, [this.titleAction , data, false], option);
+  }
+
+  share(data){
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
     // let data = {} as any;
     // data.title = this.titleUpdateFolder;
     data.id = data.recID;
-    this.callfc.openSide(PopupAddPermissionComponent, data, option);
+    this.callfc.openSide(PopupAddPermissionComponent, [this.titleAction , data, true], option);
   }
 
   valueChange(e) {

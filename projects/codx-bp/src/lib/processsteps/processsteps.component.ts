@@ -109,11 +109,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null);
+    if (!this.dataObj?.processID)
+    this.codxService.navigate('', this.urlBack);
   }
 
   onInit(): void {
-    if (!this.dataObj?.processID)
-      return this.codxService.navigate('', this.urlBack);
     this.request = new ResourceModel();
     this.request.service = 'BP';
     this.request.assemblyName = 'BP';

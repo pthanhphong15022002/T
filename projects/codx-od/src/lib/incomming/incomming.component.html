@@ -5,17 +5,17 @@
         data.agencyName,
         this.gridViewSetup?.AgencyName?.headerText
       )
-    " 
+    "
     cardCss="card-template border-bottom px-2 pt-4 pb-2" [formModel]="view.formModel"
     [icoStatus]="data?.urgency"
     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark"
     [titleLine]="2" [icoDateCss]="checkDeadLine(data?.deadline)" [dataItem]="data" (changeDataMF)="changeDataMF($event,data)"
     [footer]="footerTmp"
- 
+
     >
   </codx-temp-full>
-  <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'"     [moreFuncCss]="'me-10'"-->
+  <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
 <ng-template #panelRightRef>
   <app-view-detail #viewdetail [data]="lstDtDis" [dataItem]="dataItem" [gridViewSetup]="gridViewSetup" [view]="view"
@@ -29,8 +29,8 @@
     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [statusVll]="gridViewSetup['Status']['referedValue']"
     [icoStatus]="data?.urgency" [title]="data?.title" [status]="data.status" [date]="data.createdOn"
     [rootData]="data" [formModel]="view.formModel"
-    [setting]="setting" 
-    [footer]="cardImgFooter" 
+    [setting]="setting"
+    [footer]="cardImgFooter"
     [dataItem]="data">
   </codx-card-img>
 </ng-template>

@@ -1,50 +1,93 @@
-<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template popup add #body>
-        <div class="offcanvas-wrapper">
-            <div class="row">
-                <div class="col-xl-12 col-md-12">
-                    <div class="form-group">
-                        <codx-label name="lblRoleName" [formName]="dialog.formModel.entityName" default="Tên vai trò">
-                        </codx-label>
-                        <codx-input type="text" class="form-control" id="roleName" name="roleName"
-                            [placeholder]="gridViewSetup?.RoleName?.headerText" [crrValue]="dataUpdate?.roleName">
-                        </codx-input>
-                    </div>
-                </div>
-                <div class="col-xl-12 col-md-12">
-                    <div class="form-group">
-                        <codx-label name="lblDescription" [formName]="dialog.formModel.entityName" default="Mô tả">
-                        </codx-label>
-                        <codx-input type="textarea" class="test-textarea" name="description" rows="5"
-                            [crrValue]="formType == 'edit' ? dataUpdate?.description : empty" format="ed2"
-                            [placeholder]="gridViewSetup?.Description?.headerText">
-                        </codx-input>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end">
-                <div [class]="'d-flex align-items-center' + (dataUpdate.roleType == '1' || dataUpdate.roleType == '2' 
-                    || dataUpdate.roleID=='ADMIN' || dataUpdate.roleID=='FUNCTIONADMIN' ? ' click-disabled' : '')">
-                    <a (click)="viewRoleDetail()" class="text-primary disabled">
-                        <codx-label name="lblRolesDetail" [formName]="dialog.formModel.entityName"
-                            default="Phân quyền chi tiết">
-                        </codx-label>
-                    </a>
-                    <i class="icon-keyboard_arrow_right icon-18 me-1 text-primary"></i>
-                </div>
-            </div>
+<codx-form
+  [headerText]="header"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="offcanvas-wrapper">
+      <div class="row">
+        <div class="col-xl-12 col-md-12">
+          <div class="form-group">
+            <codx-label
+              name="lblRoleName"
+              [formName]="dialog.formModel.entityName"
+              default="Tên vai trò"
+            >
+            </codx-label>
+            <codx-input
+              type="text"
+              class="form-control"
+              field="roleName"
+              [placeholder]="gridViewSetup?.RoleName?.headerText"
+              [crrValue]="data?.roleName"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
-    </ng-template>
+        <div class="col-xl-12 col-md-12">
+          <div class="form-group">
+            <codx-label
+              name="lblDescription"
+              [formName]="dialog.formModel.entityName"
+              default="Mô tả"
+            >
+            </codx-label>
+            <codx-input
+              type="textarea"
+              class="test-textarea"
+              field="description"
+              rows="5"
+              [crrValue]="data?.description"
+              format="ed2"
+              [placeholder]="gridViewSetup?.Description?.headerText"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div
+          [class]="
+            'd-flex align-items-center' +
+            (data.roleType == '1' ||
+            data.roleType == '2' ||
+            data.roleID == 'ADMIN' ||
+            data.roleID == 'FUNCTIONADMIN'
+              ? ' click-disabled'
+              : '')
+          "
+        >
+          <a (click)="viewRoleDetail()" class="text-primary disabled">
+            <codx-label
+              name="lblRolesDetail"
+              [formName]="dialog.formModel.entityName"
+              default="Phân quyền chi tiết"
+            >
+            </codx-label>
+          </a>
+          <i class="icon-keyboard_arrow_right icon-18 me-1 text-primary"></i>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 
-    <ng-template #footer>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary ms-1" (click)="clickBtnSave()" *ngIf="!readOnly">
-                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
-            </button>
-        </div>
-    </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary ms-1"
+        (click)="clickBtnSave()"
+        *ngIf="!readOnly"
+      >
+        <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
 </codx-form>
-
 
 <!-- <div id="kt_demo_panel" class="offcanvas offcanvas-md offcanvas-right useredit-right p-6 edit-{{modelPage?.formName}}">
     <div class="offcanvas-header d-flex align-items-center justify-content-between pb-7" kt-hidden-height="46">
