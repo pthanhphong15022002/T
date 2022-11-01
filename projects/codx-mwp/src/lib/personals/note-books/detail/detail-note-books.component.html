@@ -1,133 +1,194 @@
-<codx-views #view [views]="views" [button]="button" [funcID]="funcID" (buttonClick)="openFormCreateDetail($event)"
-    idField="recID" [entityName]="functionList.entityName" service="WP" [predicate]="predicate" [dataValue]="dataValue">
+<codx-views
+  #view
+  [views]="views"
+  [button]="button"
+  [funcID]="funcID"
+  (buttonClick)="openFormCreateDetail($event)"
+  idField="recID"
+  [entityName]="functionList.entityName"
+  service="WP"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  (onLoading)="onLoading($event)"
+>
 </codx-views>
 
 <ng-template #memo let-item>
-    <span [innerHTML]="item.memo" *ngIf="item.noteType == 'text'; else checkList_"></span>
-    <ng-template #checkList_>
-        <div *ngIf="item.noteType == 'list'">
-            <div *ngFor="let dt of item?.checkList">
-                <ul>
-                    <li>
-                        <span [innerHTML]="dt.listNote"></span>
-                    </li>
-                </ul>
-            </div>
+  <span
+    [innerHTML]="item.memo"
+    *ngIf="item.noteType == 'text'; else checkList_"
+  ></span>
+  <ng-template #checkList_>
+    <div *ngIf="item.noteType == 'list'">
+      <div *ngFor="let dt of item?.checkList">
+        <ul>
+          <li>
+            <span [innerHTML]="dt.listNote"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div *ngIf="item.noteType == 'check'">
+      <div *ngFor="let dt of item?.checkList">
+        <div class="flex">
+          <div class="">
+            <codx-input
+              type="checkbox"
+              [checked]="dt?.status == '1' || dt?.status == 'true'"
+              class="test-check"
+              [disabled]="true"
+            >
+            </codx-input>
+          </div>
+          <div class="note-check">
+            <span [innerHTML]="dt.listNote"></span>
+          </div>
         </div>
-        <div *ngIf="item.noteType == 'check'">
-            <div *ngFor="let dt of item?.checkList">
-                <div class="flex">
-                    <div class="">
-                        <codx-input type="checkbox" [checked]="dt?.status == '1' || dt?.status == 'true'"
-                            class="test-check" [disabled]="true">
-                        </codx-input>
-                    </div>
-                    <div class="note-check">
-                        <span [innerHTML]="dt.listNote"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ng-template>
+      </div>
+    </div>
+  </ng-template>
 </ng-template>
 
 <ng-template #tags let-item>
-    <codx-tag [entityName]="functionList.entityName" [isEdit]="false" [disabled]="true" [value]="item?.tags"></codx-tag>
+  <codx-tag
+    [entityName]="functionList.entityName"
+    [isEdit]="false"
+    [disabled]="true"
+    [value]="item?.tags"
+  ></codx-tag>
 </ng-template>
 
 <ng-template #createdOn let-item>
-    <span>{{item.createdOn | date:'dd-MM-yyy'}}</span>
+  <span>{{ item.createdOn | date: "dd-MM-yyy" }}</span>
 </ng-template>
 
 <ng-template #modifiedOn let-item>
-    <!-- <codx-mfunc [formModel]="view?.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event,item)"
-        [dataItem]="item" type="hover">
-    </codx-mfunc> -->
-    <div class="has-action-menu">
-        <div class="action-menu d-flex">
-            <div class="d-flex align-items-center">
-                <a class="action-item" (click)="edit(item)">
-                    <div class="d-flex align-items-center btn-tooltip icon-18">
-                        <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
-                    </div>
-                </a>
-                <a class="action-item" (click)="delete(item)">
-                    <div class="d-flex align-items-center btn-tooltip icon-18">
-                        <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
-                    </div>
-                </a>
-            </div>
-        </div>
+  <div class="d-flex has-action-menu">
+    <span>{{ item.modifiedOn | date: "dd-MM-yyy" }}</span>
+    <codx-mfunc
+      [formModel]="view?.formModel"
+      [itemSelected]="itemSelected"
+      (clickMF)="clickMF($event, item)"
+      [dataItem]="item"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
+  <!-- <div class="has-action-menu">
+    <div class="action-menu d-flex">
+      <div class="d-flex align-items-center">
+        <a class="action-item" (click)="edit(item)">
+          <div class="d-flex align-items-center btn-tooltip icon-18">
+            <span
+              [class]="editMF?.largeIcon"
+              [style.color]="editMF?.color"
+            ></span>
+          </div>
+        </a>
+        <a class="action-item" (click)="delete(item)">
+          <div class="d-flex align-items-center btn-tooltip icon-18">
+            <span
+              [class]="deleteMF?.largeIcon"
+              [style.color]="deleteMF?.color"
+            ></span>
+          </div>
+        </a>
+      </div>
     </div>
-    <span>{{item.modifiedOn | date:'dd-MM-yyy'}}</span>
+  </div> -->
 </ng-template>
 
 <ng-template #fileCount let-item>
-    <div class="flex">
-        <span class="">{{item.fileCount ? item.fileCount : 0}}</span>
-        <span class="icon-attach_file"></span>
-    </div>
+  <div class="flex">
+    <span class="">{{ item.fileCount ? item.fileCount : 0 }}</span>
+    <span class="icon-attach_file"></span>
+  </div>
 </ng-template>
 
 <ng-template #listView let-item>
-    <div class="has-action-menu">
-        <div class="action-menu d-flex">
-            <div class="d-flex align-items-center">
-                <a class="action-item" (click)="edit(item)">
-                    <div class="d-flex align-items-center btn-tooltip icon-18">
-                        <span [class]="editMF?.largeIcon" [style.color]="editMF?.color"></span>
-                    </div>
-                </a>
-                <a class="action-item" (click)="delete(item)">
-                    <div class="d-flex align-items-center btn-tooltip icon-18">
-                        <span [class]="deleteMF?.largeIcon" [style.color]="deleteMF?.color"></span>
-                    </div>
-                </a>
-            </div>
-        </div>
+  <div class="has-action-menu">
+    <div class="action-menu d-flex">
+      <div class="d-flex align-items-center">
+        <a class="action-item" (click)="edit(item)">
+          <div class="d-flex align-items-center btn-tooltip icon-18">
+            <span
+              [class]="editMF?.largeIcon"
+              [style.color]="editMF?.color"
+            ></span>
+          </div>
+        </a>
+        <a class="action-item" (click)="delete(item)">
+          <div class="d-flex align-items-center btn-tooltip icon-18">
+            <span
+              [class]="deleteMF?.largeIcon"
+              [style.color]="deleteMF?.color"
+            ></span>
+          </div>
+        </a>
+      </div>
     </div>
-    <div class="d-flex flex-column flex-grow-1 border-bottom border-1">
-        <div class="d-flex align-items-center justify-content-between mb-1">
-            <div class="text-dark fs-6 fw-bold">{{item?.title}}</div>
-            <codx-tag [entityName]="functionList?.entityName" [isEdit]="false" [disabled]="true" [value]="item?.tags">
-            </codx-tag>
-            <div class="d-flex align-items-center ms-6">
-                <span class="text-dark">3</span>
-                <span class="icon-attach_file icon-16 ml-1 text-gray-600"></span>
-            </div>
-        </div>
-        <div class="text-dark line-clamp line-clamp-2" *ngIf="item?.noteType == 'text';else other">
-            {{item?.memo}}
-        </div>
-        <ng-template #other>
-            <div *ngIf="item.noteType == 'check'">
-                <div *ngFor="let itemList of item.checkList">
-                    <div class="my-1 note-list line-clamp line-clamp-2">
-                        <codx-input #checkBoxNote id="checkBoxNote" type="checkbox" [label]="itemList.listNote"
-                            [checked]="itemList?.status == 'true' || itemList?.status == '1'" labelPosition="After"
-                            [disabled]="false" class="test-check"></codx-input>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="item.noteType == 'list'">
-                <div *ngFor="let itemList of item.checkList">
-                    <div class="my-1 note-list line-clamp line-clamp-2">
-                        <ul>
-                            <li>{{itemList.listNote}}</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </ng-template>
-        <div class="d-flex align-items-center mt-2">
-            <div class="d-flex align-items-center me-6">
-                <span class="icon-access_alarm icon-16 me-1 text-gray-600"></span>
-                <span class="text-dark">{{item?.createdOn | date:'dd/MM/yyyy'}}</span>
-            </div>
-            <div class="d-flex align-items-center">
-                <span class="icon-edit icon-16 me-1 text-gray-600"></span>
-                <span class="text-dark">{{item?.modifiedOn | date:'dd/MM/yyyy'}}</span>
-            </div>
-        </div>
+  </div>
+  <div class="d-flex flex-column flex-grow-1 border-bottom border-1">
+    <div class="d-flex align-items-center justify-content-between mb-1">
+      <div class="text-dark fs-6 fw-bold">{{ item?.title }}</div>
+      <codx-tag
+        [entityName]="functionList?.entityName"
+        [isEdit]="false"
+        [disabled]="true"
+        [value]="item?.tags"
+      >
+      </codx-tag>
+      <div class="d-flex align-items-center ms-6">
+        <span class="text-dark">3</span>
+        <span class="icon-attach_file icon-16 ml-1 text-gray-600"></span>
+      </div>
     </div>
+    <div
+      class="text-dark line-clamp line-clamp-2"
+      *ngIf="item?.noteType == 'text'; else other"
+    >
+      {{ item?.memo }}
+    </div>
+    <ng-template #other>
+      <div *ngIf="item.noteType == 'check'">
+        <div *ngFor="let itemList of item.checkList">
+          <div class="my-1 note-list line-clamp line-clamp-2">
+            <codx-input
+              #checkBoxNote
+              id="checkBoxNote"
+              type="checkbox"
+              [label]="itemList.listNote"
+              [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+              labelPosition="After"
+              [disabled]="false"
+              class="test-check"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="item.noteType == 'list'">
+        <div *ngFor="let itemList of item.checkList">
+          <div class="my-1 note-list line-clamp line-clamp-2">
+            <ul>
+              <li>{{ itemList.listNote }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <div class="d-flex align-items-center mt-2">
+      <div class="d-flex align-items-center me-6">
+        <span class="icon-access_alarm icon-16 me-1 text-gray-600"></span>
+        <span class="text-dark">{{
+          item?.createdOn | date: "dd/MM/yyyy"
+        }}</span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="icon-edit icon-16 me-1 text-gray-600"></span>
+        <span class="text-dark">{{
+          item?.modifiedOn | date: "dd/MM/yyyy"
+        }}</span>
+      </div>
+    </div>
+  </div>
 </ng-template>

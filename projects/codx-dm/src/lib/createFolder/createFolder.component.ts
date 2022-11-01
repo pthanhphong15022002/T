@@ -286,7 +286,7 @@ export class CreateFolderComponent implements OnInit {
     //  this.openForm();
     this.dmSV.isFileEditing.subscribe((item) => {
       if (item) {
-        this.fileEditing = item;
+        //this.fileEditing = item; CHung Sửa nhớ
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -360,7 +360,9 @@ export class CreateFolderComponent implements OnInit {
   openForm() {
     var that = this;
     this.showAll = false;
+    debugger;
     if (that.id != '' && this.id != null) {
+      debugger;
       this.noeditName = false;
       this.folderService.getFolder(this.id).subscribe(async (res) => {
         this.checkPermission();
@@ -551,6 +553,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   onFolderSave() {
+    debugger;
     this.errorshow = true;
     if (this.approval && (this.approvers == '' || this.approvers == undefined)) {
       this.notificationsService.notify(this.titleApprovalName);

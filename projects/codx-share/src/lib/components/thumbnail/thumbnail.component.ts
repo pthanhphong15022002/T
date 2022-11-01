@@ -59,26 +59,29 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     // this.files = JSON.parse(this.data);
     // this.changeDetectorRef.detectChanges();
     //this.Dialog.hide();
-    this.dmSV.isFileEditing.subscribe(item => {
-      if (item != undefined) {
-        if (this.files.length > 0) {
-          var index = -1;
-          if (this.files[0].data != null) {
-            index = this.files.findIndex(d => d.data.recID == item.recID);
-            if (index > -1) {
-              this.files[index].data = item;
+    if(!this.files)
+    {
+      this.dmSV.isFileEditing.subscribe(item => {
+        if (item) {
+          if (this.files.length > 0) {
+            var index = -1;
+            if (this.files[0].data != null) {
+              index = this.files.findIndex(d => d.data.recID == item.recID);
+              if (index > -1) {
+                this.files[index].data = item;
+              }
             }
-          }
-          else {
-            index = this.files.findIndex(d => d.recID == item.recID);
-            if (index > -1) {
-              this.files[index] = item;
+            else {
+              index = this.files.findIndex(d => d.recID == item.recID);
+              if (index > -1) {
+                this.files[index] = item;
+              }
             }
+            this.changeDetectorRef.detectChanges();
           }
-          this.changeDetectorRef.detectChanges();
         }
-      }
-    });
+      });
+    }
   }
 
   openPermission(data) {
@@ -192,6 +195,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   openFile(id) {
     //var data = JSON.parse(file);
     this.fileService.getFile(id).subscribe(data => {
+      debugger;
       var option = new DialogModel();
       option.IsFull = true;
       this.fileName = data.fileName;
