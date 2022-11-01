@@ -13,6 +13,7 @@ import {
   CodxGridviewComponent,
   DialogModel,
   DialogRef,
+  LayoutService,
   RequestOption,
   SidebarModel,
   ViewModel,
@@ -73,7 +74,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     private callfunc: CallFuncService,
     public atSV: AttachmentService,
     private activedRouter: ActivatedRoute,
-    private esService: CodxEsService
+    private esService: CodxEsService,
+    private layout: LayoutService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
@@ -81,7 +83,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.layout.showIconBack = true;
+  }
 
   ngAfterViewInit(): void {
     this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';

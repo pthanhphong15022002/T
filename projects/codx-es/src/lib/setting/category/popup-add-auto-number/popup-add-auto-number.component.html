@@ -63,6 +63,7 @@
             [Group]="dialogAutoNum"
             [formModel]="formModel"
             (valueChange)="valueChange($event)"
+            [disabled]="!lstEnableSeparator.includes(data?.stringFormat)"
           >
           </codx-input>
         </div>

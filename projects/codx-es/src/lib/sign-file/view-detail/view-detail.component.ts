@@ -12,6 +12,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AuthStore,
+  CacheService,
   CallFuncService,
   DialogModel,
   DialogRef,
@@ -38,12 +39,14 @@ export class ViewDetailComponent implements OnInit {
     private callfunc: CallFuncService,
     private notify: NotificationsService,
     private router: ActivatedRoute,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private cache: CacheService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
   }
 
+  @Input() showApproveStatus: boolean = true;
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -154,6 +157,8 @@ export class ViewDetailComponent implements OnInit {
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {
           if (res) {
+            if (res.refType != null) {
+            }
             this.itemDetail = res;
             this.df.detectChanges();
           }
@@ -397,18 +402,32 @@ export class ViewDetailComponent implements OnInit {
   }
 
   beforeCancel(datas: any) {
-    this.esService.getApprovalTransActive(datas.recID).subscribe((lstTrans) => {
-      if (lstTrans && lstTrans?.length > 0) {
-        this.cancelControl = lstTrans[0]?.cancelControl;
-        if (this.cancelControl == '0') {
-        } else if (this.cancelControl == '1') {
+    let mssgCode = 'ES015';
+    this.notify.alertCode(mssgCode).subscribe((x) => {
+      if (x.event?.status == 'Y') {
+        if (datas.approveStatus == '1') {
           this.cancel(datas);
-        } else if (this.cancelControl == '2' || this.cancelControl == '3') {
-          this.oCancelSF = datas;
-          this.callfunc.openForm(this.addCancelComment, '', 650, 380);
+        } else {
+          this.esService
+            .getApprovalTransActive(datas.recID)
+            .subscribe((lstTrans) => {
+              if (lstTrans && lstTrans?.length > 0) {
+                this.cancelControl = lstTrans[0]?.cancelControl;
+                if (this.cancelControl == '0') {
+                } else if (this.cancelControl == '1') {
+                  this.cancel(datas);
+                } else if (
+                  this.cancelControl == '2' ||
+                  this.cancelControl == '3'
+                ) {
+                  this.oCancelSF = datas;
+                  this.callfunc.openForm(this.addCancelComment, '', 650, 380);
+                }
+                console.log(lstTrans);
+                return;
+              }
+            });
         }
-        console.log(lstTrans);
-        return;
       }
     });
   }
@@ -465,16 +484,35 @@ export class ViewDetailComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('OD002');
+          datas.bookmarks = res?.bookmarks;
+          this.view.dataService.update(datas).subscribe();
         } else {
-          this.notify.notifyCode('OD002');
         }
       });
-    console.log(datas);
-
-    //this.esService.bookmarkSingFile(datas.recID, )
   }
 
-  unBookmark(datas: any) {}
+  unBookmark(datas: any) {
+    if (!datas.bookmarks) {
+      datas.bookmarks = [];
+    }
+    let index = datas.bookmarks.findIndex(
+      (p) => p.objectID == this.user.userID
+    );
+    if (index != -1) {
+      datas.bookmarks.splice(index, 1);
+    }
+
+    this.esService
+      .bookmarkSingFile(datas.recID, datas.bookmarks)
+      .subscribe((res) => {
+        if (res) {
+          this.notify.notifyCode('OD003');
+          datas.bookmarks = res?.bookmarks;
+          this.view.dataService.update(datas).subscribe();
+        } else {
+        }
+      });
+  }
 
   //#endregion
 

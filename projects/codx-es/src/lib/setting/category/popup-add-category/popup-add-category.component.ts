@@ -345,54 +345,178 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       vllDateFormat = vllDFormat.datas;
       this.cache.valueList('L0089').subscribe((vllSFormat) => {
         vllStringFormat = vllSFormat.datas;
-        let indexStrF = vllStringFormat.findIndex(
-          (p) => p.value == modelAutoNumber?.stringFormat
-        );
-        let indexDF = vllDateFormat.findIndex(
-          (p) => p.value == modelAutoNumber?.dateFormat
-        );
-        let stringFormat = '';
-        let dateFormat = '';
-        if (indexStrF >= 0) {
-          stringFormat = vllStringFormat[indexStrF].text;
-          stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
+        if (vllStringFormat && vllDateFormat && modelAutoNumber) {
+          let dateFormat = '';
+          if (modelAutoNumber?.dateFormat != '0') {
+            dateFormat =
+              vllDateFormat.filter(
+                (p) => p.value == modelAutoNumber?.dateFormat
+              )[0]?.text ?? '';
+          }
+
+          let lengthNumber = 0;
+          let strNumber = '';
+
+          switch (modelAutoNumber?.stringFormat) {
+            // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
+            case '0': {
+              this.viewAutoNumber =
+                modelAutoNumber?.fixedString +
+                dateFormat +
+                modelAutoNumber?.separator;
+              lengthNumber =
+                modelAutoNumber?.maxLength - this.viewAutoNumber.length;
+              strNumber = '#'.repeat(lengthNumber);
+              this.viewAutoNumber =
+                modelAutoNumber?.fixedString +
+                dateFormat +
+                modelAutoNumber?.separator +
+                strNumber;
+              break;
+            }
+            // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
+            case '1': {
+              this.viewAutoNumber =
+                modelAutoNumber?.fixedString +
+                modelAutoNumber?.separator +
+                dateFormat;
+              lengthNumber =
+                modelAutoNumber?.maxLength - this.viewAutoNumber.length;
+              strNumber = '#'.repeat(lengthNumber);
+              this.viewAutoNumber =
+                modelAutoNumber?.fixedString +
+                strNumber +
+                modelAutoNumber?.separator +
+                dateFormat;
+              break;
+            }
+            // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
+            case '2': {
+              this.viewAutoNumber =
+                modelAutoNumber?.fixedString +
+                modelAutoNumber?.separator +
+                dateFormat;
+              lengthNumber =
+                modelAutoNumber?.maxLength - this.viewAutoNumber.length;
+              strNumber = '#'.repeat(lengthNumber);
+              this.viewAutoNumber =
+                strNumber +
+                modelAutoNumber?.separator +
+                modelAutoNumber?.fixedString +
+                dateFormat;
+              break;
+            }
+            // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
+            case '3': {
+              this.viewAutoNumber =
+                modelAutoNumber?.fixedString +
+                modelAutoNumber?.separator +
+                dateFormat;
+              lengthNumber =
+                modelAutoNumber?.maxLength - this.viewAutoNumber.length;
+              strNumber = '#'.repeat(lengthNumber);
+              this.viewAutoNumber =
+                strNumber +
+                modelAutoNumber?.separator +
+                dateFormat +
+                modelAutoNumber?.fixedString;
+              break;
+            }
+            // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
+            case '4': {
+              this.viewAutoNumber =
+                modelAutoNumber?.fixedString +
+                modelAutoNumber?.separator +
+                dateFormat;
+              lengthNumber =
+                modelAutoNumber?.maxLength - this.viewAutoNumber.length;
+              strNumber = '#'.repeat(lengthNumber);
+              this.viewAutoNumber =
+                dateFormat +
+                modelAutoNumber?.separator +
+                strNumber +
+                modelAutoNumber?.fixedString;
+              break;
+            }
+            // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
+            case '5': {
+              this.viewAutoNumber = modelAutoNumber?.fixedString + dateFormat;
+              lengthNumber =
+                modelAutoNumber?.maxLength - this.viewAutoNumber.length;
+              strNumber = '#'.repeat(lengthNumber);
+              this.viewAutoNumber =
+                dateFormat + modelAutoNumber?.fixedString + strNumber;
+              break;
+            }
+            // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
+            case '6': {
+              this.viewAutoNumber =
+                modelAutoNumber?.fixedString +
+                modelAutoNumber?.separator +
+                dateFormat;
+              break;
+            }
+            // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
+            case '7': {
+              this.viewAutoNumber =
+                dateFormat +
+                modelAutoNumber?.separator +
+                modelAutoNumber?.fixedString;
+              break;
+            }
+          }
+          this.cr.detectChanges();
         }
 
-        // replace chuỗi và dấu phân cách
-        stringFormat = stringFormat
-          .replace(
-            /-/g,
-            modelAutoNumber?.separator == null ? '' : modelAutoNumber?.separator
-          )
-          .replace(
-            'Chuỗi',
-            modelAutoNumber?.fixedString == null
-              ? ''
-              : modelAutoNumber?.fixedString
-          );
+        // vllStringFormat = vllSFormat.datas;
+        // let indexStrF = vllStringFormat.findIndex(
+        //   (p) => p.value == modelAutoNumber?.stringFormat
+        // );
+        // let indexDF = vllDateFormat.findIndex(
+        //   (p) => p.value == modelAutoNumber?.dateFormat
+        // );
+        // let stringFormat = '';
+        // let dateFormat = '';
+        // if (indexStrF >= 0) {
+        //   stringFormat = vllStringFormat[indexStrF].text;
+        //   stringFormat = stringFormat.replace(/&/g, '-').replace(/\s/g, '');
+        // }
 
-        //replace ngày
-        if (indexDF >= 0) {
-          dateFormat =
-            vllDateFormat[indexDF].text == 'None'
-              ? ''
-              : vllDateFormat[indexDF].text;
-        }
-        stringFormat = stringFormat.replace('Ngày', dateFormat);
+        // // replace chuỗi và dấu phân cách
+        // stringFormat = stringFormat
+        //   .replace(
+        //     /-/g,
+        //     modelAutoNumber?.separator == null ? '' : modelAutoNumber?.separator
+        //   )
+        //   .replace(
+        //     'Chuỗi',
+        //     modelAutoNumber?.fixedString == null
+        //       ? ''
+        //       : modelAutoNumber?.fixedString
+        //   );
 
-        //replace số và set chiều dài
-        let lengthNumber = modelAutoNumber?.maxLength - stringFormat.length + 2;
-        if (lengthNumber < 0) {
-          stringFormat = stringFormat.replace('Số', '');
-          stringFormat = stringFormat.substring(0, modelAutoNumber?.maxLength);
-        } else if (lengthNumber == 0) {
-          stringFormat = stringFormat.replace('Số', '');
-        } else {
-          let strNumber = '#'.repeat(lengthNumber);
-          stringFormat = stringFormat.replace('Số', strNumber);
-        }
-        this.viewAutoNumber = stringFormat;
-        this.cr.detectChanges();
+        // //replace ngày
+        // if (indexDF >= 0) {
+        //   dateFormat =
+        //     vllDateFormat[indexDF].text == 'None'
+        //       ? ''
+        //       : vllDateFormat[indexDF].text;
+        // }
+        // stringFormat = stringFormat.replace('Ngày', dateFormat);
+
+        // //replace số và set chiều dài
+        // let lengthNumber = modelAutoNumber?.maxLength - stringFormat.length + 2;
+        // if (lengthNumber < 0) {
+        //   stringFormat = stringFormat.replace('Số', '');
+        //   stringFormat = stringFormat.substring(0, modelAutoNumber?.maxLength);
+        // } else if (lengthNumber == 0) {
+        //   stringFormat = stringFormat.replace('Số', '');
+        // } else {
+        //   let strNumber = '#'.repeat(lengthNumber);
+        //   stringFormat = stringFormat.replace('Số', strNumber);
+        // }
+        // this.viewAutoNumber = stringFormat;
+        // this.cr.detectChanges();
       });
     });
   }

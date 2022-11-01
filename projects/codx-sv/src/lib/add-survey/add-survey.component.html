@@ -8,26 +8,6 @@
       >
         <div class="content-wrapper">
           <form id="formId" class="form-horizontal example-box">
-            <!-- <div class="form-group">
-              <label
-                class="col-sm-6 control-label"
-                style="text-align: left; font-size: 14px"
-              >
-                Title</label
-              >
-              <ejs-inplaceeditor
-                #inplaceTitleEditor
-                mode="Inline"
-                emptyText="Enter your question title"
-                name="Title"
-                [validationRules]="titleRule"
-                data-underline="false"
-                [model]="titleEditorModel"
-                [value]="item.text"
-                (change)="valueChange($event)"
-              >
-              </ejs-inplaceeditor>
-            </div> -->
             <div class="form-group">
               <div class="title-des">
                 <ejs-inplaceeditor
@@ -114,106 +94,12 @@
                       </div>
                       <ng-container #questionMF *ngIf="itemQuestion?.active">
                         <span class="icon-image icon-26"></span>
-                        <div ngbDropdown container="body">
-                          <button
-                            type="button"
-                            class="btn btn-outline-primary btn-sm dropdown"
-                            ngbDropdownToggle
-                          >
-                            <div class="d-flex">
-                              <span
-                                class="icon-radio_button_checked icon-24"
-                              ></span>
-                              <codx-label
-                                fiedName=""
-                                default="Trắc nghiệm"
-                              ></codx-label>
-                            </div>
-                          </button>
-                          <div ngbDropdownMenu>
-                            <button ngbDropdownItem>
-                              <div class="d-flex">
-                                <span class="icon-short_text icon-24"></span>
-                                <codx-label
-                                  fiedName=""
-                                  default="Trả lời ngắn"
-                                ></codx-label>
-                              </div>
-                            </button>
-                            <button ngbDropdownItem>
-                              <div class="d-flex">
-                                <span class="icon-text_snippet icon-24"></span>
-                                <codx-label
-                                  fiedName=""
-                                  default="Trả lời đoạn"
-                                ></codx-label>
-                              </div>
-                            </button>
-                            <hr />
-                            <button ngbDropdownItem>
-                              <div class="d-flex">
-                                <span
-                                  class="icon-radio_button_checked icon-24"
-                                ></span>
-                                <codx-label
-                                  fiedName=""
-                                  default="Trắc nghiệm"
-                                ></codx-label>
-                              </div>
-                            </button>
-                            <button ngbDropdownItem>
-                              <div class="d-flex">
-                                <span class="icon-check_box icon-24"></span>
-                                <codx-label
-                                  fiedName=""
-                                  default="Hộp kiểm"
-                                ></codx-label>
-                              </div>
-                            </button>
-                            <button ngbDropdownItem>
-                              <div class="d-flex">
-                                <span
-                                  class="icon-arrow_drop_down_circle icon-24"
-                                ></span>
-                                <codx-label
-                                  fiedName=""
-                                  default="Menu thả xuống"
-                                ></codx-label>
-                              </div>
-                            </button>
-                            <hr />
-                            <button ngbDropdownItem>
-                              <div class="d-flex">
-                                <span class="icon-cloud_upload icon-24"></span>
-                                <codx-label
-                                  fiedName=""
-                                  default="Tải tệp lên"
-                                ></codx-label>
-                              </div>
-                            </button>
-                            <hr />
-                            <button ngbDropdownItem>
-                              <div class="d-flex">
-                                <span
-                                  class="icon-calendar_today icon-24"
-                                ></span>
-                                <codx-label
-                                  fiedName=""
-                                  default="Ngày"
-                                ></codx-label>
-                              </div>
-                            </button>
-                            <button ngbDropdownItem>
-                              <div class="d-flex">
-                                <span class="icon-access_time icon-24"></span>
-                                <codx-label
-                                  fiedName=""
-                                  default="Giờ"
-                                ></codx-label>
-                              </div>
-                            </button>
-                          </div>
-                        </div>
+                        <ng-container
+                          *ngTemplateOutlet="
+                            templateQuestionMF;
+                            context: { $implicit: itemQuestion }
+                          "
+                        ></ng-container>
                       </ng-container>
                     </div>
                     <div
@@ -237,9 +123,12 @@
                               </div>
                             </div>
                             <div class="d-flex size-input">
-                              <span
-                                class="icon-radio_button_unchecked icon-radio"
-                              ></span>
+                              <ng-container
+                                *ngTemplateOutlet="
+                                  iconQuestionMF;
+                                  context: { $implicit: itemQuestion }
+                                "
+                              ></ng-container>
                               <div class="e-input-group">
                                 <input
                                   class="e-input"
@@ -283,9 +172,12 @@
                         class="d-flex size-input-other"
                         *ngIf="itemQuestion?.active"
                       >
-                        <span
-                          class="icon-radio_button_unchecked icon-radio"
-                        ></span>
+                        <ng-container
+                          *ngTemplateOutlet="
+                            iconQuestionMF;
+                            context: { $implicit: itemQuestion }
+                          "
+                        ></ng-container>
                         <div
                           class="e-input-group-other"
                           (click)="addAnswer(itemQuestion)"
@@ -298,18 +190,23 @@
                             (blur)="focusOut($event.target)"
                           />
                         </div>
-                        <div class="text-or">
-                          <codx-label fiedName="" default="hoặc"></codx-label>
-                        </div>
-                        <div
-                          class="add-answer-other"
-                          (click)="addOtherAnswer(itemQuestion)"
+                        <ng-container
+                          *ngIf="itemQuestion?.otherAnswer"
+                          class="d-flex"
                         >
-                          <codx-label
-                            fiedName=""
-                            default='thêm "Câu trả lời khác"'
-                          ></codx-label>
-                        </div>
+                          <div class="text-or">
+                            <codx-label fiedName="" default="hoặc"></codx-label>
+                          </div>
+                          <div
+                            class="add-answer-other"
+                            (click)="addOtherAnswer(itemQuestion)"
+                          >
+                            <codx-label
+                              fiedName=""
+                              default='thêm "Câu trả lời khác"'
+                            ></codx-label>
+                          </div>
+                        </ng-container>
                       </div>
                     </div>
                   </ng-container>
@@ -317,9 +214,11 @@
                   <ng-container #footer *ngIf="itemQuestion?.active">
                     <div class="d-flex justify-content-end">
                       <span
+                        (click)="copyQuestion(itemQuestion)"
                         class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
                       ></span>
                       <span
+                        (click)="deleteQuestion(itemQuestion)"
                         class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
                       ></span>
                       <span class="split"></span>
@@ -328,7 +227,12 @@
                         default="Bắt buộc"
                         class="pd-10"
                       ></codx-label>
-                      <codx-input type="switch" class="pd-t-10"></codx-input>
+                      <codx-input
+                        type="switch"
+                        class="pd-t-10"
+                        (valueChange)="valueChange($event, itemQuestion)"
+                        [crrValue]="itemQuestion.mandatory"
+                      ></codx-input>
                       <span
                         class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
                       ></span>
@@ -341,22 +245,22 @@
         </div>
         <ng-container #moreFC>
           <div class="moreFC rounded-4">
-            <div class="icon-MF">
+            <div class="icon-MF" (click)="clickMF('LTN01')">
               <span class="icon-add_circle_outline icon-24"></span>
             </div>
-            <div class="icon-MF">
+            <div class="icon-MF" (click)="clickMF('LTN02')">
               <span class="icon-input icon-24"></span>
             </div>
-            <div class="icon-MF">
+            <div class="icon-MF" (click)="clickMF('LTN03')">
               <span class="icon-format_size icon-24"></span>
             </div>
-            <div class="icon-MF">
+            <div class="icon-MF" (click)="clickMF('LTN04')">
               <span class="icon-image icon-24"></span>
             </div>
-            <div class="icon-MF">
+            <div class="icon-MF" (click)="clickMF('LTN05')">
               <span class="icon-video_library icon-24"></span>
             </div>
-            <div class="icon-MF">
+            <div class="icon-MF" (click)="clickMF('LTN06')">
               <span class="icon-calendar_view_day icon-dns icon-24"></span>
             </div>
           </div>
@@ -365,3 +269,83 @@
     </div>
   </div>
 </div>
+<ng-template #templateQuestionMF let-itemQuestion>
+  <div ngbDropdown container="body">
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-sm dropdown"
+      ngbDropdownToggle
+    >
+      <div class="d-flex">
+        <span class="icon-radio_button_checked icon-24"></span>
+        <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
+      </div>
+    </button>
+    <div ngbDropdownMenu>
+      <button ngbDropdownItem (click)="clickQuestionMF('T', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-short_text icon-24"></span>
+          <codx-label fiedName="" default="Trả lời ngắn"></codx-label>
+        </div>
+      </button>
+      <button ngbDropdownItem (click)="clickQuestionMF('T2', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-text_snippet icon-24"></span>
+          <codx-label fiedName="" default="Trả lời đoạn"></codx-label>
+        </div>
+      </button>
+      <hr />
+      <button ngbDropdownItem (click)="clickQuestionMF('L', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-radio_button_checked icon-24"></span>
+          <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
+        </div>
+      </button>
+      <button ngbDropdownItem (click)="clickQuestionMF('C', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-check_box icon-24"></span>
+          <codx-label fiedName="" default="Hộp kiểm"></codx-label>
+        </div>
+      </button>
+      <button ngbDropdownItem (click)="clickQuestionMF('L3', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-arrow_drop_down_circle icon-24"></span>
+          <codx-label fiedName="" default="Menu thả xuống"></codx-label>
+        </div>
+      </button>
+      <hr />
+      <button ngbDropdownItem (click)="clickQuestionMF('A', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-cloud_upload icon-24"></span>
+          <codx-label fiedName="" default="Tải tệp lên"></codx-label>
+        </div>
+      </button>
+      <hr />
+      <button ngbDropdownItem (click)="clickQuestionMF('D', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-calendar_today icon-24"></span>
+          <codx-label fiedName="" default="Ngày"></codx-label>
+        </div>
+      </button>
+      <button ngbDropdownItem (click)="clickQuestionMF('H', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-access_time icon-24"></span>
+          <codx-label fiedName="" default="Giờ"></codx-label>
+        </div>
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #iconQuestionMF let-itemQuestion>
+  <span
+    *ngIf="itemQuestion.answerType == 'L'"
+    class="icon-radio_button_unchecked icon-radio"
+  ></span>
+  <span
+    *ngIf="itemQuestion.answerType == 'C'"
+    class="icon-check_box_outline_blank"
+  ></span>
+  <span *ngIf="itemQuestion.answerType == 'L3'"
+    >{{ itemQuestion.seqNo + 1 }}.</span
+  >
+</ng-template>
