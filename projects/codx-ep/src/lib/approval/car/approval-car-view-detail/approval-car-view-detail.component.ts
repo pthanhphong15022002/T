@@ -141,6 +141,14 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
           }
         });  
       }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
+          {
+            func.disabled=true;
+          }
+        });
+      }
     }
   }
   clickChangeItemDetailDataStatus(stt) {

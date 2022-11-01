@@ -34,7 +34,33 @@
 <ng-template #itemTemplate let-data>
   
   <div (click)="historyItemClicked(data)" class="d-flex flex-stack py-2 Unread" *ngIf="!data.isRead">
-   kk
+    <div class="d-flex align-items-center">
+      <ng-container *ngIf="data.groupType == '1'">
+        <codx-img [objectId]="data.colabId" [objectName]="data.colabName" objectType="AD_Users"
+          class="symbol symbol-30 symbol-circle me-3">
+        </codx-img>
+      </ng-container>
+      <!-- [src]="data.picture" -->
+      <ng-container *ngIf="data.groupType == '2'">
+        <div class="symbol symbol-35px symbol-circle">
+          <codx-img [objectId]="data.groupID" objectType="WP_Groups" class="symbol symbol-30 symbol-circle me-3">
+          </codx-img>
+        </div>
+      </ng-container>
+      <div class="ms-5">
+        <a class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2 cursor-pointer">
+          {{data.groupName}} </a>
+        <div class="fw-bold text-gray-400">
+          <span class="icon-local_offer text-success icon-16 me-2"></span>
+          <span class=" me-2">{{data.message}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-end ms-2">
+      <span class="text-muted fs-7 mb-1">{{data.strTime}}</span>
+      <span class="badge badge-secondary badge-circle w-10px h-10px me-1"></span>
+    </div>
   </div>
 
   <div (click)="historyItemClicked(data)" class="d-flex flex-stack py-2 read" *ngIf="data.isRead">
@@ -92,60 +118,63 @@
 <!-- view detail -->
 <ng-template #panelRightRef>
 
-  aaaaaaaaaaaaaaaaaaaa
+
 
   <!-- <div class=""> modal-dialog modal-dialog-centered mw-400px -->
   <!--begin::Modal content-->
   <div class="modal-content">
     <!--begin::Modal header-->
-    <div class="modal-header py-0">
-      <div class="d-flex flex-stack py-4">
-        <!--begin::Details-->
-        <div class="d-flex align-items-center">
-          <!--begin::Avatar-->
-          <div class="symbol symbol-40px symbol-circle">
-            
-
-            <ng-container *ngIf="groupType == '1'">
-              <div class="symbol symbol-35px symbol-circle">
-              <codx-img [objectId]="receiverId" objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
-              </codx-img>
-              </div>
-            </ng-container>
-
-            <ng-container *ngIf="groupType == '2'">
-              <div class="symbol symbol-35px symbol-circle">
-                <codx-img [objectId]="groupId" objectType="WP_Groups" class="symbol symbol-30 symbol-circle me-3">
-                </codx-img>
-              </div>
-            </ng-container>
-
-            
-            <div class="symbol-badge bg-success start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2"></div>
-          </div>
-          <!--end::Avatar-->
+      <div class="modal-header py-0">
+        <div class="d-flex flex-stack py-4">
           <!--begin::Details-->
-          <div class="ms-4">
-            <!--begin::Name-->
-
-            <a href="#" class="d-flex align-items-center fs-5 fw-bolder text-dark text-hover-primary">{{ groupName }}
-            </a>
-            <!--end::Name-->
-            <div class="badge badge-danger fs-8 fw-bold" *ngIf="tags">
-              {{ tags }}
+          <div class="d-flex align-items-center">
+            <!--begin::Avatar-->
+            <div class="symbol symbol-40px symbol-circle">
+              
+  
+              <ng-container *ngIf="groupType == '1'">
+                <div class="symbol symbol-35px symbol-circle">
+                <codx-img [objectId]="receiverId" objectType="AD_Users" class="symbol symbol-30 symbol-circle me-3">
+                </codx-img>
+                </div>
+              </ng-container>
+  
+              <ng-container *ngIf="groupType == '2'">
+                <div class="symbol symbol-35px symbol-circle">
+                  <codx-img [objectId]="groupId" objectType="WP_Groups" class="symbol symbol-30 symbol-circle me-3">
+                  </codx-img>
+                </div>
+              </ng-container>
+  
+              
+              <div class="symbol-badge bg-success start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2"></div>
             </div>
+            <!--end::Avatar-->
+            <!--begin::Details-->
+            <div class="ms-4">
+              <!--begin::Name-->
+  
+              <a href="#" class="d-flex align-items-center fs-5 fw-bolder text-dark text-hover-primary">{{ groupName }}
+              </a>
+              <!--end::Name-->
+              <div class="badge badge-danger fs-8 fw-bold" *ngIf="tags">
+                {{ tags }}
+              </div>
+            </div>
+            <!--end::Details-->
           </div>
           <!--end::Details-->
         </div>
-        <!--end::Details-->
+        <div class="card-toolbar">
+          <span class="icon- icon-24 text-dark-75 text-hover-primary ms-3"></span>
+          <span class="icon-group_add icon-24 text-dark-75 text-hover-primary ms-3"
+            (click)="openCreategroupForm()"></span>
+  
+        </div>
+  
       </div>
-      <div class="card-toolbar">
-        <span class="icon- icon-24 text-dark-75 text-hover-primary ms-3"></span>
-        <span class="icon-group_add icon-24 text-dark-75 text-hover-primary ms-3"
-          (click)="openCreategroupForm()"></span>
-
-      </div>
-    </div>
+        
+    
     <!--begin::Modal header-->
 
     <!--begin::Modal body-->
@@ -711,7 +740,7 @@
       [functionID]="view?.formModel?.funcID"
       isDeleteTemp="1"
       (fileAdded)="fileAdded($event)"
-    
+      [hideImageThumb]="1"
       [allowMultiFile]="0"
       [idBrowse]="'add'"
       [hideDelete]="0"
@@ -774,6 +803,10 @@
     <!--end::Modal footer-->
   </div>
   <!-- </div> -->
+
+  <div>
+
+  </div>
 
 
 </ng-template>

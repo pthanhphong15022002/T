@@ -1,130 +1,217 @@
-<codx-form [headerText]="header" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template popup add #body>
-        <div class="row">
-            <div class="col-4 notebook-left">
-                <div class="d-flex my-2">
-                    <codx-tag [entityName]="functionList.entityName" [isEdit]="true" [value]="note?.tags"
-                        (valueChange)="valueChangeTag($event)"></codx-tag>
-                </div>
-                <div class="form-group">
-                    <codx-label name="lblTitle" formName="Notes" default="Tiêu đề"></codx-label>
-                    <codx-input type="text" field="title" placeholder="" [crrValue]="note?.title || ''"
-                        (valueChange)="valueChange($event)">
-                    </codx-input>
-                </div>
-                <div class="d-flex align-items-center justify-content-between mt-4">
-                    <div class="d-flex align-items-center">
-                        <span class="icon-attach_file icon-18 text-primary"></span>
-                        <div class="fw-bold fs-6 text-primary">
-                            <codx-label name="lblFile" formName="NoteBooks" default="Tài liệu đính kèm">
-                            </codx-label>
-                        </div>
-                    </div>
-                </div>
-                <div class="file mt-3">
-                    <codx-attachment #attachment [objectType]="functionList.entityName" hideBtnSave="1" hideFolder="1"
-                        hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="1"
-                        [functionID]="functionList.funcID" [objectId]="note?.recID" [allowMultiFile]="1"
-                        [idBrowse]="'add'">
-                    </codx-attachment>
-                </div>
+<codx-form
+  [headerText]="header"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  #form
+  [data]="note"
+>
+  <ng-template popup add #body>
+    <div class="row">
+      <div class="col-4 notebook-left">
+        <div class="d-flex my-2">
+          <codx-tag
+            [entityName]="functionList.entityName"
+            [isEdit]="true"
+            [value]="note?.tags"
+            (valueChange)="valueChangeTag($event)"
+          ></codx-tag>
+        </div>
+        <div class="form-group">
+          <codx-label
+            fiedName="Title"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            type="text"
+            field="title"
+            placeholder=""
+            [crrValue]="note?.title || ''"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mt-4">
+          <div class="d-flex align-items-center">
+            <span class="icon-attach_file icon-18 text-primary"></span>
+            <div class="fw-bold fs-6 text-primary">
+              <codx-label fiedName="Attachments" [formModel]="form.formModel">
+              </codx-label>
             </div>
-            <div class="col-8 notebook-right">
-                <!-- <codx-input type="textarea" field="memo" placeholder="" [crrValue]="note?.memo" class="test-area"
+          </div>
+        </div>
+        <div class="file mt-3">
+          <codx-attachment
+            #attachment
+            [objectType]="functionList.entityName"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            hideDes="1"
+            hideImageUpload="0"
+            hideImageThumb="1"
+            [functionID]="functionList.funcID"
+            [objectId]="note?.recID"
+            [allowMultiFile]="1"
+            [idBrowse]="'add'"
+          >
+          </codx-attachment>
+        </div>
+      </div>
+      <div class="col-8 notebook-right">
+        <!-- <codx-input type="textarea" field="memo" placeholder="" [crrValue]="note?.memo" class="test-area"
                     (valueChange)="valueChange($event)">
                 </codx-input> -->
-                <div class="notebook-right-content">
-                    <div *ngIf="formType == 'add'">
-                        <div *ngIf="type == 'text'">
-                            <codx-input format="ed2" [class]="'border-0'" type="textarea" class="test-textarea"
-                                [crrValue]="empty || ''" placeholder="Nhập ghi chú..."
-                                (valueChange)="valueChange($event)" ngDefaultControl field="memo">
-                            </codx-input>
-                        </div>
-                        <div *ngIf="type == 'check' || type =='list'">
-                            <ng-container *ngFor="let item of listNote; index as i">
-                                <div class="flex align-items-center">
-                                    <ng-container *ngIf="type == 'check'; else list">
-                                        <codx-input #noteAddText type="checkBox" [crrValue]="item?.status || ''"
-                                            field="status" labelPosition="Before" class="test-check"
-                                            (valueChange)="valueChange($event, item, i)">
-                                        </codx-input>
-                                    </ng-container>
-                                    <ng-template #list>
-                                        <span class="dot-black"></span>
-                                    </ng-template>
-                                    <div class="w-100" #txtNoteEdit name="txtTodoEdit">
-                                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit"
-                                            class="test-textbox border-0 input-note" (keyUpEnter)="onUpdateNote($event)"
-                                            [crrValue]="item?.listNote || ''" field="listNote"
-                                            (valueChange)="valueChange($event, item, i)" placeholder="Nhập ghi chú...">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                    <div *ngIf="formType == 'edit'">
-                        <div *ngIf="note?.noteType == 'text'">
-                            <codx-input type="textarea" field="memo" placeholder="text" format="ed2"
-                                [class]="'border-0'" (valueChange)="valueChange($event)" [crrValue]="note?.memo"
-                                class="test-textarea">
-                            </codx-input>
-                        </div>
-                        <div *ngIf="note?.noteType == 'check' || note?.noteType =='list'">
-                            <ng-container *ngFor="let item of note?.checkList; index as i">
-                                <div class="flex align-items-center">
-                                    <ng-container *ngIf="note?.noteType == 'check'; else list">
-                                        <codx-input #noteAddText type="checkbox"
-                                            [checked]="item?.status == '1' || item?.status == 'true'" field="status"
-                                            labelPosition="Before" class="test-check"
-                                            (valueChange)="valueChange($event, item, i)">
-                                        </codx-input>
-                                    </ng-container>
-                                    <ng-template #list>
-                                        <span class="dot-black"></span>
-                                    </ng-template>
-                                    <div class="w-100" #txtNoteEdit name="txtTodoEdit">
-                                        <codx-input #txtNoteEdit type="text" name="txtTodoEdit"
-                                            class="test-textbox input-note border-0" (keyUpEnter)="onUpdateNote($event)"
-                                            [crrValue]="item?.listNote" field="listNote"
-                                            (valueChange)="valueChange($event, item, i)" placeholder="Nhập ghi chú...">
-                                        </codx-input>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex note-action h-40px border align-items-center justify-content-between">
-                    <div class="d-flex">
-                        <div [class.active]="noteType.text">
-                            <span (click)="onType('text')"
-                                class="icon-font_download icon-20 me-1 btn btn-icon btn-white"></span>
-                        </div>
-                        <div [class.active]="noteType.list">
-                            <span (click)="onType('list')"
-                                class="icon-list_alt icon-20 me-1 btn btn-icon btn-white"></span>
-                        </div>
-                        <div [class.active]="noteType.check">
-                            <span (click)="onType('check')"
-                                class="icon-check_box icon-20 me-1 btn btn-icon btn-white"></span>
-                        </div>
-                    </div>
-                </div>
+        <div class="notebook-right-content">
+          <div *ngIf="formType == 'add'">
+            <div *ngIf="type == 'text'">
+              <codx-input
+                format="ed2"
+                [class]="'border-0'"
+                type="textarea"
+                class="test-textarea"
+                [crrValue]="empty || ''"
+                placeholder="Nhập ghi chú..."
+                (valueChange)="valueChange($event)"
+                ngDefaultControl
+                field="memo"
+              >
+              </codx-input>
             </div>
+            <div *ngIf="type == 'check' || type == 'list'">
+              <ng-container *ngFor="let item of listNote; index as i">
+                <div class="flex align-items-center">
+                  <ng-container *ngIf="type == 'check'; else list">
+                    <codx-input
+                      #noteAddText
+                      type="checkBox"
+                      [crrValue]="item?.status || ''"
+                      field="status"
+                      labelPosition="Before"
+                      class="test-check"
+                      (valueChange)="valueChange($event, item, i)"
+                    >
+                    </codx-input>
+                  </ng-container>
+                  <ng-template #list>
+                    <span class="dot-black"></span>
+                  </ng-template>
+                  <div class="w-100" #txtNoteEdit name="txtTodoEdit">
+                    <codx-input
+                      #txtNoteEdit
+                      type="text"
+                      name="txtTodoEdit"
+                      class="test-textbox border-0 input-note"
+                      (keyUpEnter)="onUpdateNote($event)"
+                      [crrValue]="item?.listNote || ''"
+                      field="listNote"
+                      (valueChange)="valueChange($event, item, i)"
+                      placeholder="Nhập ghi chú..."
+                    >
+                    </codx-input>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div *ngIf="formType == 'edit' || formType == 'copy'">
+            <div *ngIf="note?.noteType == 'text'">
+              <codx-input
+                type="textarea"
+                field="memo"
+                placeholder="text"
+                format="ed2"
+                [class]="'border-0'"
+                (valueChange)="valueChange($event)"
+                [crrValue]="note?.memo"
+                class="test-textarea"
+              >
+              </codx-input>
+            </div>
+            <div *ngIf="note?.noteType == 'check' || note?.noteType == 'list'">
+              <ng-container *ngFor="let item of note?.checkList; index as i">
+                <div class="flex align-items-center">
+                  <ng-container *ngIf="note?.noteType == 'check'; else list">
+                    <codx-input
+                      #noteAddText
+                      type="checkbox"
+                      [checked]="item?.status == '1' || item?.status == 'true'"
+                      field="status"
+                      labelPosition="Before"
+                      class="test-check"
+                      (valueChange)="valueChange($event, item, i)"
+                    >
+                    </codx-input>
+                  </ng-container>
+                  <ng-template #list>
+                    <span class="dot-black"></span>
+                  </ng-template>
+                  <div class="w-100" #txtNoteEdit name="txtTodoEdit">
+                    <codx-input
+                      #txtNoteEdit
+                      type="text"
+                      name="txtTodoEdit"
+                      class="test-textbox input-note border-0"
+                      (keyUpEnter)="onUpdateNote($event)"
+                      [crrValue]="item?.listNote"
+                      field="listNote"
+                      (valueChange)="valueChange($event, item, i)"
+                      placeholder="Nhập ghi chú..."
+                    >
+                    </codx-input>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
         </div>
-    </ng-template>
+        <div
+          class="d-flex note-action h-40px border align-items-center justify-content-between"
+        >
+          <div class="d-flex">
+            <div [class.active]="noteType.text">
+              <span
+                (click)="onType('text')"
+                class="icon-font_download icon-20 me-1 btn btn-icon btn-white"
+              ></span>
+            </div>
+            <div [class.active]="noteType.list">
+              <span
+                (click)="onType('list')"
+                class="icon-list_alt icon-20 me-1 btn btn-icon btn-white"
+              ></span>
+            </div>
+            <div [class.active]="noteType.check">
+              <span
+                (click)="onType('check')"
+                class="icon-check_box icon-20 me-1 btn btn-icon btn-white"
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
 
-    <ng-template #footer>
-        <div class="d-flex justify-content-between">
-            <button class="btn btn-light-primary" (click)="popup()">
-                <i class="icon-add fs-5 me-1"></i>
-                <codx-label name="lblTitle" formName="Notes" default="Thêm file"></codx-label>
-            </button>
-            <button type="button" class="btn btn-primary ms-1" (click)="saveNoteBookDetails()" *ngIf="!readOnly">
-                <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
-            </button>
-        </div>
-    </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-between">
+      <button class="btn btn-light-primary" (click)="popup()">
+        <i class="icon-add fs-5 me-1"></i>
+        <codx-label
+          fiedName="AddFile"
+          [formModel]="form.formModel"
+          default="Thêm file"
+        ></codx-label>
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary ms-1"
+        (click)="saveNoteBookDetails()"
+        *ngIf="!readOnly"
+      >
+        <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
 </codx-form>

@@ -154,6 +154,14 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
           }
         });  
       }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/ )
+          {
+            func.disabled=true;
+          }
+        });  
+      }
     }
   }
 

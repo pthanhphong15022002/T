@@ -15,6 +15,7 @@ import {
   OnDestroy,
   Injector,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { PopupAddUpdate } from './popup-add-update/popup-add-update.component';
 @Component({
@@ -57,7 +58,11 @@ export class DetailNoteBooksComponent extends UIComponent {
   @ViewChild('modifiedOn', { static: true }) modifiedOn;
   @ViewChild('fileCount', { static: true }) fileCount;
 
-  constructor(injector: Injector, private route: ActivatedRoute) {
+  constructor(
+    injector: Injector,
+    private route: ActivatedRoute,
+    private change: ChangeDetectorRef
+  ) {
     super(injector);
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
@@ -85,76 +90,80 @@ export class DetailNoteBooksComponent extends UIComponent {
         this.gridViewSetup = res;
       }
     });
+    this.getQueryParams();
   }
 
   onInit(): void {
-    this.getQueryParams();
-
     this.button = {
       id: 'btnAdd',
     };
-
-    this.columnsGrid = [
-      {
-        field: 'title',
-        headerText: 'Tiêu đề',
-        template: '',
-        width: 300,
-      },
-      {
-        field: 'Tag#',
-        headerText: 'Tag#',
-        template: this.tags,
-        width: 200,
-      },
-      {
-        field: 'memo',
-        headerText: 'Chi tiết',
-        template: this.memo,
-        innerWidth: 200,
-      },
-      {
-        field: 'Đính kèm',
-        headerText: 'Đính kèm',
-        template: this.fileCount,
-        width: 100,
-      },
-      {
-        field: 'createdOn',
-        headerText: 'Ngày tạo',
-        template: this.createdOn,
-        width: 150,
-      },
-      {
-        field: 'modifiedOn',
-        headerText: 'Ngày cập nhật',
-        template: this.modifiedOn,
-        width: 150,
-      },
-    ];
   }
 
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        id: '1',
-        active: true,
-        model: {
-          resources: this.columnsGrid,
-        },
-      },
-      {
-        sameData: true,
-        id: '2',
-        type: ViewType.list,
-        active: false,
-        model: {
-          template: this.listView,
-        },
-      },
-    ];
+  ngAfterViewInit(): void {}
+
+  onLoading(e: any) {
+    if (this.view.formModel) {
+      var formModel = this.view.formModel;
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((res) => {
+          if (res) {
+            this.columnsGrid = [
+              {
+                field: 'title',
+                headerText: res.Title.headerText,
+                template: '',
+              },
+              {
+                field: 'Tag#',
+                headerText: res.Tags.headerText,
+                template: this.tags,
+              },
+              {
+                field: 'memo',
+                headerText: res.Memo.headerText,
+                template: this.memo,
+              },
+              {
+                field: 'Đính kèm',
+                headerText: res.Attachments.headerText,
+                template: this.fileCount,
+              },
+              {
+                field: 'createdOn',
+                headerText: res.CreatedOn.headerText,
+                template: this.createdOn,
+              },
+              {
+                field: 'modifiedOn',
+                headerText: res.ModifiedOn.headerText,
+                template: this.modifiedOn,
+              },
+            ];
+            this.views = [
+              {
+                type: ViewType.grid,
+                sameData: true,
+                id: '1',
+                active: true,
+                model: {
+                  resources: this.columnsGrid,
+                },
+              },
+              {
+                sameData: true,
+                id: '2',
+                type: ViewType.list,
+                active: false,
+                model: {
+                  template: this.listView,
+                },
+              },
+            ];
+            this.change.detectChanges();
+          }
+        });
+    }
   }
 
   getQueryParams() {
@@ -167,11 +176,13 @@ export class DetailNoteBooksComponent extends UIComponent {
   }
 
   openFormCreateDetail(e) {
+    if (e?.text) this.headerText = e.text;
     var obj = [
       {
         data: this.view.dataService.data,
         type: 'add',
         parentID: this.recID,
+        headerText: this.headerText,
       },
     ];
 
@@ -181,7 +192,7 @@ export class DetailNoteBooksComponent extends UIComponent {
       option.FormModel = this.view?.currentView?.formModel;
       this.dialog = this.callfc.openForm(
         PopupAddUpdate,
-        'Thêm mới ghi chú',
+        '',
         1438,
         775,
         '',
@@ -208,6 +219,7 @@ export class DetailNoteBooksComponent extends UIComponent {
         data: data,
         type: 'edit',
         parentID: this.recID,
+        headerText: this.headerText,
       },
     ];
 
@@ -223,7 +235,7 @@ export class DetailNoteBooksComponent extends UIComponent {
         option.FormModel = this.view?.formModel;
         this.dialog = this.callfc.openForm(
           PopupAddUpdate,
-          'Thêm mới ghi chú',
+          '',
           1438,
           775,
           '',
@@ -259,8 +271,54 @@ export class DetailNoteBooksComponent extends UIComponent {
       });
   }
 
+  copy(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        var obj = [
+          {
+            data: res,
+            type: 'copy',
+            parentID: this.recID,
+            headerText: this.headerText,
+          },
+        ];
+      }
+      let option = new DialogModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      this.dialog = this.callfc.openForm(
+        PopupAddUpdate,
+        '',
+        1438,
+        775,
+        '',
+        obj,
+        '',
+        option
+      );
+    });
+  }
   onSearch(e) {
     this.lstGrid.onSearch(e);
     this.detectorRef.detectChanges();
+  }
+
+  headerText = '';
+  clickMF(e, data) {
+    this.headerText = e.text;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+    }
   }
 }
