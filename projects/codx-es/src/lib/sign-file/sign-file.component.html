@@ -22,6 +22,8 @@
     (clickMF)="clickMF($event, data)"
     typeMF="hover"
     [dataItem]="data"
+    (changeDataMF)="changeDataMF($event, data)"
+    [bookmark]="isBookmark(data)"
   >
   </codx-temp-full>
 </ng-template>

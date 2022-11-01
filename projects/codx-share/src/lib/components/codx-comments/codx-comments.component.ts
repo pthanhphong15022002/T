@@ -36,6 +36,7 @@ export class CodxCommentsComponent implements OnInit {
   checkVoted = false
   lstData: any;
   edit:boolean = false;
+  date = new Date();
   REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
@@ -136,6 +137,7 @@ export class CodxCommentsComponent implements OnInit {
                     this.codxATM.objectType = this.objectType;
                     (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
                       if(result){
+                        this.date = new Date();
                         this.fileUpload = result.data;
                         this.dt.detectChanges();
                         this.evtSendComment.emit(res);
@@ -178,6 +180,7 @@ export class CodxCommentsComponent implements OnInit {
               });
               (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
                 if(result){
+                  this.date = new Date();
                   this.fileUpload = null;
                   this.dt.detectChanges();
                   this.evtSendComment.emit(res);
