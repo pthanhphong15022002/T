@@ -1,15 +1,3 @@
 lib-reportingline codx-view-tree-detail .e-pane.e-static-pane+.e-pane {
     overflow: auto !important;
 }
-
-.reportingline-cell-positioninfo{
-    max-width: 40%;
-    overflow-x: hidden;
-}
-.reportingline-cell-job{
-    max-width: 20%;
-    overflow-x: hidden;
-}
-.reportingline-cell-quantily{
-    max-width: 15%;
-}

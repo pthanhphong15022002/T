@@ -23,7 +23,7 @@
     justify-content: center;
 }
 
-.om-process {
+.kr-process {
     position: relative;
 }
 
@@ -31,4 +31,16 @@
     margin-left: -40px;
     color: var(--primary-inverse);
     line-height: 20px;
+}
+
+.pic-face {
+    position: absolute;
+    top: 0;
+    left: 50%;
+}
+
+.pic-local {
+    position: absolute;
+    top: 0;
+    left: 50%;
 }

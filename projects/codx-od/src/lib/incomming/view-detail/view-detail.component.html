@@ -166,7 +166,7 @@
             </ng-container>
           </ng-template>
         </li>
-        <li [ngbNavItem]="2">
+        <!-- <li [ngbNavItem]="2">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
               <i class="icon-format_list_numbered me-2" [ngClass]="{ 'text-primary': active === 2 }"></i><span>Công
@@ -175,12 +175,13 @@
           </a>
           <ng-template ngbNavContent>
             <ng-container *ngIf="data?.tasks && data?.tasks.length > 0; else defaulEmpt">
-              <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks" [itemTemplate]="templateorg"
+             <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks" [itemTemplate]="templateorg"
                 [enableCheck]="true" idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true"
-                [isLoadChild]="false"></codx-treeview>
+                [isLoadChild]="false"></codx-treeview> 
+            
             </ng-container>
           </ng-template>
-        </li>
+        </li> -->
         <li [ngbNavItem]="3">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
@@ -196,7 +197,7 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID"></codx-tabs>
+    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []"></codx-tabs>
   </ng-template>
 
   <ng-template #templateorg let-item>

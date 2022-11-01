@@ -10,7 +10,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: calc(100vh - 232px);
+    height: calc(100vh - 202px);
+
 }
 
 .personal-container .pw-menu {
@@ -170,4 +171,12 @@ codx-card-img .card-icon-nowrap {
 .pw-storgae .container-fluid {
     padding: 0 !important;
     margin-top: 10px;
+}
+
+.e-listview .e-content {
+    padding-bottom: 0;
+}
+
+.e-list-item:last-child {
+    margin-bottom: 0 !important;
 }
