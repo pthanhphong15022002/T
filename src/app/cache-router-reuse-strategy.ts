@@ -82,7 +82,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
               layoutUrl: config.layoutUrl,
               layoutLogo: config.layoutLogo,
               breadcrumbs: config.breadcrumbs,
-              activeMenu: JSON.parse(JSON.stringify(config.activeMenu)),
+              activeMenu: config.activeMenu?JSON.parse(JSON.stringify(config.activeMenu)):{},
             };
           }
 
@@ -102,7 +102,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
             layoutUrl: this.codxSvc.layout.url.value,
             layoutLogo: this.codxSvc.layout.logo.value,
             breadcrumbs: this.codxSvc.page.breadcrumbs.value,
-            activeMenu: JSON.parse(JSON.stringify(this.codxSvc.activeMenu)),
+            activeMenu: this.codxSvc.activeMenu?JSON.parse(JSON.stringify(this.codxSvc.activeMenu)):{},
           };
         }
       }
@@ -124,7 +124,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
             layoutUrl: config.layoutUrl,
             layoutLogo: config.layoutLogo,
             breadcrumbs: config.breadcrumbs,
-            activeMenu: JSON.parse(JSON.stringify(config.activeMenu)),
+            activeMenu: config.activeMenu?JSON.parse(JSON.stringify(config.activeMenu)):{},
           };
         }
         this.codxSvcConfigs.delete(key);
@@ -143,7 +143,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
           layoutUrl: this.codxSvc.layout.url.value,
           layoutLogo: this.codxSvc.layout.logo.value,
           breadcrumbs: this.codxSvc.page.breadcrumbs.value,
-          activeMenu: JSON.parse(JSON.stringify(this.codxSvc.activeMenu)),
+          activeMenu: this.codxSvc.activeMenu?JSON.parse(JSON.stringify(this.codxSvc.activeMenu)):{},
         };
       }
     }
@@ -306,7 +306,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
         layoutUrl: this.codxSvc.layout.url.value,
         layoutLogo: this.codxSvc.layout.logo.value,
         breadcrumbs: this.codxSvc.page.breadcrumbs.value,
-        activeMenu: JSON.parse(JSON.stringify(this.codxSvc.activeMenu)),
+        activeMenu: this.codxSvc.activeMenu?JSON.parse(JSON.stringify(this.codxSvc.activeMenu)):{},
       };
       this.codxSvcConfigs.set(key, codxSvcConfig);
     }
