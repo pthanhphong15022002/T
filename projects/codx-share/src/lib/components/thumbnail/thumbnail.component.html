@@ -14,7 +14,7 @@
           <ng-template #full>
             <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}"
               imgCss="w-20px me-3 cursor-pointer" title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
-              subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.userName}}"
+              subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.createdBy}}"
               [desc]="getSubTitle(item.data.recID)" [descLine]="1">
             </codx-temp-full>
           </ng-template>
@@ -96,7 +96,7 @@
           <ng-template #full>
             <codx-temp-full imageSrc="{{dmSV.getImage(item)}}"
               imgCss="w-20px me-3 cursor-pointer" title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
-              subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.userName}}" [descLine]="1">
+              subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1">
             </codx-temp-full>
           </ng-template>
         </div>

@@ -612,7 +612,6 @@ export class HomeComponent extends UIComponent {
         this.dmSV.level = item.level;
         this.dmSV.getRight(item);
 
-        this.data = [];
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
         this.folderService.options.srtColumns = this.sortColumn;
@@ -651,7 +650,7 @@ export class HomeComponent extends UIComponent {
         });
       }
     } else {
-      this.data = [];
+      //this.data = [];
       if (item?.read) this.notificationsService.notify(this.titleAccessDenied);
     }
   }
@@ -809,7 +808,6 @@ export class HomeComponent extends UIComponent {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
-    this.data = [];
     //  this.data = [];
   }
   viewChanging(event) {
@@ -817,7 +815,6 @@ export class HomeComponent extends UIComponent {
     if (event.text != 'Search' && this.view.formModel.funcID != 'DMT02') {
       this.data = [];
       this.dmSV.page = 1;
-     
       var id = !this.dmSV.folderID ? '' : this.dmSV.folderID;
       this.getDataFile(id);
     }

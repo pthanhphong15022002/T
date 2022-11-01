@@ -41,14 +41,15 @@
       </div>
     </div>
     <div class="form-group">
-      <div>
+      <div class="col-md-6">
         <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
         </codx-label>
-      </div>
+
       <codx-input type="combobox" refValue="ProcessGroups" field="groupID" [crrValue]="process.groupID"
         (valueChange)="valueChange($event)" [multiple]="false" loadFull="true"
         [placeholder]="gridViewSetup?.GroupID?.headerText">
       </codx-input>
+    </div>
     </div>
     <div class="row">
       <div class="col-md-4">
@@ -83,7 +84,7 @@
         </div>
       </div>
       <div>
-        <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="data?.iterationID"
+        <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="process?.recID"
           hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
           allowMultiFile="1" [formModel]="dialog.formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)"
           (fileCount)="getfileCount($event)" displayThumb="full">
