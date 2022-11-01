@@ -35,7 +35,7 @@ export class PopupAddUpdate implements OnInit {
   formType = '';
   readOnly = false;
   data: any;
-  header = 'Thêm mới chi tiết sổ tay';
+  header = '';
   checkFile = false;
   functionList = {
     entityName: '',
@@ -66,8 +66,8 @@ export class PopupAddUpdate implements OnInit {
     this.dialog = dialog;
     this.formType = dt?.data[0].type;
     this.transID = dt?.data[0].parentID;
-    if (this.formType == 'edit') {
-      this.header = 'Cập nhật chi tiết sổ tay';
+    this.title = dt?.data[0].headerText;
+    if (this.formType == 'edit' || this.formType == 'copy') {
       this.note = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
       if (this.note.noteType !== 'text') {
@@ -77,6 +77,7 @@ export class PopupAddUpdate implements OnInit {
         };
         this.note.checkList.push(dtt);
       }
+      
     }
     this.cache.functionList('MWP00941').subscribe((res) => {
       if (res) {
@@ -86,7 +87,17 @@ export class PopupAddUpdate implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cache.functionList(this.functionList.funcID).subscribe((res) => {
+      if (res) {
+        this.header =
+          this.title +
+          ' ' +
+          res?.customName.charAt(0).toLocaleLowerCase() +
+          res?.customName.slice(1);
+      }
+    });
+  }
 
   ngAfterViewInit() {
     if (this.formType == 'edit') {
@@ -193,7 +204,7 @@ export class PopupAddUpdate implements OnInit {
 
   saveNoteBookDetails() {
     // this.attachment.saveFiles();
-    if (this.formType == 'add') this.addNoteBookDetails();
+    if (this.formType == 'add' || this.formType == 'copy') this.addNoteBookDetails();
     else this.updateNote();
   }
 
@@ -261,7 +272,7 @@ export class PopupAddUpdate implements OnInit {
       if (this.type !== 'text') this.note.checkList.pop();
     }
     this.note.noteType = this.type;
-    if (this.formType == 'add') {
+    if (this.formType == 'add' || this.formType == 'copy') {
       option.methodName = 'CreateNoteBookDetailsAsync';
       option.data = this.note;
     } else {

@@ -388,12 +388,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
     {
-      icon: 'icon-playlist_add_check',
+      icon: 'icon-person',
       text: 'Người tham gia',
       name: 'Resources',
     },
     { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'Open' },
-    { icon: 'icon-playlist_add_check', text: 'Công việc review', name: 'Job' },
+    { icon: 'icon-work_outline', text: 'Công việc review', name: 'Job' },
   ];
 
   setTitle(e: any) {
