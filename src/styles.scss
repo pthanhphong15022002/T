@@ -982,3 +982,17 @@ codx-tag .codx-tag:hover {
 .e-listview .e-content {
   overflow: auto;
 }
+
+/*** menu tree page detail **/
+.content-tree {
+  padding: 15px;
+}
+
+.content-tree .menu-item {
+  line-height: 24px !important;
+}
+
+.content-tree .icon-node {
+  display: inline-block;
+  width: 20px;
+}
