@@ -1,94 +1,92 @@
 
-<form [formGroup]="agencyForm" (ngSubmit)="onSave()">
-  <codx-form headerText="Thêm đơn vị nhận"  [body]="body" [footer]="footer" [dialog]="dialog">
-      <ng-template popup adde #body>
-        <div class="form-group mt-3">
-          <codx-label default="Nguồn"></codx-label>
-          <codx-input
-            type="valuelist"
-            [placeholder]="'Chọn nguồn'" 
-            refValue="OD001"
-            [Group]="agencyForm"
-            ControlName="category"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group mt-3">
-          <codx-label default="Tên đơn vị"></codx-label>
+<codx-form headerText="Thêm đơn vị nhận"  [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template popup adde #body>
+      <div class="form-group mt-3">
+        <codx-label default="Nguồn"></codx-label>
+        <codx-input
+          type="valuelist"
+          [placeholder]="'Chọn nguồn'" 
+          refValue="OD001"
+          [Group]="agencyForm"
+          ControlName="category"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group mt-3">
+        <codx-label default="Tên đơn vị"></codx-label>
+        <codx-input
+          type="text"
+          [Group]="agencyForm"
+          ControlName="agencyName"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group mt-3">
+        <codx-label default="Địa chỉ"></codx-label>
+        <codx-input
+          type="text"
+          [Group]="agencyForm"
+          ControlName="address"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group mt-3">
+        <codx-label default="Người liên hệ"></codx-label>
+        <codx-input
+          type="text"
+          [Group]="agencyForm"
+          ControlName="contactName"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group mt-3">
+        <codx-label default="Chức vụ"></codx-label>
+        <codx-input
+          type="text"
+          [Group]="agencyForm"
+          ControlName="jobTitle"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group row mt-3">
+        <div class="col-6">
+          <codx-label default="Điện thoại"></codx-label>
           <codx-input
             type="text"
             [Group]="agencyForm"
-            ControlName="agencyName"
+            ControlName="phone"
           >
           </codx-input>
         </div>
-        <div class="form-group mt-3">
-          <codx-label default="Địa chỉ"></codx-label>
+        <div class="col-6">
+          <codx-label default="Email"></codx-label>
           <codx-input
             type="text"
             [Group]="agencyForm"
-            ControlName="address"
+            ControlName="email"
           >
           </codx-input>
         </div>
-        <div class="form-group mt-3">
-          <codx-label default="Người liên hệ"></codx-label>
-          <codx-input
-            type="text"
-            [Group]="agencyForm"
-            ControlName="contactName"
-          >
-          </codx-input>
+      </div>
+      <div class="form-group mt-3">
+        <codx-label default="Ghi chú"></codx-label>
+        <codx-input
+          type="textarea"
+          format="ed2"
+          [Group]="agencyForm"
+          ControlName="note"
+        >
+        </codx-input>
+      </div>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <div class="d-flex">
+                <button type="button" class="btn btn-primary" type="submit" (click)="onSave()">Lưu</button>
+            </div>
         </div>
-        <div class="form-group mt-3">
-          <codx-label default="Chức vụ"></codx-label>
-          <codx-input
-            type="text"
-            [Group]="agencyForm"
-            ControlName="jobTitle"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group row mt-3">
-          <div class="col-6">
-            <codx-label default="Điện thoại"></codx-label>
-            <codx-input
-              type="text"
-              [Group]="agencyForm"
-              ControlName="phone"
-            >
-            </codx-input>
-          </div>
-          <div class="col-6">
-            <codx-label default="Email"></codx-label>
-            <codx-input
-              type="text"
-              [Group]="agencyForm"
-              ControlName="email"
-            >
-            </codx-input>
-          </div>
-        </div>
-        <div class="form-group mt-3">
-          <codx-label default="Ghi chú"></codx-label>
-          <codx-input
-            type="textarea"
-            format="ed2"
-            [Group]="agencyForm"
-            ControlName="note"
-          >
-          </codx-input>
-        </div>
-      </ng-template>
-      <ng-template #footer>
-          <div class="d-flex justify-content-end">
-              <div class="d-flex">
-                  <button type="button" class="btn btn-primary" type="submit">Lưu</button>
-              </div>
-          </div>
-      </ng-template>
-  </codx-form>
-</form>
+    </ng-template>
+</codx-form>
 
 <!--<div class="text-primary fw-bold fs-6 mt-4">Phòng ban</div>
 <div class="ms-9">

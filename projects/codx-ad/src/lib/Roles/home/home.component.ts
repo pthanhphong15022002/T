@@ -92,7 +92,8 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   LinkDetail(recID, roleName, isSystem) {
-    this.tempService.roleName = roleName;
+    debugger;
+    this.tempService.roleName.next(roleName);
     this.tempService.isSystem = isSystem;
     this.codxService.navigate('', this.urlDetailRoles, { recID: recID });
   }

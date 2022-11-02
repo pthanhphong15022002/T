@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthService , CRUDService, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthService , CRUDService, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditHobbyComponent } from './edit-hobby/edit-hobby.component';
@@ -183,7 +183,7 @@ export class EmployeeInfomationComponent extends UIComponent {
     var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
     return (yiq >= 128) ? 'black' : 'white';
   }
-  editSkill(item: any) {
+  editSkill() {
     if(this.view){
       this.editSkillMode = true;
       var model = new DialogModel();
@@ -191,22 +191,16 @@ export class EmployeeInfomationComponent extends UIComponent {
       model.FormModel = this.view.formModel;
       var data = {
         employeeID:this.employee.employeeID,
-        skill: item,
+        skill: this.skillEmployee,
       }
-      this.callfc.openForm(EditSkillComponent, '', 450, 600, '', data, "", model);
+      let popup = this.callfc.openForm(EditSkillComponent, '', 450, 600, '', data, "", model);
+      popup.closed.subscribe((res:any) =>{
+        if(res?.event)
+        {
+          this.skillEmployee = JSON.parse(JSON.stringify(res.event));
+        }
+      });
     }
-    // this.editSkillMode = true;
-    // var model = new DialogModel();
-    // model.DataService = new CRUDService(this.injector);
-    // var data = {
-    //   employeeID:this.employee.employeeID,
-    //   skill: item,
-    // }
-    // var dialog = this.callfc.openForm(EditSkillComponent, '', 450, 600, '', data, "", model);
-    // dialog.closed.subscribe(e => {
-    //   this.skillEmployee = [...e.event, ...[]];
-    //   this.detectorRef.detectChanges();
-    // })
   }
   scrollToElement(idElement:any): void {
     if(!idElement) return;
@@ -679,7 +673,7 @@ export class EmployeeInfomationComponent extends UIComponent {
          if(!isExsitElement)
          {
           let skill = {
-            RecID: Guid.newGuid(),
+            RecID: Util.uid(),
             CompetenceID: element.CompetenceID,
             CompetenceName: element.CompetenceName,
             ValueX: 0,
