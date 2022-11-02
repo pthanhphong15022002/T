@@ -1723,6 +1723,8 @@ export class PdfComponent
     let lstSigned = this.lstAreas.filter((area) => {
       return (
         area.signer &&
+        area.labelType != '9' &&
+        area.labelType != '8' &&
         this.imgConfig.includes(area.labelType) &&
         area.location.pageNumber + 1 == this.pageMax
       );
