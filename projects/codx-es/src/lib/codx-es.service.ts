@@ -1064,6 +1064,16 @@ export class CodxEsService {
     );
   }
 
+  updateTransAwaitingStatus(transID) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UpdateTransAwaitingStatusAsync',
+      [transID]
+    );
+  }
+
   getApprovalTransActive(sfRecID: string) {
     return this.api.execSv<any>(
       'es',

@@ -197,11 +197,11 @@
     </div>
     
   </div>
-  <div class="d-flex align-items-center mb-4" *ngIf="driver != null">
+  <div class="d-flex align-items-center mb-4 position-relative" *ngIf="driver != null">
     <div class="symbol symbol-30px symbol-circle me-4">
       <codx-img [objectId]="driver.objectID" [width]="30" [objectType]="driver.objectType"></codx-img>
-
-      <span class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
+      <span class="position-absolute"inlineSVG="./assets/themes/ep/default/img/{{ driver.icon }}" style="bottom: -5px;right:-4px"></span>
+      <!-- <span class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span> -->
     </div>
 
     <div class="d-flex flex-column flex-grow-1">
@@ -221,9 +221,11 @@
   </div>
 
   <div class="d-flex align-items-center mb-4" *ngIf="curUser != null">
-    <div class="symbol symbol-30px symbol-circle me-4">
+    <div class="symbol symbol-30px symbol-circle me-4 position-relative">
       <codx-img [objectId]="curUser.userID" [width]="30" objectType="AD_Users"></codx-img>
-      <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">R</span>
+      <span class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}" style="bottom: -5px;right:-4px"></span>
+      
+      <!-- <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">R</span> -->
     </div>
 
     <div class="d-flex flex-column flex-grow-1">
@@ -242,10 +244,10 @@
   </div>
 
   <div *ngIf="lstPeople != null">
-    <div class="d-flex align-items-center mb-4" *ngFor="let item of lstPeople">
+    <div class="d-flex align-items-center mb-4 position-relative" *ngFor="let item of lstPeople">
       <div class="symbol symbol-30px symbol-circle me-4">
         <codx-img [objectId]="item.userID" [width]="30" objectType="AD_Users"></codx-img>
-        <span class="symbol-badge badge badge-sm badge-circle bg-secondary top-100 start-100 text-white fs-8">O</span>
+        <span class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}" style="bottom: -5px;right:-4px"></span>
       </div>
 
       <div class="d-flex flex-column flex-grow-1">

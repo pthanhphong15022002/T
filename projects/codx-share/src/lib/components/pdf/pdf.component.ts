@@ -150,7 +150,7 @@ export class PdfComponent
   formAnnot: FormGroup;
   renderQRAllPage = false;
 
-  imgConfig = ['S1', 'S2', 'S3', '8'];
+  imgConfig = ['S1', 'S2', 'S3', '8', '9'];
 
   //save to db
   after_X_Second: number = 100;
@@ -229,7 +229,7 @@ export class PdfComponent
         this.align = res.Align;
         this.direction = res.Direction;
         this.areaControl = res.AreaControl == '1';
-        this.isAwait = res.Await == '1';
+        this.isAwait = false; //res.Await == '1';
         this.labels = res.Label.filter((label) => {
           return label.Language == this.user.language;
         });
@@ -441,16 +441,20 @@ export class PdfComponent
       this.tr.resizeEnabled(
         this.isEditable == false
           ? false
-          : area.isLock == false
-          ? true
-          : area.allowEditAreas
+          : area.allowEditAreas == false
+          ? false
+          : area.isLock == true
+          ? false
+          : true
       );
       this.tr.draggable(
         this.isEditable == false
           ? false
-          : area.isLock == false
-          ? true
-          : area.allowEditAreas
+          : area.allowEditAreas == false
+          ? false
+          : area.isLock == true
+          ? false
+          : true
       );
       this.tr.forceUpdate();
       this.tr.nodes([this.curSelectedArea]);
@@ -712,6 +716,12 @@ export class PdfComponent
               ) {
                 isRender = true;
               }
+              let transformable =
+                this.isEditable == false
+                  ? false
+                  : area.allowEditAreas == false
+                  ? false
+                  : area.isLock;
               if (isRender) {
                 switch (area.labelType) {
                   case 'S1': {
@@ -725,11 +735,7 @@ export class PdfComponent
                       url,
                       isUrl ? 'img' : 'text',
                       area.labelType,
-                      this.isEditable
-                        ? !this.isEditable
-                        : area.allowEditAreas
-                        ? area.allowEditAreas
-                        : !area.isLock,
+                      transformable,
                       false,
                       area.signer,
                       area.stepNo,
@@ -747,11 +753,7 @@ export class PdfComponent
                       url,
                       isUrl ? 'img' : 'text',
                       area.labelType,
-                      this.isEditable
-                        ? !this.isEditable
-                        : area.allowEditAreas
-                        ? area.allowEditAreas
-                        : !area.isLock,
+                      transformable,
                       false,
                       area.signer,
                       area.stepNo,
@@ -769,11 +771,7 @@ export class PdfComponent
                       url,
                       isUrl ? 'img' : 'text',
                       area.labelType,
-                      this.isEditable
-                        ? !this.isEditable
-                        : area.allowEditAreas
-                        ? area.allowEditAreas
-                        : !area.isLock,
+                      transformable,
                       false,
                       area.signer,
                       area.stepNo,
@@ -787,11 +785,7 @@ export class PdfComponent
                         qr,
                         'img',
                         area.labelType,
-                        this.isEditable
-                          ? !this.isEditable
-                          : area.allowEditAreas
-                          ? area.allowEditAreas
-                          : !area.isLock,
+                        transformable,
                         false,
                         area.signer,
                         area.stepNo,
@@ -805,11 +799,7 @@ export class PdfComponent
                       area.labelValue,
                       'img',
                       area.labelType,
-                      this.isEditable
-                        ? !this.isEditable
-                        : area.allowEditAreas
-                        ? area.allowEditAreas
-                        : !area.isLock,
+                      transformable,
                       false,
                       area.signer,
                       area.stepNo,
@@ -826,7 +816,7 @@ export class PdfComponent
                       area.labelValue,
                       'text',
                       area.labelType,
-                      area.allowEditAreas,
+                      transformable,
                       false,
                       area.signer,
                       area.stepNo,
@@ -843,6 +833,15 @@ export class PdfComponent
           //stage event
           stage.on('mouseenter', (mouseover: any) => {
             if (this.needAddKonva) {
+              let transformable =
+                this.isEditable == false
+                  ? false
+                  : this.signerInfo.allowEdit == false
+                  ? false
+                  : true;
+              this.tr.rotateEnabled(false);
+              this.tr.draggable(transformable);
+              this.tr.resizeEnabled(transformable);
               this.tr.nodes([this.needAddKonva]);
               this.tr.forceUpdate();
               stage.children[0].add(this.tr);
@@ -919,7 +918,6 @@ export class PdfComponent
           //left click
           stage.on('click', (click: any) => {
             let layerChildren = this.lstLayer.get(e.pageNumber);
-
             if (click.target == stage) {
               if (this.contextMenu) {
                 this.contextMenu.style.display = 'none';
@@ -931,7 +929,7 @@ export class PdfComponent
               this.tr.nodes([]);
             } else {
               this.curSelectedArea = click.target;
-              console.log('cur click area', this.curSelectedArea);
+              this.curSelectedAnnotID = this.curSelectedArea.id();
 
               this.tr.resizeEnabled(
                 this.isEditable == false
@@ -958,7 +956,11 @@ export class PdfComponent
             }
             this.curSelectedArea = e.target;
 
-            if (this.contextMenu) {
+            if (
+              this.isEditable &&
+              this.curSelectedArea.draggable() &&
+              this.contextMenu
+            ) {
               this.contextMenu.style.display = 'initial';
               this.contextMenu.style.zIndex = '2';
 
@@ -1721,6 +1723,8 @@ export class PdfComponent
     let lstSigned = this.lstAreas.filter((area) => {
       return (
         area.signer &&
+        area.labelType != '9' &&
+        area.labelType != '8' &&
         this.imgConfig.includes(area.labelType) &&
         area.location.pageNumber + 1 == this.pageMax
       );
@@ -1791,12 +1795,14 @@ export class PdfComponent
           LabelValue: url,
         };
 
+        let transformable =
+          this.isEditable == false ? false : this.signerInfo.allowEditAreas;
         if (!url || url == '') {
           let textArea = new Konva.Text({
             text: person.fullName + ' - ' + this.vllActions[0]?.text,
             fontSize: 14,
             fontFamily: 'Arial',
-            draggable: true,
+            draggable: transformable,
             padding: 10,
             name: JSON.stringify(tmpName),
             id: recID,
@@ -1892,7 +1898,7 @@ export class PdfComponent
               y: this.maxTop + row * 100 + 10,
               id: recID,
               name: JSON.stringify(tmpName),
-              draggable: true,
+              draggable: transformable,
             });
             imgArea.scale({ x: this.xScale, y: this.yScale });
 
