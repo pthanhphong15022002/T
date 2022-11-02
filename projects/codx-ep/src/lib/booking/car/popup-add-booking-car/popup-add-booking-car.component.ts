@@ -420,7 +420,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.bookingOn = this.data.startDate;
       this.detectorRef.detectChanges();
     }
-    
+    if(!this.isAdd){
+      this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
+        if(res){
+          this.carCapacity= res.capacity;
+        }
+      })
+    }
     
   }
 
