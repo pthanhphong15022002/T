@@ -78,7 +78,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
-        activeMF: false,
         other: true,
         mandatory: false,
         answerType: 'L',
@@ -95,160 +94,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
             hasPicture: false,
           },
         ],
-        activeMF: false,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 2,
-        question: 'Câu hỏi 3',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 3,
-        question: 'Câu hỏi 4',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: true,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 4,
-        question: 'Câu hỏi 5',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 5,
-        question: 'Câu hỏi 6',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 6,
-        question: 'Câu hỏi 7',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 7,
-        question: 'Câu hỏi 8',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 8,
-        question: 'Câu hỏi 9',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 9,
-        question: 'Câu hỏi 10',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-      },
-      {
-        seqNo: 10,
-        question: 'Câu hỏi 11',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
         other: true,
         mandatory: false,
         answerType: 'L',
@@ -318,7 +163,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   itemActive: any;
-  clickToScroll(el: HTMLElement, seqNo) {
+  clickToScroll(seqNo) {
     var html = document.getElementById(`card-survey-${seqNo}`);
     var htmlE = html as HTMLElement;
     var htmlMF = document.querySelector('.moreFC');
@@ -443,16 +288,25 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   addQuestion(dataQuestion) {
-    if(dataQuestion) {
+    if (dataQuestion) {
       var dataAnswerTemp = {
-        seqNo: dataQuestion.seqNo + 1,
+        seqNo: 0,
         answer: 'Tùy chọn 1',
         other: true,
         isColumn: false,
         hasPicture: false,
       };
-      dataQuestion.push(dataAnswerTemp);
-      dataQuestion.forEach((x, index) => x.seqNo = index)
+      var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
+      tempQuestion.seqNo = dataQuestion.seqNo + 1;
+      tempQuestion.answers = dataAnswerTemp;
+      tempQuestion.answerType = 'L';
+      tempQuestion.question = `Câu hỏi`;
+      this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
+      this.questions.forEach((x, index) => (x.seqNo = index));
+      this.questions[dataQuestion.seqNo].active = false;
+      this.questions[dataQuestion.seqNo + 1].active = true;
+      this.itemActive = this.questions[dataQuestion.seqNo + 1];
+      this.clickToScroll(dataQuestion.seqNo + 1);
     }
   }
 
