@@ -229,7 +229,7 @@ export class PdfComponent
         this.align = res.Align;
         this.direction = res.Direction;
         this.areaControl = res.AreaControl == '1';
-        this.isAwait = false; //res.Await == '1';
+        this.isAwait = res.Await == '1';
         this.labels = res.Label.filter((label) => {
           return label.Language == this.user.language;
         });
@@ -1723,6 +1723,8 @@ export class PdfComponent
     let lstSigned = this.lstAreas.filter((area) => {
       return (
         area.signer &&
+        area.labelType != '9' &&
+        area.labelType != '8' &&
         this.imgConfig.includes(area.labelType) &&
         area.location.pageNumber + 1 == this.pageMax
       );

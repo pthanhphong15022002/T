@@ -876,8 +876,8 @@ export class CodxTasksComponent
 
   requestEnded(evt: any) {}
 
-  crrStatusData(crrStatus) {
-    this.crrStatus = crrStatus
+  crrStatusData(status) {
+    this.crrStatus = status
   }
 
   onDragDrop(data) {
@@ -895,6 +895,7 @@ export class CodxTasksComponent
         UrlUtil.getUrl('defaultValue', x?.url) == data.status &&
         UrlUtil.getUrl('defaultField', x?.url) == 'Status'
     );
+    data.status = this.crrStatus
     if (moreFun) this.changeStatusTask(moreFun, data);
   }
 

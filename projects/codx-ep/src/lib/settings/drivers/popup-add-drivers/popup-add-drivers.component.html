@@ -1,5 +1,5 @@
 <codx-form
-  #form  
+  #form
   [headerText]="headerText"
   [subHeaderText]="subHeaderText"
   [body]="body"
@@ -9,23 +9,20 @@
   [data]="data"
   *ngIf="isAfterRender"
 >
-<ng-template #body>
-  <div class="form-group">
-    <codx-label
-      fiedName="ResourceName"
-      [formModel]="form.formModel"
-    >
-    </codx-label>
-    <codx-input
-      ControlName="resourceName"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-    >
-    </codx-input>
-  </div>
+  <ng-template #body>
+    <div class="form-group">
+      <codx-label fiedName="ResourceName" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        ControlName="resourceName"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      >
+      </codx-input>
+    </div>
 
-  <div class="row">
-    <!-- <div class="col-4 form-group">
+    <div class="row">
+      <!-- <div class="col-4 form-group">
       <codx-label
         fiedName="Category"
         [formModel]="form.formModel"
@@ -39,74 +36,68 @@
         >
         </codx-input>
     </div> -->
-    <div class="form-group" >
-      <codx-label
-        fiedName="CompanyID"
-        [formModel]="form.formModel"
+      <div class="form-group">
+        <codx-label fiedName="CompanyID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          [disabled]="data.category == 1 ? false : true"
+          [Group]="form.formGroup"
+          ControlName="companyID"
+          [formModel]="form.formModel"
         >
-      </codx-label>
-      <codx-input
-        [disabled]="data.category == 1 ? false :true"
-        [Group]="form.formGroup"
-        ControlName="companyID"
-        [formModel]="form.formModel"
-      >
-      </codx-input> 
+        </codx-input>
+      </div>
     </div>
-  </div>
-    
 
-  <div class="row">
-    <div class="col-9 form-group">
-      <codx-label fiedName="LinkID" [formModel]="form.formModel"></codx-label>
-      <codx-input
-        ControlName="linkID"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        [multiple]="true"
-        (valueChange)="valueCbxCarChange($event)"
+    <div class="row">
+      <div class="col-9 form-group">
+        <codx-label fiedName="LinkID" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          ControlName="linkID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [multiple]="true"
+          (valueChange)="valueCbxCarChange($event)"
         >
-      </codx-input>      
+        </codx-input>
+      </div>
+      <div class="col-3 form-group">
+        <codx-label fiedName="Code" [formModel]="form.formModel"> </codx-label>
+        <codx-input
+          type="text"
+          field="code"
+          placeholder="Biển số"
+          [crrValue]="data.code"
+          [disabled]="true"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
     </div>
-    <div class="col-3 form-group">
-      <codx-label fiedName="Code" [formModel]="form.formModel">
-      </codx-label>
-      <codx-input
-        type="text"
-        field="code" 
-        placeholder="Biển số"
-        [crrValue]="data.code"
-        [disabled]="true"
-        (valueChange)="valueChange($event)"
-      >
-      </codx-input>      
+
+    <div class="row">
+      <div class="form-group">
+        <codx-label fiedName="Owner" [formModel]="form.formModel"> </codx-label>
+
+        <codx-input
+          ControlName="owner"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+        >
+        </codx-input>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="form-group">
-      <codx-label fiedName="Owner" [formModel]="form.formModel">
-      </codx-label>
-
-      <codx-input
-        ControlName="owner"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      >
-      </codx-input>  
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="form-group">
-      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>         
-      <codx-input
-        ControlName="note"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup" 
-      >
-      </codx-input>   
-      <!-- <codx-input
+    <div class="row">
+      <div class="form-group">
+        <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          ControlName="note"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+        <!-- <codx-input
         type="textarea" format="ed2" rows="3"
         field="note"
         placeholder="Ghi chú"
@@ -114,27 +105,33 @@
         (valueChange)="valueChange($event)"
       >
       </codx-input> -->
+      </div>
     </div>
-  </div>
-  
-  <div  *ngIf="data?.recID"  class="form-group upload-img">
-    <codx-img #imageUpLoad [width]="100" [objectType]="'EP_Resources'" imageType="square" aria-disabled="false" [isAllowEdit]="true"
-        [funcId]="formModel?.funcID" [objectId]="data?.recID">
-    </codx-img>
-  </div>
-</ng-template>
 
-<ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button class="btn btn-light-primary" (click)="onSaveForm()">
-      <codx-label
+    <div *ngIf="data?.recID" class="form-group upload-img">
+      <codx-img
+        #imageUpLoad
+        [width]="100"
+        [objectType]="'EP_Resources'"
+        imageType="circle"
+        aria-disabled="false"
+        [isAllowEdit]="true"
+        [funcId]="formModel?.funcID"
+        [objectId]="data?.recID"
+      >
+      </codx-img>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-light-primary" (click)="onSaveForm()">
+        <codx-label
           name="lblSave"
           default="Lưu"
           [formModel]="form.formModel"
         ></codx-label>
-    </button>
-  </div>
-</ng-template>
-
+      </button>
+    </div>
+  </ng-template>
 </codx-form>
-
