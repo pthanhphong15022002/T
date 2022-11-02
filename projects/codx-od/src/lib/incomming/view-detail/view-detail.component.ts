@@ -1,7 +1,10 @@
 import {
   AfterViewChecked,
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ContentChild,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -9,6 +12,7 @@ import {
   Optional,
   Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -34,12 +38,14 @@ import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/po
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxImportComponent } from 'projects/codx-share/src/lib/components/codx-import/codx-import.component';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { CodxOdService } from '../../codx-od.service';
 import {
   convertHtmlAgency2,
   extractContent,
   formatDtDis,
+  getIdUser,
   getListImg,
 } from '../../function/default.function';
 import { DispatchService } from '../../services/dispatch.service';
@@ -57,10 +63,11 @@ import { UpdateExtendComponent } from '../update/update.component';
   styleUrls: ['./view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ViewDetailComponent implements OnInit, OnChanges {
+export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
   active = 1;
   checkUserPer: any;
   userID: any;
+  @ViewChild("reference") reference: TemplateRef<ElementRef>;
   @Input() pfuncID: any;
   @Input() data: any = { category: 'Phân loại công văn' };
   @Input() gridViewSetup: any;
@@ -73,8 +80,10 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @ViewChild('tmpdeadline') tmpdeadline: any;
   @ViewChild('tmpFolderCopy') tmpFolderCopy: any;
   @ViewChild('tmpexport') tmpexport!: any;
+  tabControl : TabModel[];
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency2;
+  getIdUser = getIdUser;
   dvlSecurity: any;
   dvlUrgency: any;
   dvlStatus: any;
@@ -102,6 +111,17 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     private ref: ChangeDetectorRef,
     private codxODService: CodxOdService
   ) {}
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'ReferencesOD', textDefault: 'Tham chiếu', isActive: false , template: this.reference},
+      // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
+  
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.data &&
@@ -132,6 +152,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
     this.setHeight();
+   
   }
   ngOnInit(): void {
     this.active = 1;
@@ -139,8 +160,8 @@ export class ViewDetailComponent implements OnInit, OnChanges {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
+    
   }
-
   setHeight() {
     let main,
       header = 0;
@@ -1103,5 +1124,11 @@ export class ViewDetailComponent implements OnInit, OnChanges {
 
   clickTemp(e) {
     e.stopPropagation();
+  }
+  checkDeadLine(time: any) {
+    if (new Date(time).getTime() < new Date().getTime() || !time) {
+      return 'icon-access_alarm';
+    }
+    return '';
   }
 }
