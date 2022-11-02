@@ -33,13 +33,13 @@ declare var $: any;
 })
 export class RoleDetailComponent
   extends UIComponent
-  implements OnDestroy, OnChanges {
+  implements OnDestroy, OnChanges
+{
   dataMoreFuntions: any;
   dataBasic: any = [];
   dataMore: any = [];
   dataExport: any = [];
   recid: any;
-  funid: any;
   vll: any;
   myTree = [];
   form: FormGroup;
@@ -52,7 +52,7 @@ export class RoleDetailComponent
   active = false;
   dataPermission: any = {};
   sub: Subscription;
-  funcID: any;
+  funcIDPara: any;
   views = [];
   formName = '';
   gridViewName = '';
@@ -74,12 +74,15 @@ export class RoleDetailComponent
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
-      if (params) this.funcID = params['funcID'];
+      //this.roleName = this.tempService.roleName;
+      if (params) this.funcIDPara = params['funcID'];
+    });
+    this.tempService.roleName.subscribe((res) => {
+      this.roleName = res;
     });
     this.tenant = this.tenantStore.get()?.tenant;
-    this.roleName = this.tempService.roleName;
   }
-  ngOnChanges(changes: SimpleChanges): void { }
+  ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
     var rid = this.at.snapshot.queryParams.recID;
     if (rid) {
@@ -133,8 +136,8 @@ export class RoleDetailComponent
       let item = evt.data;
       this.formName = item.formName;
       this.gridViewName = item.gridViewName;
-      this.functionID = item.functionType == 'M' ? '' : item.functionID;
-      if (this.formName && this.gridViewName && this.functionID) {
+      this.functionID = item.functionID;
+      if (item.parent && item.parent.isFunction) {
         this.roleName = this.tempService.roleName + ' - ' + item.customName;
         this.api
           .execSv(
@@ -334,9 +337,8 @@ export class RoleDetailComponent
   }
 
   Delete() {
-    var funcID = this.funcID;
     var formName = this.formName;
-    var funcID = this.funcID;
+    var funcID = this.funcIDPara;
     var roleID = this.recid;
     if (!funcID || !roleID) return;
     this.api

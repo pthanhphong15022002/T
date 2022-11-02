@@ -13,10 +13,10 @@ import {
   NgxUiLoaderRouterModule,
   NgxUiLoaderHttpModule,
 } from 'ngx-ui-loader';
-import { AppRoutingModule, routes } from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { AuthService, CodxCoreModule } from 'codx-core';
+import { AuthService, CodxCoreModule, CacheRouteReuseStrategy } from 'codx-core';
 import { ERMModule, SharedModule } from '../shared';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/vi';
@@ -32,11 +32,7 @@ import { FileComponent } from './file/file.component';
 import { AppConfigService } from '@core/services/config/app-config.service';
 import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
-import { CodxSVModule } from 'projects/codx-sv/src/public-api';
-import { CacheRouteReuseStrategy } from './cache-router-reuse-strategy';
 
-
-//import { ReportComponent } from './modules/report/report.component';
 registerLocaleData(localeFr);
 
 function appInitializer(authService: AuthService, appConfig: AppConfigService) {

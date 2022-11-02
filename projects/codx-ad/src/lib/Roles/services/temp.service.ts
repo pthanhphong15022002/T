@@ -1,16 +1,19 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { flattenDiagnosticMessageText } from "typescript";
-import { tmpformRoles } from "../model/tmpformRoles";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { flattenDiagnosticMessageText } from 'typescript';
+import { tmpformRoles } from '../model/tmpformRoles';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class TempService {
   id: any;
-  roleName = "Nhân viên";
+  //roleName = 'Nhân viên';
   isSystem = false;
   isNew = true;
+  roleName: BehaviorSubject<string> = new BehaviorSubject<string>(
+    '' //'./assets/media/logos/logo-1-dark.svg'
+  );
   private modules = new BehaviorSubject<any>(null);
   loadModule = this.modules.asObservable();
   //get data home

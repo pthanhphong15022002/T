@@ -34,7 +34,8 @@
         </codx-label>
       </div>
       <codx-input type="datetime" [crrValue]="startTime" format="t" placeholder="timefrom"
-        (valueChange)="valueStartTimeChange($event)">
+        (valueChange)="valueStartTimeChange($event)"
+        >
       </codx-input>
     </div>
     <div class="col-3">
@@ -43,12 +44,12 @@
         </codx-label>
       </div>
       <codx-input type="datetime" [crrValue]="endTime" format="t" placeholder="timefrom"
-        (valueChange)="valueEndTimeChange($event)">
+        (valueChange)="valueEndTimeChange($event)" >
       </codx-input>
     </div>
     <div class="col-2 mt-6">
       <codx-input #checkbox type="checkbox" name="checkbox" label="Cả ngày" labelPosition="After"
-        [formModel]="form.formModel" (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay">
+        [formModel]="form.formModel" (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay" >
       </codx-input>
       <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
@@ -304,7 +305,7 @@
         </div>
       </div>
       <div class="form-group mt-3">
-        <codx-label fiedName="refID" [formModel]="form.formModel" default="Dự án">
+        <codx-label fiedName="RefID" [formModel]="form.formModel" default="Dự án">
         </codx-label>
         <!-- <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
           [crrValue]="meeting.refID" loadFull="true">

@@ -61,22 +61,27 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
     }
   }
 
+  // getData() {
+  //   this.api.exec('ERM.Business.CM', 'DataBusiness', 'LoadDataAsync', this.dialog.formModel).subscribe(res => {
+  //     debugger
+  //   })
+  // }
+
   onEditNote(itemNoteBook) {
     var obj = {
       itemNoteUpdate: this.data,
       itemNoteBookUpdate: itemNoteBook,
       dialogRef: this.dialog,
     };
-    this.dialog = this.callfc.openForm(
+    this.callfc.openForm(
       PopupTitleComponent,
       '',
       400,
       100,
       '',
       obj
-    );
-    this.dialog.closed.subscribe((res) => {
-      if (res) this.dialogRef.close(res);
+    ).closed.subscribe((res) => {
+      if (res) if (this.dialogRef) this.dialogRef.close(res);
     });
   }
 }

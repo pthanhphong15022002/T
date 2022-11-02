@@ -83,7 +83,8 @@ export class PopupAddCarsComponent extends UIComponent {
         let device = new Device();
         device.id = item.value;
         device.text = item.text;
-        device.icon = item.icon;        
+        device.icon = item.icon; 
+        device.isSelected= false;       
         if (!this.isAdd) {
           this.data.equipments.forEach((item) => {
             if (item.equipmentID == device.id) {
@@ -189,9 +190,10 @@ export class PopupAddCarsComponent extends UIComponent {
               this.imageUpload
               .updateFileDirectReload(this.returnData.recID)
               .subscribe((result) => {
-                if (result) {
+                if (result) {                  
                   //xử lí nếu upload ảnh thất bại
-                  //...                
+                  //...
+                  this.dialogRef && this.dialogRef.close(this.returnData);                
                 }
                 this.dialogRef && this.dialogRef.close(this.returnData);
               });  
@@ -201,7 +203,6 @@ export class PopupAddCarsComponent extends UIComponent {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
           } 
-          this.dialogRef && this.dialogRef.close(this.returnData);
         }
         else{ 
           //Trả lỗi từ backend.         

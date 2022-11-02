@@ -81,6 +81,12 @@ export const routes: Routes = [
         path: 'personals/:funcID',
         component: PersonalsComponent,
       },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
       {
         path: 'notedetails/:funcID',
         component: DetailNoteBooksComponent,

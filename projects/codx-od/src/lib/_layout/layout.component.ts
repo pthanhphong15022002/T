@@ -37,6 +37,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.hideToolbar.SetLayout.subscribe(res => {
       if (res != null)
         this.setToolbar(res);
+        
     })
   }
 

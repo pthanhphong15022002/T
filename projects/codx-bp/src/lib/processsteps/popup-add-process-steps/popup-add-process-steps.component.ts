@@ -52,9 +52,11 @@ export class PopupAddProcessStepsComponent implements OnInit {
   textChange = '';
   popover: any;
   crrIndex = 0;
-  grvSetup: any;
+
   listOwnerID = [];
   listOwnerDetails = [];
+
+  formModelMenu :FormModel ;
 
   constructor(
     private bpService: CodxBpService,
@@ -72,22 +74,27 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
-    if (this.stepType) this.processSteps.stepType = this.stepType;
-    this.owners = this.processSteps.owners ? this.processSteps.owners : []
-    this.dialog = dialog;
+    this.formModelMenu = dt?.data[3];
 
+    if (this.stepType) this.processSteps.stepType = this.stepType;
+    this.owners = this.processSteps.owners ? this.processSteps.owners : [];
+    this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
+
     this.title = this.titleActon;
-    if(this.action =='edit') this.showLabelAttachment = this.processSteps.attachments > 0?true : false
+    if (this.action == 'edit')
+      this.showLabelAttachment =
+        this.processSteps.attachments > 0 ? true : false;
+  
   }
 
   ngOnInit(): void {
-  this.loadData()
+    this.loadData();
   }
 
-  loadData(){
-    if(this.processSteps.stepType=="C"){
-        this.referenceText = this.processSteps?.reference?.split(";")
+  loadData() {
+    if (this.processSteps.stepType == 'C') {
+      this.referenceText = this.processSteps?.reference?.split(';');
     }
   }
 
@@ -99,7 +106,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   async saveData() {
     this.processSteps.owners = this.owners;
-    this.convertReference()
+    this.convertReference();
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -150,13 +157,13 @@ export class PopupAddProcessStepsComponent implements OnInit {
     //     } else this.dialog.close();
     //   });
     this.bpService
-    .updateProcessStep([this.processSteps,this.owners])
-    .subscribe((data) => {
-      if (data) {
-        this.attachment?.clearData();
-        this.dialog.close(data);
-      } else this.dialog.close();
-    });
+      .updateProcessStep([this.processSteps, this.owners])
+      .subscribe((data) => {
+        if (data) {
+          this.attachment?.clearData();
+          this.dialog.close(data);
+        } else this.dialog.close();
+      });
   }
   //#endregion
   //#region
@@ -249,6 +256,4 @@ export class PopupAddProcessStepsComponent implements OnInit {
     var i = this.owners.findIndex((x) => x.objectID == objectID);
     if (i != -1) this.owners.slice(i, 1);
   }
-
-  
 }

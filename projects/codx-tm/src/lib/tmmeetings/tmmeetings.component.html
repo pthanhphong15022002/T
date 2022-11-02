@@ -18,7 +18,7 @@
     <div (dblclick)="doubleClick(data)">
       <codx-card-center cardCss="border w-250px h-100 px-3 py-3 position-relative" [formModel]="view.formModel"
         [headerTmp]="headerTmp" [title]="getDate(data)" titleCss="fs-5 mb-2 fw-bold" [subTitle]="data.meetingName"
-        [dataItem]="data" [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
+        [dataItem]="data" [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"  [moreFuncCss]="'me-10'"
         (changeDataMF)="changeDataMF($event, data)" [moreFuncCss]="'me-8'">
       </codx-card-center>
     </div>

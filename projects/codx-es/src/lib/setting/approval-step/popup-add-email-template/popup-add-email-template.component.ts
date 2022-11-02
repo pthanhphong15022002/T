@@ -109,6 +109,10 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.templateID = data?.data?.templateID;
     console.log(this.templateID);
 
+    this.cache.valueList('ES014').subscribe((res) => {
+      console.log('vll', res);
+    });
+
     this.showIsPublish = data.data?.showIsPublish ?? true;
     this.showIsTemplate = data.data?.showIsTemplate ?? true;
     this.showSendLater = data.data?.showSendLater ?? true;
@@ -215,15 +219,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
                         });
                       }
 
-                      if (this.lstFrom.length == 0) {
-                        const user = this.auth.get();
-                        let defaultFrom = new EmailSendTo();
-                        defaultFrom.objectType = 'U';
-                        defaultFrom.objectID = user.userID;
-                        defaultFrom.text = user.userName;
-
-                        this.lstFrom.push(defaultFrom);
-                      }
                       this.formModel.currentData = this.data;
                       this.isAfterRender = true;
                     }
@@ -340,7 +335,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       switch (event.field) {
         case 'from':
           event.data?.forEach((element) => {
-            let index = this.lstFrom.findIndex((p) => p.objetID == element.id);
+            let index = this.lstFrom.findIndex((p) => p.objectID == element.id);
 
             if (this.lstFrom.length == 0 || index < 0) {
               let item = new EmailSendTo();
@@ -356,7 +351,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           break;
         case 'to':
           event.data?.forEach((element) => {
-            let index = this.lstTo.findIndex((p) => p.objetID == element.id);
+            let index = this.lstTo.findIndex((p) => p.objectID == element.id);
             if (this.lstTo.length == 0 || index < 0) {
               let item = new EmailSendTo();
               item.objectID = element.id;
@@ -369,7 +364,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           break;
         case 'cc':
           event.data?.forEach((element) => {
-            let index = this.lstCc.findIndex((p) => p.objetID == element.id);
+            let index = this.lstCc.findIndex((p) => p.objectID == element.id);
 
             if (this.lstCc.length == 0 || index < 0) {
               let item = new EmailSendTo();
@@ -383,7 +378,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
           break;
         case 'bcc':
           event.data?.forEach((element) => {
-            let index = this.lstTo.findIndex((p) => p.objetID == element.id);
+            let index = this.lstTo.findIndex((p) => p.objectID == element.id);
 
             if (this.lstCc.length == 0 || index < 0) {
               let item = new EmailSendTo();
@@ -449,7 +444,18 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     if (event) {
       let lst = [];
       event.forEach((element) => {
-        if (element.objectType.length == 1) {
+        if (element.objectType == 'A' || element.objectType == 'S') {
+          let isExist = this.isExist(element?.objectType, sendType);
+          if (isExist == false) {
+            let appr = new EmailSendTo();
+            appr.objectID = element?.objectType;
+            appr.text = element?.objectName;
+            appr.objectType = element?.objectType;
+            appr.sendType = sendType.toString();
+            appr.icon = sendType.icon;
+            lst.push(appr);
+          }
+        } else if (element.objectType.length == 1) {
           let lstID = element?.id.split(';');
           let lstUserName = element?.text.split(';');
 
@@ -495,20 +501,20 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isExist(objetID, sendType) {
+  isExist(objectID, sendType) {
     let index = -1;
     switch (sendType) {
       case 1:
-        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        index = this.lstFrom.findIndex((p) => p.objectID == objectID);
         break;
       case 2:
-        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        index = this.lstFrom.findIndex((p) => p.objectID == objectID);
         break;
       case 3:
-        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        index = this.lstFrom.findIndex((p) => p.objectID == objectID);
         break;
       case 4:
-        index = this.lstFrom.findIndex((p) => p.objetID == objetID);
+        index = this.lstFrom.findIndex((p) => p.objectID == objectID);
         break;
     }
 

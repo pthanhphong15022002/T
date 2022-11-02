@@ -131,7 +131,9 @@
 <!-- viewlist-content -detail-Process tesssssssssssssssssssssssss  -->
 <ng-template #itemViewList>
   <div class="card">
-    <div class="card-body">
+    <div class="card-body" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto" data-kt-scroll-dependencies=".codx-wapper"
+    data-kt-scroll-wrappers=".codx-toolbar .no-header" [attr.data-kt-scroll-offset]="'130px'">
       <div class="mb-5">
         <h4 class="fw-bold text-gray-900 mb-104">
           {{ process?.processName }}
@@ -199,8 +201,23 @@
           </div>
         </div>
       </div>
+      <ng-container *ngIf="view.dataService.data?.length==0">
+        <div class="w-100">
+          <div class="list-empty card card-flush h-100">
+            <div class="d-flex flex-column flex-center justify-content-center">
+              <img
+                src="../assets/themes/sys/default/img/DataEmpty.svg"
+                class="w-400px"
+              />
+              <div class="fs-5 text-dark fw-bold mt-2 text-center">
+                {{ "SYS011" | mssg | async }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
       <!-- drop -->
-      <ng-container>
+      <ng-container *ngIf="view.dataService.data?.length >0">
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event, null)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let item of dataTreeProcessStep">
@@ -285,6 +302,7 @@
       </ng-container>
     </div>
   </div>
+ 
 </ng-template>
 
 <ng-template #titleTmp let-data>

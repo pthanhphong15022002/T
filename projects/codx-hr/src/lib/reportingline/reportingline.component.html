@@ -44,44 +44,45 @@
                         </p>
                     </div>
                 </div>
-                <!-- HR_Positions job -->
-                <div class="reportingline-cell-job">
-                    <div class="text-start w-100">
-                        <div class="align-items-center1 fs-7">
-                            <span class="me-1">
-                                <codx-label [formModel]="view.formModel" name="lblJobName" default="Nhóm chức danh:">
-                                </codx-label>
+            </div>
+            <!-- HR_Positions job -->
+            <div class="reportingline-cell-job w-200px mw-200px min-w-200px mx-6">
+                <div class="text-start w-100">
+                    <div class="align-items-center1 fs-7">
+                        <span class="me-1">
+                            <codx-label [formModel]="view.formModel" name="lblJobName" default="Nhóm chức danh:">
+                            </codx-label>
+                        </span>
+                        <span class="text-dark fw-bolder">
+                            <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
+                        </span>
+                    </div>
+                    <div class="align-items-center1 fs-7">
+                        <span class="me-2">
+                            <codx-label [formModel]="view.formModel" name="lbljobGroup" default="Chức vụ:">
+                            </codx-label>
+                        </span>
+                        <span class="text-dark fw-bolder">
+                            <span #jobGroupID>
+                                {{ data.jobGroupID | formatvalue: view.formModel: "jobGroupID": jobGroupID | async }}
                             </span>
-                            <span class="text-dark fw-bolder">
-                                <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
-                            </span>
-                        </div>
-                        <div class="align-items-center1 fs-7">
-                            <span class="me-2">
-                                <codx-label  [formModel]="view.formModel" name="lbljobGroup"  default="Chức vụ:">
-                                </codx-label>
-                            </span>
-                            <span class="text-dark fw-bolder">
-                                <span #jobGroupID>
-                                    {{ data.jobGroupID | formatvalue: view.formModel: "jobGroupID": jobGroupID | async }}
-                                </span>
-                            </span>
-                        </div>
+                        </span>
                     </div>
                 </div>
+            </div>
+            <div class="d-flex align-items-center w-350px mw-350px min-w-350px">
                 <!-- HR_Positions headcounts -->
-                <div class="reportingline-cell-quantily">
-                    <div class="d-flex flex-column align-items-center pos-item w-100px"
-                        (click)="loadEmployByCountStatus()">
+                <div class="reportingline-cell-quantily w-25">
+                    <div class="d-flex flex-column align-items-center pos-item" (click)="loadEmployByCountStatus()">
                         <div class="pos-number text-gray-500 fs-2 fw-bold">{{data.headcounts}}</div>
                         <div class="text-gray-600 mt-1">
                             <codx-label [formModel]="view.formModel" name="lblHeadcounts" default="Định biên">
                             </codx-label>
                         </div>
                     </div>
-                </div>   
+                </div>
                 <!-- HR_Positions currentcounts -->
-                <div class="reportingline-cell-quantily">
+                <div class="reportingline-cell-quantily w-25">
                     <div class="d-flex flex-column align-items-center">
                         <div class="pos-number text-primary fs-2 fw-bold">
                             <span>{{data.currentcounts}}</span>
@@ -93,25 +94,25 @@
                     </div>
                 </div>
                 <!-- HR_Positions Onboard -->
-                <div class="reportingline-cell-quantily">
+                <div class="reportingline-cell-quantily w-25">
                     <div class="d-flex flex-column align-items-center">
                         <div class="pos-number text-warning fs-2 fw-bold">
                             <span>{{data.onboard}}</span>
                         </div>
                         <div class="text-gray-600 mt-1">
-                            <codx-label [formModel]="view.formModel" name="lblOnboard"  default="Onboard">
+                            <codx-label [formModel]="view.formModel" name="lblOnboard" default="Onboard">
                             </codx-label>
                         </div>
                     </div>
                 </div>
                 <!-- HR_Positions Offboard -->
-                <div class="reportingline-cell-quantily">
+                <div class="reportingline-cell-quantily w-25">
                     <div class="d-flex flex-column align-items-center">
                         <div class="pos-number text-warning fs-2 fw-bold">
                             <span>{{data.offboard}}</span>
                         </div>
                         <div class="text-gray-600 mt-1">
-                            <codx-label [formModel]="view.formModel" name="lblOffboard"  default="Offboard">
+                            <codx-label [formModel]="view.formModel" name="lblOffboard" default="Offboard">
                             </codx-label>
                         </div>
                     </div>

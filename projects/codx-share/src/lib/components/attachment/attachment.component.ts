@@ -637,6 +637,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         .pipe(
           map((res) => {
             if (res != null) {
+              debugger;
               var newlist = res.filter((x) => x.status == 6);
               var newlistNot = res.filter((x) => x.status == -1);
               var addList = res.filter((x) => x.status == 0 || x.status == 9);
@@ -650,7 +651,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 this.atSV.fileList.next(this.fileUploadList);
                 this.atSV.fileListAdded = addList;
                 if (this.showMessage == '1')
-                  this.notificationsService.notify(this.title);
+                  this.notificationsService.notifyCode(
+                    'DM061',
+                    null,
+                    addList.length
+                  );
                 //this.closePopup();
                 this.fileUploadList = [];
                 return this.atSV.fileListAdded;
@@ -1557,7 +1562,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async handleFileInput1(files: FileList) {
     var count = this.fileUploadList.length;
-    this.getFolderPath();
+    //this.getFolderPath();
     //console.log(files);
     for (var i = 0; i < files.length; i++) {
       let index = this.fileUploadList.findIndex(
@@ -2821,7 +2826,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
-    this.getFolderPath();
+    //this.getFolderPath();
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
       if (

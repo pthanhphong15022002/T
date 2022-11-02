@@ -214,8 +214,8 @@
             [objectId]="data?.owner"
             [objectName]="data?.ownerName"
             objectType="AD_Users"
-            imageType="square"
             [width]="40"
+            imageType="circle"
           >
           </codx-img>
           <div class="ms-2">
@@ -237,6 +237,7 @@
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="border w-250px h-100"
+    [formModel]="formModel"
     [imageObjType]="view.formModel?.entityName"
     [imageWidth]="600"
     [imageId]="data?.recID"

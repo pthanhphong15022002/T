@@ -54,7 +54,12 @@ export class PopupAddProcessesComponent implements OnInit {
     this.title = this.titleAction;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if(this.action === 'edit'){
+      this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
+
+    }
+  }
 
   //#region method
   beforeSave(op) {
@@ -107,7 +112,13 @@ export class PopupAddProcessesComponent implements OnInit {
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.process.attachments = Array.isArray(res) ? res.length : 1;
+          var countAttack = 0;
+          countAttack = Array.isArray(res) ? res.length : 1;
+          if(this.action === 'edit'){
+            this.process.attachments += countAttack;
+          }else{
+            this.process.attachments = countAttack;
+          }
           if (this.action === 'add' || this.action === 'copy') this.onAdd();
           else this.onUpdate();
         }

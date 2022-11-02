@@ -44,7 +44,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;  
 
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   // Lấy dữ liệu cho view
@@ -332,7 +332,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           option.FormModel = this.formModel;
           this.dialog = this.callFuncService.openSide(
             PopupAddBookingRoomComponent,
-            [this.view.dataService.dataSelected, true, this.popupTitle],
+            [this.view.dataService.dataSelected, true, this.popupTitle,null,true],
             option
           );
         });

@@ -270,6 +270,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
         this.formModel
       );
     }
+    if (this.dialogAddBookingStationery.value.reasonID instanceof Object) {
+      this.dialogAddBookingStationery.patchValue({reasonID:this.dialogAddBookingStationery.value.reasonID[0]})
+    }
     this.dialogAddBookingStationery.patchValue({'title': this.dialogAddBookingStationery.value.note})
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)

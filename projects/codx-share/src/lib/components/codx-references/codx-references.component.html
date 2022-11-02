@@ -13,67 +13,58 @@
 </div>
 <div class="container" *ngIf="dataReferences.length > 0">
   <ng-container *ngFor="let data of dataReferences; let i = index">
-    <div class="tab-tch mt-3 border-bottom ms-{{ i * 15 }}">
-      <div class="d-flex align-items-start justify-content-between mb-3 w-100">
-        <div class="d-flex align-items-start">
-          <div class="d-flex align-items-top w-100 pe-9">
-            <div class="me-2">
-              <codx-vll
-                [name]="vllRefType"
-                [value]="data.refType"
-                [showIcon]="true"
-                [showBgColor]="true"
-                class="h-20px pic-ref"
-              >
-              </codx-vll>
-            </div>
-            <div class="d-flex flex-column flex-grow-1">
-              <div class="d-flex align-items-center">
-                <span>
-                  <codx-vll
-                    [name]="vllRefType"
-                    [value]="data.refType"
-                    [showText]="true"
-                    class="text-gray-600 fw-bold"
-                  >
-                  </codx-vll>
-                </span>
-              </div>
-              <div class="text-dark">
-                {{ data?.memo }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="w-100 tab-tch mt-3 border-bottom ms-{{ i * 15 }}">
+      <codx-temp-full
+        [icoCss]="
+          'w-40px symbol h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+          (data.refType | vll: vllRefType:'icon' | async)
+        "
+        [icoStyle]="setStyles(data.refType | vll: vllRefType:'color' | async)"
+        [title]="data.refType | vll: vllRefType:'text' | async"
+        [desc]="data?.memo ?? data?.title"
+        [footer]="footerTempfull"
+        [dataItem]="data"
+      >
+      </codx-temp-full>
 
-      <div class="d-flex justify-content-between align-items-center mt-1 mb-4">
-        <div class="d-flex align-items-center ms-6 codx-badge">
-          <div class="me-3">
-            <span class="icon-calendar_today icon-14 text-gray-600 me-1"></span>
-            <span class="text-gray-600" #createdOn>
-              {{ data?.createdOn | date: "dd/MM/yyyy" }}</span
-            >
+      <ng-template #footerTempfull let-data>
+        <div
+          class="d-flex justify-content-between align-items-center mt-1 mb-4"
+        >
+          <div class="d-flex align-items-center ms-6 codx-badge">
+            <div class="me-3">
+              <div class="d-flex flex-wrap justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="d-flex align-items-center card-icon-nowrap">
+                    <span class="me-1 icon-16 icon-calendar_today"></span>
+
+                    <span class="text-dark-50">{{
+                      data?.createdOn | fmDT
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="me-3">
+              <span class="icon-account_circle icon-16 me-1"></span>
+              <span class="text-gray-600">{{ data?.createByName }}</span>
+            </div>
           </div>
-          <div class="me-3">
-            <span class="icon-account_circle icon-14 me-1 text-gray-600"></span>
-            <span class="text-gray-600">{{ data?.createByName }}</span>
+          <div class="d-flex">
+            <span class="me-4">
+              <codx-comment-temp
+                [objectID]="data.recIDReferences"
+              ></codx-comment-temp>
+            </span>
+            <span class="me-4">
+              <codx-attachment-temp
+                [objectID]="data.recIDReferences"
+                [formModel]="formModel"
+              ></codx-attachment-temp>
+            </span>
           </div>
         </div>
-        <div class="d-flex">
-          <span class="me-4">
-            <codx-comment-temp
-              [objectID]="data.recIDReferences"
-            ></codx-comment-temp>
-          </span>
-          <span class="me-4">
-            <codx-attachment-temp
-              [objectID]="data.recIDReferences"
-              [formModel]="formModel"
-            ></codx-attachment-temp>
-          </span>
-        </div>
-      </div>
+      </ng-template>
     </div>
   </ng-container>
 </div>

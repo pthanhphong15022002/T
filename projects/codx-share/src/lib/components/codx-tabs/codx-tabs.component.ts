@@ -25,10 +25,10 @@ export class CodxTabsComponent implements OnInit {
   @Input() formModel!: any;
   @Input() TabControl: TabModel[] = [];
   //tree task
-  @Input() dataTree: any[];
+  @Input() dataTree: any[] = [];
   @Input() vllStatus: any;
   //references
-  @Input() dataReferences: any[];
+  @Input() dataReferences: any[] = [];
   @Input() vllRefType: any = 'TM018';
   //Attachment
   @Input() hideFolder: string = '1';
@@ -55,6 +55,8 @@ export class CodxTabsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('codx-tabs', this.dataReferences);
+
     if (this.TabControl.length == 0) {
       this.TabControl = this.all;
       // this.all.forEach((res, index) => {

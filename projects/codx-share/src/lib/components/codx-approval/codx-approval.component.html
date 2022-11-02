@@ -22,8 +22,8 @@
     "
     [icoStyle]="setStyles(dvlApproval?.color)"
     [desc]="data?.htmlView"
-    [statusVll]="'VL003'"
-    [status]="data?.status"
+    [statusVll]="'ES030'"
+    [status]="data?.status+data?.stepType"
     [titleLine]="2"
     [date]="data.createdOn"
     [resources]="data?.createdBy"
@@ -58,7 +58,7 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-approval-tabs [transID]="transID"></codx-approval-tabs>
+    <codx-tabs [entityName]="view?.formModel?.entityName" [objectID]="recID" [funcID]="view?.formModel?.funcID"></codx-tabs>
   </ng-template>
   <!-- <div class="pe-6 pt-1">
     <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [dataItem]="dataItem"></codx-mfunc>

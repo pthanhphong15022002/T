@@ -23,6 +23,7 @@ import {
   getJSONString,
 } from '../../function/default.function';
 import { FileService } from '@shared/services/file.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -106,7 +107,7 @@ export class IncommingAddComponent implements OnInit {
     else if (this.type == 'edit') 
     {
       this.dispatch.agencyName = this.dispatch.agencyName.toString();
-      if(this.dispatch.departmentName) 
+      if(this.dispatch.deptName) 
       {
         this.activeDiv = "dv"
         this.hidepb = false
@@ -149,19 +150,24 @@ export class IncommingAddComponent implements OnInit {
 
   changeValueDept(event: any) {
     
-    this.dispatch.departmentName = event?.data;
+    this.dispatch.deptName = event?.data;
     if(event?.component?.itemsSelected[0]?.AgencyID)
-      this.dispatch.departmentID = event?.component?.itemsSelected[0]?.AgencyID;
+      this.dispatch.deptID = event?.component?.itemsSelected[0]?.AgencyID;
   }
 
   //Người chịu trách nhiệm
   changeValueOwner(event: any) {
     this.dispatch.owner = event.data?.value[0];
-
+    if(event.data?.value[0])
+    {
+      this.getInforByUser(event.data?.value[0]).subscribe(item=>{
+        if(item) this.dispatch.orgUnitID = item.organizationID
+      })
+    }
   }
   //Nơi nhận
   changeValueBUID(event: any) {
-    this.dispatch.deptID = event?.data?.value[0];
+    this.dispatch.departmentID = event?.data?.value[0];
     if (event.data?.value[0]) {
       this.api
         .execSv(
@@ -175,12 +181,26 @@ export class IncommingAddComponent implements OnInit {
           if (item != null && item.length > 0) {
             this.dispatch.owner = item[0].domainUser;
             this.change = this.dispatch.owner;
+            this.getInforByUser(item[0].domainUser).subscribe(item=>{
+              if(item) this.dispatch.orgUnitID = item.organizationID
+            })
             this.ref.detectChanges();
           } else {
             this.dispatch.owner = '';
           }
         });
     }
+  }
+  getInforByUser(id:any) : Observable<any>
+  {
+    return this.api
+    .execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'GetOneByDomainUserAsync',
+      id
+    );
   }
   openFormUploadFile() {
     this.attachment.uploadFile();
@@ -218,7 +238,7 @@ export class IncommingAddComponent implements OnInit {
       ) {
         this.hidepb = false;
         this.activeDiv = 'dv';
-        this.myForm?.formGroup.patchValue({departmentName: null})
+        this.myForm?.formGroup.patchValue({deptName: null})
         //this.ref.detectChanges()
         //this.showAgency = true;
         //this.checkAgenciesErrors = false;

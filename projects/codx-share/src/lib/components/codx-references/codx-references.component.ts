@@ -21,14 +21,14 @@ import { AttachmentComponent } from '../attachment/attachment.component';
   selector: 'codx-references',
   templateUrl: './codx-references.component.html',
   styleUrls: ['./codx-references.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-export class CodxReferencesComponent implements OnInit,OnChanges {
-  @Input() funcID?: string// khởi tạo để test,, sau có thể xóa
+export class CodxReferencesComponent implements OnInit, OnChanges {
+  @Input() funcID?: string; // khởi tạo để test,, sau có thể xóa
   // @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
   @Input() vllRefType = 'TM018';
-  @Input() formModel?: FormModel
+  @Input() formModel?: FormModel;
   @ViewChild('attachment') attachment: AttachmentComponent;
   message: string = '';
   REFERTYPE = {
@@ -39,18 +39,22 @@ export class CodxReferencesComponent implements OnInit,OnChanges {
   lstFile: any[] = [];
   //dataAvtar: any;
 
-  constructor(private cache: CacheService, private dt: ChangeDetectorRef) {
-
-  }
+  constructor(private cache: CacheService, private dt: ChangeDetectorRef) {}
   ngOnChanges(changes: SimpleChanges): void {
-     this.dt.detectChanges() ;
-  }
-  
- 
-  ngOnInit(): void { 
-   }
-
-  ngAfterViewInit(): void {
+    this.dt.detectChanges();
   }
 
+  ngOnInit(): void {
+    console.log('logggggg', this.dataReferences);
+  }
+
+  ngAfterViewInit(): void {}
+
+  setStyles(color): any {
+    let styles = {
+      backgroundColor: color,
+      color: 'white',
+    };
+    return styles;
+  }
 }

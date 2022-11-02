@@ -21,6 +21,7 @@ import {
 import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddQuotaComponent } from './popup-add-quota/popup-add-quota.component';
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
+import { PopupUpdateQuantityComponent } from './popup-update-quantity/popup-update-quantity.component';
 
 @Component({
   selector: 'setting-stationery',
@@ -180,6 +181,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         this.copy(data);
         break;
       case 'EPS2301':
+        this.updateQuantity(data);
         break;
       case 'EPS2302':
         this.addQuota(data);
@@ -189,7 +191,19 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  changeDataMF(e: any, data: any) {}
+  changeDataMF(e: any, data: any) {
+    if (e != null && data != null) {
+      e.forEach((func) => {
+        if (
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/
+        ) {
+          func.disabled = false;
+        }
+      });
+    }
+  }
 
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
@@ -283,6 +297,12 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   addQuota(data) {
     this.callfc.openForm(PopupAddQuotaComponent, '', 500, null, '', [data]);
+  }
+
+  updateQuantity(data) {
+    this.callfc.openForm(PopupUpdateQuantityComponent, '', 500, null, '', [
+      data,
+    ]);
   }
 
   closeEditForm(evt?: any) {
