@@ -153,8 +153,7 @@ export class PopupAddStationeryComponent extends UIComponent {
                   //xử lí nếu upload ảnh thất bại
                   //...
                   this.dialog && this.dialog.close(this.returnData);                
-                }
-                this.dialog && this.dialog.close(this.returnData);
+                }                
               });  
             }          
             else 
