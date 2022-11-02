@@ -256,7 +256,8 @@ export class TaskDailyComponent implements OnInit {
     this.dataValue = evt.dataValues;
     for(let item in evt[1]){
       let _childProp = evt[1][item];
-      if(typeof _childProp  == 'object'){
+      if(typeof _childProp =='object'){
+        //objParams[item] = _childProp.join(';');
         for(let i in _childProp){
           objParams[i] = _childProp[i];
         }
