@@ -160,7 +160,8 @@ export class PopupAddRoomsComponent extends UIComponent {
               .subscribe((result) => {
                 if (result) {                  
                   //xử lí nếu upload ảnh thất bại
-                  //...                
+                  //...
+                  this.dialogRef && this.dialogRef.close(this.returnData);                
                 }
                 this.dialogRef && this.dialogRef.close(this.returnData);
               });  
@@ -170,7 +171,6 @@ export class PopupAddRoomsComponent extends UIComponent {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
           } 
-          this.dialogRef && this.dialogRef.close(this.returnData);
         }
         else{ 
           //Trả lỗi từ backend.         
