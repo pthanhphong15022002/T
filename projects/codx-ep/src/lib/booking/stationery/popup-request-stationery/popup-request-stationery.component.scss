@@ -157,4 +157,10 @@
       }
     }
   }
+  .card-vpp {
+    .codx-image {
+      display: unset !important;
+      max-height: 120px !important;
+    }
+  }
 }

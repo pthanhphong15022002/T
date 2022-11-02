@@ -7,18 +7,19 @@
   [className]="className"
   [method]="method"
   [views]="views"
+  [idField]="idField"
   [button]="button"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  [idField]="idField"
   (onActions)="onActions($event)"
   (viewChanged)="viewChanged($event)"
 >
 </codx-views>
 
 <ng-template #cardKanban let-data let-setting="setting">
+  <ng-container *ngIf="numberColums > 0">
   <codx-card-img
     cardCss="border h-100"
     (clickMF)="clickMF($event, data)"
@@ -42,7 +43,23 @@
               <codx-label name="lblTime" default="Thời gian:"></codx-label>
             </span>
           </div>
-          <div class="badge badge-white my-1 me-3">{{ data?.duration }}</div>
+          <div class="badge badge-white my-1 me-3 text-danger">
+            <span #duration>
+              {{
+                data?.duration
+                  | formatvalue
+                    : view.formModel
+                    : "duration"
+                    : duration
+                    : "BPActivity"
+                    : "grvBPActivity"
+                  | async
+              }}</span
+            >&nbsp;
+            <span>{{
+              data?.interval | vll: vllInterval:"text" | async
+            }}</span>
+          </div>
         </div>
         <ng-container *ngIf="data?.owners != null && data?.owners.length > 0">
           <div class="d-flex align-items-center card-icon-nowrap me-1">
@@ -67,6 +84,8 @@
       </div>
     </div>
   </ng-template>
+</ng-container>
+<ng-container *ngIf=" numberColums==0" [ngTemplateOutlet]="tmpEmpty"></ng-container>
 </ng-template>
 
 <ng-template #cardTitleTmp let-data>
@@ -129,11 +148,17 @@
 </ng-template>
 
 <!-- viewlist-content -detail-Process tesssssssssssssssssssssssss  -->
-<ng-template #itemViewList>
+<ng-template #itemViewList >
   <div class="card">
-    <div class="card-body" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-height="auto" data-kt-scroll-dependencies=".codx-wapper"
-    data-kt-scroll-wrappers=".codx-toolbar .no-header" [attr.data-kt-scroll-offset]="'130px'">
+    <div
+      class="card-body"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="{default: true}"
+      data-kt-scroll-height="auto"
+      data-kt-scroll-dependencies=".codx-wapper"
+      data-kt-scroll-wrappers=".codx-toolbar .no-header"
+      [attr.data-kt-scroll-offset]="'130px'"
+    >
       <div class="mb-5">
         <h4 class="fw-bold text-gray-900 mb-104">
           {{ process?.processName }}
@@ -179,7 +204,7 @@
             </span>
           </div>
         </div>
-        <div class="d-flex flex-wrap mb-2">
+        <div class="d-flex flex-wrap mb-2" *ngIf="listPhaseName?.length>0">
           <div class="d-flex align-items-center me-4">
             <span>
               <codx-label
@@ -195,29 +220,16 @@
                 class="text-danger"
                 style="font-size: 20px"
               >
-                <codx-label name="lblIcon" default=">"></codx-label>
+                <codx-label name="lblIcon" default="-->"></codx-label>
               </span>
             </ng-container>
           </div>
         </div>
       </div>
-      <ng-container *ngIf="view.dataService.data?.length==0">
-        <div class="w-100">
-          <div class="list-empty card card-flush h-100">
-            <div class="d-flex flex-column flex-center justify-content-center">
-              <img
-                src="../assets/themes/sys/default/img/DataEmpty.svg"
-                class="w-400px"
-              />
-              <div class="fs-5 text-dark fw-bold mt-2 text-center">
-                {{ "SYS011" | mssg | async }}
-              </div>
-            </div>
-          </div>
-        </div>
+      <ng-container *ngIf="view.dataService.data?.length == 0" [ngTemplateOutlet]="tmpEmpty">
       </ng-container>
       <!-- drop -->
-      <ng-container *ngIf="view.dataService.data?.length >0">
+      <ng-container *ngIf="view.dataService.data?.length > 0">
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event, null)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let item of dataTreeProcessStep">
@@ -246,14 +258,19 @@
                     [cdkDropListData]="item?.items || []"
                     (cdkDropListDropped)="drop($event, item.recID)"
                   >
-                    <ng-container *ngIf="!item?.items||item?.items?.length == 0">
+                    <ng-container
+                      *ngIf="!item?.items || item?.items?.length == 0"
+                    >
                       <div
                         class="card card-steplist p-0"
                         cdkDrag
                         [cdkDragStartDelay]="100"
                         [cdkDragData]="null"
                       >
-                       <h3>Thêm công việc để hoàn thiện quy trình ---Kéo công việc vào đây !-Test đừng ai bắt lỗi , please ! ^^! </h3>
+                        <h3>
+                          Thêm công việc để hoàn thiện quy trình ---Kéo công
+                          việc vào đây !-Test đừng ai bắt lỗi , please ! ^^!
+                        </h3>
                       </div>
                     </ng-container>
                     <ng-container *ngIf="item?.items?.length > 0">
@@ -302,7 +319,6 @@
       </ng-container>
     </div>
   </div>
- 
 </ng-template>
 
 <ng-template #titleTmp let-data>
@@ -330,13 +346,21 @@
       class="text-danger"
       *ngIf="data.stepType == 'P' || data.stepType == 'A'"
     >
-      <span>{{ data?.duration }} </span>
-      <span *ngIf="data.stepType == 'P'">
-        <codx-label name="lblDay" default="ngày"></codx-label>
-      </span>
-      <span *ngIf="data.stepType == 'A'">
-        <codx-label name="lblDuration" default="h/UV"></codx-label>
-      </span>
+    <span #duration>
+      {{
+        data?.duration
+          | formatvalue
+            : view.formModel
+            : "duration"
+            : duration
+            : "BPActivity"
+            : "grvBPActivity"
+          | async
+      }}</span
+    >&nbsp;
+    <span>{{
+      data?.interval | vll: vllInterval:"text" | async
+    }}</span>
     </span>
     <codx-mfunc
       type="hover"
@@ -442,5 +466,21 @@
       [dataItem]="data"
     >
     </codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #tmpEmpty>
+  <div class="w-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-400px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>

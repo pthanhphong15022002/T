@@ -62,7 +62,14 @@ export class MeetingComponent extends UIComponent {
     this.dialogRef = dialogRef;
   }
 
-  onInit(): void {}
+  vllImgUrl = [];
+  onInit(): void {
+    this.cache.valueList('EP021').subscribe((res) => {
+      console.log(res);
+
+      this.vllImgUrl = res.datas;
+    });
+  }
 
   createMeeting() {
     if (this.meetingUrl) {
