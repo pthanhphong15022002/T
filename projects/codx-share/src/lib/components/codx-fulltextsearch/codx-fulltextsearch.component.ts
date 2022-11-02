@@ -280,8 +280,8 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
           if (l + res.length < item[1]) loadmore = true;
           res.forEach((element) => {
             var obj = {
-              id: element[cbb?.viewMember],
-              name: element[cbb?.valueMember],
+              id: element[cbb?.valueMember],
+              name: element[cbb?.viewMember],
               view: cbb?.viewMember,
             };
             result.push(obj);
