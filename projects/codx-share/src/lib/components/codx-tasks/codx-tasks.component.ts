@@ -146,7 +146,7 @@ export class CodxTasksComponent
   dataReferences = [];
   titleAction = '';
   moreFunction = [];
-  crrStatus=''
+  crrStatus = '';
 
   constructor(
     inject: Injector,
@@ -806,8 +806,8 @@ export class CodxTasksComponent
           ''
         )
         .subscribe((res) => {
+          let kanban = (this.view.currentView as any).kanban;
           if (res && res.length > 0) {
-            let kanban = (this.view.currentView as any).kanban;
             res.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
               if (kanban) kanban.updateCard(obj);
@@ -825,6 +825,7 @@ export class CodxTasksComponent
                 .subscribe();
             }
           } else {
+            if (kanban) kanban.updateCard(taskAction);
             this.notiService.notifyCode('TM008');
           }
         });
@@ -855,8 +856,8 @@ export class CodxTasksComponent
       obj
     );
     this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        let kanban = (this.view.currentView as any).kanban;
+      let kanban = (this.view.currentView as any).kanban;
+      if (e?.event && e?.event != null) {   
         e?.event.forEach((obj) => {
           if (kanban) {
             kanban.updateCard(obj);
@@ -866,6 +867,8 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
+      }else{
+        if (kanban) kanban.updateCard(taskAction);
       }
       this.detectorRef.detectChanges();
     });
@@ -876,10 +879,6 @@ export class CodxTasksComponent
 
   requestEnded(evt: any) {}
 
-  crrStatusData(status) {
-    this.crrStatus = status
-  }
-
   onDragDrop(data) {
     // this.api
     //   .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
@@ -889,13 +888,14 @@ export class CodxTasksComponent
     //     }
     //   });
     ///chắc chắn phải sửa
-    if(this.crrStatus == data?.status || this.moreFunction?.length==0) return ;
+    if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
+      return;
     var moreFun = this.moreFunction.find(
       (x) =>
         UrlUtil.getUrl('defaultValue', x?.url) == data.status &&
         UrlUtil.getUrl('defaultField', x?.url) == 'Status'
     );
-    data.status = this.crrStatus
+    data.status = this.crrStatus;
     if (moreFun) this.changeStatusTask(moreFun, data);
   }
 
@@ -1428,6 +1428,9 @@ export class CodxTasksComponent
     switch (e.type) {
       case 'drop':
         this.onDragDrop(e.data);
+        break;
+      case 'drag':
+        this.crrStatus = e?.data?.status;
         break;
       case 'dbClick':
         this.viewTask(e?.data);
