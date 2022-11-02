@@ -279,7 +279,7 @@ export class CodxTasksComponent
       {
         type: ViewType.calendar,
         active: false,
-        sameData: true,
+        sameData: false,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -1475,22 +1475,6 @@ export class CodxTasksComponent
     TextField: 'userName',
     Title: 'Resources',
   };
-
-  viewChange(evt: any) {
-    let fied = this.gridView?.dateControl || 'DueDate';
-    console.log(evt);
-    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
-    this.startDate = evt?.fromDate;
-    this.endDate = evt?.toDate;
-    //Thêm vào option predicate
-    this.model.filter = {
-      logic: 'and',
-      filters: [
-        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
-      ],
-    };
-  }
 
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
