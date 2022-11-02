@@ -80,7 +80,7 @@ export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
   @ViewChild('tmpdeadline') tmpdeadline: any;
   @ViewChild('tmpFolderCopy') tmpFolderCopy: any;
   @ViewChild('tmpexport') tmpexport!: any;
-  tabControl : TabModel[];
+  tabControl : TabModel[] = [];
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency2;
   getIdUser = getIdUser;
@@ -128,6 +128,7 @@ export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
       changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
     ) {
       this.userID = this.authStore.get().userID;
+      debugger;
       this.data = changes.data?.currentValue;
       if (!this.data) this.data = {};
       //this.getDataValuelist();
