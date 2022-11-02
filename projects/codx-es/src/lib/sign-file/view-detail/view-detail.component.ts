@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
 import {
+  ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
@@ -40,7 +41,8 @@ export class ViewDetailComponent implements OnInit {
     private notify: NotificationsService,
     private router: ActivatedRoute,
     private authStore: AuthStore,
-    private cache: CacheService
+    private cache: CacheService,
+    private api: ApiHttpService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
@@ -71,6 +73,8 @@ export class ViewDetailComponent implements OnInit {
   oCancelSF: any; // object cancel
 
   user: any; //user loggin
+  dataReferences: any = [];
+  vllRefType: string = 'TM018';
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
@@ -134,6 +138,12 @@ export class ViewDetailComponent implements OnInit {
   }
 
   initForm() {
+    this.dataReferences = [];
+    console.log(1);
+
+    this.cache.valueList('TM018').subscribe((res) => {
+      console.log('TM018', res);
+    });
     if (this.itemDetail?.recID) {
       this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
         this.taskViews = res;
@@ -158,6 +168,26 @@ export class ViewDetailComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             if (res.refType != null) {
+              this.esService
+                .getEntity(this.itemDetail?.refType)
+                .subscribe((oEntity) => {
+                  if (oEntity) {
+                    this.esService
+                      .getod(this.itemDetail?.recID)
+                      .subscribe((res) => {
+                        console.log('1111111111111', res);
+                        res.refType = this.itemDetail?.refType;
+                        let item = this.dataReferences.filter((p) => {
+                          p.recID == res.recID;
+                        });
+                        if (item?.length == 0) {
+                          this.dataReferences.push(res);
+                        }
+                        this.df.detectChanges();
+                      });
+                  }
+                  console.log(oEntity);
+                });
             }
             this.itemDetail = res;
             this.df.detectChanges();

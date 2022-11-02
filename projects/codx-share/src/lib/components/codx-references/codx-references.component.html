@@ -39,8 +39,16 @@
                   </codx-vll>
                 </span>
               </div>
+              <!-- <codx-temp-full
+                [imageId]="data.approver"
+                [imageObjType]="'AD_Users'"
+                [imageWidth]="35"
+                [title]="data.refType | vll: vllRefType:'text' | async"
+                [desc]="data?.memo ?? data?.title"
+              >
+              </codx-temp-full> -->
               <div class="text-dark">
-                {{ data?.memo }}
+                {{ data?.memo ?? data?.title }}
               </div>
             </div>
           </div>

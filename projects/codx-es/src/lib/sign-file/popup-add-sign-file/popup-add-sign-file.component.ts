@@ -171,6 +171,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.categoryID = this.oSignFile.categoryID;
               this.data.files = this.oSignFile.files;
               this.data.refId = this.oSignFile.refId;
+              this.data.refType = this.oSignFile.refType;
               this.data.refDate = this.oSignFile.refDate;
               this.data.refNo = this.oSignFile.refNo;
               this.data.priority = this.oSignFile.priority;
@@ -205,6 +206,8 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.data.refDate = this.oSignFile.refDate;
                     this.data.refNo = this.oSignFile.refNo;
                     this.data.priority = this.oSignFile.priority;
+                    this.data.refType = this.oSignFile.refType;
+
                     this.esService
                       .getCategoryByCateID(this.data.categoryID)
                       .subscribe((cate) => {
