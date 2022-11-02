@@ -68,7 +68,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   popover: any;
   idUserSelected: string;
   roomCapacity = null;
-  returnData: any;
+  returnData=null;
   checkLoopS = true;
   checkLoopE = true;
   checkLoop = true;
@@ -282,7 +282,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       });
       if (
         !this.isAdd &&
-        this.data?.equipments != null &&
         this.optionalData == null
         
       ) {
@@ -298,6 +297,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           });
           this.tmplstDevice.push(tmpDevice);
         });
+        this.data.resourceID=this.data.resourceID;
       }
       if(this.isCopy){
         this.data.equipments.forEach((equip) => {
@@ -678,17 +678,17 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                     (this.dialogRef.dataService as CRUDService)
                       .update(this.returnData)
                       .subscribe();
-                    this.dialogRef && this.dialogRef.close();
+                    this.dialogRef && this.dialogRef.close(this.returnData);
                   } else {
                     this.notificationsService.notifyCode(res?.msgCodeError);
                     // Thêm booking thành công nhưng gửi duyệt thất bại
-                    this.dialogRef && this.dialogRef.close();
+                    this.dialogRef && this.dialogRef.close(this.returnData);
                   }
                 });
             });
-            this.dialogRef && this.dialogRef.close();
+            this.dialogRef && this.dialogRef.close(this.returnData);
           } else {
-            this.dialogRef && this.dialogRef.close();
+            this.dialogRef && this.dialogRef.close(this.returnData);
           }
         } else {
           return;
