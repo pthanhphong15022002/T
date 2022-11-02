@@ -226,6 +226,24 @@
     width: 80% !important;
   }
 
+  .short-text {
+    border: solid;
+    padding-left: 25px;
+    width: 45% !important;
+  }
+
+  .date-time {
+    border: solid;
+    padding-left: 25px;
+    width: 30% !important;
+  }
+
+
+  .long-text {
+    padding-left: 25px;
+    border: solid;
+  }
+
   .e-input-group-other {
     width: 105px !important;
   }
@@ -330,5 +348,9 @@
 
   .m-l-4 {
     margin-left: 6%;
+  }
+
+  .pd-t-7 {
+    padding-top: 7px;
   }
 }
