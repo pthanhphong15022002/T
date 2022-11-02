@@ -90,10 +90,21 @@
                 </li>
               </ul>
               <div class="d-flex">
-                <div id="ex4">
-                  <span class="p1 fa-stack fa-2x has-badge">
-                    <i class="p3 icon-shopping_cart">{{ this.cart.length }}</i>
-                  </span>
+                <div style="position: relative">
+                  <div class="p3 icon-shopping_cart icon-30">
+                    <div *ngIf="getCartQty(this.cart) != 0" class="cart-badge">
+                      <span
+                        class="badge badge-danger rounded-circle"
+                        style="
+                          position: absolute;
+                          font-size: '10px';
+                          color: 'white';
+                          transform: translate(-50%, 0%);
+                        "
+                        >{{ getCartQty(this.cart) }}</span
+                      >
+                    </div>
+                  </div>
                 </div>
 
                 <button (click)="changeTab(2)">
@@ -172,6 +183,7 @@
         class="symbol-group symbol-hover justify-content-end cursor-pointer"
         (click)="addCart($event, data)"
       >
+        <span>{{ getItemQty(data?.resourceID) }}</span>
         <span class="icon-shopping_cart icon-20 text-gray-400 cart"></span>
       </div>
     </div>
@@ -242,14 +254,6 @@
               [formModel]="formModel"
             >
             </codx-label>
-            <!-- <codx-input
-              type="datetime"
-              format="d"
-              field="bookingOn"
-              [crrValue]="dialogAddBookingStationery.value.bookingOn"
-              (valueChange)="valueBookingOnChange($event)"
-            >
-            </codx-input> -->
             <codx-input
               ControlName="bookingOn"
               [formModel]="formModel"
@@ -376,7 +380,7 @@
               <div class="me-2">
                 <codx-img
                   [objectId]="item.recID"
-                  imageType="square"
+                  imageType="circle"
                   width="35"
                   objectType="EP_Resources"
                 ></codx-img>

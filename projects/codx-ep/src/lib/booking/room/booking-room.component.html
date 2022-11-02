@@ -222,8 +222,8 @@
 
 <!-- List Viewdetail -->
 <ng-template #subTitleTmp let-data>
-  <div class="row">
-    <div class="row">
+  <div class="">
+    <div class="">
       <span>{{ data?.title }}</span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
@@ -251,7 +251,7 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2 "
     (click)="click(data)"
     [typeMF]="'hover'"
     [title]="data?.requester"
@@ -288,6 +288,7 @@
     [view]="views"
     (uploaded)="getDetailBooking($event)"
     (edit)="edit($event)"
+    (copy)="copy($event)"
     (delete)="delete($event)"
     (setPopupTitle)="setPopupTitle($event)"
   ></booking-room-view-detail>

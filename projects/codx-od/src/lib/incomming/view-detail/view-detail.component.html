@@ -197,7 +197,7 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []"></codx-tabs>
+    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
   </ng-template>
 
   <ng-template #templateorg let-item>
@@ -282,4 +282,44 @@
       </div>
     </div>
   </div>
+</ng-template>
+<ng-template #reference>
+ <ng-container *ngIf="data?.links">
+  <div *ngFor="let item of data?.links">
+    <codx-temp-full 
+    [title]="item?.title" [desc]="
+      convertHtmlAgency(
+        item.agencyName,
+        this.gridViewSetup?.AgencyName?.headerText
+      )
+    "
+    cardCss="card-template border-bottom px-2 pt-4 pb-2" 
+    [icoStatus]="item?.urgency"
+    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="item.isBookmark"
+    [titleLine]="2" [icoDateCss]="checkDeadLine(item?.deadline)" [dataItem]="item"
+    [footer]="footerTmp"
+    [moreFuncCss]="'me-10'"
+    >
+  </codx-temp-full>
+  </div>
+ </ng-container>
+</ng-template>
+<ng-template #footerTmp let-data>
+  <div  class="d-flex flex-wrap justify-content-between ">
+  <div class="d-flex align-items-center">
+    <codx-vll [value]="data.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+    </codx-vll>
+
+    <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41'" [value]="data.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+    </codx-vll>
+    <div class="d-flex align-items-center">
+      <span class="me-1 icon-16" [ngClass]="checkDeadLine(data?.deadline)"></span>
+      <span class="text-dark-50">{{data.createdOn | amDateFormat: (''||'L')}}</span>
+    </div>
+  </div>
+  <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'"
+    [width]="30" [numberImages]="3" [mode]="false">
+  </codx-imgs>
+</div>
 </ng-template>

@@ -146,7 +146,7 @@ export class CodxTasksComponent
   dataReferences = [];
   titleAction = '';
   moreFunction = [];
-  crrStatus=''
+  crrStatus = '';
 
   constructor(
     inject: Injector,
@@ -807,8 +807,8 @@ export class CodxTasksComponent
           ''
         )
         .subscribe((res) => {
+          let kanban = (this.view.currentView as any).kanban;
           if (res && res.length > 0) {
-            let kanban = (this.view.currentView as any).kanban;
             res.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
               if (kanban) kanban.updateCard(obj);
@@ -826,6 +826,7 @@ export class CodxTasksComponent
                 .subscribe();
             }
           } else {
+            if (kanban) kanban.updateCard(taskAction);
             this.notiService.notifyCode('TM008');
           }
         });
@@ -856,8 +857,8 @@ export class CodxTasksComponent
       obj
     );
     this.dialog.closed.subscribe((e) => {
+      let kanban = (this.view.currentView as any).kanban;
       if (e?.event && e?.event != null) {
-        let kanban = (this.view.currentView as any).kanban;
         e?.event.forEach((obj) => {
           if (kanban) {
             kanban.updateCard(obj);
@@ -867,6 +868,8 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
+      }else{
+        if (kanban) kanban.updateCard(taskAction);
       }
       this.detectorRef.detectChanges();
     });
@@ -877,10 +880,6 @@ export class CodxTasksComponent
 
   requestEnded(evt: any) {}
 
-  crrStatusData(crrStatus) {
-    this.crrStatus = crrStatus
-  }
-
   onDragDrop(data) {
     // this.api
     //   .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
@@ -890,12 +889,14 @@ export class CodxTasksComponent
     //     }
     //   });
     ///chắc chắn phải sửa
-    if(this.crrStatus == data?.status || this.moreFunction?.length==0) return ;
+    if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
+      return;
     var moreFun = this.moreFunction.find(
       (x) =>
         UrlUtil.getUrl('defaultValue', x?.url) == data.status &&
         UrlUtil.getUrl('defaultField', x?.url) == 'Status'
     );
+    data.status = this.crrStatus;
     if (moreFun) this.changeStatusTask(moreFun, data);
   }
 
@@ -1429,6 +1430,9 @@ export class CodxTasksComponent
       case 'drop':
         this.onDragDrop(e.data);
         break;
+      case 'drag':
+        this.crrStatus = e?.data?.status;
+        break;
       case 'dbClick':
         this.viewTask(e?.data);
         break;
@@ -1472,22 +1476,6 @@ export class CodxTasksComponent
     TextField: 'userName',
     Title: 'Resources',
   };
-
-  viewChange(evt: any) {
-    let fied = this.gridView?.dateControl || 'DueDate';
-    console.log(evt);
-    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
-    this.startDate = evt?.fromDate;
-    this.endDate = evt?.toDate;
-    //Thêm vào option predicate
-    this.model.filter = {
-      logic: 'and',
-      filters: [
-        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
-      ],
-    };
-  }
 
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
