@@ -34,6 +34,45 @@ import { PopupSignatureComponent } from '../popup-signature/popup-signature.comp
   styleUrls: ['./popup-add-signature.component.scss'],
 })
 export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
+  model = {
+    userID: 'ANHNGUYEN',
+    fullName: 'Nguyễn Hải Anh',
+    shortName: null,
+    position: 'Lái xe',
+    email: 'myan@test.com.vn',
+    signatureType: '1',
+    supplier: '1',
+    signature1: null,
+    signature2: null,
+    stamp: null,
+    certificate: null,
+    password: null,
+    startedOn: null,
+    expiredOn: null,
+    otpControl: '0',
+    otpPin: '0',
+    fontStyle: null,
+    spanTime: 0,
+    stop: false,
+    owner: 'CODXADMIN',
+    buid: 'ERP',
+    createdOn: '2022-11-02T10:41:08.0878847+00:00',
+    createdBy: 'CODXADMIN',
+    modifiedOn: null,
+    modifiedBy: null,
+    write: true,
+    delete: true,
+    share: true,
+    assign: true,
+    includeTables: null,
+    updateColumns: '',
+    unbounds: null,
+    _uuid: '31e1131d-b006-4d4a-b23c-c01b0d15b153',
+    __loading: false,
+    idField: 'recID',
+    allowEditKey: false,
+  };
+
   @Output() closeSidebar = new EventEmitter();
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
@@ -145,8 +184,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         });
       } else if (event?.field == 'signatureType') {
         if (event?.data == '2') {
-          this.data.supplier = null;
-          this.form?.formGroup.patchValue({ supplier: null });
+          this.data.supplier = '1';
+          this.form?.formGroup.patchValue({ supplier: this.data.supplier });
         } else if (event?.data == '1') {
           this.data.supplier = '2';
           this.form?.formGroup.patchValue({ supplier: '2' });

@@ -24,8 +24,9 @@
     (click)="click(data)"
     [typeMF]="'hover'"
     [title]="data?.requester"
-    [subTitle]="data?.note"
+    [subTitle]="data?.positionName"
     [subTitleCss]="'text-gray-600'"
+    [content]="data?.reasonName"
     [icoCss]="
       'w-40px h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
       setIcon(data?.resourceType)

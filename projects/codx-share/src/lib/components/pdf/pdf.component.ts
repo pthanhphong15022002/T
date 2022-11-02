@@ -212,7 +212,15 @@ export class PdfComponent
   //thumbnail
   hideThumbnail: boolean = false;
 
+  vllSupplier: any;
   onInit() {
+    this.cache.valueList('ES029').subscribe((res) => {
+      if (res) {
+        this.vllSupplier = res.datas;
+        console.log('vll', this.vllSupplier);
+      }
+    });
+
     if (this.isPublic) {
       this.user.userID = this.approver;
     }
