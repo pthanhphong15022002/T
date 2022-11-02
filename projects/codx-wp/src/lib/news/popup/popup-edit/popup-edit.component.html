@@ -2,8 +2,10 @@
     <!-- header -->
     <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
-            <div class="me-5">{{headerText}}</div>
-            <div class="" (click)="openFormShare(controlShare)">
+            <div class="fw-bolder">
+                <span class="fs-2">{{headerText}}</span>
+            </div>
+            <div class="ms-5" (click)="openFormShare(controlShare)">
                 <codx-vll
                     [classList]="'bg-gray-200 rounded-1 p-2'" 
                     [name]="'L1901'" 

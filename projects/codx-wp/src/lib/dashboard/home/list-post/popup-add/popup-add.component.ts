@@ -168,7 +168,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
           case this.SHARECONTROLS.MYDEPARMENTS:
           case this.SHARECONTROLS.MYDIVISION:
           case this.SHARECONTROLS.MYCOMPANY:
-            
             break;
           case this.SHARECONTROLS.OGRHIERACHY:
           case this.SHARECONTROLS.DEPARMENTS:
