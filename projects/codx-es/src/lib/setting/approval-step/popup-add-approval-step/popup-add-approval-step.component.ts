@@ -128,6 +128,11 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         this.formModel = res;
         this.dialog.formModel = this.formModel;
       }
+      this.cache.valueList('ES016').subscribe((vllMode) => {
+        if (vllMode) {
+          this.lstApproveMode = vllMode.datas;
+        }
+      });
       this.initForm();
     });
   }
