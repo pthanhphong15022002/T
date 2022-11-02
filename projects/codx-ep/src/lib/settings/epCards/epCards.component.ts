@@ -251,6 +251,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         option
       );
       this.dialog.closed.subscribe((x) => {
+        if (!x.event) this.view.dataService.clear();
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
             .delete([this.view.dataService.dataSelected])
@@ -282,6 +283,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             option
           );
           this.dialog.closed.subscribe((x) => {
+            if (!x.event) this.view.dataService.clear();
             if (x?.event) {
               x.event.modifiedOn = new Date();
               this.view.dataService.update(x.event).subscribe((res) => {});
@@ -308,6 +310,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
             option
           );
           this.dialog.closed.subscribe((x) => {
+            if (!x.event) this.view.dataService.clear();
             if (x?.event) {
               x.event.modifiedOn = new Date();
               this.view.dataService.update(x.event).subscribe((res) => {});
