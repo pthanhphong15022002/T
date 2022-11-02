@@ -81,6 +81,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         other: true,
         mandatory: false,
         answerType: 'L',
+        category: 'Q',
       },
       {
         seqNo: 1,
@@ -97,6 +98,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         other: true,
         mandatory: false,
         answerType: 'L',
+        category: 'Q',
       },
     ];
     this.formats = {
@@ -278,6 +280,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         case 'LTN03':
           break;
         case 'LTN04':
+          this.uploadImage(this.itemActive);
           break;
         case 'LTN05':
           break;
@@ -314,7 +317,21 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   addTitle(dataQuestion) {}
 
-  uploadImage(dataQuestion) {}
+  uploadImage(dataQuestion) {
+    if (dataQuestion) {
+      var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
+      tempQuestion.seqNo = dataQuestion.seqNo + 1;
+      tempQuestion.answerType = null;
+      tempQuestion.question = null;
+      tempQuestion.category = 'P';
+      this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
+      this.questions.forEach((x, index) => (x.seqNo = index));
+      this.questions[dataQuestion.seqNo].active = false;
+      this.questions[dataQuestion.seqNo + 1].active = true;
+      this.itemActive = this.questions[dataQuestion.seqNo + 1];
+      this.clickToScroll(dataQuestion.seqNo + 1);
+    }
+  }
 
   uploadVideo(dataQuestion) {}
 
