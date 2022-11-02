@@ -279,7 +279,8 @@ export class CodxTasksComponent
       {
         type: ViewType.calendar,
         active: false,
-        sameData: true,
+        sameData: false,
+        request: this.requestSchedule,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
