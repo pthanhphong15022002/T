@@ -123,7 +123,7 @@
 
 <ng-template #resourceHeader let-data>
   <div class="d-flex flex-row ms-5 align-items-center">
-    <codx-img [objectId]="data?.resourceData?.recID" [imageType]="'square'" [width]="50" [objectType]="'EP_Resources'"></codx-img>  
+    <codx-img [objectId]="data?.resourceData?.recID" imageType="circle" [width]="50" [objectType]="'EP_Resources'"></codx-img>  
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data?.resourceData?.resourceName}}<span *ngIf="data?.resourceData?.code!=null"> - {{data?.resourceData?.code}}</span></span>
       <div class="d-flex flex-row">
