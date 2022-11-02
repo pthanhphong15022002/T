@@ -275,14 +275,16 @@
 
         <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
           <div class="symbol-group-badge" *ngIf="curUser != null">
-            <div class="symbol symbol-30px symbol-circle">
+            <div class="symbol symbol-30px symbol-circle position-relative">
               <codx-img
                 [width]="30"
                 [objectId]="curUser?.userID"
                 objectType="AD_Users"
               ></codx-img>
               <span
-                class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 icon-swap_horiz text-white"
+                class="position-absolute"
+                inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"
+                style="bottom: -5px;right:-4px;z-index:100;"
               ></span>
             </div>
           </div>
@@ -291,26 +293,30 @@
             class="symbol-group-badge"
             *ngIf="attendeesList != null && attendeesList?.length >= 1"
           >
-            <div class="symbol symbol-30px symbol-circle">
+            <div class="symbol symbol-30px symbol-circle position-relative">
               <codx-img
                 [width]="30"
                 [objectId]="attendeesList[0]?.userID"
                 objectType="AD_Users"
               ></codx-img>
               <span
-                class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"
+                class="position-absolute"
+                inlineSVG="./assets/themes/ep/default/img/{{ attendeesList[0]?.icon }}"
+                style="bottom: -5px;right:-4px;z-index:100;"
               ></span>
             </div>
           </div>
           <div class="symbol-group-badge" *ngIf="attendeesList?.length >= 2">
-            <div class="symbol symbol-30px symbol-circle">
+            <div class="symbol symbol-30px symbol-circle position-relative">
               <codx-img
                 [width]="30"
                 [objectId]="attendeesList[1]?.userID"
                 objectType="AD_Users"
               ></codx-img>
               <span
-                class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 icon-check text-white"
+                class="position-absolute"
+                inlineSVG="./assets/themes/ep/default/img/{{ attendeesList[1]?.icon }}"
+                style="bottom: -5px;right:-4px;z-index:100;"
               ></span>
             </div>
           </div>
