@@ -1,4 +1,8 @@
-<codx-form headerText="{{ title }}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialogRef">
+<codx-form [headerText]="title" subHeaderText="" 
+[body]="body" 
+[footer]="footer" 
+[dialog]="dialogRef"
+>
   <ng-template #body>
     <div *ngIf="skillEmployee">
       <ng-container *ngFor="let skill of skillEmployee">
@@ -7,7 +11,7 @@
           <div class="d-flex align-items-center mt-2">
             <span class="w-250px">
               <ejs-slider [type]="minType" [min]="0" [max]="10"  [value]="skill.valueX"
-                (valueChange)="sliderChange($event,skill)">
+                (valueChange)="valueSliderChange($event,skill)">
               </ejs-slider>
             </span>
             <span class="ms-6 cursor-pointer">

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit,OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import {
   ConnectorModel,
   Diagram,
@@ -16,15 +16,17 @@ import { ApiHttpService, CallFuncService, NotificationsService } from 'codx-core
   templateUrl: './reportingline-orgchart.component.html',
   styleUrls: ['./reportingline-orgchart.component.css']
 })
-export class ReportinglineOrgChartComponent implements OnInit, AfterViewInit {
+export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
 
-  @Input()  positionID:string = "";
-  width:number = 260;
-  height:number = 300;
-  maxWidth:number = 300;
-  maxHeight:number = 300;
-  minWidth:number = 100;
-  minHeight:number = 300;
+  @Input() postion:any = null;
+  @Input() positionID:string = "";
+
+  width:number = 250;
+  height:number = 150;
+  maxWidth:number = 250;
+  maxHeight:number = 150;
+  minWidth:number = 200;
+  minHeight:number = 150;
   employees:any[] = [];
   employeeInfor:any = null;
   layout: Object = {
@@ -37,6 +39,8 @@ export class ReportinglineOrgChartComponent implements OnInit, AfterViewInit {
   snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
+  @ViewChild('diagram') diagram: any;
+
   datasetting: any = null;
   data:any = null
 
@@ -48,18 +52,23 @@ export class ReportinglineOrgChartComponent implements OnInit, AfterViewInit {
   ) 
   { }
   
+  
 
   ngOnInit(): void {
-    this.datasetting = this.newDataManager();
+    this.getDataPositionByID(this.positionID);
   }
 
-  ngAfterViewInit(): void {
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes.positionID.currentValue != changes.positionID.previousValue){
+      this.positionID = changes.positionID.currentValue;
+      this.getDataPositionByID(this.positionID);
+      this.changeDetectorRef.detectChanges();
+    }
   }
 
-  public connDefaults(
-    connector: ConnectorModel,
-    diagram: Diagram
-  ): ConnectorModel {
+  public connDefaults(connector: ConnectorModel,diagram: Diagram): ConnectorModel {
     connector.targetDecorator!.shape = 'None';
     connector.type = 'Orthogonal';
     connector.constraints = 0;
@@ -74,8 +83,8 @@ export class ReportinglineOrgChartComponent implements OnInit, AfterViewInit {
 
   newDataManager(): any {
     return {
-      id: 'departmentCode',
-      parentId: 'parentID',
+      id: 'positionID',
+      parentId: 'reportTo',
       dataManager: new DataManager(this.data as JSON[]),
       //binds the external data with node
       doBinding: (nodeModel: NodeModel, data: any, diagram: Diagram) => {
@@ -100,27 +109,26 @@ export class ReportinglineOrgChartComponent implements OnInit, AfterViewInit {
     if (data.length > 0) {
       this.data = data;
       var setting = this.newDataManager();
-      var dataManager = JSON.parse(JSON.stringify(this.data)) as JSON[];
-      dataManager = dataManager.filter((item: any) => {
-        if (item.departmentCode === this.positionID) item.parentID = '';
-        return item;
-      });
-      setting.dataManager = new DataManager(dataManager as JSON[]);
+      setting.dataManager = new DataManager(this.data);
       this.datasetting = setting;
       this.changeDetectorRef.detectChanges();
     }
   }
 
-  getDataPositionByID(positonID:string){
-    if(positonID){
-      this.api.execSv("","","","",)
-      .subscribe((res:any) =>{
-        if(res)
-        {
-          this.data = res;
-        }
-      });
-    }
+  getDataPositionByID(positionID:string){
+    this.api.execSv("HR",
+    "ERM.Business.HR",
+    "PositionsBusiness",
+    "GetDataOrgChartAsync",
+    [positionID]
+    )
+    .subscribe((res:any) =>{
+      if(res)
+      {
+        this.data = res;
+        this.setDataOrg(this.data);
+      }
+    });
   }
   orgClick(event){
 
@@ -132,5 +140,45 @@ export class ReportinglineOrgChartComponent implements OnInit, AfterViewInit {
 
   onSearch($event){
     
+  }
+
+  isClick = false;
+  classIcon(dt: any, ele: HTMLElement): string {
+    if (this.isClick) {
+      var cls = ele.classList;
+      if (cls.contains('icon-do_disturb_on')) {
+        cls.remove('icon-do_disturb_on');
+        return 'icon-add_circle_outline';
+      } else {
+        cls.remove('icon-add_circle_outline');
+        return 'icon-do_disturb_on';
+      }
+    } else {
+      var exist = this.checkExistParent(dt.positionCode);
+      if (exist) return 'icon-do_disturb_on';
+      else return 'icon-add_circle_outline';
+    }
+  }
+
+  mouseUp(dataNode: any, evt: any) {
+    this.positionID = dataNode.positionID;
+    var exist = this.checkExistParent(this.positionID);
+    if (this.diagram && exist) {
+      var tool = this.diagram.getTool('LayoutAnimation');
+      tool.mouseUp(this.diagram.eventHandler.eventArgs);
+    }
+  }
+
+  loadDataChild(dataNode: any) {
+    this.positionID = dataNode.positionID;
+    var exist = this.checkExistParent(this.positionID);
+    if (!exist) {
+      this.getDataPositionByID(this.positionID);
+    }
+  }
+  checkExistParent(parentID: string): boolean {
+    var dt = this.data.filter((x) => x.positionID === parentID);
+    if (dt && dt.length > 0) return true;
+    return false;
   }
 }

@@ -265,7 +265,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'SYS03': //Sua.
         this.edit(data);
         break;
-      case 'SYS04': //Sua.
+      case 'SYS04': //copy.
         this.copy(data);
         break;
     }
