@@ -236,7 +236,11 @@ export class PopupAddBookingCarComponent extends UIComponent {
                 [this.calendarID]
               )
               .subscribe((res) => {
-                let tmpDateTime = this.data.bookingOn;
+                
+                let tmpDateTime = new Date();
+                if(this.optionalData && this.optionalData?.startDate){
+                  tmpDateTime = this.optionalData.startDate
+                }
                 res.forEach((day) => {
                   if (day?.shiftType == '1') {
                     let tmpstartTime = day?.startTime.split(':');
@@ -426,6 +430,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
+    this.data.bookingOn=this.data.startDate;
+    this.data.stopOn=this.data.endDate;
     this.fGroupAddBookingCar.patchValue(this.data);
     if (this.fGroupAddBookingCar.invalid == true) {
       this.codxEpService.notifyInvalid(
@@ -472,6 +478,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.category = '2';
     this.data.status = '1';
     this.data.resourceType = '2';
+    this.data.attendees= this.attendeesList.length;
 
     if (this.data.attendees > this.carCapacity) {
       this.notificationsService.alertCode('EP010').subscribe((x) => {

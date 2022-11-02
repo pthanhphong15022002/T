@@ -191,7 +191,19 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  changeDataMF(e: any, data: any) {}
+  changeDataMF(e: any, data: any) {
+    if (e != null && data != null) {
+      e.forEach((func) => {
+        if (
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/
+        ) {
+          func.disabled = false;
+        }
+      });
+    }
+  }
 
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
