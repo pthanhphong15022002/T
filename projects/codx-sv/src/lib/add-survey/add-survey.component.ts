@@ -79,7 +79,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -96,7 +96,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -113,7 +113,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -130,7 +130,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: true,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -147,7 +147,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -164,7 +164,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -181,7 +181,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -198,7 +198,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -215,7 +215,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -232,7 +232,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -249,7 +249,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           },
         ],
         activeMF: false,
-        otherAnswer: true,
+        other: true,
         mandatory: false,
         answerType: 'L',
       },
@@ -290,6 +290,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     var index = this.questions.findIndex((x) => x.seqNo == idParent);
     this.dataAnswer = this.questions[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
+    this.dataAnswer.forEach((x, index) => (x.seqNo = index));
+    this.questions[idParent].answers = this.dataAnswer;
   }
 
   public focusIn(target: HTMLElement): void {
@@ -315,7 +317,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       });
   }
 
-  scroll(el: HTMLElement, seqNo) {
+  itemActive: any;
+  clickToScroll(el: HTMLElement, seqNo) {
     var html = document.getElementById(`card-survey-${seqNo}`);
     var htmlE = html as HTMLElement;
     var htmlMF = document.querySelector('.moreFC');
@@ -332,7 +335,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     // })
     this.questions.forEach((x) => {
       if (x['active'] == true) x['active'] = false;
-      if (x.seqNo == seqNo) x['active'] = true;
+      if (x.seqNo == seqNo) {
+        x['active'] = true;
+        this.itemActive = x;
+      }
     });
   }
 
@@ -350,7 +356,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       (x) => x.other == true
     );
     if (index >= 0) {
-      var dataOtherAnswerTemp = {
+      var dataotherTemp = {
         seqNo: seqNo - 1,
         answer: `Tùy chọn ${seqNo}`,
         other: false,
@@ -360,11 +366,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       this.questions[dataQuestion.seqNo].answers.splice(
         seqNo - 1,
         0,
-        dataOtherAnswerTemp
+        dataotherTemp
       );
       this.questions[dataQuestion.seqNo].answers[index + 1].seqNo = seqNo;
     } else this.questions[dataQuestion.seqNo].answers.push(dataAnswerTemp);
-    console.log(this.questions[dataQuestion.seqNo].answers);
   }
 
   deleteAnswer(dataQuestion, dataAnswer) {
@@ -376,7 +381,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       x.seqNo = index;
     });
     this.questions[dataQuestion.seqNo]!.answers = data;
-    if (dataAnswer.other) this.questions[dataQuestion.seqNo].otherAnswer = true;
+    if (dataAnswer.other) this.questions[dataQuestion.seqNo].other = true;
   }
 
   deleteQuestion(dataQuestion) {
@@ -385,6 +390,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     data.forEach((x, index) => {
       x.seqNo = index;
     });
+    if (dataQuestion.seqNo == 0) dataQuestion.seqNo = 1;
+    data[dataQuestion.seqNo - 1].active = true;
     this.questions = data;
   }
 
@@ -402,7 +409,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     data.push(dataAnswerTemp);
     this.questions[dataQuestion.seqNo]!.answers = data;
-    this.questions[dataQuestion.seqNo]['otherAnswer'] = false;
+    this.questions[dataQuestion.seqNo]['other'] = false;
   }
 
   copyQuestion(dataQuestion) {
@@ -419,6 +426,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     if (functionID) {
       switch (functionID) {
         case 'LTN01':
+          this.addQuestion(this.itemActive);
           break;
         case 'LTN02':
           break;
@@ -434,7 +442,19 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     }
   }
 
-  addQuestion(dataQuestion) {}
+  addQuestion(dataQuestion) {
+    if(dataQuestion) {
+      var dataAnswerTemp = {
+        seqNo: dataQuestion.seqNo + 1,
+        answer: 'Tùy chọn 1',
+        other: true,
+        isColumn: false,
+        hasPicture: false,
+      };
+      dataQuestion.push(dataAnswerTemp);
+      dataQuestion.forEach((x, index) => x.seqNo = index)
+    }
+  }
 
   importQuestion(dataQuestion) {}
 
@@ -449,6 +469,29 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   clickQuestionMF(functionID, dataQuestion) {
     if (functionID) {
       this.questions[dataQuestion.seqNo].answerType = functionID;
+      var data = JSON.parse(JSON.stringify(this.questions[dataQuestion.seqNo]));
+      if (
+        functionID == 'T' ||
+        functionID == 'T2' ||
+        functionID == 'D' ||
+        functionID == 'H'
+      ) {
+        data.other = false;
+        data.answers = new Array();
+        var dataAnswerTemp = {
+          seqNo: 0,
+          answer: '',
+          other: false,
+          isColumn: false,
+          hasPicture: false,
+        };
+        data.answers.push(dataAnswerTemp);
+      } else if (functionID == 'L3') data.other = false;
+      else data.other = true;
+      if (data.answers.length == 1) {
+        data.answers[0].answer = 'Tùy chọn 1';
+      }
+      this.questions[dataQuestion.seqNo] = data;
     }
   }
 }

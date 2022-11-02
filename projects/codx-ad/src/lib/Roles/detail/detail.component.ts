@@ -74,10 +74,13 @@ export class RoleDetailComponent
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
+      //this.roleName = this.tempService.roleName;
       if (params) this.funcIDPara = params['funcID'];
     });
+    this.tempService.roleName.subscribe((res) => {
+      this.roleName = res;
+    });
     this.tenant = this.tenantStore.get()?.tenant;
-    this.roleName = this.tempService.roleName;
   }
   ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {

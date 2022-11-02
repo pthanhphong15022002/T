@@ -184,7 +184,7 @@ export class TMMeetingsComponent
       {
         type: ViewType.calendar,
         active: false,
-        sameData: true,
+        sameData: false,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,

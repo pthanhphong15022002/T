@@ -43,6 +43,7 @@ export class AddLinkComponent implements OnInit {
     private api: ApiHttpService,
     private odService: DispatchService,
     private cache: CacheService,
+    private notifySvr: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -67,7 +68,7 @@ export class AddLinkComponent implements OnInit {
       console.log(item);
     }); */
     this.api
-      .execSv<any>('OD', 'OD', 'DispatchesBusiness', 'SearchFullTextAdvAsync', {
+      .execSv<any>('OD', 'CM', 'DataBusiness', 'SearchFullTextAdvAsync', {
         query: val,
         functionID: this.dialog?.formModel?.funcID,
         entityName: 'OD_Dispatches',
@@ -90,7 +91,12 @@ export class AddLinkComponent implements OnInit {
         ''
       )
       .subscribe((item) => {
-        if (item) this.dialog.close();
+        if (item) 
+        {
+          this.notifySvr.notify("Liên kết thành công");
+          this.dialog.close();
+        }
+        else this.notifySvr.notify("Liên kết không thành công");
       });
   }
 }

@@ -57,7 +57,7 @@
       <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="task?.recID" hideFolder="1"
         hideImageUpload="0" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
         [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
-        (fileCount)="getfileCount($event)" displayThumb="full">
+        (fileCount)="getfileCount($event)" displayThumb="full" showMessage="0">
       </codx-attachment>
     </div>
     <div class="d-flex align-items-center justify-content-between mt-4">
@@ -245,7 +245,7 @@
 </ng-template>
 
 <ng-template #popoverSelectRoles>
-  <div class="d-flex" *ngIf="!readOnly">
+  <div class="d-flex flex-column " *ngIf="!readOnly">
     <ng-container *ngFor="let item of listRoles">
       <div class="d-flex align-items-center btn btn-sm btn-white me-4"
         (click)="selectRoseType(idUserSelected, item.value)" style="cursor: pointer">

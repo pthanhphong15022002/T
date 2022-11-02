@@ -98,15 +98,15 @@ export class AddUpdateNoteBookComponent implements OnInit {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), -1)
       .subscribe((res) => {
-        if (res) {
+        if (res.save) {
           this.imageUpload
-            .updateFileDirectReload(res.recID)
+            .updateFileDirectReload(res.save.recID)
             .subscribe((result) => {
               if (result) {
                 this.loadData.emit();
               }
             });
-          this.dialog.close();
+          this.dialog.close(res.save);
         }
       });
   }
@@ -115,16 +115,15 @@ export class AddUpdateNoteBookComponent implements OnInit {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res) {
+        if (res.update) {
           if (this.imageUpload) {
             this.imageUpload
-              .updateFileDirectReload(this.data?.recID)
+              .updateFileDirectReload(res.update.recID)
               .subscribe((result) => {
                 this.loadData.emit();
               });
-          } else {
           }
-          this.dialog.close();
+          this.dialog.close(res.update);
         }
       });
   }
