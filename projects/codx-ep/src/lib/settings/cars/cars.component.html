@@ -23,7 +23,7 @@
       [objectId]="data?.recID"       
       [funcId]="funcID"       
       [objectType]="'EP_Resources'"
-      [imageType]="'square'" 
+      imageType="circle" 
       width="60" 
       [imgOn]="data.modifiedOn"
     ></codx-img>  
@@ -135,7 +135,7 @@
 
 <ng-template #linkCol let-data>
   <div class="d-flex has-action-menu align-items-center">
-    <codx-img [objectId]="data.driverRecID" [imageType]="'square'" [width]="35" [objectType]="'EP_Resources'"></codx-img>
+    <codx-img [objectId]="data.driverRecID" imageType="circle"  [width]="35" [objectType]="'EP_Resources'"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data.driverName }}</div>
     </div>   
