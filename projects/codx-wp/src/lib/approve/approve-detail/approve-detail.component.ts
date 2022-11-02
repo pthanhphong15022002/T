@@ -34,6 +34,8 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   service = "WP";
   assemblyName = "ERM.Business.WP";
   className = "NewsBusiness";
+  functionName:string = "";
+
   constructor(private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private callFuc:CallFuncService,
@@ -46,6 +48,13 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
 
   ngOnInit(): void {
     this.getPostInfor();
+    this.cache.functionList(this.funcID).subscribe((func: any) => 
+      {
+        if(func)
+        {
+          this.functionName = func.customName;
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -173,8 +182,8 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
 
 
   clickMF(event:any){
-    console.log(event)
     if(event?.functionID){
+      let headerText = event.text + " " + this.functionName;
       switch(event.functionID){
         case "SYS02": //delete
           this.deletedPost(this.data);
@@ -186,7 +195,11 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
             if(this.funcID == "WPT0211" || this.funcID == "WPT0212")
             {
               option.IsFull = true;
-              this.callFuc.openForm(PopupEditComponent,'Cập nhật bài viết',0,0,this.funcID,this.data,'',option);
+              let object = {
+                headerText: headerText,
+                data: this.data
+              }
+              this.callFuc.openForm(PopupEditComponent,"",0,0,this.funcID,object,'',option);
             }
             else 
             {
@@ -201,61 +214,55 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
                     let obj = {
                       post: res,
                       status: 'edit',
-                      headerText: 'Chỉnh sửa bài viết',
+                      headerText: headerText,
                     };
                     let option = new DialogModel();
                     option.DataService = this.dataService;
                     option.FormModel = this.formModel;
-                    this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
-                      if(data.result){
-                        console.log(data);
+                    this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
+                      if (res?.event) 
+                      {
+                        this.dataService.update(res.event).subscribe();
                       }
                     });
                   }
               });
             }
           break;
+        case "WPT02121": // duyệt
+            this.api.execSv(this.service,this.assemblyName,this.className,"UpdateAprovalStatusAsync",[this.data.recID, "5"])
+            .subscribe((res:any) => {
+              if(res)
+              {
+                this.data.approveStatus = "5";
+              this.dataService.update(this.data).subscribe();
+              }
+            });
+          break;
+        case "WPT02122": // làm lại
+          this.api.execSv(this.service,this.assemblyName,this.className,"UpdateAprovalStatusAsync",[this.data.recID,"2"])
+          .subscribe((res:any) => {
+            if(res)
+            {
+              this.data.approveStatus = "2";
+              this.dataService.update(this.data).subscribe();
+            }
+          });
+          break;
+        case "WPT02123": // từ chối
+          this.api.execSv(this.service,this.assemblyName,this.className,"UpdateAprovalStatusAsync",[this.data.recID,"4"])
+          .subscribe((res:any) => {
+            if(res)
+            {
+              this.data.approveStatus = "4";
+              this.dataService.update(this.data).subscribe();
+            }
+          });
+          break;
         default:
-          // Get precate từ moreFunc -> update ->
           break;
       }
     }
-    // switch(event.functionID){
-    //   case 'SYS02':
-    //     this.deletedPost(this.data);
-    //     break;
-    //   case 'SYS03':
-    //     let option = new DialogModel();
-    //     option.DataService = this.dataService;
-    //     option.FormModel = this.formModel;
-    //     if(this.entityName == "WP_News"){
-    //       option.IsFull = true;
-    //       this.callFuc.openForm(PopupEditComponent,'Cập nhật bài viết',0,0,this.funcID,this.data,'',option);
-    //     }
-    //     else 
-    //     {
-    //       this.api.execSv(this.service,this.assemblyName,"CommentsBusiness","GetPostByIDAsync", this.data.recID)
-    //       .subscribe((res:any) => {
-    //         if(res) {
-    //           let obj = {
-    //             post: res,
-    //             status: 'edit',
-    //             headerText: 'Chỉnh sửa bài viết',
-    //           };
-    //           let option = new DialogModel();
-    //           option.DataService = this.dataService;
-    //           option.FormModel = this.formModel;
-    //           this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((data:any) => {
-    //             if(data.result){
-    //               console.log(data);
-    //             }
-    //           })
-    //         }});
-    //     }
-    //     break;
-    //   default:
-    //     break;
-    // }
   }
 
   deletedPost(data:any){

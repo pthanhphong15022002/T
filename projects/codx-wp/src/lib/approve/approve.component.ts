@@ -3,6 +3,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Button } from '@syncfusion/ej2-angular-buttons';
+import { tab } from '@syncfusion/ej2-angular-grids';
 import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel, ButtonModel } from 'codx-core';
 import { map } from 'rxjs';
 import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add/popup-add.component';
@@ -122,6 +123,7 @@ export class ApproveComponent extends UIComponent {
         panelRightRef: this.panelRightRef
       }
     }];
+    this.detectorRef.detectChanges();
   }
 
   getGridViewSetUp(funcID:string) {
@@ -268,14 +270,14 @@ export class ApproveComponent extends UIComponent {
     {
       let headerText = event.text + " " + this.functionName;
       switch (event.functionID) {
-        case 'SYS02':
+        case 'SYS02': //delete
           this.deletedPost(data);
           break;
-        case 'SYS03':
+        case 'SYS03': //edit
           let option = new DialogModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
-          if (this.view.funcID == "WPT0211" || this.view.funcID == "WPT0212") 
+          if (this.view.funcID == "WPT0211" || this.view.funcID == "WPT0212")  // tin tức sự kiện
           {
             option.IsFull = true;
             let object = {
@@ -283,23 +285,21 @@ export class ApproveComponent extends UIComponent {
               data: data
             }
             let popup = this.callFuc.openForm(PopupEditComponent,"", 0, 0, this.view.funcID, object, '', option);
-            popup.closed.subscribe((data: any) => {
-              if (data.event) 
+            popup.closed.subscribe((res: any) => {
+              if (res?.event) 
               {
-                let dataUpdate = data.event;
-                this.view.dataService.update(dataUpdate).subscribe();
+                this.view.dataService.update(res.event).subscribe();
               }
             });
           }
-          else 
+          else // MXH
           {
             this.api.execSv(
               this.service,
               this.assemblyName,
               "CommentsBusiness",
               "GetPostByIDAsync",
-              data.recID)
-              .subscribe((res: any) => {
+              [data.recID]).subscribe((res: any) => {
                 if (res) {
                   let obj = {
                     post: res,
@@ -310,9 +310,10 @@ export class ApproveComponent extends UIComponent {
                   option.DataService = this.view.dataService;
                   option.FormModel = this.view.formModel;
                   let popup =  this.callfc.openForm(PopupAddPostComponent,headerText, 700, 550, '', obj, '', option);
-                  popup.closed.subscribe((data: any) => {
-                    if (data.result) {
-                      console.log(data);
+                  popup.closed.subscribe((res: any) => {
+                    if (res?.event) 
+                    {
+                      this.view.dataService.update(res.event).subscribe();
                     }
                   });
                 }

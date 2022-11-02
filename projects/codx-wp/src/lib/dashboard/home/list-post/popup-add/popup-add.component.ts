@@ -135,7 +135,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
       this.shareText = this.dataEdit.shareText;
       this.shareWith = this.dataEdit.shareName;
     }
-    else {
+    else
+    {
       if (this.dialogData.status == this.STATUS.SHARE) {
         this.dataShare = this.dialogData.post;
         this.entityName = this.dialogData.refType;

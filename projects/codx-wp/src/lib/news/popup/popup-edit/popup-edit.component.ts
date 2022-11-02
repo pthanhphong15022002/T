@@ -199,7 +199,8 @@ export class PopupEditComponent implements OnInit {
         "SubmitNewsAsync",
         [this.data.recID])
         .subscribe((res:any[]) => {
-          if(res && res[0]){
+          if(res && res[0] && res[1])
+          {
             this.data = res[1];
             this.dialogRef.close(this.data);
           }
