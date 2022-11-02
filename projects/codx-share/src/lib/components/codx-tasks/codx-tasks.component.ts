@@ -280,6 +280,7 @@ export class CodxTasksComponent
         type: ViewType.calendar,
         active: false,
         sameData: false,
+        request: this.requestSchedule,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -857,7 +858,7 @@ export class CodxTasksComponent
     );
     this.dialog.closed.subscribe((e) => {
       let kanban = (this.view.currentView as any).kanban;
-      if (e?.event && e?.event != null) {   
+      if (e?.event && e?.event != null) {
         e?.event.forEach((obj) => {
           if (kanban) {
             kanban.updateCard(obj);

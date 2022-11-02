@@ -204,9 +204,12 @@ export class ApprovalCarsComponent extends UIComponent {
 
   changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
-      // });
+      event.forEach(func => {       
+        if(func.functionID == "SYS04"/*Copy*/) 
+        {
+          func.disabled=true;        
+        }
+      });
       if(data.status=='3'){
         event.forEach(func => {
           if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
@@ -217,7 +220,7 @@ export class ApprovalCarsComponent extends UIComponent {
       }
       else{
         event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
+          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/)
           {
             func.disabled=true;
           }

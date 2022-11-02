@@ -2860,12 +2860,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.description = files[i].description; //
 
         var type = files[i].type.toLowerCase();
-        if (type == 'png' || type == 'jpg' || type == 'bmp') {
-          fileUpload.avatar = data;
-        } else
-          fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
-            fileUpload.fileName
-          )}`;
+        fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
+          fileUpload.fileName
+        )}`;
         fileUpload.extension =
           files[i].name.substring(
             files[i].name.lastIndexOf('.'),
