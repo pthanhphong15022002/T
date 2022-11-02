@@ -219,27 +219,73 @@ export class PopupSignForApprovalComponent extends UIComponent {
         if (res.event) {
           switch (this.pdfView.signerInfo.signType) {
             case '2': {
-              this.pdfView
-                .signPDF(mode, this.dialogSignFile.value.comment)
-                .then((value) => {
-                  if (value) {
-                    let result = {
-                      result: true,
-                      mode: mode,
-                    };
-                    this.notify.notifyCode('RS002');
-                    this.canOpenSubPopup = false;
-                    this.dialog && this.dialog.close(result);
-                  } else {
-                    this.canOpenSubPopup = false;
-                    let result = {
-                      result: false,
-                      mode: mode,
-                    };
-                    this.notify.notifyCode('SYS021');
-                    this.dialog && this.dialog.close(result);
-                  }
-                });
+              if (this.pdfView.isAwait) {
+                this.pdfView
+                  .signPDF(mode, this.dialogSignFile.value.comment)
+                  .then((value) => {
+                    if (value) {
+                      let result = {
+                        result: true,
+                        mode: mode,
+                      };
+                      this.notify.notifyCode('RS002');
+                      this.canOpenSubPopup = false;
+                      this.dialog && this.dialog.close(result);
+                    } else {
+                      this.canOpenSubPopup = false;
+                      let result = {
+                        result: false,
+                        mode: mode,
+                      };
+                      this.notify.notifyCode('SYS021');
+                      this.dialog && this.dialog.close(result);
+                    }
+                  });
+              }
+
+              //khong doi
+              else {
+                this.esService
+                  .updateTransAwaitingStatus(this.transRecID)
+                  .subscribe((updateTransStatus) => {
+                    if (updateTransStatus) {
+                      let result = {
+                        result: true,
+                        mode: 9, //dang ky
+                      };
+                      this.pdfView
+                        .signPDF(mode, this.dialogSignFile.value.comment)
+                        .then((value) => {
+                          if (value) {
+                            let result = {
+                              result: true,
+                              mode: mode,
+                            };
+                            this.esService.setupChange.next(true);
+                            this.notify.notifyCode('RS002');
+                            this.canOpenSubPopup = false;
+                          } else {
+                            this.canOpenSubPopup = false;
+                            let result = {
+                              result: false,
+                              mode: mode,
+                            };
+                            this.notify.notifyCode('SYS021');
+                          }
+                        });
+                      this.canOpenSubPopup = false;
+                      this.dialog && this.dialog.close(result);
+                    } else {
+                      this.canOpenSubPopup = false;
+                      let result = {
+                        result: false,
+                        mode: mode,
+                      };
+                      this.notify.notifyCode('SYS021');
+                      this.dialog && this.dialog.close(result);
+                    }
+                  });
+              }
               break;
             }
 
@@ -291,25 +337,69 @@ export class PopupSignForApprovalComponent extends UIComponent {
     } else {
       switch (this.pdfView.signerInfo.signType) {
         case '2': {
-          this.pdfView.signPDF(mode, '').then((value) => {
-            if (value) {
-              let result = {
-                result: true,
-                mode: mode,
-              };
-              this.notify.notifyCode('RS002');
-              this.canOpenSubPopup = false;
-              this.dialog && this.dialog.close(result);
-            } else {
-              this.canOpenSubPopup = false;
-              let result = {
-                result: false,
-                mode: mode,
-              };
-              this.notify.notifyCode('SYS021');
-              this.dialog && this.dialog.close(result);
-            }
-          });
+          if (this.pdfView.isAwait) {
+            this.pdfView.signPDF(mode, '').then((value) => {
+              if (value) {
+                let result = {
+                  result: true,
+                  mode: mode,
+                };
+                this.notify.notifyCode('RS002');
+                this.canOpenSubPopup = false;
+                this.dialog && this.dialog.close(result);
+              } else {
+                this.canOpenSubPopup = false;
+                let result = {
+                  result: false,
+                  mode: mode,
+                };
+                this.notify.notifyCode('SYS021');
+                this.dialog && this.dialog.close(result);
+              }
+            });
+          } else {
+            this.esService
+              .updateTransAwaitingStatus(this.transRecID)
+              .subscribe((updateTransStatus) => {
+                if (updateTransStatus) {
+                  let result = {
+                    result: true,
+                    mode: 9, //dang ky
+                  };
+                  this.pdfView
+                    .signPDF(mode, this.dialogSignFile.value.comment)
+                    .then((value) => {
+                      if (value) {
+                        let result = {
+                          result: true,
+                          mode: mode,
+                        };
+                        this.esService.setupChange.next(true);
+                        this.notify.notifyCode('RS002');
+                        this.canOpenSubPopup = false;
+                      } else {
+                        this.canOpenSubPopup = false;
+                        let result = {
+                          result: false,
+                          mode: mode,
+                        };
+                        this.notify.notifyCode('SYS021');
+                      }
+                    });
+                  this.canOpenSubPopup = false;
+                  this.dialog && this.dialog.close(result);
+                } else {
+                  this.canOpenSubPopup = false;
+                  let result = {
+                    result: false,
+                    mode: mode,
+                  };
+                  this.notify.notifyCode('SYS021');
+                  this.dialog && this.dialog.close(result);
+                }
+              });
+          }
+
           break;
         }
 

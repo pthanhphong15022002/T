@@ -34,7 +34,6 @@ export class WP_News{
     public createdBy:string;
     public modifiedOn:Date;
     public modifiedBy:string;
-    public objectType:string;
 
     public constructor(){
         this.permissions = [];

@@ -49,4 +49,12 @@ export class CodxReferencesComponent implements OnInit, OnChanges {
   }
 
   ngAfterViewInit(): void {}
+
+  setStyles(color): any {
+    let styles = {
+      backgroundColor: color,
+      color: 'white',
+    };
+    return styles;
+  }
 }

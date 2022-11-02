@@ -1,28 +1,13 @@
 <codx-detail-tmp 
-    [header]="header" 
-    [body]="body" 
+    [header]="header"
+    [body]="body"
     (clickMF)="clickMF($event)" 
     [formModel]="formModel"
     [dataItem]="data">
 </codx-detail-tmp>
-<ng-template #header>
-    <ng-container *ngIf="moreFC">
-        <div class="d-flex flex-row-reverse">
-            <div class="navbar p-0">
-                <ng-container *ngFor="let item of moreFC">
-                    <a class="nav-link  d-flex align-items-center" href="javascript:;"
-                        (click)="clickUpdatePost(item.functionID)">
-                        <span [style.color]="item.color" class="fw-bolder ms-1">
-                            <i [style.color]="item.color" [ngClass]="item.largeIcon"></i>
-                            <span>{{item.customName}}</span>
-                        </span>
-                    </a>
-                </ng-container>
-                
-            </div>
-        </div>
-    </ng-container>
-</ng-template>
+<ng-templtae #header >
+    
+</ng-templtae>
 <ng-template #body>
     <ng-container *ngIf="data;else empty">
         <div class="w-100 p-4">
@@ -173,8 +158,14 @@
                         <codx-label [formModel]="formModel" [fiedName]="'Category'"></codx-label>
                     </div>
                     <div class="col-10">
-                        <span class="fw-bolder">{{data.category}}</span>
-                        <span class="ms-5 me-5">|</span>
+                        <span *ngIf="data.category">
+                            <codx-vll 
+                                [name]="'L1494'"
+                                [value]="data.category"
+                                [classList]="'text-dark'" 
+                                [showText]="true">
+                            </codx-vll>
+                        </span>
                         <span>
                             <codx-label class="fw-bolder me-2" [formModel]="formModel" [fiedName]="'CreatedOn'">
                             </codx-label>

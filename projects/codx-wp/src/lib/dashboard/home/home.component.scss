@@ -2,6 +2,25 @@
     max-width: 980px;
     margin: 0 auto;
 
+    [data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-title,
+    [data-kt-aside-minimize=on] .aside:not(:hover) .aside-menu .menu-title {
+        opacity: 1;
+        margin-left: 10px;
+    }
+
+    .ms-4.home-right {
+        margin-left: 13px !important;
+    }
+
+    .e-listview .e-list-item.e-hover,
+    .e-listview .e-list-item.e-active {
+        background-color: white !important;
+    }
+
+    ejs-listview {
+        background-color: transparent;
+    }
+
 
 }
 
@@ -116,25 +135,6 @@
 
 .separator {
     border: 0;
-}
-
-[data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-title,
-[data-kt-aside-minimize=on] .aside:not(:hover) .aside-menu .menu-title {
-    opacity: 1;
-    margin-left: 10px;
-}
-
-.ms-4.home-right {
-    margin-left: 13px !important;
-}
-
-.e-listview .e-list-item.e-hover,
-.e-listview .e-list-item.e-active {
-    background-color: white !important;
-}
-
-ejs-listview {
-    background-color: transparent;
 }
 
 .sp-my-task {

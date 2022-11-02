@@ -523,12 +523,19 @@
                       >
                       </codx-temp-full>
                       <div
+                        *ngIf="
+                          !isPublic && this.isEditable == false
+                            ? false
+                            : area.allowEditAreas == false
+                            ? false
+                            : area.isLock == true
+                            ? false
+                            : true
+                        "
                         [class.d-none]="
                           !isPublic &&
                           (inputUrl != null ||
                             area.recID != curSelectedAnnotID ||
-                            area.labelType == '1' ||
-                            area.labelType == '2' ||
                             area.isLock == true)
                         "
                         [formGroup]="formAnnot"
@@ -725,7 +732,15 @@
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button
-                            *ngIf="!isPublic"
+                            *ngIf="
+                              !isPublic && this.isEditable == false
+                                ? false
+                                : area.allowEditAreas == false
+                                ? false
+                                : area.isLock == true
+                                ? false
+                                : true
+                            "
                             type="button"
                             class="btn btn-sm btn-primary"
                             (click)="removeArea()"

@@ -8,7 +8,7 @@
       ">
       <div class="d-flex align-items-center avatar">
         <codx-img class="me-4 pic-emloyee" [funcId]="functionID" [width]="100" [objectId]="employeeInfo?.employeeID"
-          [objectType]="'HR_Employees'" [objectName]="employeeInfo?.employeeName" [isAllowEdit]="true"
+          [objectType]="'HR_Employees'" [referType]="'avt'" [objectName]="employeeInfo?.employeeName" [isAllowEdit]="true"
           [updateDirect]="true">
         </codx-img>
         <div class="d-flex flex-column">
@@ -508,7 +508,7 @@
                     <codx-label [formModel]="view.formModel" formName="Employees" default="Kỹ năng ">
                     </codx-label>
                   </div>
-                  <a *ngIf="editMode" class="btn btn-sm btn-icon btn-light" (click)="editSkill(skillEmployee)">
+                  <a *ngIf="editMode" class="btn btn-sm btn-icon btn-light" (click)="editSkill()">
                     <span class="icon-edit icon-16"></span>
                   </a>
                 </div>
@@ -523,7 +523,7 @@
                               [type]="minType" 
                               [min]="0"
                               [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " 
-                              [value]="data.valueX"
+                              [value]="data.rating"
                               [readonly]="true">
                             </ejs-slider>
                         </div>
@@ -538,7 +538,7 @@
                             [dataSource]="skillEmployee" 
                             type="Radar" 
                             xName="competenceName"
-                            yName="valueX">
+                            yName="rating">
                           </e-series>
                         </e-series-collection>
                       </ejs-chart>
