@@ -11,10 +11,11 @@ export class CardTransComponent
   extends UIComponent
   implements AfterViewInit
 {
-  
-  @ViewChild('subTitle') tranTypeCol: TemplateRef<any>;
-  @ViewChild('subTitle') userIDCol: TemplateRef<any>;
-  @ViewChild('subTitle') createByCol: TemplateRef<any>;
+
+  @ViewChild('tranTypeCol') tranTypeCol: TemplateRef<any>;
+  @ViewChild('userIDCol') userIDCol: TemplateRef<any>;
+  @ViewChild('createByCol') createByCol: TemplateRef<any>;  
+  @ViewChild('transDateCol') transDateCol: TemplateRef<any>;
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_ResourceTrans';
@@ -57,37 +58,35 @@ export class CardTransComponent
         .subscribe((gv) => {
           this.columnGrids = [
             {
-              field: 'tranType',
-              headerText: gv?.TranType?.headerText,
-              width: '15%',
+              field: 'transType',
+              headerText: gv?.TransType?.headerText,
+              width: "15%",
               template: this.tranTypeCol,
+              headerTextAlign: 'Center',
+              textAlign: 'Center',
             },
             {
-              field: 'createOn',
-              headerText: gv?.CreateOn?.headerText,
-              width: '20%',
-              headerTextAlign: 'Center',
+              field: 'transDate',
+              headerText: gv?.TransDate?.headerText,
+              width: 200,
+              template : this.transDateCol,
             },
             {
               field: 'userID',
               headerText: gv?.UserID?.headerText,
+              width: 250,
               template: this.userIDCol,
-              headerTextAlign: 'Center',
-              textAlign: 'Center',
-              width: '30%',
             },          
             {
               field: 'note',
               headerText: gv?.Note?.headerText,
-              width: '35%',
-              headerTextAlign: 'Center',           
+              width: "20%",          
             },
             {
-              field: 'createBy',
-              headerText: gv?.CreateBy?.headerText,
-              width: '30%',
+              field: 'createdBy',
+              headerText: "Người tạo",//gv?.CreateBy?.headerText,
+              width: 250,
               template: this.createByCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [

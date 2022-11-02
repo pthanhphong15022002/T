@@ -1,0 +1,38 @@
+<codx-form
+  #form
+  [headerText]="title"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="reason form-group">
+      <codx-label
+        fiedName="ResourceName"
+        [formModel]=""
+        default="Bạn chưa thiết lập chữ ký cho vùng ký"
+      >
+      </codx-label>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <!-- mode == 5
+      ? 'justify-content-between card-footer d-flex'
+      :  -->
+    <div [class]="'justify-content-end card-footer d-flex'">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="confirmSignWithoutImg(true)"
+      >
+        <codx-label
+          fiedName="ResourceName"
+          [formModel]=""
+          default="Tôi xác nhận đồng ý"
+        >
+        </codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

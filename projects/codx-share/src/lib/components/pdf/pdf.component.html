@@ -523,15 +523,6 @@
                       >
                       </codx-temp-full>
                       <div
-                        *ngIf="
-                          !isPublic && this.isEditable == false
-                            ? false
-                            : area.allowEditAreas == false
-                            ? false
-                            : area.isLock == true
-                            ? false
-                            : true
-                        "
                         [class.d-none]="
                           !isPublic &&
                           (inputUrl != null ||
