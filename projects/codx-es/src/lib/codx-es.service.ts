@@ -420,6 +420,9 @@ export class CodxEsService {
   public setupChange = new BehaviorSubject<any>(null);
   isSetupChange = this.setupChange.asObservable();
 
+  public statusChange = new BehaviorSubject<any>(null);
+  isStatusChange = this.setupChange.asObservable();
+
   getAutoNumber(autoNoCode): Observable<any> {
     return this.api.execSv(
       'SYS',
@@ -1064,6 +1067,16 @@ export class CodxEsService {
     );
   }
 
+  updateTransAwaitingStatus(transID) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UpdateTransAwaitingStatusAsync',
+      [transID]
+    );
+  }
+
   getApprovalTransActive(sfRecID: string) {
     return this.api.execSv<any>(
       'es',
@@ -1311,6 +1324,26 @@ export class CodxEsService {
       'SettingValuesBusiness',
       'GetByPredicate',
       [predicate, dataValue]
+    );
+  }
+
+  getEntity(entityName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'EntitiesBusiness',
+      'GetCacheEntityAsync',
+      [entityName]
+    );
+  }
+
+  getod(recID: string) {
+    return this.api.execSv<any>(
+      'OD',
+      'ERM.Business.OD',
+      'DispatchesBusiness',
+      'GetItemByIDAsync',
+      [recID]
     );
   }
 }

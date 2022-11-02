@@ -274,7 +274,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle,this.optionalData],
+        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle,this.optionalData,false],
         option
       );
     });

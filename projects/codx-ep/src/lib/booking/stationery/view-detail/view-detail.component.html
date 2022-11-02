@@ -6,12 +6,12 @@
   [body]="body"
   [footer]="!hideFooter ? footer : null"
   [hideMF]="hideMF"
-  (clickMF)="childClickMF($event,itemDetail)"
+  (clickMF)="childClickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
   <ng-template #header>
     <div class="d-flex justify-content-between">
-      <h3>{{ itemDetail?.title }}</h3>
+      <h3>{{ itemDetail?.reasonName }}</h3>
       <codx-vll
         [name]="'VL003'"
         [value]="itemDetail?.status"
@@ -23,7 +23,7 @@
     </div>
     <div class="d-flex flex-column flex-grow-1 mb-2">
       <codx-temp-full
-        [title]="itemDetail.requester"
+        [title]="itemDetail?.requester"
         [subTitleTmp]="subTitleTmp"
         [imageId]="itemDetail?.createdBy"
         imageObjType="AD_Users"
@@ -113,7 +113,7 @@
                 <div class="me-2">
                   <codx-img
                     [objectId]="item?.recID"
-                    imageType="square"
+                    imageType="circle"
                     width="35"
                     objectType="EP_Resources"
                   ></codx-img>

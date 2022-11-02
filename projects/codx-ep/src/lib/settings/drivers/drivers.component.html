@@ -11,134 +11,142 @@
   (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
   [idField]="idField"
-  [className]="className"  
-  (onLoading)="onLoading($event)" 
+  [className]="className"
+  (onLoading)="onLoading($event)"
   [method]="method"
   [viewActiveType]="viewType.grid"
 >
-
-<ng-template #resourceNameCol let-data>  
-  <div class="d-flex flex-row align-items-center">
-    <codx-img 
-      [objectId]="data?.recID"       
-      [funcId]="funcID"       
-      [objectType]="'EP_Resources'"
-      [imageType]="'square'" 
-      width="50" 
-      [imgOn]="data.modifiedOn"
-    ></codx-img>  
-    <div class="ms-2 d-flex flex-column">
-      <span class="fw-bold">{{data.resourceName}}</span>      
+  <ng-template #resourceNameCol let-data>
+    <div class="d-flex flex-row align-items-center">
+      <codx-img
+        [objectId]="data?.recID"
+        [funcId]="funcID"
+        [objectType]="'EP_Resources'"
+        imageType="circle"
+        width="50"
+        [imgOn]="data.modifiedOn"
+      ></codx-img>
+      <div class="ms-2 d-flex flex-column">
+        <span class="fw-bold">{{ data.resourceName }}</span>
+      </div>
     </div>
-  </div>  
-</ng-template>
-<ng-template #locationCol let-data>  
-  <div class="d-flex flex-column justify-content-start">
-    <!-- <span>{{data?.category| vll: "VL005" : 'text' | async}}</span>  -->
-    <span>{{data?.companyName}}</span> 
-  </div>
-  
-</ng-template>
-<ng-template #popupDevice let-dialog>
-  <div class="modal-header">
-    <div class="d-flex flex-column flex-grow-1">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2 id="modal-basic-title">
+  </ng-template>
+  <ng-template #locationCol let-data>
+    <div class="d-flex flex-column justify-content-start">
+      <!-- <span>{{data?.category| vll: "VL005" : 'text' | async}}</span>  -->
+      <span>{{ data?.companyName }}</span>
+    </div>
+  </ng-template>
+  <ng-template #popupDevice let-dialog>
+    <div class="modal-header">
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 id="modal-basic-title">
+            <codx-label
+              default="Cài đặt thiết bị"
+              name="lblEquipment"
+              [default]="grvDrivers?.Equipments?.headerText"
+              [formModel]="dialog.formModel"
+            ></codx-label>
+          </h2>
+          <button
+            type="button"
+            class="btn btn-xs btn-icon btn-light btn-hover-primary"
+            aria-label="Close"
+            (click)="dialog.close()"
+          >
+            <span
+              class="icon-close icon-20 text-dark text-hover-primary"
+            ></span>
+          </button>
+        </div>
+        <div class="text-dark-50">
           <codx-label
-          default="Cài đặt thiết bị"
-            name="lblEquipment"
-            [default]="grvDrivers?.Equipments?.headerText"
+            name="lblChooseCarEquipments"
+            default="Chọn các thiết bị đã tích hợp sẵn trong xe"
             [formModel]="dialog.formModel"
           ></codx-label>
-        </h2>
-        <button
-          type="button"
-          class="btn btn-xs btn-icon btn-light btn-hover-primary"
-          aria-label="Close"
-          (click)="dialog.close()"
-        >
-          <span
-            class="icon-close icon-20 text-dark text-hover-primary"
-          ></span>
-        </button>
-      </div>
-      <div class="text-dark-50">
-        <codx-label
-          name="lblChooseCarEquipments"
-          default="Chọn các thiết bị đã tích hợp sẵn trong xe"
-          [formModel]="dialog.formModel"
-        ></codx-label>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="modal-body">
-    <div class="py-2" *ngFor="let item of carsEquipments">
-      <div class="d-flex flex-stack">
-        <div class="d-flex">
-          <span class="text-dark me-2 p-1" [className]="item.icon"
-          [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
-          </span>
-          <div class="d-flex flex-column justify-content-center">
-            <span href="#" class="text-dark fw-bolder">{{
-              item.text
-            }}</span>
+    <div class="modal-body">
+      <div class="py-2" *ngFor="let item of carsEquipments">
+        <div class="d-flex flex-stack">
+          <div class="d-flex">
+            <span
+              class="text-dark me-2 p-1"
+              [className]="item.icon"
+              [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"
+            >
+            </span>
+            <div class="d-flex flex-column justify-content-center">
+              <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
+            </div>
           </div>
-        </div>
-        <div class="d-flex justify-content-end">
-          <div class="form-check form-check-solid form-switch">
-            <codx-input
-              class="form-check-input w-35px h-20px"
-              type="switch"
-              id="googleswitch"
-              [checked]="item.isSelected"  
-              [disabled]="true"              
-            ></codx-input>
-            <label class="form-check-label" for="googleswitch"></label>
+          <div class="d-flex justify-content-end">
+            <div class="form-check form-check-solid form-switch">
+              <codx-input
+                class="form-check-input w-35px h-20px"
+                type="switch"
+                id="googleswitch"
+                [checked]="item.isSelected"
+                [disabled]="true"
+              ></codx-input>
+              <label class="form-check-label" for="googleswitch"></label>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>    
-</ng-template>
+  </ng-template>
 
-<ng-template #equipmentsCol let-data>  
-    <div (click)="openPopupDevice(popupDevice, data?.carEquipments)" class="btn d-flex justify-content-center align-items-center">    
+  <ng-template #equipmentsCol let-data>
+    <div
+      (click)="openPopupDevice(popupDevice, data?.carEquipments)"
+      class="btn d-flex justify-content-center align-items-center"
+    >
       <i class="icon-devices"></i>
-      <span class=" ms-1 fw-bold">{{data?.equipmentQty}}</span>
-      <codx-label [default]="grvDrivers?.Equipments?.headerText" class=" ms-1 fw-bold" name="lblDevice"></codx-label>
-    </div>  
-  
-</ng-template>  
-<ng-template #noteCol let-data>  
-  <div class="has-action-menu d-flex align-items-center">
-    <span>{{data?.note}}</span>    
-    <span>&nbsp;</span>
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
-  </div>  
-
-</ng-template>  
-
-<ng-template #carCol let-data>  
-  <div class="d-flex flex-row align-items-center">
-    <codx-img [objectId]="data.carRecID" [imageType]="'square'" [imgOn]="data.modifiedOn" [width]="50" [objectType]="'EP_Resources'"></codx-img>  
-    <div class="ms-2 d-flex flex-column">
-      <span class="fw-bold">{{data?.carName}}</span>      
+      <span class="ms-1 fw-bold">{{ data?.equipmentQty }}</span>
+      <codx-label
+        [default]="grvDrivers?.Equipments?.headerText"
+        class="ms-1 fw-bold"
+        name="lblDevice"
+      ></codx-label>
     </div>
-  </div>  
-</ng-template>
-<ng-template #ownerCol let-data>
-  <div class="d-flex has-action-menu align-items-center">
-    <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
-    <div class="ms-2">
-      <div class="fw-bold">{{ data.ownerName }}</div>
-    </div>      
-    
-  </div>
-</ng-template>
+  </ng-template>
+  <ng-template #noteCol let-data>
+    <div class="has-action-menu d-flex align-items-center">
+      <span>{{ data?.note }}</span>
+      <span>&nbsp;</span>
+      <codx-mfunc
+        [dataItem]="data"
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data)"
+        type="hover"
+      ></codx-mfunc>
+    </div>
+  </ng-template>
 
+  <ng-template #carCol let-data>
+    <div class="d-flex flex-row align-items-center">
+      <codx-img
+        [objectId]="data.carRecID"
+        imageType="circle"
+        [imgOn]="data.modifiedOn"
+        [width]="50"
+        [objectType]="'EP_Resources'"
+      ></codx-img>
+      <div class="ms-2 d-flex flex-column">
+        <span class="fw-bold">{{ data?.carName }}</span>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #ownerCol let-data>
+    <div class="d-flex has-action-menu align-items-center">
+      <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
+      <div class="ms-2">
+        <div class="fw-bold">{{ data.ownerName }}</div>
+      </div>
+    </div>
+  </ng-template>
 </codx-views>

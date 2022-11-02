@@ -30,10 +30,7 @@ export class CodxCompetencesComponent implements OnInit {
     this.dialogRef = dialogRef;
     this.dialogData = dialog?.data;
     this.positionID = this.dialogData?.positionID;
-    if(this.dialogData?.competences && this.dialogData?.competences.length > 0){
-      this.dialogData.competences.map((e) => this.competences.push({...e}));
-    }
-
+    this.competences = JSON.parse(JSON.stringify(this.dialogData.competences));
     this.parameter = this.dialogData.parameter;
   }
 

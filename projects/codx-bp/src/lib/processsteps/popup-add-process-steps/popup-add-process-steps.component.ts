@@ -5,6 +5,7 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
+import { FormControlName } from '@angular/forms';
 import {
   ApiHttpService,
   AuthStore,
@@ -28,6 +29,7 @@ import {
 })
 export class PopupAddProcessStepsComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('form') form: FormControlName;
 
   dialog!: DialogRef;
   formModel: FormModel;
@@ -75,6 +77,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
+   
 
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];

@@ -316,6 +316,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.detectorRef.detectChanges();
       if (this.isAdd && this.optionalData != null) {        
         let equips = [];
+        this.data.resourceID = this.optionalData.resourceId;
         equips = this.optionalData.resource.equipments;
         equips.forEach((equip) => {
           let tmpDevice = new Device();
@@ -547,7 +548,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     return true;
   }
 
-  onSaveForm(approval: boolean = false) {
+  onSaveForm(approval: boolean = false) {   
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -582,11 +583,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       tmpEquip.push(tempEquip);
     });
     this.data.equipments=[];
-    this.data.equipments = tmpEquip;
+    this.data.equipments = tmpEquip; 
+    this.data.stopOn=this.data.endDate;
     this.data.category = '1';
     this.data.resourceType = '1';
     this.data.requester = this.curUser.userName;
-    this.data.status = '1';
+    this.data.attendees= this.tmpAttendeesList.length;
 
     if (this.data.attendees > this.roomCapacity) {
       this.notificationsService.alertCode('EP004').subscribe((x) => {

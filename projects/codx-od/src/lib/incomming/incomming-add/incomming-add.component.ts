@@ -23,6 +23,7 @@ import {
   getJSONString,
 } from '../../function/default.function';
 import { FileService } from '@shared/services/file.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -157,7 +158,12 @@ export class IncommingAddComponent implements OnInit {
   //Người chịu trách nhiệm
   changeValueOwner(event: any) {
     this.dispatch.owner = event.data?.value[0];
-
+    if(event.data?.value[0])
+    {
+      this.getInforByUser(event.data?.value[0]).subscribe(item=>{
+        if(item) this.dispatch.orgUnitID = item.organizationID
+      })
+    }
   }
   //Nơi nhận
   changeValueBUID(event: any) {
@@ -175,12 +181,26 @@ export class IncommingAddComponent implements OnInit {
           if (item != null && item.length > 0) {
             this.dispatch.owner = item[0].domainUser;
             this.change = this.dispatch.owner;
+            this.getInforByUser(item[0].domainUser).subscribe(item=>{
+              if(item) this.dispatch.orgUnitID = item.organizationID
+            })
             this.ref.detectChanges();
           } else {
             this.dispatch.owner = '';
           }
         });
     }
+  }
+  getInforByUser(id:any) : Observable<any>
+  {
+    return this.api
+    .execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'GetOneByDomainUserAsync',
+      id
+    );
   }
   openFormUploadFile() {
     this.attachment.uploadFile();

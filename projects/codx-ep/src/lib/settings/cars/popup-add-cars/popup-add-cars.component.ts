@@ -190,9 +190,10 @@ export class PopupAddCarsComponent extends UIComponent {
               this.imageUpload
               .updateFileDirectReload(this.returnData.recID)
               .subscribe((result) => {
-                if (result) {
+                if (result) {                  
                   //xử lí nếu upload ảnh thất bại
-                  //...                
+                  //...
+                  this.dialogRef && this.dialogRef.close(this.returnData);                
                 }
                 this.dialogRef && this.dialogRef.close(this.returnData);
               });  
@@ -202,7 +203,6 @@ export class PopupAddCarsComponent extends UIComponent {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
           } 
-          this.dialogRef && this.dialogRef.close(this.returnData);
         }
         else{ 
           //Trả lỗi từ backend.         

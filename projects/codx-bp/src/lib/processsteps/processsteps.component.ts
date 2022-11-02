@@ -111,7 +111,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null);
     if (!this.dataObj?.processID)
-    this.codxService.navigate('', this.urlBack);
+      this.codxService.navigate('', this.urlBack);
   }
 
   onInit(): void {
@@ -743,7 +743,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   checkAttachment(data) {
     if (data?.attachments > 0) return true;
-    if (data?.items.length > 0) {
+    if (data?.items && data?.items.length > 0) {
       var check = false;
       data?.items.forEach((obj) => {
         if (obj.attachments > 0) check = true;
