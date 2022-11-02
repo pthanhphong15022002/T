@@ -156,6 +156,7 @@ export class PopupSignatureComponent extends UIComponent {
         .updateFileDirectReload(this.data.recID)
         .subscribe((img) => {
           console.log('img', img);
+          this.data.modifiedOn = new Date();
 
           i--;
           if (img && this.data?.signature1 == null) {
@@ -174,6 +175,7 @@ export class PopupSignatureComponent extends UIComponent {
       this.imgSignature2
         .updateFileDirectReload(this.data.recID)
         .subscribe((img) => {
+          this.data.modifiedOn = new Date();
           i--;
           if (img && this.data?.signature2 == null) {
             this.data.signature2 = (img[0] as any).recID;
@@ -190,6 +192,7 @@ export class PopupSignatureComponent extends UIComponent {
     if (this.imgStamp?.imageUpload?.item) {
       this.imgStamp.updateFileDirectReload(this.data.recID).subscribe((img) => {
         i--;
+        this.data.modifiedOn = new Date();
         if (img && this.data?.stamp == null) {
           this.data.stamp = (img[0] as any).recID;
           this.addEditSignature(i);
