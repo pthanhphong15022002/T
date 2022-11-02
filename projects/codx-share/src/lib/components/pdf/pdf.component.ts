@@ -229,7 +229,7 @@ export class PdfComponent
         this.align = res.Align;
         this.direction = res.Direction;
         this.areaControl = res.AreaControl == '1';
-        this.isAwait = false; //res.Await == '1';
+        this.isAwait = res.Await == '1';
         this.labels = res.Label.filter((label) => {
           return label.Language == this.user.language;
         });
