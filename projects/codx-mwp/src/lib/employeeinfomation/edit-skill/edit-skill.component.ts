@@ -26,7 +26,7 @@ export class EditSkillComponent implements OnInit {
   dialogRef: any;
   title = 'Chỉnh sửa kỹ năng';
   minType = 'MinRange';
-  skillEmployee: any;
+  skillEmployee: any[] = [];
   skillChartEmployee: any = null;
   dataBind: any;
   width = '720';
@@ -37,7 +37,8 @@ export class EditSkillComponent implements OnInit {
   skill = [];
   tooltip:any = {};
   ticks:any = {};
-  employeeID:String = "";
+  employeeID:string = "";
+  dialogData:any = null;
   constructor(
     private notifiSV: NotificationsService,
     private cache: CacheService,
@@ -48,24 +49,28 @@ export class EditSkillComponent implements OnInit {
     @Optional() dialog?: DialogData
   ) {
     this.dialogRef = dialogRef;
-    this.skillEmployee = dialog?.data.skill;
+    this.dialogData = dialog?.data?.skill;
     this.employeeID = dialog?.data.employeeID;
+    if(this.dialogData && this.dialogData.length > 0){
+      this.dialogData.map((e) => this.skillEmployee.push({...e}));
+    }
   }
   
   ngOnInit(): void {
     this.tooltip = { placement: 'Before', isVisible: true, showOn: 'Always' };
-    // this.ticks = { placement: 'After', largeStep: 1, smallStep: 10, showSmallTicks: true };
   }
-  sliderChange(e, data) {
-    this.skillChartEmployee = [];
-    data.rating = data.valueX = e.toString();
-    // this.api.exec('ERM.Business.HR', 'EmployeesBusiness', 'UpdateEmployeeSkillAsync', [[data]])
-    //   .subscribe((o: any) => {
-    //     var objIndex = this.skillEmployee.findIndex((obj => obj.recID == data.recID));
-    //     this.skillEmployee[objIndex].rating = this.skillEmployee[objIndex].valueX = data.rating;
-    //     this.skillEmployee = [...this.skillEmployee, ...[]];
-    //     this.df.detectChanges();
-    //   });
+  valueSliderChange(value:any,competence:any){
+    if(competence)
+    {
+      this.skillEmployee.forEach((e:any) => {
+        if(e.competenceID == competence.competenceID)
+        {
+          e.rating = value;
+          return;
+        }
+      });
+      this.df.detectChanges();
+    }
   }
 
   OnSaveForm() {
@@ -79,7 +84,7 @@ export class EditSkillComponent implements OnInit {
       .subscribe((res:boolean) => {
         if(res)
         {
-          this.dialogRef.close();
+          this.dialogRef.close(this.skillEmployee);
         }
       });
   }
@@ -113,7 +118,6 @@ export class EditSkillComponent implements OnInit {
   removeSkill(data) 
   {
   }
-
 
   
 }

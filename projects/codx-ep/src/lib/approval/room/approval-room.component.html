@@ -21,7 +21,7 @@
 <!-- Schedule view -->
 <ng-template #resourceHeader let-data>
   <div class="d-flex flex-row ms-5 align-items-center">
-    <codx-img [objectId]="data?.resourceData?.recID" [imageType]="'square'" width="50" [objectType]="'EP_Resources'"></codx-img>  
+    <codx-img [objectId]="data?.resourceData?.recID" imageType="circle" width="50" [objectType]="'EP_Resources'"></codx-img>  
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data?.resourceData?.resourceName}}</span>
       <div class="d-flex flex-row">        
@@ -134,7 +134,7 @@
           <div class="me-2">
             <codx-img
               [objectId]="item.recID"
-              imageType="square"
+              imageType="circle" 
               width="35"
               objectType="EP_Resources"
             ></codx-img>
@@ -171,8 +171,8 @@
 
 <!-- List Viewdetail -->
 <ng-template #subTitleTmp let-data>
-  <div class="row">
-    <div class="row">
+  <div class="">
+    <div class="">
       <span>{{ data?.title }}</span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
@@ -198,7 +198,6 @@
     
   </div>
 </ng-template>
-
 <ng-template #itemTemplate let-data>
   <codx-temp-full
   cardCss="card-template border-bottom px-2 pt-4 pb-2"
@@ -214,9 +213,6 @@
   [date]="data?.createdOn"
   [imageId]="data?.createdBy"
   imageObjType="AD_Users"
-  
-  [resources]="data?.bookingAttendees"
-  
   [titleLine]="2"
   [dataItem]="data"
   [formModel]="formModel"

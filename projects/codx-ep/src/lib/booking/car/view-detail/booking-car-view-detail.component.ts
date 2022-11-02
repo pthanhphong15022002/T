@@ -20,7 +20,8 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;
-  @Output('edit') edit: EventEmitter<any> = new EventEmitter();  
+  @Output('edit') edit: EventEmitter<any> = new EventEmitter();
+  @Output('copy') copy: EventEmitter<any> = new EventEmitter();  
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
@@ -78,6 +79,9 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
       case 'SYS03': //Sua.
         this.lviewEdit(data,event.text);
         break;
+      case 'SYS04': //copy.
+        this.lviewCopy(data,event.text);
+        break;
     }
   }
   lviewEdit(data?,mfuncName?) {
@@ -89,6 +93,12 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   lviewDelete(data?) {
     if (data) {      
       this.delete.emit(data);
+    }
+  }
+  lviewCopy(data?,mfuncName?) {
+    if (data) {      
+      this.setPopupTitle.emit(mfuncName); 
+      this.copy.emit(data);
     }
   }
   changeDataMF(event, data: any) {

@@ -245,7 +245,7 @@
 </ng-template>
 
 <ng-template #popoverSelectRoles>
-  <div class="d-flex" *ngIf="!readOnly">
+  <div class="d-flex flex-column " *ngIf="!readOnly">
     <ng-container *ngFor="let item of listRoles">
       <div class="d-flex align-items-center btn btn-sm btn-white me-4"
         (click)="selectRoseType(idUserSelected, item.value)" style="cursor: pointer">
