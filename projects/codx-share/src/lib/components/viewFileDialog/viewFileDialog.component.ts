@@ -260,6 +260,11 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
             this.container.documentEditor.open(http.responseText);
             this.isShow = false;
             this.changeDetectorRef.detectChanges();
+
+          }
+          else{
+            this.notificationsService.notifyCode("DM065");
+            this.isShow = false;
           }
         }
       };
@@ -317,7 +322,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
 
   ngOnInit(): void {
     this.data = this.dataFile;
-    if(this.data)this.getData(); 
+    //if(this.data)this.getData(); 
   }
   getData()
   {
