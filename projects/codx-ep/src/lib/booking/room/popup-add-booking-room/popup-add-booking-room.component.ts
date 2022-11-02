@@ -316,6 +316,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.detectorRef.detectChanges();
       if (this.isAdd && this.optionalData != null) {        
         let equips = [];
+        this.data.resourceID = this.optionalData.resourceId;
         equips = this.optionalData.resource.equipments;
         equips.forEach((equip) => {
           let tmpDevice = new Device();

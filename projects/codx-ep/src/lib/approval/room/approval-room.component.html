@@ -198,7 +198,7 @@
     
   </div>
 </ng-template>
-
+<!-- 
 <ng-template #itemTemplate let-data>
   <codx-temp-full
   cardCss="card-template border-bottom px-2 pt-4 pb-2"
@@ -217,6 +217,34 @@
   
   [resources]="data?.bookingAttendees"
   
+  [titleLine]="2"
+  [dataItem]="data"
+  [formModel]="formModel"
+  [footer]="footerTmp"
+  (clickMF)="clickMF($event, data)"
+  (changeDataMF)="changeDataMF($event, data)"
+  typeMF="hover"
+  [dataItem]="data"    
+  >
+  </codx-temp-full>
+</ng-template> -->
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+  cardCss="card-template border-bottom px-2 pt-4 pb-2"
+  (click)="click(data)"
+  [typeMF]="'hover'"
+  [title]="data?.requester"
+  [subTitleTmp]="subTitleTmp"
+  [icoCss]="
+    'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+  "
+  [hideMF]=""
+  [status]="data?.status"
+  [statusVll]="'VL003'"
+  [date]="data?.createdOn"
+  [imageId]="data?.createdBy"
+  imageObjType="AD_Users"
+  [resources]="data?.bookingAttendees"
   [titleLine]="2"
   [dataItem]="data"
   [formModel]="formModel"
