@@ -67,7 +67,7 @@
                     <div class="text-gray-600 flex-grow-1 me-2">
                       {{
                         item.text ??
-                          (item.objectID | vll: vllShare:"text" | async)
+                          (item.objectType | vll: vllShare:"text" | async)
                       }}
                     </div>
                     <a
@@ -131,7 +131,7 @@
                       {{
                         item.text != null
                           ? item.text
-                          : (item.objectID | vll: vllShare:"text" | async)
+                          : (item.objectType | vll: vllShare:"text" | async)
                       }}
                     </div>
                     <a
@@ -164,7 +164,7 @@
                     {{
                       item.text != null
                         ? item.text
-                        : (item.objectID | vll: vllShare:"text" | async)
+                        : (item.objectType | vll: vllShare:"text" | async)
                     }}
                   </div>
                   <a
@@ -254,7 +254,7 @@
                   <div class="text-gray-600 flex-grow-1 me-2">
                     {{
                       item.text ??
-                        (item.objectID | vll: vllShare:"text" | async)
+                        (item.objectType | vll: vllShare:"text" | async)
                     }}
                   </div>
                   <a
@@ -329,7 +329,7 @@
                     {{
                       item.text != null
                         ? item.text
-                        : (item.objectID | vll: vllShare:"text" | async)
+                        : (item.objectType | vll: vllShare:"text" | async)
                     }}
                   </div>
                   <a
