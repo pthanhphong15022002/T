@@ -145,21 +145,30 @@
           <div class="symbol symbol-30px symbol-circle">
             <codx-img [objectId]="driver.objectID" width="30" [objectType]="driver.objectType"></codx-img>
             <span
-              class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span>
+                class="position-absolute"
+                inlineSVG="./assets/themes/ep/default/img/{{ driver.icon }}"
+                style="bottom: -5px;right:-4px; z-index:100;"
+              ></span>
           </div>
         </div>
         <div class="" *ngIf="curUser != null">
           <div class="symbol symbol-30px symbol-circle">
             <codx-img [objectId]="curUser.userID" [width]="30" objectType="AD_Users"></codx-img>
             <span
-              class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
+                class="position-absolute"
+                inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"
+                style="bottom: -5px;right:-4px; z-index:100;"
+              ></span>
           </div>
         </div>
         <div class="" *ngIf="lstPeople?.length >= 1">
           <div class="symbol symbol-30px symbol-circle">
             <codx-img [objectId]="lstPeople[0].userID" [width]="30" objectType="AD_Users"></codx-img>
             <span
-              class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span>
+                class="position-absolute"
+                inlineSVG="./assets/themes/ep/default/img/{{ lstPeople[0].icon }}"
+                style="bottom: -5px;right:-4px; z-index:100;"
+              ></span>
           </div>
         </div>
 
