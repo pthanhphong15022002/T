@@ -72,12 +72,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   idField = 'recID';
   assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
-  // method :any
   method = 'GetProcessStepsAsync';
   listPhaseName = [];
-
-  recIDProcess = '90ab82ac-43d1-11ed-83e7-d493900707c4'; ///thêm để add thử
-  // test data tra ve la  1 []
+  numberColums = 0
+  processID = ''; 
   dataTreeProcessStep = [];
   urlBack = '/bp/processes/BPT1'; //gang tam
   data: any; //them de test
@@ -85,8 +83,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   dataChild = [];
   lockParent = false;
   childFunc = [];
-  formModel: FormModel;
   formModelMenu :FormModel ;
+  vllInterval ='VL004'
 
   constructor(
     inject: Injector,
@@ -102,15 +100,16 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     this.bpService.viewProcesses.subscribe((res) => (this.process = res));
+
+    this.processID = this.process?.recID ? this.process?.recID : '' ;
+    this.numberColums = this.process?.phases ? this.process?.phases : 0 ;
     this.dataObj = {
-      processID: this.process?.recID ? this.process?.recID : '',
+      processID: this.processID ,
     };
-
-    this.dataObj = { processID: this.recIDProcess }; //tesst
-
+    // this.dataObj = { processID: this.recIDProcess }; //tesst
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null);
-    if (!this.dataObj?.processID)
+    if (!this.processID )
       this.codxService.navigate('', this.urlBack);
   }
 
@@ -191,7 +190,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       //option.FormModel = this.formModel;
       option.Width = '550px';
 
-      this.view.dataService.dataSelected.processID = this.recIDProcess;
+      this.view.dataService.dataSelected.processID = this.processID;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
         ['add', this.titleAction, this.stepType,this.formModelMenu],
@@ -207,12 +206,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           this.notiService.notifyCode('SYS006');
           var processStep = e?.event;
           if (processStep.stepType != 'P') {
+            let kanban = (this.view.currentView as any).kanban;
             if (processStep.stepType == 'A') {
               this.dataTreeProcessStep.forEach((obj) => {
                 if (obj.recID == processStep?.parentID) {
                   obj.items.push(processStep);
                 }
               });
+              if(kanban)kanban.updateCard(processStep)
             } else {
               this.dataTreeProcessStep.forEach((obj) => {
                 if (obj.items.length > 0) {
