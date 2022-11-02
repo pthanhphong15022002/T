@@ -302,6 +302,11 @@
     [moreFuncCss]="'me-10'"
     >
   </codx-temp-full>
+  <ng-container *ngIf="item[1]">
+    <codx-thumbnail [files]="item[1]" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'"
+      (viewFile)="handleViewFile($event)">
+    </codx-thumbnail>
+  </ng-container>
   </div>
  </ng-container>
 </ng-template>
@@ -322,9 +327,5 @@
       [width]="30" [numberImages]="3" [mode]="false">
     </codx-imgs>
   </div>
-  <ng-container *ngIf="data && data?.files">
-    <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'"
-      (viewFile)="handleViewFile($event)">
-    </codx-thumbnail>
-  </ng-container>
+  
 </ng-template>

@@ -394,7 +394,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     this.cache.message(this.codeMaxFileSize).subscribe((item) => {
       if (item != null) {
-        this.titleMaxFileSiate = item.defaultName;
+        this.titleMaxFileSiate = item.customName;
       }
     });
 
@@ -405,13 +405,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     this.cache.message(this.codetitle).subscribe((item) => {
       if (item != null) {
-        this.title = item.defaultName;
+        this.title = item.customName;
       }
     });
 
     this.cache.message(this.codetitle2).subscribe((item) => {
       if (item != null) {
-        this.title2 = item.defaultName;
+        this.title2 = item.customName;
       }
     });
 
@@ -2832,12 +2832,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         files[i].size >= this.maxFileSizeUpload &&
         this.maxFileSizeUpload != 0
       ) {
-        var mess = this.titleMaxFileSiate.replace('{0}', files[i].name);
-        mess = this.titleMaxFileSiate.replace(
-          '{1}',
-          this.maxFileSizeUploadMB.toString()
-        );
-        this.notificationsService.notify(mess);
+        this.notificationsService.notifyCode("DM057",0,files[i].name,this.maxFileSizeUploadMB);
         break;
       }
 
