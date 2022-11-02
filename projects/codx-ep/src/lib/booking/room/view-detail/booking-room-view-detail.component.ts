@@ -24,6 +24,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('attachment') attachment;
   @ViewChild('bookingRoom') bookingRoom : BookingRoomComponent;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();  
+  @Output('copy') copy: EventEmitter<any> = new EventEmitter(); 
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
@@ -97,6 +98,10 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       case 'SYS03': //Sua.
         this.lviewEdit(data,event.text);
         break;
+
+        case 'SYS04': //copy.
+        this.lviewCopy(data,event.text);
+        break;
     }
   }
   lviewEdit(data?,mfuncName?) {
@@ -108,6 +113,12 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   lviewDelete(data?) {
     if (data) {      
       this.delete.emit(data);
+    }
+  }
+  lviewCopy(data?,mfuncName?) {
+    if (data) {      
+      this.setPopupTitle.emit(mfuncName); 
+      this.copy.emit(data);
     }
   }
   changeDataMF(event, data:any) {        

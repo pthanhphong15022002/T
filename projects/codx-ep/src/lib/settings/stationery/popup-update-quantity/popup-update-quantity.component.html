@@ -17,9 +17,9 @@
           ></codx-label>
           <codx-input
             type="text"
-            field="ruleType"
+            field="quantity"
             [refValue]="'EP013'"
-            [crrValue]="dialogUpdateQuantity.value?.ruleType"
+            [crrValue]="dialogUpdateQuantity.value?.quantity"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
@@ -30,8 +30,8 @@
           ></codx-label>
           <codx-input
             type="text"
-            field="quantity"
-            [crrValue]="dialogUpdateQuantity.value?.quantity"
+            field="oldQuantity"
+            [crrValue]="dialogUpdateQuantity.value?.oldQuantity"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
@@ -41,8 +41,8 @@
           <codx-label name="lblNote" default="Ghi chú"></codx-label>
           <codx-input
             type="textarea"
-            field="objectType"
-            [crrValue]="dialogUpdateQuantity.value?.quantity"
+            field="note"
+            [crrValue]="dialogUpdateQuantity.value?.note"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>

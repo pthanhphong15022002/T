@@ -6,17 +6,11 @@
         <div class="d-flex">
             <div class="body-user-img me-2">
                 <ng-container *ngIf="dialogData.status == STATUS.EDIT;else tmpUserID">
-                    <codx-img 
-                        [objectId]="dataEdit.createdBy" 
-                        objectType="AD_Users" 
-                        [width]="40">
+                    <codx-img [objectId]="dataEdit.createdBy" objectType="AD_Users" [width]="40">
                     </codx-img>
                 </ng-container>
                 <ng-template #tmpUserID>
-                    <codx-img 
-                        [objectId]="user.userID" 
-                        objectType="AD_Users" 
-                        [width]="40">
+                    <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
                     </codx-img>
                 </ng-template>
             </div>
@@ -146,11 +140,7 @@
 </ng-template>
 <ng-template #share>
     <div>
-        <codx-input format="ed3" 
-            [class]="'border-none'" 
-            type="textarea" 
-            [crrValue]="message" 
-            [placeholder]="title"
+        <codx-input format="ed3" [class]="'border-none'" type="textarea" [crrValue]="message" [placeholder]="title"
             (valueChange)="valueChange($event)">
         </codx-input>
     </div>
@@ -166,7 +156,7 @@
         </codx-attachment>
     </div>
     <div class="border-start border rounded-3 p-4">
-        <div [class.border]="listFileUpload.length > 0">
+        <div class="border-0" [class.border]="listFileUpload.length > 0">
             <ng-container *ngIf="!dataShare?.isPortal;else category2">
                 <div class="pic-feed">
                     <div class="pic-feed-img">
@@ -181,9 +171,9 @@
                     </ng-container>
                     <ng-template #WP_News>
                         <ng-container *ngIf="dataShare.subject || dataShare.subContent">
-                            <div class="fw-bolder">{{dataShare.subject}}</div>
+                            <div class="fw-bold fs-5 mt-3">{{dataShare.subject}}</div>
                             <div>{{dataShare.subContent}}</div>
-                            <div class="text-gray-600 fs-7 me-2">{{dataShare.createdOn | fmDT}}</div>
+                            <div class="text-gray-600 fs-7 me-2 mt-1">{{dataShare.createdOn | fmDT}}</div>
                         </ng-container>
                     </ng-template>
 
@@ -244,9 +234,7 @@
             </ng-template>
             <ng-container *ngIf="entityName != 'WP_News'">
                 <div class="d-flex mb-3 card-border my-2">
-                    <codx-img [width]="30" 
-                        [objectId]="dataShare.createdBy" 
-                        bjectType="AD_Users">
+                    <codx-img [width]="30" [objectId]="dataShare.createdBy" bjectType="AD_Users">
                     </codx-img>
                     <div class="d-flex flex-column flex-grow-1 ms-2">
                         <div class="d-flex align-items-center">
@@ -258,7 +246,7 @@
                     </div>
                 </div>
             </ng-container>
-            
+
         </div>
     </div>
 </ng-template>

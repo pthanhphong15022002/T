@@ -132,6 +132,22 @@ export class BookingStationeryComponent
     }
   }
 
+  changeDataMF(event, data: any) {
+    if (event != null && data != null && this.funcID=="EPT32") {
+      
+        event.forEach((func) => {
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      
+    }
+  }
+
   addNewRequest() {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
@@ -226,12 +242,18 @@ export class BookingStationeryComponent
   }
 
   allocate(evt: any) {
-    if (evt) {
-      this.view.dataService.dataSelected.issusStatus = '2';
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {});
-    }
+    this.api
+      .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [evt.recID])
+      .subscribe((dataItem) => {
+        if (dataItem) {
+          this.view.dataService.update(dataItem).subscribe((res) => {
+            if (res) {
+              this.notificationsService.notify('Cấp phát thành công', '1', 0);
+            }
+          });
+          this.detectorRef.detectChanges(); 
+        }
+      });
   }
 
   setPopupTitle(mfunc) {

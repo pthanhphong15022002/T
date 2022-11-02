@@ -527,8 +527,6 @@
                           !isPublic &&
                           (inputUrl != null ||
                             area.recID != curSelectedAnnotID ||
-                            area.labelType == '1' ||
-                            area.labelType == '2' ||
                             area.isLock == true)
                         "
                         [formGroup]="formAnnot"
@@ -725,7 +723,15 @@
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button
-                            *ngIf="!isPublic"
+                            *ngIf="
+                              !isPublic && this.isEditable == false
+                                ? false
+                                : area.allowEditAreas == false
+                                ? false
+                                : area.isLock == true
+                                ? false
+                                : true
+                            "
                             type="button"
                             class="btn btn-sm btn-primary"
                             (click)="removeArea()"
@@ -794,93 +800,36 @@
                     <ul
                       class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6"
                     >
-                      <li class="nav-item m-0">
-                        <a
-                          class="nav-link text-center flex-center rounded-0 min-w-100px"
-                          [ngClass]="currentTab == 1 ? 'active' : ''"
-                          data-bs-toggle="tab"
-                          id="#pane_1"
-                          (click)="changeTab(1)"
-                        >
-                          <span class="d-flex flex-column">
-                            <span
-                              class="icon-text_format icon-24 m-auto mb-1"
-                            ></span>
-                            <span class="fs-6 fw-bold">
-                              <codx-label
-                                Name="lblVNPT"
-                                default="VNPT"
-                                [formModel]=""
-                              ></codx-label>
+                      <ng-container
+                        *ngFor="let spl of vllSupplier; let index = index"
+                      >
+                        <li class="nav-item m-0">
+                          <a
+                            class="nav-link text-center flex-center rounded-0 min-w-100px"
+                            [ngClass]="currentTab == index ? 'active' : ''"
+                            data-bs-toggle="tab"
+                            id="'#pane_' + index"
+                            (click)="changeTab(index)"
+                          >
+                            <span class="d-flex flex-column">
+                              <span>
+                                <img
+                                  class="h-50px p-3 user-mini-icon w-50px mb-1"
+                                  [src]="
+                                    '../assets/themes/es/default/img/' +
+                                    spl.icon
+                                  "
+                                />
+                              </span>
+
+                              <span class="fs-6 fw-bold">
+                                {{ spl.text }}
+                              </span>
+                              <span class="fs-6"> </span>
                             </span>
-                            <span class="fs-6">
-                              <codx-label
-                                Name="lblDeveloping"
-                                default="Đang phát triển"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item m-0">
-                        <a
-                          class="nav-link text-center flex-center rounded-0 min-w-100px"
-                          [ngClass]="currentTab == 2 ? 'active' : ''"
-                          data-bs-toggle="tab"
-                          id="#pane_2"
-                          (click)="changeTab(2)"
-                        >
-                          <span class="d-flex flex-column">
-                            <span
-                              class="icon-gesture icon-24 m-auto mb-1"
-                            ></span>
-                            <span class="fs-6 fw-bold">
-                              <codx-label
-                                default="Viettel"
-                                name="lblViettel"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                            <span class="fs-6">
-                              <codx-label
-                                Name="lblDeveloping"
-                                default="Đang phát triển"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item m-0">
-                        <a
-                          class="nav-link text-center flex-center rounded-0 min-w-100px"
-                          [ngClass]="currentTab == 3 ? 'active' : ''"
-                          data-bs-toggle="tab"
-                          id="#pane_3"
-                          (click)="changeTab(3)"
-                        >
-                          <span class="d-flex flex-column">
-                            <span
-                              class="icon-looks_one icon-24 m-auto mb-1"
-                            ></span>
-                            <span class="fs-6 fw-bold">
-                              <codx-label
-                                Name="lblUsbToken"
-                                default="USB Token"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                            <span class="fs-6">
-                              <codx-label
-                                Name="lblDeveloping"
-                                default="Đang phát triển"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                          </span>
-                        </a>
-                      </li>
+                          </a>
+                        </li>
+                      </ng-container>
                     </ul>
                   </div>
 

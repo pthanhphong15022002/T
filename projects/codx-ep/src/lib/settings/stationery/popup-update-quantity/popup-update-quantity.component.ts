@@ -9,6 +9,7 @@ import {
   AuthStore,
   DialogData,
   DialogRef,
+  NotificationsService,
   UIComponent,
   UserModel,
 } from 'codx-core';
@@ -31,6 +32,7 @@ export class PopupUpdateQuantityComponent extends UIComponent {
     injector: Injector,
     private fb: FormBuilder,
     private auth: AuthStore,
+    private notificationsService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -46,10 +48,11 @@ export class PopupUpdateQuantityComponent extends UIComponent {
 
   initForm() {
     this.dialogUpdateQuantity = this.fb.group({
-      ruleType: ['', Validators.compose([Validators.required])],
+      oldQuantity: [''],
       quantity: ['', Validators.compose([Validators.required])],
+      note: [''],
     });
-    this.dialogUpdateQuantity.patchValue({ ruleType: '1' });
+    this.dialogUpdateQuantity.patchValue({ oldQuantity: this.data.currentQty });
     this.dialogUpdateQuantity.patchValue({ quantity: 1 });
     this.dialogUpdateQuantity.addControl('itemLevel', new FormControl('9'));
     this.dialogUpdateQuantity.addControl(
@@ -82,11 +85,23 @@ export class PopupUpdateQuantityComponent extends UIComponent {
       return;
     }
     this.api
-      .exec('EP', 'ResourceQuotaBusiness', 'AddResourceQuotaAsync', [
-        this.dialogUpdateQuantity.value,
+      .exec('EP', 'ResourceTransBusiness', 'ImportAsync', [
+        this.data.resourceID,
+        this.dialogUpdateQuantity.value.quantity,
       ])
       .subscribe((res) => {
-        console.log(res);
+        this.view.dataService.update(res).subscribe((res) => {
+          if (res) {
+            this.notificationsService.notify(
+              'Cập nhật tồn kho thành công',
+              '1',
+              0
+            );
+            this.detectorRef.detectChanges();
+            this.dialog.close();
+          }
+         
+        });
       });
   }
 }

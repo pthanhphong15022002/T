@@ -93,11 +93,11 @@
         </div>
       </div>
     </div>
-    <div class="mb-2">
+    <!-- <div class="mb-2">
       <ng-container *ngIf="files.length > 0">
         <codx-thumbnail [files]="files" displayThumb="simple"> </codx-thumbnail>
       </ng-container>
-    </div>
+    </div> -->
   </ng-template>
 
   <ng-template #body>
@@ -138,7 +138,7 @@
                 <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-50">
                   <div class="d-flex flex-row">
                     <div class="me-2">
-                      <codx-img [objectId]="item.recID" imageType="square" width="35" objectType="EP_Resources">
+                      <codx-img [objectId]="item.recID" imageType="circle"  width="35" objectType="EP_Resources">
                       </codx-img>
                     </div>
                     <div class="ms-2">

@@ -277,6 +277,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         [this.viewBase?.dataService?.dataSelected, true, this.popupTitle,this.optionalData,false],
         option
       );
+      this.dialog.closed.subscribe((returnData) => {
+        if (!returnData.event) this.view.dataService.clear();        
+      });
     });
   }
 
@@ -300,6 +303,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             [this.viewBase.dataService.dataSelected, false, this.popupTitle],
             option
           );
+          this.dialog.closed.subscribe((returnData) => {
+            if (!returnData.event) this.view.dataService.clear();        
+          });
         });
     }
   }
@@ -320,6 +326,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             [this.viewBase.dataService.dataSelected, true, this.popupTitle,null,true],
             option
           );
+          this.dialog.closed.subscribe((returnData) => {
+            if (!returnData.event) this.view.dataService.clear();        
+          });
         });
     }
   }

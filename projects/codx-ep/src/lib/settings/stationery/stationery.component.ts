@@ -11,11 +11,9 @@ import {
   DataRequest,
   DialogRef,
   FormModel,
-  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
@@ -29,14 +27,6 @@ import { PopupUpdateQuantityComponent } from './popup-update-quantity/popup-upda
   styleUrls: ['./stationery.component.scss'],
 })
 export class StationeryComponent extends UIComponent implements AfterViewInit {
-  // @ViewChild('resourceID') resourceID: TemplateRef<any>;
-  // @ViewChild('resourceName') resourceName: TemplateRef<any>;
-  // @ViewChild('productImg') productImg: TemplateRef<any>;
-  // @ViewChild('color') color: TemplateRef<any>;
-  // @ViewChild('groupID') groupID: TemplateRef<any>;
-  // @ViewChild('note') note: TemplateRef<any>;
-  // @ViewChild('quantity') quantity: TemplateRef<any>;
-  // @ViewChild('owner') owner: TemplateRef<any>;
   @ViewChild('columnsList') columnsList: TemplateRef<any>;
   @ViewChild('templateListCard') templateListCard: TemplateRef<any>;
   viewType = ViewType;
@@ -218,6 +208,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         option
       );
       this.dialog.closed.subscribe((x) => {
+        if (!x.event) this.view.dataService.clear();
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
             .delete([this.view.dataService.dataSelected])
@@ -251,6 +242,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           option
         );
         this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear();
           if (x?.event) {
             x.event.modifiedOn = new Date();
             this.view.dataService.update(x.event).subscribe((res) => {});
@@ -278,6 +270,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           option
         );
         this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear();
           if (x?.event) {
             x.event.modifiedOn = new Date();
             this.view.dataService.update(x.event).subscribe((res) => {});
@@ -303,6 +296,20 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     this.callfc.openForm(PopupUpdateQuantityComponent, '', 500, null, '', [
       data,
     ]);
+    this.dialog.closed.subscribe((x) => {
+      debugger;
+      if (!x.event) this.view.dataService.clear();
+      if (x.event == null && this.view.dataService.hasSaved)
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected])
+          .subscribe((x) => {
+            this.changeDetectorRef.detectChanges();
+          });
+      else if (x.event) {
+        x.event.modifiedOn = new Date();
+        this.view.dataService.update(x.event).subscribe();
+      }
+    });
   }
 
   closeEditForm(evt?: any) {

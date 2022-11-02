@@ -59,7 +59,7 @@
           <div
             class="card-survey"
             [id]="'card-survey-' + itemQuestion.seqNo"
-            (click)="scroll(moreFC, itemQuestion.seqNo)"
+            (click)="clickToScroll(itemQuestion.seqNo)"
           >
             <div
               class="col-lg-8 control-section inplace-editor-control-section form-layout"
@@ -118,64 +118,56 @@
                         <div class="has-action-menu">
                           <div class="d-flex">
                             <div class="action-menu">
-                              <div class="example-handle-answer" cdkDragHandle>
+                              <div
+                                class="example-handle-answer"
+                                cdkDragHandle
+                                *ngIf="
+                                  itemQuestion.answerType != 'T2' &&
+                                  itemQuestion.answerType != 'T'
+                                "
+                              >
                                 <span class="icon-reorder"></span>
                               </div>
                             </div>
                             <div class="d-flex size-input">
                               <ng-container
                                 *ngTemplateOutlet="
-                                  iconQuestionMF;
-                                  context: { $implicit: itemQuestion }
+                                  tempIconAnswers;
+                                  context: {
+                                    dataQuestion: itemQuestion,
+                                    dataAnswer: itemAnswer
+                                  }
                                 "
                               ></ng-container>
-                              <div class="e-input-group">
-                                <input
-                                  class="e-input"
-                                  type="text"
-                                  placeholder="{{
-                                    itemAnswer.other ? 'Khác...' : ''
-                                  }}"
-                                  (focus)="focusIn($event.target)"
-                                  (blur)="focusOut($event.target)"
-                                  [value]="itemAnswer.answer"
-                                  [disabled]="itemAnswer.other ? true : false"
-                                />
-                              </div>
-                              <div
-                                class="has-action-menu"
-                                *ngIf="
-                                  itemQuestion?.active && !itemAnswer.other
+                              <ng-container
+                                *ngTemplateOutlet="
+                                  tempAnswers;
+                                  context: {
+                                    dataQuestion: itemQuestion,
+                                    dataAnswer: itemAnswer
+                                  }
                                 "
-                              >
-                                <div class="action-menu">
-                                  <span class="icon-image icon-24 pd-10"></span>
-                                </div>
-                              </div>
-                              <div
-                                (click)="deleteAnswer(itemQuestion, itemAnswer)"
-                                [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
-                                *ngIf="
-                                  itemQuestion?.active &&
-                                  itemQuestion.answers?.length > 1
-                                "
-                              >
-                                <span
-                                  class="icon-close icon-24 pd-s-e-10"
-                                ></span>
-                              </div>
+                              ></ng-container>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div
                         class="d-flex size-input-other"
-                        *ngIf="itemQuestion?.active"
+                        *ngIf="
+                          itemQuestion?.active &&
+                          itemQuestion.answerType != 'T' &&
+                          itemQuestion.answerType != 'T2' &&
+                          itemQuestion.answerType != 'D' &&
+                          itemQuestion.answerType != 'H'
+                        "
                       >
                         <ng-container
                           *ngTemplateOutlet="
-                            iconQuestionMF;
-                            context: { $implicit: itemQuestion }
+                            tempIconAnswers;
+                            context: {
+                              dataQuestion: itemQuestion
+                            }
                           "
                         ></ng-container>
                         <div
@@ -191,7 +183,7 @@
                           />
                         </div>
                         <ng-container
-                          *ngIf="itemQuestion?.otherAnswer"
+                          *ngIf="itemQuestion?.other"
                           class="d-flex"
                         >
                           <div class="text-or">
@@ -261,7 +253,7 @@
               <span class="icon-video_library icon-24"></span>
             </div>
             <div class="icon-MF" (click)="clickMF('LTN06')">
-              <span class="icon-calendar_view_day icon-dns icon-24"></span>
+              <span class="icon-calendar_today icon-dns icon-24"></span>
             </div>
           </div>
         </ng-container>
@@ -276,9 +268,37 @@
       class="btn btn-outline-primary btn-sm dropdown"
       ngbDropdownToggle
     >
-      <div class="d-flex">
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'T'">
+        <span class="icon-short_text icon-24"></span>
+        <codx-label fiedName="" default="Trả lời ngắn"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'T2'">
+        <span class="icon-text_snippet icon-24"></span>
+        <codx-label fiedName="" default="Trả lời đoạn"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'L'">
         <span class="icon-radio_button_checked icon-24"></span>
         <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'C'">
+        <span class="icon-check_box icon-24"></span>
+        <codx-label fiedName="" default="Hộp kiểm"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'L3'">
+        <span class="icon-arrow_drop_down_circle icon-24"></span>
+        <codx-label fiedName="" default="Menu thả xuống"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'A'">
+        <span class="icon-cloud_upload icon-24"></span>
+        <codx-label fiedName="" default="Tải tệp lên"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'D'">
+        <span class="icon-calendar_today icon-24"></span>
+        <codx-label fiedName="" default="Ngày"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'H'">
+        <span class="icon-access_time icon-24"></span>
+        <codx-label fiedName="" default="Giờ"></codx-label>
       </div>
     </button>
     <div ngbDropdownMenu>
@@ -336,16 +356,115 @@
     </div>
   </div>
 </ng-template>
-<ng-template #iconQuestionMF let-itemQuestion>
+<ng-template
+  #tempIconAnswers
+  let-itemQuestion="dataQuestion"
+  let-itemAnswer="dataAnswer"
+>
   <span
     *ngIf="itemQuestion.answerType == 'L'"
     class="icon-radio_button_unchecked icon-radio"
   ></span>
   <span
     *ngIf="itemQuestion.answerType == 'C'"
-    class="icon-check_box_outline_blank"
+    class="icon-check_box_outline_blank pd-t-7"
   ></span>
-  <span *ngIf="itemQuestion.answerType == 'L3'"
-    >{{ itemQuestion.seqNo + 1 }}.</span
+  <span *ngIf="itemQuestion.answerType == 'L3' && itemAnswer" class="pd-t-7"
+    >{{ itemAnswer?.seqNo + 1 }}.</span
   >
+  <span *ngIf="itemQuestion.answerType == 'L3' && !itemAnswer" class="pd-t-7"
+    >{{ questions[itemQuestion.seqNo].answers.length + 1 }}.</span
+  >
+  <span
+    *ngIf="itemQuestion.answerType == 'D'"
+    class="icon-calendar_today"
+  ></span>
+  <span *ngIf="itemQuestion.answerType == 'H'" class="icon-access_time"></span>
+</ng-template>
+<ng-template
+  #tempAnswers
+  let-itemQuestion="dataQuestion"
+  let-itemAnswer="dataAnswer"
+>
+  <div
+    class="e-input-group"
+    *ngIf="
+      itemQuestion.answerType == 'L' ||
+      itemQuestion.answerType == 'C' ||
+      itemQuestion.answerType == 'L3'
+    "
+  >
+    <input
+      class="e-input"
+      type="text"
+      placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
+      (focus)="focusIn($event.target)"
+      (blur)="focusOut($event.target)"
+      [value]="itemAnswer.answer"
+      [disabled]="itemAnswer.other ? true : false"
+    />
+  </div>
+  <div class="e-input-group short-text" *ngIf="itemQuestion.answerType == 'T'">
+    <input
+      class="e-input"
+      type="text"
+      placeholder="Văn bản câu trả lời ngắn"
+      (focus)="focusIn($event.target)"
+      (blur)="focusOut($event.target)"
+      [disabled]="true"
+    />
+  </div>
+  <div class="e-input-group long-text" *ngIf="itemQuestion.answerType == 'T2'">
+    <input
+      class="e-input"
+      type="text"
+      placeholder="Văn bản câu trả lời dài"
+      (focus)="focusIn($event.target)"
+      (blur)="focusOut($event.target)"
+      [disabled]="true"
+    />
+  </div>
+  <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'D'">
+    <input
+      class="e-input"
+      type="text"
+      placeholder="Ngày, tháng, năm"
+      (focus)="focusIn($event.target)"
+      (blur)="focusOut($event.target)"
+      [disabled]="true"
+    />
+  </div>
+  <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'H'">
+    <input
+      class="e-input"
+      type="text"
+      placeholder="Giờ"
+      (focus)="focusIn($event.target)"
+      (blur)="focusOut($event.target)"
+      [disabled]="true"
+    />
+  </div>
+  <div
+    class="has-action-menu"
+    *ngIf="
+      itemQuestion?.active &&
+      !itemAnswer.other &&
+      itemQuestion.answerType != 'T2' &&
+      itemQuestion.answerType != 'T' &&
+      itemQuestion.answerType != 'L3' &&
+      itemQuestion.answerType != 'D' &&
+      itemQuestion.answerType != 'H'
+    "
+  >
+    <div class="action-menu">
+      <span class="icon-image icon-24 pd-10"></span>
+    </div>
+  </div>
+  <div
+    (click)="deleteAnswer(itemQuestion, itemAnswer)"
+    [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
+    *ngIf="itemQuestion?.active && itemQuestion.answers?.length > 1"
+  >
+    <span class="icon-close icon-24 pd-s-e-10"></span>
+  </div>
 </ng-template>

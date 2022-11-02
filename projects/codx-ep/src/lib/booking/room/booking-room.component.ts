@@ -265,7 +265,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'SYS03': //Sua.
         this.edit(data);
         break;
-      case 'SYS04': //Sua.
+      case 'SYS04': //copy.
         this.copy(data);
         break;
     }
@@ -291,6 +291,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         [this.dataSelected, true, this.popupTitle, this.optionalData],
         option
       );
+      this.dialog.closed.subscribe((returnData) => {
+        if (!returnData.event) this.view.dataService.clear();        
+      });
     });
   }
 
@@ -314,6 +317,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             [this.view.dataService.dataSelected, false, this.popupTitle],
             option
           );
+          this.dialog.closed.subscribe((returnData) => {
+            if (!returnData.event) this.view.dataService.clear();        
+          });
         });
     }
   }
@@ -335,6 +341,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             [this.view.dataService.dataSelected, true, this.popupTitle,null,true],
             option
           );
+          this.dialog.closed.subscribe((returnData) => {
+            if (!returnData.event) this.view.dataService.clear();        
+          });
         });
     }
   }

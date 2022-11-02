@@ -394,7 +394,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     this.cache.message(this.codeMaxFileSize).subscribe((item) => {
       if (item != null) {
-        this.titleMaxFileSiate = item.defaultName;
+        this.titleMaxFileSiate = item.customName;
       }
     });
 
@@ -405,13 +405,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     this.cache.message(this.codetitle).subscribe((item) => {
       if (item != null) {
-        this.title = item.defaultName;
+        this.title = item.customName;
       }
     });
 
     this.cache.message(this.codetitle2).subscribe((item) => {
       if (item != null) {
-        this.title2 = item.defaultName;
+        this.title2 = item.customName;
       }
     });
 
@@ -637,7 +637,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
         .pipe(
           map((res) => {
             if (res != null) {
-              debugger;
               var newlist = res.filter((x) => x.status == 6);
               var newlistNot = res.filter((x) => x.status == -1);
               var addList = res.filter((x) => x.status == 0 || x.status == 9);
@@ -2833,12 +2832,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         files[i].size >= this.maxFileSizeUpload &&
         this.maxFileSizeUpload != 0
       ) {
-        var mess = this.titleMaxFileSiate.replace('{0}', files[i].name);
-        mess = this.titleMaxFileSiate.replace(
-          '{1}',
-          this.maxFileSizeUploadMB.toString()
-        );
-        this.notificationsService.notify(mess);
+        this.notificationsService.notifyCode("DM057",0,files[i].name,this.maxFileSizeUploadMB);
         break;
       }
 
@@ -2861,12 +2855,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.description = files[i].description; //
 
         var type = files[i].type.toLowerCase();
-        if (type == 'png' || type == 'jpg' || type == 'bmp') {
-          fileUpload.avatar = data;
-        } else
-          fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
-            fileUpload.fileName
-          )}`;
+        fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
+          fileUpload.fileName
+        )}`;
         fileUpload.extension =
           files[i].name.substring(
             files[i].name.lastIndexOf('.'),

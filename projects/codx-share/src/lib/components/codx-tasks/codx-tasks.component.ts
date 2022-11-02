@@ -39,6 +39,7 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
+import { debug } from 'console';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -48,7 +49,8 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -144,6 +146,7 @@ export class CodxTasksComponent
   dataReferences = [];
   titleAction = '';
   moreFunction = [];
+  crrStatus = '';
 
   constructor(
     inject: Injector,
@@ -161,6 +164,14 @@ export class CodxTasksComponent
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
+    });
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res) {
+            this.moreFunction = res;
+          }
+        });
     });
   }
 
@@ -194,7 +205,7 @@ export class CodxTasksComponent
     this.resourceKanban.assemblyName = 'SYS';
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = "125125"
+    this.resourceKanban.dataObj = '125125';
 
     this.request = new ResourceModel();
     this.request.service = 'TM';
@@ -268,7 +279,8 @@ export class CodxTasksComponent
       {
         type: ViewType.calendar,
         active: false,
-        sameData: true,
+        sameData: false,
+        request: this.requestSchedule,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -773,8 +785,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -795,8 +807,8 @@ export class CodxTasksComponent
           ''
         )
         .subscribe((res) => {
+          let kanban = (this.view.currentView as any).kanban;
           if (res && res.length > 0) {
-            let kanban = (this.view.currentView as any).kanban;
             res.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
               if (kanban) kanban.updateCard(obj);
@@ -814,6 +826,7 @@ export class CodxTasksComponent
                 .subscribe();
             }
           } else {
+            if (kanban) kanban.updateCard(taskAction);
             this.notiService.notifyCode('TM008');
           }
         });
@@ -844,8 +857,8 @@ export class CodxTasksComponent
       obj
     );
     this.dialog.closed.subscribe((e) => {
+      let kanban = (this.view.currentView as any).kanban;
       if (e?.event && e?.event != null) {
-        let kanban = (this.view.currentView as any).kanban;
         e?.event.forEach((obj) => {
           if (kanban) {
             kanban.updateCard(obj);
@@ -855,36 +868,36 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
+      }else{
+        if (kanban) kanban.updateCard(taskAction);
       }
       this.detectorRef.detectChanges();
     });
   }
   //#endregion
   //#region Event
-  changeView(evt: any) { }
+  changeView(evt: any) {}
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(data) {
-    this.api
-      .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
-      .subscribe((res) => {
-        if (res) {
-          this.view.dataService.update(data).subscribe();
-        }
-      });
+    // this.api
+    //   .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.view.dataService.update(data).subscribe();
+    //     }
+    //   });
     ///chắc chắn phải sửa
-    // this.cache.functionList(this.funcID).subscribe((f) => {
-    //   if (f)
-    //     this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-    //       if (res) {
-    //       this.moreFunction = res;
-    //       if(this.moreFunction.length=0) return ;
-    //       var moreFun = this.moreFunction.find(x=>UrlUtil.getUrl('defaultValue', x?.url)==data.status && UrlUtil.getUrl('defaultField', x?.url)=="Status" )
-    //       if(moreFun) return this.changeStatusTask(moreFun,data)
-    //      }
-    //     });
-    // });
+    if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
+      return;
+    var moreFun = this.moreFunction.find(
+      (x) =>
+        UrlUtil.getUrl('defaultValue', x?.url) == data.status &&
+        UrlUtil.getUrl('defaultField', x?.url) == 'Status'
+    );
+    data.status = this.crrStatus;
+    if (moreFun) this.changeStatusTask(moreFun, data);
   }
 
   //update Status of Tasks
@@ -1417,6 +1430,9 @@ export class CodxTasksComponent
       case 'drop':
         this.onDragDrop(e.data);
         break;
+      case 'drag':
+        this.crrStatus = e?.data?.status;
+        break;
       case 'dbClick':
         this.viewTask(e?.data);
         break;
@@ -1460,22 +1476,6 @@ export class CodxTasksComponent
     TextField: 'userName',
     Title: 'Resources',
   };
-
-  viewChange(evt: any) {
-    let fied = this.gridView?.dateControl || 'DueDate';
-    console.log(evt);
-    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
-    this.startDate = evt?.fromDate;
-    this.endDate = evt?.toDate;
-    //Thêm vào option predicate
-    this.model.filter = {
-      logic: 'and',
-      filters: [
-        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
-      ],
-    };
-  }
 
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {

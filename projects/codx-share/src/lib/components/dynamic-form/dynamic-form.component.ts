@@ -92,10 +92,10 @@ export class DynamicFormComponent extends UIComponent {
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(data);
+        this.edit(data, evt);
         break;
       case 'SYS04':
-        this.copy(data);
+        this.copy(data, evt);
         break;
       //Export file
       case 'SYS002':
@@ -130,6 +130,7 @@ export class DynamicFormComponent extends UIComponent {
           function: this.function,
           dataService: this.viewBase.dataService,
           isAddMode: true,
+          titleMore: 'Thêm',
         },
         option
       );
@@ -147,7 +148,7 @@ export class DynamicFormComponent extends UIComponent {
     });
   }
 
-  private edit(evt?) {
+  private edit(evt?, mFunc?) {
     this.dataSelected = this.viewBase.dataService.dataSelected;
     if (evt) this.dataSelected = evt;
     this.viewBase.dataService.edit(this.dataSelected).subscribe(() => {
@@ -163,13 +164,14 @@ export class DynamicFormComponent extends UIComponent {
           function: this.function,
           dataService: this.viewBase.dataService,
           isAddMode: false,
+          titleMore: mFunc ? mFunc.text : '',
         },
         option
       );
     });
   }
 
-  private copy(evt: any) {
+  private copy(evt: any, mFunc?) {
     this.dataSelected = this.viewBase.dataService.dataSelected;
     if (!this.dataSelected && evt) {
       this.viewBase.dataService.dataSelected = this.dataSelected = evt;
@@ -187,6 +189,7 @@ export class DynamicFormComponent extends UIComponent {
           data: res,
           function: this.function,
           dataService: this.viewBase.dataService,
+          titleMore: mFunc ? mFunc.text : '',
         },
         option
       );
