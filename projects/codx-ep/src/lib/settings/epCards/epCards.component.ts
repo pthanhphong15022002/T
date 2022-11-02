@@ -71,7 +71,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   cardUserID:string;
   cardDate:any;
   cardNote:any;
-
+  popupDialog:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -344,7 +344,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     this.cardDate=time;
     this.currTrans=type;
     this.popupTitle=title;
-    var dialog = this.callfc.openForm(template,title, 550, 350);
+    this.popupDialog = this.callfc.openForm(template,title, 550, 350);
     this.detectorRef.detectChanges();
   }
   historyCard(url: any) {
@@ -367,7 +367,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       userID:this.cardUserID,
       transDate:this.cardDate,
       note:this.cardNote,
-      resourceType:'1',
+      resourceType:'2',
       createBy:this.authService.userValue.userID,
       transType:currTrans,
       status:'1',
@@ -384,6 +384,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       .subscribe(res=>{
         if(res){
           console.log("resourceTranAdd",res);
+          this.popupDialog.close();
         }
       });
   }
