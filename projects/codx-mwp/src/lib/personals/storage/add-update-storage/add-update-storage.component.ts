@@ -104,9 +104,9 @@ export class AddUpdateStorageComponent implements OnInit {
               .subscribe((result) => {
                 if (result) {
                   this.loadData.emit();
+                  this.dialog.close(res.save);
                 }
               });
-            this.dialog.close(res.save);
           }
         }
       });
@@ -122,9 +122,9 @@ export class AddUpdateStorageComponent implements OnInit {
               .updateFileDirectReload(res.update.recID)
               .subscribe((result) => {
                 this.loadData.emit();
+                this.dialog.close(res.update);
               });
           }
-          this.dialog.close(res.update);
         }
       });
   }

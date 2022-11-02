@@ -62,7 +62,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     },
   ];
   tempDriver: any;
-  returnData: any;
+  returnData= null;
   title = '';
   cbbData: any;
   driverCheck = false;
@@ -420,7 +420,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.bookingOn = this.data.startDate;
       this.detectorRef.detectChanges();
     }
-    
+    if(!this.isAdd){
+      this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
+        if(res){
+          this.carCapacity= res.capacity;
+        }
+      })
+    }
     
   }
 
@@ -539,18 +545,18 @@ export class PopupAddBookingCarComponent extends UIComponent {
                       (this.dialogRef.dataService as CRUDService)
                         .update(this.returnData)
                         .subscribe();
-                      this.dialogRef && this.dialogRef.close();
+                      this.dialogRef && this.dialogRef.close(this.returnData);
                     } else {
                       this.notificationsService.notifyCode(res?.msgCodeError);
                       // Thêm booking thành công nhưng gửi duyệt thất bại
-                      this.dialogRef && this.dialogRef.close();
+                      this.dialogRef && this.dialogRef.close(this.returnData);
                     }
                   });
               });
 
-            this.dialogRef && this.dialogRef.close();
+            this.dialogRef && this.dialogRef.close(this.returnData);
           } else {
-            this.dialogRef && this.dialogRef.close();
+            this.dialogRef && this.dialogRef.close(this.returnData);
           }
         } else {
           return;

@@ -317,10 +317,7 @@ export class VersionComponent implements OnInit {
     var file = files[0];    
     var data = await this.convertBlobToBase64(file.rawFile);  
     var type = file.type.toLowerCase();
-    if (type == "png" || type == "jpg" || type == "bmp") {
-      this.fileEditing.avatar = data;
-    }
-    else this.fileEditing.avatar = `../../../assets/codx/dms/${this.getAvatar(file.name)}`;
+    this.fileEditing.avatar = `../../../assets/codx/dms/${this.getAvatar(file.name)}`;
     this.fileEditing.extension = file.name.substring(file.name.lastIndexOf('.'), file.name.length) || file.name;
     this.fileEditing.createdBy = this.user.userName;//userName;
     this.fileEditing.createdOn = this.getNow();
