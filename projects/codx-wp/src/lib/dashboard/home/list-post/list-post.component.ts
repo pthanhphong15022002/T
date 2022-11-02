@@ -13,10 +13,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 
 import {
-  UploadFile,
   CodxListviewComponent,
-  AuthStore,
-  TenantStore,
   CacheService,
   ApiHttpService,
   CallFuncService,
@@ -24,14 +21,10 @@ import {
   DialogRef,
   DialogModel,
   CRUDService,
-  ViewModel,
-  ViewType,
-  ViewsComponent,
   RequestOption,
   CodxService,
   Util,
   FormModel,
-  UIComponent,
   AuthService,
 } from 'codx-core';
 import { PopupAddPostComponent } from './popup-add/popup-add.component';
