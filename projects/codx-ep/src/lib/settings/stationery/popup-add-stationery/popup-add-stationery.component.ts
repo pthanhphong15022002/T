@@ -143,22 +143,25 @@ export class PopupAddStationeryComponent extends UIComponent {
           } else {
             this.returnData = res.save;
           }
-          if (this.returnData?.recID) {
-            if (this.imageUpload?.imageUpload?.item) {
+          if(this.returnData?.recID)
+          {
+            if(this.imageUpload?.imageUpload?.item) {
               this.imageUpload
-                .updateFileDirectReload(this.returnData.recID)
-                .subscribe((result) => {
-                  if (result) {
-                    //xử lí nếu upload ảnh thất bại
-                    //...
-                  }
-                  this.dialog && this.dialog.close(this.returnData);
-                });
-            } else {
+              .updateFileDirectReload(this.returnData.recID)
+              .subscribe((result) => {
+                if (result) {                  
+                  //xử lí nếu upload ảnh thất bại
+                  //...
+                  this.dialog && this.dialog.close(this.returnData);                
+                }
+                this.dialog && this.dialog.close(this.returnData);
+              });  
+            }          
+            else 
+            {
               this.dialog && this.dialog.close(this.returnData);
             }
-          }
-          this.dialog && this.dialog.close(this.returnData);
+          } 
         } else {
           //Trả lỗi từ backend.
           return;
