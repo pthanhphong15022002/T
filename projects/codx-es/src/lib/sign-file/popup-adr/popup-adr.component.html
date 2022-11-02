@@ -56,13 +56,10 @@
   </ng-template>
 
   <ng-template #footer>
-    <div
-      [class]="
-        mode == 5
-          ? 'justify-content-between card-footer d-flex'
-          : 'justify-content-end card-footer d-flex'
-      "
-    >
+    <!-- mode == 5
+      ? 'justify-content-between card-footer d-flex'
+      :  -->
+    <div [class]="'justify-content-end card-footer d-flex'">
       <!-- <button
         *ngIf="mode == 5"
         type="button"
