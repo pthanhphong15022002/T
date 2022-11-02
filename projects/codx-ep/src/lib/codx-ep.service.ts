@@ -187,6 +187,15 @@ export class CodxEpService {
       []
     );
   }
+  getResourceByID(resourceID) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetResourceAsync',
+      [resourceID]
+    );
+  }
 
   getGetDriverByCar(carID: string) {
     return this.api.callSv(
