@@ -70,9 +70,7 @@
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <!-- <div onmouseover="crrStatusData(data)"> -->
     <codx-card-img
-    (mouseover)="crrStatusData(data.status)"
     cardCss="border h-100"
     imageObjType="AD_Users"
     [hideMF]="!showMoreFunc"
@@ -97,7 +95,6 @@
     [dataItem]="data"  
   >
   </codx-card-img>
-  <!-- </div> -->
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
