@@ -198,7 +198,6 @@ export class HomeComponent extends UIComponent {
       if (params?.id) {
         var dialogModel = new DialogModel();
         dialogModel.IsFull = true;
-        this.dmSV.folderId.next('');
         this.fileService.getFile(params?.id).subscribe((data) => {
           if (data.read) {
             this.callfc.openForm(
@@ -624,8 +623,8 @@ export class HomeComponent extends UIComponent {
             this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
             var tree = this.codxview?.currentView?.currentComponent?.treeView;
             item.items = [];
-            //if (tree) tree.addChildNodes(item, res[0]);
-            //this.changeDetectorRef.detectChanges();
+            if (tree) tree.addChildNodes(item, res[0]);
+            this.changeDetectorRef.detectChanges();
             this._beginDrapDrop();
           }
         });

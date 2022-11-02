@@ -547,7 +547,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     return true;
   }
 
-  onSaveForm(approval: boolean = false) {
+  onSaveForm(approval: boolean = false) {   
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -582,11 +582,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       tmpEquip.push(tempEquip);
     });
     this.data.equipments=[];
-    this.data.equipments = tmpEquip;
+    this.data.equipments = tmpEquip; 
+    this.data.stopOn=this.data.endDate;
     this.data.category = '1';
     this.data.resourceType = '1';
     this.data.requester = this.curUser.userName;
-    this.data.status = '1';
+    this.data.attendees= this.tmpAttendeesList.length;
 
     if (this.data.attendees > this.roomCapacity) {
       this.notificationsService.alertCode('EP004').subscribe((x) => {
@@ -730,20 +731,20 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   valueDateChange(event: any) {
     if (event.data) {
       this.data.bookingOn = event.data.fromDate;
-      if (!this.bookingOnCheck()) {
-        this.checkLoop = !this.checkLoop;
-        if (!this.checkLoop) {
-          this.notificationsService.notifyCode('EP001');
-        }
-        return;
-      }
-      if (!this.validateStartEndTime(this.startTime, this.endTime)) {
-        this.checkLoop = !this.checkLoop;
-        if (!this.checkLoop) {
-          this.notificationsService.notifyCode('EP002');
-        }
-        return;
-      }
+      // if (!this.bookingOnCheck()) {
+      //   this.checkLoop = !this.checkLoop;
+      //   if (!this.checkLoop) {
+      //     this.notificationsService.notifyCode('EP001');
+      //   }
+      //   return;
+      // }
+      // if (!this.validateStartEndTime(this.startTime, this.endTime)) {
+      //   this.checkLoop = !this.checkLoop;
+      //   if (!this.checkLoop) {
+      //     this.notificationsService.notifyCode('EP002');
+      //   }
+      //   return;
+      // }
       //this.isFullDay=false;
       this.changeDetectorRef.detectChanges();
     }

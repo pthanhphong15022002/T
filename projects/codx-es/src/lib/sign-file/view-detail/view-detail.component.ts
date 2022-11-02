@@ -11,7 +11,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
 import {
+  ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   DialogModel,
   DialogRef,
@@ -38,12 +40,15 @@ export class ViewDetailComponent implements OnInit {
     private callfunc: CallFuncService,
     private notify: NotificationsService,
     private router: ActivatedRoute,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private cache: CacheService,
+    private api: ApiHttpService
   ) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.authStore.get();
   }
 
+  @Input() showApproveStatus: boolean = true;
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -68,6 +73,8 @@ export class ViewDetailComponent implements OnInit {
   oCancelSF: any; // object cancel
 
   user: any; //user loggin
+  dataReferences: any = [];
+  vllRefType: string = 'TM018';
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
@@ -131,6 +138,12 @@ export class ViewDetailComponent implements OnInit {
   }
 
   initForm() {
+    this.dataReferences = [];
+    console.log(1);
+
+    this.cache.valueList('TM018').subscribe((res) => {
+      console.log('TM018', res);
+    });
     if (this.itemDetail?.recID) {
       this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
         this.taskViews = res;
@@ -154,6 +167,28 @@ export class ViewDetailComponent implements OnInit {
         .getDetailSignFile(this.itemDetail?.recID)
         .subscribe((res) => {
           if (res) {
+            if (res.refType != null) {
+              this.esService
+                .getEntity(this.itemDetail?.refType)
+                .subscribe((oEntity) => {
+                  if (oEntity) {
+                    this.esService
+                      .getod(this.itemDetail?.recID)
+                      .subscribe((res) => {
+                        console.log('1111111111111', res);
+                        res.refType = this.itemDetail?.refType;
+                        let item = this.dataReferences.filter((p) => {
+                          p.recID == res.recID;
+                        });
+                        if (item?.length == 0) {
+                          this.dataReferences.push(res);
+                        }
+                        this.df.detectChanges();
+                      });
+                  }
+                  console.log(oEntity);
+                });
+            }
             this.itemDetail = res;
             this.df.detectChanges();
           }
@@ -397,18 +432,32 @@ export class ViewDetailComponent implements OnInit {
   }
 
   beforeCancel(datas: any) {
-    this.esService.getApprovalTransActive(datas.recID).subscribe((lstTrans) => {
-      if (lstTrans && lstTrans?.length > 0) {
-        this.cancelControl = lstTrans[0]?.cancelControl;
-        if (this.cancelControl == '0') {
-        } else if (this.cancelControl == '1') {
+    let mssgCode = 'ES015';
+    this.notify.alertCode(mssgCode).subscribe((x) => {
+      if (x.event?.status == 'Y') {
+        if (datas.approveStatus == '1') {
           this.cancel(datas);
-        } else if (this.cancelControl == '2' || this.cancelControl == '3') {
-          this.oCancelSF = datas;
-          this.callfunc.openForm(this.addCancelComment, '', 650, 380);
+        } else {
+          this.esService
+            .getApprovalTransActive(datas.recID)
+            .subscribe((lstTrans) => {
+              if (lstTrans && lstTrans?.length > 0) {
+                this.cancelControl = lstTrans[0]?.cancelControl;
+                if (this.cancelControl == '0') {
+                } else if (this.cancelControl == '1') {
+                  this.cancel(datas);
+                } else if (
+                  this.cancelControl == '2' ||
+                  this.cancelControl == '3'
+                ) {
+                  this.oCancelSF = datas;
+                  this.callfunc.openForm(this.addCancelComment, '', 650, 380);
+                }
+                console.log(lstTrans);
+                return;
+              }
+            });
         }
-        console.log(lstTrans);
-        return;
       }
     });
   }
@@ -465,16 +514,35 @@ export class ViewDetailComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.notify.notifyCode('OD002');
+          datas.bookmarks = res?.bookmarks;
+          this.view.dataService.update(datas).subscribe();
         } else {
-          this.notify.notifyCode('OD002');
         }
       });
-    console.log(datas);
-
-    //this.esService.bookmarkSingFile(datas.recID, )
   }
 
-  unBookmark(datas: any) {}
+  unBookmark(datas: any) {
+    if (!datas.bookmarks) {
+      datas.bookmarks = [];
+    }
+    let index = datas.bookmarks.findIndex(
+      (p) => p.objectID == this.user.userID
+    );
+    if (index != -1) {
+      datas.bookmarks.splice(index, 1);
+    }
+
+    this.esService
+      .bookmarkSingFile(datas.recID, datas.bookmarks)
+      .subscribe((res) => {
+        if (res) {
+          this.notify.notifyCode('OD003');
+          datas.bookmarks = res?.bookmarks;
+          this.view.dataService.update(datas).subscribe();
+        } else {
+        }
+      });
+  }
 
   //#endregion
 

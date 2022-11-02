@@ -20,22 +20,23 @@
 </codx-views>
 
 <ng-template #templateListCard let-data>
-    <codx-card-img
-      cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
-      imageSrc="../assets/media/img/codx/default/card-default.svg"
-      imgCss="w-100 h-140px p-1"
-      [dataItem]="data"
-      [formModel]="view.formModel"
-      [typeMF]="'hover'"
-      (clickMF)="clickMF($event, data)"
-      [footer]="footerbg"
-    >
-    </codx-card-img>
+  <codx-card-img
+    cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
+    imageSrc="../assets/media/img/codx/default/card-default.svg"
+    imgCss="w-100 h-140px p-1"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    [typeMF]="'hover'"
+    (clickMF)="clickMF($event, data)"
+    [statusVll]="'BP003'"
+    [footer]="footerbg"
+  >
+  </codx-card-img>
 
   <ng-template #footerbg>
     <div class="d-flex bg-footer m-n3 mt-0">
       <div class="d-flex flex-column w-100 p-3">
-        <div class="fs-4 fw-bold lh-base" >{{ data.processName }}</div>
+        <div class="fs-4 fw-bold lh-base">{{ data.processName }}</div>
         <div class="d-flex align-items-center">
           <div class="badge badge-white my-1 me-3">{{ data.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
@@ -72,7 +73,7 @@
   <tr>
     <td class="rowphoto">
       <div class="padding">
-        <div class="d-flex flex-column w-100 p-3" >
+        <div class="d-flex flex-column w-100 p-3">
           <div class="fw-bold lh-base">{{ data.processName }}</div>
           <div class="d-flex flex-wrap justify-content-between">
             <div class="d-flex align-items-center">
@@ -125,20 +126,27 @@
       </div>
     </td>
     <td class="rowphoto">
+      <div class="padding" *ngIf="funcID == 'BPT4'">
+        <button class="btn btn-primary" (click)="approval(data)">
+          <codx-label default="Xét duyệt"></codx-label>
+        </button>
+      </div>
       <div class="padding has-action-menu">
         <codx-mfunc
           [formModel]="view.formModel"
           (clickMF)="clickMF($event, data)"
           [isBookMark]="true"
           [dataItem]="data"
-          type="hover"
+          [type]="'hover'"
         >
         </codx-mfunc>
       </div>
     </td>
-    <!-- <td class="rowphoto">
+    <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
       <div class="padding">
-        <i class="icon-create icon-18" (click)="revisions(data)"></i>
+        <button class="btn btn-primary" (click)="approval(data)">
+          <codx-label default="Xét duyệt"></codx-label>
+        </button>
       </div>
     </td> -->
   </tr>
@@ -217,7 +225,6 @@
     <div class="fw-semibold fw-base text-gray-600">4 kết quả được tìm thấy</div>
     <div class="card-body">
       <div class="mt-6">
-
         <div class="d-flex align-items-center mb-2">
           <!--begin::Title-->
           <a
@@ -316,7 +323,7 @@
 
 <ng-template #viewReName let-dialog="dialogPopupReName">
   <codx-form
-    headerText="{{ titleReName }}"
+    headerText="Thay đổi tên"
     [body]="bodyFormReName"
     [footer]="footerFormReName"
     [dialog]="dialogPopupReName"
@@ -326,21 +333,18 @@
 
 <ng-template #bodyFormReName>
   <div class="form-group mt-3">
-    <codx-input field="processName" type="text" [crrValue]="newName"
-     (valueChange)="valueChange($event)">
+    <codx-input
+      field="processName"
+      type="text"
+      [crrValue]="newName"
+      (valueChange)="valueChange($event)"
+    >
     </codx-input>
   </div>
 </ng-template>
 
 <ng-template #footerFormReName>
-  <button
-    type="button"
-    class="btn btn-primary"
-    (click)="onSave()"
-  >
-    <codx-label
-      fiedName="lblSave"
-      default="Lưu"
-    ></codx-label>
+  <button type="button" class="btn btn-primary" (click)="onSave()">
+    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
 </ng-template>

@@ -20,7 +20,7 @@ export class SearchingComponent implements OnInit {
   convertHtmlAgency = convertHtmlAgency;
   getIdUser = getIdUser;
   gridViewSetup: any;
-  funcID = 'EST011';
+  funcID = 'EST03';
   service = 'ES';
   entityName = 'ES_SignFiles';
   formModel: any = {};

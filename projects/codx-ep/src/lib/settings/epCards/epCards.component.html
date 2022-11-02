@@ -1,60 +1,91 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
-  [views]="views"
-  [button]="buttons"
-  [moreFuncs]="moreFuncs"
-  [idField]="idField"
-  [className]="className"
-  [method]="method"
-  (buttonClick)="click($event)"
-  (onLoading)="onLoading($event)" 
-  [viewActiveType]="viewType.grid"
->
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="buttons" [moreFuncs]="moreFuncs"
+  [idField]="idField" [className]="className" [method]="method" (buttonClick)="click($event)"
+  (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid">
   <ng-template #avatarCol let-data>
     <div class="h-50px m-4">
-      <codx-img 
-      [objectId]="data?.recID"       
-      [funcId]="funcID"       
-      [objectType]="'EP_Resources'"
-      [imageType]="'square'" 
-      width="50" 
-      [imgOn]="data.modifiedOn"
-    ></codx-img>  
+      <codx-img [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'" [imageType]="'square'"
+        width="50" [imgOn]="data.modifiedOn"></codx-img>
     </div>
-    
+
   </ng-template>
 
   <ng-template #statusCol let-data>
-    <codx-vll
-      [name]="'EP016'"
-      [value]="data?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-light badge-square badge-md fs-7 p-2"
-      >
-      </codx-vll>
-    
+    <codx-vll [name]="'EP016'" [value]="data?.status" [showText]="true" [showBgColor]="true"
+      class="badge badge-light badge-square badge-md fs-7 p-2">
+    </codx-vll>
+
   </ng-template>
-  
+
   <ng-template #ownerCol let-data>
     <div class="d-flex has-action-menu align-items-center">
       <codx-img [objectId]="data?.owner" objectType="AD_Users"></codx-img>
       <div class="ms-2">
         <div class="fw-bold">{{ data?.ownerName }}</div>
-      </div>      
-      <codx-mfunc
-        [dataItem]="data"
-        [formModel]="formModel"
-        (clickMF)="clickMF($event, data)"
-        type="hover"
-      ></codx-mfunc>
+      </div>
+      <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
     </div>
   </ng-template>
-  
+
 </codx-views>
+<ng-template #cardTranTmp let-dialog>
+  <div class="mx-4 my-4">
+    <div class="mx-4 pt-4 px-2">
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 id="modal-basic-title">
+            <codx-label name="lblCardTran" [default]="popupTitle"></codx-label>
+          </h2>
+          <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+            (click)="dialog.close()">
+            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mx-4 pt-4 px-2" >
+      <div>
+        <div class="form-group">
+          <codx-label name="lblReceivePeople" [default]="curPopupGrv?.UserID?.headerText"></codx-label>
+          <codx-input
+          type="combobox"
+          [refValue]="'Users'"
+          [crrValue]="cardUserID"
+          (valueChange)="valueUserIDChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label name="lblReceiveDate" [default]="curPopupGrv?.TransDate?.headerText"></codx-label>
+          <codx-input 
+            type="datetime" 
+            format="d" 
+            class="form-control test-datetime" 
+            (valueChange)="valueDateChange($event)"
+          ></codx-input>
+          <!-- <codx-input             
+            ControlName="transDate"
+            [Group]="curPopupFG"
+            [formModel]="curPopupFM"
+          ></codx-input> -->
+        </div>
+        <div class="form-group align-items-end">
+          <codx-label name="lblNote" [default]="curPopupGrv?.Note?.headerText"></codx-label>
+          <codx-input
+          type="text"
+          [crrValue]="cardNote"        
+          (valueChange)="valueNoteChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="mx-4 pt-4 px-2" >
+      <div class="form-group d-flex justify-content-end flex-row">
+        <button type="button" class="btn btn-primary" (click)="createCardTrans(currTrans)">
+          <codx-label name="lblSave" default="Lưu" ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

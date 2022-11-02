@@ -1,5 +1,6 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
+  ChangeDetectorRef,
   Component,
   HostListener,
   Injector,
@@ -61,16 +62,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   dataAnswer: any = new Array();
 
-  constructor(inject: Injector) {
+  active = false;
+  constructor(inject: Injector, private change: ChangeDetectorRef) {
     super(inject);
-    // this.answers.seqNo = 0;
-    // this.answers.answer = 'NVA';
-    // this.answers.other = true;
-    // this.answers.isColumn = false;
-    // this.answers.hasPicture = false;
-    // this.questions.question = 'Bạn tên gì nhỉ???';
-    // this.questions.answers = this.answers;
-    // this.questions.seqNo = 0;
     this.questions = [
       {
         seqNo: 0,
@@ -79,12 +73,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 1,
@@ -93,12 +90,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 2,
@@ -107,12 +107,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 3,
@@ -121,12 +124,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: true,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 4,
@@ -135,12 +141,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 5,
@@ -149,12 +158,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 6,
@@ -163,12 +175,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 7,
@@ -177,12 +192,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 8,
@@ -191,12 +209,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 9,
@@ -205,12 +226,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
       {
         seqNo: 10,
@@ -219,12 +243,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
         activeMF: false,
+        otherAnswer: true,
+        mandatory: false,
+        answerType: 'L',
       },
     ];
     this.formats = {
@@ -250,8 +277,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     }
   }
 
-  valueChange(e) {
-    console.log(e);
+  valueChange(e, dataQuestion) {
+    if (e) {
+      this.questions[dataQuestion.seqNo].mandatory = e.data;
+    }
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -286,11 +315,140 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       });
   }
 
-  scroll(el: HTMLElement, index) {
-    var html = document.getElementById(`card-survey-${index}`);
+  scroll(el: HTMLElement, seqNo) {
+    var html = document.getElementById(`card-survey-${seqNo}`);
     var htmlE = html as HTMLElement;
     var htmlMF = document.querySelector('.moreFC');
     if (htmlMF)
       htmlMF.setAttribute('style', `top: calc(${htmlE.offsetTop}px - 151px);`);
+    this.activeCard(seqNo);
+  }
+
+  activeCard(seqNo) {
+    // this.questions[seqNo]['active'] = true;
+    // this.questions.forEach(x => {
+    //   if(x.seqNo == seqNo) x['active'] = true;
+    //   else x['active'] = false;
+    // })
+    this.questions.forEach((x) => {
+      if (x['active'] == true) x['active'] = false;
+      if (x.seqNo == seqNo) x['active'] = true;
+    });
+  }
+
+  addAnswer(dataQuestion) {
+    this.questions[dataQuestion.seqNo]?.answers.filter((x) => x.other == false);
+    var seqNo = this.questions[dataQuestion.seqNo]?.answers.length;
+    var dataAnswerTemp = {
+      seqNo: seqNo,
+      answer: `Tùy chọn ${seqNo + 1}`,
+      other: false,
+      isColumn: false,
+      hasPicture: false,
+    };
+    var index = this.questions[dataQuestion.seqNo].answers.findIndex(
+      (x) => x.other == true
+    );
+    if (index >= 0) {
+      var dataOtherAnswerTemp = {
+        seqNo: seqNo - 1,
+        answer: `Tùy chọn ${seqNo}`,
+        other: false,
+        isColumn: false,
+        hasPicture: false,
+      };
+      this.questions[dataQuestion.seqNo].answers.splice(
+        seqNo - 1,
+        0,
+        dataOtherAnswerTemp
+      );
+      this.questions[dataQuestion.seqNo].answers[index + 1].seqNo = seqNo;
+    } else this.questions[dataQuestion.seqNo].answers.push(dataAnswerTemp);
+    console.log(this.questions[dataQuestion.seqNo].answers);
+  }
+
+  deleteAnswer(dataQuestion, dataAnswer) {
+    var data = JSON.parse(
+      JSON.stringify(this.questions[dataQuestion.seqNo]?.answers)
+    );
+    data = data.filter((x) => x.seqNo != dataAnswer.seqNo);
+    data.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    this.questions[dataQuestion.seqNo]!.answers = data;
+    if (dataAnswer.other) this.questions[dataQuestion.seqNo].otherAnswer = true;
+  }
+
+  deleteQuestion(dataQuestion) {
+    var data = JSON.parse(JSON.stringify(this.questions));
+    data = data.filter((x) => x.seqNo != dataQuestion.seqNo);
+    data.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    this.questions = data;
+  }
+
+  addOtherAnswer(dataQuestion) {
+    var seqNo = this.questions[dataQuestion.seqNo]?.answers?.length;
+    var dataAnswerTemp = {
+      seqNo: seqNo,
+      answer: '',
+      other: true,
+      isColumn: false,
+      hasPicture: false,
+    };
+    var data = JSON.parse(
+      JSON.stringify(this.questions[dataQuestion.seqNo]?.answers)
+    );
+    data.push(dataAnswerTemp);
+    this.questions[dataQuestion.seqNo]!.answers = data;
+    this.questions[dataQuestion.seqNo]['otherAnswer'] = false;
+  }
+
+  copyQuestion(dataQuestion) {
+    var data = JSON.parse(JSON.stringify(this.questions));
+    data[dataQuestion.seqNo].active = false;
+    data.splice(dataQuestion.seqNo + 1, 0, dataQuestion);
+    data.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    this.questions = data;
+  }
+
+  clickMF(functionID) {
+    if (functionID) {
+      switch (functionID) {
+        case 'LTN01':
+          break;
+        case 'LTN02':
+          break;
+        case 'LTN03':
+          break;
+        case 'LTN04':
+          break;
+        case 'LTN05':
+          break;
+        case 'LTN06':
+          break;
+      }
+    }
+  }
+
+  addQuestion(dataQuestion) {}
+
+  importQuestion(dataQuestion) {}
+
+  addTitle(dataQuestion) {}
+
+  uploadImage(dataQuestion) {}
+
+  uploadVideo(dataQuestion) {}
+
+  addSection(dataQuestion) {}
+
+  clickQuestionMF(functionID, dataQuestion) {
+    if (functionID) {
+      this.questions[dataQuestion.seqNo].answerType = functionID;
+    }
   }
 }

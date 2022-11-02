@@ -128,6 +128,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
     a.comboboxName = refValue;
     a.page = 1;
     a.pageSize = 5;
+   
     if (this.modeDropDown == true && (type == '2' || type == '3')) {
       data.data = refValue;
       this.dataGroup.push(data);
@@ -269,7 +270,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   ): Observable<any[]> {
     let loadmore = false;
     return this.api
-      .execSv(this.service, 'CM', 'DataBusiness', 'LoadDataCbxAsync', request)
+      .execSv(cbb.service, 'CM', 'DataBusiness', 'LoadDataCbxAsync', request)
       .subscribe((item) => {
         if (item) {
           var res = JSON.parse(item[0]);
