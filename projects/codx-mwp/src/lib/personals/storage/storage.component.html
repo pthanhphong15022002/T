@@ -1,36 +1,79 @@
 <div *ngIf="checkFormComment == false">
   <div class="pw-storgae">
-    <div class="d-flex align-items-center justify-content-between pw-header mb-3">
+    <div
+      class="d-flex align-items-center justify-content-between pw-header mb-3"
+    >
       <div class="pw-search">
-        <codx-searchbar [width]="300" (searchEvent)="onSearch($event)"></codx-searchbar>
+        <codx-searchbar
+          [width]="300"
+          (searchEvent)="onSearch($event)"
+        ></codx-searchbar>
       </div>
       <div class="d-flex justify-content-end align-items-center pw-toolbar">
         <div class="text-dark me-1">
-          <codx-label name="lblSortNoteBook" formName="NoteBooks" default="Sắp xếp"></codx-label>
+          <codx-label
+            name="lblSortNoteBook"
+            formName="NoteBooks"
+            default="Sắp xếp"
+          ></codx-label>
         </div>
         <div class="text-primary">
-          {{gridViewSetup?.Title?.headerText}}
+          {{ gridViewSetup?.Title?.headerText }}
         </div>
         <div class="mx-2 text-gray-400">|</div>
-        <div class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative">
-          <i class="icon-sort_A-Z icon-18" (click)="sortByDESC()" *ngIf="checkDESC == false"></i>
-          <i class="icon-sort_Z-A icon-18" (click)="sortByASC()" *ngIf="checkDESC == true"></i>
+        <div
+          class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative"
+        >
+          <i
+            class="icon-sort_A-Z icon-18"
+            (click)="sortByDESC()"
+            *ngIf="checkDESC == false"
+          ></i>
+          <i
+            class="icon-sort_Z-A icon-18"
+            (click)="sortByASC()"
+            *ngIf="checkDESC == true"
+          ></i>
         </div>
         <div id="kt_drawer_addStorage_toggle" (click)="formAddNoteBook()">
-          <button class="btn btn-primary" type="button" id="dropdownMenuButton1" aria-expanded="false">
+          <button
+            class="btn btn-primary"
+            type="button"
+            id="dropdownMenuButton1"
+            aria-expanded="false"
+          >
             <i class="icon-add icon-16"></i>
-            <codx-label name="lblAddStorage" formName="Storage" default="Thêm"></codx-label>
+            <codx-label
+              name="lblAddStorage"
+              formName="Storage"
+              default="Thêm"
+            ></codx-label>
           </button>
         </div>
       </div>
     </div>
-    <div class="d-flex flex-column-fluid home-storage hover-scroll-overlay-y w-100" data-kt-scroll="true"
-      data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
+    <div
+      class="d-flex flex-column-fluid home-storage hover-scroll-overlay-y w-100"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="{default: true}"
+      data-kt-scroll-height="auto"
       data-kt-scroll-dependencies=".pw-profile,.pw-menu, .pw-header"
-      data-kt-scroll-wrappers=".codx-wrapper, .wrapper,.pw-storgae, .pw-content" data-kt-scroll-offset="0px">
-      <codx-listview class="w-100" #listView entityName="WP_Storages" gridViewName="grvStorages" [predicate]="predicate"
-        [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="Storages" funcId="MWP0095"
-        service="WP">
+      data-kt-scroll-wrappers=".codx-wrapper, .wrapper,.pw-storgae, .pw-content"
+      data-kt-scroll-offset="0px"
+    >
+      <codx-listview
+        class="w-100"
+        #listView
+        entityName="WP_Storages"
+        gridViewName="grvStorages"
+        [predicate]="predicate"
+        [dataValue]="dataValue"
+        [itemTemplate]="templateListCard"
+        type="cardView"
+        formName="Storages"
+        funcId="MWP0095"
+        service="WP"
+      >
       </codx-listview>
     </div>
   </div>
@@ -44,7 +87,11 @@
           <span class="icon-keyboard_backspace icon-28"></span>
         </div>
         <div class="margin-font">
-          <codx-label name="lblDeleteNote" formName="Notes" default="Bài viết hay"></codx-label>
+          <codx-label
+            name="lblDeleteNote"
+            formName="Notes"
+            default="Bài viết hay"
+          ></codx-label>
         </div>
       </div>
     </button>
@@ -52,15 +99,28 @@
     <ng-template #moreFC let-item>
       <div class="more">
         <div ngbDropdown class="dropdown">
-          <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" ngbDropdownToggle
-            id="dropdownMenuButton1" aria-expanded="false">
+          <a
+            href="javascript:void(0)"
+            class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+            ngbDropdownToggle
+            id="dropdownMenuButton1"
+            aria-expanded="false"
+          >
             <i class="fas fa-ellipsis-h"></i>
           </a>
           <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
             <li>
-              <a (click)="removePost(item)" ngbDropdownItem href="javascript:void(0)">
+              <a
+                (click)="removePost(item)"
+                ngbDropdownItem
+                href="javascript:void(0)"
+              >
                 <span class="icon-close icon-16 me-2 icon-removePost"></span>
-                <codx-label [formModel]="listView?.formModel" name="lblDelete_comments" default="Xóa"></codx-label>
+                <codx-label
+                  [formModel]="listView?.formModel"
+                  name="lblDelete_comments"
+                  default="Xóa"
+                ></codx-label>
               </a>
             </li>
           </ul>
@@ -72,10 +132,21 @@
 
 <ng-template #templateListCard let-item>
   <div (dblclick)="openStorageDetail(item)">
-    <codx-card-img cardCss="border rounded-3 card-img-mwp img-storage w-225px h-225px" [imageId]="item.recID"
-      imgCss="h-140px mb-2" icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo"
-      [imgOn]="item?.modifiedOn" [imageObjType]="'WP_Storages'" imageWidth="223" [formModel]="listView?.formModel"
-      (clickMF)="clickMF($event, item)" [dataItem]="item" [imageObjName]="item.title">
+    <codx-card-img
+      cardCss="border rounded-3 card-img-mwp img-storage w-225px h-225px"
+      [imageId]="item.recID"
+      imgCss="h-140px mb-2"
+      icoTitleCss="icon-archive icon-16"
+      [title]="item.title"
+      [desc2]="item.memo"
+      [imgOn]="item?.modifiedOn"
+      [imageObjType]="'WP_Storages'"
+      imageWidth="223"
+      [formModel]="listView?.formModel"
+      (clickMF)="clickMF($event, item)"
+      [dataItem]="item"
+      [imageObjName]="item.title"
+    >
     </codx-card-img>
   </div>
 </ng-template>
