@@ -2,160 +2,162 @@
     max-width: 980px;
     margin: 0 auto;
 
-    .ut-item .symbol {
-        border: 2px solid #e5e5e5;
-    }
 
-    .user-online .symbol {
-        border-color: #1bc5bd;
-    }
+}
 
-    .e-calendar .e-content.e-month td.e-today span.e-day {
-        line-height: 32px;
-    }
+.ut-item .symbol {
+    border: 2px solid #e5e5e5;
+}
 
-    .form-myTeam {
-        margin-bottom: 15px;
-    }
+.user-online .symbol {
+    border-color: #1bc5bd;
+}
 
-    .calendar {
-        height: 75% !important;
-    }
+.e-calendar .e-content.e-month td.e-today span.e-day {
+    line-height: 32px;
+}
 
-    .note {
-        padding-top: 5px !important;
-        padding-bottom: 10px !important;
-    }
+.form-myTeam {
+    margin-bottom: 15px;
+}
 
-    #kt_aside_menu {
-        margin-top: 25px;
-    }
+.calendar {
+    height: 75% !important;
+}
 
-    .aside.aside-transparent {
-        width: 22%;
-        min-width: 220px;
-        max-width: 260px;
-        //border: 1px red solid;
-    }
+.note {
+    padding-top: 5px !important;
+    padding-bottom: 10px !important;
+}
 
-    .aside.aside-transparent .aside-menu {
-        width: 100%;
-    }
+#kt_aside_menu {
+    margin-top: 25px;
+}
 
+.aside.aside-transparent {
+    width: 22%;
+    min-width: 220px;
+    max-width: 260px;
+    //border: 1px red solid;
+}
 
-    .home-left {
-        min-width: 617px !important;
-    }
-
-    .overflow-hidden {
-        overflow: hidden;
-    }
-
-    .h-auto {
-        height: auto !important;
-    }
-
-    .h-100px img {
-        min-height: 100px;
-    }
-
-    .h-125px img {
-        min-height: 125px;
-    }
-
-    .h-150px img {
-        min-height: 150px;
-    }
-
-    .h-175px img {
-        min-height: 175px;
-    }
-
-    .h-200px img {
-        min-height: 200px;
-    }
-
-    .h-250px img {
-        min-height: 250px;
-    }
-
-    .h-300px img {
-        min-height: 300px;
-    }
-
-    .h-320px img {
-        min-height: 320px;
-    }
-
-    .imgs-grid codx-img,
-    .imgs-grid codx-img div,
-    .imgs-grid codx-img div img {
-        height: auto !important;
-        width: 100% !important;
-    }
-
-    /*** 1 - 5 pic ***/
-    .feed-5pic .col-xl-5.pl-0 div+div {
-        margin-top: 3px;
-    }
-
-    .feed-img-more {
-        margin-top: -175px !important;
-        height: 175px;
-        position: relative;
-        z-index: 99;
-        background-color: rgba(0, 0, 0, 0.45);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+.aside.aside-transparent .aside-menu {
+    width: 100%;
+}
 
 
-    .separator {
-        border: 0;
-    }
+.home-left {
+    min-width: 617px !important;
+}
 
-    [data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-title,
-    [data-kt-aside-minimize=on] .aside:not(:hover) .aside-menu .menu-title {
-        opacity: 1;
-        margin-left: 10px;
-    }
+.overflow-hidden {
+    overflow: hidden;
+}
 
-    .ms-4.home-right {
-        margin-left: 13px !important;
-    }
+.h-auto {
+    height: auto !important;
+}
 
-    .e-listview .e-list-item.e-hover,
-    .e-listview .e-list-item.e-active {
-        background-color: white !important;
-    }
+.h-100px img {
+    min-height: 100px;
+}
 
-    ejs-listview {
-        background-color: transparent;
-    }
+.h-125px img {
+    min-height: 125px;
+}
 
-    .sp-my-task {
-        height: calc(100vh - 155px);
-    }
+.h-150px img {
+    min-height: 150px;
+}
 
-    .e-listview .e-content {
-        padding-bottom: 0;
-    }
+.h-175px img {
+    min-height: 175px;
+}
 
-    .cal-notes .e-listview .e-content {
-        min-height: 60px;
-    }
+.h-200px img {
+    min-height: 200px;
+}
 
-    .cal-notes .lstView {
-        height: calc(100vh - 345px) !important;
-        overflow: auto;
-        margin-top: 5px;
-    }
+.h-250px img {
+    min-height: 250px;
+}
 
-    .more-function {
-        position: fixed;
-        right: 30px;
-        bottom: 20px;
-        z-index: 99;
-    }
+.h-300px img {
+    min-height: 300px;
+}
+
+.h-320px img {
+    min-height: 320px;
+}
+
+.imgs-grid codx-img,
+.imgs-grid codx-img div,
+.imgs-grid codx-img div img {
+    height: auto !important;
+    width: 100% !important;
+}
+
+/*** 1 - 5 pic ***/
+.feed-5pic .col-xl-5.pl-0 div+div {
+    margin-top: 3px;
+}
+
+.feed-img-more {
+    margin-top: -175px !important;
+    height: 175px;
+    position: relative;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.separator {
+    border: 0;
+}
+
+[data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-title,
+[data-kt-aside-minimize=on] .aside:not(:hover) .aside-menu .menu-title {
+    opacity: 1;
+    margin-left: 10px;
+}
+
+.ms-4.home-right {
+    margin-left: 13px !important;
+}
+
+.e-listview .e-list-item.e-hover,
+.e-listview .e-list-item.e-active {
+    background-color: white !important;
+}
+
+ejs-listview {
+    background-color: transparent;
+}
+
+.sp-my-task {
+    height: calc(100vh - 155px);
+}
+
+.e-listview .e-content {
+    padding-bottom: 0;
+}
+
+.cal-notes .e-listview .e-content {
+    min-height: 60px;
+}
+
+.cal-notes .lstView {
+    height: calc(100vh - 345px) !important;
+    overflow: auto;
+    margin-top: 5px;
+}
+
+.more-function {
+    position: fixed;
+    right: 30px;
+    bottom: 20px;
+    z-index: 99;
 }
