@@ -67,7 +67,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   calendarID: any;
   popover: any;
   idUserSelected: string;
-  roomCapacity = null;
+  roomCapacity :any;
   returnData=null;
   checkLoopS = true;
   checkLoopE = true;
@@ -489,6 +489,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.changeDetectorRef.detectChanges();
           }
         });
+    }
+    if(!this.isAdd){
+      this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
+        if(res){
+          this.roomCapacity= res.capacity;
+        }
+      })
     }
   }
 

@@ -55,14 +55,14 @@ export class HistoryCardsComponent
         .subscribe((gv) => {
           this.columnGrids = [
             {
-              field: 'tranType',
-              headerText: gv?.TranType?.headerText,
+              field: 'transType',
+              headerText: "Phân loại",//gv?.TranType?.headerText,
               width: 350,
               template: this.tranTypeCol,
             },
             {
-              field: 'createOn',
-              headerText: gv?.CreateOn?.headerText,
+              field: 'createdOn',
+              headerText: "Ngày phát sinh",//gv?.CreateOn?.headerText,// đang đợi BA sửa ngôn ngữ
               width: 200,
               headerTextAlign: 'Center',
             },
@@ -80,8 +80,8 @@ export class HistoryCardsComponent
               headerTextAlign: 'Center',           
             },
             {
-              field: 'createBy',
-              headerText: gv?.CreateBy?.headerText,
+              field: 'createdBy',
+              headerText: "Người tạo",//gv?.CreateBy?.headerText,
               width: 200,
               template: this.createByCol,
               headerTextAlign: 'Center',
