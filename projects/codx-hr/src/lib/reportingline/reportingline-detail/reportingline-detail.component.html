@@ -22,7 +22,7 @@
     </div>
     <!-- end header -->
     <!-- body -->
-    <div class="d-flex align-items-stretch justify-content-between bg-secondary p-4">
+    <div class="d-flex align-items-stretch justify-content-between bg-secondary p-4 vh-100">
         <!-- panel left -->
         <div class="w-25">
             <div class="bg-body rounded p-6 h-100">
@@ -172,7 +172,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-body rounded h-100 d-flex align-items-stretch flex-column p-4">
+            <div class="bg-body rounded h-100 d-flex flex-column align-items-stretch p-4">
                 <div class="d-flex justify-content-between">
                     <span >
                         <codx-label [classList]="'text-primary fw-bolder'" [formModel]="dialogRef.formModel" name="" default="Mô tả công việc" ></codx-label>
@@ -183,7 +183,7 @@
                         </button>
                     </span>
                 </div>
-                <div class="h-100 max-h-300px overflow-auto">
+                <div class="h-100 overflow-auto">
                     <ng-container *ngTemplateOutlet="tabSelected == 1 ? tmpJobDescription: tmpCompetence"></ng-container>
                 </div>
             </div>
@@ -198,7 +198,7 @@
     </ng-container>
 </ng-template>
 <ng-template #tmpEmpty>
-    <div class="w-100 h-300px"></div>
+    <div class="w-100 h-100"></div>
 </ng-template>
 <ng-template #tmpCompetence>
     <div class="row rounded p-2">

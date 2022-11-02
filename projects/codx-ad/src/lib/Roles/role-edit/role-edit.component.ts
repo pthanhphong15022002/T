@@ -85,6 +85,8 @@ export class RoleEditComponent
       this.data = dt.data.role;
       this.formType = dt.data.mode;
       this.roleID = this.data?.recID;
+      this.tempService.roleName.next(this.data?.roleName);
+      //this.tempService.roleName = roleName;
     }
   }
 
@@ -97,6 +99,7 @@ export class RoleEditComponent
   }
 
   redirectPagePermissions() {
+    this.dialog.close();
     this.codxService.navigate('', this.urlDetailRoles, { recID: this.roleID });
   }
   viewRoleDetail() {

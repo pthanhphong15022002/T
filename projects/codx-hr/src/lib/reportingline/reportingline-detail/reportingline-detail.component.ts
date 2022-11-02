@@ -9,7 +9,6 @@ import { CodxCompetencesComponent } from 'projects/codx-share/src/lib/components
   styleUrls: ['./reportingline-detail.component.css']
 })
 export class ReportinglineDetailComponent implements OnInit {
-
   @ViewChild("tmpEditCompetence") tmpEditCompetence:TemplateRef<any>;
   dialogData:any;
   dialogRef:DialogRef = null;
@@ -18,9 +17,9 @@ export class ReportinglineDetailComponent implements OnInit {
   tabSelected = 1;
   competences:any[] = [];
   parameter:any = null;
-  valueX:object = {valueType: 'competeneName'};
+  valueX:object = {valueType: 'Category'};
   valueY:object = {
-    minimum: 0, maximum: 10
+    minimum: 0, maximum: 10,interval: 1,
   };
   isShowCBB = false;
   isShowCBBPopup = false
@@ -58,7 +57,6 @@ export class ReportinglineDetailComponent implements OnInit {
         if(res)
         {
           this.data = res;
-          console.log(res);
         }
       });
     }
@@ -197,7 +195,6 @@ export class ReportinglineDetailComponent implements OnInit {
           if(res)
           {
             this.competences = this.competences.concat(res);
-            console.log(this.competences);
             this.dt.detectChanges();
             this.notifySV.notifyCode("SYS006");
           }
