@@ -420,6 +420,9 @@ export class CodxEsService {
   public setupChange = new BehaviorSubject<any>(null);
   isSetupChange = this.setupChange.asObservable();
 
+  public statusChange = new BehaviorSubject<any>(null);
+  isStatusChange = this.setupChange.asObservable();
+
   getAutoNumber(autoNoCode): Observable<any> {
     return this.api.execSv(
       'SYS',

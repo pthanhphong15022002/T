@@ -1,5 +1,5 @@
 <codx-form
-#form  
+  #form
   [headerText]="headerText"
   [subHeaderText]="subHeaderText"
   [body]="body"
@@ -57,8 +57,7 @@
 
     <div class="row">
       <div class="form-group">
-        <codx-label fiedName="Owner" [formModel]="form.formModel">
-        </codx-label>
+        <codx-label fiedName="Owner" [formModel]="form.formModel"> </codx-label>
         <codx-input
           ControlName="owner"
           [formModel]="form.formModel"
@@ -70,10 +69,7 @@
 
     <div class="row">
       <div class="form-group">
-        <codx-label
-          fiedName="Note"
-          [formModel]="form.formModel"
-        ></codx-label>
+        <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
         <codx-input
           ControlName="note"
           [formModel]="form.formModel"
@@ -83,11 +79,11 @@
       </div>
     </div>
 
-    <div *ngIf="data?.recID"  class="form-group upload-img">
+    <div *ngIf="data?.recID" class="form-group upload-img">
       <codx-img
         #imageUpLoad
         [width]="100"
-        imageType="square"
+        imageType="circle"
         [objectType]="'EP_Resources'"
         aria-disabled="false"
         [funcId]="formModel?.funcID"
