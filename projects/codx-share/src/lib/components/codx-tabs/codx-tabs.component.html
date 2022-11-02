@@ -28,7 +28,7 @@
 </div>
 
 <ng-template #tab let-tab>
-  <ng-container *ngSwitch="tab.name.toLowerCase()">
+  <ng-container [ngSwitch]="tab.name.toLowerCase()">
     <ng-container *ngSwitchCase="'history'">
       <div class="tab-his">
         <div class="tab_body">
@@ -110,8 +110,8 @@
     <ng-container *ngSwitchCase="'approve'">
       <ng-container> Comming soon... </ng-container>
     </ng-container>
-    <ng-container *ngSwitchDefault
-      ><ng-container *ngIf="tab.template">
+    <ng-container *ngSwitchDefault>
+      <ng-container *ngIf="tab.template">
         <ng-container
           *ngTemplateOutlet="tab.template; context: { $implicit: tab }"
         >

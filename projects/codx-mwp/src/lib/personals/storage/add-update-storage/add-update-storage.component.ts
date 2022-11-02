@@ -94,44 +94,19 @@ export class AddUpdateStorageComponent implements OnInit {
 
   addStorage() {
     this.storage.storageType = 'WP_Comments';
-
-    this.storage.details = [
-      {
-        recID: null,
-        refID: 'e83e5a83-55d4-4a0a-a499-5c23fe44b629',
-        memo: null,
-        createdOn: '2022-09-29T07:30:44.086+00:00',
-        createdBy: 'ADMIN',
-      },
-      {
-        recID: null,
-        refID: '6d82885f-a8bc-48c5-a106-cf22fcafcb7e',
-        memo: null,
-        createdOn: '2022-09-29T07:30:44.086+00:00',
-        createdBy: 'ADMIN',
-      },
-      {
-        recID: null,
-        refID: 'e70054cc-346a-4e6f-8aac-c80a46fba682',
-        memo: null,
-        createdOn: '2022-09-29T07:30:44.086+00:00',
-        createdBy: 'ADMIN',
-      },
-    ];
-
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res) {
+        if (res.save) {
           if (this.imageUpload) {
             this.imageUpload
-              .updateFileDirectReload(res.recID)
+              .updateFileDirectReload(res.save.recID)
               .subscribe((result) => {
                 if (result) {
                   this.loadData.emit();
                 }
               });
-            this.dialog.close(res);
+            this.dialog.close(res.save);
           }
         }
       });
@@ -141,15 +116,15 @@ export class AddUpdateStorageComponent implements OnInit {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res) {
+        if (res.update) {
           if (this.imageUpload) {
             this.imageUpload
-              .updateFileDirectReload(this.data?.recID)
+              .updateFileDirectReload(res.update.recID)
               .subscribe((result) => {
                 this.loadData.emit();
               });
           }
-          this.dialog.close();
+          this.dialog.close(res.update);
         }
       });
   }
