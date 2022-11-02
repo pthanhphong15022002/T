@@ -44,7 +44,7 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full
+    <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
     [hideMF]="!showMoreFunc"
@@ -71,6 +71,7 @@
 
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
+    (click)="crrStatusData(data?.status)"
     cardCss="border h-100"
     imageObjType="AD_Users"
     [hideMF]="!showMoreFunc"
@@ -92,7 +93,7 @@
     [formModel]="view.formModel"
     [setting]="setting"
     [footer]="cardImgFooter"
-    [dataItem]="data"
+    [dataItem]="data"  
   >
   </codx-card-img>
 </ng-template>
