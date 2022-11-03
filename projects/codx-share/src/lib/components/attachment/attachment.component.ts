@@ -610,7 +610,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
     await this.dmSV.getToken();
     let ret = new Observable<any[]>();
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectID = this.objectId;
+      if(this.objectId)
+        this.fileUploadList[i].objectID = this.objectId;
       // await this.serviceAddFile(fileItem);
       this.fileUploadList[i].avatar = null;
       if (total > 1)
