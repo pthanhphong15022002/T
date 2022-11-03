@@ -54,14 +54,25 @@
       <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
   </div>
-  <div class="form-group">
+  <div *ngIf="isRoom==false" class="form-group">
     <div>
       <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
       </codx-label>
     </div>
-    <codx-input field="location" [formModel]="form.formModel" [Group]="form.formGroup"
+    <codx-input field="location" [formModel]="form.formModel" [crrValue]="meeting?.location" [Group]="form.formGroup"
       (valueChange)="valueChange($event)">
     </codx-input>
+  </div>
+  <div *ngIf="isRoom == true" class="form-group">
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label fiedName="Location" [formModel]="form.formModel" default="Địa điểm">
+      </codx-label>
+      <!-- <span class="label-status text-primary">{{
+        data?.status | vll: "VL003":"text" | async
+        }}</span> -->
+    </div>
+    <ejs-combobox id='location' #samples [dataSource]='listRoom' [value]="meeting.location" [fields]='fields' [placeholder]="'Địa điểm'" (valueChange)="cbxChange($event)"></ejs-combobox>
+
   </div>
   <div class="form-group">
     <div class="d-flex align-items-end justify-content-between mb-2">
@@ -307,17 +318,15 @@
       <div class="form-group mt-3">
         <codx-label fiedName="RefID" [formModel]="form.formModel" default="Dự án">
         </codx-label>
-        <!-- <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
+        <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
           [crrValue]="meeting.refID" loadFull="true">
-        </codx-input> -->
-        <codx-input field="refID" [formModel]="form.formModel" [Group]="form.formGroup"
+        </codx-input>
+        <!-- <codx-input field="refID" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="valueChange($event)">
         </codx-input>
-        <!-- <codx-input field="refID" [type]="gridViewSetup['RefID']['controlType']"
-      [placeholder]="gridViewSetup['RefID']['headerText']" [refValue]="gridViewSetup['RefID']['referedValue']"
-      [refType]="gridViewSetup['RefID']['referedType']" (valueChange)="valueChange($event)"
-      [crrValue]="meeting?.refID" [showInput]="true" >
-    </codx-input> -->
+        dung cái này dính edit ko view được
+       --> 
+  
       </div>
     </ng-container>
   </ng-container>
