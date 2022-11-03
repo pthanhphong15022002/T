@@ -275,16 +275,25 @@
                                   <ng-container
                                     *ngIf="dt.referType == REFER_TYPE.IMAGE"
                                   >
-                                    <ng-container>
+                                    <ng-container
+                                      *ngIf="dt.recID; else imageSrc"
+                                    >
                                       <codx-img
+                                        [recId]="dt.recID"
                                         [objectId]="dt.objectID"
-                                        [objectType]="'SV_Surveys'"
                                         [width]="150"
                                         cssClass="pic"
                                         imageType="square"
                                       >
                                       </codx-img>
                                     </ng-container>
+                                    <ng-template #imageSrc>
+                                      <img
+                                        [src]="dt.data || dt.avatar"
+                                        alt=""
+                                        class="image"
+                                      />
+                                    </ng-template>
                                   </ng-container>
                                 </div>
                               </div>
@@ -308,16 +317,25 @@
                                   <ng-container
                                     *ngIf="data.referType == REFER_TYPE.IMAGE"
                                   >
-                                    <ng-container>
+                                    <ng-container
+                                      *ngIf="data.recID; else imageSrc"
+                                    >
                                       <codx-img
+                                        [recId]="data.recID"
                                         [objectId]="data.objectID"
-                                        [objectType]="'SV_Surveys'"
                                         [width]="150"
                                         cssClass="pic"
                                         imageType="square"
                                       >
                                       </codx-img>
                                     </ng-container>
+                                    <ng-template #imageSrc>
+                                      <img
+                                        [src]="data.data || data.avatar"
+                                        alt=""
+                                        class="image"
+                                      />
+                                    </ng-template>
                                   </ng-container>
                                 </div>
                               </div>

@@ -1,0 +1,63 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="formModel"
+  [data]="data"
+  *ngIf="isAfterRender"
+>
+<ng-template #body let-dialog>    
+    <div>
+        <div class="form-group">
+            <codx-label fiedName="ResourceID" [formModel]="formModel"></codx-label>
+            <codx-input
+            ControlName="resourceID"
+            [formModel]="formModel"
+            [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+      <div class="form-group">
+        <codx-label fiedName="UserID" [formModel]="formModel"></codx-label>
+        <codx-input
+        ControlName="userID"
+        [formModel]="formModel"
+        [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label fiedName="TransDate" [formModel]="form.formModel" ></codx-label>
+        <codx-input       
+          type="datetime"
+          ControlName="transDate"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="form-group align-items-end">
+        <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          ControlName="note"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"  
+          >
+        </codx-input>
+      </div>
+    </div>
+</ng-template>
+
+  
+</codx-form>  
+  <ng-template #footer>
+    <div class=" pt-4 " >
+        <div class="form-group d-flex justify-content-end flex-row">
+          <button type="button" class="btn btn-primary" (click)="onSaveForm()" >
+            <codx-label name="lblSave" default="Lưu" ></codx-label>
+          </button>
+        </div>
+      </div>
+  </ng-template>

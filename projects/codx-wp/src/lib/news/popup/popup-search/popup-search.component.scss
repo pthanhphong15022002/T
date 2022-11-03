@@ -1,4 +1,15 @@
-.image-150>img {
+.image-150 > img {
     width: 100%;
     height: 150px;
+}
+codx-img > .image-125 > img {
+    width: 100%;
+    height: auto;
+}
+.news-item .col-2 {
+    width: 20%;
+}
+
+.news-item .col-10 {
+    width: 80%;
 }

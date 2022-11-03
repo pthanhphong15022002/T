@@ -78,7 +78,6 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
         if(res)
         {
           this.data = res;
-          console.log(this.data)
           this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
           this.dt.detectChanges();
         }

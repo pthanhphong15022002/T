@@ -52,12 +52,14 @@ export class PopupSelectLabelComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   async closePopUp(isComplete) {
-    if (isComplete) {
-      this.dialog.close(this.curLabel);
-      (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        console.log('saved file', res);
-      });
-    } else this.dialog.close(null);
+    this.dialog.close(this.curLabel);
+
+    // if (isComplete) {
+    //   this.dialog.close(this.curLabel);
+    //   (await this.attachment.saveFilesObservable()).subscribe((res) => {
+    //     console.log('saved file', res);
+    //   });
+    // } else this.dialog.close(null);
   }
 
   changeLabel(e: any) {
