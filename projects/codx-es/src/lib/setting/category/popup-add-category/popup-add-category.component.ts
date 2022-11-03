@@ -235,7 +235,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.notifyInvalid(this.form?.formGroup, this.formModel);
       return;
     }
-    if (this.viewAutoNumber == '') {
+    if (this.data.eSign && this.viewAutoNumber == '') {
       let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;

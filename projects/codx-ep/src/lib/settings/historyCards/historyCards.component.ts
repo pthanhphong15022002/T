@@ -12,9 +12,10 @@ export class HistoryCardsComponent
   implements AfterViewInit
 {
   
-  @ViewChild('subTitle') tranTypeCol: TemplateRef<any>;
-  @ViewChild('subTitle') userIDCol: TemplateRef<any>;
-  @ViewChild('subTitle') createByCol: TemplateRef<any>;
+  @ViewChild('tranTypeCol') tranTypeCol: TemplateRef<any>;
+  @ViewChild('userIDCol') userIDCol: TemplateRef<any>;
+  @ViewChild('createByCol') createByCol: TemplateRef<any>;  
+  @ViewChild('transDateCol') transDateCol: TemplateRef<any>;
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_ResourceTrans';
@@ -56,35 +57,34 @@ export class HistoryCardsComponent
           this.columnGrids = [
             {
               field: 'transType',
-              headerText: "Phân loại",//gv?.TranType?.headerText,
-              width: 350,
+              headerText: gv?.TransType?.headerText,
+              width: "15%",
               template: this.tranTypeCol,
+              headerTextAlign: 'Center',
+              textAlign: 'Center',
             },
             {
-              field: 'createdOn',
-              headerText: "Ngày phát sinh",//gv?.CreateOn?.headerText,// đang đợi BA sửa ngôn ngữ
+              field: 'transDate',
+              headerText: gv?.TransDate?.headerText,
               width: 200,
-              headerTextAlign: 'Center',
+              template : this.transDateCol,
             },
             {
               field: 'userID',
               headerText: gv?.UserID?.headerText,
+              width: 250,
               template: this.userIDCol,
-              headerTextAlign: 'Center',
-              textAlign: 'Center',
             },          
             {
               field: 'note',
               headerText: gv?.Note?.headerText,
-              width: 200,
-              headerTextAlign: 'Center',           
+              width: "20%",          
             },
             {
               field: 'createdBy',
               headerText: "Người tạo",//gv?.CreateBy?.headerText,
-              width: 200,
+              width: 250,
               template: this.createByCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [
