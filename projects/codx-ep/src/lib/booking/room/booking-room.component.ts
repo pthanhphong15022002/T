@@ -231,7 +231,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       // event.forEach((func) => {
       //   func.disabled = true;
       // });
-      if (data.status == '1') {
+      if (data.approveStatus == '1') {
         event.forEach((func) => {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
