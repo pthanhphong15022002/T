@@ -126,7 +126,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       // event.forEach(func => {        
       //   func.disabled=true;        
       // });
-      if(data.status=='1'){
+      if(data.approveStatus=='1'){
         event.forEach(func => {
           if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
           {

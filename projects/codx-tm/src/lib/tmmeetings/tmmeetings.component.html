@@ -34,7 +34,7 @@
     </div>
     <div *ngIf="data?.isOnline" [ngbPopover]="popoverLinks"
     #p1="ngbPopover" [openDelay]="500" (mouseenter)="p1.open()" (mouseleave)="p1.close()" placement="right left">
-      <i class="icon-insert_link text-primary text-hover-primary icon-24" ></i>
+      <i class="icon-insert_link text-primary text-hover-primary icon-24" (click)="openLinkMeeting(data)"></i>
     </div>
   </div>
   <ng-template #popoverLinks >
@@ -61,9 +61,15 @@
   </div>
   <div class="footer-att" *ngIf="data.attachments > 0" [ngbPopover]="popperAttachment"
     #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
-    <span class="icon-attach_file icon-18"> </span>
+    <codx-attachment-temp
+    [objectID]="data?.recID"
+    [formModel]="view.formModel"
+    [viewType]= "1"
+    [count] = "data.attachments"
+  ></codx-attachment-temp>
+    <!-- <span class="icon-attach_file icon-18"> </span>
     <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
-      {{ data.attachments }}</span>
+      {{ data.attachments }}</span> -->
   </div>
 
   <ng-template #popperAttachment >
