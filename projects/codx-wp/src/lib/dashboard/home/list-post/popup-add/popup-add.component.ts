@@ -135,7 +135,8 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
       this.shareText = this.dataEdit.shareText;
       this.shareWith = this.dataEdit.shareName;
     }
-    else {
+    else
+    {
       if (this.dialogData.status == this.STATUS.SHARE) {
         this.dataShare = this.dialogData.post;
         this.entityName = this.dialogData.refType;
@@ -168,7 +169,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
           case this.SHARECONTROLS.MYDEPARMENTS:
           case this.SHARECONTROLS.MYDIVISION:
           case this.SHARECONTROLS.MYCOMPANY:
-            
             break;
           case this.SHARECONTROLS.OGRHIERACHY:
           case this.SHARECONTROLS.DEPARMENTS:

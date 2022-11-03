@@ -121,7 +121,7 @@ export class PdfComponent
   curPage = 1;
 
   //zoom
-  zoomValue: any = 100;
+  zoomValue: any = 60;
   zoomFields = { text: 'show', value: 'realValue' };
   lstZoomValue = [
     { realValue: '25', show: 25 },
@@ -212,7 +212,15 @@ export class PdfComponent
   //thumbnail
   hideThumbnail: boolean = false;
 
+  vllSupplier: any;
   onInit() {
+    this.cache.valueList('ES029').subscribe((res) => {
+      if (res) {
+        this.vllSupplier = res.datas;
+        console.log('vll', this.vllSupplier);
+      }
+    });
+
     if (this.isPublic) {
       this.user.userID = this.approver;
     }
@@ -543,6 +551,8 @@ export class PdfComponent
               this.user.userID
             )
             .subscribe((res) => {
+              console.log('save event', res);
+
               if (res) {
                 this.lstAreas = res;
                 this.detectorRef.detectChanges();
@@ -1225,10 +1235,12 @@ export class PdfComponent
       img.referrerPolicy = 'noreferrer';
       img.src = fileReader.result.toString();
       let min = 0;
+      let scale = 1;
       if (this.curSelectedArea?.attrs?.text) {
         let textW = this.curSelectedArea.width();
         let textH = this.curSelectedArea.height();
         min = Math.min(textW, textH);
+        scale = Math.min(img.width, img.height) / min;
       }
       img.onload = () => {
         let tmpName: tmpAreaName = {
@@ -1240,7 +1252,6 @@ export class PdfComponent
           LabelValue: '',
         };
 
-        let scale = Math.min(img.width, img.height) / min;
         let imgArea = new Konva.Image({
           image: img,
           width: img.width / scale,
@@ -1330,15 +1341,42 @@ export class PdfComponent
       if (!newUrl) return;
       else {
         let curArea = this.lstAreas.find((area) => area.recID == recID);
-
+        curArea.labelValue = newUrl;
         let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1);
-        let curKonva = curLayer?.children?.find(
-          (konva) => konva.id() == curArea.recID
-        ) as Konva.Image;
         let curImgEle = document.getElementById(recID) as HTMLImageElement;
-        curKonva?.image(curImgEle);
+        let min = 0;
+        let scale = 1;
+        curImgEle.onload = () => {
+          let isText = this.curSelectedArea.attrs?.text ? true : false;
+          if (isText) {
+            let textW = this.curSelectedArea.width();
+            let textH = this.curSelectedArea.height();
+            min = Math.min(textW, textH);
+            scale = Math.min(curImgEle.width, curImgEle.height) / min;
+          }
+          let imgArea = new Konva.Image({
+            image: curImgEle,
+            width: isText
+              ? curImgEle.width / scale
+              : this.curSelectedArea.width(),
+            height: isText
+              ? curImgEle.height / scale
+              : this.curSelectedArea.height(),
+            x: curArea.location.left * this.xScale,
+            y: curArea.location.top * this.yScale,
+            id: curArea.recID,
+            draggable: true,
+            name: this.curSelectedArea.name(),
+          });
+          imgArea?.scale({ x: this.xScale, y: this.yScale });
+          this.curSelectedArea.destroy();
+          this.curSelectedArea = imgArea;
 
-        this.curSelectedArea = curKonva;
+          this.tr?.nodes([this.curSelectedArea]);
+          curLayer.add(this.curSelectedArea);
+          curLayer?.add(this.tr);
+          curLayer?.draw();
+        };
       }
     }
 
@@ -1416,6 +1454,8 @@ export class PdfComponent
       modifiedBy: tmpName.Signer,
       recID: this.curSelectedArea.attrs.id,
     };
+    console.log('area', tmpArea);
+
     this.saveToDB(tmpArea);
   }
 
