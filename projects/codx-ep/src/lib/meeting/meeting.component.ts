@@ -62,12 +62,15 @@ export class MeetingComponent extends UIComponent {
     this.dialogRef = dialogRef;
   }
 
+  baseUrl = '.\\assets\\themes\\ep\\default\\img\\';
   vllImgUrl = [];
+  curHost;
   onInit(): void {
     this.cache.valueList('EP021').subscribe((res) => {
       console.log(res);
 
       this.vllImgUrl = res.datas;
+      this.curHost = this.vllImgUrl[0];
     });
   }
 
@@ -92,6 +95,10 @@ export class MeetingComponent extends UIComponent {
       });
   }
 
+  changeHost(imgUrl) {
+    this.curHost = imgUrl;
+    console.log('curHost', imgUrl);
+  }
   closeDialog(isSave: boolean) {
     if (isSave) {
       this.data[0].onlineUrl = this.meetingUrl;
