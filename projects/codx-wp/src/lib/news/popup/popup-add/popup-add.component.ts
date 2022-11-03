@@ -82,7 +82,6 @@ export class PopupAddComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
     private cache: CacheService,
-    private dmSV: CodxDMService,
     @Optional() dd?: DialogData,
     @Optional() dialogRef?: DialogRef
 
@@ -105,29 +104,16 @@ export class PopupAddComponent implements OnInit {
 
 
   setDataDefault() {
-    this.cache.valueList('L1901').subscribe((vll: any) => {
+    this.cache.valueList('L1901').subscribe((vll: any) => 
+    {
       let modShare = vll.datas.find((x: any) => x.value == this.SHARECONTROLS.EVERYONE);
       this.shareIcon = modShare.icon;
       this.shareText = modShare.text;
       this.shareControl = this.SHARECONTROLS.EVERYONE;
     });
-    let formName = "WPParameters";
-    let category = "1";
     this.initForm();
   }
 
-  getParameterAsync(formName:string, category:string){
-    if(formName && category){
-      this.api.execSv("SYS","ERM.Business.SYS","SettingValuesBusiness","GetParameterAsync",[formName,category])
-      .subscribe((res:any) => {
-        if(res){
-          let jsParam = JSON.parse(res);
-          console.log(jsParam);
-          this.paramerters = res;
-        }
-      })
-    }
-  }
   initForm() {
     this.formGroup = new FormGroup({
       Tags: new FormControl(''),
@@ -390,6 +376,7 @@ export class PopupAddComponent implements OnInit {
         if (f.mimeType.indexOf("image") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
           this.fileImage = f;
+          console.log(this.fileImage);
         }
         else if (f.mimeType.indexOf("video") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.VIDEO;

@@ -71,22 +71,28 @@ export class ReportinglineComponent extends UIComponent {
         id: '2',
         type: ViewType.tree_orgchart,
         active: false,
-        sameData: true,
+        sameData: false,
         model: {
           resizable: true,
           template: this.tmpTree,
           panelRightRef: this.tmpOrgchart,
+          resourceModel:{parentIDField: 'ReportTo'}
         }
       }
     ];
+    //this.view.dataService.parentIdField = 'ReportTo';
     this.detectorRef.detectChanges();
   }
 
   viewChange(event:any) {
     if(event && event.view?.id){
       if(event.view.id == "2"){
-        this.view.dataService.parentIdField = 'ReportTo';
-        this.detectorRef.detectChanges();
+        //this.view.dataService.parentIdField = 'ReportTo';
+        // this.view.dataService.load().subscribe(res=>{
+        //   this.detectorRef.detectChanges();
+        //   console.log(res);
+        // })
+        
       }
     }
   }
