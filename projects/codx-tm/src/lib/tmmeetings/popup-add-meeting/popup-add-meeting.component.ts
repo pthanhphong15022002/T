@@ -380,9 +380,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       return;
     }
     this.listTime.forEach((res) => {
-      if (this.timeBool) {
-        return;
-      }
+
       var d1 = new Date(res.startDate).toLocaleDateString();
       var d2 = new Date(this.meeting.endDate).toLocaleDateString();
       if (d1 === d2) {
@@ -409,6 +407,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           return;
         } else {
           this.timeBool = false;
+        }
+        if (this.timeBool) {
+          return;
         }
       }
     });
