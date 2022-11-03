@@ -421,7 +421,7 @@ export class CodxEsService {
   isSetupChange = this.setupChange.asObservable();
 
   public statusChange = new BehaviorSubject<any>(null);
-  isStatusChange = this.setupChange.asObservable();
+  isStatusChange = this.statusChange.asObservable();
 
   getAutoNumber(autoNoCode): Observable<any> {
     return this.api.execSv(

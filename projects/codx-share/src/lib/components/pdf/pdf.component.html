@@ -803,8 +803,9 @@
                       <ng-container
                         *ngFor="let spl of vllSupplier; let index = index"
                       >
-                        <li class="nav-item m-0">
-                          <a
+                        <div class="nav-item m-0">
+                          <button
+                            [disabled]="index != 0"
                             class="nav-link text-center flex-center rounded-0 min-w-100px"
                             [ngClass]="currentTab == index ? 'active' : ''"
                             data-bs-toggle="tab"
@@ -814,21 +815,20 @@
                             <span class="d-flex flex-column">
                               <span>
                                 <img
-                                  class="h-50px p-3 user-mini-icon w-50px mb-1"
+                                  [class]="index != 0 ? 'opacity-25' : ''"
+                                  class="h-80px w-80px p-3 user-mini-icon mb-1"
                                   [src]="
                                     '../assets/themes/es/default/img/' +
                                     spl.icon
                                   "
                                 />
                               </span>
-
                               <span class="fs-6 fw-bold">
                                 {{ spl.text }}
                               </span>
-                              <span class="fs-6"> </span>
                             </span>
-                          </a>
-                        </li>
+                          </button>
+                        </div>
                       </ng-container>
                     </ul>
                   </div>

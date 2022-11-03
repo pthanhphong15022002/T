@@ -319,9 +319,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
                               mode: mode,
                             };
                             this.esService.setupChange.next(true);
+                            this.esService.statusChange.next(mode);
                             this.notify.notifyCode('RS002');
                             this.canOpenSubPopup = false;
                           } else {
+                            this.esService.setupChange.next(true);
                             this.canOpenSubPopup = false;
                             let result = {
                               result: false,
@@ -431,10 +433,12 @@ export class PopupSignForApprovalComponent extends UIComponent {
                           result: true,
                           mode: mode,
                         };
+                        this.esService.statusChange.next(mode);
                         this.esService.setupChange.next(true);
                         this.notify.notifyCode('RS002');
                         this.canOpenSubPopup = false;
                       } else {
+                        this.esService.setupChange.next(true);
                         this.canOpenSubPopup = false;
                         let result = {
                           result: false,

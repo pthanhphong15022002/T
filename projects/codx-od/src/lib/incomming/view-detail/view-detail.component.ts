@@ -63,11 +63,11 @@ import { UpdateExtendComponent } from '../update/update.component';
   styleUrls: ['./view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
+export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   active = 1;
   checkUserPer: any;
   userID: any;
-  @ViewChild("reference") reference: TemplateRef<ElementRef>;
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() pfuncID: any;
   @Input() data: any = { category: 'Phân loại công văn' };
   @Input() gridViewSetup: any;
@@ -80,7 +80,7 @@ export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
   @ViewChild('tmpdeadline') tmpdeadline: any;
   @ViewChild('tmpFolderCopy') tmpFolderCopy: any;
   @ViewChild('tmpexport') tmpexport!: any;
-  tabControl : TabModel[] = [];
+  tabControl: TabModel[] = [];
   extractContent = extractContent;
   convertHtmlAgency = convertHtmlAgency2;
   getIdUser = getIdUser;
@@ -117,11 +117,16 @@ export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      { name: 'ReferencesOD', textDefault: 'Tham chiếu', isActive: false , template: this.reference},
+      {
+        name: 'ReferencesOD',
+        textDefault: 'Tham chiếu',
+        isActive: false,
+        template: this.reference,
+      },
       // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.data &&
@@ -153,7 +158,6 @@ export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
       this.gridViewSetup = changes?.gridViewSetup?.currentValue;
     this.active = 1;
     this.setHeight();
-   
   }
   ngOnInit(): void {
     this.active = 1;
@@ -161,7 +165,6 @@ export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
     //this.data = this.view.dataService.dataSelected;
     this.userID = this.authStore.get().userID;
     this.getGridViewSetup(this.pfuncID);
-    
   }
   setHeight() {
     let main,
@@ -1080,6 +1083,7 @@ export class ViewDetailComponent implements OnInit, OnChanges , AfterViewInit {
               var file = new File();
               file.fileID = this.data?.files[i].recID;
               file.fileName = this.data?.files[i].fileName;
+              file.eSign = true;
               signFile.files.push(file);
             }
           }
