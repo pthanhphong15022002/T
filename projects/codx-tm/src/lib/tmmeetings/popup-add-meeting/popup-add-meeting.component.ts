@@ -2,7 +2,11 @@ import {
   CO_Content,
   CO_MeetingTemplates,
 } from './../../models/CO_MeetingTemplates.model';
-import { CO_Meetings, CO_Resources } from './../../models/CO_Meetings.model';
+import {
+  CO_Meetings,
+  CO_Resources,
+  TmpRoom,
+} from './../../models/CO_Meetings.model';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -51,7 +55,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   showPlan = true;
   data: any;
   readOnly = false;
-  isFullDay: boolean = true;
+  isFullDay: boolean = false;
   beginHour = 0;
   beginMinute = 0;
   endHour = 0;
@@ -84,7 +88,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   // gridViewSetup: any;
   timeBool = false;
   isMeetingDate = true;
-  isRoom: any;
+  isRoom = true;
+  startRoom: any;
+  endRoom: any;
+  listRoom: TmpRoom[] = [];
+  location: any;
+  fields: Object = { text: 'location', value: 'resourceID' };
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -115,9 +124,23 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     //     }
     //   });
 
-    this.api.callSv('CO','CO', 'MeetingsBusiness','IsCheckEpWithModuleLAsync').subscribe(res=>{
-      this.isRoom = res.msgBodyData[0];
-    })
+    this.api
+      .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
+      .subscribe((res) => {
+        this.isRoom = res.msgBodyData[0];
+        if(this.action === 'edit'){
+          if(this.isRoom == false){
+            this.api.callSv( 'EP',
+            'EP',
+            'ResourcesBusiness',
+            'GetOneAsync', this.meeting.location).subscribe(e=>{
+              if(e.msgBodyData[0]){
+                this.meeting.location = e.msgBodyData[0].resourceName;
+              }
+            })
+          }
+        }
+      });
 
     if (this.action == 'add')
       this.meeting.startDate = moment(new Date())
@@ -150,11 +173,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.resources = [];
     } else if (this.action == 'edit') {
       // this.setTimeEdit();
+
       this.showLabelAttachment = this.meeting?.attachments > 0 ? true : false;
       this.resources = this.meeting.resources;
       if (this.resources?.length > 0) {
         this.resources.forEach((obj) => this.listUserID.push(obj.resourceID));
       }
+
     } else if (this.action == 'copy') {
       this.meeting.meetingType = '1';
       this.resources = [];
@@ -175,8 +200,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             this.templateName = this.template.templateName;
           }
         });
-    };
-
+    }
+    console.log(this.meeting.startDate);
+    console.log(this.meeting.endDate);
+    console.log(this.startTime);
+    console.log(this.endTime);
   }
 
   loadTime() {
@@ -190,14 +218,38 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       });
   }
 
-  loadRoomAvailable(){
-    this.api.callSv('EP','EP','ResourcesBusiness','GetListAvailableResourceAsync',[
-      '1',
-      this.meeting.startDate.toUTCString(),
-      this.meeting.endDate.toUTCString()
-    ]).subscribe((res)=>{
-      console.log(res);
-    })
+  loadRoomAvailable(startDate, endDate) {
+    this.api
+      .callSv(
+        'EP',
+        'EP',
+        'ResourcesBusiness',
+        'GetListAvailableResourceAsync',
+        ['1', startDate.toUTCString(), endDate.toUTCString()]
+      )
+      .subscribe((res) => {
+        console.log(res);
+        if (res.msgBodyData[0] && res.msgBodyData[0].length > 0) {
+          var list = [];
+          list = res.msgBodyData[0];
+          list.forEach((element) => {
+            var lstR = [];
+            if(this.listRoom && this.listRoom.length > 0){
+              this.listRoom.forEach(res=>{
+                if(!lstR.includes(res.resourceID))
+                  lstR.push(res.resourceID);
+              })
+            }
+            if(!lstR.includes(element.resourceID)){
+              var re = new TmpRoom();
+              re['resourceID'] = element.resourceID;
+              re['location'] = element.resourceName;
+              this.listRoom.push(re);
+            }
+          });
+          console.log(this.listRoom);
+        }
+      });
   }
 
   setTimeEdit() {
@@ -315,7 +367,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('CO002');
       return;
     }
-    if (this.validateStartEndTime(this.startTime, this.endTime) == true) {
+    if (this.validateStartEndTime(this.startTime, this.endTime) == false) {
       this.notiService.notifyCode('CO002');
       return;
     }
@@ -411,7 +463,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     let tmpCrrDate = new Date();
     let crrDate = new Date(
       tmpCrrDate.getFullYear(),
-      tmpCrrDate.getMonth() + 1,
+      tmpCrrDate.getMonth(),
       tmpCrrDate.getDate(),
       0,
       0,
@@ -421,7 +473,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     if (
       new Date(
         selectDate.getFullYear(),
-        selectDate.getMonth() + 1,
+        selectDate.getMonth(),
         selectDate.getDate(),
         0,
         0,
@@ -444,7 +496,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
     var start = new Date(0, 0, 0, tempStartTime[0], tempStartTime[1]);
     var end = new Date(0, 0, 0, tempEndTime[0], tempEndTime[1]);
-
   }
 
   validateStartEndTime(startTime: any, endTime: any) {
@@ -516,6 +567,10 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.title =
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     //this.changDetec.detectChanges();
+  }
+  cbxChange(e) {
+    console.log(e);
+    this.meeting.location = e;
   }
 
   valueCbx(id, e) {
@@ -659,6 +714,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode('TM036');
       }
     }
+    this.loadRoomAvailable(this.meeting.startDate, this.meeting.endDate);
   }
 
   openPopupLink() {
