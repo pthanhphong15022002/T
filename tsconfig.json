@@ -74,6 +74,10 @@
         "dist/codx-od/codx-od",
         "dist/codx-od"
       ],
+      "codx-om": [
+        "dist/codx-om/codx-om",
+        "dist/codx-om"
+      ],
       "codx-report": [
         "dist/codx-report/codx-report",
         "dist/codx-report"
