@@ -5,6 +5,8 @@ import {
   HostListener,
   Injector,
   OnInit,
+  TemplateRef,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -12,7 +14,8 @@ import {
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
-import { UIComponent } from 'codx-core';
+import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { SV_Surveys } from '../model/SV_Surveys';
 
 @Component({
@@ -28,6 +31,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   questions: any = new Array();
   answers: any = new Array();
   isModeAdd = true;
+  funcID = '';
+  functionList: any;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -59,10 +64,18 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     text: 'Mẫu không có tiêu đề',
     description: 'Mô tả biểu mẫu',
   };
+  REFER_TYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
 
   dataAnswer: any = new Array();
-
   active = false;
+  MODE_IMAGE_VIDEO = 'VIEW';
+  lstEditIV: any = new Array();
+  lstViewIV: any = new Array();
+  @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   constructor(inject: Injector, private change: ChangeDetectorRef) {
     super(inject);
     this.questions = [
@@ -108,6 +121,12 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       fontColor: 'black',
       fontFormat: 'B',
     };
+    this.router.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
+    this.cache.functionList('SVT01').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
 
   onInit(): void {
@@ -170,7 +189,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     var htmlE = html as HTMLElement;
     var htmlMF = document.querySelector('.moreFC');
     if (htmlMF)
-      htmlMF.setAttribute('style', `top: calc(${htmlE.offsetTop}px - 151px);`);
+      htmlMF.setAttribute('style', `top: calc(${htmlE?.offsetTop}px - 151px);`);
     this.activeCard(seqNo);
   }
 
@@ -269,7 +288,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.questions = data;
   }
 
-  clickMF(functionID) {
+  clickMF(functionID, eleAttachment = null) {
     if (functionID) {
       switch (functionID) {
         case 'LTN01':
@@ -280,7 +299,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         case 'LTN03':
           break;
         case 'LTN04':
-          this.uploadImage(this.itemActive);
+          this.uploadFileImage(eleAttachment);
           break;
         case 'LTN05':
           break;
@@ -288,6 +307,77 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           break;
       }
     }
+  }
+
+  uploadFileImage(attachmentEle) {
+    if (attachmentEle) this.ATM_Image = attachmentEle;
+    if (this.ATM_Image) this.ATM_Image.uploadFile();
+  }
+
+  async selectedImage(e, attachmentEle) {
+    let obj = JSON.parse(JSON.stringify(this.questions));
+    this.generateGuid();
+    let recID = JSON.parse(JSON.stringify(this.guidID));
+    obj[this.itemActive.seqNo].recID = recID;
+    e.data[0].objectID = recID;
+    let files = e.data;
+    // up file
+    if (files.length > 0) {
+      files.map((dt: any) => {
+        if (dt.mimeType.indexOf('image') >= 0) {
+          dt['referType'] = this.REFER_TYPE.IMAGE;
+        } else if (dt.mimeType.indexOf('video') >= 0) {
+          dt['referType'] = this.REFER_TYPE.VIDEO;
+        } else {
+          dt['referType'] = this.REFER_TYPE.APPLICATION;
+        }
+      });
+      debugger;
+      // let lstIVTemp = JSON.parse(JSON.stringify(this.lstEditIV));
+      if (this.lstViewIV.length > 0) {
+        if (this.MODE_IMAGE_VIDEO == 'VIEW') this.lstEditIV = this.lstViewIV;
+        this.lstEditIV.push(files[0]);
+      } else this.lstEditIV.push(files[0]);
+    }
+    if (files) {
+      this.ATM_Image.objectId = recID;
+      // this.ATM_IV.fileUploadList[0]['objectID'] = listFileTemp[0].objectID;
+    }
+    (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
+      if (result) {
+        debugger;
+        this.MODE_IMAGE_VIDEO = 'EDIT';
+        this.change.detectChanges();
+        this.uploadImage(this.itemActive, attachmentEle);
+      }
+    });
+    console.log('check listEdit', this.lstEditIV);
+  }
+
+  guidID: any;
+  generateGuid() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    this.guidID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
   }
 
   addQuestion(dataQuestion) {
@@ -317,13 +407,14 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   addTitle(dataQuestion) {}
 
-  uploadImage(dataQuestion) {
+  uploadImage(dataQuestion, eleAttachment) {
     if (dataQuestion) {
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
       tempQuestion.answerType = null;
       tempQuestion.question = null;
       tempQuestion.category = 'P';
+      tempQuestion.recID = this.guidID;
       this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
       this.questions.forEach((x, index) => (x.seqNo = index));
       this.questions[dataQuestion.seqNo].active = false;
