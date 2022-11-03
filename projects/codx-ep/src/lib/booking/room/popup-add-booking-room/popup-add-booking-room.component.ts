@@ -672,7 +672,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.codxEpService
                 .release(
                   this.returnData,
-                  res.processID,
+                  res?.processID,
                   'EP_Bookings',
                   this.formModel.funcID
                 )

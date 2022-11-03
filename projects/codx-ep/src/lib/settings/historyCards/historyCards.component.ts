@@ -82,7 +82,7 @@ export class HistoryCardsComponent
             },
             {
               field: 'createdBy',
-              headerText: "Người tạo",//gv?.CreateBy?.headerText,
+              headerText: gv?.CreatedBy?.headerText,
               width: 250,
               template: this.createByCol,
             },

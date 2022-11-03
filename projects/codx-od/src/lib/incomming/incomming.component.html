@@ -60,7 +60,7 @@
     <codx-vll [value]="data.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
     </codx-vll>
 
-    <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41'" [value]="data.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+    <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41' || view?.formModel?.funcID == 'ODT51'" [value]="data.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
     </codx-vll>
     <div class="d-flex align-items-center">
       <span class="me-1 icon-16" [ngClass]="checkDeadLine(data?.deadline)"></span>

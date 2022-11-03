@@ -23,6 +23,7 @@ import {
 } from 'codx-core';
 import { PopupAddEpCardsComponent } from './popup-add-epCards/popup-add-epCards.component';
 import { Router } from '@angular/router';
+import { AnyAaaaRecord } from 'dns';
 
 @Component({
   selector: 'setting-epCards',
@@ -73,6 +74,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   cardDate: any;
   cardNote: any;
   popupDialog: any;
+  selectedCard:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -220,7 +222,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         this.openPopupCardFunction(
           this.cardTranTmp,
           this.allocationCard,
-          event.text
+          event.text,
+          data
         );
         break;
       case 'EPS2502': //trả thẻ
@@ -230,7 +233,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         this.openPopupCardFunction(
           this.cardTranTmp,
           this.returnCard,
-          event.text
+          event.text,
+          data
         );
         break;
       case 'EPS2503': //lịch sử thẻ
@@ -354,7 +358,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
-  openPopupCardFunction(template: any, type: number, title: any) {
+  openPopupCardFunction(template: any, type: number, title: any,data:any) {
+    this.selectedCard=data;
     let time = new Date();
     this.cardDate = time;
     this.currTrans = type;
@@ -377,6 +382,29 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     this.cardNote = e.data;
     this.changeDetectorRef.detectChanges();
   }
+  changeDataMF(event, data:any) {        
+    if(event!=null && data!=null){
+      // event.forEach(func => {        
+      //   func.disabled=true;        
+      // });
+      if(data.status=='1'){
+        event.forEach(func => {
+          if(func.functionID == "EPS2501" /*MF cấp*/ )
+          {
+            func.disabled=true;
+          }
+        });  
+      }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "EPS2502"/*MF trả*/)
+          {
+            func.disabled=true;
+          }
+        });  
+      }
+    }
+  }
   createCardTrans(currTrans: number) {
     this.curPopupFG.patchValue({
       userID: this.cardUserID,
@@ -398,11 +426,14 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          console.log('resourceTranAdd', res);
-
+          this.selectedCard.status=currTrans;
+          this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
           this.popupDialog.close();
-          this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0);
+          this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_TEMP Đợi messcode từ BA         
         }
+        this.cardUserID=null;
+        this.cardDate=null;
+        this.cardNote=null;
       });
   }
 }
