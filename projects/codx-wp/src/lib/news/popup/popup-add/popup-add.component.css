@@ -22,3 +22,17 @@ div.e-content.e-lib {
 .add-video {
     height: calc(100vh - 178px) !important;
 }
+.tmpshare {
+    background-color: #fff;
+    right: 0px;
+    padding: 12px;
+    z-index: 99;
+    box-shadow: 2px 2px 6px #444;
+}
+
+.tmpshare-body {
+    margin-top: 10px;
+    padding: 0px 8px;
+    height: 200px;
+    overflow-y: scroll;
+}
