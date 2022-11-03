@@ -14,9 +14,10 @@ import {
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { DialogModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { SV_Surveys } from '../model/SV_Surveys';
+import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 
 @Component({
   selector: 'app-add-survey',
@@ -72,9 +73,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   dataAnswer: any = new Array();
   active = false;
-  MODE_IMAGE_VIDEO = 'VIEW';
+  MODE_IMAGE_VIDEO = 'EDIT';
   lstEditIV: any = new Array();
-  lstViewIV: any = new Array();
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   constructor(inject: Injector, private change: ChangeDetectorRef) {
     super(inject);
@@ -310,8 +310,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   uploadFileImage(attachmentEle) {
-    if (attachmentEle) this.ATM_Image = attachmentEle;
-    if (this.ATM_Image) this.ATM_Image.uploadFile();
+    // if (attachmentEle) this.ATM_Image = attachmentEle;
+    // if (this.ATM_Image) this.ATM_Image.uploadFile();
+    // let option = new DialogModel();
+    // option.DataService = this.view?.currentView?.dataService;
+    // option.FormModel = this.view?.currentView?.formModel;
+    var obj = {
+      formModel: this.functionList,
+    }
+    this.callfc.openForm(PopupUploadComponent, '', 900, 600, '', '', '');
   }
 
   async selectedImage(e, attachmentEle) {
@@ -332,26 +339,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           dt['referType'] = this.REFER_TYPE.APPLICATION;
         }
       });
-      debugger;
-      // let lstIVTemp = JSON.parse(JSON.stringify(this.lstEditIV));
-      if (this.lstViewIV.length > 0) {
-        if (this.MODE_IMAGE_VIDEO == 'VIEW') this.lstEditIV = this.lstViewIV;
-        this.lstEditIV.push(files[0]);
-      } else this.lstEditIV.push(files[0]);
+      this.lstEditIV.push(files[0]);
     }
     if (files) {
-      // this.ATM_Image.objectId = recID;
-      this.ATM_Image.fileUploadList = files;
+      this.ATM_Image.objectId = recID;
     }
     (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
       if (result) {
-        debugger;
-        this.MODE_IMAGE_VIDEO = 'EDIT';
-        this.change.detectChanges();
         this.uploadImage(this.itemActive, attachmentEle);
       }
     });
-    console.log('check listEdit', this.lstEditIV);
+    this.change.detectChanges();
   }
 
   guidID: any;

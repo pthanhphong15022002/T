@@ -259,58 +259,16 @@
                           </div>
                         </div>
                         <ng-container
-                          #viewImage
-                          *ngIf="MODE_IMAGE_VIDEO == 'VIEW'"
-                        >
-                          <div
-                            class="row mt-2 justify-content-between"
-                            *ngIf="lstViewIV"
-                          >
-                            <ng-container *ngFor="let dt of lstViewIV">
-                              <div
-                                class="col-5 my-2"
-                                *ngIf="dt.objectID == itemQuestion.recID"
-                              >
-                                <div class="w-150 position-relative">
-                                  <ng-container
-                                    *ngIf="dt.referType == REFER_TYPE.IMAGE"
-                                  >
-                                    <ng-container
-                                      *ngIf="dt.recID; else imageSrc"
-                                    >
-                                      <codx-img
-                                        [recId]="dt.recID"
-                                        [objectId]="dt.objectID"
-                                        [width]="150"
-                                        cssClass="pic"
-                                        imageType="square"
-                                      >
-                                      </codx-img>
-                                    </ng-container>
-                                    <ng-template #imageSrc>
-                                      <img
-                                        [src]="dt.data || dt.avatar"
-                                        alt=""
-                                        class="image"
-                                      />
-                                    </ng-template>
-                                  </ng-container>
-                                </div>
-                              </div>
-                            </ng-container>
-                          </div>
-                        </ng-container>
-                        <ng-container
                           #editImage
                           *ngIf="MODE_IMAGE_VIDEO == 'EDIT'"
                         >
                           <div
-                            class="row mt-2 justify-content-between"
+                            class="row mt-2 justify-content-between pd-10"
                             *ngIf="lstEditIV"
                           >
                             <ng-container *ngFor="let data of lstEditIV">
                               <div
-                                class="col-5 my-2"
+                                class="col-5 my-2 m-w-100"
                                 *ngIf="data.objectID == itemQuestion.recID"
                               >
                                 <div class="w-150 position-relative">
@@ -321,8 +279,8 @@
                                       *ngIf="data.recID; else imageSrc"
                                     >
                                       <codx-img
-                                        [recId]="data.recID"
                                         [objectId]="data.objectID"
+                                        [objectType]="functionList?.entityName"
                                         [width]="150"
                                         cssClass="pic"
                                         imageType="square"
@@ -330,10 +288,103 @@
                                       </codx-img>
                                     </ng-container>
                                     <ng-template #imageSrc>
+                                      <div class="d-flex align-items-center icon-MF-image">
+                                        <div
+                                          ngbDropdown
+                                          class="dropdown"
+                                          container="body"
+                                        >
+                                          <a
+                                            href="javascript:void(0)"
+                                            class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                                            ngbDropdownToggle
+                                            id="dropdownMenuButton1"
+                                            aria-expanded="false"
+                                          >
+                                            <span
+                                              class="icon-more_vert icon-22"
+                                            >
+                                            </span>
+                                          </a>
+                                          <ul
+                                            ngbDropdownMenu
+                                            aria-labelledby="dropdownMenuButton1"
+                                          >
+                                            <li>
+                                              <a
+                                                ngbDropdownItem
+                                                href="javascript:void(0)"
+                                              >
+                                                <span
+                                                  class="icon-format_align_left"
+                                                ></span>
+                                                <codx-label
+                                                  fiedName="formatAlignLeft"
+                                                  default="Căn trái"
+                                                ></codx-label>
+                                              </a>
+                                            </li>
+                                            <li>
+                                              <a
+                                                ngbDropdownItem
+                                                href="javascript:void(0)"
+                                              >
+                                                <span
+                                                  class="icon-format_align_right"
+                                                ></span>
+                                                <codx-label
+                                                  fiedName="formatAlignRight"
+                                                  default="Căn phải"
+                                                ></codx-label>
+                                              </a>
+                                            </li>
+                                            <li>
+                                              <a
+                                                ngbDropdownItem
+                                                href="javascript:void(0)"
+                                              >
+                                                <span
+                                                  class="icon-format_align_center"
+                                                ></span>
+                                                <codx-label
+                                                  fiedName="formatAlignCenter"
+                                                  default="Căn giữa"
+                                                ></codx-label>
+                                              </a>
+                                            </li>
+                                            <li>
+                                              <a
+                                                ngbDropdownItem
+                                                href="javascript:void(0)"
+                                              >
+                                                <span class="icon-image"></span>
+                                                <codx-label
+                                                  fiedName="changeImage"
+                                                  default="Thay đổi"
+                                                ></codx-label>
+                                              </a>
+                                            </li>
+                                            <li>
+                                              <a
+                                                ngbDropdownItem
+                                                href="javascript:void(0)"
+                                              >
+                                                <span
+                                                  class="icon-delete"
+                                                ></span>
+                                                <codx-label
+                                                  fiedName="deleteImage"
+                                                  default="Xóa"
+                                                ></codx-label>
+                                              </a>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
                                       <img
                                         [src]="data.data || data.avatar"
                                         alt=""
-                                        class="image"
+                                        class="image m-w-100"
                                       />
                                     </ng-template>
                                   </ng-container>
