@@ -1067,13 +1067,13 @@ export class CodxEsService {
     );
   }
 
-  updateTransAwaitingStatus(transID) {
+  updateTransAwaitingStatus(transID, isFail) {
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateTransAwaitingStatusAsync',
-      [transID]
+      [transID, isFail]
     );
   }
 
