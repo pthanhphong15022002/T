@@ -12,6 +12,7 @@ export class CodxAttachmentTempComponent implements OnInit {
   @Input() objectID:string = "";
   @Input() formModel:FormModel = null;
   @Input() viewType = '0' ;
+  @Input() count = 0 ;
 
   services:string = "DM";
   assamplyName:string = "ERM.Business.DM";
