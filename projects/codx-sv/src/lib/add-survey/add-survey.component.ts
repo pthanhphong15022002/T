@@ -340,8 +340,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       } else this.lstEditIV.push(files[0]);
     }
     if (files) {
-      this.ATM_Image.objectId = recID;
-      // this.ATM_IV.fileUploadList[0]['objectID'] = listFileTemp[0].objectID;
+      // this.ATM_Image.objectId = recID;
+      this.ATM_Image.fileUploadList = files;
     }
     (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
       if (result) {
