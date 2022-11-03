@@ -74,136 +74,198 @@
                     </div>
                   </ng-container>
                   <ng-container #body>
-                    <div class="d-flex">
-                      <div class="form-group question">
-                        <div class="title-des">
-                          <ejs-inplaceeditor
-                            #inplaceCommentEditor
-                            mode="Inline"
-                            emptyText="Enter your comment"
-                            submitOnEnter="false"
-                            type="RTE"
-                            name="rte"
-                            data-underline="false"
-                            [model]="titleEditorModel"
-                            [validationRules]="commentRule"
-                            [value]="itemQuestion.question"
-                          >
-                          </ejs-inplaceeditor>
-                        </div>
-                      </div>
-                      <ng-container #questionMF *ngIf="itemQuestion?.active">
-                        <span class="icon-image icon-26"></span>
-                        <ng-container
-                          *ngTemplateOutlet="
-                            templateQuestionMF;
-                            context: { $implicit: itemQuestion }
-                          "
-                        ></ng-container>
-                      </ng-container>
-                    </div>
                     <div
-                      cdkDropList
-                      class="list answer"
-                      (cdkDropListDropped)="
-                        dropAnswer($event, itemQuestion.seqNo)
+                      *ngIf="
+                        itemQuestion.category != 'P' &&
+                        itemQuestion.category != 'V'
                       "
                     >
-                      <div
-                        class="box"
-                        *ngFor="let itemAnswer of itemQuestion.answers"
-                        cdkDragBoundary=".answer"
-                        cdkDrag
-                      >
-                        <div class="has-action-menu">
-                          <div class="d-flex">
-                            <div class="action-menu">
-                              <div
-                                class="example-handle-answer"
-                                cdkDragHandle
-                                *ngIf="
-                                  itemQuestion.answerType != 'T2' &&
-                                  itemQuestion.answerType != 'T'
-                                "
-                              >
-                                <span class="icon-reorder"></span>
-                              </div>
-                            </div>
-                            <div class="d-flex size-input">
-                              <ng-container
-                                *ngTemplateOutlet="
-                                  tempIconAnswers;
-                                  context: {
-                                    dataQuestion: itemQuestion,
-                                    dataAnswer: itemAnswer
-                                  }
-                                "
-                              ></ng-container>
-                              <ng-container
-                                *ngTemplateOutlet="
-                                  tempAnswers;
-                                  context: {
-                                    dataQuestion: itemQuestion,
-                                    dataAnswer: itemAnswer
-                                  }
-                                "
-                              ></ng-container>
-                            </div>
+                      <div class="d-flex">
+                        <div class="form-group question">
+                          <div class="title-des">
+                            <ejs-inplaceeditor
+                              #inplaceCommentEditor
+                              mode="Inline"
+                              emptyText="Enter your comment"
+                              submitOnEnter="false"
+                              type="RTE"
+                              name="rte"
+                              data-underline="false"
+                              [model]="titleEditorModel"
+                              [validationRules]="commentRule"
+                              [value]="itemQuestion.question"
+                            >
+                            </ejs-inplaceeditor>
                           </div>
                         </div>
+                        <ng-container #questionMF *ngIf="itemQuestion?.active">
+                          <span class="icon-image icon-26"></span>
+                          <ng-container
+                            *ngTemplateOutlet="
+                              templateQuestionMF;
+                              context: { $implicit: itemQuestion }
+                            "
+                          ></ng-container>
+                        </ng-container>
                       </div>
                       <div
-                        class="d-flex size-input-other"
-                        *ngIf="
-                          itemQuestion?.active &&
-                          itemQuestion.answerType != 'T' &&
-                          itemQuestion.answerType != 'T2' &&
-                          itemQuestion.answerType != 'D' &&
-                          itemQuestion.answerType != 'H'
+                        cdkDropList
+                        class="list answer"
+                        (cdkDropListDropped)="
+                          dropAnswer($event, itemQuestion.seqNo)
                         "
                       >
-                        <ng-container
-                          *ngTemplateOutlet="
-                            tempIconAnswers;
-                            context: {
-                              dataQuestion: itemQuestion
-                            }
-                          "
-                        ></ng-container>
                         <div
-                          class="e-input-group-other"
-                          (click)="addAnswer(itemQuestion)"
+                          class="box"
+                          *ngFor="let itemAnswer of itemQuestion.answers"
+                          cdkDragBoundary=".answer"
+                          cdkDrag
                         >
-                          <input
-                            class="e-input answer-other"
-                            type="text"
-                            placeholder="Thêm bình chọn"
-                            (focus)="focusIn($event.target)"
-                            (blur)="focusOut($event.target)"
-                          />
+                          <div class="has-action-menu">
+                            <div class="d-flex">
+                              <div class="action-menu">
+                                <div
+                                  class="example-handle-answer"
+                                  cdkDragHandle
+                                  *ngIf="
+                                    itemQuestion.answerType != 'T2' &&
+                                    itemQuestion.answerType != 'T'
+                                  "
+                                >
+                                  <span class="icon-reorder"></span>
+                                </div>
+                              </div>
+                              <div class="d-flex size-input">
+                                <ng-container
+                                  *ngTemplateOutlet="
+                                    tempIconAnswers;
+                                    context: {
+                                      dataQuestion: itemQuestion,
+                                      dataAnswer: itemAnswer
+                                    }
+                                  "
+                                ></ng-container>
+                                <ng-container
+                                  *ngTemplateOutlet="
+                                    tempAnswers;
+                                    context: {
+                                      dataQuestion: itemQuestion,
+                                      dataAnswer: itemAnswer
+                                    }
+                                  "
+                                ></ng-container>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <ng-container
-                          *ngIf="itemQuestion?.other"
-                          class="d-flex"
+                        <div
+                          class="d-flex size-input-other"
+                          *ngIf="
+                            itemQuestion?.active &&
+                            itemQuestion.answerType != 'T' &&
+                            itemQuestion.answerType != 'T2' &&
+                            itemQuestion.answerType != 'D' &&
+                            itemQuestion.answerType != 'H'
+                          "
                         >
-                          <div class="text-or">
-                            <codx-label fiedName="" default="hoặc"></codx-label>
-                          </div>
+                          <ng-container
+                            *ngTemplateOutlet="
+                              tempIconAnswers;
+                              context: {
+                                dataQuestion: itemQuestion
+                              }
+                            "
+                          ></ng-container>
                           <div
-                            class="add-answer-other"
-                            (click)="addOtherAnswer(itemQuestion)"
+                            class="e-input-group-other"
+                            (click)="addAnswer(itemQuestion)"
                           >
-                            <codx-label
-                              fiedName=""
-                              default='thêm "Câu trả lời khác"'
-                            ></codx-label>
+                            <input
+                              class="e-input answer-other"
+                              type="text"
+                              placeholder="Thêm bình chọn"
+                              (focus)="focusIn($event.target)"
+                              (blur)="focusOut($event.target)"
+                            />
                           </div>
-                        </ng-container>
+                          <ng-container
+                            *ngIf="itemQuestion?.other"
+                            class="d-flex"
+                          >
+                            <div class="text-or">
+                              <codx-label
+                                fiedName=""
+                                default="hoặc"
+                              ></codx-label>
+                            </div>
+                            <div
+                              class="add-answer-other"
+                              (click)="addOtherAnswer(itemQuestion)"
+                            >
+                              <codx-label
+                                fiedName=""
+                                default='thêm "Câu trả lời khác"'
+                              ></codx-label>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      #question_image_video
+                      *ngIf="
+                        itemQuestion.category == 'P' ||
+                        itemQuestion.category == 'V'
+                      "
+                    >
+                      <div class="d-flex">
+                        <div class="form-group question w-100">
+                          <div class="title-des d-flex">
+                            <ejs-inplaceeditor
+                              #inplaceCommentEditor
+                              mode="Inline"
+                              emptyText="Enter your comment"
+                              submitOnEnter="false"
+                              type="RTE"
+                              name="rte"
+                              data-underline="false"
+                              [model]="titleEditorModel"
+                              [validationRules]="commentRule"
+                              [value]="itemQuestion.question"
+                            >
+                            </ejs-inplaceeditor>
+                            <ng-container
+                              #questionMF
+                              *ngIf="itemQuestion?.active"
+                              class="d-flex"
+                            >
+                              <span
+                                (click)="copyQuestion(itemQuestion)"
+                                class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                              ></span>
+                              <span
+                                (click)="deleteQuestion(itemQuestion)"
+                                class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                              ></span>
+                              <span
+                                class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                              ></span>
+                            </ng-container>
+                          </div>
+                          
+                        </div>
                       </div>
                     </div>
                   </ng-container>
-                  <hr />
-                  <ng-container #footer *ngIf="itemQuestion?.active">
+                  <ng-container
+                    #footer
+                    *ngIf="
+                      itemQuestion?.active &&
+                      itemQuestion.category != 'P' &&
+                      itemQuestion.category != 'V'
+                    "
+                  >
+                    <hr />
                     <div class="d-flex justify-content-end">
                       <span
                         (click)="copyQuestion(itemQuestion)"

@@ -3,6 +3,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Button } from '@syncfusion/ej2-angular-buttons';
+import { tab } from '@syncfusion/ej2-angular-grids';
 import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel, ButtonModel } from 'codx-core';
 import { map } from 'rxjs';
 import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add/popup-add.component';
@@ -122,6 +123,7 @@ export class ApproveComponent extends UIComponent {
         panelRightRef: this.panelRightRef
       }
     }];
+    this.detectorRef.detectChanges();
   }
 
   getGridViewSetUp(funcID:string) {
@@ -167,9 +169,11 @@ export class ApproveComponent extends UIComponent {
     this.view.dataService.setPredicates([], []).subscribe();
   }
   selectedChange(event: any) {
-    if (!event.data) return;
-    this.selectedID = event.data.recID;
-    this.detectorRef.detectChanges();
+    if (event && event?.data)
+    {
+      this.selectedID = event.data.recID;
+      this.detectorRef.detectChanges();
+    }
   }
   updateApprovePost(event: any) {
     if(event && event.status && event.data)
@@ -247,45 +251,55 @@ export class ApproveComponent extends UIComponent {
       );
   }
 
-  clickTabApprove(item = null, predicate: string, dataValue: string) {
+  clickTabApprove(item, predicate: string, dataValue: string) {
     this.view.dataService.setPredicates([predicate],[dataValue]).subscribe();
+    this.tabAsside.forEach(e => {
+      if(e.value == item.value){
+        e.active = true;
+      }
+      else
+      {
+        e.active = false;
+      }
+    });
   }
 
   clickMF(event: any, data: any) 
   {
-    if(event.functionID && event.text)
+    if(event.functionID)
     {
-      let moreFuncID = event.functionID;
-      let action = event.text;
-      let headerText = this.functionName + " " + action;
-      switch (moreFuncID) {
-        case 'SYS02':
+      let headerText = event.text + " " + this.functionName;
+      switch (event.functionID) {
+        case 'SYS02': //delete
           this.deletedPost(data);
           break;
-        case 'SYS03':
+        case 'SYS03': //edit
           let option = new DialogModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
-          if (this.entityName == "WP_News") 
+          if (this.view.funcID == "WPT0211" || this.view.funcID == "WPT0212")  // tin tức sự kiện
           {
             option.IsFull = true;
-            let popup = this.callFuc.openForm(PopupEditComponent, headerText, 0, 0, this.funcID, data, '', option);
-            popup.closed.subscribe((data: any) => {
-              if (data.event) 
+            let object = {
+              headerText: headerText,
+              data: data
+            }
+            let popup = this.callFuc.openForm(PopupEditComponent,"", 0, 0, this.view.funcID, object, '', option);
+            popup.closed.subscribe((res: any) => {
+              if (res?.event) 
               {
-                let dataUpdate = data.event;
-                this.view.dataService.update(dataUpdate).subscribe();
+                this.view.dataService.update(res.event).subscribe();
               }
             });
           }
-          else {
+          else // MXH
+          {
             this.api.execSv(
               this.service,
               this.assemblyName,
               "CommentsBusiness",
               "GetPostByIDAsync",
-              data.recID)
-              .subscribe((res: any) => {
+              [data.recID]).subscribe((res: any) => {
                 if (res) {
                   let obj = {
                     post: res,
@@ -296,9 +310,10 @@ export class ApproveComponent extends UIComponent {
                   option.DataService = this.view.dataService;
                   option.FormModel = this.view.formModel;
                   let popup =  this.callfc.openForm(PopupAddPostComponent,headerText, 700, 550, '', obj, '', option);
-                  popup.closed.subscribe((data: any) => {
-                    if (data.result) {
-                      console.log(data);
+                  popup.closed.subscribe((res: any) => {
+                    if (res?.event) 
+                    {
+                      this.view.dataService.update(res.event).subscribe();
                     }
                   });
                 }
@@ -316,7 +331,8 @@ export class ApproveComponent extends UIComponent {
     option.service = "WP";
     option.assemblyName = "ERM.Business.WP";
     option.className = "NewsBusiness";
-    if (this.entityName == "WP_News") {
+    if (this.view.funcID == "WPT0211" || this.view.funcID == "WPT0212") 
+    {
       option.methodName = "DeleteNewsAsync";
     }
     else {
@@ -328,10 +344,7 @@ export class ApproveComponent extends UIComponent {
 
   deletedPost(data: any) {
     if (!data) return;
-    this.view.dataService.delete(
-      [data],
-      true,
-      (opt: any) => this.beforDeletedPost(opt, data)).subscribe();
+    this.view.dataService.delete([data],true,(opt: any) => this.beforDeletedPost(opt, data)).subscribe();
   }
 
   clickBtnAdd() {
