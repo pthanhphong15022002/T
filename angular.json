@@ -552,6 +552,37 @@
           }
         }
       }
+    },
+    "codx-om": {
+      "projectType": "library",
+      "root": "projects/codx-om",
+      "sourceRoot": "projects/codx-om/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-om/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-om/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-om/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-om/src/test.ts",
+            "tsConfig": "projects/codx-om/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-om/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "CodxUI"

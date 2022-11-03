@@ -3,7 +3,7 @@
         <div class="d-flex align-items-center">
             <codx-label class="fw-bolder fs-1" 
                 [formModel]="dialogRef.formModel" 
-                name="lblHeaderText"
+                name="lblSearch"
                 default="Tìm kiếm">
             </codx-label>
         </div>
@@ -24,28 +24,29 @@
     </div>
 </div>
 
-<ng-template #itemTemplate let-data>    
-    <div (click)="clickViewDetail(data)" class="row my-4">
-        <div class="col-4">
-          <codx-img [width]="180" 
-            [isDefaulImg]="true"
-            [cssClass]="'image-150 w-100'" 
-            imageType="square" 
-            [objectId]="data.recID"
-            objectType="WP_News">
-          </codx-img>
+<ng-template #itemTemplate let-data>  
+    <div (click)="clickViewDetail(data)" class="news-item row my-5">
+        <div class="col-2">
+            <codx-img 
+                [width]="180" 
+                [isDefaulImg]="true" 
+                [cssClass]="'image-125 w-100 cursor-pointer'" 
+                imageType="square"
+                [isDefaulImg]="true"
+                [objectId]="data.recID" 
+                objectType="WP_News">
+            </codx-img>
         </div>
-        <div class="col-8">
+          <div class="col-10">
             <codx-temp-full 
-                [dataItem]="data"
-                [content]="data.subject"
-                [desc]="data.subContent"
-                [date]="data.createdOn" 
-                cardCss="card-template border-bottom px-2 py-3"
-                [resourceObjType]="entityName"
-                [bookmark]="false" 
-                [titleLine]="2"  >
+                [resourceObjType]="entityName" 
+                cardCss="" 
+                [title]="data.subject"
+                [titleCss]="'cursor-pointer news-title'" 
+                [desc]="data.subContent" 
+                [date]="data.createdOn"
+                [bookmark]="false">
             </codx-temp-full>
-        </div>
-      </div>
+          </div>
+    </div>
 </ng-template>

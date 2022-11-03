@@ -24,17 +24,17 @@
 
 <div class="card-body d-flex justify-content-between">
   <div class="meeting" *ngFor="let imgUrl of vllImgUrl; let idx = index">
+    <!-- [disabled]="idx != 0" -->
     <button
-      [disabled]="idx != 0"
-      [class]="idx != 0 ? 'opacity-25' : ''"
-      style="border: none"
+      (click)="changeHost(imgUrl)"
+      [ngClass]="{
+        'opacity-25': idx != 0,
+        'btn-primary': imgUrl == curHost,
+        btn: true,
+        'border-0': true
+      }"
     >
-      <img
-        [src]="'.\\assets\\themes\\ep\\default\\img\\' + imgUrl.icon"
-        alt=""
-        width="50px"
-        height="50px"
-      />
+      <img [src]="baseUrl + imgUrl.icon" alt="" width="50px" height="50px" />
     </button>
   </div>
 </div>

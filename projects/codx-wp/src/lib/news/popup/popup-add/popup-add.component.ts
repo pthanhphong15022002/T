@@ -82,7 +82,6 @@ export class PopupAddComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
     private cache: CacheService,
-    private dmSV: CodxDMService,
     @Optional() dd?: DialogData,
     @Optional() dialogRef?: DialogRef
 
@@ -99,35 +98,34 @@ export class PopupAddComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getMessage("SYS009")
     this.setDataDefault();
   }
 
 
   setDataDefault() {
-    this.cache.valueList('L1901').subscribe((vll: any) => {
-      let modShare = vll.datas.find((x: any) => x.value == this.SHARECONTROLS.EVERYONE);
-      this.shareIcon = modShare.icon;
-      this.shareText = modShare.text;
-      this.shareControl = this.SHARECONTROLS.EVERYONE;
+    this.cache.valueList('L1901').subscribe((vll: any) => 
+    {
+      if(vll)
+      {
+        let modShare = vll.datas.find((x: any) => x.value == this.SHARECONTROLS.EVERYONE);
+        this.shareIcon = modShare.icon;
+        this.shareText = modShare.text;
+        this.shareControl = this.SHARECONTROLS.EVERYONE;
+      }
     });
-    let formName = "WPParameters";
-    let category = "1";
+    this.cache.message('WP017').subscribe((mssg: any) => {
+      if(mssg?.defaultName){
+        this.messageImage = mssg.defaultName;
+      }
+    });
+    this.cache.message("SYS009").subscribe((mssg: any) => {
+      if(mssg?.defaultName){
+        this.mssgCodeNoty = mssg;
+      }
+    });
     this.initForm();
   }
 
-  getParameterAsync(formName:string, category:string){
-    if(formName && category){
-      this.api.execSv("SYS","ERM.Business.SYS","SettingValuesBusiness","GetParameterAsync",[formName,category])
-      .subscribe((res:any) => {
-        if(res){
-          let jsParam = JSON.parse(res);
-          console.log(jsParam);
-          this.paramerters = res;
-        }
-      })
-    }
-  }
   initForm() {
     this.formGroup = new FormGroup({
       Tags: new FormControl(''),
@@ -139,13 +137,6 @@ export class PopupAddComponent implements OnInit {
       Contents: new FormControl(''),
       AllowShare: new FormControl(false),
       CreatePost: new FormControl(false),
-    });
-  }
-  getMessage(mssCode:string){
-    this.cache.message(mssCode).subscribe((mssg: any) => {
-      if(mssg){
-        this.mssgCodeNoty = mssg;
-      }
     });
   }
   openFormShare(content: any) {
@@ -372,24 +363,13 @@ export class PopupAddComponent implements OnInit {
         }
     });
   }
-
-  PopoverEmpEnter(p: any) {
-    p.open();
-  }
-  PopoverEmpLeave(p: any) {
-    p.close();
-  }
-  removeFile(file) {
-    if (file) {
-      this.fileUpload = [];
-    }
-  }
   addFiles(files: any) {
     if (files && files.data.length > 0) {
       files.data.map(f => {
         if (f.mimeType.indexOf("image") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
           this.fileImage = f;
+          console.log(this.fileImage);
         }
         else if (f.mimeType.indexOf("video") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.VIDEO;
@@ -414,5 +394,19 @@ export class PopupAddComponent implements OnInit {
   }
   clickUploadVideo() {
     this.codxATM.uploadFile();
+  }
+
+  isShowTemplateShare = false;
+  showListShare(shareControl) {
+    if(shareControl == 'U' ||
+      shareControl == 'G' || shareControl == 'R' ||
+      shareControl == 'P' || shareControl == 'D' ||
+      shareControl == 'O') 
+    {
+      this.isShowTemplateShare = !this.isShowTemplateShare;
+    }
+  }
+  closeListShare(){
+      this.isShowTemplateShare = false;;
   }
 }

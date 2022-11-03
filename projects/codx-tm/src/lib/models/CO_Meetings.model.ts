@@ -58,5 +58,8 @@ export class TabControl{
   isActive: boolean;
 }
 
-
+export class TmpRoom{
+  resourceID: string;
+  location: string;
+}
 

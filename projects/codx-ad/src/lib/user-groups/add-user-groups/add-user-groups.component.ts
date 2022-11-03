@@ -201,6 +201,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   }
 
   beforeSave(op: RequestOption) {
+    this.adUserGroup.buid = null;
     var data = [];
     var checkDifference =
       JSON.stringify(this.viewChooseRoleTemp) ===
