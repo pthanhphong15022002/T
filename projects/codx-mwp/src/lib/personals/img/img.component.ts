@@ -66,7 +66,6 @@ export class ImgComponent implements OnInit, AfterViewInit {
     dataSv.request.gridViewName = 'grvFileInfo';
     dataSv.request.entityName = 'DM_FileInfo';
     dataSv.request.formName = 'FileInfo';
-    //dataSv.request.pageSize = 15;
     this.dtService = dataSv;
   }
 

@@ -19,6 +19,7 @@ import { AddSurveyComponent } from './add-survey/add-survey.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
 import { LayoutHomeComponent } from './_layout-home/layout-home.component';
+import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 
 export const routes: Routes = [
   {
@@ -48,6 +49,7 @@ const Component: Type<any>[] = [
   LayoutHomeComponent,
   HomeComponent,
   AddSurveyComponent,
+  PopupUploadComponent,
 ];
 
 @NgModule({
