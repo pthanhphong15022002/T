@@ -323,12 +323,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
                             this.notify.notifyCode('RS002');
                             this.canOpenSubPopup = false;
                           } else {
-                            this.esService.setupChange.next(true);
                             this.canOpenSubPopup = false;
                             this.esService
                               .updateTransAwaitingStatus(this.transRecID, true)
                               .subscribe((updateTransStatus) => {
                                 //that bai
+                                this.esService.setupChange.next(true);
+                                this.esService.statusChange.next(3);
                                 this.notify.notifyCode('ES017');
                               });
                           }
@@ -460,6 +461,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
                     .updateTransAwaitingStatus(this.transRecID, true)
                     .subscribe((updateTransStatus) => {
                       //that bai
+                      this.esService.setupChange.next(true);
+                      this.esService.statusChange.next(3);
                       this.notify.notifyCode('ES017');
                     });
                   this.notify.notifyCode('SYS021');
