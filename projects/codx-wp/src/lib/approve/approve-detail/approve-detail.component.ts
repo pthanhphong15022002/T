@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, VLLPipe } from 'codx-core';
+import { Observable } from 'rxjs';
 import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { WP_News } from '../../models/WP_News.model';
 import { PopupEditComponent } from '../../news/popup/popup-edit/popup-edit.component';
@@ -78,109 +79,10 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
         {
           this.data = res;
           this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          console.log(this.data);
           this.dt.detectChanges();
         }
       });
   }
-  clickUpdatePost(action:string)
-  {
-    if(action)
-    { 
-      let recID = this.data.recID;
-      let funcID = this.funcID;
-      let approveStatus = "";
-      let mssgCode = "";
-      switch(action){
-        case "WPT02121":
-          approveStatus = "5";
-          mssgCode = "WP005";
-          this.notifySvr.alertCode("WP004").subscribe((evt: any) => {
-            if (evt.event.status == 'Y'){
-              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
-            }
-          });
-          break;
-        case "WPT02122":
-          approveStatus = "2";
-          mssgCode = "WP009";
-          this.notifySvr.alertCode("WP008").subscribe((evt: any) => {
-            if (evt.event.status == 'Y'){
-              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
-            }
-          });
-          break;
-        case "WPT02123":
-          approveStatus = "4";
-          mssgCode = "WP007";
-          this.notifySvr.alertCode("WP006").subscribe((evt: any) => {
-            if (evt.event.status == 'Y'){
-              this.updateApprovalSatusAsync(recID,funcID,approveStatus,mssgCode);
-            }
-          });
-          break;
-        default:
-          break;  
-      }
-    }
-  }
-
-  updateApprovalSatusAsync(recID:string,funcID:string,approveStatus:string,mssgCode:string){
-    if(recID && funcID && approveStatus && mssgCode){
-      this.api.execSv(
-        "WP",
-        "ERM.Business.WP",
-        "NewsBusiness",
-        "UpdateAprovalStatusAsync",
-        [recID,funcID,approveStatus])
-        .subscribe((res:boolean) => 
-          {
-            if(res)
-            {
-              let oldValue = this.data.approveStatus;
-              this.data.approveStatus = approveStatus;
-              this.notifySvr.notifyCode("WP005");
-              this.evtUpdateApproval.emit({data:this.data,oldValue:oldValue,newValue:approveStatus});
-              this.dt.detectChanges();
-            }
-          }
-        );
-    }
-  }
-
-  cancelPost(e:any,data:any,approveStatus:any){
-    if(e.event.status == "Y"){
-      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-        (res) => 
-        {
-          if(res)
-          {
-            this.data = null;
-            this.notifySvr.notifyCode("WP007");
-            this.dt.detectChanges();
-          }
-        }
-      );
-    }
-  }
-
-  remakePost(e:any,data:any,approveStatus:any){
-    if(e.event.status == "Y"){
-      this.api.execSv("WP", "ERM.Business.WP","NewsBusiness","ApprovePostAsync",[data.entityName,data.recID,approveStatus]).subscribe(
-        (res) => 
-        {
-          if(res)
-          {
-            this.data = null;
-            this.notifySvr.notifyCode("WP009");
-            this.dt.detectChanges();
-          }
-        }
-      );
-    } 
-  }
-
-
   clickMF(event:any){
     if(event?.functionID){
       let headerText = event.text + " " + this.functionName;
@@ -230,32 +132,53 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
             }
           break;
         case "WPT02121": // duyệt
-            this.api.execSv(this.service,this.assemblyName,this.className,"UpdateAprovalStatusAsync",[this.data.recID, "5"])
-            .subscribe((res:any) => {
-              if(res)
+            this.notifySvr.alertCode("WP004")
+            .subscribe((option:any) =>{
+              if(option?.event?.status == "Y")
               {
-                this.data.approveStatus = "5";
-              this.dataService.update(this.data).subscribe();
+                this.updateApprovalStatus(this.data.recID, "5").subscribe((res:any) => {
+                    if(res)
+                    {
+                      this.data.approveStatus = "5";
+                      this.dataService.update(this.data).subscribe();
+                      this.evtUpdateApproval.emit("5");
+                      this.notifySvr.notifyCode("WP005");
+                    }
+                  });
               }
             });
           break;
         case "WPT02122": // làm lại
-          this.api.execSv(this.service,this.assemblyName,this.className,"UpdateAprovalStatusAsync",[this.data.recID,"2"])
-          .subscribe((res:any) => {
-            if(res)
+          this.notifySvr.alertCode("WP008")
+          .subscribe((option:any) =>{
+            if(option?.event?.status == "Y")
             {
-              this.data.approveStatus = "2";
-              this.dataService.update(this.data).subscribe();
+              this.updateApprovalStatus(this.data.recID, "2").subscribe((res:any) => {
+                  if(res)
+                  {
+                    this.data.approveStatus = "2";
+                    this.dataService.update(this.data).subscribe();
+                    this.evtUpdateApproval.emit("2");
+                    this.notifySvr.notifyCode("WP009");
+                  }
+                });
             }
           });
           break;
         case "WPT02123": // từ chối
-          this.api.execSv(this.service,this.assemblyName,this.className,"UpdateAprovalStatusAsync",[this.data.recID,"4"])
-          .subscribe((res:any) => {
-            if(res)
+          this.notifySvr.alertCode("WP006")
+          .subscribe((option:any) =>{
+            if(option?.event?.status == "Y")
             {
-              this.data.approveStatus = "4";
-              this.dataService.update(this.data).subscribe();
+              this.updateApprovalStatus(this.data.recID, "4").subscribe((res:any) => {
+                  if(res)
+                  {
+                    this.data.approveStatus = "4";
+                    this.dataService.update(this.data).subscribe();
+                    this.evtUpdateApproval.emit("4");
+                    this.notifySvr.notifyCode("WP007");
+                  }
+                });
             }
           });
           break;
@@ -265,6 +188,14 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     }
   }
 
+  updateApprovalStatus(recID:string,approvalStatus):Observable<any>{
+    return this.api.execSv(
+      this.service,
+      this.assemblyName,
+      this.className,
+      "UpdateAprovalStatusAsync",
+      [recID,approvalStatus]);
+  }
   deletedPost(data:any){
     if(!data)return;
     this.dataService.delete(
