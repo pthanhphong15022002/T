@@ -1001,3 +1001,8 @@ codx-tag .codx-tag:hover {
 .user-mini-nav:hover {
   opacity: .75;
 }
+
+/***/
+.request-box .e-richtexteditor .e-rte-content .e-content {
+  max-height: 200px;
+}
