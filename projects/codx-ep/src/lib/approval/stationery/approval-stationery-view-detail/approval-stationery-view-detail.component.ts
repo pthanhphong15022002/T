@@ -97,11 +97,11 @@ export class ApprovalStationeryViewDetailComponent
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
           if (status == '5') {
             this.notificationsService.notifyCode('ES007'); //đã duyệt
-            data.status = '5';
+            data.approveStatus = '5';
           }
           if (status == '4') {
             this.notificationsService.notifyCode('ES007'); //bị hủy
-            data.status = '4';
+            data.approveStatus = '4';
           }
           this.updateStatus.emit(data);
         } else {
@@ -117,7 +117,7 @@ export class ApprovalStationeryViewDetailComponent
           func.disabled=true;        
         }
       });
-      if(data.status=='3'){
+      if(data.approveStatus=='3'){
         event.forEach(func => {
           if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ )
           {

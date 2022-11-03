@@ -12,8 +12,36 @@
                 <span class="text-gray-700 fs-7 ms-2">{{shareText}}</span>
                 <i class="icon-arrow_drop_down icon-16 text-dark"></i>
             </div>
-            <div class="ms-2">
-                <span class="fs-6" [innerHTML]="shareWith"></span>
+            <div class="ms-2 position-relative">
+                <span class="fs-6" [innerHTML]="shareWith" (click)="showListShare(shareControl)"></span>
+                <ng-container *ngIf="isShowTemplateShare">
+                      <div class="position-absolute tmpshare w-250px">
+                        <div class="d-flex justify-content-between">
+                          <codx-label class="fw-bolder text-dark" 
+                            [formModel]="dialogRef.formModel" 
+                            name="lblListShare"
+                            default="Danh sách người được chia sẻ">
+                          </codx-label>
+                          <span class="ms-2" (click)="closeListShare()">
+                            <i class="icon-close"></i>
+                          </span>
+                        </div>
+                        <div class="tmpshare-body">
+                            <ng-container *ngFor="let item of permissions">
+                                <div class="d-flex align-items-center mb-3">
+                                    <codx-img 
+                                        class="me-3" 
+                                        [width]="30" 
+                                        [imageType]="'circle'" 
+                                        [objectId]="item.objectID"
+                                        objectType="AD_Users">
+                                    </codx-img>
+                                    <span class="fw-bolder">{{ item.objectName }}</span>
+                                </div>
+                            </ng-container>
+                        </div>
+                      </div>
+                </ng-container>
             </div>
         </div>
         <button class="btn" (click)="clickClosePopup()">

@@ -37,7 +37,7 @@
       <h3>{{ itemDetail?.title }}</h3>
       <codx-vll
         [name]="'VL003'"
-        [value]="itemDetail?.status"
+        [value]="itemDetail?.approveStatus"
         [showText]="true"
         [showBgColor]="true"
         class="badge badge-light badge-square badge-md fs-7 p-2"
@@ -306,7 +306,7 @@
     >
       <codx-vll
         [name]="'L0614'"
-        [value]="data?.status"
+        [value]="data?.approveStatus"
         [showText]="true"
         [showBgColor]="false"
       ></codx-vll>

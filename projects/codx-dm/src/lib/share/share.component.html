@@ -10,7 +10,7 @@
 
                 <a *ngIf="this.type == 'file'" (click)="copyPath()" matTooltip="copy link" alt="copy link"
                     class="btn btn-icon btn-md btn-light-primary">
-                    <span class="icon-file_copy text-gray-600 icon-20"></span>
+                    <span class="icon-file_copy text-gray-600 icon-16"></span>
                 </a>
             </div>
             <div class="request-to mt-4">
@@ -198,8 +198,8 @@
             </div>
             <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-2 mt-6">
                 <div class="text-dark-75">
-                    <codx-label [fiedName]="'isShare'" [formModel]="formModel" default="Cho phép chia sẻ lại cho người khác?"
-                        class="ms-1 fw-bold"></codx-label>
+                    <codx-label [fiedName]="'isShare'" [formModel]="formModel"
+                        default="Cho phép chia sẻ lại cho người khác?" class="ms-1 fw-bold"></codx-label>
                 </div>
                 <div class="d-flex">
                     <span class="switch switch-sm mr-2">
