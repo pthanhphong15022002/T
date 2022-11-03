@@ -55,19 +55,6 @@ export class CarDashboardComponent implements OnInit {
             item.text = item.percent.toString() + '%';
           });
         }
-        // if (this.statDayOfWeek.length > 0) {
-        //   this.statDayOfWeek.forEach((item) => {
-        //     item.statdata.forEach((i) => {
-        //       i.count = Math.floor(Math.random() * 70);
-        //     });
-        //   });
-        // }
-        // if (this.statUsedHoursOfResource.length > 0) {
-        //   this.statUsedHoursOfResource.forEach((item) => {
-        //     item.percent = Math.floor(Math.random() * 15);
-        //     item.text = item.percent.toString() + '%';
-        //   });
-        // }
         if (this.statEffenciencyOfResource.length > 0) {
           this.statEffenciencyOfResource.forEach((item) => {
             item.percent = Math.floor(Math.random() * 65);

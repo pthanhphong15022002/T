@@ -344,6 +344,10 @@ export class CodxTMService {
     );
   }
 
+  getResourcesTrackEvent(data, startDate, endDate){
+    return this.api.execSv<any>('CO','CO','MeetingsBusiness','AddResourcesEventAsync',[data,startDate,endDate]);
+  }
+
   convertListToObject(
     list: Array<object>,
     fieldName: string,

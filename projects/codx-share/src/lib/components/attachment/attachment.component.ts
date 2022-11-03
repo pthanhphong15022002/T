@@ -394,7 +394,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     this.cache.message(this.codeMaxFileSize).subscribe((item) => {
       if (item != null) {
-        this.titleMaxFileSiate = item.defaultName;
+        this.titleMaxFileSiate = item.customName;
       }
     });
 
@@ -405,13 +405,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     this.cache.message(this.codetitle).subscribe((item) => {
       if (item != null) {
-        this.title = item.defaultName;
+        this.title = item.customName;
       }
     });
 
     this.cache.message(this.codetitle2).subscribe((item) => {
       if (item != null) {
-        this.title2 = item.defaultName;
+        this.title2 = item.customName;
       }
     });
 
@@ -596,7 +596,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     for (var i = 0; i < total; i++) {
       // upload file uri from Mr Long
     }
-
+    this.fileUploadList[0].avatar = null;
     this.atSV.fileListAdded = [];
     return this.addFileObservable(this.fileUploadList[0]);
     //return this.onMultiFileSaveObservable();
@@ -610,8 +610,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
     await this.dmSV.getToken();
     let ret = new Observable<any[]>();
     for (var i = 0; i < total; i++) {
-      this.fileUploadList[i].objectID = this.objectId;
+      if(this.objectId)
+        this.fileUploadList[i].objectID = this.objectId;
       // await this.serviceAddFile(fileItem);
+      this.fileUploadList[i].avatar = null;
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
           this.fileUploadList[i],
@@ -781,7 +783,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     for (var i = 0; i < total; i++) {
       this.fileUploadList[i].objectID = this.objectId;
       this.fileUploadList[i].description = this.description[i];
-
+      this.fileUploadList[i].avatar = null;
       toltalUsed += this.fileUploadList[i].fileSize;
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
@@ -2832,12 +2834,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         files[i].size >= this.maxFileSizeUpload &&
         this.maxFileSizeUpload != 0
       ) {
-        var mess = this.titleMaxFileSiate.replace('{0}', files[i].name);
-        mess = this.titleMaxFileSiate.replace(
-          '{1}',
-          this.maxFileSizeUploadMB.toString()
-        );
-        this.notificationsService.notify(mess);
+        this.notificationsService.notifyCode("DM057",0,files[i].name,this.maxFileSizeUploadMB);
         break;
       }
 
@@ -2860,9 +2857,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.description = files[i].description; //
 
         var type = files[i].type.toLowerCase();
-        fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
-          fileUpload.fileName
-        )}`;
+        if (type == 'png' || type == 'jpg' || type == 'bmp') {
+          fileUpload.avatar = data;
+        } else
+          fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
+            fileUpload.fileName
+          )}`;
         fileUpload.extension =
           files[i].name.substring(
             files[i].name.lastIndexOf('.'),

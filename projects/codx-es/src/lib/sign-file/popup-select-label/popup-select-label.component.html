@@ -23,17 +23,28 @@
           </codx-input>
         </div>
       </div>
+      <ng-container *ngIf="lstFile">
+        <div class="imgs d-flex me-4 mb-4 w-250px h-250px border rounded-4 align-items-center flex-center"
+        *ngFor="let label of lstFile; let idx = index">
+        <div class="img d-flex flex-column  text-center ">
+          <img style="max-width: 200px;" [src]="label.avatar" />
+          <codx-input type="radio" name="radio" labelPosition="Before" [disabled]="false" value="radio"
+            (valueChange)="changeLabel(label)">
+          </codx-input>
+        </div>
+      </div>
+      </ng-container>
     </div>
   </div>
   <div class="ok-btn d-flex justify-content-end align-self-end popup-footer">
-    <!-- <codx-attachment #attachment [objectType]="'ES_SignFiles'" hideBtnSave="0" hideFolder="1" hideUploadBtn="1"
+    <codx-attachment #attachment [objectType]="'ES_SignFiles'" hideBtnSave="0" hideFolder="1" hideUploadBtn="1"
       hideDes="1" hideImageUpload="1" hideImageThumb="1" [functionID]="funcID" [allowExtensions]="'.png, .jpg'"
       [allowMultiFile]="1" [idBrowse]="'add'" [fdID]="folderID" [fdName]="folderName" [parentID]="parentID"
       [objectId]="" (fileAdded)="fileAdded($event)" (fileCount)="fileSave($event)">
     </codx-attachment>
     <button type="button" class="btn btn-light-primary me-3" (click)="popupUploadFile()">
       <codx-label name="lblAttachFiles" default="Đính kèm" [formModel]=""></codx-label>
-    </button> -->
+    </button>
     <button type="button" class="btn btn-primary" (click)="closePopUp(true)">
       <codx-label name="lblChooseStamp" default="OK"></codx-label>
     </button>

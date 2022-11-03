@@ -133,7 +133,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       changes.data?.previousValue?.recID != changes.data?.currentValue?.recID
     ) {
       this.userID = this.authStore.get().userID;
-      debugger;
       this.data = changes.data?.currentValue;
       if (!this.data) this.data = {};
       //this.getDataValuelist();
@@ -427,6 +426,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null) {
+    debugger;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
     else {
@@ -835,7 +835,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       //Gửi duyệt
-      case 'ODT201': {
+      case 'ODT201':
+      case "ODT3001" : {
         if (datas.bsCategory) {
           //Có thiết lập bước duyệt
           if (datas.bsCategory.approval) {

@@ -287,43 +287,44 @@
  <ng-container *ngIf="data?.linkss">
   <div *ngFor="let item of data?.linkss">
     <codx-temp-full 
-    [title]="item[0]?.title" [desc]="
+    [title]="item.oDis?.title" [desc]="
       convertHtmlAgency(
-        item[0].agencyName,
+        item.oDis.agencyName,
         this.gridViewSetup?.AgencyName?.headerText
       )
     "
     cardCss="card-template border-bottom px-2 pt-4 pb-2" 
-    [icoStatus]="item[0]?.urgency"
-    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item[0]?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="item[0].isBookmark"
-    [titleLine]="2" [icoDateCss]="checkDeadLine(item[0]?.deadline)" [dataItem]="item[0]"
+    [icoStatus]="item.oDis?.urgency"
+    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item.oDis?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="item.oDis.isBookmark"
+    [titleLine]="2" [icoDateCss]="checkDeadLine(item.oDis?.deadline)" [dataItem]="item"
     [footer]="footerTmp"
     [moreFuncCss]="'me-10'"
     >
-  </codx-temp-full>
+    </codx-temp-full>
+   
   </div>
  </ng-container>
 </ng-template>
 <ng-template #footerTmp let-data>
   <div  class="d-flex flex-wrap justify-content-between ">
     <div class="d-flex align-items-center">
-      <codx-vll [value]="data.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+      <codx-vll [value]="data.oDis.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
       </codx-vll>
 
-      <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41'" [value]="data.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+      <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41'" [value]="data.oDis.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
       </codx-vll>
       <div class="d-flex align-items-center">
-        <span class="me-1 icon-16" [ngClass]="checkDeadLine(data?.deadline)"></span>
-        <span class="text-dark-50">{{data.createdOn | amDateFormat: (''||'L')}}</span>
+        <span class="me-1 icon-16" [ngClass]="checkDeadLine(data.oDis?.deadline)"></span>
+        <span class="text-dark-50">{{data.oDis.createdOn | amDateFormat: (''||'L')}}</span>
       </div>
     </div>
-    <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'"
+    <codx-imgs [objectId]="getIdUser(data.oDis.createdBy, data.oDis.owner)" [objectType]="'AD_Users'"
       [width]="30" [numberImages]="3" [mode]="false">
     </codx-imgs>
   </div>
-  <ng-container *ngIf="data && data?.files">
-    <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'"
+  <ng-container *ngIf="data?.filess">
+    <codx-thumbnail [files]="data?.filess" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'"
       (viewFile)="handleViewFile($event)">
     </codx-thumbnail>
   </ng-container>

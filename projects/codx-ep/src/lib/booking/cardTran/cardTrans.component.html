@@ -10,11 +10,11 @@
   [className]="className"
   [method]="method"
   (onLoading)="onLoading($event)" 
-  [viewActiveType]="viewType.grid"
+  [viewActiveType]="viewType.grid"  
+  (buttonClick)="click($event)"
 >
 
 </codx-views>
-    
 <ng-template #tranTypeCol let-data>
   <div class="">
     <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP019'" [value]="data?.transType"
@@ -28,8 +28,12 @@
   </div>    
 </ng-template>
 <ng-template #userIDCol let-data>
-  <div class="h-50px m-4">
+  
+  <div class="h-50px d-flex has-action-menu align-items-center">
     <codx-img [objectId]="data?.userID" objectType="AD_Users"></codx-img>
+    <div class="ms-2">
+      <div class="fw-bold">{{ data?.userName }}</div>
+    </div>    
   </div>
   
 </ng-template>
@@ -38,7 +42,7 @@
   <div class="d-flex has-action-menu align-items-center">
     <codx-img [objectId]="data?.createdBy" objectType="AD_Users"></codx-img>
     <div class="ms-2">
-      <div class="fw-bold">{{ data?.createdByName }}</div>
+      <div class="fw-bold">{{ data?.createdName }}</div>
     </div>    
   </div>
-</ng-template> 
+</ng-template>

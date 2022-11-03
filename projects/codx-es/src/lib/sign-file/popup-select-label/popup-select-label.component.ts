@@ -44,6 +44,7 @@ export class PopupSelectLabelComponent extends UIComponent {
   folderID = 'label';
   folderName = 'Nhãn đính kèm'; //chị Thương kêu gắn cứng đi em, chị lo
   parentID = 'EST011';
+  lstFile = [];
   onInit(): void {
     this.title = this.data.title;
     this.labels = this.data.labels;
@@ -51,12 +52,14 @@ export class PopupSelectLabelComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   async closePopUp(isComplete) {
-    if (isComplete) {
-      this.dialog.close(this.curLabel);
-      (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        console.log('saved file', res);
-      });
-    } else this.dialog.close(null);
+    this.dialog.close(this.curLabel);
+
+    // if (isComplete) {
+    //   this.dialog.close(this.curLabel);
+    //   (await this.attachment.saveFilesObservable()).subscribe((res) => {
+    //     console.log('saved file', res);
+    //   });
+    // } else this.dialog.close(null);
   }
 
   changeLabel(e: any) {
@@ -68,7 +71,9 @@ export class PopupSelectLabelComponent extends UIComponent {
   }
 
   fileAdded(e) {
-    console.log('add event', e);
+    debugger;
+    if(e?.data)
+      this.lstFile = e?.data
   }
 
   fileSave(e) {

@@ -1,14 +1,14 @@
 <codx-views #view 
-[entityName]="entityName" 
-idField="recID" 
-[views]="views" 
-[selectedFirst]="true" 
-[service]="'WP'"
-[assemblyName]="'ERM.Business.WP'" 
-[className]="'NewsBusiness'" 
-[method]="'GetDataApprovalAsync'" 
-(selectedChange)="selectedChange($event)"
-(buttonClick)="clickBtnAdd()">
+  [entityName]="entityName" 
+  idField="recID" 
+  [views]="views" 
+  [service]="'WP'"
+  [assemblyName]="'ERM.Business.WP'" 
+  [className]="'NewsBusiness'" 
+  [method]="'GetDataApprovalAsync'" 
+  [selectedFirst]="true" 
+  (selectedChange)="selectedChange($event)"
+  (buttonClick)="clickBtnAdd()">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -24,11 +24,14 @@ idField="recID"
   </ul>
 </ng-template>
 <ng-template #panelRightRef>
-  <div class="py-3 news-appr-right">
-    <approve-view-detail [objectID]="selectedID" [entityName]="entityName" [dataService]="view.dataService"
-      [funcID]="funcID" (evtUpdateApproval)="updateApprovePost($event)" [formModel]="view.formModel">
+    <approve-view-detail 
+      [objectID]="selectedID" 
+      [entityName]="entityName" 
+      [dataService]="view.dataService"
+      [funcID]="view.funcID" 
+      (evtUpdateApproval)="realoadData($event)" 
+      [formModel]="view.formModel">
     </approve-view-detail>
-  </div>
 </ng-template>
 <ng-template #tmpEmpty>
   <div class="w-100 h-100">
