@@ -531,24 +531,6 @@
                         "
                         [formGroup]="formAnnot"
                       >
-                        <!-- <div
-                          class="qr-switch"
-                          *ngIf="!isApprover && area.labelType == 8"
-                        >
-                          <codx-input
-                            class="form-control me-2"
-                            type="switch"
-                            [crrValue]="renderQRAllPage"
-                            (valueChange)="changeQRRenderState($event)"
-                          >
-                            <codx-label
-                              name="lblSave"
-                              default="Lặp lại cho tất cả các trang"
-                              [formModel]=""
-                            >
-                            </codx-label>
-                          </codx-input>
-                        </div> -->
                         <div
                           class="text-content form-control my-2 ms-12"
                           *ngIf="area.labelType == 6"
@@ -746,7 +728,9 @@
                             type="button"
                             class="btn btn-sm btn-primary"
                             *ngIf="
-                              imgConfig.includes(area.labelType) && !isPublic
+                              isEditable &&
+                              imgConfig.includes(area.labelType) &&
+                              !isPublic
                             "
                             (click)="changeSignature_StampImg(area)"
                           >
@@ -760,7 +744,9 @@
                             type="button"
                             class="btn btn-sm btn-primary"
                             *ngIf="
-                              imgConfig.includes(area.labelType) && isPublic
+                              isEditable &&
+                              imgConfig.includes(area.labelType) &&
+                              isPublic
                             "
                             (click)="changeSignature_StampImg_Public(area)"
                           >
@@ -771,7 +757,9 @@
                             ></codx-label>
                           </button>
                           <button
-                            *ngIf="!imgConfig.includes(area.labelType)"
+                            *ngIf="
+                              isEditable && !imgConfig.includes(area.labelType)
+                            "
                             type="button"
                             class="btn btn-sm btn-primary"
                             (click)="changeAnnotPro(area.labelType, area.recID)"
