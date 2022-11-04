@@ -107,6 +107,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.formGroup = data?.data?.formGroup;
     this.templateID = data?.data?.templateID;
+    this.methodEdit = data?.data?.methodEdit ?? false;
     console.log(this.templateID);
 
     this.cache.valueList('ES014').subscribe((res) => {

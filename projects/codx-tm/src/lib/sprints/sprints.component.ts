@@ -375,4 +375,23 @@ export class SprintsComponent extends UIComponent {
     //if (value) {
     return of(`<span class="cut-size-long">${value}</span>`);
   }
-}
+
+  // placeholderIcon(value: any,formModel: FormModel,field: string): Observable<string> {
+  //     return this.cache
+  //       .gridViewSetup(formModel.formName, formModel.gridViewName)
+  //       .pipe(
+  //         map((datas) => {
+  //           if (datas && datas[field]) {
+  //             var gvSetup = datas[field];
+  //             if (gvSetup) {
+  //                 var headerText = gvSetup.headerText as string;
+  //                 let icon = value ?'icon-share text-primary text-hover-primary icon-20 m-2' :''
+  //                 return icon;
+  //             }
+  //           }
+  //         })
+  //       );
+  //   }
+  } 
+
+

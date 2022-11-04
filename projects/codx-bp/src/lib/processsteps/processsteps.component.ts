@@ -87,7 +87,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFunc = [];
   formModelMenu :FormModel ;
   vllInterval ='VL004' ;
-  dataFile : any
+  dataFile : any;
+  crrParentID =''
 
   constructor(
     inject: Injector,
@@ -356,7 +357,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         );
         if (indexChild != -1) {
           dataParents.items[indexChild] = processStep;
-          if(kanban)kanban.updateCard(obj.items[index])
+          if(kanban)kanban.updateCard(dataParents)
         }
         obj.items[index] = dataParents;
       }
@@ -554,10 +555,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       case 'drop':
         this.onDragDrop(e.data);
         break;
+      case 'drag':
+          this.crrParentID = e?.data?.parentID
+          break;
     }
   }
 
   onDragDrop(data) {
+    if(this.crrParentID == data?.parentID) return
     this.bpService
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
@@ -603,7 +608,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   dropPhase(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
-    var ps = this.dataTreeProcessStep[event.previousIndex];
+    var ps = this.view.dataService.data[event.previousIndex];
     if (ps) {
       this.bpService
         .updateStepNo([ps.recID, event.currentIndex])
@@ -611,9 +616,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           if (res) {
             var stepNoNew = event.currentIndex + 1;
             var stepNoOld = ps.stepNo;
-            this.dataTreeProcessStep[event.previousIndex].stepNo = stepNoNew;
+            this.view.dataService.data[event.previousIndex].stepNo = stepNoNew;
             if (stepNoOld > stepNoNew) {
-              this.dataTreeProcessStep.forEach((obj) => {
+              this.view.dataService.data.forEach((obj) => {
                 if (
                   obj.recID != ps.recID &&
                   obj.stepNo >= stepNoNew &&
@@ -623,7 +628,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 }
               });
             } else {
-              this.dataTreeProcessStep.forEach((obj) => {
+              this.view.dataService.data.forEach((obj) => {
                 if (
                   obj.recID != ps.recID &&
                   obj.stepNo <= stepNoNew &&
@@ -635,7 +640,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             }
 
             moveItemInArray(
-              this.dataTreeProcessStep,
+              this.view.dataService.data,
               event.previousIndex,
               event.currentIndex
             );
@@ -645,7 +650,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               event.currentIndex
             );
 
-            this.view.dataService.data = this.dataTreeProcessStep;
+           
+            this.dataTreeProcessStep = this.view.dataService.data;
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
           } else {
@@ -657,9 +663,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   dropStepChild(event: CdkDragDrop<string[]>, currentID) {
     if (event.previousIndex == event.currentIndex) return;
-    var index = this.dataTreeProcessStep.findIndex((x) => x.recID == currentID);
+    var index = this.view.dataService.data.findIndex((x) => x.recID == currentID);
     if (index == -1) return;
-    this.dataChild = this.dataTreeProcessStep[index].items;
+    this.dataChild = this.view.dataService.data[index].items;
 
     var ps = this.dataChild[event.previousIndex];
     if (ps) {
@@ -697,9 +703,16 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               event.currentIndex
             );
 
-            this.dataTreeProcessStep[index].items = this.dataChild;
-            this.view.dataService.data = this.dataTreeProcessStep;
-
+            this.view.dataService.data[index].items = this.dataChild;
+            this.dataTreeProcessStep = this.view.dataService.data;
+            //up kanban
+            let kanban = (this.view.currentView as any).kanban;
+            if(kanban){
+              this.dataChild.forEach(obj=>{
+              kanban.updateCard(obj)
+              })
+            }
+           
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
           } else {
@@ -712,17 +725,17 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   dropChildToParent(event: CdkDragDrop<string[]>, crrParentID) {
     var psMoved = event.item?.data;
 
-    var indexPrevious = this.dataTreeProcessStep.findIndex(
+    var indexPrevious =  this.view.dataService.data.findIndex(
       (x) => x.recID == psMoved.parentID
     );
     if (indexPrevious == -1) return;
-    var previousDataChild = this.dataTreeProcessStep[indexPrevious].items;
+    var previousDataChild =  this.view.dataService.data[indexPrevious].items;
 
-    var indexCrr = this.dataTreeProcessStep.findIndex(
+    var indexCrr =  this.view.dataService.data.findIndex(
       (x) => x.recID == crrParentID
     );
     if (indexCrr == -1) return;
-    var crrDataChild = this.dataTreeProcessStep[indexCrr].items;
+    var crrDataChild =  this.view.dataService.data[indexCrr].items;
     var stepNoNew = crrDataChild.length > 0 ? event.currentIndex + 1 : 1;
     var stepNoOld = psMoved.stepNo;
 
@@ -755,9 +768,18 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               return a.stepNo - b.stepNo;
             });
 
-            this.dataTreeProcessStep[indexPrevious].items = previousDataChild;
-            this.dataTreeProcessStep[indexCrr].items = crrDataChild;
-            this.view.dataService.data = this.dataTreeProcessStep;
+            this.view.dataService.data[indexPrevious].items = previousDataChild;
+            this.view.dataService.data[indexCrr].items = crrDataChild;
+            this.dataTreeProcessStep = this.view.dataService.data;
+
+             //up kanban
+             let kanban = (this.view.currentView as any).kanban;
+             if(kanban){
+               var arrDataUpdate = previousDataChild.concat(crrDataChild) ;
+               arrDataUpdate.forEach(obj=>{
+                kanban.updateCard(obj)
+               })
+             }
 
             // transferArrayItem(
             //   event.previousContainer.data,
