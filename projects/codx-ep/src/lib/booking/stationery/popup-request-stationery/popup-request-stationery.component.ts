@@ -319,7 +319,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
                     .subscribe((res) => {
                       if (res?.msgCodeError == null && res?.rowCount >= 0) {
                         this.notificationsService.notifyCode('ES007');
-                        item.status = '3';
+                        item.approveStatus = '3';
                         item.write = false;
                         item.delete = false;
                         (this.dialog.dataService as CRUDService)

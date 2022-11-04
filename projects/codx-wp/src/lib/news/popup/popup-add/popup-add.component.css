@@ -21,7 +21,10 @@ div.e-content.e-lib {
 
 .add-video {
     height: calc(100vh - 178px) !important;
+    display: flex;
+    align-items: center;
 }
+
 .tmpshare {
     background-color: #fff;
     right: 0px;

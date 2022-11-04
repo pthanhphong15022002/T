@@ -498,7 +498,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.stopOn = this.data.endDate;
     this.data.bookingOn = this.data.startDate;
     this.data.category = '2';
-    this.data.status = '1';
+    this.data.approveStatus = '1';
     this.data.resourceType = '2';
     this.data.attendees= this.attendeesList.length;
 
@@ -539,7 +539,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   .subscribe((res) => {
                     if (res?.msgCodeError == null && res?.rowCount) {
                       this.notificationsService.notifyCode('ES007');
-                      this.returnData.status = '3';
+                      this.returnData.approveStatus = '3';
                       this.returnData.write = false;
                       this.returnData.delete = false;
                       (this.dialogRef.dataService as CRUDService)

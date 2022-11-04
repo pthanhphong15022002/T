@@ -44,6 +44,7 @@ export class PopupSelectLabelComponent extends UIComponent {
   folderID = 'label';
   folderName = 'Nhãn đính kèm'; //chị Thương kêu gắn cứng đi em, chị lo
   parentID = 'EST011';
+  lstFile = [];
   onInit(): void {
     this.title = this.data.title;
     this.labels = this.data.labels;
@@ -70,7 +71,9 @@ export class PopupSelectLabelComponent extends UIComponent {
   }
 
   fileAdded(e) {
-    console.log('add event', e);
+    debugger;
+    if(e?.data)
+      this.lstFile = e?.data
   }
 
   fileSave(e) {

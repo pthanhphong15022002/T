@@ -319,6 +319,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                               mode: mode,
                             };
                             this.esService.setupChange.next(true);
+                            this.esService.statusChange.next(mode);
                             this.notify.notifyCode('RS002');
                             this.canOpenSubPopup = false;
                           } else {
@@ -327,6 +328,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
                               .updateTransAwaitingStatus(this.transRecID, true)
                               .subscribe((updateTransStatus) => {
                                 //that bai
+                                this.esService.setupChange.next(true);
+                                this.esService.statusChange.next(3);
                                 this.notify.notifyCode('ES017');
                               });
                           }
@@ -432,10 +435,12 @@ export class PopupSignForApprovalComponent extends UIComponent {
                           result: true,
                           mode: mode,
                         };
+                        this.esService.statusChange.next(mode);
                         this.esService.setupChange.next(true);
                         this.notify.notifyCode('RS002');
                         this.canOpenSubPopup = false;
                       } else {
+                        this.esService.setupChange.next(true);
                         this.canOpenSubPopup = false;
                         let result = {
                           result: false,
@@ -456,6 +461,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
                     .updateTransAwaitingStatus(this.transRecID, true)
                     .subscribe((updateTransStatus) => {
                       //that bai
+                      this.esService.setupChange.next(true);
+                      this.esService.statusChange.next(3);
                       this.notify.notifyCode('ES017');
                     });
                   this.notify.notifyCode('SYS021');
