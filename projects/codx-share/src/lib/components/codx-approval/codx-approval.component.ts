@@ -69,9 +69,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     private esService: CodxEsService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {}
-  ngOnInit(): void {
- 
-  }
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -250,6 +248,12 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             data.status = x.event?.mode;
             this.view.dataService.update(data).subscribe();
             this.esService.setupChange.next(true);
+            this.esService.isStatusChange.subscribe((res) => {
+              if (res != null) {
+                data.status = res;
+                this.view.dataService.update(data).subscribe();
+              }
+            });
           }
 
           /*return {

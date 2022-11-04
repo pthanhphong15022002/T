@@ -15,7 +15,7 @@
   [autoLoad]="true"
   [idField]="idField"
   (requestEnded)="closeAddForm($event)"
-  
+  [viewActiveType]="viewType.listdetail"
 >
 </codx-views>
 
@@ -82,8 +82,8 @@
     'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
   "
   [hideMF]=""
-  [status]="data?.status"
-  [statusVll]="'VL003'"
+  [status]="data?.approveStatus"
+  [statusVll]="'EP022'"
   [date]="data?.createdOn"
   [imageId]="data?.createdBy"
   imageObjType="AD_Users"

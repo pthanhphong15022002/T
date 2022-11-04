@@ -56,6 +56,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   dataSelected: any;
   dialog!: DialogRef;
   tempReasonName = '';
+  viewType = ViewType;
 
   constructor(
     private injector: Injector,
@@ -141,7 +142,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
-          statusColorRef: 'vl003',
+          statusColorRef: 'EP022',
         },
       },
     ];
@@ -189,11 +190,11 @@ export class ApprovalRoomsComponent extends UIComponent {
       if (res?.msgCodeError == null && res?.rowCount>=0) {
         if(status=="5"){
           this.notificationsService.notifyCode('ES007');//đã duyệt
-          data.status="5"
+          data.approveStatus="5"
         }
         if(status=="4"){
           this.notificationsService.notifyCode('ES007');//bị hủy
-          data.status="4";
+          data.approveStatus="4";
         }                          
         this.view.dataService.update(data).subscribe();
       } else {
@@ -210,7 +211,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           func.disabled=true;        
         }
       });
-      if(data.status=='3'){
+      if(data.approveStatus=='3'){
         event.forEach(func => {
           if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/ )
           {

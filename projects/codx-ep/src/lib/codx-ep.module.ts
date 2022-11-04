@@ -48,6 +48,7 @@ import { HistoryCardsComponent } from './settings/historyCards/historyCards.comp
 import { CardTransComponent } from './booking/cardTran/cardTrans.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { PopupUpdateQuantityComponent } from './settings/stationery/popup-update-quantity/popup-update-quantity.component';
+import { PopupAddCardTransComponent } from './booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
 
 const routes: Route[] = [
   {
@@ -168,6 +169,7 @@ const Components: Type<any>[] = [
   BookingCarViewDetailComponent,
   CardTransComponent,
   PopupUpdateQuantityComponent,
+  PopupAddCardTransComponent,
 ];
 
 @NgModule({
