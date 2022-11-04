@@ -10,6 +10,7 @@ import {
   AuthStore,
   CodxListviewComponent,
   CRUDService,
+  DialogData,
   DialogRef,
   UIComponent,
 } from 'codx-core';
@@ -27,17 +28,20 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
   dataValue: any;
   dtService: any;
+  data: any;
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('ATM_Image') ATM_Image: CodxListviewComponent;
   constructor(
     private injector: Injector,
     private dialogRef: DialogRef,
+    private dt: DialogData,
     private auth: AuthStore,
     private change: ChangeDetectorRef,
   ) {
     super(injector);
     this.dialog = dialogRef;
     this.user = auth.get();
+    this.data = dt.data;
     this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
     var dataSv = new CRUDService(injector);
     dataSv.request.gridViewName = 'grvFileInfo';

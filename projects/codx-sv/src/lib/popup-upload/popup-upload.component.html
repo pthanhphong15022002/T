@@ -1,9 +1,4 @@
-<codx-form
-  headerText="Chọn hình ảnh"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
->
+<codx-form headerText="Chọn hình ảnh" [body]="body" [dialog]="dialog">
   <ng-template #body>
     <ejs-tab headerPlacement="Top">
       <e-tabitems>
@@ -24,18 +19,15 @@
           </ng-template>
           <ng-template #content class="pd-t-20">
             <codx-attachment
-              #ATM_Image
+              #attachment
               [objectType]="functionList?.entityName"
-              [hideFolder]="'1'"
-              [hideUploadBtn]="'0'"
-              [hideDes]="'1'"
-              [type]="'inline'"
-              allowExtensions=".jpg,.png"
-              [allowMultiFile]="'0'"
-              [hideImageUpload]="'0'"
-              [hideBtnSave]="'1'"
-              [hideImageThumb]="'1'"
-              [showMessage]="'0'"
+              hideImageUpload="0"
+              [objectId]="data.recID"
+              hideBtnSave="1"
+              hideFolder="1"
+              hideUploadBtn="0"
+              [functionID]="functionList?.functionID"
+              type="inline"
             >
             </codx-attachment>
           </ng-template>
@@ -62,6 +54,11 @@
               service="DM"
             >
             </codx-listview>
+            <div class="d-flex justify-content-end" #footer>
+              <button type="button" class="btn btn-primary" (click)="onSave()">
+                <codx-label fiedName="Save" default="Chèn ảnh"></codx-label>
+              </button>
+            </div>
 
             <ng-template #templateListCard let-item>
               <codx-card-img
@@ -77,17 +74,9 @@
               <span
                 class="icon-check text-white default icon-16 icon-checked"
                 *ngIf="item?.isChoose"
-              ></span>
-            </ng-template> </ng-template
+              ></span> </ng-template></ng-template
         ></e-tabitem>
       </e-tabitems>
     </ejs-tab>
-  </ng-template>
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSave()">
-        <codx-label fiedName="Save" default="Lưu"></codx-label>
-      </button>
-    </div>
   </ng-template>
 </codx-form>
