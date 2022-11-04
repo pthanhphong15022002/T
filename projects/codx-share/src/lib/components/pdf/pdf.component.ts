@@ -824,10 +824,10 @@ export class PdfComponent
             }
           }
         });
-        let lstCAOnPage = this.lstCA.filter(
+        let lstCAOnPage = this.lstCA?.filter(
           (childCA) => childCA.signedPosPage == e.pageNumber
         );
-        lstCAOnPage.forEach((ca, idx) => {
+        lstCAOnPage?.forEach((ca, idx) => {
           let caW =
             ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
           let caH =
