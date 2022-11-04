@@ -448,7 +448,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             resource += element.objectName + ', ';
           });
           if(resource != ''){
-            resource = resource.substring(0,resource.length-1);
+            resource = resource.substring(0,resource.length-2);
           }
           this.notiService
               .alertCode('TM063', null, '"' + resource + '"')
@@ -481,11 +481,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       if (this.action === 'add' || this.action === 'copy') this.onAdd();
       else this.onUpdate();
     }
-  }
-
-  toTimeSpan(t) {
-    var time = new Date(t).toLocaleTimeString();
-    return time;
   }
 
   //#region check dieu kien khi add meeting
