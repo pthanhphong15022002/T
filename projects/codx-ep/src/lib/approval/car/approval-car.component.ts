@@ -51,6 +51,8 @@ export class ApprovalCarsComponent extends UIComponent {
   dataSelected: any;
   dialog!: DialogRef;
   formModel: FormModel;
+  viewType = ViewType;
+  
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,

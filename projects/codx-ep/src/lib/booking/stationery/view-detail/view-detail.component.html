@@ -41,7 +41,9 @@
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
-          {{ itemDetail?.orgUnitName }}
+          {{
+            itemDetail.orgUnitName ? itemDetail.orgUnitName : itemDetail.buid
+          }}
         </span>
       </div>
     </div>

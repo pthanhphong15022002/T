@@ -57,7 +57,9 @@
         </codx-label>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.buid }}
+          {{
+            itemDetail.orgUnitName ? itemDetail.orgUnitName : itemDetail.buid
+          }}
         </span>
       </div>
     </div>
