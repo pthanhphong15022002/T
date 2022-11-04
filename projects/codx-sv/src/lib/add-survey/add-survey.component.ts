@@ -315,10 +315,27 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     // let option = new DialogModel();
     // option.DataService = this.view?.currentView?.dataService;
     // option.FormModel = this.view?.currentView?.formModel;
+    this.generateGuid();
     var obj = {
       formModel: this.functionList,
-    }
-    this.callfc.openForm(PopupUploadComponent, '', 900, 600, '', '', '');
+      recID: this.guidID,
+    };
+    var dialog = this.callfc.openForm(
+      PopupUploadComponent,
+      '',
+      900,
+      600,
+      '',
+      obj,
+      ''
+    );
+    dialog.closed.subscribe((res) => {
+      debugger
+      if (res) {
+        this.lstEditIV = res;
+      }
+    });
+    this.change.detectChanges();
   }
 
   async selectedImage(e, attachmentEle) {

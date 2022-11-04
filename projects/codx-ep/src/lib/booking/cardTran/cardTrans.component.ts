@@ -42,14 +42,15 @@ export class CardTransComponent
     private callFuncService: CallFuncService,
   ) {
     super(injector);
+    
+  }
+  onInit(): void {
     this.funcID = this.router.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.popupTitle = res.defaultName.toString();
       }
     });
-  }
-  onInit(): void {
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;        

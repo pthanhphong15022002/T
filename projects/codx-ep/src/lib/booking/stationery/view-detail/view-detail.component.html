@@ -13,7 +13,7 @@
     <div class="d-flex justify-content-between">
       <h3>{{ itemDetail?.reasonName }}</h3>
       <codx-vll
-        [name]="'VL003'"
+        [name]="'EP022'"
         [value]="itemDetail?.approveStatus"
         [showText]="true"
         [showBgColor]="true"
@@ -41,7 +41,7 @@
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
-          {{ itemDetail?.buid }}
+          {{ itemDetail?.orgUnitName }}
         </span>
       </div>
     </div>
@@ -66,7 +66,7 @@
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
-          {{ itemDetail?.empQty }}
+          {{ itemDetail?.qtyEmployee }}
         </span>
       </div>
     </div>

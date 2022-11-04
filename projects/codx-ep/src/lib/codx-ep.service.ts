@@ -236,17 +236,7 @@ export class CodxEpService {
       [resourceID]
     );
   }
-
-  getEmployeeByOrgUnitID(orgID: string) {
-    return this.api.execSv(
-      'HR',
-      'ERM.Business.HR',
-      'PositionsBusiness',
-      'GetTotalFilledCountsByOrgUnitIDAsync',
-      [orgID]
-    );
-  }
-
+  
   getBookingByRecID(recID: string) {
     return this.api
       .exec<any>(
