@@ -6,6 +6,5 @@ export class BookingAttendees {
     optional: boolean;    
     icon: string;
     roleName:string;
-    isChecked:boolean;
     //modifiedOn: string;
   }

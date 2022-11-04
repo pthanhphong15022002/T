@@ -84,7 +84,6 @@ export class ApproveComponent extends UIComponent {
   ]
   constructor
     (
-      private notifySvr: NotificationsService,
       private auth: AuthService,
       private callFuc: CallFuncService,
       private injector: Injector
@@ -92,6 +91,7 @@ export class ApproveComponent extends UIComponent {
     super(injector);
   }
   onInit(): void {
+    // this.deleteData();
     this.user = this.auth.userValue;
     this.router.params.subscribe((param) => {
       this.funcID = param["funcID"];
@@ -125,26 +125,6 @@ export class ApproveComponent extends UIComponent {
     }];
     this.detectorRef.detectChanges();
   }
-
-  getGridViewSetUp(funcID:string) {
-    if(funcID){
-      this.cache.functionList(funcID).subscribe((func: any) => 
-      {
-        if(func)
-        {
-          this.functionName = func.customName;
-          this.cache.gridViewSetup(func.formName, func.gridViewName).
-          subscribe((grd: any) => {
-            if (grd) 
-            {
-              this.gridViewSetUp = grd;
-            }
-          });
-        }
-      });
-    }
-    
-  }
   loadDataTab(funcID:string) {
     if(funcID){
       this.api.execSv(
@@ -165,92 +145,16 @@ export class ApproveComponent extends UIComponent {
      );
     }
   }
-  loadDataAsync(predicate: string, dataValue: string) {
-    this.view.dataService.setPredicates([], []).subscribe();
-  }
   selectedChange(event: any) {
-    if (event && event?.data)
+    if (event?.data)
     {
       this.selectedID = event.data.recID;
       this.detectorRef.detectChanges();
     }
   }
-  updateApprovePost(event: any) {
-    if(event && event.status && event.data)
-    {
-      let oldValue = event.oldValue;
-      let newValue = event.newValue;
-      let data = event.data;
-      this.tabAsside.map((e:any) => {
-        if(e.value == oldValue)
-        {
-          e.total = e.total - 1;
-          return ;
-        }
-      });
-      this.tabAsside.map((e:any) => {
-        if(e.value == newValue){
-          e.total = e.total + 1;
-          return;
-        }
-      });
-      this.view.dataService.update(data).subscribe();
-      this.detectorRef.detectChanges();
-    }
+  realoadData(event: any) {
+    this.loadDataTab(this.view.funcID);
   }
-
-  approvePost(data: any, approveStatus: any) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "ApprovePostAsync",
-      [data.entityName, data.recID, approveStatus])
-      .subscribe((res) => {
-        if (res) {
-          this.dataDetail = null;
-          this.tabAsside.forEach((t: any) => {
-            if (t.value == data.approveStatus) {
-              t.total--;
-              return;
-            }
-          });
-          this.tabAsside[1].total++;
-          this.view.dataService.remove(data).subscribe();
-          this.notifySvr.notifyCode("WP005");
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
-
-  cancelPost(data: any, approveStatus: any) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "ApprovePostAsync",
-      [data.entityName, data.recID, approveStatus])
-      .subscribe((res) => {
-        if (res) {
-          this.dataDetail = null;
-          this.tabAsside.map((t: any) => {
-            if (t.value == data.approveStatus) t.total--;
-          })
-          this.tabAsside[2].total++;
-          this.view.dataService.remove(data).subscribe();
-          this.notifySvr.notifyCode("WP007");
-          this.detectorRef.detectChanges();
-        }
-      }
-      );
-  }
-
-  remakePost(data: any, approveStatus: any) {
-    this.api.execSv("WP", "ERM.Business.WP", "NewsBusiness", "ApprovePostAsync",
-      [data.entityName, data.recID, approveStatus])
-      .subscribe((res) => {
-        if (res) {
-          this.dataDetail = null;
-          this.notifySvr.notifyCode("WP009");
-          this.detectorRef.detectChanges();
-        }
-      }
-      );
-  }
-
   clickTabApprove(item, predicate: string, dataValue: string) {
     this.view.dataService.setPredicates([predicate],[dataValue]).subscribe();
     this.tabAsside.forEach(e => {
@@ -357,5 +261,9 @@ export class ApproveComponent extends UIComponent {
       color: 'white',
     };
     return styles;
+  }
+
+  deleteData(){
+    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","DeleteAllDataAsync").subscribe()
   }
 }

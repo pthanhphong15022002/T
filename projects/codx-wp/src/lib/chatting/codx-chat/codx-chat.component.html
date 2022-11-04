@@ -2,7 +2,7 @@
     <ng-container *ngIf="new;else view">
         <codx-attachment #codxATM [functionID]="funcID" [objectType]="objectType" [hideFolder]="'1'"
             [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" allowExtensions=".jpg,.png" [allowMultiFile]="'0'"
-            [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'">
+            [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'" [objectId]="objectId">
             <!-- (fileCount)="getFileCount($event)" -->
         </codx-attachment>
         <div *ngIf="fileUpload" class="d-flex position-relative ms-10 " >

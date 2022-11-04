@@ -593,7 +593,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.equipments = tmpEquip; 
     this.data.stopOn=this.data.endDate;
     this.data.category = '1';
-    this.data.resourceType = '1';
+    this.data.resourceType = '1';    
+    this.data.approveStatus = '1';    
+    this.data.status = '1';
     this.data.requester = this.curUser.userName;
     this.data.attendees= this.tmpAttendeesList.length;
 
@@ -672,14 +674,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.codxEpService
                 .release(
                   this.returnData,
-                  res.processID,
+                  res?.processID,
                   'EP_Bookings',
                   this.formModel.funcID
                 )
                 .subscribe((res) => {
                   if (res?.msgCodeError == null && res?.rowCount) {
                     this.notificationsService.notifyCode('ES007');
-                    this.returnData.status = '3';
+                    this.returnData.approveStatus = '3';
                     this.returnData.write = false;
                     this.returnData.delete = false;
                     (this.dialogRef.dataService as CRUDService)

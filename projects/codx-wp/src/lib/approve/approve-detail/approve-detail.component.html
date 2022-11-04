@@ -13,10 +13,8 @@
         <div>
             <codx-img  
                 [width]="40"
-                [isDefaulImg]="true" 
-                [imageType]="'circle'"
                 [objectId]="data?.createdBy" 
-                objectType="AD_Users">
+                [objectType]="'AD_Users'">
             </codx-img>
         </div>
         <div class="d-flex flex-column w-100 ms-4 py-3">
@@ -131,7 +129,7 @@
                 </div>
                 <div *ngIf="data?.shareControl" class="col-10">
                     <codx-vll 
-                        [name]="'WP003'" 
+                        [name]="'WP001'" 
                         [value]="data.shareControl" 
                         [classList]="'bg-secondary rounded-pill t-dark p-2'"
                         [showText]="true" 

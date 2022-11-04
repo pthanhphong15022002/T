@@ -400,25 +400,17 @@ export class PdfComponent
     }
     this.curPage = ca.signedPosPage;
     if (this.curSelectedCA) {
-      this.curSelectedCA.destroy();
+      this.curSelectedCA.opacity(1);
     }
-
-    let caW = ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
-    let caH = ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
-    let caRect = new Konva.Rect({
-      x: (ca.signedPosLeft / 0.75) * this.xScale,
-      y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
-      width: caW,
-      height: caH,
-      stroke: 'black',
-      strokeWidth: 1,
-    });
+    let layer = this.lstLayer.get(ca.signedPosPage);
+    let curID = 'CertificateAuthencation' + idx;
+    let caRect = layer.children.find((child) => child.id() == curID);
     this.curSelectedCA = caRect;
+    this.curSelectedCA.opacity(0);
     this.tr?.draggable(false);
     this.tr?.resizeEnabled(false);
     this.tr?.rotateEnabled(false);
     this.tr?.nodes([this.curSelectedCA]);
-    let layer = this.lstLayer.get(ca.signedPosPage);
     layer?.add(this.tr);
     layer?.draw();
   }
@@ -442,7 +434,21 @@ export class PdfComponent
       .children?.find((node) => {
         return node?.attrs?.id == area.recID;
       });
-    if (this.curSelectedArea != null) {
+    let isCA = false;
+    if (this.curSelectedArea == null) {
+      let curSelectedSignerInfo = this.lstSigners?.find(
+        (signer) => signer.authorID == area.signer
+      );
+      let idx = this.lstCA?.findIndex(
+        (ca) => ca.certificate.commonName == curSelectedSignerInfo?.email
+      );
+      if (idx != -1) {
+        isCA = true;
+        this.goToSelectedCA(this.lstCA[idx], idx);
+      }
+    }
+
+    if (this.curSelectedArea != null && !isCA) {
       this.tr.remove();
       let layerChildren = this.lstLayer.get(area.location.pageNumber + 1);
 
@@ -480,8 +486,8 @@ export class PdfComponent
           ? this.lstSignDateType[1]
           : this.lstSignDateType[0];
         this.curSelectedAnnotID = area.recID;
-        this.detectorRef.detectChanges();
       }
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -497,7 +503,7 @@ export class PdfComponent
       .getListCA(this.recID, this.fileInfo.fileID)
       .subscribe((res) => {
         this.lstCA = res;
-        this.lstCA?.forEach((ca) => {
+        this.lstCA?.forEach((ca, idx) => {
           this.lstCACollapseState.push({
             open: false,
             verifiedFailed: false,
@@ -656,291 +662,293 @@ export class PdfComponent
     return url.protocol === 'http:' || url.protocol === 'https:';
   }
   pageRendered(e: any) {
-    if (this.inputUrl == null) {
-      let rendedPage = Array.from(
-        document.getElementsByClassName('page')
-      )?.find((ele) => {
+    // if (this.inputUrl == null) {
+    let rendedPage = Array.from(document.getElementsByClassName('page'))?.find(
+      (ele) => {
         return ele.getAttribute('data-page-number') == e.pageNumber;
-      });
-      if (rendedPage?.firstChild) {
-        let warpper = rendedPage?.firstChild;
-        let virtual = document.createElement('div');
-        let id = 'layer' + e.pageNumber.toString();
-        virtual.id = id;
-        virtual.style.zIndex = '2';
-        virtual.style.border = '1px solid blue';
-        virtual.style.position = 'absolute';
-        virtual.style.top = '0';
+      }
+    );
+    if (rendedPage?.firstChild) {
+      let warpper = rendedPage?.firstChild;
+      let virtual = document.createElement('div');
+      let id = 'layer' + e.pageNumber.toString();
+      virtual.id = id;
+      virtual.style.zIndex = '2';
+      virtual.style.border = '1px solid blue';
+      virtual.style.position = 'absolute';
+      virtual.style.top = '0';
 
-        let canvasBounds: any;
+      let canvasBounds: any;
 
-        if (warpper) {
-          warpper.appendChild(virtual);
-          canvasBounds = (
-            warpper.firstChild as Element
-          ).getBoundingClientRect();
-          this.pageW = canvasBounds.width;
-          this.pageH = canvasBounds.height;
-          let stage = new Konva.Stage({
-            container: id,
-            id: id,
-            width: canvasBounds.width,
-            height: canvasBounds.height,
-          });
-          this.xScale = canvasBounds.width / 794;
-          this.yScale = canvasBounds.height / 1123;
+      if (warpper) {
+        warpper.appendChild(virtual);
+        canvasBounds = (warpper.firstChild as Element).getBoundingClientRect();
+        this.pageW = canvasBounds.width;
+        this.pageH = canvasBounds.height;
+        let stage = new Konva.Stage({
+          container: id,
+          id: id,
+          width: canvasBounds.width,
+          height: canvasBounds.height,
+        });
+        this.xScale = canvasBounds.width / 794;
+        this.yScale = canvasBounds.height / 1123;
+        let layer = new Konva.Layer({
+          id: id,
+          opacity: 1,
+        });
 
-          //get layer da luu
-          if (this.lstLayer.get(e.pageNumber)) {
-            let layer = this.lstLayer.get(e.pageNumber);
-            let lstKonvaOnPage = layer.children;
+        this.lstLayer.set(e.pageNumber, layer);
 
-            lstKonvaOnPage?.forEach((konva) => {
-              konva.position({
-                x: (konva.position().x * this.xScale) / konva.scaleX(),
-                y: (konva.position().y * this.yScale) / konva.scaleY(),
-              });
-              konva.scale({ x: this.xScale, y: this.yScale });
-              konva.draw();
-              layer.draw();
-            });
-            stage.add(layer);
-          } else {
-            let layer = new Konva.Layer({
-              id: id,
-              opacity: 1,
-            });
-
-            this.lstLayer.set(e.pageNumber, layer);
-
-            let lstAreaOnPage = this.lstAreas?.filter((area) => {
-              return area.location.pageNumber + 1 == e.pageNumber;
-            });
-            lstAreaOnPage?.forEach((area) => {
-              let isRender = false;
-              if (
-                (area.labelType != '8' && !this.isApprover && !area.isLock) ||
-                (this.isApprover &&
-                  area.signer == this.curSignerID &&
-                  area.stepNo == this.stepNo)
-              ) {
-                isRender = true;
-              }
-              let transformable =
-                this.isEditable == false
-                  ? false
-                  : area.allowEditAreas == false
-                  ? false
-                  : area.isLock;
-              if (isRender) {
-                switch (area.labelType) {
-                  case 'S1': {
-                    let url =
-                      this.lstSigners.find(
-                        (signer) => signer.authorID == area.signer
-                      )?.signature1 ?? area.labelValue;
-
-                    let isUrl = this.checkIsUrl(url);
-                    this.addArea(
-                      url,
-                      isUrl ? 'img' : 'text',
-                      area.labelType,
-                      transformable,
-                      false,
-                      area.signer,
-                      area.stepNo,
-                      area
-                    );
-                    break;
-                  }
-                  case 'S2': {
-                    let url =
-                      this.lstSigners.find(
-                        (signer) => signer.authorID == area.signer
-                      )?.signature2 ?? area.labelValue;
-                    let isUrl = this.checkIsUrl(url);
-                    this.addArea(
-                      url,
-                      isUrl ? 'img' : 'text',
-                      area.labelType,
-                      transformable,
-                      false,
-                      area.signer,
-                      area.stepNo,
-                      area
-                    );
-                    break;
-                  }
-                  case 'S3': {
-                    let url =
-                      this.lstSigners.find(
-                        (signer) => signer.authorID == area.signer
-                      )?.stamp ?? area.labelValue;
-                    let isUrl = this.checkIsUrl(url);
-                    this.addArea(
-                      url,
-                      isUrl ? 'img' : 'text',
-                      area.labelType,
-                      transformable,
-                      false,
-                      area.signer,
-                      area.stepNo,
-                      area
-                    );
-                    break;
-                  }
-                  case '8': {
-                    if (!area.isLock) {
-                      this.addArea(
-                        qr,
-                        'img',
-                        area.labelType,
-                        transformable,
-                        false,
-                        area.signer,
-                        area.stepNo,
-                        area
-                      );
-                    }
-                    break;
-                  }
-                  case '9': {
-                    this.addArea(
-                      area.labelValue,
-                      'img',
-                      area.labelType,
-                      transformable,
-                      false,
-                      area.signer,
-                      area.stepNo,
-                      area
-                    );
-                    break;
-                  }
-                  case '3':
-                  case '4':
-                  case '5':
-                  case '6':
-                  case '7': {
-                    this.addArea(
-                      area.labelValue,
-                      'text',
-                      area.labelType,
-                      transformable,
-                      false,
-                      area.signer,
-                      area.stepNo,
-                      area
-                    );
-                    break;
-                  }
-                }
-              }
-              this.detectorRef.detectChanges();
-            });
-            stage.add(layer);
+        let lstAreaOnPage = this.lstAreas?.filter((area) => {
+          return area.location.pageNumber + 1 == e.pageNumber;
+        });
+        lstAreaOnPage?.forEach((area) => {
+          let isRender = false;
+          if (
+            (area.labelType != '8' && !this.isApprover && !area.isLock) ||
+            (this.isApprover &&
+              area.signer == this.curSignerID &&
+              area.stepNo == this.stepNo)
+          ) {
+            isRender = true;
           }
-          //stage event
-          stage.on('mouseenter', (mouseover: any) => {
-            if (this.needAddKonva) {
-              let transformable =
-                this.isEditable == false
-                  ? false
-                  : this.signerInfo.allowEdit == false
-                  ? false
-                  : true;
-              this.tr.rotateEnabled(false);
-              this.tr.draggable(transformable);
-              this.tr.resizeEnabled(transformable);
-              this.tr.nodes([this.needAddKonva]);
-              this.tr.forceUpdate();
-              stage.children[0].add(this.tr);
-              stage.children[0].add(this.needAddKonva);
-              this.needAddKonva.position(stage.getPointerPosition());
-              this.needAddKonva.startDrag();
+          let transformable =
+            this.isEditable == false
+              ? false
+              : area.allowEditAreas == false
+              ? false
+              : area.isLock;
+          if (isRender) {
+            switch (area.labelType) {
+              case 'S1': {
+                let url =
+                  this.lstSigners.find(
+                    (signer) => signer.authorID == area.signer
+                  )?.signature1 ?? area.labelValue;
 
-              this.needAddKonva.on('dragend', (dragEnd) => {
-                if (dragEnd?.evt?.toElement?.tagName == 'CANVAS') {
-                  if (this.needAddKonva) {
-                    let attrs = this.needAddKonva.attrs;
-                    let name: tmpAreaName = JSON.parse(attrs.name);
-
-                    let curLayer = stage?.children[0]?.children;
-                    let signed = curLayer.filter((child) => {
-                      if (child != this.tr) {
-                        let childName: tmpAreaName = JSON.parse(
-                          child?.attrs?.name
-                        );
-
-                        let sameLable = childName.LabelType == name.LabelType;
-                        let isUnique = this.imgConfig.includes(
-                          childName.LabelType.toString()
-                        );
-                        let sameSigner = childName.Signer == name.Signer;
-
-                        return sameLable && sameSigner && isUnique;
-                      }
-                      return undefined;
-                    });
-                    this.holding = 0;
-                    if (
-                      !this.imgConfig.includes(name.LabelType.toString()) ||
-                      signed?.length == 1
-                    ) {
-                      switch (name.Type) {
-                        case 'text': {
-                          this.saveNewToDB(
-                            attrs.text,
-                            name.Type,
-                            name.LabelType,
-                            name.Signer,
-                            this.stepNo,
-                            this.needAddKonva
-                          );
-
-                          break;
-                        }
-                        case 'img': {
-                          this.saveNewToDB(
-                            name.LabelValue,
-                            name.Type,
-                            name.LabelType,
-                            name.Signer,
-                            this.stepNo,
-                            this.needAddKonva
-                          );
-                          break;
-                        }
-                      }
-                    } else {
-                      this.needAddKonva.destroy();
-                      this.tr.remove();
-                    }
-                  }
-                  this.needAddKonva = null;
-                } else {
-                  this.needAddKonva.startDrag();
+                let isUrl = this.checkIsUrl(url);
+                this.addArea(
+                  url,
+                  isUrl ? 'img' : 'text',
+                  area.labelType,
+                  transformable,
+                  false,
+                  area.signer,
+                  area.stepNo,
+                  area
+                );
+                break;
+              }
+              case 'S2': {
+                let url =
+                  this.lstSigners.find(
+                    (signer) => signer.authorID == area.signer
+                  )?.signature2 ?? area.labelValue;
+                let isUrl = this.checkIsUrl(url);
+                this.addArea(
+                  url,
+                  isUrl ? 'img' : 'text',
+                  area.labelType,
+                  transformable,
+                  false,
+                  area.signer,
+                  area.stepNo,
+                  area
+                );
+                break;
+              }
+              case 'S3': {
+                let url =
+                  this.lstSigners.find(
+                    (signer) => signer.authorID == area.signer
+                  )?.stamp ?? area.labelValue;
+                let isUrl = this.checkIsUrl(url);
+                this.addArea(
+                  url,
+                  isUrl ? 'img' : 'text',
+                  area.labelType,
+                  transformable,
+                  false,
+                  area.signer,
+                  area.stepNo,
+                  area
+                );
+                break;
+              }
+              case '8': {
+                if (!area.isLock) {
+                  this.addArea(
+                    qr,
+                    'img',
+                    area.labelType,
+                    transformable,
+                    false,
+                    area.signer,
+                    area.stepNo,
+                    area
+                  );
                 }
-              });
+                break;
+              }
+              case '9': {
+                this.addArea(
+                  area.labelValue,
+                  'img',
+                  area.labelType,
+                  transformable,
+                  false,
+                  area.signer,
+                  area.stepNo,
+                  area
+                );
+                break;
+              }
+              case '3':
+              case '4':
+              case '5':
+              case '6':
+              case '7': {
+                this.addArea(
+                  area.labelValue,
+                  'text',
+                  area.labelType,
+                  transformable,
+                  false,
+                  area.signer,
+                  area.stepNo,
+                  area
+                );
+                break;
+              }
             }
+          }
+        });
+        let lstCAOnPage = this.lstCA?.filter(
+          (childCA) => childCA.signedPosPage == e.pageNumber
+        );
+        lstCAOnPage?.forEach((ca, idx) => {
+          let caW =
+            ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
+          let caH =
+            ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
+          let caRect = new Konva.Rect({
+            x: (ca.signedPosLeft / 0.75) * this.xScale,
+            y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
+            width: caW,
+            height: caH,
+            opacity: 0,
+            id: 'CertificateAuthencation' + idx,
+            name: ca.certificate?.commonName,
           });
+          layer?.add(caRect);
+        });
+        stage.add(layer);
+        this.detectorRef.detectChanges();
+        // }
+        //stage event
+        stage.on('mouseenter', (mouseover: any) => {
+          if (this.needAddKonva) {
+            let transformable =
+              this.isEditable == false
+                ? false
+                : this.signerInfo.allowEdit == false
+                ? false
+                : true;
+            this.tr.rotateEnabled(false);
+            this.tr.draggable(transformable);
+            this.tr.resizeEnabled(transformable);
+            this.tr.nodes([this.needAddKonva]);
+            this.tr.forceUpdate();
+            stage.children[0].add(this.tr);
+            stage.children[0].add(this.needAddKonva);
+            this.needAddKonva.position(stage.getPointerPosition());
+            this.needAddKonva.startDrag();
 
-          //left click
-          stage.on('click', (click: any) => {
-            let layerChildren = this.lstLayer.get(e.pageNumber);
-            if (click.target == stage) {
-              if (this.contextMenu) {
-                this.contextMenu.style.display = 'none';
+            this.needAddKonva.on('dragend', (dragEnd) => {
+              if (dragEnd?.evt?.toElement?.tagName == 'CANVAS') {
+                if (this.needAddKonva) {
+                  let attrs = this.needAddKonva.attrs;
+                  let name: tmpAreaName = JSON.parse(attrs.name);
+
+                  let curLayer = stage?.children[0]?.children;
+                  let signed = curLayer.filter((child) => {
+                    if (child != this.tr) {
+                      let childName: tmpAreaName = JSON.parse(
+                        child?.attrs?.name
+                      );
+
+                      let sameLable = childName.LabelType == name.LabelType;
+                      let isUnique = this.imgConfig.includes(
+                        childName.LabelType.toString()
+                      );
+                      let sameSigner = childName.Signer == name.Signer;
+
+                      return sameLable && sameSigner && isUnique;
+                    }
+                    return undefined;
+                  });
+                  this.holding = 0;
+                  if (
+                    !this.imgConfig.includes(name.LabelType.toString()) ||
+                    signed?.length == 1
+                  ) {
+                    switch (name.Type) {
+                      case 'text': {
+                        this.saveNewToDB(
+                          attrs.text,
+                          name.Type,
+                          name.LabelType,
+                          name.Signer,
+                          this.stepNo,
+                          this.needAddKonva
+                        );
+
+                        break;
+                      }
+                      case 'img': {
+                        this.saveNewToDB(
+                          name.LabelValue,
+                          name.Type,
+                          name.LabelType,
+                          name.Signer,
+                          this.stepNo,
+                          this.needAddKonva
+                        );
+                        break;
+                      }
+                    }
+                  } else {
+                    this.needAddKonva.destroy();
+                    this.tr.remove();
+                  }
+                }
+                this.needAddKonva = null;
+              } else {
+                this.needAddKonva.startDrag();
               }
-              if (this.curSelectedCA) {
-                this.curSelectedCA = null;
-              }
-              this.tr.remove();
-              this.tr.nodes([]);
-            } else {
-              this.curSelectedArea = click.target;
+            });
+          }
+        });
+
+        //left click
+        stage.on('click', (click: any) => {
+          let layerChildren = this.lstLayer.get(e.pageNumber);
+          if (click.target == stage) {
+            if (this.contextMenu) {
+              this.contextMenu.style.display = 'none';
+            }
+            if (this.curSelectedCA) {
+              this.curSelectedCA = null;
+            }
+            this.tr.remove();
+            this.tr.nodes([]);
+          } else {
+            this.curSelectedArea = click.target;
+            if (
+              !this.curSelectedArea.id().includes('CertificateAuthencation')
+            ) {
               this.curSelectedAnnotID = this.curSelectedArea.id();
-
               this.tr.resizeEnabled(
                 this.isEditable == false
                   ? false
@@ -954,33 +962,39 @@ export class PdfComponent
               this.tr.forceUpdate();
               this.tr.nodes([this.curSelectedArea]);
               layerChildren.add(this.tr);
+            } else {
+              let idx = this.curSelectedArea
+                .id()
+                .replace('CertificateAuthencation', '');
+              this.goToSelectedCA(this.lstCA[idx], idx);
             }
-          });
+          }
+        });
 
-          //right click
-          stage.on('contextmenu', (e: any) => {
-            e.evt.preventDefault();
-            if (e.target === stage && this.contextMenu) {
-              this.contextMenu.style.display = 'none';
-              return;
-            }
-            this.curSelectedArea = e.target;
+        //right click
+        stage.on('contextmenu', (e: any) => {
+          e.evt.preventDefault();
+          if (e.target === stage && this.contextMenu) {
+            this.contextMenu.style.display = 'none';
+            return;
+          }
+          this.curSelectedArea = e.target;
 
-            if (
-              this.isEditable &&
-              this.curSelectedArea.draggable() &&
-              this.contextMenu
-            ) {
-              this.contextMenu.style.display = 'initial';
-              this.contextMenu.style.zIndex = '2';
+          if (
+            this.isEditable &&
+            this.curSelectedArea.draggable() &&
+            this.contextMenu
+          ) {
+            this.contextMenu.style.display = 'initial';
+            this.contextMenu.style.zIndex = '2';
 
-              this.contextMenu.style.top = e.evt.pageY + 'px';
-              this.contextMenu.style.left = e.evt.pageX + 'px';
-            }
-          });
-        }
+            this.contextMenu.style.top = e.evt.pageY + 'px';
+            this.contextMenu.style.left = e.evt.pageX + 'px';
+          }
+        });
       }
     }
+    // }
   }
 
   getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {
@@ -1313,7 +1327,7 @@ export class PdfComponent
 
   gotLstCA = false;
   changeLeftTab(e) {
-    if (this.inputUrl && e?.selectedIndex == 1 && !this.gotLstCA) {
+    if (e?.selectedIndex == 1 && !this.gotLstCA) {
       this.esService.getListCAByBytes(this.curFileUrl).subscribe((res) => {
         this.lstCA = res;
         this.lstCA?.forEach((ca) => {
@@ -1323,9 +1337,9 @@ export class PdfComponent
             detail: false,
           });
         });
-        this.gotLstCA = true;
-        this.detectorRef.detectChanges();
       });
+      this.gotLstCA = true;
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -1527,6 +1541,7 @@ export class PdfComponent
 
     if (this.isEditable) {
       this.holding = type?.value;
+      let transformable = this.signerInfo.allowEditAreas;
       switch (type?.value) {
         case 'S1':
           // if (!this.signerInfo?.signature1) {
@@ -1605,7 +1620,7 @@ export class PdfComponent
                   curLabelUrl,
                   'img',
                   type?.value,
-                  true,
+                  transformable,
                   true,
                   this.curSignerID,
                   this.signerInfo.stepNo
@@ -1625,7 +1640,7 @@ export class PdfComponent
             this.url,
             'img',
             type?.value,
-            true,
+            transformable,
             true,
             this.curSignerID,
             this.signerInfo.stepNo
@@ -1635,7 +1650,7 @@ export class PdfComponent
             this.signerInfo.fullName + '-' + type.text,
             'text',
             type?.value,
-            true,
+            transformable,
             true,
             this.curSignerID,
             this.signerInfo.stepNo
@@ -1646,7 +1661,7 @@ export class PdfComponent
           this.url,
           'text',
           type?.value,
-          true,
+          transformable,
           true,
           this.curSignerID,
           this.signerInfo.stepNo
@@ -1685,7 +1700,6 @@ export class PdfComponent
     this.curFileID = this.fileInfo.fileID;
     this.curFileUrl = this.fileInfo.fileUrl;
     this.autoSignState = false;
-
     this.getListCA();
     this.esService
       .getSignAreas(

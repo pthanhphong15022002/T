@@ -19,7 +19,6 @@ export class HistoryCardsComponent
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_ResourceTrans';
-  predicate = 'ResourceType=@0';
   idField = 'recID';
   className = 'ResourceTransBusiness';
   method = 'GetAsync';
@@ -82,7 +81,7 @@ export class HistoryCardsComponent
             },
             {
               field: 'createdBy',
-              headerText: "Người tạo",//gv?.CreateBy?.headerText,
+              headerText: gv?.CreatedBy?.headerText,
               width: 250,
               template: this.createByCol,
             },

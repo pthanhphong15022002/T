@@ -421,7 +421,7 @@ export class CodxEsService {
   isSetupChange = this.setupChange.asObservable();
 
   public statusChange = new BehaviorSubject<any>(null);
-  isStatusChange = this.setupChange.asObservable();
+  isStatusChange = this.statusChange.asObservable();
 
   getAutoNumber(autoNoCode): Observable<any> {
     return this.api.execSv(
@@ -1067,13 +1067,13 @@ export class CodxEsService {
     );
   }
 
-  updateTransAwaitingStatus(transID) {
+  updateTransAwaitingStatus(transID, isFail) {
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'UpdateTransAwaitingStatusAsync',
-      [transID]
+      [transID, isFail]
     );
   }
 

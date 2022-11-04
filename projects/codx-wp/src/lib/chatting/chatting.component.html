@@ -25,7 +25,8 @@
 
 
 <codx-views #view [views]="views" [idField]="'recID'" entityName="WP_Groups" service="WP" 
-  assemblyName="ERM.Business.WP" className="ChatBusiness" method="LoadChatMessagesAsync">
+  assemblyName="ERM.Business.WP" className="ChatBusiness" method="LoadChatMessagesAsync" 
+  >
 </codx-views>
 <!-- #itemTemplate  let-data-->
 
@@ -116,13 +117,15 @@
   </div>
 </ng-template>
 <!-- view detail -->
-<ng-template #panelRightRef>
+<ng-template #panelRightRef >
+
+<div class="mt-5">
 
 
 
   <!-- <div class=""> modal-dialog modal-dialog-centered mw-400px -->
   <!--begin::Modal content-->
-  <div class="modal-content">
+  <div class="modal-content col-8" style="overflow-y: scroll;">
     <!--begin::Modal header-->
       <div class="modal-header py-0">
         <div class="d-flex flex-stack py-4">
@@ -166,12 +169,16 @@
           <!--end::Details-->
         </div>
         <div class="card-toolbar">
-          <span class="icon- icon-24 text-dark-75 text-hover-primary ms-3"></span>
+          <span class="icon-search icon-24 text-dark-75 text-hover-primary ms-3" (click)="onStartSearchMess()"></span>
           <span class="icon-group_add icon-24 text-dark-75 text-hover-primary ms-3"
             (click)="openCreategroupForm()"></span>
   
         </div>
   
+      </div>
+      <div class="modal-header py-0" *ngIf="searchMessCheck == true" >
+        <codx-searchbar [width]="600" (searchEvent)="searchMess($event)"></codx-searchbar>
+        <span class="icon-close icon-24 text-dark-75 text-hover-primary ms-3" (click)="onClosearchMess()"></span>
       </div>
         
     
@@ -195,7 +202,7 @@
                 <!-- ======================================= -->
 
 
-                <container-element [ngSwitch]="item.messageType">
+                <container-element [ngSwitch]="item.messageType ">
                   <some-element *ngSwitchCase="1">
                     <div class="d-flex align-items-center flex-wrap gap-2">
                       <div class="d-flex">
@@ -330,6 +337,7 @@
                           [funcID]="view.funcID" 
                           [dVll]="dVll" 
                           [objectType]="objectType" 
+                          [objectId]="objectId"
                           [new]="true" 
                           [data]="item"
                           (evtClickImage)="clickImage($event)"
@@ -441,13 +449,15 @@
             </div>
 
             <!--begin::Message In  item.messageType == '1' && -->
-            <div class="d-flex align-items-start user-card py-2" *ngIf="  item.senderId != senderId">
+            <div class="align-items-start user-card py-2" *ngIf="  item.senderId != senderId">
 
               <div class="symbol symbol-35px symbol-circle me-4" *ngIf="item.showImage">
                 <ng-container>
                   <codx-img [objectId]="item.senderId" objectType="AD_Users"
                     class="symbol symbol-30 symbol-circle me-3">
                   </codx-img>
+                  <span style=""><b>{{item.senderName}}</b></span>
+                
                 </ng-container>
 
               </div>
@@ -535,7 +545,7 @@
                         <lib-codx-chat
                           [funcID]="view.funcID" 
                           [dVll]="dVll" 
-                          [objectType]="objectType" 
+                          [objectType]="view?.formModel?.entityName" 
                           [new]="true" 
                           [data]="item"
                           (evtClickImage)="clickImage($event)"
@@ -804,9 +814,10 @@
   </div>
   <!-- </div> -->
 
-  <div>
 
-  </div>
+
+  
+</div>
 
 
 </ng-template>

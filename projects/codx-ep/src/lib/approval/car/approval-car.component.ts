@@ -1,3 +1,4 @@
+import { title } from 'process';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
@@ -24,6 +25,7 @@ export class ApprovalCarsComponent extends UIComponent {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('driverAssign') driverAssign: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
   service = 'EP';
@@ -34,7 +36,7 @@ export class ApprovalCarsComponent extends UIComponent {
   predicate = 'ResourceType=@0';
   datavalue = '2';
   idField = 'recID';
-  
+
   // [entityName]="'ES_ApprovalTrans'"
   // [method]="'LoadDataAsync'"
   // [assemblyName]="'CM'"
@@ -49,13 +51,16 @@ export class ApprovalCarsComponent extends UIComponent {
   resourceField;
   fields;
   dataSelected: any;
+  popupDialog: any;
   dialog!: DialogRef;
-  formModel:FormModel;
+  formModel: FormModel;
+  popuptitle:any;
+  viewType=ViewType;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
-    private notificationsService: NotificationsService,
-    ) {
+    private notificationsService: NotificationsService
+  ) {
     super(injector);
 
     this.funcID = this.router.snapshot.params['funcID'];
@@ -128,9 +133,9 @@ export class ApprovalCarsComponent extends UIComponent {
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           //template5: this.resourceTootip,
-          template6: this.mfButton,//header          
-          template8: this.contentTmp,//content
-          statusColorRef: 'vl003',
+          template6: this.mfButton, //header
+          template8: this.contentTmp, //content
+          statusColorRef: 'EP022',
         },
       },
     ];
@@ -140,107 +145,124 @@ export class ApprovalCarsComponent extends UIComponent {
   click(event) {}
 
   clickMF(value, datas: any = null) {
-    
     let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
     switch (funcID) {
-      case 'EPT40201':
-      case 'EPT40201':
-      case 'EPT40301':
+      case 'EPT40201': //Duyệt
         {
-          //alert('Duyệt');
-          this.approve(datas,"5")
+          this.approve(datas, '5');
         }
-        break;      
-      case "EPT40202":
+        break;
+      case 'EPT40202': //Từ chối
         {
-          //alert('Từ chối');
-          this.approve(datas,"4")
+          this.approve(datas, '4');
         }
-        break;      
+        break;
+      case 'EPT40204': {
+        //Phân công tài xế
+        this.popuptitle=value.text;
+        this.assignDriver(datas);
+        break;
+      }
       default:
         '';
         break;
     }
   }
-  approve(data:any, status:string){
+  
+  approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
-          .approve(            
-            data?.approvalTransRecID,//ApprovelTrans.RecID
-            status,
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            status
           )
-          .subscribe((res:any) => {
-            if (res?.msgCodeError == null && res?.rowCount>=0) {
-              if(status=="5"){
-                this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.status="5"
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              if (status == '5') {
+                this.notificationsService.notifyCode('ES007'); //đã duyệt
+                data.approveStatus = '5';
               }
-              if(status=="4"){
-                this.notificationsService.notifyCode('ES007');//bị hủy
-                data.status="4";
+              if (status == '4') {
+                this.notificationsService.notifyCode('ES007'); //bị hủy
+                data.approveStatus = '4';
               }
-                             
+
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
           });
       });
-  } 
+  }
+
+  assignDriver(data: any) {
+    let startDate= new Date(data.startDate);
+    let endDate= new Date(data.endDate);
+    this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
+    .subscribe((res:any)=>{
+      if(res){
+        var x= res;
+      }
+    })
+    this.popupDialog = this.callfc.openForm(this.driverAssign, '', 550, );
+    this.detectorRef.detectChanges();    
+  }
+
   closeAddForm(event) {}
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
 
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      event.forEach(func => {       
-        if(func.functionID == "SYS04"/*Copy*/) 
-        {
-          func.disabled=true;        
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
+          func.disabled = true;
         }
       });
-      if(data.status=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/)
-          {
-            func.disabled=true;
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = false;
           }
         });
       }
     }
   }
-  
-  updateStatus(data:any)
-  {
+
+  updateStatus(data: any) {
     this.view.dataService.update(data).subscribe();
   }
   getDetailApprovalBooking(id: any) {
     this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetApprovalBookingByIDAsync',
-        [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
-      )
+      .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
+        this.itemDetail?.recID,
+        this.itemDetail?.approvalTransRecID,
+      ])
       .subscribe((res) => {
         if (res) {
           this.itemDetail = res;
