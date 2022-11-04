@@ -12,6 +12,7 @@ import {
 } from 'codx-core';
 import { PopupAddBookingCarComponent } from '../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../codx-ep.service';
+import { DriverModel } from '../../models/bookingAttendees.model';
 
 @Component({
   selector: 'approval-car',
@@ -35,6 +36,7 @@ export class ApprovalCarsComponent extends UIComponent {
   method = 'GetListApprovalAsync';
   predicate = 'ResourceType=@0';
   datavalue = '2';
+  cbbDriver: DriverModel[]=[];
   idField = 'recID';
 
   // [entityName]="'ES_ApprovalTrans'"
@@ -49,13 +51,16 @@ export class ApprovalCarsComponent extends UIComponent {
   request?: ResourceModel;
   itemDetail;
   resourceField;
-  fields;
   dataSelected: any;
   popupDialog: any;
   dialog!: DialogRef;
   formModel: FormModel;
   popuptitle:any;
   viewType=ViewType;
+  driverID:any;
+  listDriver=[];
+  driver:any;
+  fields: Object = { text: 'driverName', value: 'driverID' };
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -69,6 +74,8 @@ export class ApprovalCarsComponent extends UIComponent {
         this.formModel = res;
       }
     });
+    
+  
   }
 
   onInit(): void {
@@ -203,13 +210,22 @@ export class ApprovalCarsComponent extends UIComponent {
     this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
     .subscribe((res:any)=>{
       if(res){
-        var x= res;
+        this.cbbDriver=[];
+        this.listDriver = res;
+        this.listDriver.forEach(dri=>{
+          var tmp = new DriverModel();
+          tmp['driverID'] = dri.resourceID;
+          tmp['driverName'] = dri.resourceName;
+          this.cbbDriver.push(tmp);
+        })
+        this.detectorRef.detectChanges(); 
+        this.popupDialog = this.callfc.openForm(this.driverAssign, '', 550,250 );
       }
     })
-    this.popupDialog = this.callfc.openForm(this.driverAssign, '', 550, );
-    this.detectorRef.detectChanges();    
+       
   }
 
+  cbxChange(evt:any){}
   closeAddForm(event) {}
 
   changeItemDetail(event) {
