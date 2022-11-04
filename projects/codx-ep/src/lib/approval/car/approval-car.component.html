@@ -278,13 +278,13 @@
 
 </ng-template>
 
-<ng-template #driverAssign let-dialog>
+<ng-template #driverAssign let-dialog >
   <div class="mx-4 my-4">
     <div class="mx-4 pt-4 px-2">
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
           <h2 id="modal-basic-title">
-            <codx-label name="lblCardTran" [default]="popuptitle"></codx-label>
+            <codx-label name="lblCardTran" [default]="popupTitle"></codx-label>
           </h2>
           <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
             (click)="dialog.close()">
@@ -293,14 +293,12 @@
         </div>
       </div>
     </div>
-    <div class="mx-4 pt-4 px-2" >
+    <div class="mx-4 pt-4 px-2" *ngIf="cbbDriver!=null && cbbDriver.length>0">
       <div class="form-group">
-        <codx-label name="lblDriverAvailable" default="Tài xế sẵn sàng"></codx-label>
-        
+        <codx-label name="lblDriverAvailable" default="Tài xế sẵn sàng"></codx-label>        
         <ejs-combobox 
           id='driver' 
-          #samples [dataSource]='cbbDriver' 
-          
+          #samples [dataSource]='cbbDriver'           
           [fields]='fields' 
           [placeholder]="'Tài xế '" 
           (valueChange)="cbxChange($event)"

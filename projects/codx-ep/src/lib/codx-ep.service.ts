@@ -395,6 +395,15 @@ export class CodxEpService {
       [resourceType, startDate, endDate]
     );
   }
+  assignDriver(recID: string, driverID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AssignDriverAsync',
+      [recID, driverID]
+    );
+  }
   //#endregion
 
   //#region EmailTemplate
