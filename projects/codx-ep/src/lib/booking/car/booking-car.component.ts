@@ -169,7 +169,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           //template5: this.resourceTootip,
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
-          statusColorRef: 'vl003',
+          statusColorRef: 'EP022',
         },
       },
       {
