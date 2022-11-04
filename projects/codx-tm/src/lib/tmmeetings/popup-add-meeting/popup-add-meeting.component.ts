@@ -127,7 +127,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
       .subscribe((res) => {
-        this.isRoom = res.msgBodyData[0];
+        // this.isRoom = res.msgBodyData[0];
         if (this.action === 'edit') {
           if (this.isRoom == false) {
             this.api
