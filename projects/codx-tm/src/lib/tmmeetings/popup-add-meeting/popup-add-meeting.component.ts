@@ -633,6 +633,18 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.setDate();
   }
 
+  fullDayChangeWithTime() {
+    if (
+      this.startTime == this.startTimeWork &&
+      this.endTime == this.endTimeWork
+    ) {
+      this.isFullDay = true;
+    } else {
+      this.isFullDay = false;
+    }
+    this.changDetec.detectChanges();
+  }
+
   valueChange(event) {
     if (event?.field === 'resources') {
       this.meeting.resources = event.data[0];
@@ -713,14 +725,18 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   valueStartTimeChange(event: any) {
     this.startTime = event.data.fromDate;
+    this.fullDayChangeWithTime();
     // this.isFullDay = false;
     this.setDate();
+    this.changDetec.detectChanges();
+
   }
 
   valueEndTimeChange(event: any) {
     this.endTime = event.data.toDate;
     // this.isFullDay = false;
     this.setDate();
+    this.changDetec.detectChanges();
   }
 
   setDate() {
