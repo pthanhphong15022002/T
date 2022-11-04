@@ -47,8 +47,8 @@
 
               <ng-template #notFunction>
                 <span
-                  class="icon-node check-per {{
-                    data?.isper ? 'far fa-check-square' : ''
+                  class="icon-node check-per icon-14 {{
+                    data?.isper ? ' icon-check_box' : ''
                   }}"
                   [attr.data-id]="data?.parent?.functionID"
                 ></span>
@@ -154,7 +154,7 @@
                       class="cotrol-vll"
                       placeholder=""
                       ngDefaultControl
-                      refValue="L0001"
+                      refValue="SYS026"
                       [disabled]="!active"
                       [crrValue]="
                         dataPermission?.read ? dataPermission?.read : 0
@@ -181,7 +181,7 @@
                       placeholder=""
                       [disabled]="!active"
                       ngDefaultControl
-                      refValue="L0001"
+                      refValue="SYS026"
                       field="write"
                       [crrValue]="
                         dataPermission?.write ? dataPermission?.write : 0
@@ -207,7 +207,7 @@
                       placeholder=""
                       [disabled]="!active"
                       ngDefaultControl
-                      refValue="L0001"
+                      refValue="SYS026"
                       field="delete"
                       [crrValue]="
                         dataPermission?.delete ? dataPermission?.delete : 0
@@ -233,7 +233,7 @@
                       placeholder=""
                       [disabled]="!active"
                       ngDefaultControl
-                      refValue="L0001"
+                      refValue="SYS026"
                       field="refer"
                       [crrValue]="
                         dataPermission?.refer ? dataPermission?.refer : 0

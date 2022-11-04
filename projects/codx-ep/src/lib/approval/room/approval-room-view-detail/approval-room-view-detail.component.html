@@ -29,7 +29,7 @@
   <ng-template #header>
     <div class="d-flex justify-content-between">
       <h3>{{itemDetail?.title}}</h3>
-      <codx-vll [name]="'VL003'" [value]="itemDetail?.status" [showText]="true" [showBgColor]="true"
+      <codx-vll [name]="'VL003'" [value]="itemDetail?.approveStatus" [showText]="true" [showBgColor]="true"
         class="badge badge-light badge-square badge-md fs-7 p-2">
       </codx-vll>
     </div>
@@ -93,11 +93,11 @@
         </div>
       </div>
     </div>
-    <div class="mb-2">
+    <!-- <div class="mb-2">
       <ng-container *ngIf="files.length > 0">
         <codx-thumbnail [files]="files" displayThumb="simple"> </codx-thumbnail>
       </ng-container>
-    </div>
+    </div> -->
   </ng-template>
 
   <ng-template #body>
@@ -138,7 +138,7 @@
                 <div class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-50">
                   <div class="d-flex flex-row">
                     <div class="me-2">
-                      <codx-img [objectId]="item.recID" imageType="square" width="35" objectType="EP_Resources">
+                      <codx-img [objectId]="item.recID" imageType="circle"  width="35" objectType="EP_Resources">
                       </codx-img>
                     </div>
                     <div class="ms-2">
@@ -213,7 +213,7 @@
       </codx-temp-full>
     </div>
     <div class="mt-5 ms-5 justify-content-end w-120px text-center" *ngIf="data?.items.length == 0">
-      <codx-vll [name]="'L0614'" [value]="data?.status" [showText]="true" [showBgColor]="false"></codx-vll>
+      <codx-vll [name]="'L0614'" [value]="data?.approveStatus" [showText]="true" [showBgColor]="false"></codx-vll>
       <div class="progress h-6px w-100 mt-2">
         <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="data?.percentage" aria-valuenow="50"
           aria-valuemin="0" aria-valuemax="100"></div>

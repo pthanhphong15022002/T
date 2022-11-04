@@ -1,31 +1,46 @@
-.reporting-users {
+.h-100vh {
+    border: 1px aqua solid;
+    height: calc(100vh - 40px);
+}
+
+.icon-with-number {
     position: relative;
-    padding-bottom: 15px;
+    min-width: 30px;
+    width: 30px;
+    height: 30px;
+    border: 1px aqua solid;
 }
 
-.reporting-item {
-    margin: 20px;
-    border-radius: 8px;
-    padding: 15px;
-}
-
-
-.reporting-item.active {
-    background-color: #f4f7ff;
-}
-
-.reporting-card-btn {
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    margin-left: -13px;
-    width: 26px;
-    height: 26px;
-    background-color: #f5f6f8;
-    border-radius: 26px;
-    text-align: center;
-    padding-left: 2px;
-    align-items: center;
+.icon-with-number .number {
+    background-color: var(--primary);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 10px;
+    color: var(--primary-inverse);
     display: flex;
+    align-items: center;
     justify-content: center;
+}
+
+.kr-process {
+    position: relative;
+}
+
+.process-per {
+    margin-left: -40px;
+    color: var(--primary-inverse);
+    line-height: 20px;
+}
+
+.pic-face {
+    position: absolute;
+    top: 0;
+    left: 50%;
+}
+
+.pic-local {
+    position: absolute;
+    top: 0;
+    left: 50%;
 }

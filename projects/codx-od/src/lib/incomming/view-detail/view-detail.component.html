@@ -6,7 +6,7 @@
       <div class="w-100">
         <div>
           <codx-temp-full [title]="data?.title" [titleCss]="'fs-5'"
-            [desc]="convertHtmlAgency(data?.agencyName, data?.departmentName)" [bookmark]="false" [titleLine]="2">
+            [desc]="convertHtmlAgency(data?.agencyName, data?.deptName)" [bookmark]="false" [titleLine]="2">
           </codx-temp-full>
         </div>
         <div class="d-flex flex-wrap mt-2">
@@ -166,7 +166,7 @@
             </ng-container>
           </ng-template>
         </li>
-        <li [ngbNavItem]="2">
+        <!-- <li [ngbNavItem]="2">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
               <i class="icon-format_list_numbered me-2" [ngClass]="{ 'text-primary': active === 2 }"></i><span>Công
@@ -175,13 +175,14 @@
           </a>
           <ng-template ngbNavContent>
             <ng-container *ngIf="data?.tasks && data?.tasks.length > 0; else defaulEmpt">
-              <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks" [itemTemplate]="templateorg"
+             <codx-treeview #treeAdd id="treeAdd" [data]="data?.tasks" [itemTemplate]="templateorg"
                 [enableCheck]="true" idField="recID" parentIdField="parentID" [autoLoad]="false" [isOutput]="true"
-                [isLoadChild]="false"></codx-treeview>
+                [isLoadChild]="false"></codx-treeview> 
+            
             </ng-container>
           </ng-template>
-        </li>
-        <li [ngbNavItem]="3">
+        </li> -->
+        <!-- <li [ngbNavItem]="3">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
               <i class="icon-info me-2" [ngClass]="{ 'text-primary': active === 3 }"></i><span>Chi tiết</span>
@@ -190,13 +191,13 @@
           <ng-template ngbNavContent>
             <ng-container *ngTemplateOutlet="defaulEmpt"></ng-container>
           </ng-template>
-        </li>
+        </li> -->
       </ul>
       <div [ngbNavOutlet]="nav" class="pt-5"></div>
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID"></codx-tabs>
+    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
   </ng-template>
 
   <ng-template #templateorg let-item>
@@ -214,15 +215,15 @@
           [showBgColor]="true"
           class="badge badge-light badge-md fs-7 ms-2"
         ></codx-vll>
-        <div class="progress h-6px w-100 mt-2">
-          <div class="fs-7 text-gray-600 mb-1">
-            {{ data?.percentage.toFixed(2) }}%
-          </div>
+        <div class="fs-7 text-gray-600 mt-1">
+          {{ data?.percentage.toFixed(2) }}%
+        </div>
+        <div class="progress d-flex flex-column w-100 h-5px">
           <div class="progress w-100 h-5px">
             <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="data?.percentage"></div>
           </div>
         </div>
-        <div class="d-flex justify-content-between align-item-center mt-2">
+        <div class="d-flex justify-content-center align-item-center mt-2">
           <!-- <span class="icon-schedule icon-16 text-gray-600"></span> -->
           <span *ngIf="data?.isTimeOut" class="icon-notifications expired icon-16 ms-1"></span>
           <span class="ms-2 text-dark" #dueDate>{{
@@ -281,4 +282,50 @@
       </div>
     </div>
   </div>
+</ng-template>
+<ng-template #reference>
+ <ng-container *ngIf="data?.linkss">
+  <div *ngFor="let item of data?.linkss">
+    <codx-temp-full 
+    [title]="item.oDis?.title" [desc]="
+      convertHtmlAgency(
+        item.oDis.agencyName,
+        this.gridViewSetup?.AgencyName?.headerText
+      )
+    "
+    cardCss="card-template border-bottom px-2 pt-4 pb-2" 
+    [icoStatus]="item.oDis?.urgency"
+    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item.oDis?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="item.oDis.isBookmark"
+    [titleLine]="2" [icoDateCss]="checkDeadLine(item.oDis?.deadline)" [dataItem]="item"
+    [footer]="footerTmp"
+    [moreFuncCss]="'me-10'"
+    >
+    </codx-temp-full>
+   
+  </div>
+ </ng-container>
+</ng-template>
+<ng-template #footerTmp let-data>
+  <div  class="d-flex flex-wrap justify-content-between ">
+    <div class="d-flex align-items-center">
+      <codx-vll [value]="data.oDis.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+      </codx-vll>
+
+      <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41'" [value]="data.oDis.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+      </codx-vll>
+      <div class="d-flex align-items-center">
+        <span class="me-1 icon-16" [ngClass]="checkDeadLine(data.oDis?.deadline)"></span>
+        <span class="text-dark-50">{{data.oDis.createdOn | amDateFormat: (''||'L')}}</span>
+      </div>
+    </div>
+    <codx-imgs [objectId]="getIdUser(data.oDis.createdBy, data.oDis.owner)" [objectType]="'AD_Users'"
+      [width]="30" [numberImages]="3" [mode]="false">
+    </codx-imgs>
+  </div>
+  <ng-container *ngIf="data?.filess">
+    <codx-thumbnail [files]="data?.filess" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'"
+      (viewFile)="handleViewFile($event)">
+    </codx-thumbnail>
+  </ng-container>
 </ng-template>

@@ -15,6 +15,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FileService } from '@shared/services/file.service';
 import {
   AuthStore,
   ButtonModel,
@@ -38,6 +39,7 @@ import {
   BP_ProcessSteps,
 } from '../models/BP_Processes.model';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
+// import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 @Component({
   selector: 'lib-processsteps',
@@ -47,7 +49,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
 })
 export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
-  @ViewChild('panelRight') panelRight?: TemplateRef<any>;
+  @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   process?: BP_Processes;
@@ -72,12 +74,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   idField = 'recID';
   assemblyName = 'ERM.Business.BP';
   className = 'ProcessStepsBusiness';
-  // method :any
   method = 'GetProcessStepsAsync';
   listPhaseName = [];
-
-  recIDProcess = '90ab82ac-43d1-11ed-83e7-d493900707c4'; ///thêm để add thử
-  // test data tra ve la  1 []
+  numberColums = 0
+  processID = ''; 
   dataTreeProcessStep = [];
   urlBack = '/bp/processes/BPT1'; //gang tam
   data: any; //them de test
@@ -85,7 +85,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   dataChild = [];
   lockParent = false;
   childFunc = [];
-  formModel: FormModel;
+  formModelMenu :FormModel ;
+  vllInterval ='VL004' ;
+  dataFile : any;
+  crrParentID =''
 
   constructor(
     inject: Injector,
@@ -94,24 +97,28 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private fileService : FileService
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     this.bpService.viewProcesses.subscribe((res) => (this.process = res));
-    this.dataObj = {
-      processID: this.process?.recID ? this.process?.recID : '',
-    };
 
+    this.processID = this.process?.recID ? this.process?.recID : '90ab82ac-43d1-11ed-83e7-d493900707c4' ; //test
+    // this.processID = this.process?.recID ? this.process?.recID : '' ; 
+    this.numberColums = this.process?.phases ? this.process?.phases : 0 ;
+    this.dataObj = {
+      processID: this.processID ,
+      
+    };
     // this.dataObj = { processID: this.recIDProcess }; //tesst
-    if (!this.dataObj?.processID) {
-      this.codxService.navigate('', this.urlBack);
-      this.codxService.navigate('', 'bp/processes/BPT1');
-    }
     this.layout.setUrl(this.urlBack);
     this.layout.setLogo(null);
+    if (!this.processID )
+      this.codxService.navigate('', this.urlBack);
+    this.getFlowChart(this.process?.flowchart) ;
   }
 
   onInit(): void {
@@ -123,7 +130,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     //this.request.dataObj = { isKanban: '1' }; ///de test
     this.request.method = 'GetProcessStepsWithKanbanAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = {}; ///de test
+    this.request.dataObj = this.dataObj; ///de test
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
@@ -174,6 +181,16 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           template: this.cardKanban,
         },
       },
+      {
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        icon:"icon-bubble_chart",
+        text :"Flowchart",
+        model: {
+          panelRightRef: this.flowChart,
+        },
+      },
     ];
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
@@ -191,10 +208,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       //option.FormModel = this.formModel;
       option.Width = '550px';
 
-      this.view.dataService.dataSelected.processID = this.recIDProcess;
+      this.view.dataService.dataSelected.processID = this.processID;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        ['add', this.titleAction, this.stepType],
+        ['add', this.titleAction, this.stepType,this.formModelMenu],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -207,28 +224,32 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           this.notiService.notifyCode('SYS006');
           var processStep = e?.event;
           if (processStep.stepType != 'P') {
+            let kanban = (this.view.currentView as any).kanban;
             if (processStep.stepType == 'A') {
-              this.dataTreeProcessStep.forEach((obj) => {
+              this.view.dataService.data.forEach((obj) => {
                 if (obj.recID == processStep?.parentID) {
                   obj.items.push(processStep);
                 }
               });
+              if(kanban)kanban.addCard(processStep)
             } else {
-              this.dataTreeProcessStep.forEach((obj) => {
+              this.view.dataService.data.forEach((obj) => {
                 if (obj.items.length > 0) {
                   obj.items.forEach((dt) => {
                     if (dt.recID == processStep?.parentID) {
                       dt.items.push(processStep);
+                      if(kanban)kanban.updateCard(dt)
                     }
                   });
                 }
               });
+              
             }
           } else {
-            this.dataTreeProcessStep.push(processStep);
+            this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
-          this.view.dataService.data = this.dataTreeProcessStep;
+         this.dataTreeProcessStep =  this.view.dataService.data;
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -252,6 +273,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             'edit',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
+            this.formModelMenu
           ],
           option
         );
@@ -262,6 +284,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               false
             );
           else {
+            let kanban = (this.view.currentView as any).kanban;
             var processStep = e?.event;
             if (data.items?.length > 0) processStep.items = data.items;
             var index = -1;
@@ -269,6 +292,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               //edit activity
               if (processStep.stepType == 'A') {
                 this.editActivity(data, processStep);
+                if(kanban)kanban.updateCard(processStep)
               } else {
                 //edit !P !A hơi bị nhằn
                 this.editStepChild(data, processStep);
@@ -322,6 +346,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   editStepChild(data, processStep) {
     //khong doi parent
+    let kanban = (this.view.currentView as any).kanban;
     this.view.dataService.data.forEach((obj) => {
       var index = -1;
       index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
@@ -332,6 +357,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         );
         if (indexChild != -1) {
           dataParents.items[indexChild] = processStep;
+          if(kanban)kanban.updateCard(dataParents)
         }
         obj.items[index] = dataParents;
       }
@@ -354,6 +380,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             'copy',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
+            this.formModelMenu
           ],
           option
         );
@@ -367,22 +394,26 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         else {
           var processStep = e?.event;
           if (processStep.stepType != 'P') {
+            let kanban = (this.view.currentView as any).kanban;
             if (processStep.stepType == 'A') {
               this.view.dataService.data.forEach((obj) => {
                 if (obj.recID == processStep?.parentID) {
                   obj.items.push(processStep);
                 }
               });
+              if(kanban)kanban.addCard(processStep)
             } else {
               this.view.dataService.data.forEach((obj) => {
                 if (obj.items.length > 0) {
                   obj.items.forEach((dt) => {
                     if (dt.recID == processStep?.parentID) {
                       dt.items.push(processStep);
+                      if(kanban)kanban.updateCard(dt)
                     }
                   });
                 }
               });
+              
             }
           } else {
             this.view.dataService.data.push(processStep);
@@ -401,6 +432,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       .delete([data], true, (opt) => this.beforeDel(opt))
       .subscribe((res) => {
         if (res) {
+          let kanban = (this.view.currentView as any).kanban;
           switch (data.stepType) {
             case 'P':
               this.view.dataService.delete(data);
@@ -411,7 +443,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 var index = -1;
                 if (obj.items.length > 0)
                   index = obj.items?.findIndex((x) => x.recID == data.recID);
-                if (index != -1) obj.items.splice(index, 1);
+                if (index != -1) {
+                  if(kanban)kanban.removeCard(obj.items[index])
+                  obj.items.splice(index, 1);
+                }
               });
               break;
             default:
@@ -425,6 +460,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                       );
                     if (index != -1) {
                       child.items.splice(index, 1);
+                      if(kanban)kanban.updateCard(obj.items[index])
                       index = -1;
                     }
                   });
@@ -474,14 +510,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     }
 
-    //test
-    // this.formModel = this.view?.formModel
-    // var funcMenu = this.childFunc.find(x=>x.id==this.stepType) ;
-    // if(funcMenu){
-    //   this.formModel.formName = funcMenu.formName ;
-    //   this.formModel.gridViewName = funcMenu.gridViewName ;
-    //   this.formModel.funcID = funcMenu.funcID ;
-    // }
+    // test
+    this.formModelMenu = this.view?.formModel
+    var funcMenu = this.childFunc.find(x=>x.id==this.stepType) ;
+    if(funcMenu){
+      this.formModelMenu.formName= funcMenu.formName ;
+      this.formModelMenu.gridViewName = funcMenu.gridViewName ;
+      this.formModelMenu.funcID = funcMenu.funcID ;
+    }
   }
 
   receiveMF(e: any) {
@@ -492,13 +528,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.itemSelected = data;
     this.titleAction = e.text;
     //test
-    // this.formModel = this.view?.formModel
-    // var funcMenu = this.childFunc.find(x=>x.id==this.data?.stepType) ;
-    // if(funcMenu){
-    //   this.formModel.formName = funcMenu.formName ;
-    //   this.formModel.gridViewName = funcMenu.gridViewName ;
-    //   this.formModel.funcID = funcMenu.funcID ;
-    // }
+    this.formModelMenu = this.view?.formModel
+    var funcMenu = this.childFunc.find(x=>x.id==this.stepType) ;
+    if(funcMenu){
+      this.formModelMenu.formName= funcMenu.formName ;
+      this.formModelMenu.gridViewName = funcMenu.gridViewName ;
+      this.formModelMenu.funcID = funcMenu.funcID ;
+    }
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -519,10 +555,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       case 'drop':
         this.onDragDrop(e.data);
         break;
+      case 'drag':
+          this.crrParentID = e?.data?.parentID
+          break;
     }
   }
 
   onDragDrop(data) {
+    if(this.crrParentID == data?.parentID) return
     this.bpService
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
@@ -568,7 +608,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   dropPhase(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
-    var ps = this.dataTreeProcessStep[event.previousIndex];
+    var ps = this.view.dataService.data[event.previousIndex];
     if (ps) {
       this.bpService
         .updateStepNo([ps.recID, event.currentIndex])
@@ -576,9 +616,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           if (res) {
             var stepNoNew = event.currentIndex + 1;
             var stepNoOld = ps.stepNo;
-            this.dataTreeProcessStep[event.previousIndex].stepNo = stepNoNew;
+            this.view.dataService.data[event.previousIndex].stepNo = stepNoNew;
             if (stepNoOld > stepNoNew) {
-              this.dataTreeProcessStep.forEach((obj) => {
+              this.view.dataService.data.forEach((obj) => {
                 if (
                   obj.recID != ps.recID &&
                   obj.stepNo >= stepNoNew &&
@@ -588,7 +628,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 }
               });
             } else {
-              this.dataTreeProcessStep.forEach((obj) => {
+              this.view.dataService.data.forEach((obj) => {
                 if (
                   obj.recID != ps.recID &&
                   obj.stepNo <= stepNoNew &&
@@ -600,7 +640,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             }
 
             moveItemInArray(
-              this.dataTreeProcessStep,
+              this.view.dataService.data,
               event.previousIndex,
               event.currentIndex
             );
@@ -610,7 +650,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               event.currentIndex
             );
 
-            this.view.dataService.data = this.dataTreeProcessStep;
+           
+            this.dataTreeProcessStep = this.view.dataService.data;
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
           } else {
@@ -622,9 +663,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   dropStepChild(event: CdkDragDrop<string[]>, currentID) {
     if (event.previousIndex == event.currentIndex) return;
-    var index = this.dataTreeProcessStep.findIndex((x) => x.recID == currentID);
+    var index = this.view.dataService.data.findIndex((x) => x.recID == currentID);
     if (index == -1) return;
-    this.dataChild = this.dataTreeProcessStep[index].items;
+    this.dataChild = this.view.dataService.data[index].items;
 
     var ps = this.dataChild[event.previousIndex];
     if (ps) {
@@ -662,9 +703,16 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               event.currentIndex
             );
 
-            this.dataTreeProcessStep[index].items = this.dataChild;
-            this.view.dataService.data = this.dataTreeProcessStep;
-
+            this.view.dataService.data[index].items = this.dataChild;
+            this.dataTreeProcessStep = this.view.dataService.data;
+            //up kanban
+            let kanban = (this.view.currentView as any).kanban;
+            if(kanban){
+              this.dataChild.forEach(obj=>{
+              kanban.updateCard(obj)
+              })
+            }
+           
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
           } else {
@@ -677,17 +725,17 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   dropChildToParent(event: CdkDragDrop<string[]>, crrParentID) {
     var psMoved = event.item?.data;
 
-    var indexPrevious = this.dataTreeProcessStep.findIndex(
+    var indexPrevious =  this.view.dataService.data.findIndex(
       (x) => x.recID == psMoved.parentID
     );
     if (indexPrevious == -1) return;
-    var previousDataChild = this.dataTreeProcessStep[indexPrevious].items;
+    var previousDataChild =  this.view.dataService.data[indexPrevious].items;
 
-    var indexCrr = this.dataTreeProcessStep.findIndex(
+    var indexCrr =  this.view.dataService.data.findIndex(
       (x) => x.recID == crrParentID
     );
     if (indexCrr == -1) return;
-    var crrDataChild = this.dataTreeProcessStep[indexCrr].items;
+    var crrDataChild =  this.view.dataService.data[indexCrr].items;
     var stepNoNew = crrDataChild.length > 0 ? event.currentIndex + 1 : 1;
     var stepNoOld = psMoved.stepNo;
 
@@ -720,9 +768,18 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               return a.stepNo - b.stepNo;
             });
 
-            this.dataTreeProcessStep[indexPrevious].items = previousDataChild;
-            this.dataTreeProcessStep[indexCrr].items = crrDataChild;
-            this.view.dataService.data = this.dataTreeProcessStep;
+            this.view.dataService.data[indexPrevious].items = previousDataChild;
+            this.view.dataService.data[indexCrr].items = crrDataChild;
+            this.dataTreeProcessStep = this.view.dataService.data;
+
+             //up kanban
+             let kanban = (this.view.currentView as any).kanban;
+             if(kanban){
+               var arrDataUpdate = previousDataChild.concat(crrDataChild) ;
+               arrDataUpdate.forEach(obj=>{
+                kanban.updateCard(obj)
+               })
+             }
 
             // transferArrayItem(
             //   event.previousContainer.data,
@@ -741,7 +798,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   checkAttachment(data) {
     if (data?.attachments > 0) return true;
-    if (data?.items.length > 0) {
+    if (data?.items && data?.items.length > 0) {
       var check = false;
       data?.items.forEach((obj) => {
         if (obj.attachments > 0) check = true;
@@ -752,11 +809,16 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   getOwnerID(listOwner) {
-    // var arrOwner = [];
-    // listOwner.forEach((x) => arrOwner.push(x?.objectID));
     var arrOwner = listOwner.map(function (obj) {
       return obj?.objectID;
     });
     return arrOwner.join(';');
   }
+  //test data flow chart
+  getFlowChart(recID){
+    this.fileService.getFile("636341e8e82afdc6f9a4ab54").subscribe((data) => {
+      if(data)this.dataFile = data 
+    }); 
+  }
+ 
 }

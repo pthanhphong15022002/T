@@ -128,11 +128,11 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
             if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
                 this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.status="5"
+                data.approveStatus="5"
               }
               if(status=="4"){
                 this.notificationsService.notifyCode('ES007');//bị hủy
-                data.status="4";
+                data.approveStatus="4";
               }                           
               this.updateStatus.emit(data);
             } else {
@@ -143,14 +143,25 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
   }
   changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
-      // });
-      if(data.status=='3'){
+      event.forEach(func => {       
+        if(func.functionID == "SYS04"/*Copy*/) 
+        {
+          func.disabled=true;        
+        }
+      });
+      if(data.approveStatus=='3'){
+        event.forEach(func => {
+          if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/)
+          {
+            func.disabled=false;
+          }
+        });  
+      }
+      else{
         event.forEach(func => {
           if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/ )
           {
-            func.disabled=false;
+            func.disabled=true;
           }
         });  
       }

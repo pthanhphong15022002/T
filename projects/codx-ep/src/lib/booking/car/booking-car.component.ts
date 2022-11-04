@@ -204,7 +204,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       // event.forEach(func => {        
       //   func.disabled=true;        
       // });
-      if(data.status=='1'){
+      if(data.approveStatus=='1'){
         event.forEach(func => {
           if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
           {
@@ -242,6 +242,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
+  
   getDetailBooking(id: any) {
     this.api
       .exec<any>(
@@ -273,9 +274,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.formModel;
       this.dialog = this.callFuncService.openSide(
         PopupAddBookingCarComponent,
-        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle,this.optionalData],
+        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle,this.optionalData,false],
         option
       );
+      this.dialog.closed.subscribe((returnData) => {
+        if (!returnData.event) this.view.dataService.clear();        
+      });
     });
   }
 
@@ -299,6 +303,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             [this.viewBase.dataService.dataSelected, false, this.popupTitle],
             option
           );
+          this.dialog.closed.subscribe((returnData) => {
+            if (!returnData.event) this.view.dataService.clear();        
+          });
         });
     }
   }
@@ -319,6 +326,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             [this.viewBase.dataService.dataSelected, true, this.popupTitle,null,true],
             option
           );
+          this.dialog.closed.subscribe((returnData) => {
+            if (!returnData.event) this.view.dataService.clear();        
+          });
         });
     }
   }

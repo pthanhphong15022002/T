@@ -153,10 +153,11 @@ export class PopupAddSprintsComponent implements OnInit {
     // this.imageAvatar
     //   .updateFileDirectReload(this.master.iterationID)
     //   .subscribe((up) => {
+      // !isAdd ? null : this.master.iterationType == '1' ? 0 : 1
     this.dialog.dataService
       .save(
         (option: any) => this.beforeSave(option, isAdd),
-        !isAdd ? null : this.master.iterationType == '1' ? 0 : 1
+        !isAdd ? null : 0 
       )
       .subscribe((res) => {
         if (res) {

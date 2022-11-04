@@ -53,7 +53,7 @@ export class BookingStationeryComponent
   method = 'GetListBookingAsync';
   idField = 'recID';
   predicate = 'ResourceType=@0';
-  datavalue = '6';
+  dataValue = '6';
   funcIDName = '';
   popupTitle = '';
   formModel: FormModel;
@@ -123,9 +123,28 @@ export class BookingStationeryComponent
       case 'SYS03': //Sua.
         this.edit(data);
         break;
-      case 'SYS04': //Sua.
+      case 'SYS04': //Copy.
         this.copy(data);
         break;
+      case 'EPT40303': //Cap phat
+        this.allocate(data);
+        break;
+    }
+  }
+
+  changeDataMF(event, data: any) {
+    if (event != null && data != null && this.funcID=="EPT32") {
+      
+        event.forEach((func) => {
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = true;
+          }
+        });
+      
     }
   }
 
@@ -196,7 +215,7 @@ export class BookingStationeryComponent
       }
       this.view.dataService.dataSelected = evt;
       this.view.dataService
-        .edit(this.view.dataService.dataSelected)
+        .copy(this.view.dataService.dataSelected)
         .subscribe((res) => {
           let option = new SidebarModel();
           option.DataService = this.view?.dataService;
@@ -222,49 +241,25 @@ export class BookingStationeryComponent
     }
   }
 
+  allocate(evt: any) {
+    this.api
+      .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [evt.recID])
+      .subscribe((dataItem) => {
+        if (dataItem) {
+          this.view.dataService.update(dataItem).subscribe((res) => {
+            if (res) {
+              this.notificationsService.notify('Cấp phát thành công', '1', 0);
+            }
+          });
+          this.detectorRef.detectChanges(); 
+        }
+      });
+  }
+
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
 
-  // addNewRequest(evt?) {
-  //   this.view.dataService.addNew().subscribe((res) => {
-  //     this.dataSelected = this.view.dataService.dataSelected;
-  //     let option = new SidebarModel();
-  //     option.DataService = this.view?.dataService;
-  //     option.FormModel = this.formModel;
-  //     let dialogModel = new DialogModel();
-  //     dialogModel.IsFull = true;
-  //     this.dialog = this.callFuncService.openForm(
-  //       PopupRequestStationeryComponent,
-  //       this.popupTitle,
-  //       700,
-  //       650,
-  //       this.funcID,
-  //       [this.dataSelected, true],
-  //     );
-  //   });
-  // }
-
-  // edit(evt?) {
-  //   if (evt) {
-  //     this.view.dataService.dataSelected = evt;
-  //     this.view.dataService
-  //       .edit(this.view.dataService.dataSelected)
-  //       .subscribe((res) => {
-  //         this.dataSelected = this.view.dataService.dataSelected;
-  //         let option = new SidebarModel();
-  //         option.DataService = this.view?.dataService;
-  //         option.FormModel = this.formModel;
-  //         let dialogModel = new DialogModel();
-  //         dialogModel.IsFull = true;
-  //         this.dialog = this.callFuncService.openSide(
-  //           PopupRequestStationeryComponent,
-  //           [this.view.dataService.dataSelected, false,this.popupTitle],
-  //           option
-  //         );
-  //       });
-  //   }
-  // }
   delete(evt?) {
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {

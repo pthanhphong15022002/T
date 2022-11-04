@@ -1,46 +1,37 @@
 <div class="more-function">
-    <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary">
-      <i class="icon-search"></i>
-    </a>
+  <a (click)="clickShowPopupSearch()" class="btn btn-icon btn-primary">
+    <i class="icon-search"></i>
+  </a>
 </div>
-  <div class="d-flex flex-column flex-row-fluid position-relative">
-    <!--begin::Content-->
-    <div
-      class="content d-flex flex-column flex-column-fluid py-0"
-      id="kt_content"
-    >
-      <div id="erm_content">
-        <div class="d-flex">
-          <div class="w-100 home-left">
-            <!-- <app-list-post></app-list-post> -->
-            <wp-lib-post></wp-lib-post>
+<div class="d-flex flex-column flex-row-fluid position-relative wp-home">
+  <!--begin::Content-->
+  <div class="content d-flex flex-column flex-column-fluid py-0" id="kt_content">
+    <div id="erm_content">
+      <div class="d-flex">
+        <div class="w-100 home-left">
+          <!-- <app-list-post></app-list-post> -->
+          <wp-lib-post></wp-lib-post>
+        </div>
+        <div class="w-350px min-w-350px ms-4 home-right">
+          <div class="card card-custom card-myteam gutter-b form-myTeam">
+            <app-my-team></app-my-team>
+            <!--end::Body-->
           </div>
-          <div class="w-350px min-w-350px ms-4 home-right">
-            <div class="card card-custom card-myteam gutter-b form-myTeam">
-              <app-my-team></app-my-team>
-              <!--end::Body-->
-            </div>
-            <div class="card card-custom gutter-b sp-my-task">
-              <!--begin::Header-->
-              <div class="card-header border-0">
-                <div class="card-title">
-                  <codx-label
-                    class="mb-0 mt-2"
-                    formName="Notes"
-                    default="Lịch cá nhân"
-                    fieldName=""
-                    gridViewName=""
-                  >
-                  </codx-label>
-                </div>
+          <div class="card card-custom gutter-b sp-my-task">
+            <!--begin::Header-->
+            <div class="card-header border-0">
+              <div class="card-title">
+                <codx-label class="mb-0 mt-2" formName="Notes" default="Lịch cá nhân" fieldName="" gridViewName="">
+                </codx-label>
               </div>
-              <div class="card-body p-5 pd-top-0 note">
-                <app-calendar-notes></app-calendar-notes>
-              </div>
-              <!--end::Body-->
             </div>
+            <div class="card-body p-5 pd-top-0 note">
+              <app-calendar-notes></app-calendar-notes>
+            </div>
+            <!--end::Body-->
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

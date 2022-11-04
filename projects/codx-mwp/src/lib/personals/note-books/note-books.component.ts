@@ -144,7 +144,6 @@ export class NoteBooksComponent
       })
       .subscribe((res: any) => {
         if (res) {
-          // (this.listView.dataService as CRUDService).remove(data).subscribe();
           this.api
             .execSv(
               'DM',
@@ -170,11 +169,20 @@ export class NoteBooksComponent
         option.DataService = this.listView?.dataService;
         option.FormModel = this.listView?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
+        var dialog = this.callfc.openSide(
           AddUpdateNoteBookComponent,
           [this.listView.dataService.dataSelected, 'edit'],
           option
         );
+        dialog.closed.subscribe((res) => {
+          if (res.event) {
+            res.event['modifiedOn'] = new Date();
+            (this.listView.dataService as CRUDService)
+              .update(res.event)
+              .subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
       });
   }
 
@@ -204,11 +212,20 @@ export class NoteBooksComponent
         option.DataService = this.listView?.dataService;
         option.FormModel = this.listView?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
+        var dialog = this.callfc.openSide(
           AddUpdateNoteBookComponent,
           [this.listView.dataService.data, 'add'],
           option
         );
+        dialog.closed.subscribe((res) => {
+          if (res.event) {
+            res.event['modifiedOn'] = new Date();
+            (this.listView.dataService as CRUDService)
+              .update(res.event)
+              .subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
       });
   }
 

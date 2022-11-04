@@ -11,16 +11,15 @@ import {
   DataRequest,
   DialogRef,
   FormModel,
-  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddQuotaComponent } from './popup-add-quota/popup-add-quota.component';
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
+import { PopupUpdateQuantityComponent } from './popup-update-quantity/popup-update-quantity.component';
 
 @Component({
   selector: 'setting-stationery',
@@ -28,14 +27,6 @@ import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-st
   styleUrls: ['./stationery.component.scss'],
 })
 export class StationeryComponent extends UIComponent implements AfterViewInit {
-  // @ViewChild('resourceID') resourceID: TemplateRef<any>;
-  // @ViewChild('resourceName') resourceName: TemplateRef<any>;
-  // @ViewChild('productImg') productImg: TemplateRef<any>;
-  // @ViewChild('color') color: TemplateRef<any>;
-  // @ViewChild('groupID') groupID: TemplateRef<any>;
-  // @ViewChild('note') note: TemplateRef<any>;
-  // @ViewChild('quantity') quantity: TemplateRef<any>;
-  // @ViewChild('owner') owner: TemplateRef<any>;
   @ViewChild('columnsList') columnsList: TemplateRef<any>;
   @ViewChild('templateListCard') templateListCard: TemplateRef<any>;
   viewType = ViewType;
@@ -180,6 +171,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         this.copy(data);
         break;
       case 'EPS2301':
+        this.updateQuantity(data);
         break;
       case 'EPS2302':
         this.addQuota(data);
@@ -189,7 +181,19 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  changeDataMF(e: any, data: any) {}
+  changeDataMF(e: any, data: any) {
+    if (e != null && data != null) {
+      e.forEach((func) => {
+        if (
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/
+        ) {
+          func.disabled = false;
+        }
+      });
+    }
+  }
 
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
@@ -204,6 +208,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         option
       );
       this.dialog.closed.subscribe((x) => {
+        if (!x.event) this.view.dataService.clear();
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
             .delete([this.view.dataService.dataSelected])
@@ -237,6 +242,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           option
         );
         this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear();
           if (x?.event) {
             x.event.modifiedOn = new Date();
             this.view.dataService.update(x.event).subscribe((res) => {});
@@ -264,6 +270,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           option
         );
         this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear();
           if (x?.event) {
             x.event.modifiedOn = new Date();
             this.view.dataService.update(x.event).subscribe((res) => {});
@@ -283,6 +290,26 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   addQuota(data) {
     this.callfc.openForm(PopupAddQuotaComponent, '', 500, null, '', [data]);
+  }
+
+  updateQuantity(data) {
+    this.callfc.openForm(PopupUpdateQuantityComponent, '', 500, null, '', [
+      data,
+    ]);
+    this.dialog.closed.subscribe((x) => {
+      debugger;
+      if (!x.event) this.view.dataService.clear();
+      if (x.event == null && this.view.dataService.hasSaved)
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected])
+          .subscribe((x) => {
+            this.changeDetectorRef.detectChanges();
+          });
+      else if (x.event) {
+        x.event.modifiedOn = new Date();
+        this.view.dataService.update(x.event).subscribe();
+      }
+    });
   }
 
   closeEditForm(evt?: any) {

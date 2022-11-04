@@ -90,21 +90,23 @@
                 </li>
               </ul>
               <div class="d-flex">
-                <div id="ex4">
-                  <span class="p1 fa-stack fa-2x has-badge">
-                    <i class="p3 icon-shopping_cart">{{ this.cart.length }}</i>
-                  </span>
-                </div>
-
-                <button (click)="changeTab(2)">
-                  <i class="icon-double_arrow"></i>
-                  <span>
-                    <codx-label
-                      name="lblContinue"
-                      default="Tiếp theo"
-                    ></codx-label>
-                  </span>
+                <button class="btn btn-icon btn-tran position-relative me-5">
+                  <span class="icon-shopping_cart icon-24"></span>
+                  <span
+                    *ngIf="getCartQty(this.cart) != 0"
+                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger"
+                    >{{ getCartQty(this.cart) }}</span
+                  >
                 </button>
+                <a
+                  (click)="changeTab(2)"
+                  class="btn btn-flex btn-outline btn-outline-solid btn-outline-dark btn-active-primary"
+                  ><span class="icon-double_arrow me-2"></span>
+                  <codx-label
+                    name="lblContinue"
+                    default="Tiếp theo"
+                  ></codx-label
+                ></a>
               </div>
             </div>
             <div class="container h-75">
@@ -131,7 +133,7 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
-    cardCss="border w-200px h-100"
+    cardCss="border w-200px h-100 card-vpp"
     [imageObjType]="'EP_Resources'"
     [imageId]="data?.recID"
     [rootData]="data"
@@ -151,8 +153,11 @@
     </div>
     <div class="d-flex justify-content-between align-items-end mt-2">
       <div class="d-flex align-items-end me-2 codx-badge mb-3">
-        <div class="d-flex align-items-center position-relative me-4">
-          <span class="icon-view_agenda icon-20 text-gray-400"></span>
+        <div class="d-flex align-items-center position-relative me-4"  [title]="'hello'">
+          <span
+            class="icon-view_agenda icon-20 text-gray-400"
+           
+          ></span>
           <span>{{ data?.currentQty }}</span>
         </div>
         <div class="d-flex align-items-center position-relative me-4">
@@ -167,12 +172,14 @@
           ></span>
           <span>{{ data?.availableQty }}</span>
         </div>
-      </div>
-      <div
-        class="symbol-group symbol-hover justify-content-end cursor-pointer"
-        (click)="addCart($event, data)"
-      >
-        <span class="icon-shopping_cart icon-20 text-gray-400 cart"></span>
+        <div class="position-relative me-5" (click)="addCart($event, data)">
+          <span class="icon-shopping_cart icon-20 text-gray-400 cart"></span>
+          <span
+            *ngIf="getItemQty(data?.resourceID) != 0"
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger"
+            >{{ getItemQty(data?.resourceID) }}</span
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -226,7 +233,7 @@
         </div>
         <codx-vll
           [name]="'VL003'"
-          [value]="dialogAddBookingStationery?.value.status"
+          [value]="dialogAddBookingStationery?.value.approveStatus"
           [showText]="true"
           [showBgColor]="true"
           class="badge badge-light badge-square badge-md fs-7 p-2"
@@ -242,14 +249,6 @@
               [formModel]="formModel"
             >
             </codx-label>
-            <!-- <codx-input
-              type="datetime"
-              format="d"
-              field="bookingOn"
-              [crrValue]="dialogAddBookingStationery.value.bookingOn"
-              (valueChange)="valueBookingOnChange($event)"
-            >
-            </codx-input> -->
             <codx-input
               ControlName="bookingOn"
               [formModel]="formModel"
@@ -376,7 +375,7 @@
               <div class="me-2">
                 <codx-img
                   [objectId]="item.recID"
-                  imageType="square"
+                  imageType="circle"
                   width="35"
                   objectType="EP_Resources"
                 ></codx-img>

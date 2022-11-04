@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddUpdateStorageComponent } from './add-update-storage.component';
+import { CodxOmComponent } from './codx-om.component';
 
-describe('AddUpdateStorageComponent', () => {
-  let component: AddUpdateStorageComponent;
-  let fixture: ComponentFixture<AddUpdateStorageComponent>;
+describe('CodxOmComponent', () => {
+  let component: CodxOmComponent;
+  let fixture: ComponentFixture<CodxOmComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddUpdateStorageComponent ]
+      declarations: [ CodxOmComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddUpdateStorageComponent);
+    fixture = TestBed.createComponent(CodxOmComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -198,7 +198,6 @@ export class HomeComponent extends UIComponent {
       if (params?.id) {
         var dialogModel = new DialogModel();
         dialogModel.IsFull = true;
-        this.dmSV.folderId.next('');
         this.fileService.getFile(params?.id).subscribe((data) => {
           if (data.read) {
             this.callfc.openForm(
@@ -612,7 +611,6 @@ export class HomeComponent extends UIComponent {
         this.dmSV.level = item.level;
         this.dmSV.getRight(item);
 
-        this.data = [];
         this.dmSV.folderID = id;
         this.dmSV.folderId.next(id);
         this.folderService.options.srtColumns = this.sortColumn;
@@ -625,8 +623,8 @@ export class HomeComponent extends UIComponent {
             this.data = this.dmSV.listFolder.concat(this.dmSV.listFiles);
             var tree = this.codxview?.currentView?.currentComponent?.treeView;
             item.items = [];
-            //if (tree) tree.addChildNodes(item, res[0]);
-            //this.changeDetectorRef.detectChanges();
+            if (tree) tree.addChildNodes(item, res[0]);
+            this.changeDetectorRef.detectChanges();
             this._beginDrapDrop();
           }
         });
@@ -651,7 +649,7 @@ export class HomeComponent extends UIComponent {
         });
       }
     } else {
-      this.data = [];
+      //this.data = [];
       if (item?.read) this.notificationsService.notify(this.titleAccessDenied);
     }
   }
@@ -809,7 +807,6 @@ export class HomeComponent extends UIComponent {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
-    this.data = [];
     //  this.data = [];
   }
   viewChanging(event) {
@@ -817,7 +814,6 @@ export class HomeComponent extends UIComponent {
     if (event.text != 'Search' && this.view.formModel.funcID != 'DMT02') {
       this.data = [];
       this.dmSV.page = 1;
-     
       var id = !this.dmSV.folderID ? '' : this.dmSV.folderID;
       this.getDataFile(id);
     }

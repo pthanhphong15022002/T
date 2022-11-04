@@ -1,6 +1,8 @@
+import { FormGroup } from '@angular/forms';
 import { AfterViewInit, Component, inject, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { UIComponent, FormModel, ViewType } from 'codx-core';
+import { UIComponent, FormModel, ViewType, ButtonModel, AuthService, SidebarModel, DialogRef, CallFuncService } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
+import { PopupAddCardTransComponent } from './popup-add-cardTrans/popup-add-cardTrans.component';
 
 @Component({
   selector: 'booking-cardTran',
@@ -11,40 +13,65 @@ export class CardTransComponent
   extends UIComponent
   implements AfterViewInit
 {
-  
-  @ViewChild('subTitle') tranTypeCol: TemplateRef<any>;
-  @ViewChild('subTitle') userIDCol: TemplateRef<any>;
-  @ViewChild('subTitle') createByCol: TemplateRef<any>;
+  @ViewChild('tranTypeCol') tranTypeCol: TemplateRef<any>;
+  @ViewChild('userIDCol') userIDCol: TemplateRef<any>;
+  @ViewChild('createByCol') createByCol: TemplateRef<any>;  
+  @ViewChild('transDateCol') transDateCol: TemplateRef<any>;  
+  @ViewChild('cardTranTmp') cardTranTmp: TemplateRef<any>;
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_ResourceTrans';
-  predicate = 'ResourceType=@0';
   idField = 'recID';
   className = 'ResourceTransBusiness';
   method = 'GetListAsync';
-  dataValue='';
   viewType = ViewType;
   funcID:any;
   formModel:FormModel;
   columnGrids:any;
   views:any;
+  popupDialog:any;
+  dialog: DialogRef;
+  button:ButtonModel;
+  fGroupResourceTran:FormGroup;
   id:any;
+  popupTitle:any;
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService
+    private codxEpService: CodxEpService,
+    private authService: AuthService,
+    private callFuncService: CallFuncService,
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
-          
+    
   }
   onInit(): void {
-    this.codxEpService.getFormModel(this.funcID).then((res) => {
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
-        this.formModel = res;
+        this.popupTitle = res.defaultName.toString();
       }
     });
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;        
+        this.initForm();
+      }
+    });
+    this.button={
+      id:'btnAdd',
+    }
   }
-
+  
+  initForm() {
+    this.codxEpService
+      .getFormGroup(
+        this.formModel.formName,
+        this.formModel.gridViewName
+      )
+      .then((item) => {
+        this.fGroupResourceTran = item;    
+      });
+  }
   ngAfterViewInit(): void {}
   onLoading(evt: any) {
     let formModel = this.view.formModel;
@@ -54,37 +81,35 @@ export class CardTransComponent
         .subscribe((gv) => {
           this.columnGrids = [
             {
-              field: 'tranType',
-              headerText: gv?.TranType?.headerText,
-              width: '15%',
+              field: 'transType',
+              headerText: gv?.TransType?.headerText,
+              width: "15%",
               template: this.tranTypeCol,
+              headerTextAlign: 'Center',
+              textAlign: 'Center',
             },
             {
-              field: 'createOn',
-              headerText: gv?.CreateOn?.headerText,
-              width: '20%',
-              headerTextAlign: 'Center',
+              field: 'transDate',
+              headerText: gv?.TransDate?.headerText,
+              width: 200,
+              template : this.transDateCol,
             },
             {
               field: 'userID',
               headerText: gv?.UserID?.headerText,
+              width: 250,
               template: this.userIDCol,
-              headerTextAlign: 'Center',
-              textAlign: 'Center',
-              width: '30%',
             },          
             {
               field: 'note',
               headerText: gv?.Note?.headerText,
-              width: '35%',
-              headerTextAlign: 'Center',           
+              width: "20%",          
             },
             {
-              field: 'createBy',
-              headerText: gv?.CreateBy?.headerText,
-              width: '30%',
+              field: 'createdBy',
+              headerText: gv?.CreatedBy?.headerText,
+              width: 250,
               template: this.createByCol,
-              headerTextAlign: 'Center',
             },
           ];
           this.views = [
@@ -101,5 +126,60 @@ export class CardTransComponent
         });
     }
     
+  }
+  openPopupCardFunction(template: any) {
+    
+    let time = new Date();
+    this.popupDialog = this.callfc.openForm(template, '', 550, 350);
+    this.detectorRef.detectChanges();
+  }
+  click(evt: ButtonModel) {
+    //this.popupTitle = evt?.text + ' ' + this.funcIDName;
+    switch (evt.id) {
+      case 'btnAdd':
+        this.addNew()
+        break;
+      
+    }
+  }
+  addNew() {
+    this.view.dataService.addNew().subscribe((res) => {      
+    this.dialog = this.callFuncService.openForm(
+      PopupAddCardTransComponent,'',550,null,this.funcID,
+      [this.view.dataService.dataSelected,this.formModel,this.popupTitle,this.funcID,this.view.dataService]
+        
+    );
+      // this.dialog.closed.subscribe((returnData) => {
+      //   if (!returnData.event) this.view.dataService.clear();        
+      // });
+    });
+  }
+  createCardTrans() {
+    this.fGroupResourceTran.patchValue({
+      userID: '',
+      transDate: '',
+      note: '',
+      resourceType: '2',
+      createBy: this.authService.userValue.userID,
+      transType: '',
+      status: '1',
+      resourceID: '',
+    });
+    this.api
+      .execSv(
+        'EP',
+        'ERM.Business.EP',
+        'ResourceTransBusiness',
+        'AddResourceTransAsync',
+        [this.fGroupResourceTran.value]
+      )
+      .subscribe((res) => {
+        if (res) {
+          // this.selectedCard.status=currTrans;
+          // this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
+          // this.popupDialog.close();
+          // this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_TEMP Đợi messcode từ BA         
+        }
+      });
   }
 }

@@ -673,4 +673,7 @@ export class TMMeetingsComponent
 
     return current_day;
   }
+  openLinkMeeting(data){
+    window.open(data?.link)
+  }
 }

@@ -1,0 +1,57 @@
+<codx-form
+  #form
+  [headerText]="title"
+  [subHeaderText]="subHeader"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div class="">
+      <div class="row">
+        <div class="form-group col-6">
+          <codx-label
+            name="lblNewQuantity"
+            default="Số lượng nhập mới"
+          ></codx-label>
+          <codx-input
+            type="text"
+            field="quantity"
+            [refValue]="'EP013'"
+            [crrValue]="dialogUpdateQuantity.value?.quantity"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="form-group col-6">
+          <codx-label
+            name="lblCurQuantity"
+            default="Số lượng hiện tại"
+          ></codx-label>
+          <codx-input
+            type="text"
+            field="oldQuantity"
+            [crrValue]="dialogUpdateQuantity.value?.oldQuantity"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <codx-label name="lblNote" default="Ghi chú"></codx-label>
+          <codx-input
+            type="textarea"
+            field="note"
+            [crrValue]="dialogUpdateQuantity.value?.note"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end mt-4">
+      <button class="btn btn-primary" (click)="onSaveForm()">Lưu</button>
+    </div>
+  </ng-template>
+</codx-form>

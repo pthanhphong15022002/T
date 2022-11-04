@@ -73,7 +73,6 @@ export class ProcessesComponent
   user: any;
   funcID: any;
   itemSelected: any;
-  titleReName = 'Thay đổi tên';
   dialogPopupReName: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
   @Input() process = new BP_Processes();
@@ -101,10 +100,10 @@ export class ProcessesComponent
     this.columnsGrid = [
       { headerTemplate: this.itemProcessName, width: 300 },
       { headerTemplate: this.itemOwner, width: 300 },
-      { headerTemplate: this.itemVersionNo, width: 150 },
-      { headerTemplate: this.itemActivedOn, width: 200 },
+      { headerTemplate: this.itemVersionNo, width: 100 },
+      { headerTemplate: this.itemActivedOn, width: 150 },
       { headerTemplate: this.itemMemo, width: 300 },
-      { field: '', headerText: '', width: 30 },
+      { field: '', headerText: '', width: 100 },
     ];
   }
 
@@ -348,6 +347,8 @@ export class ProcessesComponent
       case 'BPT104':
         this.permission(data);
         break;
+      case 'BPT105':
+        this.share(data);
     }
   }
 
@@ -395,10 +396,19 @@ export class ProcessesComponent
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
+    data.id = data.recID;
+    this.callfc.openSide(PopupAddPermissionComponent, [this.titleAction , data, false], option);
+  }
+
+  share(data){
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
     // let data = {} as any;
     // data.title = this.titleUpdateFolder;
     data.id = data.recID;
-    this.callfc.openSide(PopupAddPermissionComponent, data, option);
+    this.callfc.openSide(PopupAddPermissionComponent, [this.titleAction , data, true], option);
   }
 
   valueChange(e) {
@@ -444,5 +454,9 @@ export class ProcessesComponent
     this.bpService.viewProcesses.next(data);
     // this.codxService.navigate('', e?.url); thuong chua add
     this.codxService.navigate('', 'bp/processstep/BPT11');
+  }
+
+  approval($event) {
+
   }
 }

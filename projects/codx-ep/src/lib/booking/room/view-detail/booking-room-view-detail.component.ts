@@ -24,6 +24,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('attachment') attachment;
   @ViewChild('bookingRoom') bookingRoom : BookingRoomComponent;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();  
+  @Output('copy') copy: EventEmitter<any> = new EventEmitter(); 
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
@@ -97,6 +98,10 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       case 'SYS03': //Sua.
         this.lviewEdit(data,event.text);
         break;
+
+        case 'SYS04': //copy.
+        this.lviewCopy(data,event.text);
+        break;
     }
   }
   lviewEdit(data?,mfuncName?) {
@@ -110,12 +115,18 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       this.delete.emit(data);
     }
   }
+  lviewCopy(data?,mfuncName?) {
+    if (data) {      
+      this.setPopupTitle.emit(mfuncName); 
+      this.copy.emit(data);
+    }
+  }
   changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
       // event.forEach(func => {        
       //   func.disabled=true;        
       // });
-      if(data.status=='1'){
+      if(data.approveStatus=='1'){
         event.forEach(func => {
           if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
           {

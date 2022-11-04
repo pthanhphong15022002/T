@@ -53,9 +53,4 @@ export class SearchingComponent extends UIComponent implements OnDestroy, AfterV
   onSelected(e: any) {
     alert(JSON.stringify(e));
   }
-
-  testSearch() {
-    this.views!.filter = { "AgencyName": ["Bảo"] };
-    this.views.searchText();
-  }
 }

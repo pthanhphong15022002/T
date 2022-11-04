@@ -131,13 +131,15 @@
                 [width]="80"
                 referType="S1"
                 [objectId]="data.recID"
-                [objectType]="'ES_Signatures'"
+                [objectType]="formModel.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
-                [funcId]="'ESS21'"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S1')"
+                [funcId]="funcID"
               >
               </codx-img>
             </div>
@@ -157,13 +159,15 @@
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
                 [objectId]="data.recID"
-                [objectType]="'ES_Signatures'"
+                [objectType]="formModel.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
-                [funcId]="'ESS21'"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S2')"
+                [funcId]="funcID"
               >
               </codx-img>
             </div>
@@ -185,13 +189,15 @@
                 [imageType]="'square'"
                 [width]="80"
                 [objectId]="data.recID"
-                [objectType]="'ES_Signatures'"
+                [objectType]="formModel.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
-                [funcId]="'ESS21'"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S3')"
+                [funcId]="funcID"
               >
               </codx-img>
             </div>

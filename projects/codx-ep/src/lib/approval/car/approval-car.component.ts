@@ -34,7 +34,7 @@ export class ApprovalCarsComponent extends UIComponent {
   predicate = 'ResourceType=@0';
   datavalue = '2';
   idField = 'recID';
-  
+
   // [entityName]="'ES_ApprovalTrans'"
   // [method]="'LoadDataAsync'"
   // [assemblyName]="'CM'"
@@ -50,12 +50,12 @@ export class ApprovalCarsComponent extends UIComponent {
   fields;
   dataSelected: any;
   dialog!: DialogRef;
-  formModel:FormModel;
+  formModel: FormModel;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
-    private notificationsService: NotificationsService,
-    ) {
+    private notificationsService: NotificationsService
+  ) {
     super(injector);
 
     this.funcID = this.router.snapshot.params['funcID'];
@@ -128,8 +128,8 @@ export class ApprovalCarsComponent extends UIComponent {
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           //template5: this.resourceTootip,
-          template6: this.mfButton,//header          
-          template8: this.contentTmp,//content
+          template6: this.mfButton, //header
+          template8: this.contentTmp, //content
           statusColorRef: 'vl003',
         },
       },
@@ -140,96 +140,103 @@ export class ApprovalCarsComponent extends UIComponent {
   click(event) {}
 
   clickMF(value, datas: any = null) {
-    
     let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
     switch (funcID) {
-      case 'EPT40201':
-      case 'EPT40201':
-      case 'EPT40301':
+      case 'EPT40201': //Duyệt
         {
-          //alert('Duyệt');
-          this.approve(datas,"5")
+          this.approve(datas, '5');
         }
-        break;      
-      case "EPT40202":
+        break;
+      case 'EPT40202': //Từ chối
         {
-          //alert('Từ chối');
-          this.approve(datas,"4")
+          this.approve(datas, '4');
         }
-        break;      
+        break;
+      case 'EPT40204': {
+        //Phân công tài xế
+        this.assignDriver(datas);
+        break;
+      }
       default:
         '';
         break;
     }
   }
-  approve(data:any, status:string){
+
+  approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
-          .approve(            
-            data?.approvalTransRecID,//ApprovelTrans.RecID
-            status,
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            status
           )
-          .subscribe((res:any) => {
-            if (res?.msgCodeError == null && res?.rowCount>=0) {
-              if(status=="5"){
-                this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.status="5"
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              if (status == '5') {
+                this.notificationsService.notifyCode('ES007'); //đã duyệt
+                data.approveStatus = '5';
               }
-              if(status=="4"){
-                this.notificationsService.notifyCode('ES007');//bị hủy
-                data.status="4";
+              if (status == '4') {
+                this.notificationsService.notifyCode('ES007'); //bị hủy
+                data.approveStatus = '4';
               }
-                             
+
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
           });
       });
-  } 
+  }
+
+  assignDriver(data: any) {}
+
   closeAddForm(event) {}
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
 
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
-      // });
-      if(data.status=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (func.functionID == 'SYS04' /*Copy*/ || func.functionID == "EPT40203") {
+          func.disabled = true;
+        }
+      });
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+        });
       }
     }
   }
-  
-  updateStatus(data:any)
-  {
+
+  updateStatus(data: any) {
     this.view.dataService.update(data).subscribe();
   }
   getDetailApprovalBooking(id: any) {
     this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetApprovalBookingByIDAsync',
-        [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
-      )
+      .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
+        this.itemDetail?.recID,
+        this.itemDetail?.approvalTransRecID,
+      ])
       .subscribe((res) => {
         if (res) {
           this.itemDetail = res;

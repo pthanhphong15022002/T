@@ -72,10 +72,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {
-    var btnTreeView = $('#btnTreeView');
-    btnTreeView.show();
-  }
+  ngOnDestroy(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -95,19 +92,17 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   LinkDetail(recID, roleName, isSystem) {
-    this.tempService.roleName = roleName;
+    debugger;
+    this.tempService.roleName.next(roleName);
     this.tempService.isSystem = isSystem;
     this.codxService.navigate('', this.urlDetailRoles, { recID: recID });
   }
 
   openFormEdit(data) {
-    var obj = [
-      {
-        data: this.view.dataService.data,
-        dataUpdate: data,
-        formType: 'edit',
-      },
-    ];
+    var obj = {
+      role: data,
+      mode: 'edit',
+    };
 
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
@@ -158,18 +153,17 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   openFormAdd(e) {
-    var obj = [
-      {
-        data: this.view.dataService.data,
-        formType: 'add',
-      },
-    ];
-
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+    this.view.dataService.addNew().subscribe((res: any) => {
+      var obj = {
+        role: res,
+        mode: 'add',
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+    });
   }
 
   clickMF(e, item) {

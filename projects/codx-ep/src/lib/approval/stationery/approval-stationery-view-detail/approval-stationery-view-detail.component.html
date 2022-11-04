@@ -11,10 +11,10 @@
 >
   <ng-template #header>
     <div class="d-flex justify-content-between">
-      <h3>{{ itemDetail?.title }}</h3>
+      <h3>{{ itemDetail?.reasonName }}</h3>
       <codx-vll
         [name]="'VL003'"
-        [value]="itemDetail?.status"
+        [value]="itemDetail?.approveStatus"
         [showText]="true"
         [showBgColor]="true"
         class="badge badge-light badge-square badge-md fs-7 p-2"
@@ -100,7 +100,7 @@
                 <div class="me-2">
                   <codx-img
                     [objectId]="item.recID"
-                    imageType="square"
+                    imageType="circle"
                     width="35"
                     objectType="EP_Resources"
                   ></codx-img>

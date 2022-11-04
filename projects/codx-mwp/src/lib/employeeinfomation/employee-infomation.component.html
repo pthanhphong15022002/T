@@ -8,8 +8,8 @@
       ">
       <div class="d-flex align-items-center avatar">
         <codx-img class="me-4 pic-emloyee" [funcId]="functionID" [width]="100" [objectId]="employeeInfo?.employeeID"
-          [objectType]="'HR_Employees'" [objectName]="employeeInfo?.employeeName" [isAllowEdit]="true"
-          [updateDirect]="true">
+          [objectType]="'HR_Employees'" [referType]="'avt'" [objectName]="employeeInfo?.employeeName"
+          [isAllowEdit]="true" [updateDirect]="true">
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
@@ -508,7 +508,7 @@
                     <codx-label [formModel]="view.formModel" formName="Employees" default="Kỹ năng ">
                     </codx-label>
                   </div>
-                  <a *ngIf="editMode" class="btn btn-sm btn-icon btn-light" (click)="editSkill(skillEmployee)">
+                  <a *ngIf="editMode" class="btn btn-sm btn-icon btn-light" (click)="editSkill()">
                     <span class="icon-edit icon-16"></span>
                   </a>
                 </div>
@@ -518,27 +518,17 @@
                       <ng-container *ngFor="let data of skillEmployee">
                         <div class="row mb-4">
                           <div class="fw-bold text-dark">{{ data.competenceName }}</div>
-                            <ejs-slider 
-                              [width]="300" 
-                              [type]="minType" 
-                              [min]="0"
-                              [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " 
-                              [value]="data.valueX"
-                              [readonly]="true">
-                            </ejs-slider>
+                          <ejs-slider [width]="300" [type]="minType" [min]="0"
+                            [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " [value]="data.rating"
+                            [readonly]="true">
+                          </ejs-slider>
                         </div>
                       </ng-container>
                     </div>
                     <div class="col-6" *ngIf="skillEmployee">
-                      <ejs-chart 
-                        [primaryXAxis]="primaryXAxis"
-                        [primaryYAxis]="primaryYAxis">
+                      <ejs-chart [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis">
                         <e-series-collection>
-                          <e-series 
-                            [dataSource]="skillEmployee" 
-                            type="Radar" 
-                            xName="competenceName"
-                            yName="valueX">
+                          <e-series [dataSource]="skillEmployee" type="Radar" xName="competenceName" yName="rating">
                           </e-series>
                         </e-series-collection>
                       </ejs-chart>

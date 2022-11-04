@@ -27,7 +27,7 @@
                 <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
                     <ng-container *ngIf="fileUpload.recID;else imageSrc">
                         <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
-                            cssClass="pic" imageType="square">
+                            cssClass="pic" imageType="square" [imgOn]="date">
                         </codx-img>
                     </ng-container>
                     <ng-template #imageSrc>
@@ -119,7 +119,7 @@
                     <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
                         <ng-container *ngIf="fileUpload.recID;else imageSrc">
                             <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
-                                cssClass="pic" imageType="square">
+                                cssClass="pic" imageType="square"  [imgOn]="date">
                             </codx-img>
                         </ng-container>
                         <ng-template #imageSrc>

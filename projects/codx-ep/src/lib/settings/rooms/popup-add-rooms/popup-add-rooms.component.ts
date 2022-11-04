@@ -82,6 +82,7 @@ export class PopupAddRoomsComponent extends UIComponent {
         device.id = item.value;
         device.text = item.text;
         device.icon= item.icon;
+        device.isSelected= false;  
         if (!this.isAdd) {
           this.data.equipments.forEach((item) => {
             if (item.equipmentID == device.id) {
@@ -159,7 +160,8 @@ export class PopupAddRoomsComponent extends UIComponent {
               .subscribe((result) => {
                 if (result) {                  
                   //xử lí nếu upload ảnh thất bại
-                  //...                
+                  //...
+                  this.dialogRef && this.dialogRef.close(this.returnData);                
                 }
                 this.dialogRef && this.dialogRef.close(this.returnData);
               });  
@@ -169,7 +171,6 @@ export class PopupAddRoomsComponent extends UIComponent {
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
           } 
-          this.dialogRef && this.dialogRef.close(this.returnData);
         }
         else{ 
           //Trả lỗi từ backend.         

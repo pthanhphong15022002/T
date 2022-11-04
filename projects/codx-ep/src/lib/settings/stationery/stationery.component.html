@@ -19,99 +19,6 @@
 >
 </codx-views>
 
-<!-- <ng-template #resourceID let-data>
-  <div class="fw-bold">{{ data?.resourceID }}</div>
-</ng-template>
-
-<ng-template #resourceName let-data>
-  <div class="fw-bold">{{ data?.resourceName }}</div>
-</ng-template>
-
-<ng-template #productImg let-data>
-  <div class="w-100px h-100px m-4">
-    <codx-img
-      [objectId]="data?.recID"
-      [funcId]="funcID"
-      [objectType]="formModel?.entityName"
-      [imageType]="'square'"
-      width="100"
-      [imgOn]="data.modifiedOn"
-    ></codx-img>
-  </div>
-</ng-template>
-
-<ng-template #color let-data>
-  <div
-    class="border"
-    [ngStyle]="{ 'background-color': data?.color ? data.color : '#fff' }"
-    style="width: 50px; height: 50px; border-radius: 25%"
-  ></div>
-</ng-template>
-
-<ng-template #groupID let-data>
-  <div class="fw-bold">{{ data?.groupName }}</div>
-</ng-template>
-
-<ng-template #note let-data>
-  <div class="fw-bold">{{ data?.note }}</div>
-</ng-template>
-
-<ng-template #quantity let-data>
-  <div>
-    <div>
-      <span class="fw-bold text-black-50"
-        ><codx-label
-          name="lblCurrentQty"
-          [formName]="formModel.formName"
-          [gridViewName]="formModel.gridViewName"
-          default="Tồn kho"
-        ></codx-label
-        >:
-      </span>
-      <span class="fw-bold">{{ data?.currentQty }}</span>
-    </div>
-    <div>
-      <span class="fw-bold text-black-50"
-        ><codx-label
-          name="lblReservedQty"
-          [formName]="formModel.formName"
-          [gridViewName]="formModel.gridViewName"
-          default="Đã được đăng ký"
-        ></codx-label
-        >:
-      </span>
-      <span class="fw-bold">{{ data?.reservedQty }}</span>
-    </div>
-    <div>
-      <span class="fw-bold text-black-50"
-        ><codx-label
-          name="lblAvailableQty"
-          [formName]="formModel.formName"
-          [gridViewName]="formModel.gridViewName"
-          default="Được phép đăng ký"
-        ></codx-label
-        >:
-      </span>
-      <span class="fw-bold">{{ data?.availableQty }}</span>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #owner let-data>
-  <div class="d-flex has-action-menu">
-    <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
-    <div class="ms-4">
-      <div class="fw-bold">{{ data?.ownerName }}</div>
-    </div>
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
-  </div>
-</ng-template> -->
-
 <ng-template #columnsList let-data>
   <div class="p-4">
     <div class="d-flex justify-content-between align-items-center">
@@ -121,7 +28,7 @@
             [objectId]="data?.recID"
             [funcId]="funcID"
             [objectType]="view.formModel?.entityName"
-            [imageType]="'square'"
+            imageType="circle"
             width="50"
             [imgOn]="data.modifiedOn"
           ></codx-img>
@@ -214,8 +121,8 @@
             [objectId]="data?.owner"
             [objectName]="data?.ownerName"
             objectType="AD_Users"
-            imageType="square"
             [width]="40"
+            imageType="circle"
           >
           </codx-img>
           <div class="ms-2">
@@ -236,7 +143,8 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
-    cardCss="border w-250px h-100"
+    cardCss="border w-250px h-100 card-vpp"
+    [formModel]="formModel"
     [imageObjType]="view.formModel?.entityName"
     [imageWidth]="600"
     [imageId]="data?.recID"

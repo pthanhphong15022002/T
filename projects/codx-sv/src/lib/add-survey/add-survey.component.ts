@@ -1,16 +1,23 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { X } from '@angular/cdk/keycodes';
-import { Component, Injector, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   MultiSelectService,
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
-import { UIComponent } from 'codx-core';
-import { SV_Answers } from '../model/SV_Answers';
-import { SV_Formats } from '../model/SV_Formats';
-import { SV_Questions } from '../model/SV_Questions';
+import { DialogModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { SV_Surveys } from '../model/SV_Surveys';
+import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 
 @Component({
   selector: 'app-add-survey',
@@ -25,6 +32,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   questions: any = new Array();
   answers: any = new Array();
   isModeAdd = true;
+  funcID = '';
+  functionList: any;
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -56,19 +65,19 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     text: 'Mẫu không có tiêu đề',
     description: 'Mô tả biểu mẫu',
   };
+  REFER_TYPE = {
+    IMAGE: 'image',
+    VIDEO: 'video',
+    APPLICATION: 'application',
+  };
 
   dataAnswer: any = new Array();
-
-  constructor(inject: Injector) {
+  active = false;
+  MODE_IMAGE_VIDEO = 'EDIT';
+  lstEditIV: any = new Array();
+  @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
+  constructor(inject: Injector, private change: ChangeDetectorRef) {
     super(inject);
-    // this.answers.seqNo = 0;
-    // this.answers.answer = 'NVA';
-    // this.answers.other = true;
-    // this.answers.isColumn = false;
-    // this.answers.hasPicture = false;
-    // this.questions.question = 'Bạn tên gì nhỉ???';
-    // this.questions.answers = this.answers;
-    // this.questions.seqNo = 0;
     this.questions = [
       {
         seqNo: 0,
@@ -77,12 +86,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
-        activeMF: false,
+        other: true,
+        mandatory: false,
+        answerType: 'L',
+        category: 'Q',
       },
       {
         seqNo: 1,
@@ -91,138 +103,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           {
             seqNo: 0,
             answer: 'Tùy chọn 1',
-            other: true,
+            other: false,
             isColumn: false,
             hasPicture: false,
           },
         ],
-        activeMF: false,
-      },
-      {
-        seqNo: 2,
-        question: 'Câu hỏi 3',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-      },
-      {
-        seqNo: 3,
-        question: 'Câu hỏi 4',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: true,
-      },
-      {
-        seqNo: 4,
-        question: 'Câu hỏi 5',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-      },
-      {
-        seqNo: 5,
-        question: 'Câu hỏi 6',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-      },
-      {
-        seqNo: 6,
-        question: 'Câu hỏi 7',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-      },
-      {
-        seqNo: 7,
-        question: 'Câu hỏi 8',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-      },
-      {
-        seqNo: 8,
-        question: 'Câu hỏi 9',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-      },
-      {
-        seqNo: 9,
-        question: 'Câu hỏi 10',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
-      },
-      {
-        seqNo: 10,
-        question: 'Câu hỏi 11',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: true,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        activeMF: false,
+        other: true,
+        mandatory: false,
+        answerType: 'L',
+        category: 'Q',
       },
     ];
     this.formats = {
@@ -232,13 +121,32 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       fontColor: 'black',
       fontFormat: 'B',
     };
+    this.router.params.subscribe((params) => {
+      if (params) this.funcID = params['funcID'];
+    });
+    this.cache.functionList('SVT01').subscribe((res) => {
+      if (res) this.functionList = res;
+    });
   }
 
   onInit(): void {
     // this.add();
   }
-  valueChange(e) {
-    console.log(e);
+
+  ngAfterViewInit() {
+    var html = document.querySelector('codx-wrapper');
+    if (html) {
+      html.addEventListener('scroll', (e) => {
+        var htmlMF = document.querySelector('.moreFC');
+        if (htmlMF) htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
+      });
+    }
+  }
+
+  valueChange(e, dataQuestion) {
+    if (e) {
+      this.questions[dataQuestion.seqNo].mandatory = e.data;
+    }
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -248,6 +156,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     var index = this.questions.findIndex((x) => x.seqNo == idParent);
     this.dataAnswer = this.questions[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
+    this.dataAnswer.forEach((x, index) => (x.seqNo = index));
+    this.questions[idParent].answers = this.dataAnswer;
   }
 
   public focusIn(target: HTMLElement): void {
@@ -273,24 +183,277 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       });
   }
 
-  scroll(el: HTMLElement, index) {
-    if (el) {
-      el.scroll({
-        // behavior: 'smooth',
-        // block: 'start',
-        // inline: 'nearest',
-        top: 100,
-        left: 100,
-        behavior: 'smooth',
-      });
-      var indexT = this.questions.findIndex((x) => x.activeMF == true);
-      this.questions[indexT].activeMF = false;
-      this.questions[index].activeMF = true;
-    }
-    console.log("check questions", this.questions)
+  itemActive: any;
+  clickToScroll(seqNo) {
+    var html = document.getElementById(`card-survey-${seqNo}`);
+    var htmlE = html as HTMLElement;
+    var htmlMF = document.querySelector('.moreFC');
+    if (htmlMF)
+      htmlMF.setAttribute('style', `top: calc(${htmlE?.offsetTop}px - 151px);`);
+    this.activeCard(seqNo);
   }
 
-  scrollWindow() {
+  activeCard(seqNo) {
+    // this.questions[seqNo]['active'] = true;
+    // this.questions.forEach(x => {
+    //   if(x.seqNo == seqNo) x['active'] = true;
+    //   else x['active'] = false;
+    // })
+    this.questions.forEach((x) => {
+      if (x['active'] == true) x['active'] = false;
+      if (x.seqNo == seqNo) {
+        x['active'] = true;
+        this.itemActive = x;
+      }
+    });
   }
-  
+
+  addAnswer(dataQuestion) {
+    this.questions[dataQuestion.seqNo]?.answers.filter((x) => x.other == false);
+    var seqNo = this.questions[dataQuestion.seqNo]?.answers.length;
+    var dataAnswerTemp = {
+      seqNo: seqNo,
+      answer: `Tùy chọn ${seqNo + 1}`,
+      other: false,
+      isColumn: false,
+      hasPicture: false,
+    };
+    var index = this.questions[dataQuestion.seqNo].answers.findIndex(
+      (x) => x.other == true
+    );
+    if (index >= 0) {
+      var dataotherTemp = {
+        seqNo: seqNo - 1,
+        answer: `Tùy chọn ${seqNo}`,
+        other: false,
+        isColumn: false,
+        hasPicture: false,
+      };
+      this.questions[dataQuestion.seqNo].answers.splice(
+        seqNo - 1,
+        0,
+        dataotherTemp
+      );
+      this.questions[dataQuestion.seqNo].answers[index + 1].seqNo = seqNo;
+    } else this.questions[dataQuestion.seqNo].answers.push(dataAnswerTemp);
+  }
+
+  deleteAnswer(dataQuestion, dataAnswer) {
+    var data = JSON.parse(
+      JSON.stringify(this.questions[dataQuestion.seqNo]?.answers)
+    );
+    data = data.filter((x) => x.seqNo != dataAnswer.seqNo);
+    data.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    this.questions[dataQuestion.seqNo]!.answers = data;
+    if (dataAnswer.other) this.questions[dataQuestion.seqNo].other = true;
+  }
+
+  deleteQuestion(dataQuestion) {
+    var data = JSON.parse(JSON.stringify(this.questions));
+    data = data.filter((x) => x.seqNo != dataQuestion.seqNo);
+    data.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    if (dataQuestion.seqNo == 0) dataQuestion.seqNo = 1;
+    data[dataQuestion.seqNo - 1].active = true;
+    this.questions = data;
+  }
+
+  addOtherAnswer(dataQuestion) {
+    var seqNo = this.questions[dataQuestion.seqNo]?.answers?.length;
+    var dataAnswerTemp = {
+      seqNo: seqNo,
+      answer: '',
+      other: true,
+      isColumn: false,
+      hasPicture: false,
+    };
+    var data = JSON.parse(
+      JSON.stringify(this.questions[dataQuestion.seqNo]?.answers)
+    );
+    data.push(dataAnswerTemp);
+    this.questions[dataQuestion.seqNo]!.answers = data;
+    this.questions[dataQuestion.seqNo]['other'] = false;
+  }
+
+  copyQuestion(dataQuestion) {
+    var data = JSON.parse(JSON.stringify(this.questions));
+    data[dataQuestion.seqNo].active = false;
+    data.splice(dataQuestion.seqNo + 1, 0, dataQuestion);
+    data.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    this.questions = data;
+  }
+
+  clickMF(functionID, eleAttachment = null) {
+    if (functionID) {
+      switch (functionID) {
+        case 'LTN01':
+          this.addQuestion(this.itemActive);
+          break;
+        case 'LTN02':
+          break;
+        case 'LTN03':
+          break;
+        case 'LTN04':
+          this.uploadFileImage(eleAttachment);
+          break;
+        case 'LTN05':
+          break;
+        case 'LTN06':
+          break;
+      }
+    }
+  }
+
+  uploadFileImage(attachmentEle) {
+    // if (attachmentEle) this.ATM_Image = attachmentEle;
+    // if (this.ATM_Image) this.ATM_Image.uploadFile();
+    // let option = new DialogModel();
+    // option.DataService = this.view?.currentView?.dataService;
+    // option.FormModel = this.view?.currentView?.formModel;
+    this.generateGuid();
+    var obj = {
+      formModel: this.functionList,
+      recID: this.guidID,
+    }
+    this.callfc.openForm(PopupUploadComponent, '', 900, 600, '', obj, '');
+  }
+
+  async selectedImage(e, attachmentEle) {
+    let obj = JSON.parse(JSON.stringify(this.questions));
+    this.generateGuid();
+    let recID = JSON.parse(JSON.stringify(this.guidID));
+    obj[this.itemActive.seqNo].recID = recID;
+    e.data[0].objectID = recID;
+    let files = e.data;
+    // up file
+    if (files.length > 0) {
+      files.map((dt: any) => {
+        if (dt.mimeType.indexOf('image') >= 0) {
+          dt['referType'] = this.REFER_TYPE.IMAGE;
+        } else if (dt.mimeType.indexOf('video') >= 0) {
+          dt['referType'] = this.REFER_TYPE.VIDEO;
+        } else {
+          dt['referType'] = this.REFER_TYPE.APPLICATION;
+        }
+      });
+      this.lstEditIV.push(files[0]);
+    }
+    if (files) {
+      this.ATM_Image.objectId = recID;
+    }
+    (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
+      if (result) {
+        this.uploadImage(this.itemActive, attachmentEle);
+      }
+    });
+    this.change.detectChanges();
+  }
+
+  guidID: any;
+  generateGuid() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    this.guidID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
+  }
+
+  addQuestion(dataQuestion) {
+    if (dataQuestion) {
+      var dataAnswerTemp = {
+        seqNo: 0,
+        answer: 'Tùy chọn 1',
+        other: true,
+        isColumn: false,
+        hasPicture: false,
+      };
+      var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
+      tempQuestion.seqNo = dataQuestion.seqNo + 1;
+      tempQuestion.answers = dataAnswerTemp;
+      tempQuestion.answerType = 'L';
+      tempQuestion.question = `Câu hỏi`;
+      this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
+      this.questions.forEach((x, index) => (x.seqNo = index));
+      this.questions[dataQuestion.seqNo].active = false;
+      this.questions[dataQuestion.seqNo + 1].active = true;
+      this.itemActive = this.questions[dataQuestion.seqNo + 1];
+      this.clickToScroll(dataQuestion.seqNo + 1);
+    }
+  }
+
+  importQuestion(dataQuestion) {}
+
+  addTitle(dataQuestion) {}
+
+  uploadImage(dataQuestion, eleAttachment) {
+    if (dataQuestion) {
+      var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
+      tempQuestion.seqNo = dataQuestion.seqNo + 1;
+      tempQuestion.answerType = null;
+      tempQuestion.question = null;
+      tempQuestion.category = 'P';
+      tempQuestion.recID = this.guidID;
+      this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
+      this.questions.forEach((x, index) => (x.seqNo = index));
+      this.questions[dataQuestion.seqNo].active = false;
+      this.questions[dataQuestion.seqNo + 1].active = true;
+      this.itemActive = this.questions[dataQuestion.seqNo + 1];
+      this.clickToScroll(dataQuestion.seqNo + 1);
+    }
+  }
+
+  uploadVideo(dataQuestion) {}
+
+  addSection(dataQuestion) {}
+
+  clickQuestionMF(functionID, dataQuestion) {
+    if (functionID) {
+      this.questions[dataQuestion.seqNo].answerType = functionID;
+      var data = JSON.parse(JSON.stringify(this.questions[dataQuestion.seqNo]));
+      if (
+        functionID == 'T' ||
+        functionID == 'T2' ||
+        functionID == 'D' ||
+        functionID == 'H'
+      ) {
+        data.other = false;
+        data.answers = new Array();
+        var dataAnswerTemp = {
+          seqNo: 0,
+          answer: '',
+          other: false,
+          isColumn: false,
+          hasPicture: false,
+        };
+        data.answers.push(dataAnswerTemp);
+      } else if (functionID == 'L3') data.other = false;
+      else data.other = true;
+      if (data.answers.length == 1) {
+        data.answers[0].answer = 'Tùy chọn 1';
+      }
+      this.questions[dataQuestion.seqNo] = data;
+    }
+  }
 }

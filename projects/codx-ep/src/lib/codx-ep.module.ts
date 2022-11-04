@@ -47,6 +47,8 @@ import { ApprovalStationeryViewDetailComponent } from './approval/stationery/app
 import { HistoryCardsComponent } from './settings/historyCards/historyCards.component';
 import { CardTransComponent } from './booking/cardTran/cardTrans.component';
 import { MeetingComponent } from './meeting/meeting.component';
+import { PopupUpdateQuantityComponent } from './settings/stationery/popup-update-quantity/popup-update-quantity.component';
+import { PopupAddCardTransComponent } from './booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
 
 const routes: Route[] = [
   {
@@ -60,7 +62,7 @@ const routes: Route[] = [
       {
         path: 'bookingcars/:funcID',
         component: BookingCarComponent,
-      },      
+      },
       {
         path: 'cardtrans/:funcID',
         component: CardTransComponent,
@@ -166,6 +168,8 @@ const Components: Type<any>[] = [
   BookingRoomViewDetailComponent,
   BookingCarViewDetailComponent,
   CardTransComponent,
+  PopupUpdateQuantityComponent,
+  PopupAddCardTransComponent,
 ];
 
 @NgModule({

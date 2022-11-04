@@ -8,7 +8,7 @@
   [className]="className"
   [method]="method"
   [predicate]="predicate"
-  [dataValue]="datavalue"
+  [dataValue]="dataValue"
   [button]="button"
   (buttonClick)="click($event)"
   (selectedChange)="changeItemDetail($event)"
@@ -30,9 +30,9 @@
     (click)="click(data)"
     [typeMF]="'hover'"
     [title]="data?.requester"
-    [subTitle]="data?.positionID"
+    [subTitle]="data?.positionName"
     [subTitleCss]="'text-gray-600'"
-    [content]="data?.note"
+    [content]="data?.reasonName"
     [footer]="footerTmp"
     [icoCss]="
       'w-40 h-40 fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
@@ -42,6 +42,7 @@
     [dataItem]="data"
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
     typeMF="hover"
   >
   </codx-temp-full>
@@ -55,7 +56,7 @@
     [formModel]="view?.formModel"
     [view]="view"
     (edit)="edit($event)"
-    (delete)="delete($event)"    
+    (delete)="delete($event)"
     (setPopupTitle)="setPopupTitle($event)"
     (uploaded)="getDetailBooking($event)"
   ></booking-stationery-view-detail>
@@ -68,7 +69,7 @@
         [showText]="true"
         [showBgColor]="true"
         [name]="'VL003'"
-        [value]="data?.status"
+        [value]="data?.approveStatus"
         class="badge badge-light badge-md fs-7"
       >
       </codx-vll>

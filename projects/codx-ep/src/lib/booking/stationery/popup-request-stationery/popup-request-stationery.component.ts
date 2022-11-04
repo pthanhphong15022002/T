@@ -185,6 +185,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   changeTab(tabNo: number) {
     if (tabNo == 2 && this.cart.length == 0) {
+      this.notificationsService.notify('Vui lòng chọn sản phẩm', '3', 0);
       return;
     }
     this.currentTab = tabNo;
@@ -271,9 +272,13 @@ export class PopupRequestStationeryComponent extends UIComponent {
       );
     }
     if (this.dialogAddBookingStationery.value.reasonID instanceof Object) {
-      this.dialogAddBookingStationery.patchValue({reasonID:this.dialogAddBookingStationery.value.reasonID[0]})
+      this.dialogAddBookingStationery.patchValue({
+        reasonID: this.dialogAddBookingStationery.value.reasonID[0],
+      });
     }
-    this.dialogAddBookingStationery.patchValue({'title': this.dialogAddBookingStationery.value.note})
+    this.dialogAddBookingStationery.patchValue({
+      title: this.dialogAddBookingStationery.value.note,
+    });
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe((res) => {
@@ -314,7 +319,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
                     .subscribe((res) => {
                       if (res?.msgCodeError == null && res?.rowCount >= 0) {
                         this.notificationsService.notifyCode('ES007');
-                        item.status = '3';
+                        item.approveStatus = '3';
                         item.write = false;
                         item.delete = false;
                         (this.dialog.dataService as CRUDService)
@@ -360,6 +365,21 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   //#region cart
 
+  getCartQty(cart = []): number {
+    if (cart.length == 0) {
+      return 0;
+    }
+    return cart.reduce((acc, item) => acc + item.quantity, 0);
+  }
+
+  getItemQty(itemID) {
+    let item = this.cart.filter((x) => x.resourceID == itemID);
+    if (item.length == 0) {
+      return 0;
+    }
+    return item[0].quantity;
+  }
+
   addCart(event, data) {
     let tmpResource;
     tmpResource = { ...data };
@@ -375,7 +395,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       tmpResource.quantity = 1;
       this.cart.push(tmpResource);
-      this.notificationsService.notifyCode('SYS006');
+      //this.notificationsService.notifyCode('SYS006');
     }
     this.detectorRef.detectChanges();
   }

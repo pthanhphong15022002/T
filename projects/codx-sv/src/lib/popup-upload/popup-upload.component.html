@@ -1,0 +1,82 @@
+<codx-form headerText="Chọn hình ảnh" [body]="body" [dialog]="dialog">
+  <ng-template #body>
+    <ejs-tab headerPlacement="Top">
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText class="">
+            <div class="nav-item">
+              <a class="nav-link d-flex px-0">
+                <span class="fw-bold">
+                  <codx-label
+                    name="Apps"
+                    formName="UserRoles"
+                    default="TẢI LÊN"
+                  >
+                  </codx-label>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content class="pd-t-20">
+            <codx-attachment
+              #attachment
+              [objectType]="functionList?.entityName"
+              hideImageUpload="0"
+              [objectId]="data.recID"
+              hideBtnSave="1"
+              hideFolder="1"
+              hideUploadBtn="0"
+              [functionID]="functionList?.functionID"
+              type="inline"
+            >
+            </codx-attachment>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem>
+          <ng-template #headerText class="">
+            <div class="nav-item">
+              <a class="nav-link d-flex px-0">
+                <span class="fw-bold">
+                  <codx-label name="Apps" formName="UserRoles" default="ẢNH">
+                  </codx-label>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content class="pd-t-20">
+            <codx-listview
+              #listView
+              [dataService]="dtService"
+              [predicate]="predicate"
+              [dataValue]="dataValue"
+              [itemTemplate]="templateListCard"
+              type="cardView"
+              service="DM"
+            >
+            </codx-listview>
+            <div class="d-flex justify-content-end" #footer>
+              <button type="button" class="btn btn-primary" (click)="onSave()">
+                <codx-label fiedName="Save" default="Chèn ảnh"></codx-label>
+              </button>
+            </div>
+
+            <ng-template #templateListCard let-item>
+              <codx-card-img
+                cardCss="border rounded-4 w-200px"
+                [imageRecId]="item.recID"
+                [imgOn]="item?.modifiedOn"
+                [imageObjType]="item.objectType"
+                imageWidth="200"
+                imgCss="h-150px"
+                (click)="chooseImage(item)"
+              >
+              </codx-card-img>
+              <span
+                class="icon-check text-white default icon-16 icon-checked"
+                *ngIf="item?.isChoose"
+              ></span> </ng-template></ng-template
+        ></e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </ng-template>
+</codx-form>
