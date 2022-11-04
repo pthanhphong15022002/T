@@ -61,16 +61,6 @@ export class BookingStationeryViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
-            this.epService
-              .getEmployeeByOrgUnitID(this.itemDetail?.buid)
-              .subscribe((res) => {
-                if (res) {
-                  this.itemDetail.empQty = res;
-                } else {
-                  this.itemDetail.empQty = 1;
-                }
-                this.detectorRef.detectChanges();
-              });
             this.detectorRef.detectChanges();
           }
         });
@@ -92,7 +82,6 @@ export class BookingStationeryViewDetailComponent
         this.lviewEdit(data, event.text);
         break;
     }
-  
   }
   lviewEdit(data?, mfuncName?) {
     if (data) {
