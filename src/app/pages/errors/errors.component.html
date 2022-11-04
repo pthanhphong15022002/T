@@ -1,21 +1,23 @@
-<div class="
-    d-flex
-    flex-column flex-column-fluid
-    bgi-position-y-bottom
-    position-x-center
-    bgi-no-repeat bgi-size-contain bgi-attachment-fixed
-  " [style.background-image]="
-    'url(./assets/codx/bg/bg-login.png)'
-  ">
+<div
+  class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed"
+  [style.background-image]="'url(./assets/codx/bg/bg-login.png)'"
+>
   <div class="d-flex flex-column flex-column-fluid text-center p-10 py-lg-20">
     <a (click)="routeToHome()" class="mb-10 pt-lg-20 cursor-pointer">
-      <img alt="Logo" src="./assets/media/logos/logo-1.svg" class="h-50px mb-5" />
+      <img
+        alt="Logo"
+        src="./assets/themes/sys/default/img/404-error.svg"
+        class="h-50px mb-5"
+      />
     </a>
     <div class="pt-lg-10">
       <router-outlet></router-outlet>
 
       <div class="text-center">
-        <a (click)="routeToHome()" class="btn btn-lg btn-primary fw-bolder cursor-pointer">
+        <a
+          (click)="routeToHome()"
+          class="btn btn-lg btn-primary fw-bolder cursor-pointer"
+        >
           Go to homepage
         </a>
       </div>
@@ -27,7 +29,10 @@
       <a href="https://codx.com.vn" class="text-muted text-hover-primary px-2">
         About
       </a>
-      <a href="mailto:support@codx.com.vn" class="text-muted text-hover-primary px-2">
+      <a
+        href="mailto:support@codx.com.vn"
+        class="text-muted text-hover-primary px-2"
+      >
         Contact
       </a>
       <a href="https://codx.com.vn" class="text-muted text-hover-primary px-2">
