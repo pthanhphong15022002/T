@@ -1,3 +1,4 @@
+import { TmpMemo } from './../../models/task.model';
 import {
   CO_Content,
   CO_MeetingTemplates,
@@ -5,6 +6,8 @@ import {
 import {
   CO_Meetings,
   CO_Resources,
+  EP_BookingAttendees,
+  EP_Boooking,
   TmpRoom,
 } from './../../models/CO_Meetings.model';
 import {
@@ -328,10 +331,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.attachment?.clearData();
         if (res) {
           this.dialog.close([res.save]);
+          //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
+          this.bookingRoomEP(res.save);
         } else this.dialog.close();
       });
   }
 
+  
   onUpdate() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
@@ -1034,4 +1040,41 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   //end
+  bookingRoomEP(data){
+    //chuyển model meeting sang booking
+    let booking = new EP_Boooking();
+    booking.resourceID=data.location;
+		booking.status = data.status;
+		booking.startDate= data.startDate;
+		booking.endDate= data.endDate;
+		booking.link =data.link;
+		booking.link2= data.link2;
+		booking.memo=data.memo;
+		booking.online = data.online;
+    booking.bookingOn= data.startDate;
+    booking.approveStatus='1';
+    booking.resourceType='1';
+    //cần kiểm tra lại mapping cho 2 field này
+    booking.title= data.memo;// tiêu đề cuộc họp
+    booking.reasonID= 'R'//mã lí do cuộc họp
+    //tạo ds người tham gia cho EP
+    let bookingAttendees=[];
+    data.resources.forEach(item => {
+      let attender= new EP_BookingAttendees()
+      attender.userID=item.resourceID;
+      attender.roleType= item.roleType;
+      attender.optional=item.optional;
+      attender.status= item.status;
+      bookingAttendees.push(attender);
+    });
+    this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AddEditItemAsync',
+      [booking,true,bookingAttendees]
+      ).subscribe(res=>{
+        console.log(res);
+      })
+  }
 }
