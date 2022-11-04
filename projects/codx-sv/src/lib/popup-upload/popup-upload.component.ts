@@ -5,16 +5,21 @@ import {
   OnInit,
   ViewChild,
   ViewEncapsulation,
+  Output,
+  EventEmitter,
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   AuthStore,
   CodxListviewComponent,
   CRUDService,
   DialogData,
   DialogRef,
+  ImageViewerComponent,
   UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CodxSvService } from '../codx-sv.service';
 
 @Component({
   selector: 'app-popup-upload',
@@ -27,29 +32,43 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   functionList: any;
   user: any;
   predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
-  dataValue: any;
+  dataValueImage: any;
+  dataValueVideo: any;
   dtService: any;
-  data: any;
   REFER_TYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
     APPLICATION: 'application',
   };
-  lstEditIV: any = new Array();
+  data: any;
+  typeFile: any;
+  dataImg: any;
+  modeFile: any;
+  urlVideo: any;
   @ViewChild('listView') listView: CodxListviewComponent;
+  @ViewChild('ATM_Choose_Image') ATM_Choose_Image: AttachmentComponent;
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
+
+  @Output() loadData = new EventEmitter();
+
   constructor(
     private injector: Injector,
     private dialogRef: DialogRef,
     private dt: DialogData,
     private auth: AuthStore,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private SVServices: CodxSvService,
+    private sanitizer: DomSanitizer
   ) {
     super(injector);
     this.dialog = dialogRef;
+    this.typeFile = dt.data?.typeFile;
+    this.modeFile = dt.data?.modeFile;
+    this.data = dt.data?.data;
+    this.functionList = dt.data.functionList;
     this.user = auth.get();
-    this.data = dt.data;
-    this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
+    this.dataValueImage = `WP_Comments;false;${this.user?.userID};image`;
+    this.dataValueVideo = `WP_Comments;false;${this.user?.userID};video`;
     var dataSv = new CRUDService(injector);
     dataSv.request.gridViewName = 'grvFileInfo';
     dataSv.request.entityName = 'DM_FileInfo';
@@ -59,7 +78,49 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
 
   onInit(): void {}
 
-  onSave() {}
+  onSave() {
+    this.generateGuid();
+    let recID = JSON.parse(JSON.stringify(this.guidID));
+    delete this.dataImg['recID'];
+    delete this.dataImg['id'];
+    delete this.dataImg['uploadId'];
+    this.dataImg.history = null;
+    this.dataImg.objectType = this.functionList.entityName;
+    this.dataImg.objectID = recID;
+    debugger;
+    this.ATM_Choose_Image.fileUploadList = [this.dataImg];
+    this.ATM_Choose_Image.saveFiles();
+    this.dialog.close([this.dataImg]);
+  }
+
+  getFileByObjectID(recID) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByIbjectIDAsync',
+      recID
+    );
+    // .subscribe((res: any[]) => {
+    //   if (res.length > 0) {
+    //     // let files = res;
+    //     // files.map((e: any) => {
+    //     //   if (e && e.referType == this.REFER_TYPE.VIDEO) {
+    //     //     e[
+    //     //       'srcVideo'
+    //     //     ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
+    //     //   }
+    //     // });
+    //     this.dataImg = res;
+    //   }
+    // });
+  }
+
+  valueChangeURLVideo(e) {
+    if (this.urlVideo) {
+      this.getURLEmbed(this.urlVideo);
+    }
+  }
 
   chooseImage(item) {
     var dataTemp = this.listView.dataService.data;
@@ -70,7 +131,10 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
       dataTemp[index]['isChoose'] = !dataTemp[index]['isChoose'];
     }
     this.listView.dataService.data = dataTemp;
-    this.change.detectChanges();
+    this.dataImg = item;
+    // this.getFileByObjectID(item.objectID).subscribe((res) => {
+    //   if (res) this.dataImg = res;
+    // });
   }
 
   async selectedImage(e) {
@@ -89,15 +153,19 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
           dt['referType'] = this.REFER_TYPE.APPLICATION;
         }
       });
-      this.lstEditIV.push(files[0]);
     }
     if (files) {
       this.ATM_Image.objectId = recID;
     }
     (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
-      if (result.data && result.data.length > 0) {
-        // this.uploadImage(this.itemActive, attachmentEle);
-        this.dialog.close(result.data);
+      if (result.data) {
+        if (this.modeFile == 'change') {
+          this.SVServices.deleteFile(
+            this.data,
+            this.functionList.entityName
+          ).subscribe();
+        }
+        this.dialog.close(files);
       }
     });
   }
@@ -126,5 +194,20 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
         return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
       }
     );
+  }
+
+  getEmbedID(url) {
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  }
+
+  urlEmbedSafe: any;
+  iframeMarkup: any;
+  getURLEmbed(url) {
+    const ID = this.getEmbedID(url);
+    var urlEmbed = `//www.youtube.com/embed/${ID}`;
+    this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(urlEmbed);
   }
 }
