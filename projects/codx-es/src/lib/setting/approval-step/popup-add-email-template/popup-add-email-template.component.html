@@ -481,7 +481,7 @@
 
     <div
       #textarea
-      class="request-box d-flex justify-content-between mt-3 h-150px"
+      class="request-box d-flex justify-content-between mt-3 h-250px"
       (click)="click()"
     >
       <div class="message w-100" (click)="getPosition()">
@@ -491,7 +491,7 @@
           field="message"
           format="ed"
           [crrValue]="dialogETemplate.value.message"
-          height="150"
+          height="250"
           (valueChange)="valueChange($event)"
           (keyup)="keyUp($event)"
         ></codx-input>
