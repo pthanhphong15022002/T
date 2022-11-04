@@ -42,7 +42,7 @@
         </codx-label>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.category }}
+          {{ itemDetail?.category | vll: "EP018":"text" | async }}
         </span>
       </div>
     </div>

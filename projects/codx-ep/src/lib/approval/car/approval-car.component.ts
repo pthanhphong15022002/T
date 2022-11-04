@@ -191,6 +191,7 @@ export class ApprovalCarsComponent extends UIComponent {
       });
   }
 
+  //Phân công tài xế
   assignDriver(data: any) {}
 
   closeAddForm(event) {}
@@ -202,7 +203,10 @@ export class ApprovalCarsComponent extends UIComponent {
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
-        if (func.functionID == 'SYS04' /*Copy*/ || func.functionID == "EPT40203") {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
           func.disabled = true;
         }
       });
