@@ -1,3 +1,4 @@
+import { title } from 'process';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
@@ -24,6 +25,7 @@ export class ApprovalCarsComponent extends UIComponent {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('driverAssign') driverAssign: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
   service = 'EP';
@@ -49,10 +51,11 @@ export class ApprovalCarsComponent extends UIComponent {
   resourceField;
   fields;
   dataSelected: any;
+  popupDialog: any;
   dialog!: DialogRef;
   formModel: FormModel;
-  viewType = ViewType;
-  
+  popuptitle:any;
+  viewType=ViewType;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -156,6 +159,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
       case 'EPT40204': {
         //Phân công tài xế
+        this.popuptitle=value.text;
         this.assignDriver(datas);
         break;
       }
@@ -164,7 +168,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
     }
   }
-
+  
   approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
@@ -193,8 +197,18 @@ export class ApprovalCarsComponent extends UIComponent {
       });
   }
 
-  //Phân công tài xế
-  assignDriver(data: any) {}
+  assignDriver(data: any) {
+    let startDate= new Date(data.startDate);
+    let endDate= new Date(data.endDate);
+    this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
+    .subscribe((res:any)=>{
+      if(res){
+        var x= res;
+      }
+    })
+    this.popupDialog = this.callfc.openForm(this.driverAssign, '', 550, );
+    this.detectorRef.detectChanges();    
+  }
 
   closeAddForm(event) {}
 
@@ -220,6 +234,9 @@ export class ApprovalCarsComponent extends UIComponent {
           ) {
             func.disabled = false;
           }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = true;
+          }
         });
       } else {
         event.forEach((func) => {
@@ -228,6 +245,9 @@ export class ApprovalCarsComponent extends UIComponent {
             func.functionID == 'EPT40202' /*MF từ chối*/
           ) {
             func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = false;
           }
         });
       }

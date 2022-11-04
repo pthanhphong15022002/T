@@ -128,27 +128,38 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   } 
 
   
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      event.forEach(func => {       
-        if(func.functionID == "SYS04"/*Copy*/) 
-        {
-          func.disabled=true;        
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
+          func.disabled = true;
         }
       });
-      if(data.approveStatus=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/)
-          {
-            func.disabled=true;
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = false;
           }
         });
       }
