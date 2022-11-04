@@ -56,6 +56,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   dataSelected: any;
   dialog!: DialogRef;
   tempReasonName = '';
+  viewType = ViewType;
 
   constructor(
     private injector: Injector,

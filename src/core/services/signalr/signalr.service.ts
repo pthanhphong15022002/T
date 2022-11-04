@@ -15,8 +15,10 @@ export class SignalRService {
   signalObject = new EventEmitter<any>();
   signalChat = new EventEmitter<any>();
   signalGroup = new EventEmitter<any>();
+  signaDataVote = new EventEmitter<any>();
   signalVote = new EventEmitter<any>();
   signalDelChat = new EventEmitter<any>();
+  signalVoteType = new EventEmitter<any>();
   
 
   constructor(
@@ -63,8 +65,10 @@ export class SignalRService {
     this.hubConnection.on('receiveChatMessage', (obj) => {
       this.signalChat.emit(obj);
     });
-    this.hubConnection.on('voteChatMessage', (obj) => {
-      this.signalVote.emit(obj);
+    this.hubConnection.on('voteChatMessage', (obj, obj1, obj2) => {
+      this.signaDataVote.emit(obj);
+      this.signalVote.emit(obj1);
+      this.signalVoteType.emit(obj2);
     });
     this.hubConnection.on('delChatMessage', (obj) => {
       this.signalDelChat.emit(obj);
@@ -75,6 +79,9 @@ export class SignalRService {
   //#region Post to server
   sendData(message, func = 'NewMessage') {
     this.hubConnection.invoke(func, message);
+  }
+  sendVoteData(data,votes,voteType, func = 'VoteMessage') {
+    this.hubConnection.invoke(func, data, votes, voteType);
   }
   //#endregion
 }

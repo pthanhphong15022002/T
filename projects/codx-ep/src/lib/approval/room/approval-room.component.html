@@ -15,6 +15,7 @@
   [autoLoad]="true"
   [idField]="idField"
   (requestEnded)="closeAddForm($event)"
+  [viewActiveType]="viewType.listdetail"
 >
 </codx-views>
 
@@ -24,11 +25,11 @@
     <codx-img [objectId]="data?.resourceData?.recID" imageType="circle" width="50" [objectType]="'EP_Resources'"></codx-img>  
     <div class="ms-2 d-flex flex-column">
       <span class="fw-bold">{{data?.resourceData?.resourceName}}</span>
-      <div class="d-flex flex-row">        
+      <!-- <div class="d-flex flex-row">        
         <codx-label name="lblRanking" default="Phân loại" class="text-gray-600"></codx-label>
         <span class="me-1 text-gray-600">:</span>
         <span class="fw-bold ms-1">{{ data?.resourceData?.ranking| vll: "EP005" : 'text' | async}}</span>
-      </div>
+      </div> -->
       <div class="d-flex flex-row">        
         <codx-label name="lblArea" default="Diện tích (m2)" class="text-gray-600"></codx-label>
         <span class="me-1 text-gray-600">:</span>
