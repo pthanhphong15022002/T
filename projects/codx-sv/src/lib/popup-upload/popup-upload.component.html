@@ -28,6 +28,7 @@
               hideUploadBtn="0"
               [functionID]="functionList?.functionID"
               type="inline"
+              (fileCount)="selectedImage($event)"
             >
             </codx-attachment>
           </ng-template>
