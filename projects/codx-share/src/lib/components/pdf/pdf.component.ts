@@ -400,25 +400,17 @@ export class PdfComponent
     }
     this.curPage = ca.signedPosPage;
     if (this.curSelectedCA) {
-      this.curSelectedCA.destroy();
+      this.curSelectedCA.opacity(1);
     }
-
-    let caW = ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
-    let caH = ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
-    let caRect = new Konva.Rect({
-      x: (ca.signedPosLeft / 0.75) * this.xScale,
-      y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
-      width: caW,
-      height: caH,
-      stroke: 'black',
-      strokeWidth: 1,
-    });
+    let layer = this.lstLayer.get(ca.signedPosPage);
+    let curID = 'CertificateAuthencation' + idx;
+    let caRect = layer.children.find((child) => child.id() == curID);
     this.curSelectedCA = caRect;
+    this.curSelectedCA.opacity(0);
     this.tr?.draggable(false);
     this.tr?.resizeEnabled(false);
     this.tr?.rotateEnabled(false);
     this.tr?.nodes([this.curSelectedCA]);
-    let layer = this.lstLayer.get(ca.signedPosPage);
     layer?.add(this.tr);
     layer?.draw();
   }
@@ -442,7 +434,21 @@ export class PdfComponent
       .children?.find((node) => {
         return node?.attrs?.id == area.recID;
       });
-    if (this.curSelectedArea != null) {
+    let isCA = false;
+    if (this.curSelectedArea == null) {
+      let curSelectedSignerInfo = this.lstSigners?.find(
+        (signer) => signer.authorID == area.signer
+      );
+      let idx = this.lstCA?.findIndex(
+        (ca) => ca.certificate.commonName == curSelectedSignerInfo?.email
+      );
+      if (idx != -1) {
+        isCA = true;
+        this.goToSelectedCA(this.lstCA[idx], idx);
+      }
+    }
+
+    if (this.curSelectedArea != null && !isCA) {
       this.tr.remove();
       let layerChildren = this.lstLayer.get(area.location.pageNumber + 1);
 
@@ -497,7 +503,7 @@ export class PdfComponent
       .getListCA(this.recID, this.fileInfo.fileID)
       .subscribe((res) => {
         this.lstCA = res;
-        this.lstCA?.forEach((ca) => {
+        this.lstCA?.forEach((ca, idx) => {
           this.lstCACollapseState.push({
             open: false,
             verifiedFailed: false,
@@ -687,23 +693,6 @@ export class PdfComponent
         });
         this.xScale = canvasBounds.width / 794;
         this.yScale = canvasBounds.height / 1123;
-
-        //get layer da luu
-        // if (this.lstLayer.get(e.pageNumber)) {
-        //   let layer = this.lstLayer.get(e.pageNumber);
-        //   let lstKonvaOnPage = layer.children;
-
-        //   lstKonvaOnPage?.forEach((konva) => {
-        //     konva.position({
-        //       x: (konva.position().x * this.xScale) / konva.scaleX(),
-        //       y: (konva.position().y * this.yScale) / konva.scaleY(),
-        //     });
-        //     konva.scale({ x: this.xScale, y: this.yScale });
-        //     konva.draw();
-        //     layer.draw();
-        //   });
-        //   stage.add(layer);
-        // } else {
         let layer = new Konva.Layer({
           id: id,
           opacity: 1,
@@ -834,9 +823,28 @@ export class PdfComponent
               }
             }
           }
-          this.detectorRef.detectChanges();
+        });
+        let lstCAOnPage = this.lstCA.filter(
+          (childCA) => childCA.signedPosPage == e.pageNumber
+        );
+        lstCAOnPage.forEach((ca, idx) => {
+          let caW =
+            ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
+          let caH =
+            ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
+          let caRect = new Konva.Rect({
+            x: (ca.signedPosLeft / 0.75) * this.xScale,
+            y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
+            width: caW,
+            height: caH,
+            opacity: 0,
+            id: 'CertificateAuthencation' + idx,
+            name: ca.certificate?.commonName,
+          });
+          layer?.add(caRect);
         });
         stage.add(layer);
+        this.detectorRef.detectChanges();
         // }
         //stage event
         stage.on('mouseenter', (mouseover: any) => {
@@ -937,21 +945,29 @@ export class PdfComponent
             this.tr.nodes([]);
           } else {
             this.curSelectedArea = click.target;
-            this.curSelectedAnnotID = this.curSelectedArea.id();
-
-            this.tr.resizeEnabled(
-              this.isEditable == false
-                ? false
-                : this.curSelectedArea.draggable()
-            );
-            this.tr.draggable(
-              this.isEditable == false
-                ? false
-                : this.curSelectedArea.draggable()
-            );
-            this.tr.forceUpdate();
-            this.tr.nodes([this.curSelectedArea]);
-            layerChildren.add(this.tr);
+            if (
+              !this.curSelectedArea.id().includes('CertificateAuthencation')
+            ) {
+              this.curSelectedAnnotID = this.curSelectedArea.id();
+              this.tr.resizeEnabled(
+                this.isEditable == false
+                  ? false
+                  : this.curSelectedArea.draggable()
+              );
+              this.tr.draggable(
+                this.isEditable == false
+                  ? false
+                  : this.curSelectedArea.draggable()
+              );
+              this.tr.forceUpdate();
+              this.tr.nodes([this.curSelectedArea]);
+              layerChildren.add(this.tr);
+            } else {
+              let idx = this.curSelectedArea
+                .id()
+                .replace('CertificateAuthencation', '');
+              this.goToSelectedCA(this.lstCA[idx], idx);
+            }
           }
         });
 
@@ -1311,7 +1327,7 @@ export class PdfComponent
 
   gotLstCA = false;
   changeLeftTab(e) {
-    if (this.inputUrl && e?.selectedIndex == 1 && !this.gotLstCA) {
+    if (e?.selectedIndex == 1 && !this.gotLstCA) {
       this.esService.getListCAByBytes(this.curFileUrl).subscribe((res) => {
         this.lstCA = res;
         this.lstCA?.forEach((ca) => {
@@ -1321,9 +1337,9 @@ export class PdfComponent
             detail: false,
           });
         });
-        this.gotLstCA = true;
-        this.detectorRef.detectChanges();
       });
+      this.gotLstCA = true;
+      this.detectorRef.detectChanges();
     }
   }
 
@@ -1684,7 +1700,6 @@ export class PdfComponent
     this.curFileID = this.fileInfo.fileID;
     this.curFileUrl = this.fileInfo.fileUrl;
     this.autoSignState = false;
-
     this.getListCA();
     this.esService
       .getSignAreas(
