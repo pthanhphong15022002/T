@@ -386,7 +386,15 @@ export class CodxEpService {
       [entityName]
     );
   }
-
+  getAvailableResources(resourceType: string, startDate: string, endDate:string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListAvailableResourceAsync',
+      [resourceType, startDate, endDate]
+    );
+  }
   //#endregion
 
   //#region EmailTemplate

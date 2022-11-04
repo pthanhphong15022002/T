@@ -1,0 +1,155 @@
+<ng-template #Info let-data="data">
+  <ng-container
+    [ngTemplateOutlet]="avatar"
+    [ngTemplateOutletContext]="{ data: data }"
+  ></ng-container>
+  <ng-container
+    [ngTemplateOutlet]="baseInfo"
+    [ngTemplateOutletContext]="{ data: data }"
+  ></ng-container>
+  <ng-container
+    [ngTemplateOutlet]="lstTabHeader"
+    [ngTemplateOutletContext]="{ tabs: vllTabs }"
+  ></ng-container>
+</ng-template>
+
+<ng-template #avatar let-data="data">
+  <codx-img
+    class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+    [imageType]="'circle'"
+    [width]="80"
+    [objectId]=""
+    [objectType]=""
+    data-kt-menu-trigger="click"
+    data-kt-menu-attach="parent"
+    data-kt-menu-placement="bottom-end"
+    data-kt-menu-flip="bottom"
+    [isAllowEdit]="true"
+    [funcId]=""
+  >
+  </codx-img>
+  <div class="">avatar chua lam</div>
+</ng-template>
+<ng-template #baseInfo let-data="data">
+  <div class="baseInfo d-flex flex-column">
+    <div class="id d-flex">
+      <codx-temp-full
+        [title]="data?.employeeID"
+        [icoCss]="
+          'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 '
+        "
+        [icoStyle]=""
+        [titleCss]="'fs-4'"
+      >
+      </codx-temp-full>
+      <codx-temp-full
+        [title]="data?.joinedOn"
+        [icoCss]="
+          'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 '
+        "
+        [icoStyle]=""
+        [titleCss]="'fs-4'"
+      >
+      </codx-temp-full>
+      <codx-temp-full
+        [title]="data?.status ?? 'chua co vll'"
+        [icoCss]="
+          'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 '
+        "
+        [icoStyle]=""
+        [titleCss]="'fs-4'"
+        [statusVll]="statusVll"
+      >
+      </codx-temp-full>
+    </div>
+    <div class="dept d-flex">
+      <codx-temp-full
+        [title]="'Chua lay'"
+        [icoCss]="
+          'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 '
+        "
+        [icoStyle]=""
+        [titleCss]="'fs-4'"
+      >
+      </codx-temp-full>
+    </div>
+    <div class="mail d-flex">
+      <codx-temp-full
+        [title]="data?.email"
+        [icoCss]="
+          'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 '
+        "
+        [icoStyle]=""
+        [titleCss]="'fs-4'"
+      >
+      </codx-temp-full>
+    </div>
+    <div class="contact d-flex">
+      <codx-temp-full
+        [title]="data?.phone ?? 'Check truong hop chua co'"
+        [icoCss]="
+          'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 '
+        "
+        [icoStyle]=""
+        [titleCss]="'fs-4'"
+      >
+      </codx-temp-full>
+      <codx-temp-full
+        [title]="data?.mobile ?? 'Check truong hop chua co'"
+        [icoCss]="
+          'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 '
+        "
+        [icoStyle]=""
+        [titleCss]="'fs-4'"
+      >
+      </codx-temp-full>
+    </div>
+  </div>
+</ng-template>
+<ng-template #lstTabHeader let-tabs="tabs">
+  <codx-temp-full
+    *ngFor="let tab of tabs"
+    [title]="tab?.text"
+    [icoCss]="
+      'fs-7 d-flex justify-content-center align-items-center rounded-circle me-2 p-2 ' +
+      tab.icon
+    "
+    [icoStyle]=""
+    [titleCss]="'fs-4'"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-container
+  [ngTemplateOutlet]="Info"
+  [ngTemplateOutletContext]="{ data: sampleData }"
+>
+</ng-container>
+
+<ng-template #paneRight>
+  <lib-view-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="view?.formModel"
+    [view]="view"
+  >
+    <!-- (uploaded)="getDetailSignFile($event)" -->
+  </lib-view-detail>
+  <codx-views
+    #view
+    [views]="views"
+    [funcID]="funcID"
+    [service]="service"
+    [assemblyName]="assemblyName"
+    [entityName]="entity"
+    [className]="className"
+    [predicate]="'IsTemplate=@0'"
+    [dataValue]="false"
+    (selectedChange)="changeItemDetail($event)"
+    [selectedFirst]="true"
+    [idField]="idField"
+  >
+  </codx-views>
+  <ng-template #itemTemplate let-data></ng-template>
+</ng-template>
