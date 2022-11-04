@@ -498,7 +498,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.data.stopOn = this.data.endDate;
     this.data.bookingOn = this.data.startDate;
     this.data.category = '2';
-    this.data.approveStatus = '1';
+    this.data.approveStatus = '1';    
+    this.data.status = '1';
     this.data.resourceType = '2';
     this.data.attendees= this.attendeesList.length;
 

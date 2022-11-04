@@ -19,7 +19,6 @@ export class HistoryCardsComponent
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_ResourceTrans';
-  predicate = 'ResourceType=@0';
   idField = 'recID';
   className = 'ResourceTransBusiness';
   method = 'GetAsync';

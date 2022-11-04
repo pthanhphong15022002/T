@@ -32,7 +32,6 @@ export class PopupSelectLabelComponent extends UIComponent {
 
   data;
   title: string;
-  funcID;
   dialog;
 
   curLabel;
@@ -44,6 +43,8 @@ export class PopupSelectLabelComponent extends UIComponent {
   folderID = 'label';
   folderName = 'Nhãn đính kèm'; //chị Thương kêu gắn cứng đi em, chị lo
   parentID = 'EST011';
+  funcID = 'EST011';
+
   lstFile = [];
   onInit(): void {
     this.title = this.data.title;
@@ -52,14 +53,23 @@ export class PopupSelectLabelComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   async closePopUp(isComplete) {
-    this.dialog.close(this.curLabel);
-
-    // if (isComplete) {
-    //   this.dialog.close(this.curLabel);
-    //   (await this.attachment.saveFilesObservable()).subscribe((res) => {
-    //     console.log('saved file', res);
-    //   });
-    // } else this.dialog.close(null);
+    if (isComplete) {
+      if (
+        this.attachment?.fileUploadList?.length > 0 ||
+        this.data?.files?.length > 0
+      ) {
+        if (this.attachment.fileUploadList?.length > 0) {
+          for (let i = 0; i < this.attachment.fileUploadList.length; i++) {
+            this.attachment.fileUploadList[i].referType = this.folderID;
+          }
+          (await this.attachment.saveFilesObservable()).subscribe(
+            (item2: any) => {
+              console.log('save item', item2);
+            }
+          );
+        }
+      }
+    } else this.dialog.close(null);
   }
 
   changeLabel(e: any) {
@@ -71,9 +81,7 @@ export class PopupSelectLabelComponent extends UIComponent {
   }
 
   fileAdded(e) {
-    debugger;
-    if(e?.data)
-      this.lstFile = e?.data
+    if (e?.data) this.lstFile = e?.data;
   }
 
   fileSave(e) {
