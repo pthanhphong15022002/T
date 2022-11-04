@@ -56,6 +56,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   dataSelected: any;
   dialog!: DialogRef;
   tempReasonName = '';
+  viewType = ViewType;
 
   constructor(
     private injector: Injector,
@@ -141,7 +142,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
-          statusColorRef: 'vl003',
+          statusColorRef: 'EP022',
         },
       },
     ];

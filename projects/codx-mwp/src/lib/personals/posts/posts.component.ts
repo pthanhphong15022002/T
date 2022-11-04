@@ -48,11 +48,8 @@ export class PostsComponent implements OnInit {
 
   loadListPostComponent() { 
     var a = this.lstComment.createComponent(ListPostComponent);
-    a.instance.predicateWP = `CreatedBy="${this.user?.userID}" && Category="1" && Stop="false"`;
+    a.instance.predicateWP = `CreatedBy="${this.user?.userID}" && Stop="false" && Category!="2"`;
     a.instance.isShowCreate = false;
     a.instance.formModel = this.formModel;
-  }
-  removePost(e) {
-    
   }
 }

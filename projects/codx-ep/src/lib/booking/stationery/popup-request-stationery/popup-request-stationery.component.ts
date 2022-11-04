@@ -117,14 +117,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (!this.isAddNew) {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
-      this.epService
-        .getEmployeeByOrgUnitID(this.data?.orgUnitID)
-        .subscribe((res: number) => {
-          if (res) {
-            this.qtyEmp = res;
-            this.detectorRef.detectChanges();
-          }
-        });
       this.cart = this.data.bookingItems;
       this.changeTab(2);
     } else {
@@ -185,7 +177,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   changeTab(tabNo: number) {
     if (tabNo == 2 && this.cart.length == 0) {
-      this.notificationsService.notify('Vui lòng chọn sản phẩm', '3', 0);
+      this.notificationsService.notifyCode('EP011');
       return;
     }
     this.currentTab = tabNo;
@@ -203,14 +195,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     if (event?.field === 'bUID') {
       this.dialogAddBookingStationery.patchValue({ bUID: event?.data });
-      this.epService
-        .getEmployeeByOrgUnitID(event.data)
-        .subscribe((res: any) => {
-          this.qtyEmp = 0;
-          if (res) {
-            this.qtyEmp = res;
-          }
-        });
     }
 
     if (event?.field === 'category') {

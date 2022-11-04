@@ -33,6 +33,8 @@ import { ChatVoteComponent } from './chat-vote/chat-vote.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 
+import { SignalRService } from '@core/services/signalr/signalr.service';
+
 
 import { environment } from 'src/environments/environment';
 import { PopupViewImageComponent } from './popup-view-image/popup-view-image.component';
@@ -58,9 +60,10 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
 
   
   @Input() objectType: string = '';
+  @Input() objectId: string = '';
 
   
-  @Input() objectID: string = '';
+  //@Input() objectID: string = '';
 
 /*   titleAttach = "Đính Kèm";
   titleSendMail = "Gửi Mail";
@@ -89,6 +92,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   
 
   chatMessages: any[] = [];
+  objIndex: any;
   message: string;
   groupType: any;
 
@@ -97,15 +101,19 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   isFull = false;
   clickCheck = false;
   public searchCheck = false;
+  public searchMessCheck = false;
   titleRef = 'Đang trả lời ';
   refName = '';
-  refID: any;
+  refIDPost = '00000000-0000-0000-0000-000000000000';
   refContent = '';
 
   userId : any;
-  
-
-
+  SignalrMess : any[] = [];
+  countSignalr = 0;
+  countSignalr1 = 0;
+  sodem1 = 0;
+  sodem2 = 0;
+  refID: any;
 
 
   tags = '';
@@ -148,8 +156,10 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   
   
   lstData: any;
+  
   constructor
   (
+    private signalrService: SignalRService,//Signalr
     private  inject: Injector,//service mở cửa sổ
     
     private chatService: ChatService,
@@ -184,12 +194,132 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
+
+    
+
+      this.signalrService.signalChat.subscribe(res=>{
+
+        console.log('tin nhan ne',res);
+        //this.SignalrMess = res;
+        if(this.countSignalr == 0){
+          this.chatMessages.push(res);
+          this.detectorRef.detectChanges();
+          //this.SignalrMess = [];
+          this.countSignalr ++ ;
+        }else{
+          this.countSignalr = 0;
+        }
+        
+      })
+      this.signalrService.signalDelChat.subscribe(res=>{
+        //this.SignalrMess = res;
+        if(this.countSignalr == 0){
+          console.log('Xoa tin nhan ne',res);
+          
+          this.objIndex = this.chatMessages.findIndex((obj => obj.messageId == res.messageId));
+
+          console.log("Before update: ", this.chatMessages[this.objIndex])
+
+          this.chatMessages[this.objIndex].messageType = "5";
+
+          console.log("After update: ", this.chatMessages[this.objIndex])
+
+          //res.messageType = 5;
+          //this.chatMessages.push(res);
+          this.detectorRef.detectChanges();
+          //this.SignalrMess = [];
+          this.countSignalr ++ ;
+        }else{
+          this.countSignalr = 0;
+        }
+        //this.SignalrMess = res;
+        
+        //res.message = this.mesDelete;
+        
+      })
+
+      this.signalrService.signaDataVote.subscribe(rest1=>{
+        if(this.countSignalr == 0){
+          
+          this.objIndex = this.chatMessages.findIndex((obj => obj.messageId == rest1.messageId));
+          console.log('vote nek',rest1);
+        this.signalrService.signalVote.subscribe(res1=>{
+          // console.log('vòng 2',this.sodem2);
+          if(this.sodem2 == 0){
+          this.signalrService.signalVoteType.subscribe(res2=>{
+          // if(this.countSignalr1 <= 2 ){
+            this.chatMessages[this.objIndex].votes = res1[0];
+            this.chatMessages[this.objIndex].totalVote = res1[1];
+            this.chatMessages[this.objIndex].listVoteType = res1[2];
+            if (res2 == this.chatMessages[this.objIndex].myVotedType) {
+              this.chatMessages[this.objIndex].myVotedType = null;
+              this.chatMessages[this.objIndex].myVoted = false;
+              this.checkVoted = false;
+            } else {
+              this.chatMessages[this.objIndex].myVotedType = res2;
+              this.chatMessages[this.objIndex].myVoted = true;
+              this.checkVoted = true;
+            }
+          //    this.countSignalr1 ++ ;
+          // }
+        })
+        this.sodem2 ++;
+      }
+        
+        })
+        this.countSignalr ++
+      
+        this.changeDetectorRef.detectChanges();
+        // }
+        }else{
+        this.countSignalr = 0;
+        // this.countSignalr1 = 0;
+        this.sodem2 =0;
+      }
+      
+      // else{
+          
+      })
+      
+
+      this.signalrService.signalGroup.subscribe(res=>{
+        console.log('group ne ',res);
+        if(this.countSignalr == 0){
+        this.view.dataService.add(res,0).subscribe();
+        debugger;
+        this.groupId = res.groupID;
+        //this.view.dataService.add(resp.event,0).subscribe();
+          //this.SignalrMess = [];
+
+          // this.signalrService.signalFileMess.subscribe(res=>{
+          //   console.log('file ne ',res);
+          //   debugger;
+          //     this.objectId = res.recID;
+          //     this.objectType = res.referType;
+          // })
+          this.countSignalr ++ ;
+        }else{
+          this.countSignalr = 0;
+        }
+        
+      })
+      
+      
+      
+    
   }
   addEmoji(event: any){
     this.message += event.emoji.native;
     this.changeDetectorRef.detectChanges();
   }
   onInit(): void {
+    // 1 - start a connection
+    this.signalrService.createConnection();
+    // 2 - register for ALL relay
+    this.signalrService.registerOnServerEvents();
+    
+
+
     //this.api.execSv("WP","ERM.Business.WP","ChatBusiness","AddChatTestAsync").subscribe();
     this.senderId = this.user.userID; //
     this.senderName = this.user.userName; //
@@ -250,7 +380,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
               }
             }
           });
-          this.files = result;
+          this.files = result;this.SignalrMess
           this.evtGetFiles.emit(this.files); 
           this.dt.detectChanges();
         }
@@ -297,8 +427,9 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
     dialogModel.FormModel = this.view.formModel;
     let dialog = this.callfc.openForm(PopupGroupComponent,"Tao nhom chat",0,0,"",null,"",dialogModel);
     dialog.closed.subscribe((resp: any) => {
-      debugger;
-      this.chatMessages.push(resp);
+      if(resp?.event)
+      this.signalrService.sendData(resp.event,"NewGroup");
+      //this.chatMessages.push(resp);
     })
   }
 
@@ -413,24 +544,24 @@ fileAdded(event: any) {
   } else{
     this.messageType = "1";
   }
-
-  
-  
+}
+selectGroup(event: any){
+//debugger;
 }
   async sendMessage() {
     
     //Gọi service gửi tin nhắn
     if(!this.clickCheck && this.messageType != "2") {
-      this.refID = '00000000-0000-0000-0000-000000000000';
+      this.refID = this.refIDPost;
       this.refContent = null;
     } 
-    debugger;
+    //debugger;
     if(this.messageType == "1" || this.messageType == "4"){
       if (!this.message) {
         return;
       }
     }else if(this.messageType == "2"){
-      this.refID =  '00000000-0000-0000-0000-000000000000' ;
+      this.refID =  this.refIDPost ;
       this.refContent = null;
       if(!this.message) this.message = "";
     }
@@ -472,7 +603,12 @@ fileAdded(event: any) {
             this.attachment.fileUploadList = [...this.listFileUpload];
             resp.files = [...this.listFileUpload];
             (await this.attachment.saveFilesObservable()).subscribe((res: any) => {
-              
+
+              // 3 - subscribe to messages received
+
+              //this.objectId = res.data.objectID;
+
+
               /* if (res) {
                 if(this.dialogRef?.dataService){
                   this.dialogRef.dataService.add(result, 0).subscribe();
@@ -486,6 +622,7 @@ fileAdded(event: any) {
                 this.dialogRef.close();
               } */
             });
+
           }
           else {
             // if(this.dialogRef?.dataService)
@@ -496,12 +633,11 @@ fileAdded(event: any) {
             // this.dialogRef.close();
           }
         
+          this.signalrService.sendData(resp[0]);//this.allFeedSubscription = 
+          //this.chatMessages.push(resp[0]);
+          //this.detectorRef.detectChanges();
+          this.message="";
 
-
-        
-        this.chatMessages.push(resp[0]);
-        this.detectorRef.detectChanges();
-        this.message="";
       });
   }
 
@@ -531,12 +667,9 @@ fileAdded(event: any) {
     dialogModel.FormModel = this.view.formModel;
     this.callfc.openForm(PopupViewImageComponent,null,0,850,null,{ data: event },"",dialogModel);
     
-
   }
   DelMessage(event: any){
     
-    
-
     if(event.receiverId != null){
       this.userId = event.receiverId
     }else{
@@ -558,21 +691,19 @@ fileAdded(event: any) {
       if (resp == false) {
         // //Xử lý xóa tin nhắn không thành công
         return;
-        event.message = this.mesDelete;
+        
       }
-
-      debugger;
+      this.signalrService.sendData(event,"DelMessage");
       
-      this.detectorRef.detectChanges();
+      //debugger;
+      
     });
-
-
         this.detectorRef.detectChanges();
       };
   
 groupName = "";
   historyItemClicked(data) {
-    debugger;
+    //debugger;
     this.groupName = data.groupName;
        
   this.groupId = data.groupID;
@@ -631,8 +762,6 @@ groupName = "";
             this.groupId_coppy = this.groupId;
             this.count ++ ;
             
-          
-
           this.senderId = sender.userID;
           this.senderName = sender.userName;
 
@@ -641,7 +770,7 @@ groupName = "";
       }
       
   votePost(data: any, voteType = null) {
-    debugger;
+    
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -649,22 +778,31 @@ groupName = "";
       "VoteChatPostAsync",
       [data.messageId, voteType])
       .subscribe((res: any) => {
-        debugger;
         if (res) {
-          data.votes = res[0];
-          data.totalVote = res[1];
-          data.listVoteType = res[2];
-          if (voteType == data.myVotedType) {
-            data.myVotedType = null;
-            data.myVoted = false;
-            this.checkVoted = false;
-          }
-          else {
-            data.myVotedType = voteType;
-            data.myVoted = true;
-            this.checkVoted = true;
-          }
-          this.changeDetectorRef.detectChanges();
+
+           this.signalrService.sendVoteData(data,res,voteType,"VoteMessage");
+          
+           
+          
+          
+          
+
+             
+                // data.votes = res[0];
+                // data.totalVote = res[1];
+                // data.listVoteType = res[2];
+                // if (voteType == data.myVotedType) {
+                //   data.myVotedType = null;
+                //   data.myVoted = false;
+                //   this.checkVoted = false;
+                // }
+                // else {
+                //   data.myVotedType = voteType;
+                //   data.myVoted = true;
+                //   this.checkVoted = true;
+                // }
+                
+          
         }
 
       });
@@ -696,7 +834,7 @@ groupName = "";
       }
       this.view.dataService.search(event).subscribe();
     }
-    /* searchMess(event){
+    searchMess(event){
       if(event){
         this.searchMessCheck = true;
         event.searchMessCheck = true;
@@ -706,9 +844,15 @@ groupName = "";
         event = "";
       }
       this.view.dataService.search(event).subscribe();
-    } */
-    /* onClosearch(){
+    }
+    onClosearchMess(){
+      this.searchMessCheck = false;
+    }
+    onStartSearchMess(){
+      this.searchMessCheck = true;
+    }
+    onClosearch(){
 
       this.clickCheck = false;
-    } */
+    }
 }

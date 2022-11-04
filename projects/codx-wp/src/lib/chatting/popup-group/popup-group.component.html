@@ -3,9 +3,7 @@
     </codx-views>
     <div class="row">
 
-
          <h1> <codx-label [formModel]="view.formModel" name="lblCreateGr" default="Tạo Nhóm Chat"></codx-label> </h1>
-
 
         <div class="d-flex justify-content-between l-12">
             <codx-img [objectId]="" #imageGroup [width]="40" [objectType]="'WP_Groups'" [funcId]="'WP'"
@@ -14,7 +12,6 @@
                 (valueChange)="valueChange($event)" field="groupName"></codx-input>
             <span class="icon-close icon-24 text-dark-75 text-hover-primary ms-3" (click)="onClose()"></span>
         </div>
-
 
     </div>
     <div class="row mt-5">

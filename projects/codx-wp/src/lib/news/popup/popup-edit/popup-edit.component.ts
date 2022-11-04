@@ -29,21 +29,13 @@ export class PopupEditComponent implements OnInit {
   startDate: Date;
   endDate: Date;
   tagName = "";
-  objectType = "";
-  shareControl: string = "";
-  userRecevier: any;
-  recevierID = "";
-  recevierName = "";
   data: any;
   fileUpload: any[] = [];
   fileImage: any = null;
   fileVideo: any = null;
-  myPermission: Permission = null;
-  apprPermission: Permission = null;
   shareIcon: string = "";
   shareText: string = "";
   shareWith: String = "";
-  permissions: Permission[] = [];
   mssgCodeNoty:any = null;
   headerText:string ="";
   NEWSTYPE = {
@@ -126,11 +118,8 @@ export class PopupEditComponent implements OnInit {
       }
     });
   }
-
   setData() {
     this.tagName = this.data.tags;
-    this.shareControl = this.data.shareControl;
-    this.permissions = this.data.permissions;
     this.formGroup = new FormGroup({
       Tags: new FormControl(this.data.tags),
       Category: new FormControl(this.data.category),
@@ -145,7 +134,6 @@ export class PopupEditComponent implements OnInit {
     });
     this.getMessageNoti("SYS009");
     this.changedt.detectChanges();
-
   }
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
@@ -165,14 +153,14 @@ export class PopupEditComponent implements OnInit {
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
-        'UpdateNewsAsync',
+        'UpdatePostAsync',
         [this.data]
       )
       .subscribe(async (res: any) => {
         if (res) {
           if (this.fileUpload.length > 0) {
             this.deleteFileByObjectID(this.data.recID);
-            this.dmSV.fileUploadList = [...this.fileUpload];
+            this.dmSV.fileUploadList = this.fileUpload;
             (await (this.codxAttm.saveFilesObservable())).subscribe((res2: any) => {
               if (res2) 
               {
@@ -188,7 +176,6 @@ export class PopupEditComponent implements OnInit {
         }
       });
   }
-
   clickApproPost() {
     if(this.data)
     {
@@ -207,8 +194,6 @@ export class PopupEditComponent implements OnInit {
         });
     }
   }
-
-
   deleteFileByObjectID(recID: string) {
     if (recID) {
       this.api.execSv(
@@ -271,16 +256,14 @@ export class PopupEditComponent implements OnInit {
     this.changedt.detectChanges();
   }
   eventApply(event: any) {
-    if (event && event[0]?.objectType) {
+    if (event?.dataSelected && event[0]?.objectType) {
       this.data.shareControl = event[0].objectType;
-      this.getValueShare(this.data.shareControl, event);
+      this.getValueShare(this.data.shareControl, event.dataSelected);
     }
   }
-  getValueShare(shareControl: string, data: any[] = null) {
+  getValueShare(shareControl: string, data: any[]) {
     if (shareControl) {
-      let listPermission = [];
-      this.shareWith = "";
-      switch (this.shareControl) {
+      switch (shareControl) {
         case this.SHARECONTROLS.OWNER:
         case this.SHARECONTROLS.EVERYONE:
         case this.SHARECONTROLS.MYGROUP:
@@ -295,25 +278,24 @@ export class PopupEditComponent implements OnInit {
         case this.SHARECONTROLS.ROLES:
         case this.SHARECONTROLS.GROUPS:
         case this.SHARECONTROLS.USER:
-          listPermission.forEach((x: any) => {
+          data.forEach((x: any) => {
             let p = new Permission();
-            p.objectType = this.shareControl;
+            p.objectType = shareControl;
             p.objectID = x.id;
             p.objectName = x.text;
             p.memberType = this.MEMBERTYPE.SHARE;
-            listPermission.push(p);
+            this.data.permissions.push(p);
           });
-          this.data.permissions = listPermission;
-          if (listPermission.length > 1) {
+          if (data.length > 1) {
             this.cache.message('WP002').subscribe((mssg: any) => {
               if (mssg)
-                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + listPermission[0].text + '</b>', listPermission.length - 1, this.shareText);
+                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1, this.shareText);
             });
           }
           else {
             this.cache.message('WP001').subscribe((mssg: any) => {
               if (mssg)
-                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + listPermission[0].text + '</b>');
+                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
             });
           }   
           break;

@@ -1,3 +1,4 @@
+import { TmpMemo } from './../../models/task.model';
 import {
   CO_Content,
   CO_MeetingTemplates,
@@ -5,6 +6,8 @@ import {
 import {
   CO_Meetings,
   CO_Resources,
+  EP_BookingAttendees,
+  EP_Boooking,
   TmpRoom,
 } from './../../models/CO_Meetings.model';
 import {
@@ -127,7 +130,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
       .subscribe((res) => {
-        this.isRoom = res.msgBodyData[0];
+        // this.isRoom = res.msgBodyData[0];
         if (this.action === 'edit') {
           if (this.isRoom == false) {
             this.api
@@ -328,10 +331,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.attachment?.clearData();
         if (res) {
           this.dialog.close([res.save]);
+          //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
+          this.bookingRoomEP(res.save);
         } else this.dialog.close();
       });
   }
 
+  
   onUpdate() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
@@ -448,7 +454,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             resource += element.objectName + ', ';
           });
           if(resource != ''){
-            resource = resource.substring(0,resource.length-1);
+            resource = resource.substring(0,resource.length-2);
           }
           this.notiService
               .alertCode('TM063', null, '"' + resource + '"')
@@ -481,11 +487,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       if (this.action === 'add' || this.action === 'copy') this.onAdd();
       else this.onUpdate();
     }
-  }
-
-  toTimeSpan(t) {
-    var time = new Date(t).toLocaleTimeString();
-    return time;
   }
 
   //#region check dieu kien khi add meeting
@@ -633,6 +634,18 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.setDate();
   }
 
+  fullDayChangeWithTime() {
+    if (
+      this.startTime == this.startTimeWork &&
+      this.endTime == this.endTimeWork
+    ) {
+      this.isFullDay = true;
+    } else {
+      this.isFullDay = false;
+    }
+    this.changDetec.detectChanges();
+  }
+
   valueChange(event) {
     if (event?.field === 'resources') {
       this.meeting.resources = event.data[0];
@@ -713,14 +726,18 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   valueStartTimeChange(event: any) {
     this.startTime = event.data.fromDate;
+    this.fullDayChangeWithTime();
     // this.isFullDay = false;
     this.setDate();
+    this.changDetec.detectChanges();
+
   }
 
   valueEndTimeChange(event: any) {
     this.endTime = event.data.toDate;
     // this.isFullDay = false;
     this.setDate();
+    this.changDetec.detectChanges();
   }
 
   setDate() {
@@ -1018,4 +1035,41 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   //end
+  bookingRoomEP(data){
+    //chuyển model meeting sang booking
+    let booking = new EP_Boooking();
+    booking.resourceID=data.location;
+		booking.status = data.status;
+		booking.startDate= data.startDate;
+		booking.endDate= data.endDate;
+		booking.link =data.link;
+		booking.link2= data.link2;
+		booking.memo=data.memo;
+		booking.online = data.online;
+    booking.bookingOn= data.startDate;
+    booking.approveStatus='1';
+    booking.resourceType='1';
+    //cần kiểm tra lại mapping cho 2 field này
+    booking.title= data.memo;// tiêu đề cuộc họp
+    booking.reasonID= 'R'//mã lí do cuộc họp
+    //tạo ds người tham gia cho EP
+    let bookingAttendees=[];
+    data.resources.forEach(item => {
+      let attender= new EP_BookingAttendees()
+      attender.userID=item.resourceID;
+      attender.roleType= item.roleType;
+      attender.optional=item.optional;
+      attender.status= item.status;
+      bookingAttendees.push(attender);
+    });
+    this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AddEditItemAsync',
+      [booking,true,bookingAttendees]
+      ).subscribe(res=>{
+        console.log(res);
+      })
+  }
 }
