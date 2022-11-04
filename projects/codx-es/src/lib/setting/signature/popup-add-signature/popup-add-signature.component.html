@@ -137,7 +137,9 @@
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
-                [funcId]="funcID"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S1')"
+                [funcId]="'ESS21'"
               >
               </codx-img>
             </div>
@@ -163,7 +165,9 @@
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
-                [funcId]="funcID"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S2')"
+                [funcId]="'ESS21'"
               >
               </codx-img>
             </div>
@@ -191,7 +195,9 @@
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
-                [funcId]="funcID"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S3')"
+                [funcId]="'ESS21'"
               >
               </codx-img>
             </div>

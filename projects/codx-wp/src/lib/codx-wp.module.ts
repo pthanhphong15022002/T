@@ -55,6 +55,7 @@ import { ChatVoteComponent } from './chatting/chat-vote/chat-vote.component';
 import { CodxChatComponent } from './chatting/codx-chat/codx-chat.component';
 import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
 
+
 export const routes: Routes = [
   {
     path: 'portal',
@@ -214,6 +215,7 @@ const Component: Type<any>[] =
   exports: [RouterModule],
   declarations: [Component ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  
 })
 export class CodxWpModule {
   public static forRoot(
