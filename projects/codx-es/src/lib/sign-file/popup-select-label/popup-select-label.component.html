@@ -10,35 +10,51 @@
 
   <div class="d-flex mx-auto pt-12 popup-body card-scroll">
     <div class="d-flex flex-wrap">
+      <!-- Vung load label mac dinh -->
       <div
         class="imgs d-flex me-4 mb-4 w-250px h-250px border rounded-4 align-items-center flex-center"
-        *ngFor="let label of labels; let idx = index"
+        *ngFor="let label of defaultLabels; let idx = index"
       >
         <div class="img d-flex flex-column text-center">
           <img style="max-width: 200px" [src]="label.Image" />
-          <!-- <codx-vll
-  [showText]="true"
-  [showBgColor]="true"
-  [name]="'ES023'"
-  [value]="label.Type"
-  class="badge badge-light badge-md fs-7"
->
-</codx-vll> -->
+
           <codx-input
             type="radio"
             name="radio"
             labelPosition="Before"
             [disabled]="false"
             value="radio"
-            (valueChange)="changeLabel(label)"
+            (valueChange)="changeLabel(label.Image)"
           >
           </codx-input>
         </div>
       </div>
-      <ng-container *ngIf="lstFile">
+      <!-- Vung load label da save truoc do -->
+      <ng-container *ngIf="selfLabels">
         <div
           class="imgs d-flex me-4 mb-4 w-250px h-250px border rounded-4 align-items-center flex-center"
-          *ngFor="let label of lstFile; let idx = index"
+          *ngFor="let label of selfLabels; let idx = index"
+        >
+          <div class="img d-flex flex-column text-center">
+            <img style="max-width: 200px" [src]="label.pathDisk" />
+            <codx-input
+              type="radio"
+              name="radio"
+              labelPosition="Before"
+              [disabled]="false"
+              value="radio"
+              (valueChange)="changeLabel(label.pathDisk)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Vung load label vua save -->
+      <ng-container *ngIf="lstAddedFile">
+        <div
+          class="imgs d-flex me-4 mb-4 w-250px h-250px border rounded-4 align-items-center flex-center"
+          *ngFor="let label of lstAddedFile; let idx = index"
         >
           <div class="img d-flex flex-column text-center">
             <img style="max-width: 200px" [src]="label.avatar" />
@@ -48,7 +64,7 @@
               labelPosition="Before"
               [disabled]="false"
               value="radio"
-              (valueChange)="changeLabel(label)"
+              (valueChange)="changeLabel(label.avatar)"
             >
             </codx-input>
           </div>

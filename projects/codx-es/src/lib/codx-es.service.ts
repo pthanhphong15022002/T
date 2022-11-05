@@ -1277,6 +1277,16 @@ export class CodxEsService {
     );
   }
 
+  getLabels() {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetLabelForESAsync',
+      []
+    );
+  }
+
   getLstFileByID(lstID: string[]): Observable<any> {
     return this.api.execSv(
       'DM',
