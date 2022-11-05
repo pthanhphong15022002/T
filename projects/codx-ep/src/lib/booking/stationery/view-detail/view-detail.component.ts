@@ -23,6 +23,7 @@ export class BookingStationeryViewDetailComponent
 {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('attachment') attachment;
+  @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
@@ -79,7 +80,7 @@ export class BookingStationeryViewDetailComponent
         this.lviewEdit(data, event.text);
         break;
       case 'SYS04': //Copy.
-        this.lviewEdit(data, event.text);
+        this.lviewCopy(data, event.text);
         break;
     }
   }
@@ -93,7 +94,7 @@ export class BookingStationeryViewDetailComponent
   lviewCopy(data?, mfuncName?) {
     if (data) {
       this.setPopupTitle.emit(mfuncName);
-      this.edit.emit(data);
+      this.copy.emit(data);
     }
   }
 

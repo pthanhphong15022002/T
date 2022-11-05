@@ -92,6 +92,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   
 
   chatMessages: any[] = [];
+  objIndex: any;
   message: string;
   groupType: any;
 
@@ -109,6 +110,9 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   userId : any;
   SignalrMess : any[] = [];
   countSignalr = 0;
+  countSignalr1 = 0;
+  sodem1 = 0;
+  sodem2 = 0;
   refID: any;
 
 
@@ -152,6 +156,7 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
   
   
   lstData: any;
+  
   constructor
   (
     private signalrService: SignalRService,//Signalr
@@ -195,7 +200,6 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
       this.signalrService.signalChat.subscribe(res=>{
 
         console.log('tin nhan ne',res);
-        console.log('tin nhan signalr',this.SignalrMess);
         //this.SignalrMess = res;
         if(this.countSignalr == 0){
           this.chatMessages.push(res);
@@ -208,13 +212,75 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
         
       })
       this.signalrService.signalDelChat.subscribe(res=>{
-
-        console.log('Xoa tin nhan ne',res);
         //this.SignalrMess = res;
-        res.messageType = 5;
-        res.message = this.mesDelete;
+        if(this.countSignalr == 0){
+          console.log('Xoa tin nhan ne',res);
+          
+          this.objIndex = this.chatMessages.findIndex((obj => obj.messageId == res.messageId));
+
+          console.log("Before update: ", this.chatMessages[this.objIndex])
+
+          this.chatMessages[this.objIndex].messageType = "5";
+
+          console.log("After update: ", this.chatMessages[this.objIndex])
+
+          //res.messageType = 5;
+          //this.chatMessages.push(res);
+          this.detectorRef.detectChanges();
+          //this.SignalrMess = [];
+          this.countSignalr ++ ;
+        }else{
+          this.countSignalr = 0;
+        }
+        //this.SignalrMess = res;
+        
+        //res.message = this.mesDelete;
         
       })
+
+      this.signalrService.signaDataVote.subscribe(rest1=>{
+        if(this.countSignalr == 0){
+          
+          this.objIndex = this.chatMessages.findIndex((obj => obj.messageId == rest1.messageId));
+          console.log('vote nek',rest1);
+        this.signalrService.signalVote.subscribe(res1=>{
+          // console.log('vòng 2',this.sodem2);
+          if(this.sodem2 == 0){
+          this.signalrService.signalVoteType.subscribe(res2=>{
+          // if(this.countSignalr1 <= 2 ){
+            this.chatMessages[this.objIndex].votes = res1[0];
+            this.chatMessages[this.objIndex].totalVote = res1[1];
+            this.chatMessages[this.objIndex].listVoteType = res1[2];
+            if (res2 == this.chatMessages[this.objIndex].myVotedType) {
+              this.chatMessages[this.objIndex].myVotedType = null;
+              this.chatMessages[this.objIndex].myVoted = false;
+              this.checkVoted = false;
+            } else {
+              this.chatMessages[this.objIndex].myVotedType = res2;
+              this.chatMessages[this.objIndex].myVoted = true;
+              this.checkVoted = true;
+            }
+          //    this.countSignalr1 ++ ;
+          // }
+        })
+        this.sodem2 ++;
+      }
+        
+        })
+        this.countSignalr ++
+      
+        this.changeDetectorRef.detectChanges();
+        // }
+        }else{
+        this.countSignalr = 0;
+        // this.countSignalr1 = 0;
+        this.sodem2 =0;
+      }
+      
+      // else{
+          
+      })
+      
 
       this.signalrService.signalGroup.subscribe(res=>{
         console.log('group ne ',res);
@@ -704,7 +770,7 @@ groupName = "";
       }
       
   votePost(data: any, voteType = null) {
-    debugger;
+    
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -712,30 +778,31 @@ groupName = "";
       "VoteChatPostAsync",
       [data.messageId, voteType])
       .subscribe((res: any) => {
-        debugger;
         if (res) {
 
-          // this.signalrService.sendData(res,"VoteMessage");
+           this.signalrService.sendVoteData(data,res,voteType,"VoteMessage");
+          
+           
+          
+          
+          
 
-          // this.signalrService.signalVote.subscribe(res1=>{
-
-          //   console.log('vote nek',res1);
-                data.votes = res[0];
-                data.totalVote = res[1];
-                data.listVoteType = res[2];
-                if (voteType == data.myVotedType) {
-                  data.myVotedType = null;
-                  data.myVoted = false;
-                  this.checkVoted = false;
-                }
-                else {
-                  data.myVotedType = voteType;
-                  data.myVoted = true;
-                  this.checkVoted = true;
-                }
-                this.changeDetectorRef.detectChanges();
-            
-          // })
+             
+                // data.votes = res[0];
+                // data.totalVote = res[1];
+                // data.listVoteType = res[2];
+                // if (voteType == data.myVotedType) {
+                //   data.myVotedType = null;
+                //   data.myVoted = false;
+                //   this.checkVoted = false;
+                // }
+                // else {
+                //   data.myVotedType = voteType;
+                //   data.myVoted = true;
+                //   this.checkVoted = true;
+                // }
+                
+          
         }
 
       });

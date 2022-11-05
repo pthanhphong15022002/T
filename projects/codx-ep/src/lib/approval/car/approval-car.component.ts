@@ -12,6 +12,8 @@ import {
 } from 'codx-core';
 import { PopupAddBookingCarComponent } from '../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../codx-ep.service';
+import { DriverModel } from '../../models/bookingAttendees.model';
+import { PopupDriverAssignComponent } from './popup-driver-assign/popup-driver-assign.component';
 
 @Component({
   selector: 'approval-car',
@@ -35,6 +37,7 @@ export class ApprovalCarsComponent extends UIComponent {
   method = 'GetListApprovalAsync';
   predicate = 'ResourceType=@0';
   datavalue = '2';
+  cbbDriver: DriverModel[]=[];
   idField = 'recID';
 
   // [entityName]="'ES_ApprovalTrans'"
@@ -49,13 +52,16 @@ export class ApprovalCarsComponent extends UIComponent {
   request?: ResourceModel;
   itemDetail;
   resourceField;
-  fields;
   dataSelected: any;
   popupDialog: any;
   dialog!: DialogRef;
   formModel: FormModel;
-  popuptitle:any;
   viewType=ViewType;
+  driverID:any;
+  listDriver=[];
+  driver:any;
+  fields: Object = { text: 'driverName', value: 'driverID' };
+  popupTitle: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -69,6 +75,8 @@ export class ApprovalCarsComponent extends UIComponent {
         this.formModel = res;
       }
     });
+    
+  
   }
 
   onInit(): void {
@@ -159,7 +167,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
       case 'EPT40204': {
         //Phân công tài xế
-        this.popuptitle=value.text;
+        this.popupTitle=value.text;
         this.assignDriver(datas);
         break;
       }
@@ -203,13 +211,35 @@ export class ApprovalCarsComponent extends UIComponent {
     this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
     .subscribe((res:any)=>{
       if(res){
-        var x= res;
+        this.cbbDriver=[];
+        this.listDriver = res;
+        this.listDriver.forEach(dri=>{
+          var tmp = new DriverModel();
+          tmp['driverID'] = dri.resourceID;
+          tmp['driverName'] = dri.resourceName;
+          this.cbbDriver.push(tmp);
+        })
+        this.popupDialog = this.callfc.openForm(
+          PopupDriverAssignComponent,'',550,250,this.funcID,
+          [
+            this.view.dataService.dataSelected,            
+            this.popupTitle,
+            this.view.dataService,
+            this.cbbDriver,
+          ]            
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear(); 
+          else {
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
       }
     })
-    this.popupDialog = this.callfc.openForm(this.driverAssign, '', 550, );
-    this.detectorRef.detectChanges();    
+       
   }
 
+  cbxChange(evt:any){}
   closeAddForm(event) {}
 
   changeItemDetail(event) {

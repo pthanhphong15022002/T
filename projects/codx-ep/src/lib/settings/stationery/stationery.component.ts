@@ -293,23 +293,25 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   updateQuantity(data) {
-    this.callfc.openForm(PopupUpdateQuantityComponent, '', 500, null, '', [
-      data,
-    ]);
-    this.dialog.closed.subscribe((x) => {
-      debugger;
-      if (!x.event) this.view.dataService.clear();
-      if (x.event == null && this.view.dataService.hasSaved)
-        this.view.dataService
-          .delete([this.view.dataService.dataSelected])
-          .subscribe((x) => {
-            this.changeDetectorRef.detectChanges();
-          });
-      else if (x.event) {
-        x.event.modifiedOn = new Date();
-        this.view.dataService.update(x.event).subscribe();
-      }
-    });
+    this.callfc
+      .openForm(PopupUpdateQuantityComponent, '', 500, null, '', [
+        data,
+        this.view.dataService,
+      ])
+      .closed.subscribe((x) => {
+        debugger;
+        if (!x.event) this.view.dataService.clear();
+        if (x.event == null && this.view.dataService.hasSaved)
+          this.view.dataService
+            .delete([this.view.dataService.dataSelected])
+            .subscribe((x) => {
+              this.changeDetectorRef.detectChanges();
+            });
+        else if (x.event) {
+          x.event.modifiedOn = new Date();
+          this.view.dataService.update(x.event).subscribe();
+        }
+      });
   }
 
   closeEditForm(evt?: any) {
