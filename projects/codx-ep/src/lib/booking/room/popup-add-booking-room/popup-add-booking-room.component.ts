@@ -598,18 +598,41 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.data.status = '1';
     this.data.requester = this.curUser.userName;
     this.data.attendees= this.tmpAttendeesList.length;
-
-    if (this.data.attendees > this.roomCapacity) {
-      this.notificationsService.alertCode('EP004').subscribe((x) => {
+    //ktra link online
+    if(this.data.online && (this.data.onlineUrl==null || this.data.onlineUrl==''))
+    {
+      this.notificationsService.alertCode('EP012').subscribe((x)=>{
         if (x.event.status == 'N') {
           return;
         } else {
-          this.attendeesValidateStep(approval);
+          if (this.data.attendees > this.roomCapacity) {
+            this.notificationsService.alertCode('EP004').subscribe((x) => {
+              if (x.event.status == 'N') {
+                return;
+              } else {
+                this.attendeesValidateStep(approval);
+              }
+            });
+          } else {
+            this.attendeesValidateStep(approval);
+          }
         }
-      });
-    } else {
-      this.attendeesValidateStep(approval);
+      })
     }
+    else{
+      if (this.data.attendees > this.roomCapacity) {
+        this.notificationsService.alertCode('EP004').subscribe((x) => {
+          if (x.event.status == 'N') {
+            return;
+          } else {
+            this.attendeesValidateStep(approval);
+          }
+        });
+      } else {
+        this.attendeesValidateStep(approval);
+      }
+    }
+    
   }
 
   attendeesValidateStep(approval) {
@@ -682,6 +705,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   if (res?.msgCodeError == null && res?.rowCount) {
                     this.notificationsService.notifyCode('ES007');
                     this.returnData.approveStatus = '3';
+                    this.returnData.status = '3';
                     this.returnData.write = false;
                     this.returnData.delete = false;
                     (this.dialogRef.dataService as CRUDService)

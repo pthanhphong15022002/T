@@ -130,8 +130,8 @@ export class PdfComponent
     { realValue: '90', show: 90 },
     { realValue: '100', show: 100 },
     { realValue: 'Auto', show: 'Auto' },
-    { realValue: 'Fit to Width', show: 'Fit to Width' },
-    { realValue: 'Fit to page', show: 'Fit to page' },
+    // { realValue: 'Fit to Width', show: 'Fit to Width' },
+    // { realValue: 'Fit to page', show: 'Fit to page' },
   ];
 
   //sign area
@@ -1613,7 +1613,7 @@ export class PdfComponent
               res.event &&
               !this.lstAreas.find((area) => area.labelType == '9')
             ) {
-              let curLabelUrl = res.event.Image;
+              let curLabelUrl = res.event;
               this.url = '';
               if (curLabelUrl && curLabelUrl != '') {
                 this.addArea(
