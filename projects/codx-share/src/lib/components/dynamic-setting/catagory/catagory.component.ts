@@ -13,6 +13,7 @@ import {
   DialogModel,
   DialogRef,
 } from 'codx-core';
+//import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 @Component({
@@ -25,6 +26,7 @@ export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
     cpnAlertRules: PopupAddEmailTemplateComponent,
+    //cpnApprovals: ApprovalStepComponent,
   };
   category = '';
   title = '';
@@ -59,7 +61,7 @@ export class CatagoryComponent implements OnInit {
       this.valuelist = data.data?.valuelist;
       this.category = data.data?.category;
       this.function = data.data?.function;
-    
+
       //this.loadSettingValue();
     }
   }
@@ -196,6 +198,13 @@ export class CatagoryComponent implements OnInit {
           // data['showSendLater'] = null;
 
           this.callfc.openForm(component, '', 800, screen.height, '', data);
+          break;
+        case 'cpnApprovals':
+          // var rule = this.alertRules[value];
+          // if (!rule) return;
+          // data['formGroup'] = null;
+          // data['templateID'] = rule.emailTemplate;
+          // this.callfc.openForm(component, '', 800, screen.height, '', data);
           break;
         default:
           break;
@@ -424,7 +433,5 @@ export class CatagoryComponent implements OnInit {
         console.log(res);
       });
   }
-  checkA(e:any)
-  {
-  }
+  checkA(e: any) {}
 }

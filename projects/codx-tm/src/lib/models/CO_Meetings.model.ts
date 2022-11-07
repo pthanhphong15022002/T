@@ -52,6 +52,33 @@ export class CO_Resources{
     positionName: string;
 }
 
+export class EP_Boooking{
+  resourceID:string;
+  status: string;
+  startDate: Date;
+  endDate: Date;
+  bookingOn: Date;
+  location: string;
+  link: string;
+  link2: string;
+  memo: string;
+  autoCreate: boolean;
+  repeated: boolean;
+  attachments: number;
+  createOn: Date;
+  online=false;
+  title:string='';
+  reasonID:string='';
+  approveStatus:string;
+  resourceType:string;
+}
+export class EP_BookingAttendees {
+  userID: string;
+  userName: string;
+  roleType: string;
+  status: string;
+  optional: boolean; 
+}
 export class TabControl{
   name: 'Nội dung họp' | 'Thảo luận' |string;
   textDefault: string;

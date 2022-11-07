@@ -86,22 +86,19 @@ export class PopupUpdateQuantityComponent extends UIComponent {
     }
     this.api
       .exec('EP', 'ResourceTransBusiness', 'ImportAsync', [
-        this.data.resourceID,
+        this.data.recID,
         this.dialogUpdateQuantity.value.quantity,
       ])
       .subscribe((res) => {
-        this.view.dataService.update(res).subscribe((res) => {
-          if (res) {
-            this.notificationsService.notify(
-              'Cập nhật tồn kho thành công',
-              '1',
-              0
-            );
-            this.detectorRef.detectChanges();
-            this.dialog.close();
-          }
-         
-        });
+        if (res) {
+          this.notificationsService.notify(
+            'Cập nhật tồn kho thành công',
+            '1',
+            0
+          );
+          this.detectorRef.detectChanges();
+          this.dialog && this.dialog.close(res);
+        }
       });
   }
 }

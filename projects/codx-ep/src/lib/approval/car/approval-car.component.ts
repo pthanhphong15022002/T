@@ -1,3 +1,4 @@
+import { title } from 'process';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
@@ -11,6 +12,8 @@ import {
 } from 'codx-core';
 import { PopupAddBookingCarComponent } from '../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../codx-ep.service';
+import { DriverModel } from '../../models/bookingAttendees.model';
+import { PopupDriverAssignComponent } from './popup-driver-assign/popup-driver-assign.component';
 
 @Component({
   selector: 'approval-car',
@@ -24,6 +27,7 @@ export class ApprovalCarsComponent extends UIComponent {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('driverAssign') driverAssign: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
   service = 'EP';
@@ -33,6 +37,7 @@ export class ApprovalCarsComponent extends UIComponent {
   method = 'GetListApprovalAsync';
   predicate = 'ResourceType=@0';
   datavalue = '2';
+  cbbDriver: DriverModel[]=[];
   idField = 'recID';
 
   // [entityName]="'ES_ApprovalTrans'"
@@ -47,10 +52,16 @@ export class ApprovalCarsComponent extends UIComponent {
   request?: ResourceModel;
   itemDetail;
   resourceField;
-  fields;
   dataSelected: any;
+  popupDialog: any;
   dialog!: DialogRef;
   formModel: FormModel;
+  viewType=ViewType;
+  driverID:any;
+  listDriver=[];
+  driver:any;
+  fields: Object = { text: 'driverName', value: 'driverID' };
+  popupTitle: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -64,6 +75,8 @@ export class ApprovalCarsComponent extends UIComponent {
         this.formModel = res;
       }
     });
+    
+  
   }
 
   onInit(): void {
@@ -130,7 +143,7 @@ export class ApprovalCarsComponent extends UIComponent {
           //template5: this.resourceTootip,
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
-          statusColorRef: 'vl003',
+          statusColorRef: 'EP022',
         },
       },
     ];
@@ -154,6 +167,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
       case 'EPT40204': {
         //Phân công tài xế
+        this.popupTitle=value.text;
         this.assignDriver(datas);
         break;
       }
@@ -162,7 +176,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
     }
   }
-
+  
   approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
@@ -191,8 +205,41 @@ export class ApprovalCarsComponent extends UIComponent {
       });
   }
 
-  assignDriver(data: any) {}
+  assignDriver(data: any) {
+    let startDate= new Date(data.startDate);
+    let endDate= new Date(data.endDate);
+    this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
+    .subscribe((res:any)=>{
+      if(res){
+        this.cbbDriver=[];
+        this.listDriver = res;
+        this.listDriver.forEach(dri=>{
+          var tmp = new DriverModel();
+          tmp['driverID'] = dri.resourceID;
+          tmp['driverName'] = dri.resourceName;
+          this.cbbDriver.push(tmp);
+        })
+        this.popupDialog = this.callfc.openForm(
+          PopupDriverAssignComponent,'',550,250,this.funcID,
+          [
+            this.view.dataService.dataSelected,            
+            this.popupTitle,
+            this.view.dataService,
+            this.cbbDriver,
+          ]            
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear(); 
+          else {
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
+      }
+    })
+       
+  }
 
+  cbxChange(evt:any){}
   closeAddForm(event) {}
 
   changeItemDetail(event) {
@@ -202,7 +249,10 @@ export class ApprovalCarsComponent extends UIComponent {
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
-        if (func.functionID == 'SYS04' /*Copy*/ || func.functionID == "EPT40203") {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
           func.disabled = true;
         }
       });
@@ -214,6 +264,9 @@ export class ApprovalCarsComponent extends UIComponent {
           ) {
             func.disabled = false;
           }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = true;
+          }
         });
       } else {
         event.forEach((func) => {
@@ -222,6 +275,9 @@ export class ApprovalCarsComponent extends UIComponent {
             func.functionID == 'EPT40202' /*MF từ chối*/
           ) {
             func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = false;
           }
         });
       }
