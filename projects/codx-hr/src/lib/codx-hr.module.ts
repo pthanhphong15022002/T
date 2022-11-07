@@ -52,7 +52,6 @@ import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-add-new-hr.component';
-import { PopupAddEmployeeComponent } from './employee-list/popup-add-employee/popup-add-employee.component';
 
 export const routes: Routes = [
   {
@@ -205,7 +204,6 @@ const T_Component: Type<any>[] = [
   EmployeeProfileComponent,
   PopupAddNewHRComponent,
   EmployeeListComponent,
-  PopupAddEmployeeComponent,
 ];
 @NgModule({
   imports: [
