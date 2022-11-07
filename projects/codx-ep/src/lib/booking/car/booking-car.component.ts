@@ -65,6 +65,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   popupTitle = '';
   funcIDName = '';
   columnsGrid: any;
+  popupClosed=true;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -259,77 +260,88 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       });
   }
 
-  addNew(evt?: any) {
-    if(evt!=null)
-    {
-      this.optionalData=evt;
+  addNew(evt?) {
+    if (evt != null) {
+      this.optionalData = evt;
+    } else {
+      this.optionalData = null;
     }
-    else{
-      this.optionalData=null;
-    }
-    this.viewBase.dataService.addNew().subscribe((res) => {
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.viewBase?.dataService;
-      option.FormModel = this.formModel;
-      this.dialog = this.callFuncService.openSide(
-        PopupAddBookingCarComponent,
-        [this.viewBase?.dataService?.dataSelected, true, this.popupTitle,this.optionalData,false],
-        option
-      );
-      this.dialog.closed.subscribe((returnData) => {
-        if (!returnData.event) this.view.dataService.clear();        
+    if(this.popupClosed){
+      this.view.dataService.addNew().subscribe((res) => {      
+        this.popupClosed = false;
+        this.dataSelected = this.view.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callFuncService.openSide(
+          PopupAddBookingCarComponent,
+          [this.dataSelected, true, this.popupTitle, this.optionalData],
+          option
+        );
+        this.dialog.closed.subscribe((returnData) => {
+          this.popupClosed=true;
+          if (!returnData.event) this.view.dataService.clear();        
+        });
       });
-    });
+    }    
   }
 
-  edit(obj?) {
-    if (obj) {
-      if (this.authService.userValue.userID != obj.owner) {
+  edit(evt?) {
+    if (evt) {
+      if (this.authService.userValue.userID != evt?.owner) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
-      this.viewBase.dataService.dataSelected = obj;
-      this.viewBase.dataService
-        .edit(this.viewBase?.dataService?.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.viewBase.dataService.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.viewBase?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callFuncService.openSide(
-            PopupAddBookingCarComponent,
-            [this.viewBase.dataService.dataSelected, false, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((returnData) => {
-            if (!returnData.event) this.view.dataService.clear();        
+      if(this.popupClosed){
+        this.view.dataService.dataSelected = evt;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view.dataService.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '800px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callFuncService.openSide(
+              PopupAddBookingCarComponent,
+              [this.view.dataService.dataSelected, false, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((returnData) => {
+              this.popupClosed=true;
+              if (!returnData.event) this.view.dataService.clear();        
+            });
           });
-        });
+      }
     }
   }
 
-  copy(obj?) {
-    if (obj) {      
-      this.viewBase.dataService.dataSelected = obj;
-      this.viewBase.dataService
-        .edit(this.viewBase?.dataService?.dataSelected)
+  copy(evt?) {
+    if (evt) {
+      if(this.popupClosed){      
+      this.view.dataService.dataSelected = evt;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
-          this.dataSelected = this.viewBase.dataService.dataSelected;
+          this.popupClosed = false;
+          this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
-          option.DataService = this.viewBase?.dataService;
+          option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callFuncService.openSide(
             PopupAddBookingCarComponent,
-            [this.viewBase.dataService.dataSelected, true, this.popupTitle,null,true],
+            [this.view.dataService.dataSelected, true, this.popupTitle,null,true],
             option
           );
           this.dialog.closed.subscribe((returnData) => {
+            this.popupClosed = true;
             if (!returnData.event) this.view.dataService.clear();        
           });
         });
+      }
     }
   }
 
