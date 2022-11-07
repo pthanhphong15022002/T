@@ -75,6 +75,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   cardNote: any;
   popupDialog: any;
   selectedCard:any;
+  popupClosed=true;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -258,84 +259,96 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew() {
-    this.view.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.view.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      this.dialog = this.callfc.openSide(
-        PopupAddEpCardsComponent,
-        [this.dataSelected, true, this.popupTitle],
-        option
-      );
-      this.dialog.closed.subscribe((x) => {
-        if (!x.event) this.view.dataService.clear();
-        if (x.event == null && this.view.dataService.hasSaved)
-          this.view.dataService
-            .delete([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.changeDetectorRef.detectChanges();
-            });
-        else if (x.event) {
-          x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
-        }
+    if (this.popupClosed) {
+      this.view.dataService.addNew().subscribe((res) => {
+        this.popupClosed = false;
+        this.dataSelected = this.view.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          PopupAddEpCardsComponent,
+          [this.dataSelected, true, this.popupTitle],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          this.popupClosed = true;
+          if (!x.event) this.view.dataService.clear();
+          if (x.event == null && this.view.dataService.hasSaved)
+            this.view.dataService
+              .delete([this.view.dataService.dataSelected])
+              .subscribe((x) => {
+                this.changeDetectorRef.detectChanges();
+              });
+          else if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
       });
-    });
+    }
   }
 
   edit(obj?) {
     if (obj) {
-      this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddEpCardsComponent,
-            [this.view.dataService.dataSelected, false, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((x) => {
-            if (!x.event) this.view.dataService.clear();
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {});
-            }
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = obj;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view?.dataService?.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '550px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callfc.openSide(
+              PopupAddEpCardsComponent,
+              [this.view.dataService.dataSelected, false, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((x) => {
+              this.popupClosed = true;
+              if (!x.event) this.view.dataService.clear();
+              if (x?.event) {
+                x.event.modifiedOn = new Date();
+                this.view.dataService.update(x.event).subscribe((res) => {});
+              }
+            });
           });
-        });
+      }
     }
   }
 
   copy(obj?) {
     if (obj) {
-      this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddEpCardsComponent,
-            [this.view.dataService.dataSelected, true, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((x) => {
-            if (!x.event) this.view.dataService.clear();
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {});
-            }
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = obj;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view?.dataService?.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '550px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callfc.openSide(
+              PopupAddEpCardsComponent,
+              [this.view.dataService.dataSelected, true, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((x) => {
+              this.popupClosed = true;
+              if (!x.event) this.view.dataService.clear();
+              if (x?.event) {
+                x.event.modifiedOn = new Date();
+                this.view.dataService.update(x.event).subscribe((res) => {});
+              }
+            });
           });
-        });
+      }
     }
   }
 
@@ -429,7 +442,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           this.selectedCard.status=currTrans;
           this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
           this.popupDialog.close();
-          this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_TEMP Đợi messcode từ BA         
+          this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_WAITING Đợi messcode từ BA         
         }
         this.cardUserID=null;
         this.cardDate=null;
