@@ -166,6 +166,7 @@ db.DM_FolderInfo.updateMany(
     this.dmSV.menuActive.next(title);
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id);
+    this.dmSV.dmFavoriteID = subid;
     this.folderService.options.funcID = id;
     this.folderService.options.favoriteID = subid;
     this.folderService.getFolders('').subscribe(async (list) => {
