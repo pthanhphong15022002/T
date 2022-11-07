@@ -218,6 +218,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -281,6 +282,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
               [this.view.dataService.dataSelected],
@@ -389,6 +391,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         );
       }
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],

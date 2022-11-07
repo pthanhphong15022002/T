@@ -1,0 +1,386 @@
+<codx-layout-add
+  #form
+  [title]="title"
+  [tabInfo]="tabInfo"
+  [formModel]="dialogRef.formModel"
+  [subHeader]=""
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [openMore]="true"
+  (buttonClick)="buttonClick($event)"
+  [tabContent]="[baseInfo]"
+  (setTitle)="setTitle($event)"
+  [data]="data"
+>
+</codx-layout-add>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
+      Lưu
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #baseInfo>
+  <div class="form-group">
+    <div
+      id="avatar_id"
+      class="d-flex justify-content-between align-items-center"
+    >
+      <div id="eAvartar">
+        <codx-img
+          class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+          [imageType]="'circle'"
+          [width]="80"
+          [objectId]=""
+          [objectType]=""
+          data-kt-menu-trigger="click"
+          data-kt-menu-attach="parent"
+          data-kt-menu-placement="bottom-end"
+          data-kt-menu-flip="bottom"
+          [funcId]="funcID"
+          [isAllowEdit]="true"
+        >
+        </codx-img>
+      </div>
+      <div id="eID">
+        <codx-label fiedName="employeeID" default="Mã Nhân Viên"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="employeeID"
+          [disabled]="true"
+          type="text"
+          [crrValue]="hrID"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div id="eName" class="employeeName">
+      <codx-label fiedName="employeeName" default="Họ và tên"> </codx-label>
+      <codx-input
+        class="form-control"
+        field="employeeName"
+        [disabled]="false"
+        type="text"
+      >
+      </codx-input>
+    </div>
+
+    <div id="employeeName2_joinedOn" class="d-flex justify-content-between">
+      <div id="employeeName2">
+        <codx-label fiedName="employeeName2" default="Bí danh"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="employeeName2"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="joinedOn">
+        <codx-label fiedName="joinedOn" default="Ngày vào làm"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="joinedOn"
+          [disabled]="false"
+          format="d"
+          type="datetime"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div id="birthday_birthPlace" class="d-flex justify-content-between">
+      <div class="birthday">
+        <codx-label fiedName="birthday" default="Ngày sinh"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="birthday"
+          [disabled]="false"
+          format="d"
+          type="datetime"
+        >
+        </codx-input>
+      </div>
+      <div class="birthPlace">
+        <codx-label fiedName="birthPlace" default="Nơi sinh"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="birthPlace"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div id="gender-iDCardNo" class="d-flex justify-content-between">
+      <div id="gender">
+        <codx-label fiedName="gender" default="Giới tính"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="gender"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="iDCardNo">
+        <codx-label fiedName="iDCardNo" default="Số CMND/CCCD"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="iDCardNo"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div id="issuedOn-issuedBy" class="d-flex justify-content-between">
+      <div id="issuedOn">
+        <codx-label fiedName="issuedOn" default="Ngày cấp"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="issuedOn"
+          [disabled]="false"
+          format="d"
+          type="datetime"
+        >
+        </codx-input>
+      </div>
+      <div id="issuedBy">
+        <codx-label fiedName="issuedBy" default="Nơi cấp"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="issuedBy"
+          [disabled]="false"
+          format="d"
+          type="datetime"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <br />
+    <br />
+    <br />
+    <div id="orgUnitID">
+      <codx-label fiedName="orgUnitID" default="Bộ phận làm việc"> </codx-label>
+      <codx-input
+        class="form-control"
+        field="employeeName2"
+        [disabled]="false"
+        type="text"
+      >
+      </codx-input>
+    </div>
+
+    <div id="locationID">
+      <codx-label fiedName="locationID" default="Địa điểm làm việc">
+      </codx-label>
+      <codx-input
+        class="form-control"
+        field="locationID"
+        [disabled]="false"
+        type="text"
+      >
+      </codx-input>
+    </div>
+    <div
+      id="lineManager-indirectManager"
+      class="d-flex justify-content-between"
+    >
+      <div id="lineManager">
+        <codx-label fiedName="lineManager" default="Quản lý trực tiếp">
+        </codx-label>
+        <codx-input
+          class="form-control"
+          field="lineManager"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="indirectManager">
+        <codx-label fiedName="indirectManager" default="Quản lý gián tiếp">
+        </codx-label>
+        <codx-input
+          class="form-control"
+          field="indirectManager"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <br />
+    <br />
+    <br />
+
+    <div id="email-phone" class="d-flex justify-content-between">
+      <div id="email">
+        <codx-label fiedName="email" default="Email"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="email"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="phone">
+        <codx-label fiedName="phone" default="Phone"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="phone"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div id="documentNo-employeeTypeID" class="d-flex justify-content-between">
+      <div id="documentNo">
+        <codx-label fiedName="documentNo" default="Số lưu hồ sơ"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="documentNo"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="employeeTypeID">
+        <codx-label fiedName="employeeTypeID" default="Loại nhân viên">
+        </codx-label>
+        <codx-input
+          class="form-control"
+          field="employeeTypeID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div id="positionID-positionRankID" class="d-flex justify-content-between">
+      <div id="positionID">
+        <codx-label fiedName="positionID" default="Chức danh"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="positionID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="employeeTypeID">
+        <codx-label fiedName="employeeTypeID" default="Chức vụ"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="employeeTypeID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div id="timeCardNo-userID" class="d-flex justify-content-between">
+      <div id="timeCardNo">
+        <codx-label fiedName="timeCardNo" default="Mã chấm công"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="timeCardNo"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="userID">
+        <codx-label fiedName="userID" default="Tài khoản Portal"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="userID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+
+    <div id="weekendGroupID-aLObjectID" class="d-flex justify-content-between">
+      <div id="weekendGroupID">
+        <codx-label fiedName="weekendGroupID" default="Nhóm ngày nghỉ tuần">
+        </codx-label>
+        <codx-input
+          class="form-control"
+          field="weekendGroupID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="aLObjectID">
+        <codx-label fiedName="aLObjectID" default="Đối tượng tính phép năm">
+        </codx-label>
+        <codx-input
+          class="form-control"
+          field="aLObjectID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div id="shiftID-isAltShift" class="d-flex justify-content-between">
+      <div id="shiftID">
+        <codx-label fiedName="shiftID" default="Ca làm việc"> </codx-label>
+        <codx-input
+          class="form-control"
+          field="shiftID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="isAltShift">
+        <codx-label fiedName="isAltShift" default="Ca làm việc thay đổi">
+        </codx-label>
+        <codx-input
+          class="form-control"
+          field="isAltShift"
+          [disabled]="false"
+          type="checkbox"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div id="payrollGroupID-currencyID" class="d-flex justify-content-between">
+      <div id="payrollGroupID">
+        <codx-label fiedName="payrollGroupID" default="Nhóm tính lương">
+        </codx-label>
+        <codx-input
+          class="form-control"
+          field="payrollGroupID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div id="currencyID">
+        <codx-label fiedName="currencyID" default="Nguyên tệ tính lương">
+        </codx-label>
+        <codx-input
+          class="form-control"
+          field="currencyID"
+          [disabled]="false"
+          type="text"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+</ng-template>

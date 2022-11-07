@@ -10,16 +10,30 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="form-group">
-      <codx-label fiedName="ResourceName" [formModel]="form.formModel">
-      </codx-label>
-      <codx-input
-        ControlName="resourceName"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      >
-      </codx-input>
-    </div>
+    <div class="row">
+      <div class="form-group col-9">
+        <codx-label fiedName="ResourceName" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          ControlName="resourceName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group col-3 d-flex align-items-end justify-content-start">
+
+        <div class="d-flex justify-content-start align-items-center">
+          <codx-input class="ps-2" #checkbox class="test-switch" type="switch" [checked]="useCardCheck"
+            (valueChange)="valueUseCardChange($event)">
+          </codx-input>
+      
+        <codx-label class="ps-2" fiedName="UseCard" [formModel]="form.formModel"></codx-label>
+        </div>
+          
+        
+      </div>      
+    </div>   
 
     <div class="row">
       <div class="col-3 form-group">
@@ -181,7 +195,7 @@
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">
+      <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label
           name="lblSave"
           default="Lưu"

@@ -1,17 +1,6 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [autoLoad]="true"
-  entityName="HR_OrganizationUnits"
-  idField="orgUnitID"
-  [views]="views"
-  [selectedFirst]="true"
-  (selectedChange)="onSelectionChanged($event)"
-  [button]="button"
-  (buttonClick)="btnClick($event)"
-  (viewChanged)="changeView($event)"
-  [viewActiveType]="1"
-></codx-views>
+<codx-views #view [funcID]="funcID" [autoLoad]="true" entityName="HR_OrganizationUnits" idField="orgUnitID"
+  [views]="views" [selectedFirst]="true" (selectedChange)="onSelectionChanged($event)" [button]="button"
+  (buttonClick)="btnClick($event)" (viewChanged)="changeView($event)" [viewActiveType]="1"></codx-views>
 
 <ng-template #templateRight>
   <ng-container *ngTemplateOutlet="currView"></ng-container>
@@ -19,13 +8,8 @@
 
 <ng-template #templateDetail>
   <ng-container *ngIf="orgUnitID">
-    <lib-organize-detail
-      [orgUnitID]="orgUnitID"
-      [data]="dataDetail"
-      [formModel]="view.formModel"
-      [numberLV]="numberLV"
-      (afterInit)="orgChartAfterView($event)"
-    ></lib-organize-detail>
+    <lib-organize-detail [orgUnitID]="orgUnitID" [data]="dataDetail" [formModel]="view.formModel" [numberLV]="numberLV"
+      (afterInit)="orgChartAfterView($event)"></lib-organize-detail>
   </ng-container>
 </ng-template>
 
@@ -33,33 +17,21 @@
   <div class="p-5 card-organization">
     <ng-container *ngFor="let data of dataCard; let i = index">
       <div class="d-flex flex-column">
-        <div
-          class="d-flex justify-content-between align-items-top list-action-menu"
-        >
+        <div class="d-flex justify-content-between align-items-top list-action-menu">
           <div class="d-flex flex-column org-card flex-grow-1">
-            <div class="d-flex align-items-center org-header mt-1 mb-3 p-l-5">
+            <div class="d-flex align-items-center org-header mt-1 mb-3">
               <div class="text-dark font-weight-bold font-size-h6">
                 {{ data.departmentName }}
               </div>
               <span class="label label-inline label-pill label-xxs ml-2 mr-2">
-                <codx-vll
-                  [name]="'L0605'"
-                  [value]="data.orgUnitType"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  [showIcon]="true"
-                  class="badge badge-light badge-md fs-7 me-2"
-                >
+                <codx-vll [name]="'L0605'" [value]="data.orgUnitType" [showText]="true" [showBgColor]="true"
+                  [showIcon]="true" class="badge badge-light badge-md fs-7 me-2">
                 </codx-vll>
               </span>
               <div *ngIf="data.parentID" class="text-dark mr-2">
                 <span>
-                  <codx-label
-                    fiedName="under"
-                    formName="OrganizationUnits"
-                    gridViewName="grvOrganizationUnits"
-                    default=" Trực thuộc:"
-                  >
+                  <codx-label fiedName="under" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+                    default=" Trực thuộc:">
                   </codx-label>
                 </span>
               </div>
@@ -67,78 +39,44 @@
                 {{ data.parentName }}
               </div>
             </div>
-            <codx-temp-full
-              [dataItem]="data"
-              [formModel]="view.formModel"
-              (clickMF)="clickMF($event, data)"
-              typeMF="view"
-              [titleTmp]="infoEmployee"
-              [imgOn]="data.modifiedOn"
-            >
+            <codx-temp-full [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+              typeMF="view" [titleTmp]="infoEmployee" [imgOn]="data.modifiedOn">
             </codx-temp-full>
           </div>
           <div class="d-flex org-dinhbien">
-            <div
-              #h
-              class="mx-6 d-flex flex-column align-items-center"
-              (click)="loadEmployList(h, data.departmentCode, '')"
-            >
+            <div #h class="mx-6 d-flex flex-column align-items-center"
+              (click)="loadEmployList(h, data.departmentCode, '')">
               <h4 class="text-dark-75 mb-2">{{ data.headcounts }}</h4>
               <span class="text-dark-75">
-                <codx-label
-                  fiedName="headcounts"
-                  formName="OrganizationUnits"
-                  gridViewName="grvOrganizationUnits"
-                  default="Định biên"
-                >
+                <codx-label fiedName="headcounts" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+                  default="Định biên">
                 </codx-label>
               </span>
             </div>
-            <div
-              #c
-              class="mx-6 d-flex flex-column align-items-center"
-              (click)="loadEmployList(c, data.departmentCode, '50')"
-            >
+            <div #c class="mx-6 d-flex flex-column align-items-center"
+              (click)="loadEmployList(c, data.departmentCode, '50')">
               <h4 class="text-dark-75 mb-2 text-primary">{{ data.counts }}</h4>
               <span class="text-dark-75">
-                <codx-label
-                  fiedName="counts"
-                  formName="OrganizationUnits"
-                  gridViewName="grvOrganizationUnits"
-                  default="Chính thức"
-                >
+                <codx-label fiedName="counts" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+                  default="Chính thức">
                 </codx-label>
               </span>
             </div>
-            <div
-              #o
-              class="mx-6 d-flex flex-column align-items-center"
-              (click)="loadEmployList(o, data.departmentCode, '30')"
-            >
+            <div #o class="mx-6 d-flex flex-column align-items-center"
+              (click)="loadEmployList(o, data.departmentCode, '30')">
               <h4 class="text-dark-75 mb-2 text-warning">{{ data.onboard }}</h4>
               <span class="text-dark-75">
-                <codx-label
-                  fiedName="onboard"
-                  formName="OrganizationUnits"
-                  gridViewName="grvOrganizationUnits"
-                  default="Onbroard"
-                >
+                <codx-label fiedName="onboard" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+                  default="Onbroard">
                 </codx-label>
               </span>
             </div>
-            <div
-              #f
-              class="mx-6 d-flex flex-column align-items-center"
-              (click)="loadEmployList(f, data.departmentCode, '70')"
-            >
+            <div #f class="mx-6 d-flex flex-column align-items-center"
+              (click)="loadEmployList(f, data.departmentCode, '70')">
               <h4 class="text-dark-75 mb-2 text-danger">{{ data.offboard }}</h4>
               <span class="text-dark-75">
-                <codx-label
-                  fiedName="offboard"
-                  formName="OrganizationUnits"
-                  gridViewName="grvOrganizationUnits"
-                  default="Offboard"
-                >
+                <codx-label fiedName="offboard" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+                  default="Offboard">
                 </codx-label>
               </span>
             </div>
@@ -155,53 +93,30 @@
 
 <ng-template #infoEmployee let-data>
   <div class="d-flex align-items-start">
-    <codx-img
-      *ngIf="data.employeeID"
-      class="symbol symbol-40 symbol-circle mr-3"
-      [objectName]="data.employeeName"
-      [objectId]="data.employeeID"
-      objectType="HR_Employees"
-    >
+    <codx-img *ngIf="data.employeeID" [width]="40" class="me-3" [objectName]="data.employeeName"
+      [objectId]="data.employeeID" objectType="HR_Employees">
     </codx-img>
-    <div *ngIf="!data.employeeID" class="symbol symbol-40 symbol-circle mr-3">
-      <span
-        class="noimage symbol symbol-40 symbol-circle symbol-label text-white ng-star-inserted"
-        style="background-color: #a2dbdb38; background-image: none"
-        ><span class="icon-account_circle icon-60 text-dark-50"></span
-      ></span>
+    <div *ngIf="!data.employeeID" class="me-3">
+      <span class="noimage symbol symbol-40 symbol-circle symbol-label text-white ng-star-inserted"
+        style="background-color: #a2dbdb38; background-image: none"><span
+          class="icon-account_circle icon-60 text-dark-50"></span></span>
     </div>
     <div class="d-flex flex-column flex-grow-1">
       <div class="align-items-center mb-1">
-        <span
-          *ngIf="data.employeeName"
-          class="text-dark font-weight-bold font-size-lg mr-2"
-        >
-          {{ data.employeeName }}</span
-        >
-        <span
-          *ngIf="!data.employeeName"
-          class="text-muted font-weight-bold mr-2"
-        >
-          <codx-label
-            fiedName="name"
-            formName="OrganizationUnits"
-            gridViewName="grvOrganizationUnits"
-            default="Tên nhân viên"
-          >
+        <span *ngIf="data.employeeName" class="text-dark font-weight-bold font-size-lg mr-2">
+          {{ data.employeeName }}</span>
+        <span *ngIf="!data.employeeName" class="text-muted font-weight-bold mr-2">
+          <codx-label fiedName="name" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+            default="Tên nhân viên">
           </codx-label>
         </span>
       </div>
       <div class="align-items-center mb-1">
         <span class="text-dark-50 ml-2" *ngIf="data.positionName">
-          {{ data.positionName }}</span
-        >
+          {{ data.positionName }}</span>
         <span class="text-50 ml-2 text-muted" *ngIf="!data.positionName">
-          <codx-label
-            fiedName="positionName"
-            formName="OrganizationUnits"
-            gridViewName="grvOrganizationUnits"
-            default="Chức vụ"
-          >
+          <codx-label fiedName="positionName" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+            default="Chức vụ">
           </codx-label>
         </span>
       </div>
@@ -212,12 +127,8 @@
             {{ data.phone }}
           </span>
           <span class="text-50 ml-2 text-muted" *ngIf="!data.phone">
-            <codx-label
-              fiedName="phone"
-              formName="OrganizationUnits"
-              gridViewName="grvOrganizationUnits"
-              default="Số điện thoại"
-            >
+            <codx-label fiedName="phone" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+              default="Số điện thoại">
             </codx-label>
           </span>
         </div>
@@ -227,12 +138,8 @@
             {{ data.email }}
           </div>
           <div class="text-50 font-size-sm text-muted" *ngIf="!data.email">
-            <codx-label
-              fiedName="email"
-              formName="OrganizationUnits"
-              gridViewName="grvOrganizationUnits"
-              default="Email"
-            >
+            <codx-label fiedName="email" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
+              default="Email">
             </codx-label>
           </div>
         </div>

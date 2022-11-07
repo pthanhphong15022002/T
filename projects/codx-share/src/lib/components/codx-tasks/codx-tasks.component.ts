@@ -361,6 +361,7 @@ export class CodxTasksComponent
         option
       );
       dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -433,6 +434,7 @@ export class CodxTasksComponent
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -538,6 +540,7 @@ export class CodxTasksComponent
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (!e.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
               [this.view.dataService.dataSelected],

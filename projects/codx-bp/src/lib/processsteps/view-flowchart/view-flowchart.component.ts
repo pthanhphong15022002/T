@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { environment } from 'src/environments/environment';
+// Import the library
+
 
 @Component({
   selector: 'codx-view-flowchart',
@@ -16,6 +18,7 @@ export class ViewFlowchartComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
   getImg(recID) {
     this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
       if (data) {
