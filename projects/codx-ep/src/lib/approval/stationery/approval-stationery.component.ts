@@ -114,13 +114,15 @@ export class ApprovalStationeryComponent
           )
           .subscribe((res:any) => {
             if (res?.msgCodeError == null && res?.rowCount>=0) {
-              if(status=="5"){
-                this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.approveStatus="5"
+              if (status == '5') {
+                this.notificationsService.notifyCode('ES007'); //đã duyệt
+                data.approveStatus = '5';
+                data.status = '5';
               }
-              if(status=="4"){
-                this.notificationsService.notifyCode('ES007');//bị hủy
-                data.approveStatus="4";
+              if (status == '4') {
+                this.notificationsService.notifyCode('ES007'); //bị hủy
+                data.approveStatus = '4';
+                data.status = '4';
               }              
               this.view.dataService.update(data).subscribe();
             } else {
