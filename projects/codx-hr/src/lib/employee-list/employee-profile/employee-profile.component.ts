@@ -90,4 +90,6 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   changeItemDetail(item) {}
+
+  add() {}
 }
