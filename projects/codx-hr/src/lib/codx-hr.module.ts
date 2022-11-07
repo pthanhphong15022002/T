@@ -50,6 +50,7 @@ import { ReportinglineOrgChartComponent } from './reportingline/reportingline-or
 import { ReportinglineComponent } from './reportingline/reportingline.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
+import { PopupAddEmployeesPartyInfoComponent } from './employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
 
 export const routes: Routes = [
   {
@@ -199,6 +200,7 @@ const T_Component: Type<any>[] = [
   ReportinglineOrgChartComponent,
   ReportinglineDetailComponent,
   EmployeeProfileComponent,
+  PopupAddEmployeesPartyInfoComponent
 ];
 @NgModule({
   imports: [
