@@ -107,7 +107,7 @@ export class SettingCalendarComponent
         this.dayWeek = res;
         (
           this.viewOrg.currentView as any
-        ).schedule?.scheduleObj?.first?.refresh();
+        )?.schedule?.scheduleObj?.first?.refresh();
       }
     });
   }
