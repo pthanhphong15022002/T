@@ -14,7 +14,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../codx-hr.service';
+import { CodxHrService } from '../../codx-hr.service';
 
 @Component({
   selector: 'lib-employee-profile',
