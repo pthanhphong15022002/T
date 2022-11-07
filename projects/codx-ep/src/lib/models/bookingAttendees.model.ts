@@ -8,3 +8,7 @@ export class BookingAttendees {
     roleName:string;
     //modifiedOn: string;
   }
+  export class DriverModel {
+    driverID: string;
+    driverName: string;    
+  }

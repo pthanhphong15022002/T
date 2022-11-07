@@ -20,6 +20,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
 import { LayoutHomeComponent } from './_layout-home/layout-home.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
+import { FormsModule } from '@angular/forms';
 
 export const routes: Routes = [
   {
@@ -64,6 +65,7 @@ const Component: Type<any>[] = [
     NgbModule,
     InPlaceEditorModule,
     DragDropModule,
+    FormsModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],

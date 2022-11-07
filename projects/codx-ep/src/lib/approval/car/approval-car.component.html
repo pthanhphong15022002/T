@@ -15,7 +15,7 @@
   [autoLoad]="true"
   [idField]="idField"
   (requestEnded)="closeAddForm($event)"
-  
+  [viewActiveType]="viewType.listdetail"
 >
 </codx-views>
 
@@ -83,7 +83,7 @@
   "
   [hideMF]=""
   [status]="data?.approveStatus"
-  [statusVll]="'VL003'"
+  [statusVll]="'EP022'"
   [date]="data?.createdOn"
   [imageId]="data?.createdBy"
   imageObjType="AD_Users"
@@ -276,4 +276,42 @@
     </div>
   </div>
 
+</ng-template>
+
+<ng-template #driverAssign let-dialog >
+  <div class="mx-4 my-4">
+    <div class="mx-4 pt-4 px-2">
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 id="modal-basic-title">
+            <codx-label name="lblCardTran" [default]="popupTitle"></codx-label>
+          </h2>
+          <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+            (click)="dialog.close()">
+            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mx-4 pt-4 px-2" *ngIf="cbbDriver!=null && cbbDriver.length>0">
+      <div class="form-group">
+        <codx-label name="lblDriverAvailable" default="Tài xế sẵn sàng"></codx-label>        
+        <ejs-combobox 
+          id='driver' 
+          #samples [dataSource]='cbbDriver'           
+          [fields]='fields' 
+          [placeholder]="'Tài xế '" 
+          (valueChange)="cbxChange($event)"
+        ></ejs-combobox>
+
+      </div>
+    </div>
+    <div class="mx-4 pt-4 px-2" >
+      <div class="form-group d-flex justify-content-end flex-row">
+        <button type="button" class="btn btn-primary" >
+          <codx-label name="lblSave" default="Lưu" ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
 </ng-template>
