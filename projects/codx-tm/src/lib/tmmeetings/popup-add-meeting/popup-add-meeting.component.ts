@@ -208,10 +208,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           }
         });
     }
-    console.log(this.meeting.startDate);
-    console.log(this.meeting.endDate);
-    console.log(this.startTime);
-    console.log(this.endTime);
   }
 
   loadTime() {
@@ -219,7 +215,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'GetListTimeAsync')
       .subscribe((res) => {
         if (res) {
-          console.log(res);
           this.listTime = res[0];
         }
       });
@@ -235,7 +230,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         ['1', startDate.toUTCString(), endDate.toUTCString()]
       )
       .subscribe((res) => {
-        console.log(res);
         if (res.msgBodyData[0] && res.msgBodyData[0].length > 0) {
           var list = [];
           list = res.msgBodyData[0];
