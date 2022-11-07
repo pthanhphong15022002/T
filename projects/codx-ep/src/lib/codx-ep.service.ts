@@ -342,6 +342,12 @@ export class CodxEpService {
       [funcID, objectId, objectType]
     );
   }
+  getAutoNumberDefault(funcID: string): Observable<any> {
+    return this.api.execSv(
+      "SYS", "ERM.Business.AD", "AutoNumbersBusiness", "GetAutoNumberByFuncIDAsync",
+      [funcID]
+    );
+  }
 
   getLstFileByID(lstID: string[]): Observable<any> {
     return this.api.execSv(
