@@ -23,6 +23,7 @@ export class BookingStationeryViewDetailComponent
 {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('attachment') attachment;
+  @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
@@ -61,16 +62,6 @@ export class BookingStationeryViewDetailComponent
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
-            this.epService
-              .getEmployeeByOrgUnitID(this.itemDetail?.buid)
-              .subscribe((res) => {
-                if (res) {
-                  this.itemDetail.empQty = res;
-                } else {
-                  this.itemDetail.empQty = 1;
-                }
-                this.detectorRef.detectChanges();
-              });
             this.detectorRef.detectChanges();
           }
         });
@@ -89,10 +80,9 @@ export class BookingStationeryViewDetailComponent
         this.lviewEdit(data, event.text);
         break;
       case 'SYS04': //Copy.
-        this.lviewEdit(data, event.text);
+        this.lviewCopy(data, event.text);
         break;
     }
-  
   }
   lviewEdit(data?, mfuncName?) {
     if (data) {
@@ -104,7 +94,7 @@ export class BookingStationeryViewDetailComponent
   lviewCopy(data?, mfuncName?) {
     if (data) {
       this.setPopupTitle.emit(mfuncName);
-      this.edit.emit(data);
+      this.copy.emit(data);
     }
   }
 

@@ -1,0 +1,26 @@
+<div class="card-title">
+  <h1>
+    <codx-label
+      name="lblLabelConfirmTitle"
+      default="Nhãn chưa được lưu, bạn có muốn lưu lại"
+      [formModel]=""
+    ></codx-label>
+  </h1>
+</div>
+
+<div class="card-footer d-flex justify-content-between">
+  <button (click)="closePopUp(false)">
+    <codx-label
+      name="lblLabelConfirmCancel"
+      default="Hủy"
+      [formModel]=""
+    ></codx-label>
+  </button>
+  <button (click)="closePopUp(true)">
+    <codx-label
+      name="lblLabelConfirmCancel"
+      default="Đồng ý"
+      [formModel]=""
+    ></codx-label>
+  </button>
+</div>

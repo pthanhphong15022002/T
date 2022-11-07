@@ -134,3 +134,19 @@ export class BP_ProcessPermissions {
   modifiedBy: string;
   form: string;
 }
+
+export class tmpPermission{
+  recID: string;
+  form: string;
+  titleEmail: string;
+  contentEmail: string;
+  sendEmail: boolean;
+  postBlog: boolean;
+  urlShare: string;
+  urlPath: string;
+  permissions: BP_ProcessPermissions[];
+  toPermission: BP_ProcessPermissions[];
+  byPermission: BP_ProcessPermissions[];
+  ccPermission: BP_ProcessPermissions[];
+  fromPermission: BP_ProcessPermissions[];
+}

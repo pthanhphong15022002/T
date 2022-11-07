@@ -209,10 +209,6 @@ export class BookingStationeryComponent
 
   copy(evt: any) {
     if (evt) {
-      if (this.authService.userValue.userID != evt?.owner) {
-        this.notificationsService.notifyCode('TM052');
-        return;
-      }
       this.view.dataService.dataSelected = evt;
       this.view.dataService
         .copy(this.view.dataService.dataSelected)
