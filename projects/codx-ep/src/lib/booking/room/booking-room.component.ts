@@ -308,34 +308,39 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         this.notificationsService.notifyCode('TM052');
         return;
       }
-      this.view.dataService.dataSelected = evt;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view.dataService.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callFuncService.openSide(
-            PopupAddBookingRoomComponent,
-            [this.view.dataService.dataSelected, false, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((returnData) => {
-            if (!returnData.event) this.view.dataService.clear();        
+      if(this.popupClosed){
+        this.view.dataService.dataSelected = evt;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view.dataService.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '800px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callFuncService.openSide(
+              PopupAddBookingRoomComponent,
+              [this.view.dataService.dataSelected, false, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((returnData) => {
+              this.popupClosed=true;
+              if (!returnData.event) this.view.dataService.clear();        
+            });
           });
-        });
+      }
     }
   }
 
   copy(evt?) {
     if (evt) {
-      
+      if(this.popupClosed){      
       this.view.dataService.dataSelected = evt;
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
+          this.popupClosed = false;
           this.dataSelected = this.view.dataService.dataSelected;
           let option = new SidebarModel();
           option.Width = '800px';
@@ -347,9 +352,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             option
           );
           this.dialog.closed.subscribe((returnData) => {
+            this.popupClosed = true;
             if (!returnData.event) this.view.dataService.clear();        
           });
         });
+      }
     }
   }
 

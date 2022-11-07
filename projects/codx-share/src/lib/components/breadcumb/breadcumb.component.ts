@@ -32,7 +32,6 @@ export class BreadcumbComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.dmSV.isBreadcumTree.subscribe(res => {
       if (res != null) {
         this.breadcumbTree = res;
@@ -70,6 +69,7 @@ export class BreadcumbComponent implements OnInit {
       return this.breadcumbTree;
     else
       return this.breadcumb;
+   
   }
 
   onJump(id) {

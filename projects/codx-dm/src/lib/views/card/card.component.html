@@ -2,7 +2,7 @@
   imgCss="card-img-center h-100px mt-2" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
   [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)"
   [typeMF]="'hover'" [footer]="cardImgFooter" 
-  (changeDataMF)="dmSV.filterMoreFunction($event, data)" >
+  (changeDataMF)="dmSV.filterMoreFunction($event, data)" [hideMF]="hideMF">
 </codx-card-img>
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div [title]="data.folderName != undefined ? data.folderName : data.fileName"

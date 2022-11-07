@@ -77,6 +77,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
 
   popupTitle: string = '';
   funcIDName: string = '';
+  popupClosed =true;
 
   constructor(
     private injector: Injector,
@@ -196,7 +197,10 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew() {
+    if(this.popupClosed){
     this.view.dataService.addNew().subscribe((res) => {
+      
+      this.popupClosed = false;
       let dataSelected = this.view.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
@@ -207,7 +211,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         [dataSelected, true, this.popupTitle],
         option
       );
-      this.dialog.closed.subscribe((x) => {
+      this.dialog.closed.subscribe((x) => {        
+        this.popupClosed = false;
         if (!x.event) this.view.dataService.clear();
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
@@ -215,12 +220,13 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
             .subscribe((x) => {
               this.changeDetectorRef.detectChanges();
             });
-        else if (x.event) {
+        else if (x.event) {          
           x.event.modifiedOn = new Date();
           this.view.dataService.update(x.event).subscribe();
         }
       });
     });
+    }
   }
 
   edit(data?) {
@@ -228,9 +234,12 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       data.uMID = data.umid;
       this.view.dataService.dataSelected = data;
     }
+    
+    if(this.popupClosed){
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
-      .subscribe((res) => {
+      .subscribe((res) => {        
+        this.popupClosed = false;
         let dataSelected = this.view?.dataService?.dataSelected;
         let option = new SidebarModel();
         option.Width = '800px';
@@ -242,6 +251,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           option
         );
         this.dialog.closed.subscribe((x) => {
+          this.popupClosed = true;
           if (!x.event) this.view.dataService.clear();
           if (x?.event) {
             x.event.modifiedOn = new Date();
@@ -249,6 +259,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           }
         });
       });
+    }
   }
 
   copy(data) {
@@ -256,9 +267,13 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
       data.uMID = data.umid;
       this.view.dataService.dataSelected = data;
     }
+    
+    if(this.popupClosed){
     this.view.dataService
       .copy(this.view.dataService.dataSelected)
       .subscribe((res) => {
+        
+        this.popupClosed = false;
         let dataSelected = this.view?.dataService?.dataSelected;
         let option = new SidebarModel();
         option.Width = '800px';
@@ -270,6 +285,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           option
         );
         this.dialog.closed.subscribe((x) => {
+          this.popupClosed = true;
           if (!x.event) this.view.dataService.clear();
           if (x?.event) {
             x.event.modifiedOn = new Date();
@@ -277,6 +293,8 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
           }
         });
       });
+
+    }
   }
 
   delete(data?) {

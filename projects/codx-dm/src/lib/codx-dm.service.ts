@@ -125,7 +125,7 @@ export class CodxDMService {
   moveable = false;
   itemRight: ItemRight;
   path: string;
-
+  breakCumArr = [];
   // public confirmationDialogService: ConfirmationDialogService;
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();

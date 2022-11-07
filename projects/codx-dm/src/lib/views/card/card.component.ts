@@ -26,6 +26,7 @@ export class CardComponent implements OnInit , OnChanges {
   user: any;
   totalRating: number;
   totalViews: number;
+  hideMF = false;
   @Input() data: any;
   @Output() viewFile = new EventEmitter<any>();
   constructor(
@@ -43,9 +44,17 @@ export class CardComponent implements OnInit , OnChanges {
   }
 
   ngOnInit(): void {
-    this.user = this.auth.get();   
+    this.user = this.auth.get();
+    this.checkHideMoreFunc();   
   }
-  
+  checkHideMoreFunc()
+  {
+    debugger;
+    if(this.formModel?.funcID == "DMT06")
+    {
+      if(!this.data.read) this.hideMF = true;
+    }
+  }
   classRating(rating) {    
     var ret = "icon-star text-warning icon-16";
     if (rating == 0)
