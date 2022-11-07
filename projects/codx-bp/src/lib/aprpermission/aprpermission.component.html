@@ -1,0 +1,131 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  service="BP"
+  assemblyName="ERM.Business.BP"
+  entityName="BP_Processes"
+  className="ProcessesBusiness"
+  method="GetListProcessesAsync"
+  [views]="views"
+  [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)"
+  [dataObj]="dataObj"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  idField="recID"
+>
+</codx-views>
+
+<ng-template #itemViewList let-data>
+  <tr>
+    <td class="rowphoto">
+      <div class="padding">
+        <div class="d-flex flex-column w-100 p-3">
+          <div class="fw-bold lh-base">{{ data.processName }}</div>
+          <div class="d-flex flex-wrap justify-content-between">
+            <div class="d-flex align-items-center">
+              <div class="d-flex me-3">
+                <span class="icon-server text-dark icon-16 me-1"></span>
+                <span class="">{{ data.phases }}</span>
+              </div>
+              <div class="d-flex me-3">
+                <span
+                  class="icon-format_list_numbered text-danger icon-16 me-1"
+                ></span>
+                <span class="">{{ data.activities }}</span>
+              </div>
+              <div class="d-flex me-3">
+                <span class="icon-attach_file text-primary icon-16 me-1"></span>
+                <span class=" ">{{ data.attachments }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </td>
+    <td class="rowphoto"></td>
+    <td class="rowphoto"></td>
+    <td class="rowphoto"></td>
+    <td class="rowphoto">
+        <div class="padding">
+            <div [innerHTML]="data.memo"></div>
+          </div>
+    </td>
+    <td class="rowphoto">
+        <!-- <div class="padding" *ngIf="funcID == 'BPT5'"> -->
+          <button class="btn btn-primary" (click)="permission(data)">
+            <codx-label default="Xét duyệt"></codx-label>
+          </button>
+        <!-- </div> -->
+        <div class="padding has-action-menu">
+          <codx-mfunc
+            [formModel]="view.formModel"
+            (clickMF)="clickMF($event, data)"
+            [isBookMark]="true"
+            [dataItem]="data"
+            [type]="'hover'"
+          >
+          </codx-mfunc>
+        </div>
+  </tr>
+</ng-template>
+
+<ng-template #itemProcessName let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="ProcessName"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Tên qui trình"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemPetitioner let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="Petitioner"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Người yêu cầu"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemRequestDate let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="RequestDate"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Ngày yêu cầu"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemPermission let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="Permission"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Quyền"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemDescription let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="Description"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Ghi chú"
+    >
+    </codx-label>
+  </div>
+</ng-template>

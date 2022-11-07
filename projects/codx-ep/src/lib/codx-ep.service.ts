@@ -236,17 +236,7 @@ export class CodxEpService {
       [resourceID]
     );
   }
-
-  getEmployeeByOrgUnitID(orgID: string) {
-    return this.api.execSv(
-      'HR',
-      'ERM.Business.HR',
-      'PositionsBusiness',
-      'GetTotalFilledCountsByOrgUnitIDAsync',
-      [orgID]
-    );
-  }
-
+  
   getBookingByRecID(recID: string) {
     return this.api
       .exec<any>(
@@ -396,7 +386,24 @@ export class CodxEpService {
       [entityName]
     );
   }
-
+  getAvailableResources(resourceType: string, startDate: string, endDate:string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListAvailableResourceAsync',
+      [resourceType, startDate, endDate]
+    );
+  }
+  assignDriver(recID: string, driverID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AssignDriverAsync',
+      [recID, driverID]
+    );
+  }
   //#endregion
 
   //#region EmailTemplate

@@ -16,6 +16,7 @@ import {
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import { DialogModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CodxSvService } from '../codx-sv.service';
 import { SV_Surveys } from '../model/SV_Surveys';
 import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 
@@ -76,11 +77,24 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   MODE_IMAGE_VIDEO = 'EDIT';
   lstEditIV: any = new Array();
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
-  constructor(inject: Injector, private change: ChangeDetectorRef) {
+  constructor(
+    inject: Injector,
+    private change: ChangeDetectorRef,
+    private SVServices: CodxSvService
+  ) {
     super(inject);
     this.questions = [
       {
         seqNo: 0,
+        question: null,
+        answers: null,
+        other: false,
+        mandatory: false,
+        answerType: null,
+        category: 'S',
+      },
+      {
+        seqNo: 1,
         question: 'Câu hỏi 1',
         answers: [
           {
@@ -97,7 +111,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         category: 'Q',
       },
       {
-        seqNo: 1,
+        seqNo: 2,
         question: 'Câu hỏi 2',
         answers: [
           {
@@ -278,7 +292,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.questions[dataQuestion.seqNo]['other'] = false;
   }
 
-  copyQuestion(dataQuestion) {
+  copyCard(category, dataQuestion) {
     var data = JSON.parse(JSON.stringify(this.questions));
     data[dataQuestion.seqNo].active = false;
     data.splice(dataQuestion.seqNo + 1, 0, dataQuestion);
@@ -292,33 +306,33 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     if (functionID) {
       switch (functionID) {
         case 'LTN01':
-          this.addQuestion(this.itemActive);
+          this.addCard('Q', this.itemActive);
           break;
         case 'LTN02':
           break;
         case 'LTN03':
+          this.addCard('T', this.itemActive);
           break;
         case 'LTN04':
-          this.uploadFileImage(eleAttachment);
+          this.uploadFile('image', 'upload');
           break;
         case 'LTN05':
+          this.uploadFile('video', 'upload');
           break;
         case 'LTN06':
+          this.addCard('S', this.itemActive);
           break;
       }
     }
   }
 
-  uploadFileImage(attachmentEle) {
-    // if (attachmentEle) this.ATM_Image = attachmentEle;
-    // if (this.ATM_Image) this.ATM_Image.uploadFile();
-    // let option = new DialogModel();
-    // option.DataService = this.view?.currentView?.dataService;
-    // option.FormModel = this.view?.currentView?.formModel;
+  uploadFile(typeFile, modeFile) {
     this.generateGuid();
     var obj = {
-      formModel: this.functionList,
-      recID: this.guidID,
+      functionList: this.functionList,
+      typeFile: typeFile,
+      modeFile: modeFile,
+      data: this.itemActive,
     };
     var dialog = this.callfc.openForm(
       PopupUploadComponent,
@@ -330,43 +344,54 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       ''
     );
     dialog.closed.subscribe((res) => {
-      debugger
-      if (res) {
-        this.lstEditIV = res;
+      debugger;
+      if (res.event) {
+        this.uploadImage(this.itemActive, res.event);
       }
     });
-    this.change.detectChanges();
+  }
+
+  deleteFile() {
+    this.SVServices.deleteFile(
+      this.itemActive,
+      this.functionList.entityName
+    ).subscribe((res) => {
+      if (res) {
+        this.questions.splice(this.itemActive.seqNo, 1);
+        this.questions.forEach((x, index) => (x.seqNo = index));
+      }
+    });
   }
 
   async selectedImage(e, attachmentEle) {
-    let obj = JSON.parse(JSON.stringify(this.questions));
-    this.generateGuid();
-    let recID = JSON.parse(JSON.stringify(this.guidID));
-    obj[this.itemActive.seqNo].recID = recID;
-    e.data[0].objectID = recID;
-    let files = e.data;
-    // up file
-    if (files.length > 0) {
-      files.map((dt: any) => {
-        if (dt.mimeType.indexOf('image') >= 0) {
-          dt['referType'] = this.REFER_TYPE.IMAGE;
-        } else if (dt.mimeType.indexOf('video') >= 0) {
-          dt['referType'] = this.REFER_TYPE.VIDEO;
-        } else {
-          dt['referType'] = this.REFER_TYPE.APPLICATION;
-        }
-      });
-      this.lstEditIV.push(files[0]);
-    }
-    if (files) {
-      this.ATM_Image.objectId = recID;
-    }
-    (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
-      if (result) {
-        this.uploadImage(this.itemActive, attachmentEle);
-      }
-    });
-    this.change.detectChanges();
+    // let obj = JSON.parse(JSON.stringify(this.questions));
+    // this.generateGuid();
+    // let recID = JSON.parse(JSON.stringify(this.guidID));
+    // obj[this.itemActive.seqNo].recID = recID;
+    // e.data[0].objectID = recID;
+    // let files = e.data;
+    // // up file
+    // if (files.length > 0) {
+    //   files.map((dt: any) => {
+    //     if (dt.mimeType.indexOf('image') >= 0) {
+    //       dt['referType'] = this.REFER_TYPE.IMAGE;
+    //     } else if (dt.mimeType.indexOf('video') >= 0) {
+    //       dt['referType'] = this.REFER_TYPE.VIDEO;
+    //     } else {
+    //       dt['referType'] = this.REFER_TYPE.APPLICATION;
+    //     }
+    //   });
+    //   this.lstEditIV.push(files[0]);
+    // }
+    // if (files) {
+    //   this.ATM_Image.objectId = recID;
+    // }
+    // (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
+    //   if (result) {
+    //     this.uploadImage(this.itemActive, attachmentEle);
+    //   }
+    // });
+    // this.change.detectChanges();
   }
 
   guidID: any;
@@ -395,7 +420,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
   }
 
-  addQuestion(dataQuestion) {
+  addCard(category, dataQuestion) {
     if (dataQuestion) {
       var dataAnswerTemp = {
         seqNo: 0,
@@ -406,9 +431,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       };
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
-      tempQuestion.answers = dataAnswerTemp;
+      tempQuestion.answers = category != 'T' ? [dataAnswerTemp] : null;
       tempQuestion.answerType = 'L';
       tempQuestion.question = `Câu hỏi`;
+      tempQuestion.category = category;
       this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
       this.questions.forEach((x, index) => (x.seqNo = index));
       this.questions[dataQuestion.seqNo].active = false;
@@ -422,14 +448,14 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   addTitle(dataQuestion) {}
 
-  uploadImage(dataQuestion, eleAttachment) {
+  uploadImage(dataQuestion, data) {
     if (dataQuestion) {
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
       tempQuestion.answerType = null;
       tempQuestion.question = null;
       tempQuestion.category = 'P';
-      tempQuestion.recID = this.guidID;
+      tempQuestion.recID = data[0].objectID;
       this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
       this.questions.forEach((x, index) => (x.seqNo = index));
       this.questions[dataQuestion.seqNo].active = false;
@@ -437,6 +463,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       this.itemActive = this.questions[dataQuestion.seqNo + 1];
       this.clickToScroll(dataQuestion.seqNo + 1);
     }
+    this.lstEditIV = data;
+    this.change.detectChanges();
   }
 
   uploadVideo(dataQuestion) {}
