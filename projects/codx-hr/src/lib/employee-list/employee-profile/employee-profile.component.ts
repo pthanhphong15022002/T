@@ -17,6 +17,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
+import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
 import { PopupAddEmployeesPartyInfoComponent } from '../../employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
 
 @Component({
@@ -77,7 +78,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    this.view.dataService.methodDelete = 'DeleteSignFileAsync';
+    // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
     this.views = [
       {
         id: '1',
@@ -96,7 +97,7 @@ export class EmployeeProfileComponent extends UIComponent {
 
   changeItemDetail(item) {}
 
-  add() {
+  addEmployeePartyInfo() {
     let option = new SidebarModel();
     //option.DataService = this.viewBase.dataService;
     //option.FormModel = this.viewBase.formModel;
@@ -106,6 +107,19 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         isAdd: true,
         headerText: 'Thông tin Đảng - Đoàn',
+      },
+      option
+    );
+  }
+
+  addEmployeeSelfInfo(){
+    let option = new SidebarModel();
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeSelfInfoComponent,
+      {
+        isAdd: true,
+        headerText: 'Thông tin bản thân',
       },
       option
     );
