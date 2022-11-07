@@ -326,7 +326,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
       if (this.popupClosed) {
         this.view.dataService.dataSelected = obj;
         this.view.dataService
-          .edit(this.view.dataService.dataSelected)
+          .copy(this.view.dataService.dataSelected)
           .subscribe((res) => {
             this.popupClosed = false;
             this.dataSelected = this.view?.dataService?.dataSelected;

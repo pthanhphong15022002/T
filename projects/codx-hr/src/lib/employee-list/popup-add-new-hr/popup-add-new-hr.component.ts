@@ -23,6 +23,8 @@ export class PopupAddNewHRComponent extends UIComponent {
   ) {
     super(inject);
     this.dialogRef = dialogRef;
+    console.log(this.dialogRef);
+
     // this.formModel = ;
     this.funcID = this.dialogRef.formModel.funcID;
   }
@@ -37,22 +39,17 @@ export class PopupAddNewHRComponent extends UIComponent {
     {
       icon: 'icon-info',
       text: 'Thông tin nhân viên',
-      name: 'tabInfoPersonal',
+      name: 'emmployeeInfo',
     },
-    // {
-    //   icon: 'icon-person',
-    //   text: 'Nhân viên',
-    //   name: 'tabInfoEmploy',
-    // },
     // {
     //   icon: 'icon-receipt_long',
     //   text: 'Thông tin cá nhân',
-    //   name: 'tabInfoPrivate',
+    //   name: 'personalInfo',
     // },
     // {
     //   icon: 'icon-business_center',
     //   text: 'Pháp lý',
-    //   name: 'tabInfoLaw',
+    //   name: 'legalInfo',
     // },
   ];
 

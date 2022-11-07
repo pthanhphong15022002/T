@@ -103,7 +103,7 @@ export class CodxFdService {
             if (fieldName == 'Buid') fieldName = 'BUID';
             gridViewSetup = res;
             this.notificationsService.notifyCode(
-              'SYS028',
+              'SYS009',
               0,
               '"' + gridViewSetup[fieldName]?.headerText + '"'
             );
@@ -111,7 +111,7 @@ export class CodxFdService {
         });
     } else {
       this.notificationsService.notifyCode(
-        'SYS028',
+        'SYS009',
         0,
         '"' + gridViewSetup[fieldName]?.headerText + '"'
       );
