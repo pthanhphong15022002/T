@@ -1,5 +1,15 @@
-<codx-views #view [views]="views" idField="positionID" [selectedFirst]="false" (viewChanged)="viewChange($event)"
-    (selectedChange)="onSelectionChanged()" [button]="button" (buttonClick)="btnClick()">
+<codx-views #view 
+    [views]="views" 
+    idField="positionID" 
+    [selectedFirst]="false" 
+    (viewChanged)="viewChange($event)"
+    (selectedChange)="onSelectionChanged($event)" 
+    [button]="button" 
+    [service]="'HR'"
+    [assemblyName]="'ERM.Business.HR'"
+    [className]="'PositionsBusiness'"
+    [method]="'GetPositionsAsync'"
+    (buttonClick)="btnClick()">
 </codx-views>
 
 <ng-template #tmpTree let-data>

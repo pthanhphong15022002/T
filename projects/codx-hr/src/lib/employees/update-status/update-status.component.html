@@ -1,22 +1,26 @@
-<codx-form #form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template #body>
-        <div class="form-group row mt-3">
-            <div class="col-4 pt-2">
-                <codx-label name="status" default="Tình trạng"></codx-label>
-            </div>
-            <div class="col-8">
-                <codx-input type="valuelist" class="form-control noBorder cotrol-vll"
-                    (valueChange)="valueChange($event)" [crrValue]="employee.status" field="status" ngDefaultControl
-                    refValue="L0225">
-                </codx-input>
-            </div>
-        </div>
-    </ng-template>
-    <ng-template #footer>
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="updateStatus()">
-                <codx-label name="Save" default="Chọn"></codx-label>
-            </button>
-        </div>
-    </ng-template>
+<codx-form #form 
+    [headerText]="headerText" 
+    [body]="body" 
+    [footer]="footer" 
+    [dialog]="dialogRef">
 </codx-form>
+<ng-template #body>
+    <div class="form-group row mt-3">
+        <div class="col-4 pt-2">
+            <codx-label name="status" default="Tình trạng"></codx-label>
+        </div>
+        <div class="col-8">
+            <codx-input type="valuelist" class="form-control noBorder cotrol-vll"
+                (valueChange)="valueChange($event)" [crrValue]="employee.status" field="status" ngDefaultControl
+                refValue="L0225">
+            </codx-input>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="updateStatus()">
+            <codx-label name="Save" default="Chọn"></codx-label>
+        </button>
+    </div>
+</ng-template>

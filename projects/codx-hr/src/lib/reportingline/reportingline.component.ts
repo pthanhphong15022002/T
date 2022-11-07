@@ -231,14 +231,14 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
 
-  onSelectionChanged() {
+  onSelectionChanged(event) {
     if (this.view) {
       let viewActive = this.view.views.find((e) => e.active == true);
       if (viewActive && viewActive.id == '1') {
         return;
       }
-      this.dataSelected = this.view.dataService.dataSelected;
-      this.positionID = this.dataSelected.positionID;
+      this.dataSelected = event.data;
+      this.positionID = event.data.positionID;
       this.detectorRef.detectChanges();
     }
   }
