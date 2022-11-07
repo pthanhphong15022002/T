@@ -20,7 +20,7 @@ import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeei
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
+import { EmployeeProfileComponent } from './employee-list/employee-profile/employee-profile.component';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
@@ -50,8 +50,9 @@ import { ReportinglineOrgChartComponent } from './reportingline/reportingline-or
 import { ReportinglineComponent } from './reportingline/reportingline.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
+import { PopupAddEmployeesPartyInfoComponent } from './employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
-import { PopupAddEmployeeComponent } from './employee-list/popup-add-employee/popup-add-employee.component';
+import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-add-new-hr.component';
 
 export const routes: Routes = [
   {
@@ -200,9 +201,11 @@ const T_Component: Type<any>[] = [
   TimeAgoPipe,
   ReportinglineOrgChartComponent,
   ReportinglineDetailComponent,
-  EmployeeProfileComponent,
   EmployeeListComponent,
-  PopupAddEmployeeComponent,
+  EmployeeProfileComponent,
+  PopupAddNewHRComponent,
+  EmployeeListComponent,
+  PopupAddEmployeesPartyInfoComponent,
 ];
 @NgModule({
   imports: [

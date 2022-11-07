@@ -29,9 +29,8 @@ import moment from 'moment';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { CodxHrService } from '../codx-hr.service';
-import { PopupAddEmployeesComponent } from '../employees/popup-add-employees/popup-add-employees.component';
-import { UpdateStatusComponent } from '../employees/update-status/update-status.component';
 import { HR_Employees } from '../model/HR_Employees.model';
+import { PopupAddNewHRComponent } from './popup-add-new-hr/popup-add-new-hr.component';
 
 @Component({
   selector: 'lib-employee-list',
@@ -72,7 +71,6 @@ export class EmployeeListComponent extends UIComponent {
   ) {
     super(injector);
   }
-
   onInit(): void {
     this.cache.moreFunction('Employees', 'grvEmployees').subscribe((res) => {
       if (res) this.listMoreFunc = res;
@@ -142,11 +140,7 @@ export class EmployeeListComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '800px';
-      let popup = this.callfc.openSide(
-        PopupAddEmployeesComponent,
-        'add',
-        option
-      );
+      let popup = this.callfc.openSide(PopupAddNewHRComponent, 'add', option);
       popup.closed.subscribe((res: any) => {
         if (res && res.event) {
           let data = res.event;
@@ -171,7 +165,7 @@ export class EmployeeListComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '800px';
-      this.callfc.openSide(PopupAddEmployeesComponent, null, option);
+      this.callfc.openSide(PopupAddNewHRComponent, null, option);
     }
   }
   add() {
@@ -181,7 +175,7 @@ export class EmployeeListComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
       this.dialog = this.callfc.openSide(
-        PopupAddEmployeesComponent,
+        PopupAddNewHRComponent,
         this.view.dataService.dataSelected,
         option
       );
@@ -211,7 +205,7 @@ export class EmployeeListComponent extends UIComponent {
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
         var dialog = this.callfc.openSide(
-          PopupAddEmployeesComponent,
+          PopupAddNewHRComponent,
           'edit',
           option
         );
@@ -248,7 +242,7 @@ export class EmployeeListComponent extends UIComponent {
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
         this.dialog = this.callfc.openSide(
-          PopupAddEmployeesComponent,
+          PopupAddNewHRComponent,
           'copy',
           option
         );
@@ -338,24 +332,21 @@ export class EmployeeListComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  updateStatus(data) {
-    this.dialog = this.callfc.openForm(
-      UpdateStatusComponent,
+  updateStatus(data: any, funcID: string) {
+    let popup = this.callfc.openForm(
+      PopupAddNewHRComponent,
       'Cập nhật tình trạng',
       350,
       200,
-      '',
+      funcID,
       data
     );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        //  e?.event.forEach((obj) => {
-        var emp = e?.event;
+    popup.closed.subscribe((e) => {
+      if (e?.event) {
+        var emp = e.event;
         if (emp.status == '90') {
-          this.view.dataService.remove(e?.event).subscribe();
-        } else this.view.dataService.update(e?.event).subscribe();
-        // });
-        // this.itemSelected = e?.event;
+          this.view.dataService.remove(emp).subscribe();
+        } else this.view.dataService.update(emp).subscribe();
       }
       this.detectorRef.detectChanges();
     });
@@ -390,37 +381,36 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   clickMF(e: any, data?: any) {
-    console.log(data);
-    // this.itemSelected = data;
-    // switch (e.functionID) {
-    //   case 'SYS01':
-    //     this.add();
-    //     break;
-    //   case 'SYS02':
-    //     this.delete(data);
-    //     break;
-    //   case 'SYS03':
-    //     this.edit(data);
-    //     break;
-    //   case 'SYS04':
-    //     this.copy(data);
-    //     break;
-    //   case 'HR0031': /// cần biến cố định để truyền vào đây !!!!
-    //     this.updateStatus(data);
-    //     break;
-    //   case 'HR0032':
-    //     this.viewEmployeeInfo(e.data, data);
-    //     break;
-    //   case 'SYS002':
-    //     this.exportFile();
-    //     break;
-    // }
+    this.itemSelected = data;
+    switch (e.functionID) {
+      case 'SYS01': // thêm
+        this.add();
+        break;
+      case 'SYS02': // xóa
+        this.delete(data);
+        break;
+      case 'SYS03': // edit
+        this.edit(data);
+        break;
+      case 'SYS04': // sao chép
+        this.copy(data);
+        break;
+      case 'HR0031': // cập nhật tình trạng
+        this.updateStatus(data, e.functionID);
+        break;
+      case 'HR0032': // xem chi tiết
+        this.viewEmployeeInfo(e.data, data);
+        break;
+      case 'SYS002':
+        this.exportFile();
+        break;
+    }
   }
 
   doubleClick(data) {
     if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
-        if (obj.functionID == 'HRT03a01') this.urlView = obj.url;
+        if (obj.functionID == 'HR0032') this.urlView = obj.url;
       });
       this.codxService.navigate('', this.urlView, {
         employeeID: data.employeeID,

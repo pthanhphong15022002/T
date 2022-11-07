@@ -8,13 +8,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  CallFuncService,
   DialogData,
   DialogRef,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { CodxHrService } from '../codx-hr.service';
+import { CodxHrService } from '../../codx-hr.service';
+import { PopupAddEmployeesPartyInfoComponent } from '../../employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -26,6 +29,8 @@ export class EmployeeProfileComponent extends UIComponent {
     private inject: Injector,
     private hrService: CodxHrService,
     private df: ChangeDetectorRef,
+    private callfunc: CallFuncService,
+
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -90,4 +95,19 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   changeItemDetail(item) {}
+
+  add() {
+    let option = new SidebarModel();
+    //option.DataService = this.viewBase.dataService;
+    //option.FormModel = this.viewBase.formModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupAddEmployeesPartyInfoComponent,
+      {
+        isAdd: true,
+        headerText: 'Thông tin Đảng - Đoàn',
+      },
+      option
+    );
+  }
 }
