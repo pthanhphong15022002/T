@@ -4,10 +4,11 @@
             <div class="d-flex justify-content-between">
                 <div class="d-flex align-items-center w-100 breadcrum-box me-2">
                     <codx-breadcumb end="1" start="0" max="3"></codx-breadcumb>
-                    <span class="icon-keyboard_arrow_right icon-18"></span>
-                    <span class="text-dark text-max-100px">{{fullName}}</span>
+                    <ng-container *ngIf="fullName">
+                        <span class="icon-keyboard_arrow_right icon-18"></span>
+                        <span class="text-dark text-max-100px">{{fullName}}</span>
+                    </ng-container>
                 </div>
-
                 <a *ngIf="this.type == 'file'" (click)="copyPath()" matTooltip="copy link" alt="copy link"
                     class="btn btn-icon btn-md btn-light-primary">
                     <span class="icon-file_copy text-gray-600 icon-16"></span>

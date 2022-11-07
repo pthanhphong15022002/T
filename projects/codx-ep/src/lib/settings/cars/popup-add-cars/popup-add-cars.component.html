@@ -11,7 +11,7 @@
 >
   <ng-template #body>
     <div class="row">
-      <div class="form-group col-8">
+      <div class="form-group col-9">
         <codx-label fiedName="ResourceName" [formModel]="form.formModel">
         </codx-label>
         <codx-input
@@ -21,13 +21,14 @@
         >
         </codx-input>
       </div>
-      <div class="form-group col-4">
-        <div class="d-flex justify-content-center align-items-center">
-          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="true"
-            (valueChange)="valueChange($event)">
+      <div class="form-group col-3 d-flex align-items-end justify-content-start">
+
+        <div class="d-flex justify-content-start align-items-center">
+          <codx-input class="ps-2" #checkbox class="test-switch" type="switch" [checked]="useCardCheck"
+            (valueChange)="valueUseCardChange($event)">
           </codx-input>
       
-        <codx-label fiedName="UseCard" [formModel]="form.formModel"></codx-label>
+        <codx-label class="ps-2" fiedName="UseCard" [formModel]="form.formModel"></codx-label>
         </div>
           
         
