@@ -70,6 +70,9 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.formModel = this.dialogRef.formModel;    
     if(this.isAdd){
       this.data.preparator= this.authService.userValue.userID;
+      this.data.capacity=null;
+      this.data.area=null;
+      
     }
   }
 

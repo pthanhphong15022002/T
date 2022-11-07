@@ -338,7 +338,8 @@ db.DM_FolderInfo.updateMany(
     var data = {} as any;
     data.recID = '';
     this.dmSV.refreshTree.next(true);
-    this.dmSV.breadcumb.next([]);
+    this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);
+    this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
     //isFolderId
     this.changeDetectorRef.detectChanges();
   }
