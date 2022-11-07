@@ -28,7 +28,7 @@
             (valueChange)="valueUseCardChange($event)">
           </codx-input>
       
-        <codx-label class="ps-2" fiedName="UseCard" [formModel]="form.formModel"></codx-label>
+        <codx-label class="ps-2" default="Dùng thẻ xe" fiedName="UseCard" [formModel]="form.formModel"></codx-label>
         </div>
           
         
@@ -154,7 +154,7 @@
     </div>
     <div class="form-group">
       <div
-        class="col-12 form-group d-flex justify-content-start"
+        class="col-12 form-group d-flex flex-wrap"
         *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
       >
         <div
@@ -187,7 +187,7 @@
         aria-disabled="false"
         [funcId]="formModel?.funcID"
         [isAllowEdit]="true"
-        [objectId]="data?.recID"
+        [objectId]="data.recID"
       >
       </codx-img>
     </div>
