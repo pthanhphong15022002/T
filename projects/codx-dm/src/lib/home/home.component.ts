@@ -601,6 +601,7 @@ export class HomeComponent extends UIComponent {
             breadcumbLink.push(list[i].id);
           }
           this.dmSV.breadcumbLink = breadcumbLink;
+          this.dmSV.breakCumArr = breadcumb;
           this.dmSV.breadcumb.next(breadcumb);
         }
         if (breadcumb.length == 0) {
