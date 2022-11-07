@@ -10,16 +10,29 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="form-group">
-      <codx-label fiedName="ResourceName" [formModel]="form.formModel">
-      </codx-label>
-      <codx-input
-        ControlName="resourceName"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      >
-      </codx-input>
-    </div>
+    <div class="row">
+      <div class="form-group col-8">
+        <codx-label fiedName="ResourceName" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          ControlName="resourceName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group col-4">
+        <div class="d-flex justify-content-center align-items-center">
+          <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="true"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+      
+        <codx-label fiedName="UseCard" [formModel]="form.formModel"></codx-label>
+        </div>
+          
+        
+      </div>      
+    </div>   
 
     <div class="row">
       <div class="col-3 form-group">

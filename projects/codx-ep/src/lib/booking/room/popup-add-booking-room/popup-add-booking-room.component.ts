@@ -682,6 +682,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   if (res?.msgCodeError == null && res?.rowCount) {
                     this.notificationsService.notifyCode('ES007');
                     this.returnData.approveStatus = '3';
+                    this.returnData.status = '3';
                     this.returnData.write = false;
                     this.returnData.delete = false;
                     (this.dialogRef.dataService as CRUDService)
