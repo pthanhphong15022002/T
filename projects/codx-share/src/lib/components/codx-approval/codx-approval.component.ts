@@ -281,7 +281,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       )
         status = '5';
       else if (funcID == 'SYS205') status = '4';
-      else if (funcID == 'SYS206') status = '6';
+      else if (funcID == 'SYS206') status = '2';
       this.api
         .execSv(
           'ES',
