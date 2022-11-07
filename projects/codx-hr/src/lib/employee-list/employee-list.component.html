@@ -1,0 +1,15 @@
+<codx-views
+  #view
+  service="HR"
+  entityName="HR_Employees"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="addNewHR()"
+  idField="employeeID"
+  assemblyName="ERM.Business.HR"
+  className="EmployeesBusiness"
+  method="GetModelFormEmployAsync"
+  [selectedFirst]="true"
+  [itemSelected]="itemSelected"
+>
+</codx-views>
