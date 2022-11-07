@@ -70,6 +70,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   columnGrids: any;
   grvCars: any;
   popupTitle = '';
+  popupClosed = true;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -217,84 +218,96 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew() {
-    this.view.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.view.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      this.dialog = this.callfc.openSide(
-        PopupAddCarsComponent,
-        [this.dataSelected, true, this.popupTitle],
-        option
-      );
-      this.dialog.closed.subscribe((x) => {
-        if (!x.event) this.view.dataService.clear();
-        if (x.event == null && this.view.dataService.hasSaved)
-          this.view.dataService
-            .delete([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.changeDetectorRef.detectChanges();
-            });
-        else if (x.event) {
-          x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
-        }
+    if (this.popupClosed) {
+      this.view.dataService.addNew().subscribe((res) => {
+        this.popupClosed = false;
+        this.dataSelected = this.view.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          PopupAddCarsComponent,
+          [this.dataSelected, true, this.popupTitle],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          this.popupClosed = true;
+          if (!x.event) this.view.dataService.clear();
+          if (x.event == null && this.view.dataService.hasSaved)
+            this.view.dataService
+              .delete([this.view.dataService.dataSelected])
+              .subscribe((x) => {
+                this.changeDetectorRef.detectChanges();
+              });
+          else if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
       });
-    });
+    }
   }
 
   edit(obj?) {
     if (obj) {
-      this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddCarsComponent,
-            [this.view.dataService.dataSelected, false, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((x) => {
-            if (!x.event) this.view.dataService.clear();
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {});
-            }
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = obj;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view?.dataService?.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '550px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callfc.openSide(
+              PopupAddCarsComponent,
+              [this.view.dataService.dataSelected, false, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((x) => {
+              this.popupClosed = true;
+              if (!x.event) this.view.dataService.clear();
+              if (x?.event) {
+                x.event.modifiedOn = new Date();
+                this.view.dataService.update(x.event).subscribe((res) => {});
+              }
+            });
           });
-        });
+      }
     }
   }
 
   copy(obj?) {
     if (obj) {
-      this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddCarsComponent,
-            [this.view.dataService.dataSelected, true, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((x) => {
-            if (!x.event) this.view.dataService.clear();
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {});
-            }
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = obj;
+        this.view.dataService
+          .copy(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view?.dataService?.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '550px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callfc.openSide(
+              PopupAddCarsComponent,
+              [this.view.dataService.dataSelected, true, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((x) => {
+              this.popupClosed = true;
+              if (!x.event) this.view.dataService.clear();
+              if (x?.event) {
+                x.event.modifiedOn = new Date();
+                this.view.dataService.update(x.event).subscribe((res) => {});
+              }
+            });
           });
-        });
+      }
     }
   }
 

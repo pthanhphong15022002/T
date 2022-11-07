@@ -55,7 +55,6 @@ export class CodxTabsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    debugger;
     if (this.TabControl.length == 0) {
       this.TabControl = this.all;
       // this.all.forEach((res, index) => {
