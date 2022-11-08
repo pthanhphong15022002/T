@@ -160,19 +160,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
     });
 
     if (missingImgArea) {
-      let title =
-        'Warning Missing Image At Page ' +
-        (missingImgArea.location.pageNumber + 1);
-      let dialogWarning = this.callfc.openForm(
-        WarningMissImgComponent,
-        title,
-        500,
-        200,
-        this.funcID,
-        { title: title }
-      );
-      dialogWarning.closed.subscribe((res) => {
-        if (res?.event) {
+      this.notify.alertCode('ES019').subscribe((x) => {
+        if (x.event.status == 'Y') {
           this.mode = mode;
           let title = '';
           let subTitle = 'Comment khi duyệt';
@@ -204,6 +193,20 @@ export class PopupSignForApprovalComponent extends UIComponent {
           }
         }
       });
+      // let title = missingImgArea.location.pageNumber + 1;
+      // let dialogWarning = this.callfc.openForm(
+      //   WarningMissImgComponent,
+      //   title,
+      //   500,
+      //   200,
+      //   this.funcID,
+      //   { title: title }
+      // );
+      // dialogWarning.closed.subscribe((res) => {
+      //   if (res?.event) {
+
+      //   }
+      // });
     } else {
       this.mode = mode;
       let title = '';
@@ -273,7 +276,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
       this.pdfView.curPage = this.pdfView.pageMax;
       dialogADR.closed.subscribe((res) => {
         console.log('res.event', res.event);
-        if (res.event) {
+        if (res.event.toString()) {
           switch (this.pdfView.signerInfo.signType) {
             case '2': {
               if (this.pdfView.isAwait) {
@@ -302,7 +305,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
               //khong doi
               else {
-                switch (mode) {
+                switch (mode.toString()) {
                   case '5': {
                     this.esService
                       .updateTransAwaitingStatus(this.transRecID, false)
@@ -427,7 +430,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               }
             });
           } else {
-            switch (mode) {
+            switch (mode.toString()) {
               case '5': {
                 this.esService
                   .updateTransAwaitingStatus(this.transRecID, false)

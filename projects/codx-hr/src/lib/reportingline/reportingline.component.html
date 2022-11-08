@@ -90,36 +90,45 @@
             <div class="reportingline-cell-quantily w-25">
                 <div class="d-flex flex-column align-items-center">
                     <div class="pos-number text-primary fs-2 fw-bold">
-                        <span>{{data.currentcounts}}</span>
+                        <span>{{data.filledCounts - data.onBoard - data.offBoard}}</span>
                     </div>
                     <div class="text-gray-600 mt-1">
                         <codx-label [formModel]="view.formModel" name="lblCurrentcounts" default="Chính thức">
                         </codx-label>
                     </div>
+                    <ng-container *ngIf="data.officialStaff">
+                        <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.officialStaff }"></ng-container>
+                    </ng-container>
                 </div>
             </div>
             <!-- HR_Positions Onboard -->
             <div class="reportingline-cell-quantily w-25">
                 <div class="d-flex flex-column align-items-center">
                     <div class="pos-number text-warning fs-2 fw-bold">
-                        <span>{{data.onboard}}</span>
+                        <span>{{data.onBoard}}</span>
                     </div>
                     <div class="text-gray-600 mt-1">
                         <codx-label [formModel]="view.formModel" name="lblOnboard" default="Onboard">
                         </codx-label>
                     </div>
+                    <ng-container *ngIf="data.onBoardEmp">
+                        <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.onBoardEmp }"></ng-container>
+                    </ng-container>
                 </div>
             </div>
             <!-- HR_Positions Offboard -->
             <div class="reportingline-cell-quantily w-25">
                 <div class="d-flex flex-column align-items-center">
                     <div class="pos-number text-warning fs-2 fw-bold">
-                        <span>{{data.offboard}}</span>
+                        <span>{{data.offBoard}}</span>
                     </div>
                     <div class="text-gray-600 mt-1">
                         <codx-label [formModel]="view.formModel" name="lblOffboard" default="Offboard">
                         </codx-label>
                     </div>
+                    <ng-container *ngIf="data.offBoardEmp">
+                        <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.offBoardEmp }"></ng-container>
+                    </ng-container>
                 </div>
             </div>
         </div>
@@ -127,6 +136,55 @@
             <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
                 [dataItem]="data" type="hover">
             </codx-mfunc>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateListEmployee let-employees>
+    <div ngbDropdown class="symbol-more" [container]="'body'">
+        <div ngbDropdownToggle 
+            class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px" 
+            type="button"
+            id="dropdownMenuButton" 
+            data-toggle="dropdown" 
+            aria-haspopup="true" 
+            aria-expanded="false"
+            style="padding: 0 !important ; margin-left: 0 !important; border:none">
+            <div class="d-flex align-items-center">
+                <codx-img 
+                [objectId]="employees[0].employeeID" 
+                [objectName]="employees[0].employeeName"
+                [objectType]="'HR_Employees'"
+                [width]="30">
+                </codx-img>
+                <span *ngIf="employees.length > 1" class="multiple-employee rounded-circle">
+                    <span class="text-white">+{{(employees.length - 1)}}</span>
+                </span>
+            </div>
+        </div>
+        <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+            <div class="py-2">
+                <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
+                <span class="fw-bold">{{employees.length}}</span>
+            </div>
+            <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar>
+            <div class="hr-list-employee">
+                <ng-container *ngFor="let emp of employees">
+                    <div class="d-flex align-items-center mt-3">
+                        <codx-img 
+                            [objectId]="emp.employeeID" 
+                            [objectType]="'HR_Employees'" 
+                            [cssClass]="'me-3'" 
+                            [objectName]="emp.employeeName"
+                            [width]="30">
+                        </codx-img>
+                        <div class="d-flex flex-column w-300px">
+                            <span class="fs-6">{{emp.employeeName}}</span>
+                            <span class="text-gray-600 fs-7">{{emp.positionName}}</span>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
         </div>
     </div>
 </ng-template>

@@ -221,7 +221,6 @@ export class ShareComponent implements OnInit {
   }
 
   onShare() {
-   
     if (this.shareContent === '') {
       //$('#shareContent').addClass('form-control is-invalid');
       this.errorshow = true;
@@ -234,7 +233,7 @@ export class ShareComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if(!this.checkPermission(this.fileEditing.permissions , this.byPermission)) return this.notificationsService.notifyCode("DM066");
+    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.byPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
     this.fileEditing.byPermission = this.byPermission;

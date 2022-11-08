@@ -1,8 +1,11 @@
-<codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialog" >
+<codx-form
+  [headerText]="title"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
 </codx-form>
-<ng-template>
-
-</ng-template>
+<ng-template> </ng-template>
 
 <ng-template #body>
   <div class="row font_size">
@@ -10,37 +13,65 @@
       <codx-label name="" formName="" default="Tên người đại diện"></codx-label>
     </div>
     <div class="col-9">
-      <codx-input class="form-control" type="text" [crrValue]="items?.contactName"
-        (valueChange)="txtValueContactName($event)"></codx-input>
+      <codx-input
+        class="form-control"
+        type="text"
+        [crrValue]="items?.contactName"
+        (valueChange)="txtValueContactName($event)"
+      ></codx-input>
     </div>
     <div class="col-3">
       <codx-label name="" formName="" default="Chức danh"></codx-label>
     </div>
     <div class="col-9">
-      <codx-input class="form-control" type="text" [crrValue]="items.jobTitle" (valueChange)="txtValueJobTitle($event)">
+      <codx-input
+        class="form-control"
+        type="text"
+        [crrValue]="items.jobTitle"
+        (valueChange)="txtValueJobTitle($event)"
+      >
       </codx-input>
     </div>
     <div class="col-3">
       <codx-label name="" formName="" default="Email"></codx-label>
     </div>
     <div class="col-9">
-      <codx-input class="form-control" type="text" [crrValue]="items?.personalEmail"
-        (valueChange)="txtValueEmail($event)"></codx-input>
+      <codx-input
+        class="form-control"
+        type="text"
+        [crrValue]="items?.personalEmail"
+        (valueChange)="txtValueEmail($event)"
+      ></codx-input>
     </div>
     <div class="col-3">
       <codx-label name="" formName="" default="Điện thoại"></codx-label>
     </div>
     <div class="col-9">
-      <codx-input class="form-control" type="text" [crrValue]="items?.mobile" (valueChange)="txtValuePhone($event)">
+      <codx-input
+        class="form-control"
+        type="text"
+        [crrValue]="items?.mobile"
+        (valueChange)="txtValuePhone($event)"
+      >
       </codx-input>
     </div>
     <div class="col-3">
       <codx-label name="" formName="" default="Hình đại diện"></codx-label>
     </div>
     <div class="col-9">
-      <codx-img #imageAvatar class="symbol symbol-50 symbol-circle" [objectId]="data ? data.recID : ''" [objectName]="data?data.contactName:''"
-      objectType="AD_CompanySettings" isAllowEdit="true" updateDirect="true" [width]="150" [height]="150"
-        [disabled]="" >
+      <codx-img
+        #imageAvatar
+        class="symbol symbol-50 symbol-circle"
+        [objectId]="data ? data.recID : ''"
+        [objectName]="data ? data.contactName : ''"
+        [funcId]="dialog.formModel.funcID"
+        objectType="AD_CompanySettings"
+        isAllowEdit="true"
+        updateDirect="true"
+        [width]="150"
+        [height]="150"
+        [imgOn]="data?.modifiedOn"
+      >
       </codx-img>
     </div>
   </div>
@@ -48,7 +79,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onEdit()">
+    <button type="button" class="btn btn-primary" (click)="update()">
       <codx-label name="Save" formName="Tasks" default="Lưu"></codx-label>
     </button>
   </div>
