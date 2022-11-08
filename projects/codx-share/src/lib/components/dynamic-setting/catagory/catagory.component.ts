@@ -26,7 +26,7 @@ export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
     cpnAlertRules: PopupAddEmailTemplateComponent,
-    //cpnApprovals: ApprovalStepComponent,
+    // cpnApprovals: ApprovalStepComponent,
   };
   category = '';
   title = '';

@@ -122,8 +122,11 @@ export class PopupAddSprintsComponent implements OnInit {
     if (
       this.master.iterationType == '1' &&
       (this.master.projectID == null || this.master.projectID.trim() == '')
-    )
-      return this.notiService.notify('Tên dự án không được để trống !'); ///Nhờ Hảo, cho câu messCode
+    ){
+      return this.notiService.notifyCode('TM035');
+      // let headerText = this.gridViewSetup['IterationName']?.headerText ?? 'IterationName';
+      // return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+    }
     if (
       this.master.iterationType == '0' &&
       (this.master.iterationName == null ||
@@ -169,7 +172,7 @@ export class PopupAddSprintsComponent implements OnInit {
               .updateFileDirectReload(this.master.iterationID)
               .subscribe((up) => {
                 (this.dialog.dataService as CRUDService).update(dt).subscribe();
-              
+                
               });
 
           }

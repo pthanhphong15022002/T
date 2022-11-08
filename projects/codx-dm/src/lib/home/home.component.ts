@@ -1145,7 +1145,17 @@ export class HomeComponent extends UIComponent {
           breadcumb.push(this.dmSV.titleShareBy);
           break;
         case 'DMT06':
-          breadcumb.push(this.dmSV.titleRequestShare);
+          {
+            this.dmSV.dmFavoriteID = "2";
+            breadcumb.push(this.dmSV.titleRequestShare);
+            this.folderService.options.funcID = "DMT06";
+            this.folderService.options.favoriteID = "2";
+            this.getDataFolder("");
+            this.fileService.options.funcID = "DMT06";
+            this.fileService.options.favoriteID = "2";
+            this.getDataFile("");
+          }
+       
           break;
         case 'DMT07':
           breadcumb.push(this.dmSV.titleRequestBy);

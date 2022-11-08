@@ -43,7 +43,7 @@
 </ng-template>
 
 <ng-template #templateListCard let-item>
-  <div>
+  <div (click)="update(item)">
     <codx-card-img cardCss="border card-img-mwp rounded-3 img-storage w-225px h-225px" (clickMF)="clickMF($event, item)"
       [imageId]="item.recID" imgCss="h-140px mb-2" icoTitleCss="icon-assignment icon-16" [title]="item.title"
       cssTitle="line-clamp line-clamp-1" [imgOn]="item?.modifiedOn" [desc2]="item.memo"
