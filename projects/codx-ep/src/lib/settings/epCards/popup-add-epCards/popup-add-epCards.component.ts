@@ -50,6 +50,8 @@ export class PopupAddEpCardsComponent extends UIComponent {
   isAfterRender = false;
   gviewEpCards: any;
   avatarID: any = null;
+  funcID: any;
+  autoNumDisable= false;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -63,14 +65,38 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    
   }
 
   ngAfterViewInit(): void {}
 
   onInit(): void {
-    this.initForm();
+    this.initForm();    
+    this.codxEpService.getAutoNumberDefault(this.formModel.funcID).subscribe(autoN=>{
+      if(autoN){
+        if(!autoN?.stop ){
+          if(this.isAdd){
+            //ktra tham so auto number stop =true == ko dùng auto number
+            // this.api.execSv("SYS", "ERM.Business.AD", "AutoNumbersBusiness", "CreateAutoNumberByFunction", [this.formModel.funcID]).subscribe(autoNumber=>{
+            //   if(autoNumber)
+            //   {
+            //     this.data.resourceID=autoNumber;
+            //     this.detectorRef.detectChanges();
+            //   }
+            // })
+            this.autoNumDisable=true;
+          }
+          else{
+            this.data.resourceID=null;
+          }
+          
+        }
+      }
+    })
   }
-
+  valueChange(evt:any){
+    console.log(evt);
+  }
   initForm() {    
     this.codxEpService
       .getFormGroup(

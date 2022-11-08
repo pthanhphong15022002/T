@@ -68,6 +68,7 @@
               ControlName="resourceID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              [disabled]="autoNumDisable"
             ></codx-input>
           </div>
         </div>
@@ -129,7 +130,7 @@
             <codx-img
               #imageUpLoad
               [width]="100"
-              imageType="circle" 
+              imageType="circle"
               [objectType]="'EP_Resources'"
               aria-disabled="false"
               [funcId]="formModel?.funcID"
@@ -301,7 +302,7 @@
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-light-primary" (click)="onSaveForm()">
+      <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label
           name="lblSave"
           default="Lưu"

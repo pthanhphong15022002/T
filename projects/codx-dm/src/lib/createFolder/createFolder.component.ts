@@ -286,7 +286,7 @@ export class CreateFolderComponent implements OnInit {
     //  this.openForm();
     this.dmSV.isFileEditing.subscribe((item) => {
       if (item) {
-        //this.fileEditing = item; CHung Sửa nhớ
+        this.fileEditing = item; //CHung Sửa nhớ
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -360,9 +360,7 @@ export class CreateFolderComponent implements OnInit {
   openForm() {
     var that = this;
     this.showAll = false;
-    debugger;
     if (that.id != '' && this.id != null) {
-      debugger;
       this.noeditName = false;
       this.folderService.getFolder(this.id).subscribe(async (res) => {
         this.checkPermission();
@@ -434,6 +432,7 @@ export class CreateFolderComponent implements OnInit {
           JSON.stringify(this.parentFolder.permissions)
         );
       }
+      debugger;
       this.checkPermission();
       this.fileEditing.permissions = this.addPermissionForRoot(
         this.fileEditing.permissions
@@ -553,7 +552,6 @@ export class CreateFolderComponent implements OnInit {
   }
 
   onFolderSave() {
-    debugger;
     this.errorshow = true;
     if (this.approval && (this.approvers == '' || this.approvers == undefined)) {
       this.notificationsService.notify(this.titleApprovalName);
@@ -593,6 +591,7 @@ export class CreateFolderComponent implements OnInit {
           that.dmSV.addFolder.next(res.data);
           that.changeDetectorRef.detectChanges();
           this.dialog.close();
+          this.dmSV.fileEditing.next(null);
         } else {
           this.message = res.message;
           this.errorshow = true;
@@ -659,6 +658,7 @@ export class CreateFolderComponent implements OnInit {
                         }
                         that.dmSV.listFolder = folders;
                         that.dmSV.ChangeData.next(true);
+                        this.dmSV.fileEditing.next(null)
                         this.dialog.close();
                       } else {
                         // $('#fullName').addClass('form-control is-invalid');
@@ -673,6 +673,7 @@ export class CreateFolderComponent implements OnInit {
               });
           } else {
             this.notificationsService.notify(item.message);
+            this.dmSV.fileEditing.next(null)
             this.dialog.close();
           }
         });
@@ -816,6 +817,7 @@ export class CreateFolderComponent implements OnInit {
 
   openRight(mode = 1, type = true) {
     this.dmSV.dataFileEditing = this.fileEditing;
+    this.dmSV.dataFileEditing.assign = true;
     this.callfc.openForm(
       RolesComponent,
       this.titleRolesDialog,

@@ -1,0 +1,217 @@
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [subHeaderText] = ""
+    [body]="body"
+    [footer]="footer"
+    [formModel]="formModel"
+
+>
+    <ng-template #body>
+        <codx-label
+            [name]="'lblTitleAddPartyInfo'"
+            default="THÔNG TIN ĐẢNG ĐOÀN"
+            [formModel]="formModel"
+        >
+        </codx-label>
+        
+        <div class="row">
+            <codx-label
+                [name]="'lblTitleAddPartyInfo'"
+                default="THÔNG TIN ĐOÀN TNCS HCM"
+                [formModel]="formModel"
+            >
+            </codx-label>
+        </div>
+
+        <div class="form-group">
+            <codx-input
+                type="checkbox"
+                labelPosition="after"
+                field="isYUnion"
+                [formModel]="formModel"
+                class="test-check"
+            >
+            </codx-input>
+            <codx-label class="ms-2" fiedName="IsYUnion" [formModel]="formModel">
+            </codx-label>
+        </div>
+ 
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label  fiedName="YUnionDate" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type = "datetime"
+                        format="d"
+                        field="yUnionDate"
+                        [disabled]="false"
+
+                    ></codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="YUnionAt" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="yUnionAt"
+                    ></codx-input>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="YUnionPlace" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="yUnionPlace"
+                    ></codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="YUnionFee" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="yUnionFee"
+                    ></codx-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <codx-label
+                [name]="'lblTitleAddPartyInfo'"
+                default="THÔNG TIN ĐẢNG CSVN"
+                [formModel]="formModel"
+            >
+            </codx-label>
+        </div>
+
+        <div class="form-group">
+            <codx-input
+                type="checkbox"
+                labelPosition="after"
+                field="isParty"
+                class="test-check"
+            >
+            </codx-input>
+            <codx-label class="ms-2" fiedName="IsParty" [formModel]="formModel">
+            </codx-label>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="PartyBackgroundNo" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="partyBackgroundNo"
+                    ></codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="PartyNo" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="partyNo"
+                    ></codx-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="PartyDate" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="datetime"
+                        field="partyDate"
+                        format="d"
+                    ></codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="PartyAt" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="partyAt"
+                    ></codx-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="PartyOfficalDate" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="datetime"
+                        format="d"
+                        field="partyOfficalDate"
+                    ></codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="PartyPosition" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="partyPosition"
+                    ></codx-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="PartyLevel" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="partyLevel"
+                    ></codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="PartyPlace" [formModel]="formModel"></codx-label>
+                <div>
+                    <codx-input
+                        type="text"
+                        field="partyPlace"
+                    ></codx-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label fiedName="PartyFee" [formModel]="formModel"></codx-label>
+            <div>
+                <codx-input
+                    type="text"
+                    field="partyFee"
+                ></codx-input>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" >
+            <codx-label
+              default="Lưu"
+              name="lblSave"
+              [formModel]="formModel"
+            ></codx-label>
+          </button>
+        </div>
+      </ng-template>
+
+</codx-form>
+    

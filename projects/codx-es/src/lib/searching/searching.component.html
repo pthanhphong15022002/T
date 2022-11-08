@@ -14,7 +14,27 @@
     <button (click)="testSearch()">test</button>
 </ng-template> -->
 <ng-template #centerTmp let-data>
-  E sửa lại template nha Hòa
+  <codx-temp-full
+    [content]="extractContent(data.title)"
+    [desc]="
+      convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)
+    "
+    [status]="data.status"
+    [statusVll]="gridViewSetup['ApproveStatus']['referedValue']"
+    [date]="data.createdOn"
+    cardCss="card-template border-bottom px-2 py-3"
+    [resources]="getIdUser(data.createdBy, data.owner)"
+    [resourceObjType]="'AD_Users'"
+    [icoStatus]="data?.urgency"
+    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
+    [icoStatus2]="data?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
+    [modeImgs]="false"
+    [bookmark]="isBookmark(data)"
+    [titleLine]="2"
+    [dataItem]="data"
+  >
+  </codx-temp-full>
 </ng-template>
 
 <ng-template #rightTmp>

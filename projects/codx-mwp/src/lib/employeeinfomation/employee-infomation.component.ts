@@ -97,6 +97,8 @@ export class EmployeeInfomationComponent extends UIComponent {
         })
         this.codxMwpService.empInfo.subscribe((res: string) => {
           if (res) {
+            console.log(res);
+            
             this.employeeInfo = null;
             this.employeeHobbie = null;
             this.employeeContracts = null;
