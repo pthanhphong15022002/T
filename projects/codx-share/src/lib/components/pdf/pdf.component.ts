@@ -883,8 +883,8 @@ export class PdfComponent
                         childName.LabelType.toString()
                       );
                       let sameSigner = childName.Signer == name.Signer;
-
-                      return sameLable && sameSigner && isUnique;
+                      let sameStepNo = childName.StepNo == name.StepNo;
+                      return sameLable && sameSigner && isUnique && sameStepNo;
                     }
                     return undefined;
                   });

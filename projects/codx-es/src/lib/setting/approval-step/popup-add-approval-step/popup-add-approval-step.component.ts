@@ -65,9 +65,22 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   headerText1;
 
   title = '';
+  // tabInfo: any[] = [
+  //   { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
+  //   { icon: 'icon-rule', text: 'Điều kiện', name: 'tabQuery' },
+  //   {
+  //     icon: 'icon-email',
+  //     text: 'Email/thông báo',
+  //     name: 'tabEmail',
+  //   },
+  //   {
+  //     icon: 'icon-tune',
+  //     text: 'Thông tin khác',
+  //     name: 'tabAnother',
+  //   },
+  // ];
   tabInfo: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
-    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabQuery' },
     {
       icon: 'icon-email',
       text: 'Email/thông báo',
