@@ -195,6 +195,14 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     if (event?.field === 'bUID') {
       this.dialogAddBookingStationery.patchValue({ bUID: event?.data });
+      this.epService
+        .getEmployeeByOrgUnitID(event.data)
+        .subscribe((res: any) => {
+          this.qtyEmp = 0;
+          if (res) {
+            this.qtyEmp = res;
+          }
+        });
     }
 
     if (event?.field === 'category') {
@@ -304,6 +312,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
                       if (res?.msgCodeError == null && res?.rowCount >= 0) {
                         this.notificationsService.notifyCode('ES007');
                         item.approveStatus = '3';
+                        item.status = '3';
                         item.write = false;
                         item.delete = false;
                         (this.dialog.dataService as CRUDService)

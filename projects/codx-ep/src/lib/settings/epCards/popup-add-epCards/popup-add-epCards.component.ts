@@ -50,6 +50,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
   isAfterRender = false;
   gviewEpCards: any;
   avatarID: any = null;
+  funcID: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -69,6 +70,15 @@ export class PopupAddEpCardsComponent extends UIComponent {
 
   onInit(): void {
     this.initForm();
+    
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getAutoNumberDefault(this.funcID).subscribe(autoN=>{
+      if(autoN){
+        if(autoN?.stop){
+          //ktra tham so auto number stop =true == ko dùng auto number
+        }
+      }
+    })
   }
 
   initForm() {    

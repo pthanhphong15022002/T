@@ -128,6 +128,10 @@ export class PopupAddStationeryComponent extends UIComponent {
   onSaveForm() {
     this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
+    if (this.dialogAddStationery.invalid == true) {
+      this.epService.notifyInvalid(this.dialogAddStationery, this.formModel);
+      return;
+    }
     let index: any;
     if (this.isAdd) {
       index = 0;
@@ -143,24 +147,21 @@ export class PopupAddStationeryComponent extends UIComponent {
           } else {
             this.returnData = res.save;
           }
-          if(this.returnData?.recID)
-          {
-            if(this.imageUpload?.imageUpload?.item) {
+          if (this.returnData?.recID) {
+            if (this.imageUpload?.imageUpload?.item) {
               this.imageUpload
-              .updateFileDirectReload(this.returnData.recID)
-              .subscribe((result) => {
-                if (result) {                  
-                  //xử lí nếu upload ảnh thất bại
-                  //...
-                  this.dialog && this.dialog.close(this.returnData);                
-                }                
-              });  
-            }          
-            else 
-            {
+                .updateFileDirectReload(this.returnData.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    //xử lí nếu upload ảnh thất bại
+                    //...
+                    this.dialog && this.dialog.close(this.returnData);
+                  }
+                });
+            } else {
               this.dialog && this.dialog.close(this.returnData);
             }
-          } 
+          }
         } else {
           //Trả lỗi từ backend.
           return;

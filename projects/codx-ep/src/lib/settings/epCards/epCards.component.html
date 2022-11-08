@@ -52,6 +52,7 @@
           type="combobox"
           [refValue]="'Users'"
           [crrValue]="cardUserID"
+          [placeholder]="curPopupGrv.UserID.headerText"
           (valueChange)="valueUserIDChange($event)"
           >
           </codx-input>
@@ -74,7 +75,8 @@
           <codx-label name="lblNote" [default]="curPopupGrv?.Note?.headerText"></codx-label>
           <codx-input
           type="text"
-          [crrValue]="cardNote"        
+          [crrValue]="cardNote" 
+          [placeholder]="curPopupGrv.Note.headerText"       
           (valueChange)="valueNoteChange($event)"
           >
           </codx-input>

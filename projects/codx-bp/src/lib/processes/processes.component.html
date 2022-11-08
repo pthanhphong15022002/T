@@ -34,7 +34,10 @@
   </codx-card-img>
 
   <ng-template #footerbg>
-    <div class="d-flex bg-footer m-n3 mt-0">
+    <div class="d-flex bg-footer m-n3 mt-0" [style.color]="'1'
+    | vll: 'BP003':'textColor'
+    | async
+">
       <div class="d-flex flex-column w-100 p-3">
         <div class="fs-4 fw-bold lh-base">{{ data.processName }}</div>
         <div class="d-flex align-items-center">
@@ -218,6 +221,55 @@
     </codx-label>
   </div>
 </ng-template>
+
+<ng-template #itemPetitioner let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="Petitioner"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Người yêu cầu"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemRequestDate let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="RequestDate"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Ngày yêu cầu"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemPermission let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="Permission"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Quyền"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemDescription let-data>
+  <div class="padding">
+    <codx-label
+      fiedName="Description"
+      formName="AprPermissions"
+      gridViewName="grvAprPermissions"
+      default="Ghi chú"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+
 
 <!-- View Search -->
 <ng-template #templateSearch>

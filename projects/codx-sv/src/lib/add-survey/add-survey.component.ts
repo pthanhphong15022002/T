@@ -1,3 +1,4 @@
+import { SV_Questions } from './../model/SV_Questions';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectorRef,
@@ -16,6 +17,7 @@ import {
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import { DialogModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CodxSvService } from '../codx-sv.service';
 import { SV_Surveys } from '../model/SV_Surveys';
 import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 
@@ -29,7 +31,7 @@ import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 export class AddSurveyComponent extends UIComponent implements OnInit {
   surveys: SV_Surveys = new SV_Surveys();
   formats: any = new Array();
-  questions: any = new Array();
+  questions: any = new SV_Surveys();
   answers: any = new Array();
   isModeAdd = true;
   funcID = '';
@@ -75,45 +77,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   active = false;
   MODE_IMAGE_VIDEO = 'EDIT';
   lstEditIV: any = new Array();
+  recID: any;
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
-  constructor(inject: Injector, private change: ChangeDetectorRef) {
+  constructor(
+    inject: Injector,
+    private change: ChangeDetectorRef,
+    private SVServices: CodxSvService
+  ) {
     super(inject);
-    this.questions = [
-      {
-        seqNo: 0,
-        question: 'Câu hỏi 1',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-        category: 'Q',
-      },
-      {
-        seqNo: 1,
-        question: 'Câu hỏi 2',
-        answers: [
-          {
-            seqNo: 0,
-            answer: 'Tùy chọn 1',
-            other: false,
-            isColumn: false,
-            hasPicture: false,
-          },
-        ],
-        other: true,
-        mandatory: false,
-        answerType: 'L',
-        category: 'Q',
-      },
-    ];
+
     this.formats = {
       item: 'Title',
       fontStyle: 'Arial',
@@ -124,6 +96,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.router.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
+    this.router.queryParams.subscribe((queryParams) => {
+      if (queryParams?.recID) this.recID = queryParams.recID;
+    });
     this.cache.functionList('SVT01').subscribe((res) => {
       if (res) this.functionList = res;
     });
@@ -131,6 +106,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     // this.add();
+    this.loadData();
   }
 
   ngAfterViewInit() {
@@ -141,6 +117,18 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         if (htmlMF) htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
       });
     }
+  }
+
+  loadData() {
+    this.api
+    .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [
+      this.recID,
+    ])
+    .subscribe((res) => {
+      if (res) {
+        this.questions = res;
+      }
+    });
   }
 
   valueChange(e, dataQuestion) {
@@ -168,14 +156,27 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     target.parentElement.classList.remove('e-input-focus');
   }
 
+  questionAdd: SV_Questions = new SV_Questions();
   add() {
-    this.surveys.title = 'Khảo sát địa điểm team building';
-    this.surveys.memo = 'Mẫu không có mô tả';
+    var dataAnswerTemp = [
+      {
+        seqNo: 0,
+        answer: `Tùy chọn 1`,
+      },
+    ];
+    this.questionAdd.transID = this.recID;
+    this.questionAdd.seqNo = 6;
+    this.questionAdd.category = 'S';
+    this.questionAdd.question = 'Câu hỏi session 3';
+    this.questionAdd.answers = dataAnswerTemp;
+    this.questionAdd.answerType = 'O';
+    this.questionAdd.parentID = 'a32f2b10-5e76-11ed-a637-e454e8b52262';
+
     this.api
-      .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
-        this.surveys,
-        this.formats,
-        this.isModeAdd,
+      .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
+        this.recID,
+        this.questionAdd,
+        true,
       ])
       .subscribe((res) => {
         if (res) {
@@ -250,7 +251,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     if (dataAnswer.other) this.questions[dataQuestion.seqNo].other = true;
   }
 
-  deleteQuestion(dataQuestion) {
+  deleteCard(dataQuestion) {
     var data = JSON.parse(JSON.stringify(this.questions));
     data = data.filter((x) => x.seqNo != dataQuestion.seqNo);
     data.forEach((x, index) => {
@@ -278,47 +279,54 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.questions[dataQuestion.seqNo]['other'] = false;
   }
 
-  copyQuestion(dataQuestion) {
+  copyCard(category, dataQuestion) {
+    var dataTemp = JSON.parse(JSON.stringify(dataQuestion));
+    this.generateGuid();
+    delete dataQuestion.id;
+    dataQuestion.recID = this.GUID;
+    if(category == 'S') dataQuestion.parentID = null;
     var data = JSON.parse(JSON.stringify(this.questions));
     data[dataQuestion.seqNo].active = false;
     data.splice(dataQuestion.seqNo + 1, 0, dataQuestion);
     data.forEach((x, index) => {
       x.seqNo = index;
+      if(x.parentID == dataTemp.recID)
+       x.parentID = this.GUID;
     });
     this.questions = data;
+    console.log("check copy  questions", this.questions)
   }
 
   clickMF(functionID, eleAttachment = null) {
     if (functionID) {
       switch (functionID) {
         case 'LTN01':
-          this.addQuestion(this.itemActive);
+          this.addCard('Q', this.itemActive);
           break;
         case 'LTN02':
           break;
         case 'LTN03':
+          this.addCard('T', this.itemActive);
           break;
         case 'LTN04':
-          this.uploadFileImage(eleAttachment);
+          this.uploadFile('image', 'upload');
           break;
         case 'LTN05':
+          this.uploadFile('video', 'upload');
           break;
         case 'LTN06':
+          this.addCard('S', this.itemActive);
           break;
       }
     }
   }
 
-  uploadFileImage(attachmentEle) {
-    // if (attachmentEle) this.ATM_Image = attachmentEle;
-    // if (this.ATM_Image) this.ATM_Image.uploadFile();
-    // let option = new DialogModel();
-    // option.DataService = this.view?.currentView?.dataService;
-    // option.FormModel = this.view?.currentView?.formModel;
-    this.generateGuid();
+  uploadFile(typeFile, modeFile) {
     var obj = {
-      formModel: this.functionList,
-      recID: this.guidID,
+      functionList: this.functionList,
+      typeFile: typeFile,
+      modeFile: modeFile,
+      data: this.itemActive,
     };
     var dialog = this.callfc.openForm(
       PopupUploadComponent,
@@ -330,46 +338,57 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       ''
     );
     dialog.closed.subscribe((res) => {
-      debugger
-      if (res) {
-        this.lstEditIV = res;
+      debugger;
+      if (res.event) {
+        this.uploadImage(this.itemActive, res.event);
       }
     });
-    this.change.detectChanges();
+  }
+
+  deleteFile() {
+    this.SVServices.deleteFile(
+      this.itemActive,
+      this.functionList.entityName
+    ).subscribe((res) => {
+      if (res) {
+        this.questions.splice(this.itemActive.seqNo, 1);
+        this.questions.forEach((x, index) => (x.seqNo = index));
+      }
+    });
   }
 
   async selectedImage(e, attachmentEle) {
-    let obj = JSON.parse(JSON.stringify(this.questions));
-    this.generateGuid();
-    let recID = JSON.parse(JSON.stringify(this.guidID));
-    obj[this.itemActive.seqNo].recID = recID;
-    e.data[0].objectID = recID;
-    let files = e.data;
-    // up file
-    if (files.length > 0) {
-      files.map((dt: any) => {
-        if (dt.mimeType.indexOf('image') >= 0) {
-          dt['referType'] = this.REFER_TYPE.IMAGE;
-        } else if (dt.mimeType.indexOf('video') >= 0) {
-          dt['referType'] = this.REFER_TYPE.VIDEO;
-        } else {
-          dt['referType'] = this.REFER_TYPE.APPLICATION;
-        }
-      });
-      this.lstEditIV.push(files[0]);
-    }
-    if (files) {
-      this.ATM_Image.objectId = recID;
-    }
-    (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
-      if (result) {
-        this.uploadImage(this.itemActive, attachmentEle);
-      }
-    });
-    this.change.detectChanges();
+    // let obj = JSON.parse(JSON.stringify(this.questions));
+    // this.generateGuid();
+    // let recID = JSON.parse(JSON.stringify(this.guidID));
+    // obj[this.itemActive.seqNo].recID = recID;
+    // e.data[0].objectID = recID;
+    // let files = e.data;
+    // // up file
+    // if (files.length > 0) {
+    //   files.map((dt: any) => {
+    //     if (dt.mimeType.indexOf('image') >= 0) {
+    //       dt['referType'] = this.REFER_TYPE.IMAGE;
+    //     } else if (dt.mimeType.indexOf('video') >= 0) {
+    //       dt['referType'] = this.REFER_TYPE.VIDEO;
+    //     } else {
+    //       dt['referType'] = this.REFER_TYPE.APPLICATION;
+    //     }
+    //   });
+    //   this.lstEditIV.push(files[0]);
+    // }
+    // if (files) {
+    //   this.ATM_Image.objectId = recID;
+    // }
+    // (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
+    //   if (result) {
+    //     this.uploadImage(this.itemActive, attachmentEle);
+    //   }
+    // });
+    // this.change.detectChanges();
   }
 
-  guidID: any;
+  GUID: any;
   generateGuid() {
     var d = new Date().getTime(); //Timestamp
     var d2 =
@@ -377,7 +396,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         performance.now &&
         performance.now() * 1000) ||
       0; //Time in microseconds since page-load or 0 if unsupported
-    this.guidID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+    this.GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
       function (c) {
         var r = Math.random() * 16; //random number between 0 and 16
@@ -395,7 +414,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
   }
 
-  addQuestion(dataQuestion) {
+  addCard(category, dataQuestion) {
     if (dataQuestion) {
       var dataAnswerTemp = {
         seqNo: 0,
@@ -405,10 +424,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         hasPicture: false,
       };
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
+      if (category == 'T' || category == 'S') {
+        tempQuestion.answers = null;
+        tempQuestion.answerType = null;
+        tempQuestion.question = null;
+      } else {
+        tempQuestion.answers = dataAnswerTemp;
+        tempQuestion.answerType = 'O';
+        tempQuestion.question = 'Câu hỏi';
+      }
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
-      tempQuestion.answers = dataAnswerTemp;
-      tempQuestion.answerType = 'L';
-      tempQuestion.question = `Câu hỏi`;
+      tempQuestion.category = category;
       this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
       this.questions.forEach((x, index) => (x.seqNo = index));
       this.questions[dataQuestion.seqNo].active = false;
@@ -416,20 +442,21 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       this.itemActive = this.questions[dataQuestion.seqNo + 1];
       this.clickToScroll(dataQuestion.seqNo + 1);
     }
+    console.log('check addCard', this.questions);
   }
 
   importQuestion(dataQuestion) {}
 
   addTitle(dataQuestion) {}
 
-  uploadImage(dataQuestion, eleAttachment) {
+  uploadImage(dataQuestion, data) {
     if (dataQuestion) {
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
       tempQuestion.answerType = null;
       tempQuestion.question = null;
       tempQuestion.category = 'P';
-      tempQuestion.recID = this.guidID;
+      tempQuestion.recID = data[0].objectID;
       this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
       this.questions.forEach((x, index) => (x.seqNo = index));
       this.questions[dataQuestion.seqNo].active = false;
@@ -437,6 +464,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       this.itemActive = this.questions[dataQuestion.seqNo + 1];
       this.clickToScroll(dataQuestion.seqNo + 1);
     }
+    this.lstEditIV = data;
+    this.change.detectChanges();
   }
 
   uploadVideo(dataQuestion) {}

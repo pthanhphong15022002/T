@@ -1,6 +1,6 @@
 <ng-container #itemTemplate>
   <div class="page-add-survey" style="overflow: none">
-    <div class="box">
+    <!-- <div class="box">
       <div class="card-survey">
         <div
           class="col-lg-8 control-section inplace-editor-control-section form-layout"
@@ -47,392 +47,136 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
       <div class="example-boundary d-flex w-100">
         <div class="d-flex flex-column">
-          <div
-            class="box"
-            *ngFor="let itemQuestion of questions; index as i"
-            cdkDragBoundary=".example-boundary"
-            cdkDrag
-          >
-            <div
-              class="card-survey"
-              [id]="'card-survey-' + itemQuestion.seqNo"
-              (click)="clickToScroll(itemQuestion.seqNo)"
-            >
+          <div class="box">
+            <div *ngFor="let itemQuestion of questions">
               <div
-                class="col-lg-8 control-section inplace-editor-control-section form-layout"
-                #formlayout
-                id="inplace-editor-control"
+                *ngIf="
+                  itemQuestion.category == 'S' && !itemQuestion.parentID;
+                  else children
+                "
+                class="card-survey"
+                [id]="'card-survey-' + itemQuestion.seqNo"
+                (click)="clickToScroll(itemQuestion.seqNo)"
               >
-                <div class="content-wrapper">
-                  <form id="formId" class="form-horizontal example-box">
-                    <ng-container #header>
-                      <div class="example-handle" cdkDragHandle>
-                        <span class="icon-reorder"></span>
-                      </div>
-                    </ng-container>
-                    <ng-container #body>
-                      <div
-                        *ngIf="
-                          itemQuestion.category != 'P' &&
-                          itemQuestion.category != 'V'
-                        "
-                      >
-                        <div class="d-flex">
-                          <div class="form-group question">
-                            <div class="title-des">
-                              <ejs-inplaceeditor
-                                #inplaceCommentEditor
-                                mode="Inline"
-                                emptyText="Enter your comment"
-                                submitOnEnter="false"
-                                type="RTE"
-                                name="rte"
-                                data-underline="false"
-                                [model]="titleEditorModel"
-                                [validationRules]="commentRule"
-                                [value]="itemQuestion.question"
-                              >
-                              </ejs-inplaceeditor>
-                            </div>
-                          </div>
-                          <ng-container
-                            #questionMF
-                            *ngIf="itemQuestion?.active"
-                          >
-                            <span class="icon-image icon-26"></span>
-                            <ng-container
-                              *ngTemplateOutlet="
-                                templateQuestionMF;
-                                context: { $implicit: itemQuestion }
-                              "
-                            ></ng-container>
-                          </ng-container>
-                        </div>
-                        <div
-                          cdkDropList
-                          class="list answer"
-                          (cdkDropListDropped)="
-                            dropAnswer($event, itemQuestion.seqNo)
+                <div class="count-session"></div>
+                <div
+                  class="col-lg-8 control-section inplace-editor-control-section form-layout"
+                  id="inplace-editor-control"
+                >
+                  <div class="content-wrapper">
+                    <form id="formId" class="form-horizontal example-box">
+                      <ng-container #body>
+                        <ng-container
+                          *ngTemplateOutlet="
+                            template_card_session;
+                            context: {
+                              dataQuestion: itemQuestion
+                            }
                           "
-                        >
-                          <div
-                            class="box"
-                            *ngFor="let itemAnswer of itemQuestion.answers"
-                            cdkDragBoundary=".answer"
-                            cdkDrag
-                          >
-                            <div class="has-action-menu">
-                              <div class="d-flex">
-                                <div class="action-menu">
-                                  <div
-                                    class="example-handle-answer"
-                                    cdkDragHandle
-                                    *ngIf="
-                                      itemQuestion.answerType != 'T2' &&
-                                      itemQuestion.answerType != 'T'
-                                    "
-                                  >
-                                    <span class="icon-reorder"></span>
-                                  </div>
-                                </div>
-                                <div class="d-flex size-input">
-                                  <ng-container
-                                    *ngTemplateOutlet="
-                                      tempIconAnswers;
-                                      context: {
-                                        dataQuestion: itemQuestion,
-                                        dataAnswer: itemAnswer
-                                      }
-                                    "
-                                  ></ng-container>
-                                  <ng-container
-                                    *ngTemplateOutlet="
-                                      tempAnswers;
-                                      context: {
-                                        dataQuestion: itemQuestion,
-                                        dataAnswer: itemAnswer
-                                      }
-                                    "
-                                  ></ng-container>
-                                </div>
-                              </div>
-                            </div>
+                        ></ng-container>
+                      </ng-container>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <ng-template #children>
+                <div
+                  class="card-survey"
+                  [id]="'card-survey-' + itemQuestion.seqNo"
+                  (click)="clickToScroll(itemQuestion.seqNo)"
+                  cdkDragBoundary=".example-boundary"
+                  cdkDrag
+                >
+                  <div
+                    class="col-lg-8 control-section inplace-editor-control-section form-layout"
+                    id="inplace-editor-control"
+                  >
+                    <div class="content-wrapper">
+                      <form id="formId" class="form-horizontal example-box">
+                        <ng-container #header>
+                          <div class="example-handle" cdkDragHandle>
+                            <span class="icon-reorder"></span>
                           </div>
-                          <div
-                            class="d-flex size-input-other"
-                            *ngIf="
-                              itemQuestion?.active &&
-                              itemQuestion.answerType != 'T' &&
-                              itemQuestion.answerType != 'T2' &&
-                              itemQuestion.answerType != 'D' &&
-                              itemQuestion.answerType != 'H'
-                            "
-                          >
+                        </ng-container>
+                        <ng-container #body>
+                          <div *ngIf="itemQuestion.category == 'Q'">
                             <ng-container
                               *ngTemplateOutlet="
-                                tempIconAnswers;
+                                template_card_question;
                                 context: {
                                   dataQuestion: itemQuestion
                                 }
                               "
                             ></ng-container>
-                            <div
-                              class="e-input-group-other"
-                              (click)="addAnswer(itemQuestion)"
-                            >
-                              <input
-                                class="e-input answer-other"
-                                type="text"
-                                placeholder="Thêm bình chọn"
-                                (focus)="focusIn($event.target)"
-                                (blur)="focusOut($event.target)"
-                              />
-                            </div>
-                            <ng-container
-                              *ngIf="itemQuestion?.other"
-                              class="d-flex"
-                            >
-                              <div class="text-or">
-                                <codx-label
-                                  fiedName=""
-                                  default="hoặc"
-                                ></codx-label>
-                              </div>
-                              <div
-                                class="add-answer-other"
-                                (click)="addOtherAnswer(itemQuestion)"
-                              >
-                                <codx-label
-                                  fiedName=""
-                                  default='thêm "Câu trả lời khác"'
-                                ></codx-label>
-                              </div>
-                            </ng-container>
                           </div>
-                        </div>
-                      </div>
-                      <div
-                        #question_image_video
-                        *ngIf="
-                          itemQuestion.category == 'P' ||
-                          itemQuestion.category == 'V'
-                        "
-                      >
-                        <div class="d-flex">
-                          <div class="form-group question w-100">
-                            <div class="title-des d-flex">
-                              <ejs-inplaceeditor
-                                #inplaceCommentEditor
-                                mode="Inline"
-                                emptyText="Enter your comment"
-                                submitOnEnter="false"
-                                type="RTE"
-                                name="rte"
-                                data-underline="false"
-                                [model]="titleEditorModel"
-                                [validationRules]="commentRule"
-                                [value]="itemQuestion.question"
-                              >
-                              </ejs-inplaceeditor>
-                              <ng-container
-                                #questionMF
-                                *ngIf="itemQuestion?.active"
-                                class="d-flex"
-                              >
-                                <span
-                                  (click)="copyQuestion(itemQuestion)"
-                                  class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                                ></span>
-                                <span
-                                  (click)="deleteQuestion(itemQuestion)"
-                                  class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                                ></span>
-                                <span
-                                  class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                                ></span>
-                              </ng-container>
-                            </div>
-                          </div>
-                        </div>
-                        <ng-container
-                          #editImage
-                          *ngIf="MODE_IMAGE_VIDEO == 'EDIT'"
-                        >
                           <div
-                            class="row mt-2 justify-content-between pd-10"
-                            *ngIf="lstEditIV"
+                            *ngIf="
+                              itemQuestion.category == 'P' ||
+                              itemQuestion.category == 'V'
+                            "
                           >
-                            <ng-container *ngFor="let data of lstEditIV">
-                              <div
-                                class="col-5 my-2 m-w-100"
-                                *ngIf="data.objectID == itemQuestion.recID"
-                              >
-                                <div class="w-150 position-relative">
-                                  <ng-container
-                                    *ngIf="data.referType == REFER_TYPE.IMAGE"
-                                  >
-                                    <ng-container
-                                      *ngIf="data.recID; else imageSrc"
-                                    >
-                                      <codx-img
-                                        [objectId]="data.objectID"
-                                        [objectType]="functionList?.entityName"
-                                        [width]="150"
-                                        cssClass="pic"
-                                        imageType="square"
-                                      >
-                                      </codx-img>
-                                    </ng-container>
-                                    <ng-template #imageSrc>
-                                      <div class="d-flex align-items-center icon-MF-image">
-                                        <div
-                                          ngbDropdown
-                                          class="dropdown"
-                                          container="body"
-                                        >
-                                          <a
-                                            href="javascript:void(0)"
-                                            class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                                            ngbDropdownToggle
-                                            id="dropdownMenuButton1"
-                                            aria-expanded="false"
-                                          >
-                                            <span
-                                              class="icon-more_vert icon-22"
-                                            >
-                                            </span>
-                                          </a>
-                                          <ul
-                                            ngbDropdownMenu
-                                            aria-labelledby="dropdownMenuButton1"
-                                          >
-                                            <li>
-                                              <a
-                                                ngbDropdownItem
-                                                href="javascript:void(0)"
-                                              >
-                                                <span
-                                                  class="icon-format_align_left"
-                                                ></span>
-                                                <codx-label
-                                                  fiedName="formatAlignLeft"
-                                                  default="Căn trái"
-                                                ></codx-label>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a
-                                                ngbDropdownItem
-                                                href="javascript:void(0)"
-                                              >
-                                                <span
-                                                  class="icon-format_align_right"
-                                                ></span>
-                                                <codx-label
-                                                  fiedName="formatAlignRight"
-                                                  default="Căn phải"
-                                                ></codx-label>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a
-                                                ngbDropdownItem
-                                                href="javascript:void(0)"
-                                              >
-                                                <span
-                                                  class="icon-format_align_center"
-                                                ></span>
-                                                <codx-label
-                                                  fiedName="formatAlignCenter"
-                                                  default="Căn giữa"
-                                                ></codx-label>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a
-                                                ngbDropdownItem
-                                                href="javascript:void(0)"
-                                              >
-                                                <span class="icon-image"></span>
-                                                <codx-label
-                                                  fiedName="changeImage"
-                                                  default="Thay đổi"
-                                                ></codx-label>
-                                              </a>
-                                            </li>
-                                            <li>
-                                              <a
-                                                ngbDropdownItem
-                                                href="javascript:void(0)"
-                                              >
-                                                <span
-                                                  class="icon-delete"
-                                                ></span>
-                                                <codx-label
-                                                  fiedName="deleteImage"
-                                                  default="Xóa"
-                                                ></codx-label>
-                                              </a>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
-                                      <img
-                                        [src]="data.data || data.avatar"
-                                        alt=""
-                                        class="image m-w-100"
-                                      />
-                                    </ng-template>
-                                  </ng-container>
-                                </div>
-                              </div>
-                            </ng-container>
+                            <ng-container
+                              *ngTemplateOutlet="
+                                template_card_image_video;
+                                context: {
+                                  dataQuestion: itemQuestion
+                                }
+                              "
+                            ></ng-container>
+                          </div>
+                          <div *ngIf="itemQuestion.category == 'T'">
+                            <ng-container
+                              *ngTemplateOutlet="
+                                template_card_title;
+                                context: {
+                                  dataQuestion: itemQuestion
+                                }
+                              "
+                            ></ng-container>
                           </div>
                         </ng-container>
-                      </div>
-                    </ng-container>
-                    <ng-container
-                      #footer
-                      *ngIf="
-                        itemQuestion?.active &&
-                        itemQuestion.category != 'P' &&
-                        itemQuestion.category != 'V'
-                      "
-                    >
-                      <hr />
-                      <div class="d-flex justify-content-end">
-                        <span
-                          (click)="copyQuestion(itemQuestion)"
-                          class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                        ></span>
-                        <span
-                          (click)="deleteQuestion(itemQuestion)"
-                          class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                        ></span>
-                        <span class="split"></span>
-                        <codx-label
-                          fiedName=""
-                          default="Bắt buộc"
-                          class="pd-10"
-                        ></codx-label>
-                        <codx-input
-                          type="switch"
-                          class="pd-t-10"
-                          (valueChange)="valueChange($event, itemQuestion)"
-                          [crrValue]="itemQuestion.mandatory"
-                        ></codx-input>
-                        <span
-                          class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                        ></span>
-                      </div>
-                    </ng-container>
-                  </form>
+                        <ng-container
+                          #footer
+                          *ngIf="
+                            itemQuestion?.active && itemQuestion.category == 'Q'
+                          "
+                        >
+                          <hr />
+                          <div class="d-flex justify-content-end">
+                            <span
+                              (click)="copyCard('Q', itemQuestion)"
+                              class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                            ></span>
+                            <span
+                              (click)="deleteCard(itemQuestion)"
+                              class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                            ></span>
+                            <span class="split"></span>
+                            <codx-label
+                              fiedName=""
+                              default="Bắt buộc"
+                              class="pd-10"
+                            ></codx-label>
+                            <codx-input
+                              type="switch"
+                              class="pd-t-10"
+                              (valueChange)="valueChange($event, itemQuestion)"
+                              [crrValue]="itemQuestion.mandatory"
+                            ></codx-input>
+                            <span
+                              class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                            ></span>
+                          </div>
+                        </ng-container>
+                      </form>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </ng-template>
             </div>
           </div>
           <ng-container #moreFC>
@@ -448,7 +192,7 @@
               </div>
               <div class="icon-MF" (click)="clickMF('LTN04', ATM_Image)">
                 <span class="icon-image icon-24">
-                  <div class="d-none">
+                  <!-- <div class="d-none">
                     <codx-attachment
                       #ATM_Image
                       [functionID]="funcID"
@@ -466,7 +210,7 @@
                       (fileCount)="selectedImage($event, ATM_Image)"
                     >
                     </codx-attachment>
-                  </div>
+                  </div> -->
                 </span>
               </div>
               <div class="icon-MF" (click)="clickMF('LTN05')">
@@ -486,7 +230,7 @@
   <div ngbDropdown container="body">
     <button
       type="button"
-      class="btn btn-outline-primary btn-sm dropdown"
+      class="btn btn-outline-primary btn-sm dropdown1"
       ngbDropdownToggle
     >
       <div class="d-flex" *ngIf="itemQuestion.answerType == 'T'">
@@ -497,7 +241,7 @@
         <span class="icon-text_snippet icon-24"></span>
         <codx-label fiedName="" default="Trả lời đoạn"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'L'">
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'O'">
         <span class="icon-radio_button_checked icon-24"></span>
         <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
       </div>
@@ -536,7 +280,7 @@
         </div>
       </button>
       <hr />
-      <button ngbDropdownItem (click)="clickQuestionMF('L', itemQuestion)">
+      <button ngbDropdownItem (click)="clickQuestionMF('O', itemQuestion)">
         <div class="d-flex">
           <span class="icon-radio_button_checked icon-24"></span>
           <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
@@ -582,110 +326,512 @@
   let-itemQuestion="dataQuestion"
   let-itemAnswer="dataAnswer"
 >
-  <span
-    *ngIf="itemQuestion.answerType == 'L'"
-    class="icon-radio_button_unchecked icon-radio"
-  ></span>
-  <span
-    *ngIf="itemQuestion.answerType == 'C'"
-    class="icon-check_box_outline_blank pd-t-7"
-  ></span>
-  <span *ngIf="itemQuestion.answerType == 'L3' && itemAnswer" class="pd-t-7"
-    >{{ itemAnswer?.seqNo + 1 }}.</span
-  >
-  <span *ngIf="itemQuestion.answerType == 'L3' && !itemAnswer" class="pd-t-7"
-    >{{ questions[itemQuestion.seqNo].answers.length + 1 }}.</span
-  >
-  <span
-    *ngIf="itemQuestion.answerType == 'D'"
-    class="icon-calendar_today"
-  ></span>
-  <span *ngIf="itemQuestion.answerType == 'H'" class="icon-access_time"></span>
+  <div>
+    <span
+      *ngIf="itemQuestion.answerType == 'O'"
+      class="icon-radio_button_unchecked icon-radio"
+    ></span>
+    <span
+      *ngIf="itemQuestion.answerType == 'C'"
+      class="icon-check_box_outline_blank pd-t-7"
+    ></span>
+    <span *ngIf="itemQuestion.answerType == 'L3' && itemAnswer" class="pd-t-7"
+      >{{ itemAnswer?.seqNo + 1 }}.</span
+    >
+    <span *ngIf="itemQuestion.answerType == 'L3' && !itemAnswer" class="pd-t-7"
+      >{{ questions[itemQuestion.seqNo].answers.length + 1 }}.</span
+    >
+    <span
+      *ngIf="itemQuestion.answerType == 'D'"
+      class="icon-calendar_today"
+    ></span>
+    <span
+      *ngIf="itemQuestion.answerType == 'H'"
+      class="icon-access_time"
+    ></span>
+  </div>
 </ng-template>
 <ng-template
   #tempAnswers
   let-itemQuestion="dataQuestion"
   let-itemAnswer="dataAnswer"
 >
-  <div
-    class="e-input-group"
-    *ngIf="
-      itemQuestion.answerType == 'L' ||
-      itemQuestion.answerType == 'C' ||
-      itemQuestion.answerType == 'L3'
-    "
-  >
-    <input
-      class="e-input"
-      type="text"
-      placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-      [value]="itemAnswer.answer"
-      [disabled]="itemAnswer.other ? true : false"
-    />
-  </div>
-  <div class="e-input-group short-text" *ngIf="itemQuestion.answerType == 'T'">
-    <input
-      class="e-input"
-      type="text"
-      placeholder="Văn bản câu trả lời ngắn"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-      [disabled]="true"
-    />
-  </div>
-  <div class="e-input-group long-text" *ngIf="itemQuestion.answerType == 'T2'">
-    <input
-      class="e-input"
-      type="text"
-      placeholder="Văn bản câu trả lời dài"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-      [disabled]="true"
-    />
-  </div>
-  <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'D'">
-    <input
-      class="e-input"
-      type="text"
-      placeholder="Ngày, tháng, năm"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-      [disabled]="true"
-    />
-  </div>
-  <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'H'">
-    <input
-      class="e-input"
-      type="text"
-      placeholder="Giờ"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-      [disabled]="true"
-    />
-  </div>
-  <div
-    class="has-action-menu"
-    *ngIf="
-      itemQuestion?.active &&
-      !itemAnswer.other &&
-      itemQuestion.answerType != 'T2' &&
-      itemQuestion.answerType != 'T' &&
-      itemQuestion.answerType != 'L3' &&
-      itemQuestion.answerType != 'D' &&
-      itemQuestion.answerType != 'H'
-    "
-  >
-    <div class="action-menu">
-      <span class="icon-image icon-24 pd-10"></span>
+  <div class="d-flex">
+    <div
+      class="e-input-group"
+      *ngIf="
+        itemQuestion.answerType == 'O' ||
+        itemQuestion.answerType == 'C' ||
+        itemQuestion.answerType == 'L3'
+      "
+    >
+      <input
+        class="e-input"
+        type="text"
+        placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
+        (focus)="focusIn($event.target)"
+        (blur)="focusOut($event.target)"
+        [value]="itemAnswer.answer"
+        [disabled]="itemAnswer.other ? true : false"
+      />
+    </div>
+    <div
+      class="e-input-group short-text"
+      *ngIf="itemQuestion.answerType == 'T'"
+    >
+      <input
+        class="e-input"
+        type="text"
+        placeholder="Văn bản câu trả lời ngắn"
+        (focus)="focusIn($event.target)"
+        (blur)="focusOut($event.target)"
+        [disabled]="true"
+      />
+    </div>
+    <div
+      class="e-input-group long-text"
+      *ngIf="itemQuestion.answerType == 'T2'"
+    >
+      <input
+        class="e-input"
+        type="text"
+        placeholder="Văn bản câu trả lời dài"
+        (focus)="focusIn($event.target)"
+        (blur)="focusOut($event.target)"
+        [disabled]="true"
+      />
+    </div>
+    <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'D'">
+      <input
+        class="e-input"
+        type="text"
+        placeholder="Ngày, tháng, năm"
+        (focus)="focusIn($event.target)"
+        (blur)="focusOut($event.target)"
+        [disabled]="true"
+      />
+    </div>
+    <div class="e-input-group date-time" *ngIf="itemQuestion.answerType == 'H'">
+      <input
+        class="e-input"
+        type="text"
+        placeholder="Giờ"
+        (focus)="focusIn($event.target)"
+        (blur)="focusOut($event.target)"
+        [disabled]="true"
+      />
+    </div>
+    <div
+      class="has-action-menu"
+      *ngIf="
+        itemQuestion?.active &&
+        !itemAnswer.other &&
+        itemQuestion.answerType != 'T2' &&
+        itemQuestion.answerType != 'T' &&
+        itemQuestion.answerType != 'L3' &&
+        itemQuestion.answerType != 'D' &&
+        itemQuestion.answerType != 'H'
+      "
+    >
+      <div class="action-menu">
+        <span class="icon-image icon-24 pd-10"></span>
+      </div>
+    </div>
+    <div
+      (click)="deleteAnswer(itemQuestion, itemAnswer)"
+      [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
+      *ngIf="itemQuestion?.active && itemQuestion.answers?.length > 1"
+    >
+      <span class="icon-close icon-24 pd-s-e-10"></span>
     </div>
   </div>
+</ng-template>
+<ng-template #template_card_question let-itemQuestion="dataQuestion">
+  <div class="d-flex">
+    <div class="form-group question">
+      <div class="title-des">
+        <ejs-inplaceeditor
+          #inplaceCommentEditor
+          mode="Inline"
+          emptyText="Enter your comment"
+          submitOnEnter="false"
+          type="RTE"
+          name="rte"
+          data-underline="false"
+          [model]="titleEditorModel"
+          [validationRules]="commentRule"
+          [value]="itemQuestion.question"
+        >
+        </ejs-inplaceeditor>
+      </div>
+    </div>
+    <ng-container #questionMF *ngIf="itemQuestion?.active">
+      <span class="icon-image icon-26"></span>
+      <ng-container
+        *ngTemplateOutlet="
+          templateQuestionMF;
+          context: { $implicit: itemQuestion }
+        "
+      ></ng-container>
+    </ng-container>
+  </div>
   <div
-    (click)="deleteAnswer(itemQuestion, itemAnswer)"
-    [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
-    *ngIf="itemQuestion?.active && itemQuestion.answers?.length > 1"
+    cdkDropList
+    class="list answer"
+    (cdkDropListDropped)="dropAnswer($event, itemQuestion.seqNo)"
   >
-    <span class="icon-close icon-24 pd-s-e-10"></span>
+    <div
+      class="box"
+      *ngFor="let itemAnswer of itemQuestion.answers"
+      cdkDragBoundary=".answer"
+      cdkDrag
+    >
+      <div class="has-action-menu">
+        <div class="d-flex">
+          <div class="action-menu">
+            <div
+              class="example-handle-answer"
+              cdkDragHandle
+              *ngIf="
+                itemQuestion.answerType != 'T2' &&
+                itemQuestion.answerType != 'T'
+              "
+            >
+              <span class="icon-reorder"></span>
+            </div>
+          </div>
+          <div class="d-flex size-input">
+            <ng-container
+              *ngTemplateOutlet="
+                tempIconAnswers;
+                context: {
+                  dataQuestion: itemQuestion,
+                  dataAnswer: itemAnswer
+                }
+              "
+            ></ng-container>
+            <ng-container
+              *ngTemplateOutlet="
+                tempAnswers;
+                context: {
+                  dataQuestion: itemQuestion,
+                  dataAnswer: itemAnswer
+                }
+              "
+            ></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-flex size-input-other"
+      *ngIf="
+        itemQuestion?.active &&
+        itemQuestion.answerType != 'T' &&
+        itemQuestion.answerType != 'T2' &&
+        itemQuestion.answerType != 'D' &&
+        itemQuestion.answerType != 'H'
+      "
+    >
+      <ng-container
+        *ngTemplateOutlet="
+          tempIconAnswers;
+          context: {
+            dataQuestion: itemQuestion
+          }
+        "
+      ></ng-container>
+      <div class="e-input-group-other" (click)="addAnswer(itemQuestion)">
+        <input
+          class="e-input answer-other"
+          type="text"
+          placeholder="Thêm bình chọn"
+          (focus)="focusIn($event.target)"
+          (blur)="focusOut($event.target)"
+        />
+      </div>
+      <ng-container *ngIf="itemQuestion?.other" class="d-flex">
+        <div class="text-or">
+          <codx-label fiedName="" default="hoặc"></codx-label>
+        </div>
+        <div class="add-answer-other" (click)="addOtherAnswer(itemQuestion)">
+          <codx-label
+            fiedName=""
+            default='thêm "Câu trả lời khác"'
+          ></codx-label>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template_card_image_video let-itemQuestion="dataQuestion">
+  <div class="d-flex">
+    <div class="form-group question w-100">
+      <div class="title-des d-flex">
+        <ejs-inplaceeditor
+          #inplaceCommentEditor
+          mode="Inline"
+          emptyText="Tiêu đề hình ảnh"
+          submitOnEnter="false"
+          type="RTE"
+          name="rte"
+          data-underline="false"
+          [model]="titleEditorModel"
+          [validationRules]="commentRule"
+          [value]="itemQuestion.question"
+        >
+        </ejs-inplaceeditor>
+        <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
+          <span
+            (click)="copyCard('P-V', itemQuestion)"
+            class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+          ></span>
+          <span
+            (click)="deleteCard(itemQuestion)"
+            class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+          ></span>
+          <span
+            class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+          ></span>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <ng-container #editImage *ngIf="MODE_IMAGE_VIDEO == 'EDIT'">
+    <div
+      class="row mt-2 justify-content-between pd-10"
+      *ngIf="lstEditIV.length > 0"
+    >
+      <ng-container *ngFor="let data of lstEditIV">
+        <div class="col-5 my-2 m-w-100">
+          <div class="w-150 position-relative">
+            <ng-container *ngIf="data.referType == REFER_TYPE.IMAGE">
+              <ng-container *ngIf="data.recID; else imageSrc">
+                <codx-img
+                  [recId]="data.recID"
+                  [objectId]="data.objectID"
+                  [width]="150"
+                  cssClass="pic"
+                  imageType="square"
+                >
+                </codx-img>
+              </ng-container>
+              <ng-template #imageSrc>
+                <div class="d-flex align-items-center icon-MF-image">
+                  <div ngbDropdown class="dropdown" container="body">
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                      ngbDropdownToggle
+                      id="dropdownMenuButton1"
+                      aria-expanded="false"
+                    >
+                      <span class="icon-more_vert icon-22"> </span>
+                    </a>
+                    <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                      <li>
+                        <a ngbDropdownItem href="javascript:void(0)">
+                          <span class="icon-format_align_left"></span>
+                          <codx-label
+                            fiedName="formatAlignLeft"
+                            default="Căn trái"
+                          ></codx-label>
+                        </a>
+                      </li>
+                      <li>
+                        <a ngbDropdownItem href="javascript:void(0)">
+                          <span class="icon-format_align_right"></span>
+                          <codx-label
+                            fiedName="formatAlignRight"
+                            default="Căn phải"
+                          ></codx-label>
+                        </a>
+                      </li>
+                      <li>
+                        <a ngbDropdownItem href="javascript:void(0)">
+                          <span class="icon-format_align_center"></span>
+                          <codx-label
+                            fiedName="formatAlignCenter"
+                            default="Căn giữa"
+                          ></codx-label>
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          (click)="uploadFile('image', 'change')"
+                          ngbDropdownItem
+                          href="javascript:void(0)"
+                        >
+                          <span class="icon-image"></span>
+                          <codx-label
+                            fiedName="changeImage"
+                            default="Thay đổi"
+                          ></codx-label>
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          (click)="deleteFile()"
+                          ngbDropdownItem
+                          href="javascript:void(0)"
+                        >
+                          <span class="icon-delete"></span>
+                          <codx-label
+                            fiedName="deleteImage"
+                            default="Xóa"
+                          ></codx-label>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <img
+                  [src]="data.avatar || data.data"
+                  alt=""
+                  class="image m-w-100"
+                />
+              </ng-template>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #template_card_title let-itemQuestion="dataQuestion">
+  <div class="d-flex">
+    <div class="form-group question w-100">
+      <div class="title-des d-flex">
+        <ejs-inplaceeditor
+          #inplaceCommentEditor
+          mode="Inline"
+          emptyText="Không có tiêu đề"
+          submitOnEnter="false"
+          type="RTE"
+          name="rte"
+          data-underline="false"
+          [model]="titleEditorModel"
+          [validationRules]="commentRule"
+        >
+        </ejs-inplaceeditor>
+        <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
+          <span
+            (click)="copyCard('T', itemQuestion)"
+            class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+          ></span>
+          <span
+            (click)="deleteCard(itemQuestion)"
+            class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+          ></span>
+          <span
+            class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+          ></span>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="form-group question">
+    <div class="title-des">
+      <ejs-inplaceeditor
+        #inplaceCommentEditor
+        mode="Inline"
+        emptyText="Mô tả (không bắt buộc)"
+        submitOnEnter="false"
+        type="RTE"
+        name="rte"
+        data-underline="false"
+        [model]="descriptionEditorModel"
+        [validationRules]="commentRule"
+      >
+      </ejs-inplaceeditor>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template_card_session let-itemQuestion="dataQuestion">
+  <div class="d-flex">
+    <div class="form-group question w-100 position-relative">
+      <div class="title-des d-flex">
+        <ejs-inplaceeditor
+          #inplaceCommentEditor
+          mode="Inline"
+          emptyText="Mẫu không có tiêu đề"
+          submitOnEnter="false"
+          type="RTE"
+          name="rte"
+          data-underline="false"
+          [model]="titleEditorModel"
+          [validationRules]="commentRule"
+        >
+        </ejs-inplaceeditor>
+        <ng-container #questionMF>
+          <!-- <span
+            class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary"
+          ></span> -->
+          <div class="d-flex align-items-center pd-10 left-100">
+            <div ngbDropdown container="body">
+              <a
+                href="javascript:void(0)"
+                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                ngbDropdownToggle
+                id="dropdownMenuButton1"
+                aria-expanded="false"
+              >
+                <span class="icon-more_vert icon-22"></span>
+              </a>
+              <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                <li>
+                  <a
+                    (click)="copyCard('S', itemQuestion)"
+                    ngbDropdownItem
+                    href="javascript:void(0)"
+                  >
+                    <codx-label
+                      fiedName="copySession"
+                      default="Sao chép phần"
+                    ></codx-label>
+                  </a>
+                </li>
+                <li>
+                  <a ngbDropdownItem href="javascript:void(0)">
+                    <codx-label
+                      fiedName="moveSession"
+                      default="Di chuyển phần"
+                    ></codx-label>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    (click)="deleteCard(itemQuestion)"
+                    ngbDropdownItem
+                    href="javascript:void(0)"
+                  >
+                    <codx-label
+                      fiedName="deleteSession"
+                      default="Xóa phần"
+                    ></codx-label>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="form-group question">
+    <div class="title-des">
+      <ejs-inplaceeditor
+        #inplaceCommentEditor
+        mode="Inline"
+        emptyText="Mô tả biểu mẫu"
+        submitOnEnter="false"
+        type="RTE"
+        name="rte"
+        data-underline="false"
+        [model]="descriptionEditorModel"
+        [validationRules]="commentRule"
+      >
+      </ejs-inplaceeditor>
+    </div>
   </div>
 </ng-template>

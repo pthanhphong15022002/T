@@ -13,6 +13,7 @@ import {
 import { PopupAddBookingCarComponent } from '../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../codx-ep.service';
 import { DriverModel } from '../../models/bookingAttendees.model';
+import { PopupDriverAssignComponent } from './popup-driver-assign/popup-driver-assign.component';
 
 @Component({
   selector: 'approval-car',
@@ -55,12 +56,12 @@ export class ApprovalCarsComponent extends UIComponent {
   popupDialog: any;
   dialog!: DialogRef;
   formModel: FormModel;
-  popuptitle:any;
   viewType=ViewType;
   driverID:any;
   listDriver=[];
   driver:any;
   fields: Object = { text: 'driverName', value: 'driverID' };
+  popupTitle: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -166,7 +167,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
       case 'EPT40204': {
         //Phân công tài xế
-        this.popuptitle=value.text;
+        this.popupTitle=value.text;
         this.assignDriver(datas);
         break;
       }
@@ -190,10 +191,12 @@ export class ApprovalCarsComponent extends UIComponent {
               if (status == '5') {
                 this.notificationsService.notifyCode('ES007'); //đã duyệt
                 data.approveStatus = '5';
+                data.status = '5';
               }
               if (status == '4') {
                 this.notificationsService.notifyCode('ES007'); //bị hủy
                 data.approveStatus = '4';
+                data.status = '4';
               }
 
               this.view.dataService.update(data).subscribe();
@@ -218,8 +221,21 @@ export class ApprovalCarsComponent extends UIComponent {
           tmp['driverName'] = dri.resourceName;
           this.cbbDriver.push(tmp);
         })
-        this.detectorRef.detectChanges(); 
-        this.popupDialog = this.callfc.openForm(this.driverAssign, '', 550,250 );
+        this.popupDialog = this.callfc.openForm(
+          PopupDriverAssignComponent,'',550,250,this.funcID,
+          [
+            this.view.dataService.dataSelected,            
+            this.popupTitle,
+            this.view.dataService,
+            this.cbbDriver,
+          ]            
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear(); 
+          else {
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
       }
     })
        
@@ -263,6 +279,7 @@ export class ApprovalCarsComponent extends UIComponent {
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            if(data.status==5 && data.driverName!=null && data.driverName!='')
             func.disabled = false;
           }
         });

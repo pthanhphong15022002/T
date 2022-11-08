@@ -339,12 +339,17 @@ export class IncommingAddComponent implements OnInit {
     }
   }
   checkIsRequired() {
+    var arr = [];
     for (var i = 0; i < this.objRequied.length; i++) {
       var field = capitalizeFirstLetter(this.objRequied[i]);
       var data = this.dispatch[field];
-      if (!data) {
-        return this.notifySvr.notifyCode('SYS028', 0, field);
-      }
+      if(!data)
+        arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
+    }
+    if(arr.length>0)
+    {
+      var name = arr.join(" , ");
+      return this.notifySvr.notifyCode('SYS009', 0, name);
     }
     if (!this.fileCount || this.fileCount == 0)
       return this.notifySvr.notifyCode('OD022');

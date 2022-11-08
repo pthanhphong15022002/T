@@ -32,6 +32,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { debug } from 'console';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../codx-bp.service';
 import {
   BP_Processes,
@@ -52,6 +53,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('attachment') attachment: AttachmentComponent;
+
   process?: BP_Processes;
   showButtonAdd = true;
   dataObj?: any;
@@ -215,6 +218,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -278,6 +282,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
               [this.view.dataService.dataSelected],
@@ -386,6 +391,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         );
       }
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -820,5 +826,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       if(data)this.dataFile = data 
     }); 
   }
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileAdded(e) {
+
+  }
+  getfileCount(e){}
  
 }

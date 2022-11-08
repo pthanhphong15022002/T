@@ -25,6 +25,9 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { PropertiesComponent } from './properties/properties.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupAddPermissionComponent } from './processes/popup-add-permission/popup-add-permission.component';
+import { AprpermissionComponent } from './aprpermission/aprpermission.component';
+import { ViewFlowchartComponent } from './processsteps/view-flowchart/view-flowchart.component';
+// import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 
 export const routes: Routes = [
@@ -39,6 +42,10 @@ export const routes: Routes = [
       {
         path: 'approvals/:funcID',
         component: ProcessesComponent,
+      },
+      {
+        path: 'aprpermission/:funcID',
+        component: AprpermissionComponent,
       },
       {
         path: 'testhtml',
@@ -72,6 +79,8 @@ export const routes: Routes = [
     RevisionsComponent,
     PropertiesComponent,
     PopupAddPermissionComponent,
+    AprpermissionComponent,
+    ViewFlowchartComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -86,7 +95,8 @@ export const routes: Routes = [
     OverlayModule,
     TabModule,
     CommonModule,
-    DragDropModule
+    DragDropModule,
+    // NgxImageZoomModule 
   ],
   exports: [CodxBpComponent],
 })

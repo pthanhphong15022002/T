@@ -541,6 +541,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                     if (res?.msgCodeError == null && res?.rowCount) {
                       this.notificationsService.notifyCode('ES007');
                       this.returnData.approveStatus = '3';
+                      this.returnData.status = '3';
                       this.returnData.write = false;
                       this.returnData.delete = false;
                       (this.dialogRef.dataService as CRUDService)
@@ -693,6 +694,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
       return;
     }
     this.data.startDate = new Date(evt.data.fromDate);
+    this.driverValidator(
+      this.tempDriver.userID,
+      this.data.startDate,
+      this.data.endDate,
+      this.data.recID
+    );
     // if (
     //   this.data.startDate.getHours() == 0 &&
     //   this.data.startDate.getMinutes() == 0
@@ -730,6 +737,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
       return;
     }
     this.data.endDate = new Date(evt.data.fromDate);
+    this.driverValidator(
+      this.tempDriver.userID,
+      this.data.startDate,
+      this.data.endDate,
+      this.data.recID
+    );
     // if (
     //   this.data.endDate.getHours() == 0 &&
     //   this.data.endDate.getMinutes() == 0
