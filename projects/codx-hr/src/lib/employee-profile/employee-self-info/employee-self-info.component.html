@@ -1,0 +1,296 @@
+<div>
+  <codx-form
+    #form
+    [body]="form1body"
+    [footer]="footer"
+    [formModel]="formModel"
+    [dialog]="dialog"
+    [data]="{}"
+  >
+    <ng-template #form1body>
+      <div class="form-group">
+        <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="employeeID"
+        ></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          fiedName="EmployeeName"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input type="text" field="employeeName"></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          fiedName="EmployeeName2"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input type="text" field="employeeName2"></codx-input>
+      </div>
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="Gender" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="gender"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="MaritalStatus"
+            [formModel]="formModel"
+          ></codx-label>
+          <div>
+            <codx-input
+              type="combobox"
+              refType=""
+              field="maritalStatus"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="Birthday" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              type="datetime"
+              format="d"
+              field="birthday"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="BirthPlace"
+            [formModel]="formModel"
+          ></codx-label>
+          <div>
+            <codx-input
+              type="combobox"
+              refType="Provinces"
+              field="birthPlace"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="Domicile" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              type="combobox"
+              refType="Provinces"
+              field="domicile"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="Nationality"
+            [formModel]="formModel"
+          ></codx-label>
+          <div>
+            <codx-input
+              type="combobox"
+              refType="Provinces"
+              field="nationality"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="EthnicGroup"
+            [formModel]="formModel"
+          ></codx-label>
+          <div>
+            <codx-input
+              type="combobox"
+              refType="EthnicGroups"
+              field="ethnicGroup"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="Religion" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              type="combobox"
+              refType="EthnicGroups"
+              field="religion"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <codx-label [name]="" default="CMND/CCCD" [formModel]="formModel">
+        </codx-label>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="IDCardNo" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              type="combobox"
+              refType="EthnicGroups"
+              field="iDCardNo"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="IssuedOn" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              type="datetime"
+              format="d"
+              field="issuedOn"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="IDExpiredOn"
+            [formModel]="formModel"
+          ></codx-label>
+          <div>
+            <codx-input
+              type="datetime"
+              format="d"
+              field="iDExpiredOn"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
+          <div>
+            <codx-input
+              type="combobox"
+              refType="EthnicGroups"
+              field="issuedBy"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #footer>
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">
+          <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="formModel"
+          ></codx-label>
+        </button>
+      </div>
+    </ng-template>
+  </codx-form>
+
+  <!-- <ejs-tab
+        #leftToolbar
+        heightAdjustMode="Fill"
+    >
+    <e-tabitems>
+        <e-tabitem>
+            <ng-template #headerText>
+                <codx-label
+default="abc"
+                ></codx-label>
+            </ng-template>
+
+            <ng-template #content>
+                
+                <codx-form
+                    #form
+                    [body]="form1body"
+                    [footer]="footer"
+                    [formModel]="formModel"
+                >
+                <ng-template #form1body>
+                    <div class="form-group">
+                        <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
+                        <codx-input
+                            type="text"
+                            field="employeeID"
+                        ></codx-input>
+                    </div>
+                    <div class="form-group">
+                        <codx-label fiedName="EmployeeName" [formModel]="formModel"></codx-label>
+                        <codx-input
+                            type="text"
+                            field="employeeName"
+                        ></codx-input>
+                    </div>
+                    <div class="form-group">
+                        <codx-label fiedName="EmployeeName2" [formModel]="formModel"></codx-label>
+                        <codx-input
+                            type="text"
+                            field = "employeeName2"
+                        ></codx-input>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <codx-label fiedName="Gender"  [formModel]="formModel"></codx-label>
+                            <div>
+                                <codx-input
+                                    type="combobox"
+                                    refType="HR001"
+                                    Group=""
+                                    field="gender"
+                                ></codx-input>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <codx-label fiedName="MaritalStatus" [formModel]="formModel"></codx-label>
+                            <div>
+                                <codx-input
+                                    type="combobox"
+                                    refType=""
+                                ></codx-input>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template #footer>
+                    <div class="d-flex justify-content-end">
+                      <button class="btn btn-primary" >
+                        <codx-label
+                          default="Lưu"
+                          name="lblSave"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </button>
+                    </div>
+                  </ng-template>
+                </codx-form>
+            </ng-template>  
+        </e-tabitem>
+        <e-tabitem>
+            <ng-template #headerText>
+                <codx-label
+                
+                ></codx-label>
+            </ng-template>
+
+            <ng-template #content>
+
+            </ng-template>
+        </e-tabitem>
+    </e-tabitems>
+    </ejs-tab> -->
+</div>

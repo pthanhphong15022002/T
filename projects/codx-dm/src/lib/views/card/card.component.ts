@@ -1,18 +1,9 @@
-import { NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Subject } from "rxjs";
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DomSanitizer } from '@angular/platform-browser';
-import { FolderInfo } from '@shared/models/folder.model';
-import { FileInfo, HistoryFile, View } from '@shared/models/file.model';
 import { ApiHttpService, AuthStore, CallFuncService, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
-import { CopyComponent } from '../../copy/copy.component';
-import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
-import { AnimationSettingsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
+
 
 @Component({
   selector: 'card',
@@ -27,6 +18,7 @@ export class CardComponent implements OnInit , OnChanges {
   totalRating: number;
   totalViews: number;
   @Input() data: any;
+  @Input() view: any;
   @Output() viewFile = new EventEmitter<any>();
   constructor(
     public dmSV: CodxDMService,
@@ -37,13 +29,11 @@ export class CardComponent implements OnInit , OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes["data"] && changes["data"].currentValue != changes["data"].previousValue )
-    {
       this.data = changes["data"].currentValue 
-    }
   }
 
   ngOnInit(): void {
-    this.user = this.auth.get();   
+    this.user = this.auth.get();
   }
   
   classRating(rating) {    
@@ -68,7 +58,7 @@ export class CardComponent implements OnInit , OnChanges {
         }
       })
     }
-    else this.dmSV.clickMF(e, data)
+    else this.dmSV.clickMF(e, data ,this.view)
   }
   dbView()
   {

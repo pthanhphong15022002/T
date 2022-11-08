@@ -21,8 +21,6 @@
       <codx-card-center
         cardCss="border h-100 w-225px"
         [formModel]="view.formModel"
-        [iconCss]="data.sharedByOther ? 'icon-share' : ' '"
-        [iconColorCss]="'blue'"
         [imageId]="data.iterationID"
         [imageObjName]="data.iterationName"
         [imageObjType]="view.formModel.entityName"
@@ -36,8 +34,8 @@
         (changeDataMF)="changeDataMF($event, data)"
         [moreFuncCss]="'me-8'"
         [dataItem]="data"
-        [typeMF]="'hover'" 
-      
+        [typeMF]="'hover'"
+        [baseHeaderRightTmp]="baseHeaderRightTmp"
       >
       </codx-card-center>
       <!--   [iconCss]="data.sharedByOther ? 'icon-share' : ' '"
@@ -46,21 +44,31 @@
   </ng-container>
 
   <ng-template #baseHeaderRightTmp let-data>
-      <div  *ngIf="!data?.sharedByOther" [ngbPopover]="popover"
-      #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
-        <i class="icon-share text-primary text-hover-primary icon-20 m-2" ></i>
+    <i
+      class="icon-share text-primary text-hover-primary icon-20 m-2"
+      *ngIf="data?.sharedByOther"
+      [ngbPopover]="popoverShare"
+      #p="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="p.open()"
+      (mouseleave)="p.close()"
+      placement="right top left bottom "
+    ></i>
+
+    <ng-template #popoverShare>
+      <div>
+        <codx-label
+          name="lblIsShare"
+          [formModel]="view.formModel"
+          default="Được chia sẻ !"
+        ></codx-label>
       </div>
-  
-    <ng-template #popover >
-      <span>
-        <codx-label name="lblIsShare" [formModel]="view.formModel" default="Được chia sẻ"></codx-label>
-      </span>
     </ng-template>
   </ng-template>
 </ng-template>
 
 <ng-template #cardImgFooter let-data>
-  <div class="footer-bottom" style="height: 30px">
+  <!-- <div class="footer-bottom" style="height: 30px">
     <div *ngIf="data.resources" class="d-flex flex-center flex-wrap">
       <codx-imgs
         [width]="30"
@@ -71,7 +79,46 @@
       >
       </codx-imgs>
     </div>
+  </div> -->
+  <div class="d-flex justify-content-center h-50px">
+    <ng-container *ngIf="data.resources">
+      <codx-imgs
+        [width]="30"
+        [objectId]="data?.resources"
+        objectType="AD_Users"
+        [numberImages]="4"
+        [mode]="false"
+      >
+      </codx-imgs>
+    </ng-container>
   </div>
+  <!-- <div
+    class="footer-att"
+    *ngIf="data.attachments > 0"
+    [ngbPopover]="popperAttachment"
+    #p="ngbPopover"
+    [openDelay]="500"
+    (mouseenter)="p.open()"
+    (mouseleave)="p.close()"
+    placement="right left"
+  >
+    <codx-attachment-temp
+      [objectID]="data?.iterationID"
+      [formModel]="view.formModel"
+      [viewType]="1"
+      [count]="data.attachments"
+    ></codx-attachment-temp>
+  </div>
+
+  <ng-template #popperAttachment>
+    <span>
+      <codx-label
+        name="lblAttachment"
+        [formModel]="view.formModel"
+        default="Tài liệu đính kèm"
+      ></codx-label>
+    </span>
+  </ng-template> -->
 </ng-template>
 
 <ng-template #titleTemp let-data>

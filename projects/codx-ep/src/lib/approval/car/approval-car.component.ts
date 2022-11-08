@@ -191,10 +191,12 @@ export class ApprovalCarsComponent extends UIComponent {
               if (status == '5') {
                 this.notificationsService.notifyCode('ES007'); //đã duyệt
                 data.approveStatus = '5';
+                data.status = '5';
               }
               if (status == '4') {
                 this.notificationsService.notifyCode('ES007'); //bị hủy
                 data.approveStatus = '4';
+                data.status = '4';
               }
 
               this.view.dataService.update(data).subscribe();
@@ -277,6 +279,7 @@ export class ApprovalCarsComponent extends UIComponent {
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            if(data.status==5 && data.driverName!=null && data.driverName!='')
             func.disabled = false;
           }
         });

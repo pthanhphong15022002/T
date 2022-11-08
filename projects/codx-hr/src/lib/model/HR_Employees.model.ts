@@ -42,3 +42,14 @@ export class HR_Employees {
 
     constructor(){}
 }
+
+export class HR_Employees_Extend extends HR_Employees {
+    public employeeTypeID: string;
+
+    constructor(){
+        super();
+    }
+}
+
+
+

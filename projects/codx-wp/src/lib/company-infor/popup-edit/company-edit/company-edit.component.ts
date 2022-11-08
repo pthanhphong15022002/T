@@ -66,9 +66,8 @@ export class CompanyEditComponent implements OnInit {
         {
           this.dataOld = res;
           this.dataOld.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          this.dialogRef.close(this.dataOld);
-          this.dt.detectChanges();
           this.notifySvr.notifyCode('SYS007');
+          this.dialogRef.close(this.dataOld);
         }
       });
     }
