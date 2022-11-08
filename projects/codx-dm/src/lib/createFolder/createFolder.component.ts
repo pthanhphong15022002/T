@@ -442,7 +442,6 @@ export class CreateFolderComponent implements OnInit {
           JSON.stringify(this.parentFolder.permissions)
         );
       }
-      debugger;
       this.checkPermission();
       this.fileEditing.permissions = this.addPermissionForRoot(
         this.fileEditing.permissions

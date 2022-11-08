@@ -227,7 +227,7 @@ export class HomeComponent extends UIComponent {
         });
       }
     });
-
+   
     this.dmSV.isDisableUpload.subscribe((res) => {
       if (res) {
         this.button.disabled = res;
@@ -801,8 +801,14 @@ export class HomeComponent extends UIComponent {
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
+   
+    if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
+    {
+      this.dmSV.dmFavoriteID = "2";
+      this.folderService.options.favoriteID = "2";
+      this.fileService.options.favoriteID = "2";
+    }
     this.getDataFile('');
-
     //   console.log(this.button);
   }
 
@@ -815,6 +821,12 @@ export class HomeComponent extends UIComponent {
  
     if (event.text != 'Search' && this.view.formModel.funcID != 'DMT02') {
       this.data = [];
+      if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
+      {
+        this.dmSV.dmFavoriteID = "2";
+        this.folderService.options.favoriteID = "2";
+        this.fileService.options.favoriteID = "2";
+      }
       this.dmSV.page = 1;
       var id = !this.dmSV.folderID ? '' : this.dmSV.folderID;
       this.getDataFile(id);
@@ -1156,11 +1168,7 @@ export class HomeComponent extends UIComponent {
       }
       if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
       {
-        this.dmSV.dmFavoriteID = "2";
-        this.folderService.options.favoriteID = "2";
-        this.fileService.options.favoriteID = "2";
         this.getDataFolder("");
-        this.getDataFile("");
       }
       if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
         this.dmSV.disableInput.next(true);
