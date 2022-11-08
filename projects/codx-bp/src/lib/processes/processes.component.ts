@@ -22,6 +22,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { Subject } from 'rxjs';
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { PropertiesComponent } from '../properties/properties.component';
@@ -79,6 +80,8 @@ export class ProcessesComponent
   newName = '';
   crrRecID = '';
   dataSelected: any;
+
+  private searchKey = new Subject<any>();
 
   constructor(
     inject: Injector,
@@ -145,7 +148,7 @@ export class ProcessesComponent
     this.changeDetectorRef.detectChanges();
   }
 
-  search(isScroll = false) {
+  search() {
     // this.views.forEach(item => {
     //   item.hide = true;
     //   if (item.text == "Search")
@@ -173,17 +176,34 @@ export class ProcessesComponent
     //     this.changeDetectorRef.detectChanges();
     //   }
     // });
+    // this.searchKey.subscribe((x)=> {
+    //   this.bpService.getSearchProcess(x);
+    // })
+
+    // BaoLV
+    this.searchKey.subscribe((x)=> {
+      //this.bpService.SearchDataProcess(x).subscribe( res =>res[0]);
+      const subscription = this.bpService.SearchDataProcess(x).subscribe( (value) => {
+        console.log(value);
+      });
+
+    })
   }
 
   searchChange($event) {
     try {
       this.textSearch = $event;
+      this.searchKey.next($event);
+      // this.searchKey.subscribe((x)=> {
+      //   this.bpService.getSearchProcess(x);
+      // })
       this.data = [];
       if (this.codxview.currentView.viewModel.model != null)
         this.codxview.currentView.viewModel.model.panelLeftHide = true;
       this.isSearch = true;
       // this.dmSV.page = 1;
       // this.fileService.options.page = this.dmSV.page;
+
       this.textSearchAll = this.textSearch;
       this.predicates = 'FileName.Contains(@0)';
       this.values = this.textSearch;
