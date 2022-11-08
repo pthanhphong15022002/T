@@ -8,7 +8,7 @@
               <div
                 class="card-survey"
                 [id]="'card-survey-' + itemSession.seqNo"
-                (click)="clickToScroll(itemSession.seqNo)"
+                (click)="clickToScroll(itemSession.seqNo, null, 'S')"
               >
                 <div class="count-session">
                   <div class="d-flex num-session">
@@ -40,7 +40,7 @@
                 <div
                   class="card-survey"
                   [id]="'card-survey-' + itemQuestion.seqNo"
-                  (click)="clickToScroll(itemQuestion.seqNo)"
+                  (click)="clickToScroll(i, itemQuestion.seqNo, 'Not-S')"
                   cdkDragBoundary=".example-boundary"
                   cdkDrag
                 >
@@ -96,9 +96,9 @@
                           #footer
                           *ngIf="
                             itemQuestion?.active &&
-                            itemQuestion.category == 'Q' &&
-                            itemQuestion.category == 'R' &&
-                            itemQuestion.category == 'O2' &&
+                            itemQuestion.category == 'Q' ||
+                            itemQuestion.category == 'R' ||
+                            itemQuestion.category == 'O2' ||
                             itemQuestion.category == 'C2'
                           "
                         >
@@ -184,7 +184,7 @@
   </div>
 </ng-container>
 <ng-template #templateQuestionMF let-itemQuestion>
-  <div ngbDropdown container="body">
+  <div ngbDropdown container="body" #templateQuestionMF>
     <button
       type="button"
       class="btn btn-outline-primary btn-sm dropdown1"
@@ -260,6 +260,25 @@
         <div class="d-flex">
           <span class="icon-cloud_upload icon-24"></span>
           <codx-label fiedName="" default="Tải tệp lên"></codx-label>
+        </div>
+      </button>
+      <hr />
+      <button ngbDropdownItem (click)="clickQuestionMF('recID', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-24"></span>
+          <codx-label fiedName="" default="Phạm vi tuyến tính"></codx-label>
+        </div>
+      </button>
+      <button ngbDropdownItem (click)="clickQuestionMF('O2', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-24"></span>
+          <codx-label fiedName="" default="Lưới trắc nghiệm"></codx-label>
+        </div>
+      </button>
+      <button ngbDropdownItem (click)="clickQuestionMF('C2', itemQuestion)">
+        <div class="d-flex">
+          <span class="icon-view_module icon-24"></span>
+          <codx-label fiedName="" default="Lưới hộp kiểm"></codx-label>
         </div>
       </button>
       <hr />

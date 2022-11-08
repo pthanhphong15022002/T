@@ -1028,15 +1028,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   //   }
   // }
 
-  cbbDataUser=[];
+  cbbDataUser='';
   valueCbxUserChange(event) {
     
     if (event == null) {
       this.isPopupUserCbb = false;
-      this.cbbDataUser= event.data;
       return;
     }
-    this.cbbDataUser = event;
     if (event?.dataSelected) {
       this.lstUser = [];
       this.attendeesList = [];
@@ -1067,6 +1065,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
       this.UpdateAttendeesList();
       this.changeDetectorRef.detectChanges();
+      let tmpDataCBB='';
+      this.attendeesList.forEach(item=>{
+        tmpDataCBB=tmpDataCBB+";"+item.userID;        
+      });
+      this.cbbDataUser=tmpDataCBB;
       this.isPopupUserCbb = false;
     }
   }
@@ -1152,16 +1155,30 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.popover = p;
   }
   selectRoseType(idUserSelected, value) {
-    this.attendeesList.forEach((res) => {
-      if (res.userID == idUserSelected) {
-        res.roleType = value;
-        this.listRoles.forEach((role) => {
-          if (role?.value == res?.roleType) {
-            res.icon = role.icon;
-          }
-        });
-      }
-    });
+    if(idUserSelected==this.curUser.userID){
+      this.curUser.roleType=value;
+      this.listRoles.forEach((role) => {
+        if (this.curUser.roleType == role.value) {
+          this.curUser.icon = role.icon;
+        }
+      });
+      
+      this.changeDetectorRef.detectChanges();
+    }
+    else{
+      this.attendeesList.forEach((res) => {
+        if (res.userID == idUserSelected) {
+          res.roleType = value;
+          this.listRoles.forEach((role) => {
+            if (role?.value == res?.roleType) {
+              res.icon = role.icon;
+            }
+          });
+        }
+      });      
+      this.changeDetectorRef.detectChanges();
+    }
+    
     this.changeDetectorRef.detectChanges();
 
     this.popover.close();

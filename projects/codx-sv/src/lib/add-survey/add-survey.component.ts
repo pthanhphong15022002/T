@@ -85,6 +85,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   amountOfSession = 0;
   children: any = new Array();
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
+  @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   constructor(
     inject: Injector,
     private change: ChangeDetectorRef,
@@ -241,28 +242,42 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   itemActive: any;
-  clickToScroll(seqNo) {
+  clickToScroll(seqNoSession = null, seqNoQuestion = null, category = null) {
+    var seqNo = 0;
+    if (category == 'S') seqNo = seqNoSession;
+    else seqNo = seqNoQuestion;
     var html = document.getElementById(`card-survey-${seqNo}`);
     var htmlE = html as HTMLElement;
     var htmlMF = document.querySelector('.moreFC');
     if (htmlMF)
       htmlMF.setAttribute('style', `top: calc(${htmlE?.offsetTop}px - 151px);`);
-    this.activeCard(seqNo);
+    this.activeCard(seqNoSession, seqNoQuestion, category);
   }
 
-  activeCard(seqNo) {
-    // this.questions[seqNo]['active'] = true;
-    // this.questions.forEach(x => {
-    //   if(x.seqNo == seqNo) x['active'] = true;
-    //   else x['active'] = false;
-    // })
+  activeCard(seqNoSession, seqNoQuestion, category) {
     this.questions.forEach((x) => {
       if (x['active'] == true) x['active'] = false;
-      if (x.seqNo == seqNo) {
-        x['active'] = true;
-        this.itemActive = x;
-      }
+      x.children.forEach((y) => {
+        if (y['active'] == true) y['active'] = false;
+      });
     });
+    if (category == 'S') {
+      this.questions.forEach((x) => {
+        if (x['active'] == true) x['active'] = false;
+        if (x.seqNo == seqNoSession) {
+          x['active'] = true;
+          this.itemActive = x;
+        }
+      });
+    } else {
+      this.questions[seqNoSession].children.forEach((x) => {
+        if (x['active'] == true) x['active'] = false;
+        if (x.seqNo == seqNoQuestion) {
+          x['active'] = true;
+          this.itemActive = x;
+        }
+      });
+    }
   }
 
   addAnswer(dataQuestion) {
@@ -499,7 +514,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       this.questions[dataQuestion.seqNo].active = false;
       this.questions[dataQuestion.seqNo + 1].active = true;
       this.itemActive = this.questions[dataQuestion.seqNo + 1];
-      this.clickToScroll(dataQuestion.seqNo + 1);
+      this.clickToScroll(dataQuestion.seqNo + 1, category);
     }
     console.log('check addCard', this.questions);
   }

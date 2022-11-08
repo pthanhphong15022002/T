@@ -266,7 +266,6 @@
             [value]=""
             [formModel]="formModel"
             (clickSave)="valueCbxUserChange($event)"
-            [dataValue]="cbbDataUser"
           >
           </codx-combobox-popup>
         </ng-container>
@@ -432,10 +431,18 @@
             objectType="AD_Users"
           ></codx-img>
           <span
+            popoverClass="userPopoverClass"
+            [ngbPopover]="popoverSelectRoles"
+            placement="right"
+            #p="ngbPopover"
+            (mouseenter)="showPopover(p, curUser.userID)"
+            autoClose="outside"
             class="position-absolute"
             inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"
             style="bottom: -5px;right:-4px"
-          ></span>
+          >
+        
+        </span>
         </div>
 
         <div class="d-flex flex-column flex-grow-1">
@@ -443,7 +450,7 @@
             {{ curUser?.userName }}
           </div>
           <div>
-            <span class="text-muted">{{ curUser.roleName }}</span>
+            <span class="text-muted">{{ curUser.roleType | vll: "EP009":"text" | async }}</span>
           </div>
         </div>
 
@@ -696,11 +703,12 @@
     <ng-container *ngIf="form && form.formGroup">
       <div class="d-flex justify-content-between">
         <a
+          (click)="popupUploadFile($event)"
           class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
         >
           <span
             class="icon-cloud_upload btn-text-primary me-2"
-            (click)="popupUploadFile($event)"
+            
           ></span>
           <codx-label
             fiedName="lblUploadFile"
