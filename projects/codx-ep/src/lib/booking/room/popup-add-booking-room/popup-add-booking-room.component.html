@@ -29,7 +29,7 @@
         <div class="row">
           <div
             *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
-            class="d-flex flex-row justify-content-between"
+            class="d-flex flex-row flex-wrap"
           >
             <div class="d-flex justify-content-start">
               <div
@@ -677,6 +677,15 @@
           </codx-input>
         </div>
       </div>
+      <!-- <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Reminder"> </codx-label>
+        <codx-input
+          ControlName="reminder"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div> -->
     </ng-container>
   </ng-template>
 

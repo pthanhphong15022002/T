@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { drillThroughClosed } from '@syncfusion/ej2-pivotview';
 import {
   ApiHttpService,
   AuthStore,
@@ -56,6 +57,7 @@ export class PopupAddSprintsComponent implements OnInit {
 
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @Output() loadData = new EventEmitter();
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -122,8 +124,11 @@ export class PopupAddSprintsComponent implements OnInit {
     if (
       this.master.iterationType == '1' &&
       (this.master.projectID == null || this.master.projectID.trim() == '')
-    )
-      return this.notiService.notify('Tên dự án không được để trống !'); ///Nhờ Hảo, cho câu messCode
+    ){
+      return this.notiService.notifyCode('TM035');
+      // let headerText = this.gridViewSetup['IterationName']?.headerText ?? 'IterationName';
+      // return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+    }
     if (
       this.master.iterationType == '0' &&
       (this.master.iterationName == null ||
@@ -150,11 +155,6 @@ export class PopupAddSprintsComponent implements OnInit {
   }
 
   saveMaster(isAdd: boolean) {
-    //comnet tạm
-    // this.imageAvatar
-    //   .updateFileDirectReload(this.master.iterationID)
-    //   .subscribe((up) => {
-      // !isAdd ? null : this.master.iterationType == '1' ? 0 : 1
     this.dialog.dataService
       .save(
         (option: any) => this.beforeSave(option, isAdd),
@@ -164,19 +164,18 @@ export class PopupAddSprintsComponent implements OnInit {
         if (res) {
           this.attachment?.clearData();
           var dt = isAdd ? res.save : res.update;
+          (this.dialog.dataService as CRUDService).update(dt).subscribe();
           if (this.imageAvatar) {
             this.imageAvatar
               .updateFileDirectReload(this.master.iterationID)
               .subscribe((up) => {
-                (this.dialog.dataService as CRUDService).update(dt).subscribe();
-              
-              });
-
-          }
-          this.dialog.close();
-        }
+                if (up) {
+                  this.dialog.close(dt);
+                }
+              });} 
+          }else this.dialog.close();  
+        
       });
-    // });
   }
 
   //#endregion

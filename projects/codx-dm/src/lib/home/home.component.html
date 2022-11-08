@@ -107,7 +107,7 @@
       <ng-container  *ngFor="let item of data ; trackBy: trackItem">
         <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
           [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item"
-          [formModel]="view.formModel">
+          [formModel]="view.formModel" [view]="codxview">
         </card>
       </ng-container>
     </div>

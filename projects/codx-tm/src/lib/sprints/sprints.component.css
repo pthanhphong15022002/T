@@ -9,4 +9,10 @@
     text-align: center;
     height: 40px !important;
  }
+ .footer-att {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    width: 25px;
+  }
  
