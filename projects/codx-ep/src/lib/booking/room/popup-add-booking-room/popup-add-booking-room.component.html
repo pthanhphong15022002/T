@@ -696,11 +696,12 @@
     <ng-container *ngIf="form && form.formGroup">
       <div class="d-flex justify-content-between">
         <a
+          (click)="popupUploadFile($event)"
           class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
         >
           <span
             class="icon-cloud_upload btn-text-primary me-2"
-            (click)="popupUploadFile($event)"
+            
           ></span>
           <codx-label
             fiedName="lblUploadFile"
