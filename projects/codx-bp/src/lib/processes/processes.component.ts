@@ -79,18 +79,29 @@ export class ProcessesComponent
   newName = '';
   crrRecID = '';
   dataSelected: any;
-
+  gridViewSetup: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.cache
+      .gridViewSetup(
+        'Processes',
+        'grvProcesses'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   onInit(): void {
@@ -364,10 +375,10 @@ export class ProcessesComponent
   }
 
   reName(data) {
-    this.dataSelected = data;
-    this.newName = data.processName;
-    this.crrRecID = data.recID;
-    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
+      this.dataSelected = data;
+      this.newName = data.processName;
+      this.crrRecID = data.recID;
+      this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
   revisions(more, data) {
@@ -416,6 +427,14 @@ export class ProcessesComponent
   }
 
   onSave() {
+    if(this.newName.trim() == "" || this.newName == null){
+      this.notification.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ProcessName'].headerText + '"'
+      );
+      return;
+    }
     this.api
       .exec('BP', 'ProcessesBusiness', 'UpdateProcessNameAsync', [
         this.crrRecID,

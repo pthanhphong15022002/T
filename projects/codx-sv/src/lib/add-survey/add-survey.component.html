@@ -51,40 +51,133 @@
     <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
       <div class="example-boundary d-flex w-100">
         <div class="d-flex flex-column">
-          <div class="box" *ngFor="let itemQuestion of questions; index as i">
-            <div
-              *ngIf="itemQuestion.category != 'S'; else other"
-              class="card-survey"
-              [id]="'card-survey-' + itemQuestion.seqNo"
-              (click)="clickToScroll(itemQuestion.seqNo)"
-              cdkDragBoundary=".example-boundary"
-              cdkDrag
-            >
-              <ng-container
-                *ngTemplateOutlet="
-                  formLayout;
-                  context: {
-                    dataQuestion: itemQuestion
-                  }
-                "
-              ></ng-container>
-            </div>
-            <ng-template #other>
+          <div class="box">
+            <div *ngFor="let itemQuestion of questions">
               <div
+                *ngIf="
+                  itemQuestion.category == 'S' && !itemQuestion.parentID;
+                  else children
+                "
                 class="card-survey"
                 [id]="'card-survey-' + itemQuestion.seqNo"
                 (click)="clickToScroll(itemQuestion.seqNo)"
               >
-                <ng-container
-                  *ngTemplateOutlet="
-                    formLayout;
-                    context: {
-                      dataQuestion: itemQuestion
-                    }
-                  "
-                ></ng-container>
+                <div class="count-session"></div>
+                <div
+                  class="col-lg-8 control-section inplace-editor-control-section form-layout"
+                  id="inplace-editor-control"
+                >
+                  <div class="content-wrapper">
+                    <form id="formId" class="form-horizontal example-box">
+                      <ng-container #body>
+                        <ng-container
+                          *ngTemplateOutlet="
+                            template_card_session;
+                            context: {
+                              dataQuestion: itemQuestion
+                            }
+                          "
+                        ></ng-container>
+                      </ng-container>
+                    </form>
+                  </div>
+                </div>
               </div>
-            </ng-template>
+              <ng-template #children>
+                <div
+                  class="card-survey"
+                  [id]="'card-survey-' + itemQuestion.seqNo"
+                  (click)="clickToScroll(itemQuestion.seqNo)"
+                  cdkDragBoundary=".example-boundary"
+                  cdkDrag
+                >
+                  <div
+                    class="col-lg-8 control-section inplace-editor-control-section form-layout"
+                    id="inplace-editor-control"
+                  >
+                    <div class="content-wrapper">
+                      <form id="formId" class="form-horizontal example-box">
+                        <ng-container #header>
+                          <div class="example-handle" cdkDragHandle>
+                            <span class="icon-reorder"></span>
+                          </div>
+                        </ng-container>
+                        <ng-container #body>
+                          <div *ngIf="itemQuestion.category == 'Q'">
+                            <ng-container
+                              *ngTemplateOutlet="
+                                template_card_question;
+                                context: {
+                                  dataQuestion: itemQuestion
+                                }
+                              "
+                            ></ng-container>
+                          </div>
+                          <div
+                            *ngIf="
+                              itemQuestion.category == 'P' ||
+                              itemQuestion.category == 'V'
+                            "
+                          >
+                            <ng-container
+                              *ngTemplateOutlet="
+                                template_card_image_video;
+                                context: {
+                                  dataQuestion: itemQuestion
+                                }
+                              "
+                            ></ng-container>
+                          </div>
+                          <div *ngIf="itemQuestion.category == 'T'">
+                            <ng-container
+                              *ngTemplateOutlet="
+                                template_card_title;
+                                context: {
+                                  dataQuestion: itemQuestion
+                                }
+                              "
+                            ></ng-container>
+                          </div>
+                        </ng-container>
+                        <ng-container
+                          #footer
+                          *ngIf="
+                            itemQuestion?.active && itemQuestion.category == 'Q'
+                          "
+                        >
+                          <hr />
+                          <div class="d-flex justify-content-end">
+                            <span
+                              (click)="copyCard('Q', itemQuestion)"
+                              class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                            ></span>
+                            <span
+                              (click)="deleteCard(itemQuestion)"
+                              class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                            ></span>
+                            <span class="split"></span>
+                            <codx-label
+                              fiedName=""
+                              default="Bắt buộc"
+                              class="pd-10"
+                            ></codx-label>
+                            <codx-input
+                              type="switch"
+                              class="pd-t-10"
+                              (valueChange)="valueChange($event, itemQuestion)"
+                              [crrValue]="itemQuestion.mandatory"
+                            ></codx-input>
+                            <span
+                              class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                            ></span>
+                          </div>
+                        </ng-container>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
           </div>
           <ng-container #moreFC>
             <div class="moreFC rounded-4">
@@ -133,102 +226,11 @@
     </div>
   </div>
 </ng-container>
-<ng-template #formLayout let-itemQuestion="dataQuestion">
-  <div
-    class="col-lg-8 control-section inplace-editor-control-section form-layout"
-    id="inplace-editor-control"
-  >
-    <div class="content-wrapper">
-      <form id="formId" class="form-horizontal example-box">
-        <ng-container #header *ngIf="itemQuestion.category != 'S'">
-          <div class="example-handle" cdkDragHandle>
-            <span class="icon-reorder"></span>
-          </div>
-        </ng-container>
-        <ng-container #body>
-          <div *ngIf="itemQuestion.category == 'Q'">
-            <ng-container
-              *ngTemplateOutlet="
-                template_card_question;
-                context: {
-                  dataQuestion: itemQuestion
-                }
-              "
-            ></ng-container>
-          </div>
-          <div
-            *ngIf="itemQuestion.category == 'P' || itemQuestion.category == 'V'"
-          >
-            <ng-container
-              *ngTemplateOutlet="
-                template_card_image_video;
-                context: {
-                  dataQuestion: itemQuestion
-                }
-              "
-            ></ng-container>
-          </div>
-          <div *ngIf="itemQuestion.category == 'T'">
-            <ng-container
-              *ngTemplateOutlet="
-                template_card_title;
-                context: {
-                  dataQuestion: itemQuestion
-                }
-              "
-            ></ng-container>
-          </div>
-          <div *ngIf="itemQuestion.category == 'S'">
-            <ng-container
-              *ngTemplateOutlet="
-                template_card_session;
-                context: {
-                  dataQuestion: itemQuestion
-                }
-              "
-            ></ng-container>
-          </div>
-        </ng-container>
-        <ng-container
-          #footer
-          *ngIf="itemQuestion?.active && itemQuestion.category == 'Q'"
-        >
-          <hr />
-          <div class="d-flex justify-content-end">
-            <span
-              (click)="copyCard('Q', itemQuestion)"
-              class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-            ></span>
-            <span
-              (click)="deleteQuestion(itemQuestion)"
-              class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-            ></span>
-            <span class="split"></span>
-            <codx-label
-              fiedName=""
-              default="Bắt buộc"
-              class="pd-10"
-            ></codx-label>
-            <codx-input
-              type="switch"
-              class="pd-t-10"
-              (valueChange)="valueChange($event, itemQuestion)"
-              [crrValue]="itemQuestion.mandatory"
-            ></codx-input>
-            <span
-              class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-            ></span>
-          </div>
-        </ng-container>
-      </form>
-    </div>
-  </div>
-</ng-template>
 <ng-template #templateQuestionMF let-itemQuestion>
   <div ngbDropdown container="body">
     <button
       type="button"
-      class="btn btn-outline-primary btn-sm dropdown"
+      class="btn btn-outline-primary btn-sm dropdown1"
       ngbDropdownToggle
     >
       <div class="d-flex" *ngIf="itemQuestion.answerType == 'T'">
@@ -239,7 +241,7 @@
         <span class="icon-text_snippet icon-24"></span>
         <codx-label fiedName="" default="Trả lời đoạn"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'L'">
+      <div class="d-flex" *ngIf="itemQuestion.answerType == 'O'">
         <span class="icon-radio_button_checked icon-24"></span>
         <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
       </div>
@@ -278,7 +280,7 @@
         </div>
       </button>
       <hr />
-      <button ngbDropdownItem (click)="clickQuestionMF('L', itemQuestion)">
+      <button ngbDropdownItem (click)="clickQuestionMF('O', itemQuestion)">
         <div class="d-flex">
           <span class="icon-radio_button_checked icon-24"></span>
           <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
@@ -326,7 +328,7 @@
 >
   <div>
     <span
-      *ngIf="itemQuestion.answerType == 'L'"
+      *ngIf="itemQuestion.answerType == 'O'"
       class="icon-radio_button_unchecked icon-radio"
     ></span>
     <span
@@ -354,11 +356,11 @@
   let-itemQuestion="dataQuestion"
   let-itemAnswer="dataAnswer"
 >
-  <div>
+  <div class="d-flex">
     <div
       class="e-input-group"
       *ngIf="
-        itemQuestion.answerType == 'L' ||
+        itemQuestion.answerType == 'O' ||
         itemQuestion.answerType == 'C' ||
         itemQuestion.answerType == 'L3'
       "
@@ -585,7 +587,7 @@
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteQuestion(itemQuestion)"
+            (click)="deleteCard(itemQuestion)"
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -718,7 +720,7 @@
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteQuestion(itemQuestion)"
+            (click)="deleteCard(itemQuestion)"
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -747,12 +749,12 @@
 </ng-template>
 <ng-template #template_card_session let-itemQuestion="dataQuestion">
   <div class="d-flex">
-    <div class="form-group question w-100">
+    <div class="form-group question w-100 position-relative">
       <div class="title-des d-flex">
         <ejs-inplaceeditor
           #inplaceCommentEditor
           mode="Inline"
-          emptyText="Không có tiêu đề"
+          emptyText="Mẫu không có tiêu đề"
           submitOnEnter="false"
           type="RTE"
           name="rte"
@@ -761,11 +763,57 @@
           [validationRules]="commentRule"
         >
         </ejs-inplaceeditor>
-        <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
-          <span
-            (click)="copyCard('T', itemQuestion)"
-            class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-          ></span>
+        <ng-container #questionMF>
+          <!-- <span
+            class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary"
+          ></span> -->
+          <div class="d-flex align-items-center pd-10 left-100">
+            <div ngbDropdown container="body">
+              <a
+                href="javascript:void(0)"
+                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                ngbDropdownToggle
+                id="dropdownMenuButton1"
+                aria-expanded="false"
+              >
+                <span class="icon-more_vert icon-22"></span>
+              </a>
+              <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                <li>
+                  <a
+                    (click)="copyCard('S', itemQuestion)"
+                    ngbDropdownItem
+                    href="javascript:void(0)"
+                  >
+                    <codx-label
+                      fiedName="copySession"
+                      default="Sao chép phần"
+                    ></codx-label>
+                  </a>
+                </li>
+                <li>
+                  <a ngbDropdownItem href="javascript:void(0)">
+                    <codx-label
+                      fiedName="moveSession"
+                      default="Di chuyển phần"
+                    ></codx-label>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    (click)="deleteCard(itemQuestion)"
+                    ngbDropdownItem
+                    href="javascript:void(0)"
+                  >
+                    <codx-label
+                      fiedName="deleteSession"
+                      default="Xóa phần"
+                    ></codx-label>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </ng-container>
       </div>
     </div>
@@ -775,7 +823,7 @@
       <ejs-inplaceeditor
         #inplaceCommentEditor
         mode="Inline"
-        emptyText="Mô tả (không bắt buộc)"
+        emptyText="Mô tả biểu mẫu"
         submitOnEnter="false"
         type="RTE"
         name="rte"
