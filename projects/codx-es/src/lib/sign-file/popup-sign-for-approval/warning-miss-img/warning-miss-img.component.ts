@@ -31,6 +31,9 @@ export class WarningMissImgComponent extends UIComponent {
 
   title;
   onInit(): void {
+    let msg = this.cache.message('ES019').subscribe((res) => {
+      console.log(msg);
+    });
     this.title = this.data.title;
   }
 
