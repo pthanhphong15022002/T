@@ -23,624 +23,640 @@
 </ng-template>
 
 <ng-template #emmployeeInfo>
-  <div class="form-group">
-    <div
-      id="avatar_id"
-      class="d-flex justify-content-between align-items-center"
-    >
-      <div id="eAvartar">
-        <codx-img
-          class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-          [imageType]="'circle'"
-          [width]="80"
-          [objectId]=""
-          [objectType]=""
-          data-kt-menu-trigger="click"
-          data-kt-menu-attach="parent"
-          data-kt-menu-placement="bottom-end"
-          data-kt-menu-flip="bottom"
-          [funcId]="funcID"
-          [isAllowEdit]="true"
-        >
-        </codx-img>
-      </div>
-      <div id="employeeID">
-        <codx-label fiedName="employeeID" default="Mã Nhân Viên"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="employeeID"
-          [disabled]="true"
-          type="text"
-          [crrValue]="hrID"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <!-- <div id="employeeName" class="employeeName">
-      <codx-label fiedName="employeeName" default="Họ và tên"> </codx-label>
-      <codx-input
-        class="form-control"
-        field="employeeName"
-        [disabled]="false"
-        type="text"
+  <ng-container *ngIf="form && form.formGroup">
+    <div>
+      <div
+        id="avatar_id"
+        class="d-flex justify-content-between form-group align-items-center form-group"
       >
-      </codx-input>
-    </div>
-
-    <div id="joinedOn-employeeTypeID" class="d-flex justify-content-between">
-      <div id="joinedOn">
-        <codx-label fiedName="JoinedOn" default="Ngày vào làm"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="joinedOn"
-          [disabled]="false"
-          format="d"
-          type="datetime"
-        >
-        </codx-input>
+        <div id="eAvartar">
+          <codx-img
+            class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+            [imageType]="'circle'"
+            [width]="80"
+            [objectId]=""
+            [objectType]=""
+            data-kt-menu-trigger="click"
+            data-kt-menu-attach="parent"
+            data-kt-menu-placement="bottom-end"
+            data-kt-menu-flip="bottom"
+            [funcId]="funcID"
+            [isAllowEdit]="true"
+          >
+          </codx-img>
+        </div>
+        <div id="employeeID">
+          <codx-label [formModel]="form.formModel" fiedName="employeeID">
+          </codx-label>
+          <codx-input
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            field="employeeID"
+          >
+          </codx-input>
+        </div>
       </div>
-      <div id="employeeTypeID">
-        <codx-label fiedName="employeeTypeID" default="Loại nhân viên">
+
+      <div id="employeeName" class="employeeName form-group">
+        <codx-label [formModel]="form.formModel" fiedName="employeeName">
         </codx-label>
         <codx-input
-          class="form-control"
-          field="employeeTypeID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="employeeName"
           [disabled]="false"
-          type="text"
         >
         </codx-input>
       </div>
-    </div>
 
-    <div id="email-phone" class="d-flex justify-content-between">
-      <div id="email">
-        <codx-label fiedName="email" default="Email"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="email"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-      <div id="phone">
-        <codx-label fiedName="phone" default="Phone"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="phone"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <div id="positionID-jobLevel" class="d-flex justify-content-between">
-      <div id="positionID">
-        <codx-label fiedName="positionID" default="Chức danh"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="positionID"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-      <div id="jobLevel">
-        <codx-label fiedName="jobLevel" default="Chức vụ"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="jobLevel"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <div id="orgUnitID">
-      <codx-label fiedName="orgUnitID" default="Bộ phận làm việc"> </codx-label>
-      <codx-input
-        class="form-control"
-        field="employeeName2"
-        [disabled]="false"
-        type="text"
+      <div
+        id="joinedOn-employeeTypeID"
+        class="d-flex justify-content-between form-group"
       >
-      </codx-input>
-    </div>
+        <div id="joinedOn">
+          <codx-label fiedName="joinedOn" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="joinedOn"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div id="employeeTypeID">
+          <codx-label fiedName="employeeTypeID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="employeeTypeID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
 
-    <div id="locationID">
-      <codx-label fiedName="locationID" default="Địa điểm làm việc">
-      </codx-label>
-      <codx-input
-        class="form-control"
-        field="locationID"
-        [disabled]="false"
-        type="text"
+      <div id="email-phone" class="d-flex justify-content-between form-group">
+        <div id="email">
+          <codx-label fiedName="email" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="email"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div id="phone">
+          <codx-label fiedName="phone" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="phone"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
+
+      <div
+        id="positionID-jobLevel"
+        class="d-flex justify-content-between form-group"
       >
-      </codx-input>
-    </div>
+        <div id="positionID">
+          <codx-label fiedName="positionID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="positionID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div id="jobLevel">
+          <codx-label fiedName="jobLevel" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="jobLevel"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
 
-    <div id="timeCardNo-userID" class="d-flex justify-content-between">
-      <div id="timeCardNo">
-        <codx-label fiedName="timeCardNo" default="Mã chấm công"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="timeCardNo"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-      <div id="userID">
-        <codx-label fiedName="userID" default="Tài khoản Portal"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="userID"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-    </div>
-
-    <div id="shiftCalendarID-aLObjectID" class="d-flex justify-content-between">
-      <div id="shiftID">
-        <codx-label fiedName="shiftID" default="Ca làm việc"> </codx-label>
-        <codx-input
-          class="form-control"
-          field="shiftID"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-      <div id="aLObjectID">
-        <codx-label fiedName="aLObjectID" default="Đối tượng tính phép năm">
+      <div id="orgUnitID">
+        <codx-label fiedName="orgUnitID" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          class="form-control"
-          field="aLObjectID"
-          [disabled]="false"
-          type="text"
+          field="orgUnitID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
+      </div>
+
+      <div id="locationID">
+        <codx-label fiedName="locationID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="locationID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+
+      <div
+        id="timeCardNo-userID"
+        class="d-flex justify-content-between form-group"
+      >
+        <div id="timeCardNo">
+          <codx-label fiedName="timeCardNo" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="timeCardNo"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div id="userID">
+          <codx-label fiedName="userID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="userID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
+
+      <div
+        id="shiftCalendarID-aLObjectID"
+        class="d-flex justify-content-between form-group"
+      >
+        <div id="shiftCalendarID">
+          <codx-label fiedName="shiftCalendarID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="shiftCalendarID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div id="aLObjectID">
+          <codx-label fiedName="aLObjectID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="aLObjectID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
+
+      <div
+        id="payrollGroupID-currencyID"
+        class="d-flex justify-content-between form-group"
+      >
+        <div id="payrollGroupID">
+          <codx-label fiedName="payrollGroupID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="payrollGroupID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+        <div id="currencyID">
+          <codx-label fiedName="currencyID" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="currencyID"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
       </div>
     </div>
-
-    <div id="payrollGroupID-currencyID" class="d-flex justify-content-between">
-      <div id="payrollGroupID">
-        <codx-label fiedName="payrollGroupID" default="Nhóm tính lương">
-        </codx-label>
-        <codx-input
-          class="form-control"
-          field="payrollGroupID"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-      <div id="currencyID">
-        <codx-label fiedName="currencyID" default="Nguyên tệ tính lương">
-        </codx-label>
-        <codx-input
-          class="form-control"
-          field="currencyID"
-          [disabled]="false"
-          type="text"
-        >
-        </codx-input>
-      </div>
-    </div> -->
-  </div>
+  </ng-container>
 </ng-template>
 
-<ng-teamplate #personalInfo>
-  <!-- <ng-container *ngIf="form && form.formGroup">
+<ng-template #personalInfo>
+  <ng-container *ngIf="form && form.formGroup">
     <div class="form-group">
-      <div id="gender-maritalStatus" class="d-flex justify-content-between">
+      <div
+        id="gender-maritalStatus"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="gender">
-          <codx-label fiedName="gender" default="Giới tính"> </codx-label>
+          <codx-label fiedName="gender" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="gender"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="maritalStatus">
-          <codx-label fiedName="maritalStatus" default="Tình trạng hôn nhân">
+          <codx-label fiedName="maritalStatus" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            class="form-control"
             field="maritalStatus"
-            [formModel]=""
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-      <div id="birthday_birthPlace" class="d-flex justify-content-between">
+      <div
+        id="birthday_birthPlace"
+        class="d-flex justify-content-between form-group"
+      >
         <div class="birthday">
-          <codx-label fiedName="birthday" default="Ngày sinh"> </codx-label>
+          <codx-label fiedName="birthday" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="birthday"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div class="birthPlace">
-          <codx-label fiedName="birthPlace" default="Nơi sinh"> </codx-label>
+          <codx-label fiedName="birthPlace" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="birthPlace"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-      <div id="domicile-nationality" class="d-flex justify-content-between">
+      <div
+        id="domicile-nationality"
+        class="d-flex justify-content-between form-group"
+      >
         <div class="domicile">
-          <codx-label fiedName="domicile" default="Nguyên quán"> </codx-label>
+          <codx-label fiedName="domicile" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="domicile"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div class="nationality">
-          <codx-label fiedName="nationality" default="Quốc tịch"> </codx-label>
+          <codx-label fiedName="nationality" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="nationality"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-      <div id="ethnicGroup-religion" class="d-flex justify-content-between">
+      <div
+        id="ethnicGroup-religion"
+        class="d-flex justify-content-between form-group"
+      >
         <div class="ethnicGroup">
-          <codx-label fiedName="ethnicGroup" default="Dân tộc"> </codx-label>
+          <codx-label fiedName="ethnicGroup" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="ethnicGroup"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div class="religion">
-          <codx-label fiedName="religion" default="Tôn giáo"> </codx-label>
+          <codx-label fiedName="religion" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="religion"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-      <div id="iDCardNo-issuedBy" class="d-flex justify-content-between">
+      <div
+        id="iDCardNo-issuedBy"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="iDCardNo">
-          <codx-label fiedName="iDCardNo" default="Số CMND/CCCD"> </codx-label>
+          <codx-label fiedName="iDCardNo" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="iDCardNo"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
-          <div id="issuedBy">
-            <codx-label fiedName="issuedBy" default="Nơi cấp"> </codx-label>
-            <codx-input
-              class="form-control"
-              field="issuedBy"
-              [disabled]="false"
-              format="d"
-              type="datetime"
-            >
-            </codx-input>
-          </div>
+        </div>
+        <div id="issuedBy">
+          <codx-label fiedName="issuedBy" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="issuedBy"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
         </div>
       </div>
-      <div id="issuedOn-iDExpiredOn" class="d-flex justify-content-between">
+      <div
+        id="issuedOn-iDExpiredOn"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="issuedOn">
-          <codx-label fiedName="issuedOn" default="Ngày cấp"> </codx-label>
+          <codx-label fiedName="issuedOn" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="issuedOn"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="iDExpiredOn">
-          <codx-label fiedName="iDExpiredOn" default="Ngày hết hạn">
+          <codx-label fiedName="iDExpiredOn" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            class="form-control"
             field="iDExpiredOn"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
       <div
         id="education-educationTrainForm"
-        class="d-flex justify-content-between"
+        class="d-flex justify-content-between form-group"
       >
         <div id="education">
-          <codx-label fiedName="education" default="Trình độ văn hóa">
+          <codx-label fiedName="education" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            class="form-control"
             field="education"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="educationTrainForm">
           <codx-label
             fiedName="educationTrainForm"
-            default="Hệ đào tạo phổ thông"
+            [formModel]="form.formModel"
           >
           </codx-label>
           <codx-input
-            class="form-control"
             field="educationTrainForm"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-      <div id="trainFieldID-trainLevel" class="d-flex justify-content-between">
+      <div
+        id="trainFieldID-trainLevel"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="trainFieldID">
-          <codx-label fiedName="trainFieldID" default="Chuyên ngành đào tạo">
+          <codx-label fiedName="trainFieldID" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            class="form-control"
             field="trainFieldID"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="trainLevel">
-          <codx-label fiedName="trainLevel" default="Trình độ"> </codx-label>
+          <codx-label fiedName="trainLevel" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="trainLevel"
-            [disabled]="false"
-            format="d"
-            type="datetime"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
       <div id="degreeName">
-        <codx-label fiedName="degreeName" default="Trình độ chuyên môn">
+        <codx-label fiedName="degreeName" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          class="form-control"
           field="degreeName"
-          [disabled]="false"
-          type="text"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
-
-      <h1>
-        <codx-label fiedName="" default="Liên hệ"> </codx-label>
-      </h1>
-      <div id="mobile-personalEmail" class="d-flex justify-content-between">
+      <div
+        id="mobile-personalEmail"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="mobile">
-          <codx-label fiedName="mobile" default="Điện thoại cá nhân">
+          <codx-label fiedName="mobile" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            class="form-control"
             field="mobile"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="personalEmail">
-          <codx-label fiedName="personalEmail" default="Email cá nhân">
+          <codx-label fiedName="personalEmail" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            class="form-control"
             field="personalEmail"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
       <div id="address">
-        <codx-label fiedName="address" default="Địa chỉ thường trú">
+        <codx-label fiedName="address" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          class="form-control"
           field="address"
-          [disabled]="false"
-          type="text"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
-      <div id="provinceID-districtID" class="d-flex justify-content-between">
+      <div
+        id="provinceID-districtID"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="provinceID">
-          <codx-label fiedName="provinceID" default="Tỉnh/thành"> </codx-label>
+          <codx-label fiedName="provinceID" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="provinceID"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="districtID">
-          <codx-label fiedName="districtID" default="Quận/huyện"> </codx-label>
+          <codx-label fiedName="districtID" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="districtID"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-      <div id="wardID-hamlet" class="d-flex justify-content-between">
+      <div id="wardID-hamlet" class="d-flex justify-content-between form-group">
         <div id="wardID">
-          <codx-label fiedName="wardID" default="Phường/Xã"> </codx-label>
+          <codx-label fiedName="wardID" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="wardID"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="hamlet">
-          <codx-label fiedName="hamlet" default="Thôn/Xóm"> </codx-label>
+          <codx-label fiedName="hamlet" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="hamlet"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-
       <div id="tAddress">
-        <codx-label fiedName="tAddress" default="Địa chỉ tạm trú"> </codx-label>
+        <codx-label fiedName="tAddress" [formModel]="form.formModel">
+        </codx-label>
         <codx-input
-          class="form-control"
           field="tAddress"
-          [disabled]="false"
-          type="text"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
-      <div id="tProvinceID-tDistrictID" class="d-flex justify-content-between">
+      <div
+        id="tProvinceID-tDistrictID"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="tProvinceID">
-          <codx-label fiedName="tProvinceID" default="Tỉnh/thành"> </codx-label>
+          <codx-label fiedName="tProvinceID" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="tProvinceID"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="tDistrictID">
-          <codx-label fiedName="tDistrictID" default="Quận/huyện"> </codx-label>
+          <codx-label fiedName="tDistrictID" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="tDistrictID"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-      <div id="tWardID-tHamlet" class="d-flex justify-content-between">
+      <div
+        id="tWardID-tHamlet"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="tWardID">
-          <codx-label fiedName="tWardID" default="Phường/Xã"> </codx-label>
+          <codx-label fiedName="tWardID" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="tWardID"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="tHamlet">
-          <codx-label fiedName="tHamlet" default="Thôn/Xóm"> </codx-label>
-          <codx-input
-            class="form-control"
-            field="tHamlet"
-            [disabled]="false"
-            type="text"
-          >
-          </codx-input>
+          <codx-label fiedName="tHamlet" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input field="tHamlet" v> </codx-input>
         </div>
       </div>
     </div>
-  </ng-container> -->
-</ng-teamplate>
+  </ng-container>
+</ng-template>
 
 <ng-template #legalInfo>
-  <!-- <ng-container *ngIf="form && form.formGroup">
+  <ng-container *ngIf="form && form.formGroup">
     <div class="form-group">
       <div
         id="sIRegisterNo-sIRegisterOn"
-        class="d-flex justify-content-between"
+        class="d-flex justify-content-between form-group"
       >
         <div id="sIRegisterNo">
-          <codx-label fiedName="sIRegisterNo" default="Số BHXH"> </codx-label>
+          <codx-label fiedName="sIRegisterNo" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="sIRegisterNo"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
         <div id="sIRegisterOn">
-          <codx-label fiedName="sIRegisterOn" default="Ngày cấp"> </codx-label>
+          <codx-label fiedName="sIRegisterOn" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
             field="sIRegisterOn"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
-      <div id="pITNumber-PITIssuedOn" class="d-flex justify-content-between">
+      <div
+        id="pITNumber-pITIssuedOn"
+        class="d-flex justify-content-between form-group"
+      >
         <div id="pITNumber">
-          <codx-label fiedName="pITNumber" default="Mã số thuế TNCA">
+          <codx-label fiedName="pITNumber" [formModel]="form.formModel">
           </codx-label>
           <codx-input
-            class="form-control"
             field="pITNumber"
-            [disabled]="false"
-            type="text"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
-        <div id="PITIssuedOn">
-          <codx-label fiedName="PITIssuedOn" default="Ngày cấp"> </codx-label>
+        <div id="pITIssuedOn">
+          <codx-label fiedName="pITIssuedOn" [formModel]="form.formModel">
+          </codx-label>
           <codx-input
-            class="form-control"
-            field="PITIssuedOn"
-            [disabled]="false"
-            type="text"
+            field="pITIssuedOn"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           >
           </codx-input>
         </div>
       </div>
     </div>
-  </ng-container> -->
+  </ng-container>
 </ng-template>
