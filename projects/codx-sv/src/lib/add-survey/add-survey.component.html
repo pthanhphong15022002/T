@@ -1,80 +1,33 @@
 <ng-container #itemTemplate>
   <div class="page-add-survey" style="overflow: none">
-    <!-- <div class="box">
-      <div class="card-survey">
-        <div
-          class="col-lg-8 control-section inplace-editor-control-section form-layout"
-          #formlayout
-          id="inplace-editor-control"
-        >
-          <div class="content-wrapper">
-            <form id="formId" class="form-horizontal example-box">
-              <div class="form-group">
-                <div class="title-des">
-                  <ejs-inplaceeditor
-                    #inplaceCommentEditor
-                    mode="Inline"
-                    emptyText="Enter your comment"
-                    submitOnEnter="false"
-                    type="RTE"
-                    name="rte"
-                    data-underline="false"
-                    [model]="titleEditorModel"
-                    [validationRules]="commentRule"
-                    [value]="data.text"
-                  >
-                  </ejs-inplaceeditor>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="title-des">
-                  <ejs-inplaceeditor
-                    #inplaceCommentEditor
-                    mode="Inline"
-                    emptyText="Mô tả biểu mẫu"
-                    submitOnEnter="false"
-                    type="RTE"
-                    name="rte"
-                    data-underline="false"
-                    [model]="descriptionEditorModel"
-                    [validationRules]="commentRule"
-                    [value]="data.description"
-                  >
-                  </ejs-inplaceeditor>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
       <div class="example-boundary d-flex w-100">
         <div class="d-flex flex-column">
           <div class="box">
-            <div *ngFor="let itemQuestion of questions">
+            <div *ngFor="let itemSession of questions; index as i">
               <div
-                *ngIf="
-                  itemQuestion.category == 'S' && !itemQuestion.parentID;
-                  else children
-                "
                 class="card-survey"
-                [id]="'card-survey-' + itemQuestion.seqNo"
-                (click)="clickToScroll(itemQuestion.seqNo)"
+                [id]="'card-survey-' + itemSession.seqNo"
+                (click)="clickToScroll(itemSession.seqNo)"
               >
-                <div class="count-session"></div>
+                <div class="count-session">
+                  <div class="d-flex num-session">
+                    <codx-label fiedName="AOS" default="Phần"></codx-label>
+                    <span>&nbsp;{{ i + 1 + " / " + amountOfSession }}</span>
+                  </div>
+                </div>
                 <div
                   class="col-lg-8 control-section inplace-editor-control-section form-layout"
                   id="inplace-editor-control"
                 >
-                  <div class="content-wrapper">
-                    <form id="formId" class="form-horizontal example-box">
+                  <div class="content-wrapper b-t">
+                    <form id="formSession" class="form-horizontal example-box">
                       <ng-container #body>
                         <ng-container
                           *ngTemplateOutlet="
                             template_card_session;
                             context: {
-                              dataQuestion: itemQuestion
+                              dataQuestion: itemSession
                             }
                           "
                         ></ng-container>
@@ -83,7 +36,7 @@
                   </div>
                 </div>
               </div>
-              <ng-template #children>
+              <div *ngFor="let itemQuestion of itemSession.children">
                 <div
                   class="card-survey"
                   [id]="'card-survey-' + itemQuestion.seqNo"
@@ -95,7 +48,7 @@
                     class="col-lg-8 control-section inplace-editor-control-section form-layout"
                     id="inplace-editor-control"
                   >
-                    <div class="content-wrapper">
+                    <div class="content-wrapper b-l">
                       <form id="formId" class="form-horizontal example-box">
                         <ng-container #header>
                           <div class="example-handle" cdkDragHandle>
@@ -142,7 +95,11 @@
                         <ng-container
                           #footer
                           *ngIf="
-                            itemQuestion?.active && itemQuestion.category == 'Q'
+                            itemQuestion?.active &&
+                            itemQuestion.category == 'Q' &&
+                            itemQuestion.category == 'R' &&
+                            itemQuestion.category == 'O2' &&
+                            itemQuestion.category == 'C2'
                           "
                         >
                           <hr />
@@ -176,10 +133,10 @@
                     </div>
                   </div>
                 </div>
-              </ng-template>
+              </div>
             </div>
           </div>
-          <ng-container #moreFC>
+          <ng-container #moreFC *ngIf="questions && questions.length > 0">
             <div class="moreFC rounded-4">
               <div class="icon-MF" (click)="clickMF('LTN01')">
                 <span class="icon-add_circle_outline icon-24"></span>
@@ -421,6 +378,150 @@
         [disabled]="true"
       />
     </div>
+    <div class="e-input-group" *ngIf="itemQuestion.answerType == 'R'">
+      <div class="d-flex">
+        <div ngbDropdown container="body">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm dropdown1"
+            ngbDropdownToggle
+          >
+            <div class="d-flex">
+              <span class="icon-short_text icon-24"></span>
+              <span>1</span>
+            </div>
+          </button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>0</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>1</span>
+              </div>
+            </button>
+          </div>
+        </div>
+        <codx-label fiedName="To" default="đến"></codx-label>
+        <div ngbDropdown container="body">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm dropdown1"
+            ngbDropdownToggle
+          >
+            <div class="d-flex">
+              <span class="icon-short_text icon-24"></span>
+              <span>2</span>
+            </div>
+          </button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>2</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>3</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>4</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>5</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>6</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>7</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>8</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>9</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span class="icon-short_text icon-24"></span>
+                <span>10</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex">
+        <span>{{ 1 }}</span>
+        <input
+          class="e-input"
+          type="text"
+          placeholder="Nhãn (không bắt buộc)"
+          (focus)="focusIn($event.target)"
+          (blur)="focusOut($event.target)"
+          [disabled]="true"
+        />
+      </div>
+      <div class="d-flex">
+        <span>{{ 5 }}</span>
+        <input
+          class="e-input"
+          type="text"
+          placeholder="Nhãn (không bắt buộc)"
+          (focus)="focusIn($event.target)"
+          (blur)="focusOut($event.target)"
+          [disabled]="true"
+        />
+      </div>
+    </div>
+    <div
+      class="e-input-group date-time"
+      *ngIf="itemQuestion.answerType == 'O2'"
+    >
+      <div class="row">
+        <div class="column" style="background-color: #aaa">
+          <codx-label fiedName="Row" default="Hàng"></codx-label>
+          <p>Some text..</p>
+        </div>
+        <div class="column" style="background-color: #bbb">
+          <codx-label fiedName="Column" default="Cột"></codx-label>
+          <p>Some text..</p>
+        </div>
+      </div>
+      <input
+        class="e-input"
+        type="text"
+        placeholder="Giờ"
+        (focus)="focusIn($event.target)"
+        (blur)="focusOut($event.target)"
+        [disabled]="true"
+      />
+    </div>
     <div
       class="has-action-menu"
       *ngIf="
@@ -494,7 +595,8 @@
               cdkDragHandle
               *ngIf="
                 itemQuestion.answerType != 'T2' &&
-                itemQuestion.answerType != 'T'
+                itemQuestion.answerType != 'T' &&
+                itemQuestion.answerType != 'R'
               "
             >
               <span class="icon-reorder"></span>
