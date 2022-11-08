@@ -26,6 +26,8 @@ import { PopupAddEmployeesPartyInfoComponent } from '../../employee-profile/popu
   styleUrls: ['./employee-profile.component.scss'],
 })
 export class EmployeeProfileComponent extends UIComponent {
+  @ViewChild('panelContent') panelContent: TemplateRef<any>;
+  minType = 'MinRange';
   constructor(
     private inject: Injector,
     private hrService: CodxHrService,
@@ -81,14 +83,10 @@ export class EmployeeProfileComponent extends UIComponent {
     // this.view.dataService.methodDelete = 'DeleteSignFileAsync';
     this.views = [
       {
-        id: '1',
-        type: ViewType.listdetail,
-        sameData: true,
+        type: ViewType.content,
         active: true,
         model: {
-          template: this.template,
-          panelRightRef: this.panelRight,
-          contextMenu: '',
+          panelRightRef: this.panelContent,
         },
       },
     ];
