@@ -65,6 +65,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
   tmpTitle = '';
+  autoNumDisable = false;
 
   constructor(
     private injector: Injector,
@@ -83,6 +84,20 @@ export class PopupAddStationeryComponent extends UIComponent {
 
   onInit(): void {
     this.initForm();
+    this.epService
+      .getAutoNumberDefault(this.formModel.funcID)
+      .subscribe((autoN) => {
+        if (autoN) {
+          if (!autoN?.stop) {
+            if (this.isAdd) {
+              //ktra tham so auto number stop =true == ko dùng auto number
+              this.autoNumDisable = true;
+            } else {
+              this.data.resourceID = null;
+            }
+          }
+        }
+      });
     this.columnsGrid = [
       // {
       //   field: 'noName',
