@@ -31,7 +31,7 @@ import { ActivatedRoute } from '@angular/router';
 export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   minType = 'MinRange';
-  user
+  user;
   constructor(
     private inject: Injector,
     private routeActive: ActivatedRoute,
@@ -46,7 +46,6 @@ export class EmployeeProfileComponent extends UIComponent {
   ) {
     super(inject);
     this.user = this.auth.get();
-    
   }
 
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -61,9 +60,9 @@ export class EmployeeProfileComponent extends UIComponent {
   entity = '';
   className = '';
   idField = 'recID';
-  functionID : string;
-  data: any = {}
-
+  functionID: string;
+  data: any = {};
+  formModel;
   itemDetail;
 
   vllTabs = [
@@ -88,7 +87,6 @@ export class EmployeeProfileComponent extends UIComponent {
   };
   onInit(): void {
     this.routeActive.queryParams.subscribe((params) => {
-
       if (params.employeeID || this.user.userID) {
         this.codxMwpService
           .LoadData(params.employeeID, this.user.userID, '0')
@@ -96,7 +94,7 @@ export class EmployeeProfileComponent extends UIComponent {
             if (response) {
               this.data = response.Employee;
               console.log(this.data);
-              
+
               // this.dataEmployee.employeeInfo = response.InfoPersonal;
               // this.codxMwpService.appendID(params.employeeID);
               // this.codxMwpService.empInfo.next(response);
@@ -105,41 +103,39 @@ export class EmployeeProfileComponent extends UIComponent {
           });
       }
     });
-    this.router.params.subscribe((param:any) => {
-      if(param)
-      {
+    this.router.params.subscribe((param: any) => {
+      if (param) {
         this.functionID = param['funcID'];
         this.getDataAsync(this.functionID);
         this.codxMwpService.empInfo.subscribe((res: string) => {
           if (res) {
-          console.log(res);
+            console.log(res);
           }
-          
-        })
+        });
       }
     });
   }
 
-  getDataAsync(funcID:string){
+  getDataAsync(funcID: string) {
     this.getDataFromFunction(funcID);
   }
-  getDataFromFunction(functionID:string){
-    if(functionID)
-    {
-      this.api.execSv
-      (
-        'SYS',
-        'ERM.Business.SYS',
-        'MoreFunctionsBusiness',
-        'GetMoreFunctionByHRAsync',
-        [this.functionID]
-      ).subscribe((res:any[]) => {
-        if(res && res.length > 0){
-          // this.moreFunc = res;
-          // this.defautFunc = res[0];
-          this.detectorRef.detectChanges();
-        }
-      });
+  getDataFromFunction(functionID: string) {
+    if (functionID) {
+      this.api
+        .execSv(
+          'SYS',
+          'ERM.Business.SYS',
+          'MoreFunctionsBusiness',
+          'GetMoreFunctionByHRAsync',
+          [this.functionID]
+        )
+        .subscribe((res: any[]) => {
+          if (res && res.length > 0) {
+            // this.moreFunc = res;
+            // this.defautFunc = res[0];
+            this.detectorRef.detectChanges();
+          }
+        });
     }
   }
 
@@ -154,6 +150,9 @@ export class EmployeeProfileComponent extends UIComponent {
         },
       },
     ];
+    this.formModel = this.view.formModel;
+    console.log('afterview init', this.formModel);
+
     this.df.detectChanges();
   }
 
@@ -178,7 +177,7 @@ export class EmployeeProfileComponent extends UIComponent {
     })
   }
 
-  addEmployeeSelfInfo(){
+  addEmployeeSelfInfo() {
     this.view.dataService.dataSelected = this.data;
     // this.view.dataService
     // .edit(this.data)
@@ -200,6 +199,5 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     })
     // })
-    
   }
 }
