@@ -407,6 +407,16 @@ export class CodxTMService {
     );
   }
 
+  sendMailAlert(recID: string, valueRuleNo: string, funcID: string){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'SendAlertMailAsync',
+      [recID, valueRuleNo, funcID]
+    );
+  }
+
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {

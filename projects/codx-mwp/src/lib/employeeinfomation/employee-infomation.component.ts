@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthService , CRUDService, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import { AfterViewInit, Component, Injector, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AuthService , CRUDService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditHobbyComponent } from './edit-hobby/edit-hobby.component';
@@ -155,6 +155,17 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
+  geteEmployeeInfor(employeeID:string){
+    if(employeeID){
+      this.api
+      .execSv("HR","ERM.Business.HR", "EmployeesBusiness", "GetByUserAsync", [employeeID])
+      .subscribe((res:any) => {
+        if(res){
+          
+        }
+      });
+    }
+  }
   getDataAsync(funcID:string){
     this.getDataFromFunction(funcID);
   }

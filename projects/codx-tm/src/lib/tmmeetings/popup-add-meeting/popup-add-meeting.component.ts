@@ -88,7 +88,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   dayOnWeeks = [];
   selectedDate: Date;
   listTime = [];
-  // gridViewSetup: any;
+  gridViewSetup: any;
   timeBool = false;
   isMeetingDate = true;
   isRoom = true;
@@ -116,16 +116,16 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.titleAction = dt.data[1];
     this.functionID = this.dialog.formModel.funcID;
 
-    // this.cache
-    //   .gridViewSetup(
-    //     this.dialog.formModel.formName,
-    //     this.dialog.formModel.gridViewName
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.gridViewSetup = res;
-    //     }
-    //   });
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
 
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
@@ -326,7 +326,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close([res.save]);
           //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
-          this.bookingRoomEP(res.save);
+          // this.bookingRoomEP(res.save);
+          this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID).subscribe();
         } else this.dialog.close();
       });
   }
@@ -337,6 +338,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.dialog.close();
+        this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID).subscribe();
       });
   }
   ///cần 1 đống mess Code
@@ -345,27 +347,25 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.meeting.meetingName == null ||
       this.meeting.meetingName.trim() == ''
     ) {
-      this.notiService.notify('Tên cuộc họp không được để trống !');
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['MeetingName']?.headerText + '"'
+      );
       return;
     }
 
-    // if (this.meeting.startDate <= new Date()) {
-    //   this.notiService.notifyCode('CO002');
-    //   return;
-    // }
-    // if (this.meeting.endDate <= new Date()) {
-    //   this.notiService.notifyCode('CO002');
-    //   return;
-    // }
     if (this.meeting.meetingType == '1') {
       if (!this.meeting.fromDate || !this.meeting.toDate) {
-        this.notiService.notify(
-          'Thời gian của công việc review không được để trống !'
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['FromDate']?.headerText + '"'
         );
         return;
       }
     }
-
+    //Chưa có mssg code
     if (this.isCheckStartEndTime(this.meeting.startDate)) {
       this.notiService.notify(' "Giờ" họp phải lớn hơn "Giờ" hiện tại !');
       return;
@@ -383,7 +383,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('CO003');
       return;
     }
-
+    //Chưa có mssg code
     if (this.isCheckFromToDate(this.meeting.toDate)) {
       this.notiService.notify(
         'Vui lòng chọn ngày kết thúc nhỏ hơn ngày hiện tại!'
@@ -1074,8 +1074,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     booking.approveStatus = '1';
     booking.resourceType = '1';
     //cần kiểm tra lại mapping cho 2 field này
-    booking.title= data.meetingName;// tiêu đề cuộc họp
-    booking.reasonID= 'R'//mã lí do cuộc họp
+    booking.title = data.meetingName; // tiêu đề cuộc họp
+    booking.reasonID = 'R'; //mã lí do cuộc họp
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
     data.resources.forEach((item) => {

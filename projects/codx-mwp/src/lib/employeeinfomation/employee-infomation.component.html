@@ -1,4 +1,8 @@
-<codx-views #view entityName="HR_Employees" idField="employeeID" [views]="views" [viewActiveType]="'16'"
+<codx-views 
+  #view 
+  entityName="HR_Employees" 
+  idField="employeeID" 
+  [views]="views" 
   [autoLoad]="false">
 </codx-views>
 
@@ -7,9 +11,14 @@
     <div class="pw-profile" style="background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
       ">
       <div class="d-flex align-items-center avatar">
-        <codx-img class="me-4 pic-emloyee" [funcId]="functionID" [width]="100" [objectId]="employeeInfo?.employeeID"
-          [objectType]="'HR_Employees'" [referType]="'avt'" [objectName]="employeeInfo?.employeeName"
-          [isAllowEdit]="true" [updateDirect]="true">
+        <codx-img class="me-4 pic-emloyee" 
+          [funcId]="functionID" [width]="100" 
+          [objectId]="employeeInfo?.employeeID"
+          [objectType]="'HR_Employees'" 
+          [referType]="'avt'" 
+          [objectName]="employeeInfo?.employeeName"
+          [isAllowEdit]="true" 
+          [updateDirect]="true">
         </codx-img>
         <div class="d-flex flex-column">
           <div class="fw-bold text-dark fs-5 mb-1">
