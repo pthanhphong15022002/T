@@ -331,10 +331,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       });
   }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0bc8da12b3bc09591fab0140356fa6aa137ddf6e
   onUpdate() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
@@ -1078,13 +1074,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     booking.approveStatus = '1';
     booking.resourceType = '1';
     //cần kiểm tra lại mapping cho 2 field này
-<<<<<<< HEAD
     booking.title= data.meetingName;// tiêu đề cuộc họp
     booking.reasonID= 'R'//mã lí do cuộc họp
-=======
-    booking.title = data.memo; // tiêu đề cuộc họp
-    booking.reasonID = 'R'; //mã lí do cuộc họp
->>>>>>> 0bc8da12b3bc09591fab0140356fa6aa137ddf6e
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
     data.resources.forEach((item) => {
