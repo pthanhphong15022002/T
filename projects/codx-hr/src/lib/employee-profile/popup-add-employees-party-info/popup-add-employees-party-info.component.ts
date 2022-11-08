@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import {} from '@angular/router';
 import{
+  DialogData,
+  DialogRef,
   FormModel
 } from 'codx-core';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
@@ -13,18 +15,28 @@ import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 export class PopupAddEmployeesPartyInfoComponent implements OnInit {
 
   formModel: FormModel
+  dataService
   dialog: any;
   form: any;
   headerText: ''
   private esService: CodxEsService
 
-  constructor() { }
+  constructor(
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
+  ) {
+    this.dialog = dialog;
+    this.formModel = dialog?.formModel;
+    this.headerText = data?.data?.headerText;
+
+
+   }
 
   ngOnInit(): void {
-    this.formModel = new FormModel();
-    this.formModel.entityName = 'HR_Employees'
-    this.formModel.formName = 'Employees'
-    this.formModel.gridViewName = 'grvEmployees'
+    // this.formModel = new FormModel();
+    // this.formModel.entityName = 'HR_Employees'
+    // this.formModel.formName = 'Employees'
+    // this.formModel.gridViewName = 'grvEmployees'
   }
 
 

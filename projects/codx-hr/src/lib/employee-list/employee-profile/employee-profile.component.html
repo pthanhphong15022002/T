@@ -224,10 +224,8 @@
                   ></span>
                 </a>
               </div>
-              <div class="d-flex">
-                <span
-                  class="icon-connection-point icon-14 text-gray-600 me-1"
-                ></span>
+              <div class="d-flex form-group">
+                <span class="icon-person icon-14 text-gray-600 me-1"></span>
                 <codx-label
                   class="text-gray-600 me-2"
                   fiedName="gender"
@@ -236,10 +234,8 @@
                 >
                 </codx-label>
                 <span class="text-dark fw-bold"> Lê Phạm Hoài Thương</span>
-                <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
-                    }}</span> -->
               </div>
-              <div class="row">
+              <div class="row form-group">
                 <div class="col">
                   <div class="d-flex">
                     <span
@@ -249,7 +245,7 @@
                       class="text-gray-600 me-2"
                       fiedName="gender"
                       formName="Employees"
-                      default="Giới tính:"
+                      default="Bí danh:"
                     >
                     </codx-label>
                     <span class="text-dark">
@@ -268,7 +264,7 @@
                       class="text-gray-600 me-2"
                       fiedName="birthday"
                       formName="Employees"
-                      default="Sinh ngày:"
+                      default="Giới tính:"
                     >
                     </codx-label>
                     <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
@@ -284,7 +280,7 @@
                       class="text-gray-600 me-2"
                       fiedName="birthPlaceName"
                       formName="Employees"
-                      default="Tại:"
+                      default="Tình trạng hôn nhân:"
                     >
                     </codx-label>
                     <!-- <span class="text-dark">employeeInfo?.birthPlaceName !=""? employeeInfo?.birthPlaceName :
@@ -293,7 +289,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row form-group">
                 <div class="col">
                   <div class="d-flex">
                     <span
@@ -303,7 +299,7 @@
                       class="text-gray-600 me-2"
                       fiedName="idCardNo"
                       formName="Employees"
-                      default="CMND/CCCD:"
+                      default="Ngày sinh:"
                     >
                     </codx-label>
 
@@ -321,16 +317,16 @@
                       class="text-gray-600 me-2"
                       fiedName="issuedOn"
                       formName="Employees"
-                      default="Cấp ngày:"
+                      default="Nơi sinh:"
                     >
                     </codx-label>
                     <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
 
-                    <span #issuedOn> employeeInfo.issuedOn</span>
+                    <span #issuedOn> Tiền Giang</span>
                   </div>
                 </div>
                 <div class="col">
-                  <div class="d-flex">
+                  <!-- <div class="d-flex">
                     <span
                       class="icon-connection-point icon-14 text-gray-600 me-1"
                     ></span>
@@ -341,14 +337,11 @@
                       default="Tại:"
                     >
                     </codx-label>
-
-                    <!-- <span class="text-dark me-15">employeeInfo?.issuedBy != "" ? employeeInfo?.issuedBy :
-                          null}}</span> -->
                     <span #issuedBy> employeeInfo.issuedBy</span>
-                  </div>
+                  </div> -->
                 </div>
               </div>
-              <div class="row">
+              <div class="row form-group">
                 <div class="col">
                   <div class="d-flex">
                     <span
@@ -358,11 +351,11 @@
                       class="text-gray-600 me-2"
                       fiedName="religion"
                       formName="Employees"
-                      default="Tôn giáo:"
+                      default="Quốc tịch:"
                     >
                     </codx-label>
                     <!-- <span class="text-dark">employeeInfo.religion}}</span> -->
-                    <span #religion> employeeInfo.religion</span>
+                    <span #religion> Việt Nam</span>
                   </div>
                 </div>
                 <div class="col">
@@ -378,7 +371,7 @@
                     >
                     </codx-label>
                     <!-- <span class="text-dark">employeeInfo.ethnicGroup}}</span> -->
-                    <span #ethnicGroup> employeeInfo.ethnicGroup</span>
+                    <span #ethnicGroup>Kinh</span>
                   </div>
                 </div>
                 <div class="col">
@@ -390,19 +383,69 @@
                       class="text-gray-600 me-2"
                       fiedName="nationality"
                       formName="Employees"
-                      default="Quốc tịch:"
+                      default="Tôn giáo:"
                     >
                     </codx-label>
                     <!-- <span class="text-dark">employeeInfo.nationality}}</span> -->
-                    <span #nationality> employeeInfo.nationality</span>
+                    <span #nationality>Không</span>
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-4">
+              <div class="row form-group">
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="education"
+                      formName="Employees"
+                      default="Số CMND/CCCD:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.education}}</span> -->
+                    <span #education>0123456789102</span>
+                  </div>
+                </div>
+                <div class="col">
                   <div class="d-flex">
                     <span
                       class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="ethnicGroup"
+                      formName="Employees"
+                      default="Ngày cấp:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.ethnicGroup}}</span> -->
+                    <span #ethnicGroup>15/07/2020</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="nationality"
+                      formName="Employees"
+                      default="Nơi cấp:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.nationality}}</span> -->
+                    <span #nationality>Tiền Giang</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-4">
+                  <div class="d-flex">
+                    <span
+                      class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
                     ></span>
                     <codx-label
                       class="text-gray-600 me-2"
@@ -412,7 +455,7 @@
                     >
                     </codx-label>
                     <!-- <span class="text-dark">employeeInfo.education}}</span> -->
-                    <span #education> employeeInfo.education</span>
+                    <span #education>12/12</span>
                   </div>
                 </div>
                 <div class="col-8">
@@ -425,79 +468,69 @@
                     >
                     </codx-label>
                     <!-- <span class="text-dark">employeeInfo.certificateName}}</span> -->
-                    <span #degree> employeeInfo.degree</span>
+                    <span #degree>Kỹ sư Công nghệ thông tin</span>
                   </div>
                 </div>
               </div>
-              <div class="text-dark fw-bold text-uppercase mt-6 mb-1">
-                <codx-label name="lblJuridical" default="Pháp lý"> </codx-label>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="pITNumber"
-                      formName="Employees"
-                      default="Thuế TNCN số:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.pitNumber}}</span> -->
-                    <span #pitNumber> employeeInfo.pitNumber</span>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="pitIssuedOn"
-                      formName="Employees"
-                      default="Cấp ngày:"
-                    >
-                    </codx-label>
-                    <span class="text-dark"> dd/MM/yyyy</span>
-                    <!-- <span #pitIssuedOn> employeeInfo.pitIssuedOn | formatvalue: view.formModel:"pitIssuedOn":pitIssuedOn | async
-                        }}</span> -->
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <!-- chưa có field -->
-                    <span class="text-gray-600 me-2">Tại:</span>
-                    <span class="text-dark">Cục thuế HCM</span>
-                  </div>
+              <div class="row form-group">
+                <div class="d-flex">
+                  <codx-label
+                    class="text-gray-600 me-2"
+                    fiedName="pITNumber"
+                    formName="Employees"
+                    default="Thường trú:"
+                  >
+                  </codx-label>
+                  <span #pitNumber> employeeInfo.pitNumber</span>
                 </div>
               </div>
-              <div class="row">
-                <div class="col">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="sIRegisterNo"
-                      formName="Employees"
-                      default="BHXH số:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.siRegisterNo}}</span> -->
-                    <span #siRegisterNo> employeeInfo.siRegisterNo</span>
-                  </div>
+              <div class="row form-group">
+                <div class="d-flex">
+                  <codx-label
+                    class="text-gray-600 me-2"
+                    fiedName="pITNumber"
+                    formName="Employees"
+                    default="Tạm trú:"
+                  >
+                  </codx-label>
+                  <span #pitNumber> employeeInfo.pitNumber</span>
                 </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="siRegisterOn"
-                      formName="Employees"
-                      default="Cấp ngày:"
-                    >
-                    </codx-label>
-                    <span class="text-dark"> dd/MM/yyyy</span>
-                    <!-- <span #siRegisterOn> employeeInfo.siRegisterOn | formatvalue: view.formModel:"siRegisterOn":siRegisterOn | async
-                        }}</span> -->
-                  </div>
+              </div>
+              <div class="row form-group">
+                <div class="d-flex">
+                  <span class="icon-mood icon-14 text-gray-600 me-1"></span>
+                  <codx-label
+                    class="text-gray-600 me-2"
+                    fiedName="pITNumber"
+                    formName="Employees"
+                    default="Thành tích:"
+                  >
+                  </codx-label>
+                  <span #pitNumber> employeeInfo.pitNumber</span>
                 </div>
-                <div class="col">
-                  <div class="d-flex"></div>
+              </div>
+              <div class="row form-group">
+                <div class="d-flex">
+                  <codx-label
+                    class="text-gray-600 me-2"
+                    fiedName="pITNumber"
+                    formName="Employees"
+                    default="Sở trường:"
+                  >
+                  </codx-label>
+                  <span #pitNumber>Chăm chỉ, có trách nhiệm trong học tập</span>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="d-flex">
+                  <codx-label
+                    class="text-gray-600 me-2"
+                    fiedName="pITNumber"
+                    formName="Employees"
+                    default="Sở thích:"
+                  >
+                  </codx-label>
+                  <span #pitNumber>Đóng đá, đọc sách, du lịch</span>
                 </div>
               </div>
             </div>
@@ -518,23 +551,9 @@
                   ></span>
                 </a>
               </div>
-              <div class="d-flex">
-                <span
-                  class="icon-connection-point icon-14 text-gray-600 me-1"
-                ></span>
-                <codx-label
-                  class="text-gray-600 me-2"
-                  fiedName="gender"
-                  formName="Employees"
-                  default="Họ tên:"
-                >
-                </codx-label>
-                <span class="text-dark fw-bold"> Lê Phạm Hoài Thương</span>
-                <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
-                    }}</span> -->
-              </div>
-              <div class="row">
-                <div class="col">
+
+              <div class="row form-group">
+                <div class="col-4">
                   <div class="d-flex">
                     <span
                       class="icon-connection-point icon-14 text-gray-600 me-1"
@@ -553,7 +572,7 @@
                         }}</span> -->
                   </div>
                 </div>
-                <div class="col">
+                <div class="col-8">
                   <div class="d-flex">
                     <span
                       class="icon-connection-point icon-14 text-gray-600 me-1"
@@ -569,26 +588,9 @@
                     <span #birthday> employeeInfo.birthday </span>
                   </div>
                 </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="birthPlaceName"
-                      formName="Employees"
-                      default="Tại:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo?.birthPlaceName !=""? employeeInfo?.birthPlaceName :
-                          null}}</span> -->
-                    <span #birthPlaceName> employeeInfo.birthPlaceName </span>
-                  </div>
-                </div>
               </div>
-              <div class="row">
-                <div class="col">
+              <div class="row form-group">
+                <div class="col-4">
                   <div class="d-flex">
                     <span
                       class="icon-connection-point icon-14 text-gray-600 me-1"
@@ -606,7 +608,7 @@
                     <span #idCardNo> employeeInfo.idCardNo</span>
                   </div>
                 </div>
-                <div class="col">
+                <div class="col-8">
                   <div class="d-flex">
                     <span
                       class="icon-connection-point icon-14 text-gray-600 me-1"
@@ -622,176 +624,6 @@
 
                     <span #issuedOn> employeeInfo.issuedOn</span>
                   </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="issuedBy"
-                      formName="Employees"
-                      default="Tại:"
-                    >
-                    </codx-label>
-
-                    <!-- <span class="text-dark me-15">employeeInfo?.issuedBy != "" ? employeeInfo?.issuedBy :
-                          null}}</span> -->
-                    <span #issuedBy> employeeInfo.issuedBy</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="religion"
-                      formName="Employees"
-                      default="Tôn giáo:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.religion}}</span> -->
-                    <span #religion> employeeInfo.religion</span>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="ethnicGroup"
-                      formName="Employees"
-                      default="Dân tộc:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.ethnicGroup}}</span> -->
-                    <span #ethnicGroup> employeeInfo.ethnicGroup</span>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="nationality"
-                      formName="Employees"
-                      default="Quốc tịch:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.nationality}}</span> -->
-                    <span #nationality> employeeInfo.nationality</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="education"
-                      formName="Employees"
-                      default="Trình độ văn hóa:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.education}}</span> -->
-                    <span #education> employeeInfo.education</span>
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="degree"
-                      formName="Employees"
-                      default="Trình độ chuyên môn:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.certificateName}}</span> -->
-                    <span #degree> employeeInfo.degree</span>
-                  </div>
-                </div>
-              </div>
-              <div class="text-dark fw-bold text-uppercase mt-6 mb-1">
-                <codx-label name="lblJuridical" default="Pháp lý"> </codx-label>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="pITNumber"
-                      formName="Employees"
-                      default="Thuế TNCN số:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.pitNumber}}</span> -->
-                    <span #pitNumber> employeeInfo.pitNumber</span>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="pitIssuedOn"
-                      formName="Employees"
-                      default="Cấp ngày:"
-                    >
-                    </codx-label>
-                    <span class="text-dark"> dd/MM/yyyy</span>
-                    <!-- <span #pitIssuedOn> employeeInfo.pitIssuedOn | formatvalue: view.formModel:"pitIssuedOn":pitIssuedOn | async
-                        }}</span> -->
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <!-- chưa có field -->
-                    <span class="text-gray-600 me-2">Tại:</span>
-                    <span class="text-dark">Cục thuế HCM</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="sIRegisterNo"
-                      formName="Employees"
-                      default="BHXH số:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.siRegisterNo}}</span> -->
-                    <span #siRegisterNo> employeeInfo.siRegisterNo</span>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="siRegisterOn"
-                      formName="Employees"
-                      default="Cấp ngày:"
-                    >
-                    </codx-label>
-                    <span class="text-dark"> dd/MM/yyyy</span>
-                    <!-- <span #siRegisterOn> employeeInfo.siRegisterOn | formatvalue: view.formModel:"siRegisterOn":siRegisterOn | async
-                        }}</span> -->
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="d-flex"></div>
                 </div>
               </div>
             </div>
@@ -811,17 +643,22 @@
               </div>
               <div class="d-flex flex-column py-3 px-4 process-r">
                 <div class="d-flex flex-column">
-                  <codx-temp-full
-                    [imageId]="'ADMIN'"
-                    imageObjType="AD_Users"
-                    [imageWidth]="40"
-                    [formModel]="view.formModel"
-                    [title]="'experences.companyName'"
-                    [dataItem]="'experences'"
-                    [desc]="'relationship.relationType' + ' | ' + 'Năm sinh: '"
-                    [typeMF]="'hover'"
+                  <div
+                    class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
                   >
-                  </codx-temp-full>
+                    <codx-temp-full
+                      cardCss="card-template px-2 pt-4 pb-2"
+                      [imageId]="'ADMIN'"
+                      imageObjType="AD_Users"
+                      [imageWidth]="40"
+                      [formModel]="view.formModel"
+                      [title]="'experences.companyName'"
+                      [dataItem]="'experences'"
+                      [desc]="'relationType' + ' | ' + 'Năm sinh: '"
+                      [typeMF]="'hover'"
+                    >
+                    </codx-temp-full>
+                  </div>
                 </div>
               </div>
             </div>

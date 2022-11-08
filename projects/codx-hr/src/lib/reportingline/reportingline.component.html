@@ -26,18 +26,26 @@
                         (data.departmentID ? ' | ' + data.departmentID: '') +
                         (data.divisionID ? ' | ' + data.divisionID: '')}}
                     </div>
-                    <div class="me-5 d-flex align-items-center mt-1">
-                        <codx-label class="me-1" name="lblReportTo" formName="Positions" default="Báo cáo trực tiếp:">
-                        </codx-label>
-                        <span #reportTo>{{ data.reportTo | formatvalue: view.formModel:"reportTo":reportTo | async
-                            }}</span>
+                    <div class="me-5 float-left mt-1">
+                        <div class="me-2">
+                            <codx-label name="lblReportTo" formName="Positions" default="Báo cáo trực tiếp:">
+                            </codx-label>
+                        </div>
+                        <div>
+                            <span #reportTo>{{ data.reportTo | formatvalue: view.formModel:"reportTo":reportTo | async
+                                }}</span>
+                        </div>
                     </div>
-                    <div class="me-5 d-flex align-items-center mt-1">
-                        <codx-label class="me-1" name="lblReportTo2" formName="Positions" default="Báo cáo gián tiếp:">
-                        </codx-label>
-                        <span #reportTo2>
-                            {{ data.reportTo2 | formatvalue: view.formModel:"reportTo2":reportTo2 | async}}
-                        </span>
+                    <div class="me-5 float-left mt-1">
+                        <div class="me-2">
+                            <codx-label name="lblReportTo2" formName="Positions" default="Báo cáo gián tiếp:">
+                            </codx-label>
+                        </div>
+                        <div class="me-2">
+                            <span #reportTo2>
+                                {{ data.reportTo2 | formatvalue: view.formModel:"reportTo2":reportTo2 | async}}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
