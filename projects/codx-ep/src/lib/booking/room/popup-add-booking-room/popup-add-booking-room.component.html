@@ -29,9 +29,9 @@
         <div class="row">
           <div
             *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
-            class="d-flex flex-row flex-wrap"
+            class="d-flex flex-row justify-content-between"
           >
-            <div class="d-flex justify-content-start">
+            <div class="d-flex flex-wrap">
               <div
                 class="d-flex justify-content-start"
                 *ngFor="let item of tmplstDevice"
@@ -242,7 +242,7 @@
             </div>
           </div>
         </div>
-        <ng-container *ngIf="isPopupOptionalUserCbb">
+        <!-- <ng-container *ngIf="isPopupOptionalUserCbb">
           <codx-combobox-popup
             [comboboxName]="'Users'"
             [field]="'cbbUser'"
@@ -254,7 +254,7 @@
             (clickSave)="valueCbxUserOptionalChange($event)"
           >
           </codx-combobox-popup>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container *ngIf="isPopupUserCbb">
           <codx-combobox-popup
@@ -480,7 +480,9 @@
             class="position-absolute"
             inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
             style="bottom: -5px;right:-4px"
-          ></span>
+          >
+        
+        </span>
 
           <!-- <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span> -->
         </div>
@@ -693,11 +695,12 @@
     <ng-container *ngIf="form && form.formGroup">
       <div class="d-flex justify-content-between">
         <a
+          (click)="popupUploadFile($event)"
           class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
         >
           <span
             class="icon-cloud_upload btn-text-primary me-2"
-            (click)="popupUploadFile($event)"
+            
           ></span>
           <codx-label
             fiedName="lblUploadFile"
@@ -808,7 +811,7 @@
 </codx-layout-add>
 
 <ng-template #popoverSelectRoles>
-  <div class="d-flex flex-column mb-1 w-150px">
+  <div class="d-flex flex-column mb-1 w-150px" >
     <ng-container *ngFor="let item of listRoles">
       <div
         class="d-flex align-items-center btn btn-sm btn-white"
