@@ -990,48 +990,50 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
   }
 
-  cbbDataOptionalUser: any;
-  valueCbxUserOptionalChange(event) {
-    if (event == null) {
-      this.isPopupOptionalUserCbb = false;
-      return;
-    }
-    this.cbbDataUser = event;
-    if (event?.dataSelected) {
-      this.lstUserOptional = [];
-      this.attendeesList = [];
-      event.dataSelected.forEach((people) => {
-        let tempAttender = new BookingAttendees();
-        tempAttender.userID = people.UserID;
-        tempAttender.userName = people.UserName;
-        tempAttender.status = '1';
-        tempAttender.roleType = '3';
-        tempAttender.optional = true;
-        this.listRoles.forEach((element) => {
-          if (element.value == tempAttender.roleType) {
-            tempAttender.icon = element.icon;
-            tempAttender.roleName = element.text;
-          }
-        });
-        this.lstUserOptional.push(tempAttender);
-      });
-      for (let i = 0; i < this.lstUserOptional.length; ++i) {
-        for (let j = 0; j < this.lstUser.length; ++j) {
-          if (this.lstUserOptional[i].userID == this.lstUser[j].userID) {
-            this.lstUser.splice(j, 1);
-          }
-        }
-      }
-      this.UpdateAttendeesList();
-      this.changeDetectorRef.detectChanges();
-      this.isPopupOptionalUserCbb = false;
-    }
-  }
+  //cbbDataOptionalUser: any;
+  // valueCbxUserOptionalChange(event) {
+  //   if (event == null) {
+  //     this.isPopupOptionalUserCbb = false;
+  //     return;
+  //   }
+  //   this.cbbDataUser = event;
+  //   if (event?.dataSelected) {
+  //     this.lstUserOptional = [];
+  //     this.attendeesList = [];
+  //     event.dataSelected.forEach((people) => {
+  //       let tempAttender = new BookingAttendees();
+  //       tempAttender.userID = people.UserID;
+  //       tempAttender.userName = people.UserName;
+  //       tempAttender.status = '1';
+  //       tempAttender.roleType = '3';
+  //       tempAttender.optional = true;
+  //       this.listRoles.forEach((element) => {
+  //         if (element.value == tempAttender.roleType) {
+  //           tempAttender.icon = element.icon;
+  //           tempAttender.roleName = element.text;
+  //         }
+  //       });
+  //       this.lstUserOptional.push(tempAttender);
+  //     });
+  //     for (let i = 0; i < this.lstUserOptional.length; ++i) {
+  //       for (let j = 0; j < this.lstUser.length; ++j) {
+  //         if (this.lstUserOptional[i].userID == this.lstUser[j].userID) {
+  //           this.lstUser.splice(j, 1);
+  //         }
+  //       }
+  //     }
+  //     this.UpdateAttendeesList();
+  //     this.changeDetectorRef.detectChanges();
+  //     this.isPopupOptionalUserCbb = false;
+  //   }
+  // }
 
-  cbbDataUser: any;
+  cbbDataUser=[];
   valueCbxUserChange(event) {
+    
     if (event == null) {
       this.isPopupUserCbb = false;
+      this.cbbDataUser= event.data;
       return;
     }
     this.cbbDataUser = event;
@@ -1142,6 +1144,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
   }
+  
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
