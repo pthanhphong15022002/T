@@ -74,7 +74,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.initForm();    
     this.codxEpService.getAutoNumberDefault(this.formModel.funcID).subscribe(autoN=>{
       if(autoN){
-        if(!autoN?.stop){
+        if(!autoN?.stop && this.isAdd){
           //ktra tham so auto number stop =true == ko dùng auto number
           this.api.execSv("SYS", "ERM.Business.AD", "AutoNumbersBusiness", "GenAutoNumberAsync", [this.formModel.funcID]).subscribe(autoNumber=>{
             if(autoNumber)
