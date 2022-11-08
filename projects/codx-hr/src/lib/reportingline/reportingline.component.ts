@@ -261,4 +261,14 @@ export class ReportinglineComponent extends UIComponent {
       );
     }
   }
+  searchUser($event){
+    
+  }
+  isShow
+  showEmployees(){
+
+  }
+  closeEmployee(){
+
+  }
 }
