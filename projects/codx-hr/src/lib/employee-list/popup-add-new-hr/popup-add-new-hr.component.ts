@@ -4,9 +4,25 @@ import {
   Injector,
   OnInit,
   Optional,
+  ViewChild,
 } from '@angular/core';
-import { UIComponent, DialogData, DialogRef, FormModel } from 'codx-core';
+import {
+  AbstractControl,
+  FormControl,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import {
+  UIComponent,
+  DialogData,
+  DialogRef,
+  FormModel,
+  LayoutAddComponent,
+} from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
+import { HR_Employees_Extend } from '../../model/HR_Employees.model';
 
 @Component({
   selector: 'lib-popup-add-new-hr',
@@ -33,6 +49,8 @@ export class PopupAddNewHRComponent extends UIComponent {
   formModel: FormModel;
   funcID;
 
+  @ViewChild('form', { static: true }) form: LayoutAddComponent;
+
   data;
   title = '';
   hrID;
@@ -54,6 +72,17 @@ export class PopupAddNewHRComponent extends UIComponent {
     },
   ];
 
+  validateFields = [
+    'birthday',
+    'issuedOn',
+    'iDExpiredOn',
+    'degreeName',
+    'trainFieldID',
+    'trainLevel',
+    '',
+    '',
+  ];
+
   onInit(): void {
     //nho xoa
     this.hrID = 'Dang test';
@@ -66,7 +95,10 @@ export class PopupAddNewHRComponent extends UIComponent {
         this.formModel = res;
         console.log('form model', this.formModel);
       });
+
+    //add validator (BA request)
   }
+
   buttonClick(e: any) {
     console.log(e);
   }
@@ -79,6 +111,29 @@ export class PopupAddNewHRComponent extends UIComponent {
     console.log('changeID not done yet');
   }
   OnSaveForm() {
-    console.log('save new hr', this.formModel.currentData);
+    if (this.form.formGroup.valid) {
+      let tmpHR: HR_Employees_Extend = this.form.formGroup.value;
+      this.addEmployeeAsync(tmpHR);
+    } else {
+      console.log('form group khong hop le');
+    }
+  }
+
+  addEmployeeAsync(employee: any) {
+    if (employee) {
+      this.api
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'AddEmployeeAsync',
+          [employee, this.funcID]
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.dialogRef.close(res);
+          }
+        });
+    }
   }
 }

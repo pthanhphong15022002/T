@@ -15,8 +15,10 @@ import {
 })
 export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
   formModel: FormModel;
+  grvSetup
   dialog: DialogRef;
-
+  data;
+  isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
@@ -26,17 +28,34 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
-    this.formModel = new FormModel();
-    this.formModel.entityName = 'HR_Employees';
-    this.formModel.formName = 'Employees';
-    this.formModel.gridViewName = 'grvEmployees';
-    this.formModel.funcID = 'HRT03a1';
-    this.formModel.entityPer = 'HR_Employees';
+    this.formModel = dialog?.formModel;
+    if(this.formModel){
+      this.isAfterRender = true
+    }
+    this.data = dialog?.dataService?.dataSelected
+    // this.formModel.entityName = 'HR_Employees';
+    // this.formModel.formName = 'Employees';
+    // this.formModel.gridViewName = 'grvEmployees';
+    // this.formModel.funcID = 'HRT03a1';
+    // this.formModel.entityPer = 'HR_Employees';
   }
 
-  onInit(): void {}
+  onInit(): void {
+    console.log('form', this.form);
+    
+    this.cache
+      .gridViewSetup(
+        this.dialog?.formModel?.formName,
+        this.dialog?.formModel?.gridViewName
+      )
+      .subscribe((res) => {
+        this.grvSetup = res;
+        console.log('form model', this.formModel);
+      });
+  }
 
   ngAfterViewInit() {
     console.log('check form', this.form);
+    console.log('form', this.form);
   }
 }
