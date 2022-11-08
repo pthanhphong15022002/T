@@ -24,6 +24,7 @@ export class PopupAddNewHRComponent extends UIComponent {
     super(inject);
     this.dialogRef = dialogRef;
     console.log(this.dialogRef);
+    this.data = this.dialogRef.dataService.dataSelected;
 
     // this.formModel = ;
     this.funcID = this.dialogRef.formModel.funcID;
@@ -41,16 +42,16 @@ export class PopupAddNewHRComponent extends UIComponent {
       text: 'Thông tin nhân viên',
       name: 'emmployeeInfo',
     },
-    // {
-    //   icon: 'icon-receipt_long',
-    //   text: 'Thông tin cá nhân',
-    //   name: 'personalInfo',
-    // },
-    // {
-    //   icon: 'icon-business_center',
-    //   text: 'Pháp lý',
-    //   name: 'legalInfo',
-    // },
+    {
+      icon: 'icon-receipt_long',
+      text: 'Thông tin cá nhân',
+      name: 'personalInfo',
+    },
+    {
+      icon: 'icon-business_center',
+      text: 'Pháp lý',
+      name: 'legalInfo',
+    },
   ];
 
   onInit(): void {
@@ -78,6 +79,6 @@ export class PopupAddNewHRComponent extends UIComponent {
     console.log('changeID not done yet');
   }
   OnSaveForm() {
-    console.log('save just add hr not done yet');
+    console.log('save new hr', this.formModel.currentData);
   }
 }
