@@ -6,6 +6,7 @@
     [formModel]="formModel"
     [dialog]="dialog"
     [data]="data"
+    *ngIf="isAfterRender"
   >
     <ng-template #form1body>
       <div class="form-group">
@@ -166,7 +167,7 @@
             <codx-input
               [Group]="form.formGroup"
               [formModel]="form.formModel"
-              field="iDCardNo"
+              field="idCardNo"
             ></codx-input>
           </div>
         </div>
@@ -196,7 +197,7 @@
             <codx-input
               [Group]="form.formGroup"
               [formModel]="form.formModel"
-              field="iDExpiredOn"
+              field="idExpiredOn"
             ></codx-input>
           </div>
         </div>
