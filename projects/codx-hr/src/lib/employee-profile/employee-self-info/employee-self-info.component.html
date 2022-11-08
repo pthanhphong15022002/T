@@ -5,7 +5,7 @@
     [footer]="footer"
     [formModel]="formModel"
     [dialog]="dialog"
-    [data]="{}"
+    [data]="data"
   >
     <ng-template #form1body>
       <div class="form-group">
@@ -21,14 +21,23 @@
           fiedName="EmployeeName"
           [formModel]="formModel"
         ></codx-label>
-        <codx-input type="text" field="employeeName"></codx-input>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="employeeName"
+        ></codx-input>
       </div>
       <div class="form-group">
         <codx-label
           fiedName="EmployeeName2"
           [formModel]="formModel"
         ></codx-label>
-        <codx-input type="text" field="employeeName2"></codx-input>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="employeeName2"
+        >
+        </codx-input>
       </div>
       <div class="form-group row">
         <div class="col-6">
@@ -48,8 +57,8 @@
           ></codx-label>
           <div>
             <codx-input
-              type="combobox"
-              refType=""
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="maritalStatus"
             ></codx-input>
           </div>
@@ -57,12 +66,13 @@
       </div>
 
       <div class="form-group row">
+
         <div class="col-6">
           <codx-label fiedName="Birthday" [formModel]="formModel"></codx-label>
           <div>
             <codx-input
-              type="datetime"
-              format="d"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="birthday"
             ></codx-input>
           </div>
@@ -74,8 +84,8 @@
           ></codx-label>
           <div>
             <codx-input
-              type="combobox"
-              refType="Provinces"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="birthPlace"
             ></codx-input>
           </div>
@@ -86,9 +96,11 @@
         <div class="col-6">
           <codx-label fiedName="Domicile" [formModel]="formModel"></codx-label>
           <div>
+            <!-- type="combobox"
+            refType="Provinces" -->
             <codx-input
-              type="combobox"
-              refType="Provinces"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="domicile"
             ></codx-input>
           </div>
@@ -99,9 +111,11 @@
             [formModel]="formModel"
           ></codx-label>
           <div>
+            <!-- type="combobox"
+            refType="Provinces" -->
             <codx-input
-              type="combobox"
-              refType="Provinces"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="nationality"
             ></codx-input>
           </div>
@@ -115,9 +129,11 @@
             [formModel]="formModel"
           ></codx-label>
           <div>
+            <!-- type="combobox"
+            refType="EthnicGroups" -->
             <codx-input
-              type="combobox"
-              refType="EthnicGroups"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="ethnicGroup"
             ></codx-input>
           </div>
@@ -125,9 +141,11 @@
         <div class="col-6">
           <codx-label fiedName="Religion" [formModel]="formModel"></codx-label>
           <div>
+            <!-- type="combobox"
+            refType="EthnicGroups" -->
             <codx-input
-              type="combobox"
-              refType="EthnicGroups"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="religion"
             ></codx-input>
           </div>
@@ -143,19 +161,23 @@
         <div class="col-6">
           <codx-label fiedName="IDCardNo" [formModel]="formModel"></codx-label>
           <div>
+            <!-- type="combobox"
+            refType="EthnicGroups" -->
             <codx-input
-              type="combobox"
-              refType="EthnicGroups"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="iDCardNo"
             ></codx-input>
           </div>
         </div>
         <div class="col-6">
           <codx-label fiedName="IssuedOn" [formModel]="formModel"></codx-label>
+          <!-- type="datetime"
+          format="d" -->
           <div>
             <codx-input
-              type="datetime"
-              format="d"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="issuedOn"
             ></codx-input>
           </div>
@@ -169,9 +191,11 @@
             [formModel]="formModel"
           ></codx-label>
           <div>
+            <!-- type="datetime"
+            format="d" -->
             <codx-input
-              type="datetime"
-              format="d"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="iDExpiredOn"
             ></codx-input>
           </div>
@@ -179,12 +203,316 @@
         <div class="col-6">
           <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
           <div>
+            <!-- type="combobox"
+            refType="EthnicGroups" -->
             <codx-input
-              type="combobox"
-              refType="EthnicGroups"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
               field="issuedBy"
             ></codx-input>
           </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <codx-label
+          fiedName="Distinguishing"
+          [formModel]="formModel"
+        ></codx-label>
+        <div>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="distinguishing"
+          ></codx-input>
+        </div>
+      </div>
+
+      <codx-label
+        [name]="'lblTitleAddPartyInfo'"
+        default="Học vấn"
+        [formModel]="formModel"
+      >
+      </codx-label>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label fiedName="Education" [formModel]="formModel">
+          </codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="education"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="EducationTrainForm"
+            [formModel]="formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="educationTrainForm"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="TrainFieldID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="trainFieldID"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="TrainLevel"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="trainLevel"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <codx-label
+          fiedName="DegreeName"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="degreeName"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row">
+        <codx-label
+          fiedName="Achievement"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="achievement"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row">
+        <codx-label fiedName="Forte" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="forte"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row">
+        <codx-label fiedName="Hobby" [formModel]="form.formModel"></codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="hobby"
+        ></codx-input>
+      </div>
+    </ng-template>
+
+    <ng-template #form2body>
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="Email"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="email"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="Phone"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="phone"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="PersonalEmail"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="personalEmail"
+          ></codx-input>
+        </div>
+
+        <div class="col-6">
+          <codx-label
+            fiedName="Mobile"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="mobile"
+          ></codx-input>
+        </div>
+      </div>
+
+      <codx-label
+        [name]="'lblTitleAddPartyInfo'"
+        default="Thường trú"
+        [formModel]="formModel"
+      >
+      </codx-label>
+
+      <div class="form-group row">
+        <codx-label
+          fiedName="Address"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="address"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="ProvinceID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="provinceID"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="DistrictID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="districtID"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="WardID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="wardID"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="Hamlet"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="hamlet"
+          ></codx-input>
+        </div>
+      </div>
+
+      <codx-label
+        [name]="'lblTitleAddPartyInfo'"
+        default="Tạm trú"
+        [formModel]="formModel"
+      >
+      </codx-label>
+
+      <div class="form-group row">
+        <codx-label
+          fiedName="TAddress"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          field="tAddress"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="TProvinceID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="tProvinceID"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="TDistrictID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="tDistrictID"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="TWardID"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="tWardID"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="THamlet"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            field="tHamlet"
+          ></codx-input>
         </div>
       </div>
     </ng-template>

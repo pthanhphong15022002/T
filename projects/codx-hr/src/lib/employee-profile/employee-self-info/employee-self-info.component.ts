@@ -16,7 +16,7 @@ import {
 export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog: DialogRef;
-
+  data;
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
@@ -34,7 +34,17 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
     this.formModel.entityPer = 'HR_Employees';
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        this.formModel = res;
+        console.log('form model', this.formModel);
+      });
+  }
 
   ngAfterViewInit() {
     console.log('check form', this.form);
