@@ -609,6 +609,7 @@ export class HomeComponent extends UIComponent {
         }
         this.dmSV.folderName = item.folderName;
         this.dmSV.parentFolderId = item.parentId;
+        this.dmSV.parentFolder.next(item);
         this.dmSV.level = item.level;
         this.dmSV.getRight(item);
 
@@ -1143,23 +1144,23 @@ export class HomeComponent extends UIComponent {
       switch (this.view.funcID) {
         case 'DMT05':
           breadcumb.push(this.dmSV.titleShareBy);
+          this.folderService.options.funcID = "DMT05";
           break;
         case 'DMT06':
-          {
-            this.dmSV.dmFavoriteID = "2";
-            breadcumb.push(this.dmSV.titleRequestShare);
-            this.folderService.options.funcID = "DMT06";
-            this.folderService.options.favoriteID = "2";
-            this.getDataFolder("");
-            this.fileService.options.funcID = "DMT06";
-            this.fileService.options.favoriteID = "2";
-            this.getDataFile("");
-          }
-       
+          breadcumb.push(this.dmSV.titleRequestShare);
+          this.folderService.options.funcID = "DMT06";
           break;
         case 'DMT07':
           breadcumb.push(this.dmSV.titleRequestBy);
           break;
+      }
+      if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
+      {
+        this.dmSV.dmFavoriteID = "2";
+        this.folderService.options.favoriteID = "2";
+        this.fileService.options.favoriteID = "2";
+        this.getDataFolder("");
+        this.getDataFile("");
       }
       if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
         this.dmSV.disableInput.next(true);

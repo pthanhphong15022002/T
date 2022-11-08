@@ -66,7 +66,7 @@ export class CodxDMService {
   public titleEmptyAction = 'Dọn sạch thùng rác';
   public titleNodaTa = 'Không có tài liệu';
   public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
-  public titleShareBy = 'Tài liệu được chia sẻ';
+  public titleShareBy = 'Tài liệu chia sẻ';
   public titleRequestShare = 'Tài liệu yêu cầu';
   public titleRequestBy = 'Tài liệu được yêu cầu';
 
