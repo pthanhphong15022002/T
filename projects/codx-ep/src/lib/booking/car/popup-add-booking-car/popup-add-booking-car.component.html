@@ -14,7 +14,7 @@
         (valueChange)="valueCbxCarChange($event)">
       </codx-input>
       <div class="row">
-        <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row ">
+        <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
           <div class="d-flex justify-content-start">
             <div class="d-flex  flex-wrap" *ngFor="let item of tmplstDevice">
               <div class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">

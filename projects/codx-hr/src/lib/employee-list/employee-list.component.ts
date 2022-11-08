@@ -136,18 +136,7 @@ export class EmployeeListComponent extends UIComponent {
 
   btnClick() {
     if (this.view) {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px';
-      let popup = this.callfc.openSide(PopupAddNewHRComponent, 'add', option);
-      popup.closed.subscribe((res: any) => {
-        if (res && res.event) {
-          let data = res.event;
-          this.view.dataService.add(data, 0).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      });
+      this.add();
     }
   }
   click(evt: ButtonModel) {
@@ -161,15 +150,29 @@ export class EmployeeListComponent extends UIComponent {
 
   openPopupAdd() {
     if (this.view) {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px';
-      this.callfc.openSide(PopupAddNewHRComponent, null, option);
+      this.view.dataService.addNew().subscribe((res: any) => {
+        console.log('add new ', res);
+
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        this.dialog = this.callfc.openSide(
+          PopupAddNewHRComponent,
+          this.view.dataService.dataSelected,
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          console.log(e);
+          this.detectorRef.detectChanges();
+        });
+      });
     }
   }
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
+      console.log('add new ', res);
+
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;

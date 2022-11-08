@@ -865,7 +865,8 @@ codx-header .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not
 }
 
 .content-tree .d-flex.user-card {
-  margin-top: 0px;
+  margin-top: 0px !important;
+  padding: 0 !important;
 }
 
 /****/
@@ -998,11 +999,15 @@ codx-tag .codx-tag:hover {
 }
 
 /***/
-.user-mini-nav:hover {
-  opacity: .75;
-}
+// .user-mini-nav:hover {
+//   opacity: .75;
+// }
 
 /***/
 .request-box .e-richtexteditor .e-rte-content .e-content {
   max-height: 200px;
+}
+
+.e-datepicker.e-popup-open {
+  width: 320px;
 }

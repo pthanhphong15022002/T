@@ -126,13 +126,16 @@ export class ApproveComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   loadDataTab(funcID:string) {
-    if(funcID){
+    if(funcID)
+    {
+      let model = new DataRequest();
+      model.funcID = funcID; 
       this.api.execSv(
         "WP",
         "ERM.Business.WP",
         "NewsBusiness",
         "GetDataByApproSatusAsync",
-        [funcID] )
+        [model] )
         .subscribe(
        (res: any) => {
          if (res) {

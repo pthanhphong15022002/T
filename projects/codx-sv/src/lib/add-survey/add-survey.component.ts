@@ -5,6 +5,8 @@ import {
   Component,
   HostListener,
   Injector,
+  Input,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -20,6 +22,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxSvService } from '../codx-sv.service';
 import { SV_Surveys } from '../model/SV_Surveys';
 import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-survey',
@@ -31,7 +34,8 @@ import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 export class AddSurveyComponent extends UIComponent implements OnInit {
   surveys: SV_Surveys = new SV_Surveys();
   formats: any = new Array();
-  questions: any = new SV_Surveys();
+  questions: any = new Array();
+  sessions: any = new Array();
   answers: any = new Array();
   isModeAdd = true;
   funcID = '';
@@ -78,7 +82,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   MODE_IMAGE_VIDEO = 'EDIT';
   lstEditIV: any = new Array();
   recID: any;
+  amountOfSession = 0;
+  children: any = new Array();
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
+  @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   constructor(
     inject: Injector,
     private change: ChangeDetectorRef,
@@ -97,7 +104,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       if (params) this.funcID = params['funcID'];
     });
     this.router.queryParams.subscribe((queryParams) => {
-      if (queryParams?.recID) this.recID = queryParams.recID;
+      if (queryParams?.recID) {
+        this.recID = queryParams.recID;
+        this.loadData();
+      }
     });
     this.cache.functionList('SVT01').subscribe((res) => {
       if (res) this.functionList = res;
@@ -106,7 +116,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     // this.add();
-    this.loadData();
   }
 
   ngAfterViewInit() {
@@ -120,15 +129,63 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   loadData() {
+    this.questions = null;
     this.api
-    .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [
-      this.recID,
-    ])
-    .subscribe((res) => {
-      if (res) {
-        this.questions = res;
-      }
+      .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [
+        this.recID,
+      ])
+      .subscribe((res: any) => {
+        if (res[0] && res[0].length > 0) {
+          this.amountOfSession = res[1].length - 1;
+          this.questions = this.getHierarchy(res[0], res[1]);
+          console.log('check questions', this.questions);
+        } else {
+          this.questions = [
+            {
+              seqNo: 0,
+              question: null,
+              answers: null,
+              other: false,
+              mandatory: false,
+              answerType: null,
+              category: 'S',
+            },
+            {
+              seqNo: 1,
+              question: 'Câu hỏi 1',
+              answers: [
+                {
+                  seqNo: 0,
+                  answer: 'Tùy chọn 1',
+                  other: false,
+                  isColumn: false,
+                  hasPicture: false,
+                },
+              ],
+              other: true,
+              mandatory: false,
+              answerType: 'O',
+              category: 'Q',
+            },
+          ];
+          this.amountOfSession = 1;
+        }
+        this.questions[1]['active'] = true;
+      });
+    // this.change.detectChanges();
+  }
+
+  getHierarchy(dataSession, dataQuestion) {
+    var dataTemp = JSON.parse(JSON.stringify(dataSession));
+    dataTemp.forEach((res) => {
+      res['children'] = [];
+      dataQuestion.forEach((x) => {
+        if (x.parentID == res.recID) {
+          res['children'].push(x);
+        }
+      });
     });
+    return dataTemp;
   }
 
   valueChange(e, dataQuestion) {
@@ -185,28 +242,42 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   itemActive: any;
-  clickToScroll(seqNo) {
+  clickToScroll(seqNoSession = null, seqNoQuestion = null, category = null) {
+    var seqNo = 0;
+    if (category == 'S') seqNo = seqNoSession;
+    else seqNo = seqNoQuestion;
     var html = document.getElementById(`card-survey-${seqNo}`);
     var htmlE = html as HTMLElement;
     var htmlMF = document.querySelector('.moreFC');
     if (htmlMF)
       htmlMF.setAttribute('style', `top: calc(${htmlE?.offsetTop}px - 151px);`);
-    this.activeCard(seqNo);
+    this.activeCard(seqNoSession, seqNoQuestion, category);
   }
 
-  activeCard(seqNo) {
-    // this.questions[seqNo]['active'] = true;
-    // this.questions.forEach(x => {
-    //   if(x.seqNo == seqNo) x['active'] = true;
-    //   else x['active'] = false;
-    // })
+  activeCard(seqNoSession, seqNoQuestion, category) {
     this.questions.forEach((x) => {
       if (x['active'] == true) x['active'] = false;
-      if (x.seqNo == seqNo) {
-        x['active'] = true;
-        this.itemActive = x;
-      }
+      x.children.forEach((y) => {
+        if (y['active'] == true) y['active'] = false;
+      });
     });
+    if (category == 'S') {
+      this.questions.forEach((x) => {
+        if (x['active'] == true) x['active'] = false;
+        if (x.seqNo == seqNoSession) {
+          x['active'] = true;
+          this.itemActive = x;
+        }
+      });
+    } else {
+      this.questions[seqNoSession].children.forEach((x) => {
+        if (x['active'] == true) x['active'] = false;
+        if (x.seqNo == seqNoQuestion) {
+          x['active'] = true;
+          this.itemActive = x;
+        }
+      });
+    }
   }
 
   addAnswer(dataQuestion) {
@@ -284,17 +355,20 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.generateGuid();
     delete dataQuestion.id;
     dataQuestion.recID = this.GUID;
-    if(category == 'S') dataQuestion.parentID = null;
+    if (category == 'S') dataQuestion.parentID = null;
     var data = JSON.parse(JSON.stringify(this.questions));
     data[dataQuestion.seqNo].active = false;
     data.splice(dataQuestion.seqNo + 1, 0, dataQuestion);
     data.forEach((x, index) => {
       x.seqNo = index;
-      if(x.parentID == dataTemp.recID)
-       x.parentID = this.GUID;
+      if (x.parentID == dataTemp.recID) x.parentID = this.GUID;
     });
     this.questions = data;
-    console.log("check copy  questions", this.questions)
+    this.amountOfSession = 0;
+    this.questions.forEach((x) => {
+      if (x.category == 'S') this.amountOfSession++;
+    });
+    console.log('check copy questions', this.questions);
   }
 
   clickMF(functionID, eleAttachment = null) {
@@ -440,7 +514,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       this.questions[dataQuestion.seqNo].active = false;
       this.questions[dataQuestion.seqNo + 1].active = true;
       this.itemActive = this.questions[dataQuestion.seqNo + 1];
-      this.clickToScroll(dataQuestion.seqNo + 1);
+      this.clickToScroll(dataQuestion.seqNo + 1, category);
     }
     console.log('check addCard', this.questions);
   }

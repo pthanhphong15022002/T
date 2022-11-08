@@ -1,6 +1,9 @@
-<codx-form [body]="body" (onScroll)="onScroll($event)" [headerText]="'Thông báo'" [dialog]="dialog"></codx-form>
-
-
+<codx-form 
+[body]="body" 
+(onScroll)="onScroll($event)" 
+[headerText]="'Thông báo'" 
+[dialog]="dialogRef">
+</codx-form>
 <ng-template #body>
   <div class="p-2">
     <ng-container *ngFor="let item of lstNotify;index as i">
