@@ -159,6 +159,7 @@ export class EmployeeProfileComponent extends UIComponent {
   changeItemDetail(item) {}
 
   addEmployeePartyInfo() {
+    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -171,6 +172,9 @@ export class EmployeeProfileComponent extends UIComponent {
       },
       option
     );
+    dialogAdd.closed.subscribe(res => {
+      if (!res?.event) this.view.dataService.clear();
+    })
   }
 
   addEmployeeSelfInfo() {
@@ -191,6 +195,9 @@ export class EmployeeProfileComponent extends UIComponent {
       },
       option
     );
+    dialogAdd.closed.subscribe(res => {
+      if (!res?.event) this.view.dataService.clear();
+    })
     // })
   }
 }

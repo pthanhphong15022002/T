@@ -1,43 +1,66 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import {} from '@angular/router';
+import { Injector } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import{
+  CodxFormComponent,
   DialogData,
   DialogRef,
-  FormModel
+  FormModel,
+  UIComponent,
 } from 'codx-core';
-import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 
 @Component({
   selector: 'lib-popup-add-employees-party-info',
   templateUrl: './popup-add-employees-party-info.component.html',
   styleUrls: ['./popup-add-employees-party-info.component.css']
 })
-export class PopupAddEmployeesPartyInfoComponent implements OnInit {
-
+export class PopupAddEmployeesPartyInfoComponent extends UIComponent implements OnInit {
   formModel: FormModel
-  dataService
-  dialog: any;
-  form: any;
+  grvSetup
+  dialog: DialogRef
+  data
+  isAfterRender = false
   headerText: ''
-  private esService: CodxEsService
-
+  @ViewChild('form') form: CodxFormComponent;
+  
   constructor(
-    @Optional() dialog: DialogRef,
-    @Optional() data: DialogData
+    private injector: Injector,
+    @Optional() dialog?: DialogRef,
+    @Optional() data?: DialogData
   ) {
+    super(injector)
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
-
-
+    if(this.formModel){
+      this.isAfterRender = true
+    }
+    this.data = dialog?.dataService?.dataSelected
    }
 
-  ngOnInit(): void {
-    // this.formModel = new FormModel();
-    // this.formModel.entityName = 'HR_Employees'
-    // this.formModel.formName = 'Employees'
-    // this.formModel.gridViewName = 'grvEmployees'
+  onInit(): void {
+    this.cache
+      .gridViewSetup(
+        this.dialog?.FormModel?.formName,
+        this.dialog?.FormModel?.gridViewName
+      )
+      .subscribe((res) => {
+        this.grvSetup = res;
+      })
   }
+
+  ngAfterViewInit(){
+
+  }
+
+
+
+
+  // ngOnInit(): void {
+  //   // this.formModel = new FormModel();
+  //   // this.formModel.entityName = 'HR_Employees'
+  //   // this.formModel.formName = 'Employees'
+  //   // this.formModel.gridViewName = 'grvEmployees'
+  // }
 
 
   // onSaveForm() {

@@ -209,6 +209,7 @@ export class EditFileComponent implements OnInit {
   editfilemessage = 'Cần điền đầy đủ thông tin trước khi lưu';
   //objectType="";
   indexSub: number;
+  isCopyRight = false;
   subItemLevel: string;
   comboboxName = "";
   listLanguages: any;
@@ -251,7 +252,9 @@ export class EditFileComponent implements OnInit {
       this.fileEditing =  JSON.parse(JSON.stringify(this.data[1]));   
       this.user = this.auth.get();
       this.dialog = dialog;     
-      this.id = this.fileEditing.recID;      
+      this.id = this.fileEditing.recID;
+      debugger;
+      if(this.data[2]) this.isCopyRight = this.data[2];      
       // this.dmSV.isFileEditing.subscribe(item => {
       //   if (item != undefined && this.fileEditing.recID == item.recID) {
       //     this.fileEditing.permissions = item.permissions;
@@ -293,15 +296,15 @@ export class EditFileComponent implements OnInit {
       // $('#fileName').addClass('form-control is-invalid');
       // $('#fileName').focus();
       
-      
     }
-    if(this.license == true){
-      if(this.fileEditing.author == "" || this.fileEditing.publisher == "" || this.fileEditing.publishYear == null || this.fileEditing.copyRights == "" || this.fileEditing.publishDate == null){
-        this.notificationsService.notify(this.editfilemessage);
-        return;
-      }
-    }
-    
+    // if(this.license == true){
+    //   if(this.fileEditing.author == "" || this.fileEditing.publisher == "" || this.fileEditing.publishYear == null || this.fileEditing.copyRights == "" || this.fileEditing.publishDate == null){
+    //     this.notificationsService.notify(this.editfilemessage);
+    //     return;
+    //   }
+    // }
+    //Check bản quyền
+    if(this.isCopyRight && this.checkRequired()) return
 
     if (this.id !=undefined &&  this.id != "") {
       // update file
@@ -372,7 +375,7 @@ export class EditFileComponent implements OnInit {
 
     }
     else {
-      this.dialog.close();
+      this.dialog.close(true);
     }
     // else {
     //   //  this.dmSV.fileEditing.next(this.fileEditing);
@@ -398,6 +401,21 @@ export class EditFileComponent implements OnInit {
 
   }
 
+  checkRequired()
+  {
+    var arr = [];
+    if(!this.fileEditing.author || this.fileEditing.author == "") arr.push(this.titleAuthor);
+    if(!this.fileEditing.publisher || this.fileEditing.publisher == "") arr.push(this.titlePublisher);
+    if(!this.fileEditing.publishYear || this.fileEditing.publishYear == "") arr.push(this.titlePublishyear);
+    if(!this.fileEditing.copyRights || this.fileEditing.copyRights == "") arr.push(this.titleCopyright);
+    if(!this.fileEditing.publishDate || this.fileEditing.publishDate == "") arr.push(this.titlePublishDate);
+    if(arr.length>0) 
+    {
+      this.notificationsService.notifyCode("SYS009",0,arr.join(" ,")); 
+      return true
+    }
+    return false;
+  }
   removeUserRight(index, list: Permission[] = null) {
     if (list == null) {
       if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
