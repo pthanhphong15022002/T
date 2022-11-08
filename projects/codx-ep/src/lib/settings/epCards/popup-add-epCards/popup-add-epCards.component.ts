@@ -76,13 +76,13 @@ export class PopupAddEpCardsComponent extends UIComponent {
       if(autoN){
         if(!autoN?.stop && this.isAdd){
           //ktra tham so auto number stop =true == ko dùng auto number
-          this.api.execSv("SYS", "ERM.Business.AD", "AutoNumbersBusiness", "GenAutoNumberAsync", [this.formModel.funcID]).subscribe(autoNumber=>{
-            if(autoNumber)
-            {
-              this.data.resourceID=autoNumber;
-              this.detectorRef.detectChanges();
-            }
-          })
+          // this.api.execSv("SYS", "ERM.Business.AD", "AutoNumbersBusiness", "GenAutoNumberAsync", [this.formModel.funcID]).subscribe(autoNumber=>{
+          //   if(autoNumber)
+          //   {
+          //     this.data.resourceID=autoNumber;
+          //     this.detectorRef.detectChanges();
+          //   }
+          // })
           this.autoNumDisable=true;
         }
       }
