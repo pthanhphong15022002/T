@@ -26,6 +26,7 @@ import { PopupAddEmployeesPartyInfoComponent } from '../../employee-profile/popu
 })
 export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
+  minType = 'MinRange';
   constructor(
     private inject: Injector,
     private hrService: CodxHrService,
