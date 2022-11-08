@@ -1,165 +1,1113 @@
-<div class="page-profile">
-  <div class="d-flex">
-    <div class="user-left me-7">
-      <div class="d-flex flex-column mt-9">
-        <div class="d-flex flex-column text-center mb-4">
-          <div
-            class="symbol symbol-60 symbol-circle mb-2 d-flex justify-content-center"
-          >
-            <img alt="Pic" src="../../../assets/demos/user/user3.jpg" />
-          </div>
-          <div class="font-weight-bold font-size-h5 mb-2">
-            Lê Phạm Hoài Thương
-          </div>
-          <div class="text-muted">lphthuong@lacviet.vn</div>
-          <div class="text-dark-75">Busssiness Solution Center</div>
-        </div>
-      </div>
-      <div class="user-menu px-9">
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-dashboard icon-18"></span>
-          </span>
-          <div class="text-dark">Dashboard</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-perm_contact_calendar icon-18"></span>
-          </span>
-          <div class="text-dark">Hồ sơ nhân viên</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-account_balance_wallet icon-18"></span>
-          </span>
-          <div class="text-dark">Ví của tôi</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-check_box icon-18"></span>
-          </span>
-          <div class="text-dark">Công việc cá nhân</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-near_me icon-18"></span>
-          </span>
-          <div class="text-dark">Thông điệp phản hồi</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-playlist_add icon-18"></span>
-          </span>
-          <div class="text-dark">Đăng ký</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-playlist_add_check icon-18"></span>
-          </span>
-          <div class="text-dark">Xét duyệt</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-article icon-18"></span>
-          </span>
-          <div class="text-dark">Mục tiêu của tôi</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-insert_chart icon-18"></span>
-          </span>
-          <div class="text-dark">Báo cáo của tôi</div>
-        </a>
-        <a href="/" class="d-flex align-items-start my-4">
-          <span class="navi-icon me-2">
-            <span class="icon-person icon-18"></span>
-          </span>
-          <div class="text-dark">Trang cá nhân</div>
-        </a>
-      </div>
-    </div>
-    <div class="d-flex flex-column-fluid">
-      <div class="container p-0">
-        <div class="bg-profile d-flex justify-content-between">
-          <div class="w-100 user-pic d-flex flex-column text-center mb-4">
-            <div
-              class="symbol symbol-90 symbol-circle mb-2 d-flex justify-content-center"
-            >
-              <img alt="Pic" src="../../../assets/demos/user/user3.jpg" />
-            </div>
-            <div class="font-weight-bold font-size-h4 text-dark mb-2">
-              Lê Phạm Hoài Thương
+<codx-views
+  #view
+  entityName="HR_Employees"
+  idField="employeeID"
+  [views]="views"
+  [viewActiveType]="'16'"
+  [autoLoad]="false"
+>
+</codx-views>
+<ng-template #panelContent>
+  <div class="page-pw h-100">
+    <div class="page-profile">
+      <div class="d-flex">
+        <div class="user-left me-7">
+          <div class="d-flex flex-column mt-9">
+            <div class="d-flex flex-column text-center mb-4">
+              <div class="mb-2 d-flex justify-content-center">
+                <codx-img
+                  class="me-4 pic-emloyee"
+                  [funcId]="'HRT03a1'"
+                  [width]="100"
+                  [objectId]="'ADMIN'"
+                  [objectType]="'HR_Employees'"
+                  [referType]="'avt'"
+                  [objectName]=""
+                  [isAllowEdit]="true"
+                  [updateDirect]="true"
+                >
+                </codx-img>
+              </div>
+              <div class="font-weight-bold font-size-h5 mb-2">
+                Lê Phạm Hoài Thương
+              </div>
+              <div class="text-muted">lphthuong@lacviet.vn</div>
+              <div class="text-dark-75">Busssiness Solution Center</div>
             </div>
           </div>
+          <div class="d-flex flex-column mt-9 ms-5">
+            <div class="d-flex align-items-center">
+              <span
+                class="icon-qr_code_scanner icon-16 text-danger me-1"
+              ></span>
+              <span class="text-danger w-bold">
+                <span #email>012.MPD</span>
+              </span>
+
+              <span
+                class="icon-date_range icon-16 text-gray-800 me-1 ms-2"
+              ></span>
+              <span class="text-dark fw-bold">
+                <span #email>10/03/2022</span>
+              </span>
+            </div>
+            <codx-vll
+              [name]="'L0614'"
+              [value]="'1'"
+              [showText]="true"
+              [showBgColor]="true"
+            ></codx-vll>
+            <div class="d-flex align-items-center">
+              <span
+                class="icon-connection-point icon-16 text-gray-800 me-1"
+              ></span>
+              <span class="text-dark">
+                <span #email>Đội BA - </span>
+                <span #email>Nhóm Codx - </span>
+                <span #email>Trung tâm DXC</span>
+              </span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="icon-email icon-16 text-gray-800 me-1"></span>
+              <span class="text-dark">
+                <span #email>lphthuong@lacviet.vn</span>
+              </span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="icon-local_phone icon-16 text-gray-800 me-1"></span>
+              <span class="text-dark">
+                <span #phone>Số điện thoại</span>
+              </span>
+
+              <span
+                class="icon-phone_android icon-16 text-gray-800 me-1 ms-2"
+              ></span>
+              <span class="text-dark">
+                <span #street>0907323495</span>
+              </span>
+            </div>
+          </div>
+          <div class="user-menu px-9">
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-dashboard icon-18"></span>
+              </span>
+              <div class="text-dark">Dashboard</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-perm_contact_calendar icon-18"></span>
+              </span>
+              <div class="text-dark">Hồ sơ nhân viên</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-account_balance_wallet icon-18"></span>
+              </span>
+              <div class="text-dark">Ví của tôi</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-check_box icon-18"></span>
+              </span>
+              <div class="text-dark">Công việc cá nhân</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-near_me icon-18"></span>
+              </span>
+              <div class="text-dark">Thông điệp phản hồi</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-playlist_add icon-18"></span>
+              </span>
+              <div class="text-dark">Đăng ký</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-playlist_add_check icon-18"></span>
+              </span>
+              <div class="text-dark">Xét duyệt</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-article icon-18"></span>
+              </span>
+              <div class="text-dark">Mục tiêu của tôi</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-insert_chart icon-18"></span>
+              </span>
+              <div class="text-dark">Báo cáo của tôi</div>
+            </a>
+            <a href="/" class="d-flex align-items-start my-4">
+              <span class="navi-icon me-2">
+                <span class="icon-person icon-18"></span>
+              </span>
+              <div class="text-dark">Trang cá nhân</div>
+            </a>
+          </div>
         </div>
-        <div class="w-100 user-right pt-3">Thêm thông tin đảng đoàn</div>
-          <button type="button" class="btn btn-primary" (click)="addEmployeePartyInfo()">
-            Thêm thông tin đảng đoàn
-          </button>
+        <div class="d-flex flex-column-fluid">
+          <div class="container p-0">
+            <div class="w-100 user-right pt-3">
+              <ng-container [ngTemplateOutlet]="info"></ng-container>
+            </div>
+          </div>
         </div>
-        <div class="w-100 user-right pt-3">Thêm thông tin cá nhân</div>
-          <button type="button" class="btn btn-primary" (click)="addEmployeeSelfInfo()">
-            Thêm thông tin cá nhân
-          </button>
       </div>
     </div>
   </div>
+</ng-template>
 
-<!-- <div class="d-flex flex-column-fluid h-100 p-6">
-  <div class="bg-body rounded-3 p-6 w-100 h-100vh card-body scroll-y">
-      <div class="d-flex mb-5">
-          <span class="icon-adjust icon-20 me-3"></span>
-          <h3 class="text-dark">Mục tiêu</h3>
-      </div>
-      <div class="d-flex align-items-center justify-content-between mb-3 aqua">
-          <div class="d-flex align-items-center w-100 pe-9">
-              <button class="btn btn-icon btn-sm btn-light rounded-10 me-3">
-                  <span class="icon-keyboard_arrow_right icon-16"></span></button>
-              <img class="symbol symbol-25px symbol-circle me-3" src="../../../assets/demos/svg/Ranking_card.png">
-              <div class="text-dark fs-6 fw-bold">Gia tăng lượng khách hàng tiềm năng</div>
+<ng-template #info>
+  <div
+    class="pw-content w-100 pw-lg scroll-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".employee-container"
+    data-kt-scroll-offset="0px"
+  >
+    <div class="user-content flex-row-fluid">
+      <ng-container>
+        <!-- thong tin chung -->
+        <div class="user-profile overview d-block mb-3" id="MWP00201">
+          <div class="d-flex justify-content-between mb-2 mt-6">
+            <div class="fw-bold fs-4 text-primary">
+              <codx-label
+                name="lblInfoPersonal"
+                formName="Employees"
+                default="SƠ YẾU LÝ LỊCH"
+              >
+              </codx-label>
+            </div>
+            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+              <span class="icon-edit icon-18"></span>
+            </a>
           </div>
-          <div class="w-450px min-w-450px d-flex align-items-center justify-content-end">
-              <img class="symbol symbol-30px symbol-circle" src="../../../assets/demos/svg/Ranking_card.png">
-              <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
-                  <div class="h-20px w-100 bg-gray-200 rounded-4">
-                      <div class="bg-primary rounded-4 h-20px" role="progressbar" style="width: 72%;"
-                          aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <div class="process-per position-absolute top-0" style="left:72%">72%</div>
-                  <div class="pic-face">
-                      <img class="w-20px h-20px" style="left:77%;" src="assets/themes/wp/default/img/L1480_3.svg">
-                  </div>
-                  <div class="pic-local">
-                      <span class="icon-language text-primary icon-20" style="left:90%;"></span>
-                  </div>
+          <ngx-skeleton-loader
+            count="5"
+            animation="progress"
+          ></ngx-skeleton-loader>
+
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">SƠ YẾU LÝ LỊCH</div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div #info class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <codx-label
+                  name="lblEmployeeInfo"
+                  formName="Employees"
+                  default="Thông tin bản thân"
+                >
+                </codx-label>
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeSelfInfo()"
+                  ></span>
+                </a>
               </div>
               <div class="d-flex">
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"></span>
-                      <span
-                          class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">5</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
-                      <span
-                          class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">5</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
-                      <span
-                          class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">5</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
-                      <span
-                          class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">5</span>
-                  </button>
-                  <button class="btn btn-icon btn-sm position-relative ms-4">
-                      <span class="icon-more_vert icon-20 text-gray-600 text-hover-primary"></span>
-                  </button>
-
+                <span
+                  class="icon-connection-point icon-14 text-gray-600 me-1"
+                ></span>
+                <codx-label
+                  class="text-gray-600 me-2"
+                  fiedName="gender"
+                  formName="Employees"
+                  default="Họ tên:"
+                >
+                </codx-label>
+                <span class="text-dark fw-bold"> Lê Phạm Hoài Thương</span>
+                <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
+                    }}</span> -->
               </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="gender"
+                      formName="Employees"
+                      default="Giới tính:"
+                    >
+                    </codx-label>
+                    <span class="text-dark">
+                      {{ "0" | vll: "L0068":"text" | async }}</span
+                    >
+                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
+                        }}</span> -->
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="birthday"
+                      formName="Employees"
+                      default="Sinh ngày:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
+                    <span #birthday> employeeInfo.birthday </span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="birthPlaceName"
+                      formName="Employees"
+                      default="Tại:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo?.birthPlaceName !=""? employeeInfo?.birthPlaceName :
+                          null}}</span> -->
+                    <span #birthPlaceName> employeeInfo.birthPlaceName </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="idCardNo"
+                      formName="Employees"
+                      default="CMND/CCCD:"
+                    >
+                    </codx-label>
+
+                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
+                          null}}</span> -->
+                    <span #idCardNo> employeeInfo.idCardNo</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="issuedOn"
+                      formName="Employees"
+                      default="Cấp ngày:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
+
+                    <span #issuedOn> employeeInfo.issuedOn</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="issuedBy"
+                      formName="Employees"
+                      default="Tại:"
+                    >
+                    </codx-label>
+
+                    <!-- <span class="text-dark me-15">employeeInfo?.issuedBy != "" ? employeeInfo?.issuedBy :
+                          null}}</span> -->
+                    <span #issuedBy> employeeInfo.issuedBy</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="religion"
+                      formName="Employees"
+                      default="Tôn giáo:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.religion}}</span> -->
+                    <span #religion> employeeInfo.religion</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="ethnicGroup"
+                      formName="Employees"
+                      default="Dân tộc:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.ethnicGroup}}</span> -->
+                    <span #ethnicGroup> employeeInfo.ethnicGroup</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="nationality"
+                      formName="Employees"
+                      default="Quốc tịch:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.nationality}}</span> -->
+                    <span #nationality> employeeInfo.nationality</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="education"
+                      formName="Employees"
+                      default="Trình độ văn hóa:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.education}}</span> -->
+                    <span #education> employeeInfo.education</span>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="degree"
+                      formName="Employees"
+                      default="Trình độ chuyên môn:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.certificateName}}</span> -->
+                    <span #degree> employeeInfo.degree</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-dark fw-bold text-uppercase mt-6 mb-1">
+                <codx-label name="lblJuridical" default="Pháp lý"> </codx-label>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="pITNumber"
+                      formName="Employees"
+                      default="Thuế TNCN số:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.pitNumber}}</span> -->
+                    <span #pitNumber> employeeInfo.pitNumber</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="pitIssuedOn"
+                      formName="Employees"
+                      default="Cấp ngày:"
+                    >
+                    </codx-label>
+                    <span class="text-dark"> dd/MM/yyyy</span>
+                    <!-- <span #pitIssuedOn> employeeInfo.pitIssuedOn | formatvalue: view.formModel:"pitIssuedOn":pitIssuedOn | async
+                        }}</span> -->
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <!-- chưa có field -->
+                    <span class="text-gray-600 me-2">Tại:</span>
+                    <span class="text-dark">Cục thuế HCM</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="sIRegisterNo"
+                      formName="Employees"
+                      default="BHXH số:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.siRegisterNo}}</span> -->
+                    <span #siRegisterNo> employeeInfo.siRegisterNo</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="siRegisterOn"
+                      formName="Employees"
+                      default="Cấp ngày:"
+                    >
+                    </codx-label>
+                    <span class="text-dark"> dd/MM/yyyy</span>
+                    <!-- <span #siRegisterOn> employeeInfo.siRegisterOn | formatvalue: view.formModel:"siRegisterOn":siRegisterOn | async
+                        }}</span> -->
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex"></div>
+                </div>
+              </div>
+            </div>
+            <div #DangDoan class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <codx-label
+                  name="lblEmployeeInfo"
+                  formName="Employees"
+                  default="Thông tin đảng - đoàn"
+                >
+                </codx-label>
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeePartyInfo()"
+                  ></span>
+                </a>
+              </div>
+              <div class="d-flex">
+                <span
+                  class="icon-connection-point icon-14 text-gray-600 me-1"
+                ></span>
+                <codx-label
+                  class="text-gray-600 me-2"
+                  fiedName="gender"
+                  formName="Employees"
+                  default="Họ tên:"
+                >
+                </codx-label>
+                <span class="text-dark fw-bold"> Lê Phạm Hoài Thương</span>
+                <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
+                    }}</span> -->
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="gender"
+                      formName="Employees"
+                      default="Giới tính:"
+                    >
+                    </codx-label>
+                    <span class="text-dark">
+                      {{ "0" | vll: "L0068":"text" | async }}</span
+                    >
+                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
+                        }}</span> -->
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="birthday"
+                      formName="Employees"
+                      default="Sinh ngày:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
+                    <span #birthday> employeeInfo.birthday </span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="birthPlaceName"
+                      formName="Employees"
+                      default="Tại:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo?.birthPlaceName !=""? employeeInfo?.birthPlaceName :
+                          null}}</span> -->
+                    <span #birthPlaceName> employeeInfo.birthPlaceName </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="idCardNo"
+                      formName="Employees"
+                      default="CMND/CCCD:"
+                    >
+                    </codx-label>
+
+                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
+                          null}}</span> -->
+                    <span #idCardNo> employeeInfo.idCardNo</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="issuedOn"
+                      formName="Employees"
+                      default="Cấp ngày:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
+
+                    <span #issuedOn> employeeInfo.issuedOn</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="issuedBy"
+                      formName="Employees"
+                      default="Tại:"
+                    >
+                    </codx-label>
+
+                    <!-- <span class="text-dark me-15">employeeInfo?.issuedBy != "" ? employeeInfo?.issuedBy :
+                          null}}</span> -->
+                    <span #issuedBy> employeeInfo.issuedBy</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="religion"
+                      formName="Employees"
+                      default="Tôn giáo:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.religion}}</span> -->
+                    <span #religion> employeeInfo.religion</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="ethnicGroup"
+                      formName="Employees"
+                      default="Dân tộc:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.ethnicGroup}}</span> -->
+                    <span #ethnicGroup> employeeInfo.ethnicGroup</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="nationality"
+                      formName="Employees"
+                      default="Quốc tịch:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.nationality}}</span> -->
+                    <span #nationality> employeeInfo.nationality</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="education"
+                      formName="Employees"
+                      default="Trình độ văn hóa:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.education}}</span> -->
+                    <span #education> employeeInfo.education</span>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="degree"
+                      formName="Employees"
+                      default="Trình độ chuyên môn:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.certificateName}}</span> -->
+                    <span #degree> employeeInfo.degree</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-dark fw-bold text-uppercase mt-6 mb-1">
+                <codx-label name="lblJuridical" default="Pháp lý"> </codx-label>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="pITNumber"
+                      formName="Employees"
+                      default="Thuế TNCN số:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.pitNumber}}</span> -->
+                    <span #pitNumber> employeeInfo.pitNumber</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="pitIssuedOn"
+                      formName="Employees"
+                      default="Cấp ngày:"
+                    >
+                    </codx-label>
+                    <span class="text-dark"> dd/MM/yyyy</span>
+                    <!-- <span #pitIssuedOn> employeeInfo.pitIssuedOn | formatvalue: view.formModel:"pitIssuedOn":pitIssuedOn | async
+                        }}</span> -->
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <!-- chưa có field -->
+                    <span class="text-gray-600 me-2">Tại:</span>
+                    <span class="text-dark">Cục thuế HCM</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="sIRegisterNo"
+                      formName="Employees"
+                      default="BHXH số:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.siRegisterNo}}</span> -->
+                    <span #siRegisterNo> employeeInfo.siRegisterNo</span>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="siRegisterOn"
+                      formName="Employees"
+                      default="Cấp ngày:"
+                    >
+                    </codx-label>
+                    <span class="text-dark"> dd/MM/yyyy</span>
+                    <!-- <span #siRegisterOn> employeeInfo.siRegisterOn | formatvalue: view.formModel:"siRegisterOn":siRegisterOn | async
+                        }}</span> -->
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="d-flex"></div>
+                </div>
+              </div>
+            </div>
+            <div #family class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <codx-label
+                  name="lblEmployeeInfo"
+                  formName="Employees"
+                  default="Quan hệ gia đình"
+                >
+                </codx-label>
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span class="icon-edit icon-18"></span>
+                </a>
+              </div>
+              <div class="d-flex flex-column py-3 px-4 process-r">
+                <div class="d-flex flex-column">
+                  <codx-temp-full
+                    [imageId]="'ADMIN'"
+                    imageObjType="AD_Users"
+                    [imageWidth]="40"
+                    [formModel]="view.formModel"
+                    [title]="'experences.companyName'"
+                    [dataItem]="'experences'"
+                    [desc]="'relationship.relationType' + ' | ' + 'Năm sinh: '"
+                    [typeMF]="'hover'"
+                  >
+                  </codx-temp-full>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      </ng-container>
+      <!-- kinh nghiem -->
+      <div id="MWP00202" class="d-block mt-6">
+        <div class="user-profile overview">
+          <div class="fw-bold fs-4 text-primary mb-2 mt-6">
+            <codx-label
+              name="lblExperencies"
+              formName="Employees"
+              default="Kinh nghiệm trước đây"
+            >
+            </codx-label>
+          </div>
+          <!-- <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader> -->
+          <div class="border rounded-2 p-6 pb-0">
+            <div class="user-process process-h">
+              <ng-container>
+                <div class="process-item d-flex mb-4">
+                  <div class="yeartoyear fw-bold text-dark mt-3">2 năm</div>
+                  <div class="mx-3 mt-3 process-line">
+                    <span class="pic-circle"></span>
+                  </div>
+                  <div class="d-flex flex-column py-3 px-4 process-r">
+                    <div class="d-flex flex-column">
+                      <codx-temp-full
+                        [formModel]="view.formModel"
+                        [title]="'experences.companyName'"
+                        [dataItem]="'experences'"
+                        [desc]="'experences.roleName'"
+                        [typeMF]="'hover'"
+                      >
+                      </codx-temp-full>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container>
+                <div class="process-item d-flex mb-4">
+                  <div class="yeartoyear mt-3"></div>
+                  <div class="mx-3 mt-3 process-line">
+                    <span
+                      class="icon-add_circle_outline icon-16 text-success"
+                    ></span>
+                  </div>
+                  <div class="add-process">
+                    <button class="btn btn-sm btn-light">
+                      <i class="icon-add icon-16 ms-n2"></i>
+                      <codx-label
+                        name="lblAdd"
+                        formName="Employees"
+                        default="Thêm mới"
+                      >
+                      </codx-label>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- skills -->
+      <!-- <div id="MWP00203" #MWP00203 class="d-block">
+              <div class="user-profile overview">
+                <div class="d-flex justify-content-between mb-2 mt-6">
+                  <div class="fw-bold fs-4 text-primary">
+                    <codx-label [formModel]="view.formModel" formName="Employees" default="Kỹ năng ">
+                    </codx-label>
+                  </div>
+                  <a class="btn btn-sm btn-icon btn-light">
+                    <span class="icon-edit icon-16"></span>
+                  </a>
+                </div>
+                <div class="border rounded-2 p-6">
+                  <div class="row" >
+                    <div class="col-6">
+                      <ng-container >
+                        <div class="row mb-4">
+                          <div class="fw-bold text-dark"> data.competenceName }}</div>
+                          <ejs-slider [width]="300" [type]="minType" [min]="0"
+                            [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " [value]="data.rating"
+                            [readonly]="true">
+                          </ejs-slider>
+                        </div>
+                      </ng-container>
+                    </div>
+                    <div class="col-6">
+                      <ejs-chart [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis">
+                        <e-series-collection>
+                          <e-series [dataSource]="skillEmployee" type="Radar" xName="competenceName" yName="rating">
+                          </e-series>
+                        </e-series-collection>
+                      </ejs-chart>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <ng-container *ngIf="editMode">
+                      <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
+                        <button class="btn btn-sm bg-light" (click)="clickOpenPopupAddSkill()">
+                          <i class="icon-add icon-16 ms-n2"></i>
+                          <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
+                          </codx-label>
+                        </button>
+                      </div>
+                      <ng-container *ngIf="showCBB">
+                        <codx-combobox-popup comboboxName="Skills" field="skill" [multiple]="true" [width]="width"
+                          [height]="height" (clickSave)="saveAddSkill($event)" title="Kỹ năng">
+                        </codx-combobox-popup>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+
+      <!-- đào tạo -->
+      <!-- <div id="MWP00204" class="d-block mb-3">
+              <div class="user-profile overview">
+                <div class="fw-bold fs-4 text-primary mb-2 mt-6">
+                  <codx-label name="lblTraining" formName="Employees" default="Đào tạo cá nhân">
+                  </codx-label>
+                </div>
+                <ngx-skeleton-loader *ngIf="
+                    !trainingInterObl &&
+                    !trainingInterUnObl &&
+                    !trainingPersonal
+                  " count="5" animation="progress"></ngx-skeleton-loader>
+                <div class="border rounded-2 p-6" *ngIf="
+                    trainingInterObl || trainingInterUnObl || trainingPersonal
+                  ">
+                  <div *ngIf="trainingPersonal && trainingPersonal.length > 0"
+                    class="text-dark fw-bold text-uppercase mt-8 mb-4">
+                    <codx-label formName="Employees" default="Bên ngoài công ty">
+                    </codx-label>
+                  </div>
+                  <div class="user-process process-v swiper-wrapper">
+                    <ng-container swiperSlide *ngIf="editMode">
+                      <ng-container>
+                        <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
+                          <div class="d-flex">
+                            <div class="add-process">
+                              <button class="btn btn-sm btn-light" (click)="editDataEdu(null)">
+                                <i class="icon-add icon-16 ms-n2"></i>
+                                <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
+                                </codx-label>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+
+                    <ng-container swiperSlide *ngFor="let item of trainingPersonal">
+                      <ng-container>
+                        <div class="process-item swiper-slide">
+                          <div class="line"></div>
+                          <span class="yeartoyear btn btn-sm">
+                            item.completeOn
+                            }}</span>
+                          <div class="d-flex flex-column mt-4">
+                            <div class="text-dark mb-1">
+                               item.organizationName }}
+                            </div>
+                            <div class="text-dark mt-1 d-flex align-items-start">
+                              <span class="text-dark-50 icon-check_circle icon-16 me-2"></span>
+                              <span class="text-dark-50">
+                                item.certificateName
+                                }}</span>
+                            </div>
+                            <div class="text-dark mt-1 d-flex align-items-start">
+                              <span class="text-dark-50 icon-class icon-16 me-2"></span>
+                              <span class="text-dark-50"> item.memo }}</span>
+                            </div>
+                            <div class="d-flex mt-4">
+                              <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-2" *ngIf="editMode"
+                                (click)="editDataEdu(item)">
+                                <span class="icon-edit icon-18"></span>
+                              </a>
+                              <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
+                                (click)="deleteEducation(item)">
+                                <span class="icon-close icon-18"></span>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+
+      <!-- quan hệ gia đình -->
+      <div id="MWP00205" class="d-block mb-3">
+        <div class="user-profile overview">
+          <div class="fw-bold fs-4 text-primary mb-2 mt-6">
+            <codx-label
+              name="lblRelationShip"
+              formName="Employees"
+              default="Quan hệ gia đình"
+            >
+            </codx-label>
+            <ngx-skeleton-loader count="5" animation="progress">
+            </ngx-skeleton-loader>
+          </div>
+          <div class="border rounded-2 p-6">
+            <div class="row">
+              <ng-container>
+                <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
+                  <codx-card-center
+                    cardCss="border h-100"
+                    [imageId]="'relationship.recID'"
+                    [formModel]="view.formModel"
+                    [title]="'relationship.relationName'"
+                    [dataItem]="'relationship'"
+                    [typeMF]="'hover'"
+                    [desc]="'relationship.relationType' + ' | ' + 'Năm sinh: '"
+                  >
+                  </codx-card-center>
+                </div>
+              </ng-container>
+              <ng-container>
+                <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
+                  <div class="d-flex">
+                    <div class="add-process">
+                      <button class="btn btn-sm btn-light">
+                        <i class="icon-add icon-16 ms-n2"></i>
+                        <codx-label
+                          name="lblAdd"
+                          formName="Employees"
+                          default="Thêm mới"
+                        >
+                        </codx-label>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- sở thích -->
+      <div id="MWP00206" class="d-block mb-5">
+        <div class="user-profile overview">
+          <div class="fw-bold fs-4 text-primary mb-2 mt-6">
+            <codx-label
+              name="lblHobbie"
+              formName="Employees"
+              default="Sở thích"
+            >
+            </codx-label>
+          </div>
+        </div>
+        <ngx-skeleton-loader
+          count="5"
+          animation="progress"
+        ></ngx-skeleton-loader>
+        <div class="border rounded-2 p-6">
+          <div class="list-hoppy">
+            <div class="d-flex align-items-center user-item tagitem">
+              <div>item.hobbyName }}</div>
+              <a class="text-dark text-hover-danger mt-1 ms-1">
+                <span class="icon-close icon-14"></span>
+              </a>
+            </div>
+            <div class="add-process">
+              <button class="btn btn-sm btn-light">
+                <i class="icon-add icon-16 ms-n2"></i>
+                <codx-label
+                  name="lblAdd"
+                  formName="Employees"
+                  default="Thêm mới"
+                >
+                </codx-label>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div> -->
+</ng-template>

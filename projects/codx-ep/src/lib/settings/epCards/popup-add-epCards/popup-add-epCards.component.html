@@ -22,6 +22,7 @@
           ControlName="resourceID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [disabled]="autoNumDisable"
         >
         </codx-input>
       </div>
@@ -89,7 +90,7 @@
         [funcId]="formModel?.funcID"
         [isAllowEdit]="true"
         [objectId]="data?.recID"
-      >s
+      >
       </codx-img>
     </div>
   </ng-template>
