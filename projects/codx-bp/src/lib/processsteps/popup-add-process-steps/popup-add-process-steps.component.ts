@@ -10,11 +10,13 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
   DialogData,
   DialogRef,
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
 import {
@@ -67,6 +69,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     private cache: CacheService,
     private changeDef: ChangeDetectorRef,
     private notifySvr: NotificationsService,
+    private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -92,7 +95,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadData();   
   }
 
   loadData() {
@@ -101,6 +104,26 @@ export class PopupAddProcessStepsComponent implements OnInit {
     }
   }
 
+  handelMail() {
+    let data = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: '5860917c-af36-4803-b90d-ed9f364985c6',
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+    };
+        
+    this.callfunc.openForm(
+      PopupAddEmailTemplateComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    }
   //#region
 
   //endregio
@@ -120,7 +143,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
       });
     else {
       if (this.action == 'edit') this.updateProcessStep();
-      else this.addProcessStep();
+      else this.addProcessStep();     
     }
   }
 

@@ -69,9 +69,16 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
+    this.router.params.subscribe((params) => {
+      if (params) {
+        this.funcID = params['funcID'];
+        if (!this.funcID.includes('WP')) {
+          this.button = {
+            id: 'btnAdd',
+          };
+        }
+      }
+    });
     if (!this.setupEmp) {
       this.cache
         .gridViewSetup(

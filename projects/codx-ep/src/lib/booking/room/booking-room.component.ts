@@ -219,6 +219,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   valueChange(evt: any, a?: any, type?: any) {}
 
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   click(evt: ButtonModel) {
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
@@ -338,7 +346,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       if(this.popupClosed){      
       this.view.dataService.dataSelected = evt;
       this.view.dataService
-        .edit(this.view.dataService.dataSelected)
+        .copy(this.view.dataService.dataSelected)
         .subscribe((res) => {
           this.popupClosed = false;
           this.dataSelected = this.view.dataService.dataSelected;

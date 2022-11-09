@@ -88,7 +88,14 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
     this.setHeight();
     this.active = 1;
   }
-  
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   childClickMF(event, data) {   
     switch (event?.functionID) {
       case 'SYS02': //Xoa

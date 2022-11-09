@@ -39,11 +39,11 @@ export class EmployeesLeaveComponent implements OnInit {
         this.urlDetail = res[1].url;
       }
     });
-   }
+  }
 
   ngOnInit(): void {
     this.columnsGrid = [
-      { field: '', headerText: '', width: 20, template: this.itemAction },
+      { field: '', headerText: '', width: 40, template: this.itemAction },
       { field: 'employeeID', headerText: 'Nhân viên', width: 300, template: this.itemEmployee },
       { field: 'email', headerText: 'Liên hệ', width: 300, template: this.itemContact },
       { field: 'birthday', headerText: 'Thông tin cá nhân', width: 200, template: this.itemInfoPersonal },
@@ -78,15 +78,15 @@ export class EmployeesLeaveComponent implements OnInit {
   }
 
   // delete(data: any) {
-    // this.view.dataService
-    //   .delete([this.view.dataService.dataSelected] ,true,(opt) =>
-    //     this.beforeDel(opt)
-    //   )
-    //   .subscribe((res) => {
-    //     if (res[0]) {
-    //       this.notiService.notifyCode('TM004');
-    //     }
-    //   });
+  // this.view.dataService
+  //   .delete([this.view.dataService.dataSelected] ,true,(opt) =>
+  //     this.beforeDel(opt)
+  //   )
+  //   .subscribe((res) => {
+  //     if (res[0]) {
+  //       this.notiService.notifyCode('TM004');
+  //     }
+  //   });
   // }
 
   // beforeDel(opt: RequestOption) {
