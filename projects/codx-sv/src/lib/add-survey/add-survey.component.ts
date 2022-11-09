@@ -280,9 +280,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     }
   }
 
-  addAnswer(dataQuestion) {
-    this.questions[dataQuestion.seqNo]?.answers.filter((x) => x.other == false);
-    var seqNo = this.questions[dataQuestion.seqNo]?.answers.length;
+  addAnswer(indexSession, indexQuestion) {
+    var data = JSON.parse(JSON.stringify(this.questions[indexSession].children[indexQuestion]));
+    data?.answers.filter((x) => x.other == false);
+    var seqNo = data?.answers.length;
     var dataAnswerTemp = {
       seqNo: seqNo,
       answer: `Tùy chọn ${seqNo + 1}`,
@@ -290,36 +291,38 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       isColumn: false,
       hasPicture: false,
     };
-    var index = this.questions[dataQuestion.seqNo].answers.findIndex(
+    var index = data.answers.findIndex(
       (x) => x.other == true
     );
     if (index >= 0) {
-      var dataotherTemp = {
+      var dataOtherTemp = {
         seqNo: seqNo - 1,
         answer: `Tùy chọn ${seqNo}`,
         other: false,
         isColumn: false,
         hasPicture: false,
       };
-      this.questions[dataQuestion.seqNo].answers.splice(
+      data.answers.splice(
         seqNo - 1,
         0,
-        dataotherTemp
+        dataOtherTemp
       );
-      this.questions[dataQuestion.seqNo].answers[index + 1].seqNo = seqNo;
-    } else this.questions[dataQuestion.seqNo].answers.push(dataAnswerTemp);
+      data.answers[index + 1].seqNo = seqNo;
+    } else data.answers.push(dataAnswerTemp);
+    this.questions[indexSession].children[indexQuestion] = data;
   }
 
-  deleteAnswer(dataQuestion, dataAnswer) {
+  deleteAnswer(indexSession, indexQuestion, dataAnswer) {
     var data = JSON.parse(
-      JSON.stringify(this.questions[dataQuestion.seqNo]?.answers)
+      JSON.stringify(this.questions[indexSession].children[indexQuestion].answers)
     );
     data = data.filter((x) => x.seqNo != dataAnswer.seqNo);
     data.forEach((x, index) => {
       x.seqNo = index;
     });
-    this.questions[dataQuestion.seqNo]!.answers = data;
-    if (dataAnswer.other) this.questions[dataQuestion.seqNo].other = true;
+    this.questions[indexSession].children[indexQuestion].answers = data;
+    if (dataAnswer.other) this.questions[indexSession].children[indexQuestion].other = false;
+    console.log("check questions", this.questions)
   }
 
   deleteCard(dataQuestion) {
@@ -333,8 +336,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.questions = data;
   }
 
-  addOtherAnswer(dataQuestion) {
-    var seqNo = this.questions[dataQuestion.seqNo]?.answers?.length;
+  addOtherAnswer(indexSession, indexQuestion) {
+    var seqNo = this.questions[indexSession].children[indexQuestion].answers?.length;
     var dataAnswerTemp = {
       seqNo: seqNo,
       answer: '',
@@ -343,11 +346,11 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       hasPicture: false,
     };
     var data = JSON.parse(
-      JSON.stringify(this.questions[dataQuestion.seqNo]?.answers)
+      JSON.stringify(this.questions[indexSession].children[indexQuestion].answers)
     );
     data.push(dataAnswerTemp);
-    this.questions[dataQuestion.seqNo]!.answers = data;
-    this.questions[dataQuestion.seqNo]['other'] = false;
+    this.questions[indexSession].children[indexQuestion]!.answers = data;
+    this.questions[indexSession].children[indexQuestion]['other'] = true;
   }
 
   copyCard(category, dataQuestion) {
@@ -412,7 +415,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       ''
     );
     dialog.closed.subscribe((res) => {
-      debugger;
       if (res.event) {
         this.uploadImage(this.itemActive, res.event);
       }
@@ -546,15 +548,19 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   addSection(dataQuestion) {}
 
-  clickQuestionMF(functionID, dataQuestion) {
-    if (functionID) {
-      this.questions[dataQuestion.seqNo].answerType = functionID;
-      var data = JSON.parse(JSON.stringify(this.questions[dataQuestion.seqNo]));
+  clickQuestionMF(indexSession, indexQuestion, answerType) {
+    if (answerType) {
+      var data = JSON.parse(
+        JSON.stringify(
+          this.questions[indexSession].children[indexQuestion]
+        )
+      );
+      data.answerType = answerType;
       if (
-        functionID == 'T' ||
-        functionID == 'T2' ||
-        functionID == 'D' ||
-        functionID == 'H'
+        answerType == 'T' ||
+        answerType == 'T2' ||
+        answerType == 'D' ||
+        answerType == 'H'
       ) {
         data.other = false;
         data.answers = new Array();
@@ -566,12 +572,12 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           hasPicture: false,
         };
         data.answers.push(dataAnswerTemp);
-      } else if (functionID == 'L3') data.other = false;
+      } else if (answerType == 'L') data.other = false;
       else data.other = true;
       if (data.answers.length == 1) {
         data.answers[0].answer = 'Tùy chọn 1';
       }
-      this.questions[dataQuestion.seqNo] = data;
+      this.questions[indexSession].children[indexQuestion] = data;
     }
   }
 }
