@@ -91,16 +91,17 @@ export class PopupAddPermissionComponent implements OnInit {
       this.per.sendEmail = this.sentEmail;
       this.per.postBlog = this.postblog;
       this.per.urlPath = this.getPath();
-      this.api
+
+    }
+    this.api
         .execSv<any>(
           'BP',
           'BP',
           'ProcessesBusiness',
           'RequestOrShareProcessAsync',
-          this.per
+          [this.per]
         )
         .subscribe((res) => {
-          console.log(res);
           if (res) {
             if (this.per.form == 'share')
               this.notificationsService.notify('Chia sẻ thành công');
@@ -114,8 +115,8 @@ export class PopupAddPermissionComponent implements OnInit {
               );
           }
         });
-    }
-    this.dialog.close();
+        this.dialog.close();
+
   }
   //#endregion
 

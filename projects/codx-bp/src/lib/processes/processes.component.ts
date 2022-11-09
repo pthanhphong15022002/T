@@ -27,6 +27,7 @@ import { BP_Processes } from '../models/BP_Processes.model';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
+import { PopupRolesComponent } from './popup-roles/popup-roles.component';
 import { RevisionsComponent } from './revisions/revisions.component';
 
 @Component({
@@ -86,22 +87,16 @@ export class ProcessesComponent
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
-    
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.cache
-      .gridViewSetup(
-        'Processes',
-        'grvProcesses'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
+    this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -114,6 +109,7 @@ export class ProcessesComponent
       { headerTemplate: this.itemVersionNo, width: 100 },
       { headerTemplate: this.itemActivedOn, width: 150 },
       { headerTemplate: this.itemMemo, width: 300 },
+      { field: '', headerText: '', width: 100 },
       { field: '', headerText: '', width: 100 },
     ];
   }
@@ -254,7 +250,7 @@ export class ProcessesComponent
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessesComponent,
-          ['edit',this.titleAction],
+          ['edit', this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -265,7 +261,7 @@ export class ProcessesComponent
             });
             this.detectorRef.detectChanges();
           }
-        })
+        });
       });
   }
 
@@ -347,8 +343,8 @@ export class ProcessesComponent
         this.properties(data);
         break;
       case 'BPT101':
-          this.viewDetailProcessSteps(e?.data,data);
-          break;
+        this.viewDetailProcessSteps(e?.data, data);
+        break;
       case 'BPT102':
         this.reName(data);
         break;
@@ -375,10 +371,10 @@ export class ProcessesComponent
   }
 
   reName(data) {
-      this.dataSelected = data;
-      this.newName = data.processName;
-      this.crrRecID = data.recID;
-      this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
+    this.dataSelected = data;
+    this.newName = data.processName;
+    this.crrRecID = data.recID;
+    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
   revisions(more, data) {
@@ -402,16 +398,37 @@ export class ProcessesComponent
     });
   }
 
-  permission(data){
+  permission(data) {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     data.id = data.recID;
-    this.callfc.openSide(PopupAddPermissionComponent, [this.titleAction , data, false], option);
+    this.callfc.openSide(
+      PopupAddPermissionComponent,
+      [this.titleAction, data, false],
+      option
+    );
   }
 
-  share(data){
+  roles(e: any) {
+    console.log(e);
+    this.callfc
+      .openForm(
+        PopupRolesComponent,
+        '',
+        950,
+        650,
+        '',
+        [this.titleAction, e],
+        ''
+      )
+      .closed.subscribe((item) => {
+        this.view?.dataService.update(item?.event).subscribe();
+      });
+  }
+
+  share(data) {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
@@ -419,7 +436,11 @@ export class ProcessesComponent
     // let data = {} as any;
     // data.title = this.titleUpdateFolder;
     data.id = data.recID;
-    this.callfc.openSide(PopupAddPermissionComponent, [this.titleAction , data, true], option);
+    this.callfc.openSide(
+      PopupAddPermissionComponent,
+      [this.titleAction, data, true],
+      option
+    );
   }
 
   valueChange(e) {
@@ -427,7 +448,7 @@ export class ProcessesComponent
   }
 
   onSave() {
-    if(this.newName.trim() == "" || this.newName == null){
+    if (this.newName.trim() == '' || this.newName == null) {
       this.notification.notifyCode(
         'SYS009',
         0,
@@ -469,13 +490,13 @@ export class ProcessesComponent
   //#endregion
 
   //tesst
-  viewDetailProcessSteps(e,data) {
+  viewDetailProcessSteps(e, data) {
     this.bpService.viewProcesses.next(data);
     // this.codxService.navigate('', e?.url); thuong chua add
     this.codxService.navigate('', 'bp/processstep/BPT11');
   }
 
-  approval($event) {
+  approval($event) {}
 
-  }
+
 }
