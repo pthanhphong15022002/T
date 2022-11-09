@@ -227,7 +227,7 @@ export class HomeComponent extends UIComponent {
         });
       }
     });
-
+   
     this.dmSV.isDisableUpload.subscribe((res) => {
       if (res) {
         this.button.disabled = res;
@@ -609,6 +609,7 @@ export class HomeComponent extends UIComponent {
         }
         this.dmSV.folderName = item.folderName;
         this.dmSV.parentFolderId = item.parentId;
+        this.dmSV.parentFolder.next(item);
         this.dmSV.level = item.level;
         this.dmSV.getRight(item);
 
@@ -800,8 +801,14 @@ export class HomeComponent extends UIComponent {
     this.codxview.dataService.parentIdField = 'parentId';
     this.dmSV.formModel = this.view.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
+   
+    if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
+    {
+      this.dmSV.dmFavoriteID = "2";
+      this.folderService.options.favoriteID = "2";
+      this.fileService.options.favoriteID = "2";
+    }
     this.getDataFile('');
-
     //   console.log(this.button);
   }
 
@@ -814,6 +821,12 @@ export class HomeComponent extends UIComponent {
  
     if (event.text != 'Search' && this.view.formModel.funcID != 'DMT02') {
       this.data = [];
+      if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
+      {
+        this.dmSV.dmFavoriteID = "2";
+        this.folderService.options.favoriteID = "2";
+        this.fileService.options.favoriteID = "2";
+      }
       this.dmSV.page = 1;
       var id = !this.dmSV.folderID ? '' : this.dmSV.folderID;
       this.getDataFile(id);
@@ -1143,23 +1156,19 @@ export class HomeComponent extends UIComponent {
       switch (this.view.funcID) {
         case 'DMT05':
           breadcumb.push(this.dmSV.titleShareBy);
+          this.folderService.options.funcID = "DMT05";
           break;
         case 'DMT06':
-          {
-            this.dmSV.dmFavoriteID = "2";
-            breadcumb.push(this.dmSV.titleRequestShare);
-            this.folderService.options.funcID = "DMT06";
-            this.folderService.options.favoriteID = "2";
-            this.getDataFolder("");
-            this.fileService.options.funcID = "DMT06";
-            this.fileService.options.favoriteID = "2";
-            this.getDataFile("");
-          }
-       
+          breadcumb.push(this.dmSV.titleRequestShare);
+          this.folderService.options.funcID = "DMT06";
           break;
         case 'DMT07':
           breadcumb.push(this.dmSV.titleRequestBy);
           break;
+      }
+      if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
+      {
+        this.getDataFolder("");
       }
       if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {
         this.dmSV.disableInput.next(true);

@@ -72,7 +72,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   ngAfterViewInit() {
     this.views = [
@@ -86,6 +86,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
         },
       },
     ];
+    this.changedt.detectChanges();
   }
   ngOnChanges() {
     if (!this.isLoad) return;

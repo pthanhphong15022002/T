@@ -81,6 +81,16 @@ export const routes: Routes = [
       },
       {
         path: '',
+        component: LayoutOnlyHeaderComponent,
+        children: [
+          {
+            path: 'employeedetail/:funcID',
+            component: EmployeeProfileComponent,
+          },
+        ],
+      },
+      {
+        path: '',
         component: NoSubAsideComponent,
         children: [
           // {
@@ -99,10 +109,7 @@ export const routes: Routes = [
             path: 'employeelist/:funcID',
             component: EmployeeListComponent,
           },
-          {
-            path: 'employeedetail/:funcID',
-            component: EmployeeProfileComponent,
-          },
+
           {
             path: 'employeeleave/:funcID',
             component: EmployeesLeaveComponent,
