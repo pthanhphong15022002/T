@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
-import { tmpInforSentEMail } from './models/BP_Processes.model';
 
 @Injectable({
   providedIn: 'root',
