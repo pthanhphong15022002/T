@@ -111,11 +111,12 @@ export class ProcessStepsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.activedRouter.params.subscribe((res) => {
       this.funcID = res.funcID;
       this.processID = res.processID;
     });
-
+    
     this.bpService.viewProcesses.subscribe((res) => {
       this.process = res;
       this.processID = this.process?.recID ? this.process?.recID : '';
@@ -128,26 +129,29 @@ export class ProcessStepsComponent
       if (!this.processID) {
         this.codxService.navigate('', this.urlBack);
       }
-      this.getFlowChart(this.process?.flowchart);
+      this.getFlowChart(this.process?.recID);
 
-      this.request = new ResourceModel();
-      this.request.service = 'BP';
-      this.request.assemblyName = 'BP';
-      this.request.className = 'ProcessStepsBusiness';
-      this.request.method = 'GetProcessStepsWithKanbanAsync';
-      this.request.idField = 'recID';
-      this.request.dataObj = this.dataObj; ///de test
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessStepsBusiness';
+    this.request.method = 'GetProcessStepsWithKanbanAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj; ///de test
 
-      this.resourceKanban = new ResourceModel();
-      this.resourceKanban.service = 'BP';
-      this.resourceKanban.assemblyName = 'BP';
-      this.resourceKanban.className = 'ProcessStepsBusiness';
-      this.resourceKanban.method = 'GetColumnsKanbanAsync';
-      this.resourceKanban.dataObj = this.dataObj;
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'BP';
+    this.resourceKanban.assemblyName = 'BP';
+    this.resourceKanban.className = 'ProcessStepsBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
     });
   }
 
   onInit(): void {
+
+  
+
     this.bpService
       .getListFunctionMenuCreatedStepAsync(this.funcID)
       .subscribe((datas) => {
@@ -184,7 +188,7 @@ export class ProcessStepsComponent
       {
         type: ViewType.kanban,
         active: false,
-        sameData: true,
+        sameData: false,
         request: this.request,
         request2: this.resourceKanban,
         model: {
@@ -592,6 +596,7 @@ export class ProcessStepsComponent
 
   viewChanged(e) {
     // test
+    console.log(this.view.dataService.data) 
     if (e?.view.type == 16) {
       this.dataTreeProcessStep = this.view.dataService.data;
       this.listPhaseName = [];
