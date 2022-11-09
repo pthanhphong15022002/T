@@ -1,7 +1,40 @@
-<codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
     <div class="row">
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
+        <div class="user-mini-nav">
+          <div *ngIf="process.permissions != null && process.permissions.length != null">
+            <ng-container *ngFor="let perm of process?.permissions; index as i;">
+              <div (click)="changePermission(i)"  [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
+                <div class="d-flex align-items-center w-100">
+                  <div class="symbol symbol-30 symbol-circle me-3">
+                    <div *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
+                    </div>
+                    <ng-template #thenAvatar1>
+                      <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="25"
+                        imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="perm.objectName"
+                        [descLine]="1">
+                      </codx-temp-full>
+                    </ng-template>
+                    <ng-template #elsethenAvatar1>
+                      <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
+                        imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25"
+                        [title]="perm.objectName">
+                      </codx-temp-full>
+                    </ng-template>
+                  </div>
+                </div>
+                <ng-container>
+                  <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
+                    (click)="removeUserRight(i)">
+                    <i class="icon-close text-danger icon-16"></i>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+        </div>
       </div>
       <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
         <div class="role-right">
@@ -25,8 +58,8 @@
                   <codx-label [default]="'Full Control'" [fiedName]="'Full'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Người dùng có tất cả quyền trên folder/file'"
-                    [fiedName]="'DescriptionFull'"></codx-label>
+                  <codx-label [default]="'Người dùng có tất cả quyền trên folder/file'" [fiedName]="'DescriptionFull'">
+                  </codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="full" field="full"
@@ -40,13 +73,11 @@
                   <codx-label [default]="'Tạo thư mục'" [fiedName]="'Create'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép tạo thư mục'"
-                    [fiedName]="'DescriptionCreate'"></codx-label>
+                  <codx-label [default]="'Cho phép tạo thư mục'" [fiedName]="'DescriptionCreate'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="create" field="create"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')"
-                    >
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')">
                   </codx-input>
                 </td>
               </tr>
@@ -55,13 +86,12 @@
                   <codx-label [default]="'View'" [fiedName]="'Read'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép xem chi tiết folder/file'"
-                    [fiedName]="'DescriptionRead'"></codx-label>
+                  <codx-label [default]="'Cho phép xem chi tiết folder/file'" [fiedName]="'DescriptionRead'">
+                  </codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="read" field="read"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')"
-                    >
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')">
                   </codx-input>
                 </td>
               </tr>
@@ -74,9 +104,8 @@
                     [fiedName]="'DescriptionUpdate'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="update" field="update"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'update')"
-                    >
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="updatePerm" field="update"
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'update')">
                   </codx-input>
                 </td>
               </tr>
@@ -85,13 +114,11 @@
                   <codx-label [default]="'Xóa'" [fiedName]="'Delete'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép xóa folder/file'"
-                    [fiedName]="'DescriptionDelete'"></codx-label>
+                  <codx-label [default]="'Cho phép xóa folder/file'" [fiedName]="'DescriptionDelete'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete" field="delete"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'delete')"
-                    >
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="deletePerm" field="delete"
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'delete')">
                   </codx-input>
                 </td>
               </tr>
@@ -100,13 +127,11 @@
                   <codx-label [default]="'Chia sẻ'" [fiedName]="'Share'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép chia sẻ folder/file'"
-                    [fiedName]="'DescriptionShare'"></codx-label>
+                  <codx-label [default]="'Cho phép chia sẻ folder/file'" [fiedName]="'DescriptionShare'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'share')"
-                    >
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'share')">
                   </codx-input>
                 </td>
               </tr>
@@ -115,13 +140,12 @@
                   <codx-label [default]="'Chia sẻ quyền'" [fiedName]="'Assign'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'"
-                    [fiedName]="'DescriptionAssign'"></codx-label>
+                  <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [fiedName]="'DescriptionAssign'">
+                  </codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="assign" field="assign"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'assign')"
-                    >
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'assign')">
                   </codx-input>
                 </td>
               </tr>
@@ -130,13 +154,11 @@
                   <codx-label [default]="'Upload'" [fiedName]="'Upload'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép upload file'"
-                    [fiedName]="'DescriptionUpload'"></codx-label>
+                  <codx-label [default]="'Cho phép upload file'" [fiedName]="'DescriptionUpload'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="upload" field="upload"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'upload')"
-                    >
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'upload')">
                   </codx-input>
                 </td>
               </tr>
@@ -145,13 +167,11 @@
                   <codx-label [default]="'Download'" [fiedName]="'Download'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép upload file'"
-                    [fiedName]="'DescriptionDownload'"></codx-label>
+                  <codx-label [default]="'Cho phép upload file'" [fiedName]="'DescriptionDownload'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="download" field="download"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'download')"
-                    >
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'download')">
                   </codx-input>
                 </td>
               </tr>
