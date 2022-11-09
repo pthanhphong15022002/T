@@ -445,6 +445,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           switch (data.stepType) {
             case 'P':
               this.view.dataService.delete(data);
+              this.view.dataService.data.forEach((dt) => {
+                if (dt.stepNo > data.stepNo) dt.stepNo--;
+              });
               this.listPhaseName.splice(data.stepNo - 1, 1);
               break;
             case 'A':
@@ -455,6 +458,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 if (index != -1) {
                   if (kanban) kanban.removeCard(obj.items[index]);
                   obj.items.splice(index, 1);
+                  obj.items.forEach((dt) => {
+                    if (dt.stepNo > data.stepNo) dt.stepNo--;
+                  });
                 }
               });
               break;
@@ -470,6 +476,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                     if (index != -1) {
                       child.items.splice(index, 1);
                       if (kanban) kanban.updateCard(obj.items[index]);
+                      child.items.forEach((dt) => {
+                        if (dt.stepNo > data.stepNo) dt.stepNo--;
+                      });
                       index = -1;
                     }
                   });
