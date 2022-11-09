@@ -491,7 +491,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
-    if(!this.isAdd){
+    if((this.isAdd && this.data.resourceID!=null) || !this.isAdd){
       this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
         if(res){
           this.roomCapacity= res.capacity;
@@ -557,6 +557,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {   
+    let roleCheck=0;
+    if(this.curUser.roleType!="1"){
+      this.attendeesList.forEach(item=>{
+        if(item.roleType=="1"){
+          roleCheck=roleCheck+1;        
+        }      
+      });
+      if(roleCheck<1){
+        this.notificationsService.notify('Chưa có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
+        return;
+      }
+    }
+    
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -564,8 +577,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.fGroupAddBookingRoom,
         this.formModel
       );
+      return;
     }
     if (!this.bookingOnCheck()) {
+      this.notificationsService.notifyCode('EP001');
+      return;
+    }
+    if (this.data.startDate< new Date()) {
       this.notificationsService.notifyCode('EP001');
       return;
     }
@@ -1148,25 +1166,26 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
   
   showPopover(p, userID) {
-    if (this.popover) this.popover.close();
+    // if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
     p.open();
     this.popover = p;
   }
   selectRoseType(idUserSelected, value) {
-    // if(value=="1"){
-    //   let checkRole=true;
-    //   this.attendeesList.forEach(att=>{
-    //     if(att.roleType == value || this.curUser.roleType== value){
-    //       checkRole=false;          
-    //     }      
-    //   });
-    //   if(!checkRole){
-    //     //this.notificationsService.notifyCode('');
-    //     this.notificationsService.notify('Đã có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
-    //     return;
-    //   }
-    // }
+    if(value=="1"){
+      let checkRole=true;
+      this.attendeesList.forEach(att=>{
+        if(att.roleType == value || this.curUser.roleType== value){
+          checkRole=false;          
+        }      
+      });
+      if(!checkRole){
+        //this.notificationsService.notifyCode('');
+        this.notificationsService.notify('Đã có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
+        //this.popover.close();
+        return;
+      }
+    }
     if(idUserSelected==this.curUser.userID){
       this.curUser.roleType=value;
       this.listRoles.forEach((role) => {

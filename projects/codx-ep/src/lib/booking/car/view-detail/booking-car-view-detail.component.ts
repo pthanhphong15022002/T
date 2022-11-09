@@ -8,7 +8,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
 import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
+import moment from 'moment';
 import { CodxEpService } from '../../../codx-ep.service';
 
 @Component({
@@ -104,7 +106,17 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   changeDataMF(event, data: any) {
     
   }
-
+  sameDayCheck(sDate:any, eDate:any){
+    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
   }

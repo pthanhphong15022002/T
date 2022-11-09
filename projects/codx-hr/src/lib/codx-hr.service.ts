@@ -142,7 +142,7 @@ export class CodxHrService {
       'EmployeesBusiness',
       'UpdateEmployeeUnionAndPartyInfoAsync',
       data
-    );
+    )
   }
 
 }
