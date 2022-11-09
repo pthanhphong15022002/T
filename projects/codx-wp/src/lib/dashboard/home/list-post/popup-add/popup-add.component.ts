@@ -255,12 +255,18 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
+            this.listFileUpload.map((e: any) => {
+              if (e.mimeType.indexOf('image') >= 0) {
+                e.referType = "image";
+              } else if (e.mimeType.indexOf('video') >= 0) {
+                e.referType = "video";
+              }
+            })
             result.files = [...this.listFileUpload];
-            debugger;
+            this.atmCreate.fileUploadList = this.listFileUpload;
             (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
               if (res) 
               {
-                debugger;
                 if(this.dialogRef?.dataService)
                 {
                   this.dialogRef.dataService.add(result, 0).subscribe();

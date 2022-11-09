@@ -602,6 +602,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       // upload file uri from Mr Long
     }
     this.fileUploadList[0].avatar = null;
+    this.fileUploadList[0].data = "";
     this.atSV.fileListAdded = [];
     return this.addFileObservable(this.fileUploadList[0]);
     //return this.onMultiFileSaveObservable();
@@ -619,6 +620,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         this.fileUploadList[i].objectID = this.objectId;
       // await this.serviceAddFile(fileItem);
       this.fileUploadList[i].avatar = null;
+      this.fileUploadList[i].data = "";
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
           this.fileUploadList[i],
@@ -793,6 +795,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.fileUploadList[i].objectID = this.objectId;
       this.fileUploadList[i].description = this.description[i];
       this.fileUploadList[i].avatar = null;
+      this.fileUploadList[i].data = "";
       toltalUsed += this.fileUploadList[i].fileSize;
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
@@ -964,6 +967,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         });
     } else if (total == 1) {
       this.fileUploadList[0].description = this.description[0];
+      this.fileUploadList[0].data = ""
       this.addFileLargeLong(this.fileUploadList[0]);
       //this.addFile(this.fileUploadList[0]);
 
@@ -2877,7 +2881,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
         {
           var url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(files[i].rawFile));
           fileUpload.data = url;
-          this.referType = 'video'
         }
         else
           fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
@@ -2903,6 +2906,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;
+       
         fileUpload.reWrite = false;
         //fileUpload.data = '';
         fileUpload.item = files[i];
