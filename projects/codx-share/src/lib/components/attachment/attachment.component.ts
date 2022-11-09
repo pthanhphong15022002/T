@@ -50,6 +50,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { from, map, mergeMap, Observable, Observer } from 'rxjs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { environment } from 'src/environments/environment';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -169,6 +170,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     public cache: CacheService,
     private callfc: CallFuncService,
     private notificationsService: NotificationsService,
+    private sanitizer: DomSanitizer,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -1011,11 +1013,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true,
     index: number = -1
   ): Observable<any[]> {
+    debugger;
     var ret = fileItem;
     var fileSize = parseInt(fileItem.fileSize);
     var that = this;
     fileItem.uploadId = '';
     fileItem.objectId = this.objectId;
+    fileItem.data = '';
     var appName = environment.appName;
     var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
     var uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
@@ -2865,11 +2869,17 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.fileName = files[i].name;
 
         fileUpload.description = files[i].description; //
-
         var type = files[i].type.toLowerCase();
         if (type == 'png' || type == 'jpg' || type == 'bmp') {
           fileUpload.avatar = data;
-        } else
+        } 
+        else if(type == "mp4" || type == "m4v" || type == "avi" || type == "mov" || type == "mpg" || type == "mpeg")
+        {
+          var url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(files[i].rawFile));
+          fileUpload.data = url;
+          this.referType = 'video'
+        }
+        else
           fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
             fileUpload.fileName
           )}`;
@@ -2894,7 +2904,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;
         fileUpload.reWrite = false;
-        fileUpload.data = '';
+        //fileUpload.data = '';
         fileUpload.item = files[i];
         //fileUpload.folderId = this.folderId;
         fileUpload.folderID = this.dmSV.folderId.getValue();
