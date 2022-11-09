@@ -1,3 +1,4 @@
+import { CodxHrService } from './../../codx-hr.service';
 import { Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import{
@@ -5,6 +6,7 @@ import{
   DialogData,
   DialogRef,
   FormModel,
+  NotificationsService,
   UIComponent,
 } from 'codx-core';
 
@@ -24,6 +26,8 @@ export class PopupAddEmployeesPartyInfoComponent extends UIComponent implements 
   
   constructor(
     private injector: Injector,
+    private notify: NotificationsService,
+    private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
@@ -50,6 +54,14 @@ export class PopupAddEmployeesPartyInfoComponent extends UIComponent implements 
 
   ngAfterViewInit(){
 
+  }
+
+  onSaveForm(){
+    this.hrService.saveEmployeeUnionAndPartyInfo(this.data).subscribe(p => {
+      if(p === "True"){
+        this.notify.notifyCode('SYS007')
+      }
+    })
   }
 
 
