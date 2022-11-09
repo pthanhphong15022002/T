@@ -560,7 +560,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         answerType == 'T' ||
         answerType == 'T2' ||
         answerType == 'D' ||
-        answerType == 'H'
+        answerType == 'H' ||
+        answerType == 'R' ||
+        answerType == 'O2' ||
+        answerType == 'C2'
       ) {
         data.other = false;
         data.answers = new Array();
