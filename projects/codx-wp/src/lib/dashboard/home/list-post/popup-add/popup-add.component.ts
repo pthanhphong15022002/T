@@ -249,19 +249,18 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     post.refType = this.entityName;
     post.permissions = this.permissions;
     post.listTag = this.tags;
+    debugger;
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe(async (result: any) => {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
-            this.listFileUpload.map((e: any) => {
-              e.objectId = this.atmCreate.objectId;
-            })
-            this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
+            debugger;
             (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
               if (res) 
               {
+                debugger;
                 if(this.dialogRef?.dataService)
                 {
                   this.dialogRef.dataService.add(result, 0).subscribe();
@@ -420,6 +419,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
 
   getfileCount(event: any) {
     if (event && event?.data?.length > 0) {
+      debugger;
       if (this.dialogData.status == this.STATUS.EDIT) {
         this.codxFileEdit.addFiles(event.data);
       }

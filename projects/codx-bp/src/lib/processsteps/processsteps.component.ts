@@ -13,6 +13,9 @@ import {
   Injector,
   ChangeDetectorRef,
   ViewEncapsulation,
+  OnChanges,
+  SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
@@ -41,7 +44,6 @@ import {
   BP_ProcessSteps,
 } from '../models/BP_Processes.model';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
-// import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 @Component({
   selector: 'lib-processsteps',
@@ -49,7 +51,10 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
   styleUrls: ['./processsteps.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProcessStepsComponent extends UIComponent implements OnInit {
+export class ProcessStepsComponent
+  extends UIComponent
+  implements OnInit
+{
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -106,43 +111,43 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.user = this.authStore.get();
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.activedRouter.params.subscribe((res) => {
+      this.funcID = res.funcID;
+      this.processID = res.processID;
+    });
 
-    this.bpService.viewProcesses.subscribe((res) => (this.process = res));
+    this.bpService.viewProcesses.subscribe((res) => {
+      this.process = res;
+      this.processID = this.process?.recID ? this.process?.recID : '';
+      this.numberColums = this.process?.phases ? this.process?.phases : 0;
+      this.dataObj = {
+        processID: this.processID,
+      };
+      this.layout.setUrl(this.urlBack);
+      this.layout.setLogo(null);
+      if (!this.processID) {
+        this.codxService.navigate('', this.urlBack);
+      }
+      this.getFlowChart(this.process?.flowchart);
 
-    this.processID = this.process?.recID
-      ? this.process?.recID
-      : '90ab82ac-43d1-11ed-83e7-d493900707c4'; //test
-    // this.processID = this.process?.recID ? this.process?.recID : '' ;
-    this.numberColums = this.process?.phases ? this.process?.phases : 0;
-    this.dataObj = {
-      processID: this.processID,
-    };
-    // this.dataObj = { processID: this.recIDProcess }; //tesst
-    this.layout.setUrl(this.urlBack);
-    this.layout.setLogo(null);
-    if (!this.processID) this.codxService.navigate('', this.urlBack);
-    this.getFlowChart(this.process?.flowchart);
+      this.request = new ResourceModel();
+      this.request.service = 'BP';
+      this.request.assemblyName = 'BP';
+      this.request.className = 'ProcessStepsBusiness';
+      this.request.method = 'GetProcessStepsWithKanbanAsync';
+      this.request.idField = 'recID';
+      this.request.dataObj = this.dataObj; ///de test
+
+      this.resourceKanban = new ResourceModel();
+      this.resourceKanban.service = 'BP';
+      this.resourceKanban.assemblyName = 'BP';
+      this.resourceKanban.className = 'ProcessStepsBusiness';
+      this.resourceKanban.method = 'GetColumnsKanbanAsync';
+      this.resourceKanban.dataObj = this.dataObj;
+    });
   }
 
   onInit(): void {
-    this.request = new ResourceModel();
-    this.request.service = 'BP';
-    this.request.assemblyName = 'BP';
-    this.request.className = 'ProcessStepsBusiness';
-    // this.request.method = 'GetProcessStepsAsync';
-    //this.request.dataObj = { isKanban: '1' }; ///de test
-    this.request.method = 'GetProcessStepsWithKanbanAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj; ///de test
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'BP';
-    this.resourceKanban.assemblyName = 'BP';
-    this.resourceKanban.className = 'ProcessStepsBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
-
     this.bpService
       .getListFunctionMenuCreatedStepAsync(this.funcID)
       .subscribe((datas) => {
@@ -166,6 +171,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    console.log('after view');
     this.views = [
       {
         type: ViewType.content,
@@ -178,7 +184,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       {
         type: ViewType.kanban,
         active: false,
-        sameData: false,
+        sameData: true,
         request: this.request,
         request2: this.resourceKanban,
         model: {
@@ -202,6 +208,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
     this.changeDetectorRef.detectChanges();
   }
+
+  // ngOnDestroy() {
+  //   console.log('on de troy');
+  // }
 
   //#region CRUD bước công việc
   add() {
@@ -831,7 +841,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.dataFile = Array.isArray(res) ? res[0] :null;
+          this.dataFile = Array.isArray(res) ? res[0] : null;
         }
       });
   }

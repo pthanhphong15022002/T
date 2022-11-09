@@ -19,6 +19,7 @@ import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
 import { PopupAddBookingCarComponent } from './popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService, ModelPage } from '../../codx-ep.service';
+import moment from 'moment';
 @Component({
   selector: 'booking-car',
   templateUrl: 'booking-car.component.html',
@@ -360,7 +361,17 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-
+  sameDayCheck(sDate:any, eDate:any){
+    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   closeEditForm(evt?: any) {
     if (evt) {
       this.dialog && this.dialog.close();
