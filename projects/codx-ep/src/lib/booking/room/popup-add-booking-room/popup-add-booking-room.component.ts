@@ -491,7 +491,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
-    if(!this.isAdd){
+    if((this.isAdd && this.data.resourceID!=null) || !this.isAdd){
       this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
         if(res){
           this.roomCapacity= res.capacity;
@@ -564,6 +564,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.fGroupAddBookingRoom,
         this.formModel
       );
+      return;
     }
     if (!this.bookingOnCheck()) {
       this.notificationsService.notifyCode('EP001');
