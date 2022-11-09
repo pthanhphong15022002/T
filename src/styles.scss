@@ -131,7 +131,8 @@ textarea.e-input,
   line-height: 20px;
 }
 
-img.w-20px.h-20px {
+img.w-20px.h-20px,
+.w-20px.h-20px>img {
   width: 20px;
   min-width: 20px;
   height: 20px;
@@ -455,6 +456,11 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 codx-img .top-100.start-100 {
   width: 26px;
   height: 26px;
+}
+
+codx-img .symbol-90px .top-100.start-100 {
+  margin-left: -10px;
+  margin-top: -10px;
 }
 
 codx-user-inner .top-100.start-100 {
@@ -1010,5 +1016,21 @@ codx-tag .codx-tag:hover {
 
 .e-datepicker.e-popup-open {
   width: 320px;
-  border: 1px aqua solid;
+}
+
+
+.tm-viewlist {
+  /* border: 1px green solid !important; */
+  min-width: 1000px;
+}
+
+.h-12px.w-12px {
+  width: 12px;
+  height: 12px;
+}
+
+/******* tam ***/
+.codx-form .card-footer,
+.e-dialog .card-footer {
+  padding-bottom: 10px !important;
 }

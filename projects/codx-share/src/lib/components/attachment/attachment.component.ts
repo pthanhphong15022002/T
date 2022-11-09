@@ -776,7 +776,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async onMultiFileSave() {
     if(this.dataFolder && this.dataFolder?.copyrights && this.isCopyRight>0) {
-      this.notificationsService.notify("Bạn chưa nhập thông tin bản quyền")
+      this.notificationsService.notifyCode("DM067")
       return;
     }
     if (this.data == undefined) this.data = [];
