@@ -78,15 +78,7 @@ export class EmployeeProfileComponent extends UIComponent {
     { icon: 'icon-apartment', text: 'Sức khỏe' },
     { icon: 'icon-apartment', text: 'Thôi việc' },
   ];
-  sampleData = {
-    employeeID: '012.MPDF',
-    joinedOn: '10/03/2015',
-    status: '',
-    orgUnitID: '',
-    email: 'lphthuong@lacviet.com.vn',
-    phone: '#LinePhone',
-    mobile: '0907323495',
-  };
+
   onInit(): void {
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
