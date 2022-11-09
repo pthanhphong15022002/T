@@ -149,24 +149,22 @@
     min-height: 60px;
 }
 
-// .cal-notes .lstView {
-//     height: auto !important;
-//     margin-top: 5px;
-//     border: 1px aqua solid;
-// }
 .cal-notes .lstView .card-body.p-0 {
-    //height: auto !important;
     padding: 10px 0 !important;
-    //max-height: 200px !important;
-    // border: 1px red solid;
-    min-height: 200px;
 }
 
-.cal-notes .lstView .w-200px {
-    height: 170px;
-    width: auto !important;
 
-}
+// .cal-notes .lstView .card-body.p-0 {
+//    padding: 10px 0 !important;
+//     border: 1px red solid;
+//     min-height: 200px;
+// }
+
+// .cal-notes .lstView .w-200px {
+//     height: 170px;
+//     width: auto !important;
+
+// }
 
 .cal-notes .lstView .list-empty {
     display: flex;
