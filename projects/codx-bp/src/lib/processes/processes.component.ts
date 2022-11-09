@@ -126,7 +126,8 @@ export class ProcessesComponent
       {
         id: '1',
         type: ViewType.grid,
-        active: false,
+        active: true,
+        hide:true,
         sameData: true,
         model: {
           resources: this.columnsGrid,
@@ -137,13 +138,14 @@ export class ProcessesComponent
         id: '2',
         type: ViewType.card,
         sameData: true,
-        active: false,
+        active: true,
+        hide:true,
         model: {
           template: this.templateListCard,
         },
       },
       {
-        id: '16',
+        id: '4',
         icon: 'icon-search',
         text: 'Search',
         hide: true,
@@ -176,11 +178,13 @@ export class ProcessesComponent
     gridModels.entityPermission = this.view.formModel.entityPer;
   }
   search() {
-    this.views.forEach(item => {
-      item.hide = true;
-      if (item.text == "Search")
-        item.hide = false;
-    });
+    // var viewsAction = []
+    // this.views.forEach(item => {
+    //   item.hide = true;
+    //   if (item.id == "4")
+    //     item.hide = false;
+    //     viewsAction.push(item)
+    // });
     // this.fileService.searchFile(this.textSearchAll, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
     //   if (item != null) {
     //     if(!isScroll)
@@ -223,9 +227,14 @@ export class ProcessesComponent
       const subscription = this.bpService
         .searchDataProcess(gridModels, x)
         .subscribe((value) => {
-          value = this.listProcess;
-          console.log(this.listProcess.listProcess);
-          console.log(this.listProcess.userParama);
+          // this.views = viewsAction
+          this.listProcess= value;
+          console.log(value);
+          console.log(this.listProcess);
+          console.log(this.listProcess[0]?.listProcess);
+          console.log(this.listProcess[1]?.userParama);
+
+          this.changeDetectorRef.detectChanges();
         });
     });
   }
@@ -248,7 +257,7 @@ export class ProcessesComponent
       // this.fileService.options.page = this.dmSV.page;
 
       this.textSearchAll = this.textSearch;
-      this.predicates = 'FileName.Contains(@0)';
+      this.predicates = 'ProcessName.Contains(@0)';
       this.values = this.textSearch;
       this.searchAdvance = false;
       this.viewActive = this.views.filter((x) => x.active == true)[0];
@@ -265,6 +274,7 @@ export class ProcessesComponent
 
         this.changeDetectorRef.detectChanges();
       } else {
+        this.isSearch=true;
         this.search();
         // var viewActive = []
         // this.views.forEach((item) => {
@@ -272,9 +282,9 @@ export class ProcessesComponent
         //   else item.active = true;
         //   viewActive.push(item)
         // });
-        this.view.viewChange(this.viewActive);
-        this.codxview.currentView.viewModel.model.panelLeftHide = false;
-        this.changeDetectorRef.detectChanges();``
+        // this.view.viewChange(this.viewActive);
+        // this.codxview.currentView.viewModel.model.panelLeftHide = false;
+        // this.changeDetectorRef.detectChanges();
       }
     } catch (ex) {
       this.changeDetectorRef.detectChanges();
