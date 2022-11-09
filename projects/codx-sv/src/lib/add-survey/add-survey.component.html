@@ -491,8 +491,8 @@
       />
     </div>
     <div *ngIf="itemQuestion.answerType == 'R'">
-      <div class="d-flex pd-l-16p">
-        <div ngbDropdown container="body">
+      <div class="d-flex ps-6">
+        <div ngbDropdown container="body" class="pe-3">
           <button
             type="button"
             class="btn btn-outline-primary btn-sm dropdown"
@@ -517,7 +517,7 @@
           </div>
         </div>
         <codx-label fiedName="To" default="đến"></codx-label>
-        <div ngbDropdown container="body">
+        <div ngbDropdown container="body" class="ps-3">
           <button
             type="button"
             class="btn btn-outline-primary btn-sm dropdown"
@@ -580,7 +580,7 @@
       <div class="d-flex e-input-group e-input-group-full pd-10">
         <span>{{ 1 }}</span>
         <input
-          class="e-input"
+          class="e-input ps-6"
           type="text"
           placeholder="Nhãn (không bắt buộc)"
           (focus)="focusIn($event.target)"
@@ -590,7 +590,7 @@
       <div class="d-flex e-input-group e-input-group-full pd-10">
         <span>{{ 5 }}</span>
         <input
-          class="e-input"
+          class="e-input ps-6"
           type="text"
           placeholder="Nhãn (không bắt buộc)"
           (focus)="focusIn($event.target)"
