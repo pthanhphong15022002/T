@@ -233,6 +233,18 @@
         <span class="icon-cloud_upload icon-24"></span>
         <codx-label fiedName="" default="Tải tệp lên"></codx-label>
       </div>
+      <div class="d-flex" *ngIf="answerType == 'R'">
+        <span class="icon-24"></span>
+        <codx-label fiedName="" default="Phạm vi tuyến tính"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="answerType == 'O2'">
+        <span class="icon-24"></span>
+        <codx-label fiedName="" default="Lưới trắc nghiệm"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="answerType == 'C2'">
+        <span class="icon-view_module icon-24"></span>
+        <codx-label fiedName="" default="Lưới hộp kiểm"></codx-label>
+      </div>
       <div class="d-flex" *ngIf="answerType == 'D'">
         <span class="icon-calendar_today icon-24"></span>
         <codx-label fiedName="" default="Ngày"></codx-label>
@@ -478,6 +490,114 @@
         [disabled]="true"
       />
     </div>
+    <div *ngIf="itemQuestion.answerType == 'R'">
+      <div class="d-flex ps-6">
+        <div ngbDropdown container="body" class="pe-3">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm dropdown"
+            ngbDropdownToggle
+          >
+            <div class="d-flex">
+              <span>1</span>
+              <span class="icon-arrow_drop_down icon-18"></span>
+            </div>
+          </button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>0</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>1</span>
+              </div>
+            </button>
+          </div>
+        </div>
+        <codx-label fiedName="To" default="đến"></codx-label>
+        <div ngbDropdown container="body" class="ps-3">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm dropdown"
+            ngbDropdownToggle
+          >
+            <div class="d-flex">
+              <span>5</span>
+              <span class="icon-arrow_drop_down icon-18"></span>
+            </div>
+          </button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>2</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>3</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>4</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>5</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>6</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>7</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>8</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>9</span>
+              </div>
+            </button>
+            <button ngbDropdownItem>
+              <div class="d-flex">
+                <span>10</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex e-input-group e-input-group-full pd-10">
+        <span>{{ 1 }}</span>
+        <input
+          class="e-input ps-6"
+          type="text"
+          placeholder="Nhãn (không bắt buộc)"
+          (focus)="focusIn($event.target)"
+          (blur)="focusOut($event.target)"
+        />
+      </div>
+      <div class="d-flex e-input-group e-input-group-full pd-10">
+        <span>{{ 5 }}</span>
+        <input
+          class="e-input ps-6"
+          type="text"
+          placeholder="Nhãn (không bắt buộc)"
+          (focus)="focusIn($event.target)"
+          (blur)="focusOut($event.target)"
+        />
+      </div>
+    </div>
     <ng-container
       #iconRight
       *ngIf="
@@ -498,117 +618,6 @@
         <span class="icon-close icon-24 pd-s-e-10"></span>
       </div>
     </ng-container>
-  </div>
-  <div class="e-input-group" *ngIf="itemQuestion.answerType == 'R'">
-    <div class="d-flex">
-      <div ngbDropdown container="body">
-        <button
-          type="button"
-          class="btn btn-outline-primary btn-sm dropdown"
-          ngbDropdownToggle
-        >
-          <div class="d-flex">
-            <span>1</span>
-            <span class="icon-arrow_drop_down icon-18"></span>
-          </div>
-        </button>
-        <div ngbDropdownMenu>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>0</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span class="icon-short_text icon-24"></span>
-              <span>1</span>
-            </div>
-          </button>
-        </div>
-      </div>
-      <codx-label fiedName="To" default="đến"></codx-label>
-      <div ngbDropdown container="body">
-        <button
-          type="button"
-          class="btn btn-outline-primary btn-sm dropdown"
-          ngbDropdownToggle
-        >
-          <div class="d-flex">
-            <span>2</span>
-            <span class="icon-arrow_drop_down icon-18"></span>
-          </div>
-        </button>
-        <div ngbDropdownMenu>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>2</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>3</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>4</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>5</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>6</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>7</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>8</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>9</span>
-            </div>
-          </button>
-          <button ngbDropdownItem>
-            <div class="d-flex">
-              <span>10</span>
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex">
-      <span>{{ 1 }}</span>
-      <input
-        class="e-input"
-        type="text"
-        placeholder="Nhãn (không bắt buộc)"
-        (focus)="focusIn($event.target)"
-        (blur)="focusOut($event.target)"
-        [disabled]="true"
-      />
-    </div>
-    <div class="d-flex">
-      <span>{{ 5 }}</span>
-      <input
-        class="e-input"
-        type="text"
-        placeholder="Nhãn (không bắt buộc)"
-        (focus)="focusIn($event.target)"
-        (blur)="focusOut($event.target)"
-        [disabled]="true"
-      />
-    </div>
   </div>
 </ng-template>
 <ng-template
@@ -707,10 +716,8 @@
       class="d-flex size-input-other"
       *ngIf="
         itemQuestion?.active &&
-        itemQuestion.answerType != 'T' &&
-        itemQuestion.answerType != 'T2' &&
-        itemQuestion.answerType != 'D' &&
-        itemQuestion.answerType != 'H'
+        itemQuestion.answerType == 'O' ||
+        itemQuestion.answerType == 'C'
       "
     >
       <ng-container
