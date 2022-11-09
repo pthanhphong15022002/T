@@ -249,7 +249,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     post.refType = this.entityName;
     post.permissions = this.permissions;
     post.listTag = this.tags;
-    debugger;
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe(async (result: any) => {
         if (result) {
