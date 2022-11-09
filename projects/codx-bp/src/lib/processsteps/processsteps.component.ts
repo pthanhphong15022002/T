@@ -51,10 +51,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
   styleUrls: ['./processsteps.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProcessStepsComponent
-  extends UIComponent
-  implements OnInit
-{
+export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -116,7 +113,7 @@ export class ProcessStepsComponent
       this.funcID = res.funcID;
       this.processID = res.processID;
     });
-    
+
     this.bpService.viewProcesses.subscribe((res) => {
       this.process = res;
       this.processID = this.process?.recID ? this.process?.recID : '';
@@ -131,27 +128,24 @@ export class ProcessStepsComponent
       }
       this.getFlowChart(this.process?.recID);
 
-    this.request = new ResourceModel();
-    this.request.service = 'BP';
-    this.request.assemblyName = 'BP';
-    this.request.className = 'ProcessStepsBusiness';
-    this.request.method = 'GetProcessStepsWithKanbanAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj; ///de test
+      this.request = new ResourceModel();
+      this.request.service = 'BP';
+      this.request.assemblyName = 'BP';
+      this.request.className = 'ProcessStepsBusiness';
+      this.request.method = 'GetProcessStepsWithKanbanAsync';
+      this.request.idField = 'recID';
+      this.request.dataObj = this.dataObj; ///de test
 
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'BP';
-    this.resourceKanban.assemblyName = 'BP';
-    this.resourceKanban.className = 'ProcessStepsBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
+      this.resourceKanban = new ResourceModel();
+      this.resourceKanban.service = 'BP';
+      this.resourceKanban.assemblyName = 'BP';
+      this.resourceKanban.className = 'ProcessStepsBusiness';
+      this.resourceKanban.method = 'GetColumnsKanbanAsync';
+      this.resourceKanban.dataObj = this.dataObj;
     });
   }
 
   onInit(): void {
-
-  
-
     this.bpService
       .getListFunctionMenuCreatedStepAsync(this.funcID)
       .subscribe((datas) => {
@@ -212,10 +206,6 @@ export class ProcessStepsComponent
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
     this.changeDetectorRef.detectChanges();
   }
-
-  // ngOnDestroy() {
-  //   console.log('on de troy');
-  // }
 
   //#region CRUD bước công việc
   add() {
@@ -545,7 +535,7 @@ export class ProcessStepsComponent
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
-    this.titleAction = e.text;
+    this.titleAction = this.getTitleAction(e.text, data.stepType);
     //test
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
@@ -567,6 +557,17 @@ export class ProcessStepsComponent
       case 'SYS02':
         this.delete(data);
     }
+  }
+
+  getTitleAction(action, stepType): string {
+    var menu = this.button.items.find((x) => x.id == stepType);
+    if (!menu) return action;
+    return (
+      action +
+      ' ' +
+      menu?.text.charAt(0).toLocaleLowerCase() +
+      menu?.text.slice(1)
+    );
   }
 
   onActions(e: any) {
@@ -596,7 +597,6 @@ export class ProcessStepsComponent
 
   viewChanged(e) {
     // test
-    console.log(this.view.dataService.data) 
     if (e?.view.type == 16) {
       this.dataTreeProcessStep = this.view.dataService.data;
       this.listPhaseName = [];
