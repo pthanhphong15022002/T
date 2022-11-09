@@ -131,7 +131,8 @@ textarea.e-input,
   line-height: 20px;
 }
 
-img.w-20px.h-20px {
+img.w-20px.h-20px,
+.w-20px.h-20px>img {
   width: 20px;
   min-width: 20px;
   height: 20px;
