@@ -875,7 +875,7 @@ export class CodxEsService {
     );
   }
 
-  saveUSBSignPDF(transRecID, sfID, fileID, fileBase64Content, cmt) {
+  saveUSBSignedPDF(transRecID, sfID, fileID, fileBase64Content, cmt) {
     let data = [transRecID, sfID, fileID, fileBase64Content, cmt];
     return this.api.execSv(
       'es',
@@ -1221,8 +1221,17 @@ export class CodxEsService {
     );
   }
 
-  SignAsync(stepNo, isAwait, userID, sfID, mode, comment) {
-    let data = [stepNo, isAwait, userID, sfID, mode, comment];
+  SignAsync(stepNo, isAwait, userID, sfID, signType, supplier, mode, comment) {
+    let data = [
+      stepNo,
+      isAwait,
+      userID,
+      sfID,
+      signType,
+      supplier,
+      mode,
+      comment,
+    ];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

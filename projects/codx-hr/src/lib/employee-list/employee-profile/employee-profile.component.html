@@ -1109,6 +1109,8 @@
   </div>
 </ng-template>
 
+<ng-container *ngTemplateOutlet="jobInfo; context: { data: data }">
+</ng-container>
 <ng-template #jobInfo let-data="data">
   <div class="job-Title"></div>
   <codx-label [formModel]="formModel" fiedName="employeeID"></codx-label>

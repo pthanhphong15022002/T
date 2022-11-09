@@ -525,6 +525,8 @@ export class PdfComponent
             this.isAwait,
             this.user.userID,
             this.recID,
+            this.signerInfo.signType,
+            this.signerInfo.supplier,
             mode,
             comment
           )
