@@ -60,6 +60,7 @@ export const routes: Routes = [
       {
         path: 'processstep/:funcID',
         component: ProcessStepsComponent,
+        data: { noReuse: true },
       },
     ],
   },
