@@ -275,9 +275,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
       );
       this.pdfView.curPage = this.pdfView.pageMax;
       dialogADR.closed.subscribe((res) => {
-        console.log('res.event', res.event);
         if (res.event.toString()) {
           switch (this.pdfView.signerInfo.signType) {
+            //ky noi bo
             case '2': {
               if (this.pdfView.isAwait) {
                 this.pdfView
@@ -360,21 +360,21 @@ export class PopupSignForApprovalComponent extends UIComponent {
               }
               break;
             }
-
+            //ky cong khai
             case '1': {
-              switch (this.signerInfo.supplier) {
-                //usb
-                case '5': {
-                  this.esService
-                    .getSignContracts(
-                      this.sfRecID,
-                      this.pdfView.curFileID,
-                      this.pdfView.curFileUrl,
-                      this.stepNo
-                    )
-                    .subscribe(async (lstContract) => {
+              this.esService
+                .getSignContracts(
+                  this.sfRecID,
+                  this.pdfView.curFileID,
+                  this.pdfView.curFileUrl,
+                  this.stepNo
+                )
+                .subscribe(async (lstContract) => {
+                  switch (this.signerInfo.supplier) {
+                    //usb
+                    case '5': {
                       if (lstContract) {
-                        let finalContract = await this.signContract(
+                        let finalContract = await this.signContractUSBToken(
                           lstContract,
                           0,
                           this.dialogSignFile.value.comment
@@ -397,11 +397,35 @@ export class PopupSignForApprovalComponent extends UIComponent {
                           this.dialog && this.dialog.close(result);
                         }
                       }
-                    });
-                  break;
-                }
-              }
-              break;
+                      break;
+                    }
+
+                    //vnpt
+                    case '3': {
+                      this.pdfView
+                        .signPDF(mode, this.dialogSignFile.value.comment)
+                        .then((value) => {
+                          if (value) {
+                            let result = {
+                              result: true,
+                              mode: mode,
+                            };
+                            this.notify.notifyCode('RS002');
+                            this.canOpenSubPopup = false;
+                            this.dialog && this.dialog.close(result);
+                          } else {
+                            this.canOpenSubPopup = false;
+                            let result = {
+                              result: false,
+                              mode: mode,
+                            };
+                            this.notify.notifyCode('SYS021');
+                            this.dialog && this.dialog.close(result);
+                          }
+                        });
+                    }
+                  }
+                });
             }
           }
         }
@@ -503,7 +527,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 )
                 .subscribe(async (lstContract) => {
                   if (lstContract) {
-                    let finalContract = await this.signContract(
+                    let finalContract = await this.signContractUSBToken(
                       lstContract,
                       0,
                       this.dialogSignFile.value.comment
@@ -529,6 +553,30 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 });
               break;
             }
+
+            //vnpt
+            case '3': {
+              this.pdfView.signPDF(mode, '').then((value) => {
+                if (value) {
+                  let result = {
+                    result: true,
+                    mode: mode,
+                  };
+                  this.notify.notifyCode('RS002');
+                  this.canOpenSubPopup = false;
+                  this.dialog && this.dialog.close(result);
+                } else {
+                  this.canOpenSubPopup = false;
+                  let result = {
+                    result: false,
+                    mode: mode,
+                  };
+                  this.notify.notifyCode('SYS021');
+                  this.dialog && this.dialog.close(result);
+                }
+              });
+              break;
+            }
           }
           break;
         }
@@ -536,9 +584,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     }
   }
 
-  clickUSB() {}
-
-  async signContract(lstContract, idx: number, comment) {
+  async signContractUSBToken(lstContract, idx: number, comment) {
     //chua ki xong
     return new Promise<any>((resolve, rejects) => {
       this.http
@@ -548,7 +594,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           //ky xong
           if (idx == lstContract.length) {
             this.esService
-              .saveUSBSignPDF(
+              .saveUSBSignedPDF(
                 this.transRecID,
                 this.sfRecID,
                 this.pdfView.curFileID,
@@ -563,7 +609,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           } else {
             lstContract[idx - 1] = res;
             lstContract[idx].fileBase64Content = res.fileBase64ContentSigned;
-            lstContract = this.signContract(lstContract, idx, comment);
+            lstContract = this.signContractUSBToken(lstContract, idx, comment);
           }
         });
     });
