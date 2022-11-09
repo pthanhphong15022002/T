@@ -28,10 +28,10 @@
       <codx-label fiedName="" [formModel]="formModel" default="Ghi chú">
       </codx-label>
       <codx-input
-        type="text"
-        ControlName="comment"
-        [Group]="dialogSignFile"
+        field="comment"
         [formModel]="formModel"
+        [crrValue]="dialogSignFile.value.comment"
+        (valueChange)="changeReason($event)"
       >
       </codx-input>
     </div>

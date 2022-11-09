@@ -101,6 +101,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
     totalHdd: 0,
     totalUsed: 0,
   };
+  isCopyRight = 0;
+  dataFolder:any;
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
@@ -385,6 +387,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     //this.getFolderPath();
+    this.dataFolder = this.dmSV.parentFolder.getValue();
     this.fileService.getAllowSizeUpload().subscribe((item) => {
       if (item != null) {
         this.maxFileSizeUploadMB = item.len;
@@ -501,7 +504,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.folderService
         .getFoldersByFunctionID(this.functionID)
         .subscribe(async (res) => {
-          if (res != null) {
+          if (res) {
             this.listRemoteFolder = res;
             this.atSV.currentNode = '';
             this.atSV.folderId.next(res[0].folderId);
@@ -772,6 +775,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSave() {
+    if(this.dataFolder && this.dataFolder?.copyrights && this.isCopyRight>0) {
+      this.notificationsService.notifyCode("DM067")
+      return;
+    }
     if (this.data == undefined) this.data = [];
     let total = this.fileUploadList.length;
     var toltalUsed = 0; //bytes
@@ -1385,15 +1392,18 @@ export class AttachmentComponent implements OnInit, OnChanges {
     // data.title = "test";
     // this.callfc.openSide(EditFileComponent, data, option);
     //  this.callfc.openSide(EditFileComponent, this.titleDialog, [this.functionID, file], null);
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       EditFileComponent,
       this.titleDialog,
       800,
       800,
       '',
-      [this.functionID, file],
+      [this.functionID, file , this.dataFolder.copyrights],
       ''
     );
+    dialog.closed.subscribe(item=>{
+      if(item.event) this.isCopyRight --;
+    })
   }
 
   sortBy() {
@@ -2918,7 +2928,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         input.value = '';
       }
     }
-
+    this.isCopyRight = this.fileUploadList.length;
     //  this.fileUploadList.next(this.fileUploadList);
     // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
