@@ -11,6 +11,7 @@ import {
   Optional,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DataRequest } from '@shared/models/data.request';
 import {
   AuthStore,
   ButtonModel,
@@ -25,9 +26,11 @@ import {
 import { Subject } from 'rxjs';
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
+import { BP_ProcessesPageSize } from '../models/BP_Processes.modelPageSize';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
+import { PopupRolesComponent } from './popup-roles/popup-roles.component';
 import { RevisionsComponent } from './revisions/revisions.component';
 
 @Component({
@@ -67,7 +70,7 @@ export class ProcessesComponent
   searchAdvance: boolean;
   viewActive: any;
   // titleUpdateFolder = 'Cập nhật thư mục';
-
+  viewMode: any
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -82,32 +85,28 @@ export class ProcessesComponent
   dataSelected: any;
   gridViewSetup: any;
   private searchKey = new Subject<any>();
-
+  listProcess = new BP_ProcessesPageSize();
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
-
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
+
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.cache
-      .gridViewSetup(
-        'Processes',
-        'grvProcesses'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-        }
-      });
+    this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
   onInit(): void {
+
     this.button = {
       id: 'btnAdd',
     };
@@ -118,6 +117,7 @@ export class ProcessesComponent
       { headerTemplate: this.itemActivedOn, width: 150 },
       { headerTemplate: this.itemMemo, width: 300 },
       { field: '', headerText: '', width: 100 },
+      { field: '', headerText: '', width: 100 },
     ];
   }
 
@@ -126,7 +126,8 @@ export class ProcessesComponent
       {
         id: '1',
         type: ViewType.grid,
-        active: false,
+        active: true,
+        hide:true,
         sameData: true,
         model: {
           resources: this.columnsGrid,
@@ -138,18 +139,23 @@ export class ProcessesComponent
         type: ViewType.card,
         sameData: true,
         active: true,
+        hide:true,
         model: {
           template: this.templateListCard,
         },
       },
       {
+        id: '4',
+        icon: 'icon-search',
         text: 'Search',
         hide: true,
-        type: ViewType.listdetail,
+        type: ViewType.content,
         sameData: true,
-        active: false,
         model: {
+          // template: this.templateMain,
+          // panelRightRef: this.templateRight,
           template2: this.templateSearch,
+          resizable: false,
         },
       },
     ];
@@ -159,11 +165,25 @@ export class ProcessesComponent
     this.changeDetectorRef.detectChanges();
   }
 
+  getGridModel() {
+    var gridModels = new DataRequest();
+    gridModels.formName = this.view.formModel.formName;
+    gridModels.entityName = this.view.formModel.entityName;
+    gridModels.funcID = this.view.formModel.funcID;
+    gridModels.gridViewName = this.view.formModel.gridViewName;
+    gridModels.page = this.view.dataService.request.page;
+    gridModels.pageSize = this.view.dataService.request.pageSize;
+    gridModels.predicate = this.view.dataService.request.predicates;
+    gridModels.dataValue = this.view.dataService.request.dataValues;
+    gridModels.entityPermission = this.view.formModel.entityPer;
+  }
   search() {
+    // var viewsAction = []
     // this.views.forEach(item => {
     //   item.hide = true;
-    //   if (item.text == "Search")
+    //   if (item.id == "4")
     //     item.hide = false;
+    //     viewsAction.push(item)
     // });
     // this.fileService.searchFile(this.textSearchAll, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
     //   if (item != null) {
@@ -187,36 +207,57 @@ export class ProcessesComponent
     //     this.changeDetectorRef.detectChanges();
     //   }
     // });
-    // this.searchKey.subscribe((x)=> {
-    //   this.bpService.getSearchProcess(x);
-    // })
+
 
     // BaoLV
-    this.searchKey.subscribe((x)=> {
-      //this.bpService.SearchDataProcess(x).subscribe( res =>res[0]);
-      const subscription = this.bpService.SearchDataProcess(x).subscribe( (value) => {
-        console.log(value);
-      });
+    //   this.getGridModel();
+    let gridModels = new DataRequest();
+    gridModels.formName = this.view.formModel.formName;
+    gridModels.entityName = this.view.formModel.entityName;
+    gridModels.funcID = this.view.formModel.funcID;
+    gridModels.gridViewName = this.view.formModel.gridViewName;
+    gridModels.page = this.view.dataService.request.page;
+    gridModels.pageSize = this.view.dataService.request.pageSize;
+    gridModels.predicate = this.view.dataService.request.predicates;
+    gridModels.entityPermission = this.view.formModel.entityPer;
 
-    })
+    this.searchKey.subscribe((x) => {
+      //this.bpService.SearchDataProcess(x).subscribe( res =>res[0]);
+      gridModels.dataValues = x;
+      const subscription = this.bpService
+        .searchDataProcess(gridModels, x)
+        .subscribe((value) => {
+          // this.views = viewsAction
+          this.listProcess= value;
+          console.log(value);
+          console.log(this.listProcess);
+          console.log(this.listProcess[0]?.listProcess);
+          console.log(this.listProcess[1]?.userParama);
+
+          this.changeDetectorRef.detectChanges();
+        });
+    });
   }
 
   searchChange($event) {
     try {
       this.textSearch = $event;
       this.searchKey.next($event);
-      // this.searchKey.subscribe((x)=> {
-      //   this.bpService.getSearchProcess(x);
-      // })
-      this.data = [];
-      if (this.codxview.currentView.viewModel.model != null)
-        this.codxview.currentView.viewModel.model.panelLeftHide = true;
-      this.isSearch = true;
+      // this.columnsGrid = [];
+      // // this.searchKey.subscribe((x)=> {
+      // //   this.bpService.getSearchProcess(x);
+      // // })
+
+      // this.columnsGrid = [];
+      // this.data = [];
+      // if (this.codxview.currentView.viewModel.model != null)
+      //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
+      // this.isSearch = true;
       // this.dmSV.page = 1;
       // this.fileService.options.page = this.dmSV.page;
 
       this.textSearchAll = this.textSearch;
-      this.predicates = 'FileName.Contains(@0)';
+      this.predicates = 'ProcessName.Contains(@0)';
       this.values = this.textSearch;
       this.searchAdvance = false;
       this.viewActive = this.views.filter((x) => x.active == true)[0];
@@ -227,12 +268,24 @@ export class ProcessesComponent
           if (item.text == 'Search') item.hide = true;
           if (item.text == this.viewActive.text) item.active = true;
         });
-        if (this.view.funcID == 'BPT2') {
+
           this.view.viewChange(this.viewActive);
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
-        }
+
         this.changeDetectorRef.detectChanges();
-      } else this.search();
+      } else {
+        this.isSearch=true;
+        this.search();
+        // var viewActive = []
+        // this.views.forEach((item) => {
+        //   if (item.id != '1000') item.active = false;
+        //   else item.active = true;
+        //   viewActive.push(item)
+        // });
+        // this.view.viewChange(this.viewActive);
+        // this.codxview.currentView.viewModel.model.panelLeftHide = false;
+        // this.changeDetectorRef.detectChanges();
+      }
     } catch (ex) {
       this.changeDetectorRef.detectChanges();
       console.log(ex);
@@ -274,7 +327,7 @@ export class ProcessesComponent
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupAddProcessesComponent,
-          ['edit',this.titleAction],
+          ['edit', this.titleAction],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -285,7 +338,7 @@ export class ProcessesComponent
             });
             this.detectorRef.detectChanges();
           }
-        })
+        });
       });
   }
 
@@ -367,8 +420,8 @@ export class ProcessesComponent
         this.properties(data);
         break;
       case 'BPT101':
-          this.viewDetailProcessSteps(e?.data,data);
-          break;
+        this.viewDetailProcessSteps(e?.data, data);
+        break;
       case 'BPT102':
         this.reName(data);
         break;
@@ -395,10 +448,10 @@ export class ProcessesComponent
   }
 
   reName(data) {
-      this.dataSelected = data;
-      this.newName = data.processName;
-      this.crrRecID = data.recID;
-      this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
+    this.dataSelected = data;
+    this.newName = data.processName;
+    this.crrRecID = data.recID;
+    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
   revisions(more, data) {
@@ -422,16 +475,37 @@ export class ProcessesComponent
     });
   }
 
-  permission(data){
+  permission(data) {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     data.id = data.recID;
-    this.callfc.openSide(PopupAddPermissionComponent, [this.titleAction , data, false], option);
+    this.callfc.openSide(
+      PopupAddPermissionComponent,
+      [this.titleAction, data, false],
+      option
+    );
   }
 
-  share(data){
+  roles(e: any) {
+    console.log(e);
+    this.callfc
+      .openForm(
+        PopupRolesComponent,
+        '',
+        950,
+        650,
+        '',
+        [this.titleAction,e],
+        ''
+      )
+      .closed.subscribe((item) => {
+        this.view?.dataService.update(item?.event).subscribe();
+      });
+  }
+
+  share(data) {
     let option = new SidebarModel();
     option.DataService = this.view?.dataService;
     option.FormModel = this.view?.formModel;
@@ -439,7 +513,11 @@ export class ProcessesComponent
     // let data = {} as any;
     // data.title = this.titleUpdateFolder;
     data.id = data.recID;
-    this.callfc.openSide(PopupAddPermissionComponent, [this.titleAction , data, true], option);
+    this.callfc.openSide(
+      PopupAddPermissionComponent,
+      [this.titleAction, data, true],
+      option
+    );
   }
 
   valueChange(e) {
@@ -447,7 +525,7 @@ export class ProcessesComponent
   }
 
   onSave() {
-    if(this.newName.trim() == "" || this.newName == null){
+    if (this.newName.trim() == '' || this.newName == null) {
       this.notification.notifyCode(
         'SYS009',
         0,
@@ -489,7 +567,7 @@ export class ProcessesComponent
   //#endregion
 
   //tesst
-  viewDetailProcessSteps(e,data) {
+  viewDetailProcessSteps(e, data) {
     this.bpService.viewProcesses.next(data);
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
@@ -498,7 +576,7 @@ export class ProcessesComponent
     this.codxService.navigate('', url,{processID:data.recID});
   }
 
-  approval($event) {
+  approval($event) {}
 
-  }
+
 }
