@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
+import { DataRequest } from 'codx-core/public-api';
 import {
   BehaviorSubject,
   catchError,
@@ -75,22 +76,13 @@ export class CodxBpService {
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
 
-  SearchDataProcess(searchKey): Observable<any> {
+  searchDataProcess(gridModel,searchKey): Observable<any> {
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
       'GetProcessesByKeyAsync',
-      [searchKey]
-    )
-    .pipe(
-      map((data) => {
-        if (data.error) return;
-        return data;
-      }),
-        catchError((err) => {
-          return of(undefined);
-        }),
-        finalize(() => null)
+      [gridModel,searchKey]
     );
+    //.subscribe((res)=>{ console.log(res)});
   }
 }

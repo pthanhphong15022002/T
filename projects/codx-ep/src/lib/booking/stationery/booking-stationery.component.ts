@@ -58,7 +58,7 @@ export class BookingStationeryComponent
   popupTitle = '';
   formModel: FormModel;
   itemDetail;
-  popupClosed=true;
+  popupClosed = true;
 
   constructor(
     private injector: Injector,
@@ -77,7 +77,8 @@ export class BookingStationeryComponent
     });
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
-        this.funcIDName = res.customName.toString().toLowerCase();
+        this.funcIDName =
+          res.customName.charAt(0).toLowerCase() + res.customName.slice(1);
       }
     });
   }
@@ -134,63 +135,59 @@ export class BookingStationeryComponent
   }
 
   changeDataMF(event, data: any) {
-    if (event != null && data != null && this.funcID=="EPT32") {
-      
-        event.forEach((func) => {
-          if (
-            func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'SYS04' /*MF chép*/
-          ) {
-            func.disabled = true;
-          }
-        });
-      
+    if (event != null && data != null && this.funcID == 'EPT32') {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/
+        ) {
+          func.disabled = true;
+        }
+      });
     }
   }
 
   addNewRequest() {
-    
-    if(this.popupClosed){
-    this.view.dataService.addNew().subscribe((res) => {
-      this.popupClosed = false;
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      this.callfc.openForm(
-        PopupRequestStationeryComponent,
-        this.popupTitle,
-        700,
-        650,
-        this.funcID,
-        {
-          isAddNew: true,
-          formModel: this.formModel,
-          option: option,
-          title: this.popupTitle,
-        },
-        '',
-        dialogModel
-      );
-      this.dialog.closed.subscribe((returnData) => {
-        this.popupClosed = true;
-        if (!returnData.event) this.view.dataService.clear();        
+    if (this.popupClosed) {
+      this.view.dataService.addNew().subscribe((res) => {
+        this.popupClosed = false;
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        this.callfc.openForm(
+          PopupRequestStationeryComponent,
+          this.popupTitle,
+          700,
+          650,
+          this.funcID,
+          {
+            isAddNew: true,
+            formModel: this.formModel,
+            option: option,
+            title: this.popupTitle,
+          },
+          '',
+          dialogModel
+        );
+        this.dialog.closed.subscribe((returnData) => {
+          this.popupClosed = true;
+          if (!returnData.event) this.view.dataService.clear();
+        });
       });
-    });
     }
   }
 
   edit(evt: any) {
     if (evt) {
-      
       if (this.authService.userValue.userID != evt?.owner) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
-      
-      if(this.popupClosed){
+
+      if (this.popupClosed) {
         this.view.dataService.dataSelected = evt;
         this.view.dataService
           .edit(this.view.dataService.dataSelected)
@@ -218,7 +215,7 @@ export class BookingStationeryComponent
             );
             this.dialog.closed.subscribe((returnData) => {
               this.popupClosed = true;
-              if (!returnData.event) this.view.dataService.clear();        
+              if (!returnData.event) this.view.dataService.clear();
             });
           });
       }
@@ -227,37 +224,37 @@ export class BookingStationeryComponent
 
   copy(evt: any) {
     if (evt) {
-      if(this.popupClosed){
-      this.view.dataService.dataSelected = evt;
-      this.view.dataService
-        .copy(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.popupClosed = false;
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          let dialogModel = new DialogModel();
-          dialogModel.IsFull = true;
-          this.callfc.openForm(
-            PopupRequestStationeryComponent,
-            this.popupTitle,
-            700,
-            650,
-            this.funcID,
-            {
-              isAddNew: true,
-              formModel: this.formModel,
-              option: option,
-              title: this.popupTitle,
-            },
-            '',
-            dialogModel
-          );
-          this.dialog.closed.subscribe((returnData) => {
-            this.popupClosed = true;
-            if (!returnData.event) this.view.dataService.clear();        
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = evt;
+        this.view.dataService
+          .copy(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            let option = new SidebarModel();
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            let dialogModel = new DialogModel();
+            dialogModel.IsFull = true;
+            this.callfc.openForm(
+              PopupRequestStationeryComponent,
+              this.popupTitle,
+              700,
+              650,
+              this.funcID,
+              {
+                isAddNew: true,
+                formModel: this.formModel,
+                option: option,
+                title: this.popupTitle,
+              },
+              '',
+              dialogModel
+            );
+            this.dialog.closed.subscribe((returnData) => {
+              this.popupClosed = true;
+              if (!returnData.event) this.view.dataService.clear();
+            });
           });
-        });
       }
     }
   }
@@ -272,7 +269,7 @@ export class BookingStationeryComponent
               this.notificationsService.notify('Cấp phát thành công', '1', 0);
             }
           });
-          this.detectorRef.detectChanges(); 
+          this.detectorRef.detectChanges();
         }
       });
   }

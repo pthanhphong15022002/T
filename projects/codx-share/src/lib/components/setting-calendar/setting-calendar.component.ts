@@ -32,12 +32,9 @@ export class SettingCalendarComponent
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('view') viewOrg!: ViewsComponent;
   views: Array<ViewModel> | any = [];
-  request: ResourceModel;
   funcID: string;
   calendarID: string;
   calendarName: string;
-  fields;
-  resourceField;
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
@@ -50,33 +47,18 @@ export class SettingCalendarComponent
   }
 
   onInit(): void {
-    this.fields = {
-      id: 'calendarID',
-      subject: { name: 'note' },
-      startTime: { name: 'startDate' },
-      endTime: { name: 'endDate' },
-    };
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.getParams(res.module + 'Parameters', 'CalendarID');
     });
   }
 
   ngAfterViewInit(): void {
-    this.request = new ResourceModel();
-    this.request.service = 'BS';
-    this.request.assemblyName = 'BS';
-    this.request.className = 'CalendarDateBusiness';
-    this.request.method = 'GetDateOffAsync';
-    this.request.idField = 'recID';
-
     this.views = [
       {
         type: ViewType.calendar,
-        active: false,
+        active: true,
         sameData: false,
         model: {
-          eventModel: this.fields,
-          template: this.cellTemplate,
           template3: this.cellTemplate,
         },
       },
@@ -89,7 +71,7 @@ export class SettingCalendarComponent
       if (res) {
         let dataValue = res[0].dataValue;
         let json = JSON.parse(dataValue);
-        if (json.CalendarID && json.Calendar == '') {
+        if (json.CalendarID && json.CalendarID == '') {
           this.calendarID = 'STD';
         } else {
           this.calendarID = json.CalendarID;

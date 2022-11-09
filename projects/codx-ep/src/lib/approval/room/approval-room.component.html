@@ -86,13 +86,13 @@
     <div class="d-flex me-6">
       <i class="icon-access_time me-1"></i>
       <span class="fw-bold">
-        {{ data?.startHour}}
+        {{ showHour(data?.startDate) }}
       </span>
-      <span *ngIf="data?.startHour && data?.endHour" class="fw-bold ms-1 me-1">{{
+      <span *ngIf="data?.startDate && data?.endDate" class="fw-bold ms-1 me-1">{{
         "-"
       }}</span>
       <span class="fw-bold">
-        {{ data?.endHour}}
+        {{ showHour(data?.endDate) }}
       </span>
     </div>
   </div>
@@ -186,13 +186,13 @@
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
         <span class="text-gray-600">
-          {{ data?.startHour}}
+          {{ showHour(data?.startDate) }}
         </span>
-        <span *ngIf="data?.startHour && data?.endHour" class="ms-1 me-1">{{
+        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
           "-"
         }}</span>
         <span class="text-gray-600">
-          {{ data?.endHour}}
+          {{ showHour(data?.endDate) }}
         </span>
       </div>
     </div>
