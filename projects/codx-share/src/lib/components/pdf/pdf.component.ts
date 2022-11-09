@@ -559,9 +559,8 @@ export class PdfComponent
               this.user.userID
             )
             .subscribe((res) => {
-              console.log('save event', res);
-
               if (res) {
+                console.log('save event', res);
                 this.lstAreas = res;
                 this.detectorRef.detectChanges();
               }
@@ -1470,9 +1469,25 @@ export class PdfComponent
       modifiedBy: tmpName.Signer,
       recID: this.curSelectedArea.attrs.id,
     };
-    console.log('area', tmpArea);
 
-    this.saveToDB(tmpArea);
+    this.esService
+      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
+      .subscribe((res) => {
+        this.esService
+          .getSignAreas(
+            this.recID,
+            this.fileInfo.fileID,
+            this.isApprover,
+            this.user.userID
+          )
+          .subscribe((res) => {
+            if (res) {
+              console.log('save event', res);
+              this.lstAreas = res;
+              this.detectorRef.detectChanges();
+            }
+          });
+      });
   }
 
   changeQRRenderState(e) {

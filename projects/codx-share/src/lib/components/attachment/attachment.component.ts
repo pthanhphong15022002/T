@@ -50,6 +50,7 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { from, map, mergeMap, Observable, Observer } from 'rxjs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { environment } from 'src/environments/environment';
+import { DomSanitizer } from '@angular/platform-browser';
 
 // import { AuthStore } from '@core/services/auth/auth.store';
 @Component({
@@ -169,6 +170,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     public cache: CacheService,
     private callfc: CallFuncService,
     private notificationsService: NotificationsService,
+    private sanitizer: DomSanitizer,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -600,6 +602,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       // upload file uri from Mr Long
     }
     this.fileUploadList[0].avatar = null;
+    this.fileUploadList[0].data = "";
     this.atSV.fileListAdded = [];
     return this.addFileObservable(this.fileUploadList[0]);
     //return this.onMultiFileSaveObservable();
@@ -617,6 +620,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         this.fileUploadList[i].objectID = this.objectId;
       // await this.serviceAddFile(fileItem);
       this.fileUploadList[i].avatar = null;
+      this.fileUploadList[i].data = "";
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
           this.fileUploadList[i],
@@ -791,6 +795,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.fileUploadList[i].objectID = this.objectId;
       this.fileUploadList[i].description = this.description[i];
       this.fileUploadList[i].avatar = null;
+      this.fileUploadList[i].data = "";
       toltalUsed += this.fileUploadList[i].fileSize;
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
@@ -962,6 +967,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         });
     } else if (total == 1) {
       this.fileUploadList[0].description = this.description[0];
+      this.fileUploadList[0].data = ""
       this.addFileLargeLong(this.fileUploadList[0]);
       //this.addFile(this.fileUploadList[0]);
 
@@ -1011,11 +1017,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true,
     index: number = -1
   ): Observable<any[]> {
+    debugger;
     var ret = fileItem;
     var fileSize = parseInt(fileItem.fileSize);
     var that = this;
     fileItem.uploadId = '';
     fileItem.objectId = this.objectId;
+    fileItem.data = '';
     var appName = environment.appName;
     var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
     var uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
@@ -2865,11 +2873,16 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.fileName = files[i].name;
 
         fileUpload.description = files[i].description; //
-
         var type = files[i].type.toLowerCase();
         if (type == 'png' || type == 'jpg' || type == 'bmp') {
           fileUpload.avatar = data;
-        } else
+        } 
+        else if(type == "mp4" || type == "m4v" || type == "avi" || type == "mov" || type == "mpg" || type == "mpeg")
+        {
+          var url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(files[i].rawFile));
+          fileUpload.data = url;
+        }
+        else
           fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
             fileUpload.fileName
           )}`;
@@ -2893,8 +2906,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;
+       
         fileUpload.reWrite = false;
-        fileUpload.data = '';
+        //fileUpload.data = '';
         fileUpload.item = files[i];
         //fileUpload.folderId = this.folderId;
         fileUpload.folderID = this.dmSV.folderId.getValue();

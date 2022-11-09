@@ -131,8 +131,8 @@
             </div>
             <div class="d-none">
                 <codx-attachment #atmEdit objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1"
-                    type="inline" [showMessage]="0" allowExtensions=".jpg,.png" allowMultiFile="1"
-                    (fileCount)="getfileCount($event)" idBrowse="atmEdit" [functionID]="dialogRef.formModel.funcID">
+                    type="inline" [showMessage]="0" allowExtensions=".jpg,.png,.mp4" allowMultiFile="1"
+                    (fileAdded)="getfileCount($event)" idBrowse="atmEdit" [functionID]="dialogRef.formModel.funcID">
                 </codx-attachment>
             </div>
         </div>

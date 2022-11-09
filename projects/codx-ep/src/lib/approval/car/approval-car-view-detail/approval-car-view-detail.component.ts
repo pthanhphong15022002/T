@@ -10,6 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
+import moment from 'moment';
 import { CodxEpService } from '../../../codx-ep.service';
 import { DriverModel } from '../../../models/bookingAttendees.model';
 
@@ -73,7 +74,17 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
     this.setHeight();
     this.active = 1;
   }
-
+  sameDayCheck(sDate:any, eDate:any){
+    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   clickMF(value, datas: any = null) {
     
     let funcID = value?.functionID;

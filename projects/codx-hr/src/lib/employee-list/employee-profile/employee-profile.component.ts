@@ -53,6 +53,8 @@ export class EmployeeProfileComponent extends UIComponent {
 
   views: Array<ViewModel> | any = [];
 
+  infoPersonal: any = {};
+
   statusVll = 'L0225';
   funcID = '';
   service = '';
@@ -86,6 +88,8 @@ export class EmployeeProfileComponent extends UIComponent {
           .LoadData(params.employeeID, this.user.userID, '0')
           .subscribe((response: any) => {
             if (response) {
+              console.log(response);
+              this.infoPersonal = response.InfoPersonal;
               this.data = response.Employee;
               console.log(this.data);
 
