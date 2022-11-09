@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -20,28 +21,35 @@ import {
   DialogRef,
   FormModel,
   LayoutAddComponent,
+  NotificationsService,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
-import { HR_Employees_Extend } from '../../model/HR_Employees.model';
+import {
+  HR_Employees_Extend,
+  HR_Validator,
+} from '../../model/HR_Employees.model';
 
 @Component({
   selector: 'lib-popup-add-new-hr',
   templateUrl: './popup-add-new-hr.component.html',
   styleUrls: ['./popup-add-new-hr.component.scss'],
 })
-export class PopupAddNewHRComponent extends UIComponent {
+export class PopupAddNewHRComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   constructor(
     private inject: Injector,
     private hrService: CodxHrService,
     private df: ChangeDetectorRef,
+    private notify: NotificationsService,
+
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
     super(inject);
     this.dialogRef = dialogRef;
-    console.log(this.dialogRef);
     this.data = this.dialogRef.dataService.dataSelected;
-    console.log('data', this.data);
 
     // this.formModel = ;
     this.funcID = this.dialogRef.formModel.funcID;
@@ -73,15 +81,13 @@ export class PopupAddNewHRComponent extends UIComponent {
     },
   ];
 
-  validateFields = [
-    'birthday',
-    'issuedOn',
-    'iDExpiredOn',
-    'degreeName',
-    'trainFieldID',
-    'trainLevel',
-    '',
-    '',
+  validateFields: Array<HR_Validator> = [
+    { field: 'birthday', error: 'HR001' },
+    { field: 'issuedOn', error: '' },
+    { field: 'iDExpiredOn', error: '' },
+    { field: 'degreeName', error: '' },
+    { field: 'trainFieldID', error: '' },
+    { field: 'trainLevel', error: '' },
   ];
 
   onInit(): void {
@@ -94,32 +100,27 @@ export class PopupAddNewHRComponent extends UIComponent {
       )
       .subscribe((res) => {
         this.formModel = res;
-        console.log('form model', this.form);
       });
 
     //add validator (BA request)
   }
 
-  ngViewInit() {
-    this.form.formGroup.controls[this.validateFields[0]]?.addValidators(
-      this.olderThan18(this.form.formGroup.controls[this.validateFields[0]])
-    );
+  ngAfterViewInit() {
+    let formControl =
+      this.form?.formGroup?.controls[this.validateFields[0].field];
+    formControl?.addValidators(this.olderThan18(formControl));
   }
 
-  test(e) {
-    console.log('vlc', e);
-  }
   olderThan18(formControl: AbstractControl): ValidatorFn {
     return (): ValidationErrors | null => {
       {
-        let result =
-          new Date().getFullYear() -
-            new Date(formControl.value).getFullYear() >=
-          18
-            ? { formControl: { value: formControl.value } }
-            : null;
-        console.log('result', result);
+        let birthday = new Date(formControl.value).valueOf();
+        let today = new Date().valueOf();
+        let diffMS = today - birthday;
+        let diff = new Date(diffMS).getFullYear() - 1970;
 
+        let result =
+          diff >= 18 ? null : { formControl: { value: formControl.value } };
         return result;
       }
     };
@@ -129,13 +130,9 @@ export class PopupAddNewHRComponent extends UIComponent {
     console.log(e);
   }
   setTitle(e) {
-    console.log('setTitle not done yet');
-
     this.title = e;
   }
-  changeID(e) {
-    console.log('changeID not done yet');
-  }
+  changeID(e) {}
   OnSaveForm() {
     if (this.form.formGroup.valid) {
       let tmpHR: HR_Employees_Extend = this.form.formGroup.value;
@@ -147,9 +144,12 @@ export class PopupAddNewHRComponent extends UIComponent {
       for (let control in controls) {
         if (controls[control].invalid) {
           invalidControls.push(control);
+          let curHR_Validator = this.validateFields.find(
+            (field) => field.field == control
+          );
+          this.notify.notifyCode(curHR_Validator.error);
         }
       }
-      console.log('form group khong hop le', invalidControls);
     }
   }
 

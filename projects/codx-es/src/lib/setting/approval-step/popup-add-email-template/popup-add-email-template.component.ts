@@ -91,6 +91,7 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
   files: any; //param list file
 
   show = false;
+  isAddNew: boolean = false;
 
   public cssClass: string = 'e-list-template';
 
@@ -120,6 +121,8 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
     this.showIsTemplate = data.data?.showIsTemplate ?? true;
     this.showSendLater = data.data?.showSendLater ?? true;
     this.showFrom = data.data?.showFrom ?? true;
+
+    this.isAddNew = data.data?.showFrom ?? false;
     this.files = data?.data?.files;
 
     this.renderer.listen('window', 'click', (e: Event) => {
@@ -187,48 +190,50 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
               if (res) {
                 this.dialogETemplate = res;
 
-                this.esService
-                  .getEmailTemplate(this.templateID)
-                  .subscribe((res1) => {
-                    if (res1 != null) {
-                      this.data = res1[0];
-                      this.dialogETemplate.patchValue(res1[0]);
-                      this.dialogETemplate.addControl(
-                        'recID',
-                        new FormControl(res1[0].recID)
-                      );
+                if (this.templateID) {
+                  this.esService
+                    .getEmailTemplate(this.templateID)
+                    .subscribe((res1) => {
+                      if (res1 != null) {
+                        this.data = res1[0];
+                        this.dialogETemplate.patchValue(res1[0]);
+                        this.dialogETemplate.addControl(
+                          'recID',
+                          new FormControl(res1[0].recID)
+                        );
 
-                      // if (res[0].isTemplate) {
-                      //   this.methodEdit = true;
-                      // }
+                        // if (res[0].isTemplate) {
+                        //   this.methodEdit = true;
+                        // }
 
-                      let lstUser = res1[1];
-                      if (lstUser && lstUser.length > 0) {
-                        console.log(lstUser);
+                        let lstUser = res1[1];
+                        if (lstUser && lstUser.length > 0) {
+                          console.log(lstUser);
 
-                        lstUser.forEach((element) => {
-                          switch (element.sendType) {
-                            case '1':
-                              this.lstFrom.push(element);
-                              break;
-                            case '2':
-                              this.lstTo.push(element);
-                              break;
-                            case '3':
-                              this.lstCc.push(element);
-                              break;
-                            case '4':
-                              this.lstBcc.push(element);
-                              break;
-                          }
-                        });
+                          lstUser.forEach((element) => {
+                            switch (element.sendType) {
+                              case '1':
+                                this.lstFrom.push(element);
+                                break;
+                              case '2':
+                                this.lstTo.push(element);
+                                break;
+                              case '3':
+                                this.lstCc.push(element);
+                                break;
+                              case '4':
+                                this.lstBcc.push(element);
+                                break;
+                            }
+                          });
+                        }
+
+                        this.formModel.currentData = this.data;
+                        this.isAfterRender = true;
                       }
-
-                      this.formModel.currentData = this.data;
-                      this.isAfterRender = true;
-                    }
-                    this.cr.detectChanges();
-                  });
+                      this.cr.detectChanges();
+                    });
+                }
               }
             });
         });

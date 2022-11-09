@@ -87,9 +87,10 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     this.dataImg.history = null;
     this.dataImg.objectType = this.functionList.entityName;
     this.dataImg.objectID = recID;
-    debugger;
-    this.ATM_Choose_Image.fileUploadList = [this.dataImg];
-    this.ATM_Choose_Image.saveFiles();
+    this.api.execSv("DM","DM","FileBussiness","CopyAsync",this.dataImg).subscribe( item=>{
+       //Trả ra true false
+    }
+    );
     this.dialog.close([this.dataImg]);
   }
 
