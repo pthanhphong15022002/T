@@ -53,8 +53,6 @@ export class PropertiesComponent implements OnInit {
       }
       this.openProperties(this.data.recID);
     });
-
-    //  document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 460px; z-index: 1000;");
     this.changeDetectorRef.detectChanges();
   }
 

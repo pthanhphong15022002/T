@@ -104,7 +104,7 @@ export class MyTeamComponent implements OnInit {
           let id = res.msgBodyData[0].employeeID;
           this.employeeMyTeam = null;
           this.codx_mwp_service
-            .LoadData(id, "3")
+            .LoadData(id, '', "3")
             .subscribe((response: any) => {
               if (response) {
                 this.employeeMyTeam = [];
