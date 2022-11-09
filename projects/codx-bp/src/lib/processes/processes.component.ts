@@ -492,7 +492,8 @@ export class ProcessesComponent
   viewDetailProcessSteps(e,data) {
     this.bpService.viewProcesses.next(data);
     // this.codxService.navigate('', e?.url); thuong chua add
-    this.codxService.navigate('', 'bp/processstep/BPT11');
+    let url ='bp/processstep/BPT11'
+    this.codxService.navigate('', url,{processID:data.recID});
   }
 
   approval($event) {
