@@ -27,12 +27,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupAddPermissionComponent } from './processes/popup-add-permission/popup-add-permission.component';
 import { AprpermissionComponent } from './aprpermission/aprpermission.component';
 import { ViewFlowchartComponent } from './processsteps/view-flowchart/view-flowchart.component';
-<<<<<<< HEAD
 import { PopupRolesComponent } from './processes/popup-roles/popup-roles.component';
-=======
-import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
->>>>>>> 15150ce75266d065534fec00a582ebab0b3ea131
 // import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 
 export const routes: Routes = [
   {
@@ -102,7 +99,7 @@ export const routes: Routes = [
     CommonModule,
     DragDropModule,
     PinchZoomModule
-    // NgxImageZoomModule 
+    // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
 })

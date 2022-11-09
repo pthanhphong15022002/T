@@ -90,12 +90,7 @@ export class ProcessesComponent
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-<<<<<<< HEAD
     private changeDetectorRef: ChangeDetectorRef
-=======
-    private changeDetectorRef: ChangeDetectorRef,
-
->>>>>>> 15150ce75266d065534fec00a582ebab0b3ea131
   ) {
     super(inject);
     this.user = this.authStore.get();
