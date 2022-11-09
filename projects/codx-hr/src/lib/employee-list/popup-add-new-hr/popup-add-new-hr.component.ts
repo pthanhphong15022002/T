@@ -41,6 +41,7 @@ export class PopupAddNewHRComponent extends UIComponent {
     this.dialogRef = dialogRef;
     console.log(this.dialogRef);
     this.data = this.dialogRef.dataService.dataSelected;
+    console.log('data', this.data);
 
     // this.formModel = ;
     this.funcID = this.dialogRef.formModel.funcID;
@@ -93,10 +94,35 @@ export class PopupAddNewHRComponent extends UIComponent {
       )
       .subscribe((res) => {
         this.formModel = res;
-        console.log('form model', this.formModel);
+        console.log('form model', this.form);
       });
 
     //add validator (BA request)
+  }
+
+  ngViewInit() {
+    this.form.formGroup.controls[this.validateFields[0]]?.addValidators(
+      this.olderThan18(this.form.formGroup.controls[this.validateFields[0]])
+    );
+  }
+
+  test(e) {
+    console.log('vlc', e);
+  }
+  olderThan18(formControl: AbstractControl): ValidatorFn {
+    return (): ValidationErrors | null => {
+      {
+        let result =
+          new Date().getFullYear() -
+            new Date(formControl.value).getFullYear() >=
+          18
+            ? { formControl: { value: formControl.value } }
+            : null;
+        console.log('result', result);
+
+        return result;
+      }
+    };
   }
 
   buttonClick(e: any) {
@@ -115,7 +141,15 @@ export class PopupAddNewHRComponent extends UIComponent {
       let tmpHR: HR_Employees_Extend = this.form.formGroup.value;
       this.addEmployeeAsync(tmpHR);
     } else {
-      console.log('form group khong hop le');
+      let controls = this.form.formGroup.controls;
+      let invalidControls = [];
+
+      for (let control in controls) {
+        if (controls[control].invalid) {
+          invalidControls.push(control);
+        }
+      }
+      console.log('form group khong hop le', invalidControls);
     }
   }
 

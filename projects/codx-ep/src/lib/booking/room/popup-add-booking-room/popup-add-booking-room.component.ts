@@ -990,51 +990,51 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
   }
 
-  cbbDataOptionalUser: any;
-  valueCbxUserOptionalChange(event) {
-    if (event == null) {
-      this.isPopupOptionalUserCbb = false;
-      return;
-    }
-    this.cbbDataUser = event;
-    if (event?.dataSelected) {
-      this.lstUserOptional = [];
-      this.attendeesList = [];
-      event.dataSelected.forEach((people) => {
-        let tempAttender = new BookingAttendees();
-        tempAttender.userID = people.UserID;
-        tempAttender.userName = people.UserName;
-        tempAttender.status = '1';
-        tempAttender.roleType = '3';
-        tempAttender.optional = true;
-        this.listRoles.forEach((element) => {
-          if (element.value == tempAttender.roleType) {
-            tempAttender.icon = element.icon;
-            tempAttender.roleName = element.text;
-          }
-        });
-        this.lstUserOptional.push(tempAttender);
-      });
-      for (let i = 0; i < this.lstUserOptional.length; ++i) {
-        for (let j = 0; j < this.lstUser.length; ++j) {
-          if (this.lstUserOptional[i].userID == this.lstUser[j].userID) {
-            this.lstUser.splice(j, 1);
-          }
-        }
-      }
-      this.UpdateAttendeesList();
-      this.changeDetectorRef.detectChanges();
-      this.isPopupOptionalUserCbb = false;
-    }
-  }
+  //cbbDataOptionalUser: any;
+  // valueCbxUserOptionalChange(event) {
+  //   if (event == null) {
+  //     this.isPopupOptionalUserCbb = false;
+  //     return;
+  //   }
+  //   this.cbbDataUser = event;
+  //   if (event?.dataSelected) {
+  //     this.lstUserOptional = [];
+  //     this.attendeesList = [];
+  //     event.dataSelected.forEach((people) => {
+  //       let tempAttender = new BookingAttendees();
+  //       tempAttender.userID = people.UserID;
+  //       tempAttender.userName = people.UserName;
+  //       tempAttender.status = '1';
+  //       tempAttender.roleType = '3';
+  //       tempAttender.optional = true;
+  //       this.listRoles.forEach((element) => {
+  //         if (element.value == tempAttender.roleType) {
+  //           tempAttender.icon = element.icon;
+  //           tempAttender.roleName = element.text;
+  //         }
+  //       });
+  //       this.lstUserOptional.push(tempAttender);
+  //     });
+  //     for (let i = 0; i < this.lstUserOptional.length; ++i) {
+  //       for (let j = 0; j < this.lstUser.length; ++j) {
+  //         if (this.lstUserOptional[i].userID == this.lstUser[j].userID) {
+  //           this.lstUser.splice(j, 1);
+  //         }
+  //       }
+  //     }
+  //     this.UpdateAttendeesList();
+  //     this.changeDetectorRef.detectChanges();
+  //     this.isPopupOptionalUserCbb = false;
+  //   }
+  // }
 
-  cbbDataUser: any;
+  cbbDataUser='';
   valueCbxUserChange(event) {
+    
     if (event == null) {
       this.isPopupUserCbb = false;
       return;
     }
-    this.cbbDataUser = event;
     if (event?.dataSelected) {
       this.lstUser = [];
       this.attendeesList = [];
@@ -1065,6 +1065,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
       this.UpdateAttendeesList();
       this.changeDetectorRef.detectChanges();
+      let tmpDataCBB='';
+      this.attendeesList.forEach(item=>{
+        tmpDataCBB=tmpDataCBB+";"+item.userID;        
+      });
+      this.cbbDataUser=tmpDataCBB;
       this.isPopupUserCbb = false;
     }
   }
@@ -1142,6 +1147,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
   }
+  
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
@@ -1149,16 +1155,30 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.popover = p;
   }
   selectRoseType(idUserSelected, value) {
-    this.attendeesList.forEach((res) => {
-      if (res.userID == idUserSelected) {
-        res.roleType = value;
-        this.listRoles.forEach((role) => {
-          if (role?.value == res?.roleType) {
-            res.icon = role.icon;
-          }
-        });
-      }
-    });
+    if(idUserSelected==this.curUser.userID){
+      this.curUser.roleType=value;
+      this.listRoles.forEach((role) => {
+        if (this.curUser.roleType == role.value) {
+          this.curUser.icon = role.icon;
+        }
+      });
+      
+      this.changeDetectorRef.detectChanges();
+    }
+    else{
+      this.attendeesList.forEach((res) => {
+        if (res.userID == idUserSelected) {
+          res.roleType = value;
+          this.listRoles.forEach((role) => {
+            if (role?.value == res?.roleType) {
+              res.icon = role.icon;
+            }
+          });
+        }
+      });      
+      this.changeDetectorRef.detectChanges();
+    }
+    
     this.changeDetectorRef.detectChanges();
 
     this.popover.close();

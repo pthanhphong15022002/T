@@ -136,10 +136,11 @@ export class SubFolderComponent implements OnInit {
   // }
 
   disableSubItemAdd() {
-    return (this.listSubFolder.length >= 5 || this.subitem.level == "" || this.subitem.type == "" || this.subitem.format == "")
+    return (this.listSubFolder.length >= 5)
   }
 
-  SaveSubFolder() {   
+  SaveSubFolder() {
+    if(this.checkRequied()) return; 
     if (this.indexSub == -1) {
       if (this.listSubFolder == null)
         this.listSubFolder = [];
@@ -149,11 +150,24 @@ export class SubFolderComponent implements OnInit {
       this.listSubFolder[this.indexSub] = JSON.parse(JSON.stringify(this.subitem));
     }
 
-    this.dmSV.ListSubFolder.next(this.listSubFolder);
+    //this.dmSV.ListSubFolder.next(this.listSubFolder);
     this.changeDetectorRef.detectChanges();   
-    this.dialog.close();
+    this.dialog.close(this.listSubFolder);
   }
 
+  checkRequied()
+  {
+    var arr = [];
+    if(!this.subitem.level || this.subitem.level =="") arr.push(this.titleLevel);
+    if(!this.subitem.type || this.subitem.type =="") arr.push(this.titleLevelFor);
+    if((!this.subitem.format || this.subitem.format =="") &&  this.subitem.type!="1") arr.push(this.titleFormat);
+    if(arr.length>0)
+    {
+      this.notificationsService.notifyCode("SYS009",0,arr.join(' , '));
+      return true;
+    }
+    return false;
+  }
   doSubItemValueChange($event) {
     this.subitem.description = $event.target.value;
   }
