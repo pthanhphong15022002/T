@@ -42,7 +42,7 @@
           <div class="d-flex org-dinhbien">
             <div #h class="mx-6 d-flex flex-column align-items-center"
               (click)="loadEmployList(h, data.departmentCode, '')">
-              <div class="fs-4 fw-bold text-dark mb-2">{{ data.headcounts }}</div>
+              <div class="fs-2 fw-bold text-dark mb-2">{{ data.headcounts }}</div>
               <span class="text-gray-500">
                 <codx-label fiedName="headcounts" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
                   default="Định biên">
@@ -51,7 +51,7 @@
             </div>
             <div #c class="mx-6 d-flex flex-column align-items-center"
               (click)="loadEmployList(c, data.departmentCode, '50')">
-              <div class="fs-1 fw-bold mb-2 text-primary">{{ data.counts }}</div>
+              <div class="fs-2 fw-bold mb-2 text-primary">{{ data.counts }}</div>
               <span class="text-gray-500">
                 <codx-label fiedName="counts" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
                   default="Chính thức">
@@ -69,7 +69,7 @@
             </div>
             <div #f class="mx-6 d-flex flex-column align-items-center"
               (click)="loadEmployList(f, data.departmentCode, '70')">
-              <div class="fs-3 fw-bold mb-2 text-danger">{{ data.offboard }}</div>
+              <div class="fs-2 fw-bold mb-2 text-danger">{{ data.offboard }}</div>
               <span class="text-gray-500">
                 <codx-label fiedName="offboard" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
                   default="Offboard">

@@ -31,7 +31,6 @@ export class CodxShareService {
     formModel?: any,
     dataService?: any
   ) {
-    debugger;
     var funcID = val?.functionID;
     switch (funcID) {
       //Giao việc
