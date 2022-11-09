@@ -65,6 +65,8 @@ export class EmployeeProfileComponent extends UIComponent {
   formModel;
   itemDetail;
 
+  crrTab: number = 0;
+
   vllTabs = [
     { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
     { icon: 'icon-apartment', text: 'Thông tin công việc' },
@@ -158,6 +160,10 @@ export class EmployeeProfileComponent extends UIComponent {
 
   changeItemDetail(item) {}
 
+  clickTab(tabNumber) {
+    this.crrTab = tabNumber;
+  }
+
   addEmployeePartyInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
@@ -172,9 +178,9 @@ export class EmployeeProfileComponent extends UIComponent {
       },
       option
     );
-    dialogAdd.closed.subscribe(res => {
+    dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
-    })
+    });
   }
 
   addEmployeeSelfInfo() {
@@ -195,9 +201,9 @@ export class EmployeeProfileComponent extends UIComponent {
       },
       option
     );
-    dialogAdd.closed.subscribe(res => {
+    dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
-    })
+    });
     // })
   }
 }
