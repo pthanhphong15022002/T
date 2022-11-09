@@ -237,6 +237,11 @@
     width: 80% !important;
   }
 
+  .e-input-group-full {
+    border: none;
+    width: 100% !important;
+  }
+
   .short-text {
     border: solid;
     padding-left: 25px;
@@ -248,7 +253,6 @@
     padding-left: 25px;
     width: 100% !important;
   }
-
 
   .long-text {
     padding-left: 25px;
@@ -370,7 +374,7 @@
     width: 100% !important;
   }
 
-  .icon-MF-image { 
+  .icon-MF-image {
     position: absolute !important;
     top: -5px;
     left: -5px;
@@ -389,7 +393,7 @@
   .count-session {
     width: 97px !important;
     height: 36px !important;
-    background-color: #3699FF!important;
+    background-color: #3699ff !important;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     color: white !important;
@@ -400,15 +404,15 @@
   }
 
   .b-l {
-    border: 0px solid #E2E3EE;
+    border: 0px solid #e2e3ee;
     border-radius: 11px;
-    border-left-color: #3699FF!important;
-    border-left-width: 5px!important;
+    border-left-color: #3699ff !important;
+    border-left-width: 5px !important;
   }
 
   .b-t {
-    border: 0px solid #E2E3EE;
-    border-top-color: #3699FF !important;
+    border: 0px solid #e2e3ee;
+    border-top-color: #3699ff !important;
     border-top-width: 10px !important;
     border-top-right-radius: 18px !important;
   }
@@ -424,9 +428,13 @@
     padding: 10px;
     height: 300px;
   }
-  
+
   .row:after {
     display: table;
     clear: both;
+  }
+
+  .pd-l-16p {
+    padding-left: 16% !important;
   }
 }
