@@ -140,7 +140,6 @@ export class SubFolderComponent implements OnInit {
   }
 
   SaveSubFolder() {
-    debugger;
     if(this.checkRequied()) return; 
     if (this.indexSub == -1) {
       if (this.listSubFolder == null)
