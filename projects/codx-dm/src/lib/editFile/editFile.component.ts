@@ -253,7 +253,6 @@ export class EditFileComponent implements OnInit {
       this.user = this.auth.get();
       this.dialog = dialog;     
       this.id = this.fileEditing.recID;
-      debugger;
       if(this.data[2]) this.isCopyRight = this.data[2];      
       // this.dmSV.isFileEditing.subscribe(item => {
       //   if (item != undefined && this.fileEditing.recID == item.recID) {
