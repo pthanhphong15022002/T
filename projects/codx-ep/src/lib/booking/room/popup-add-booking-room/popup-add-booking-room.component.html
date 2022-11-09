@@ -326,7 +326,7 @@
             >
               <span
                 class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
-                >+{{ lstUser?.length + lstUserOptional?.length - 2 }}</span
+                >+{{ attendeesList.length - 2 }}</span
               >
             </span>
           </div>
@@ -431,10 +431,18 @@
             objectType="AD_Users"
           ></codx-img>
           <span
+            popoverClass="userPopoverClass"
+            [ngbPopover]="popoverSelectRoles"
+            placement="right"
+            #p="ngbPopover"
+            (mouseenter)="showPopover(p, curUser.userID)"
+            autoClose="outside"
             class="position-absolute"
             inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"
             style="bottom: -5px;right:-4px"
-          ></span>
+          >
+        
+        </span>
         </div>
 
         <div class="d-flex flex-column flex-grow-1">
@@ -442,7 +450,7 @@
             {{ curUser?.userName }}
           </div>
           <div>
-            <span class="text-muted">{{ curUser.roleName }}</span>
+            <span class="text-muted">{{ curUser.roleType | vll: "EP009":"text" | async }}</span>
           </div>
         </div>
 

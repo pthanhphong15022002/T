@@ -195,7 +195,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   openFile(id) {
     //var data = JSON.parse(file);
     this.fileService.getFile(id).subscribe(data => {
-      debugger;
       var option = new DialogModel();
       option.IsFull = true;
       this.fileName = data.fileName;

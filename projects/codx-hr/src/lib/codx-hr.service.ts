@@ -114,4 +114,35 @@ export class CodxHrService {
       data
     );
   }
+
+  saveEmployeeSelfInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeSelfInfoAsync',
+      data
+    );
+  }
+
+  saveEmployeeContactInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeContactInfoAsync',
+      data
+    )
+  }
+
+  saveEmployeeUnionAndPartyInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeUnionAndPartyInfoAsync',
+      data
+    );
+  }
+
 }

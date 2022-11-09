@@ -415,6 +415,7 @@ export class EmployeeListComponent extends UIComponent {
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'HR0032') this.urlView = obj.url;
       });
+      this.urlView = '/hr/employeedetail/HRT03a1';
       this.codxService.navigate('', this.urlView, {
         employeeID: data.employeeID,
       });
