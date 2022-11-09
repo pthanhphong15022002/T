@@ -363,7 +363,11 @@ export class CreateFolderComponent implements OnInit {
 
   changeValueOwner($event) {
     this.showPopup = false;
-    if ($event?.id != undefined) this.approvers = $event.id;
+    this.approvers = $event.id
+    // this.api.execSv("SYS","AD","UserGroupsBusiness","GetListMemberIDByGroupIDAsync",$event.id).subscribe(item=>{
+    //   if(item)
+    //     this.approvers = item[0]
+    // })
     //this.approvers - $event.dataSelected[0].OrgUnitID;
   }
 
