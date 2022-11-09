@@ -161,15 +161,17 @@ db.DM_FolderInfo.updateMany(
     breadcumb.push(title);
     breadcumb.push(subtitle);
     this.dmSV.idMenuActive = id;
+    this.dmSV.page =0;
     this.dmSV.breadcumb.next(breadcumb);
     this.dmSV.menuIdActive.next(id);
     this.dmSV.menuActive.next(title);
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id);
+    this.dmSV.dmFavoriteID = "2";
     this.folderService.options.funcID = id;
     this.folderService.options.favoriteID = subid;
     this.folderService.getFolders('').subscribe(async (list) => {
-      if (list != null) {
+      if (list) {
         this.dmSV.listFolder = list[0];
         this.dmSV.ChangeData.next(true);
         this.changeDetectorRef.detectChanges();
@@ -338,7 +340,8 @@ db.DM_FolderInfo.updateMany(
     var data = {} as any;
     data.recID = '';
     this.dmSV.refreshTree.next(true);
-    this.dmSV.breadcumb.next([]);
+    this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);
+    this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0,1);
     //isFolderId
     this.changeDetectorRef.detectChanges();
   }

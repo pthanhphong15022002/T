@@ -283,10 +283,11 @@ export class CreateFolderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.refesh();
     //  this.openForm();
     this.dmSV.isFileEditing.subscribe((item) => {
       if (item) {
-        //this.fileEditing = item; CHung Sửa nhớ
+        this.fileEditing = item; //CHung Sửa nhớ
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -300,12 +301,12 @@ export class CreateFolderComponent implements OnInit {
       }
     });
 
-    this.dmSV.isListSubFolder.subscribe((item) => {
-      this.listSubFolder = item;
-      if (this.fileEditing === undefined) this.fileEditing = new FileUpload();
-      this.fileEditing.subFolder = this.listSubFolder;
-      this.changeDetectorRef.detectChanges();
-    });
+    // this.dmSV.isListSubFolder.subscribe((item) => {
+    //   this.listSubFolder = item;
+    //   if (this.fileEditing === undefined) this.fileEditing = new FileUpload();
+    //   this.fileEditing.subFolder = this.listSubFolder;
+    //   this.changeDetectorRef.detectChanges();
+    // });
 
     this.cache.valueList('L1488').subscribe((res) => {
       // console.log(res);
@@ -337,7 +338,16 @@ export class CreateFolderComponent implements OnInit {
       this.listFormat4 = res.datas;
     });
   }
-
+  refesh()
+  {
+    this.revision = false;
+    this.physical = false;
+    this.copyrightsControl = false;
+    this.approval = false;
+    this.security = false;
+    this.createSubFolder = false;
+    this.listSubFolder = null;
+  }
   changeValue($event, type) {
     //   console.log($event);
     this.errorshow = true;
@@ -360,9 +370,7 @@ export class CreateFolderComponent implements OnInit {
   openForm() {
     var that = this;
     this.showAll = false;
-    debugger;
     if (that.id != '' && this.id != null) {
-      debugger;
       this.noeditName = false;
       this.folderService.getFolder(this.id).subscribe(async (res) => {
         this.checkPermission();
@@ -553,7 +561,6 @@ export class CreateFolderComponent implements OnInit {
   }
 
   onFolderSave() {
-    debugger;
     this.errorshow = true;
     if (this.approval && (this.approvers == '' || this.approvers == undefined)) {
       this.notificationsService.notify(this.titleApprovalName);
@@ -593,6 +600,7 @@ export class CreateFolderComponent implements OnInit {
           that.dmSV.addFolder.next(res.data);
           that.changeDetectorRef.detectChanges();
           this.dialog.close();
+          this.dmSV.fileEditing.next(null);
         } else {
           this.message = res.message;
           this.errorshow = true;
@@ -659,6 +667,7 @@ export class CreateFolderComponent implements OnInit {
                         }
                         that.dmSV.listFolder = folders;
                         that.dmSV.ChangeData.next(true);
+                        this.dmSV.fileEditing.next(null)
                         this.dialog.close();
                       } else {
                         // $('#fullName').addClass('form-control is-invalid');
@@ -673,6 +682,7 @@ export class CreateFolderComponent implements OnInit {
               });
           } else {
             this.notificationsService.notify(item.message);
+            this.dmSV.fileEditing.next(null)
             this.dialog.close();
           }
         });
@@ -700,7 +710,7 @@ export class CreateFolderComponent implements OnInit {
     this.subitem.description = '';
     this.disableSubItem = true;
 
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       SubFolderComponent,
       this.titleDialogPHysical,
       450,
@@ -709,6 +719,11 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.indexSub, this.subitem, this.listSubFolder],
       ''
     );
+    dialog.closed.subscribe(item=>{
+      if(item.event)
+        this.listSubFolder = item.event;
+      this.changeDetectorRef.detectChanges();
+    })
   }
 
   onDeleteSub(index) {
@@ -728,7 +743,7 @@ export class CreateFolderComponent implements OnInit {
     this.indexSub = index;
     this.subitem = JSON.parse(JSON.stringify(this.listSubFolder[index]));
     this.subItemLevel = this.listSubFolder[index].level;
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       SubFolderComponent,
       this.titleDialogPHysical,
       450,
@@ -737,9 +752,21 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.indexSub, this.subitem, this.listSubFolder],
       ''
     );
+    dialog.closed.subscribe(item=>{
+      if(item.event) this.listSubFolder = item.event
+      this.changeDetectorRef.detectChanges();
+    })
   }
 
-  removeUserRight(index) { }
+  removeUserRight(index) {
+    this.fileEditing.permissions = this.fileEditing.permissions.filter(x=>x.id != this.fileEditing.permissions[index].id);
+    // this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
+    //   if (res) {
+    //     this.dmSV.fileEditing.next(this.fileEditing);
+    //     this.notificationsService.notify(res.message);
+    //   }
+    // });
+   }
 
   isShowAll(action = false) {
     if (action) this.showAll = !this.showAll;
@@ -816,6 +843,7 @@ export class CreateFolderComponent implements OnInit {
 
   openRight(mode = 1, type = true) {
     this.dmSV.dataFileEditing = this.fileEditing;
+    this.dmSV.dataFileEditing.assign = true;
     this.callfc.openForm(
       RolesComponent,
       this.titleRolesDialog,

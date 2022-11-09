@@ -1,3 +1,4 @@
+import { TmpMemo } from './../../models/task.model';
 import {
   CO_Content,
   CO_MeetingTemplates,
@@ -5,6 +6,8 @@ import {
 import {
   CO_Meetings,
   CO_Resources,
+  EP_BookingAttendees,
+  EP_Boooking,
   TmpRoom,
 } from './../../models/CO_Meetings.model';
 import {
@@ -85,7 +88,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   dayOnWeeks = [];
   selectedDate: Date;
   listTime = [];
-  // gridViewSetup: any;
+  gridViewSetup: any;
   timeBool = false;
   isMeetingDate = true;
   isRoom = true;
@@ -113,21 +116,21 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.titleAction = dt.data[1];
     this.functionID = this.dialog.formModel.funcID;
 
-    // this.cache
-    //   .gridViewSetup(
-    //     this.dialog.formModel.formName,
-    //     this.dialog.formModel.gridViewName
-    //   )
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.gridViewSetup = res;
-    //     }
-    //   });
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
 
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
       .subscribe((res) => {
-        this.isRoom = res.msgBodyData[0];
+        // this.isRoom = res.msgBodyData[0];
         if (this.action === 'edit') {
           if (this.isRoom == false) {
             this.api
@@ -159,7 +162,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     // this.getTimeWork(this.selectedDate);
 
     if (this.action == 'add' || this.action == 'copy') {
-      this.getListUser(this.user.userID);
+      this.getListUser(this.user?.userID);
     }
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -205,10 +208,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           }
         });
     }
-    console.log(this.meeting.startDate);
-    console.log(this.meeting.endDate);
-    console.log(this.startTime);
-    console.log(this.endTime);
   }
 
   loadTime() {
@@ -216,7 +215,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'GetListTimeAsync')
       .subscribe((res) => {
         if (res) {
-          console.log(res);
           this.listTime = res[0];
         }
       });
@@ -232,7 +230,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         ['1', startDate.toUTCString(), endDate.toUTCString()]
       )
       .subscribe((res) => {
-        console.log(res);
         if (res.msgBodyData[0] && res.msgBodyData[0].length > 0) {
           var list = [];
           list = res.msgBodyData[0];
@@ -328,6 +325,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.attachment?.clearData();
         if (res) {
           this.dialog.close([res.save]);
+          //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
+          // this.bookingRoomEP(res.save);
+          this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID).subscribe();
         } else this.dialog.close();
       });
   }
@@ -338,6 +338,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.dialog.close();
+        this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID).subscribe();
       });
   }
   ///cần 1 đống mess Code
@@ -346,27 +347,25 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.meeting.meetingName == null ||
       this.meeting.meetingName.trim() == ''
     ) {
-      this.notiService.notify('Tên cuộc họp không được để trống !');
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['MeetingName']?.headerText + '"'
+      );
       return;
     }
 
-    // if (this.meeting.startDate <= new Date()) {
-    //   this.notiService.notifyCode('CO002');
-    //   return;
-    // }
-    // if (this.meeting.endDate <= new Date()) {
-    //   this.notiService.notifyCode('CO002');
-    //   return;
-    // }
     if (this.meeting.meetingType == '1') {
       if (!this.meeting.fromDate || !this.meeting.toDate) {
-        this.notiService.notify(
-          'Thời gian của công việc review không được để trống !'
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['FromDate']?.headerText + '"'
         );
         return;
       }
     }
-
+    //Chưa có mssg code
     if (this.isCheckStartEndTime(this.meeting.startDate)) {
       this.notiService.notify(' "Giờ" họp phải lớn hơn "Giờ" hiện tại !');
       return;
@@ -380,21 +379,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('CO002');
       return;
     }
-
-    if (
-      this.meeting?.isOnline &&
-      (!this.meeting.link || this.meeting.link.trim() == '')
-    ) {
-      this.notiService.notify('Vui lòng nhập đường link họp online !');
-      return;
-    }
-
     if (this.meeting.fromDate >= this.meeting.toDate) {
-      // this.notiService.notify('Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc !');
       this.notiService.notifyCode('CO003');
       return;
     }
-
+    //Chưa có mssg code
     if (this.isCheckFromToDate(this.meeting.toDate)) {
       this.notiService.notify(
         'Vui lòng chọn ngày kết thúc nhỏ hơn ngày hiện tại!'
@@ -434,8 +423,56 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         }
       }
     });
-    if (this.action === 'add' || this.action === 'copy') {
-      this.tmSv
+
+    //confirm
+    if (
+      this.meeting.isOnline &&
+      (!this.meeting.link || this.meeting.link.trim() == '')
+    ) {
+      this.notiService.alertCode('CO004').subscribe((res) => {
+        if (res?.event && res?.event?.status == 'Y')
+          this.confirmResourcesTrackEvent();
+        else return;
+      });
+    } else this.confirmResourcesTrackEvent();
+
+    //edit van kiem tra =>Nếu ok thì xóa để không nặng code
+    // if (this.action === 'add' || this.action === 'copy') {
+    //   this.tmSv
+    //   .getResourcesTrackEvent(
+    //     this.meeting.resources,
+    //     this.meeting.startDate.toUTCString(),
+    //     this.meeting.endDate.toUTCString()
+    //   )
+    //   .subscribe((res) => {
+    //     if (res && res.length > 0) {
+    //       var resource = '';
+    //       res.forEach((element) => {
+    //         resource += element.objectName + ', ';
+    //       });
+    //       if(resource != ''){
+    //         resource = resource.substring(0,resource.length-2);
+    //       }
+    //       this.notiService
+    //           .alertCode('TM063', null, ' "' + resource + '" ')
+    //           .subscribe((x) => {
+    //             if (x.event.status == 'N') {
+    //               return;
+    //             } else {
+    //               this.save();
+    //             }
+    //           });
+    //     }else{
+    //       this.save();
+    //     }
+    //   });
+    // } else {
+    //   this.save();
+    // }
+  }
+  //chuyển và làm gọn hàm gọi event của P
+  confirmResourcesTrackEvent() {
+    this.tmSv
       .getResourcesTrackEvent(
         this.meeting.resources,
         this.meeting.startDate.toUTCString(),
@@ -447,25 +484,19 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           res.forEach((element) => {
             resource += element.objectName + ', ';
           });
-          if(resource != ''){
-            resource = resource.substring(0,resource.length-1);
+          if (resource != '') {
+            resource = resource.substring(0, resource.length - 2);
           }
           this.notiService
-              .alertCode('TM063', null, '"' + resource + '"')
-              .subscribe((x) => {
-                if (x.event.status == 'N') {
-                  return;
-                } else {
-                  this.save();
-                }
-              });
-        }else{
+            .alertCode('TM063', null, ' "' + resource + '" ')
+            .subscribe((x) => {
+              if (x?.event && x?.event?.status == 'Y') this.save();
+              else return;
+            });
+        } else {
           this.save();
         }
       });
-    } else {
-      this.save();
-    }
   }
 
   async save() {
@@ -481,11 +512,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       if (this.action === 'add' || this.action === 'copy') this.onAdd();
       else this.onUpdate();
     }
-  }
-
-  toTimeSpan(t) {
-    var time = new Date(t).toLocaleTimeString();
-    return time;
   }
 
   //#region check dieu kien khi add meeting
@@ -729,7 +755,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     // this.isFullDay = false;
     this.setDate();
     this.changDetec.detectChanges();
-
   }
 
   valueEndTimeChange(event: any) {
@@ -1034,4 +1059,41 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   //end
+  bookingRoomEP(data) {
+    //chuyển model meeting sang booking
+    let booking = new EP_Boooking();
+    booking.resourceID = data.location;
+    booking.status = data.status;
+    booking.startDate = data.startDate;
+    booking.endDate = data.endDate;
+    booking.link = data.link;
+    booking.link2 = data.link2;
+    booking.memo = data.memo;
+    booking.online = data.online;
+    booking.bookingOn = data.startDate;
+    booking.approveStatus = '1';
+    booking.resourceType = '1';
+    //cần kiểm tra lại mapping cho 2 field này
+    booking.title = data.meetingName; // tiêu đề cuộc họp
+    booking.reasonID = 'R'; //mã lí do cuộc họp
+    //tạo ds người tham gia cho EP
+    let bookingAttendees = [];
+    data.resources.forEach((item) => {
+      let attender = new EP_BookingAttendees();
+      attender.userID = item.resourceID;
+      attender.roleType = item.roleType;
+      attender.optional = item.optional;
+      attender.status = item.status;
+      bookingAttendees.push(attender);
+    });
+    this.api
+      .execSv('EP', 'ERM.Business.EP', 'BookingsBusiness', 'AddEditItemAsync', [
+        booking,
+        true,
+        bookingAttendees,
+      ])
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
 }

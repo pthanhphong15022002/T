@@ -1,3 +1,16 @@
 lib-reportingline codx-view-tree-detail .e-pane.e-static-pane+.e-pane {
     overflow: auto !important;
 }
+.multiple-employee{
+    z-index: 10;
+    width: 25px;
+    height: 25px;
+    margin-left: -4px;
+    line-height: 25px;
+    background-color: rgba(158, 157, 157, 0.5);
+    text-align: center;
+}
+.hr-list-employee{
+    max-height: 200px;
+    overflow: auto;
+}

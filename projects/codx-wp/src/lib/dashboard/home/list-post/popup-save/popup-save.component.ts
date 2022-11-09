@@ -43,12 +43,15 @@ export class PopupSavePostComponent implements OnInit {
       .subscribe((res: any[]) => {
         if (res) {
           this.listStorage = res;
+          this.listStorage[0].isActive = true;
+          this.storageIDSelected = this.listStorage[0].recID;
           this.dt.detectChanges();
         }
       });
   }
   saveObjectToStorage() {
-    this.api.execSv("WP", "ERM.Business.WP", "StoragesBusiness", "InsertIntoStorageAsync", [this.storageIDSelected, this.data.recID])
+    if(this.storageIDSelected){
+      this.api.execSv("WP", "ERM.Business.WP", "StoragesBusiness", "InsertIntoStorageAsync", [this.storageIDSelected, this.data.recID])
       .subscribe((res: any) => {
         if (res) {
           this.notifiSV.notifyCode("SYS006");
@@ -58,6 +61,7 @@ export class PopupSavePostComponent implements OnInit {
           this.notifiSV.notifyCode("SYS023");
         }
       });
+    }
   }
   selectStorage(item) {
     this.listStorage.map((x: any) => {

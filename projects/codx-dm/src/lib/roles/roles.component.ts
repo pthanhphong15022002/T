@@ -617,7 +617,7 @@ export class RolesComponent implements OnInit {
     if (this.modePermission) {
       if (this.type == "file") {
         this.fileService.updatePermisson(this.fileEditing).subscribe(async res => {
-          if (res != null) {
+          if (res) {
             this.notificationsService.notify(res.message);
           }
         });
@@ -629,7 +629,7 @@ export class RolesComponent implements OnInit {
         // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
         // });
         this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
-          if (res != null) {
+          if (res) {
             this.dmSV.fileEditing.next(this.fileEditing);
             this.notificationsService.notify(res.message);
           }

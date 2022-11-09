@@ -6,10 +6,12 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
+import { DriverModel } from '../../../models/bookingAttendees.model';
 
 @Component({
   selector: 'approval-car-view-detail',
@@ -20,6 +22,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
+  @ViewChild('driverAssign') driverAssign: TemplateRef<any>;
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -32,7 +35,11 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;  
-
+  cbbDriver: any[];
+  listDriver=[];
+  popupDialog: any;
+  popuptitle: any;
+  fields: Object = { text: 'driverName', value: 'driverID' };
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,    
@@ -79,19 +86,21 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
     // }
     switch (funcID) {
       case 'EPT40201':
-      case 'EPT40201':
-      case 'EPT40301':
         {
           //alert('Duyệt');
           this.approve(datas,"5")
         }
         break;      
       case 'EPT40205':
-      case 'EPT40205':
-      case 'EPT40305':
         {
           //alert('Từ chối');
           this.approve(datas,"4")
+        }
+        break;
+      case 'EPT40204':
+        {
+          this.popuptitle=value.text;
+          this.assignDriver(datas);
         }
         break;
       
@@ -128,31 +137,62 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   } 
 
   
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      event.forEach(func => {       
-        if(func.functionID == "SYS04"/*Copy*/) 
-        {
-          func.disabled=true;        
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
+          func.disabled = true;
         }
       });
-      if(data.approveStatus=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/)
-          {
-            func.disabled=true;
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = false;
           }
         });
       }
     }
+  }
+  assignDriver(data: any) {
+    let startDate= new Date(data.startDate);
+    let endDate= new Date(data.endDate);
+    this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
+    .subscribe((res:any)=>{
+      if(res){
+        this.cbbDriver=[];
+        this.listDriver = res;
+        this.listDriver.forEach(dri=>{
+          var tmp = new DriverModel();
+          tmp['driverID'] = dri.resourceID;
+          tmp['driverName'] = dri.resourceName;
+          this.cbbDriver.push(tmp);
+        })
+        this.detectorRef.detectChanges(); 
+        this.popupDialog = this.callfc.openForm(this.driverAssign, '', 550,250 );
+      }
+    })
+       
   }
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;

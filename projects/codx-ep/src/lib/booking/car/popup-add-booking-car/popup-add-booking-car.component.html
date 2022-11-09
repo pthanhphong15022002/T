@@ -16,13 +16,13 @@
       <div class="row">
         <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
           <div class="d-flex justify-content-start">
-            <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
-              <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
+            <div class="d-flex  flex-wrap" *ngFor="let item of tmplstDevice">
+              <div class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
                 <span class="me-1 ps-2"  [className]="item.icon"
                 [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
                 </span>{{ item.text }}
                 <!-- <i class="icon-panorama_fish_eye"></i> -->
-              </li>
+              </div>              
             </div>
           </div>
           <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
@@ -34,27 +34,6 @@
         </div>
       </div>
     </div>
-
-    <div class="row form-group d-flex flex-row justify-content-start align-items-center">
-      <div class="col-1">
-        <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-      <div class="col-5">
-        <codx-label name="lblDriverStatus" default="Đã điều tài xế" [formModel]="form.formModel"></codx-label>
-      </div>
-
-      <div class="col-1">
-        <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="useCard"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-      <div class="col-5">
-        <codx-label name="lblUseCard" default="Có sử dụng thẻ" [formModel]="form.formModel"></codx-label>
-      </div>
-    </div>
-
     <div class="row">
       <div class="col-6 form-group">
         <codx-label fiedName="StartDate" [formModel]="form.formModel">
@@ -78,6 +57,25 @@
         <codx-input field="endDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
           (valueChange)="endDateChange($event)">
         </codx-input>
+      </div>
+    </div>
+    <div class="row form-group d-flex flex-row justify-content-start align-items-center">
+      <div class="col-1">
+        <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-5">
+        <codx-label name="lblDriverStatus" default="Đã điều tài xế" [formModel]="form.formModel"></codx-label>
+      </div>
+
+      <div class="col-1">
+        <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="useCard"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-5">
+        <codx-label name="lblUseCard" default="Có sử dụng thẻ" [formModel]="form.formModel"></codx-label>
       </div>
     </div>
     <div class="form-group">

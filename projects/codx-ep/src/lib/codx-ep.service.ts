@@ -248,13 +248,12 @@ export class CodxEpService {
   }
 
   getBookingByRecID(recID: string) {
-    return this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetBookingByIDAsync',
-        recID
-      )
+    return this.api.exec<any>(
+      'EP',
+      'BookingsBusiness',
+      'GetBookingByIDAsync',
+      recID
+    );
   }
 
   updateResource(model: any, isAdd: boolean) {
@@ -343,6 +342,12 @@ export class CodxEpService {
       [funcID, objectId, objectType]
     );
   }
+  getAutoNumberDefault(funcID: string): Observable<any> {
+    return this.api.execSv(
+      "SYS", "ERM.Business.AD", "AutoNumbersBusiness", "GetAutoNumberByFuncIDAsync",
+      [funcID]
+    );
+  }
 
   getLstFileByID(lstID: string[]): Observable<any> {
     return this.api.execSv(
@@ -396,7 +401,28 @@ export class CodxEpService {
       [entityName]
     );
   }
-
+  getAvailableResources(
+    resourceType: string,
+    startDate: string,
+    endDate: string
+  ) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListAvailableResourceAsync',
+      [resourceType, startDate, endDate]
+    );
+  }
+  assignDriver(recID: string, driverID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'AssignDriverAsync',
+      [recID, driverID]
+    );
+  }
   //#endregion
 
   //#region EmailTemplate

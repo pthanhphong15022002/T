@@ -109,15 +109,15 @@ export class ShareComponent implements OnInit {
 
   ngOnInit(): void {   
     this.user = this.auth.get();       
-   
+    if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
   }
 
-  checkContent() {    
-    if (this.shareContent === "")
-       return false;
-     else
-       return true;
-   }
+
+  checkContent() 
+  {    
+    if (this.shareContent == "")  return false;
+    return true;
+  }
 
   validate(item) {
     //  fileName
@@ -233,7 +233,7 @@ export class ShareComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-
+    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.byPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
     this.fileEditing.byPermission = this.byPermission;
@@ -314,6 +314,17 @@ export class ShareComponent implements OnInit {
     this.dialog.close();
   }  
 
+  checkPermission(permiss:any , upermiss:any)
+  {
+    var result = false;
+    for(var i = 0 ; i< upermiss.length ; i++)
+    {
+      var check = permiss.filter(x=>x.objectID == upermiss[i].objectID);
+      if(!check || !check[0]?.assign) return false;
+      else result = true;
+    }
+    return result;
+  }
   copyPath() {
     this.copyToClipboard(this.getPath())
       .then(() => console.log('text copied !'))

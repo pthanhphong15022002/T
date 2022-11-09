@@ -281,6 +281,7 @@ export class CodxTasksComponent
         active: false,
         sameData: false,
         request: this.requestSchedule,
+        showSearchBar: false,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -288,7 +289,7 @@ export class CodxTasksComponent
           template4: this.resourceHeader,
           template6: this.mfButton, //header
           // template: this.eventTemplate,
-          template2: this.headerTemp,
+          //template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
@@ -300,6 +301,8 @@ export class CodxTasksComponent
         sameData: false,
         request: this.requestSchedule,
         request2: this.modelResource,
+        showSearchBar: false,
+        showFilter:false,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -307,7 +310,7 @@ export class CodxTasksComponent
           template4: this.resourceHeader,
           template6: this.mfButton, //header
           // template: this.eventTemplate, lấy event của temo
-          template2: this.headerTemp,
+          //template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
@@ -329,7 +332,7 @@ export class CodxTasksComponent
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
     this.getParam();
-    this.detectorRef.detectChanges();
+    //this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -358,6 +361,7 @@ export class CodxTasksComponent
         option
       );
       dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -430,6 +434,7 @@ export class CodxTasksComponent
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -535,6 +540,7 @@ export class CodxTasksComponent
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (!e.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
               [this.view.dataService.dataSelected],
@@ -1494,14 +1500,18 @@ export class CodxTasksComponent
               (item as any).style.backgroundColor = this.dayoff[i].color;
             });
           }
-          return (
-            '<icon class="' +
-            this.dayoff[i].symbol +
-            '"></icon>' +
-            '<span>' +
-            this.dayoff[i].note +
-            '</span>'
-          );
+          if(this.dayoff[i].note ){
+            return (
+              '<icon class="' +
+              this.dayoff[i].symbol +
+              '"></icon>' +
+              '<span>' +
+              this.dayoff[i].note +
+              '</span>'
+            );
+          }
+          else return null;
+
         }
       }
     }

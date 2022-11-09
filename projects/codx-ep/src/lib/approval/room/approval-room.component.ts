@@ -56,6 +56,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   dataSelected: any;
   dialog!: DialogRef;
   tempReasonName = '';
+  viewType = ViewType;
 
   constructor(
     private injector: Injector,
@@ -141,7 +142,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
-          statusColorRef: 'vl003',
+          statusColorRef: 'EP022',
         },
       },
     ];
@@ -187,13 +188,15 @@ export class ApprovalRoomsComponent extends UIComponent {
     )
     .subscribe((res:any) => {
       if (res?.msgCodeError == null && res?.rowCount>=0) {
-        if(status=="5"){
-          this.notificationsService.notifyCode('ES007');//đã duyệt
-          data.approveStatus="5"
+        if (status == '5') {
+          this.notificationsService.notifyCode('ES007'); //đã duyệt
+          data.approveStatus = '5';
+          data.status = '5';
         }
-        if(status=="4"){
-          this.notificationsService.notifyCode('ES007');//bị hủy
-          data.approveStatus="4";
+        if (status == '4') {
+          this.notificationsService.notifyCode('ES007'); //bị hủy
+          data.approveStatus = '4';
+          data.status = '4';
         }                          
         this.view.dataService.update(data).subscribe();
       } else {

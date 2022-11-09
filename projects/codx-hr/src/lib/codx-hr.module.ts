@@ -20,6 +20,7 @@ import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeei
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { EmployeeProfileComponent } from './employee-list/employee-profile/employee-profile.component';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
@@ -49,6 +50,10 @@ import { ReportinglineOrgChartComponent } from './reportingline/reportingline-or
 import { ReportinglineComponent } from './reportingline/reportingline.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
+import { PopupAddEmployeesPartyInfoComponent } from './employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
+import { EmployeeListComponent } from './employee-list/employee-list.component';
+import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-add-new-hr.component';
+import { EmployeeSelfInfoComponent } from './employee-profile/employee-self-info/employee-self-info.component';
 
 export const routes: Routes = [
   {
@@ -76,6 +81,16 @@ export const routes: Routes = [
       },
       {
         path: '',
+        component: LayoutOnlyHeaderComponent,
+        children: [
+          {
+            path: 'employeedetail/:funcID',
+            component: EmployeeProfileComponent,
+          },
+        ],
+      },
+      {
+        path: '',
         component: NoSubAsideComponent,
         children: [
           // {
@@ -90,6 +105,11 @@ export const routes: Routes = [
             path: 'employee/:funcID',
             component: EmployeesComponent,
           },
+          {
+            path: 'employeelist/:funcID',
+            component: EmployeeListComponent,
+          },
+
           {
             path: 'employeeleave/:funcID',
             component: EmployeesLeaveComponent,
@@ -189,6 +209,12 @@ const T_Component: Type<any>[] = [
   TimeAgoPipe,
   ReportinglineOrgChartComponent,
   ReportinglineDetailComponent,
+  EmployeeListComponent,
+  EmployeeProfileComponent,
+  PopupAddNewHRComponent,
+  EmployeeListComponent,
+  PopupAddEmployeesPartyInfoComponent,
+  EmployeeSelfInfoComponent,
 ];
 @NgModule({
   imports: [

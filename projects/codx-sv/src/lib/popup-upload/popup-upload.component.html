@@ -1,93 +1,220 @@
 <codx-form
-  headerText="Chọn hình ảnh"
+  [headerText]="typeFile == 'image' ? 'Chọn hình ảnh' : 'Chọn video'"
   [body]="body"
-  [footer]="footer"
   [dialog]="dialog"
 >
   <ng-template #body>
-    <ejs-tab headerPlacement="Top">
-      <e-tabitems>
-        <e-tabitem>
-          <ng-template #headerText class="">
-            <div class="nav-item">
-              <a class="nav-link d-flex px-0">
-                <span class="fw-bold">
-                  <codx-label
-                    name="Apps"
-                    formName="UserRoles"
-                    default="TẢI LÊN"
-                  >
-                  </codx-label>
-                </span>
-              </a>
-            </div>
-          </ng-template>
-          <ng-template #content class="pd-t-20">
-            <codx-attachment
-              #ATM_Image
-              [objectType]="functionList?.entityName"
-              [hideFolder]="'1'"
-              [hideUploadBtn]="'0'"
-              [hideDes]="'1'"
-              [type]="'inline'"
-              allowExtensions=".jpg,.png"
-              [allowMultiFile]="'0'"
-              [hideImageUpload]="'0'"
-              [hideBtnSave]="'1'"
-              [hideImageThumb]="'1'"
-              [showMessage]="'0'"
-            >
-            </codx-attachment>
-          </ng-template>
-        </e-tabitem>
-        <e-tabitem>
-          <ng-template #headerText class="">
-            <div class="nav-item">
-              <a class="nav-link d-flex px-0">
-                <span class="fw-bold">
-                  <codx-label name="Apps" formName="UserRoles" default="ẢNH">
-                  </codx-label>
-                </span>
-              </a>
-            </div>
-          </ng-template>
-          <ng-template #content class="pd-t-20">
-            <codx-listview
-              #listView
-              [dataService]="dtService"
-              [predicate]="predicate"
-              [dataValue]="dataValue"
-              [itemTemplate]="templateListCard"
-              type="cardView"
-              service="DM"
-            >
-            </codx-listview>
-
-            <ng-template #templateListCard let-item>
-              <codx-card-img
-                cardCss="border rounded-4 w-200px"
-                [imageRecId]="item.recID"
-                [imgOn]="item?.modifiedOn"
-                [imageObjType]="item.objectType"
-                imageWidth="200"
-                imgCss="h-150px"
-                (click)="chooseImage(item)"
+    <ng-container #image *ngIf="typeFile == 'image'">
+      <ejs-tab headerPlacement="Top">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText class="">
+              <div class="nav-item">
+                <a class="nav-link d-flex px-0">
+                  <span class="fw-bold">
+                    <codx-label
+                      name="Apps"
+                      formName="UserRoles"
+                      default="TẢI LÊN"
+                    >
+                    </codx-label>
+                  </span>
+                </a>
+              </div>
+            </ng-template>
+            <ng-template #content class="pd-t-20">
+              <codx-attachment
+                #ATM_Image
+                [objectType]="functionList?.entityName"
+                hideImageUpload="0"
+                hideBtnSave="1"
+                hideFolder="1"
+                hideUploadBtn="0"
+                [functionID]="functionList?.functionID"
+                type="inline"
+                (fileCount)="selectedImage($event)"
               >
-              </codx-card-img>
-              <span
-                class="icon-check text-white default icon-16 icon-checked"
-                *ngIf="item?.isChoose"
-              ></span>
-            </ng-template> </ng-template
-        ></e-tabitem>
-      </e-tabitems>
-    </ejs-tab>
-  </ng-template>
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSave()">
-        <codx-label fiedName="Save" default="Lưu"></codx-label>
-      </button>
-    </div>
+              </codx-attachment>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText class="">
+              <div class="nav-item">
+                <a class="nav-link d-flex px-0">
+                  <span class="fw-bold">
+                    <codx-label name="Apps" formName="UserRoles" default="ẢNH">
+                    </codx-label>
+                  </span>
+                </a>
+              </div>
+            </ng-template>
+            <ng-template #content class="pd-t-20">
+              <codx-listview
+                #listView
+                [dataService]="dtService"
+                [predicate]="predicate"
+                [dataValue]="dataValueImage"
+                [itemTemplate]="templateListCard"
+                type="cardView"
+                service="DM"
+              >
+              </codx-listview>
+              <div class="d-none">
+                <codx-attachment
+                  #ATM_Choose_Image
+                  [objectType]="functionList?.entityName"
+                  hideImageUpload="0"
+                  hideBtnSave="1"
+                  hideFolder="1"
+                  hideUploadBtn="0"
+                  [functionID]="functionList?.functionID"
+                  type="inline"
+                >
+                </codx-attachment>
+              </div>
+              <div class="d-flex justify-content-end" #footer>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="onSave()"
+                >
+                  <codx-label fiedName="Save" default="Chèn ảnh"></codx-label>
+                </button>
+              </div>
+
+              <ng-template #templateListCard let-item>
+                <codx-card-img
+                  cardCss="border rounded-4 w-200px"
+                  [imageRecId]="item.recID"
+                  [imgOn]="item?.modifiedOn"
+                  [imageObjType]="item.objectType"
+                  imageWidth="200"
+                  imgCss="h-150px"
+                  (click)="chooseImage(item)"
+                >
+                </codx-card-img>
+                <span
+                  class="icon-check text-white default icon-16 icon-checked"
+                  *ngIf="item?.isChoose"
+                ></span> </ng-template></ng-template
+          ></e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </ng-container>
+    <ng-container #image *ngIf="typeFile == 'video'">
+      <ejs-tab headerPlacement="Top">
+        <e-tabitems >
+          <e-tabitem>
+            <ng-template #headerText class="">
+              <div class="nav-item">
+                <a class="nav-link d-flex px-0">
+                  <span class="fw-bold">
+                    <codx-label
+                      name="Apps"
+                      formName="UserRoles"
+                      default="TẢI LÊN"
+                    >
+                    </codx-label>
+                  </span>
+                </a>
+              </div>
+            </ng-template>
+            <ng-template #content class="pd-t-20">
+              <codx-attachment
+                #ATM_Image
+                [objectType]="functionList?.entityName"
+                hideImageUpload="0"
+                hideBtnSave="1"
+                hideFolder="1"
+                hideUploadBtn="0"
+                [functionID]="functionList?.functionID"
+                type="inline"
+                (fileCount)="selectedImage($event)"
+              >
+              </codx-attachment>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText class="">
+              <div class="nav-item">
+                <a class="nav-link d-flex px-0">
+                  <span class="fw-bold">
+                    <codx-label name="Apps" formName="UserRoles" default="URL">
+                    </codx-label>
+                  </span>
+                </a>
+              </div>
+            </ng-template>
+            <ng-template #content class="pd-t-20">
+              <div class="d-flex">
+                <img
+                  class="w-20"
+                  src="./assets/logos/youtube_logo.PNG"
+                  alt=""
+                />
+                <input
+                  type="text"
+                  class="input-URL"
+                  (change)="valueChangeURLVideo($event)"
+                  [(ngModel)]="urlVideo"
+                />
+              </div>
+              <iframe
+                *ngIf="urlEmbedSafe"
+                width="100%"
+                height="380"
+                [src]="urlEmbedSafe"
+                frameborder="0"
+                allowfullscreen
+              ></iframe></ng-template
+          ></e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText class="">
+              <div class="nav-item">
+                <a class="nav-link d-flex px-0">
+                  <span class="fw-bold">
+                    <codx-label
+                      name="Apps"
+                      formName="UserRoles"
+                      default="VIDEO"
+                    >
+                    </codx-label>
+                  </span>
+                </a>
+              </div>
+            </ng-template>
+            <ng-template #content class="pd-t-20">
+              <codx-listview
+                #listView
+                entityName="DM_FileInfo"
+                gridViewName="grvFileInfo"
+                [predicate]="predicate"
+                [dataService]="dtService"
+                [dataValue]="dataValueVideo"
+                [itemTemplate]="templateListCard"
+                type="cardView"
+                formName="FileInfo"
+                service="DM"
+              >
+              </codx-listview>
+
+              <ng-template #templateListCard let-item>
+                <div class="pw-listcard" *ngIf="item.srcVideo">
+                  <div class="pw-card">
+                    <ng-container *ngIf="item.referType == REFER_TYPE.VIDEO">
+                      <video
+                        #video
+                        controls
+                        class="w-100 rounded bg-secondary h-150px mh-150px"
+                      >
+                        <source [src]="item.srcVideo" type="video/mp4" />
+                      </video>
+                    </ng-container>
+                  </div>
+                </div> </ng-template></ng-template
+          ></e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </ng-container>
   </ng-template>
 </codx-form>

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   Injector,
   TemplateRef,
@@ -72,7 +73,8 @@ export class SprintsComponent extends UIComponent {
     private notiService: NotificationsService,
     private tmSv: CodxTMService,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -132,11 +134,17 @@ export class SprintsComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
             false
           );
+        if (e?.event != null) {
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e?.event).subscribe();
+          this.changeDetectorRef.detectChanges();
+        }
       });
     });
   }
@@ -158,11 +166,17 @@ export class SprintsComponent extends UIComponent {
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
               [this.view.dataService.dataSelected],
               false
             );
+          if (e?.event != null) {
+            e.event.modifiedOn = new Date();
+            this.view.dataService.update(e?.event).subscribe();
+            this.changeDetectorRef.detectChanges();
+          }
         });
       });
   }
@@ -180,11 +194,17 @@ export class SprintsComponent extends UIComponent {
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
             false
           );
+        if (e?.event != null) {
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e?.event).subscribe();
+          this.changeDetectorRef.detectChanges();
+        }
       });
     });
   }
@@ -284,8 +304,8 @@ export class SprintsComponent extends UIComponent {
     );
   }
 
-  viewBoard( data) {
-    this.doubleClick(data)
+  viewBoard(data) {
+    this.doubleClick(data);
   }
 
   changeView(evt: any) {}
@@ -392,6 +412,4 @@ export class SprintsComponent extends UIComponent {
   //         })
   //       );
   //   }
-  } 
-
-
+}

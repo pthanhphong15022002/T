@@ -22,7 +22,7 @@ export class PopupContactComponent implements OnInit {
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Liên hệ';
-  option:any = 'contact';
+  option: any = 'contact';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -38,50 +38,43 @@ export class PopupContactComponent implements OnInit {
   ngOnInit(): void {
     this.items = this.data;
   }
-  saveData() {}
-  onEdit() {
-    this.UpdateData();
-  }
 
-  UpdateData() {
-    console.log(this.items);
+  update() {
     this.adService
-      .updateInformationCompanySettings(this.items,this.option)
+      .updateInformationCompanySettings(this.items, this.option)
       .subscribe((response) => {
         if (response) {
-          this.notiService.notifyCode('thêm thành công');
+          this.notiService.notifyCode('SYS007');
         } else {
-          this.notiService.notifyCode('thêm thất bại');
+          this.notiService.notifyCode('SYS021');
         }
       });
     this.dialog.close();
     this.changeDetectorRef.detectChanges();
   }
 
-  txtValuePhone(e: any){
+  txtValuePhone(e: any) {
     this.items.phone = e.data;
     console.log(this.items.phone);
   }
 
-
-  txtValueFaxNo(e: any){
+  txtValueFaxNo(e: any) {
     this.items.faxNo = e.data;
     console.log(this.items.phone);
   }
 
-  txtValueEmail(e: any){
+  txtValueEmail(e: any) {
     this.items.email = e.data;
     console.log(this.items.phone);
   }
 
-  txtValueWebPage(e: any){
+  txtValueWebPage(e: any) {
     this.items.webPage = e.data;
     console.log(this.items.phone);
   }
 
-  txtValueStreet(e: any){
+  txtValueStreet(e: any) {
     this.items.street = e.data;
     console.log(this.items.phone);
   }
-
 }
