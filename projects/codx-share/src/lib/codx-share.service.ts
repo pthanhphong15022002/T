@@ -14,7 +14,6 @@ export class CodxShareService {
   ) {}
   defaultMoreFunc(val:any  , data:any,  afterSave?: Function , formModel?:any , dataService?:any)
   {
-    debugger;
     var funcID = val?.functionID;
     switch(funcID)
     {
