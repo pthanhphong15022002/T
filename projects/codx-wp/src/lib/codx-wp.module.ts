@@ -32,7 +32,7 @@ import { AddNoteComponent } from './dashboard/home/add-note/add-note.component';
 import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
-import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add.component';
+import { PopupAddPostComponents } from './dashboard/home/list-post/popup-add/popup-add.component';
 
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './dashboard/home/list-post/popup-save/popup-save.component';
@@ -54,6 +54,7 @@ import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 import { ChatVoteComponent } from './chatting/chat-vote/chat-vote.component';
 import { CodxChatComponent } from './chatting/codx-chat/codx-chat.component';
 import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
+import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post/popup-add-post.component';
 
 
 export const routes: Routes = [
@@ -175,7 +176,7 @@ const Component: Type<any>[] =
     AddNoteComponent,
     SaveNoteComponent,
     PostComponent,
-    PopupAddPostComponent,
+    PopupAddPostComponents,
     PopupSavePostComponent,
     MyTeamComponent,
     UpdateNotePinComponent,
@@ -196,6 +197,7 @@ const Component: Type<any>[] =
     LayoutComponent,
     ChatVoteComponent,
     PopupViewImageComponent,
+    PopupAddPostComponent
   ];
 
 @NgModule({

@@ -620,7 +620,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     //ktra link online
     if(this.data.online && (this.data.onlineUrl==null || this.data.onlineUrl==''))
     {
-      this.notificationsService.alertCode('EP012').subscribe((x)=>{
+      this.notificationsService.alertCode('Chưa có đường dẫn cho cuộc họp online!').subscribe((x)=>{//EP_WAIT đợi messagecode từ BA
         if (x.event.status == 'N') {
           return;
         } else {
@@ -1182,7 +1182,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if(!checkRole){
         //this.notificationsService.notifyCode('');
         this.notificationsService.notify('Đã có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
-        //this.popover.close();
+        this.popover.close();
         return;
       }
     }

@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, VLLPipe } from 'codx-core';
 import { Observable } from 'rxjs';
-import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
+import { PopupAddPostComponents } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { WP_News } from '../../models/WP_News.model';
 import { PopupEditComponent } from '../../news/popup/popup-edit/popup-edit.component';
 import { ApproveComponent } from '../approve.component';
@@ -121,7 +121,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
                     let option = new DialogModel();
                     option.DataService = this.dataService;
                     option.FormModel = this.formModel;
-                    this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
+                    this.callFuc.openForm(PopupAddPostComponents,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
                       if (res?.event) 
                       {
                         this.dataService.update(res.event).subscribe();

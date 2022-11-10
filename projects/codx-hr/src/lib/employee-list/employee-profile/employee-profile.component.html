@@ -278,7 +278,7 @@
                   id="pane_1"
                   [class]="crrTab == 1 ? 'active' : ''"
                 >
-                  <ng-container [ngTemplateOutlet]="info"></ng-container>
+                  <ng-container [ngTemplateOutlet]="jobInfo"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
@@ -1109,9 +1109,182 @@
   </div>
 </ng-template>
 
-<ng-container *ngTemplateOutlet="jobInfo; context: { data: data }">
-</ng-container>
-<ng-template #jobInfo let-data="data">
-  <div class="job-Title"></div>
-  <codx-label [formModel]="formModel" fiedName="employeeID"></codx-label>
+<ng-template #jobInfo>
+  <div class="job-Info">
+    <h1>
+      <codx-label
+        [formModel]=""
+        fiedName=""
+        name="lblEmployeeJobTitle"
+        default="Thông tin công việc"
+      >
+      </codx-label>
+    </h1>
+
+    <div class="general">
+      <h1>
+        <codx-label
+          [formModel]=""
+          fiedName=""
+          name="lblEmployeeJobGeneralTitle"
+          default="THÔNG TIN CHUNG"
+        >
+        </codx-label>
+      </h1>
+      <div class="detail">
+        <div class="d-flex justify-content-between documentNo-status">
+          <div id="documentNo">
+            <codx-label [formModel]="view.formModel" fiedName="documentNo">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.documentNo }}</span>
+            </span>
+          </div>
+          <div id="status">
+            <codx-label [formModel]="view.formModel" fiedName="status">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.status }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between joinedOn-hiredOn">
+          <div id="joinedOn">
+            <codx-label [formModel]="view.formModel" fiedName="joinedOn">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.joinedOn }}</span>
+            </span>
+          </div>
+          <div id="hiredOn">
+            <codx-label [formModel]="view.formModel" fiedName="hiredOn">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.hiredOn }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between userID-employeeID">
+          <div id="userID">
+            <codx-label [formModel]="view.formModel" fiedName="userID">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.userID }}</span>
+            </span>
+          </div>
+          <div id="employeeID">
+            <codx-label [formModel]="view.formModel" fiedName="employeeID">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.employeeID }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between positionID-jobLevel">
+          <div id="positionID">
+            <codx-label [formModel]="view.formModel" fiedName="positionID">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.positionID }}</span>
+            </span>
+          </div>
+          <div id="jobLevel">
+            <codx-label [formModel]="view.formModel" fiedName="jobLevel">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.jobLevel }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between orgUnitID">
+          <div id="orgUnitID">
+            <codx-label [formModel]="view.formModel" fiedName="orgUnitID">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.orgUnitID }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between lineManager-indirectManager">
+          <div id="lineManager">
+            <codx-label [formModel]="view.formModel" fiedName="lineManager">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.lineManager }}</span>
+            </span>
+          </div>
+          <div id="indirectManager">
+            <codx-label [formModel]="view.formModel" fiedName="indirectManager">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.indirectManager }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between locationID">
+          <div id="locationID">
+            <codx-label [formModel]="view.formModel" fiedName=""> </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.locationID }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between labourType-labourConditions">
+          <div id="labourType">
+            <codx-label [formModel]="view.formModel" fiedName="labourType">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.labourType }}</span>
+            </span>
+          </div>
+          <div id="labourConditions">
+            <codx-label
+              [formModel]="view.formModel"
+              fiedName="labourConditions"
+            >
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.labourConditions }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between isTUnion-tUnionDate">
+          <div id="isTUnion">
+            <codx-label [formModel]="view.formModel" fiedName="isTUnion">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.isTUnion }}</span>
+            </span>
+          </div>
+          <div id="tUnionDate">
+            <codx-label [formModel]="view.formModel" fiedName="tUnionDate">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.tUnionDate }}</span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="d-flex justify-content-between isExpertRecruit-isExpertTrain"
+        >
+          <div id="isExpertRecruit">
+            <codx-label [formModel]="view.formModel" fiedName="isExpertRecruit">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.isExpertRecruit }}</span>
+            </span>
+          </div>
+          <div id="isExpertTrain">
+            <codx-label [formModel]="view.formModel" fiedName="isExpertTrain">
+            </codx-label>
+            <span class="text-dark fw-bold">
+              <span>{{ data.isExpertTrain }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  .job-
 </ng-template>

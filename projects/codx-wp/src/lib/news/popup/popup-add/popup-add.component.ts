@@ -24,7 +24,6 @@ export class PopupAddComponent implements OnInit {
   dialogData: any;
   dialogRef: DialogRef = null;
   newsType: any;
-  objectType:string = "";
   shareControl: string = "9"; // default everyone
   mssgCodeNoty:any = null;
   fileUpload: any[] = [];
@@ -33,6 +32,7 @@ export class PopupAddComponent implements OnInit {
   shareIcon: string = "";
   shareText: string = "";
   shareWith: string = "";
+  dVLL:any = {};
   permissions: Permission[] = [];
   messageImage: string = "";
   data:WP_News = null;  
@@ -104,8 +104,16 @@ export class PopupAddComponent implements OnInit {
       }
     });
     this.cache.message("SYS009").subscribe((mssg: any) => {
-      if(mssg?.defaultName){
+      if(mssg){
         this.mssgCodeNoty = mssg;
+      }
+    });
+    this.cache.valueList("WP001").subscribe((vll:any) => {
+      if(vll){
+        console.log(vll);
+        vll.datas.forEach(x => {
+          this.dVLL[x.value] = x;
+        });
       }
     });
   }
@@ -230,34 +238,6 @@ export class PopupAddComponent implements OnInit {
     }
     let field = event.field;
     let value = event.data;
-    let obj = {};
-    // switch (field) {
-    //   case 'StartDate':
-    //     this.startDate = value.fromDate;
-    //     if (this.endDate < this.startDate) {
-    //       this.notifSV.notifyCode("WP011");
-    //       this.endDate = null;
-    //       obj[field] = null;
-    //     }
-    //     else {
-    //       obj[field] = this.startDate;
-    //     }
-    //     break;
-    //   case 'EndDate':
-    //     this.endDate = value.fromDate;
-    //     if (this.endDate < this.startDate) {
-    //       this.notifSV.notifyCode("WP011");
-    //       this.endDate = null;
-    //       obj[field] = null;
-    //     }
-    //     else {
-    //       obj[field] = this.endDate;
-    //     }
-    //     break;
-    //   default:
-    //     obj[field] = value;
-    //     break;
-    // }
     switch(field){
       case "Tags":
         this.data.tags = value;
@@ -289,7 +269,6 @@ export class PopupAddComponent implements OnInit {
       default:
         break;  
     }
-    // this.formGroup.patchValue(obj);
     this.changedt.detectChanges();
   }
   eventApply(event: any) {
@@ -299,57 +278,49 @@ export class PopupAddComponent implements OnInit {
     }
   }
   getValueShare(shareControl: string, data: any[] = null) {
-    this.cache.valueList('L1901').subscribe((vll: any) => {
-      if(vll){
-        let modShare = vll.datas.find((x: any) => x.value == shareControl);
-        this.shareControl = shareControl;
-        this.shareIcon = modShare.icon;
-        this.shareText = modShare.text;
-        if (dataValidate.length > 0) {
-          this.permissions = []
-          this.shareWith = "";
-          switch (this.shareControl) {
-            case this.SHARECONTROLS.OWNER:
-            case this.SHARECONTROLS.EVERYONE:
-            case this.SHARECONTROLS.MYGROUP:
-            case this.SHARECONTROLS.MYTEAM:
-            case this.SHARECONTROLS.MYDEPARMENTS:
-            case this.SHARECONTROLS.MYDIVISION:
-            case this.SHARECONTROLS.MYCOMPANY:
-              break;
-            case this.SHARECONTROLS.OGRHIERACHY:
-            case this.SHARECONTROLS.DEPARMENTS:
-            case this.SHARECONTROLS.POSITIONS:
-            case this.SHARECONTROLS.ROLES:
-            case this.SHARECONTROLS.GROUPS:
-            case this.SHARECONTROLS.USER:
-              data.forEach((x: any) => {
-                let p = new Permission();
-                p.objectType = x.objectType;
-                p.objectID = x.id;
-                p.objectName = x.text;
-                p.memberType = this.MEMBERTYPE.SHARE;
-                this.permissions.push(p);
-              });
-              if (data.length > 1) {
-                this.cache.message('WP002').subscribe((mssg: any) => {
-                  if (mssg)
-                    this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1, data[0].text.objectName);
-                });
-              }
-              else {
-                this.cache.message('WP001').subscribe((mssg: any) => {
-                  if (mssg)
-                    this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
-                });
-              }   
-              break;
-            default:  
+    if (dataValidate.length > 0) {
+      this.permissions = []
+      this.shareWith = "";
+      switch (this.shareControl) {
+        case this.SHARECONTROLS.OWNER:
+        case this.SHARECONTROLS.EVERYONE:
+        case this.SHARECONTROLS.MYGROUP:
+        case this.SHARECONTROLS.MYTEAM:
+        case this.SHARECONTROLS.MYDEPARMENTS:
+        case this.SHARECONTROLS.MYDIVISION:
+        case this.SHARECONTROLS.MYCOMPANY:
+          break;
+        case this.SHARECONTROLS.OGRHIERACHY:
+        case this.SHARECONTROLS.DEPARMENTS:
+        case this.SHARECONTROLS.POSITIONS:
+        case this.SHARECONTROLS.ROLES:
+        case this.SHARECONTROLS.GROUPS:
+        case this.SHARECONTROLS.USER:
+          data.forEach((x: any) => {
+            let p = new Permission();
+            p.objectType = x.objectType;
+            p.objectID = x.id;
+            p.objectName = x.text;
+            p.memberType = this.MEMBERTYPE.SHARE;
+            this.permissions.push(p);
+          });
+          if (data.length > 1) {
+            this.cache.message('WP002').subscribe((mssg: any) => {
+              if (mssg)
+                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1,this.dVLL[shareControl].text);
+            });
           }
-        }
-        this.changedt.detectChanges();
-        }
-    });
+          else {
+            this.cache.message('WP001').subscribe((mssg: any) => {
+              if (mssg)
+                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+            });
+          }   
+          break;
+        default:  
+      }
+    }
+    this.changedt.detectChanges();
   }
   addFiles(files: any) {
     if (files && files.data.length > 0) {

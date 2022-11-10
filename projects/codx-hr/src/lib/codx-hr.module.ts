@@ -89,6 +89,10 @@ export const routes: Routes = [
             path: 'employeedetail/:funcID',
             component: EmployeeProfileComponent,
           },
+          {
+            path: 'employeelist/:funcID',
+            component: EmployeeListComponent,
+          },
         ],
       },
       {
@@ -214,7 +218,6 @@ const T_Component: Type<any>[] = [
   EmployeeListComponent,
   EmployeeProfileComponent,
   PopupAddNewHRComponent,
-  EmployeeListComponent,
   PopupAddEmployeesPartyInfoComponent,
   EmployeeSelfInfoComponent,
   EmployeeFamilyRelationshipComponent,
