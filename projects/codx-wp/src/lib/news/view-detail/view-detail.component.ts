@@ -1,7 +1,7 @@
 import { Component, HostBinding, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewModel, ViewType, DialogModel, UIComponent } from 'codx-core';
-import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
+import { PopupAddPostComponents } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
@@ -136,7 +136,7 @@ export class ViewDetailComponent extends UIComponent {
     };
     let option = new DialogModel();
     option.FormModel = this.view.formModel;
-    this.callfc.openForm(PopupAddPostComponent, '', 650, 550, '', obj, '', option);
+    this.callfc.openForm(PopupAddPostComponents, '', 650, 550, '', obj, '', option);
   }
   showListShare(){
     this.isShowTemplateShare = !this.isShowTemplateShare;

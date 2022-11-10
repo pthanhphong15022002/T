@@ -89,13 +89,8 @@ export class PopupAddStationeryComponent extends UIComponent {
       .subscribe((autoN) => {
         if (autoN) {
           if (!autoN?.stop) {
-            if (this.isAdd) {
-              //ktra tham so auto number stop =true == ko dùng auto number
-              this.autoNumDisable = true;
-            } else {
-              this.data.resourceID = null;
-            }
-          }
+            this.autoNumDisable = true;            
+          }          
         }
       });
     this.columnsGrid = [

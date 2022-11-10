@@ -127,6 +127,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'om',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-om/src/lib/codx-om.module').then(
+            (m) => m.CodxOmModule
+          ),
+      },
+      {
         path: 'shared',
         canActivate: [AuthGuard],
         component: LayoutOnlyHeaderComponent,

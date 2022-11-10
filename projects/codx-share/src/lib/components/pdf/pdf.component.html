@@ -730,6 +730,7 @@
                             *ngIf="
                               isEditable &&
                               imgConfig.includes(area.labelType) &&
+                              area.labelType != '8' &&
                               !isPublic
                             "
                             (click)="changeSignature_StampImg(area)"
@@ -746,6 +747,7 @@
                             *ngIf="
                               isEditable &&
                               imgConfig.includes(area.labelType) &&
+                              area.labelType != '8' &&
                               isPublic
                             "
                             (click)="changeSignature_StampImg_Public(area)"
