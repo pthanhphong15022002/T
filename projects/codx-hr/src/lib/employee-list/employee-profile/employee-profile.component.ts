@@ -53,6 +53,8 @@ export class EmployeeProfileComponent extends UIComponent {
 
   views: Array<ViewModel> | any = [];
 
+  infoPersonal: any = {};
+
   statusVll = 'L0225';
   funcID = '';
   service = '';
@@ -78,15 +80,7 @@ export class EmployeeProfileComponent extends UIComponent {
     { icon: 'icon-apartment', text: 'Sức khỏe' },
     { icon: 'icon-apartment', text: 'Thôi việc' },
   ];
-  sampleData = {
-    employeeID: '012.MPDF',
-    joinedOn: '10/03/2015',
-    status: '',
-    orgUnitID: '',
-    email: 'lphthuong@lacviet.com.vn',
-    phone: '#LinePhone',
-    mobile: '0907323495',
-  };
+
   onInit(): void {
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
@@ -94,6 +88,8 @@ export class EmployeeProfileComponent extends UIComponent {
           .LoadData(params.employeeID, this.user.userID, '0')
           .subscribe((response: any) => {
             if (response) {
+              console.log(response);
+              this.infoPersonal = response.InfoPersonal;
               this.data = response.Employee;
               console.log(this.data);
 

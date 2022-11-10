@@ -520,22 +520,25 @@
     <ng-container >
       <codx-attachment
       #attachment
-      [objectType]="view.formModel.entityName"
-      [objectId]="process?.recID"
-      hideFolder="1"
-      hideImageUpload="1"
-      hideImageThumb="1"
-      hideUploadBtn="1"
-      hideDes="1"
-      type="inline"
-      allowMultiFile="0"
+      [objectType]="'BP_Processes'"
+      [objectId]="processID"
+      [hideFolder]="1"
+      [hideImageUpload]="1"
+      [hideImageThumb]="1"
+      [hideUploadBtn]="1"
+      [hideDes]="1"
+      [type]="'inline'"
+      [allowMultiFile]="0"
       [formModel]="view.formModel"
-      [functionID]="funcID"
+      [functionID]="funcID" 
+      [isSaveSelected]="1"
+      allowExtensions=".jpg,.png"
       (fileAdded)="fileAdded($event)"
       (fileCount)="getfileCount($event)"
       displayThumb="full"
     >
     </codx-attachment>
+         <!-- [isSaveSelected]="1" -->
   </ng-container>
   <ng-container *ngIf="dataFile" >
     <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>

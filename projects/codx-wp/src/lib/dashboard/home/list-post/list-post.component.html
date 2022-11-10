@@ -40,7 +40,7 @@
   <div class="p-5 pb-0">
     <div class="d-flex align-items-top">
       <div class="me-3">
-        <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40">
+        <codx-img [objectId]="item.createdBy" [objectName]="item.createdName" objectType="AD_Users" [width]="40">
         </codx-img>
       </div>
       <div class="d-flex flex-column flex-grow-1">
@@ -65,11 +65,16 @@
                   <div class="tmpTag-body">
                     <ng-container *ngFor="let tag of lstUserTag">
                       <div class="d-flex align-items-center mb-2">
-                        <codx-img class="me-2" [width]="30" [imageType]="'circle'" [objectId]="tag.objectID"
+                        <codx-img 
+                          class="me-2" 
+                          [objectName]="tag.objectName" 
+                          [width]="30" 
+                          [imageType]="'circle'" 
+                          [objectId]="tag.objectID"
                           objectType="AD_Users">
                         </codx-img>
                         <span class="fw-bolder">
-                          {{ tag.objectName }}
+                          {{tag.objectName}}
                         </span>
                       </div>
                     </ng-container>
@@ -85,49 +90,46 @@
               item.createdOn | timefrom
               }}</span>
             <span class="rounded-1 py-0 px-2 bg-gray-200 d-flex algin-items-center">
-              <span class="me-1">
-                <img class="h-12px w-12px" src="assets/themes/sys/default/img/{{ item.shareIcon }}" />
-              </span>
-              <span class="fs-7">
-                {{ item.shareText }}
-              </span>
+              <codx-vll 
+                [name]="'L1901'" 
+                [value]="item.shareControl" 
+                [showText]="true" 
+                [showIcon]="true" 
+                [showBgColor]="true">
+              </codx-vll>
             </span>
           </div>
 
           <ng-container *ngIf="item.shareName">
-            <div class="position-relative me-2 mt-1">
-              <span (click)="showListShare(item)" [innerHTML]="item.shareName">
+            <div class="position-relative text-hover-underline me-2 mt-1">
+              <span  (click)="showListShare(item)" [innerHTML]="item.shareName">
               </span>
               <ng-container *ngIf="item.isShowShare">
-                <ng-container *ngIf="
-                    item.shareControl == 'U' ||
-                    item.shareControl == 'G' ||
-                    item.shareControl == 'R' ||
-                    item.shareControl == 'P' ||
-                    item.shareControl == 'D' ||
-                    item.shareControl == 'O'
-                  ">
-                  <div class="position-absolute tmpshare w-250px">
-                    <div class="d-flex justify-content-between">
-                      <codx-label class="fw-bold text-dark" [formModel]="formModel" name="lblShare"
-                        default="Danh sách người được chia sẻ">
-                      </codx-label>
-                      <span class="ms-2" (click)="closeListShare(item)">
-                        <i class="icon-close"></i>
+                <div class="position-absolute tmpshare w-250px">
+                  <div class="d-flex justify-content-between">
+                    <codx-label class="fw-bold text-dark" [formModel]="formModel" name="lblShare"
+                      default="Danh sách người được chia sẻ">
+                    </codx-label>
+                    <span class="ms-2" (click)="closeListShare(item)">
+                      <i class="icon-close"></i>
+                    </span>
+                  </div>
+                  <div class="tmpshare-body">
+                    <div class="d-flex align-items-center mb-3" *ngFor="let share of lstUserShare">
+                      <codx-img 
+                        class="me-3" 
+                        [width]="25" 
+                        [imageType]="'circle'" 
+                        [objectId]="share.objectID"
+                        [objectName]="share.objectName"
+                        objectType="AD_Users">
+                      </codx-img>
+                      <span class="fw-bold">
+                        {{share.objectName}}
                       </span>
                     </div>
-                    <div class="tmpshare-body">
-                      <div class="d-flex align-items-center mb-3" *ngFor="let share of lstUserShare">
-                        <codx-img class="me-3" [width]="25" [imageType]="'circle'" [objectId]="share.objectID"
-                          objectType="AD_Users">
-                        </codx-img>
-                        <span class="fw-bold">
-                          {{ share.objectName }}
-                        </span>
-                      </div>
-                    </div>
                   </div>
-                </ng-container>
+                </div>
               </ng-container>
             </div>
           </ng-container>
@@ -222,7 +224,12 @@
               <div [innerHTML]="item.shares.content" class="mb-2"></div>
               <div class="d-flex">
                 <div class="me-3">
-                  <codx-img slot="start" [objectId]="item.shares.createdBy" objectType="AD_Users" [width]="30">
+                  <codx-img 
+                    slot="start" 
+                    [objectName]="item.shares.createdName" 
+                    [objectId]="item.shares.createdBy" 
+                    objectType="AD_Users" 
+                    [width]="30">
                   </codx-img>
                 </div>
                 <div class="d-flex flex-column flex-grow-1">
