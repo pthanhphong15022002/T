@@ -73,93 +73,93 @@
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-  <tr>
-    <td class="rowphoto">
-      <div class="padding">
-        <div class="d-flex flex-column w-100 p-3">
-          <div class="fw-bold lh-base">{{ data.processName }}</div>
-          <div class="d-flex flex-wrap justify-content-between">
-            <div class="d-flex align-items-center">
-              <div class="d-flex me-3">
-                <span class="icon-server text-dark icon-16 me-1"></span>
-                <span class="">{{ data.phases }}</span>
-              </div>
-              <div class="d-flex me-3">
-                <span
-                  class="icon-format_list_numbered text-danger icon-16 me-1"
-                ></span>
-                <span class="">{{ data.activities }}</span>
-              </div>
-              <div class="d-flex me-3">
-                <span class="icon-attach_file text-primary icon-16 me-1"></span>
-                <span class=" ">{{ data.attachments }}</span>
+    <tr>
+      <td class="rowphoto">
+        <div class="padding">
+          <div class="d-flex flex-column w-100 p-3">
+            <div class="fw-bold lh-base">{{ data.processName }}</div>
+            <div class="d-flex flex-wrap justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="d-flex me-3">
+                  <span class="icon-server text-dark icon-16 me-1"></span>
+                  <span class="">{{ data.phases }}</span>
+                </div>
+                <div class="d-flex me-3">
+                  <span
+                    class="icon-format_list_numbered text-danger icon-16 me-1"
+                  ></span>
+                  <span class="">{{ data.activities }}</span>
+                </div>
+                <div class="d-flex me-3">
+                  <span class="icon-attach_file text-primary icon-16 me-1"></span>
+                  <span class=" ">{{ data.attachments }}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </td>
-    <td class="rowphoto" placement="left">
-      <div class="padding justify-content-start" style="margin-top: 10px">
-        <codx-temp-full
-          cardCss="card-template"
-          [imageId]="data.owner"
-          imageObjType="AD_Users"
-          [titleTmp]="titleTmp"
-          [desc]="convertHtmlAgency(data.positionName)"
-          [desc2]="data.groupID"
-          [dataItem]="data"
-        >
-        </codx-temp-full>
-      </div>
-    </td>
-    <td class="rowphoto">
-      <div class="padding">
-        {{ data.versionNo }}
-      </div>
-    </td>
-    <td class="rowphoto">
-      <div class="padding">
-        {{ data.activedOn | fmDT }}
-      </div>
-    </td>
-    <td class="rowphoto">
-      <div class="padding">
-        <div [innerHTML]="data.memo"></div>
-      </div>
-    </td>
-    <td class="rowphoto">
-      <div class="padding" *ngIf="funcID == 'BPT4'">
-        <button class="btn btn-primary" (click)="approval(data)">
-          <codx-label default="Xét duyệt"></codx-label>
-        </button>
-      </div>
-      <div class="padding has-action-menu">
-        <codx-mfunc
-          [formModel]="view.formModel"
-          (clickMF)="clickMF($event, data)"
-          [isBookMark]="true"
-          [dataItem]="data"
-          [type]="'hover'"
-        >
-        </codx-mfunc>
-      </div>
-    </td>
-    <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
-      <div class="padding">
-        <button class="btn btn-primary" (click)="approval(data)">
-          <codx-label default="Xét duyệt"></codx-label>
-        </button>
-      </div>
-    </td> -->
-    <td class="rowphoto">
-      <div class="padding">
-        <button class="btn btn-primary" (click)="roles(data)">
-          <codx-label default="Phân quyền"></codx-label>
-        </button>
-      </div>
-    </td>
-  </tr>
+      </td>
+      <td class="rowphoto" placement="left">
+        <div class="padding justify-content-start" style="margin-top: 10px">
+          <codx-temp-full
+            cardCss="card-template"
+            [imageId]="data.owner"
+            imageObjType="AD_Users"
+            [titleTmp]="titleTmp"
+            [desc]="convertHtmlAgency(data.positionName)"
+            [desc2]="data.groupID"
+            [dataItem]="data"
+          >
+          </codx-temp-full>
+        </div>
+      </td>
+      <td class="rowphoto">
+        <div class="padding">
+          {{ data.versionNo }}
+        </div>
+      </td>
+      <td class="rowphoto">
+        <div class="padding">
+          {{ data.activedOn | fmDT }}
+        </div>
+      </td>
+      <td class="rowphoto">
+        <div class="padding">
+          <div [innerHTML]="data.memo"></div>
+        </div>
+      </td>
+      <td class="rowphoto">
+        <div class="padding" *ngIf="funcID == 'BPT4'">
+          <button class="btn btn-primary" (click)="approval(data)">
+            <codx-label default="Xét duyệt"></codx-label>
+          </button>
+        </div>
+        <div class="padding has-action-menu">
+          <codx-mfunc
+            [formModel]="view.formModel"
+            (clickMF)="clickMF($event, data)"
+            [isBookMark]="true"
+            [dataItem]="data"
+            [type]="'hover'"
+          >
+          </codx-mfunc>
+        </div>
+      </td>
+      <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
+        <div class="padding">
+          <button class="btn btn-primary" (click)="approval(data)">
+            <codx-label default="Xét duyệt"></codx-label>
+          </button>
+        </div>
+      </td> -->
+      <td class="rowphoto">
+        <div class="padding">
+          <button class="btn btn-primary" (click)="roles(data)">
+            <codx-label default="Phân quyền"></codx-label>
+          </button>
+        </div>
+      </td>
+    </tr>
 </ng-template>
 <!-- view-list -->
 
@@ -280,102 +280,120 @@
 
 <!-- View Search -->
 <ng-template #templateSearch>
-  <div class="card rounded-0 p-10">
-    <div class="fw-semibold fw-base text-gray-600">4 kết quả được tìm thấy</div>
-    <div class="card-body">
-      <div class="mt-6">
-        <div class="d-flex align-items-center mb-2">
-          <!--begin::Title-->
-          <a
-            href="#"
-            class="fs-5 fw-bold text-primary-darker text-hover-primary me-1"
-            >Qui trình tuyển dụng</a
-          >
-          <!--end::Title-->
-        </div>
-        <!--end::Head-->
-        <!--begin::Summary-->
-        <div class="fs-base fw-normal text-gray-700 mb-2">
-          Thực hiện các công việc được quản lý giao, hỗ trợ các thành viên trong
-          nhóm, tham gia đóng góp ý tưởng cho việc phát triển công ty
-        </div>
-        <!--end::Summary-->
-        <!--begin::Foot-->
-        <div class="d-flex flex-wrap">
-          <!--begin::Author-->
-          <div class="d-flex align-items-center justify-content-center">
-            <div class="d-flex align-items-center card-icon-nowrap me-3">
-              <span class="me-1 icon-16 icon-access_alarm"></span
-              ><span class="line-clamp">07/12/2021 10:53 AM</span>
-            </div>
-            <div class="d-flex align-items-center card-icon-nowrap px-4 me-2">
-              <span class="me-1">200</span
-              ><span class="line-clamp">lượt xem</span>
-            </div>
-            <div class="rating px-4 me-2">
-              <div class="rating-label checked">
-                <i class="icon-star"></i>
-              </div>
-              <div class="rating-label checked">
-                <i class="icon-star"></i>
-              </div>
-              <div class="rating-label checked">
-                <i class="icon-star"></i>
-              </div>
-              <div class="rating-label checked">
-                <i class="icon-star_half"></i>
-              </div>
-              <div class="rating-label checked">
-                <i class="icon-star_border"></i>
-              </div>
-            </div>
-            <span class="badge badge-warning my-1 me-3">Tuyển dụng</span>
-            <div class="badge badge-success my-1 me-3">Onboard</div>
+  <ng-container *ngIf="listProcess !=null; else tmpEmpty" >
+    <div class="card rounded-0 p-10">
+      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRowCount>0">{{totalRowCount}} kết quả được tìm thấy</div>
+      <div class="card-body" *ngFor="let item of listProcess">
+        <div class="mt-6">
+          <div class="d-flex align-items-center mb-2">
+            <!--begin::Title-->
+            <a
+              href="#"
+              class="fs-5 fw-bold text-primary-darker text-hover-primary me-1"
+              >{{item.processName}}</a
+            >
+            <!--end::Title-->
           </div>
+          <!--end::Head-->
+          <!--begin::Summary-->
+          <div class="fs-base fw-normal text-gray-700 mb-2">
+            {{item.memo}}
+          </div>
+          <!--end::Summary-->
+          <!--begin::Foot-->
+          <div class="d-flex flex-wrap">
+            <!--begin::Author-->
+            <div class="d-flex align-items-center justify-content-center">
+              <div class="d-flex align-items-center card-icon-nowrap me-3">
+                <span class="me-1 icon-16 icon-access_alarm"></span
+                ><span class="line-clamp">
+                  {{ item?.activedOn | date: "dd/MM/yyyy" }}
+               </span>
+              </div>
+              <div class="d-flex align-items-center card-icon-nowrap px-4 me-2">
+                <span class="me-1">{{item.views}}</span
+                ><span class="line-clamp">lượt xem</span>
+              </div>
+              <div class="rating px-4 me-2">
+                <div class="rating-label checked">
+                  <i class="icon-star"></i>
+                </div>
+                <div class="rating-label checked">
+                  <i class="icon-star"></i>
+                </div>
+                <div class="rating-label checked">
+                  <i class="icon-star"></i>
+                </div>
+                <div class="rating-label checked">
+                  <i class="icon-star_half"></i>
+                </div>
+                <div class="rating-label checked">
+                  <i class="icon-star_border"></i>
+                </div>
+              </div>
+              <!-- <div *ngIf="item.tags">
+                <codx-tag [entityName]="gridModels.entityName" [disabled]="true" [isEdit]="false" [value]="item.tags">
+                </codx-tag>
+              </div> -->
+              <span class="badge badge-warning my-1 me-3">Tuyển dụng</span>
+              <div class="badge badge-success my-1 me-3">Onboard</div>
+            </div>
+          </div>
+          <!--end::Foot-->
         </div>
-        <!--end::Foot-->
+        <div class="separator mt-2"></div>
       </div>
-      <div class="separator mt-2"></div>
+      <div class="card-footer border-0" *ngIf="listNumberPage.length>0">
+        <ul class="pagination pagination-circle pagination-outline">
+          <li class="page-item first m-1" [ngClass]="pageNumberCliked==1? 'disabled' : ''">
+            <a (click)="firstPage($event)" class="page-link px-0">
+              <!--begin::Svg Icon | path: icons/duotune/arrows/arr079.svg-->
+              <span class="icon-first_page"></span>
+              <!--end::Svg Icon-->
+            </a>
+          </li>
+          <li class="page-item previous m-1" [ngClass]="pageNumberCliked==1? 'disabled' : ''">
+            <a (click)="previousPage($event)" class="page-link px-0">
+              <!--begin::Svg Icon | path: icons/duotune/arrows/arr074.svg-->
+              <span class="icon-arrow_back_ios"></span>
+              <!--end::Svg Icon-->
+            </a>
+          </li>
+          <div *ngFor="let number of listNumberPage">
+              <li class="page-item m-1" [ngClass]="number==pageNumberCliked?'active':''" ><a class="page-link" (click)="PageClick($event,number)">{{number}}</a></li>
+          </div>
+          <li class="page-item next m-1"[ngClass]="pageNumberCliked==listNumberPage.length? 'disabled' : ''">
+            <a (click)="nextPage($event)" class="page-link px-0" >
+              <!--begin::Svg Icon | path: icons/duotune/arrows/arr071.svg-->
+              <span class="icon-arrow_forward_ios"></span>
+              <!--end::Svg Icon-->
+            </a>
+          </li>
+          <li class="page-item last m-1" [ngClass]="pageNumberCliked==listNumberPage.length? 'disabled' : ''">
+            <a (click)="lastPage($event)" class="page-link px-0">
+              <!--begin::Svg Icon | path: icons/duotune/arrows/arr080.svg-->
+              <span class="icon-last_page"></span>
+              <!--end::Svg Icon-->
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="card-footer border-0">
-      <ul class="pagination pagination-circle pagination-outline">
-        <li class="page-item first disabled m-1">
-          <a href="#" class="page-link px-0">
-            <!--begin::Svg Icon | path: icons/duotune/arrows/arr079.svg-->
-            <span class="icon-first_page"></span>
-            <!--end::Svg Icon-->
-          </a>
-        </li>
-        <li class="page-item previous disabled m-1">
-          <a href="#" class="page-link px-0">
-            <!--begin::Svg Icon | path: icons/duotune/arrows/arr074.svg-->
-            <span class="icon-arrow_back_ios"></span>
-            <!--end::Svg Icon-->
-          </a>
-        </li>
-        <li class="page-item m-1"><a href="#" class="page-link">1</a></li>
-        <li class="page-item active m-1">
-          <a href="#" class="page-link">2</a>
-        </li>
-        <li class="page-item m-1"><a href="#" class="page-link">3</a></li>
-        <li class="page-item m-1"><a href="#" class="page-link">4</a></li>
-        <li class="page-item m-1"><a href="#" class="page-link">5</a></li>
-        <li class="page-item m-1"><a href="#" class="page-link">6</a></li>
-        <li class="page-item next m-1">
-          <a href="#" class="page-link px-0">
-            <!--begin::Svg Icon | path: icons/duotune/arrows/arr071.svg-->
-            <span class="icon-arrow_forward_ios"></span>
-            <!--end::Svg Icon-->
-          </a>
-        </li>
-        <li class="page-item last m-1">
-          <a href="#" class="page-link px-0">
-            <!--begin::Svg Icon | path: icons/duotune/arrows/arr080.svg-->
-            <span class="icon-last_page"></span>
-            <!--end::Svg Icon-->
-          </a>
-        </li>
-      </ul>
+
+  </ng-container>
+</ng-template>
+<ng-template #tmpEmpty>
+  <div class="w-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-400px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
