@@ -467,9 +467,7 @@ export class ProcessesComponent
         [this.titleAction,e],
         ''
       )
-      .closed.subscribe((item) => {
-        this.view?.dataService.update(item?.event).subscribe();
-      });
+      .closed.subscribe();
   }
 
   share(data) {

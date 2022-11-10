@@ -2,19 +2,21 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FileService } from '@shared/services/file.service';
 import { NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
-// Import the library
+import { ToolbarService , PrintService } from '@syncfusion/ej2-angular-documenteditor'
 
 
 @Component({
   selector: 'codx-view-flowchart',
   templateUrl: './view-flowchart.component.html',
   styleUrls: ['./view-flowchart.component.css'],
+  providers:[ToolbarService , PrintService]
 })
 export class ViewFlowchartComponent implements OnInit,OnChanges {
   @Input() dataFile: any;
   data: any;
   linkFile : any
-  isShow = true;
+  isShow = true; 
+  heightFlowChart = 600 ;
 
   pzProperties = {
     zoomControlScale: 2,
@@ -26,6 +28,7 @@ export class ViewFlowchartComponent implements OnInit,OnChanges {
     if(this.dataFile){
       this.data = this.dataFile ;
       this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
+      this.heightFlowChart = screen.height 
     }
     // else
     //  this.getImg(''); //test

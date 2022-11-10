@@ -73,93 +73,93 @@
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-    <tr>
-      <td class="rowphoto">
-        <div class="padding">
-          <div class="d-flex flex-column w-100 p-3">
-            <div class="fw-bold lh-base">{{ data.processName }}</div>
-            <div class="d-flex flex-wrap justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="d-flex me-3">
-                  <span class="icon-server text-dark icon-16 me-1"></span>
-                  <span class="">{{ data.phases }}</span>
-                </div>
-                <div class="d-flex me-3">
-                  <span
-                    class="icon-format_list_numbered text-danger icon-16 me-1"
-                  ></span>
-                  <span class="">{{ data.activities }}</span>
-                </div>
-                <div class="d-flex me-3">
-                  <span class="icon-attach_file text-primary icon-16 me-1"></span>
-                  <span class=" ">{{ data.attachments }}</span>
-                </div>
+  <tr class="has-action-menu">
+    <td class="rowphoto">
+      <div class="padding">
+        <div class="d-flex flex-column w-100 p-3">
+          <div class="fw-bold lh-base">{{ data.processName }}</div>
+          <div class="d-flex flex-wrap justify-content-between">
+            <div class="d-flex align-items-center">
+              <div class="d-flex me-3">
+                <span class="icon-server text-dark icon-16 me-1"></span>
+                <span class="">{{ data.phases }}</span>
+              </div>
+              <div class="d-flex me-3">
+                <span
+                  class="icon-format_list_numbered text-danger icon-16 me-1"
+                ></span>
+                <span class="">{{ data.activities }}</span>
+              </div>
+              <div class="d-flex me-3">
+                <span class="icon-attach_file text-primary icon-16 me-1"></span>
+                <span class=" ">{{ data.attachments }}</span>
               </div>
             </div>
           </div>
         </div>
-      </td>
-      <td class="rowphoto" placement="left">
-        <div class="padding justify-content-start" style="margin-top: 10px">
-          <codx-temp-full
-            cardCss="card-template"
-            [imageId]="data.owner"
-            imageObjType="AD_Users"
-            [titleTmp]="titleTmp"
-            [desc]="convertHtmlAgency(data.positionName)"
-            [desc2]="data.groupID"
-            [dataItem]="data"
-          >
-          </codx-temp-full>
-        </div>
-      </td>
-      <td class="rowphoto">
-        <div class="padding">
-          {{ data.versionNo }}
-        </div>
-      </td>
-      <td class="rowphoto">
-        <div class="padding">
-          {{ data.activedOn | fmDT }}
-        </div>
-      </td>
-      <td class="rowphoto">
-        <div class="padding">
-          <div [innerHTML]="data.memo"></div>
-        </div>
-      </td>
-      <td class="rowphoto">
-        <div class="padding" *ngIf="funcID == 'BPT4'">
-          <button class="btn btn-primary" (click)="approval(data)">
-            <codx-label default="Xét duyệt"></codx-label>
-          </button>
-        </div>
-        <div class="padding has-action-menu">
-          <codx-mfunc
-            [formModel]="view.formModel"
-            (clickMF)="clickMF($event, data)"
-            [isBookMark]="true"
-            [dataItem]="data"
-            [type]="'hover'"
-          >
-          </codx-mfunc>
-        </div>
-      </td>
-      <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
-        <div class="padding">
-          <button class="btn btn-primary" (click)="approval(data)">
-            <codx-label default="Xét duyệt"></codx-label>
-          </button>
-        </div>
-      </td> -->
-      <td class="rowphoto">
-        <div class="padding">
-          <button class="btn btn-primary" (click)="roles(data)">
-            <codx-label default="Phân quyền"></codx-label>
-          </button>
-        </div>
-      </td>
-    </tr>
+      </div>
+    </td>
+    <td class="rowphoto" placement="left">
+      <div class="padding justify-content-start" style="margin-top: 10px">
+        <codx-temp-full
+          cardCss="card-template"
+          [imageId]="data.owner"
+          imageObjType="AD_Users"
+          [titleTmp]="titleTmp"
+          [desc]="convertHtmlAgency(data.positionName)"
+          [desc2]="data.groupID"
+          [dataItem]="data"
+        >
+        </codx-temp-full>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        {{ data.versionNo }}
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        {{ data.activedOn | fmDT }}
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div class="padding">
+        <div [innerHTML]="data.memo"></div>
+      </div>
+    </td>
+    <td class="rowphoto position-relative">
+      <div class="padding" *ngIf="funcID == 'BPT4'">
+        <button class="btn btn-primary" (click)="approval(data)">
+          <codx-label default="Xét duyệt"></codx-label>
+        </button>
+      </div>
+      <div class="padding position-absolute top-0 end-0" >
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          [isBookMark]="true"
+          [dataItem]="data"
+          [type]="'hover'"
+        >
+        </codx-mfunc>
+      </div>
+    </td>
+    <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
+      <div class="padding">
+        <button class="btn btn-primary" (click)="approval(data)">
+          <codx-label default="Xét duyệt"></codx-label>
+        </button>
+      </div>
+    </td> -->
+    <td class="rowphoto">
+      <div class="padding">
+        <button class="btn btn-primary" (click)="roles(data)">
+          <codx-label default="Phân quyền"></codx-label>
+        </button>
+      </div>
+    </td>
+  </tr>
 </ng-template>
 <!-- view-list -->
 

@@ -33,8 +33,7 @@ declare var $: any;
 })
 export class RoleDetailComponent
   extends UIComponent
-  implements OnDestroy, OnChanges
-{
+  implements OnDestroy, OnChanges {
   dataMoreFuntions: any;
   dataBasic: any = [];
   dataMore: any = [];
@@ -82,7 +81,7 @@ export class RoleDetailComponent
     });
     this.tenant = this.tenantStore.get()?.tenant;
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void { }
   onInit(): void {
     var rid = this.at.snapshot.queryParams.recID;
     if (rid) {
@@ -301,8 +300,8 @@ export class RoleDetailComponent
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'SaveRolePermissionAsync', [
         roleID,
-        run,
         create,
+        run,
         view,
         edit,
         deleted,

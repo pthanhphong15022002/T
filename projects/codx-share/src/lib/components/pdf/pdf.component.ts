@@ -385,7 +385,7 @@ export class PdfComponent
               }
             });
           this.curSelectedArea.destroy();
-          this.tr.remove();
+          this.tr?.remove();
         }
       });
   }
@@ -449,10 +449,10 @@ export class PdfComponent
     }
 
     if (this.curSelectedArea != null && !isCA) {
-      this.tr.remove();
+      this.tr?.remove();
       let layerChildren = this.lstLayer.get(area.location.pageNumber + 1);
 
-      this.tr.resizeEnabled(
+      this.tr?.resizeEnabled(
         this.isEditable == false
           ? false
           : area.allowEditAreas == false
@@ -461,7 +461,7 @@ export class PdfComponent
           ? false
           : true
       );
-      this.tr.draggable(
+      this.tr?.draggable(
         this.isEditable == false
           ? false
           : area.allowEditAreas == false
@@ -470,8 +470,8 @@ export class PdfComponent
           ? false
           : true
       );
-      this.tr.forceUpdate();
-      this.tr.nodes([this.curSelectedArea]);
+      this.tr?.forceUpdate();
+      this.tr?.nodes([this.curSelectedArea]);
       layerChildren.add(this.tr);
       if (this.curSelectedAnnotID != area.recID) {
         this.formAnnot.controls['content'].setValue(area.labelValue);
@@ -719,15 +719,19 @@ export class PdfComponent
               ? false
               : area.allowEditAreas == false
               ? false
-              : area.isLock;
+              : !area.isLock;
           if (isRender) {
+            let curSignerInfo = this.lstSigners.find(
+              (signer) => signer.authorID == area.signer
+            );
+            let url = '';
+            let isChangeUrl = false;
             switch (area.labelType) {
               case 'S1': {
-                let url =
-                  this.lstSigners.find(
-                    (signer) => signer.authorID == area.signer
-                  )?.signature1 ?? area.labelValue;
-
+                url = curSignerInfo?.signature1 ?? area.labelValue;
+                if (area.labelValue != url) {
+                  isChangeUrl = true;
+                }
                 let isUrl = this.checkIsUrl(url);
                 this.addArea(
                   url,
@@ -742,10 +746,10 @@ export class PdfComponent
                 break;
               }
               case 'S2': {
-                let url =
-                  this.lstSigners.find(
-                    (signer) => signer.authorID == area.signer
-                  )?.signature2 ?? area.labelValue;
+                url = curSignerInfo?.signature2 ?? area.labelValue;
+                if (area.labelValue != url) {
+                  isChangeUrl = true;
+                }
                 let isUrl = this.checkIsUrl(url);
                 this.addArea(
                   url,
@@ -760,10 +764,7 @@ export class PdfComponent
                 break;
               }
               case 'S3': {
-                let url =
-                  this.lstSigners.find(
-                    (signer) => signer.authorID == area.signer
-                  )?.stamp ?? area.labelValue;
+                let url = curSignerInfo?.stamp ?? area.labelValue;
                 let isUrl = this.checkIsUrl(url);
                 this.addArea(
                   url,
@@ -823,27 +824,19 @@ export class PdfComponent
                 break;
               }
             }
+            if (isChangeUrl) {
+              area.labelValue = url;
+              this.esService
+                .addOrEditSignArea(this.recID, this.curFileID, area, area.recID)
+                .subscribe((res) => {
+                  console.log('change area.url', res);
+                });
+            } else {
+              console.log('khong doi gi ca');
+            }
           }
         });
-        let lstCAOnPage = this.lstCA?.filter(
-          (childCA) => childCA.signedPosPage == e.pageNumber
-        );
-        lstCAOnPage?.forEach((ca, idx) => {
-          let caW =
-            ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
-          let caH =
-            ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
-          let caRect = new Konva.Rect({
-            x: (ca.signedPosLeft / 0.75) * this.xScale,
-            y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
-            width: caW,
-            height: caH,
-            opacity: 0,
-            id: 'CertificateAuthencation' + idx,
-            name: ca.certificate?.commonName,
-          });
-          layer?.add(caRect);
-        });
+
         stage.add(layer);
         this.detectorRef.detectChanges();
         // }
@@ -856,11 +849,11 @@ export class PdfComponent
                 : this.signerInfo.allowEdit == false
                 ? false
                 : true;
-            this.tr.rotateEnabled(false);
-            this.tr.draggable(transformable);
-            this.tr.resizeEnabled(transformable);
-            this.tr.nodes([this.needAddKonva]);
-            this.tr.forceUpdate();
+            this.tr?.rotateEnabled(false);
+            this.tr?.draggable(transformable);
+            this.tr?.resizeEnabled(transformable);
+            this.tr?.nodes([this.needAddKonva]);
+            this.tr?.forceUpdate();
             stage.children[0].add(this.tr);
             stage.children[0].add(this.needAddKonva);
             this.needAddKonva.position(stage.getPointerPosition());
@@ -921,7 +914,7 @@ export class PdfComponent
                     }
                   } else {
                     this.needAddKonva.destroy();
-                    this.tr.remove();
+                    this.tr?.remove();
                   }
                 }
                 this.needAddKonva = null;
@@ -942,26 +935,26 @@ export class PdfComponent
             if (this.curSelectedCA) {
               this.curSelectedCA = null;
             }
-            this.tr.remove();
-            this.tr.nodes([]);
+            this.tr?.remove();
+            this.tr?.nodes([]);
           } else {
             this.curSelectedArea = click.target;
             if (
               !this.curSelectedArea.id().includes('CertificateAuthencation')
             ) {
               this.curSelectedAnnotID = this.curSelectedArea.id();
-              this.tr.resizeEnabled(
+              this.tr?.resizeEnabled(
                 this.isEditable == false
                   ? false
                   : this.curSelectedArea.draggable()
               );
-              this.tr.draggable(
+              this.tr?.draggable(
                 this.isEditable == false
                   ? false
                   : this.curSelectedArea.draggable()
               );
-              this.tr.forceUpdate();
-              this.tr.nodes([this.curSelectedArea]);
+              this.tr?.forceUpdate();
+              this.tr?.nodes([this.curSelectedArea]);
               layerChildren.add(this.tr);
             } else {
               let idx = this.curSelectedArea
@@ -1096,7 +1089,7 @@ export class PdfComponent
           this.needAddKonva = textArea;
         } else {
           textArea.id(area.recID ? area.recID : textArea.id());
-          textArea.draggable(!area.allowEditAreas ? false : area.isLock);
+          textArea.draggable(!area.allowEditAreas ? false : !area.isLock);
           textArea.scale({
             x: area.location.width * this.xScale,
             y: area.location.height * this.yScale,
@@ -1151,7 +1144,7 @@ export class PdfComponent
             this.needAddKonva = imgArea;
           } else {
             imgArea.id(area.recID);
-            imgArea.draggable(!area.allowEditAreas ? false : area.isLock);
+            imgArea.draggable(!area.allowEditAreas ? false : !area.isLock);
             imgArea.scale({
               x: this.xScale * area.location.width,
               y: this.yScale * area.location.height,
@@ -1338,6 +1331,25 @@ export class PdfComponent
             detail: false,
           });
         });
+        let lstCAOnPage = this.lstCA?.filter(
+          (childCA) => childCA.signedPosPage == this.curPage
+        );
+        lstCAOnPage?.forEach((ca, idx) => {
+          let caW =
+            ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
+          let caH =
+            ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
+          let caRect = new Konva.Rect({
+            x: (ca.signedPosLeft / 0.75) * this.xScale,
+            y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
+            width: caW,
+            height: caH,
+            opacity: 0,
+            id: 'CertificateAuthencation' + idx,
+            name: ca.certificate?.commonName,
+          });
+          this.lstLayer.get(this.curPage)?.add(caRect);
+        });
       });
       this.gotLstCA = true;
       this.detectorRef.detectChanges();
@@ -1423,8 +1435,8 @@ export class PdfComponent
     }
 
     this.curSelectedArea.draw();
-    this.tr.forceUpdate();
-    this.tr.draw();
+    this.tr?.forceUpdate();
+    this.tr?.draw();
     //save to db
     let y = this.curSelectedArea.position().y;
     let x = this.curSelectedArea.position().x;
@@ -1750,8 +1762,10 @@ export class PdfComponent
           return;
       }
     }
-    this.tr.forceUpdate();
-    this.tr.draw();
+    if (this.inputUrl == null) {
+      this.tr?.forceUpdate();
+      this.tr?.draw();
+    }
   }
   changeSigner(e: any) {
     //reset
