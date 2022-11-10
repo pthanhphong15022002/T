@@ -66,6 +66,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { PopupStatusMeetingComponent } from './tmmeetings/popup-status-meeting/popup-status-meeting.component';
 import { CoreModule } from '@core/core.module';
 import { PopupTabsViewsDetailsComponent } from './popup-tabs-views-details/popup-tabs-views-details.component';
+import { PopupRescheduleMeetingComponent } from './tmmeetings/popup-reschedule-meeting/popup-reschedule-meeting.component';
 
 export const routes: Routes = [
   {
@@ -233,7 +234,8 @@ const T_Component: Type<any>[] = [
   ViewWorkComponent,
   DashboardComponent,
   PopupStatusMeetingComponent,
-  PopupTabsViewsDetailsComponent
+  PopupTabsViewsDetailsComponent,
+  PopupRescheduleMeetingComponent
 ];
 @NgModule({
   imports: [
