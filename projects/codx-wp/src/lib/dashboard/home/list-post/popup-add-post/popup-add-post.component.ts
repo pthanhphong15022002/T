@@ -186,7 +186,6 @@ export class PopupAddPostComponent implements OnInit {
       this.notifySvr.notify(mssgStr);
       return;
     }
-    debugger;
     this.data.category = "1" // post;
     this.data.approveControl = "0"; 
     this.data.createdBy = this.user.userID;

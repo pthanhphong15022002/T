@@ -161,12 +161,15 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         let a = this.file_img_video.find((f2) => f2.fileName == f.fileName);
         if (a) return;
         this.file_img_video.push(f);
-      } else if (f.mimeType.indexOf('video') >= 0) {
+      } else if (f.mimeType.indexOf('video') >= 0) 
+      {
         f['referType'] = this.FILE_REFERTYPE.VIDEO;
         let a = this.file_img_video.find((f2) => f2.fileName == f.fileName);
         if (a) return;
         this.file_img_video.push(f);
-      } else {
+      }
+      else 
+      {
         f['referType'] = this.FILE_REFERTYPE.APPLICATION;
         let a = this.file_application.find((f2) => f2.fileName == f.fileName);
         if (a) return;
