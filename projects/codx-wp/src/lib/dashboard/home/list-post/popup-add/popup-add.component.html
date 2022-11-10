@@ -28,11 +28,6 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-start " (click)="openFormShare(controlShare)">
                     <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
-                        <!-- <span class="symbol-12px symbol-circle">
-                            <img *ngIf="shareIcon" src="assets/themes/sys/default/img/{{shareIcon}}" />
-                        </span>
-                        <span class="fs-7 ms-1">{{shareText}}</span>
-                        <i class="icon-arrow_drop_down icon-18 text-dark"></i> -->
                         <codx-vll 
                             [name]="'L1901'" 
                             [value]="shareControl" 
@@ -118,7 +113,7 @@
     </div>
     <div>
         <codx-file #codxFileCreated [isNew]="true" [funcID]="dialogRef.formModel.funcID"
-            (removeFile)="removeFile($event)" (addFile)="addFile($event)" [edit]='true'>
+            (evtRemoveFile)="removeFile($event)" (evtAddFile)="addFile($event)" [edit]='true'>
         </codx-file>
     </div>
     <div class="d-none">
@@ -137,8 +132,12 @@
                 </codx-input>
             </div>
             <div>
-                <codx-file #codxFileEdit [objectID]="dataEdit.recID" [edit]='true' (addFile)="addFile($event)"
-                    (removeFile)="removeFile($event)"></codx-file>
+                <codx-file #codxFileEdit 
+                    [objectID]="dataEdit.recID" 
+                    [edit]='true' 
+                    (evtAddFile)="addFile($event)"
+                    (evtRemoveFile)="removeFile($event)">
+                </codx-file>
             </div>
             <div class="d-none">
                 <codx-attachment #atmEdit objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1"
@@ -156,8 +155,9 @@
         </codx-input>
     </div>
     <div>
-        <codx-file #codxFileCreated [funcID]="dialogRef.formModel.funcID" (removeFile)="removeFile($event)"
-            (addFile)="addFile($event)" [edit]='true'>
+        <codx-file #codxFileCreated 
+            [funcID]="dialogRef.formModel.funcID" (evtRemoveFile)="removeFile($event)"
+            (evtAddFile)="addFile($event)" [edit]='true'>
         </codx-file>
     </div>
     <div class="d-none">
