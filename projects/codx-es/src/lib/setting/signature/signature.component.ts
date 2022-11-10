@@ -79,15 +79,15 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
       this.funcList = func;
     });
+
+    this.formModel = this.viewBase?.formModel;
   }
 
   views: Array<ViewModel> = [];
   moreFunc: Array<ButtonModel> = [];
   ngOnInit(): void {
     this.layout.showIconBack = true;
-    this.esService.getFormModel(this.funcID).then((fm) => {
-      if (fm) this.formModel = fm;
-    });
+    this.formModel = this.viewBase?.formModel;
   }
 
   button: ButtonModel;
@@ -114,10 +114,14 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
   onLoading(evt: any) {
     let formModel = this.viewBase.formModel;
+    console.log(this.formModel);
+
     if (formModel) {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
+          console.log(gv);
+
           this.columnsGrid = [
             {
               field: 'email',

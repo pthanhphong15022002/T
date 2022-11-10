@@ -419,23 +419,23 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     }
   }
   createCardTrans(currTrans: number) {
-    this.curPopupFG.patchValue({
-      userID: this.cardUserID,
-      transDate: this.cardDate,
-      note: this.cardNote,
-      resourceType: '2',
-      createBy: this.authService.userValue.userID,
-      transType: currTrans,
-      status: '1',
-      resourceID: this.currCardID,
-    });
+    // this.curPopupFG.patchValue({
+    //   userID: this.cardUserID,
+    //   transDate: this.cardDate,
+    //   note: this.cardNote,
+    //   resourceType: '2',
+    //   createBy: this.authService.userValue.userID,
+    //   transType: currTrans,
+    //   status: '1',
+    //   resourceID: this.currCardID,
+    // });
     this.api
       .execSv(
         'EP',
         'ERM.Business.EP',
         'ResourceTransBusiness',
-        'AddResourceTransAsync',
-        [this.curPopupFG.value]
+        'AddEPResourceTransAsync',
+        [this.currCardID,this.cardUserID,this.cardDate,this.cardNote,currTrans]
       )
       .subscribe((res) => {
         if (res) {

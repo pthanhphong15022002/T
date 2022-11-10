@@ -14,6 +14,7 @@ import { PopupAddBookingCarComponent } from '../../booking/car/popup-add-booking
 import { CodxEpService } from '../../codx-ep.service';
 import { DriverModel } from '../../models/bookingAttendees.model';
 import { PopupDriverAssignComponent } from './popup-driver-assign/popup-driver-assign.component';
+import moment from 'moment';
 
 @Component({
   selector: 'approval-car',
@@ -286,7 +287,17 @@ export class ApprovalCarsComponent extends UIComponent {
       }
     }
   }
-
+  sameDayCheck(sDate:any, eDate:any){
+    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   updateStatus(data: any) {
     this.view.dataService.update(data).subscribe();
   }

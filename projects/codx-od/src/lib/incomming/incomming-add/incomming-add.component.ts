@@ -100,6 +100,8 @@ export class IncommingAddComponent implements OnInit {
       if (this.type == 'add') {
         this.dispatch.dispatchType = this.data?.dispatchType;
         this.dispatch.agencyName = null;
+        // this.dispatch.departmentID = "BGĐ"
+        // this.getDispathOwner("BGĐ");
         if(this.formModel?.funcID == "ODT41") this.dispatch.owner = user?.userID
       }
       this.dispatch.createdOn = new Date();
@@ -168,14 +170,17 @@ export class IncommingAddComponent implements OnInit {
   //Nơi nhận
   changeValueBUID(event: any) {
     this.dispatch.departmentID = event?.data?.value[0];
-    if (event.data?.value[0]) {
-      this.api
+    if (event.data?.value[0]) this.getDispathOwner(event.data?.value[0]);
+  }
+  getDispathOwner(data:any)
+  {
+    this.api
         .execSv(
           'HR',
           'ERM.Business.HR',
           'OrganizationUnitsBusiness',
           'GetUserByDept',
-          [event.data?.value[0], null, null]
+          [data, null, null]
         )
         .subscribe((item: any) => {
           if (item != null && item.length > 0) {
@@ -189,7 +194,6 @@ export class IncommingAddComponent implements OnInit {
             this.dispatch.owner = '';
           }
         });
-    }
   }
   getInforByUser(id:any) : Observable<any>
   {

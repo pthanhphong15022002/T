@@ -1,23 +1,16 @@
 <codx-form
     #form
     [headerText] = "headerText"
-    [subHeaderText] = ""
     [body]="body"
-    [footer]="footer"
     [formModel]="formModel"
-
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
 >
     <ng-template #body>
-        <codx-label
-            [name]="'lblTitleAddPartyInfo'"
-            default="THÔNG TIN ĐẢNG ĐOÀN"
-            [formModel]="formModel"
-        >
-        </codx-label>
-        
         <div class="row">
             <codx-label
-                [name]="'lblTitleAddPartyInfo'"
                 default="THÔNG TIN ĐOÀN TNCS HCM"
                 [formModel]="formModel"
             >
@@ -26,14 +19,12 @@
 
         <div class="form-group">
             <codx-input
-                type="checkbox"
-                labelPosition="after"
                 field="isYUnion"
-                [formModel]="formModel"
-                class="test-check"
-            >
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                >
             </codx-input>
-            <codx-label class="ms-2" fiedName="IsYUnion" [formModel]="formModel">
+            <codx-label fiedName="IsYUnion" [formModel]="formModel">
             </codx-label>
         </div>
  
@@ -42,11 +33,9 @@
                 <codx-label  fiedName="YUnionDate" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type = "datetime"
-                        format="d"
                         field="yUnionDate"
-                        [disabled]="false"
-
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                     ></codx-input>
                 </div>
             </div>
@@ -54,7 +43,8 @@
                 <codx-label fiedName="YUnionAt" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="yUnionAt"
                     ></codx-input>
                 </div>
@@ -67,7 +57,8 @@
                 <codx-label fiedName="YUnionPlace" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="yUnionPlace"
                     ></codx-input>
                 </div>
@@ -76,7 +67,8 @@
                 <codx-label fiedName="YUnionFee" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="yUnionFee"
                     ></codx-input>
                 </div>
@@ -94,10 +86,9 @@
 
         <div class="form-group">
             <codx-input
-                type="checkbox"
-                labelPosition="after"
                 field="isParty"
-                class="test-check"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             >
             </codx-input>
             <codx-label class="ms-2" fiedName="IsParty" [formModel]="formModel">
@@ -109,7 +100,8 @@
                 <codx-label fiedName="PartyBackgroundNo" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="partyBackgroundNo"
                     ></codx-input>
                 </div>
@@ -118,7 +110,8 @@
                 <codx-label fiedName="PartyNo" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="partyNo"
                     ></codx-input>
                 </div>
@@ -130,9 +123,9 @@
                 <codx-label fiedName="PartyDate" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="datetime"
                         field="partyDate"
-                        format="d"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                     ></codx-input>
                 </div>
             </div>
@@ -140,7 +133,8 @@
                 <codx-label fiedName="PartyAt" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="partyAt"
                     ></codx-input>
                 </div>
@@ -152,8 +146,8 @@
                 <codx-label fiedName="PartyOfficalDate" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="datetime"
-                        format="d"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="partyOfficalDate"
                     ></codx-input>
                 </div>
@@ -162,7 +156,8 @@
                 <codx-label fiedName="PartyPosition" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="partyPosition"
                     ></codx-input>
                 </div>
@@ -174,7 +169,8 @@
                 <codx-label fiedName="PartyLevel" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="partyLevel"
                     ></codx-input>
                 </div>
@@ -183,7 +179,8 @@
                 <codx-label fiedName="PartyPlace" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        type="text"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         field="partyPlace"
                     ></codx-input>
                 </div>
@@ -194,7 +191,8 @@
             <codx-label fiedName="PartyFee" [formModel]="formModel"></codx-label>
             <div>
                 <codx-input
-                    type="text"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
                     field="partyFee"
                 ></codx-input>
             </div>
@@ -203,7 +201,7 @@
 
     <ng-template #footer>
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" >
+          <button class="btn btn-primary" (click)="onSaveForm()" >
             <codx-label
               default="Lưu"
               name="lblSave"

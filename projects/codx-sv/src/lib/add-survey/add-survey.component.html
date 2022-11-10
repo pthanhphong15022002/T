@@ -1,80 +1,37 @@
 <ng-container #itemTemplate>
   <div class="page-add-survey" style="overflow: none">
-    <!-- <div class="box">
-      <div class="card-survey">
-        <div
-          class="col-lg-8 control-section inplace-editor-control-section form-layout"
-          #formlayout
-          id="inplace-editor-control"
-        >
-          <div class="content-wrapper">
-            <form id="formId" class="form-horizontal example-box">
-              <div class="form-group">
-                <div class="title-des">
-                  <ejs-inplaceeditor
-                    #inplaceCommentEditor
-                    mode="Inline"
-                    emptyText="Enter your comment"
-                    submitOnEnter="false"
-                    type="RTE"
-                    name="rte"
-                    data-underline="false"
-                    [model]="titleEditorModel"
-                    [validationRules]="commentRule"
-                    [value]="data.text"
-                  >
-                  </ejs-inplaceeditor>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="title-des">
-                  <ejs-inplaceeditor
-                    #inplaceCommentEditor
-                    mode="Inline"
-                    emptyText="Mô tả biểu mẫu"
-                    submitOnEnter="false"
-                    type="RTE"
-                    name="rte"
-                    data-underline="false"
-                    [model]="descriptionEditorModel"
-                    [validationRules]="commentRule"
-                    [value]="data.description"
-                  >
-                  </ejs-inplaceeditor>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
       <div class="example-boundary d-flex w-100">
         <div class="d-flex flex-column">
           <div class="box">
-            <div *ngFor="let itemQuestion of questions">
+            <div *ngFor="let itemSession of questions">
               <div
-                *ngIf="
-                  itemQuestion.category == 'S' && !itemQuestion.parentID;
-                  else children
-                "
                 class="card-survey"
-                [id]="'card-survey-' + itemQuestion.seqNo"
-                (click)="clickToScroll(itemQuestion.seqNo)"
+                [id]="'card-survey-' + itemSession.recID"
+                (click)="clickToScroll(itemSession.seqNo, null, 'S')"
               >
-                <div class="count-session"></div>
+                <div class="count-session">
+                  <div class="d-flex num-session">
+                    <codx-label fiedName="AOS" default="Phần"></codx-label>
+                    <span
+                      >&nbsp;{{
+                        itemSession.seqNo + 1 + " / " + amountOfSession
+                      }}</span
+                    >
+                  </div>
+                </div>
                 <div
                   class="col-lg-8 control-section inplace-editor-control-section form-layout"
                   id="inplace-editor-control"
                 >
-                  <div class="content-wrapper">
-                    <form id="formId" class="form-horizontal example-box">
+                  <div class="content-wrapper b-t">
+                    <form id="formSession" class="form-horizontal example-box">
                       <ng-container #body>
                         <ng-container
                           *ngTemplateOutlet="
                             template_card_session;
                             context: {
-                              dataQuestion: itemQuestion
+                              itemSession: itemSession
                             }
                           "
                         ></ng-container>
@@ -83,11 +40,17 @@
                   </div>
                 </div>
               </div>
-              <ng-template #children>
+              <div *ngFor="let itemQuestion of itemSession.children">
                 <div
                   class="card-survey"
-                  [id]="'card-survey-' + itemQuestion.seqNo"
-                  (click)="clickToScroll(itemQuestion.seqNo)"
+                  [id]="'card-survey-question-' + itemQuestion.recID"
+                  (click)="
+                    clickToScroll(
+                      itemSession.seqNo,
+                      itemQuestion.recID,
+                      'Not-S'
+                    )
+                  "
                   cdkDragBoundary=".example-boundary"
                   cdkDrag
                 >
@@ -95,7 +58,13 @@
                     class="col-lg-8 control-section inplace-editor-control-section form-layout"
                     id="inplace-editor-control"
                   >
-                    <div class="content-wrapper">
+                    <div
+                      [ngClass]="
+                        itemQuestion.active
+                          ? 'content-wrapper b-l'
+                          : 'content-wrapper'
+                      "
+                    >
                       <form id="formId" class="form-horizontal example-box">
                         <ng-container #header>
                           <div class="example-handle" cdkDragHandle>
@@ -108,7 +77,8 @@
                               *ngTemplateOutlet="
                                 template_card_question;
                                 context: {
-                                  dataQuestion: itemQuestion
+                                  itemSession: itemSession,
+                                  itemQuestion: itemQuestion
                                 }
                               "
                             ></ng-container>
@@ -123,7 +93,7 @@
                               *ngTemplateOutlet="
                                 template_card_image_video;
                                 context: {
-                                  dataQuestion: itemQuestion
+                                  itemQuestion: itemQuestion
                                 }
                               "
                             ></ng-container>
@@ -133,7 +103,7 @@
                               *ngTemplateOutlet="
                                 template_card_title;
                                 context: {
-                                  dataQuestion: itemQuestion
+                                  itemQuestion: itemQuestion
                                 }
                               "
                             ></ng-container>
@@ -142,7 +112,11 @@
                         <ng-container
                           #footer
                           *ngIf="
-                            itemQuestion?.active && itemQuestion.category == 'Q'
+                            (itemQuestion?.active &&
+                              itemQuestion.category == 'Q') ||
+                            itemQuestion.category == 'R' ||
+                            itemQuestion.category == 'O2' ||
+                            itemQuestion.category == 'C2'
                           "
                         >
                           <hr />
@@ -176,10 +150,10 @@
                     </div>
                   </div>
                 </div>
-              </ng-template>
+              </div>
             </div>
           </div>
-          <ng-container #moreFC>
+          <ng-container #moreFC *ngIf="questions && questions.length > 0">
             <div class="moreFC rounded-4">
               <div class="icon-MF" (click)="clickMF('LTN01')">
                 <span class="icon-add_circle_outline icon-24"></span>
@@ -191,27 +165,7 @@
                 <span class="icon-format_size icon-24"></span>
               </div>
               <div class="icon-MF" (click)="clickMF('LTN04', ATM_Image)">
-                <span class="icon-image icon-24">
-                  <!-- <div class="d-none">
-                    <codx-attachment
-                      #ATM_Image
-                      [functionID]="funcID"
-                      [objectType]="functionList?.entityName"
-                      [hideFolder]="'1'"
-                      [hideUploadBtn]="'1'"
-                      [hideDes]="'1'"
-                      [type]="'inline'"
-                      allowExtensions=".jpg,.png"
-                      [allowMultiFile]="'0'"
-                      [hideImageUpload]="'1'"
-                      [hideBtnSave]="'1'"
-                      [hideImageThumb]="'1'"
-                      [showMessage]="'0'"
-                      (fileCount)="selectedImage($event, ATM_Image)"
-                    >
-                    </codx-attachment>
-                  </div> -->
-                </span>
+                <span class="icon-image icon-24"> </span>
               </div>
               <div class="icon-MF" (click)="clickMF('LTN05')">
                 <span class="icon-video_library icon-24"></span>
@@ -226,93 +180,162 @@
     </div>
   </div>
 </ng-container>
-<ng-template #templateQuestionMF let-itemQuestion>
+<ng-template
+  #templateQuestionMF
+  let-seqNoSession="seqNoSession"
+  let-indexQuestion="indexQuestion"
+  let-answerType="answerType"
+>
   <div ngbDropdown container="body">
     <button
       type="button"
       class="btn btn-outline-primary btn-sm dropdown1"
       ngbDropdownToggle
     >
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'T'">
+      <div class="d-flex" *ngIf="answerType == 'T'">
         <span class="icon-short_text icon-24"></span>
         <codx-label fiedName="" default="Trả lời ngắn"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'T2'">
+      <div class="d-flex" *ngIf="answerType == 'T2'">
         <span class="icon-text_snippet icon-24"></span>
         <codx-label fiedName="" default="Trả lời đoạn"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'O'">
+      <div class="d-flex" *ngIf="answerType == 'O'">
         <span class="icon-radio_button_checked icon-24"></span>
         <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'C'">
+      <div class="d-flex" *ngIf="answerType == 'C'">
         <span class="icon-check_box icon-24"></span>
         <codx-label fiedName="" default="Hộp kiểm"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'L3'">
+      <div class="d-flex" *ngIf="answerType == 'L'">
         <span class="icon-arrow_drop_down_circle icon-24"></span>
         <codx-label fiedName="" default="Menu thả xuống"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'A'">
+      <div class="d-flex" *ngIf="answerType == 'A'">
         <span class="icon-cloud_upload icon-24"></span>
         <codx-label fiedName="" default="Tải tệp lên"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'D'">
+      <div class="d-flex" *ngIf="answerType == 'R'">
+        <span class="icon-24"></span>
+        <codx-label fiedName="" default="Phạm vi tuyến tính"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="answerType == 'O2'">
+        <span class="icon-24"></span>
+        <codx-label fiedName="" default="Lưới trắc nghiệm"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="answerType == 'C2'">
+        <span class="icon-view_module icon-24"></span>
+        <codx-label fiedName="" default="Lưới hộp kiểm"></codx-label>
+      </div>
+      <div class="d-flex" *ngIf="answerType == 'D'">
         <span class="icon-calendar_today icon-24"></span>
         <codx-label fiedName="" default="Ngày"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="itemQuestion.answerType == 'H'">
+      <div class="d-flex" *ngIf="answerType == 'H'">
         <span class="icon-access_time icon-24"></span>
         <codx-label fiedName="" default="Giờ"></codx-label>
       </div>
     </button>
     <div ngbDropdownMenu>
-      <button ngbDropdownItem (click)="clickQuestionMF('T', itemQuestion)">
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'T')"
+      >
         <div class="d-flex">
           <span class="icon-short_text icon-24"></span>
           <codx-label fiedName="" default="Trả lời ngắn"></codx-label>
         </div>
       </button>
-      <button ngbDropdownItem (click)="clickQuestionMF('T2', itemQuestion)">
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'T2')"
+      >
         <div class="d-flex">
           <span class="icon-text_snippet icon-24"></span>
           <codx-label fiedName="" default="Trả lời đoạn"></codx-label>
         </div>
       </button>
       <hr />
-      <button ngbDropdownItem (click)="clickQuestionMF('O', itemQuestion)">
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'O')"
+      >
         <div class="d-flex">
           <span class="icon-radio_button_checked icon-24"></span>
           <codx-label fiedName="" default="Trắc nghiệm"></codx-label>
         </div>
       </button>
-      <button ngbDropdownItem (click)="clickQuestionMF('C', itemQuestion)">
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'C')"
+      >
         <div class="d-flex">
           <span class="icon-check_box icon-24"></span>
           <codx-label fiedName="" default="Hộp kiểm"></codx-label>
         </div>
       </button>
-      <button ngbDropdownItem (click)="clickQuestionMF('L3', itemQuestion)">
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'L')"
+      >
         <div class="d-flex">
           <span class="icon-arrow_drop_down_circle icon-24"></span>
           <codx-label fiedName="" default="Menu thả xuống"></codx-label>
         </div>
       </button>
       <hr />
-      <button ngbDropdownItem (click)="clickQuestionMF('A', itemQuestion)">
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'A')"
+      >
         <div class="d-flex">
           <span class="icon-cloud_upload icon-24"></span>
           <codx-label fiedName="" default="Tải tệp lên"></codx-label>
         </div>
       </button>
       <hr />
-      <button ngbDropdownItem (click)="clickQuestionMF('D', itemQuestion)">
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'R')"
+      >
+        <div class="d-flex">
+          <span class="icon-24"></span>
+          <codx-label fiedName="" default="Phạm vi tuyến tính"></codx-label>
+        </div>
+      </button>
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'O2')"
+      >
+        <div class="d-flex">
+          <span class="icon-24"></span>
+          <codx-label fiedName="" default="Lưới trắc nghiệm"></codx-label>
+        </div>
+      </button>
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'C2')"
+      >
+        <div class="d-flex">
+          <span class="icon-view_module icon-24"></span>
+          <codx-label fiedName="" default="Lưới hộp kiểm"></codx-label>
+        </div>
+      </button>
+      <hr />
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'D')"
+      >
         <div class="d-flex">
           <span class="icon-calendar_today icon-24"></span>
           <codx-label fiedName="" default="Ngày"></codx-label>
         </div>
       </button>
-      <button ngbDropdownItem (click)="clickQuestionMF('H', itemQuestion)">
+      <button
+        ngbDropdownItem
+        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'H')"
+      >
         <div class="d-flex">
           <span class="icon-access_time icon-24"></span>
           <codx-label fiedName="" default="Giờ"></codx-label>
@@ -323,8 +346,9 @@
 </ng-template>
 <ng-template
   #tempIconAnswers
-  let-itemQuestion="dataQuestion"
-  let-itemAnswer="dataAnswer"
+  let-seqNoSession="seqNoSession"
+  let-itemQuestion="itemQuestion"
+  let-itemAnswer="itemAnswer"
 >
   <div>
     <span
@@ -335,11 +359,13 @@
       *ngIf="itemQuestion.answerType == 'C'"
       class="icon-check_box_outline_blank pd-t-7"
     ></span>
-    <span *ngIf="itemQuestion.answerType == 'L3' && itemAnswer" class="pd-t-7"
+    <span *ngIf="itemQuestion.answerType == 'L' && itemAnswer" class="pd-t-7"
       >{{ itemAnswer?.seqNo + 1 }}.</span
     >
-    <span *ngIf="itemQuestion.answerType == 'L3' && !itemAnswer" class="pd-t-7"
-      >{{ questions[itemQuestion.seqNo].answers.length + 1 }}.</span
+    <span *ngIf="itemQuestion.answerType == 'L' && !itemAnswer" class="pd-t-7"
+      >{{
+        questions[seqNoSession].children[itemQuestion.seqNo].answers.length + 1
+      }}.</span
     >
     <span
       *ngIf="itemQuestion.answerType == 'D'"
@@ -353,8 +379,9 @@
 </ng-template>
 <ng-template
   #tempAnswers
-  let-itemQuestion="dataQuestion"
-  let-itemAnswer="dataAnswer"
+  let-seqNoSession="seqNoSession"
+  let-itemQuestion="itemQuestion"
+  let-itemAnswer="itemAnswer"
 >
   <div class="d-flex">
     <div
@@ -362,7 +389,7 @@
       *ngIf="
         itemQuestion.answerType == 'O' ||
         itemQuestion.answerType == 'C' ||
-        itemQuestion.answerType == 'L3'
+        itemQuestion.answerType == 'L'
       "
     >
       <input
@@ -422,31 +449,163 @@
       />
     </div>
     <div
-      class="has-action-menu"
-      *ngIf="
-        itemQuestion?.active &&
-        !itemAnswer.other &&
-        itemQuestion.answerType != 'T2' &&
-        itemQuestion.answerType != 'T' &&
-        itemQuestion.answerType != 'L3' &&
-        itemQuestion.answerType != 'D' &&
-        itemQuestion.answerType != 'H'
-      "
+      class="e-input-group date-time"
+      *ngIf="itemQuestion.answerType == 'O2'"
     >
-      <div class="action-menu">
-        <span class="icon-image icon-24 pd-10"></span>
+      <div class="row">
+        <div class="column" style="background-color: #aaa">
+          <codx-label fiedName="Row" default="Hàng"></codx-label>
+          <p>Some text..</p>
+        </div>
+        <div class="column" style="background-color: #bbb">
+          <codx-label fiedName="Column" default="Cột"></codx-label>
+          <p>Some text..</p>
+        </div>
+      </div>
+      <!-- <input
+        class="e-input"
+        type="text"
+        placeholder="Giờ"
+        (focus)="focusIn($event.target)"
+        (blur)="focusOut($event.target)"
+        [disabled]="true"
+      /> -->
+    </div>
+    <div *ngIf="itemQuestion.answerType == 'R'">
+      <div class="d-flex ps-6">
+        <div ngbDropdown container="body" class="pe-3">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm dropdown"
+            ngbDropdownToggle
+          >
+            <div class="d-flex">
+              <span>{{ valueFrom }}</span>
+              <span class="icon-arrow_drop_down icon-18"></span>
+            </div>
+          </button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem (click)="changeRating('0', 'FROM')">
+              <div class="d-flex">
+                <span>0</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('1', 'FROM')">
+              <div class="d-flex">
+                <span>1</span>
+              </div>
+            </button>
+          </div>
+        </div>
+        <codx-label fiedName="To" default="đến"></codx-label>
+        <div ngbDropdown container="body" class="ps-3">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm dropdown"
+            ngbDropdownToggle
+          >
+            <div class="d-flex">
+              <span>{{ valueTo }}</span>
+              <span class="icon-arrow_drop_down icon-18"></span>
+            </div>
+          </button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem (click)="changeRating('2', 'TO')">
+              <div class="d-flex">
+                <span>2</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('3', 'TO')">
+              <div class="d-flex">
+                <span>3</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('4', 'TO')">
+              <div class="d-flex">
+                <span>4</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('5', 'TO')">
+              <div class="d-flex">
+                <span>5</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('6', 'TO')">
+              <div class="d-flex">
+                <span>6</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('7', 'TO')">
+              <div class="d-flex">
+                <span>7</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('8', 'TO')">
+              <div class="d-flex">
+                <span>8</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('9', 'TO')">
+              <div class="d-flex">
+                <span>9</span>
+              </div>
+            </button>
+            <button ngbDropdownItem (click)="changeRating('10', 'TO')">
+              <div class="d-flex">
+                <span>10</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex e-input-group e-input-group-full pd-10">
+        <span>{{ valueFrom }}</span>
+        <input
+          class="e-input ps-6"
+          type="text"
+          placeholder="Nhãn (không bắt buộc)"
+          (focus)="focusIn($event.target)"
+          (blur)="focusOut($event.target)"
+        />
+      </div>
+      <div class="d-flex e-input-group e-input-group-full pd-10">
+        <span>{{ valueTo }}</span>
+        <input
+          class="e-input ps-6"
+          type="text"
+          placeholder="Nhãn (không bắt buộc)"
+          (focus)="focusIn($event.target)"
+          (blur)="focusOut($event.target)"
+        />
       </div>
     </div>
-    <div
-      (click)="deleteAnswer(itemQuestion, itemAnswer)"
-      [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
-      *ngIf="itemQuestion?.active && itemQuestion.answers?.length > 1"
+    <ng-container
+      #iconRight
+      *ngIf="
+        itemQuestion.active &&
+        (itemQuestion.answerType == 'O' || itemQuestion.answerType == 'C')
+      "
     >
-      <span class="icon-close icon-24 pd-s-e-10"></span>
-    </div>
+      <div class="has-action-menu" *ngIf="!itemAnswer.other">
+        <div class="action-menu">
+          <span class="icon-image icon-24 pd-10"></span>
+        </div>
+      </div>
+      <div
+        (click)="deleteAnswer(seqNoSession, itemQuestion.seqNo, itemAnswer)"
+        [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
+        *ngIf="itemQuestion.answers?.length > 1"
+      >
+        <span class="icon-close icon-24 pd-s-e-10"></span>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
-<ng-template #template_card_question let-itemQuestion="dataQuestion">
+<ng-template
+  #template_card_question
+  let-itemSession="itemSession"
+  let-itemQuestion="itemQuestion"
+>
   <div class="d-flex">
     <div class="form-group question">
       <div class="title-des">
@@ -470,7 +629,11 @@
       <ng-container
         *ngTemplateOutlet="
           templateQuestionMF;
-          context: { $implicit: itemQuestion }
+          context: {
+            seqNoSession: itemSession.seqNo,
+            seqNoQuestion: itemQuestion.seqNo,
+            answerType: itemQuestion.answerType
+          }
         "
       ></ng-container>
     </ng-container>
@@ -494,7 +657,8 @@
               cdkDragHandle
               *ngIf="
                 itemQuestion.answerType != 'T2' &&
-                itemQuestion.answerType != 'T'
+                itemQuestion.answerType != 'T' &&
+                itemQuestion.answerType != 'R'
               "
             >
               <span class="icon-reorder"></span>
@@ -505,8 +669,9 @@
               *ngTemplateOutlet="
                 tempIconAnswers;
                 context: {
-                  dataQuestion: itemQuestion,
-                  dataAnswer: itemAnswer
+                  seqNoSession: itemSession.seqNo,
+                  itemQuestion: itemQuestion,
+                  itemAnswer: itemAnswer
                 }
               "
             ></ng-container>
@@ -514,8 +679,9 @@
               *ngTemplateOutlet="
                 tempAnswers;
                 context: {
-                  dataQuestion: itemQuestion,
-                  dataAnswer: itemAnswer
+                  seqNoSession: itemSession.seqNo,
+                  itemQuestion: itemQuestion,
+                  itemAnswer: itemAnswer
                 }
               "
             ></ng-container>
@@ -526,22 +692,24 @@
     <div
       class="d-flex size-input-other"
       *ngIf="
-        itemQuestion?.active &&
-        itemQuestion.answerType != 'T' &&
-        itemQuestion.answerType != 'T2' &&
-        itemQuestion.answerType != 'D' &&
-        itemQuestion.answerType != 'H'
+        (itemQuestion?.active && itemQuestion.answerType == 'O') ||
+        itemQuestion.answerType == 'C'
       "
     >
       <ng-container
         *ngTemplateOutlet="
           tempIconAnswers;
           context: {
-            dataQuestion: itemQuestion
+            seqNoSession: itemSession.seqNo,
+            seqNoQuestion: itemQuestion.seqNo,
+            itemQuestion: itemQuestion
           }
         "
       ></ng-container>
-      <div class="e-input-group-other" (click)="addAnswer(itemQuestion)">
+      <div
+        class="e-input-group-other"
+        (click)="addAnswer(itemSession.seqNo, itemQuestion.seqNo)"
+      >
         <input
           class="e-input answer-other"
           type="text"
@@ -550,11 +718,21 @@
           (blur)="focusOut($event.target)"
         />
       </div>
-      <ng-container *ngIf="itemQuestion?.other" class="d-flex">
+      <ng-container
+        *ngIf="
+          (itemQuestion?.answerType == 'O' ||
+            itemQuestion?.answerType == 'C') &&
+          !itemQuestion.other
+        "
+        class="d-flex"
+      >
         <div class="text-or">
           <codx-label fiedName="" default="hoặc"></codx-label>
         </div>
-        <div class="add-answer-other" (click)="addOtherAnswer(itemQuestion)">
+        <div
+          class="add-answer-other"
+          (click)="addOtherAnswer(itemSession.seqNo, itemQuestion.seqNo)"
+        >
           <codx-label
             fiedName=""
             default='thêm "Câu trả lời khác"'
@@ -564,7 +742,7 @@
     </div>
   </div>
 </ng-template>
-<ng-template #template_card_image_video let-itemQuestion="dataQuestion">
+<ng-template #template_card_image_video let-itemQuestion="itemQuestion">
   <div class="d-flex">
     <div class="form-group question w-100">
       <div class="title-des d-flex">
@@ -698,7 +876,7 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #template_card_title let-itemQuestion="dataQuestion">
+<ng-template #template_card_title let-itemQuestion="itemQuestion">
   <div class="d-flex">
     <div class="form-group question w-100">
       <div class="title-des d-flex">
@@ -747,7 +925,7 @@
     </div>
   </div>
 </ng-template>
-<ng-template #template_card_session let-itemQuestion="dataQuestion">
+<ng-template #template_card_session let-itemQuestion="itemQuestion">
   <div class="d-flex">
     <div class="form-group question w-100 position-relative">
       <div class="title-des d-flex">

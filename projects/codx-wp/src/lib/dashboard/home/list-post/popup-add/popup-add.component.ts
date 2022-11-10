@@ -242,10 +242,14 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
             this.listFileUpload.map((e: any) => {
-              e.objectId = this.atmCreate.objectId;
+              if (e.mimeType.indexOf('image') >= 0) {
+                e.referType = "image";
+              } else if (e.mimeType.indexOf('video') >= 0) {
+                e.referType = "video";
+              }
             })
-            this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
+            this.atmCreate.fileUploadList = this.listFileUpload;
             (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
               if (res) 
               {
@@ -395,6 +399,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   }
   getfileCount(event: any) {
     if (event && event?.data?.length > 0) {
+      debugger;
       if (this.dialogData.status == this.STATUS.EDIT) {
         this.codxFileEdit.addFiles(event.data);
       }

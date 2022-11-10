@@ -525,6 +525,8 @@ export class PdfComponent
             this.isAwait,
             this.user.userID,
             this.recID,
+            this.signerInfo.signType,
+            this.signerInfo.supplier,
             mode,
             comment
           )
@@ -557,9 +559,8 @@ export class PdfComponent
               this.user.userID
             )
             .subscribe((res) => {
-              console.log('save event', res);
-
               if (res) {
+                console.log('save event', res);
                 this.lstAreas = res;
                 this.detectorRef.detectChanges();
               }
@@ -718,7 +719,7 @@ export class PdfComponent
               ? false
               : area.allowEditAreas == false
               ? false
-              : area.isLock;
+              : !area.isLock;
           if (isRender) {
             switch (area.labelType) {
               case 'S1': {
@@ -883,8 +884,8 @@ export class PdfComponent
                         childName.LabelType.toString()
                       );
                       let sameSigner = childName.Signer == name.Signer;
-
-                      return sameLable && sameSigner && isUnique;
+                      let sameStepNo = childName.StepNo == name.StepNo;
+                      return sameLable && sameSigner && isUnique && sameStepNo;
                     }
                     return undefined;
                   });
@@ -1095,7 +1096,7 @@ export class PdfComponent
           this.needAddKonva = textArea;
         } else {
           textArea.id(area.recID ? area.recID : textArea.id());
-          textArea.draggable(!area.allowEditAreas ? false : area.isLock);
+          textArea.draggable(!area.allowEditAreas ? false : !area.isLock);
           textArea.scale({
             x: area.location.width * this.xScale,
             y: area.location.height * this.yScale,
@@ -1150,7 +1151,7 @@ export class PdfComponent
             this.needAddKonva = imgArea;
           } else {
             imgArea.id(area.recID);
-            imgArea.draggable(!area.allowEditAreas ? false : area.isLock);
+            imgArea.draggable(!area.allowEditAreas ? false : !area.isLock);
             imgArea.scale({
               x: this.xScale * area.location.width,
               y: this.yScale * area.location.height,
@@ -1468,9 +1469,25 @@ export class PdfComponent
       modifiedBy: tmpName.Signer,
       recID: this.curSelectedArea.attrs.id,
     };
-    console.log('area', tmpArea);
 
-    this.saveToDB(tmpArea);
+    this.esService
+      .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
+      .subscribe((res) => {
+        this.esService
+          .getSignAreas(
+            this.recID,
+            this.fileInfo.fileID,
+            this.isApprover,
+            this.user.userID
+          )
+          .subscribe((res) => {
+            if (res) {
+              console.log('save event', res);
+              this.lstAreas = res;
+              this.detectorRef.detectChanges();
+            }
+          });
+      });
   }
 
   changeQRRenderState(e) {

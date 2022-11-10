@@ -283,6 +283,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.refesh();
     //  this.openForm();
     this.dmSV.isFileEditing.subscribe((item) => {
       if (item) {
@@ -300,12 +301,12 @@ export class CreateFolderComponent implements OnInit {
       }
     });
 
-    this.dmSV.isListSubFolder.subscribe((item) => {
-      this.listSubFolder = item;
-      if (this.fileEditing === undefined) this.fileEditing = new FileUpload();
-      this.fileEditing.subFolder = this.listSubFolder;
-      this.changeDetectorRef.detectChanges();
-    });
+    // this.dmSV.isListSubFolder.subscribe((item) => {
+    //   this.listSubFolder = item;
+    //   if (this.fileEditing === undefined) this.fileEditing = new FileUpload();
+    //   this.fileEditing.subFolder = this.listSubFolder;
+    //   this.changeDetectorRef.detectChanges();
+    // });
 
     this.cache.valueList('L1488').subscribe((res) => {
       // console.log(res);
@@ -337,7 +338,16 @@ export class CreateFolderComponent implements OnInit {
       this.listFormat4 = res.datas;
     });
   }
-
+  refesh()
+  {
+    this.revision = false;
+    this.physical = false;
+    this.copyrightsControl = false;
+    this.approval = false;
+    this.security = false;
+    this.createSubFolder = false;
+    this.listSubFolder = null;
+  }
   changeValue($event, type) {
     //   console.log($event);
     this.errorshow = true;
@@ -353,7 +363,11 @@ export class CreateFolderComponent implements OnInit {
 
   changeValueOwner($event) {
     this.showPopup = false;
-    if ($event?.id != undefined) this.approvers = $event.id;
+    this.approvers = $event.id
+    // this.api.execSv("SYS","AD","UserGroupsBusiness","GetListMemberIDByGroupIDAsync",$event.id).subscribe(item=>{
+    //   if(item)
+    //     this.approvers = item[0]
+    // })
     //this.approvers - $event.dataSelected[0].OrgUnitID;
   }
 
@@ -432,7 +446,6 @@ export class CreateFolderComponent implements OnInit {
           JSON.stringify(this.parentFolder.permissions)
         );
       }
-      debugger;
       this.checkPermission();
       this.fileEditing.permissions = this.addPermissionForRoot(
         this.fileEditing.permissions
@@ -701,7 +714,7 @@ export class CreateFolderComponent implements OnInit {
     this.subitem.description = '';
     this.disableSubItem = true;
 
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       SubFolderComponent,
       this.titleDialogPHysical,
       450,
@@ -710,6 +723,11 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.indexSub, this.subitem, this.listSubFolder],
       ''
     );
+    dialog.closed.subscribe(item=>{
+      if(item.event)
+        this.listSubFolder = item.event;
+      this.changeDetectorRef.detectChanges();
+    })
   }
 
   onDeleteSub(index) {
@@ -729,7 +747,7 @@ export class CreateFolderComponent implements OnInit {
     this.indexSub = index;
     this.subitem = JSON.parse(JSON.stringify(this.listSubFolder[index]));
     this.subItemLevel = this.listSubFolder[index].level;
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       SubFolderComponent,
       this.titleDialogPHysical,
       450,
@@ -738,9 +756,21 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.indexSub, this.subitem, this.listSubFolder],
       ''
     );
+    dialog.closed.subscribe(item=>{
+      if(item.event) this.listSubFolder = item.event
+      this.changeDetectorRef.detectChanges();
+    })
   }
 
-  removeUserRight(index) { }
+  removeUserRight(index) {
+    this.fileEditing.permissions = this.fileEditing.permissions.filter(x=>x.id != this.fileEditing.permissions[index].id);
+    // this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
+    //   if (res) {
+    //     this.dmSV.fileEditing.next(this.fileEditing);
+    //     this.notificationsService.notify(res.message);
+    //   }
+    // });
+   }
 
   isShowAll(action = false) {
     if (action) this.showAll = !this.showAll;

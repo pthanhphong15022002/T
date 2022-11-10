@@ -1,3 +1,4 @@
+
 <codx-views
   #view
   [funcID]="funcID"
@@ -478,57 +479,71 @@
 </ng-template>
 
 <ng-template #flowChart>
-  <div class="d-flex justify-content-between mb-5">
-    <h1 #processName>
-      {{
-        process?.processName
-          | formatvalue
-            : view.formModel
-            : "processName"
-            : processName
-            : "Processes"
-            : "grvProcesses"
-          | async
-      }}
-    </h1>
-    <button
-      type="button"
-      class="btn btn-light-primary me-3"
-      (click)="addFile($event)"
-    >
-      <i class="icon-cloud_upload fs-5"></i
-      ><span
-        ><codx-label
-          name="UploadFile"
-          formName="Processes"
-          gridViewName="grvProcesses"
-          default="Upload File"
-        ></codx-label>
-      </span>
-    </button>
-  </div>
-  <!-- chua co referedType -->
-  <div>
-    <!-- <codx-attachment
+  <div
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto"
+    data-kt-scroll-dependencies=".codx-wapper"
+    data-kt-scroll-wrappers=".codx-toolbar .no-header"
+    [attr.data-kt-scroll-offset]="'650px'"
+  >
+    <div class="d-flex justify-content-between mb-5">
+      <h1 #processName>
+        {{
+          process?.processName
+            | formatvalue
+              : view.formModel
+              : "processName"
+              : processName
+              : "Processes"
+              : "grvProcesses"
+            | async
+        }}
+      </h1>
+      <button
+        type="button"
+        class="btn btn-light-primary me-3"
+        (click)="addFile($event)"
+      >
+        <i class="icon-cloud_upload fs-5"></i
+        ><span
+          ><codx-label
+            name="UploadFile"
+            formName="Processes"
+            gridViewName="grvProcesses"
+            default="Tải ảnh"
+          ></codx-label>
+        </span>
+      </button>
+    </div>
+    <!-- chua co referedType -->
+    <ng-container >
+      <codx-attachment
       #attachment
-      [objectType]="dialog.formModel.entityName"
+      [objectType]="view.formModel.entityName"
       [objectId]="process?.recID"
       hideFolder="1"
-      hideImageUpload="0"
-      hideImageThumb="0"
+      hideImageUpload="1"
+      hideImageThumb="1"
       hideUploadBtn="1"
       hideDes="1"
       type="inline"
-      allowMultiFile="1"
-      [formModel]="dialog.formModel"
+      allowMultiFile="0"
+      [formModel]="view.formModel"
       [functionID]="funcID"
       (fileAdded)="fileAdded($event)"
       (fileCount)="getfileCount($event)"
       displayThumb="full"
     >
-    </codx-attachment> -->
+    </codx-attachment>
+  </ng-container>
+  <ng-container *ngIf="dataFile" >
+    <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
+  </ng-container>
+  <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
+  </ng-container>
+ 
   </div>
-  <codx-view-flowchart></codx-view-flowchart>
 </ng-template>
 
 <ng-template #tmpEmpty>

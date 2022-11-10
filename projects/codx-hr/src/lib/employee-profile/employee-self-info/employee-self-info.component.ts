@@ -1,3 +1,4 @@
+import { CodxHrService } from './../../codx-hr.service';
 import { Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
@@ -5,6 +6,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  NotificationsService,
   UIComponent,
 } from 'codx-core';
 
@@ -23,6 +25,8 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
 
   constructor(
     private injector: Injector,
+    private notitfy: NotificationsService,
+    private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -49,13 +53,68 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
         this.dialog?.formModel?.gridViewName
       )
       .subscribe((res) => {
-        this.grvSetup = res;
-        console.log('form model', this.formModel);
+        // this.grvSetup = res;
+        // console.log('form model', this.formModel);
       });
   }
 
   ngAfterViewInit() {
     console.log('check form', this.form);
     console.log('form', this.form);
+  }
+
+  swipeToRightTab(e) {
+    if (e.isSwiped) {
+      e.cancel = true;
+    }
+  }
+
+  updateDegreeName(){
+    let trainFieldId = this.data.trainFieldID
+    let trainLev = this.data.trainLevel 
+    if(trainFieldId!= null && trainLev != null){
+      this.data.degreeName = trainLev + " " + trainFieldId
+    }
+    else if(trainFieldId){
+      this.data.degreeName = trainFieldId
+    }
+    else if(trainLev){
+      this.data.degreeName = trainLev
+    }
+    this.form?.formGroup.patchValue({degreeName: this.data.degreeName})
+  }
+
+  handleOnSaveEmployeeContactInfo(){
+    this.hrService.saveEmployeeContactInfo(this.data).subscribe(p => {
+      if(p === "True"){
+        this.notitfy.notifyCode('SYS007')
+      }
+      else this.notitfy.notifyCode('DM034')
+    })
+  }
+
+  handleOnSaveEmployeeSelfInfo(e?: any){
+    //Xu li validate thong tin ngay sinh nhan vien
+    if( new Date().getFullYear() - new Date(this.data.birthday).getFullYear() < 18){
+      this.notitfy.notifyCode('HR001')
+      return
+    }
+
+    //Xu li validate thong tin CMND nhan vien
+    if(this.data.expiredOn < this.data.issuedOn){
+      this.notitfy.notifyCode('HR002')
+      return
+    }
+
+    this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
+      if(p === "True"){
+        this.notitfy.notifyCode('SYS007')
+      }
+      else this.notitfy.notifyCode('DM034')
+    })
+  }
+
+  handleProvinceChange(value){
+
   }
 }
