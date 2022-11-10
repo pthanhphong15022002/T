@@ -1,0 +1,73 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [views]="views"
+  [button]="buttons"
+  (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc"
+  [idField]="idField"
+  [className]="className"
+  [method]="method"
+  (selectedChange)="changeItemDetail($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+  [viewActiveType]="viewType.schedule"
+  (onActions)="onActionClick($event)"
+>
+</codx-views>
+
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    cardCss="border h-100"
+    imageObjType="AD_Users"
+    (clickMF)="clickMF($event, data)"
+    cardCss="card-template meeting-card border-bottom"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [title]="data?.meetingName"
+    [status]="data.status"
+    [statusVll]="statusVll"
+    [showBgColorVll]="true"
+    [icoStatus2]="data?.isOnline"
+    [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-22'"
+    [date]="data.startDate"
+    [rootData]="data"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="cardImgFooter"
+    [dataItem]="data"
+  >
+  </codx-card-img>
+</ng-template>
+
+<ng-template #cardImgFooter let-data let-setting="setting">
+  <div
+    *ngIf="!setting?.resources"
+    class="d-flex justify-content-center h-50px"
+  ></div>
+  <div class="footer-tag">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="tag-1line" *ngIf="data.tags && setting?.tags">
+        <codx-tag
+          [entityName]="view.formModel.entityName"
+          [disabled]="true"
+          [isEdit]="false"
+          [value]="data?.tags"
+        >
+        </codx-tag>
+      </div>
+      <div *ngIf="!data.tags"></div>
+    </div>
+  </div>
+  <div class="footer-att" *ngIf="data.attachments > 0">
+    <span class="icon-attach_file icon-18"> </span>
+    <span
+      class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary"
+    >
+      {{ data.attachments }}</span
+    >
+  </div>
+</ng-template>

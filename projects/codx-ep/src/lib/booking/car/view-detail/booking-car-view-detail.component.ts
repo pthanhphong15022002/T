@@ -1,17 +1,19 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Injector,
   Input,
   OnChanges,
   Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
 import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
 import moment from 'moment';
-import { CodxEpService } from '../../../codx-ep.service';
+import { CodxEpService } from '../../../codx-ep.service';import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
 @Component({
   selector: 'booking-car-view-detail',
@@ -22,6 +24,7 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();  
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
@@ -34,6 +37,8 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   @Input() hideMF = false;
   @Input() hideFooter = false;
   firstLoad = true;
+  
+  tabControl: TabModel[] = [];
   id: string;
   itemDetailDataStt: any;
   itemDetailStt: any;
@@ -49,7 +54,21 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   onInit(): void {
     this.itemDetailStt = 1;
   }
-
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      //{ name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      {
+        name: 'ReferencesOD',
+        textDefault: 'Tham chiếu',
+        isActive: false,
+        template: this.reference,
+      },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&
