@@ -6,7 +6,7 @@ import { Button } from '@syncfusion/ej2-angular-buttons';
 import { tab } from '@syncfusion/ej2-angular-grids';
 import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel, ButtonModel } from 'codx-core';
 import { map } from 'rxjs';
-import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add/popup-add.component';
+import { PopupAddPostComponents } from '../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
 
@@ -216,7 +216,7 @@ export class ApproveComponent extends UIComponent {
                   let option = new DialogModel();
                   option.DataService = this.view.dataService;
                   option.FormModel = this.view.formModel;
-                  let popup =  this.callfc.openForm(PopupAddPostComponent,headerText, 700, 550, '', obj, '', option);
+                  let popup =  this.callfc.openForm(PopupAddPostComponents,headerText, 700, 550, '', obj, '', option);
                   popup.closed.subscribe((res: any) => {
                     if (res?.event) 
                     {
