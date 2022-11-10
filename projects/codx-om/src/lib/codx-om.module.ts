@@ -3,10 +3,18 @@ import { Routes } from '@angular/router';
 import { CodxOmComponent } from './codx-om.component';
 import { LayoutComponent } from './_layout/layout.component';
 
+import { OKRComponent } from './okr/okr.component';
+
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    children: [
+        {
+          path: 'okr/:funcID',
+          component: OKRComponent,
+        },
+      ]
     // children: [
     //   {
     //     path: 'home/:funcID',
@@ -47,7 +55,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    CodxOmComponent
+    CodxOmComponent,
+    OKRComponent
   ],
   imports: [
   ],
