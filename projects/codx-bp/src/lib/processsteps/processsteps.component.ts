@@ -42,6 +42,7 @@ import {
   BP_Processes,
   BP_ProcessOwners,
   BP_ProcessSteps,
+  ColumnsModel,
 } from '../models/BP_Processes.model';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
@@ -230,10 +231,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             false
           );
         else {
+          let kanban = (this.view.currentView as any).kanban;
           this.notiService.notifyCode('SYS006');
           var processStep = e?.event;
           if (processStep.stepType != 'P') {
-            let kanban = (this.view.currentView as any).kanban;
             if (processStep.stepType == 'A') {
               this.view.dataService.data.forEach((obj) => {
                 if (obj.recID == processStep?.parentID) {
@@ -253,7 +254,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 }
               });
             }
-          } else {
+          } else { 
+            if (kanban) {
+              var column = new ColumnsModel();
+              column.headerText = processStep.stepName;
+              column.keyField = processStep.recID;
+               let index = kanban?.columns?.length  ? kanban?.columns?.length : 0 ;
+              kanban.addColumn(column,index)
+            }
+
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
@@ -844,22 +853,23 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     });
     return arrOwner.join(';');
   }
-  //test data flow chart
+  //test data flow chart 636341e8e82afdc6f9a4ab54
   getFlowChart(recID) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
+    this.fileService.getFile('636c6412b02950a2d9f1db47').subscribe((data) => {
       if (data) this.dataFile = data;
     });
   }
   async addFile(evt: any) {
     this.attachment.uploadFile();
-    if (this.attachment && this.attachment.fileUploadList.length)
-      (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          this.dataFile = Array.isArray(res) ? res[0] : null;
-        }
-      });
+    // if (this.attachment && this.attachment.fileUploadList.length)
+    //   (await this.attachment.saveFilesObservable()).subscribe((res) => {
+    //     if (res) {
+    //       this.dataFile = Array.isArray(res) ? res[0] : null;
+    //     }
+    //   });
   }
   fileAdded(e) {}
 
   getfileCount(e) {}
+
 }

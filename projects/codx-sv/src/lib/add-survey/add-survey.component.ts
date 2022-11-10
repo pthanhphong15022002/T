@@ -1,3 +1,4 @@
+import { SortSessionComponent } from './sort-session/sort-session.component';
 import { SV_Questions } from './../model/SV_Questions';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
@@ -17,7 +18,14 @@ import {
   RteService,
 } from '@syncfusion/ej2-angular-inplace-editor';
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
-import { DialogModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  CallFuncService,
+  DialogModel,
+  NotificationsService,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxSvService } from '../codx-sv.service';
 import { SV_Surveys } from '../model/SV_Surveys';
@@ -82,14 +90,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   MODE_IMAGE_VIDEO = 'EDIT';
   lstEditIV: any = new Array();
   recID: any;
-  amountOfSession = 0;
   children: any = new Array();
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   constructor(
     inject: Injector,
     private change: ChangeDetectorRef,
-    private SVServices: CodxSvService
+    private SVServices: CodxSvService,
+    private notification: NotificationsService,
+    private call: CallFuncService,
   ) {
     super(inject);
 
@@ -136,7 +145,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res: any) => {
         if (res[0] && res[0].length > 0) {
-          this.amountOfSession = res[1].length - 1;
           this.questions = this.getHierarchy(res[0], res[1]);
           console.log('check questions', this.questions);
         } else {
@@ -168,11 +176,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
               category: 'Q',
             },
           ];
-          this.amountOfSession = 1;
         }
-        this.questions[1]['active'] = true;
+        this.questions[0].children[0]['active'] = true;
+        this.itemActive = this.questions[0].children[0];
       });
-    // this.change.detectChanges();
   }
 
   getHierarchy(dataSession, dataQuestion) {
@@ -243,16 +250,16 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   itemActive: any;
   clickToScroll(seqNoSession = null, recIDQuestion = null, category = null) {
-    var recID = 0;
-    var id = 'card-survey';
+    let recID = 0;
+    let id = 'card-survey';
     if (category == 'S') recID = seqNoSession;
     else {
       recID = recIDQuestion;
       id = 'card-survey-question';
     }
-    var html = document.getElementById(`${id}-${recID}`);
-    var htmlE = html as HTMLElement;
-    var htmlMF = document.querySelector('.moreFC');
+    let html = document.getElementById(`${id}-${recID}`);
+    let htmlE = html as HTMLElement;
+    let htmlMF = document.querySelector('.moreFC');
     if (htmlMF)
       htmlMF.setAttribute('style', `top: calc(${htmlE?.offsetTop}px - 151px);`);
     this.activeCard(seqNoSession, recIDQuestion, category);
@@ -332,15 +339,42 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     console.log('check questions', this.questions);
   }
 
-  deleteCard(dataQuestion) {
-    var data = JSON.parse(JSON.stringify(this.questions));
-    data = data.filter((x) => x.seqNo != dataQuestion.seqNo);
+  deleteCard(seqNoSession, seqNoQuestion, category) {
+    if (category == 'S') this.deleteSession(seqNoSession);
+    else this.deleteNoSession(seqNoSession, seqNoQuestion);
+    console.log('check delete card', this.questions);
+  }
+
+  deleteSession(seqNoSession) {
+    this.notification
+      .alert(
+        'Xóa câu hỏi và mục?',
+        'Việc xóa một mục cũng sẽ xóa các câu hỏi và câu trả lời trong mục đó.'
+      )
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y') {
+          var data = JSON.parse(JSON.stringify(this.questions));
+          data = data.filter((x) => x.seqNo != seqNoSession);
+          data.forEach((x, index) => {
+            x.seqNo = index;
+          });
+          this.questions = data;
+          this.change.detectChanges();
+        }
+      });
+  }
+
+  deleteNoSession(seqNoSession, seqNoQuestion) {
+    var data = JSON.parse(
+      JSON.stringify(this.questions[seqNoSession].children)
+    );
+    data = data.filter((x) => x.seqNo != seqNoQuestion);
     data.forEach((x, index) => {
       x.seqNo = index;
     });
-    if (dataQuestion.seqNo == 0) dataQuestion.seqNo = 1;
-    data[dataQuestion.seqNo - 1].active = true;
-    this.questions = data;
+    if (seqNoQuestion == 0) this.questions[seqNoSession].active = true;
+    else data[seqNoQuestion - 1].active = true;
+    this.questions[seqNoSession].children = data;
   }
 
   addOtherAnswer(indexSession, indexQuestion) {
@@ -363,37 +397,52 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.questions[indexSession].children[indexQuestion]['other'] = true;
   }
 
-  copyCard(category, dataQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(dataQuestion));
+  copyCard(itemSession, itemQuestion, category) {
+    if (category == 'S') this.copySession(itemSession);
+    else this.copyNoSession(itemSession, itemQuestion);
+    console.log('check copy questions', this.questions);
+  }
+
+  copySession(itemSession) {
     this.generateGuid();
-    delete dataQuestion.id;
-    dataQuestion.recID = this.GUID;
-    if (category == 'S') dataQuestion.parentID = null;
+    delete itemSession.id;
+    itemSession.recID = this.GUID;
     var data = JSON.parse(JSON.stringify(this.questions));
-    data[dataQuestion.seqNo].active = false;
-    data.splice(dataQuestion.seqNo + 1, 0, dataQuestion);
+    data[itemSession.seqNo].active = false;
+    data.splice(itemSession.seqNo + 1, 0, itemSession);
+    data.forEach((x, index) => {
+      x.seqNo = index;
+    });
+    this.questions = data;
+  }
+
+  copyNoSession(itemSession, itemQuestion) {
+    var dataTemp = JSON.parse(JSON.stringify(itemQuestion));
+    this.generateGuid();
+    delete itemQuestion.id;
+    itemQuestion.recID = this.GUID;
+    var data = JSON.parse(
+      JSON.stringify(this.questions[itemSession.seqNo].children)
+    );
+    data[itemQuestion.seqNo].active = false;
+    data.splice(itemQuestion.seqNo + 1, 0, itemQuestion);
     data.forEach((x, index) => {
       x.seqNo = index;
       if (x.parentID == dataTemp.recID) x.parentID = this.GUID;
     });
-    this.questions = data;
-    this.amountOfSession = 0;
-    this.questions.forEach((x) => {
-      if (x.category == 'S') this.amountOfSession++;
-    });
-    console.log('check copy questions', this.questions);
+    this.questions[itemSession.seqNo].children = data;
   }
 
   clickMF(functionID, eleAttachment = null) {
     if (functionID) {
       switch (functionID) {
         case 'LTN01':
-          this.addCard('Q', this.itemActive, this.indexSessionA);
+          this.addCard(this.itemActive, this.indexSessionA, 'Q');
           break;
         case 'LTN02':
           break;
         case 'LTN03':
-          this.addCard('T', this.itemActive, this.indexSessionA);
+          this.addCard(this.itemActive, this.indexSessionA, 'T');
           break;
         case 'LTN04':
           this.uploadFile('image', 'upload');
@@ -402,7 +451,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           this.uploadFile('video', 'upload');
           break;
         case 'LTN06':
-          this.addCard('S', this.itemActive, this.indexSessionA);
+          this.addCard(this.itemActive, this.indexSessionA, 'S');
           break;
       }
     }
@@ -469,55 +518,79 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
   }
 
-  addCard(category, dataQuestion, seqNoSession = null) {
-    if (dataQuestion) {
-      this.generateGuid();
-      var dataAnswerTemp = {
-        seqNo: 0,
-        answer: 'Tùy chọn 1',
-        other: true,
-        isColumn: false,
-        hasPicture: false,
-      };
-      var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
-      if (category == 'T' || category == 'S') {
-        tempQuestion.answers = null;
-        tempQuestion.answerType = null;
-        tempQuestion.question = null;
-      } else {
-        tempQuestion.answers = [dataAnswerTemp];
-        tempQuestion.answerType = 'O';
-        tempQuestion.question = 'Câu hỏi';
-      }
-      tempQuestion.seqNo = dataQuestion.seqNo + 1;
-      tempQuestion.category = category;
-      tempQuestion.recID = this.GUID;
-      if (category == 'S') {
-        this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
-        this.questions.forEach((x, index) => (x.seqNo = index));
-        this.questions[dataQuestion.seqNo].active = false;
-        this.questions[dataQuestion.seqNo + 1].active = true;
-        this.itemActive = this.questions[dataQuestion.seqNo + 1];
-      } else {
-        this.questions[seqNoSession].children.splice(
-          dataQuestion.seqNo + 1,
-          0,
-          tempQuestion
-        );
-        this.questions[seqNoSession].children.forEach(
-          (x, index) => (x.seqNo = index)
-        );
-        this.questions[seqNoSession].children[dataQuestion.seqNo].active =
-          false;
-        this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
-          true;
-        this.itemActive =
-          this.questions[seqNoSession].children[dataQuestion.seqNo + 1];
-      }
-      this.clickToScroll(seqNoSession, this.GUID, category);
+  addCard(itemActive, seqNoSession = null, category) {
+    if (itemActive) {
+      if (category == 'S') this.addSession(itemActive, seqNoSession);
+      else this.addNoSession(itemActive, seqNoSession, category);
+      console.log('check addCard', this.questions);
     }
-    this.change.detectChanges();
-    console.log('check addCard', this.questions);
+  }
+
+  addSession(itemActive, seqNoSession) {
+    var index = itemActive.seqNo;
+    this.generateGuid();
+    var tempQuestion = JSON.parse(JSON.stringify(itemActive));
+    tempQuestion.answers = null;
+    tempQuestion.answerType = null;
+    tempQuestion.question = null;
+    tempQuestion.seqNo = index + 1;
+    tempQuestion.category = 'S';
+    tempQuestion.recID = this.GUID;
+    this.questions.splice(index + 1, 0, tempQuestion);
+    this.questions.forEach((x, index) => (x.seqNo = index));
+    this.questions[index].active = false;
+    this.questions[index + 1].active = true;
+    this.itemActive = this.questions[index + 1];
+    var lstMain = this.questions[seqNoSession].children;
+    if (itemActive.category == 'S') {
+      this.questions[index + 1].children = this.questions[index].children;
+      this.questions[index].children = [];
+    } else {
+      var lstUp = [];
+      var lstDown = [];
+      lstUp = lstMain.slice(0, index + 1);
+      lstDown = lstMain.slice(index + 1, lstMain.length);
+      this.questions[index + 1]['children'] = lstDown;
+      this.questions[index]['children'] = lstUp;
+    }
+    this.clickToScroll(index + 1, this.GUID, 'S');
+  }
+
+  addNoSession(itemActive, seqNoSession, category) {
+    this.generateGuid();
+    var dataAnswerTemp = {
+      seqNo: 0,
+      answer: 'Tùy chọn 1',
+      other: true,
+      isColumn: false,
+      hasPicture: false,
+    };
+    var tempQuestion = JSON.parse(JSON.stringify(itemActive));
+    if (category == 'T') {
+      tempQuestion.answers = null;
+      tempQuestion.answerType = null;
+      tempQuestion.question = null;
+    } else {
+      tempQuestion.answers = [dataAnswerTemp];
+      tempQuestion.answerType = 'O';
+      tempQuestion.question = 'Câu hỏi';
+    }
+    tempQuestion.seqNo = itemActive.seqNo + 1;
+    tempQuestion.category = category;
+    tempQuestion.recID = this.GUID;
+    this.questions[seqNoSession].children.splice(
+      itemActive.seqNo + 1,
+      0,
+      tempQuestion
+    );
+    this.questions[seqNoSession].children.forEach(
+      (x, index) => (x.seqNo = index)
+    );
+    this.questions[seqNoSession].children[itemActive.seqNo].active = false;
+    this.questions[seqNoSession].children[itemActive.seqNo + 1].active = true;
+    this.itemActive =
+      this.questions[seqNoSession].children[itemActive.seqNo + 1];
+    this.clickToScroll(seqNoSession, this.GUID, category);
   }
 
   importQuestion(dataQuestion) {}
@@ -544,8 +617,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   uploadVideo(dataQuestion) {}
-
-  addSection(dataQuestion) {}
 
   clickQuestionMF(indexSession, indexQuestion, answerType) {
     if (answerType) {
@@ -586,5 +657,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   changeRating(value, type) {
     if (type == 'FROM') this.valueFrom = value;
     else this.valueTo = value;
+  }
+
+  moveSession() {
+    var obj = {
+      data: this.recID
+    }
+    var dialog = this.call.openForm(SortSessionComponent, '', 500, 600, '', obj);
+    dialog.closed.subscribe(res => {
+      if(res.event) {
+
+      }
+    })
   }
 }

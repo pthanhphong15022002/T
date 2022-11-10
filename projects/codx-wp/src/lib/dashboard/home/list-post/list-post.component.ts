@@ -27,7 +27,7 @@ import {
   FormModel,
   AuthService,
 } from 'codx-core';
-import { PopupAddPostComponent } from './popup-add/popup-add.component';
+import { PopupAddPostComponents } from './popup-add/popup-add.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './popup-save/popup-save.component';
 
@@ -198,7 +198,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     this.modal = this.callFC.openForm(
-      PopupAddPostComponent,
+      PopupAddPostComponents,
       '',
       700,
       550,
@@ -221,7 +221,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     this.modal = this.callFC.openForm(
-      PopupAddPostComponent,
+      PopupAddPostComponents,
       '',
       700,
       550,
@@ -242,7 +242,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
     this.modal = this.callFC.openForm(
-      PopupAddPostComponent,
+      PopupAddPostComponents,
       '',
       650,
       550,
