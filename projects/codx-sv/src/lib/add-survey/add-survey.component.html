@@ -804,10 +804,10 @@
         <div class="col-5 my-2 m-w-100">
           <div class="w-150 position-relative">
             <ng-container *ngIf="data.referType == REFER_TYPE.IMAGE">
-              <ng-container *ngIf="data.recID; else imageSrc">
+              <ng-container *ngIf="data.recID || data.objectID; else imageSrc">
                 <codx-img
-                  [recId]="data.recID"
                   [objectId]="data.objectID"
+                  [objectType]="functionList.entityName"
                   [width]="150"
                   cssClass="pic"
                   imageType="square"
@@ -889,6 +889,13 @@
                   class="image m-w-100"
                 />
               </ng-template>
+            </ng-container>
+            <ng-container *ngIf="data.referType == REFER_TYPE.VIDEO">
+              <div>
+                <video #video controls class="w-100 rounded h-auto">
+                  <source [src]="data?.srcVideo" type="video/mp4" />
+                </video>
+              </div>
             </ng-container>
           </div>
         </div>
@@ -994,8 +1001,11 @@
                   </a>
                 </li>
                 <li>
-                  <a (click)="moveSession()"
-                  ngbDropdownItem href="javascript:void(0)">
+                  <a
+                    (click)="moveSession()"
+                    ngbDropdownItem
+                    href="javascript:void(0)"
+                  >
                     <codx-label
                       fiedName="moveSession"
                       default="Di chuyển phần"
