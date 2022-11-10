@@ -9,7 +9,7 @@ import {
   Observable,
   of,
 } from 'rxjs';
-import { tmpInforSentEMail } from './models/BP_Processes.model';
+import { BP_Processes, tmpInforSentEMail } from './models/BP_Processes.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,8 @@ import { tmpInforSentEMail } from './models/BP_Processes.model';
 export class CodxBpService {
   viewProcesses = new BehaviorSubject<any>(null);
   constructor(private api: ApiHttpService) {}
-
+  public bpProcesses = new BehaviorSubject<BP_Processes>(null);
+  isFileEditing = this.bpProcesses.asObservable();
   getListFunctionMenuCreatedStepAsync(funcID) {
     return this.api.exec<any>(
       'BP',
@@ -68,6 +69,15 @@ export class CodxBpService {
       'UpdateProcessStepWithDropDrapAsync',
       data
     );
+  }
+
+  updatePermissionProcess(data){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdatePermissionProcessAsync',
+      data
+    )
   }
 
   public listTags = new BehaviorSubject<any>(null);
