@@ -26,6 +26,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../approval-step/approval-step.component';
 import { PopupAddEmailTemplateComponent } from '../approval-step/popup-add-email-template/popup-add-email-template.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 export class defaultRecource {}
 @Component({
@@ -217,7 +218,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         };
 
         this.callfunc.openForm(
-          PopupAddEmailTemplateComponent,
+          CodxEmailComponent,
           '',
           800,
           screen.height,
