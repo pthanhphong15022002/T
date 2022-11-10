@@ -1,5 +1,4 @@
-<codx-views class="system-settings" #view entityName="AD_SystemSettings" service="SYS" assemblyName="ERM.Business.AD"
-  className="SystemSettingsBusiness" [method]="'GetOneAsync'" [views]="views" idField="recID">
+<codx-views class="system-settings" #view [views]="views" entityName="AD_SystemSettings" [autoLoad]="false">
 </codx-views>
 
 <ng-template #paneleft let-data>
