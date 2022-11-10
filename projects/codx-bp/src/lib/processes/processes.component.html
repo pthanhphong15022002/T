@@ -73,7 +73,7 @@
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-  <tr>
+  <tr class="has-action-menu">
     <td class="rowphoto">
       <div class="padding">
         <div class="d-flex flex-column w-100 p-3">
@@ -128,13 +128,13 @@
         <div [innerHTML]="data.memo"></div>
       </div>
     </td>
-    <td class="rowphoto">
+    <td class="rowphoto position-relative">
       <div class="padding" *ngIf="funcID == 'BPT4'">
         <button class="btn btn-primary" (click)="approval(data)">
           <codx-label default="Xét duyệt"></codx-label>
         </button>
       </div>
-      <div class="padding has-action-menu">
+      <div class="padding position-absolute top-0 end-0" >
         <codx-mfunc
           [formModel]="view.formModel"
           (clickMF)="clickMF($event, data)"
