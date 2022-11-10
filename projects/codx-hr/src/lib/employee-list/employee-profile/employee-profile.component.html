@@ -31,7 +31,7 @@
               <div class="font-weight-bold font-size-h5 mb-2">
                 {{ data.employeeName }}
               </div>
-              <div class="text-muted">{{ data.email }}</div>
+              <div class="text-muted">{{ infoPersonal.email }}</div>
               <div class="text-dark-75">Busssiness Solution Center</div>
             </div>
           </div>
@@ -70,7 +70,7 @@
             <div class="d-flex align-items-center">
               <span class="icon-email icon-16 text-gray-800 me-1"></span>
               <span class="text-dark">
-                <span #email>{{ data.email }}</span>
+                <span #email>{{ infoPersonal.email }}</span>
               </span>
             </div>
             <div class="d-flex align-items-center">
@@ -243,8 +243,8 @@
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
                   id="tab_6"
-                  [class]="crrTab == 6 ? 'active' : ''"
-                  (click)="clickTab(6)"
+                  [class]="crrTab == 7 ? 'active' : ''"
+                  (click)="clickTab(7)"
                 >
                   <span class="me-2">
                     <span class="icon-dashboard icon-18"></span>
@@ -494,7 +494,7 @@
                     >
                     </codx-label>
 
-                    <span #birthPlace>{{ data.birthPlace }}</span>
+                    <span #birthPlace>{{ data.birthPlaceName }}</span>
                   </div>
                 </div>
                 <div class="col"></div>

@@ -22,6 +22,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
@@ -346,7 +347,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       };
 
       this.callfc.openForm(
-        PopupAddEmailTemplateComponent,
+        CodxEmailComponent,
         '',
         800,
         screen.height,
