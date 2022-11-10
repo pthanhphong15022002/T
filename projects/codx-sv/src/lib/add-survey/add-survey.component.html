@@ -7,7 +7,7 @@
             <div *ngFor="let itemSession of questions">
               <div
                 class="card-survey"
-                [id]="'card-survey-' + itemSession.recID"
+                [id]="'card-survey-' + itemSession.seqNo"
                 (click)="clickToScroll(itemSession.seqNo, null, 'S')"
               >
                 <div class="count-session">
@@ -15,7 +15,7 @@
                     <codx-label fiedName="AOS" default="Phần"></codx-label>
                     <span
                       >&nbsp;{{
-                        itemSession.seqNo + 1 + " / " + amountOfSession
+                        itemSession.seqNo + 1 + " / " + questions.length
                       }}</span
                     >
                   </div>
@@ -24,7 +24,13 @@
                   class="col-lg-8 control-section inplace-editor-control-section form-layout"
                   id="inplace-editor-control"
                 >
-                  <div class="content-wrapper b-t">
+                  <div
+                    [ngClass]="
+                      itemSession.active
+                        ? 'content-wrapper b-t b-l-session'
+                        : 'content-wrapper b-t'
+                    "
+                  >
                     <form id="formSession" class="form-horizontal example-box">
                       <ng-container #body>
                         <ng-container
@@ -93,6 +99,7 @@
                               *ngTemplateOutlet="
                                 template_card_image_video;
                                 context: {
+                                  seqNoSession: itemSession.seqNo,
                                   itemQuestion: itemQuestion
                                 }
                               "
@@ -103,6 +110,7 @@
                               *ngTemplateOutlet="
                                 template_card_title;
                                 context: {
+                                  seqNoSession: itemSession.seqNo,
                                   itemQuestion: itemQuestion
                                 }
                               "
@@ -122,11 +130,19 @@
                           <hr />
                           <div class="d-flex justify-content-end">
                             <span
-                              (click)="copyCard('Q', itemQuestion)"
+                              (click)="
+                                copyCard(itemSession.seqNo, itemQuestion, 'Q')
+                              "
                               class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
                             ></span>
                             <span
-                              (click)="deleteCard(itemQuestion)"
+                              (click)="
+                                deleteCard(
+                                  itemSession.seqNo,
+                                  itemQuestion.seqNo,
+                                  'Not-S'
+                                )
+                              "
                               class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
                             ></span>
                             <span class="split"></span>
@@ -742,7 +758,11 @@
     </div>
   </div>
 </ng-template>
-<ng-template #template_card_image_video let-itemQuestion="itemQuestion">
+<ng-template
+  #template_card_image_video
+  let-seqNoSession="seqNoSession"
+  let-itemQuestion="itemQuestion"
+>
   <div class="d-flex">
     <div class="form-group question w-100">
       <div class="title-des d-flex">
@@ -761,11 +781,11 @@
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
           <span
-            (click)="copyCard('P-V', itemQuestion)"
+            (click)="copyCard(seqNoSession, itemQuestion, 'P-V')"
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteCard(itemQuestion)"
+            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, 'Not-S')"
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -876,7 +896,11 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #template_card_title let-itemQuestion="itemQuestion">
+<ng-template
+  #template_card_title
+  let-seqNoSession="seqNoSession"
+  let-itemQuestion="itemQuestion"
+>
   <div class="d-flex">
     <div class="form-group question w-100">
       <div class="title-des d-flex">
@@ -894,11 +918,11 @@
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
           <span
-            (click)="copyCard('T', itemQuestion)"
+            (click)="copyCard(seqNoSession, itemQuestion, 'T')"
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteCard(itemQuestion)"
+            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, 'Not-S')"
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -925,7 +949,7 @@
     </div>
   </div>
 </ng-template>
-<ng-template #template_card_session let-itemQuestion="itemQuestion">
+<ng-template #template_card_session let-itemSession="itemSession">
   <div class="d-flex">
     <div class="form-group question w-100 position-relative">
       <div class="title-des d-flex">
@@ -959,7 +983,7 @@
               <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                 <li>
                   <a
-                    (click)="copyCard('S', itemQuestion)"
+                    (click)="copyCard(itemSession, '', 'S')"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >
@@ -970,7 +994,8 @@
                   </a>
                 </li>
                 <li>
-                  <a ngbDropdownItem href="javascript:void(0)">
+                  <a (click)="moveSession()"
+                  ngbDropdownItem href="javascript:void(0)">
                     <codx-label
                       fiedName="moveSession"
                       default="Di chuyển phần"
@@ -979,7 +1004,7 @@
                 </li>
                 <li>
                   <a
-                    (click)="deleteCard(itemQuestion)"
+                    (click)="deleteCard(itemSession.seqNo, '', 'S')"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >
