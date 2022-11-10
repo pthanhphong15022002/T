@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Injector,
   Input,
@@ -13,7 +14,7 @@ import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from '
 import moment from 'moment';
 import { CodxEpService } from '../../../codx-ep.service';
 import { DriverModel } from '../../../models/bookingAttendees.model';
-
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 @Component({
   selector: 'approval-car-view-detail',
   templateUrl: 'approval-car-view-detail.component.html',
@@ -23,6 +24,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @ViewChild('driverAssign') driverAssign: TemplateRef<any>;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -40,6 +42,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   listDriver=[];
   popupDialog: any;
   popuptitle: any;
+  tabControl: TabModel[] = [];
   fields: Object = { text: 'driverName', value: 'driverID' };
   constructor(
     private injector: Injector,
@@ -52,7 +55,21 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   onInit(): void {
     this.itemDetailStt = 1;
   }
-
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      //{ name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      {
+        name: 'ReferencesOD',
+        textDefault: 'Tham chiếu',
+        isActive: false,
+        template: this.reference,
+      },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&

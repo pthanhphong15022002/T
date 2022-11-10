@@ -211,11 +211,34 @@
     </div>-->
   </ng-template>
 
-  <ng-template #footer>
-    <approval-tabs></approval-tabs>
-  </ng-template>
+  
 </codx-detail-tmp>
-
+<ng-template #footer>
+  <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
+</ng-template>
+<!-- <ng-template #reference>
+  <ng-container *ngIf="data?.linkss">
+   <div *ngFor="let item of data?.linkss">
+     <codx-temp-full 
+     [title]="item.oDis?.title" [desc]="
+       convertHtmlAgency(
+         item.oDis.agencyName,
+         this.gridViewSetup?.AgencyName?.headerText
+       )
+     "
+     cardCss="card-template border-bottom px-2 pt-4 pb-2" 
+     [icoStatus]="item.oDis?.urgency"
+     [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item.oDis?.security"
+     [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="item.oDis.isBookmark"
+     [titleLine]="2" [icoDateCss]="checkDeadLine(item.oDis?.deadline)" [dataItem]="item"
+     [footer]="footerTmp"
+     [moreFuncCss]="'me-10'"
+     >
+     </codx-temp-full>
+    
+   </div>
+  </ng-container>
+ </ng-template> -->
 <ng-template #defaulEmpt>
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
