@@ -861,14 +861,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
   async addFile(evt: any) {
     this.attachment2.uploadFile();
-    // if (this.attachment && this.attachment.fileUploadList.length)
-    //   (await this.attachment.saveFilesObservable()).subscribe((res) => {
-    //     if (res) {
-    //       this.dataFile = Array.isArray(res) ? res[0] : null;
-    //     }
-    //   });
   }
-  fileAdded(e) {}
+  fileAdded(e) {
+    if(e && e?.data?.length > 0)  this.dataFile = e.data[0] ;
+    this.changeDetectorRef.detectChanges() ;
+  }
 
   getfileCount(e) {}
 
