@@ -76,7 +76,7 @@
       <codx-label name="lblTime" default="Thời gian" class="fw-bold"></codx-label>
       <span class="me-1 fw-bold">:</span>
 
-      <div *ngIf="!itemDetail?.isSameDay">
+      <div *ngIf="!sameDayCheck(itemDetail?.startDate,itemDetail?.endDate)">
         <div class="ms-1 text-gray-600">
           <span>
             {{ itemDetail?.startDate | fmDT: "dmy":true }}
@@ -87,13 +87,13 @@
           </span>
         </div>
       </div>
-      <div *ngIf="itemDetail?.isSameDay">
+      <div *ngIf="sameDayCheck(itemDetail?.startDate,itemDetail?.endDate)">
         <div class="ms-1 text-gray-600">
           <span>
             {{ itemDetail?.startDate | fmDT}}
           </span>
           <span>
-            {{ itemDetail?.startHour}} - {{ itemDetail?.endHour}}
+            {{ showHour(itemDetail?.startDate) }} - {{ showHour(itemDetail?.endDate) }}
           </span>
         </div>
       </div>
@@ -119,8 +119,8 @@
       </div>
     </div>
 
-    <div class="d-flex mb-2 text-dark me-6">
-      <codx-label name="lblUseCardHeader" default="Sử dụng thẻ" class="fw-bold"></codx-label>
+    <div class="d-flex mb-2 align-items-center text-dark me-6">
+      <codx-label class="d-flex align-items-center" name="lblUseCardHeader" default="Sử dụng thẻ" class="fw-bold"></codx-label>
       <span class="me-1 fw-bold">:</span>
 
       <span *ngIf="!!itemDetail?.useCard">

@@ -400,8 +400,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
                       break;
                     }
 
-                    //vnpt
-                    case '3': {
+                    //vnpt || ky noi bo
+                    default: {
                       this.pdfView
                         .signPDF(mode, this.dialogSignFile.value.comment)
                         .then((value) => {
@@ -554,8 +554,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
               break;
             }
 
-            //vnpt
-            case '3': {
+            //vnpt || ky noi bo
+            default: {
               this.pdfView.signPDF(mode, '').then((value) => {
                 if (value) {
                   let result = {

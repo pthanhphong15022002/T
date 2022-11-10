@@ -53,8 +53,8 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
         this.dialog?.formModel?.gridViewName
       )
       .subscribe((res) => {
-        this.grvSetup = res;
-        console.log('form model', this.formModel);
+        // this.grvSetup = res;
+        // console.log('form model', this.formModel);
       });
   }
 
@@ -87,11 +87,9 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
   handleOnSaveEmployeeContactInfo(){
     this.hrService.saveEmployeeContactInfo(this.data).subscribe(p => {
       if(p === "True"){
-
+        this.notitfy.notifyCode('SYS007')
       }
-      else{
-        
-      }
+      else this.notitfy.notifyCode('DM034')
     })
   }
 

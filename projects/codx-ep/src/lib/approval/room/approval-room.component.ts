@@ -205,6 +205,14 @@ export class ApprovalRoomsComponent extends UIComponent {
     });
      
   }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
       event.forEach(func => {       

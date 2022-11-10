@@ -28,15 +28,25 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-start " (click)="openFormShare(controlShare)">
                     <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
-                        <span class="symbol symbol-12px symbol-circle">
+                        <!-- <span class="symbol-12px symbol-circle">
                             <img *ngIf="shareIcon" src="assets/themes/sys/default/img/{{shareIcon}}" />
                         </span>
                         <span class="fs-7 ms-1">{{shareText}}</span>
-                        <i class="icon-arrow_drop_down icon-18 text-dark"></i>
+                        <i class="icon-arrow_drop_down icon-18 text-dark"></i> -->
+                        <codx-vll 
+                            [name]="'L1901'" 
+                            [value]="shareControl" 
+                            [showText]="true" 
+                            [showIcon]="true" 
+                            [path]="'assets/themes/sys/default/img/'"
+                            [icoCss]="'symbol-12px symbol-circle'"
+                            [showBgColor]="true">
+                        </codx-vll>
+                        <i class="icon-arrow_drop_down icon-18 text-dark"></i> 
                     </div>
                     <div class="ms-2">
                         <div class="fs-6">
-                            <span class="me-2" [innerHTML]="shareWith"></span>
+                            <span class="me-2" [innerHTML]="shareName"></span>
                         </div>
                     </div>
 
@@ -64,25 +74,26 @@
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-emoji">
-                    <button (click)="toggleEmojiPicker()" type="button" data-toggle="tooltip" title="Cảm xúc"
+                    <button (click)="clickEmoji()" type="button" data-toggle="tooltip" title="Cảm xúc"
                         class="btn btn-icon btn-md ms-2 btn-emoji">
                         <i class="icon-tag_faces icon-24 text-warning"></i>
                     </button>
                     <ng-container *ngIf="showEmojiPicker">
                         <div class="emoji">
-                            <emoji-mart [showSingleCategory]="true" [showPreview]="false" [set]="set" [perLine]="7"
+                            <emoji-mart [showSingleCategory]="true" 
+                            [showPreview]="false" [set]="emojiMode" [perLine]="7"
                                 (emojiSelect)="addEmoji($event)"></emoji-mart>
                         </div>
                     </ng-container>
                 </div>
                 <div>
-                    <button (click)="tagUser()" type="button" data-toggle="tooltip" title="Gắn thẻ"
+                    <button (click)="clickTagsUser()" type="button" data-toggle="tooltip" title="Gắn thẻ"
                         class="btn btn-icon btn-md ms-2">
                         <i class="icon-local_offer icon-24 text-primary"></i>
                     </button>
                 </div>
                 <div class="btn-upload">
-                    <button (click)="uploadFile()" type="button" data-toggle="tooltip" title="Hình ảnh"
+                    <button (click)="clickUploadFile()" type="button" data-toggle="tooltip" title="Hình ảnh"
                         class="btn btn-icon btn-md ms-2 ng-star-inserted">
                         <i class="icon-photo icon-24 text-success"></i>
                     </button>
@@ -131,8 +142,8 @@
             </div>
             <div class="d-none">
                 <codx-attachment #atmEdit objectType="WP_Comments" hideFolder="1" hideUploadBtn="1" hideDes="1"
-                    type="inline" [showMessage]="0" allowExtensions=".jpg,.png" allowMultiFile="1"
-                    (fileCount)="getfileCount($event)" idBrowse="atmEdit" [functionID]="dialogRef.formModel.funcID">
+                    type="inline" [showMessage]="0" allowExtensions=".jpg,.png,.mp4" allowMultiFile="1"
+                    (fileAdded)="getfileCount($event)" idBrowse="atmEdit" [functionID]="dialogRef.formModel.funcID">
                 </codx-attachment>
             </div>
         </div>
@@ -253,16 +264,21 @@
 <ng-template #controlShare let-dialog>
     <ng-container *ngIf="dialogData.status == STATUS.EDIT;else creat_share">
         <codx-share [dialog]="dialog" [multiple]="false" [dataShare]="dataEdit.permissions"
-            (eventApply)="eventApply($event)">
+            (eventApply)="addPerrmisson($event)">
         </codx-share>
     </ng-container>
     <ng-template #creat_share>
-        <codx-share [dialog]="dialog" [multiple]="false" listName="WP001" (eventApply)="eventApply($event)">
+        <codx-share [dialog]="dialog" [multiple]="false" listName="WP001" (eventApply)="addPerrmisson($event)">
         </codx-share>
     </ng-template>
 </ng-template>
 <ng-container #controlTag *ngIf="showCBB">
-    <codx-combobox-popup [comboboxName]="'Users'" [field]="'tagUser'" [multiple]="true" [width]="width"
-        [height]="height" [value]="''" (clickSave)="saveAddUser($event)">
+    <codx-combobox-popup 
+        [comboboxName]="'Users'" 
+        [field]="'tagUser'" 
+        [multiple]="true" 
+        [width]="width"
+        [height]="height" 
+        (clickSave)="addTagsUser($event)">
     </codx-combobox-popup>
 </ng-container>

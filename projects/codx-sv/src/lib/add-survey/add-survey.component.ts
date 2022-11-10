@@ -242,19 +242,26 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   itemActive: any;
-  clickToScroll(seqNoSession = null, seqNoQuestion = null, category = null) {
-    var seqNo = 0;
-    if (category == 'S') seqNo = seqNoSession;
-    else seqNo = seqNoQuestion;
-    var html = document.getElementById(`card-survey-${seqNo}`);
+  clickToScroll(seqNoSession = null, recIDQuestion = null, category = null) {
+    var recID = 0;
+    var id = 'card-survey';
+    if (category == 'S') recID = seqNoSession;
+    else {
+      recID = recIDQuestion;
+      id = 'card-survey-question';
+    }
+    var html = document.getElementById(`${id}-${recID}`);
     var htmlE = html as HTMLElement;
     var htmlMF = document.querySelector('.moreFC');
     if (htmlMF)
       htmlMF.setAttribute('style', `top: calc(${htmlE?.offsetTop}px - 151px);`);
-    this.activeCard(seqNoSession, seqNoQuestion, category);
+    this.activeCard(seqNoSession, recIDQuestion, category);
   }
 
-  activeCard(seqNoSession, seqNoQuestion, category) {
+  indexSessionA = 0;
+  indexQuestionA = 0;
+  activeCard(seqNoSession, recIDQuestion, category) {
+    this.indexSessionA = seqNoSession;
     this.questions.forEach((x) => {
       if (x['active'] == true) x['active'] = false;
       x.children.forEach((y) => {
@@ -272,7 +279,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     } else {
       this.questions[seqNoSession].children.forEach((x) => {
         if (x['active'] == true) x['active'] = false;
-        if (x.seqNo == seqNoQuestion) {
+        if (x.recID == recIDQuestion) {
           x['active'] = true;
           this.itemActive = x;
         }
@@ -281,7 +288,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   addAnswer(indexSession, indexQuestion) {
-    var data = JSON.parse(JSON.stringify(this.questions[indexSession].children[indexQuestion]));
+    var data = JSON.parse(
+      JSON.stringify(this.questions[indexSession].children[indexQuestion])
+    );
     data?.answers.filter((x) => x.other == false);
     var seqNo = data?.answers.length;
     var dataAnswerTemp = {
@@ -291,9 +300,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       isColumn: false,
       hasPicture: false,
     };
-    var index = data.answers.findIndex(
-      (x) => x.other == true
-    );
+    var index = data.answers.findIndex((x) => x.other == true);
     if (index >= 0) {
       var dataOtherTemp = {
         seqNo: seqNo - 1,
@@ -302,27 +309,27 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         isColumn: false,
         hasPicture: false,
       };
-      data.answers.splice(
-        seqNo - 1,
-        0,
-        dataOtherTemp
-      );
+      data.answers.splice(seqNo - 1, 0, dataOtherTemp);
       data.answers[index + 1].seqNo = seqNo;
     } else data.answers.push(dataAnswerTemp);
     this.questions[indexSession].children[indexQuestion] = data;
+    console.log('check question after addAnswer', this.questions);
   }
 
   deleteAnswer(indexSession, indexQuestion, dataAnswer) {
     var data = JSON.parse(
-      JSON.stringify(this.questions[indexSession].children[indexQuestion].answers)
+      JSON.stringify(
+        this.questions[indexSession].children[indexQuestion].answers
+      )
     );
     data = data.filter((x) => x.seqNo != dataAnswer.seqNo);
     data.forEach((x, index) => {
       x.seqNo = index;
     });
     this.questions[indexSession].children[indexQuestion].answers = data;
-    if (dataAnswer.other) this.questions[indexSession].children[indexQuestion].other = false;
-    console.log("check questions", this.questions)
+    if (dataAnswer.other)
+      this.questions[indexSession].children[indexQuestion].other = false;
+    console.log('check questions', this.questions);
   }
 
   deleteCard(dataQuestion) {
@@ -337,7 +344,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   addOtherAnswer(indexSession, indexQuestion) {
-    var seqNo = this.questions[indexSession].children[indexQuestion].answers?.length;
+    var seqNo =
+      this.questions[indexSession].children[indexQuestion].answers?.length;
     var dataAnswerTemp = {
       seqNo: seqNo,
       answer: '',
@@ -346,7 +354,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       hasPicture: false,
     };
     var data = JSON.parse(
-      JSON.stringify(this.questions[indexSession].children[indexQuestion].answers)
+      JSON.stringify(
+        this.questions[indexSession].children[indexQuestion].answers
+      )
     );
     data.push(dataAnswerTemp);
     this.questions[indexSession].children[indexQuestion]!.answers = data;
@@ -378,12 +388,12 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     if (functionID) {
       switch (functionID) {
         case 'LTN01':
-          this.addCard('Q', this.itemActive);
+          this.addCard('Q', this.itemActive, this.indexSessionA);
           break;
         case 'LTN02':
           break;
         case 'LTN03':
-          this.addCard('T', this.itemActive);
+          this.addCard('T', this.itemActive, this.indexSessionA);
           break;
         case 'LTN04':
           this.uploadFile('image', 'upload');
@@ -392,7 +402,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           this.uploadFile('video', 'upload');
           break;
         case 'LTN06':
-          this.addCard('S', this.itemActive);
+          this.addCard('S', this.itemActive, this.indexSessionA);
           break;
       }
     }
@@ -433,37 +443,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     });
   }
 
-  async selectedImage(e, attachmentEle) {
-    // let obj = JSON.parse(JSON.stringify(this.questions));
-    // this.generateGuid();
-    // let recID = JSON.parse(JSON.stringify(this.guidID));
-    // obj[this.itemActive.seqNo].recID = recID;
-    // e.data[0].objectID = recID;
-    // let files = e.data;
-    // // up file
-    // if (files.length > 0) {
-    //   files.map((dt: any) => {
-    //     if (dt.mimeType.indexOf('image') >= 0) {
-    //       dt['referType'] = this.REFER_TYPE.IMAGE;
-    //     } else if (dt.mimeType.indexOf('video') >= 0) {
-    //       dt['referType'] = this.REFER_TYPE.VIDEO;
-    //     } else {
-    //       dt['referType'] = this.REFER_TYPE.APPLICATION;
-    //     }
-    //   });
-    //   this.lstEditIV.push(files[0]);
-    // }
-    // if (files) {
-    //   this.ATM_Image.objectId = recID;
-    // }
-    // (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
-    //   if (result) {
-    //     this.uploadImage(this.itemActive, attachmentEle);
-    //   }
-    // });
-    // this.change.detectChanges();
-  }
-
   GUID: any;
   generateGuid() {
     var d = new Date().getTime(); //Timestamp
@@ -490,8 +469,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
   }
 
-  addCard(category, dataQuestion) {
+  addCard(category, dataQuestion, seqNoSession = null) {
     if (dataQuestion) {
+      this.generateGuid();
       var dataAnswerTemp = {
         seqNo: 0,
         answer: 'Tùy chọn 1',
@@ -505,19 +485,38 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         tempQuestion.answerType = null;
         tempQuestion.question = null;
       } else {
-        tempQuestion.answers = dataAnswerTemp;
+        tempQuestion.answers = [dataAnswerTemp];
         tempQuestion.answerType = 'O';
         tempQuestion.question = 'Câu hỏi';
       }
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
       tempQuestion.category = category;
-      this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
-      this.questions.forEach((x, index) => (x.seqNo = index));
-      this.questions[dataQuestion.seqNo].active = false;
-      this.questions[dataQuestion.seqNo + 1].active = true;
-      this.itemActive = this.questions[dataQuestion.seqNo + 1];
-      this.clickToScroll(dataQuestion.seqNo + 1, category);
+      tempQuestion.recID = this.GUID;
+      if (category == 'S') {
+        this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
+        this.questions.forEach((x, index) => (x.seqNo = index));
+        this.questions[dataQuestion.seqNo].active = false;
+        this.questions[dataQuestion.seqNo + 1].active = true;
+        this.itemActive = this.questions[dataQuestion.seqNo + 1];
+      } else {
+        this.questions[seqNoSession].children.splice(
+          dataQuestion.seqNo + 1,
+          0,
+          tempQuestion
+        );
+        this.questions[seqNoSession].children.forEach(
+          (x, index) => (x.seqNo = index)
+        );
+        this.questions[seqNoSession].children[dataQuestion.seqNo].active =
+          false;
+        this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
+          true;
+        this.itemActive =
+          this.questions[seqNoSession].children[dataQuestion.seqNo + 1];
+      }
+      this.clickToScroll(seqNoSession, this.GUID, category);
     }
+    this.change.detectChanges();
     console.log('check addCard', this.questions);
   }
 
@@ -551,16 +550,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   clickQuestionMF(indexSession, indexQuestion, answerType) {
     if (answerType) {
       var data = JSON.parse(
-        JSON.stringify(
-          this.questions[indexSession].children[indexQuestion]
-        )
+        JSON.stringify(this.questions[indexSession].children[indexQuestion])
       );
       data.answerType = answerType;
       if (
         answerType == 'T' ||
         answerType == 'T2' ||
         answerType == 'D' ||
-        answerType == 'H'
+        answerType == 'H' ||
+        answerType == 'R' ||
+        answerType == 'O2' ||
+        answerType == 'C2'
       ) {
         data.other = false;
         data.answers = new Array();
@@ -579,5 +579,12 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       }
       this.questions[indexSession].children[indexQuestion] = data;
     }
+  }
+
+  valueFrom = 1;
+  valueTo = 5;
+  changeRating(value, type) {
+    if (type == 'FROM') this.valueFrom = value;
+    else this.valueTo = value;
   }
 }

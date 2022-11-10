@@ -2,25 +2,20 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Injector,
   Input,
   OnInit,
   Optional,
-  Output,
   ViewChild,
 } from '@angular/core';
 import { Post } from '@shared/models/post';
 import 'lodash';
-import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile, Util } from 'codx-core';
+import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile, Util } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
-import { Observable, of, Subscriber } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-addpost',
@@ -28,7 +23,7 @@ import { Observable, of, Subscriber } from 'rxjs';
   styleUrls: ['./popup-add.component.scss'],
 
 })
-export class PopupAddPostComponent implements OnInit, AfterViewInit {
+export class PopupAddPostComponents implements OnInit, AfterViewInit {
 
   data: any;
   message: string = '';
@@ -42,10 +37,13 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   shareText: string = "";
   shareControl: string = "";
   objectType: string = "";
-  shareWith: string = "";
+  shareName: string = "";
   permissions: any[] = [];
   mssgNoti:string = "";
-
+  showCBB = false;
+  tagWith: string = '';
+  tags: any[] = [];
+  lstTagUser: any[] = [];
   @ViewChild('atmCreate') atmCreate: AttachmentComponent;
   @ViewChild('atmEdit') atmEdit: AttachmentComponent;
   @ViewChild('codxFileCreated') codxFileCreated: ImageGridComponent;
@@ -86,21 +84,13 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
   objectName = '';
   dataShare: Post = null;
   dataEdit: Post = null;
-  sets = [
-    'native',
-    'google',
-    'twitter',
-    'facebook',
-    'emojione',
-    'apple',
-    'messenger'
-  ]
-  set = 'apple';
+  emojiMode = 'apple';
   status: string = "";
   dialogData: any;
   dialogRef: DialogRef;
   listFileUpload:any[] = [];
-
+  width = 720;
+  height = window.innerHeight;
   @Input() isShow: boolean;
   constructor(
     private dt: ChangeDetectorRef,
@@ -131,9 +121,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
       this.message = this.dataEdit.content;
       this.permissions = this.dataEdit.permissions;
       this.shareControl = this.dataEdit.shareControl;
-      this.shareIcon = this.dataEdit.shareIcon;
-      this.shareText = this.dataEdit.shareText;
-      this.shareWith = this.dataEdit.shareName;
     }
     else
     {
@@ -150,57 +137,15 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     this.getMessageNoti("SYS009");
     this.dt.detectChanges();
   }
-
-  getValueShare(shareControl: string, data: any[] = null) {
-    let listPermission = data;
-    this.cache.valueList('L1901').subscribe((vll: any) => {
-      let modShare = vll.datas.find((x: any) => x.value == shareControl);
-      this.shareControl = shareControl;
-      this.shareIcon = modShare.icon;
-      this.shareText = modShare.text;
-      if (listPermission) {
-        this.permissions = []
-        this.shareWith = "";
-        switch (this.shareControl) {
-          case this.SHARECONTROLS.OWNER:
-          case this.SHARECONTROLS.EVERYONE:
-          case this.SHARECONTROLS.MYGROUP:
-          case this.SHARECONTROLS.MYTEAM:
-          case this.SHARECONTROLS.MYDEPARMENTS:
-          case this.SHARECONTROLS.MYDIVISION:
-          case this.SHARECONTROLS.MYCOMPANY:
-            break;
-          case this.SHARECONTROLS.OGRHIERACHY:
-          case this.SHARECONTROLS.DEPARMENTS:
-          case this.SHARECONTROLS.POSITIONS:
-          case this.SHARECONTROLS.ROLES:
-          case this.SHARECONTROLS.GROUPS:
-          default:
-            listPermission.forEach((x: any) => {
-              let p = new Permission();
-              p.objectType = this.objectType;
-              p.objectID = x.id;
-              p.objectName = x.text;
-              p.memberType = this.MEMBERTYPE.SHARE;
-              this.permissions.push(p);
-            });
-            if (listPermission.length > 1) {
-              this.cache.message('WP002').subscribe((mssg: any) => {
-                if (mssg)
-                  this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + listPermission[0].text + '</b>', listPermission.length - 1, this.shareText);
-              });
-            }
-            else {
-              this.cache.message('WP001').subscribe((mssg: any) => {
-                if (mssg)
-                  this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + listPermission[0].text + '</b>');
-              });
-            }
-        }
+  getMessageNoti(mssgCode:string){
+    this.cache.message(mssgCode).subscribe((mssg:any) =>{
+      if(mssg?.defaultName){
+        this.mssgNoti = mssg.defaultName;
+        this.dt.detectChanges();
       }
-      this.dt.detectChanges();
-    });
+    })
   }
+  
   click() {
     switch (this.dialogData.status) {
       case this.STATUS.EDIT:
@@ -226,11 +171,52 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges();
   }
-
-  eventApply(event: any) {
+  getValueShare(shareControl: string, data: any[] = null) {
+    if (data.length > 0) {
+      this.permissions = []
+      this.shareName = "";
+      switch (shareControl) {
+        case this.SHARECONTROLS.OWNER:
+        case this.SHARECONTROLS.EVERYONE:
+        case this.SHARECONTROLS.MYGROUP:
+        case this.SHARECONTROLS.MYTEAM:
+        case this.SHARECONTROLS.MYDEPARMENTS:
+        case this.SHARECONTROLS.MYDIVISION:
+        case this.SHARECONTROLS.MYCOMPANY:
+          break;
+        case this.SHARECONTROLS.OGRHIERACHY:
+        case this.SHARECONTROLS.DEPARMENTS:
+        case this.SHARECONTROLS.POSITIONS:
+        case this.SHARECONTROLS.ROLES:
+        case this.SHARECONTROLS.GROUPS:
+        default:
+          data.forEach((x: any) => {
+            let p = new Permission();
+            p.objectType = this.objectType;
+            p.objectID = x.id;
+            p.objectName = x.text;
+            p.memberType = this.MEMBERTYPE.SHARE;
+            this.permissions.push(p);
+          });
+          if (data.length > 1) {
+            this.cache.message('WP002').subscribe((mssg: any) => {
+              if (mssg)
+                this.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1, data[0].objectName);
+            });
+          }
+          else {
+            this.cache.message('WP001').subscribe((mssg: any) => {
+              if (mssg)
+                this.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+            });
+          }
+      }
+    }
+    this.dt.detectChanges();
+  }
+  addPerrmisson(event: any) {
     if (!event) return;
     this.shareControl = event[0].objectType;
-    this.objectType = event[0].objectType;
     this.getValueShare(this.shareControl, event);
   }
 
@@ -243,22 +229,27 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     var post = new Post();
     post.content = this.message;
     post.shareControl = this.shareControl;
-    post.objectType = this.objectType;
     post.category = this.CATEGORY.POST;
-    post.approveControl = "0"; // không qua xét duyệt
+    post.approveControl = "0";
     post.refType = this.entityName;
     post.permissions = this.permissions;
-    post.listTag = this.tags;
+    post.createdBy = this.user.userID;
+    post.createdName = this.user.userName;
+    post.createdOn = new Date();
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe(async (result: any) => {
         if (result) {
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
             this.listFileUpload.map((e: any) => {
-              e.objectId = this.atmCreate.objectId;
+              if (e.mimeType.indexOf('image') >= 0) {
+                e.referType = "image";
+              } else if (e.mimeType.indexOf('video') >= 0) {
+                e.referType = "video";
+              }
             })
-            this.atmCreate.fileUploadList = [...this.listFileUpload];
             result.files = [...this.listFileUpload];
+            this.atmCreate.fileUploadList = this.listFileUpload;
             (await this.atmCreate.saveFilesObservable()).subscribe((res: any) => {
               if (res) 
               {
@@ -291,14 +282,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  getMessageNoti(mssgCode:string){
-    this.cache.message(mssgCode).subscribe((mssg:any) =>{
-      if(mssg && mssg?.defaultName){
-        this.mssgNoti = mssg.defaultName;
-        this.dt.detectChanges();
-      }
-    })
-  }
+  
   async editPost() {
     if (!this.message) {
       let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
@@ -307,11 +291,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     }
     this.dataEdit.content = this.message;
     this.dataEdit.shareControl = this.shareControl;
-    this.dataEdit.shareIcon = this.shareIcon;
-    this.dataEdit.shareText = this.shareText;
-    this.dataEdit.shareName = this.shareWith;
     this.dataEdit.permissions = this.permissions;
-    this.dataEdit.listTag = this.tags;
     if (this.listFileUpload.length > 0) {
       this.atmEdit.objectId = this.dataEdit.recID;
       this.dmSV.fileUploadList = this.listFileUpload;
@@ -354,8 +334,10 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     post.refID = this.dataShare.recID;
     post.refType = this.entityName;
     post.shares = this.dataShare;
-    post.listTag = this.tags;
     post.permissions = this.permissions;
+    post.createdBy = this.user.userID;
+    post.createdName = this.user.userName;
+    post.createdOn = new Date();
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe(async (result: any) => {
         if (result) {
@@ -394,13 +376,12 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
         }
       });
   }
-  width = 720;
-  height = window.innerHeight;
+  
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
 
-  toggleEmojiPicker() {
+  clickEmoji() {
     this.showEmojiPicker = !this.showEmojiPicker;
     this.dt.detectChanges();
   }
@@ -408,8 +389,7 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     this.message += event.emoji.native;
     this.dt.detectChanges();
   }
-  uploadFile() {
-    this.dmSV.fileUploadList = [];
+  clickUploadFile() {
     if (this.dialogData.status == this.STATUS.EDIT) {
       this.atmEdit.uploadFile();
     }
@@ -417,9 +397,9 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
       this.atmCreate.uploadFile();
     }
   }
-
   getfileCount(event: any) {
     if (event && event?.data?.length > 0) {
+      debugger;
       if (this.dialogData.status == this.STATUS.EDIT) {
         this.codxFileEdit.addFiles(event.data);
       }
@@ -429,7 +409,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges();
   }
-
   removeFile(file: any) {
     switch (this.dialogData.status) {
       case this.STATUS.EDIT:
@@ -442,7 +421,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges();
   }
-
   deleteFile(fileID: string, deleted: boolean) {
     if (fileID) {
       this.api.execSv(
@@ -476,7 +454,6 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     if (this.listFileUpload.length == 0) {
       this.listFileUpload = [];
     }
-    // this.listFileUpload = this.listFileUpload.concat(files);
     files.map((f:any)=>{
       let isExist = this.listFileUpload.some((e:any)=>  e.fileName == f.fileName);
       if(!isExist)
@@ -484,16 +461,12 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
         this.listFileUpload.push(f);
       }
     });
-    // this.listFileUpload.push(files);
     this.dt.detectChanges();
   }
-
-  showCBB = false;
-  tagWith: string = '';
-  tags: any[] = [];
-  lstTagUser: any[] = [];
-  searchTagUser: string = "";
-  saveAddUser(value: any) {
+  clickTagsUser() {
+    this.showCBB = !this.showCBB;
+  }
+  addTagsUser(value: any) {
     let data = value.dataSelected;
     if (data && data.length > 0) {
       this.tags = [];
@@ -520,8 +493,4 @@ export class PopupAddPostComponent implements OnInit, AfterViewInit {
     this.showCBB = !this.showCBB;
     this.dt.detectChanges();
   }
-  tagUser() {
-    this.showCBB = !this.showCBB;
-  }
-
 }

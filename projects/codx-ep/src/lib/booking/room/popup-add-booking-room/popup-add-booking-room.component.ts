@@ -21,6 +21,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
   UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -490,7 +491,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
-    if(!this.isAdd){
+    if((this.isAdd && this.data.resourceID!=null) || !this.isAdd){
       this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
         if(res){
           this.roomCapacity= res.capacity;
@@ -542,7 +543,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     return '';
   }
 
-  beforeSave(option: any) {
+  beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [
@@ -556,6 +557,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {   
+    let roleCheck=0;
+    if(this.curUser.roleType!="1"){
+      this.attendeesList.forEach(item=>{
+        if(item.roleType=="1"){
+          roleCheck=roleCheck+1;        
+        }      
+      });
+      if(roleCheck<1){
+        this.notificationsService.notify('Chưa có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
+        return;
+      }
+    }
+    
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -563,8 +577,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.fGroupAddBookingRoom,
         this.formModel
       );
+      return;
     }
     if (!this.bookingOnCheck()) {
+      this.notificationsService.notifyCode('EP001');
+      return;
+    }
+    if (this.data.startDate< new Date()) {
       this.notificationsService.notifyCode('EP001');
       return;
     }
@@ -670,7 +689,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
   startSave(approval) {
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
+      .save((opt: RequestOption) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe(async (res) => {
         if (res.save || res.update) {
           if (!res.save) {
@@ -690,7 +709,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
           if (approval) {
             (
-              await this.codxEpService.getCategoryByEntityName(
+              this.codxEpService.getCategoryByEntityName(
                 this.formModel.entityName
               )
             ).subscribe((res: any) => {
@@ -724,6 +743,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.dialogRef && this.dialogRef.close(this.returnData);
           }
         } else {
+          
           return;
         }
       });
@@ -964,7 +984,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   UpdateAttendeesList() {
-    this.attendeesList = [];
     if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
       this.lstUser.forEach((item) => {
         this.attendeesList.push(item);
@@ -986,7 +1005,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
       }
     });
-    this.data.attendees = this.attendeesList.length + 1;
+    
     this.changeDetectorRef.detectChanges();
   }
 
@@ -1037,7 +1056,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
     if (event?.dataSelected) {
       this.lstUser = [];
-      this.attendeesList = [];
       event.dataSelected.forEach((people) => {
         let tempAttender = new BookingAttendees();
         tempAttender.userID = people.UserID;
@@ -1051,27 +1069,26 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             tempAttender.roleName = element.text;
           }
         });
-        this.lstUser.push(tempAttender);
+        this.attendeesList.push(tempAttender);
       });
-
-      if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
-        for (let i = 0; i < this.lstUser.length; ++i) {
-          for (let j = 0; j < this.lstUserOptional.length; ++j) {
-            if (this.lstUser[i].userID == this.lstUserOptional[j].userID) {
-              this.lstUserOptional.splice(j, 1);
-            }
-          }
+      this.attendeesList.forEach((item) => {
+        if (item.userID == this.curUser.userID) {
+          this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
         }
-      }
-      this.UpdateAttendeesList();
+      });
+      this.attendeesList=this.filterArray(this.attendeesList);
+      this.data.attendees = this.attendeesList.length + 1;
       this.changeDetectorRef.detectChanges();
       let tmpDataCBB='';
-      this.attendeesList.forEach(item=>{
-        tmpDataCBB=tmpDataCBB+";"+item.userID;        
-      });
+      // this.attendeesList.forEach(item=>{
+      //   tmpDataCBB=tmpDataCBB+";"+item.userID;        
+      // });
       this.cbbDataUser=tmpDataCBB;
       this.isPopupUserCbb = false;
     }
+  }
+  filterArray(arr) {
+    return [...new Map(arr.map(item => [item["userID"], item])).values()];
   }
   //Stationery & Room
   valueCbxRoomChange(event?) {
@@ -1104,7 +1121,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.isPopupStationeryCbb = false;
       return;
     }
-    this.lstStationery = [];
     event.dataSelected.forEach((item) => {
       let tempStationery: {
         id: string;
@@ -1123,6 +1139,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       };
       this.lstStationery.push(tempStationery);
     });
+    this.lstStationery=[...new Map(this.lstStationery.map(item => [item["id"], item])).values()]
 
     this.changeDetectorRef.detectChanges();
     this.isPopupStationeryCbb = false;
@@ -1149,12 +1166,26 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
   
   showPopover(p, userID) {
-    if (this.popover) this.popover.close();
+    // if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
     p.open();
     this.popover = p;
   }
   selectRoseType(idUserSelected, value) {
+    if(value=="1"){
+      let checkRole=true;
+      this.attendeesList.forEach(att=>{
+        if(att.roleType == value || this.curUser.roleType== value){
+          checkRole=false;          
+        }      
+      });
+      if(!checkRole){
+        //this.notificationsService.notifyCode('');
+        this.notificationsService.notify('Đã có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
+        //this.popover.close();
+        return;
+      }
+    }
     if(idUserSelected==this.curUser.userID){
       this.curUser.roleType=value;
       this.listRoles.forEach((role) => {
