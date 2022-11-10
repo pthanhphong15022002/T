@@ -1,3 +1,4 @@
+import { TestOMComponent } from './testOM/testOM.component';
 import { PopupAddQuotaComponent } from './settings/stationery/popup-add-quota/popup-add-quota.component';
 import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
@@ -83,6 +84,10 @@ const routes: Route[] = [
       {
         path: 'cardtrans/:funcID',
         component: CardTransComponent,
+      },
+      {
+        path: 'testOM/:funcID',
+        component: TestOMComponent,
       },
       {
         path: 'settings',
@@ -172,6 +177,7 @@ const Components: Type<any>[] = [
   PopupUpdateQuantityComponent,
   PopupAddCardTransComponent,
   PopupDriverAssignComponent,
+  TestOMComponent,
 ];
 
 @NgModule({
