@@ -58,7 +58,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('attachment2') attachment2: AttachmentComponent;
+  @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
   process?: BP_Processes;
   showButtonAdd = true;
   dataObj?: any;
@@ -96,6 +96,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   vllInterval = 'VL004';
   dataFile: any;
   crrParentID = '';
+  kanban: any;
 
   constructor(
     inject: Injector,
@@ -170,7 +171,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    console.log('after view');
     this.views = [
       {
         type: ViewType.content,
@@ -205,6 +205,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -231,7 +232,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             false
           );
         else {
-          let kanban = (this.view.currentView as any).kanban;
+          if ((this.view.currentView as any)?.kanban)
+            this.kanban = (this.view.currentView as any).kanban;
           this.notiService.notifyCode('SYS006');
           var processStep = e?.event;
           if (processStep.stepType != 'P') {
@@ -241,26 +243,28 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                   obj.items.push(processStep);
                 }
               });
-              if (kanban) kanban.addCard(processStep);
+              if (this.kanban) this.kanban.addCard(processStep);
             } else {
               this.view.dataService.data.forEach((obj) => {
                 if (obj.items.length > 0) {
                   obj.items.forEach((dt) => {
                     if (dt.recID == processStep?.parentID) {
                       dt.items.push(processStep);
-                      if (kanban) kanban.updateCard(dt);
+                      if (this.kanban) this.kanban.updateCard(dt);
                     }
                   });
                 }
               });
             }
-          } else { 
-            if (kanban) {
+          } else {
+            if (this.kanban) {
               var column = new ColumnsModel();
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
-               let index = kanban?.columns?.length  ? kanban?.columns?.length : 0 ;
-              kanban.addColumn(column,index)
+              let index = this.kanban?.columns?.length
+                ? this.kanban?.columns?.length
+                : 0;
+              this.kanban.addColumn(column, index);
             }
 
             this.view.dataService.data.push(processStep);
@@ -302,7 +306,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               false
             );
           else {
-            let kanban = (this.view.currentView as any).kanban;
+            if ((this.view.currentView as any)?.kanban)
+              this.kanban = (this.view.currentView as any).kanban;
             var processStep = e?.event;
             if (data.items?.length > 0) processStep.items = data.items;
             var index = -1;
@@ -310,7 +315,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               //edit activity
               if (processStep.stepType == 'A') {
                 this.editActivity(data, processStep);
-                if (kanban) kanban.updateCard(processStep);
+                if (this.kanban) this.kanban.updateCard(processStep);
               } else {
                 //edit !P !A hơi bị nhằn
                 this.editStepChild(data, processStep);
@@ -364,7 +369,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   editStepChild(data, processStep) {
     //khong doi parent
-    let kanban = (this.view.currentView as any).kanban;
+    if ((this.view.currentView as any)?.kanban)
+      this.kanban = (this.view.currentView as any).kanban;
     this.view.dataService.data.forEach((obj) => {
       var index = -1;
       index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
@@ -375,7 +381,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         );
         if (indexChild != -1) {
           dataParents.items[indexChild] = processStep;
-          if (kanban) kanban.updateCard(dataParents);
+          if (this.kanban) this.kanban.updateCard(dataParents);
         }
         obj.items[index] = dataParents;
       }
@@ -411,29 +417,39 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             false
           );
         else {
+          if ((this.view.currentView as any)?.kanban)
+            this.kanban = (this.view.currentView as any).kanban;
           var processStep = e?.event;
           if (processStep.stepType != 'P') {
-            let kanban = (this.view.currentView as any).kanban;
             if (processStep.stepType == 'A') {
               this.view.dataService.data.forEach((obj) => {
                 if (obj.recID == processStep?.parentID) {
                   obj.items.push(processStep);
                 }
               });
-              if (kanban) kanban.addCard(processStep);
+              if (this.kanban) this.kanban.addCard(processStep);
             } else {
               this.view.dataService.data.forEach((obj) => {
                 if (obj.items.length > 0) {
                   obj.items.forEach((dt) => {
                     if (dt.recID == processStep?.parentID) {
                       dt.items.push(processStep);
-                      if (kanban) kanban.updateCard(dt);
+                      if (this.kanban) this.kanban.updateCard(dt);
                     }
                   });
                 }
               });
             }
           } else {
+            if (this.kanban) {
+              var column = new ColumnsModel();
+              column.headerText = processStep.stepName;
+              column.keyField = processStep.recID;
+              let index = this.kanban?.columns?.length
+                ? this.kanban?.columns?.length
+                : 0;
+              this.kanban.addColumn(column, index);
+            }
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
@@ -450,9 +466,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       .delete([data], true, (opt) => this.beforeDel(opt))
       .subscribe((res) => {
         if (res) {
-          let kanban = (this.view.currentView as any).kanban;
+          if ((this.view.currentView as any)?.kanban)
+            this.kanban = (this.view.currentView as any).kanban;
           switch (data.stepType) {
             case 'P':
+              if (this.kanban) {
+                //remove cột
+                // this.kanban.remove(column, index);
+              }
               this.view.dataService.delete(data);
               this.view.dataService.data.forEach((dt) => {
                 if (dt.stepNo > data.stepNo) dt.stepNo--;
@@ -465,7 +486,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 if (obj.items.length > 0)
                   index = obj.items?.findIndex((x) => x.recID == data.recID);
                 if (index != -1) {
-                  if (kanban) kanban.removeCard(obj.items[index]);
+                  if (this.kanban) this.kanban.removeCard(obj.items[index]);
                   obj.items.splice(index, 1);
                   obj.items.forEach((dt) => {
                     if (dt.stepNo > data.stepNo) dt.stepNo--;
@@ -484,7 +505,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                       );
                     if (index != -1) {
                       child.items.splice(index, 1);
-                      if (kanban) kanban.updateCard(obj.items[index]);
+                      if (this.kanban) this.kanban.updateCard(obj.items[index]);
                       child.items.forEach((dt) => {
                         if (dt.stepNo > data.stepNo) dt.stepNo--;
                       });
@@ -623,6 +644,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
       this.changeDetectorRef.detectChanges();
     }
+    if (e?.view.type == 6) {
+      if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+      else this.kanban = (this.view.currentView as any).kanban;
+      this.changeDetectorRef.detectChanges();
+    }
   }
 
   //#endregion
@@ -745,10 +771,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.view.dataService.data[index].items = this.dataChild;
             this.dataTreeProcessStep = this.view.dataService.data;
             //up kanban
-            let kanban = (this.view.currentView as any).kanban;
-            if (kanban) {
+            if ((this.view.currentView as any)?.kanban)
+              this.kanban = (this.view.currentView as any).kanban;
+            if (this.kanban) {
               this.dataChild.forEach((obj) => {
-                kanban.updateCard(obj);
+                this.kanban.updateCard(obj);
               });
             }
 
@@ -812,11 +839,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.dataTreeProcessStep = this.view.dataService.data;
 
             //up kanban
-            let kanban = (this.view.currentView as any).kanban;
-            if (kanban) {
+            if ((this.view.currentView as any)?.kanban)
+              this.kanban = (this.view.currentView as any).kanban;
+            if (this.kanban) {
               var arrDataUpdate = previousDataChild.concat(crrDataChild);
               arrDataUpdate.forEach((obj) => {
-                kanban.updateCard(obj);
+                this.kanban.updateCard(obj);
               });
             }
 
@@ -855,18 +883,17 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
   //test data flow chart 636341e8e82afdc6f9a4ab54
   getFlowChart(recID) {
-    this.fileService.getFile('636c6412b02950a2d9f1db47').subscribe((data) => {
+    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
       if (data) this.dataFile = data;
     });
   }
   async addFile(evt: any) {
-    this.attachment2.uploadFile();
+    this.addFlowchart.uploadFile();
   }
   fileAdded(e) {
-    if(e && e?.data?.length > 0)  this.dataFile = e.data[0] ;
-    this.changeDetectorRef.detectChanges() ;
+    if (e && e?.data?.length > 0) this.dataFile = e.data[0];
+    this.changeDetectorRef.detectChanges();
   }
 
   getfileCount(e) {}
-
 }
