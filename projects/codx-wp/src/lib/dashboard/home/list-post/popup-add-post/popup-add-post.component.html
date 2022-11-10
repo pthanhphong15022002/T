@@ -1,0 +1,156 @@
+<codx-form
+ [headerText]="headerText" 
+ [body]="body" 
+ [footer]="footer" 
+ [dialog]="dialogRef">
+</codx-form>
+<ng-template #body>
+    <div class="body body-addpost">
+        <div class="d-flex">
+            <div class="body-user-img me-2">
+                <codx-img 
+                    [objectId]="data.createdBy" 
+                    [objectName]="data.createdName"
+                    objectType="AD_Users" 
+                    [width]="40">
+                </codx-img>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="d-flex align-items-center">
+                    <div class="user-name fw-bolder me-2">
+                        <span>{{data.createdName}}</span>
+                    </div>
+                    <ng-container *ngIf="data.tagName">
+                        <div [innerHTML]="data.tagName"></div>
+                    </ng-container>
+                </div>
+                <div class="d-flex align-items-center justify-content-start ">
+                    <ng-container *ngIf="data.shareControl">
+                        <div (click)="openControlShare(controlShare)" class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
+                            <codx-vll 
+                                [name]="'L1901'" 
+                                [value]="data.shareControl" 
+                                [showText]="true" 
+                                [showIcon]="true" 
+                                [path]="'assets/themes/sys/default/img/'"
+                                [icoCss]="'symbol-12px symbol-circle'"  
+                                [showBgColor]="true">
+                            </codx-vll>
+                            <i class="icon-arrow_drop_down icon-18 text-dark"></i> 
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="data.shareName">
+                        <div class="ms-2">
+                            <div class="fs-6">
+                                <span class="me-2" [innerHTML]="data.shareName"></span>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="addpost-scroll">
+            <!-- text -->
+            <div>
+                <codx-input 
+                    format="ed3" 
+                    [class]="'border-none'" 
+                    type="textarea" 
+                    [crrValue]="data.comments" 
+                    [placeholder]="placeholderText"
+                    (valueChange)="valueChange($event)">
+                </codx-input>
+            </div>
+            <!-- files -->
+            <div>
+                <codx-file 
+                    #codxFile
+                    [isNew]="true" 
+                    [funcID]="dialogRef.formModel.funcID"
+                    (removeFile)="removeFile($event)" 
+                    (addFile)="addFile($event)" 
+                    [edit]='true'>
+                </codx-file>
+            </div>
+            <!-- template share -->
+            <ng-container *ngIf="data.shares">
+                <div class="border-start border rounded-3 p-4">
+                </div>
+            </ng-container>
+        </div>
+        <!-- template emoji, tag, uploadFile -->
+        <div class="d-flex justify-content-between align-items-center body-function">
+            <div class="text-gray-500 fw-bold">
+                <codx-label [formModel]="dialogRef.formModel" name="lblMore" default="Thêm vào bài viết">
+                </codx-label>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-emoji">
+                    <button (click)="clickEmoji()" type="button" data-toggle="tooltip" title="Cảm xúc"
+                        class="btn btn-icon btn-md ms-2 btn-emoji">
+                        <i class="icon-tag_faces icon-24 text-warning"></i>
+                    </button>
+                    <ng-container *ngIf="showEmojiPicker">
+                        <div class="emoji">
+                            <emoji-mart [showSingleCategory]="true" 
+                            [showPreview]="false" [set]="emojiMode" [perLine]="7"
+                                (emojiSelect)="addEmoji($event)"></emoji-mart>
+                        </div>
+                    </ng-container>
+                </div>
+                <div>
+                    <button (click)="clickTagsUser()" type="button" data-toggle="tooltip" title="Gắn thẻ"
+                        class="btn btn-icon btn-md ms-2">
+                        <i class="icon-local_offer icon-24 text-primary"></i>
+                    </button>
+                </div>
+                <div class="btn-upload">
+                    <button (click)="clickUploadFile()" type="button" data-toggle="tooltip" title="Hình ảnh"
+                        class="btn btn-icon btn-md ms-2 ng-star-inserted">
+                        <i class="icon-photo icon-24 text-success"></i>
+                        <div class="d-none">
+                            <codx-attachment #codxATM 
+                                objectType="WP_Comments" 
+                                hideFolder="1" 
+                                hideUploadBtn="1" 
+                                hideDes="1" type="inline"
+                                allowExtensions=".jpg,.png" 
+                                allowMultiFile="1" 
+                                [showMessage]="0" 
+                                (fileCount)="getfileCount($event)"
+                                [functionID]="dialogRef.formModel.funcID">
+                            </codx-attachment>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-primary btn-post" (click)="submit()">
+            <codx-label formName="WP_Comments" name="lblSubmit"
+                [default]="dialogData.status == 'edit'? 'Lưu':'Đăng'">
+            </codx-label>
+        </button>
+    </div>
+</ng-template>
+<ng-template #controlShare let-dialog>
+    <codx-share 
+        [dialog]="dialog" 
+        [multiple]="false" 
+        listName="WP001" 
+        (eventApply)="addPerrmissonShares($event)">
+    </codx-share>
+</ng-template>
+<ng-container #controlTag *ngIf="showCBB">
+    <codx-combobox-popup 
+        [comboboxName]="'Users'" 
+        [field]="'tagUser'" 
+        [multiple]="true" 
+        [width]="width"
+        [height]="height" 
+        (clickSave)="addPerrmissonTags($event)">
+    </codx-combobox-popup>
+</ng-container>

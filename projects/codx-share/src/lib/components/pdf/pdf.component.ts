@@ -719,7 +719,7 @@ export class PdfComponent
               ? false
               : area.allowEditAreas == false
               ? false
-              : area.isLock;
+              : !area.isLock;
           if (isRender) {
             switch (area.labelType) {
               case 'S1': {
@@ -1096,7 +1096,7 @@ export class PdfComponent
           this.needAddKonva = textArea;
         } else {
           textArea.id(area.recID ? area.recID : textArea.id());
-          textArea.draggable(!area.allowEditAreas ? false : area.isLock);
+          textArea.draggable(!area.allowEditAreas ? false : !area.isLock);
           textArea.scale({
             x: area.location.width * this.xScale,
             y: area.location.height * this.yScale,
@@ -1151,7 +1151,7 @@ export class PdfComponent
             this.needAddKonva = imgArea;
           } else {
             imgArea.id(area.recID);
-            imgArea.draggable(!area.allowEditAreas ? false : area.isLock);
+            imgArea.draggable(!area.allowEditAreas ? false : !area.isLock);
             imgArea.scale({
               x: this.xScale * area.location.width,
               y: this.yScale * area.location.height,
