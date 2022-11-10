@@ -27,7 +27,7 @@
                 </div>
                 <ng-container>
                   <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
-                    (click)="removeUserRight(i)">
+                    (click)="removeUser(i)">
                     <i class="icon-close text-danger icon-16"></i>
                   </div>
                 </ng-container>
@@ -35,6 +35,11 @@
             </ng-container>
           </div>
         </div>
+        <div class="add-user" >
+          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
+              (valueChange)="changUsers($event)">
+          </codx-input>
+      </div>
       </div>
       <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
         <div class="role-right">
