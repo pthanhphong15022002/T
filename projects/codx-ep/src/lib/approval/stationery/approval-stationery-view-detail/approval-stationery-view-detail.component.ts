@@ -6,10 +6,13 @@ import {
   Injector,
   EventEmitter,
   Output,
+  ElementRef,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
-
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 @Component({
   selector: 'approval-stationery-view-detail',
   templateUrl: 'approval-stationery-view-detail.component.html',
@@ -21,6 +24,7 @@ export class ApprovalStationeryViewDetailComponent
 {
   @Input() itemDetail: any;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() funcID;
   @Input() formModel;
   @Input() override view: ViewsComponent;
@@ -30,6 +34,7 @@ export class ApprovalStationeryViewDetailComponent
   itemDetailStt: any;
   active = 1;
 
+  tabControl: TabModel[] = [];
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
@@ -41,7 +46,21 @@ export class ApprovalStationeryViewDetailComponent
   onInit(): void {
     this.itemDetailStt = 1;
   }
-
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      //{ name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      {
+        name: 'ReferencesOD',
+        textDefault: 'Tham chiếu',
+        isActive: false,
+        template: this.reference,
+      },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&
@@ -96,11 +115,11 @@ export class ApprovalStationeryViewDetailComponent
       .subscribe(async (res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
           if (status == '5') {
-            this.notificationsService.notifyCode('ES007'); //đã duyệt
+            this.notificationsService.notifyCode('SYS034'); //đã duyệt
             data.approveStatus = '5';
           }
           if (status == '4') {
-            this.notificationsService.notifyCode('ES007'); //bị hủy
+            this.notificationsService.notifyCode('SYS034'); //bị hủy
             data.approveStatus = '4';
           }
           this.updateStatus.emit(data);

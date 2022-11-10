@@ -29,7 +29,7 @@
       </div>
       <div class="col-4" *ngFor="let md of codxService.modulesOb$ | async">
         <a
-          (click)="codxService.navigate(md.functionID, null, null, true)"
+          (click)="codxService.navigate(md.functionID, null, null, null, true)"
           href="javascript:;"
           class="d-flex flex-column align-items-center bg-hover-light py-3"
         >

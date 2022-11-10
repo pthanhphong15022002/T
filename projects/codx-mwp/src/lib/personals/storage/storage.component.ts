@@ -334,21 +334,7 @@ export class StorageComponent
                 .remove(dataSelected)
                 .subscribe();
               this.detectorRef.detectChanges();
-              // for (
-              //   let x = 0;
-              //   x < this.a.instance?.listview?.dataService?.data.length;
-              //   x++
-              // ) {
-              //   if (
-              //     this.a.instance?.listview?.dataService?.data[x].recID ==
-              //     this.a.instance?.listview?.dataService?.dataSelected?.recID
-              //   ) {
-              //     this.a.instance?.listview?.dataService?.data.splice(x, 1);
-              //     this.detectorRef.detectChanges();
-              //   }
-              // }
             }
-            // this.a.instance?.listview?.dataService?.data.splice(0, 1);
           }
         });
     }

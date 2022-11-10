@@ -214,7 +214,7 @@ export class CodxNoteComponent implements OnInit, AfterViewInit {
             if (e && e.referType == this.REFER_TYPE.VIDEO) {
               e[
                 'srcVideo'
-              ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
+              ] = `${environment.urlUpload}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
             }
           });
           this.lstEditIV = res;

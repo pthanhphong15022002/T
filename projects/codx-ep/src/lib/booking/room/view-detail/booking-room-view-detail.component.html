@@ -240,7 +240,7 @@
   </ng-template>
 
   <ng-template #footer>
-    <approval-tabs></approval-tabs>
+    <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
   </ng-template>
 </codx-detail-tmp>
 
@@ -382,3 +382,4 @@
     </codx-label>
   </ng-container>
 </ng-template>
+
