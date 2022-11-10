@@ -51,10 +51,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
   styleUrls: ['./processsteps.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProcessStepsComponent
-  extends UIComponent
-  implements OnInit
-{
+export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -111,6 +108,7 @@ export class ProcessStepsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.activedRouter.params.subscribe((res) => {
       this.funcID = res.funcID;
       this.processID = res.processID;
@@ -128,7 +126,7 @@ export class ProcessStepsComponent
       if (!this.processID) {
         this.codxService.navigate('', this.urlBack);
       }
-      this.getFlowChart(this.process?.flowchart);
+      this.getFlowChart(this.process?.recID);
 
       this.request = new ResourceModel();
       this.request.service = 'BP';
@@ -184,7 +182,7 @@ export class ProcessStepsComponent
       {
         type: ViewType.kanban,
         active: false,
-        sameData: true,
+        sameData: false,
         request: this.request,
         request2: this.resourceKanban,
         model: {
@@ -208,10 +206,6 @@ export class ProcessStepsComponent
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
     this.changeDetectorRef.detectChanges();
   }
-
-  // ngOnDestroy() {
-  //   console.log('on de troy');
-  // }
 
   //#region CRUD bước công việc
   add() {
@@ -451,6 +445,9 @@ export class ProcessStepsComponent
           switch (data.stepType) {
             case 'P':
               this.view.dataService.delete(data);
+              this.view.dataService.data.forEach((dt) => {
+                if (dt.stepNo > data.stepNo) dt.stepNo--;
+              });
               this.listPhaseName.splice(data.stepNo - 1, 1);
               break;
             case 'A':
@@ -461,6 +458,9 @@ export class ProcessStepsComponent
                 if (index != -1) {
                   if (kanban) kanban.removeCard(obj.items[index]);
                   obj.items.splice(index, 1);
+                  obj.items.forEach((dt) => {
+                    if (dt.stepNo > data.stepNo) dt.stepNo--;
+                  });
                 }
               });
               break;
@@ -476,6 +476,9 @@ export class ProcessStepsComponent
                     if (index != -1) {
                       child.items.splice(index, 1);
                       if (kanban) kanban.updateCard(obj.items[index]);
+                      child.items.forEach((dt) => {
+                        if (dt.stepNo > data.stepNo) dt.stepNo--;
+                      });
                       index = -1;
                     }
                   });
@@ -541,7 +544,7 @@ export class ProcessStepsComponent
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
-    this.titleAction = e.text;
+    this.titleAction = this.getTitleAction(e.text, data.stepType);
     //test
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
@@ -563,6 +566,17 @@ export class ProcessStepsComponent
       case 'SYS02':
         this.delete(data);
     }
+  }
+
+  getTitleAction(action, stepType): string {
+    var menu = this.button.items.find((x) => x.id == stepType);
+    if (!menu) return action;
+    return (
+      action +
+      ' ' +
+      menu?.text.charAt(0).toLocaleLowerCase() +
+      menu?.text.slice(1)
+    );
   }
 
   onActions(e: any) {
