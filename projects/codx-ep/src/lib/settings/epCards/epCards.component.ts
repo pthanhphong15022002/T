@@ -442,7 +442,7 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
           this.selectedCard.status=currTrans;
           this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
           this.popupDialog.close();
-          this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_WAITING Đợi messcode từ BA         
+          this.notificationsService.notifyCode('SYS034');    
         }
         this.cardUserID=null;
         this.cardDate=null;
