@@ -7,7 +7,7 @@
             <div *ngFor="let itemSession of questions">
               <div
                 class="card-survey"
-                [id]="'card-survey-' + itemSession.recID"
+                [id]="'card-survey-' + itemSession.seqNo"
                 (click)="clickToScroll(itemSession.seqNo, null, 'S')"
               >
                 <div class="count-session">
@@ -15,7 +15,7 @@
                     <codx-label fiedName="AOS" default="Phần"></codx-label>
                     <span
                       >&nbsp;{{
-                        itemSession.seqNo + 1 + " / " + amountOfSession
+                        itemSession.seqNo + 1 + " / " + questions.length
                       }}</span
                     >
                   </div>
@@ -24,7 +24,13 @@
                   class="col-lg-8 control-section inplace-editor-control-section form-layout"
                   id="inplace-editor-control"
                 >
-                  <div class="content-wrapper b-t">
+                  <div
+                    [ngClass]="
+                      itemSession.active
+                        ? 'content-wrapper b-t b-l-session'
+                        : 'content-wrapper b-t'
+                    "
+                  >
                     <form id="formSession" class="form-horizontal example-box">
                       <ng-container #body>
                         <ng-container
@@ -93,6 +99,7 @@
                               *ngTemplateOutlet="
                                 template_card_image_video;
                                 context: {
+                                  seqNoSession: itemSession.seqNo,
                                   itemQuestion: itemQuestion
                                 }
                               "
@@ -103,6 +110,7 @@
                               *ngTemplateOutlet="
                                 template_card_title;
                                 context: {
+                                  seqNoSession: itemSession.seqNo,
                                   itemQuestion: itemQuestion
                                 }
                               "
@@ -122,11 +130,19 @@
                           <hr />
                           <div class="d-flex justify-content-end">
                             <span
-                              (click)="copyCard('Q', itemQuestion)"
+                              (click)="
+                                copyCard(itemSession.seqNo, itemQuestion, 'Q')
+                              "
                               class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
                             ></span>
                             <span
-                              (click)="deleteCard(itemQuestion)"
+                              (click)="
+                                deleteCard(
+                                  itemSession.seqNo,
+                                  itemQuestion.seqNo,
+                                  'Not-S'
+                                )
+                              "
                               class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
                             ></span>
                             <span class="split"></span>
@@ -183,7 +199,7 @@
 <ng-template
   #templateQuestionMF
   let-seqNoSession="seqNoSession"
-  let-indexQuestion="indexQuestion"
+  let-seqNoQuestion="seqNoQuestion"
   let-answerType="answerType"
 >
   <div ngbDropdown container="body">
@@ -240,7 +256,7 @@
     <div ngbDropdownMenu>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'T')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'T')"
       >
         <div class="d-flex">
           <span class="icon-short_text icon-24"></span>
@@ -249,7 +265,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'T2')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'T2')"
       >
         <div class="d-flex">
           <span class="icon-text_snippet icon-24"></span>
@@ -259,7 +275,7 @@
       <hr />
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'O')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'O')"
       >
         <div class="d-flex">
           <span class="icon-radio_button_checked icon-24"></span>
@@ -268,7 +284,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'C')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'C')"
       >
         <div class="d-flex">
           <span class="icon-check_box icon-24"></span>
@@ -277,7 +293,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'L')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'L')"
       >
         <div class="d-flex">
           <span class="icon-arrow_drop_down_circle icon-24"></span>
@@ -287,7 +303,7 @@
       <hr />
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'A')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'A')"
       >
         <div class="d-flex">
           <span class="icon-cloud_upload icon-24"></span>
@@ -297,7 +313,7 @@
       <hr />
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'R')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'R')"
       >
         <div class="d-flex">
           <span class="icon-24"></span>
@@ -306,7 +322,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'O2')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'O2')"
       >
         <div class="d-flex">
           <span class="icon-24"></span>
@@ -315,7 +331,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'C2')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'C2')"
       >
         <div class="d-flex">
           <span class="icon-view_module icon-24"></span>
@@ -325,7 +341,7 @@
       <hr />
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'D')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'D')"
       >
         <div class="d-flex">
           <span class="icon-calendar_today icon-24"></span>
@@ -334,7 +350,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, indexQuestion, 'H')"
+        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'H')"
       >
         <div class="d-flex">
           <span class="icon-access_time icon-24"></span>
@@ -452,24 +468,16 @@
       class="e-input-group date-time"
       *ngIf="itemQuestion.answerType == 'O2'"
     >
-      <div class="row">
-        <div class="column" style="background-color: #aaa">
+      <div class="d-flex">
+        <div class="column">
           <codx-label fiedName="Row" default="Hàng"></codx-label>
           <p>Some text..</p>
         </div>
-        <div class="column" style="background-color: #bbb">
+        <div class="column">
           <codx-label fiedName="Column" default="Cột"></codx-label>
           <p>Some text..</p>
         </div>
       </div>
-      <!-- <input
-        class="e-input"
-        type="text"
-        placeholder="Giờ"
-        (focus)="focusIn($event.target)"
-        (blur)="focusOut($event.target)"
-        [disabled]="true"
-      /> -->
     </div>
     <div *ngIf="itemQuestion.answerType == 'R'">
       <div class="d-flex ps-6">
@@ -742,7 +750,11 @@
     </div>
   </div>
 </ng-template>
-<ng-template #template_card_image_video let-itemQuestion="itemQuestion">
+<ng-template
+  #template_card_image_video
+  let-seqNoSession="seqNoSession"
+  let-itemQuestion="itemQuestion"
+>
   <div class="d-flex">
     <div class="form-group question w-100">
       <div class="title-des d-flex">
@@ -761,11 +773,11 @@
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
           <span
-            (click)="copyCard('P-V', itemQuestion)"
+            (click)="copyCard(seqNoSession, itemQuestion, 'P-V')"
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteCard(itemQuestion)"
+            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, 'Not-S')"
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -783,11 +795,79 @@
       <ng-container *ngFor="let data of lstEditIV">
         <div class="col-5 my-2 m-w-100">
           <div class="w-150 position-relative">
+            <div class="d-flex align-items-center icon-MF-image">
+              <div ngbDropdown class="dropdown" container="body">
+                <a
+                  href="javascript:void(0)"
+                  class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                  ngbDropdownToggle
+                  id="dropdownMenuButton1"
+                  aria-expanded="false"
+                >
+                  <span class="icon-more_vert icon-22"> </span>
+                </a>
+                <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                  <li>
+                    <a ngbDropdownItem href="javascript:void(0)">
+                      <span class="icon-format_align_left"></span>
+                      <codx-label
+                        fiedName="formatAlignLeft"
+                        default="Căn trái"
+                      ></codx-label>
+                    </a>
+                  </li>
+                  <li>
+                    <a ngbDropdownItem href="javascript:void(0)">
+                      <span class="icon-format_align_right"></span>
+                      <codx-label
+                        fiedName="formatAlignRight"
+                        default="Căn phải"
+                      ></codx-label>
+                    </a>
+                  </li>
+                  <li>
+                    <a ngbDropdownItem href="javascript:void(0)">
+                      <span class="icon-format_align_center"></span>
+                      <codx-label
+                        fiedName="formatAlignCenter"
+                        default="Căn giữa"
+                      ></codx-label>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      (click)="uploadFile('image', 'change')"
+                      ngbDropdownItem
+                      href="javascript:void(0)"
+                    >
+                      <span class="icon-image"></span>
+                      <codx-label
+                        fiedName="changeImage"
+                        default="Thay đổi"
+                      ></codx-label>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      (click)="deleteFile()"
+                      ngbDropdownItem
+                      href="javascript:void(0)"
+                    >
+                      <span class="icon-delete"></span>
+                      <codx-label
+                        fiedName="deleteImage"
+                        default="Xóa"
+                      ></codx-label>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
             <ng-container *ngIf="data.referType == REFER_TYPE.IMAGE">
-              <ng-container *ngIf="data.recID; else imageSrc">
+              <ng-container *ngIf="data.recID || data.objectID; else imageSrc">
                 <codx-img
-                  [recId]="data.recID"
                   [objectId]="data.objectID"
+                  [objectType]="functionList.entityName"
                   [width]="150"
                   cssClass="pic"
                   imageType="square"
@@ -795,74 +875,6 @@
                 </codx-img>
               </ng-container>
               <ng-template #imageSrc>
-                <div class="d-flex align-items-center icon-MF-image">
-                  <div ngbDropdown class="dropdown" container="body">
-                    <a
-                      href="javascript:void(0)"
-                      class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                      ngbDropdownToggle
-                      id="dropdownMenuButton1"
-                      aria-expanded="false"
-                    >
-                      <span class="icon-more_vert icon-22"> </span>
-                    </a>
-                    <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                      <li>
-                        <a ngbDropdownItem href="javascript:void(0)">
-                          <span class="icon-format_align_left"></span>
-                          <codx-label
-                            fiedName="formatAlignLeft"
-                            default="Căn trái"
-                          ></codx-label>
-                        </a>
-                      </li>
-                      <li>
-                        <a ngbDropdownItem href="javascript:void(0)">
-                          <span class="icon-format_align_right"></span>
-                          <codx-label
-                            fiedName="formatAlignRight"
-                            default="Căn phải"
-                          ></codx-label>
-                        </a>
-                      </li>
-                      <li>
-                        <a ngbDropdownItem href="javascript:void(0)">
-                          <span class="icon-format_align_center"></span>
-                          <codx-label
-                            fiedName="formatAlignCenter"
-                            default="Căn giữa"
-                          ></codx-label>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          (click)="uploadFile('image', 'change')"
-                          ngbDropdownItem
-                          href="javascript:void(0)"
-                        >
-                          <span class="icon-image"></span>
-                          <codx-label
-                            fiedName="changeImage"
-                            default="Thay đổi"
-                          ></codx-label>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          (click)="deleteFile()"
-                          ngbDropdownItem
-                          href="javascript:void(0)"
-                        >
-                          <span class="icon-delete"></span>
-                          <codx-label
-                            fiedName="deleteImage"
-                            default="Xóa"
-                          ></codx-label>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
                 <img
                   [src]="data.avatar || data.data"
                   alt=""
@@ -870,13 +882,24 @@
                 />
               </ng-template>
             </ng-container>
+            <ng-container *ngIf="data.referType == REFER_TYPE.VIDEO">
+              <div>
+                <video #video controls class="w-100 rounded h-auto">
+                  <source [src]="data?.srcVideo" type="video/mp4" />
+                </video>
+              </div>
+            </ng-container>
           </div>
         </div>
       </ng-container>
     </div>
   </ng-container>
 </ng-template>
-<ng-template #template_card_title let-itemQuestion="itemQuestion">
+<ng-template
+  #template_card_title
+  let-seqNoSession="seqNoSession"
+  let-itemQuestion="itemQuestion"
+>
   <div class="d-flex">
     <div class="form-group question w-100">
       <div class="title-des d-flex">
@@ -894,11 +917,11 @@
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
           <span
-            (click)="copyCard('T', itemQuestion)"
+            (click)="copyCard(seqNoSession, itemQuestion, 'T')"
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteCard(itemQuestion)"
+            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, 'Not-S')"
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -925,7 +948,7 @@
     </div>
   </div>
 </ng-template>
-<ng-template #template_card_session let-itemQuestion="itemQuestion">
+<ng-template #template_card_session let-itemSession="itemSession">
   <div class="d-flex">
     <div class="form-group question w-100 position-relative">
       <div class="title-des d-flex">
@@ -959,7 +982,7 @@
               <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                 <li>
                   <a
-                    (click)="copyCard('S', itemQuestion)"
+                    (click)="copyCard(itemSession, '', 'S')"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >
@@ -970,7 +993,11 @@
                   </a>
                 </li>
                 <li>
-                  <a ngbDropdownItem href="javascript:void(0)">
+                  <a
+                    (click)="moveSession()"
+                    ngbDropdownItem
+                    href="javascript:void(0)"
+                  >
                     <codx-label
                       fiedName="moveSession"
                       default="Di chuyển phần"
@@ -979,7 +1006,7 @@
                 </li>
                 <li>
                   <a
-                    (click)="deleteCard(itemQuestion)"
+                    (click)="deleteCard(itemSession.seqNo, '', 'S')"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >

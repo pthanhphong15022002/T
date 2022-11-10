@@ -150,3 +150,12 @@ export class tmpPermission{
   ccPermission: BP_ProcessPermissions[];
   fromPermission: BP_ProcessPermissions[];
 }
+
+export class ColumnsModel{
+   headerText :string;
+   keyField :string;
+   color :string;
+   showItemCount :boolean =true ;
+   allowDrag :boolean = true;
+   allowDrop :boolean = true;
+}

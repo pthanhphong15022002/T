@@ -430,7 +430,7 @@
             [objectId]="curUser?.userID"
             objectType="AD_Users"
           ></codx-img>
-          <div (click)="showPopover(p, curUser.userID)">
+          <div role="button" class="pe-auto" (click)="showPopover(p, curUser.userID)">
           <span
             popoverClass="userPopoverClass"
             [ngbPopover]="popoverSelectRoles"
@@ -479,7 +479,7 @@
             [objectId]="item.userID"
             objectType="AD_Users"
           ></codx-img>
-          <div (click)="showPopover(p, item.userID)">
+          <div role="button" class="pe-auto" (click)="showPopover(p, item.userID)">
             <span
             popoverClass="userPopoverClass"
             [ngbPopover]="popoverSelectRoles"

@@ -18,6 +18,7 @@ import {
   DialogRef,
   NotificationsService,
   RequestOption,
+  ResourceModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -59,6 +60,7 @@ export class ProcessesComponent
   @Input() showButtonAdd = true;
   @Input() dataObj?: any;
   dialog!: DialogRef;
+  requestSearch: ResourceModel;
   titleAction = '';
   columnsGrid = [];
   textSearch: string;
@@ -85,7 +87,15 @@ export class ProcessesComponent
   dataSelected: any;
   gridViewSetup: any;
   private searchKey = new Subject<any>();
-  listProcess = new BP_ProcessesPageSize();
+  listProcess = new Array<BP_Processes>();
+  totalRowCount: any;
+  totalPages: number;
+  gridModels = new DataRequest();
+  listNumberPage = new Array();
+  pageNumberDefault: 1;
+  pageNumberCliked: number;
+  pageNumberSearch: number;
+  clickDisable: string;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -106,7 +116,6 @@ export class ProcessesComponent
   }
 
   onInit(): void {
-
     this.button = {
       id: 'btnAdd',
     };
@@ -126,8 +135,6 @@ export class ProcessesComponent
       {
         id: '1',
         type: ViewType.grid,
-        active: true,
-        hide:true,
         sameData: true,
         model: {
           resources: this.columnsGrid,
@@ -139,7 +146,7 @@ export class ProcessesComponent
         type: ViewType.card,
         sameData: true,
         active: true,
-        hide:true,
+        hide: false,
         model: {
           template: this.templateListCard,
         },
@@ -148,14 +155,12 @@ export class ProcessesComponent
         id: '4',
         icon: 'icon-search',
         text: 'Search',
-        hide: true,
-        type: ViewType.content,
-        sameData: true,
+        type: ViewType.card,
+        active: true,
+        sameData: false,
+        // request: this.requestSearch,
         model: {
-          // template: this.templateMain,
-          // panelRightRef: this.templateRight,
-          template2: this.templateSearch,
-          resizable: false,
+          panelRightRef: this.templateSearch,
         },
       },
     ];
@@ -166,101 +171,76 @@ export class ProcessesComponent
   }
 
   getGridModel() {
-    var gridModels = new DataRequest();
-    gridModels.formName = this.view.formModel.formName;
-    gridModels.entityName = this.view.formModel.entityName;
-    gridModels.funcID = this.view.formModel.funcID;
-    gridModels.gridViewName = this.view.formModel.gridViewName;
-    gridModels.page = this.view.dataService.request.page;
-    gridModels.pageSize = this.view.dataService.request.pageSize;
-    gridModels.predicate = this.view.dataService.request.predicates;
-    gridModels.dataValue = this.view.dataService.request.dataValues;
-    gridModels.entityPermission = this.view.formModel.entityPer;
+    this.gridModels.formName = this.view.formModel.formName;
+    this.gridModels.entityName = this.view.formModel.entityName;
+    this.gridModels.funcID = this.view.formModel.funcID;
+    this.gridModels.gridViewName = this.view.formModel.gridViewName;
+    this.gridModels.page =
+      this.gridModels.page > 1
+        ? this.gridModels.page
+        : this.view.dataService.request.page;
+    this.gridModels.pageSize = this.view.dataService.request.pageSize;
+    this.gridModels.predicate = this.view.dataService.request.predicates;
+    this.gridModels.dataValue = this.view.dataService.request.dataValues;
+    this.gridModels.entityPermission = this.view.formModel.entityPer;
   }
-  search() {
-    // var viewsAction = []
-    // this.views.forEach(item => {
-    //   item.hide = true;
-    //   if (item.id == "4")
-    //     item.hide = false;
-    //     viewsAction.push(item)
-    // });
-    // this.fileService.searchFile(this.textSearchAll, this.dmSV.page, this.dmSV.pageSize).subscribe(item => {
-    //   if (item != null) {
-    //     if(!isScroll)
-    //     {
-    //       var view = this.views.filter(x=>x.text == "Search")[0];
-    //       view.active = true;
-    //       this.view.viewChange(view);
-    //     }
-    //     // this.dmSV.listFiles = item.data;
-    //     this.totalSearch = item.total;
-    //     this.dmSV.listFiles = [...this.dmSV.listFiles, ...item.data];
-    //     this.data = [...this.data, ...this.dmSV.listFiles];
-    //     this.getTotalPage(item.total);
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    //   else {
-    //     //this.dmSV.loadedFile = true;
-    //     this.totalSearch = 0;
-    //     this.dmSV.totalPage = 0;
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
-
-
-    // BaoLV
-    //   this.getGridModel();
-    let gridModels = new DataRequest();
-    gridModels.formName = this.view.formModel.formName;
-    gridModels.entityName = this.view.formModel.entityName;
-    gridModels.funcID = this.view.formModel.funcID;
-    gridModels.gridViewName = this.view.formModel.gridViewName;
-    gridModels.page = this.view.dataService.request.page;
-    gridModels.pageSize = this.view.dataService.request.pageSize;
-    gridModels.predicate = this.view.dataService.request.predicates;
-    gridModels.entityPermission = this.view.formModel.entityPer;
-
-    this.searchKey.subscribe((x) => {
-      //this.bpService.SearchDataProcess(x).subscribe( res =>res[0]);
-      gridModels.dataValues = x;
-      const subscription = this.bpService
-        .searchDataProcess(gridModels, x)
-        .subscribe((value) => {
-          // this.views = viewsAction
-          this.listProcess= value;
-          console.log(value);
-          console.log(this.listProcess);
-          console.log(this.listProcess[0]?.listProcess);
-          console.log(this.listProcess[1]?.userParama);
-
-          this.changeDetectorRef.detectChanges();
-        });
-    });
+  getHomeProcessSearch(pageClickNumber?:Number) {
+    this.getGridModel();
+    this.gridModels.dataValues = this.textSearch;
+    this.bpService
+      .searchDataProcess(this.gridModels, this.textSearch)
+      .subscribe((res) => {
+        if (res != null) {
+          this.listProcess = res[0];
+          this.totalRowCount = res[1];
+          // test phân trang
+          this.gridModels.pageSize = 1;
+          this.totalPages = Math.ceil(
+            this.totalRowCount / this.gridModels.pageSize
+          );
+          this.listNumberPage = Array(this.totalPages)
+            .fill(0)
+            .map((x, i) => i + 1);
+          this.pageNumberCliked = this.gridModels.page;
+        } else {
+          this.listProcess = null;
+        }
+        this.changeDetectorRef.detectChanges();
+      });
   }
+  PageClick($event, pageNumClick: any) {
+    this.pageNumberCliked = pageNumClick;
+    this.gridModels.page =this.pageNumberCliked;
+    this.getHomeProcessSearch();
+  }
+  nextPage($event) {
+    this.pageNumberCliked= this.pageNumberCliked + 1;;
+    this.gridModels.page =this.pageNumberCliked;
+    this.getHomeProcessSearch();
+  }
+  previousPage($event) {
+    this.pageNumberCliked= this.pageNumberCliked - 1;;
+    this.gridModels.page =this.pageNumberCliked;
+    this.getHomeProcessSearch();
+  }
+  firstPage($event) {
+    this.pageNumberCliked= this.pageNumberDefault;
+    this.gridModels.page =this.pageNumberCliked;
+    this.getHomeProcessSearch();
+  }
+  lastPage($event) {
+    this.pageNumberCliked= this.totalPages;
+    this.gridModels.page =this.pageNumberCliked;
+    this.getHomeProcessSearch();
+  }
+
+
 
   searchChange($event) {
     try {
       this.textSearch = $event;
       this.searchKey.next($event);
-      // this.columnsGrid = [];
-      // // this.searchKey.subscribe((x)=> {
-      // //   this.bpService.getSearchProcess(x);
-      // // })
-
-      // this.columnsGrid = [];
-      // this.data = [];
-      // if (this.codxview.currentView.viewModel.model != null)
-      //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
-      // this.isSearch = true;
-      // this.dmSV.page = 1;
-      // this.fileService.options.page = this.dmSV.page;
-
-      this.textSearchAll = this.textSearch;
-      this.predicates = 'ProcessName.Contains(@0)';
-      this.values = this.textSearch;
-      this.searchAdvance = false;
-      this.viewActive = this.views.filter((x) => x.active == true)[0];
+      this.isSearch == true;
       if (this.textSearch == null || this.textSearch == '') {
         this.views.forEach((item) => {
           item.active = false;
@@ -268,27 +248,14 @@ export class ProcessesComponent
           if (item.text == 'Search') item.hide = true;
           if (item.text == this.viewActive.text) item.active = true;
         });
-
-          this.view.viewChange(this.viewActive);
-          this.codxview.currentView.viewModel.model.panelLeftHide = false;
-
         this.changeDetectorRef.detectChanges();
       } else {
-        this.isSearch=true;
-        this.search();
-        // var viewActive = []
-        // this.views.forEach((item) => {
-        //   if (item.id != '1000') item.active = false;
-        //   else item.active = true;
-        //   viewActive.push(item)
-        // });
-        // this.view.viewChange(this.viewActive);
-        // this.codxview.currentView.viewModel.model.panelLeftHide = false;
-        // this.changeDetectorRef.detectChanges();
+        this.isSearch = true;
+   //     this.pageNumberCliked= this.pageNumberDefault;
+        this.getHomeProcessSearch();
       }
     } catch (ex) {
       this.changeDetectorRef.detectChanges();
-      console.log(ex);
     }
   }
 
@@ -500,9 +467,7 @@ export class ProcessesComponent
         [this.titleAction,e],
         ''
       )
-      .closed.subscribe((item) => {
-        this.view?.dataService.update(item?.event).subscribe();
-      });
+      .closed.subscribe();
   }
 
   share(data) {
@@ -578,5 +543,16 @@ export class ProcessesComponent
 
   approval($event) {}
 
-
+  // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
+  // formatAMPM(date) {
+  //   var
+  //   var hours = date.getHours();
+  //   var minutes = date.getMinutes();
+  //   var ampm = hours >= 12 ? 'pm' : 'am';
+  //   hours = hours % 12;
+  //   hours = hours ? hours : 12; // the hour '0' should be '12'
+  //   minutes = minutes < 10 ? '0'+minutes : minutes;
+  //   var strTime = hours + ':' + minutes + ' ' + ampm;
+  //   return strTime;
+  // }
 }

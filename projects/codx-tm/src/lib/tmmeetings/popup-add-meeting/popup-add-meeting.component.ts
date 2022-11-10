@@ -150,10 +150,15 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         }
       });
 
-    if (this.action == 'add')
+    if (this.action == 'add'){
       this.meeting.startDate = moment(new Date())
-        .set({ hour: 0, minute: 0, second: 0 })
-        .toDate();
+      .set({ hour: 0, minute: 0, second: 0 })
+      .toDate();
+      // this.meeting.endDate = moment(new Date())
+      // .set({ hour: 0, minute: 0, second: 0 })
+      // .toDate();
+    }
+
 
     this.selectedDate = moment(new Date(this.meeting.startDate))
       .set({ hour: 0, minute: 0, second: 0 })
@@ -759,6 +764,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   valueEndTimeChange(event: any) {
     this.endTime = event.data.toDate;
+    this.fullDayChangeWithTime();
     // this.isFullDay = false;
     this.setDate();
     this.changDetec.detectChanges();

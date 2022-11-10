@@ -1,18 +1,20 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Injector,
   Input,
   OnChanges,
   Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { BookingRoomComponent } from '../booking-room.component';
 import { PopupAddBookingRoomComponent } from '../popup-add-booking-room/popup-add-booking-room.component';
-
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 @Component({
   selector: 'booking-room-view-detail',
   templateUrl: 'booking-room-view-detail.component.html',
@@ -27,6 +29,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   @Output('copy') copy: EventEmitter<any> = new EventEmitter(); 
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -34,6 +37,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   @Input() override view: ViewsComponent;
   @Input() hideMF = false;
   @Input() hideFooter = false;
+  tabControl: TabModel[] = [];
   firstLoad = true;
   id: string;
   itemDetailDataStt: any;
@@ -53,7 +57,21 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   onInit(): void {
     this.itemDetailStt = 1;
   }
-
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      //{ name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      {
+        name: 'ReferencesOD',
+        textDefault: 'Tham chiếu',
+        isActive: false,
+        template: this.reference,
+      },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&
