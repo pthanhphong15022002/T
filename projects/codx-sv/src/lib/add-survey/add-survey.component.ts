@@ -705,4 +705,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       }
     });
   }
+
+  onChange(e) {
+    console.log("check onChange", e);
+  }
 }
