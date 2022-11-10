@@ -212,11 +212,10 @@
   </div>-->
   </ng-template>
 
-  <ng-template #footer>
-    <approval-tabs></approval-tabs>
-  </ng-template>
 </codx-detail-tmp>
-
+<ng-template #footer>
+  <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
+</ng-template>
 <ng-template #defaulEmpt>
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">

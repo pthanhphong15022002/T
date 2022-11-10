@@ -342,9 +342,13 @@ export class CodxEpService {
       [funcID, objectId, objectType]
     );
   }
+
   getAutoNumberDefault(funcID: string): Observable<any> {
     return this.api.execSv(
-      "SYS", "ERM.Business.AD", "AutoNumbersBusiness", "GetAutoNumberByFuncIDAsync",
+      'SYS',
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'GetAutoNumberByFuncIDAsync',
       [funcID]
     );
   }

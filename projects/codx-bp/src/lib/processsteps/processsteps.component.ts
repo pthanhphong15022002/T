@@ -58,7 +58,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChild('attachment2') attachment2: AttachmentComponent;
   process?: BP_Processes;
   showButtonAdd = true;
   dataObj?: any;
@@ -860,15 +860,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     });
   }
   async addFile(evt: any) {
-    this.attachment.uploadFile();
-    // if (this.attachment && this.attachment.fileUploadList.length)
-    //   (await this.attachment.saveFilesObservable()).subscribe((res) => {
-    //     if (res) {
-    //       this.dataFile = Array.isArray(res) ? res[0] : null;
-    //     }
-    //   });
+    this.attachment2.uploadFile();
   }
-  fileAdded(e) {}
+  fileAdded(e) {
+    if(e && e?.data?.length > 0)  this.dataFile = e.data[0] ;
+    this.changeDetectorRef.detectChanges() ;
+  }
 
   getfileCount(e) {}
 
