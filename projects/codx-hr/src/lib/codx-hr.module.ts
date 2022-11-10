@@ -1,3 +1,5 @@
+import { EmployeeFamilyRelationshipDetailComponent } from './employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
+import { EmployeeFamilyRelationshipComponent } from './employee-profile/employee-family-relationship/employee-family-relationship.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -215,6 +217,8 @@ const T_Component: Type<any>[] = [
   EmployeeListComponent,
   PopupAddEmployeesPartyInfoComponent,
   EmployeeSelfInfoComponent,
+  EmployeeFamilyRelationshipComponent,
+  EmployeeFamilyRelationshipDetailComponent,
 ];
 @NgModule({
   imports: [
