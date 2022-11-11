@@ -1102,65 +1102,6 @@
                   </div>
                 </div>
               </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="Street"
-                    [formModel]="view.formModel"
-                  >
-                  </codx-label>
-                  <span #street> {{ data.street }}</span>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="FullAddress"
-                    [formModel]="view.formModel"
-                  >
-                  </codx-label>
-                  <span #pitNumber> {{ data.fullAddress }}</span>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <span class="icon-mood icon-14 text-gray-600 me-1"></span>
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="pITNumber"
-                    [formModel]="view.formModel"
-                    default="Thành tích:"
-                  >
-                  </codx-label>
-                  <span #pitNumber> {{ data.pitNumber }}</span>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="pITNumber"
-                    [formModel]="view.formModel"
-                    default="Sở trường:"
-                  >
-                  </codx-label>
-                  <span #pitNumber>Chăm chỉ, có trách nhiệm trong học tập</span>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="pITNumber"
-                    [formModel]="view.formModel"
-                    default="Sở thích:"
-                  >
-                  </codx-label>
-                  <span #pitNumber>Đóng đá, đọc sách, du lịch</span>
-                </div>
-              </div>
             </div>
             <div #DangDoan class="border mb-3">
               <div
@@ -1259,40 +1200,196 @@
                 </div>
               </div>
             </div>
-            <div #family class="border mb-3">
+            <div #DangDoan class="border mb-3">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
                 <codx-label
                   name="lblEmployeeInfo"
                   [formModel]="view.formModel"
-                  default="Quan hệ gia đình"
+                  default="Giấy phép lao động"
                 >
                 </codx-label>
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addFamilyRelationshipInfo()"
+                    (click)="addEmployeePartyInfo()"
                   ></span>
                 </a>
               </div>
-              <div class="d-flex flex-column py-3 px-4 process-r">
-                <div class="d-flex flex-column">
-                  <div
-                    class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
-                  >
-                    <codx-temp-full
-                      cardCss="card-template px-2 pt-4 pb-2"
-                      [imageId]="'ADMIN'"
-                      imageObjType="AD_Users"
-                      [imageWidth]="40"
+
+              <div class="row form-group">
+                <div class="col-4">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="gender"
                       [formModel]="view.formModel"
-                      [title]="'experences.companyName'"
-                      [dataItem]="'experences'"
-                      [desc]="'relationType' + ' | ' + 'Năm sinh: '"
-                      [typeMF]="'hover'"
+                      default="Giới tính:"
                     >
-                    </codx-temp-full>
+                    </codx-label>
+                    <span class="text-dark">
+                      <codx-vll
+                        [formModel]="view.formModel"
+                        field="gender"
+                      ></codx-vll>
+                      {{ "0" | vll: "L0068":"text" | async }}</span
+                    >
+                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
+                        }}</span> -->
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="birthday"
+                      [formModel]="view.formModel"
+                      default="Sinh ngày:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
+                    <span #birthday> employeeInfo.birthday </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-4">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="idCardNo"
+                      [formModel]="view.formModel"
+                      default="CMND/CCCD:"
+                    >
+                    </codx-label>
+
+                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
+                          null}}</span> -->
+                    <span #idCardNo> employeeInfo.idCardNo</span>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="issuedOn"
+                      [formModel]="view.formModel"
+                      default="Cấp ngày:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
+
+                    <span #issuedOn> employeeInfo.issuedOn</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div #DangDoan class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <codx-label
+                  name="lblEmployeeInfo"
+                  [formModel]="view.formModel"
+                  default="Thị thực"
+                >
+                </codx-label>
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeePartyInfo()"
+                  ></span>
+                </a>
+              </div>
+
+              <div class="row form-group">
+                <div class="col-4">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="gender"
+                      [formModel]="view.formModel"
+                      default="Giới tính:"
+                    >
+                    </codx-label>
+                    <span class="text-dark">
+                      <codx-vll
+                        [formModel]="view.formModel"
+                        field="gender"
+                      ></codx-vll>
+                      {{ "0" | vll: "L0068":"text" | async }}</span
+                    >
+                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
+                        }}</span> -->
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="birthday"
+                      [formModel]="view.formModel"
+                      default="Sinh ngày:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
+                    <span #birthday> employeeInfo.birthday </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-4">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="idCardNo"
+                      [formModel]="view.formModel"
+                      default="CMND/CCCD:"
+                    >
+                    </codx-label>
+
+                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
+                          null}}</span> -->
+                    <span #idCardNo> employeeInfo.idCardNo</span>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex">
+                    <span
+                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                    ></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="issuedOn"
+                      [formModel]="view.formModel"
+                      default="Cấp ngày:"
+                    >
+                    </codx-label>
+                    <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
+
+                    <span #issuedOn> employeeInfo.issuedOn</span>
                   </div>
                 </div>
               </div>
@@ -1311,7 +1408,6 @@
             >
             </codx-label>
           </div>
-          <!-- <ngx-skeleton-loader *ngIf="!ExperencesCurrent" count="5" animation="progress"></ngx-skeleton-loader> -->
           <div class="border rounded-2 p-6 pb-0">
             <div class="user-process process-h">
               <ng-container>

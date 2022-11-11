@@ -205,21 +205,22 @@ export class EmployeeProfileComponent extends UIComponent {
     // })
   }
 
-  addFamilyRelationshipInfo(){
+  addFamilyRelationshipInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeFamilyRelationshipComponent,{
+      EmployeeFamilyRelationshipComponent,
+      {
         isAdd: true,
         headerText: 'Quan hệ gia đình',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
-    })
+      if (!res?.event) this.view.dataService.clear();
+    });
   }
 }
