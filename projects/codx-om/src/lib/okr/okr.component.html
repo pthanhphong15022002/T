@@ -1,1 +1,88 @@
-<p>okr works!</p>
+<codx-views #view [views]="views" (buttonClick)="add($event)" [button]="button" [entityName]="'OM_OKRCompany'"
+[assemblyName]="'OM'" [service]="'OM'" 
+[selectedFirst]="false" idField="recID">
+</codx-views>
+<ng-template #panelRight>
+    <div class="w-100 h-100 bg-white px-5">
+        <div class="pt-5 pb-2 text-center">
+            <codx-label [default]="titleRoom" fiedName="titleRoom" class="fw-bold fs-2"></codx-label>            
+        </div>
+        <div>
+            <ejs-tab id="om-tab">
+                <e-tabitems>
+                        <e-tabitem>
+                            <ng-template #headerText>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-bullseye me-2"></i>
+                                    <codx-label default="Mục tiêu" fiedName="lbltaget" class="fw-bold"></codx-label>
+                                </div>
+                               
+                            </ng-template>
+                            <ng-template #content>
+                               Mục tiêu
+                            </ng-template>
+                        </e-tabitem>
+                        <e-tabitem>
+                            <ng-template #headerText>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-folder-tree me-2"></i>
+                                    <codx-label default="Cây mục tiêu" fiedName="lbltreetaget" class="fw-bold"></codx-label>
+                                </div>
+                               
+                            </ng-template>
+                            <ng-template #content>
+                               Cây mục tiêu
+                            </ng-template>
+                        </e-tabitem>
+                        <e-tabitem>
+                            <ng-template #headerText>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-list me-2"></i>
+                                    <codx-label default="Công việc" fiedName="lbljob" class="fw-bold"></codx-label>
+                                </div>
+                            </ng-template>
+                            <ng-template #content>
+                               Công việc
+                            </ng-template>
+                        </e-tabitem>
+                        <e-tabitem>
+                            <ng-template #headerText>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-regular fa-calendar me-2"></i>
+                                    <codx-label default="Họp định kỳ" fiedName="lblmeeting" class="fw-bold"></codx-label>
+                                </div>
+                               
+                            </ng-template>
+                            <ng-template #content>
+                               Họp định kỳ
+                            </ng-template>
+                        </e-tabitem>
+                        <e-tabitem>
+                            <ng-template #headerText>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-regular fa-square-check me-2"></i>
+                                    <codx-label default="Đánh giá" fiedName="lblmeeting" class="fw-bold"></codx-label>
+                                </div>
+                               
+                            </ng-template>
+                            <ng-template #content>
+                               Đánh giá
+                            </ng-template>
+                        </e-tabitem>
+                        <e-tabitem>
+                            <ng-template #headerText>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-clock-rotate-left me-2"></i>
+                                    <codx-label default="Cập nhật" fiedName="lblmeeting" class="fw-bold"></codx-label>
+                                </div>
+                               
+                            </ng-template>
+                            <ng-template #content>
+                               Cập nhật
+                            </ng-template>
+                        </e-tabitem>
+                    </e-tabitems>
+                </ejs-tab>
+        </div>
+    </div>
+</ng-template>
