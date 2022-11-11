@@ -493,7 +493,12 @@ export class ProcessesComponent
         [this.titleAction, e],
         ''
       )
-      .closed.subscribe();
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   share(data) {

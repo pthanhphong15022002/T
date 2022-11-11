@@ -44,29 +44,34 @@
       </div>
     </td>
     <td class="rowphoto"></td>
-    <td class="rowphoto"></td>
+    <td class="rowphoto">
+      <div class="padding">
+        {{ data.startDate | fmDT }}
+      </div>
+    </td>
     <td class="rowphoto"></td>
     <td class="rowphoto">
-        <div class="padding">
-            <div [innerHTML]="data.memo"></div>
-          </div>
+      <div class="padding">
+        <div [innerHTML]="data.memo"></div>
+      </div>
     </td>
     <td class="rowphoto">
-        <!-- <div class="padding" *ngIf="funcID == 'BPT5'"> -->
-          <button class="btn btn-primary" (click)="permission(data)">
-            <codx-label default="Xét duyệt"></codx-label>
-          </button>
-        <!-- </div> -->
-        <div class="padding has-action-menu">
-          <codx-mfunc
-            [formModel]="view.formModel"
-            (clickMF)="clickMF($event, data)"
-            [isBookMark]="true"
-            [dataItem]="data"
-            [type]="'hover'"
-          >
-          </codx-mfunc>
-        </div>
+      <!-- <div class="padding" *ngIf="funcID == 'BPT5'"> -->
+      <button class="btn btn-primary" (click)="permission(data)">
+        <codx-label default="Xét duyệt"></codx-label>
+      </button>
+      <!-- </div> -->
+      <div class="padding has-action-menu">
+        <codx-mfunc
+          [formModel]="view.formModel"
+          (clickMF)="clickMF($event, data)"
+          [isBookMark]="true"
+          [dataItem]="data"
+          [type]="'hover'"
+        >
+        </codx-mfunc>
+      </div>
+    </td>
   </tr>
 </ng-template>
 
