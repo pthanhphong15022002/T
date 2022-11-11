@@ -199,14 +199,12 @@ export class PopupAddPostComponent implements OnInit {
       [this.data])
       .subscribe(async (res1: any) => {
         if (res1) {
-          debugger;
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = res1.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
               if (res2) 
               {
-                debugger
                 let files:any[] = [];
                 if(Array.isArray(res2)){
                   res2.forEach(element => {
@@ -217,6 +215,8 @@ export class PopupAddPostComponent implements OnInit {
                   files.push(res2.data);
                 }
                 res1.files = JSON.parse(JSON.stringify(files));
+                console.log(res1.files);
+
                 this.dialogRef.close(res1);
               }
               else 
