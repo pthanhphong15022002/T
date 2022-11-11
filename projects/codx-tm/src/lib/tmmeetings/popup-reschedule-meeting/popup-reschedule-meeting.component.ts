@@ -77,6 +77,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   confirmResourcesTrackEvent() {
     this.tmSv
       .getResourcesTrackEvent(
+        this.meeting.meetingID,
         this.meeting.resources,
         this.meeting.startDate.toUTCString(),
         this.meeting.endDate.toUTCString()
@@ -105,11 +106,12 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   }
 
   onUpdate(){
-    this.tmSv.UpdateDateMeeting(this.meeting.meetingID, this.meeting.startDate.toUTCString(), this.meeting.endDate.toUTCString()).subscribe(res=>{
+    this.tmSv.UpdateDateMeeting(this.meeting.meetingID, this.meeting.startDate, this.meeting.endDate).subscribe(res=>{
       if(res){
         this.dialog.close(res);
         //chưa có mssgcode dời lịch
         this.notiService.notify('Cập nhật thành công');
+        this.tmSv.changeBookingDateTime(this.meeting.recID, this.meeting.startDate.toUTCString(), this.meeting.endDate.toUTCString())
         this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.funcID).subscribe();
       }else
         this.dialog.close();
