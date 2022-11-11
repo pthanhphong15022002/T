@@ -2,7 +2,6 @@
   #view
   [views]="views"
   (buttonClick)="add($event)"
-  [button]="button"
   [entityName]="'OM_OKRCompany'"
   [assemblyName]="'OM'"
   [service]="'OM'"
@@ -12,6 +11,7 @@
 </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
+    <lib-okr-toolbar></lib-okr-toolbar>
     <div class="pt-5 pb-2 text-center">
       <codx-label
         [default]="titleRoom"

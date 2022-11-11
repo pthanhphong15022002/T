@@ -87,13 +87,31 @@
         <codx-label fiedName="Supplier" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input
+          *ngIf="data.signatureType == '1'"
           type="valuelist"
           field="supplier"
-          [Group]="form.formGroup"
-          [formModel]="dialog.formModel"
-          [disabled]="data.signatureType == '2'"
+          [refValue]="'ES029'"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data.supplier"
         >
         </codx-input>
+        <codx-input
+          *ngIf="data.signatureType == '2'"
+          type="valuelist"
+          field="supplier"
+          [refValue]="'ES032'"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data.supplier"
+        >
+        </codx-input>
+        <!-- <codx-input
+          type="valuelist"
+          field="supplier"
+          [refValue]="data.signatureType == '1' ? 'ES029' : 'ES032'"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data.supplier"
+        >
+        </codx-input> -->
       </div>
     </div>
     <div class="form-group">
