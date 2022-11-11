@@ -4,7 +4,7 @@
   [dataItem]="itemDetail"
   [header]="header"
   [body]="body"
-  [footer]="!hideFooter ? footer : null"
+  [footer]="hideFooter ? null : footer"
   [hideMF]="hideMF"
   (clickMF)="childClickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
