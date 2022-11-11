@@ -143,6 +143,7 @@
             field="signatureType"
             [formModel]="formModel"
             [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>

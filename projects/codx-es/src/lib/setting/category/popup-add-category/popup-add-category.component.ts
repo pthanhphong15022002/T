@@ -68,6 +68,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   type: string;
   parentRecID: string;
   oldRecID: string;
+  isChangeSignatureType: boolean = false;
 
   constructor(
     private esService: CodxEsService,
@@ -80,7 +81,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.data = dialog?.dataService?.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
     this.headerText = data?.data?.headerText;
