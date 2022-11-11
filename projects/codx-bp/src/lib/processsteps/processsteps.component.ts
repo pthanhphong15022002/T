@@ -261,6 +261,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               var column = new ColumnsModel();
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
+              column.showItemCount = false;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
@@ -454,6 +455,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               var column = new ColumnsModel();
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
+              column.showItemCount = false;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
@@ -480,8 +482,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           switch (data.stepType) {
             case 'P':
               if (this.kanban) {
-                // this.kanban.columns?.splice(data.stepNo, 1); ;
-                // this.kanban.refresh();
+                this.kanban.columns?.splice(data.stepNo-1, 1); ;
+                this.kanban.refresh();
                 
               }
               this.view.dataService.delete(data);
