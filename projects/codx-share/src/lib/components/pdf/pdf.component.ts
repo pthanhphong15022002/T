@@ -197,6 +197,9 @@ export class PdfComponent
   maxTopDiv;
   labels = [];
 
+  //ca
+  gotLstCA = false;
+
   //css ???
   public cssClass: string = 'e-list-template';
 
@@ -518,6 +521,7 @@ export class PdfComponent
   //sign pdf
   signPDF(mode, comment): any {
     if (this.isEditable && this.transRecID) {
+      let hasCA = this.lstCA ? (this.lstCA.length != 0 ? true : false) : false;
       return new Promise<any>((resolve, rejects) => {
         this.esService
           .SignAsync(
@@ -527,6 +531,7 @@ export class PdfComponent
             this.recID,
             this.signerInfo.signType,
             this.signerInfo.supplier,
+            hasCA,
             mode,
             comment
           )
@@ -837,6 +842,38 @@ export class PdfComponent
           }
         });
 
+        if (this.inputUrl && !this.gotLstCA) {
+          this.esService.getListCAByBytes(this.curFileUrl).subscribe((res) => {
+            this.lstCA = res;
+            this.lstCA?.forEach((ca) => {
+              this.lstCACollapseState.push({
+                open: false,
+                verifiedFailed: false,
+                detail: false,
+              });
+            });
+            let lstCAOnPage = this.lstCA?.filter(
+              (childCA) => childCA.signedPosPage == this.curPage
+            );
+            lstCAOnPage?.forEach((ca, idx) => {
+              let caW =
+                ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
+              let caH =
+                ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
+              let caRect = new Konva.Rect({
+                x: (ca.signedPosLeft / 0.75) * this.xScale,
+                y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
+                width: caW,
+                height: caH,
+                opacity: 0,
+                id: 'CertificateAuthencation' + idx,
+                name: ca.certificate?.commonName,
+              });
+              layer.add(caRect);
+            });
+          });
+          this.gotLstCA = true;
+        }
         stage.add(layer);
         this.detectorRef.detectChanges();
         // }
@@ -1319,40 +1356,9 @@ export class PdfComponent
     }
   }
 
-  gotLstCA = false;
   changeLeftTab(e) {
-    if (e?.selectedIndex == 1 && !this.gotLstCA) {
-      this.esService.getListCAByBytes(this.curFileUrl).subscribe((res) => {
-        this.lstCA = res;
-        this.lstCA?.forEach((ca) => {
-          this.lstCACollapseState.push({
-            open: false,
-            verifiedFailed: false,
-            detail: false,
-          });
-        });
-        let lstCAOnPage = this.lstCA?.filter(
-          (childCA) => childCA.signedPosPage == this.curPage
-        );
-        lstCAOnPage?.forEach((ca, idx) => {
-          let caW =
-            ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
-          let caH =
-            ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
-          let caRect = new Konva.Rect({
-            x: (ca.signedPosLeft / 0.75) * this.xScale,
-            y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
-            width: caW,
-            height: caH,
-            opacity: 0,
-            id: 'CertificateAuthencation' + idx,
-            name: ca.certificate?.commonName,
-          });
-          this.lstLayer.get(this.curPage)?.add(caRect);
-        });
-      });
-      this.gotLstCA = true;
-      this.detectorRef.detectChanges();
+    if (e.isSwiped) {
+      e.cancel = true;
     }
   }
 
@@ -1550,6 +1556,12 @@ export class PdfComponent
   crrType: any;
 
   changeAnnotationItem(type: any) {
+    let hasCA = this.lstCA ? (this.lstCA.length != 0 ? true : false) : false;
+
+    if (this.isApprover && hasCA) {
+      this.notificationsService.notify('ES022');
+      return;
+    }
     if (!type) return;
     /** action: object vll
     {value: 'S1', text: 'Chữ ký chính', default: 'Chữ ký chính', color: null, textColor: null, …}
