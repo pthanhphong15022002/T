@@ -75,13 +75,18 @@ export class PopupADRComponent extends UIComponent {
     this.funcID = this.data.funcID;
     this.recID = this.data.signfileID;
     this.formModel = this.data.formModel;
+    console.log('form model', this.formModel);
+
     this.formModel.currentData = this.approvalTrans;
     this.dialogSignFile = this.data.formGroup;
+    this.dialogSignFile.patchValue({ comment: '' });
+    this.approvalTrans.comment = '';
     console.log('dialog', this.dialogSignFile);
 
     this.approveControl = this.data?.approveControl ?? '2';
 
-    this.controlName = this.mode == 2 ? 'rejectControl' : 'redoControl';
+    this.controlName = this.mode != 2 ? 'rejectControl' : 'redoControl';
+    console.log('controlName', this.controlName);
 
     this.detectorRef.detectChanges();
   }
@@ -90,6 +95,7 @@ export class PopupADRComponent extends UIComponent {
 
   changeReason(e) {
     if (e.field == 'comment') {
+      this.approvalTrans.comment = e.data;
       this.dialogSignFile.patchValue({ comment: e.data });
     }
   }

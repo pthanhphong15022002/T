@@ -167,6 +167,7 @@ export class FileUpload {
     assign: any;
     write: any;
     viewThumb:any;
+    rawFile:any
 }
 
 

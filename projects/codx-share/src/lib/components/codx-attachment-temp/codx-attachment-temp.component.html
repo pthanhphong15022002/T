@@ -1,6 +1,7 @@
 <div *ngIf="viewType=='0'">
     <div class="d-flex align-items-center {{countData>0 ? 'text-success' : 'text-gray-600'}}">
-        <div class="me-1" (click)="openPopup()"><i class="text-hover-primary icon-attach_file icon-16 text-dark cursor-pointer"></i></div>
+        <div class="me-1" (click)="openPopup()"><i
+                class="text-hover-primary icon-attach_file icon-16 text-dark cursor-pointer"></i></div>
         <div>{{countData}}</div>
     </div>
 </div>
@@ -8,13 +9,13 @@
     <div (click)="openPopup()">
         <span class="icon-attach_file icon-18"> </span>
         <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
-          {{ count}}</span>
+            {{ count}}</span>
     </div>
 </div>
 <ng-template #tmpListItem let-dialog>
-    <codx-form [body]="body" [dialog]="dialog" [subHeaderText]="'Danh sách file đính kèm'">
+    <codx-form [body]="body" [dialog]="dialog" headerText="Danh sách file đính kèm">
     </codx-form>
     <ng-template #body>
-        <codx-thumbnail [files]="lstFile" [formModel]="formModel"></codx-thumbnail>
+        <codx-thumbnail class="popup-attachment" [files]="lstFile" [formModel]="formModel"></codx-thumbnail>
     </ng-template>
 </ng-template>

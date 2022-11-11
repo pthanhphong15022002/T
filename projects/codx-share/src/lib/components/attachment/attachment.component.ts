@@ -104,6 +104,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   };
   isCopyRight = 0;
   dataFolder:any;
+  lstRawFile = [];
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
@@ -985,7 +986,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
       fileItem.objectID = this.objectId;
       var appName = environment.appName; // Tam thoi de hard
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
-      var uploadFile = fileItem.item.rawFile;
+      var uploadFile = null;
+      if(!fileItem.item?.rawFile?.name)
+        uploadFile = this.lstRawFile.find(x=>x.name == fileItem.item.name);
+      else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
       var retUpload = await lvFileClientAPI.postAsync(
         `api/${appName}/files/register`,
         {
@@ -1006,6 +1010,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
       fileItem.uploadId = retUpload.Data?.UploadId; //"";
       fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
+      this.lstRawFile = [];
     } catch (ex) {
       console.log(ex);
     }
@@ -1017,16 +1022,15 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true,
     index: number = -1
   ): Observable<any[]> {
-    debugger;
-    var ret = fileItem;
-    var fileSize = parseInt(fileItem.fileSize);
-    var that = this;
     fileItem.uploadId = '';
     fileItem.objectId = this.objectId;
     fileItem.data = '';
     var appName = environment.appName;
     var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
-    var uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
+    var uploadFile = null;
+    if(!fileItem.item?.rawFile?.name)
+      uploadFile = this.lstRawFile.find(x=>x.name == fileItem.item.name);
+    else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
     var obj = from(
       lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
         Data: {
@@ -1045,6 +1049,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     var chunSizeInfBytes = ChunkSizeInKB * 1024;
     var sizeInBytes = 0;
+    this.lstRawFile = [];
     return obj.pipe(
       mergeMap((retUpload, i) => {
         // update len server urs và thumbnail
@@ -1067,17 +1072,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
           var fileChunk = new File([blogPart], uploadFile.name, {
             type: uploadFile.type,
           }); //Gói lại thành 1 file chunk để upload
-          var uploadChunk = lvFileClientAPI.formPostWithToken(
-            `api/${appName}/files/upload`,
-            {
-              FilePart: fileChunk,
-              UploadId: retUpload.Data?.UploadId,
-              Index: i,
-            }
-          );
-          console.log(uploadChunk);
-        }
-
+          try {
+            var uploadChunk = lvFileClientAPI.formPostWithToken(
+              `api/${appName}/files/upload`,
+              {
+                FilePart: fileChunk,
+                UploadId: retUpload.Data?.UploadId,
+                Index: i,
+              }
+            );
+            console.log(uploadChunk);
+          }
+          catch(ex)
+          {}
+          }
         if (isAddFile)
           return this.fileService
             .addFileObservable(
@@ -1165,6 +1173,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true
   ): Promise<FileUpload> {
     // check dung luong dia cungs
+    debugger;
     var ret = fileItem;
     var fileSize = parseInt(fileItem.fileSize);
     var that = this;
@@ -1183,7 +1192,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     try {
       //  var item = await isAllowAddFileAsync();
-      var uploadFile = fileItem.item.rawFile;
+      var uploadFile = null;
+      if(!fileItem.item?.rawFile?.name)
+        uploadFile = this.lstRawFile.find(x=>x.name == fileItem.item.name);
+      else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
       var appName = environment.appName; // Tam thoi de hard
       fileItem = await this.serviceAddFile(fileItem);
       if (isAddFile) this.addFile(fileItem);
@@ -1218,6 +1230,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           console.log(ex);
         }
       }
+      this.lstRawFile = [];
     } catch (ex) {
       fileItem.uploadId = '0';
       // this.notificationsService.notify(ex);
@@ -2845,6 +2858,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
+   
     //this.getFolderPath();
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
@@ -2906,7 +2920,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
         fileUpload.referType = this.referType;
-       
+        this.lstRawFile.push(files[i].rawFile);
         fileUpload.reWrite = false;
         //fileUpload.data = '';
         fileUpload.item = files[i];

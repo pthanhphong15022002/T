@@ -92,7 +92,7 @@
         <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="master?.iterationID"
           hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
           allowMultiFile="1" [formModel]="dialog.formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)"
-          (fileCount)="getfileCount($event)" displayThumb="full">
+          (fileCount)="getfileCount($event)" displayThumb="full" showMessage="0">
         </codx-attachment>
       </div>
     </ng-container>
