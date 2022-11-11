@@ -41,10 +41,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   onInit(): void {
     //Lấy thông tin công ty
     var user = this.auth.get();
-    this.cache.getCompany(user.userID).subscribe(item=>{
-      if(item)
-        this.titleRoom = item.organizationName
-    })
+    // this.cache.getCompany(user.userID).subscribe(item=>{
+    //   if(item)
+    //     this.titleRoom = item.organizationName
+    // })
   }
   //Thêm mới mục tiêu
   add(e:any)
