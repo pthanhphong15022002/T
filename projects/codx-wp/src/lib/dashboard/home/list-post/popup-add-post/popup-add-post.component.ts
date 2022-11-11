@@ -199,6 +199,7 @@ export class PopupAddPostComponent implements OnInit {
       [this.data])
       .subscribe(async (res1: any) => {
         if (res1) {
+          debugger;
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = res1.recID;
             this.codxATM.fileUploadList = this.fileUpload;
