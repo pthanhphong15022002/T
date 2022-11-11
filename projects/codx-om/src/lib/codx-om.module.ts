@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { OKRTasksComponent } from './okr/tasks/tasks.component';
+//import { PopupAddKRComponent } from './okr/popup-add-kr/popup-add-kr.component';
 
 const routes: Routes = [
   {
@@ -58,6 +59,7 @@ const routes: Routes = [
     ReportsComponent,
     ReviewsComponent,
     OKRTasksComponent,
+    //PopupAddKRComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
