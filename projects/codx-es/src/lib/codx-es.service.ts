@@ -1221,7 +1221,17 @@ export class CodxEsService {
     );
   }
 
-  SignAsync(stepNo, isAwait, userID, sfID, signType, supplier, mode, comment) {
+  SignAsync(
+    stepNo,
+    isAwait,
+    userID,
+    sfID,
+    signType,
+    supplier,
+    hasCA,
+    mode,
+    comment
+  ) {
     let data = [
       stepNo,
       isAwait,
@@ -1229,6 +1239,7 @@ export class CodxEsService {
       sfID,
       signType,
       supplier,
+      hasCA,
       mode,
       comment,
     ];
