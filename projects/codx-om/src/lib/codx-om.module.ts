@@ -13,39 +13,40 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { OKRTasksComponent } from './okr/tasks/tasks.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-        {
-          path: 'okr/:funcID',
-          component: OKRComponent,
-        },
-        {
-          path: 'dashboard/:funcID',
-          component: DashboardComponent,
-        },
-        {
-          path: 'reports/:funcID',
-          component: ReportsComponent,
-        },
-        {
-          path: 'reviews/:funcID',
-          component: ReviewsComponent,
-        },
-        {
-          path: '',
-          redirectTo: 'home',
-          pathMatch: 'full',
-        },
-        {
-          path: '**',
-          redirectTo: 'error/404',
-        }
-      ]
-  }
+      {
+        path: 'okr/:funcID',
+        component: OKRComponent,
+      },
+      {
+        path: 'dashboard/:funcID',
+        component: DashboardComponent,
+      },
+      {
+        path: 'reports/:funcID',
+        component: ReportsComponent,
+      },
+      {
+        path: 'reviews/:funcID',
+        component: ReviewsComponent,
+      },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+      {
+        path: '**',
+        redirectTo: 'error/404',
+      },
+    ],
+  },
 ];
 
 @NgModule({
@@ -55,7 +56,8 @@ const routes: Routes = [
     OKRComponent,
     DashboardComponent,
     ReportsComponent,
-    ReviewsComponent
+    ReviewsComponent,
+    OKRTasksComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -66,8 +68,6 @@ const routes: Routes = [
     SharedModule,
     CodxShareModule,
   ],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule],
 })
-export class CodxOmModule { }
+export class CodxOmModule {}
