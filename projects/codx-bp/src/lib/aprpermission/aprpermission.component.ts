@@ -49,6 +49,7 @@ export class AprpermissionComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.grid,
         active: true,
         sameData: true,

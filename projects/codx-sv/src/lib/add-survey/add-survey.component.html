@@ -793,39 +793,33 @@
     "
     class="pd-5p"
   >
-    <table class="column">
-      <thead>
-        <tr>
-          <th scope="col" class="w-40"></th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblCoinReceived"
-              formName="FED_TagObjects"
-              default="Cột 1"
-            ></codx-label>
-          </th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblCoinSended"
-              formName="FED_TagObjects"
-              default="Cột 2"
-            ></codx-label>
-          </th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblTotal"
-              formName="FED_TagObjects"
-              default="Cột 3"
-            ></codx-label>
-          </th>
-        </tr>
-      </thead>
-    </table>
-    <div *ngFor="let item of itemQuestion.answers">
-      <ng-container
-        *ngTemplateOutlet="templateMatrix; context: { itemAnswer: item }"
-      >
-      </ng-container>
+    <div class="d-flex pl-15">
+      <div *ngFor="let itemC of itemQuestion.answers">
+        <span class="ps-6" *ngIf="itemC.isColumn">{{ itemC.answer }}</span>
+      </div>
+    </div>
+    <div *ngFor="let itemR of itemQuestion.answers">
+      <table class="table mb-0" *ngIf="!itemR.isColumn">
+        <tbody>
+          <tr>
+            <td class="w-17">
+              <div class="d-flex align-items-top">
+                {{ itemR.answer }}
+              </div>
+            </td>
+            <div class="d-flex">
+              <div *ngFor="let itemC of itemQuestion.answers">
+                <td class="text-right pe-12">
+                  <span
+                    class="icon-radio_button_unchecked icon-radio"
+                    *ngIf="itemC.isColumn"
+                  ></span>
+                </td>
+              </div>
+            </div>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div
@@ -934,34 +928,6 @@
       </ng-container>
     </div>
   </div>
-</ng-template>
-<ng-template #templateMatrix>
-  <table class="table mb-0">
-    <tbody>
-      <!-- <tr>
-        <td class="w-40">
-          <div class="d-flex align-items-top">
-            {{ item.text }}
-          </div>
-        </td>
-        <td class="w-20 text-right">
-          {{ item.totalCoinReceiver > 0 ? "+" : ""
-          }}{{ item.totalCoinReceiver }}
-        </td>
-        <td class="w-20 text-right">
-          {{ item.totalCoinReceiver > 0 ? "-" : "" }}{{ item.totalCoinSend }}
-        </td>
-        <td
-          class="w-20 text-right fw-bold"
-          [ngClass]="
-            getClassTextCoin(item.totalCoinReceiver, item.totalCoinSend)
-          "
-        >
-          {{ item.totalCoinReceiver - item.totalCoinSend }}
-        </td>
-      </tr> -->
-    </tbody>
-  </table>
 </ng-template>
 <ng-template
   #template_card_image_video
