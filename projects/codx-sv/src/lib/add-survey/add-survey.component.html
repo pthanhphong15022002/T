@@ -793,48 +793,34 @@
     "
     class="pd-5p"
   >
-    <table class="column">
-      <thead>
-        <tr>
-          <th scope="col" class="w-40"></th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblCoinReceived"
-              formName="FED_TagObjects"
-              default="Cột 1"
-            ></codx-label>
-          </th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblCoinSended"
-              formName="FED_TagObjects"
-              default="Cột 2"
-            ></codx-label>
-          </th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblTotal"
-              formName="FED_TagObjects"
-              default="Cột 3"
-            ></codx-label>
-          </th>
-        </tr>
-      </thead>
-    </table>
-    <table class="table mb-0">
-      <tbody>
-        <div *ngFor="let item of itemQuestion.answers">
+    <div class="d-flex pl-15">
+      <div *ngFor="let itemC of itemQuestion.answers">
+        <span class="ps-6" *ngIf="itemC.isColumn">{{ itemC.answer }}</span>
+      </div>
+    </div>
+    <div *ngFor="let itemR of itemQuestion.answers">
+      <table class="table mb-0" *ngIf="!itemR.isColumn">
+        <tbody>
           <tr>
-            <td class="w-40">
+            <td class="w-17">
               <div class="d-flex align-items-top">
-                {{ item.answer }}
+                {{ itemR.answer }}
               </div>
             </td>
-            <td class="w-20 text-right"></td>
+            <div class="d-flex">
+              <div *ngFor="let itemC of itemQuestion.answers">
+                <td class="text-right pe-12">
+                  <span
+                    class="icon-radio_button_unchecked icon-radio"
+                    *ngIf="itemC.isColumn"
+                  ></span>
+                </td>
+              </div>
+            </div>
           </tr>
-        </div>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div
     *ngIf="itemQuestion.answerType != 'O2' || itemQuestion.answerType != 'C2'"
