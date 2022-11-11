@@ -260,6 +260,7 @@ export class PopupAddPostComponent implements OnInit {
       }
       switch (this.data.shareControl) {
         case this.SHARECONTROLS.OWNER:
+          break;
         case this.SHARECONTROLS.EVERYONE:
         case this.SHARECONTROLS.MYGROUP:
         case this.SHARECONTROLS.MYTEAM:
