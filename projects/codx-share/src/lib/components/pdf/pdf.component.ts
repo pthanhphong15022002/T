@@ -610,7 +610,7 @@ export class PdfComponent
       fontFormat:
         type == 'text' ? konva.fontStyle() + ' ' + konva.textDecoration() : '',
       fontSize: type == 'text' ? konva.fontSize() : '',
-      signatureType: 2,
+      signatureType: this.signerInfo.signType,
       comment: '',
       createdBy: authorID,
       modifiedBy: authorID,

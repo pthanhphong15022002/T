@@ -91,7 +91,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   gridViewSetup: any;
   timeBool = false;
   isMeetingDate = true;
-  isRoom = true;
+  isRoom = false;
   startRoom: any;
   endRoom: any;
   listRoom: TmpRoom[] = [];
@@ -130,40 +130,21 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
       .subscribe((res) => {
-        // this.isRoom = res.msgBodyData[0];
-        if (this.action === 'edit') {
-          if (this.isRoom == false) {
-            this.api
-              .callSv(
-                'EP',
-                'EP',
-                'ResourcesBusiness',
-                'GetOneAsync',
-                this.meeting.location
-              )
-              .subscribe((e) => {
-                if (e.msgBodyData[0]) {
-                  this.meeting.location = e.msgBodyData[0].resourceName;
-                }
-              });
-          }
-        }
+        console.log(res);
+        this.isRoom = res.msgBodyData[0];
+
       });
 
-    if (this.action == 'add'){
-      this.meeting.startDate = moment(new Date())
-      .set({ hour: 0, minute: 0, second: 0 })
-      .toDate();
-      // this.meeting.endDate = moment(new Date())
-      // .set({ hour: 0, minute: 0, second: 0 })
-      // .toDate();
+    if (this.action == 'add') {
+      this.meeting.startDate = new Date();
+
     }
-
-
     this.selectedDate = moment(new Date(this.meeting.startDate))
       .set({ hour: 0, minute: 0, second: 0 })
       .toDate();
     this.getTimeParameter();
+    // this.getTimeWork(new Date());
+
     // this.getTimeWork(this.selectedDate);
 
     if (this.action == 'add' || this.action == 'copy') {
@@ -237,6 +218,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res.msgBodyData[0] && res.msgBodyData[0].length > 0) {
           var list = [];
+          this.listRoom = [];
           list = res.msgBodyData[0];
           list.forEach((element) => {
             var lstR = [];
@@ -250,10 +232,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               re['resourceID'] = element.resourceID;
               re['location'] = element.resourceName;
               this.listRoom.push(re);
+
             }
           });
           console.log(this.listRoom);
         }
+        this.changDetec.detectChanges();
       });
   }
 
@@ -331,8 +315,10 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close([res.save]);
           //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
-          // this.bookingRoomEP(res.save);
-          this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID).subscribe();
+          this.bookingRoomEP(res.save);
+          this.tmSv
+            .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
+            .subscribe();
         } else this.dialog.close();
       });
   }
@@ -343,7 +329,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.dialog.close();
-        this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID).subscribe();
+        this.tmSv
+          .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
+          .subscribe();
       });
   }
   ///cần 1 đống mess Code
@@ -479,6 +467,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   confirmResourcesTrackEvent() {
     this.tmSv
       .getResourcesTrackEvent(
+        this.meeting.meetingID,
         this.meeting.resources,
         this.meeting.startDate.toUTCString(),
         this.meeting.endDate.toUTCString()
@@ -700,7 +689,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.selectedDate = moment(new Date(this.meeting.startDate))
         .set({ hour: 0, minute: 0, second: 0 })
         .toDate();
-      this.getTimeWork(this.selectedDate);
+      // this.getTimeWork(this.selectedDate);
       this.setDate();
     }
     // var now = Date.now();
@@ -1016,11 +1005,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           var param = JSON.parse(res.dataValue);
           this.calendarID = param.CalendarID;
           this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
-          this.getTimeWork(
-            moment(new Date(this.meeting.startDate))
-              .set({ hour: 0, minute: 0, second: 0 })
-              .toDate()
-          );
+          this.getTimeWork(new Date());
         }
       });
   }
@@ -1046,6 +1031,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               this.startTimeWork = day.startTime;
               endShiftType1 = day.endTime;
             }
+
             if (day.shiftType == '2') {
               this.endTimeWork = day.endTime;
               starrShiftType2 = day.startTime;
@@ -1055,10 +1041,15 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           this.startTimeWork = this.startTimeWork
             ? this.startTimeWork
             : starrShiftType2;
-          this.endTimeWork = this.endTimeWork
+          if (this.action === 'add') {
+            this.startTime = this.startTimeWork;
+          }
+          this.endTimeWork = this.startTimeWork
             ? this.endTimeWork
             : endShiftType1;
-
+          if (this.action === 'add') {
+            this.endTime = this.endTimeWork;
+          }
           if (this.action != 'add') this.setTimeEdit();
         }
       });
@@ -1073,23 +1064,25 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     booking.startDate = data.startDate;
     booking.endDate = data.endDate;
     booking.link = data.link;
-    booking.link2 = data.link2;
+    // booking.link2 = data.link2;
     booking.memo = data.memo;
     booking.online = data.online;
     booking.bookingOn = data.startDate;
-    booking.approveStatus = '1';
+    // booking.approveStatus = '1';
     booking.resourceType = '1';
     //cần kiểm tra lại mapping cho 2 field này
     booking.title = data.meetingName; // tiêu đề cuộc họp
-    booking.reasonID = 'R'; //mã lí do cuộc họp
+    booking.reasonID = 'R';
+    booking.refID = data.recID;//mã lí do cuộc họp
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
     data.resources.forEach((item) => {
       let attender = new EP_BookingAttendees();
       attender.userID = item.resourceID;
       attender.roleType = item.roleType;
-      attender.optional = item.optional;
-      attender.status = item.status;
+      attender.userName = item.resourceName;
+      // attender.optional = item.optional;
+      // attender.status = item.status;
       bookingAttendees.push(attender);
     });
     this.api
