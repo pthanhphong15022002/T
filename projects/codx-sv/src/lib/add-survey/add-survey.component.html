@@ -821,12 +821,20 @@
         </tr>
       </thead>
     </table>
-    <div *ngFor="let item of itemQuestion.answers">
-      <ng-container
-        *ngTemplateOutlet="templateMatrix; context: { itemAnswer: item }"
-      >
-      </ng-container>
-    </div>
+    <table class="table mb-0">
+      <tbody>
+        <div *ngFor="let item of itemQuestion.answers">
+          <tr>
+            <td class="w-40">
+              <div class="d-flex align-items-top">
+                {{ item.answer }}
+              </div>
+            </td>
+            <td class="w-20 text-right"></td>
+          </tr>
+        </div>
+      </tbody>
+    </table>
   </div>
   <div
     *ngIf="itemQuestion.answerType != 'O2' || itemQuestion.answerType != 'C2'"
@@ -934,34 +942,6 @@
       </ng-container>
     </div>
   </div>
-</ng-template>
-<ng-template #templateMatrix>
-  <table class="table mb-0">
-    <tbody>
-      <!-- <tr>
-        <td class="w-40">
-          <div class="d-flex align-items-top">
-            {{ item.text }}
-          </div>
-        </td>
-        <td class="w-20 text-right">
-          {{ item.totalCoinReceiver > 0 ? "+" : ""
-          }}{{ item.totalCoinReceiver }}
-        </td>
-        <td class="w-20 text-right">
-          {{ item.totalCoinReceiver > 0 ? "-" : "" }}{{ item.totalCoinSend }}
-        </td>
-        <td
-          class="w-20 text-right fw-bold"
-          [ngClass]="
-            getClassTextCoin(item.totalCoinReceiver, item.totalCoinSend)
-          "
-        >
-          {{ item.totalCoinReceiver - item.totalCoinSend }}
-        </td>
-      </tr> -->
-    </tbody>
-  </table>
 </ng-template>
 <ng-template
   #template_card_image_video
