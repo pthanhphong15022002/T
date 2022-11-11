@@ -72,7 +72,7 @@ export class ProcessesComponent
   searchAdvance: boolean;
   viewActive: any;
   // titleUpdateFolder = 'Cập nhật thư mục';
-  viewMode: any
+  viewMode: any;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -184,7 +184,7 @@ export class ProcessesComponent
     this.gridModels.dataValue = this.view.dataService.request.dataValues;
     this.gridModels.entityPermission = this.view.formModel.entityPer;
   }
-  getHomeProcessSearch(pageClickNumber?:Number) {
+  getHomeProcessSearch(pageClickNumber?: Number) {
     this.getGridModel();
     this.gridModels.dataValues = this.textSearch;
     this.bpService
@@ -210,31 +210,29 @@ export class ProcessesComponent
   }
   PageClick($event, pageNumClick: any) {
     this.pageNumberCliked = pageNumClick;
-    this.gridModels.page =this.pageNumberCliked;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
   nextPage($event) {
-    this.pageNumberCliked= this.pageNumberCliked + 1;;
-    this.gridModels.page =this.pageNumberCliked;
+    this.pageNumberCliked = this.pageNumberCliked + 1;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
   previousPage($event) {
-    this.pageNumberCliked= this.pageNumberCliked - 1;;
-    this.gridModels.page =this.pageNumberCliked;
+    this.pageNumberCliked = this.pageNumberCliked - 1;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
   firstPage($event) {
-    this.pageNumberCliked= this.pageNumberDefault;
-    this.gridModels.page =this.pageNumberCliked;
+    this.pageNumberCliked = this.pageNumberDefault;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
   lastPage($event) {
-    this.pageNumberCliked= this.totalPages;
-    this.gridModels.page =this.pageNumberCliked;
+    this.pageNumberCliked = this.totalPages;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
-
-
 
   searchChange($event) {
     try {
@@ -251,7 +249,7 @@ export class ProcessesComponent
         this.changeDetectorRef.detectChanges();
       } else {
         this.isSearch = true;
-   //     this.pageNumberCliked= this.pageNumberDefault;
+        //     this.pageNumberCliked= this.pageNumberDefault;
         this.getHomeProcessSearch();
       }
     } catch (ex) {
@@ -464,10 +462,15 @@ export class ProcessesComponent
         950,
         650,
         '',
-        [this.titleAction,e],
+        [this.titleAction, e],
         ''
       )
-      .closed.subscribe();
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   share(data) {
@@ -537,8 +540,8 @@ export class ProcessesComponent
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
-    let url ='bp/processstep/BPT11'
-    this.codxService.navigate('', url,{processID:data.recID});
+    let url = 'bp/processstep/BPT11';
+    this.codxService.navigate('', url, { processID: data.recID });
   }
 
   approval($event) {}
