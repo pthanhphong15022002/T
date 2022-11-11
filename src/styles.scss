@@ -1025,6 +1025,25 @@ codx-tag .codx-tag:hover {
   height: 12px;
 }
 
+.viewfile-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewfile-content img {
+  max-height: 100% !important;
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.list-empty.card.card-flush {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /******* tam ***/
 .codx-form .card-footer,
 .e-dialog .card-footer {
