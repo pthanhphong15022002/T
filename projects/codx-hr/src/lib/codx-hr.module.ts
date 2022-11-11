@@ -1,3 +1,4 @@
+import { EmployeeAssurTaxBankaccInfoComponent } from './employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { EmployeeFamilyRelationshipDetailComponent } from './employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
 import { EmployeeFamilyRelationshipComponent } from './employee-profile/employee-family-relationship/employee-family-relationship.component';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -222,6 +223,7 @@ const T_Component: Type<any>[] = [
   EmployeeSelfInfoComponent,
   EmployeeFamilyRelationshipComponent,
   EmployeeFamilyRelationshipDetailComponent,
+  EmployeeAssurTaxBankaccInfoComponent,
 ];
 @NgModule({
   imports: [
