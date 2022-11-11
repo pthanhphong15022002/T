@@ -199,6 +199,7 @@ export class PdfComponent
 
   //ca
   gotLstCA = false;
+  caStepConfig = ['S1', 'S2', 'S3'];
 
   //css ???
   public cssClass: string = 'e-list-template';
@@ -1556,10 +1557,19 @@ export class PdfComponent
   crrType: any;
 
   changeAnnotationItem(type: any) {
-    let hasCA = this.lstCA ? (this.lstCA.length != 0 ? true : false) : false;
+    let curStepType = this.signerInfo.stepType;
+    let hasCA = false;
+    if (curStepType != 'S') {
+      let hasCAStep = this.lstSigners.find(
+        (signer) => signer.stepNo < this.stepNo && signer.stepType == 'S'
+      );
+      if (hasCAStep) {
+        hasCA = true;
+      }
+    }
 
-    if (this.isApprover && hasCA) {
-      this.notificationsService.notify('ES022');
+    if (hasCA) {
+      this.notificationsService.notifyCode('ES022');
       return;
     }
     if (!type) return;
