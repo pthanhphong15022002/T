@@ -69,6 +69,12 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   parentRecID: string;
   oldRecID: string;
 
+  //test to update signtype for all step
+  isChangeSignatureType: boolean = false;
+  signatureType: string;
+
+  oUpdate: any = null; //update item in grid
+
   constructor(
     private esService: CodxEsService,
     private cache: CacheService,
@@ -80,7 +86,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.data = dialog?.dataService?.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
+    this.signatureType = dialog?.dataService?.dataSelected?.signatureType;
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
     this.headerText = data?.data?.headerText;
@@ -90,6 +97,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dialog.closed.subscribe((res) => {
+      if (res.event == null && this.oUpdate != null) {
+        //update gridView dont use btb Save when close form
+        this.dialog.dataService.update(this.oUpdate).subscribe();
+      }
+
       this.esService.setLstDeleteStep(null);
       this.esService.setApprovalStep(null);
       if (this.isSaved) {
@@ -102,9 +114,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         //delete autoNumer đã thiết lập
         this.esService
           .deleteAutoNumber(this.data.categoryID)
-          .subscribe((resDelete) => {
-            console.log('result delete auto', resDelete);
-          });
+          .subscribe((resDelete) => {});
 
         //delete EmailTemplate da thiet lap
         this.esService.deleteEmailTemplate().subscribe((res1) => {
@@ -144,6 +154,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.data.signatureType = '1';
       this.data.icon = 'icon-text_snippet';
       this.data.color = '#0078FF';
+      this.signatureType = '1';
 
       this.form?.formGroup?.patchValue({
         signatureType: '1',
@@ -210,8 +221,39 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field && event?.component) {
-      this.data[event['field']] = event.data;
-      this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+      if (event?.field == 'signatureType') {
+        if (this.data?.countStep > 0) {
+          this.notify.alertCode('ES023').subscribe((x) => {
+            //open popup confirm
+            let lastValue = JSON.parse(JSON.stringify(this.data.signatureType));
+            this.data[event['field']] = event.data;
+            this.cr.detectChanges();
+            if (x.event.status == 'Y') {
+              this.form?.formGroup?.patchValue({
+                [event['field']]: event.data,
+              });
+              this.esService
+                .updateSignatureType(this.data.recID, this.data.signatureType)
+                .subscribe();
+
+              this.esService.updateCategory(this.data).subscribe((res) => {
+                if (res) {
+                  this.oUpdate = res;
+                }
+              });
+            } else {
+              this.data.signatureType = lastValue;
+              this.cr.detectChanges();
+            }
+          });
+        } else {
+          this.data[event['field']] = event.data;
+          this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+        }
+      } else {
+        this.data[event['field']] = event.data;
+        this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+      }
     }
     this.cr.detectChanges();
   }
@@ -291,7 +333,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
-    if (this.viewAutoNumber == '') {
+    if (this.data.eSign && this.viewAutoNumber == '') {
       let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;

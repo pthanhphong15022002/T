@@ -60,6 +60,10 @@ export class PopupAddApproverComponent implements OnInit {
     if (!field) field = event?.field;
     if (field && event.component) {
       this.data[field] = event.data;
+      if (field == 'email') {
+        this.data.approver = this.data.email;
+        this.fgroupApprover.patchValue({ approver: this.data.approver });
+      }
       this.cr.detectChanges();
     }
   }

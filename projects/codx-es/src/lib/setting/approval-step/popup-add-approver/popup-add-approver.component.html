@@ -15,6 +15,7 @@
         field="email"
         [Group]="fgroupApprover"
         [formModel]="formModel"
+        (valueChange)="valueChange($event)"
       >
       </codx-input>
     </div>

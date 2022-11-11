@@ -141,8 +141,10 @@
           </codx-label>
           <codx-input
             field="signatureType"
-            [formModel]="formModel"
-            [Group]="form.formGroup"
+            [crrValue]="data.signatureType"
+            type="valuelist"
+            [refValue]="grvSetup['SignatureType']['referedValue']"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>

@@ -331,7 +331,12 @@
   </ng-container>
   <ng-template #WPComment>
     <div class="pic-feed mb-2">
-      <ng-container *ngIf="item.files; else get">
+      <div class="pic-feed-img">
+        <codx-file [objectID]="item.recID" (evtGetFiles)="getFiles($event, item)"
+          (evtViewDetail)="clickViewDetail($event)">
+        </codx-file>
+      </div>
+      <!-- <ng-container *ngIf="item.files; else get">
         <div>
           <codx-file [files]="item.files" (evtGetFiles)="getFiles($event, item)" (evtViewDetail)="clickViewDetail($event)">
           </codx-file>
@@ -343,7 +348,7 @@
             (evtViewDetail)="clickViewDetail($event)">
           </codx-file>
         </div>
-      </ng-template>
+      </ng-template> -->
     </div>
   </ng-template>
 </ng-template>

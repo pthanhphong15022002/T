@@ -89,19 +89,23 @@ export class TreeviewCommentComponent implements OnInit {
     });
   }
   totalComment:number = 0;
-  getDataComment(){ 
-    this.api.execSv
-    ("WP",
-    "ERM.Business.WP",
-    "CommentsBusiness",
-    "GetCommentsByOjectIDAsync",[this.objectID, this.pageIndex])
-    .subscribe((res:any[]) => {
-      if(res){
-        this.dataComment.listComment = res[0];
-        this.totalComment = res[1];
-        this.dt.detectChanges();
-      }
-    })
+  getDataComment()
+  {
+    if(this.objectID){
+      this.api.execSv
+      ("WP",
+      "ERM.Business.WP",
+      "CommentsBusiness",
+      "GetCommentsByOjectIDAsync",[this.objectID, this.pageIndex])
+      .subscribe((res:any[]) => {
+        if(res){
+          this.dataComment.listComment = res[0];
+          this.totalComment = res[1];
+          this.dt.detectChanges();
+        }
+      });
+    } 
+    
   }
   showVotes(data: any) {
     let object = {
@@ -182,13 +186,13 @@ export class TreeviewCommentComponent implements OnInit {
             data.votes = res[0];
             data.totalVote = res[1];
             data.listVoteType = res[2];
-            if (voteType == data.myVotedType) {
-              data.myVotedType = null;
+            if (voteType == data.myVoteType) {
+              data.myVoteType = null;
               data.myVoted = false;
               this.checkVoted = false;
             }
             else {
-              data.myVotedType = voteType;
+              data.myVoteType = voteType;
               data.myVoted = true;
               this.checkVoted = true;
             }
