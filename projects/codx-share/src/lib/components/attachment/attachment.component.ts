@@ -610,6 +610,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
+    debugger;
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
@@ -970,6 +971,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.fileUploadList[0].description = this.description[0];
       this.fileUploadList[0].data = ""
       this.addFileLargeLong(this.fileUploadList[0]);
+      this.lstRawFile = [];
       //this.addFile(this.fileUploadList[0]);
 
       this.atSV.fileList.next(this.fileUploadList);
@@ -1010,7 +1012,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
       fileItem.uploadId = retUpload.Data?.UploadId; //"";
       fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
-      this.lstRawFile = [];
     } catch (ex) {
       console.log(ex);
     }
@@ -1049,7 +1050,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     var chunSizeInfBytes = ChunkSizeInKB * 1024;
     var sizeInBytes = 0;
-    this.lstRawFile = [];
     return obj.pipe(
       mergeMap((retUpload, i) => {
         // update len server urs và thumbnail
@@ -1230,7 +1230,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
           console.log(ex);
         }
       }
-      this.lstRawFile = [];
     } catch (ex) {
       fileItem.uploadId = '0';
       // this.notificationsService.notify(ex);
