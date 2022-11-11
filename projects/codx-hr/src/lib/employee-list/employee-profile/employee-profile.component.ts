@@ -69,7 +69,7 @@ export class EmployeeProfileComponent extends UIComponent {
   formModel;
   itemDetail;
 
-  crrTab: number = 0;
+  crrTab: number = 1;
 
   vllTabs = [
     { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
