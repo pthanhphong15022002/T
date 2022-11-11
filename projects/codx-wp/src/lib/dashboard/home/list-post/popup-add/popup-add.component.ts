@@ -147,7 +147,9 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   }
   
   click() {
+    debugger;
     switch (this.dialogData.status) {
+
       case this.STATUS.EDIT:
         this.editPost();
         break;
@@ -239,6 +241,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe(async (result: any) => {
         if (result) {
+          debugger;
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
             this.listFileUpload.map((e: any) => {
