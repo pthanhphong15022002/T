@@ -2,13 +2,14 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FileService } from '@shared/services/file.service';
 import { NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
-// Import the library
+import { ToolbarService , PrintService } from '@syncfusion/ej2-angular-documenteditor'
 
 
 @Component({
   selector: 'codx-view-flowchart',
   templateUrl: './view-flowchart.component.html',
   styleUrls: ['./view-flowchart.component.css'],
+  providers:[ToolbarService , PrintService]
 })
 export class ViewFlowchartComponent implements OnInit,OnChanges {
   @Input() dataFile: any;

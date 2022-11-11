@@ -31,6 +31,8 @@ import { CodxSvService } from '../codx-sv.service';
 import { SV_Surveys } from '../model/SV_Surveys';
 import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 import { Observable, Subscription } from 'rxjs';
+import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-add-survey',
@@ -93,12 +95,13 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   children: any = new Array();
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
+  src: any;
   constructor(
     inject: Injector,
     private change: ChangeDetectorRef,
     private SVServices: CodxSvService,
     private notification: NotificationsService,
-    private call: CallFuncService,
+    private call: CallFuncService
   ) {
     super(inject);
 
@@ -125,6 +128,19 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     // this.add();
+    // this.getFileByObjectID('84458c7d-1a7a-470b-a1c6-dedbb5ba66de').subscribe((res: any[]) => {
+    //   if (res.length > 0) {
+    //     let files = res;
+    //     files.map((e: any) => {
+    //       if (e && e.referType == this.REFER_TYPE.VIDEO) {
+    //         e[
+    //           'srcVideo'
+    //         ] = `${environment.urlUpload}/${e.url}`;
+    //       }
+    //     });
+    //     this.src = files;
+    //   }
+    // });
   }
 
   ngAfterViewInit() {
@@ -475,7 +491,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        this.uploadImage(this.itemActive, res.event);
+        this.uploadImage(this.indexSessionA, this.itemActive, res.event);
       }
     });
   }
@@ -597,7 +613,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   addTitle(dataQuestion) {}
 
-  uploadImage(dataQuestion, data) {
+  uploadImage(seqNoSession, dataQuestion, data) {
     if (dataQuestion) {
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
@@ -605,14 +621,27 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       tempQuestion.question = null;
       tempQuestion.category = 'P';
       tempQuestion.recID = data[0].objectID;
-      this.questions.splice(dataQuestion.seqNo + 1, 0, tempQuestion);
-      this.questions.forEach((x, index) => (x.seqNo = index));
-      this.questions[dataQuestion.seqNo].active = false;
-      this.questions[dataQuestion.seqNo + 1].active = true;
-      this.itemActive = this.questions[dataQuestion.seqNo + 1];
-      this.clickToScroll(dataQuestion.seqNo + 1);
+      this.questions[seqNoSession].children.splice(
+        dataQuestion.seqNo + 1,
+        0,
+        tempQuestion
+      );
+      this.questions[seqNoSession].children.forEach(
+        (x, index) => (x.seqNo = index)
+      );
+      this.questions[seqNoSession].children[dataQuestion.seqNo].active = false;
+      this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
+        true;
+      this.itemActive =
+        this.questions[seqNoSession].children[dataQuestion.seqNo + 1];
+      // this.clickToScroll(dataQuestion.seqNo + 1);
     }
+    data[0]['recID'] = data[0].objectID;
     this.lstEditIV = data;
+    if (this.lstEditIV[0].referType == 'video')
+      this.lstEditIV[0][
+        'srcVideo'
+      ] = `${environment.urlUpload}/${this.lstEditIV[0].urlPath}`;
     this.change.detectChanges();
   }
 
@@ -661,13 +690,23 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   moveSession() {
     var obj = {
-      data: this.recID
-    }
-    var dialog = this.call.openForm(SortSessionComponent, '', 500, 600, '', obj);
-    dialog.closed.subscribe(res => {
-      if(res.event) {
-
+      data: this.recID,
+    };
+    var dialog = this.call.openForm(
+      SortSessionComponent,
+      '',
+      500,
+      600,
+      '',
+      obj
+    );
+    dialog.closed.subscribe((res) => {
+      if (res.event) {
       }
-    })
+    });
+  }
+
+  onChange(e) {
+    console.log("check onChange", e);
   }
 }

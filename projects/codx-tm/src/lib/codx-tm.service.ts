@@ -417,6 +417,16 @@ export class CodxTMService {
     );
   }
 
+  UpdateDateMeeting(meetingID: string, startDate: string, endDate: string){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'UpdateDateMeetingAsync',
+      [meetingID, startDate, endDate]
+    );
+  }
+
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
       this.cache.functionList(functionID).subscribe((funcList) => {

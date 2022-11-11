@@ -190,7 +190,7 @@
         <div [innerHTML]="item.content"></div>
       </div> -->
       <div class="mt-2">
-        <codx-file [objectID]="item.recID" objectType="WP_Comments" (viewDetail)="clickViewDetail($event)">
+        <codx-file [objectID]="item.recID" objectType="WP_Comments" (evtViewDetail)="clickViewDetail($event)">
         </codx-file>
       </div>
       <ng-container *ngIf="item.refType == 'WP_News'; else tmpSharePost">
@@ -333,14 +333,14 @@
     <div class="pic-feed mb-2">
       <ng-container *ngIf="item.files; else get">
         <div>
-          <codx-file [files]="item.files" (evtGetFiles)="getFiles($event, item)" (viewDetail)="clickViewDetail($event)">
+          <codx-file [files]="item.files" (evtGetFiles)="getFiles($event, item)" (evtViewDetail)="clickViewDetail($event)">
           </codx-file>
         </div>
       </ng-container>
       <ng-template #get>
         <div class="pic-feed-img">
           <codx-file [objectID]="item.recID" (evtGetFiles)="getFiles($event, item)"
-            (viewDetail)="clickViewDetail($event)">
+            (evtViewDetail)="clickViewDetail($event)">
           </codx-file>
         </div>
       </ng-template>

@@ -87,11 +87,13 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     this.dataImg.history = null;
     this.dataImg.objectType = this.functionList.entityName;
     this.dataImg.objectID = recID;
-    this.api.execSv("DM","DM","FileBussiness","CopyAsync",this.dataImg).subscribe( item=>{
-       //Trả ra true false
-    }
-    );
-    this.dialog.close([this.dataImg]);
+    this.api
+      .execSv('DM', 'DM', 'FileBussiness', 'CopyAsync', this.dataImg)
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close([this.dataImg]);
+        }
+      });
   }
 
   getFileByObjectID(recID) {
@@ -138,7 +140,7 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     // });
   }
 
-  async selectedImage(e) {
+  async selectedFile(e) {
     this.generateGuid();
     let recID = JSON.parse(JSON.stringify(this.guidID));
     e.data[0].objectID = recID;
@@ -148,16 +150,16 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
       files.map((dt: any) => {
         if (dt.mimeType.indexOf('image') >= 0) {
           dt['referType'] = this.REFER_TYPE.IMAGE;
-        } else if (dt.mimeType.indexOf('video') >= 0) {
+        } else if (dt.mimeType.indexOf('video/mp4') >= 0) {
+          dt['referType'] = this.REFER_TYPE.VIDEO;
+        } else if (dt.mimeType.indexOf('video/mp3') >= 0) {
           dt['referType'] = this.REFER_TYPE.VIDEO;
         } else {
           dt['referType'] = this.REFER_TYPE.APPLICATION;
         }
       });
     }
-    if (files) {
-      this.ATM_Image.objectId = recID;
-    }
+    this.ATM_Image.fileUploadList = files;
     (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
       if (result.data) {
         if (this.modeFile == 'change') {
@@ -170,6 +172,8 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
       }
     });
   }
+
+  selectedVideo;
 
   guidID: any;
   generateGuid() {

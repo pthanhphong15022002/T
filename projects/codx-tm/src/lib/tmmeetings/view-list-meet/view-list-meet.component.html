@@ -1,4 +1,8 @@
 <div class="d-flex flex-row align-items-top p-2 border-bottom" (dblclick)="dbClick(data)">
+  <div class="w-3">
+    <button class="icon-access_alarm" (click)="updateTimeMeeting(data)">
+    </button>
+  </div>
   <div class="me-5">
     <div class="badge badge-danger me-2 label-status a" [style.background-color]="
     (data.status | vll: 'CO004':'textColor' | async) +
@@ -47,6 +51,7 @@
       [isBookMark]="false" [dataItem]="data" type="hover">
     </codx-mfunc>
   </div>
+
 </div>
 
 <ng-template #titleTmp>
