@@ -20,8 +20,7 @@
         </ng-container>
         <ng-template #video_1_0>
           <video [autoplay]="false" #video controls class="w-100 rounded h-auto">
-            <source [src]="file_img_video[0].srcVideo || file_img_video[0].data  ||
-            file_img_video[0].data.changingThisBreaksApplicationSecurity" type="video/mp4">
+            <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
           </video>
         </ng-template>
         <ng-container *ngIf="edit">

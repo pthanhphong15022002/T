@@ -203,10 +203,20 @@ export class PopupAddPostComponent implements OnInit {
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = res1.recID;
             this.codxATM.fileUploadList = this.fileUpload;
-            res1.files = JSON.parse(JSON.stringify(this.fileUpload));
             (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
               if (res2) 
               {
+                debugger
+                let files:any[] = [];
+                if(Array.isArray(res2)){
+                  res2.forEach(element => {
+                    files.push(element.data)
+                  });;
+                }
+                else{
+                  files.push(res2.data);
+                }
+                res1.files = JSON.parse(JSON.stringify(files));
                 this.dialogRef.close(res1);
               }
               else 
