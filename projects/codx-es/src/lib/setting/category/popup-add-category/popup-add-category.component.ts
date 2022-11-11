@@ -73,6 +73,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   isChangeSignatureType: boolean = false;
   signatureType: string;
 
+  oUpdate: any = null; //update item in grid
+
   constructor(
     private esService: CodxEsService,
     private cache: CacheService,
@@ -95,6 +97,11 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dialog.closed.subscribe((res) => {
+      if (res.event == null && this.oUpdate != null) {
+        //update gridView dont use btb Save when close form
+        this.dialog.dataService.update(this.oUpdate).subscribe();
+      }
+
       this.esService.setLstDeleteStep(null);
       this.esService.setApprovalStep(null);
       if (this.isSaved) {
@@ -231,6 +238,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
               this.esService.updateCategory(this.data).subscribe((res) => {
                 if (res) {
+                  this.oUpdate = res;
                 }
               });
             } else {
