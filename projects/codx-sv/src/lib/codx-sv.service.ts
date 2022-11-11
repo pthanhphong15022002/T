@@ -127,4 +127,14 @@ export class CodxSvService {
       [item.recID, objectType, true]
     );
   }
+
+  getFileByObjectID(recID) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByIbjectIDAsync',
+      recID
+    );
+  }
 }

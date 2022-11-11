@@ -44,12 +44,36 @@ export class BookingStationeryViewDetailComponent
   active = 1;
 
   tabControl: TabModel[] = [];
+  routerRecID: any;
   constructor(private injector: Injector, private epService: CodxEpService) {
     super(injector);
+    this.routerRecID = this.router.snapshot.params['id'];
+    if(this.routerRecID!=null){
+      this.hideFooter=true
+    }
   }
 
   onInit(): void {
     this.itemDetailStt = 1;
+    let tempRecID:any;
+    if(this.routerRecID!=null){
+      tempRecID=this.routerRecID;
+    }
+    else{
+      tempRecID=this.itemDetail?.currentValue?.recID
+    }
+    this.api
+        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
+          tempRecID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.itemDetail = res;
+            this.detectorRef.detectChanges();
+          }
+        });
+      this.detectorRef.detectChanges();
+      this.setHeight();
   }
   ngAfterViewInit(): void {
     this.tabControl = [

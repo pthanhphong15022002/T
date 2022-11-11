@@ -1,3 +1,4 @@
+import { CheckBox } from '@syncfusion/ej2-angular-buttons';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import {
   Component,
@@ -22,6 +23,7 @@ import { CodxHrService } from '../../codx-hr.service';
 import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
 import { PopupAddEmployeesPartyInfoComponent } from '../../employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
 import { ActivatedRoute } from '@angular/router';
+import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -201,5 +203,23 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     });
     // })
+  }
+
+  addFamilyRelationshipInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeFamilyRelationshipComponent,{
+        isAdd: true,
+        headerText: 'Quan hệ gia đình',
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    })
   }
 }

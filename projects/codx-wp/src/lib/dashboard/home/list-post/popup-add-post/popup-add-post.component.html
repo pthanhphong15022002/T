@@ -28,7 +28,7 @@
                     <ng-container *ngIf="data.shareControl">
                         <div (click)="openControlShare(controlShare)" class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
                             <codx-vll 
-                                [name]="'L1901'" 
+                                [name]="'WP001'" 
                                 [value]="data.shareControl" 
                                 [showText]="true" 
                                 [showIcon]="true" 
@@ -56,7 +56,7 @@
                     format="ed3" 
                     [class]="'border-none'" 
                     type="textarea" 
-                    [crrValue]="data.comments" 
+                    [crrValue]="data.content" 
                     [placeholder]="placeholderText"
                     (valueChange)="valueChange($event)">
                 </codx-input>
@@ -67,8 +67,8 @@
                     #codxFile
                     [isNew]="true" 
                     [funcID]="dialogRef.formModel.funcID"
-                    (removeFile)="removeFile($event)" 
-                    (addFile)="addFile($event)" 
+                    (evtRemoveFile)="removeFile($event)" 
+                    (evtAddFile)="addFile($event)" 
                     [edit]='true'>
                 </codx-file>
             </div>
