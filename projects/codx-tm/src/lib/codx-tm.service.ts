@@ -210,6 +210,9 @@ export class CodxTMService {
       [predicate, dataValue]
     );
   }
+
+
+
   //update status
   setStatusTask(
     funcID: string,
@@ -344,8 +347,8 @@ export class CodxTMService {
     );
   }
 
-  getResourcesTrackEvent(data, startDate, endDate){
-    return this.api.execSv<any>('CO','CO','MeetingsBusiness','AddResourcesEventAsync',[data,startDate,endDate]);
+  getResourcesTrackEvent(meetingID, data, startDate, endDate){
+    return this.api.execSv<any>('CO','CO','MeetingsBusiness','AddResourcesEventAsync',[meetingID, data,startDate,endDate]);
   }
 
   convertListToObject(
@@ -417,7 +420,7 @@ export class CodxTMService {
     );
   }
 
-  UpdateDateMeeting(meetingID: string, startDate: string, endDate: string){
+  UpdateDateMeeting(meetingID: string, startDate, endDate){
     return this.api.execSv(
       'CO',
       'CO',
@@ -425,6 +428,10 @@ export class CodxTMService {
       'UpdateDateMeetingAsync',
       [meetingID, startDate, endDate]
     );
+  }
+
+  changeBookingDateTime(recID, startDate, endDate){
+    return this.api.execSv('CO','CO','MeetingsBusiness','ChangeBookingDateTimeAsync', [recID, startDate, endDate]);
   }
 
   getFormModel(functionID): Promise<FormModel> {
