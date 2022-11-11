@@ -87,7 +87,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       )
       .subscribe((result: any[]) => {
         if (result.length > 0) {
-          debugger;
           result.forEach((f: any) => {
             if (this.objectType == 'WP_News') {
               if (f.referType == this.FILE_REFERTYPE.IMAGE) {
