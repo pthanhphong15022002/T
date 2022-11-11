@@ -1,5 +1,11 @@
-
 .h-searchtmp {
-    height: calc(100% - 100px)!important;
+    height: calc(100% - 100px) !important;
 }
 
+.search-header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 400px;
+    margin-left: -200px;
+}

@@ -151,8 +151,8 @@
 
 <ng-template #add>
     <div>
-        <codx-file #codxFileAdd [isNew]="true" [funcID]="functionList?.functionID" (removeFile)="removeFile($event)"
-            (addFile)="addFile($event)" [edit]='true'>
+        <codx-file #codxFileAdd [isNew]="true" [funcID]="functionList?.functionID" (evtRemoveFile)="removeFile($event)"
+            (evtAddFile)="addFile($event)" [edit]='true'>
         </codx-file>
     </div>
     <div class="d-none">
@@ -166,8 +166,8 @@
 <ng-template #edit>
     <ng-container *ngIf="note">
         <div class="my-3">
-            <codx-file #codxFileEdit [objectID]="note.recID" [edit]='true' (addFile)="addFile($event)"
-                (removeFile)="removeFile($event)" (evtGetFiles)="evtGetFiles($event)"></codx-file>
+            <codx-file #codxFileEdit [objectID]="note.recID" [edit]='true' (evtAddFile)="addFile($event)"
+                (evtRemoveFile)="removeFile($event)" (evtGetFiles)="evtGetFiles($event)"></codx-file>
             <div class="d-none">
                 <codx-attachment #attachmentEdit [objectType]="functionList?.entityName" hideFolder="1"
                     hideUploadBtn="1" hideDes="1" type="inline" [showMessage]="0" allowExtensions=".jpg,.png"

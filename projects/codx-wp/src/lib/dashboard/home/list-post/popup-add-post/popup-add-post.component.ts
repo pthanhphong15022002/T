@@ -4,6 +4,7 @@ import { Post } from '@shared/models/post';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 import { json } from 'stream/consumers';
 import { isThisTypeNode } from 'typescript';
@@ -24,7 +25,7 @@ export class PopupAddPostComponent implements OnInit {
   status: "create" | "edit" | "share" = "create"
   fileUpload:any[] = [];
   mssgNoti:String = "";
-  // emoji
+  // emoji  
   showEmojiPicker:boolean = false;
   emojiMode = 'apple';
   // end emoji
@@ -54,6 +55,7 @@ export class PopupAddPostComponent implements OnInit {
     USER: "U",
   }
   @ViewChild("codxATM") codxATM:AttachmentComponent;
+  @ViewChild("codxFile") codxFile:ImageGridComponent;
   constructor(
     private api:ApiHttpService,
     private callFC:CallFuncService,
@@ -75,11 +77,12 @@ export class PopupAddPostComponent implements OnInit {
   }
 
   getData(){
-    this.data = new WP_Comments();
-    this.data.shareControl = "9";
-    this.headerText = this.dialogData?.headerText;
-    this.status = this.dialogData?.status;
-    this.data = this.dialogData?.data;
+    if(this.dialogData)
+    {
+      this.headerText = this.dialogData.headerText;
+      this.status = this.dialogData.status;
+      this.data = this.dialogData.data;
+    }
     this.cache.message('WP011').subscribe((mssg: any) => {
       if(mssg?.defaultName)
       {
@@ -115,7 +118,23 @@ export class PopupAddPostComponent implements OnInit {
   }
   // upload file 
   addFile(files: any) {
-
+    if(files){
+      if (this.fileUpload.length == 0) {
+        this.fileUpload = JSON.parse(JSON.stringify(files));
+      }
+      else
+      {
+        this.fileUpload = this.fileUpload.concat(files);
+      }
+      if(this.fileUpload.length > 0)
+      {
+        let fileImages = this.fileUpload.filter(x => x.referType == "image");
+        if(fileImages?.length > 0){
+          this.data.images = fileImages.length;
+        }
+      }
+      this.dt.detectChanges();
+    }
   }
 
   // remove file 
@@ -124,7 +143,14 @@ export class PopupAddPostComponent implements OnInit {
 
   // select file
   getfileCount(event: any) {
-
+    console.log(event);
+    if(event)
+    {
+      let files = event.data;
+      if(files?.length > 0){
+        this.codxFile.addFiles(files);
+      }
+    }
   }
 
   // open popup emoji
@@ -133,7 +159,7 @@ export class PopupAddPostComponent implements OnInit {
   }
   // chose emoji
   addEmoji(event:any){
-    this.data.comments = this.data.comments + event.emoji.native;
+    this.data.content = this.data.content + event.emoji.native;
   }
 
   // click tag 
@@ -143,7 +169,7 @@ export class PopupAddPostComponent implements OnInit {
 
   // clikc uploadFile
   clickUploadFile(){
-
+    this.codxATM.uploadFile();
   }
 
   // submit
@@ -153,7 +179,7 @@ export class PopupAddPostComponent implements OnInit {
     }
   }
 
-  // insert Post 
+  // create Post 
   publishPost(){
     if (!this.data.content && this.fileUpload.length == 0) {
       let mssgStr = Util.stringFormat('Nội dung');
@@ -234,6 +260,7 @@ export class PopupAddPostComponent implements OnInit {
       }
       switch (this.data.shareControl) {
         case this.SHARECONTROLS.OWNER:
+          break;
         case this.SHARECONTROLS.EVERYONE:
         case this.SHARECONTROLS.MYGROUP:
         case this.SHARECONTROLS.MYTEAM:
@@ -243,6 +270,8 @@ export class PopupAddPostComponent implements OnInit {
           let permission = new Permission();
             permission.memberType = this.MEMBERTYPE.SHARE;
             permission.objectType = data[0].objectType;
+            permission.createdBy = this.user.userID,
+            permission.createdOn = new Date();
             this.data.permissions.push(permission);
           break;
         case this.SHARECONTROLS.OGRHIERACHY:
@@ -257,6 +286,8 @@ export class PopupAddPostComponent implements OnInit {
             p.objectType = x.objectType;
             p.objectID = x.id;
             p.objectName = x.text;
+            p.createdBy = this.user.userID;
+            p.createdOn = new Date();
             this.data.permissions.push(p);
           });
           let mssgCode = data.length > 1 ? "WP002" : "WP001";
@@ -301,7 +332,9 @@ export class PopupAddPostComponent implements OnInit {
         p.memberType = this.MEMBERTYPE.TAGS;
         p.objectID = x.UserID;
         p.objectName = x.UserName;
-        p.objectType = "U"
+        p.objectType = "U";
+        p.createdBy = this.user.userID;
+        p.createdOn = new Date();
         this.data.permissions.push(p);
       });
       let mssgCode = data.length > 1 ? "WP019" : "WP018";
