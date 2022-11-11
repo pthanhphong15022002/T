@@ -86,6 +86,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         this.objectID
       )
       .subscribe((result: any[]) => {
+        debugger;
         if (result.length > 0) {
           result.forEach((f: any) => {
             if (this.objectType == 'WP_News') {
@@ -97,6 +98,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
               if (f.referType == this.FILE_REFERTYPE.IMAGE) {
                 this.file_img_video.push(f);
               } else if (f.referType == this.FILE_REFERTYPE.VIDEO) {
+                debugger;
                 f[
                   'srcVideo'
                 ] = `${environment.urlUpload}`+"/"+f.url;

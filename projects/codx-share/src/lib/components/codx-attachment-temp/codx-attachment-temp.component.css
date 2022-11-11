@@ -1,5 +1,9 @@
-.icon-attachment-temp{
+.icon-attachment-temp {
     width: 25px;
     height: 25px;
     font-size: 25px !important;
+}
+
+.popup-attachment>div {
+    max-height: none !important;
 }

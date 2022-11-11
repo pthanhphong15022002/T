@@ -115,7 +115,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = dialog?.dataService?.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
 
     //set gia trị data oTP != otp
     this.data.oTPControl = this.data?.otpControl;
@@ -188,8 +188,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           this.data.supplier = '1';
           this.form?.formGroup.patchValue({ supplier: this.data.supplier });
         } else if (event?.data == '1') {
-          this.data.supplier = '2';
-          this.form?.formGroup.patchValue({ supplier: '2' });
+          this.data.supplier = '3';
+          this.form?.formGroup.patchValue({ supplier: this.data.supplier });
         }
       } else this.data[event['field']] = event?.data;
       this.cr.detectChanges();
