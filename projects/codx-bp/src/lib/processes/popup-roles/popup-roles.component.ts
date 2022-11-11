@@ -89,12 +89,13 @@ export class PopupRolesComponent implements OnInit {
       this.bpSv.updatePermissionProcess(this.process).subscribe((res) => {
         if (res.permissions != null) {
           this.notifi.notify('Phân quyền thành công');
+          this.dialog.close(this.process);
         } else {
           this.notifi.notify('Phân quyền không thành công');
+          this.dialog.close();
         }
       });
     }
-    this.dialog.close();
   }
   //#endregion
 
@@ -221,6 +222,8 @@ export class PopupRolesComponent implements OnInit {
         var perm = new BP_ProcessPermissions();
         perm.objectName = data.text != null ? data.text : data.objectName;
         perm.objectID = data.id;
+        perm.nemberType = '1';
+        perm.autoCreat = false;
         perm.objectType = data.objectType;
         this.process.permissions = this.checkUserPermission(
           this.process.permissions,

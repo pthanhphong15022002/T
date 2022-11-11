@@ -32,6 +32,7 @@ import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
 import { PopupRolesComponent } from './popup-roles/popup-roles.component';
+import { PopupUpdateRevisionsComponent } from './popup-update-revisions/popup-update-revisions.component';
 import { RevisionsComponent } from './revisions/revisions.component';
 
 @Component({
@@ -72,7 +73,7 @@ export class ProcessesComponent
   searchAdvance: boolean;
   viewActive: any;
   // titleUpdateFolder = 'Cập nhật thư mục';
-  viewMode: any
+  viewMode: any;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
@@ -184,7 +185,7 @@ export class ProcessesComponent
     this.gridModels.dataValue = this.view.dataService.request.dataValues;
     this.gridModels.entityPermission = this.view.formModel.entityPer;
   }
-  getHomeProcessSearch(pageClickNumber?:Number) {
+  getHomeProcessSearch(pageClickNumber?: Number) {
     this.getGridModel();
     this.gridModels.dataValues = this.textSearch;
     this.bpService
@@ -210,31 +211,29 @@ export class ProcessesComponent
   }
   PageClick($event, pageNumClick: any) {
     this.pageNumberCliked = pageNumClick;
-    this.gridModels.page =this.pageNumberCliked;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
   nextPage($event) {
-    this.pageNumberCliked= this.pageNumberCliked + 1;;
-    this.gridModels.page =this.pageNumberCliked;
+    this.pageNumberCliked = this.pageNumberCliked + 1;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
   previousPage($event) {
-    this.pageNumberCliked= this.pageNumberCliked - 1;;
-    this.gridModels.page =this.pageNumberCliked;
+    this.pageNumberCliked = this.pageNumberCliked - 1;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
   firstPage($event) {
-    this.pageNumberCliked= this.pageNumberDefault;
-    this.gridModels.page =this.pageNumberCliked;
+    this.pageNumberCliked = this.pageNumberDefault;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
   lastPage($event) {
-    this.pageNumberCliked= this.totalPages;
-    this.gridModels.page =this.pageNumberCliked;
+    this.pageNumberCliked = this.totalPages;
+    this.gridModels.page = this.pageNumberCliked;
     this.getHomeProcessSearch();
   }
-
-
 
   searchChange($event) {
     try {
@@ -251,7 +250,7 @@ export class ProcessesComponent
         this.changeDetectorRef.detectChanges();
       } else {
         this.isSearch = true;
-   //     this.pageNumberCliked= this.pageNumberDefault;
+        //     this.pageNumberCliked= this.pageNumberDefault;
         this.getHomeProcessSearch();
       }
     } catch (ex) {
@@ -392,8 +391,9 @@ export class ProcessesComponent
       case 'BPT102':
         this.reName(data);
         break;
-      case 'BPT103':
-        this.revisions(e.data, data);
+      case 'BPT103': // gán tạm cập nhật phiên bản
+        //this.revisions(e.data, data);
+        this.Updaterevisions(data);
         break;
       case 'BPT104':
         this.permission(data);
@@ -421,6 +421,32 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
+  Updaterevisions(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          PopupUpdateRevisionsComponent,
+          this.titleAction,
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            e?.event.forEach((obj) => {
+              this.view.dataService.update(obj).subscribe();
+            });
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+  }
   revisions(more, data) {
     var obj = {
       more: more,
@@ -464,10 +490,15 @@ export class ProcessesComponent
         950,
         650,
         '',
-        [this.titleAction,e],
+        [this.titleAction, e],
         ''
       )
-      .closed.subscribe();
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   share(data) {
@@ -537,8 +568,8 @@ export class ProcessesComponent
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
-    let url ='bp/processstep/BPT11'
-    this.codxService.navigate('', url,{processID:data.recID});
+    let url = 'bp/processstep/BPT11';
+    this.codxService.navigate('', url, { processID: data.recID });
   }
 
   approval($event) {}

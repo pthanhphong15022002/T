@@ -72,9 +72,11 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   ngOnInit() {
     if (this.objectID) {
       this.getFileByObjectID();
-    } else {
-      this.convertFile();
-    }
+    } 
+    // else 
+    // {
+    //   this.convertFile();
+    // }
   }
   getFileByObjectID() {
     this.api
@@ -86,26 +88,21 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         this.objectID
       )
       .subscribe((result: any[]) => {
-        debugger;
         if (result.length > 0) {
+          debugger
           result.forEach((f: any) => {
-            if (this.objectType == 'WP_News') {
-              if (f.referType == this.FILE_REFERTYPE.IMAGE) {
+            switch(f['referType'])
+            {
+              case this.FILE_REFERTYPE.IMAGE:
+              case this.FILE_REFERTYPE.VIDEO:
+                f["source"] = `${environment.urlUpload}`+"/"+f.url; 
                 this.file_img_video.push(f);
-              }
-            } 
-            else {
-              if (f.referType == this.FILE_REFERTYPE.IMAGE) {
-                this.file_img_video.push(f);
-              } else if (f.referType == this.FILE_REFERTYPE.VIDEO) {
-                debugger;
-                f[
-                  'srcVideo'
-                ] = `${environment.urlUpload}`+"/"+f.url;
-                this.file_img_video.push(f);
-              } else {
+                break;
+              case this.FILE_REFERTYPE.APPLICATION:
                 this.file_application.push(f);
-              }
+                break;
+              default:
+                break;
             }
           });
           this.files = result;
@@ -157,24 +154,30 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     this.dt.detectChanges();
   }
   addFiles(files: any[]) {
-    files.map((f) => {
-      if (f.mimeType.indexOf('image') >= 0) {
-        f['referType'] = this.FILE_REFERTYPE.IMAGE;
-        let a = this.file_img_video.find((f2) => f2.fileName == f.fileName);
-        if (a) return;
-        this.file_img_video.push(f);
-      } else if (f.mimeType.indexOf('video') >= 0) 
+    if(this.files.length == 0)
+    {
+      this.files = [];
+      this.file_img_video = [];
+      this.file_application = []
+    }
+    files.forEach((f) => {
+      let isExist = this.files.some((x) => x.fileName === f.fileName);
+      if(isExist) return;
+      if (f.mimeType.includes('image') || f.mimeType.includes('video')) 
       {
-        f['referType'] = this.FILE_REFERTYPE.VIDEO;
-        let a = this.file_img_video.find((f2) => f2.fileName == f.fileName);
-        if (a) return;
+        if(f.mimeType.includes('image'))
+        {
+          f['referType'] = this.FILE_REFERTYPE.IMAGE;
+        }
+        else
+        {
+          f['referType'] = this.FILE_REFERTYPE.VIDEO;
+        }
         this.file_img_video.push(f);
       }
       else 
       {
         f['referType'] = this.FILE_REFERTYPE.APPLICATION;
-        let a = this.file_application.find((f2) => f2.fileName == f.fileName);
-        if (a) return;
         this.file_application.push(f);
       }
     });
