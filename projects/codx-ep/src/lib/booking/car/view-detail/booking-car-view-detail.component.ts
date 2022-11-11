@@ -43,16 +43,40 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;  
-
+  routerRecID:any;
+  recID:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService
   ) {
-    super(injector);
+    super(injector);    
+    this.routerRecID = this.router.snapshot.params['id'];
+    if(this.routerRecID!=null){
+      this.hideFooter=true;
+    }
   }
 
   onInit(): void {
     this.itemDetailStt = 1;
+    let tempRecID:any;
+    if(this.routerRecID!=null){
+      tempRecID=this.routerRecID;
+    }
+    else{
+      tempRecID=this.itemDetail?.currentValue?.recID
+    }
+    this.api
+        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
+          tempRecID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.itemDetail = res;
+            this.detectorRef.detectChanges();
+          }
+        });
+      this.detectorRef.detectChanges();
+      this.setHeight();
   }
   ngAfterViewInit(): void {
     this.tabControl = [

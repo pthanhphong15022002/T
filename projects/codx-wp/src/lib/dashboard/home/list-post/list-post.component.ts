@@ -27,6 +27,8 @@ import {
   FormModel,
   AuthService,
 } from 'codx-core';
+import { WP_Comments } from '../../../models/WP_Comments.model';
+import { PopupAddPostComponent } from './popup-add-post/popup-add-post.component';
 import { PopupAddPostComponents } from './popup-add/popup-add.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './popup-save/popup-save.component';
@@ -112,6 +114,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.userValue;
     this.getGridViewSetUp("WP");
     this.getValueList();
+    // this.clearData();
   }
   getValueList() {
     this.cache.valueList('L1480').subscribe((res) => {
@@ -189,16 +192,23 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   }
   openCreateModal() {
+    let data = new WP_Comments();
+    data.recID = Util.uid();
+    data.shareControl = "9";
+    data.refType = "WP_Comments"
+    data.createdBy = this.user.userID;
+    data.createdName = this.user.userName;
     var obj = {
       status: 'create',
       headerText: 'Tạo bài viết',
       lstView: this.listview,
+      data: data
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callFC.openForm(
-      PopupAddPostComponents,
+    let popup = this.callFC.openForm(
+      PopupAddPostComponent,
       '',
       700,
       550,
@@ -206,7 +216,15 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       obj,
       '',
       option
-    );
+    )
+    popup.closed.subscribe((res:any)=>{
+      if(res?.event?.recID)
+      {
+        debugger;
+        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        this.notifySvr.notifyCode("WP024");
+      }
+    });
 
   }
   openEditModal(data: any) {
@@ -339,5 +357,17 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   replyTo(data: any) {
     data.showReply = !data.showReply;
     this.dt.detectChanges();
+  }
+
+  clearData(){
+    this.api
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'CommentsBusiness',
+        'DeleteDataCommentsAsync'
+      )
+      .subscribe((res) => {
+      });
   }
 }

@@ -145,4 +145,14 @@ export class CodxHrService {
     )
   }
 
+  saveEmployeeAssurTaxBankAccountInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeAssurTaxBankInfoAsync',
+      data
+    )
+  }
+
 }

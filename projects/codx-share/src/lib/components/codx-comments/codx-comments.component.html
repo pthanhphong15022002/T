@@ -141,7 +141,7 @@
             <div class="d-flex justify-content-between align-items-center ms-1">
                 <div class="d-flex flex-grow-1 fs-7">
                     <div class="btn-like delay-500 me-3">
-                        <div *ngIf="!data.myVotedType;else dataMyVoted">
+                        <div *ngIf="!data.myVoteType;else dataMyVoted">
                             <div class="d-flex align-items-center justify-content-center text-hover-primary">
                                 <span class="text-gray-600">
                                     <codx-label formName="WP_Comments" name="lblLike" default="Thích">
@@ -158,8 +158,8 @@
                         </div>
                         <ng-template #dataMyVoted>
                             <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                                <span [style.color]="data.myVotedType | vll:'L1480':'textColor' | async">
-                                    {{data.myVotedType | vll:'L1480':'text' | async}}
+                                <span [style.color]="data.myVoteType | vll:'L1480':'textColor' | async">
+                                    {{data.myVoteType | vll:'L1480':'text' | async}}
                                 </span>
                             </div>
                         </ng-template>

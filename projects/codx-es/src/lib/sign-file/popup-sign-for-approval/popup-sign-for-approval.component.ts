@@ -155,7 +155,9 @@ export class PopupSignForApprovalComponent extends UIComponent {
     let missingImgArea = this.pdfView?.lstAreas?.find((area) => {
       return (
         this.imgAreaConfig.includes(area.labelType) &&
-        !this.pdfView.checkIsUrl(area.labelValue)
+        !this.pdfView.checkIsUrl(area.labelValue) &&
+        area.signer == this.pdfView.signerInfo.authorID &&
+        area.stepNo == this.pdfView.stepNo
       );
     });
 

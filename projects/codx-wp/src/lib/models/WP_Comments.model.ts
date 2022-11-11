@@ -59,6 +59,8 @@ export class WP_Comments{
     public tagName:string
     public shares:any
     public news:any
+    public images:number
+
     constructor(){
         this.recID = "";
         this.refID = "";
@@ -72,7 +74,7 @@ export class WP_Comments{
         this.refType = "";
         this.parentID = "";
         this.votes = null;
-        this.shareControl = "";
+        this.shareControl = "9";
         this.permissions = null;
         this.approveControl = "";
         this.approverOn = null;

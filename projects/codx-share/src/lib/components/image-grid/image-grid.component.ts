@@ -44,9 +44,9 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Input() edit: boolean = false;
   @Input() files: any[] = [];
   @Output() evtGetFiles = new EventEmitter();
-  @Output() removeFile = new EventEmitter();
-  @Output() addFile = new EventEmitter();
-  @Output() viewDetail = new EventEmitter();
+  @Output() evtRemoveFile = new EventEmitter();
+  @Output() evtAddFile = new EventEmitter();
+  @Output() evtViewDetail = new EventEmitter();
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
@@ -86,13 +86,15 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         this.objectID
       )
       .subscribe((result: any[]) => {
+        debugger;
         if (result.length > 0) {
           result.forEach((f: any) => {
             if (this.objectType == 'WP_News') {
               if (f.referType == this.FILE_REFERTYPE.IMAGE) {
                 this.file_img_video.push(f);
               }
-            } else {
+            } 
+            else {
               if (f.referType == this.FILE_REFERTYPE.IMAGE) {
                 this.file_img_video.push(f);
               } else if (f.referType == this.FILE_REFERTYPE.VIDEO) {
@@ -127,7 +129,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   }
 
   clickViewDetail(file: any) {
-    this.viewDetail.emit(file);
+    this.evtViewDetail.emit(file);
   }
 
   removeFiles(file: any) {
@@ -151,7 +153,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     }
     this.files = this.files.filter((f: any) => f.fileName != file.fileName);
     this.filesDelete.push(file);
-    this.removeFile.emit(file);
+    this.evtRemoveFile.emit(file);
     this.dt.detectChanges();
   }
   addFiles(files: any[]) {
@@ -161,12 +163,15 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         let a = this.file_img_video.find((f2) => f2.fileName == f.fileName);
         if (a) return;
         this.file_img_video.push(f);
-      } else if (f.mimeType.indexOf('video') >= 0) {
+      } else if (f.mimeType.indexOf('video') >= 0) 
+      {
         f['referType'] = this.FILE_REFERTYPE.VIDEO;
         let a = this.file_img_video.find((f2) => f2.fileName == f.fileName);
         if (a) return;
         this.file_img_video.push(f);
-      } else {
+      }
+      else 
+      {
         f['referType'] = this.FILE_REFERTYPE.APPLICATION;
         let a = this.file_application.find((f2) => f2.fileName == f.fileName);
         if (a) return;
@@ -175,7 +180,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     });
     this.filesAdd = this.filesAdd.concat(files);
     this.files = this.files.concat(files);
-    this.addFile.emit(files);
+    this.evtAddFile.emit(files);
     this.dt.detectChanges();
   }
 }

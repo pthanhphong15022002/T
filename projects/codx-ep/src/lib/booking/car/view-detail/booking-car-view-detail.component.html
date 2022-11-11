@@ -1,5 +1,5 @@
 <codx-detail-tmp #itemDetailTemplate [formModel]="formModel" [dataItem]="itemDetail" [header]="header" [body]="body"
-  [footer]="!hideFooter ? footer : null" [hideMF]="hideMF" (clickMF)="childClickMF($event, itemDetail)"
+  [footer]="hideFooter ? null : footer" [hideMF]="hideMF" (clickMF)="childClickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)">
   <ng-template #subTitleHeader>
     <div class="d-flex flex-row">

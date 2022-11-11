@@ -9,16 +9,11 @@
 >
   <ng-template #body>
     <div class="reason form-group" *ngIf="mode != 5">
-      <codx-label
-        fiedName="ResourceName"
-        [formModel]="formModel"
-        default="Lí do"
-      >
-      </codx-label>
+      <codx-label fiedName="ResourceName" [formModel]="formModel"> </codx-label>
       <codx-input
         type="combobox"
         [Group]="dialogSignFile"
-        [ControlName]="controlName"
+        [field]="controlName"
         [formModel]="formModel"
       >
       </codx-input>
@@ -28,9 +23,10 @@
       <codx-label fiedName="" [formModel]="formModel" default="Ghi chú">
       </codx-label>
       <codx-input
+        type="text"
         field="comment"
-        [formModel]="formModel"
         [crrValue]="dialogSignFile.value.comment"
+        [require]="false"
         (valueChange)="changeReason($event)"
       >
       </codx-input>

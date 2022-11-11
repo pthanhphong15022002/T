@@ -748,6 +748,16 @@ export class CodxEsService {
     );
   }
 
+  updateSignatureType(tranID: string, signatureType: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'UpdateSignatureTypeAsync',
+      [tranID, signatureType]
+    );
+  }
+
   //#endregion
 
   //#region EmailTemplate
@@ -1221,7 +1231,17 @@ export class CodxEsService {
     );
   }
 
-  SignAsync(stepNo, isAwait, userID, sfID, signType, supplier, mode, comment) {
+  SignAsync(
+    stepNo,
+    isAwait,
+    userID,
+    sfID,
+    signType,
+    supplier,
+    hasCA,
+    mode,
+    comment
+  ) {
     let data = [
       stepNo,
       isAwait,
@@ -1229,6 +1249,7 @@ export class CodxEsService {
       sfID,
       signType,
       supplier,
+      hasCA,
       mode,
       comment,
     ];

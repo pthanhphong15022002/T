@@ -15,8 +15,8 @@
             </ng-container>
             <ng-container *ngSwitchCase="FILE_REFERTYPE.VIDEO">
                 <div class="w-100 vh-100 video-full">
-                    <video class="w-100 h-auto video" controls>
-                        <source [src]="file.thumbnail" type="video/mp4">
+                    <video class="w-100 h-auto video" [autoplay]="false">
+                        <source [src]="file.data" type="video/mp4">
                     </video>
                 </div>
             </ng-container>
@@ -64,7 +64,6 @@
                     [objectId]="post.createdBy" 
                     [objectName]="post.createdName"
                     [imageType]="'circle'"
-                    [isDefaulImg]="true" 
                     objectType="AD_Users" 
                     [width]="40">
                 </codx-img>
@@ -72,21 +71,26 @@
             <div class="text-info-date ms-2">
                 <div class="">
                     <span class="fw-bolder fs-7 me-2">{{post.createdName}}</span>
-                    <ng-container *ngIf="post.shareName">
-                        <span [innerHTML]="post.shareName"></span>
+                    <ng-container *ngIf="post.tagName">
+                        <span [innerHTML]="post.tagName"></span>
                     </ng-container>
                 </div>
                 <div class="mt-2">
                     <span class="text-gray-600 fs-7 me-2">{{post.createdOn | timefrom}}</span>
-                    <span *ngIf="post.shareIcon && post.shareText" class="rounded-1 py-1 px-2 bg-gray-200">
-                        <span class="symbol symbol-circle ">
-                            <img class="h-13px w-13px"
-                                src="assets/themes/sys/default/img/{{post.shareIcon}}" />
-                        </span>
-                        <span class="fs-7">
-                            {{post.shareText}}
-                        </span>
+                    <span *ngIf="post.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
+                        <codx-vll 
+                            [name]="'WP001'" 
+                            [value]="post.shareControl" 
+                            [showText]="true" 
+                            [showIcon]="true" 
+                            [path]="'assets/themes/sys/default/img/'"
+                            [icoCss]="'symbol-12px symbol-circle'"  
+                            [showBgColor]="true">
+                        </codx-vll>
                     </span>
+                    <ng-container *ngIf="post.shareName">
+                        <span [innerHTML]="post.shareName"></span>
+                    </ng-container>
                 </div>
             </div>
         </div>

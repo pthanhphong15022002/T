@@ -124,6 +124,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         .subscribe((gv) => {
           this.columnsGrid = [
             {
+              field: '',
+              headerText: '',
+              width: 20,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
+            {
               field: 'categoryID',
               headerText: gv
                 ? gv['CategoryID'].headerText || 'categoryID'
@@ -169,7 +176,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: this.process,
               width: 220,
             },
-            { field: '', headerText: '', width: 20, template: this.itemAction },
           ];
 
           this.views = [
@@ -305,7 +311,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             option
           );
           popupEdit.closed.subscribe((res) => {
-            if (!res?.event) this.viewBase.dataService.clear();
+            if (res?.event == null) {
+              this.viewBase.dataService.dataSelected = evt.data;
+              this.viewBase.dataService.clear();
+            }
           });
         });
     }

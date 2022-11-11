@@ -261,10 +261,18 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               var column = new ColumnsModel();
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
+              column.showItemCount = false;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
+                if(this.kanban.columns && this.kanban.columns.length)
               this.kanban.addColumn(column, index);
+              else
+              {
+                this.kanban.columns =[];
+                this.kanban.columns.push(column);
+                this.kanban.refresh();
+              }
             }
 
             this.view.dataService.data.push(processStep);
@@ -321,6 +329,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 this.editStepChild(data, processStep);
               }
             } else {
+              if (this.kanban) {
+              }
               this.view.dataService.update(processStep).subscribe();
               index = this.listPhaseName.findIndex(
                 (x) => x == data?.processName
@@ -445,6 +455,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               var column = new ColumnsModel();
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
+              column.showItemCount = false;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
@@ -471,8 +482,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           switch (data.stepType) {
             case 'P':
               if (this.kanban) {
-                //remove cột
-                // this.kanban.remove(column, index);
+                this.kanban.columns?.splice(data.stepNo-1, 1); ;
+                this.kanban.refresh();
+                
               }
               this.view.dataService.delete(data);
               this.view.dataService.data.forEach((dt) => {
