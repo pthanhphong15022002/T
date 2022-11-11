@@ -79,6 +79,8 @@ export class PopupADRComponent extends UIComponent {
 
     this.formModel.currentData = this.approvalTrans;
     this.dialogSignFile = this.data.formGroup;
+    this.dialogSignFile.patchValue({ comment: '' });
+    this.approvalTrans.comment = '';
     console.log('dialog', this.dialogSignFile);
 
     this.approveControl = this.data?.approveControl ?? '2';
@@ -93,6 +95,7 @@ export class PopupADRComponent extends UIComponent {
 
   changeReason(e) {
     if (e.field == 'comment') {
+      this.approvalTrans.comment = e.data;
       this.dialogSignFile.patchValue({ comment: e.data });
     }
   }
