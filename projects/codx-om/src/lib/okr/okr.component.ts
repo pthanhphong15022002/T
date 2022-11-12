@@ -44,8 +44,21 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.titleRoom = item.organizationName
     })
   }
+  
+  //Hàm click
+  click(event:any)
+  {
+    switch(event)
+    {
+      case "add":
+        {
+          this.add();
+          break;
+        }
+    }
+  }
   //Thêm mới mục tiêu
-  add(e:any)
+  add()
   {
     var dialogModel = new  DialogModel();
     dialogModel.IsFull = true;
@@ -55,10 +68,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       null,
       null,
       null,
-      null,
+      [this.view.formModel],
       "",
       dialogModel
     )
   }
- 
 }

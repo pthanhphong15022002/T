@@ -31,8 +31,8 @@
         <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar" class="me-4"
         ></codx-dropdown-calendar >
         <div class="me-4">
-            <codx-toolbar-button [button]="button" >
-            </codx-toolbar-button >
+            <codx-toolbar-button [button]="button" (buttonClick)="buttonClick('add')">
+            </codx-toolbar-button>
         </div> 
         <div class="symbol symbol-30px symbol-circle cursor-pointer">
             <span class="symbol-label bg-om-gray">

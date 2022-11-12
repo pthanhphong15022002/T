@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ButtonModel } from 'codx-core';
 
 @Component({
@@ -10,6 +10,7 @@ import { ButtonModel } from 'codx-core';
 export class OkrToolbarComponent implements OnInit {
 
   button?: ButtonModel;
+  @Output() click = new EventEmitter<string>();
 
   constructor() { }
 
@@ -18,5 +19,8 @@ export class OkrToolbarComponent implements OnInit {
       id: 'btnAdd',
     };
   }
-
+  buttonClick(event:any)
+  {
+    this.click.emit(event);
+  }
 }
