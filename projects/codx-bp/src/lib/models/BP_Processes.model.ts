@@ -59,8 +59,10 @@ export class BP_ProcessSteps {
   perUnit: string;
   eventBase: string;
   reminder: string;
-  reminderBy: string;
+  isAlert: boolean; 
+  isEmail: boolean;   
   note: string;
+  color: string;
   stopOn: Date;
   attachments: number;
   comments: number;
