@@ -34,7 +34,7 @@
   </codx-card-img>
 
   <ng-template #cardImgFooter>
-    <div class="d-flex bg-footer bg-light-warning">
+    <div class="d-flex bg-footer {{data?.color?'':'bg-light-warning'}}" [style.background]="data?.color">
       <div class="d-flex flex-column w-100 p-3">
         <div class="d-flex align-items-center">
           <div class="d-flex align-items-center card-icon-nowrap me-1">

@@ -39,8 +39,6 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '3';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';

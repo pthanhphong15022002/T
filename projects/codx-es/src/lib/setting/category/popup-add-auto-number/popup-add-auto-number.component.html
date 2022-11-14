@@ -27,15 +27,17 @@
         <div class="form-group">
           <codx-label fiedName="MaxLength" [formModel]="formModel">
           </codx-label>
-          <codx-input
-            [min]="0"
-            field="maxLength"
-            [formModel]="formModel"
-            [Group]="dialogAutoNum"
-            (valueChange)="valueChange($event)"
-            [showSpinButton]="false"
-          >
-          </codx-input>
+          <div>
+            <codx-input
+              [min]="0"
+              field="maxLength"
+              [formModel]="formModel"
+              [Group]="dialogAutoNum"
+              (valueChange)="valueChange($event)"
+              [showSpinButton]="false"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
     </div>

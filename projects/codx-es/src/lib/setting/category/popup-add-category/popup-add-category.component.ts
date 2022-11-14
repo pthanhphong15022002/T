@@ -359,6 +359,27 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
 
     this.dialog.dataService.dataSelected = this.data;
+
+    // this.esService.checkCategoryName(this.data).subscribe((res) => {
+    //   if (res) {
+    //     this.notify.notifyCode('ES024');
+    //     return;
+    //   } else {
+    //     this.dialog.dataService
+    //       .save((opt: any) => this.beforeSave(opt), 0)
+    //       .subscribe((res) => {
+    //         if (res.update || res.save) {
+    //           let resData = res.save;
+    //           if (res.update) resData = res.update;
+    //           this.isSaved = true;
+    //           if (isClose) {
+    //             this.dialog && this.dialog.close(resData);
+    //           }
+    //         }
+    //       });
+    //   }
+    // });
+
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), 0)
       .subscribe((res) => {

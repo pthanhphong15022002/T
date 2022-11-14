@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, UIComponent, ViewModel, ViewType ,AuthStore } from 'codx-core';
+import { ButtonModel, UIComponent, ViewModel, ViewType ,AuthStore , CallFuncService, DialogModel } from 'codx-core';
+import { OkrAddComponent } from './okr-add/okr-add.component';
 
 @Component({
   selector: 'lib-okr',
@@ -8,7 +9,6 @@ import { ButtonModel, UIComponent, ViewModel, ViewType ,AuthStore } from 'codx-c
 })
 export class OKRComponent extends UIComponent implements AfterViewInit {
 
-  button?: ButtonModel;
   views: Array<ViewModel> | any = [];
   @ViewChild('panelRight') panelRight: TemplateRef<any>;
   
@@ -33,9 +33,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
-    this.button = {
-      id: 'btnAdd',
-    };
+  
   }
 
   onInit(): void {
@@ -46,10 +44,33 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     //     this.titleRoom = item.organizationName
     // })
   }
-  //Thêm mới mục tiêu
-  add(e:any)
+  
+  //Hàm click
+  click(event:any)
   {
-
+    switch(event)
+    {
+      case "add":
+        {
+          this.add();
+          break;
+        }
+    }
   }
- 
+  //Thêm mới mục tiêu
+  add()
+  {
+    var dialogModel = new  DialogModel();
+    dialogModel.IsFull = true;
+    this.callfc.openForm(
+      OkrAddComponent,
+      "",
+      null,
+      null,
+      null,
+      [this.view.formModel],
+      "",
+      dialogModel
+    )
+  }
 }

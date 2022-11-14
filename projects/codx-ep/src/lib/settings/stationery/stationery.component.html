@@ -4,8 +4,6 @@
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
   (buttonClick)="click($event)"
@@ -31,6 +29,7 @@
             imageType="circle"
             width="50"
             [imgOn]="data.modifiedOn"
+            [objectName]="data.resourceName"
           ></codx-img>
           <div class="m-2">
             <div class="fw-bold">{{ data?.resourceName }}</div>

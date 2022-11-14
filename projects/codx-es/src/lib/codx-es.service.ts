@@ -593,6 +593,16 @@ export class CodxEsService {
       [categoryID]
     );
   }
+
+  checkCategoryName(model: any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'CheckCategoryNameAsync',
+      [model]
+    );
+  }
   //#endregion
 
   //#region ES_ApprovalSteps

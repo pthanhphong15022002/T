@@ -1,3 +1,4 @@
+import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { CheckBox } from '@syncfusion/ej2-angular-buttons';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import {
@@ -69,7 +70,8 @@ export class EmployeeProfileComponent extends UIComponent {
   formModel;
   itemDetail;
 
-  crrTab: number = 1;
+  hrEContract;
+  crrTab: number = 3;
 
   vllTabs = [
     { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
@@ -181,6 +183,25 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
+  addAssuranceTaxBankAccountInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeAssurTaxBankaccInfoComponent,
+      {
+        isAdd: true,
+        headerText: 'Bảo hiểm - MST - Tài khoản',
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
   addEmployeeSelfInfo() {
     this.view.dataService.dataSelected = this.data;
     // this.view.dataService
@@ -223,4 +244,6 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     });
   }
+
+
 }

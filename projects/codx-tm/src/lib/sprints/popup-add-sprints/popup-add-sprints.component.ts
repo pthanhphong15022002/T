@@ -77,7 +77,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
-    
+
     //đã bổ sung nên có thể xóa
     // if (this.funcID == 'TMT0301') this.master.iterationType == '1';
     // else if (this.funcID == 'TMT0302') this.master.iterationType == '0';
@@ -124,7 +124,7 @@ export class PopupAddSprintsComponent implements OnInit {
     if (
       this.master.iterationType == '1' &&
       (this.master.projectID == null || this.master.projectID.trim() == '')
-    ){
+    ) {
       return this.notiService.notifyCode('TM035');
       // let headerText = this.gridViewSetup['IterationName']?.headerText ?? 'IterationName';
       // return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
@@ -141,7 +141,7 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
-    
+
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -151,15 +151,12 @@ export class PopupAddSprintsComponent implements OnInit {
       });
     else {
       this.saveMaster(isAdd);
-    }  
+    }
   }
 
   saveMaster(isAdd: boolean) {
     this.dialog.dataService
-      .save(
-        (option: any) => this.beforeSave(option, isAdd),
-        !isAdd ? null : 0 
-      )
+      .save((option: any) => this.beforeSave(option, isAdd), !isAdd ? null : 0)
       .subscribe((res) => {
         if (res) {
           this.attachment?.clearData();
@@ -171,10 +168,10 @@ export class PopupAddSprintsComponent implements OnInit {
               .subscribe((up) => {
                 if (up) {
                   this.dialog.close(dt);
-                }
-              });} 
-          }else this.dialog.close();  
-        
+                } else this.dialog.close();
+              });
+          } else this.dialog.close();
+        } else this.dialog.close();
       });
   }
 
@@ -235,7 +232,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.tmSv.getSprints(iterationID).subscribe((res) => {
       if (res) {
         this.master = res;
-        this.showLabelAttachment = this.master.attachments > 0? true : false ;
+        this.showLabelAttachment = this.master.attachments > 0 ? true : false;
         if (this.master.resources) this.getListUser(this.master.resources);
         else this.listUserDetail = [];
         this.changeDetectorRef.detectChanges();

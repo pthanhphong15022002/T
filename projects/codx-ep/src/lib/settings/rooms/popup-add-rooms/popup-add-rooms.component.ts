@@ -120,7 +120,6 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   onSaveForm() {
-    this.data.resourceType='1';
     this.fGroupAddRoom.patchValue(this.data);
     if (this.fGroupAddRoom.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddRoom, this.formModel);
@@ -137,7 +136,6 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.fGroupAddRoom.patchValue({      
       equipments: this.lstEquipment,
       category: '1',
-      linkType: '0',
     });   
     let index:any
     if(this.isAdd){
