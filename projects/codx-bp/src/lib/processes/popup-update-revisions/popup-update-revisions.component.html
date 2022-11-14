@@ -1,0 +1,121 @@
+<codx-form [headerText]="titleAction" [subHeader]="subHeader" [formModel]="dialog.formModel" [data]="process"
+  [dialog]="dialog" #form>
+  <!-- <ng-template #body>
+    <div class="form-group">
+      <div>
+        <codx-label fiedName="ProcessName" [formModel]="form.formModel" default="Tên quy trình">
+        </codx-label>
+      </div>
+      <codx-input field="processName" type="text" [crrValue]="process?.processName"
+        [placeholder]="gridViewSetup?.ProcessName?.headerText" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <div>
+        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả">
+        </codx-label>
+      </div>
+      <codx-input field="memo" type="textarea" [crrValue]="process?.memo"
+        [placeholder]="gridViewSetup?.Memo?.headerText" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
+        <div class="d-flex align-items-center">
+          <span class="icon-person icon-18 me-2 text-primary"></span>
+          <div class="text-primary">
+            <codx-label class="fw-bold fs-6" fiedName="Owner" [formModel]="form.formModel" default="Quản lý qui trình">
+            </codx-label>
+          </div>
+        </div>
+        <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="owner" [dataShared]="[]"
+          [showInput]="false">
+        </codx-input>
+      </div>
+      <div class="d-flex flex-wrap">
+        <div class="">
+            <codx-img class="flex symbol-40px" [objectId]="process.owner" objectType="AD_Users">
+            </codx-img>
+        </div>
+
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-6">
+        <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
+        </codx-label>
+
+      <codx-input type="combobox" refValue="ProcessGroups" field="groupID" [crrValue]="process.groupID"
+        (valueChange)="valueChange($event)" [multiple]="false" loadFull="true"
+        [placeholder]="gridViewSetup?.GroupID?.headerText">
+      </codx-input>
+    </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <codx-label fiedName="ActivedOn" [formModel]="form.formModel" default="Ngày hiệu lực"></codx-label>
+          <codx-input type="datetime" class="test-datetime" [crrValue]="process?.activedOn"
+            [placeholder]="gridViewSetup?.ActivedOn?.headerText" (valueChange)="valueDateChange($event)"
+            field="activedOn" format="d">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <codx-label fiedName="ExpiredOn" [formModel]="form.formModel" default="Ngày hết hạn"></codx-label>
+          <codx-input type="datetime" class="test-datetime" [crrValue]="process?.expiredOn"
+            [placeholder]="gridViewSetup?.ExpiredOn?.headerText" (valueChange)="valueDateChange($event)"
+            field="expiredOn" format="d">
+          </codx-input>
+        </div>
+      </div>
+
+    </div>
+    <ng-container>
+      <div class="d-flex align-items-center justify-content-between mt-4" *ngIf="showLabelAttachment"
+        style="float: left; clear: left">
+        <div class="d-flex align-items-center mb-2">
+          <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+          <div class="fw-bold text-primary">
+            <codx-label fiedName="Attachments" [formModel]="form.formModel" default="Tài liệu đính kèm">
+            </codx-label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="process?.recID"
+          hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
+          allowMultiFile="1" [formModel]="dialog.formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)"
+          (fileCount)="getfileCount($event)" displayThumb="full">
+        </codx-attachment>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
+        <i class="icon-cloud_upload fs-5"></i><span>
+          <codx-label name="UploadFile" [formModel]="form.formModel" default="Upload File"></codx-label>
+        </span>
+      </button>
+      <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+        <codx-label name="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template> -->
+
+  <ng-template #body>
+
+  </ng-template>
+</codx-form>
+
+<ng-template #subHeader>
+  <!-- <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"></codx-tag> -->
+</ng-template>
+
+<ng-template #controlShare let-dialogShare>
+  <codx-share [listName]="listName" [field]="fieldValue" [dataShare]="[]" [dialog]="dialogShare" [multiple]="false"
+    (eventApply)="valueCbx($event, fieldValue)">
+  </codx-share>
+</ng-template>

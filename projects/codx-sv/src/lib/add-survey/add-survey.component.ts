@@ -687,41 +687,51 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   uploadVideo(dataQuestion) {}
 
   amountOfRow = 2;
-  clickQuestionMF(indexSession, indexQuestion, answerType) {
+  clickQuestionMF(seqNoSession, itemQuestion, answerType) {
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
     if (answerType) {
       var data = JSON.parse(
-        JSON.stringify(this.questions[indexSession].children[indexQuestion])
+        JSON.stringify(
+          this.questions[seqNoSession].children[itemQuestion.seqNo]
+        )
       );
       data.answerType = answerType;
-      data.answers = new Array();
       if (answerType == 'O' || answerType == 'C' || answerType == 'L') {
-        let dataAnswerTemp = {
-          recID: recID,
-          seqNo: 0,
-          answer: 'Tùy chọn 1',
-          other: false,
-        };
-        data.answers.push(dataAnswerTemp);
+        if (itemQuestion.answerType != 'O' && itemQuestion.answerType != 'C') {
+          data.answers = new Array();
+          let dataAnswerTemp = {
+            recID: recID,
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: false,
+          };
+          data.answers.push(dataAnswerTemp);
+        }
       } else if (answerType == 'O2' || answerType == 'C2') {
-        let dataAnswerR = {
-          recID: recID,
-          seqNo: 0,
-          answer: 'Hàng 1',
-          isColumn: false,
-        };
-        data.answers.push(dataAnswerR);
-        this.generateGuid();
-        let dataAnswerC = {
-          recID: this.GUID,
-          seqNo: 0,
-          answer: 'Cột 1',
-          isColumn: true,
-        };
-        data.answers.push(dataAnswerC);
+        if (
+          itemQuestion.answerType != 'O2' &&
+          itemQuestion.answerType != 'C2'
+        ) {
+          data.answers = new Array();
+          let dataAnswerR = {
+            recID: recID,
+            seqNo: 0,
+            answer: 'Hàng 1',
+            isColumn: false,
+          };
+          data.answers.push(dataAnswerR);
+          this.generateGuid();
+          let dataAnswerC = {
+            recID: this.GUID,
+            seqNo: 0,
+            answer: 'Cột 1',
+            isColumn: true,
+          };
+          data.answers.push(dataAnswerC);
+        }
       }
-      this.questions[indexSession].children[indexQuestion] = data;
+      this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
     }
   }
 
@@ -824,5 +834,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       if (res.event) {
       }
     });
+  }
+
+  filterDataColumn(data) {
+    data = data.filter((x) => x.isColumn);
+    return data;
+  }
+
+  filterDataRow(data) {
+    data = data.filter((x) => !x.isColumn);
+    return data;
   }
 }

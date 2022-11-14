@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
+import { DialogRef , DialogData} from 'codx-core';
 
 @Component({
   selector: 'lib-okr-add',
@@ -7,9 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OkrAddComponent implements OnInit {
 
-  constructor() { }
+  title = "Thêm bộ mục tiêu";
+  dialog:any;
+  formModel: any
+  constructor(
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) 
+  {
+    //FormModel
+    if(dt?.data[0]) this.formModel = dt?.data[0]
+    this.dialog =  dialog;
+  }
 
   ngOnInit(): void {
+    alert(this.formModel?.funcID)
   }
 
 }

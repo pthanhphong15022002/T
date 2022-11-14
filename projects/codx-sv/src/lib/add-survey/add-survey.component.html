@@ -20,7 +20,7 @@
                 </div>
               </div>
               <div
-                class="col-lg-8 control-section inplace-editor-control-section form-layout"
+                class="col-lg-8 control-section inplace-editor-control-section form-lafyout"
                 id="inplace-editor-control"
               >
                 <div
@@ -203,7 +203,7 @@
 <ng-template
   #templateQuestionMF
   let-seqNoSession="seqNoSession"
-  let-seqNoQuestion="seqNoQuestion"
+  let-itemQuestion="itemQuestion"
   let-answerType="answerType"
 >
   <div ngbDropdown container="body">
@@ -260,7 +260,7 @@
     <div ngbDropdownMenu>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'T')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'T')"
       >
         <div class="d-flex">
           <span class="icon-short_text icon-24"></span>
@@ -269,7 +269,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'T2')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'T2')"
       >
         <div class="d-flex">
           <span class="icon-text_snippet icon-24"></span>
@@ -279,7 +279,7 @@
       <hr />
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'O')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'O')"
       >
         <div class="d-flex">
           <span class="icon-radio_button_checked icon-24"></span>
@@ -288,7 +288,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'C')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'C')"
       >
         <div class="d-flex">
           <span class="icon-check_box icon-24"></span>
@@ -297,7 +297,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'L')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'L')"
       >
         <div class="d-flex">
           <span class="icon-arrow_drop_down_circle icon-24"></span>
@@ -307,7 +307,7 @@
       <hr />
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'A')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'A')"
       >
         <div class="d-flex">
           <span class="icon-cloud_upload icon-24"></span>
@@ -317,7 +317,7 @@
       <hr />
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'R')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'R')"
       >
         <div class="d-flex">
           <span class="icon-24"></span>
@@ -326,7 +326,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'O2')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'O2')"
       >
         <div class="d-flex">
           <span class="icon-24"></span>
@@ -335,7 +335,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'C2')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'C2')"
       >
         <div class="d-flex">
           <span class="icon-view_module icon-24"></span>
@@ -345,7 +345,7 @@
       <hr />
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'D')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'D')"
       >
         <div class="d-flex">
           <span class="icon-calendar_today icon-24"></span>
@@ -354,7 +354,7 @@
       </button>
       <button
         ngbDropdownItem
-        (click)="clickQuestionMF(seqNoSession, seqNoQuestion, 'H')"
+        (click)="clickQuestionMF(seqNoSession, itemQuestion, 'H')"
       >
         <div class="d-flex">
           <span class="icon-access_time icon-24"></span>
@@ -628,7 +628,7 @@
           templateQuestionMF;
           context: {
             seqNoSession: itemSession.seqNo,
-            seqNoQuestion: itemQuestion.seqNo,
+            itemQuestion: itemQuestion,
             answerType: itemQuestion.answerType
           }
         "
@@ -791,49 +791,26 @@
       (itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') &&
       !itemQuestion?.active
     "
-    class="pd-5p"
   >
-    <table class="column">
-      <thead>
-        <tr>
-          <th scope="col" class="w-40"></th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblCoinReceived"
-              formName="FED_TagObjects"
-              default="Cột 1"
-            ></codx-label>
-          </th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblCoinSended"
-              formName="FED_TagObjects"
-              default="Cột 2"
-            ></codx-label>
-          </th>
-          <th scope="col" class="w-20 text-right font-weight-600">
-            <codx-label
-              name="lblTotal"
-              formName="FED_TagObjects"
-              default="Cột 3"
-            ></codx-label>
-          </th>
-        </tr>
-      </thead>
-    </table>
-    <table class="table mb-0">
-      <tbody>
-        <div *ngFor="let item of itemQuestion.answers">
-          <tr>
-            <td class="w-40">
-              <div class="d-flex align-items-top">
-                {{ item.answer }}
-              </div>
-            </td>
-            <td class="w-20 text-right"></td>
-          </tr>
-        </div>
-      </tbody>
+    <table>
+      <tr>
+        <th scope="col" class="w-20"></th>
+        <th
+          *ngFor="let itemC of filterDataColumn(itemQuestion.answers)"
+          scope="col"
+        >
+          <span>{{ itemC.answer }}</span>
+        </th>
+      </tr>
+      <tr *ngFor="let itemR of filterDataRow(itemQuestion.answers)">
+        <td>
+          {{ itemR.answer }}
+        </td>
+        <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers)">
+          <span class="icon-radio_button_unchecked icon-radio" *ngIf="itemQuestion.answerType == 'O2'"></span>
+          <span class="icon-check_box_outline_blank" *ngIf="itemQuestion.answerType == 'C2'"></span>
+        </td>
+      </tr>
     </table>
   </div>
   <div

@@ -67,6 +67,7 @@ import { PopupStatusMeetingComponent } from './tmmeetings/popup-status-meeting/p
 import { CoreModule } from '@core/core.module';
 import { PopupTabsViewsDetailsComponent } from './popup-tabs-views-details/popup-tabs-views-details.component';
 import { PopupRescheduleMeetingComponent } from './tmmeetings/popup-reschedule-meeting/popup-reschedule-meeting.component';
+import { PopupAddResourcesComponent } from './tmmeetings/popup-add-resources/popup-add-resources.component';
 
 export const routes: Routes = [
   {
@@ -235,7 +236,8 @@ const T_Component: Type<any>[] = [
   DashboardComponent,
   PopupStatusMeetingComponent,
   PopupTabsViewsDetailsComponent,
-  PopupRescheduleMeetingComponent
+  PopupRescheduleMeetingComponent,
+  PopupAddResourcesComponent
 ];
 @NgModule({
   imports: [

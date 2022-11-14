@@ -191,16 +191,16 @@ export class PropertiesComponent implements OnInit {
         this.commenttext = '';
         this.fileEditing = res.data;
         this.getRating(res.data.views);
-        // var files = this.dmSV.listFiles;
-        // if (files != null) {
-        //   let index = files.findIndex(d => d.recID.toString() === this.id);
+        // var process = this.bpSV.listProcess;
+        // if (process != null) {
+        //   let index = process.findIndex(d => d.recID.toString() === this.id);
         //   if (index != -1) {
-        //     var thumbnail = files[index].thumbnail;
-        //     files[index] = res.data;
-        //     files[index].thumbnail = thumbnail;
+        //     var thumbnail = process[index].thumbnail;
+        //     process[index] = res.data;
+        //     process[index].thumbnail = thumbnail;
         //   }
-        //   this.dmSV.listFiles = files;
-        //   this.dmSV.ChangeData.next(true);
+        //   this.bpSV.listProcess = process;
+        //   this.bpSV.ChangeData.next(true);
         // }
 
         this.changeDetectorRef.detectChanges();          //alert(res.message);
