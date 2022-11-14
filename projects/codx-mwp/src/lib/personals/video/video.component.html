@@ -23,15 +23,15 @@
     </codx-listview>
 
     <ng-template #templateListCard let-item>
-      <div class="pw-listcard" *ngIf="item.srcVideo">
+      <div class="pw-listcard" *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
         <div class="pw-card">
-          <ng-container *ngIf="item.referType == FILE_REFERTYPE.VIDEO">
+          <ng-container>
             <video
               #video
               controls
               class="w-100 rounded bg-secondary h-150px mh-150px"
             >
-              <source [src]="item.srcVideo" type="video/mp4" />
+              <source [src]="getSrcVideo(item)" type="video/mp4" />
             </video>
           </ng-container>
         </div>

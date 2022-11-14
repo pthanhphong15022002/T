@@ -632,7 +632,7 @@ export class TMMeetingsComponent
       if (e?.event && e?.event != null) {
         this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
-      } else this.view.dataService.clear();
+      } else this.view.dataService.dataSelected = null;
     });
   }
 
@@ -654,7 +654,7 @@ export class TMMeetingsComponent
       if (e?.event && e?.event != null) {
         this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
-      } else this.view.dataService.clear();
+      } else this.view.dataService.dataSelected = null;
     });
   }
   //#endregion

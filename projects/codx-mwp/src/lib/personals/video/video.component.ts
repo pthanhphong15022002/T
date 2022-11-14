@@ -67,20 +67,25 @@ export class VideoComponent implements OnInit {
   }
 
   getFile(data) {
-    if (data.length > 0) {
-      data.forEach((f: any) => {
-        if (f.referType == this.FILE_REFERTYPE.VIDEO) {
-          f[
-            'srcVideo'
-          ] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
-          //this.file_video.push(f);
-          this.listview.dataService.data = [
-            ...this.listview.dataService.data,
-            ...[],
-          ];
-        }
-      });
-      this.dt.detectChanges();
-    }
+    // if (data.length > 0) {
+    //   data.forEach((f: any) => {
+    //     if (f.referType == this.FILE_REFERTYPE.VIDEO) {
+    //       f[
+    //         'srcVideo'
+    //       ] = `${environment.urlUpload}/${f.pathDisk}`;
+    //       //this.file_video.push(f);
+    //       this.listview.dataService.data = [
+    //         ...this.listview.dataService.data,
+    //         ...[],
+    //       ];
+    //     }
+    //   });
+    //   console.log("check data", this.listview.dataService.data)
+    //   this.dt.detectChanges();
+    // }
+  }
+
+  getSrcVideo(data) {
+    return data['srcVideo'] = `${environment.urlUpload}/${data.pathDisk}`;
   }
 }

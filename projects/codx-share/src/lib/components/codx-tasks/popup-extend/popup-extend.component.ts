@@ -31,7 +31,7 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.funcID = this.data.funcID
-    this.taskExtend = this.data.data ;
+    this.taskExtend = JSON.parse(JSON.stringify(this.data?.data)); ;
   }
 
   ngOnInit(): void {
