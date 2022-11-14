@@ -96,7 +96,6 @@ export class IncommingAddComponent implements OnInit {
       this.dispatch.copies = 1;
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
-      this.dispatch.owner = null;
       if (this.type == 'add') {
         this.dispatch.dispatchType = this.data?.dispatchType;
         this.dispatch.agencyName = null;
@@ -262,7 +261,8 @@ export class IncommingAddComponent implements OnInit {
     /////////////////////////////////////////////////////////
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if (this.type == 'add' || this.type == 'copy') {
-      this.dispatch.status = '1';
+      if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
+      else this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       if (this.type == 'copy') 
       {
@@ -278,7 +278,6 @@ export class IncommingAddComponent implements OnInit {
       }
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
-      this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       this.odService
         .saveDispatch(this.dataRq, this.dispatch)
