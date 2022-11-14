@@ -149,7 +149,7 @@ export class BookingStationeryComponent
   }
 
   addNewRequest() {
-    if (this.popupClosed) {
+    if (true) {
       this.view.dataService.addNew().subscribe((res) => {
         this.popupClosed = false;
         let option = new SidebarModel();
@@ -172,7 +172,7 @@ export class BookingStationeryComponent
           '',
           dialogModel
         );
-        this.dialog.closed.subscribe((returnData) => {
+        this.dialog?.closed.subscribe((returnData) => {
           this.popupClosed = true;
           if (!returnData.event) this.view.dataService.clear();
         });
@@ -187,7 +187,7 @@ export class BookingStationeryComponent
         return;
       }
 
-      if (this.popupClosed) {
+      if (true) {
         this.view.dataService.dataSelected = evt;
         this.view.dataService
           .edit(this.view.dataService.dataSelected)
@@ -213,7 +213,7 @@ export class BookingStationeryComponent
               '',
               dialogModel
             );
-            this.dialog.closed.subscribe((returnData) => {
+            this.dialog?.closed.subscribe((returnData) => {
               this.popupClosed = true;
               if (!returnData.event) this.view.dataService.clear();
             });
@@ -224,7 +224,7 @@ export class BookingStationeryComponent
 
   copy(evt: any) {
     if (evt) {
-      if (this.popupClosed) {
+      if (true) {
         this.view.dataService.dataSelected = evt;
         this.view.dataService
           .copy(this.view.dataService.dataSelected)
@@ -250,7 +250,7 @@ export class BookingStationeryComponent
               '',
               dialogModel
             );
-            this.dialog.closed.subscribe((returnData) => {
+            this.dialog?.closed.subscribe((returnData) => {
               this.popupClosed = true;
               if (!returnData.event) this.view.dataService.clear();
             });

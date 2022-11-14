@@ -9,6 +9,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CodxFdService } from '../../../codx-fd.service';
+import { SettingService } from '../../setting.service';
 
 @Component({
   selector: 'lib-detail-policy',
@@ -24,16 +25,16 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
   value = '';
   tenant: string;
   tabActive = 1;
+  isGroup: any;
   private recID;
 
   constructor(
-    private fedsv: CodxFdService,
     private changedr: ChangeDetectorRef,
     private at: ActivatedRoute,
-    private route: ActivatedRoute,
     private modalService: NgbModal,
     private tenantStore: TenantStore,
     private notification: NotificationsService,
+    private settingSV: SettingService,
     injector: Injector
   ) {
     super(injector);
@@ -51,6 +52,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
       if (params.recID) {
         this.recID = params.recID;
       }
+      if (params.isGroup) this.isGroup = params.isGroup;
       if (params && params.type) {
         let category = '2';
         let applyFor = '2';
@@ -69,6 +71,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
             this.cardtype,
             applyFor,
             this.recID,
+            this.isGroup
           ])
           .subscribe((res) => {
             if (res && res.msgBodyData[0]) {

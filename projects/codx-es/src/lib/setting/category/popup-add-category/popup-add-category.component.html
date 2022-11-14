@@ -92,8 +92,7 @@
           <codx-input
             #checkbox
             type="switch"
-            id="switch"
-            [checked]="data?.confirmControl"
+            [checked]="data?.confirmControl == '0' ? false : true"
             labelPosition="After"
             field="confirmControl"
             class="test-switch"
@@ -117,7 +116,7 @@
             #checkbox
             type="switch"
             id="switch"
-            [checked]="data?.areaControl"
+            [checked]="data?.areaControl == '1' ? true : false"
             labelPosition="After"
             field="areaControl"
             class="test-switch"
