@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
+import { DayMarkers } from '@syncfusion/ej2-gantt';
 import {
   AuthStore,
   ButtonModel,
@@ -265,11 +266,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
-                if(this.kanban.columns && this.kanban.columns.length)
-              this.kanban.addColumn(column, index);
-              else
-              {
-                this.kanban.columns =[];
+              if (this.kanban.columns && this.kanban.columns.length)
+                this.kanban.addColumn(column, index);
+              else {
+                this.kanban.columns = [];
                 this.kanban.columns.push(column);
                 this.kanban.refresh();
               }
@@ -329,8 +329,32 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 this.editStepChild(data, processStep);
               }
             } else {
-              if (this.kanban) {
+              //edit colum
+              if (
+                this.kanban &&
+                this.kanban.columns &&
+                this.kanban.columns.length &&
+                data.stepName != processStep.stepName
+              ) {
+                // //dung core
+                // let columm = this.kanban.columns.find(
+                //   (c) => c.keyField == data.recID
+                // );
+                // if (columm) {
+                //   columm.headerText = processStep.stepName;
+                //   this.kanban.updateColumn(columm);
+                // }
+                // bua data
+                let colummIndex = this.kanban.columns.findIndex(
+                  (c) => c.keyField == data.recID
+                );
+                if (colummIndex != -1) {
+                  this.kanban.columns[colummIndex].headerText =
+                    processStep.stepName;
+                  this.kanban.refresh();
+                }
               }
+
               this.view.dataService.update(processStep).subscribe();
               index = this.listPhaseName.findIndex(
                 (x) => x == data?.processName
@@ -482,9 +506,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           switch (data.stepType) {
             case 'P':
               if (this.kanban) {
-                this.kanban.columns?.splice(data.stepNo-1, 1); ;
+                this.kanban.columns?.splice(data.stepNo - 1, 1);
                 this.kanban.refresh();
-                
               }
               this.view.dataService.delete(data);
               this.view.dataService.data.forEach((dt) => {
@@ -727,6 +750,18 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             );
 
             this.dataTreeProcessStep = this.view.dataService.data;
+            //edit kéo Phase
+            if (
+              this.kanban &&
+              this.kanban.columns &&
+              this.kanban.columns.length
+            ) {
+              let temp = this.kanban.columns[event.currentIndex];
+              this.kanban.columns[event.currentIndex] =
+                this.kanban.columns[event.previousIndex];
+              this.kanban.columns[event.previousIndex] = temp;
+              this.kanban.refresh();
+            }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
           } else {

@@ -51,8 +51,6 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '7';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';

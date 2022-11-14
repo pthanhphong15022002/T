@@ -193,8 +193,10 @@ export class PopupAddCardsComponent implements OnInit {
       .subscribe((res:any) => {
         if (res && res.length > 0)
         {
+          debugger
           this.lstPattern = res;
-          this.patternSelected = this.lstPattern.find((e:any)=> e.isDefault == true);
+          let patternDefault = this.lstPattern.find((e:any)=> e.isDefault == true);
+          this.patternSelected = patternDefault ? patternDefault : this.lstPattern[0]; 
           this.dt.detectChanges();
         }
       });
@@ -326,7 +328,9 @@ export class PopupAddCardsComponent implements OnInit {
       }
     })
   }
-  Save() {
+  Save() 
+  {
+    debugger
     if (!this.form.controls['receiver'].value) 
     {
       let mssg  = Util.stringFormat(this.mssgNoti, "Người nhận");
@@ -451,6 +455,7 @@ export class PopupAddCardsComponent implements OnInit {
 
 
   eventApply(event: any) {
+    debugger
     if (!event) {
       return;
     }
