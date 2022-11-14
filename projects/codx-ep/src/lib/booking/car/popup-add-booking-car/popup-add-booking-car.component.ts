@@ -621,7 +621,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.driver = this.tempAtender;
         this.tempDriver = this.driver;
         this.driverValidator(
-          this.tempDriver.userID,
+          this.tempDriver?.userID,
           this.data.startDate,
           this.data.endDate,
           this.data.recID
@@ -681,7 +681,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     if (this.tempDriver != null) {
       this.driverValidator(
-        this.tempDriver.userID,
+        this.tempDriver?.userID,
         this.data.startDate,
         this.data.endDate,
         this.data.recID
@@ -695,7 +695,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     this.data.startDate = new Date(evt.data.fromDate);
     this.driverValidator(
-      this.tempDriver.userID,
+      this.tempDriver?.userID,
       this.data.startDate,
       this.data.endDate,
       this.data.recID
@@ -738,7 +738,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     this.data.endDate = new Date(evt.data.fromDate);
     this.driverValidator(
-      this.tempDriver.userID,
+      this.tempDriver?.userID,
       this.data.startDate,
       this.data.endDate,
       this.data.recID
