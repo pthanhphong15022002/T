@@ -54,6 +54,7 @@ import { AddLinkComponent } from '../addlink/addlink.component';
 import { CompletedComponent } from '../completed/completed.component';
 import { ForwardComponent } from '../forward/forward.component';
 import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
+import { RefuseComponent } from '../refuse/refuse.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
 import { SharingComponent } from '../sharing/sharing.component';
 import { UpdateExtendComponent } from '../update/update.component';
@@ -428,6 +429,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null) {
+    debugger;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
     else {
@@ -870,9 +872,29 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           });
         break;
       }
-      case "Trả lại":
+      //Trả lại
+      case "ODT113":
         {
-          this.refuse(datas);
+          var option = new DialogModel();
+          option.FormModel = this.formModel;
+          this.callfunc
+          .openForm(
+            RefuseComponent,
+            null,
+            600,
+            400,
+            null,
+            { data: datas },
+            '',
+            option
+          )
+          .closed.subscribe((x) => {
+            if (x?.event == 0) {
+              // datas.status = '7';
+              // this.view.dataService.update(datas).subscribe();
+            }
+          });
+          // this.refuse(datas);
           break;
         }
       default:
