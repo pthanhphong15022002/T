@@ -10,7 +10,9 @@ import { DispatchService } from '../../services/dispatch.service';
 })
 export class RefuseComponent implements OnInit {
   dialog:any;
-  data:any
+  data:any;
+  status: any;
+  headerText:any;
   constructor(
     private notifySvr : NotificationsService,
     private odService: DispatchService,
@@ -18,8 +20,9 @@ export class RefuseComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) { 
-    if(dt?.data?.data)
-      this.data = dt?.data?.data
+    if(dt?.data?.data) this.data = dt?.data?.data
+    if(dt?.data?.headerText) this.headerText = dt?.data?.headerText
+    if(dt?.data?.status) this.status = dt?.data?.status
     this.dialog = dialog;
   }
   updateForm :FormGroup;
@@ -32,8 +35,7 @@ export class RefuseComponent implements OnInit {
   }
   onSave()
   {
-    this.updateForm.value.recID = this.data.recID;
-    this.odService.updateRefuseDispatch(this.updateForm.value).subscribe((item)=>{
+    this.odService.complete(this.data.recID,this.updateForm.value.comment,this.status).subscribe((item)=>{
       if(item.status == 0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     }) 

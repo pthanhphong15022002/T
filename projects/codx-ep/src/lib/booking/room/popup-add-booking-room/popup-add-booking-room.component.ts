@@ -805,8 +805,26 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   bookingOnCheck() {
-    let selectDate = new Date(this.data.bookingOn);
+    let selectDate = new Date(this.data.bookingOn);        
     let tmpCrrDate = new Date();
+    this.data.startDate= new Date(
+      selectDate.getFullYear(),
+      selectDate.getMonth(),
+      selectDate.getDate(),
+      this.data.startDate.getHours(),
+      this.data.startDate.getMinutes(),
+      0,
+      0
+    );
+    this.data.endDate= new Date(
+      selectDate.getFullYear(),
+      selectDate.getMonth(),
+      selectDate.getDate(),
+      this.data.endDate.getHours(),
+      this.data.endDate.getMinutes(),
+      0,
+      0
+    );
     let crrDate = new Date(
       tmpCrrDate.getFullYear(),
       tmpCrrDate.getMonth(),

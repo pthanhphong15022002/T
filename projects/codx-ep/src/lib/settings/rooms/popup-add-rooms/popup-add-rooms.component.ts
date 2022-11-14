@@ -86,7 +86,7 @@ export class PopupAddRoomsComponent extends UIComponent {
         device.text = item.text;
         device.icon= item.icon;
         device.isSelected= false;  
-        if (!this.isAdd) {
+        if (!this.isAdd  && this.data.equipments!=null) {
           this.data.equipments.forEach((item) => {
             if (item.equipmentID == device.id) {
               device.isSelected = true;
@@ -125,6 +125,7 @@ export class PopupAddRoomsComponent extends UIComponent {
       this.codxEpService.notifyInvalid(this.fGroupAddRoom, this.formModel);
       return;
     }
+    this.lstEquipment=[];
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         let tempEquip = new Equipments();
