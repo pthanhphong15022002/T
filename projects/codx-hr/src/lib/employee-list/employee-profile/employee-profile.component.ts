@@ -77,6 +77,10 @@ export class EmployeeProfileComponent extends UIComponent {
   vaccineColumnsGrid;
   diseaseColumnsGrid;
   accidentColumnsGrid;
+  positionColumnsGrid;
+  holidayColumnsGrid;
+  workDiaryColumnGrid;
+  expColumnGrid;
 
   @ViewChild('healthPeriodID', { static: true })
   healthPeriodID: TemplateRef<any>;
@@ -170,6 +174,79 @@ export class EmployeeProfileComponent extends UIComponent {
     this.formModel = this.view.formModel;
     console.log('afterview init', this.formModel);
 
+    //processingInfo
+    this.positionColumnsGrid = [
+      {
+        field: 'healthPeriodName',
+        headerText: 'Loại quyết định',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày hiệu lực',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày hết hạn',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Chức danh',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Phòng ban',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+    ];
+    this.holidayColumnsGrid = [
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày đăng ký',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Nghỉ từ ngày ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Đến ngày',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Số ngày nghỉ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Loại nghỉ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Lý do',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+    ];
+
+    //healthInfo
     this.healthColumnsGrid = [
       {
         field: 'healthPeriodName',
