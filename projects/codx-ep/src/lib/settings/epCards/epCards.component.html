@@ -4,7 +4,8 @@
   (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid">
   <ng-template #avatarCol let-data>
     <div class="h-50px m-4">
-      <codx-img [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle" 
+      <codx-img [objectId]="data?.recID" 
+      [objectName]="data.resourceName" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle" 
         width="50" [imgOn]="data.modifiedOn"></codx-img>
     </div>
 
