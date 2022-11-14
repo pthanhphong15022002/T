@@ -34,6 +34,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   startDate: any;
   endDate: any;
   funcID: any;
+  comment = '';
   constructor(
     private api: ApiHttpService,
     private changDetec: ChangeDetectorRef,
@@ -44,7 +45,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = dt.data;
-    this.meeting = this.data.data;
+    this.meeting = JSON.parse(JSON.stringify(this.data.data));
     this.funcID = this.data.funcID;
     this.title = this.data.title;
     this.selectedDate = moment(new Date(this.meeting.startDate))
@@ -107,7 +108,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   }
 
   onUpdate(){
-    this.tmSv.UpdateDateMeeting(this.meeting.meetingID, this.meeting.startDate, this.meeting.endDate).subscribe(res=>{
+    this.tmSv.UpdateDateMeeting(this.meeting.meetingID, this.meeting.startDate, this.meeting.endDate, this.funcID, this.comment).subscribe(res=>{
       if(res){
         this.dialog.close(res);
         //chưa có mssgcode dời lịch
@@ -277,6 +278,12 @@ export class PopupRescheduleMeetingComponent implements OnInit {
     this.setDate();
   }
 
+  valueChange(data) {
+    if (data?.data) {
+      this.comment = data?.data ? data?.data : '';
+    }
+    this.changDetec.detectChanges;
+  }
   //#endregion
 
   //region time work
