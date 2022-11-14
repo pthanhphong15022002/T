@@ -217,8 +217,11 @@
   <div (dblclick)="doubleClick(data)">
     <div class="d-flex flex-column employee-info">
       <div class="d-flex">
-        <span class="badge badge-success badge-sm badge-inline" [style.background]="data.statusColor">
-          {{ data.statusName}}
+        <!-- <span class="badge badge-success badge-sm badge-inline" [style.background]="data.statusColor">
+          {{data.statusName}}
+        </span> -->
+        <span class="badge badge-success badge-sm badge-inline" [style.background]="data.status | vll:'L0225':'color' | async">
+          {{data.status | vll:'L0225' : 'text' | async}}
         </span>
       </div>
 
