@@ -1,10 +1,11 @@
-import { Component, OnInit, Injector, Optional } from '@angular/core';
+import { Component, OnInit, Injector, Optional, ViewEncapsulation } from '@angular/core';
 import { DialogData, DialogRef, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'app-sort-session',
   templateUrl: './sort-session.component.html',
   styleUrls: ['./sort-session.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class SortSessionComponent extends UIComponent implements OnInit {
   formModel: any;

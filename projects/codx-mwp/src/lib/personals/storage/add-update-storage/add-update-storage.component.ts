@@ -102,10 +102,8 @@ export class AddUpdateStorageComponent implements OnInit {
             this.imageUpload
               .updateFileDirectReload(res.save.recID)
               .subscribe((result) => {
-                if (result) {
-                  this.loadData.emit();
-                  this.dialog.close(res.save);
-                }
+                this.loadData.emit();
+                this.dialog.close(res.save);
               });
           }
         }

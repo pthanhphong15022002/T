@@ -224,6 +224,7 @@ export class PopupRolesComponent implements OnInit {
         perm.objectID = data.id;
         perm.nemberType = '1';
         perm.autoCreat = false;
+        perm.isActive = true;
         perm.objectType = data.objectType;
         this.process.permissions = this.checkUserPermission(
           this.process.permissions,
