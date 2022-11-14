@@ -32,6 +32,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   functionList: any;
   @Output() changeLock = new EventEmitter<object>();
   @Input() typeCard: string;
+  @Output() getGroup = new EventEmitter<object>();
 
   constructor(
     private modalService: NgbModal,
@@ -112,6 +113,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       isLockCoin: this.isLockCoin,
       isLockDedicate: this.isLockDedicate,
     });
+    this.getGroup.emit({ isGroup: this.quantity.RuleSelected });
   }
 
   valueChangeSwitch(e) {
@@ -217,6 +219,7 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   changeValueListRuleSelected(selected) {
     this.quantity.RuleSelected = selected.data;
     this.objectUpdate['RuleSelected'] = selected.data;
+    this.getGroup.emit({ isGroup: selected.data });
     this.handleSaveParameter();
   }
 
@@ -312,8 +315,8 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
           if (Object.keys(this.data).length == 0) {
             this.isShowPolicyCard = false;
           }
-          this.handleLock(this.data.PolicyControl);
           this.setValueListName(this.dataFull);
+          this.handleLock(this.quantity.PolicyControl);
           this.change.detectChanges();
         }
       });
@@ -327,10 +330,10 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
   // }
   stringToBoolean(val) {
     var a = {
-      "true": true,
-      "false": false,
-      "1": true,
-      "0": false,
+      true: true,
+      false: false,
+      '1': true,
+      '0': false,
     };
     return a[val];
   }
@@ -357,7 +360,6 @@ export class PolicyCardComponent extends UIComponent implements OnInit {
       this.valueListNameCoin = 'L1460';
       return;
     }
-    this.change.detectChanges();
   }
 
   valueChangeQuantity(event) {
