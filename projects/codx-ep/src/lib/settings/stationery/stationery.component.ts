@@ -39,25 +39,9 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '6';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
-  defaultRecource: any = {
-    resourceName: '',
-    ranking: '1',
-    category: '1',
-    area: '',
-    capacity: '',
-    location: '',
-    companyID: '1',
-    owner: '',
-    note: '',
-    resourceType: '',
-    icon: '',
-    equipments: '',
-  };
   dialog!: DialogRef;
   model: DataRequest;
   formModel: FormModel;

@@ -126,8 +126,6 @@ export class PopupAddDriversComponent
   }
 
   onSaveForm() {
-    this.data.linkType='2';
-    this.data.resourceType='3';
     this.fGroupAddDriver.patchValue(this.data);
     if (this.fGroupAddDriver.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddDriver, this.formModel);

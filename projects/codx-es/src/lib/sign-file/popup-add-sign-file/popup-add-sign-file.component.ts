@@ -27,11 +27,9 @@ import {
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { isBuffer } from 'util';
 import { ES_SignFile, File } from '../../codx-es.model';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
-import { Files } from '../../setting/approval-step/popup-add-approval-step/popup-add-approval-step.component';
 
 @Component({
   selector: 'popup-add-sign-file',
@@ -71,8 +69,8 @@ export class PopupAddSignFileComponent implements OnInit {
 
   isSaved: boolean = false; // flag đã gọi hàm lưu signfile
   isEdit: boolean = false; // flag kiểm tra đã chỉnh sửa thông tin signfile
-  modeView: boolean = false; //mode xem tai lieu
 
+  modeView: string = '0'; //0: chỉnh sủa, 1: view file, 2: view signfile
   lstFile: any = [];
 
   templateName: string = ''; // tên template khi chọn lưu thành template
@@ -111,7 +109,10 @@ export class PopupAddSignFileComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.modeView = data?.data?.modeView ?? false;
+    this.modeView = data?.data?.modeView ?? '0';
+    /*
+    1: view
+    */
     this.formModelCustom = data?.data?.formModel;
     this.data = data?.data?.option?.DataService.dataSelected || {};
     this.isAddNew = data?.data?.isAddNew ?? true;
@@ -119,6 +120,10 @@ export class PopupAddSignFileComponent implements OnInit {
     this.oSignFile = data?.data?.oSignFile;
     this.disableCateID = data?.data?.disableCateID ?? false;
     this.headerText = data?.data?.headerText;
+
+    if (this.modeView == '2') {
+      this.disableCateID = true;
+    }
 
     //bien cho mf copy
     this.type = data?.data?.type;
@@ -139,7 +144,7 @@ export class PopupAddSignFileComponent implements OnInit {
         this.data = data?.data.dataSelected;
         this.processTab = 4;
       }
-      if (this.data?.approveStatus != 1 || this.modeView == true) {
+      if (this.data?.approveStatus != 1 || this.modeView == '1') {
         this.currentTab = 3;
         this.processTab = 4;
       }

@@ -485,4 +485,27 @@
   .pl-15 {
     padding-left: 15% !important;
   }
+
+  .pe-2-5 {
+    padding-right: 2.5rem !important;
+  }
+
+  table {
+    width: 760px !important;
+    height: 100% !important;
+  }
+
+  table,
+  th,
+  td {
+    padding: 1rem;
+  }
+  th,
+  td {
+    text-align: center;
+  }
+
+  .d-none {
+    display: none !important;
+  }
 }

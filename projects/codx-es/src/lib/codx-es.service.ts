@@ -758,13 +758,17 @@ export class CodxEsService {
     );
   }
 
-  updateSignatureType(tranID: string, signatureType: string) {
+  updateFieldApprovalStepAsync(
+    tranID: string,
+    fieldName: string,
+    value: string
+  ) {
     return this.api.execSv<any>(
       'ES',
       'ES',
       'ApprovalStepsBusiness',
-      'UpdateSignatureTypeAsync',
-      [tranID, signatureType]
+      'UpdateFieldAsync',
+      [tranID, fieldName, value]
     );
   }
 

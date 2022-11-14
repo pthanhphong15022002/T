@@ -43,6 +43,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   isAfterRender = false;
   isAdd = true;
   formModel: FormModel;
+
+  formModelCustom: FormModel;
   dialogApprovalStep: FormGroup;
 
   lstApproveMode: any;
@@ -137,6 +139,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.formModelCustom = new FormModel();
+    this.formModelCustom.formName = 'ApprovalSteps_Approvers';
+    this.formModelCustom.gridViewName = 'grvApprovalSteps_Approvers';
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;

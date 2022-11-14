@@ -1,3 +1,4 @@
+import { map } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -75,7 +76,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
   ) {
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
-    );
+    );   
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
@@ -88,14 +89,19 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.funcID = this.dialog.formModel.funcID;
 
     this.title = this.titleActon;
-    if (this.action == 'edit')
-      this.showLabelAttachment =
-        this.processSteps.attachments > 0 ? true : false;
-  
+    if (this.action == 'edit'){
+      this.showLabelAttachment = this.processSteps.attachments > 0 ? true : false;
+      this.processSteps!.owners
+      this.processSteps.owners
+      this.listOwnerID =  this.processSteps.owners.map((item) => {
+        return item?.objectID ? item.objectID : null ;
+      })
+    }
   }
 
   ngOnInit(): void {
     this.loadData();   
+    this.getListUser();
   }
 
   loadData() {
@@ -201,6 +207,14 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
+
+    let parentID = e?.data;
+    this.bpService
+    .getOwnersByParentID( [parentID])
+    .subscribe((data) => {
+     console.log("---------", data);
+     
+    });
   }
 
   valueChangeRefrence(e) {
@@ -282,4 +296,23 @@ export class PopupAddProcessStepsComponent implements OnInit {
     var i = this.owners.findIndex((x) => x.objectID == objectID);
     if (i != -1) this.owners.slice(i, 1);
   }
+
+  // get list user by userID
+  getListUser() {
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(this.listOwnerID)
+      )
+      .subscribe((res) => {
+        this.listOwnerDetails = res.map(user => {
+          return {id: user.userID, name: user.userName}
+        })        
+      });
+  }
+  // get list user by userID
+
 }
