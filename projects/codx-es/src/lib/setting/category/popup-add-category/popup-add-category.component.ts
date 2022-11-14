@@ -132,7 +132,10 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       //New list step
       this.esService
         .copyApprovalStep(this.oldRecID, this.data.recID)
-        .subscribe((res) => {});
+        .subscribe((res) => {
+          console.log(this.data);
+          console.log(res);
+        });
     }
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -380,18 +383,41 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     //   }
     // });
 
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), 0)
-      .subscribe((res) => {
-        if (res.update || res.save) {
-          let resData = res.save;
-          if (res.update) resData = res.update;
+    // this.dialog.dataService
+    //   .save((opt: any) => this.beforeSave(opt), 0)
+    //   .subscribe((res) => {
+    //     if (res.update || res.save) {
+    //       let resData = res.save;
+    //       if (res.update) resData = res.update;
+    //       this.isSaved = true;
+    //       if (isClose) {
+    //         this.dialog && this.dialog.close(resData);
+    //       }
+    //     }
+    //   });
+
+    if (
+      (this.isAdd && this.isSaved == false) ||
+      (this.isSaved == false && this.type == 'copy')
+    ) {
+      this.esService.addNewCategory(this.data).subscribe((res) => {
+        if (res) {
           this.isSaved = true;
           if (isClose) {
-            this.dialog && this.dialog.close(resData);
+            this.dialog && this.dialog.close(res);
           }
         }
       });
+    } else {
+      this.esService.updateCategory(this.data).subscribe((res) => {
+        if (res) {
+          this.isSaved = true;
+          if (isClose) {
+            this.dialog && this.dialog.close(res);
+          }
+        }
+      });
+    }
   }
 
   openAutoNumPopup() {
