@@ -109,7 +109,6 @@ export class PopupAddEpCardsComponent extends UIComponent {
       this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
       return;
     }
-    this.data.resourceType='7';
     let index:any
     if(this.isAdd){
       index=0;

@@ -4,8 +4,6 @@
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
   (buttonClick)="click($event)"
@@ -23,12 +21,13 @@
       [objectId]="data?.recID"
       [funcId]="funcID"
       [objectType]="'EP_Resources'"
+      [objectName]="data.resourceName"
       imageType="circle"
       width="60"
       [imgOn]="data.modifiedOn"
     ></codx-img>
     <div class="ms-2 d-flex flex-column">
-      <span class="fw-bold">{{ data.resourceName }} - {{ data.code }}</span>
+      <span class="fw-bold">{{ data.resourceName }}<span *ngIf="data.code!=null"> - {{ data.code }}</span></span>
       <div class="d-flex flex-row">
         <codx-label
           [default]="grvCars?.Ranking?.headerText"
@@ -151,6 +150,7 @@
   <div *ngIf="data.linkID" class="d-flex has-action-menu align-items-center">
     <codx-img
       [objectId]="data.driverRecID"
+      [objectName]="data.driverName"
       imageType="circle"
       [width]="35"
       [objectType]="'EP_Resources'"
