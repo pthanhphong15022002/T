@@ -57,6 +57,12 @@ import { PopupAddEmployeesPartyInfoComponent } from './employee-profile/popup-ad
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-add-new-hr.component';
 import { EmployeeSelfInfoComponent } from './employee-profile/employee-self-info/employee-self-info.component';
+import { EmployeeLegalPassportInfoComponent } from './employee-profile/employee-legal-passport-info/employee-legal-passport-info.component';
+import { EmployeeLegalPassportFormComponent } from './employee-profile/employee-legal-passport-form/employee-legal-passport-form.component';
+import { EmployeeWorkingLisenceDetailComponent } from './employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
+import { EmployeeWorkingLisenceComponent } from './employee-profile/employee-working-lisence/employee-working-lisence.component';
+import { EmployeeVisaInfoComponent } from './employee-profile/employee-visa-info/employee-visa-info.component';
+import { EmployeeVisaFormComponent } from './employee-profile/employee-visa-form/employee-visa-form.component';
 
 export const routes: Routes = [
   {
@@ -224,6 +230,12 @@ const T_Component: Type<any>[] = [
   EmployeeFamilyRelationshipComponent,
   EmployeeFamilyRelationshipDetailComponent,
   EmployeeAssurTaxBankaccInfoComponent,
+  EmployeeLegalPassportInfoComponent,
+  EmployeeLegalPassportFormComponent,
+  EmployeeWorkingLisenceComponent,
+  EmployeeWorkingLisenceDetailComponent,
+  EmployeeVisaInfoComponent,
+  EmployeeVisaFormComponent,
 ];
 @NgModule({
   imports: [

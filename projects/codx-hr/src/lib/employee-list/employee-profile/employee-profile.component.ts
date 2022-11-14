@@ -1,3 +1,7 @@
+import { EmployeeVisaInfoComponent } from './../../employee-profile/employee-visa-info/employee-visa-info.component';
+import { EmployeeWorkingLisenceComponent } from './../../employee-profile/employee-working-lisence/employee-working-lisence.component';
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
+import { EmployeeLegalPassportFormComponent } from './../../employee-profile/employee-legal-passport-form/employee-legal-passport-form.component';
 import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { CheckBox } from '@syncfusion/ej2-angular-buttons';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
@@ -242,6 +246,63 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  addEmployeePassportInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeLegalPassportFormComponent,
+      {
+        isAdd: true,
+        headerText: 'Hộ chiếu'
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  addEmployeeWorkingLisenceInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeWorkingLisenceComponent,
+      {
+        isAdd: true,
+        headerText: 'Giấy phép lao động'
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  addEmployeeVisaInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeVisaInfoComponent,
+      {
+        isAdd: true,
+        headerText: 'Thị thực'
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
     });
   }
 

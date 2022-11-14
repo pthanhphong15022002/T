@@ -88,6 +88,7 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
     this.hrService.saveEmployeeContactInfo(this.data).subscribe(p => {
       if(p === "True"){
         this.notitfy.notifyCode('SYS007')
+        this.dialog.close()
       }
       else this.notitfy.notifyCode('DM034')
     })
@@ -101,7 +102,9 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
     }
 
     //Xu li validate thong tin CMND nhan vien
-    if(this.data.expiredOn < this.data.issuedOn){
+    console.log(this.data.expiredOn)
+    console.log(this.data.issuedOn)
+    if(this.data.idExpiredOn < this.data.issuedOn){
       this.notitfy.notifyCode('HR002')
       return
     }
@@ -109,6 +112,7 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
       if(p === "True"){
         this.notitfy.notifyCode('SYS007')
+        this.dialog.close()
       }
       else this.notitfy.notifyCode('DM034')
     })
