@@ -860,7 +860,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             600,
             400,
             null,
-            { data: datas },
+            { data: datas  },
             '',
             option
           )
@@ -884,19 +884,38 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             600,
             400,
             null,
-            { data: datas },
+            { data: datas , headerText:"Trả lại" , status:"4"},
             '',
             option
           )
           .closed.subscribe((x) => {
-            if (x?.event == 0) {
-              // datas.status = '7';
-              // this.view.dataService.update(datas).subscribe();
-            }
+            if (x.event) this.view.dataService.update(x.event).subscribe();
           });
           // this.refuse(datas);
           break;
         }
+      //Chuyển lại
+      case "ODT114":
+      {
+        var option = new DialogModel();
+        option.FormModel = this.formModel;
+        this.callfunc
+        .openForm(
+          RefuseComponent,
+          null,
+          600,
+          400,
+          null,
+          { data: datas , headerText:"Chuyển lại" , status:"3"},
+          '',
+          option
+        )
+        .closed.subscribe((x) => {
+          if (x.event) this.view.dataService.update(x.event).subscribe();
+        });
+        // this.refuse(datas);
+        break;
+      }
       default:
       {
         this.shareService.defaultMoreFunc(val,datas,this.afterSaveTask,this.view.formModel,this.view.dataService);
@@ -1042,6 +1061,19 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       completed.forEach((elm) => {
         elm.disabled = true;
       });
+    }
+    var approvelCL = e.filter(
+      (x: { functionID: string }) => x.functionID == 'ODT114' 
+    );
+    approvelCL[0].disabled = true;
+    //Trả lại
+    if(data?.status == "4")
+    {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT113' 
+      );
+      approvel[0].disabled = true;
+      approvelCL[0].disabled = false;
     }
     //data?.isblur = true
   }

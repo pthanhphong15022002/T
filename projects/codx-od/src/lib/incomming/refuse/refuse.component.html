@@ -1,6 +1,6 @@
-<codx-form [headerText]="'Trả lại'" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+<codx-form [headerText]="headerText" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template popup adde #body>
-        <codx-label default="Ghi chú" [fiedName]="'lblComment'"></codx-label>
+        <codx-label default="Lý do" [fiedName]="'lblComment'"></codx-label>
         <codx-input 
             type="textarea" 
             format="ed2"
