@@ -474,6 +474,34 @@ export class ViewDetailComponent implements OnInit {
       });
   }
 
+  viewSFile(datas: any, mF: any) {
+    this.view.dataService.edit(datas).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      let dialogAdd = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        mF?.text,
+        700,
+        650,
+        this.funcID,
+        {
+          modeView: '2',
+          isAddNew: false,
+          dataSelected: datas,
+          formModel: this.view?.formModel,
+          option: option,
+          headerText: mF?.text,
+        },
+        '',
+        dialogModel
+      );
+    });
+  }
+
   viewFile(datas: any, mF: any) {
     this.view.dataService.edit(datas).subscribe((res: any) => {
       let option = new SidebarModel();
@@ -489,7 +517,7 @@ export class ViewDetailComponent implements OnInit {
         650,
         this.funcID,
         {
-          modeView: true,
+          modeView: '1',
           isAddNew: false,
           dataSelected: datas,
           formModel: this.view?.formModel,

@@ -1,7 +1,7 @@
 <codx-form [dialog]="dialog" [body]="body" [footer]="footer" [subHeader]="subheader"></codx-form>
 <ng-template #subheader>
     <div class="offcanvas-header d-flex align-items-center justify-content-between w-100" kt-hidden-height="46">
-        <h2 class="m-0"> {{title}}</h2>
+        <h2 class="m-0">{{title}}</h2>
         <div class="btn-extand mt-2 d-flex justify-content-end me-2">
             <a class="text-gray-700 text-hover-primary d-flex align-items-center">
                 <span class="text-dark">
@@ -98,7 +98,12 @@
                         <div class="d-flex">
                             <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
                                 <span class="symbol-circle">
-                                    <codx-vll [name]="'FD001'" value="shareControl" [showIcon]="true" [showText]="true"
+                                    <codx-vll 
+                                        [name]="'FD001'"
+                                        [value]="shareControl" 
+                                        [showIcon]="true" 
+                                        [showText]="true"
+                                        [path]="'assets/themes/sys/default/img/'"
                                         [showBgColor]="true">
                                     </codx-vll>
                                 </span>
@@ -275,7 +280,7 @@
                     </ng-cintainer>
 
                     <div class="d-flex align-items-start">
-                        <ng-container *ngIf="form.controls['giftID'].value && gift">
+                        <ng-container *ngIf="form.controls['giftID'].value && gifts">
                             <img class="symbol-image icon-surface1 h-30px mr-2" src="/assets/img/feedback/gift 1.png" />
                         </ng-container>
                         <ng-container *ngIf="givePoint > 0">

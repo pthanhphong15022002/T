@@ -526,20 +526,14 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             option
           );
           this.dialog.closed.subscribe((x) => {
-            if (x.event == null) {
-              //this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
-              this.view.dataService.remove(res?.recID).subscribe();
-              this.view.dataService.onAction.next({
-                type: 'update',
-                data: datas,
-              });
-            } else
+            if (x.event) {
               this.view.dataService.add(x.event, 0).subscribe((item) => {
                 this.view.dataService.onAction.next({
                   type: 'update',
                   data: x.event,
                 });
               });
+            } 
           });
         });
         break;
@@ -876,6 +870,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           });
         break;
       }
+      case "Trả lại":
+        {
+          this.refuse(datas);
+          break;
+        }
       default:
       {
         this.shareService.defaultMoreFunc(val,datas,this.afterSaveTask,this.view.formModel,this.view.dataService);
@@ -1137,5 +1136,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       return 'icon-access_alarm';
     }
     return '';
+  }
+  //Từ chối
+  refuse(datas:any)
+  {
+    //datas = this.
   }
 }

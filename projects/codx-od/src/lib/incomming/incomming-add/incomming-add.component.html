@@ -143,6 +143,22 @@
     <div class="col-4">
       <codx-label
         [formModel]="form.formModel"
+        fiedName="DispatchNo"
+        class="fw-bold"
+      ></codx-label>
+      <!-- Bùa r nhờ Quang fix sau -->
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="dispatchNo"
+        [disabled]="true"
+      >
+      </codx-input>
+    </div>
+    <div class="col-4">
+      <codx-label
+        [formModel]="form.formModel"
         fiedName="RefNo"
         class="fw-bold"
       ></codx-label>
@@ -171,7 +187,9 @@
       >
       </codx-input>
     </div>
-    <div class="col-2">
+  </div>
+  <div  class="row mt-3">
+    <div class="col-3">
       <codx-label
         [formModel]="form.formModel"
         fiedName="Pages"
@@ -186,7 +204,7 @@
       >
       </codx-input>
     </div>
-    <div class="col-2">
+    <div class="col-3">
       <codx-label
         [formModel]="form.formModel"
         fiedName="Copies"
