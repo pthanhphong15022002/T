@@ -86,7 +86,7 @@ export class PopupAddRoomsComponent extends UIComponent {
         device.text = item.text;
         device.icon= item.icon;
         device.isSelected= false;  
-        if (!this.isAdd) {
+        if (!this.isAdd  && this.data.equipments!=null) {
           this.data.equipments.forEach((item) => {
             if (item.equipmentID == device.id) {
               device.isSelected = true;
@@ -116,16 +116,16 @@ export class PopupAddRoomsComponent extends UIComponent {
     }
   }
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
   onSaveForm() {
-    this.data.resourceType='1';
     this.fGroupAddRoom.patchValue(this.data);
     if (this.fGroupAddRoom.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddRoom, this.formModel);
       return;
     }
+    this.lstEquipment=[];
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         let tempEquip = new Equipments();
@@ -137,7 +137,6 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.fGroupAddRoom.patchValue({      
       equipments: this.lstEquipment,
       category: '1',
-      linkType: '0',
     });   
     let index:any
     if(this.isAdd){

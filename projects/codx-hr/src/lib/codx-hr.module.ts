@@ -57,6 +57,7 @@ import { PopupAddEmployeesPartyInfoComponent } from './employee-profile/popup-ad
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-add-new-hr.component';
 import { EmployeeSelfInfoComponent } from './employee-profile/employee-self-info/employee-self-info.component';
+import { TmpGridViewComponent } from './employee-list/employee-profile/tmp-grid-view/tmp-grid-view.component';
 
 export const routes: Routes = [
   {
@@ -224,6 +225,7 @@ const T_Component: Type<any>[] = [
   EmployeeFamilyRelationshipComponent,
   EmployeeFamilyRelationshipDetailComponent,
   EmployeeAssurTaxBankaccInfoComponent,
+  TmpGridViewComponent,
 ];
 @NgModule({
   imports: [

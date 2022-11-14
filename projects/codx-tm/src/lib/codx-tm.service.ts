@@ -420,13 +420,23 @@ export class CodxTMService {
     );
   }
 
-  UpdateDateMeeting(meetingID: string, startDate, endDate){
+  UpdateDateMeeting(meetingID: string, startDate, endDate, funcID: string, comment: string){
     return this.api.execSv(
       'CO',
       'CO',
       'MeetingsBusiness',
       'UpdateDateMeetingAsync',
-      [meetingID, startDate, endDate]
+      [meetingID, startDate, endDate, funcID, comment]
+    );
+  }
+
+  SendMailNewResources(recID: string, valueNo: string, funcID: string, resources){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'SendAlertMailNewResourcesAsync',
+      [recID, valueNo, funcID,resources]
     );
   }
 

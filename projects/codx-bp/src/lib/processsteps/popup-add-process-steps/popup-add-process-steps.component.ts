@@ -1,28 +1,26 @@
+import { map } from 'rxjs';
 import {
-  ChangeDetectorRef,
-  Component,
   OnInit,
   Optional,
   ViewChild,
+  Component,
+  ChangeDetectorRef,
 } from '@angular/core';
-import { FormControlName } from '@angular/forms';
 import {
-  ApiHttpService,
   AuthStore,
-  CacheService,
-  CallFuncService,
-  DialogData,
   DialogRef,
   FormModel,
+  DialogData,
+  CacheService,
+  ApiHttpService,
+  CallFuncService,
   NotificationsService,
 } from 'codx-core';
-import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { FormControlName } from '@angular/forms';
 import { CodxBpService } from '../../codx-bp.service';
-import {
-  BP_ProcessOwners,
-  BP_ProcessSteps,
-} from '../../models/BP_Processes.model';
+import {  BP_ProcessOwners,  BP_ProcessSteps} from '../../models/BP_Processes.model';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 
 @Component({
   selector: 'lib-popup-add-process-steps',
@@ -30,8 +28,8 @@ import {
   styleUrls: ['./popup-add-process-steps.component.css'],
 })
 export class PopupAddProcessStepsComponent implements OnInit {
-  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('form') form: FormControlName;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   dialog!: DialogRef;
   formModel: FormModel;
@@ -42,24 +40,24 @@ export class PopupAddProcessStepsComponent implements OnInit {
   data: any;
   funcID: any;
   showLabelAttachment = false;
-  title = '';
   stepType = 'C';
-  readOnly = false;
-  titleActon = '';
+  title = '';
   action = '';
+  textChange = '';
+  titleActon = '';
   vllShare = 'TM003';
+  readOnly = false;
   listUser = [];
   isAlert = true;
   isEmail = true;
   isHaveFile = false;
   referenceText = [];
-  textChange = '';
   popover: any;
   crrIndex = 0;
 
   listOwnerID = [];
   listOwnerDetails = [];
-
+  lstOwners = [];
   formModelMenu :FormModel ;
 
   constructor(
@@ -75,27 +73,38 @@ export class PopupAddProcessStepsComponent implements OnInit {
   ) {
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
-    );
+    );   
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
    
-
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
 
     this.title = this.titleActon;
-    if (this.action == 'edit')
-      this.showLabelAttachment =
-        this.processSteps.attachments > 0 ? true : false;
-  
+    if (this.action == 'edit'){
+      this.showLabelAttachment = this.processSteps.attachments > 0 ? true : false;
+      this.processSteps!.owners
+      this.processSteps.owners
+      if(this.stepType === "A"){
+        this.getOwnerByParentID(this.processSteps["recID"]);
+      }else{
+        this.listOwnerID =  this.processSteps.owners.map((item) => {
+          return item?.objectID ? item.objectID : null ;
+        }) 
+      }
+           
+    }
   }
 
   ngOnInit(): void {
     this.loadData();   
+    if(this.listOwnerID.length > 0){
+      this.getListUser();
+    }
   }
 
   loadData() {
@@ -167,6 +176,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
       .subscribe((data) => {
         if (data) {
           this.dialog.close(data);
+          this.api.callSv('BP','BP','ProcessStepsBusiness','UpdateOwnersAsync',[this.processSteps.recID, this.lstOwners]).subscribe();
         } else this.dialog.close();
       });
     // }
@@ -188,6 +198,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
         if (data) {
           this.attachment?.clearData();
           this.dialog.close(data);
+          
         } else this.dialog.close();
       });
   }
@@ -201,6 +212,11 @@ export class PopupAddProcessStepsComponent implements OnInit {
 
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
+    let parentID = e?.data;
+    // Get owners  
+    if(this.stepType !== "A" && this.stepType !== "P"){
+      this.getOwnerByParentID(parentID);
+    } 
   }
 
   valueChangeRefrence(e) {
@@ -280,6 +296,41 @@ export class PopupAddProcessStepsComponent implements OnInit {
   onDeleteOwner(objectID, index) {
     this.listOwnerDetails.splice(index, 1);
     var i = this.owners.findIndex((x) => x.objectID == objectID);
-    if (i != -1) this.owners.slice(i, 1);
+    if (i != -1) this.owners.splice(i, 1);
   }
+
+  // get list user by userID
+  getListUser() {
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(this.listOwnerID)
+      )
+      .subscribe((res) => {
+        this.listOwnerDetails = res.map(user => {
+          return {id: user.userID, name: user.userName}
+        })        
+      });
+  }
+  getOwnerByParentID(id){
+      this.bpService
+      .getOwnersByParentID( [id])
+      .subscribe((data) => {
+        data.forEach((item) => {
+          if(item.objectID){
+            this.listOwnerID.push(item.objectID);
+            var owner = new BP_ProcessOwners();
+            owner.objectType = item.objectType;
+            owner.objectID = item.objectID;
+            owner.rAIC = item.raic;
+            this.owners.push(owner);
+            this.lstOwners.push(owner);
+          }
+        })
+        this.getListUser();               
+      });
+    }
 }

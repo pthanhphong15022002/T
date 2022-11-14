@@ -818,7 +818,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     else this.valueTo = value;
   }
 
-  moveSession() {
+  sortSession() {
     var obj = {
       data: this.recID,
     };

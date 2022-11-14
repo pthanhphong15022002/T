@@ -20,7 +20,7 @@
           </ng-template>
         </div>
 
-        <div class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer">
+        <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer">
           <div class="btn btn-sm btn-icon btn-white cursor-pointer " *ngIf="hideDelete=='1'"
             (click)="deleteFile(item.data.recID)">
             <i class="icon-close text-danger icon-16"></i>
@@ -100,7 +100,7 @@
             </codx-temp-full>
           </ng-template>
         </div>
-        <div class="action-menu-1 d-flex align-items-center cursor-pointer">
+        <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex align-items-center cursor-pointer">
           <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="hideDelete=='1'"
             (click)="deleteFile(item.recID)">
             <i class="icon-close text-danger icon-16"></i>

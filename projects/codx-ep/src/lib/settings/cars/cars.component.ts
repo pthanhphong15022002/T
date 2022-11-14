@@ -42,8 +42,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '2';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
@@ -93,7 +91,9 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     //this.view.dataService.methodDelete = 'DeleteResourceAsync';
-
+    this.cache.functionList('EPS22').subscribe(res=>{
+      var x= res;
+    })
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -132,6 +132,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               width: '15%',
               field: 'companyID',
               template: this.locationCol,
+              
             },
             {
               headerText: gv['Equipments'].headerText,
@@ -183,7 +184,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
         }
       });
     });
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
 

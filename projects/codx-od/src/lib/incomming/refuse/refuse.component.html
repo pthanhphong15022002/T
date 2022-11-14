@@ -1,0 +1,19 @@
+<codx-form [headerText]="headerText" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
+    <ng-template popup adde #body>
+        <codx-label default="Lý do" [fiedName]="'lblComment'"></codx-label>
+        <codx-input 
+            type="textarea" 
+            format="ed2"
+            [Group]="updateForm"
+            ControlName="comment"
+            class="h-100px"
+        ></codx-input>
+    </ng-template>
+    <ng-template #footer>
+        <div class="d-flex justify-content-end" (click)="onSave()">
+            <button class="btn btn-primary">
+                Gửi
+            </button>
+        </div>
+    </ng-template>
+</codx-form>
