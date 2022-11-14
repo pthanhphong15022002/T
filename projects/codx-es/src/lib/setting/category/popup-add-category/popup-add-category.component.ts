@@ -132,9 +132,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       //New list step
       this.esService
         .copyApprovalStep(this.oldRecID, this.data.recID)
-        .subscribe((res) => {
-          console.log(res);
-        });
+        .subscribe((res) => {});
     }
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -172,19 +170,32 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             this.settingDataValue = JSON.parse(setting.dataValue);
             console.log(this.settingDataValue);
             if (this.settingDataValue) {
+              let lstTrueFalse = ['AllowEditAreas', 'AreaControl'];
               for (const key in this.settingDataValue) {
-                console.log(key);
                 let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
                 this.data[fieldName] = this.settingDataValue[key];
-                if (key == 'AllowEditAreas') {
-                  this.data[fieldName] =
-                    this.settingDataValue[key] == '0' ? false : true;
-                }
+
+                // if (lstTrueFalse.includes(key)) {
+                //   this.data[fieldName] =
+                //     this.settingDataValue[key] == '0' ? false : true;
+                //   if (key == 'AreaControl') {
+                //     console.log('AreaControl', this.data[fieldName]);
+                //   }
+                // } else {
+                //   this.data[fieldName] = this.settingDataValue[key];
+                // }
+                this.data[fieldName] = this.settingDataValue[key];
+                this.form.formGroup.patchValue({
+                  fieldName: this.data[fieldName],
+                });
               }
+              console.log(this.data);
+              this.cr.detectChanges();
             }
-            console.log(this.data);
           }
         });
+    } else {
+      console.log(this.data);
     }
     this.form?.formGroup?.addControl(
       'countStep',
@@ -221,40 +232,104 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field && event?.component) {
-      if (event?.field == 'signatureType') {
-        if (this.data?.countStep > 0) {
-          this.notify.alertCode('ES023').subscribe((x) => {
-            //open popup confirm
-            let lastValue = JSON.parse(JSON.stringify(this.data.signatureType));
-            this.data[event['field']] = event.data;
-            this.cr.detectChanges();
-            if (x.event.status == 'Y') {
-              this.form?.formGroup?.patchValue({
-                [event['field']]: event.data,
-              });
-              this.esService
-                .updateSignatureType(this.data.recID, this.data.signatureType)
-                .subscribe();
+      console.log('value change', event);
 
-              this.esService.updateCategory(this.data).subscribe((res) => {
-                if (res) {
-                  this.oUpdate = res;
-                }
-              });
-            } else {
-              this.data.signatureType = lastValue;
-              this.cr.detectChanges();
-            }
+      let fieldName =
+        event.field.charAt(0).toUpperCase() + event.field.slice(1);
+      switch (event?.field) {
+        case 'areaControl': {
+          this.data[event['field']] = event.data == true ? '1' : '0';
+          this.form?.formGroup?.patchValue({
+            [event['field']]: this.data[event['field']],
           });
-        } else {
+          break;
+        }
+        case 'confirmControl': {
+          if (this.data?.countStep > 0) {
+            this.notify.alertCode('ES023').subscribe((x) => {
+              //open popup confirm
+              let lastValue = JSON.parse(
+                JSON.stringify(this.data.confirmControl)
+              );
+
+              if (x.event?.status == 'Y') {
+                this.form?.formGroup?.patchValue({
+                  [event['field']]: event.data,
+                });
+                this.esService
+                  .updateFieldApprovalStepAsync(
+                    this.data.recID,
+                    fieldName,
+                    event.data
+                  )
+                  .subscribe();
+
+                this.esService.updateCategory(this.data).subscribe((res) => {
+                  if (res) {
+                    this.oUpdate = res;
+                  }
+                });
+              } else {
+                // back data
+                this.data.confirmControl = event?.data ? '1' : '0';
+                this.data.confirmControl = lastValue == '1' ? true : false;
+                this.cr.detectChanges();
+              }
+            });
+          } else {
+            this.data[event['field']] = event.data ? true : false;
+            this.form?.formGroup?.patchValue({
+              [event['field']]: this.data[event['field']],
+            });
+          }
+          break;
+        }
+        case 'signatureType': {
+          if (this.data?.countStep > 0) {
+            this.notify.alertCode('ES023').subscribe((x) => {
+              //open popup confirm
+              let lastValue = JSON.parse(
+                JSON.stringify(this.data.signatureType)
+              );
+
+              if (x.event?.status == 'Y') {
+                this.form?.formGroup?.patchValue({
+                  [event['field']]: event.data,
+                });
+                this.esService
+                  .updateFieldApprovalStepAsync(
+                    this.data.recID,
+                    fieldName,
+                    event.data
+                  )
+                  .subscribe();
+
+                this.esService.updateCategory(this.data).subscribe((res) => {
+                  if (res) {
+                    this.oUpdate = res;
+                  }
+                });
+              } else {
+                this.data[event['field']] = event.data;
+                this.cr.detectChanges();
+                this.data.signatureType = lastValue;
+                this.cr.detectChanges();
+              }
+            });
+          } else {
+            this.data[event['field']] = event.data;
+            this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+          }
+          break;
+        }
+        default: {
           this.data[event['field']] = event.data;
           this.form?.formGroup?.patchValue({ [event['field']]: event.data });
         }
-      } else {
-        this.data[event['field']] = event.data;
-        this.form?.formGroup?.patchValue({ [event['field']]: event.data });
       }
     }
+
+    console.log('value change', event);
     this.cr.detectChanges();
   }
 
