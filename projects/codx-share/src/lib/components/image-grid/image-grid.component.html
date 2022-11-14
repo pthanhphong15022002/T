@@ -3,18 +3,26 @@
     <ng-container *ngSwitchCase="1">
       <div class="feed-1pic position-relative overflow-hidden h-250px" (click)="clickViewDetail(file_img_video[0])">
         <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_1_0">
-          <ng-container *ngIf="file_img_video[0].recID;else image_1_0">
-            <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"
-              [width]="600" cssClass="pic" imageType="square">
+          <!-- <ng-container *ngIf="file_img_video[0].recID;else image_1_0">
+            <codx-img class="h-auto" 
+              [recId]="file_img_video[0].recID" 
+              [objectId]="file_img_video[0].objectID"
+              [objectType]="file_img_video[0].objectType"
+              [isDefaulImg]="true"
+              [width]="600"
+              cssClass="pic" 
+              imageType="square">
             </codx-img>
-          </ng-container>
-          <ng-template #image_1_0>
-            <img class="w-100 rounded h-auto" [src]="file_img_video[0].avatar" />
-          </ng-template>
+          </ng-container> -->
+          <img class="w-100 rounded h-auto" [src]="file_img_video[0].source || file_img_video[0].avatar" />
+
+          <!-- <ng-template #image_1_0>
+            <img class="w-100 rounded h-auto" [src]=" file_img_video[0].avatar || file_img_video[0].path" />
+          </ng-template> -->
         </ng-container>
         <ng-template #video_1_0>
-          <video #video controls class="w-100 rounded h-auto">
-            <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
+          <video [autoplay]="false" #video controls class="w-100 rounded h-auto">
+            <source [src]="file_img_video[0].source || file_img_video[0].data" type="video/mp4">
           </video>
         </ng-template>
         <ng-container *ngIf="edit">
@@ -26,18 +34,24 @@
       <div class="row row-custom feed-2pic m-0 ">
         <div class="col-7 pe-2 ps-0 position-relative overflow-hidden h-200px" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_2_0">
-            <ng-container *ngIf="file_img_video[0].recID;else Image_2_0">
-              <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"
+            <!-- <ng-container *ngIf="file_img_video[0].recID;else Image_2_0">
+              <codx-img class="h-auto" 
+                [recId]="file_img_video[0].recID" 
+                [objectId]="file_img_video[0].objectID"
+                [objectType]="file_img_video[0].objectType"
+                [isDefaulImg]="true"
                 [width]="300" [cssClass]="'pic'" imageType="square">
               </codx-img>
             </ng-container>
             <ng-template #Image_2_0>
-              <img class="w-100 rounded h-auto" [src]="file_img_video[0].avatar || file_img_video[0].data" />
-            </ng-template>
+              <img class="w-100 rounded h-auto" [src]="file_img_video[0].avatar || file_img_video[0].source" />
+            </ng-template> -->
+          <img class="w-100 rounded h-auto" [src]="file_img_video[0].source || file_img_video[0].avatar" />
+
           </ng-container>
           <ng-template #video_2_0>
             <video #video controls class="w-100 rounded h-auto">
-              <source [src]="file_img_video[0].srcVideo || file_img_video[0].data">
+              <source [src]="file_img_video[0].source || file_img_video[0].data">
             </video>
           </ng-template>
           <ng-container *ngIf="edit">
@@ -46,18 +60,24 @@
         </div>
         <div class="col-5 px-0 h-200px position-relative overflow-hidden" (click)="clickViewDetail(file_img_video[1])">
           <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_2_1">
-            <ng-container *ngIf="file_img_video[1].recID;else Image_2_1">
-              <codx-img class="h-auto" [recId]="file_img_video[1].recID" [objectId]="file_img_video[1].objectID"
+            <!-- <ng-container *ngIf="file_img_video[1].recID;else Image_2_1">
+              <codx-img class="h-auto" 
+                [recId]="file_img_video[1].recID" 
+                [objectId]="file_img_video[1].objectID"
+                [objectType]="file_img_video[1].objectType"
+                [isDefaulImg]="true"
                 [width]="300" [cssClass]="'pic'" imageType="square">
               </codx-img>
             </ng-container>
             <ng-template #Image_2_1>
-              <img class="w-100 rounded h-auto" [src]="file_img_video[1].avatar || file_img_video[1].data" />
-            </ng-template>
+              <img class="w-100 rounded h-auto" [src]="file_img_video[1].avatar || file_img_video[1].source" />
+            </ng-template> -->
+          <img class="w-100 rounded h-auto" [src]="file_img_video[1].source || file_img_video[1].avatar" />
+
           </ng-container>
           <ng-template #video_2_1>
             <video #video controls class="w-100 h-auto">
-              <source [src]="file_img_video[1].srcVideo || file_img_video[1].data" type="video/mp4">
+              <source [src]="file_img_video[1].source || file_img_video[1].data" type="video/mp4">
             </video>
           </ng-template>
           <ng-container *ngIf="edit">
@@ -70,18 +90,24 @@
       <div class="row row-custom feed-3pic m-0">
         <div class="col-7 ps-0 pe-2 position-relative h-320px overflow-hidden" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_3_0">
-            <ng-container *ngIf="file_img_video[0].recID;else Image_3_0">
-              <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"
+            <!-- <ng-container *ngIf="file_img_video[0].recID;else Image_3_0">
+              <codx-img class="h-auto" 
+                [recId]="file_img_video[0].recID" 
+                [objectId]="file_img_video[0].objectID"
+                [objectType]="file_img_video[0].objectType"
+                [isDefaulImg]="true"
                 [width]="600" [cssClass]="'pic'" imageType="square">
               </codx-img>
             </ng-container>
             <ng-template #Image_3_0>
-              <img class="w-100 rounded h-auto" [src]="file_img_video[0].avatar || file_img_video[0].data" />
-            </ng-template>
+              <img class="w-100 rounded h-auto" [src]="file_img_video[0].avatar || file_img_video[0].source" />
+            </ng-template> -->
+          <img class="w-100 rounded h-auto" [src]="file_img_video[0].source || file_img_video[0].avatar" />
+
           </ng-container>
           <ng-template #video_3_0>
             <video #video controls class="w-100 h-auto">
-              <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
+              <source [src]="file_img_video[0].source || file_img_video[0].data" type="video/mp4">
             </video>
           </ng-template>
           <ng-container *ngIf="edit">
@@ -91,18 +117,24 @@
         <div class="col-5 px-0 ">
           <div class="position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[1])">
             <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_3_1">
-              <ng-container *ngIf="file_img_video[1].recID;else Image_3_1">
-                <codx-img class="h-auto" [recId]="file_img_video[1].recID" [objectId]="file_img_video[1].objectID"
+              <!-- <ng-container *ngIf="file_img_video[1].recID;else Image_3_1">
+                <codx-img class="h-auto" 
+                  [recId]="file_img_video[1].recID" 
+                  [objectId]="file_img_video[1].objectID"
+                  [objectType]="file_img_video[1].objectType"
+                  [isDefaulImg]="true"
                   [width]="300" [cssClass]="'pic'" imageType="square">
                 </codx-img>
               </ng-container>
               <ng-template #Image_3_1>
                 <img class="w-100 rounded h-auto" [src]="file_img_video[1].avatar || file_img_video[1].data" />
-              </ng-template>
+              </ng-template> -->
+            <img class="w-100 rounded h-auto" [src]="file_img_video[1].source || file_img_video[1].avatar" />
+
             </ng-container>
             <ng-template #video_3_1>
               <video #video controls class="w-100 h-auto">
-                <source [src]="file_img_video[1].srcVideo || file_img_video[1].data" type="video/mp4">
+                <source [src]="file_img_video[1].source || file_img_video[1].data" type="video/mp4">
               </video>
             </ng-template>
             <ng-container *ngIf="edit">
@@ -111,18 +143,25 @@
           </div>
           <div class="position-relative h-150px overflow-hidden mt-2" (click)="clickViewDetail(file_img_video[2])">
             <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_3_2">
-              <ng-container *ngIf="file_img_video[2].recID;else Image_3_2">
-                <codx-img class="h-auto" [recId]="file_img_video[2].recID" [objectId]="file_img_video[2].objectID"
+              <!-- <ng-container *ngIf="file_img_video[2].recID;else Image_3_2">
+                <codx-img 
+                  class="h-auto" 
+                  [recId]="file_img_video[2].recID" 
+                  [objectId]="file_img_video[2].objectID"
+                  [objectType]="file_img_video[2].objectType"
+                  [isDefaulImg]="true"
                   [width]="300" [cssClass]="'pic'" imageType="square">
                 </codx-img>
               </ng-container>
               <ng-template #Image_3_2>
                 <img class="w-100 rounded h-auto" [src]="file_img_video[2].avatar || file_img_video[2].data" />
-              </ng-template>
+              </ng-template> -->
+            <img class="w-100 rounded h-auto" [src]="file_img_video[2].source || file_img_video[2].avatar" />
+
             </ng-container>
             <ng-template #video_3_2>
               <video #video controls class="w-100 h-auto">
-                <source [src]="file_img_video[2].srcVideo || file_img_video[2].data" type="video/mp4">
+                <source [src]="file_img_video[2].source || file_img_video[2].data" type="video/mp4">
               </video>
             </ng-template>
             <ng-container *ngIf="edit">
@@ -136,18 +175,25 @@
       <div class="row row-custom feed-4pic m-0">
         <div class="col-5 pe-2 ps-0 position-relative h-320px overflow-hidden" (click)="clickViewDetail(file_img_video[0])">
           <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_4_0">
-            <ng-container *ngIf="file_img_video[0].recID;else Image_4_0">
-              <codx-img [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID" [width]="300"
+            <!-- <ng-container *ngIf="file_img_video[0].recID;else Image_4_0">
+              <codx-img 
+                [recId]="file_img_video[0].recID" 
+                [objectId]="file_img_video[0].objectID" 
+                [objectType]="file_img_video[0].objectType"
+                [isDefaulImg]="true"
+                [width]="300"
                 [cssClass]="'pic h-auto'" imageType="square">
               </codx-img>
             </ng-container>
             <ng-template #Image_4_0>
               <img class="w-100 rounded h-auto" [src]="file_img_video[0].avatar || file_img_video[0].data" />
-            </ng-template>
+            </ng-template> -->
+            <img class="w-100 rounded h-auto" [src]="file_img_video[0].source || file_img_video[0].avatar" />
+
           </ng-container>
           <ng-template #video_4_0>
             <video #video controls class="w-100 h-auto">
-              <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
+              <source [src]="file_img_video[0].source || file_img_video[0].data" type="video/mp4">
             </video>
           </ng-template>
           <ng-container *ngIf="edit">
@@ -157,18 +203,24 @@
         <div class="col-7 px-0">
           <div class="position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[1])">
             <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_4_1">
-              <ng-container *ngIf="file_img_video[1].recID;else Image_4_1">
-                <codx-img class="h-auto" [recId]="file_img_video[1].recID" [objectId]="file_img_video[1].objectID"
+              <!-- <ng-container *ngIf="file_img_video[1].recID;else Image_4_1">
+                <codx-img class="h-auto" 
+                  [recId]="file_img_video[1].recID" 
+                  [objectId]="file_img_video[1].objectID"
+                  [objectType]="file_img_video[1].objectType"
+                  [isDefaulImg]="true"
                   [width]="300" [cssClass]="'pic'" imageType="square">
                 </codx-img>
               </ng-container>
               <ng-template #Image_4_1>
                 <img class="w-100 rounded h-auto" [src]="file_img_video[1].avatar || file_img_video[1].data" />
-              </ng-template>
+              </ng-template> -->
+            <img class="w-100 rounded h-auto" [src]="file_img_video[1].source || file_img_video[1].avatar" />
+
             </ng-container>
             <ng-template #video_4_1>
               <video #video controls class="w-100 h-auto">
-                <source [src]="file_img_video[1].srcVideo || file_img_video[1].data" type="video/mp4">
+                <source [src]="file_img_video[1].source || file_img_video[1].data" type="video/mp4">
               </video>
             </ng-template>
             <ng-container *ngIf="edit">
@@ -178,18 +230,24 @@
           <div class="row row-custom mt-2 mx-0">
             <div class="col-6 ps-0 pe-0 position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[2])">
               <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_4_2">
-                <ng-container *ngIf="file_img_video[2].recID;else Image_4_2">
-                  <codx-img class="h-auto" [recId]="file_img_video[2].recID" [objectId]="file_img_video[2].objectID"
+                <!-- <ng-container *ngIf="file_img_video[2].recID;else Image_4_2">
+                  <codx-img class="h-auto" 
+                    [recId]="file_img_video[2].recID" 
+                    [objectId]="file_img_video[2].objectID"
+                    [objectType]="file_img_video[2].objectType"
+                    [isDefaulImg]="true"
                     [width]="300" [cssClass]="'pic'" imageType="square">
                   </codx-img>
                 </ng-container>
                 <ng-template #Image_4_2>
                   <img class="w-100 rounded h-auto" [src]="file_img_video[2].avatar || file_img_video[2].data" />
-                </ng-template>
+                </ng-template> -->
+              <img class="w-100 rounded h-auto" [src]="file_img_video[2].source || file_img_video[2].avatar" />
+
               </ng-container>
               <ng-template #video_4_2>
                 <video #video controls class="w-100 h-auto">
-                  <source [src]="file_img_video[2].srcVideo || file_img_video[2].data" type="video/mp4">
+                  <source [src]="file_img_video[2].source || file_img_video[2].data" type="video/mp4">
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
@@ -199,14 +257,20 @@
             </div>
             <div class="col-6 px-0 ps-2 position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[3])">
               <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_4_3">
-                <ng-container *ngIf="file_img_video[3].recID;else Image_4_3">
-                  <codx-img class="h-auto" [recId]="file_img_video[3].recID" [objectId]="file_img_video[3].objectID"
+                <!-- <ng-container *ngIf="file_img_video[3].recID;else Image_4_3">
+                  <codx-img class="h-auto" 
+                    [recId]="file_img_video[3].recID" 
+                    [objectId]="file_img_video[3].objectID"
+                    [objectType]="file_img_video[3].objectType"
+                    [isDefaulImg]="true"
                     [width]="300" [cssClass]="'pic'" imageType="square">
                   </codx-img>
                 </ng-container>
                 <ng-template #Image_4_3>
                   <img class="w-100 rounded h-auto" [src]="file_img_video[3].avatar || file_img_video[3].data" />
-                </ng-template>
+                </ng-template> -->
+              <img class="w-100 rounded h-auto" [src]="file_img_video[3].source || file_img_video[3].avatar" />
+
               </ng-container>
               <ng-template #video_4_3>
                 <video #video controls class="w-100 h-auto">
@@ -227,18 +291,24 @@
         <div class="col-7 ps-0 pe-2">
           <div class="position-relative h-200px overflow-hidden " (click)="clickViewDetail(file_img_video[0])">
             <ng-container *ngIf="file_img_video[0].referType == FILE_REFERTYPE.IMAGE; else video_n_0">
-              <ng-container *ngIf="file_img_video[0].recID;else Image_n_0">
-                <codx-img class="h-auto" [recId]="file_img_video[0].recID" [objectId]="file_img_video[0].objectID"
+              <!-- <ng-container *ngIf="file_img_video[0].recID;else Image_n_0">
+                <codx-img class="h-auto" 
+                  [recId]="file_img_video[0].recID" 
+                  [objectId]="file_img_video[0].objectID"
+                  [objectType]="file_img_video[0].objectType"
+                  [isDefaulImg]="true"
                   [width]="300" [cssClass]="'pic'" imageType="square">
                 </codx-img>
               </ng-container>
               <ng-template #Image_n_0>
                 <img class="w-100 rounded h-auto" [src]="file_img_video[0].avatar || file_img_video[0].data" />
-              </ng-template>
+              </ng-template> -->
+              <img class="w-100 rounded h-auto" [src]="file_img_video[0].source || file_img_video[0].avatar" />
+
             </ng-container>
             <ng-template #video_n_0>
               <video #video controls class="w-100 h-auto">
-                <source [src]="file_img_video[0].srcVideo || file_img_video[0].data" type="video/mp4">
+                <source [src]="file_img_video[0].source || file_img_video[0].data" type="video/mp4">
               </video>
             </ng-template>
             <ng-container *ngIf="edit">
@@ -248,18 +318,24 @@
           <div class="row row-custom mt-2 mx-0 h-125px">
             <div class="col-6 pe-0 ps-0 position-relative h-125px overflow-hidden " (click)="clickViewDetail(file_img_video[1])">
               <ng-container *ngIf="file_img_video[1].referType == FILE_REFERTYPE.IMAGE; else video_n_1">
-                <ng-container *ngIf="file_img_video[1].recID;else Image_n_1">
-                  <codx-img class="h-auto" [recId]="file_img_video[1].recID" [objectId]="file_img_video[1].objectID"
+                <!-- <ng-container *ngIf="file_img_video[1].recID;else Image_n_1">
+                  <codx-img class="h-auto" 
+                    [recId]="file_img_video[1].recID" 
+                    [objectId]="file_img_video[1].objectID"
+                    [objectType]="file_img_video[1].objectType"
+                    [isDefaulImg]="true"
                     [width]="300" [cssClass]="'pic'" imageType="square">
                   </codx-img>
                 </ng-container>
                 <ng-template #Image_n_1>
                   <img class="w-100 rounded h-auto" [src]="file_img_video[1].avatar || file_img_video[1].data" />
-                </ng-template>
+                </ng-template> -->
+              <img class="w-100 rounded h-auto" [src]="file_img_video[1].source || file_img_video[1].avatar" />
+
               </ng-container>
               <ng-template #video_n_1>
                 <video #video controls class="w-100 h-auto">
-                  <source [src]="file_img_video[1].srcVideo || file_img_video[1].data " type="video/mp4">
+                  <source [src]="file_img_video[1].source || file_img_video[1].data " type="video/mp4">
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
@@ -269,18 +345,24 @@
             </div>
             <div class="col-6 ps-2 pe-0 position-relative h-125px overflow-hidden" (click)="clickViewDetail(file_img_video[2])">
               <ng-container *ngIf="file_img_video[2].referType == FILE_REFERTYPE.IMAGE; else video_n_2">
-                <ng-container *ngIf="file_img_video[2].recID;else Image_n_2">
-                  <codx-img class="h-auto" [recId]="file_img_video[2].recID" [objectId]="file_img_video[2].objectID"
+                <!-- <ng-container *ngIf="file_img_video[2].recID;else Image_n_2">
+                  <codx-img class="h-auto" 
+                    [recId]="file_img_video[2].recID" 
+                    [objectId]="file_img_video[2].objectID"
+                    [objectType]="file_img_video[2].objectType"
+                    [isDefaulImg]="true"
                     [width]="300" [cssClass]="'pic'" imageType="square">
                   </codx-img>
                 </ng-container>
                 <ng-template #Image_n_2>
                   <img class="w-100 rounded h-auto" [src]="file_img_video[2].avatar || file_img_video[2].data " />
-                </ng-template>
+                </ng-template> -->
+              <img class="w-100 rounded h-auto" [src]="file_img_video[2].source || file_img_video[2].avatar" />
+
               </ng-container>
               <ng-template #video_n_2>
                 <video #video controls class="w-100 h-auto">
-                  <source [src]="file_img_video[2].srcVideo || file_img_video[2].data" type="video/mp4">
+                  <source [src]="file_img_video[2].source || file_img_video[2].data" type="video/mp4">
                 </video>
               </ng-template>
               <ng-container *ngIf="edit">
@@ -293,14 +375,20 @@
         <div class="col-5 px-0">
           <div class="position-relative h-150px overflow-hidden" (click)="clickViewDetail(file_img_video[3])">
             <ng-container *ngIf="file_img_video[3].referType == FILE_REFERTYPE.IMAGE; else video_n_3">
-              <ng-container *ngIf="file_img_video[3].recID;else Image_n_3">
-                <codx-img class="h-auto" [recId]="file_img_video[3].recID" [objectId]="file_img_video[3].objectID"
+              <!-- <ng-container *ngIf="file_img_video[3].recID;else Image_n_3">
+                <codx-img class="h-auto" 
+                  [recId]="file_img_video[3].recID" 
+                  [objectId]="file_img_video[3].objectID"
+                  [objectType]="file_img_video[3].objectType"
+                  [isDefaulImg]="true"
                   [width]="300" [cssClass]="'pic'" imageType="square">
                 </codx-img>
               </ng-container>
               <ng-template #Image_n_3>
                 <img class="w-100 rounded h-auto" [src]="file_img_video[3].avatar ||file_img_video[3].data " />
-              </ng-template>
+              </ng-template> -->
+              <img class="w-100 rounded h-auto" [src]="file_img_video[3].source || file_img_video[3].avatar" />
+
             </ng-container>
             <ng-template #video_n_3>
               <video #video controls class="w-100 h-auto">
@@ -313,14 +401,20 @@
           </div>
           <div class="position-relative mt-2 h-175px overflow-hidden" (click)="clickViewDetail(file_img_video[4])">
             <ng-container *ngIf="file_img_video[4].referType == FILE_REFERTYPE.IMAGE; else video_n_4">
-              <ng-container *ngIf="file_img_video[4].recID;else Image_n_4">
-                <codx-img class="h-auto" [recId]="file_img_video[4].recID" [objectId]="file_img_video[4].objectID"
+              <!-- <ng-container *ngIf="file_img_video[4].recID;else Image_n_4">
+                <codx-img class="h-auto" 
+                  [recId]="file_img_video[4].recID" 
+                  [objectId]="file_img_video[4].objectID"
+                  [objectType]="file_img_video[4].objectType"
+                  [isDefaulImg]="true"
                   [width]="300" [cssClass]="'pic'" imageType="square">
                 </codx-img>
               </ng-container>
               <ng-template #Image_n_4>
                 <img class="w-100 rounded h-auto" [src]="file_img_video[4].avatar || file_img_video[4].data" />
-              </ng-template>
+              </ng-template> -->
+              <img class="w-100 rounded h-auto" [src]="file_img_video[4].source || file_img_video[4].avatar" />
+
             </ng-container>
             <ng-template #video_n_4>
               <video #video controls class="w-100 h-auto">

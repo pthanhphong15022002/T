@@ -59,8 +59,10 @@ export class BP_ProcessSteps {
   perUnit: string;
   eventBase: string;
   reminder: string;
-  reminderBy: string;
+  isAlert: boolean; 
+  isEmail: boolean;   
   note: string;
+  color: string;
   stopOn: Date;
   attachments: number;
   comments: number;
@@ -119,7 +121,9 @@ export class BP_ProcessPermissions {
   assign: boolean;
   share: boolean;
   upload: boolean;
+  isActive: boolean;
   download: boolean;
+  nemberType: string;
   startDate: Date;
   endDate: Date;
   approveStatus: string;
@@ -155,6 +159,7 @@ export class ColumnsModel{
    headerText :string;
    keyField :string;
    color :string;
+   showItemCount :boolean =true ;
    allowDrag :boolean = true;
    allowDrop :boolean = true;
 }

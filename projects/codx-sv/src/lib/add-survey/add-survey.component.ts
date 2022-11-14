@@ -217,15 +217,54 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     }
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.questions, event.previousIndex, event.currentIndex);
+  drop(seqNoSession, event: CdkDragDrop<string[]>) {
+    moveItemInArray(
+      this.questions[seqNoSession].children,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
+
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
     var index = this.questions.findIndex((x) => x.seqNo == idParent);
     this.dataAnswer = this.questions[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
     this.dataAnswer.forEach((x, index) => (x.seqNo = index));
     this.questions[idParent].answers = this.dataAnswer;
+  }
+
+  dropAnswerRC(
+    event: CdkDragDrop<string[]>,
+    seqNoSession,
+    seqNoQuestion,
+    answerType
+  ) {
+    var dataTemp = JSON.parse(
+      JSON.stringify(
+        this.questions[seqNoSession].children[seqNoQuestion].answers
+      )
+    );
+    moveItemInArray(dataTemp, event.previousIndex, event.currentIndex);
+    var dataAnswerR = dataTemp.filter((x) => !x.isColumn);
+    var dataAnswerC = dataTemp.filter((x) => x.isColumn);
+    if (answerType == 'row') {
+      dataAnswerR.forEach((x, index) => {
+        x.seqNo = index;
+      });
+    } else {
+      dataAnswerC.forEach((x, index) => {
+        x.seqNo = index;
+      });
+    }
+    var dataMerge = [...dataAnswerR, ...dataAnswerC];
+    if (dataMerge.length > 0) {
+      this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
+      console.log(
+        'check dropAnswerRC',
+        this.questions[seqNoSession].children[seqNoQuestion].answers
+      );
+    }
+    this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
   }
 
   public focusIn(target: HTMLElement): void {
@@ -647,37 +686,128 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   uploadVideo(dataQuestion) {}
 
-  clickQuestionMF(indexSession, indexQuestion, answerType) {
+  amountOfRow = 2;
+  clickQuestionMF(seqNoSession, itemQuestion, answerType) {
+    this.generateGuid();
+    var recID = JSON.parse(JSON.stringify(this.GUID));
     if (answerType) {
       var data = JSON.parse(
-        JSON.stringify(this.questions[indexSession].children[indexQuestion])
+        JSON.stringify(
+          this.questions[seqNoSession].children[itemQuestion.seqNo]
+        )
       );
       data.answerType = answerType;
-      if (
-        answerType == 'T' ||
-        answerType == 'T2' ||
-        answerType == 'D' ||
-        answerType == 'H' ||
-        answerType == 'R' ||
-        answerType == 'O2' ||
-        answerType == 'C2'
-      ) {
-        data.other = false;
-        data.answers = new Array();
-        var dataAnswerTemp = {
-          seqNo: 0,
-          answer: '',
-          other: false,
-          isColumn: false,
-          hasPicture: false,
-        };
-        data.answers.push(dataAnswerTemp);
-      } else if (answerType == 'L') data.other = false;
-      else data.other = true;
-      if (data.answers.length == 1) {
-        data.answers[0].answer = 'Tùy chọn 1';
+      if (answerType == 'O' || answerType == 'C' || answerType == 'L') {
+        if (itemQuestion.answerType != 'O' && itemQuestion.answerType != 'C') {
+          data.answers = new Array();
+          let dataAnswerTemp = {
+            recID: recID,
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: false,
+          };
+          data.answers.push(dataAnswerTemp);
+        }
+      } else if (answerType == 'O2' || answerType == 'C2') {
+        if (
+          itemQuestion.answerType != 'O2' &&
+          itemQuestion.answerType != 'C2'
+        ) {
+          data.answers = new Array();
+          let dataAnswerR = {
+            recID: recID,
+            seqNo: 0,
+            answer: 'Hàng 1',
+            isColumn: false,
+          };
+          data.answers.push(dataAnswerR);
+          this.generateGuid();
+          let dataAnswerC = {
+            recID: this.GUID,
+            seqNo: 0,
+            answer: 'Cột 1',
+            isColumn: true,
+          };
+          data.answers.push(dataAnswerC);
+        }
       }
-      this.questions[indexSession].children[indexQuestion] = data;
+      this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
+    }
+  }
+
+  addAnswerR(seqNoSession, seqNoQuestion) {
+    this.generateGuid();
+    var dataTemp = JSON.parse(
+      JSON.stringify(
+        this.questions[seqNoSession].children[seqNoQuestion].answers
+      )
+    );
+    var dataAnswerR = dataTemp.filter((x) => !x.isColumn);
+    this.amountOfRow = 0;
+    this.amountOfRow = dataAnswerR.length;
+    var dataAnswerTemp = {
+      recID: this.GUID,
+      seqNo: dataAnswerR.length,
+      answer: `Hàng ${dataAnswerR.length + 1}`,
+      isColumn: false,
+    };
+    dataTemp.push(dataAnswerTemp);
+    this.amountOfRow += 2;
+    this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
+    console.log(
+      'check addAnswerR',
+      this.questions[seqNoSession].children[seqNoQuestion].answers
+    );
+  }
+
+  addAnswerC(seqNoSession, seqNoQuestion) {
+    this.generateGuid();
+    var dataTemp = JSON.parse(
+      JSON.stringify(
+        this.questions[seqNoSession].children[seqNoQuestion].answers
+      )
+    );
+    var dataAnswerR = dataTemp.filter((x) => x.isColumn);
+    var dataAnswerTemp = {
+      recID: this.GUID,
+      seqNo: dataAnswerR.length,
+      answer: `Cột ${dataAnswerR.length + 1}`,
+      isColumn: true,
+    };
+    dataTemp.push(dataAnswerTemp);
+    this.questions[seqNoSession].children[seqNoQuestion].answers = dataTemp;
+    console.log(
+      'check addAnswerC',
+      this.questions[seqNoSession].children[seqNoQuestion].answers
+    );
+  }
+
+  deleteAnswerRC(seqNoSession, seqNoQuestion, itemAnswer, answerType) {
+    var dataTemp = JSON.parse(
+      JSON.stringify(
+        this.questions[seqNoSession].children[seqNoQuestion].answers
+      )
+    );
+    var dataAnswerR = dataTemp.filter((x) => !x.isColumn);
+    var dataAnswerC = dataTemp.filter((x) => x.isColumn);
+    if (answerType == 'row') {
+      dataAnswerR = dataAnswerR.filter((x) => x.recID != itemAnswer.recID);
+      dataAnswerR.forEach((x, index) => {
+        x.seqNo = index;
+      });
+    } else {
+      dataAnswerC = dataAnswerC.filter((x) => x.recID != itemAnswer.recID);
+      dataAnswerC.forEach((x, index) => {
+        x.seqNo = index;
+      });
+    }
+    var dataMerge = [...dataAnswerR, ...dataAnswerC];
+    if (dataMerge.length > 0) {
+      this.questions[seqNoSession].children[seqNoQuestion].answers = dataMerge;
+      console.log(
+        'check deleteAnswerRC',
+        this.questions[seqNoSession].children[seqNoQuestion].answers
+      );
     }
   }
 
@@ -704,5 +834,15 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       if (res.event) {
       }
     });
+  }
+
+  filterDataColumn(data) {
+    data = data.filter((x) => x.isColumn);
+    return data;
+  }
+
+  filterDataRow(data) {
+    data = data.filter((x) => !x.isColumn);
+    return data;
   }
 }

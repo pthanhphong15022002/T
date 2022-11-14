@@ -9,6 +9,7 @@ import {
 import { Post } from '@shared/models/post';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
+import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
 
 @Component({
   selector: 'lib-popup-detail',
@@ -22,7 +23,7 @@ export class PopupDetailComponent implements OnInit {
   assemplyName: string = 'ERM.Business.WP';
   className: string = 'CommentsBusiness';
   methodName: string = 'GetPostByIDAsync';
-  post: Post = new Post();
+  post: WP_Comments= new WP_Comments();
   dialogRef: any;
   recID: string = '';
   userID:string = "";
@@ -85,6 +86,7 @@ export class PopupDetailComponent implements OnInit {
         if (res) 
         {
           this.post = res;
+          this.dt.detectChanges();
         }
       });
     }

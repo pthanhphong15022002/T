@@ -35,7 +35,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   isClick: boolean = false;
   shareIcon: string = "";
   shareText: string = "";
-  shareControl: string = "";
+  shareControl: string = "9";
   objectType: string = "";
   shareName: string = "";
   permissions: any[] = [];
@@ -147,7 +147,9 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   }
   
   click() {
+    debugger;
     switch (this.dialogData.status) {
+
       case this.STATUS.EDIT:
         this.editPost();
         break;
@@ -172,7 +174,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
   getValueShare(shareControl: string, data: any[] = null) {
-    if (data.length > 0) {
+    if (data?.length > 0) {
       this.permissions = []
       this.shareName = "";
       switch (shareControl) {
@@ -192,7 +194,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
         default:
           data.forEach((x: any) => {
             let p = new Permission();
-            p.objectType = this.objectType;
+            p.objectType = x.objectType;
             p.objectID = x.id;
             p.objectName = x.text;
             p.memberType = this.MEMBERTYPE.SHARE;
@@ -239,6 +241,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
     this.api.execSv("WP", "ERM.Business.WP", "CommentsBusiness", "PublishPostAsync", [post])
       .subscribe(async (result: any) => {
         if (result) {
+          debugger;
           if (this.listFileUpload.length > 0) {
             this.atmCreate.objectId = result.recID;
             this.listFileUpload.map((e: any) => {
@@ -399,7 +402,6 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   }
   getfileCount(event: any) {
     if (event && event?.data?.length > 0) {
-      debugger;
       if (this.dialogData.status == this.STATUS.EDIT) {
         this.codxFileEdit.addFiles(event.data);
       }
@@ -473,8 +475,10 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
       this.lstTagUser = data;
       data.forEach((x: any) => {
         let p = new Permission();
+        p.objectType = "U";
         p.objectID = x.UserID;
         p.objectName = x.UserName;
+        p.memberType = this.MEMBERTYPE.TAGS
         this.tags.push(p);
       });
       if (data.length > 1) {

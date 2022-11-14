@@ -180,3 +180,13 @@ codx-card-img .card-icon-nowrap {
 .e-list-item:last-child {
     margin-bottom: 0 !important;
 }
+
+.home-notebooks {
+    justify-content: center;
+}
+
+.pw-content .list-empty>div {
+    align-self: center;
+    align-items: stretch;
+    height: 100%;
+}

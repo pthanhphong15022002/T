@@ -13,7 +13,7 @@
                 (click)="openFormShare(controlShare)">
                 <img *ngIf="shareIcon" class="w-15px ms-1" 
                     src="assets/themes/sys/default/img/{{dVLL[shareControl]?.icon}}" />
-                <span class="fw-bolder text-gray-700 fs-7 ms-2">{{dVLL[shareControl]?.text}}</span>
+                <span class="fw-bold text-gray-700 fs-7 ms-2">{{dVLL[shareControl]?.text}}</span>
                 <i class="icon-arrow_drop_down icon-16 text-dark"></i>
             </div>
             <div class="ms-2 position-relative">
@@ -77,7 +77,7 @@
                         <codx-input 
                             type="valuelist" 
                             name="valuelist" 
-                            refValue="WP001" 
+                            refValue="WP002" 
                             field="Category"
                             [crrValue]="data.category" 
                             (valueChange)="valueChange($event)">

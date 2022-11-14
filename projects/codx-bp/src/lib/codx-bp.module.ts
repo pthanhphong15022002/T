@@ -30,6 +30,7 @@ import { ViewFlowchartComponent } from './processsteps/view-flowchart/view-flowc
 import { PopupRolesComponent } from './processes/popup-roles/popup-roles.component';
 // import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
+import { PopupUpdateRevisionsComponent } from './processes/popup-update-revisions/popup-update-revisions.component';
 
 export const routes: Routes = [
   {
@@ -84,6 +85,7 @@ export const routes: Routes = [
     AprpermissionComponent,
     ViewFlowchartComponent,
     PopupRolesComponent,
+    PopupUpdateRevisionsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

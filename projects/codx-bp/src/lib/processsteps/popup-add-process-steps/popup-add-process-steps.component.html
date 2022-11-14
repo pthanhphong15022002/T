@@ -2,12 +2,27 @@
   #form
   [headerText]="title"
   subHeaderText=""
+  [subHeader]="subHeader"
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
   [formModel]="formModelMenu"
   [data]="processSteps"
 >
+  <ng-template #subHeader>
+    <div class="ms-4" *ngIf="stepType == 'A'">
+      <codx-input
+        class="ms-4"
+        type="colorpicker"
+        [showText]="false"
+        [modeSwitcher]="false"
+        [crrValue]="processSteps?.color"
+        field="color"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </ng-template>
   <ng-template #body>
     <div class="card-form">
       <div class="form-group" *ngIf="stepType == 'P'">
@@ -372,12 +387,12 @@
         <div class="form-group">
           <div class="note">
             <codx-label
-            fiedName="note-label"
-            [formModel]="form.formModel"
-            default="Ghi chú"
-          >
-          </codx-label>
-          </div>         
+              fiedName="note-label"
+              [formModel]="form.formModel"
+              default="Ghi chú"
+            >
+            </codx-label>
+          </div>
           <codx-input
             field="note"
             [height]="100"
@@ -422,6 +437,7 @@
             (fileAdded)="fileAdded($event)"
             (fileCount)="getfileCount($event)"
             displayThumb="full"
+            showMessage="0"
           >
           </codx-attachment>
         </div>
