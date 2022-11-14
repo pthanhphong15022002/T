@@ -107,7 +107,10 @@ export class FeedbackMessageComponent extends UIComponent implements OnInit {
   }
 
   redirectPage(page, number) {
-    this.codxService.navigate('', 'fd/settings/FDS', { redirectPage: page, index: number });
+    this.codxService.navigate('', 'fd/settings/FDS', {
+      redirectPage: page,
+      index: number,
+    });
   }
 
   onSaveCMParameter(objectUpdate) {
@@ -128,17 +131,22 @@ export class FeedbackMessageComponent extends UIComponent implements OnInit {
       });
   }
   changeLock(data) {
-    this.isLockCoin = data.isLockCoin;
-    this.isLockDedicate = data.isLockDedicate;
+    if (data) {
+      this.isLockCoin = data.isLockCoin;
+      this.isLockDedicate = data.isLockDedicate;
+      this.changedr.detectChanges();
+    }
   }
-  // openCreate(): void {
-  //   $('#create_card').addClass('offcanvas-on');
-  // }
-  // closeCreate(): void {
-  //   $('#create_card').removeClass('offcanvas-on');
-  // }
 
   backLocation() {
     // this.location.back();
+  }
+
+  isGroup: any;
+  getGroup(data) {
+    if (data) {
+      this.isGroup = data.isGroup;
+      this.changedr.detectChanges();
+    }
   }
 }
