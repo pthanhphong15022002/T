@@ -71,7 +71,26 @@ export class EmployeeProfileComponent extends UIComponent {
   itemDetail;
 
   hrEContract;
-  crrTab: number = 3;
+  crrTab: number = 6;
+
+  healthColumnsGrid;
+  vaccineColumnsGrid;
+  diseaseColumnsGrid;
+  accidentColumnsGrid;
+  positionColumnsGrid;
+  holidayColumnsGrid;
+  workDiaryColumnGrid;
+  expColumnGrid;
+
+  @ViewChild('healthPeriodID', { static: true })
+  healthPeriodID: TemplateRef<any>;
+  @ViewChild('healthPeriodDate', { static: true })
+  healthPeriodDate: TemplateRef<any>;
+  @ViewChild('healthPeriodPlace', { static: true })
+  healthPeriodPlace: TemplateRef<any>;
+  @ViewChild('healthType', { static: true }) healthType: TemplateRef<any>;
+  @ViewChild('healthPeriodResult', { static: true })
+  healthPeriodResult: TemplateRef<any>;
 
   vllTabs = [
     { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
@@ -155,7 +174,137 @@ export class EmployeeProfileComponent extends UIComponent {
     this.formModel = this.view.formModel;
     console.log('afterview init', this.formModel);
 
-    this.df.detectChanges();
+    //processingInfo
+    this.positionColumnsGrid = [
+      {
+        field: 'healthPeriodName',
+        headerText: 'Loại quyết định',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày hiệu lực',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày hết hạn',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Chức danh',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Phòng ban',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+    ];
+    this.holidayColumnsGrid = [
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày đăng ký',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Nghỉ từ ngày ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Đến ngày',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Số ngày nghỉ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Loại nghỉ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Lý do',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+    ];
+
+    //healthInfo
+    this.healthColumnsGrid = [
+      {
+        field: 'healthPeriodName',
+        headerText: 'Kỳ khám',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodDate',
+        headerText: 'Ngày khám',
+        width: 250,
+        template: this.healthPeriodDate,
+      },
+      {
+        field: 'healthPeriodPlace',
+        headerText: 'Đơn vị khám',
+        width: 200,
+        template: this.healthPeriodPlace,
+      },
+      {
+        field: 'healthType',
+        headerText: 'Phân loại sức khỏe',
+        width: 200,
+        template: this.healthType,
+      },
+      {
+        field: 'healthPeriodResult',
+        headerText: 'Kết quả chẩn đoán',
+        width: 50,
+        template: this.healthPeriodResult,
+      },
+    ];
+    this.accidentColumnsGrid = [
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày xảy ra',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Loại tai nạn lao động',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Nơi xảy ra',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Tình trạng/Mức độ tai nạn',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+    ];
   }
 
   changeItemDetail(item) {}
@@ -183,7 +332,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addAssuranceTaxBankAccountInfo(){
+  addAssuranceTaxBankAccountInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -244,6 +393,4 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     });
   }
-
-
 }
