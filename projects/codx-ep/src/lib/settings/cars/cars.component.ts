@@ -42,8 +42,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '2';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
@@ -93,7 +91,9 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     //this.view.dataService.methodDelete = 'DeleteResourceAsync';
-
+    this.cache.functionList('EPS22').subscribe(res=>{
+      var x= res;
+    })
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
