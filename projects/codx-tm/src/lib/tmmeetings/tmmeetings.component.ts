@@ -34,6 +34,8 @@ import { PopupStatusMeetingComponent } from './popup-status-meeting/popup-status
 import { Observable, of } from 'rxjs';
 import moment from 'moment';
 import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popup-tabs-views-details.component';
+import { PopupAddResourcesComponent } from './popup-add-resources/popup-add-resources.component';
+import { PopupRescheduleMeetingComponent } from './popup-reschedule-meeting/popup-reschedule-meeting.component';
 @Component({
   selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
@@ -42,7 +44,8 @@ import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popu
 })
 export class TMMeetingsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @Input() meeting = new CO_Meetings();
   @Input() funcID: string;
   @Input() dataObj?: any;
@@ -435,6 +438,12 @@ export class TMMeetingsComponent
       case 'TMT05013':
         this.updateStatusMeeting(e.data, data);
         break;
+      case 'TMT05014':
+        this.updateTimeMeeting(data);
+        break;
+      case 'TMT05015':
+        this.updateResources(data);
+        break;
     }
   }
 
@@ -604,6 +613,52 @@ export class TMMeetingsComponent
   }
   //#region end
 
+  //#region Doi lich hop, Them nguoi tham gia
+  updateTimeMeeting(data) {
+    var obj = {
+      title: this.titleAction,
+      data: data,
+      funcID: this.funcID,
+    };
+    this.dialog = this.callfc.openForm(
+      PopupRescheduleMeetingComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      } else this.view.dataService.clear();
+    });
+  }
+
+  updateResources(data) {
+    var obj = {
+      title: this.titleAction,
+      data: data,
+      funcID: this.funcID,
+    };
+    this.dialog = this.callfc.openForm(
+      PopupAddResourcesComponent,
+      '',
+      880,
+      500,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      } else this.view.dataService.clear();
+    });
+  }
+  //#endregion
+
   //#region double click  view detail
   doubleClick(data) {
     this.viewDetail(data);
@@ -629,8 +684,7 @@ export class TMMeetingsComponent
       .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'UpdateMeetingsAsync', data)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.update(data).subscribe()
-            ;
+          this.view.dataService.update(data).subscribe();
         }
       });
   }
@@ -676,6 +730,6 @@ export class TMMeetingsComponent
     return current_day;
   }
   openLinkMeeting(data) {
-    window.open(data?.link)
+    window.open(data?.link);
   }
 }

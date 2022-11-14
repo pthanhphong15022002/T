@@ -170,21 +170,21 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             this.settingDataValue = JSON.parse(setting.dataValue);
             console.log(this.settingDataValue);
             if (this.settingDataValue) {
-              let lstTrueFalse = ['AllowEditAreas', 'AreaControl'];
+              let lstTrueFalse = ['AllowEditAreas'];
               for (const key in this.settingDataValue) {
                 let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
                 this.data[fieldName] = this.settingDataValue[key];
 
-                // if (lstTrueFalse.includes(key)) {
-                //   this.data[fieldName] =
-                //     this.settingDataValue[key] == '0' ? false : true;
-                //   if (key == 'AreaControl') {
-                //     console.log('AreaControl', this.data[fieldName]);
-                //   }
-                // } else {
-                //   this.data[fieldName] = this.settingDataValue[key];
-                // }
-                this.data[fieldName] = this.settingDataValue[key];
+                if (lstTrueFalse.includes(key)) {
+                  this.data[fieldName] =
+                    this.settingDataValue[key] == '0' ? false : true;
+                  if (key == 'AreaControl') {
+                    console.log('AreaControl', this.data[fieldName]);
+                  }
+                } else {
+                  this.data[fieldName] = this.settingDataValue[key];
+                }
+                //this.data[fieldName] = this.settingDataValue[key];
                 this.form.formGroup.patchValue({
                   fieldName: this.data[fieldName],
                 });

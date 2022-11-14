@@ -1,6 +1,15 @@
 import { CodxTMService } from './../../codx-tm.service';
-import { CO_Meetings } from './../../models/CO_Meetings.model';
-import { CacheService, DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
+import {
+  CO_Meetings,
+  EP_BookingAttendees,
+} from './../../models/CO_Meetings.model';
+import {
+  CacheService,
+  DialogData,
+  DialogRef,
+  ApiHttpService,
+  NotificationsService,
+} from 'codx-core';
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import { CO_Resources } from '../../models/CO_Meetings.model';
 
@@ -17,8 +26,9 @@ export class PopupAddResourcesComponent implements OnInit {
   resources: CO_Resources[] = [];
   popover: any;
   idUserSelected: any;
-  lstResources = [];
+  lstResources : CO_Resources[] = [];;
   data: any;
+  funcID: any;
   constructor(
     private cache: CacheService,
     private changeDetec: ChangeDetectorRef,
@@ -31,31 +41,63 @@ export class PopupAddResourcesComponent implements OnInit {
     this.dialog = dialog;
     this.data = dt.data;
     this.meeting = this.data.data;
+    this.title = this.data.title;
+    this.funcID = this.data.funcID;
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
         this.listRoles = res.datas;
       }
     });
-
-  }
-
-  ngOnInit(): void {
     this.resources = this.meeting.resources;
-
   }
+
+  ngOnInit(): void {}
 
   //#region save
-  onSave(){
-    this.api.callSv('CO','CO','MeetingsBusiness','UpdateResourcesMeetingAsync',[this.meeting.meetingID, this.meeting.resources]).subscribe((res)=>{
-      if(res != null){
-        this.dialog.close(this.meeting);
-        this.noti.notify('Mời người tham gia thành công');
-      }else{
-        this.dialog.close(this.meeting);
-        this.noti.notify('Mời người không thành công');
+  onSave() {
+    this.api
+      .callSv('CO', 'CO', 'MeetingsBusiness', 'UpdateResourcesMeetingAsync', [
+        this.meeting.meetingID,
+        this.meeting.resources,
+      ])
+      .subscribe((res) => {
+        if (res.msgBodyData[0] != null) {
+          this.dialog.close(this.meeting);
+          this.AddResourcesToBookingAttendees(
+            this.meeting.recID,
+            this.meeting.resources
+          );
+          if(this.lstResources != null && this.lstResources.length > 0){
+            this.tmSv.SendMailNewResources(this.meeting.recID, 'TM_0023', this.funcID, this.lstResources).subscribe();
+          }
+          this.noti.notify('Mời người tham gia thành công');
+        } else {
+          this.dialog.close();
+          this.noti.notify('Mời người không thành công');
+        }
+      });
+  }
+
+  AddResourcesToBookingAttendees(recID, data) {
+    var list = [];
+    data.forEach((e) => {
+      if (e) {
+        var attendees = new EP_BookingAttendees();
+        attendees.userID = e.resourceID;
+        attendees.userName = e.resourceName;
+        attendees.roleType = e.roleType;
+        list.push(attendees);
       }
-    })
+    });
+    if (list && list.length > 0) {
+      this.api
+        .callSv('EP', 'EP', 'BookingsBusiness', 'InviteAttendeesAsync', [
+          recID,
+          list,
+        ])
+        .subscribe();
+    }
   }
   //#endregion
   //#region event
@@ -99,10 +141,10 @@ export class PopupAddResourcesComponent implements OnInit {
     }
   }
 
-  valueUser(resourceID){
-    if (resourceID != ''){
+  valueUser(resourceID) {
+    if (resourceID != '') {
       if (this.resources != null) {
-        var user = this.resources;;
+        var user = this.resources;
         var array = resourceID.split(';');
         var id = '';
         var arrayNew = [];
@@ -121,7 +163,7 @@ export class PopupAddResourcesComponent implements OnInit {
           id += ';' + resourceID;
           this.getListUser(resourceID);
         }
-      }else {
+      } else {
         this.getListUser(resourceID);
       }
     }
@@ -145,13 +187,13 @@ export class PopupAddResourcesComponent implements OnInit {
             let emp = res[i];
             var tmpResource = new CO_Resources();
 
-              tmpResource.resourceID = emp?.userID;
-              tmpResource.resourceName = emp?.userName;
-              tmpResource.positionName = emp?.positionName;
-              tmpResource.roleType = 'P';
-              tmpResource.taskControl = true;
-              this.resources.push(tmpResource);
-
+            tmpResource.resourceID = emp?.userID;
+            tmpResource.resourceName = emp?.userName;
+            tmpResource.positionName = emp?.positionName;
+            tmpResource.roleType = 'P';
+            tmpResource.taskControl = true;
+            this.resources.push(tmpResource);
+            this.lstResources.push(tmpResource);
             this.meeting.resources = this.resources;
           }
         }
