@@ -80,6 +80,15 @@ export class CodxBpService {
     )
   }
 
+  getOwnersByParentID(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessStepsBusiness',
+      'GetOwnersByParentIDAsync',
+      data
+    );
+  }
+
   public listTags = new BehaviorSubject<any>(null);
   isListTags = this.listTags.asObservable();
 

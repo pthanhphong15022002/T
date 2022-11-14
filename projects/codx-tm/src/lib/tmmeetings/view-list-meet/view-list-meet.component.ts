@@ -14,9 +14,11 @@ import {
   FormModel,
   CallFuncService,
   ViewsComponent,
+  Util,
 } from 'codx-core';
 import { PopupRescheduleMeetingComponent } from '../popup-reschedule-meeting/popup-reschedule-meeting.component';
 import { ActivatedRoute } from '@angular/router';
+import { PopupAddResourcesComponent } from '../popup-add-resources/popup-add-resources.component';
 
 @Component({
   selector: 'lib-view-list-meet',
@@ -41,6 +43,8 @@ export class ViewListMeetComponent implements OnInit {
   countResource = 0;
   dialog: any;
   funcID: any;
+  widthWin: any;
+  heightWin: any;
   constructor(
     private activedRouter: ActivatedRoute,
     private callFc: CallFuncService,
@@ -51,6 +55,8 @@ export class ViewListMeetComponent implements OnInit {
     this.dialog = dialog;
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   ngOnInit(): void {
@@ -145,6 +151,27 @@ export class ViewListMeetComponent implements OnInit {
       '',
       500,
       350,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.data = e?.event;
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  updateResources(data) {
+    var obj = {
+      data: data,
+      funcID: this.funcID,
+    };
+    this.dialog = this.callFc.openForm(
+      PopupAddResourcesComponent,
+      '',
+      880,
+      500,
       '',
       obj
     );

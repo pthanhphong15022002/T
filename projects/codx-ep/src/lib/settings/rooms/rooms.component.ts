@@ -55,8 +55,6 @@ export class RoomsComponent extends UIComponent {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '1';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
