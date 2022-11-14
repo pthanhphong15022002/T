@@ -870,6 +870,11 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           });
         break;
       }
+      case "Trả lại":
+        {
+          this.refuse(datas);
+          break;
+        }
       default:
       {
         this.shareService.defaultMoreFunc(val,datas,this.afterSaveTask,this.view.formModel,this.view.dataService);
@@ -1131,5 +1136,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       return 'icon-access_alarm';
     }
     return '';
+  }
+  //Từ chối
+  refuse(datas:any)
+  {
+    //datas = this.
   }
 }
