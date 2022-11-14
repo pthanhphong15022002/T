@@ -29,6 +29,7 @@
       imageType="circle"
       width="50"
       [objectType]="'EP_Resources'"
+      [objectName]="data?.resourceData?.resourceName"
     ></codx-img>
     <div class="ms-2 d-flex flex-column" style="width:160px;">
       <span
@@ -197,6 +198,7 @@
               imageType="circle"
               width="35"
               objectType="EP_Resources"
+              [objectName]="item.itemName"
             ></codx-img>
           </div>
           <div class="">
