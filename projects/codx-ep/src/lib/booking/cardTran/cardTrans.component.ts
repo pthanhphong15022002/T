@@ -131,7 +131,7 @@ export class CardTransComponent
   openPopupCardFunction(template: any) {
     
     let time = new Date();
-    this.popupDialog = this.callfc.openForm(template, '', 550, 350);
+    this.popupDialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
   click(evt: ButtonModel) {

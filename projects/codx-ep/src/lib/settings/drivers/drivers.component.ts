@@ -174,7 +174,7 @@ export class DriversComponent extends UIComponent implements AfterViewInit {
         }
       });
     });
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
   clickMF(event, data) {

@@ -48,10 +48,10 @@ export class PopupUpdateProgressComponent implements OnInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.funcID = this.data.funcID;
-    this.task = this.data?.data;
+    this.task = JSON.parse(JSON.stringify(this.data?.data));
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc.customName;
-    this.task.percentage = this.task.percentage?.toFixed(2)
+    this.task.percentage = this.task?.percentage?.toFixed(2)
     this.crrpercentage = this.task.percentage;
   }
 
