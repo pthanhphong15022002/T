@@ -254,7 +254,7 @@ export class PopupAddComponent implements OnInit {
       case "Subject":
         this.data.subject = value;
         break;
-      case "subContent":
+      case "SubContent":
         this.data.subContent = value;
         break;
       case "AllowShare":
