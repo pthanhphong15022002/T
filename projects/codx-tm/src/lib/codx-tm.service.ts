@@ -430,6 +430,16 @@ export class CodxTMService {
     );
   }
 
+  SendMailNewResources(recID: string, valueNo: string, funcID: string, resources){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'SendAlertMailNewResourcesAsync',
+      [recID, valueNo, funcID,resources]
+    );
+  }
+
   changeBookingDateTime(recID, startDate, endDate){
     return this.api.execSv('CO','CO','MeetingsBusiness','ChangeBookingDateTimeAsync', [recID, startDate, endDate]);
   }

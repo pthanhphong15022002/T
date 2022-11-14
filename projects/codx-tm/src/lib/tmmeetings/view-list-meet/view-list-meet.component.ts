@@ -141,45 +141,5 @@ export class ViewListMeetComponent implements OnInit {
     this.viewDetail.emit(data);
   }
 
-  updateTimeMeeting(data) {
-    var obj = {
-      data: data,
-      funcID: this.funcID,
-    };
-    this.dialog = this.callFc.openForm(
-      PopupRescheduleMeetingComponent,
-      '',
-      500,
-      350,
-      '',
-      obj
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        this.data = e?.event;
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
 
-  updateResources(data) {
-    var obj = {
-      data: data,
-      funcID: this.funcID,
-    };
-    this.dialog = this.callFc.openForm(
-      PopupAddResourcesComponent,
-      '',
-      880,
-      500,
-      '',
-      obj
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        this.data = e?.event;
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
 }
