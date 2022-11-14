@@ -37,7 +37,7 @@ export class PopupUpdateStatusComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.task = this.data.taskAction;
+    this.task = JSON.parse(JSON.stringify(this.data?.taskAction));;
     this.moreFunc = this.data.moreFunc;
     this.title = this.moreFunc.customName ;
     this.url = this.moreFunc.url;

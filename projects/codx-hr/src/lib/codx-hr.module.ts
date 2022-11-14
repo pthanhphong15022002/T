@@ -63,6 +63,7 @@ import { EmployeeWorkingLisenceDetailComponent } from './employee-profile/employ
 import { EmployeeWorkingLisenceComponent } from './employee-profile/employee-working-lisence/employee-working-lisence.component';
 import { EmployeeVisaInfoComponent } from './employee-profile/employee-visa-info/employee-visa-info.component';
 import { EmployeeVisaFormComponent } from './employee-profile/employee-visa-form/employee-visa-form.component';
+import { TmpGridViewComponent } from './employee-list/employee-profile/tmp-grid-view/tmp-grid-view.component';
 
 export const routes: Routes = [
   {
@@ -236,6 +237,7 @@ const T_Component: Type<any>[] = [
   EmployeeWorkingLisenceDetailComponent,
   EmployeeVisaInfoComponent,
   EmployeeVisaFormComponent,
+  TmpGridViewComponent,
 ];
 @NgModule({
   imports: [

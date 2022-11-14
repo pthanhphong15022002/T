@@ -19,9 +19,9 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cache.functionList(this.funcID).subscribe(res => {
-      console.log(res);
-    })
+    // this.cache.functionList(this.funcID).subscribe(res => {
+    //   console.log(res);
+    // })
     this.tmService.menuClick.subscribe(res => {
       if (res && res.func) {
         if (this.funcID != res.func.functionID)

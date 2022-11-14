@@ -1,0 +1,47 @@
+.bgEDEDED
+{
+    background-color: #EDEDED;
+}
+.okr-add-body
+{
+    padding: 30px 25rem 0 25rem !important;
+}
+.om-input
+{
+    border : solid 1px white !important;
+}
+.om-input:focus
+{
+    border:solid 1px white;
+    border-bottom-color: #9ACCFF !important;
+}
+.om-border-bottom-add
+{
+    border-bottom: solid 1px #9ACCFF;
+}
+.w-70
+{
+    width: 70%;
+}
+.om-add-btn i , .check-with-label:checked + .icon-language
+{
+    color: #3699FF;
+}
+.om-add-btn span
+{
+    color: #5EADFF;
+}
+.om-fs-3
+{
+    font-size: 1.5rem !important;
+}
+.om-h-header
+{
+    height: 135px;
+}
+.om-h-body
+{
+    overflow: auto;
+    height: calc(100% - 180px);
+}
+.om-select { font-family: 'FontAwesome', Verdana }

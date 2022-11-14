@@ -157,8 +157,6 @@ export class PopupAddCarsComponent extends UIComponent {
   }
 
   onSaveForm() {
-    this.data.linkType='3';
-    this.data.resourceType='2';
     this.data.useCard=this.useCardCheck;
     this.fGroupAddCar.patchValue(this.data);
     if (this.fGroupAddCar.invalid == true) {

@@ -82,7 +82,7 @@ export class CompanyInforComponent extends UIComponent {
       option.IsFull = true;
       let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
       popup.closed.subscribe((res:any)=>{
-        if(res.event && res.closedBy != "escape"){
+        if(res?.event){
           this.data = res.event;
           this.detectorRef.detectChanges();
         }

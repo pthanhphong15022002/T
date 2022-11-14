@@ -136,7 +136,6 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
-    this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
     if (this.dialogAddStationery.invalid == true) {
       this.epService.notifyInvalid(this.dialogAddStationery, this.formModel);
