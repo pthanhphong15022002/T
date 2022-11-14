@@ -1,11 +1,17 @@
-import { Component, OnInit, Injector, Optional, ViewEncapsulation } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  Component,
+  OnInit,
+  Injector,
+  Optional,
+  ViewEncapsulation,
+} from '@angular/core';
 import { DialogData, DialogRef, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'app-sort-session',
   templateUrl: './sort-session.component.html',
   styleUrls: ['./sort-session.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class SortSessionComponent extends UIComponent implements OnInit {
   formModel: any;
@@ -33,8 +39,26 @@ export class SortSessionComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) this.data = res;
+        let eleSort = document.getElementsByClassName(
+          'example-boundary-sort'
+        )[0];
+        if (eleSort) {
+          eleSort.parentElement.setAttribute(
+            'style',
+            'padding: 0 0 0 5px !important'
+          );
+        }
       });
   }
 
-  onSave() {}
+  onSave() {
+    
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+    this.data.forEach((x, index) => {
+      x.seqNo = index;
+    });
+  }
 }

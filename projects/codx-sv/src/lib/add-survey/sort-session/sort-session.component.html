@@ -5,15 +5,23 @@
   [dialog]="dialog"
 >
   <ng-template #body>
-    <div class="sort-session">
+    <div
+      cdkDropList
+      class="list example-boundary-sort"
+      (cdkDropListDropped)="drop($event)"
+    >
       <hr />
-      <div *ngFor="let item of data">
+      <div
+        *ngFor="let item of data"
+        cdkDragBoundary=".example-boundary-sort"
+        cdkDrag
+      >
         <div class="has-action-menu">
-          <div class="d-flex">
-            <div class="action-menu">
-              <span class="b-l"></span>
-            </div>
-            <span class="icon-menu"></span>
+          <div class="ms-1 d-flex">
+            <span
+              class="icon-menu d-flex align-items-center"
+              cdkDragHandle
+            ></span>
             <div class="ps-6">
               <span>{{ item.question }}</span>
               <div class="d-flex">
@@ -22,10 +30,10 @@
               </div>
             </div>
           </div>
-        </div> 
+        </div>
         <hr />
       </div>
-    </div> 
+    </div>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">

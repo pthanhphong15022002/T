@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
@@ -25,7 +26,7 @@ export class PopupContactComponent implements OnInit {
   option: any = 'contact';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService,
+    private sanitizer: DomSanitizer,
     private notiService: NotificationsService,
     private adService: CodxAdService,
     @Optional() dt?: DialogData,
@@ -37,6 +38,7 @@ export class PopupContactComponent implements OnInit {
 
   ngOnInit(): void {
     this.items = this.data;
+    this.getURLEmbed(this.items.timeZone);
   }
 
   update() {
@@ -53,28 +55,26 @@ export class PopupContactComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  txtValuePhone(e: any) {
-    this.items.phone = e.data;
-    console.log(this.items.phone);
+  valueChange(e: any) {
+    if (e) {
+      this.items[e.field] = e.data;
+    }
   }
 
-  txtValueFaxNo(e: any) {
-    this.items.faxNo = e.data;
-    console.log(this.items.phone);
+  valueChangeTimeZone(e: any) {
+    if (e) {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(e.data, 'text/html');
+      if (doc) {
+        var htmlE: any = doc.body.childNodes[0];
+        this.items.timeZone = htmlE.src;
+        this.getURLEmbed(htmlE.src);
+      }
+    }
   }
 
-  txtValueEmail(e: any) {
-    this.items.email = e.data;
-    console.log(this.items.phone);
-  }
-
-  txtValueWebPage(e: any) {
-    this.items.webPage = e.data;
-    console.log(this.items.phone);
-  }
-
-  txtValueStreet(e: any) {
-    this.items.street = e.data;
-    console.log(this.items.phone);
+  urlEmbedSafe: any;
+  getURLEmbed(url) {
+    this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }
