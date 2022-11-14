@@ -17,7 +17,7 @@ import { CodxTMService } from '../../codx-tm.service';
 export class PopupRescheduleMeetingComponent implements OnInit {
   meeting = new CO_Meetings();
   dialog: any;
-  title = 'Dời lịch họp';
+  title = '';
   data: any;
   startTime: any = null;
   endTime: any = null;
@@ -46,6 +46,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
     this.data = dt.data;
     this.meeting = this.data.data;
     this.funcID = this.data.funcID;
+    this.title = this.data.title;
     this.selectedDate = moment(new Date(this.meeting.startDate))
       .set({ hour: 0, minute: 0, second: 0 })
       .toDate();

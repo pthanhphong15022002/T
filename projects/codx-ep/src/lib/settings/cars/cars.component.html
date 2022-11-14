@@ -27,7 +27,10 @@
       [imgOn]="data.modifiedOn"
     ></codx-img>
     <div class="ms-2 d-flex flex-column">
-      <span class="fw-bold">{{ data.resourceName }}<span *ngIf="data.code!=null"> - {{ data.code }}</span></span>
+      <span class="fw-bold"
+        >{{ data.resourceName
+        }}<span *ngIf="data.code != null"> - {{ data.code }}</span></span
+      >
       <div class="d-flex flex-row">
         <codx-label
           [default]="grvCars?.Ranking?.headerText"
@@ -54,7 +57,9 @@
 <ng-template #locationCol let-data>
   <div class="d-flex flex-column justify-content-start">
     <!-- <span>{{data.category| vll: "VL005" : 'text' | async}}</span>  -->
-    <span>{{ data.companyName }}</span>
+    <span class="text-truncate" [title]="data?.companyName">{{
+      data?.companyName
+    }}</span>
   </div>
 </ng-template>
 <ng-template #popupDevice let-dialog>

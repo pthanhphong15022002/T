@@ -136,6 +136,7 @@ export class PopupAddPermissionComponent implements OnInit {
         perm.endDate = this.endDate;
         perm.objectName = item.text;
         perm.objectID = item.id;
+        perm.isActive = true;
         perm.objectType = item.objectType;
         perm.read = true;
         list.push(Object.assign({}, perm));

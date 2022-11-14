@@ -129,7 +129,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['CompanyID'].headerText,
-              width: '15%',
+              width: '250',
               field: 'companyID',
               template: this.locationCol,
             },
