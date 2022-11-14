@@ -78,7 +78,7 @@
         <div class="w-50px min-w-50px pe-6">
           <div class="d-flex flex-column justify-content-start">
             <div class="text-gray-500 mb-1">
-              {{ item?.percentage.toFixed(2) }}%
+              {{ item?.percentage?.toFixed(2) }}%
             </div>
             <div class="progress w-100 h-5px">
               <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="item?.percentage"></div>
