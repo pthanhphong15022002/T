@@ -16,6 +16,7 @@ export class UpdateStatusComponent implements OnInit {
   title: string = 'Cập nhật tình trạng';
   headerText:string = "";
   employee: any;
+  statusSelected:string = "";
   @Input() view: any;
 
   constructor(
@@ -34,29 +35,39 @@ export class UpdateStatusComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  updateStatus() {
-    this.api
-      .execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", this.employee)
+  updateStatus() 
+  {
+    if(this.statusSelected)
+    {
+      this.api
+      .execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", [this.employee.employeeID, this.statusSelected])
       .subscribe((res) => {
-        if (res) {
+        if (res) 
+        {
+          this.employee.status = this.statusSelected;
           this.dialogRef.close(this.employee)
-        } else {
+        } 
+        else 
+        {
           this.dialogRef.close()
         }
-      }
-      );
+      });
+    }
+    
   }
 
   valueChange(e) {
     if (e) {
+      debugger;
       var arrData = e.component?.dataSource;
-      this.employee.status = e.data;
-      arrData.forEach(obj => {
-        if (obj.value == e.data) {
-          this.employee.statusName = obj.text;
-          this.employee.statusColor = obj.color;
-        }
-      })
+      // this.employee.status = e.data;
+      this.statusSelected = e.data;
+      // arrData.forEach(obj => {
+      //   if (obj.value == e.data) {
+      //     this.employee.statusName = obj.text;
+      //     this.employee.statusColor = obj.color;
+      //   }
+      // })
     }
   }
 
