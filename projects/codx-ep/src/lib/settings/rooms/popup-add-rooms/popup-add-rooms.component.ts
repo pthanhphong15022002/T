@@ -116,7 +116,7 @@ export class PopupAddRoomsComponent extends UIComponent {
     }
   }
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
   onSaveForm() {
