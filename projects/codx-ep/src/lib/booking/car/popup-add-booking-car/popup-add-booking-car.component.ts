@@ -136,7 +136,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-    this.data.requester = this.authService?.userValue?.userName;
+    if(this.isAdd){
+
+      this.data.requester = this.authService?.userValue?.userName;
+    }
     if(this.isAdd && this.optionalData!=null){
       this.data.resourceID = this.optionalData.resourceId;
       this.data.bookingOn=this.optionalData.startDate;
