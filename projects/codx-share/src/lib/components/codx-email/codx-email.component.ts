@@ -346,9 +346,7 @@ export class CodxEmailComponent implements OnInit {
                 this.formGroup.patchValue({ emailTemplates: emailTemplates });
               }
             }
-
-            dialog1 && dialog1.close();
-            this.dialog && this.dialog.close();
+            this.dialog && this.dialog.close(res);
           }
         });
     } else if (this.isAddNew) {
