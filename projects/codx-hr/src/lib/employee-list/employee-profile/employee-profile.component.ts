@@ -75,7 +75,7 @@ export class EmployeeProfileComponent extends UIComponent {
   itemDetail;
 
   hrEContract;
-  crrTab: number = 6;
+  crrTab: number = 4;
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -398,62 +398,60 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeePassportInfo(){
+  addEmployeePassportInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeLegalPassportFormComponent,
       {
         isAdd: true,
-        headerText: 'Hộ chiếu'
+        headerText: 'Hộ chiếu',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeWorkingLisenceInfo(){
+  addEmployeeWorkingLisenceInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeWorkingLisenceComponent,
       {
         isAdd: true,
-        headerText: 'Giấy phép lao động'
+        headerText: 'Giấy phép lao động',
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeVisaInfo(){
+  addEmployeeVisaInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeVisaInfoComponent,
       {
         isAdd: true,
-        headerText: 'Thị thực'
+        headerText: 'Thị thực',
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
-
-
 }
