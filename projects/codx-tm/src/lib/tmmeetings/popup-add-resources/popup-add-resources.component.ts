@@ -9,9 +9,11 @@ import {
   DialogRef,
   ApiHttpService,
   NotificationsService,
+  CodxFormComponent,
 } from 'codx-core';
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Optional, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
 import { CO_Resources } from '../../models/CO_Meetings.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lib-popup-add-resources',
@@ -19,6 +21,7 @@ import { CO_Resources } from '../../models/CO_Meetings.model';
   styleUrls: ['./popup-add-resources.component.css'],
 })
 export class PopupAddResourcesComponent implements OnInit {
+  @ViewChild('form') form: TemplateRef<any>;
   meeting = new CO_Meetings();
   dialog: any;
   title = '';
@@ -26,7 +29,7 @@ export class PopupAddResourcesComponent implements OnInit {
   resources: CO_Resources[] = [];
   popover: any;
   idUserSelected: any;
-  lstResources : CO_Resources[] = [];;
+  lstResources : CO_Resources[] = [];
   data: any;
   funcID: any;
   constructor(
@@ -40,7 +43,7 @@ export class PopupAddResourcesComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = dt.data;
-    this.meeting = this.data.data;
+    this.meeting = JSON.parse(JSON.stringify(this.data.data));
     this.title = this.data.title;
     this.funcID = this.data.funcID;
     this.cache.valueList('CO001').subscribe((res) => {

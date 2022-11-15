@@ -54,6 +54,7 @@ import { AddLinkComponent } from '../addlink/addlink.component';
 import { CompletedComponent } from '../completed/completed.component';
 import { ForwardComponent } from '../forward/forward.component';
 import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
+import { RefuseComponent } from '../refuse/refuse.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
 import { SharingComponent } from '../sharing/sharing.component';
 import { UpdateExtendComponent } from '../update/update.component';
@@ -428,6 +429,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null) {
+    debugger;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
     else {
@@ -858,7 +860,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             600,
             400,
             null,
-            { data: datas },
+            { data: datas  },
             '',
             option
           )
@@ -870,11 +872,50 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           });
         break;
       }
-      case "Trả lại":
+      //Trả lại
+      case "ODT113":
         {
-          this.refuse(datas);
+          var option = new DialogModel();
+          option.FormModel = this.formModel;
+          this.callfunc
+          .openForm(
+            RefuseComponent,
+            null,
+            600,
+            400,
+            null,
+            { data: datas , headerText:"Trả lại" , status:"4"},
+            '',
+            option
+          )
+          .closed.subscribe((x) => {
+            if (x.event) this.view.dataService.update(x.event).subscribe();
+          });
+          // this.refuse(datas);
           break;
         }
+      //Chuyển lại
+      case "ODT114":
+      {
+        var option = new DialogModel();
+        option.FormModel = this.formModel;
+        this.callfunc
+        .openForm(
+          RefuseComponent,
+          null,
+          600,
+          400,
+          null,
+          { data: datas , headerText:"Chuyển lại" , status:"3"},
+          '',
+          option
+        )
+        .closed.subscribe((x) => {
+          if (x.event) this.view.dataService.update(x.event).subscribe();
+        });
+        // this.refuse(datas);
+        break;
+      }
       default:
       {
         this.shareService.defaultMoreFunc(val,datas,this.afterSaveTask,this.view.formModel,this.view.dataService);
@@ -1020,6 +1061,19 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       completed.forEach((elm) => {
         elm.disabled = true;
       });
+    }
+    var approvelCL = e.filter(
+      (x: { functionID: string }) => x.functionID == 'ODT114' 
+    );
+    approvelCL[0].disabled = true;
+    //Trả lại
+    if(data?.status == "4")
+    {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT113' 
+      );
+      approvel[0].disabled = true;
+      approvelCL[0].disabled = false;
     }
     //data?.isblur = true
   }

@@ -144,7 +144,7 @@ export class DynamicFormComponent extends UIComponent {
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
-              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt?.data,'ODT41'])
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt?.data,'ODS21'])
               .subscribe();
           }
         });

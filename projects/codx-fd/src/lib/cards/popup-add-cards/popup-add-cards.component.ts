@@ -119,7 +119,9 @@ export class PopupAddCardsComponent implements OnInit {
           this.title = func.description;
           this.cache.gridViewSetup(this.formName,this.gridViewName)
           .subscribe((grdSetUp:any) => {
-            if(grdSetUp && grdSetUp?.Rating?.referedValue){
+            if(grdSetUp && grdSetUp?.Rating?.referedValue)
+            {
+              console.log(grdSetUp)
               this.ratingVll = grdSetUp.Rating.referedValue;
               this.cache.valueList(this.ratingVll)
               .subscribe((vll:any) => {
@@ -148,7 +150,6 @@ export class PopupAddCardsComponent implements OnInit {
     .subscribe((res:any)=>{
       if(res){
         this.parameter = JSON.parse(res);
-        console.log(this.parameter)
         if(this.parameter.MaxSendControl === "1"){
           this.getCountCardSend(this.user.userID, this.cardType);
         }
@@ -157,7 +158,6 @@ export class PopupAddCardsComponent implements OnInit {
             this.getCountPointSend(this.user.userID, this.cardType,this.parameter.ActiveCoins);
           }
         }
-        console.log(this.parameter);
         this.dt.detectChanges();
       }
     })
@@ -194,7 +194,6 @@ export class PopupAddCardsComponent implements OnInit {
       .subscribe((res:any) => {
         if (res && res.length > 0)
         {
-          debugger
           this.lstPattern = res;
           let patternDefault = this.lstPattern.find((e:any)=> e.isDefault == true);
           this.patternSelected = patternDefault ? patternDefault : this.lstPattern[0]; 
@@ -290,6 +289,7 @@ export class PopupAddCardsComponent implements OnInit {
         break;
       case "receiver":
         this.userReciver = data;
+        this.userReciverName = e.component.itemsSelected[0].UserName;
         this.form.patchValue({receiver: this.userReciver});
         if(this.parameter.MaxReceiveControl == "1"){
           this.getCountCardRecive(data,this.cardType);
@@ -331,7 +331,6 @@ export class PopupAddCardsComponent implements OnInit {
   }
   Save() 
   {
-    debugger
     if (!this.form.controls['receiver'].value) 
     {
       let mssg  = Util.stringFormat(this.mssgNoti, "Người nhận");
@@ -442,15 +441,6 @@ export class PopupAddCardsComponent implements OnInit {
     }
     
   }
-  postFeedBack(cardID:string,shareControl:string){
-    this.api
-      .execSv("WP", "ERM.Business.WP", "CommentsBusiness", "FeedBackPostAsync", [cardID,shareControl])
-      .subscribe((res) => {
-        if(res){
-          this.notifySV.notify("Thêm thành công!");
-        }
-      })
-  }
   openFormShare(content: any) {
     this.callfc.openForm(content, '', 420, window.innerHeight);
   }
@@ -546,7 +536,7 @@ export class PopupAddCardsComponent implements OnInit {
         "FD",
         "ERM.Business.FD",
         "GiftsBusiness",
-        "GetAsync",
+        "GetGiftAsync",
         [giftID]
       ).subscribe((res:any)=>{
         if(res)
@@ -554,8 +544,12 @@ export class PopupAddCardsComponent implements OnInit {
           if(res.availableQty <= 0){
             this.notifySV.notify("Số dư quà tặng không đủ");
           }
-          else{
-            this.gifts = res;
+          else
+          {
+            if(this.gifts.length == 0){
+              this.gifts = [];
+            }
+            this.gifts.push(res);
             this.form.patchValue({giftID : giftID});
           }
         }

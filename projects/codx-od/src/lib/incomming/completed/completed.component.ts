@@ -42,7 +42,7 @@ export class CompletedComponent implements OnInit {
   }
   onSave()
   {
-    this.odService.complete(this.data?.recID,this.complatedForm.value.comment).subscribe((item)=>{
+    this.odService.complete(this.data?.recID,this.complatedForm.value.comment,"7").subscribe((item)=>{
       if(item.status == 0) this.dialog.close(item.status);
       this.notifySvr.notify(item.message);
     }) 

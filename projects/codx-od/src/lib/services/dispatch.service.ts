@@ -217,7 +217,6 @@ export class DispatchService implements OnDestroy {
   {
     return this.api.exec<any>('OD', 'DispatchesBusiness', 'UpdateResultAsync', obj);
   }
-
    //Thêm mới công văn
    saveDispatch(dataRq : DataRequest ,obj: dispatch)
    {
@@ -312,9 +311,9 @@ export class DispatchService implements OnDestroy {
        return this.api.execSv<any>('TM','ERM.Business.TM','TaskBusiness','GetListTaskTreeByRefIDAsync', recID)
      }
      //Completed
-     complete(recID:string , comment:string)
+     complete(recID:string , comment:string , status:any)
      {
-       return this.api.exec<any>('OD','DispatchesBusiness','CompletedAsync', [recID,comment])
+       return this.api.exec<any>('OD','DispatchesBusiness','CompletedAsync', [recID,comment,status])
      }
     
 }

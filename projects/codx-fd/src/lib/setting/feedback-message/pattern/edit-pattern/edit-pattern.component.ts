@@ -44,6 +44,7 @@ export class EditPatternComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
+  listFileView: any;
   user: any;
   checkFile = false;
 
@@ -89,38 +90,7 @@ export class EditPatternComponent implements OnInit {
     this.getCardType(this.formModel?.functionID);
   }
 
-  ngOnInit(): void {
-    // this.patternSV.recID.subscribe((recID) => {
-    //   this.colorImage = this.patternSV.colorImage;
-    //   if (recID) {
-    //     this.isEdit = true;
-    //     this.api
-    //       .execSv<any>(
-    //         'FD',
-    //         'ERM.Business.FD',
-    //         'PatternsBusiness',
-    //         'GetAsync',
-    //         [recID]
-    //       )
-    //       .subscribe((res) => {
-    //         if (res) Object.assign(this.pattern, res);
-    //         this.change.detectChanges();
-    //         this.checkActive();
-    //       });
-    //   } else if (!this.patternSV.load) {
-    //     this.isEdit = false;
-    //     this.pattern.cardType = this.cardType;
-    //     this.change.detectChanges();
-    //     this.checkActive();
-    //   }
-    // });
-    // this.at.queryParams.subscribe((params) => {
-    //   if (params.funcID) {
-    //     let functionID = params.funcID;
-    //     this.cardType = functionID.substr(-1);
-    //   }
-    // });
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit() {
     this.checkActive();
@@ -166,17 +136,11 @@ export class EditPatternComponent implements OnInit {
         }
       });
       this.listFile = files;
+      this.listFileView = files;
     }
   }
 
-  closeCreate(): void {
-    // this.pattern = new pattern();
-    // this.pattern.cardType = this.cardType;
-    // this.pattern.headerColor = "#918e8e";
-    // this.pattern.textColor = "#918e8e";
-    // $('#create_card').removeClass('offcanvas-on');
-    // $('#cardImageInput').val('');
-  }
+  closeCreate(): void {}
 
   valueChange(e) {
     if (e) this.pattern[e.field] = e.data;
@@ -201,16 +165,7 @@ export class EditPatternComponent implements OnInit {
     // this.attachment.uploadFile();
   }
 
-  async handleFileInput(event) {
-    // var $elm = $('.symbol-label[data-color]', $('.patternt'));
-    // $elm.removeClass('color-check');
-    // $('label.symbol-label').addClass('color-check');
-    // //if (!this.pattern.patternID) return;
-    // this.pattern.backgroundColor = "";
-    // this.pattern.fileName = event.currentTarget.files[0].name;
-    // this.change.detectChanges();
-    // this.uploadImage.handleFileInput(event);
-  }
+  async handleFileInput(event) {}
 
   savePattern() {
     if (!this.pattern.patternName) {
@@ -228,22 +183,24 @@ export class EditPatternComponent implements OnInit {
       .subscribe(async (res) => {
         if (res.save || res.update) {
           var dt = res.save ? res.save : res.update;
-          if (this.listFile && this.listFile?.length > 0) {
-            this.listFile[0].objectID = dt.recID;
-            this.listFile[0].objectId = dt.recID;
-            this.attachment.objectId = dt.recID;
-            this.attachment.fileUploadList = this.listFile;
-            (await this.attachment.saveFilesObservable()).subscribe(
-              (result: any) => {
-                if (result.data) {
+          if (this.listFileView && this.listFileView.length > 0) {
+            if (this.listFile && this.listFile?.length > 0) {
+              this.listFile[0].objectID = dt.recID;
+              this.listFile[0].objectId = dt.recID;
+              this.attachment.objectId = dt.recID;
+              this.attachment.fileUploadList = this.listFile;
+              (await this.attachment.saveFilesObservable()).subscribe(
+                (result: any) => {
+                  var obj = { data: res, listFile: this.listFile };
+                  this.dialog.close(obj);
                   this.change.detectChanges();
                 }
-              }
-            );
-            this.attachment.saveFiles();
+              );
+            }
+          } else {
+            var obj = { data: res, listFile: null };
+            this.dialog.close(obj);
           }
-          var obj = { data: res, listFile: this.listFile };
-          this.dialog.close(obj);
         }
       });
   }
@@ -260,11 +217,7 @@ export class EditPatternComponent implements OnInit {
     return true;
   }
 
-  checkDisable(pattern) {
-    // if (pattern.isDefault)
-    //   return true;
-    // return false;
-  }
+  checkDisable(pattern) {}
 
   checkActive() {
     var label = document.querySelectorAll('.symbol-label[data-color]');
@@ -272,39 +225,9 @@ export class EditPatternComponent implements OnInit {
       var htmlE = label[0] as HTMLElement;
       if (htmlE) htmlE.classList.add('color-check');
     }
-    // var $elm = $('.symbol-label', $('.patternt'));
-    // $elm.removeClass('color-check');
-    // var elecolor = null;
-    // var color = "";
-    // if (!this.pattern.backgroundColor && this.isEdit) {
-    //   elecolor = $('span[data-color="image"]').closest(".symbol-label");
-    //   this.pattern.backgroundColor = "";
-    // }
-    // else {
-    //   if (this.pattern.backgroundColor) {
-    //     elecolor = $('.symbol-label[data-color="' + this.pattern.backgroundColor + '"]', $('.patternt'));
-    //     if (elecolor.length === 0)
-    //       elecolor = $('kendo-colorpicker.symbol-label');
-    //   } else {
-    //     elecolor = $('.symbol-label[data-color]', $('.patternt')).first();
-    //     color = elecolor.data('color');
-    //     this.pattern.backgroundColor = color;
-    //     this.pattern.fileName = "";
-    //   }
-    // }
-    // if (elecolor != null && elecolor.length > 0)
-    //   elecolor.addClass('color-check');
-    // this.change.detectChanges();
   }
 
   colorClick(ele, item, index) {
-    // var $label = $('.symbol-label[data-color]', $('.patternt'));
-    // $label.removeClass('color-check');
-    // $(ele).addClass('color-check');
-    // var color = $(ele).data('color');
-    // this.pattern.backgroundColor = color;
-    // this.pattern.fileName = "";
-    // this.change.detectChanges();
     this.listFile = '';
     var label = document.querySelectorAll('.symbol-label[data-color]');
     if (label) {

@@ -178,7 +178,11 @@ export class PatternComponent extends UIComponent implements OnInit {
               else this.lstPattern[index].isDefault = false;
             });
           }
+          var data = e?.event?.data?.save;
+          data['modifiedOn'] = new Date();
+          this.view.dataService.update(data).subscribe();
         }
+        this.view.dataService.clear();
       });
     });
     this.change.detectChanges();
@@ -223,6 +227,7 @@ export class PatternComponent extends UIComponent implements OnInit {
               this.lstFile = arr;
             }
           }
+          this.view.dataService.clear();
         });
       });
     this.change.detectChanges();

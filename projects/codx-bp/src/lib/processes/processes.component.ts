@@ -393,7 +393,7 @@ export class ProcessesComponent
         break;
       case 'BPT103': // gán tạm cập nhật phiên bản
         //this.revisions(e.data, data);
-        this.Updaterevisions(data);
+        this.Updaterevisions(e.data,data);
         break;
       case 'BPT104':
         this.permission(data);
@@ -421,10 +421,11 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  Updaterevisions(data) {
+  Updaterevisions(more,data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -434,17 +435,10 @@ export class ProcessesComponent
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
-          this.titleAction,
-          option
+          [this.titleAction],
+          option,
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e && e.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-            this.detectorRef.detectChanges();
-          }
-        });
+        this.dialog.closed.subscribe();
       });
   }
   revisions(more, data) {
