@@ -27,7 +27,7 @@ export class BP_Processes {
   views: number;
   attachments: number;
   comments: number;
-  rattings: string;
+  rattings: BP_ProcessesRating[];
   positionID: string;
   deptID: string;
   divisionID: string;
@@ -59,8 +59,8 @@ export class BP_ProcessSteps {
   perUnit: string;
   eventBase: string;
   reminder: string;
-  isAlert: boolean; 
-  isEmail: boolean;   
+  isAlert: boolean;
+  isEmail: boolean;
   note: string;
   color: string;
   stopOn: Date;
@@ -137,6 +137,17 @@ export class BP_ProcessPermissions {
   modifiedOn: Date;
   modifiedBy: string;
   form: string;
+}
+
+export class BP_ProcessesRating{
+  id: string;
+  recID: string;
+  objectID: string;
+  objectName: string;
+  positionName: string;
+  comment: string;
+  ratting: number;
+  createOn: Date;
 }
 
 export class tmpPermission{

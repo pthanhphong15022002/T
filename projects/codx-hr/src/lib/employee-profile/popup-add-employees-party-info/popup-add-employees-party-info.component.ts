@@ -60,6 +60,7 @@ export class PopupAddEmployeesPartyInfoComponent extends UIComponent implements 
     this.hrService.saveEmployeeUnionAndPartyInfo(this.data).subscribe(p => {
       if(p === "True"){
         this.notify.notifyCode('SYS007')
+        this.dialog.close()
       }
     })
   }

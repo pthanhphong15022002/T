@@ -67,7 +67,7 @@ export class OkrAddComponent implements OnInit {
   }
   save()
   {
-    this.api.execSv("OM","OM","OKRBusiness","SaveOMAsync",["a"]).subscribe();
+    this.api.execSv("OM","OM","OKRBusiness","SaveOMAsync",this.okrForm.value.okrFormArray).subscribe();
     var a = this.okrForm.value
     debugger;
 
@@ -75,7 +75,6 @@ export class OkrAddComponent implements OnInit {
   newOKRs(): FormGroup {
     return this.fb.group({
       okrName: '',
-      testcheckbox: false,
       confidence:'',
       targets: this.fb.array([]) ,
     })
@@ -83,7 +82,7 @@ export class OkrAddComponent implements OnInit {
   newKRs(): FormGroup {
     return this.fb.group({
       comment: '',
-      target: '' ,
+      target: null ,
     })
   }
   getTargets(form:any){

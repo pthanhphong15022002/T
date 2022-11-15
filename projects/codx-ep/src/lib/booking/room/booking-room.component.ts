@@ -311,7 +311,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   edit(evt?) {
     if (evt) {
-      if (this.authService.userValue.userID != evt?.owner|| !this.authService.userValue.administrator ) {
+      if (
+        this.authService.userValue.userID != evt?.owner &&
+        !this.authService.userValue.administrator
+      ) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
@@ -377,7 +380,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
-      if (this.authService.userValue.userID != evt?.owner|| !this.authService.userValue.administrator ) {
+      if (
+        this.authService.userValue.userID != evt?.owner &&
+        !this.authService.userValue.administrator
+      ) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
