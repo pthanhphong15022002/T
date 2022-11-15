@@ -126,6 +126,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
+      status: 'approveStatus',
     };
 
     this.resourceField = {
