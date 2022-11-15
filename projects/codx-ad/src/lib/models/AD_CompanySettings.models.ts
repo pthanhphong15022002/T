@@ -20,7 +20,7 @@ export class AD_CompanySettings {
   ;districtID: String
   ;postalCode: String
   ;regionID: String
-  ;timeZone: String
+  ;timeZone: any
   ;contactName: String
   ;jobTitle: String
   ;phone: String

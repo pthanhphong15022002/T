@@ -61,7 +61,7 @@ export class ApprovalCarsComponent extends UIComponent {
   driverID:any;
   listDriver=[];
   driver:any;
-  fields: Object = { text: 'driverName', value: 'driverID' };
+  fields:any;
   popupTitle: any;
   constructor(
     private injector: Injector,
@@ -105,6 +105,7 @@ export class ApprovalCarsComponent extends UIComponent {
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
       code: { name: 'code' },
+      status: 'approveStatus',
     };
 
     this.resourceField = {
@@ -145,6 +146,7 @@ export class ApprovalCarsComponent extends UIComponent {
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           statusColorRef: 'EP022',
+          
         },
       },
     ];
@@ -207,11 +209,15 @@ export class ApprovalCarsComponent extends UIComponent {
           });
       });
   }
-
+  setPopupTitle(data:any){
+    if(data){
+      this.popupTitle=data;
+    }
+  }
   assignDriver(data: any) {
     let startDate= new Date(data.startDate);
     let endDate= new Date(data.endDate);
-    this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
+    this.codxEpService.getAvailableDriver(startDate.toUTCString(), endDate.toUTCString())
     .subscribe((res:any)=>{
       if(res){
         this.cbbDriver=[];
@@ -238,8 +244,7 @@ export class ApprovalCarsComponent extends UIComponent {
           }
         });
       }
-    })
-       
+    })       
   }
 
   cbxChange(evt:any){}
@@ -280,8 +285,11 @@ export class ApprovalCarsComponent extends UIComponent {
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if(data.status==5 && data.driverName!=null && data.driverName!='')
-            func.disabled = false;
+            if(data.status==5 && data.driverName==null)
+              func.disabled = false;
+            else{
+              func.disabled = true;
+            }
           }
         });
       }

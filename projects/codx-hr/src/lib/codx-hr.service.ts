@@ -93,6 +93,7 @@ export class CodxHrService {
       .callSv(
         'HR',
         'ERM.Business.HR',
+        
         'OrganizationUnitsBusiness',
         'GetDataDiagramAsync',
         [orgUnitID, numberLV, parentID, onlyDepartment]
