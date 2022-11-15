@@ -121,15 +121,16 @@ export class PdfComponent
   curPage = 1;
 
   //zoom
-  zoomValue: any = 60;
+  zoomValue: any = 100;
   zoomFields = { text: 'show', value: 'realValue' };
   lstZoomValue = [
+    { realValue: '10', show: 10 },
     { realValue: '25', show: 25 },
     { realValue: '30', show: 30 },
     { realValue: '50', show: 50 },
     { realValue: '90', show: 90 },
     { realValue: '100', show: 100 },
-    { realValue: 'Auto', show: 'Auto' },
+    // { realValue: 'Auto', show: 'Auto' },
     // { realValue: 'Fit to Width', show: 'Fit to Width' },
     // { realValue: 'Fit to page', show: 'Fit to page' },
   ];
@@ -700,8 +701,15 @@ export class PdfComponent
           width: canvasBounds.width,
           height: canvasBounds.height,
         });
-        this.xScale = canvasBounds.width / 794;
-        this.yScale = canvasBounds.height / 1123;
+        if (this.zoomValue == 100) {
+          this.xAt100 = canvasBounds.width;
+          this.yAt100 = canvasBounds.height;
+          console.log('xscale', this.xAt100, 'yscale', this.yAt100);
+        }
+        this.xScale = canvasBounds.width / this.xAt100;
+        this.yScale = canvasBounds.height / this.yAt100;
+        console.log('xscale', this.xScale, 'yscale', this.yScale);
+
         let layer = new Konva.Layer({
           id: id,
           opacity: 1,
@@ -1773,22 +1781,19 @@ export class PdfComponent
   }
 
   changeZoom(type: string, e?: any) {
-    if (!isNaN(Number(e?.value))) {
+    if (
+      !isNaN(Number(e?.value)) &&
+      Number(e?.value) <= 100 &&
+      Number(e?.value) >= 10
+    ) {
       this.zoomValue = e.value;
+    } else if (!isNaN(Number(e)) && Number(e) <= 100 && Number(e) >= 10) {
+      this.ngxPdfView.zoom = e;
     } else {
-      switch (e.value) {
-        case 'Auto':
-          this.zoomValue = 'auto';
-          return;
-        case 'Fit to Width':
-          this.zoomValue = 'page-width';
-          return;
-        case 'Fit to page':
-          this.zoomValue = 'page-fit';
-          return;
-      }
+      // this.zoomValue = 10;
     }
-    if (this.inputUrl == null) {
+    this.detectorRef.detectChanges();
+    if (this.curSelectedArea) {
       this.tr?.forceUpdate();
       this.tr?.draw();
     }

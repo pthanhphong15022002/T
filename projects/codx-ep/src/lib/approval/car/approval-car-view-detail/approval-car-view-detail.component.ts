@@ -1,3 +1,4 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   Component,
   ElementRef,
@@ -10,11 +11,12 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
+import { DataRequest, NotificationsService, UIComponent, ViewsComponent, DialogRef } from 'codx-core';
 import moment from 'moment';
 import { CodxEpService } from '../../../codx-ep.service';
 import { DriverModel } from '../../../models/bookingAttendees.model';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { PopupDriverAssignComponent } from '../popup-driver-assign/popup-driver-assign.component';
 @Component({
   selector: 'approval-car-view-detail',
   templateUrl: 'approval-car-view-detail.component.html',
@@ -24,8 +26,9 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
+  @Output('driverAssigned') driverAssigned: EventEmitter<any> = new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
-  @ViewChild('driverAssign') driverAssign: TemplateRef<any>;
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -40,8 +43,9 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   active = 1;  
   cbbDriver: any[];
   listDriver=[];
-  popupDialog: any;
-  popuptitle: any;
+  popupDialog: DialogRef;
+  popupTitle: any;
+  dialog:any;
   tabControl: TabModel[] = [];
   fields: Object = { text: 'driverName', value: 'driverID' };
   constructor(
@@ -127,8 +131,9 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
         break;
       case 'EPT40204':
         {
-          this.popuptitle=value.text;
-          this.assignDriver(datas);
+          this.popupTitle=value.text;       
+          this.lviewSetPopupTitle(this.popupTitle);
+          this.lviewDriverAssign(datas);
         }
         break;
       
@@ -196,31 +201,25 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            func.disabled = false;
+            if(data.status==5 && data.driverName==null)
+              func.disabled = false;
+            else{
+              func.disabled = true;
+            }
           }
         });
       }
     }
   }
-  assignDriver(data: any) {
-    let startDate= new Date(data.startDate);
-    let endDate= new Date(data.endDate);
-    this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
-    .subscribe((res:any)=>{
-      if(res){
-        this.cbbDriver=[];
-        this.listDriver = res;
-        this.listDriver.forEach(dri=>{
-          var tmp = new DriverModel();
-          tmp['driverID'] = dri.resourceID;
-          tmp['driverName'] = dri.resourceName;
-          this.cbbDriver.push(tmp);
-        })
-        this.detectorRef.detectChanges(); 
-        this.popupDialog = this.callfc.openForm(this.driverAssign, '', 550,250 );
-      }
-    })
-       
+  lviewSetPopupTitle(data){
+    if(data){
+      this.setPopupTitle.emit(data);
+    }
+  }
+  lviewDriverAssign(data) {
+    if (data) {    
+      this.driverAssigned.emit(data);
+    }
   }
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;

@@ -174,35 +174,40 @@ export class EditPatternComponent implements OnInit {
     }
     if (
       this.formType == 'edit' &&
-      this.pattern.backgroundColor &&
+      //this.pattern.backgroundColor &&
       this.checkFile
     )
-      this.patternSV.deleteFile(this.pattern.recID);
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), -1)
-      .subscribe(async (res) => {
-        if (res.save || res.update) {
-          var dt = res.save ? res.save : res.update;
-          if (this.listFileView && this.listFileView.length > 0) {
-            if (this.listFile && this.listFile?.length > 0) {
-              this.listFile[0].objectID = dt.recID;
-              this.listFile[0].objectId = dt.recID;
-              this.attachment.objectId = dt.recID;
-              this.attachment.fileUploadList = this.listFile;
-              (await this.attachment.saveFilesObservable()).subscribe(
-                (result: any) => {
-                  var obj = { data: res, listFile: this.listFile };
-                  this.dialog.close(obj);
-                  this.change.detectChanges();
+      this.patternSV.deleteFile(this.pattern.recID).subscribe(item=>{
+        if(item)
+        {
+          this.dialog.dataService
+          .save((opt: any) => this.beforeSave(opt), -1)
+          .subscribe(async (res) => {
+            if (res.save || res.update) {
+              var dt = res.save ? res.save : res.update;
+              if (this.listFileView && this.listFileView.length > 0) {
+                if (this.listFile && this.listFile?.length > 0) {
+                  this.listFile[0].objectID = dt.recID;
+                  this.listFile[0].objectId = dt.recID;
+                  this.attachment.objectId = dt.recID;
+                  this.attachment.fileUploadList = this.listFile;
+                  (await this.attachment.saveFilesObservable()).subscribe(
+                    (result: any) => {
+                      var obj = { data: res, listFile: this.listFile };
+                      this.dialog.close(obj);
+                      this.change.detectChanges();
+                    }
+                  );
                 }
-              );
+              } else {
+                var obj = { data: res, listFile: null };
+                this.dialog.close(obj);
+              }
             }
-          } else {
-            var obj = { data: res, listFile: null };
-            this.dialog.close(obj);
-          }
+          });
         }
       });
+   
   }
 
   beforeSave(op: RequestOption) {

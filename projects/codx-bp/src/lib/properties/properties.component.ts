@@ -1,20 +1,29 @@
+import {
+  BP_Processes,
+  BP_ProcessesRating,
+} from './../models/BP_Processes.model';
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FileUpload, View } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
-import { CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import {
+  CacheService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
 
 @Component({
   selector: 'lib-properties',
   templateUrl: './properties.component.html',
-  styleUrls: ['./properties.component.css']
+  styleUrls: ['./properties.component.css'],
 })
 export class PropertiesComponent implements OnInit {
-
+  process = new BP_Processes();
+  rattings: BP_ProcessesRating[] = [];
   dialog: any;
   data: any;
   hideExtend = true;
-  fileEditing: FileUpload;
   styleRating: string;
   totalViews: number;
   totalRating: number;
@@ -26,15 +35,13 @@ export class PropertiesComponent implements OnInit {
   currentRate = 1;
   readonly = false;
   hovered = 0;
-  commenttext: string = "";
+  commenttext: string = '';
   id: string;
   vlL1473: any;
   requestTitle: string;
 
-
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private fileService: FileService,
     private notificationsService: NotificationsService,
     private bpSV: CodxBpService,
     private cache: CacheService,
@@ -43,16 +50,12 @@ export class PropertiesComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = data.data;
+    this.process = this.data;
     this.totalRating = 0;
   }
 
   ngOnInit(): void {
-    this.cache.valueList("L1473").subscribe(item => {
-      if (item && item.datas) {
-        this.vlL1473 = item.datas;
-      }
-      this.openProperties(this.data.recID);
-    });
+    this.openProperties(this.data.recID);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -61,7 +64,9 @@ export class PropertiesComponent implements OnInit {
     this.totalViews = 0;
     this.readonly = false;
     this.commenttext = '';
-    this.requestTitle = "";
+    this.requestTitle = '';
+    this.currentRate = 1;
+    this.getRating(this.process.rattings);
     this.changeDetectorRef.detectChanges();
     // this.fileService.getFile(id, false).subscribe(async res => {
     //   if (res != null) {
@@ -80,7 +85,7 @@ export class PropertiesComponent implements OnInit {
     //     }
 
     //     this.onUpdateTags();
-    //     this.currentRate = 1;
+    //
     //     this.getRating(res.views);
     //     // var files = this.dmSV.listFiles;
     //     // if (files != null) {
@@ -93,27 +98,33 @@ export class PropertiesComponent implements OnInit {
     // });
   }
 
+  //#region mo rong
   extendShow(): void {
     this.hideExtend = !this.hideExtend;
     var doc = document.getElementsByClassName('extend-more')[0];
     var ext = document.getElementsByClassName('ext_button')[0];
     if (doc != null) {
       if (this.hideExtend) {
-        document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 550px; z-index: 1000;");
-        doc.setAttribute("style", "display: none");
-        ext.classList.remove("rotate-back");
-      }
-      else {
-        document.getElementsByClassName("codx-dialog-container")[0].setAttribute("style", "width: 900px; z-index: 1000;");
-        doc.setAttribute("style", "display: block");
-        ext.classList.add("rotate-back");
+        document
+          .getElementsByClassName('codx-dialog-container')[0]
+          .setAttribute('style', 'width: 550px; z-index: 1000;');
+        doc.setAttribute('style', 'display: none');
+        ext.classList.remove('rotate-back');
+      } else {
+        document
+          .getElementsByClassName('codx-dialog-container')[0]
+          .setAttribute('style', 'width: 900px; z-index: 1000;');
+        doc.setAttribute('style', 'display: block');
+        ext.classList.add('rotate-back');
       }
     }
 
     this.changeDetectorRef.detectChanges();
   }
+  //#endregion
 
-  getRating(data: View[]) {
+  //region rating
+  getRating(data: BP_ProcessesRating[]) {
     let _rating1 = 0;
     let _rating2 = 0;
     let _rating3 = 0;
@@ -123,12 +134,12 @@ export class PropertiesComponent implements OnInit {
     this.totalViews = 0;
 
     if (data != null) {
-      var list = data.filter(x => x.rating > 0);
+      var list = data.filter((x) => x.ratting > 0);
       this.totalViews = list.length;
       //res.views.forEach(item => {
       for (var i = 0; i < list.length; i++) {
-        _sum = _sum + list[i].rating;
-        switch (list[i].rating) {
+        _sum = _sum + list[i].ratting;
+        switch (list[i].ratting) {
           case 1:
             _rating1++;
             break;
@@ -149,70 +160,58 @@ export class PropertiesComponent implements OnInit {
     }
 
     if (this.totalViews != 0) {
-      this.rating1 = ((_rating1 / this.totalViews) * 100).toFixed(0).toString() + "%";
-      this.rating2 = ((_rating2 / this.totalViews) * 100).toFixed(0).toString() + "%";
-      this.rating3 = ((_rating3 / this.totalViews) * 100).toFixed(0).toString() + "%";
-      this.rating4 = ((_rating4 / this.totalViews) * 100).toFixed(0).toString() + "%";
-      this.rating5 = ((_rating5 / this.totalViews) * 100).toFixed(0).toString() + "%";
+      this.rating1 =
+        ((_rating1 / this.totalViews) * 100).toFixed(0).toString() + '%';
+      this.rating2 =
+        ((_rating2 / this.totalViews) * 100).toFixed(0).toString() + '%';
+      this.rating3 =
+        ((_rating3 / this.totalViews) * 100).toFixed(0).toString() + '%';
+      this.rating4 =
+        ((_rating4 / this.totalViews) * 100).toFixed(0).toString() + '%';
+      this.rating5 =
+        ((_rating5 / this.totalViews) * 100).toFixed(0).toString() + '%';
       this.totalRating = _sum / this.totalViews;
-    }
-    else {
-      this.rating1 = "0%";
-      this.rating2 = "0%";
-      this.rating3 = "0%";
-      this.rating4 = "0%";
-      this.rating5 = "0%";
+    } else {
+      this.rating1 = '0%';
+      this.rating2 = '0%';
+      this.rating3 = '0%';
+      this.rating4 = '0%';
+      this.rating5 = '0%';
       this.totalRating = 0;
     }
     this.totalRating = parseFloat(this.totalRating.toFixed(2));
-    this.styleRating = (this.totalRating * 2 * 10).toFixed(2).toString() + "%";
+    this.styleRating = (this.totalRating * 2 * 10).toFixed(2).toString() + '%';
   }
+  //#endregion
 
-  onUpdateTags() {
-    if (this.fileEditing.tags != null) {
-      var list = this.fileEditing.tags.split(";");
-      this.bpSV.listTags.next(list);
-    }
-  }
-
+  //#region event
   txtValue($event, type) {
     switch (type) {
-      case "commenttext":
+      case 'commenttext':
         this.commenttext = $event.data;
         break;
     }
   }
+  //#endregion
 
   setComment() {
-    this.fileService.setViewFile(this.id, this.currentRate.toString(), this.commenttext).subscribe(async res => {
-      if (res.status == 0) {
-        this.currentRate = 1;
-        this.readonly = false;
-        this.commenttext = '';
-        this.fileEditing = res.data;
-        this.getRating(res.data.views);
-        // var process = this.bpSV.listProcess;
-        // if (process != null) {
-        //   let index = process.findIndex(d => d.recID.toString() === this.id);
-        //   if (index != -1) {
-        //     var thumbnail = process[index].thumbnail;
-        //     process[index] = res.data;
-        //     process[index].thumbnail = thumbnail;
-        //   }
-        //   this.bpSV.listProcess = process;
-        //   this.bpSV.ChangeData.next(true);
-        // }
-
-        this.changeDetectorRef.detectChanges();          //alert(res.message);
-        this.notificationsService.notify(res.message);
-      }
-    });
+    this.bpSV
+      .setViewRattings(this.id, this.currentRate.toString(), this.commenttext)
+      .subscribe(async (res) => {
+        if (res.rattings.length > 0) {
+          this.currentRate = 1;
+          this.readonly = false;
+          this.commenttext = '';
+          this.getRating(res.rattings);
+          this.process.rattings.push(res.rattings);
+          this.changeDetectorRef.detectChanges();
+          this.notificationsService.notify(res.message);
+        }
+      });
   }
 
   setClassRating(i, rating) {
-    if (i <= rating)
-      return "icon-star text-warning icon-16 mr-1";
-    else
-      return "icon-star text-muted icon-16 mr-1";
+    if (i <= rating) return 'icon-star text-warning icon-16 mr-1';
+    else return 'icon-star text-muted icon-16 mr-1';
   }
 }

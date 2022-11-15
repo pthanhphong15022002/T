@@ -488,6 +488,9 @@
     .thumbnailImage {
       width: 150px !important;
       height: 175px !important;
+      // border: 3px #d00 solid;
+      // display: block;
+      // margin-bottom: 10px;
     }
     .thumbnailSelectionRing {
       border: 1px solid $primary-dark;
@@ -504,7 +507,7 @@
   padding: 7px 10px;
 }
 
-.img{
+.img {
   width: 100%;
   height: 100%;
 }
