@@ -7,8 +7,6 @@ import {
   OnInit
 } from '@angular/core';
 
-import { ActivatedRoute } from '@angular/router';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   SidebarModel,
   UIComponent,

@@ -1,0 +1,168 @@
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
+
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body]="body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="VisaNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="visaNo"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="VisaType"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="visaType"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="EffectedDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="effectedDate"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="ExpiredDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="expiredDate"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="StayDays"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="stayDays"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="VisaEntry"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="visaEntry"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="NationalityID"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="nationalityID"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="IssuedDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="issuedDate"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="IssuedPlace"
+            ></codx-label>
+            <codx-input
+                field="issuedPlace"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="PassportNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="passportNo"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="PassportNationalityID"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="passportNationalityID"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Note"
+            ></codx-label>
+            <codx-input
+                field="note"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+            ></codx-input>
+        </div>
+    </ng-template>
+</codx-form>
