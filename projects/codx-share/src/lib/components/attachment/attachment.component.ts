@@ -103,7 +103,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     totalUsed: 0,
   };
   isCopyRight = 0;
-  dataFolder:any;
+  dataFolder: any;
   lstRawFile = [];
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
@@ -227,11 +227,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
           if (
             document
               .getElementsByName('UploadFiles')
-            [i].getAttribute('idbutton') == null
+              [i].getAttribute('idbutton') == null
           ) {
             document
               .getElementsByName('UploadFiles')
-            [i].setAttribute('idbutton', this.idBrowse);
+              [i].setAttribute('idbutton', this.idBrowse);
             break;
           }
         }
@@ -337,7 +337,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (status === 'File uploaded successfully') {
       this.uploadObj.remove(
         this.filesDetails[
-        this.filesList.indexOf(args.currentTarget.parentElement)
+          this.filesList.indexOf(args.currentTarget.parentElement)
         ]
       );
     } else {
@@ -486,7 +486,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         pathFolder,
         pathID
       )
-      .subscribe((item) => { });
+      .subscribe((item) => {});
 
     if ($data.dataItem.items && $data.dataItem.items.length <= 0) {
       this.folderService.getFolders(id).subscribe(async (res) => {
@@ -603,14 +603,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
       // upload file uri from Mr Long
     }
     this.fileUploadList[0].avatar = null;
-    this.fileUploadList[0].data = "";
+    this.fileUploadList[0].data = '';
     this.atSV.fileListAdded = [];
     return this.addFileObservable(this.fileUploadList[0]);
     //return this.onMultiFileSaveObservable();
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
-    debugger;
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
@@ -618,11 +617,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
     await this.dmSV.getToken();
     let ret = new Observable<any[]>();
     for (var i = 0; i < total; i++) {
-      if(this.objectId)
-        this.fileUploadList[i].objectID = this.objectId;
+      if (this.objectId) this.fileUploadList[i].objectID = this.objectId;
       // await this.serviceAddFile(fileItem);
       this.fileUploadList[i].avatar = null;
-      this.fileUploadList[i].data = "";
+      this.fileUploadList[i].data = '';
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
           this.fileUploadList[i],
@@ -781,8 +779,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSave() {
-    if(this.dataFolder && this.dataFolder?.copyrights && this.isCopyRight>0) {
-      this.notificationsService.notifyCode("DM067")
+    if (
+      this.dataFolder &&
+      this.dataFolder?.copyrights &&
+      this.isCopyRight > 0
+    ) {
+      this.notificationsService.notifyCode('DM067');
       return;
     }
     if (this.data == undefined) this.data = [];
@@ -797,7 +799,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.fileUploadList[i].objectID = this.objectId;
       this.fileUploadList[i].description = this.description[i];
       this.fileUploadList[i].avatar = null;
-      this.fileUploadList[i].data = "";
+      this.fileUploadList[i].data = '';
       toltalUsed += this.fileUploadList[i].fileSize;
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
@@ -969,7 +971,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         });
     } else if (total == 1) {
       this.fileUploadList[0].description = this.description[0];
-      this.fileUploadList[0].data = ""
+      this.fileUploadList[0].data = '';
       this.addFileLargeLong(this.fileUploadList[0]);
       this.lstRawFile = [];
       //this.addFile(this.fileUploadList[0]);
@@ -989,8 +991,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
       var appName = environment.appName; // Tam thoi de hard
       var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
       var uploadFile = null;
-      if(!fileItem.item?.rawFile?.name)
-        uploadFile = this.lstRawFile.find(x=>x.name == fileItem.item.name);
+      if (!fileItem.item?.rawFile?.name)
+        uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
       else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
       var retUpload = await lvFileClientAPI.postAsync(
         `api/${appName}/files/register`,
@@ -1029,8 +1031,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var appName = environment.appName;
     var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
     var uploadFile = null;
-    if(!fileItem.item?.rawFile?.name)
-      uploadFile = this.lstRawFile.find(x=>x.name == fileItem.item.name);
+    if (!fileItem.item?.rawFile?.name)
+      uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
     else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
     var obj = from(
       lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
@@ -1082,10 +1084,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
               }
             );
             console.log(uploadChunk);
-          }
-          catch(ex)
-          {}
-          }
+          } catch (ex) {}
+        }
         if (isAddFile)
           return this.fileService
             .addFileObservable(
@@ -1173,7 +1173,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true
   ): Promise<FileUpload> {
     // check dung luong dia cungs
-    debugger;
     var ret = fileItem;
     var fileSize = parseInt(fileItem.fileSize);
     var that = this;
@@ -1193,8 +1192,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
     try {
       //  var item = await isAllowAddFileAsync();
       var uploadFile = null;
-      if(!fileItem.item?.rawFile?.name)
-        uploadFile = this.lstRawFile.find(x=>x.name == fileItem.item.name);
+      if (!fileItem.item?.rawFile?.name)
+        uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
       else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
       var appName = environment.appName; // Tam thoi de hard
       fileItem = await this.serviceAddFile(fileItem);
@@ -1367,7 +1366,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       });
   }
 
-  closeFileDialog(form): void { }
+  closeFileDialog(form): void {}
 
   arrayBufferToBase64(buffer) {
     var binary = '';
@@ -1418,12 +1417,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
       800,
       800,
       '',
-      [this.functionID, file , this.dataFolder.copyrights],
+      [this.functionID, file, this.dataFolder.copyrights],
       ''
     );
-    dialog.closed.subscribe(item=>{
-      if(item.event) this.isCopyRight --;
-    })
+    dialog.closed.subscribe((item) => {
+      if (item.event) this.isCopyRight--;
+    });
   }
 
   sortBy() {
@@ -2857,7 +2856,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
-   
+
     //this.getFolderPath();
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
@@ -2865,7 +2864,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
         files[i].size >= this.maxFileSizeUpload &&
         this.maxFileSizeUpload != 0
       ) {
-        this.notificationsService.notifyCode("DM057",0,files[i].name,this.maxFileSizeUploadMB);
+        this.notificationsService.notifyCode(
+          'DM057',
+          0,
+          files[i].name,
+          this.maxFileSizeUploadMB
+        );
         break;
       }
 
@@ -2889,13 +2893,19 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var type = files[i].type.toLowerCase();
         if (type == 'png' || type == 'jpg' || type == 'bmp') {
           fileUpload.avatar = data;
-        } 
-        else if(type == "mp4" || type == "m4v" || type == "avi" || type == "mov" || type == "mpg" || type == "mpeg")
-        {
-          var url = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(files[i].rawFile));
+        } else if (
+          type == 'mp4' ||
+          type == 'm4v' ||
+          type == 'avi' ||
+          type == 'mov' ||
+          type == 'mpg' ||
+          type == 'mpeg'
+        ) {
+          var url = this.sanitizer.bypassSecurityTrustUrl(
+            URL.createObjectURL(files[i].rawFile)
+          );
           fileUpload.data = url;
-        }
-        else
+        } else
           fileUpload.avatar = `../../../assets/codx/dms/${this.getAvatar(
             fileUpload.fileName
           )}`;
@@ -2959,8 +2969,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     //  this.fileUploadList.next(this.fileUploadList);
     // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
-    if(this.isSaveSelected == "1")
-    {
+    if (this.isSaveSelected == '1') {
       this.onMultiFileSave();
     }
     return false;

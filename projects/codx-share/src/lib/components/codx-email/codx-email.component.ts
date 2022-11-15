@@ -31,7 +31,6 @@ import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EmailSendTo } from 'projects/codx-es/src/lib/codx-es.model';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { DocumentRegistryBucketKey } from 'typescript';
 import { CodxShareService } from '../../codx-share.service';
 
 @Component({
@@ -92,6 +91,7 @@ export class CodxEmailComponent implements OnInit {
 
   show = false;
   isAddNew: boolean = false;
+  viewBody: string = '';
 
   public cssClass: string = 'e-list-template';
 
@@ -199,6 +199,8 @@ export class CodxEmailComponent implements OnInit {
                       if (res1 != null) {
                         this.data = res1[0];
                         this.dialogETemplate.patchValue(res1[0]);
+                        this.viewBody = res1[0]?.message ?? '';
+                        this.setViewBody();
                         this.dialogETemplate.addControl(
                           'recID',
                           new FormControl(res1[0].recID)
@@ -242,6 +244,32 @@ export class CodxEmailComponent implements OnInit {
     });
   }
 
+  setViewBody() {
+    if (this.dataSource) {
+      this.dataSource.forEach((element) => {
+        this.viewBody = this.viewBody.replace(
+          '[' + element.fieldName + ']',
+          '[' + element.headerText + ']'
+        );
+      });
+      this.cr.detectChanges();
+    }
+  }
+
+  setMessage() {
+    if (this.dataSource) {
+      let stringBody = this.viewBody;
+      this.dataSource.forEach((element) => {
+        stringBody = stringBody.replace(
+          '[' + element.headerText + ']',
+          '[' + element.fieldName + ']'
+        );
+      });
+      this.dialogETemplate.patchValue({ message: stringBody });
+      this.cr.detectChanges();
+    }
+  }
+
   ngOnInit(): void {
     this.initForm();
   }
@@ -250,7 +278,7 @@ export class CodxEmailComponent implements OnInit {
     if (this.isTemplate) {
       this.callFunc.openForm(this.addTemplateName, '', 400, 250);
     } else {
-      this.onSaveForm1(dialog);
+      this.onSaveForm(dialog);
     }
   }
 
@@ -258,7 +286,8 @@ export class CodxEmailComponent implements OnInit {
     this.codxService.sendEmailTemplate(this.templateID).subscribe((res) => {});
   }
 
-  onSaveForm1(dialog1: DialogRef) {
+  onSaveForm(dialog1: DialogRef) {
+    this.setMessage();
     let lstSento = [
       ...this.lstFrom,
       ...this.lstTo,
@@ -594,9 +623,7 @@ export class CodxEmailComponent implements OnInit {
       this.richtexteditor.control.executeCommand('fontColor', 'black');
 
       this.range = this.selection.getRange(document);
-      this.dialogETemplate.patchValue({
-        message: this.richtexteditor.control.angularValue,
-      });
+      this.viewBody = this.richtexteditor.control.angularValue;
     }
   }
 
