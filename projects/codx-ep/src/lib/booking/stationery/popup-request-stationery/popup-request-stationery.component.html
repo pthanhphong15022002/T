@@ -155,18 +155,24 @@
       <div class="d-flex align-items-end me-2 codx-badge mb-3">
         <div
           class="d-flex align-items-center position-relative me-4"
-          [title]="'hello'"
+          [title]="grvStationery['CurrentQty'].headerText"
         >
           <span class="icon-view_agenda icon-20 text-gray-400"></span>
           <span>{{ data?.currentQty }}</span>
         </div>
-        <div class="d-flex align-items-center position-relative me-4">
+        <div
+          class="d-flex align-items-center position-relative me-4"
+          [title]="grvStationery['ReservedQty'].headerText"
+        >
           <span
             class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
           ></span>
           <span>{{ data?.reservedQty }}</span>
         </div>
-        <div class="d-flex align-items-center position-relative me-4">
+        <div
+          class="d-flex align-items-center position-relative me-4"
+          [title]="grvStationery['AvailableQty'].headerText"
+        >
           <span
             class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
           ></span>

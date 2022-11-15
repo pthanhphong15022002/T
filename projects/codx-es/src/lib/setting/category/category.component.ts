@@ -309,6 +309,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           let popupEdit = this.callfunc.openSide(
             PopupAddCategoryComponent,
             {
+              disableCategoryID: '1',
               data: evt?.data,
               isAdd: false,
               headerText: evt.text + ' ' + this.funcList?.customName ?? '',
