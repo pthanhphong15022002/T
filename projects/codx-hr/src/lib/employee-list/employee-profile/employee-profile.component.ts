@@ -77,11 +77,7 @@ export class EmployeeProfileComponent extends UIComponent {
   itemDetail;
 
   hrEContract;
-<<<<<<< HEAD
   crrTab: number = 2;
-=======
-  crrTab: number = 4;
->>>>>>> b8c8330d68bf547a8b4d73a511cc12664e40ef1b
 
   healthColumnsGrid;
   vaccineColumnsGrid;
