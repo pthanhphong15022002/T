@@ -185,6 +185,7 @@ export class CompanySettingComponent
             this.imageLogo = image;
           }
 
+          if (this.data.timeZone) this.getURLEmbed(this.data.timeZone);
           // this.data.companyCode.toString().toLowerCase();
           this.detectorRef.detectChanges();
         }
@@ -310,5 +311,10 @@ export class CompanySettingComponent
       bytes[i] = ascii;
     }
     return bytes;
+  }
+
+  urlEmbedSafe: any;
+  getURLEmbed(url) {
+    this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }

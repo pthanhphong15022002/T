@@ -50,11 +50,11 @@ export class RevisionsComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
-    this.more = this.data.more;
-    this.funcID = this.more.functionID;
-    this.process = this.data.data;
-    this.revisions = this.process.versions;
-    this.headerText = this.more.customName;
+    this.more = this.data?.more;
+    this.funcID = this.more?.functionID;
+    this.process = this.data?.data;
+    this.revisions = this.process?.versions;
+    this.headerText = this.more?.customName;
     this.user = this.authStore.get();
   }
 

@@ -77,22 +77,38 @@
     <td class="rowphoto">
       <div class="padding">
         <div class="d-flex flex-column w-100 p-3">
-          <div class="fw-bold lh-base">{{ data.processName }}</div>
+          <div #processName class="fw-bold lh-base">
+            {{
+              data.processName | formatvalue
+              : view.formModel
+              : "processName"
+              : processName
+              : "Processes"
+              : "grvProcesses"
+              | async
+              }}
+          </div>
           <div class="d-flex flex-wrap justify-content-between">
             <div class="d-flex align-items-center">
               <div class="d-flex me-3">
                 <span class="icon-server text-dark icon-16 me-1"></span>
-                <span class="">{{ data.phases }}</span>
+                <span #phases class="">
+                  {{
+                    data.phases
+                    }}
+                </span>
               </div>
               <div class="d-flex me-3">
                 <span
                   class="icon-format_list_numbered text-danger icon-16 me-1"
                 ></span>
-                <span class="">{{ data.activities }}</span>
+                <span #activities class="">
+                  {{data.activities}}
+                </span>
               </div>
               <div class="d-flex me-3">
                 <span class="icon-attach_file text-primary icon-16 me-1"></span>
-                <span class=" ">{{ data.attachments }}</span>
+                {{data.attachments}}
               </div>
             </div>
           </div>
@@ -114,13 +130,29 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
-        {{ data.versionNo }}
+      <div #versionNo class="padding">
+        {{
+          data.versionNo | formatvalue
+          : view.formModel
+          : "versionNo"
+          : versionNo
+          : "Processes"
+          : "grvProcesses"
+          | async
+          }}
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
-        {{ data.activedOn | fmDT }}
+      <div #activedOn class="padding">
+        {{
+          data.activedOn | formatvalue
+          : view.formModel
+          : "activedOn"
+          : activedOn
+          : "Processes"
+          : "grvProcesses"
+          | async
+          }}
       </div>
     </td>
     <td class="rowphoto">
