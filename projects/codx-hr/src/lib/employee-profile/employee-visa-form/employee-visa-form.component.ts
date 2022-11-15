@@ -11,11 +11,11 @@ import {
 } from 'codx-core';
 
 @Component({
-  selector: 'lib-employee-assur-tax-bankacc-info',
-  templateUrl: './employee-assur-tax-bankacc-info.component.html',
-  styleUrls: ['./employee-assur-tax-bankacc-info.component.css']
+  selector: 'lib-employee-visa-form',
+  templateUrl: './employee-visa-form.component.html',
+  styleUrls: ['./employee-visa-form.component.css']
 })
-export class EmployeeAssurTaxBankaccInfoComponent extends UIComponent implements OnInit {
+export class EmployeeVisaFormComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog: DialogRef;
   data;
@@ -23,7 +23,7 @@ export class EmployeeAssurTaxBankaccInfoComponent extends UIComponent implements
   headerText: ''
   @ViewChild('form') form: CodxFormComponent;
 
-    constructor(
+  constructor(
     private injector: Injector,
     private notify: NotificationsService,
     private hrService: CodxHrService,
@@ -38,7 +38,7 @@ export class EmployeeAssurTaxBankaccInfoComponent extends UIComponent implements
       this.isAfterRender = true
     }
     this.data = dialog?.dataService?.dataSelected
-  }
+   }
 
   onInit(): void {
   }

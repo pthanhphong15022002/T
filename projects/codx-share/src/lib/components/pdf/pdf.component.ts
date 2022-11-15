@@ -337,6 +337,7 @@ export class PdfComponent
     }
     this.tr = new Konva.Transformer({
       rotateEnabled: false,
+      enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -490,6 +491,7 @@ export class PdfComponent
           ? this.lstSignDateType[1]
           : this.lstSignDateType[0];
         this.curSelectedAnnotID = area.recID;
+        this.detectorRef.detectChanges();
       }
       this.detectorRef.detectChanges();
     }
