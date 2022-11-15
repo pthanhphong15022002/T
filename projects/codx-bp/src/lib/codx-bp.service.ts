@@ -98,6 +98,15 @@ export class CodxBpService {
     );
   }
 
+  loadUserName(id: string){
+    return this.api.exec<any>(
+      'AD',
+      'UsersBusiness',
+      'GetAsync',
+      id
+    );
+  }
+
   public listTags = new BehaviorSubject<any>(null);
   isListTags = this.listTags.asObservable();
 
