@@ -129,9 +129,10 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
             },
             {
               headerText: gv['CompanyID'].headerText,
-              width: '250',
+              width: '15%',
               field: 'companyID',
               template: this.locationCol,
+              
             },
             {
               headerText: gv['Equipments'].headerText,
@@ -183,7 +184,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
         }
       });
     });
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
 

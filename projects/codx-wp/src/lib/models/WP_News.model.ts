@@ -36,8 +36,19 @@ export class WP_News{
     public modifiedBy:string;
 
     public constructor(){
+        this.recID = "";
+        this.newsType = "";
+        this.category = "";
+        this.shareControl = "";
+        this.subject = "";
+        this.subContent = "";
+        this.image = "";
+        this.allowShare = false;
+        this.createPost = false;
+        this.contents = "";
         this.permissions = [];
         this.createdOn = new Date();
         this.startDate = new Date();
+        this.endDate = null;
     }
 }

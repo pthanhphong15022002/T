@@ -37,6 +37,7 @@ export class CompanyEditComponent implements OnInit {
     @Optional() dialogRef?: DialogRef
     ) 
   {
+    debugger
     this.dialogRef = dialogRef;
     this.dataOld = dialog.data
     this.user = this.auth.userValue;
