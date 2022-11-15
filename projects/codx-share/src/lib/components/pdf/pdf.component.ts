@@ -152,6 +152,17 @@ export class PdfComponent
   renderQRAllPage = false;
 
   imgConfig = ['S1', 'S2', 'S3', '8', '9'];
+  fullAnchor = [
+    'top-left',
+    'top-center',
+    'top-right',
+    'middle-right',
+    'middle-left',
+    'bottom-left',
+    'bottom-center',
+    'bottom-right',
+  ];
+  textAnchor = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 
   //save to db
   after_X_Second: number = 100;
@@ -338,7 +349,6 @@ export class PdfComponent
     }
     this.tr = new Konva.Transformer({
       rotateEnabled: false,
-      enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -466,6 +476,20 @@ export class PdfComponent
           : area.isLock == true
           ? false
           : true
+      );
+
+      this.tr?.enabledAnchors(
+        this.isEditable == false
+          ? []
+          : area.allowEditAreas == false
+          ? []
+          : area.isLock == true
+          ? []
+          : this.imgConfig.includes(area.labelType)
+          ? this.checkIsUrl(area.labelValue)
+            ? this.fullAnchor
+            : this.textAnchor
+          : this.textAnchor
       );
       this.tr?.draggable(
         this.isEditable == false
@@ -891,6 +915,9 @@ export class PdfComponent
         //stage event
         stage.on('mouseenter', (mouseover: any) => {
           if (this.needAddKonva) {
+            let attrs = this.needAddKonva.attrs;
+            let name: tmpAreaName = JSON.parse(attrs.name);
+
             let transformable =
               this.isEditable == false
                 ? false
@@ -899,6 +926,15 @@ export class PdfComponent
                 : true;
             this.tr?.rotateEnabled(false);
             this.tr?.draggable(transformable);
+            this.tr?.enabledAnchors(
+              !transformable
+                ? []
+                : name.Type == 'img'
+                ? this.checkIsUrl(name.LabelValue)
+                  ? this.fullAnchor
+                  : this.textAnchor
+                : this.textAnchor
+            );
             this.tr?.resizeEnabled(transformable);
             this.tr?.nodes([this.needAddKonva]);
             this.tr?.forceUpdate();
@@ -910,9 +946,6 @@ export class PdfComponent
             this.needAddKonva.on('dragend', (dragEnd) => {
               if (dragEnd?.evt?.toElement?.tagName == 'CANVAS') {
                 if (this.needAddKonva) {
-                  let attrs = this.needAddKonva.attrs;
-                  let name: tmpAreaName = JSON.parse(attrs.name);
-
                   let curLayer = stage?.children[0]?.children;
                   let signed = curLayer.filter((child) => {
                     if (child != this.tr) {
@@ -1000,6 +1033,18 @@ export class PdfComponent
                 this.isEditable == false
                   ? false
                   : this.curSelectedArea.draggable()
+              );
+
+              let attrs = this.curSelectedArea?.attrs;
+              let name: tmpAreaName = JSON.parse(attrs.name);
+              this.tr?.enabledAnchors(
+                this.isEditable == false
+                  ? []
+                  : name.Type == 'img'
+                  ? this.checkIsUrl(name.LabelValue)
+                    ? this.fullAnchor
+                    : this.textAnchor
+                  : this.textAnchor
               );
               this.tr?.forceUpdate();
               this.tr?.nodes([this.curSelectedArea]);

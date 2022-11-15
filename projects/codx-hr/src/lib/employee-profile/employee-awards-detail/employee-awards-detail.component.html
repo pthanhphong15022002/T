@@ -1,0 +1,169 @@
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
+
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body]="body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="form-group row">
+            <codx-label
+                fiedName="AwardID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="awardID"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="AwardDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="awardDate"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                    (valueChange)="handleSelectAwardDate($event.target.value)"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="InYear"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="inYear"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="AwardFormCategory"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="awardFormCategory"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="AwardLevelCategory"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="awardLevelCategory"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="AwardPlace"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="awardPlace"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Reason"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="reason"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="DecisionNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="decisionNo"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="SignedDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="signedDate"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Signer"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="signer"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="SignerPosition"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="signerPosition"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Note"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="note"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+            ></codx-input>
+        </div>
+    </ng-template>
+</codx-form>
