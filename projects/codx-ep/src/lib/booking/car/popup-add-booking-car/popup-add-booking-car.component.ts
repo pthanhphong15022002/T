@@ -136,7 +136,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-    this.data.requester = this.authService?.userValue?.userName;
+    if(this.isAdd){
+
+      this.data.requester = this.authService?.userValue?.userName;
+    }
     if(this.isAdd && this.optionalData!=null){
       this.data.resourceID = this.optionalData.resourceId;
       this.data.bookingOn=this.optionalData.startDate;
@@ -621,7 +624,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.driver = this.tempAtender;
         this.tempDriver = this.driver;
         this.driverValidator(
-          this.tempDriver.userID,
+          this.tempDriver?.userID,
           this.data.startDate,
           this.data.endDate,
           this.data.recID
@@ -662,7 +665,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
   }
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
   checkedChange(event: any, device: any) {
@@ -681,7 +684,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     if (this.tempDriver != null) {
       this.driverValidator(
-        this.tempDriver.userID,
+        this.tempDriver?.userID,
         this.data.startDate,
         this.data.endDate,
         this.data.recID
@@ -695,7 +698,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     this.data.startDate = new Date(evt.data.fromDate);
     this.driverValidator(
-      this.tempDriver.userID,
+      this.tempDriver?.userID,
       this.data.startDate,
       this.data.endDate,
       this.data.recID
@@ -738,7 +741,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     this.data.endDate = new Date(evt.data.fromDate);
     this.driverValidator(
-      this.tempDriver.userID,
+      this.tempDriver?.userID,
       this.data.startDate,
       this.data.endDate,
       this.data.recID

@@ -194,7 +194,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   openCreateModal() {
     let data = new WP_Comments();
     data.recID = Util.uid();
-    data.shareControl = "9";
+    data.shareControl = "1";
     data.refType = "WP_Comments"
     data.createdBy = this.user.userID;
     data.createdName = this.user.userName;

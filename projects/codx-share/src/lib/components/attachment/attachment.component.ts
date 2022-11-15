@@ -1060,9 +1060,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
 
         //this.displayThumbnail(res.recID, res.pathDisk);
-        var sizeInBytes = uploadFile.size;
+        var sizeInBytes = uploadFile?.size;
         var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
-        if (uploadFile.size % chunSizeInfBytes > 0) {
+        if (uploadFile?.size % chunSizeInfBytes > 0) {
           numOfChunks++;
         }
         //api/lv-docs/files/upload

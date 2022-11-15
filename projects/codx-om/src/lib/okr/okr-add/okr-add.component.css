@@ -4,7 +4,7 @@
 }
 .okr-add-body
 {
-    padding: 30px 25rem 0 25rem !important;
+    padding: 30px 20rem 0 20rem !important;
 }
 .om-input
 {
@@ -37,11 +37,11 @@
 }
 .om-h-header
 {
-    height: 135px;
+    height: 100px;
 }
 .om-h-body
 {
     overflow: auto;
-    height: calc(100% - 180px);
+    height: calc(100% - 145px);
 }
 .om-select { font-family: 'FontAwesome', Verdana }

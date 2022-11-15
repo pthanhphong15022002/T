@@ -337,6 +337,7 @@ export class PdfComponent
     }
     this.tr = new Konva.Transformer({
       rotateEnabled: false,
+      enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -490,6 +491,7 @@ export class PdfComponent
           ? this.lstSignDateType[1]
           : this.lstSignDateType[0];
         this.curSelectedAnnotID = area.recID;
+        this.detectorRef.detectChanges();
       }
       this.detectorRef.detectChanges();
     }
@@ -1115,9 +1117,9 @@ export class PdfComponent
           fontSize: 14,
           fontFamily: 'Arial',
           draggable: draggable,
-          padding: 10,
           name: JSON.stringify(tmpName),
           id: recID,
+          align: 'left',
         });
         if (isSaveToDB) {
           textArea.scale({
@@ -1148,6 +1150,8 @@ export class PdfComponent
           textArea.y(txtY);
           this.lstLayer.get(area.location.pageNumber + 1).add(textArea);
           textArea.on('dragend transformend', (e: any) => {
+            console.log('textarea', textArea.attrs);
+
             this.addDragResizeEevent(
               area,
               e.type,
@@ -1910,11 +1914,11 @@ export class PdfComponent
             fontSize: 14,
             fontFamily: 'Arial',
             draggable: transformable,
-            padding: 10,
             name: JSON.stringify(tmpName),
             id: recID,
             x: unsignIdx[idx],
             y: this.maxTop + row * 100 + 10,
+            align: 'left',
           });
           textArea.scale({
             x: this.xScale,

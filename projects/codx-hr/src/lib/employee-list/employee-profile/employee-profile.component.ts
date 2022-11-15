@@ -1,3 +1,7 @@
+import { EmployeeVisaInfoComponent } from './../../employee-profile/employee-visa-info/employee-visa-info.component';
+import { EmployeeWorkingLisenceComponent } from './../../employee-profile/employee-working-lisence/employee-working-lisence.component';
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
+import { EmployeeLegalPassportFormComponent } from './../../employee-profile/employee-legal-passport-form/employee-legal-passport-form.component';
 import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { CheckBox } from '@syncfusion/ej2-angular-buttons';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
@@ -77,6 +81,10 @@ export class EmployeeProfileComponent extends UIComponent {
   vaccineColumnsGrid;
   diseaseColumnsGrid;
   accidentColumnsGrid;
+  positionColumnsGrid;
+  holidayColumnsGrid;
+  workDiaryColumnGrid;
+  expColumnGrid;
 
   @ViewChild('healthPeriodID', { static: true })
   healthPeriodID: TemplateRef<any>;
@@ -170,6 +178,79 @@ export class EmployeeProfileComponent extends UIComponent {
     this.formModel = this.view.formModel;
     console.log('afterview init', this.formModel);
 
+    //processingInfo
+    this.positionColumnsGrid = [
+      {
+        field: 'healthPeriodName',
+        headerText: 'Loại quyết định',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày hiệu lực',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày hết hạn',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Chức danh',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Phòng ban',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+    ];
+    this.holidayColumnsGrid = [
+      {
+        field: 'healthPeriodName',
+        headerText: 'Ngày đăng ký',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Nghỉ từ ngày ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Đến ngày',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Số ngày nghỉ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Loại nghỉ',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+      {
+        field: 'healthPeriodName',
+        headerText: 'Lý do',
+        width: 250,
+        template: this.healthPeriodID,
+      },
+    ];
+
+    //healthInfo
     this.healthColumnsGrid = [
       {
         field: 'healthPeriodName',
@@ -316,4 +397,63 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     });
   }
+
+  addEmployeePassportInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeLegalPassportFormComponent,
+      {
+        isAdd: true,
+        headerText: 'Hộ chiếu'
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  addEmployeeWorkingLisenceInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeWorkingLisenceComponent,
+      {
+        isAdd: true,
+        headerText: 'Giấy phép lao động'
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  addEmployeeVisaInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeVisaInfoComponent,
+      {
+        isAdd: true,
+        headerText: 'Thị thực'
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    });
+  }
+
+
 }
