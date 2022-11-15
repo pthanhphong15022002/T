@@ -37,6 +37,8 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
       this.isAfterRender = true
     }
     this.data = dialog?.dataService?.dataSelected
+
+    
     // this.formModel.entityName = 'HR_Employees';
     // this.formModel.formName = 'Employees';
     // this.formModel.gridViewName = 'grvEmployees';
