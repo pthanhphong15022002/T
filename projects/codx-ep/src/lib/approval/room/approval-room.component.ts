@@ -97,6 +97,7 @@ export class ApprovalRoomsComponent extends UIComponent {
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
+      status: 'approveStatus',
     };
 
     this.resourceField = {

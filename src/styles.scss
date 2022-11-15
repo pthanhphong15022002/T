@@ -925,10 +925,10 @@ codx-tag .codx-tag:hover {
 }
 
 .header-fixed.toolbar-fixed .wrapper .fillter-card-body {
-  height: calc(100vh - 212px);
-  max-height: calc(100vh - 212px);
+  height: calc(100vh - 228px);
+  max-height: calc(100vh - 228px);
   overflow: auto;
-  padding-top: 10px;
+  //  padding-top: 10px;
 }
 
 .card .card-header.fillter-card-header {
@@ -1042,6 +1042,13 @@ codx-tag .codx-tag:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+
+.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon).px-1 {
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+
 }
 
 /******* tam ***/

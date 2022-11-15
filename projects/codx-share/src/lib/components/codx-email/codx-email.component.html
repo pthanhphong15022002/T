@@ -372,6 +372,7 @@
       <div class="d-flex align-items-center mb-1">
         <codx-input
           type="combobox"
+          field="template"
           refValue="EmailTemplates"
           placeholder="Chọn mẫu"
           (valueChange)="valueChange($event)"
@@ -490,7 +491,7 @@
           type="textarea"
           field="message"
           format="ed"
-          [crrValue]="dialogETemplate.value.message"
+          [crrValue]="viewBody"
           height="250"
           (valueChange)="valueChange($event)"
           (keyup)="keyUp($event)"
@@ -716,7 +717,7 @@
     </div>
     <div class="card-footer border-0">
       <div class="d-flex justify-content-end">
-        <a class="btn btn-primary fw-bold" (click)="onSaveForm1(dialog1)">
+        <a class="btn btn-primary fw-bold" (click)="onSaveForm(dialog1)">
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>

@@ -389,24 +389,23 @@
                         [formModel]="formModelCustom"
                       >
                       </codx-label>
-                      <codx-input
+                      <!-- <codx-input
                         field="categoryID"
                         [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
+                        [disabled]="disableCateID"
+                      >
+                      </codx-input> -->
+                      <codx-input
+                        field="categoryID"
+                        [crrValue]="data?.categoryID"
+                        [placeholder]="gvSetup['CategoryID']['description']"
+                        [refValue]="gvSetup['CategoryID']['referedValue']"
+                        type="combobox"
                         (valueChange)="valueChange($event)"
                         [disabled]="disableCateID"
                       >
                       </codx-input>
-                      <!-- <codx-input
-                        field="categoryID"
-                        [crrValue]="data?.categoryID"
-                        [placeholder]="gvSetup['CategoryID']['Description']"
-                        [refValue]="gvSetup['CategoryID']['refValue']"
-                        refType="valuelist"
-                        (valueChange)="valueChange($event)"
-                        [disabled]="disableCateID"
-                      >
-                      </codx-input> -->
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -439,7 +438,6 @@
                         [disabled]="true"
                         [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
-                        [disabled]="modeView == '2'"
                       >
                       </codx-input>
                     </div>
