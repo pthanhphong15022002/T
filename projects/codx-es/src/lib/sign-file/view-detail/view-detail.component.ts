@@ -75,6 +75,7 @@ export class ViewDetailComponent implements OnInit {
   user: any; //user loggin
   dataReferences: any = [];
   vllRefType: string = 'TM018';
+  isAfterRender: boolean = false;
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
@@ -139,8 +140,9 @@ export class ViewDetailComponent implements OnInit {
 
   initForm() {
     this.dataReferences = [];
-    console.log(1);
-
+    if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
+      this.itemDetailTemplate.formModel = this.formModel;
+    }
     this.cache.valueList('TM018').subscribe((res) => {
       console.log('TM018', res);
     });
@@ -175,7 +177,6 @@ export class ViewDetailComponent implements OnInit {
                     this.esService
                       .getod(this.itemDetail?.recID)
                       .subscribe((res) => {
-                        console.log('1111111111111', res);
                         res.refType = this.itemDetail?.refType;
                         let item = this.dataReferences.filter((p) => {
                           p.recID == res.recID;
@@ -225,6 +226,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
     }
+    this.isAfterRender = true;
     // this.setHeight();
   }
 
