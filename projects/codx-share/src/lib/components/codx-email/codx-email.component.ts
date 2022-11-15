@@ -82,7 +82,6 @@ export class CodxEmailComponent implements OnInit {
   lstCc = [];
   lstBcc = [];
 
-  methodEdit: boolean = false;
   dataSource: any = {};
 
   width: any = 'auto';
@@ -112,7 +111,7 @@ export class CodxEmailComponent implements OnInit {
     this.dialog = dialog;
     this.formGroup = data?.data?.formGroup;
     this.templateID = data?.data?.templateID;
-    this.methodEdit = data?.data?.methodEdit ?? true;
+    this.isAddNew = data?.data?.isAddNew ?? true;
     console.log(this.templateID);
 
     this.cache.valueList('ES014').subscribe((res) => {
@@ -124,7 +123,7 @@ export class CodxEmailComponent implements OnInit {
     this.showSendLater = data.data?.showSendLater ?? true;
     this.showFrom = data.data?.showFrom ?? true;
 
-    this.isAddNew = data.data?.showFrom ?? false;
+    this.isAddNew = data.data?.isAddNew ?? false;
     this.files = data?.data?.files;
 
     this.renderer.listen('window', 'click', (e: Event) => {
@@ -246,6 +245,7 @@ export class CodxEmailComponent implements OnInit {
 
   setViewBody() {
     if (this.dataSource) {
+      if (!this.viewBody) this.viewBody = '';
       this.dataSource.forEach((element) => {
         this.viewBody = this.viewBody.replace(
           '[' + element.fieldName + ']',
@@ -259,6 +259,7 @@ export class CodxEmailComponent implements OnInit {
   setMessage() {
     if (this.dataSource) {
       let stringBody = this.viewBody;
+      if (!stringBody) stringBody = '';
       this.dataSource.forEach((element) => {
         stringBody = stringBody.replace(
           '[' + element.headerText + ']',
@@ -325,7 +326,7 @@ export class CodxEmailComponent implements OnInit {
             this.dialog && this.dialog.close();
           }
         });
-    } else if (this.methodEdit) {
+    } else if (this.isAddNew == false && this.templateID) {
       this.codxService
         .editEmailTemplate(this.dialogETemplate.value, lstSento)
         .subscribe((res) => {
@@ -347,12 +348,10 @@ export class CodxEmailComponent implements OnInit {
                 this.formGroup.patchValue({ emailTemplates: emailTemplates });
               }
             }
-
-            dialog1 && dialog1.close();
-            this.dialog && this.dialog.close();
+            this.dialog && this.dialog.close(res);
           }
         });
-    } else {
+    } else if (this.isAddNew) {
       this.codxService
         .addEmailTemplate(this.dialogETemplate.value, lstSento)
         .subscribe((res) => {
@@ -374,8 +373,7 @@ export class CodxEmailComponent implements OnInit {
                 this.formGroup.patchValue({ emailTemplates: emailTemplates });
               }
             }
-            dialog1 && dialog1.close();
-            this.dialog && this.dialog.close();
+            this.dialog && this.dialog.close(res);
           }
         });
     }
@@ -383,14 +381,67 @@ export class CodxEmailComponent implements OnInit {
 
   valueChange(event) {
     if (event?.field && event.component) {
-      if (event.field == 'isTemplate') {
-        this.isTemplate = event?.data;
-      } else if (event.field == 'sendTime') {
-        this.dialogETemplate.patchValue({
-          [event['field']]: event.data.fromDate,
-        });
-      } else {
-        this.dialogETemplate.patchValue({ [event['field']]: event.data });
+      switch (event.field) {
+        case 'isTemplate': {
+          this.isTemplate = event?.data;
+          break;
+        }
+        case 'sendTime': {
+          this.dialogETemplate.patchValue({
+            [event['field']]: event.data.fromDate,
+          });
+          break;
+        }
+        case 'template': {
+          console.log(event);
+
+          if (event?.data != '') {
+            this.codxService.getEmailTemplate(event?.data).subscribe((res1) => {
+              if (res1 != null) {
+                res1[0].recID = this.data?.recID;
+                res1[0].id = this.data?.id;
+                this.data = res1[0];
+                this.dialogETemplate.patchValue(res1[0]);
+                this.viewBody = res1[0]?.message ?? '';
+                this.setViewBody();
+
+                let lstUser = res1[1];
+                this.lstFrom = [];
+                this.lstTo = [];
+                this.lstCc = [];
+                this.lstBcc = [];
+                if (lstUser && lstUser.length > 0) {
+                  console.log(lstUser);
+
+                  lstUser.forEach((element) => {
+                    delete element.id;
+                    delete element.recID;
+                    element.transID = this.dialogETemplate.value.recID;
+                    switch (element.sendType) {
+                      case '1':
+                        this.lstFrom.push(element);
+                        break;
+                      case '2':
+                        this.lstTo.push(element);
+                        break;
+                      case '3':
+                        this.lstCc.push(element);
+                        break;
+                      case '4':
+                        this.lstBcc.push(element);
+                        break;
+                    }
+                  });
+                }
+              }
+              this.cr.detectChanges();
+            });
+          }
+          break;
+        }
+        default: {
+          this.dialogETemplate.patchValue({ [event['field']]: event.data });
+        }
       }
     }
     this.cr.detectChanges();
