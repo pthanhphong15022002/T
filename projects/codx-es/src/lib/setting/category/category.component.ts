@@ -216,12 +216,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         let data = {
           dialog: this.dialog,
           formGroup: null,
-          templateID: '5860917c-af36-4803-b90d-ed9f364985c6',
+          templateID: 'afc89b5d-ef88-4a02-a470-88843c4fa49e',
           showIsTemplate: true,
           showIsPublish: true,
           showSendLater: true,
           files: null,
-          isAddNew: true,
+          isAddNew: false,
         };
 
         let popEmail = this.callfunc.openForm(

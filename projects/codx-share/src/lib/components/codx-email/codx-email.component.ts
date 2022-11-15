@@ -245,6 +245,7 @@ export class CodxEmailComponent implements OnInit {
 
   setViewBody() {
     if (this.dataSource) {
+      if (!this.viewBody) this.viewBody = '';
       this.dataSource.forEach((element) => {
         this.viewBody = this.viewBody.replace(
           '[' + element.fieldName + ']',
@@ -258,6 +259,7 @@ export class CodxEmailComponent implements OnInit {
   setMessage() {
     if (this.dataSource) {
       let stringBody = this.viewBody;
+      if (!stringBody) stringBody = '';
       this.dataSource.forEach((element) => {
         stringBody = stringBody.replace(
           '[' + element.headerText + ']',
