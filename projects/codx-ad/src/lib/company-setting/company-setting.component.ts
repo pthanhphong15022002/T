@@ -129,7 +129,7 @@ export class CompanySettingComponent
   }
 
   clickEditContact(data) {
-    this.dialog = this.callfc.openForm(
+    var dialog = this.callfc.openForm(
       PopupContactComponent,
       '',
       800,
@@ -137,6 +137,11 @@ export class CompanySettingComponent
       '',
       data
     );
+    dialog.closed.subscribe((res) => {
+      if (res.event[0]) {
+        this.getURLEmbed(res.event[0].timeZone);
+      }
+    });
     this.changeDetectorRef.detectChanges();
   }
 
@@ -315,6 +320,9 @@ export class CompanySettingComponent
 
   urlEmbedSafe: any;
   getURLEmbed(url) {
-    this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    if (url) {
+      this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.changeDetectorRef.detectChanges();
+    }
   }
 }

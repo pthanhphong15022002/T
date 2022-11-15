@@ -1,12 +1,28 @@
-<codx-views [views]="views" #view [funcID]="funcID" [entityName]="'BS_RangeLines'" (buttonClick)="add($event)"
-  [button]="button" service="BS" assemblyName="ERM.Business.BS" className="RangeLinesBusiness"
-  method="LoadDataRangeLinesAsync" [predicate]="'RangeID=@0'" [dataValue]="'KUDOS'" entityName="BS_RangeLines"
-  (onLoading)="onLoading($event)"></codx-views>
+<codx-views
+  [views]="views"
+  #view
+  [funcID]="funcID"
+  [entityName]="'BS_RangeLines'"
+  (buttonClick)="add($event)"
+  [button]="button"
+  service="BS"
+  assemblyName="ERM.Business.BS"
+  className="RangeLinesBusiness"
+  method="LoadDataRangeLinesAsync"
+  [predicate]="'RangeID=@0'"
+  [dataValue]="'KUDOS'"
+  entityName="BS_RangeLines"
+  (onLoading)="onLoading($event)"
+></codx-views>
 
 <ng-template #itemCreateBy let-dataItem>
   <div class="d-flex align-items-center" #itemCreateBy>
     <div class="me-3">
-      <codx-img [objectId]="dataItem.createdBy" objectType="AD_Users" [width]="30">
+      <codx-img
+        [objectId]="dataItem.createdBy"
+        objectType="AD_Users"
+        [width]="30"
+      >
       </codx-img>
     </div>
     <div class="text-dark fs-6">{{ dataItem.createdName }}</div>
@@ -19,8 +35,14 @@
 
 <ng-template #imageItem let-dataItem>
   <div class="me-3">
-    <codx-img [objectId]="dataItem.recID" [objectName]="dataItem.breakName" [funcId]="funcID" aria-disabled="true"
-      [objectType]="view.formModel.entityName" [width]="30">
+    <codx-img
+      [objectId]="dataItem.recID"
+      [objectName]="dataItem.breakName"
+      aria-disabled="true"
+      [objectType]="view.formModel.entityName"
+      [width]="30"
+      [imgOn]="dataItem?.modifiedOn"
+    >
     </codx-img>
   </div>
 </ng-template>
@@ -45,7 +67,12 @@
 <ng-template #createdOn let-item>
   <div class="d-flex has-action-menu">
     <span>{{ item.createdOn | fmDT }}</span>
-    <codx-mfunc [dataItem]="item" [formModel]="view?.formModel" (clickMF)="clickMF($event, item)" type="hover">
+    <codx-mfunc
+      [dataItem]="item"
+      [formModel]="view?.formModel"
+      (clickMF)="clickMF($event, item)"
+      type="hover"
+    >
     </codx-mfunc>
   </div>
 </ng-template>

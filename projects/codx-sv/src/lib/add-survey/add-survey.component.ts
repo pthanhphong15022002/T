@@ -697,7 +697,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         )
       );
       data.answerType = answerType;
-      if (answerType == 'O' || answerType == 'C' || answerType == 'L') {
+      if (answerType == 'O' || answerType == 'C' || answerType == 'L' || answerType == 'R') {
         if (itemQuestion.answerType != 'O' && itemQuestion.answerType != 'C') {
           data.answers = new Array();
           let dataAnswerTemp = {
@@ -820,7 +820,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   sortSession() {
     var obj = {
-      data: this.recID,
+      data: this.questions,
     };
     var dialog = this.call.openForm(
       SortSessionComponent,
@@ -832,6 +832,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
+        debugger;
+        this.questions = res.event;
       }
     });
   }
