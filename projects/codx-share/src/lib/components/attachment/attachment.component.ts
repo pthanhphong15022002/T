@@ -610,7 +610,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
-    debugger;
     if (this.data == undefined) this.data = [];
 
     let total = this.fileUploadList.length;
