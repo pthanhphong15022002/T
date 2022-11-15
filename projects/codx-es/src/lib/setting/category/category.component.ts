@@ -221,9 +221,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           showIsPublish: true,
           showSendLater: true,
           files: null,
+          isAddNew: true,
         };
 
-        this.callfunc.openForm(
+        let popEmail = this.callfunc.openForm(
           CodxEmailComponent,
           '',
           800,
@@ -231,6 +232,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           '',
           data
         );
+
+        popEmail.closed.subscribe((res) => {
+          if (res.event) {
+            console.log(res.event);
+          }
+        });
         break;
     }
   }
