@@ -1,6 +1,5 @@
-
-<div class="h-100 d-flex mt-6">
-  <div class="d-flex flex-column bg-white me-5 rounded overflow-auto h-100 p-5" [style.width.px]="widthLeft">
+<div class="h-100 bg-white w-100 rounded-3 d-flex">
+  <div class="d-flex flex-column border-right overflow-auto h-100 p-5" [style.width.px]="widthLeft">
     <ng-template [ngTemplateOutlet]="tempMenu"></ng-template>
     <ng-container *ngIf="gridViewSetup">
       <div *ngFor="let item of dataGroup" class="my-2">
@@ -56,30 +55,30 @@
     </ng-container>
   </div>
 
-  <div class="d-flex bg-white w-100 rounded ms-6">
+  <div class="d-flex w-100 p-5 pb-0">
     <div class="search-header">
       <div class="d-flex justify-content-center">
-       
+
       </div>
     </div>
     <div class="d-flex flex-column justify-content-start w-100">
-      <codx-searchbar (searchEvent)="changeSearch($event)" class="text" style="width:400px"></codx-searchbar>
-      <div class="mb-5 mt-6">
+      <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
         <span class="fs-4 fw-bold text-dark">Khoảng <span class="text-danger">{{count}}</span> kết quả được tìm
           thấy</span>
+        <codx-searchbar (searchEvent)="changeSearch($event)" class="text w-300px"></codx-searchbar>
       </div>
       <div class="overflow-auto pe-5 h-searchtmp">
-        <div class="ps-5" [style.maxWidth.px]="widthItemTmp">
-          <ng-container *ngIf="searchData && searchData[0]">
-            <ng-container *ngFor="let data of searchData[0]">
-              <div (click)="onSelected(data)">
-                <ng-container *ngTemplateOutlet="centerTmp ; context: { $implicit: data}"></ng-container>
-              </div>
-              <!-- [icoDateCss]="'icon-access_alarm'" -->
-              <!-- [icoDateCss] codx-temp-full bị lỗi do core mới nên tạm xóa  -->
-            </ng-container>
+        <!-- <div class="ps-5" [style.maxWidth.px]="widthItemTmp"> </div> -->
+        <ng-container *ngIf="searchData && searchData[0]">
+          <ng-container *ngFor="let data of searchData[0]">
+            <div (click)="onSelected(data)">
+              <ng-container *ngTemplateOutlet="centerTmp ; context: { $implicit: data}"></ng-container>
+            </div>
+            <!-- [icoDateCss]="'icon-access_alarm'" -->
+            <!-- [icoDateCss] codx-temp-full bị lỗi do core mới nên tạm xóa  -->
           </ng-container>
-        </div>
+        </ng-container>
+
       </div>
       <div *ngIf="!hideN" class="py-3">
         <ul class="pagination">

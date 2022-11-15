@@ -39,26 +39,23 @@ export class PopupAddProcessStepsComponent implements OnInit {
   user: any;
   data: any;
   funcID: any;
-  showLabelAttachment = false;
-  stepType = 'C';
   title = '';
   action = '';
   textChange = '';
   titleActon = '';
+  stepType = 'C';
   vllShare = 'TM003';
   readOnly = false;
-  listUser = [];
-  isAlert = true;
-  isEmail = true;
   isHaveFile = false;
+  showLabelAttachment = false;
+  listUser = [];
+  listOwnerID = [];
   referenceText = [];
+  listOwnerDetails = [];
   popover: any;
+  formModelMenu :FormModel ;
   crrIndex = 0;
 
-  listOwnerID = [];
-  listOwnerDetails = [];
-  lstOwners = [];
-  formModelMenu :FormModel ;
 
   constructor(
     private bpService: CodxBpService,
@@ -74,6 +71,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );   
+
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
@@ -95,8 +93,7 @@ export class PopupAddProcessStepsComponent implements OnInit {
         this.listOwnerID =  this.processSteps.owners.map((item) => {
           return item?.objectID ? item.objectID : null ;
         }) 
-      }
-           
+      }         
     }
   }
 
@@ -176,7 +173,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
       .subscribe((data) => {
         if (data) {
           this.dialog.close(data);
-          this.api.callSv('BP','BP','ProcessStepsBusiness','UpdateOwnersAsync',[this.processSteps.recID, this.lstOwners]).subscribe();
         } else this.dialog.close();
       });
     // }
@@ -257,7 +253,9 @@ export class PopupAddProcessStepsComponent implements OnInit {
     else this.isHaveFile = false;
     if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
-  valueChangeSwitch(e) {}
+  valueChangeAlert(e) {
+    this.processSteps[e?.field] = e.data;
+  }
 
   //endregion
   convertReference() {
@@ -319,17 +317,20 @@ export class PopupAddProcessStepsComponent implements OnInit {
       this.bpService
       .getOwnersByParentID( [id])
       .subscribe((data) => {
+        let ownerIDs = [];
+        let owenrs = [];
         data.forEach((item) => {
           if(item.objectID){
-            this.listOwnerID.push(item.objectID);
+            ownerIDs.push(item.objectID);
             var owner = new BP_ProcessOwners();
             owner.objectType = item.objectType;
             owner.objectID = item.objectID;
             owner.rAIC = item.raic;
-            this.owners.push(owner);
-            this.lstOwners.push(owner);
+            owenrs.push(owner);
           }
         })
+        this.listOwnerID = [...ownerIDs];
+        this.owners = [...owenrs];
         this.getListUser();               
       });
     }
