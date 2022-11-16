@@ -46,9 +46,8 @@
                 </div>
                 <codx-input
                   type="text"
-                  class="form-control"
                   field="legalName"
-                  [crrValue]="data.legalName"
+                  [crrValue]="data?.legalName"
                   placeholder="Tên công ty"
                   (valueChange)="valueChange($event)"
                 >
@@ -312,11 +311,11 @@
                       >
                     </div>
                   </div>
-                  <div class="col-7">
+                  <div class="col-7" *ngIf="urlEmbedSafe">
                     <div class="contact-map">
                       <iframe
                         class="contact-map-size"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.1916277478313!2d106.67422991524113!3d10.796630561771677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528d61d708d9b%3A0xa88abf9cfd8e5128!2zMjMgTmd1eeG7hW4gVGjhu4sgSHXhu7NuaCwgUGjGsOG7nW5nIDgsIFBow7ogTmh14bqtbiwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaWV0bmFt!5e0!3m2!1sen!2sus!4v1657168799748!5m2!1sen!2sus"
+                        [src]="urlEmbedSafe"
                         allowfullscreen=""
                         loading="lazy"
                       ></iframe>

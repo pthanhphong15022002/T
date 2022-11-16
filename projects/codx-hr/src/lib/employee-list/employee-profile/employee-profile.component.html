@@ -169,7 +169,7 @@
                     <codx-label
                       name="lblHRProcess"
                       [formModel]="view.formModel"
-                      default="Quá trình nhân sự"
+                      default="KIẾN THỨC"
                     >
                     </codx-label>
                   </div>
@@ -301,7 +301,7 @@
                   id="pane_4"
                   [class]="crrTab == 4 ? 'active' : ''"
                 >
-                  <ng-container [ngTemplateOutlet]="info"></ng-container>
+                  <ng-container [ngTemplateOutlet]="knowledge"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
@@ -1008,7 +1008,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeePartyInfo()"
+                    (click)="addEmployeePassportInfo()"
                   ></span>
                 </a>
               </div>
@@ -1101,7 +1101,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeePartyInfo()"
+                    (click)="addEmployeeVisaInfo()"
                   ></span>
                 </a>
               </div>
@@ -1195,7 +1195,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeePartyInfo()"
+                    (click)="addEmployeeWorkingLisenceInfo()"
                   ></span>
                 </a>
               </div>
@@ -1292,7 +1292,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeePartyInfo()"
+                    (click)="addEmployeeVisaInfo()"
                   ></span>
                 </a>
               </div>
@@ -2647,7 +2647,7 @@
   </div>
 </ng-template>
 
-<ng-template #processingInfo>
+<ng-template #knowledge>
   <div
     class="pw-content w-100 pw-lg scroll-y"
     data-kt-scroll="true"
@@ -2666,6 +2666,188 @@
                 name="lblEmployeeProcessing"
                 [formModel]="view.formModel"
                 default="Qúa trình nhân sự"
+              >
+              </codx-label>
+            </div>
+            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+              <span class="icon-edit icon-18"></span>
+            </a>
+          </div>
+          <ngx-skeleton-loader
+            count="5"
+            animation="progress"
+          ></ngx-skeleton-loader>
+
+          <!-- Degree -->
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">
+                  <codx-label
+                    name="lblEmployeeDegree"
+                    [formModel]="view.formModel"
+                    default="Bằng cấp"
+                  >
+                  </codx-label>
+                </div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeSelfInfo()"
+                  ></span>
+                </a>
+              </div>
+              <div class="row form-group"></div>
+            </div>
+          </div>
+
+          <!-- cer -->
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">
+                  <codx-label
+                    name="lblEmployeeCertificate"
+                    [formModel]="view.formModel"
+                    default="CHỨNG CHỈ"
+                  >
+                  </codx-label>
+                </div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeSelfInfo()"
+                  ></span>
+                </a>
+              </div>
+              <div class="row form-group"></div>
+            </div>
+          </div>
+
+          <!-- skill -->
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">
+                  <codx-label
+                    name="lblEmployeeSkill"
+                    [formModel]="view.formModel"
+                    default="KỸ NĂNG"
+                  >
+                  </codx-label>
+                </div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeSelfInfo()"
+                  ></span>
+                </a>
+              </div>
+
+              <div class="row form-group"></div>
+            </div>
+          </div>
+
+          <!-- training -->
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">
+                  <codx-label
+                    name="lblEmployeeTraining"
+                    [formModel]="view.formModel"
+                    default="Đào tạo"
+                  >
+                  </codx-label>
+                </div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeSelfInfo()"
+                  ></span>
+                </a>
+              </div>
+              <!-- documentNo-status -->
+              <div class="row form-group"></div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #processingInfo>
+  <div
+    class="pw-content w-100 pw-lg scroll-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".employee-container"
+    data-kt-scroll-offset="0px"
+  >
+    <div class="user-content flex-row-fluid">
+      <ng-container>
+        <div class="user-profile overview d-block mb-3" id="MWP00201">
+          <div class="d-flex justify-content-between mb-2 mt-6">
+            <div class="fw-bold fs-4 text-primary">
+              <codx-label
+                name="lblEmployeeKnowledge"
+                [formModel]="view.formModel"
+                default="Quá trình nhân sự"
               >
               </codx-label>
             </div>
@@ -2698,7 +2880,7 @@
                 <span class="icon-arrow_drop_down icon-24"></span>
               </a>
             </div>
-            <div #curContract class="border mb-3">
+            <div class="border mb-3">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
@@ -2709,7 +2891,7 @@
                   ></span>
                 </a>
               </div>
-              <div class="row form-group">'dang lam'</div>
+              <div class="row form-group"></div>
             </div>
           </div>
           <div class="border rounded-2 p-6">
@@ -2732,7 +2914,7 @@
                 <span class="icon-arrow_drop_down icon-24"></span>
               </a>
             </div>
-            <div #curContract class="border mb-3">
+            <div class="border mb-3">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
@@ -2769,7 +2951,7 @@
                 <span class="icon-arrow_drop_down icon-24"></span>
               </a>
             </div>
-            <div #curContract class="border mb-3">
+            <div class="border mb-3">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
@@ -2807,7 +2989,7 @@
                 <span class="icon-arrow_drop_down icon-24"></span>
               </a>
             </div>
-            <div #curContract class="border mb-3">
+            <div class="border mb-3">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >
@@ -2845,7 +3027,7 @@
                 <span class="icon-arrow_drop_down icon-24"></span>
               </a>
             </div>
-            <div #curContract class="border mb-3">
+            <div class="border mb-3">
               <div
                 class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
               >

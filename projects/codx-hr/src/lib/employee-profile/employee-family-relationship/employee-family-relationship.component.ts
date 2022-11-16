@@ -7,8 +7,6 @@ import {
   OnInit
 } from '@angular/core';
 
-import { ActivatedRoute } from '@angular/router';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   SidebarModel,
   UIComponent,
@@ -29,7 +27,7 @@ import { EmployeeFamilyRelationshipDetailComponent } from '../employee-family-re
   styleUrls: ['./employee-family-relationship.component.css']
 })
 export class EmployeeFamilyRelationshipComponent extends UIComponent implements OnInit {
-  FormModel: FormModel;
+  formModel: FormModel;
   dialog: DialogRef;
   data;
   itemDetail;
@@ -63,7 +61,7 @@ export class EmployeeFamilyRelationshipComponent extends UIComponent implements 
    @ViewChild('panelRight') panelRight: TemplateRef<any>;
    @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
 
-   onInit(): void {
+  onInit(): void {
   }
 
   ngAfterViewInit(): void{

@@ -90,24 +90,20 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
               if (this.user.userName)
                 res.save['createdName'] = this.user.userName;
               this.imageUpload
-                .updateFileDirectReload(res.save.recID)
+                .updateFileDirectReload(res.save[0].recID)
                 .subscribe((result) => {
-                  if (result) {
-                    this.loadData.emit();
-                  }
-                  var obj = { data: res.save, file: result };
+                  this.loadData.emit();
+                  var obj = { data: res.save[0], file: result };
                   this.dialog.close(obj);
                 });
             } else this.notification.notifyCode('SYS023');
           } else {
             if (res && res.update) {
               this.imageUpload
-                .updateFileDirectReload(res.update.recID)
+                .updateFileDirectReload(res.update[0].recID)
                 .subscribe((result) => {
-                  if (result) {
-                    this.loadData.emit();
-                  }
-                  var obj = { data: res.update, file: result };
+                  this.loadData.emit();
+                  var obj = { data: res.update[0], file: result };
                   this.dialog.close(obj);
                 });
             } else this.notification.notifyCode('SYS007');

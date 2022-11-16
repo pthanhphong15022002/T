@@ -665,6 +665,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.tmpAttendeesList,
           this.data.startDate.toUTCString(),
           this.data.endDate.toUTCString(),
+          this.data.recID
         ]
       )
       .subscribe((res) => {
