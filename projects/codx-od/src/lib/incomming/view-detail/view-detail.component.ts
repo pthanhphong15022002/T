@@ -514,7 +514,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'SYS04': {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
-          debugger;
           this.view.dataService.dataSelected.recID = res?.recID;
           this.view.dataService.dataSelected.dispatchNo = res?.dispatchNo
           let option = new SidebarModel();
