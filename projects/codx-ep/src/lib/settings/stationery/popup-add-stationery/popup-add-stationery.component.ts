@@ -53,7 +53,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     },
   ];
   data: any = {};
-  dialog: DialogRef;
+  dialogRef: DialogRef;
   isAdd = true;
   colorItem: any;
   listColor = [];
@@ -79,8 +79,8 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.tmpTitle = dt?.data[2];
-    this.dialog = dialog;
-    this.formModel = this.dialog.formModel;
+    this.dialogRef = dialog;
+    this.formModel = this.dialogRef.formModel;
     if(this.isAdd){
       this.imgRecID=null;
     }
@@ -154,7 +154,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     } else {
       index = null;
     }
-    this.dialog.dataService
+    this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt), index)
       .subscribe(async (res) => {
         if (res.save || res.update) {
@@ -171,11 +171,11 @@ export class PopupAddStationeryComponent extends UIComponent {
                   if (result) {
                     //xử lí nếu upload ảnh thất bại
                     //...
-                    this.dialog && this.dialog.close(this.returnData);
+                    this.dialogRef && this.dialogRef.close(this.returnData);
                   }
                 });
             } else {
-              this.dialog && this.dialog.close(this.returnData);
+              this.dialogRef && this.dialogRef.close(this.returnData);
             }
           }
         } else {
