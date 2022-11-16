@@ -96,8 +96,8 @@ export class PopupAddStationeryComponent extends UIComponent {
       .subscribe((autoN) => {
         if (autoN) {
           if (!autoN?.stop) {
-            this.autoNumDisable = true;            
-          }          
+            this.autoNumDisable = true;
+          }
         }
       });
     this.columnsGrid = [

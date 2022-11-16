@@ -286,7 +286,6 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
         console.log('group ne ',res);
         if(this.countSignalr == 0){
         this.view.dataService.add(res,0).subscribe();
-        debugger;
         this.groupId = res.groupID;
         //this.view.dataService.add(resp.event,0).subscribe();
           //this.SignalrMess = [];
@@ -332,7 +331,6 @@ export class ChattingComponent extends UIComponent implements AfterViewInit {
         this.lstData = res.datas;
       }
     });
-    debugger;
     /* if (this.objectID) {
       this.getFileByObjectID();
     } else {
@@ -513,7 +511,6 @@ valueChange(event:any){
   this.detectorRef.detectChanges();
 }
 fileAdded(event: any) {
-  debugger;
   if (event?.data){
     this.messageType = "2";
 

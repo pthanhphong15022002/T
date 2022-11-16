@@ -203,7 +203,7 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
               .subscribe((x) => {
                 this.changeDetectorRef.detectChanges();
               });
-          else if (x.event) {
+          if (x.event) {
             x.event.modifiedOn = new Date();
             this.view.dataService.update(x.event).subscribe();
           }
@@ -215,31 +215,33 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
   edit(data?) {
     if (data) {
       data.uMID = data.umid;
-      this.view.dataService.dataSelected = data;if (this.popupClosed) {
-        this.view.dataService
-          .edit(this.view.dataService.dataSelected)
-          .subscribe((res) => {
-            this.popupClosed = false;
-            let dataSelected = this.view?.dataService?.dataSelected;
-            let option = new SidebarModel();
-            option.Width = '800px';
-            option.DataService = this.view?.dataService;
-            option.FormModel = this.formModel;
-            this.dialog = this.callfc.openSide(
-              PopupAddStationeryComponent,
-              [dataSelected, false, this.popupTitle],
-              option
-            );
-            this.dialog.closed.subscribe((x) => {
-              this.popupClosed = true;
-              if (!x.event) this.view.dataService.clear();
-              if (x?.event) {
-                x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => {});
-              }
-            });
+      this.view.dataService.dataSelected = data;
+    }
+
+    if (this.popupClosed) {
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          this.popupClosed = false;
+          let dataSelected = this.view?.dataService?.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '800px';
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          this.dialog = this.callfc.openSide(
+            PopupAddStationeryComponent,
+            [dataSelected, false, this.popupTitle],
+            option
+          );
+          this.dialog.closed.subscribe((x) => {
+            this.popupClosed = true;
+            if (!x.event) this.view.dataService.clear();
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe((res) => {});
+            }
           });
-      }
+        });
     }
 
     
@@ -299,7 +301,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         this.view.dataService,
       ])
       .closed.subscribe((x) => {
-        debugger;
         if (!x.event) this.view.dataService.clear();
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
