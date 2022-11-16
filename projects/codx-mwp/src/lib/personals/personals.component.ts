@@ -63,13 +63,11 @@ export class PersonalsComponent implements OnInit {
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.menuUrl = this.funcID;
-      this.changedt.detectChanges();
     });
     this.refreshAvatar();
   }
 
   ngAfterViewInit() {
-    this.changedt.detectChanges();
   }
 
   refreshAvatar() {
