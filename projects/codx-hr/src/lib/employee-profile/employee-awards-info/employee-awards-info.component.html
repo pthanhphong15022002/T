@@ -1,0 +1,36 @@
+<codx-views 
+    #view
+    [views]="views"
+    [funcID]="funcID"
+    [service]="service"
+    [assemblyName]="assemblyName"
+    [entityName]="entity"
+    [className]="className"
+></codx-views>
+
+<ng-template #panelRight>
+    
+    <lib-employee-disciplines-detail
+    [data]="data"
+    >
+
+    </lib-employee-disciplines-detail>
+    <lib-view-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="view?.formModel"
+    [view]="view"
+>
+    </lib-view-detail>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+    <codx-temp-full>
+
+    </codx-temp-full>
+</ng-template>
+<!-- [title]
+[desc]
+[status]
+[statusVll] -->

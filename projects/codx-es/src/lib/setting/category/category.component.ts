@@ -216,14 +216,15 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         let data = {
           dialog: this.dialog,
           formGroup: null,
-          templateID: '5860917c-af36-4803-b90d-ed9f364985c6',
+          templateID: 'afc89b5d-ef88-4a02-a470-88843c4fa49e',
           showIsTemplate: true,
           showIsPublish: true,
           showSendLater: true,
           files: null,
+          isAddNew: false,
         };
 
-        this.callfunc.openForm(
+        let popEmail = this.callfunc.openForm(
           CodxEmailComponent,
           '',
           800,
@@ -231,6 +232,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           '',
           data
         );
+
+        popEmail.closed.subscribe((res) => {
+          if (res.event) {
+            console.log(res.event);
+          }
+        });
         break;
     }
   }
@@ -309,6 +316,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           let popupEdit = this.callfunc.openSide(
             PopupAddCategoryComponent,
             {
+              disableCategoryID: '1',
               data: evt?.data,
               isAdd: false,
               headerText: evt.text + ' ' + this.funcList?.customName ?? '',

@@ -129,7 +129,7 @@ export class CompanySettingComponent
   }
 
   clickEditContact(data) {
-    this.dialog = this.callfc.openForm(
+    var dialog = this.callfc.openForm(
       PopupContactComponent,
       '',
       800,
@@ -137,6 +137,11 @@ export class CompanySettingComponent
       '',
       data
     );
+    dialog.closed.subscribe((res) => {
+      if (res.event[0]) {
+        this.getURLEmbed(res.event[0].timeZone);
+      }
+    });
     this.changeDetectorRef.detectChanges();
   }
 
@@ -185,6 +190,7 @@ export class CompanySettingComponent
             this.imageLogo = image;
           }
 
+          if (this.data.timeZone) this.getURLEmbed(this.data.timeZone);
           // this.data.companyCode.toString().toLowerCase();
           this.detectorRef.detectChanges();
         }
@@ -310,5 +316,13 @@ export class CompanySettingComponent
       bytes[i] = ascii;
     }
     return bytes;
+  }
+
+  urlEmbedSafe: any;
+  getURLEmbed(url) {
+    if (url) {
+      this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.changeDetectorRef.detectChanges();
+    }
   }
 }

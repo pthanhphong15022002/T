@@ -94,13 +94,7 @@
                 <span class="icon-server text-dark icon-16 me-1"></span>
                 <span #phases class="">
                   {{
-                    data.phases | formatvalue
-                    : view.formModel
-                    : "phases"
-                    : phases
-                    : "Processes"
-                    : "grvProcesses"
-                    | async
+                    data.phases
                     }}
                 </span>
               </div>
@@ -109,30 +103,12 @@
                   class="icon-format_list_numbered text-danger icon-16 me-1"
                 ></span>
                 <span #activities class="">
-                  {{
-                    data.activities | formatvalue
-                    : view.formModel
-                    : "activities"
-                    : activities
-                    : "Processes"
-                    : "grvProcesses"
-                    | async
-                    }}
+                  {{data.activities}}
                 </span>
               </div>
               <div class="d-flex me-3">
                 <span class="icon-attach_file text-primary icon-16 me-1"></span>
-                <span #attachments class=" ">
-                  {{
-                    data.attachments | formatvalue
-                    : view.formModel
-                    : "attachments"
-                    : attachments
-                    : "Processes"
-                    : "grvProcesses"
-                    | async
-                    }}
-                </span>
+                {{data.attachments}}
               </div>
             </div>
           </div>

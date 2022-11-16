@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
@@ -18,28 +19,29 @@ import { AD_CompanySettings } from '../../models/AD_CompanySettings.models';
   styleUrls: ['./popup-contact.component.css'],
 })
 export class PopupContactComponent implements OnInit {
-  data: any;
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Liên hệ';
   option: any = 'contact';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService,
+    private sanitizer: DomSanitizer,
     private notiService: NotificationsService,
     private adService: CodxAdService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dt?.data;
+    this.items = dt?.data;
     this.dialog = dialog;
   }
 
   ngOnInit(): void {
-    this.items = this.data;
+    this.getURLEmbed(this.items.timeZone);
   }
 
   update() {
+    this.items;
+    debugger;
     this.adService
       .updateInformationCompanySettings(this.items, this.option)
       .subscribe((response) => {
@@ -48,33 +50,35 @@ export class PopupContactComponent implements OnInit {
         } else {
           this.notiService.notifyCode('SYS021');
         }
+        this.dialog.close(response);
+        this.changeDetectorRef.detectChanges();
       });
-    this.dialog.close();
-    this.changeDetectorRef.detectChanges();
   }
 
-  txtValuePhone(e: any) {
-    this.items.phone = e.data;
-    console.log(this.items.phone);
+  valueChange(e: any) {
+    if (e) {
+      this.items[e.field] = e.data;
+    }
   }
 
-  txtValueFaxNo(e: any) {
-    this.items.faxNo = e.data;
-    console.log(this.items.phone);
+  valueChangeTimeZone(e: any) {
+    if (e) {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(e.data, 'text/html');
+      if (doc) {
+        var htmlE: any = doc.body.childNodes[0];
+        if (htmlE?.src) {
+          this.items.timeZone = htmlE.src;
+          this.getURLEmbed(htmlE.src);
+        }
+      }
+    }
   }
 
-  txtValueEmail(e: any) {
-    this.items.email = e.data;
-    console.log(this.items.phone);
-  }
-
-  txtValueWebPage(e: any) {
-    this.items.webPage = e.data;
-    console.log(this.items.phone);
-  }
-
-  txtValueStreet(e: any) {
-    this.items.street = e.data;
-    console.log(this.items.phone);
+  urlEmbedSafe: any;
+  getURLEmbed(url) {
+    if (url) {
+      this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
   }
 }

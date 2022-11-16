@@ -9,6 +9,7 @@
   (clickMF)="openFormFuncID($event)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
   class="h-100"
+  *ngIf="isAfterRender"
 >
   <ng-template #header>
     <div class="d-flex justify-content-between flex-grow-1 mb-3">

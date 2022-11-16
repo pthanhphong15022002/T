@@ -242,7 +242,6 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
           if (res.msgBodyData[0][0] == true) {
             this.closeHangconghien();
             let data = res.msgBodyData[0][2];
-            console.log('check add', res);
             this.imageUpload
               .updateFileDirectReload(data.recID)
               .subscribe((result) => {
@@ -274,16 +273,17 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(
+      var dialog = this.callfc.openSide(
         AddDedicationRankComponent,
         obj,
         option
       );
-      this.dialog.closed.subscribe((e: any) => {
+      dialog.closed.subscribe((e: any) => {
         if (e?.event?.file) {
           e.event.data.modifiedOn = new Date();
           this.view.dataService.update(e.event?.data).subscribe();
         }
+        this.view.dataService.clear();
         this.changedr.detectChanges();
       });
     });
@@ -302,12 +302,12 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
+        var dialog = this.callfc.openSide(
           AddDedicationRankComponent,
           obj,
           option
         );
-        this.dialog.closed.subscribe((e: any) => {
+        dialog.closed.subscribe((e: any) => {
           if (e?.event?.data) e.event.data.modifiedOn = new Date();
           this.view.dataService.update(e.event?.data).subscribe();
           this.changedr.detectChanges();

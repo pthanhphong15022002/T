@@ -1,12 +1,14 @@
-<codx-views
-  #view_task
-  [views]="views"
-  (buttonClick)="add($event)"
-  [button]="button"
-  [entityName]="'OM_OKRCompany'"
-  [assemblyName]="'OM'"
-  [service]="'OM'"
-  [selectedFirst]="false"
-  idField="recID"
->
-</codx-views>
+<div style="height: 900px">
+  <codx-views
+    #view_task
+    [views]="views"
+    (buttonClick)="add($event)"
+    [button]="button"
+    [entityName]="'OM_OKRCompany'"
+    [assemblyName]="'OM'"
+    [service]="'OM'"
+    [selectedFirst]="false"
+    idField="recID"
+  >
+  </codx-views>
+</div>

@@ -94,7 +94,7 @@ export class PopupDriverAssignComponent extends UIComponent {
       if(res!=null)
       {
         this.data.driverName=res;
-        this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_TEMP Đợi messcode từ BA   
+        this.notificationsService.notifyCode('SYS034');
         this.dialogRef && this.dialogRef.close(this.data); 
       }
     })

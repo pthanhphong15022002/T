@@ -1,13 +1,4 @@
-<codx-views
-  #view
-  [views]="views"
-  [entityName]="'OM_OKRCompany'"
-  [assemblyName]="'OM'"
-  [service]="'OM'"
-  [selectedFirst]="false"
-  idField="recID"
->
-</codx-views>
+<codx-views #view [views]="views"> </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
     <lib-okr-toolbar (click)="click($event)"></lib-okr-toolbar>
@@ -58,7 +49,7 @@
                 ></codx-label>
               </div>
             </ng-template>
-            <ng-template #content   class="position-absolute">
+            <ng-template #content>
               <lib-okr-tasks></lib-okr-tasks>
             </ng-template>
           </e-tabitem>

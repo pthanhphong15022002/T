@@ -89,6 +89,24 @@ export class CodxBpService {
     );
   }
 
+  setViewRattings(recID: string, ratting: string, comment: string){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'SetViewRattingAsync',
+      [recID, ratting, comment]
+    );
+  }
+
+  loadUserName(id: string){
+    return this.api.exec<any>(
+      'AD',
+      'UsersBusiness',
+      'GetAsync',
+      id
+    );
+  }
+
   public listTags = new BehaviorSubject<any>(null);
   isListTags = this.listTags.asObservable();
 
