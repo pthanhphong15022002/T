@@ -160,8 +160,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         area.stepNo == this.pdfView.stepNo
       );
     });
-
-    if (missingImgArea) {
+    if (missingImgArea || this.pdfView.lstAreas.length == 0) {
       this.notify.alertCode('ES019').subscribe((x) => {
         if (x.event.status == 'Y') {
           this.mode = mode;

@@ -63,7 +63,7 @@
                   "
                   cdkDragBoundary=".example-boundary"
                   cdkDrag
-                > 
+                >
                   <div
                     class="col-lg-8 control-section inplace-editor-control-section form-layout"
                     id="inplace-editor-control"
@@ -161,9 +161,38 @@
                               (valueChange)="valueChange($event, itemQuestion)"
                               [crrValue]="itemQuestion.mandatory"
                             ></codx-input>
-                            <span
-                              class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
-                            ></span>
+                            <div ngbDropdown class="dropdown" container="body">
+                              <a
+                                href="javascript:void(0)"
+                                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                                ngbDropdownToggle
+                                id="dropdownMenuButton1"
+                                aria-expanded="false"
+                              >
+                                <span
+                                  class="icon-more_vert icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
+                                >
+                                </span>
+                              </a>
+                              <ul
+                                ngbDropdownMenu
+                                aria-labelledby="dropdownMenuButton1"
+                                class="MF"
+                              >
+                                <li>
+                                  <a (click)="hideComment(itemSession.seqNo, itemQuestion.seqNo)"
+                                    ngbDropdownItem
+                                    href="javascript:void(0)"
+                                    class="mt-30px"
+                                  >
+                                    <codx-label
+                                      fiedName="formatAlignLeft"
+                                      default="Mô tả"
+                                    ></codx-label>
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
                           </div>
                         </ng-container>
                       </form>
@@ -604,21 +633,48 @@
   let-itemQuestion="itemQuestion"
 >
   <div class="d-flex">
-    <div class="form-group question">
-      <div class="title-des">
-        <ejs-inplaceeditor
-          #inplaceCommentEditor
-          mode="Inline"
-          emptyText="Enter your comment"
-          submitOnEnter="false"
-          type="RTE"
-          name="rte"
-          data-underline="false"
-          [model]="titleEditorModel"
-          [validationRules]="commentRule"
-          [value]="itemQuestion.question"
+    <div #header>
+      <div class="form-group question">
+        <div
+          [ngClass]="
+            itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
+          "
         >
-        </ejs-inplaceeditor>
+          <ejs-inplaceeditor
+            #inplaceCommentEditor
+            mode="Inline"
+            emptyText="Enter your comment"
+            submitOnEnter="false"
+            type="RTE"
+            name="rte"
+            data-underline="false"
+            [model]="titleEditorModel"
+            [validationRules]="commentRule"
+            [value]="itemQuestion.question"
+          >
+          </ejs-inplaceeditor>
+        </div>
+      </div>
+      <div class="form-group question">
+        <div
+          [ngClass]="
+            itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
+          "
+        >
+          <ejs-inplaceeditor
+            #inplaceCommentEditor
+            mode="Inline"
+            emptyText="Enter your comment"
+            submitOnEnter="false"
+            type="RTE"
+            name="rte"
+            data-underline="false"
+            [model]="titleEditorModel"
+            [validationRules]="commentRule"
+            [value]="itemQuestion.question"
+          >
+          </ejs-inplaceeditor>
+        </div>
       </div>
     </div>
     <ng-container #questionMF *ngIf="itemQuestion?.active">
@@ -807,8 +863,14 @@
           {{ itemR.answer }}
         </td>
         <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers)">
-          <span class="icon-radio_button_unchecked icon-radio" *ngIf="itemQuestion.answerType == 'O2'"></span>
-          <span class="icon-check_box_outline_blank" *ngIf="itemQuestion.answerType == 'C2'"></span>
+          <span
+            class="icon-radio_button_unchecked icon-radio"
+            *ngIf="itemQuestion.answerType == 'O2'"
+          ></span>
+          <span
+            class="icon-check_box_outline_blank"
+            *ngIf="itemQuestion.answerType == 'C2'"
+          ></span>
         </td>
       </tr>
     </table>
@@ -1131,7 +1193,8 @@
           name="rte"
           data-underline="false"
           [model]="titleEditorModel"
-          [validationRules]="commentRule"
+          [validationRules]=""
+          [value]="itemSession.question"
         >
         </ejs-inplaceeditor>
         <ng-container #questionMF>
@@ -1161,7 +1224,7 @@
                       default="Sao chép phần"
                     ></codx-label>
                   </a>
-                </li> 
+                </li>
                 <li>
                   <a
                     (click)="sortSession()"
@@ -1204,7 +1267,7 @@
         name="rte"
         data-underline="false"
         [model]="descriptionEditorModel"
-        [validationRules]="commentRule"
+        [validationRules]=""
       >
       </ejs-inplaceeditor>
     </div>
