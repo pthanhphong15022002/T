@@ -455,6 +455,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
+    this.data.reminder=15;
     this.data.bookingOn=this.data.startDate;
     this.data.stopOn=this.data.endDate;
     this.fGroupAddBookingCar.patchValue(this.data);

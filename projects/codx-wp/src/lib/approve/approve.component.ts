@@ -1,14 +1,8 @@
-import { T, TAB } from '@angular/cdk/keycodes';
-import { ThisReceiver } from '@angular/compiler';
-import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Button } from '@syncfusion/ej2-angular-buttons';
-import { tab } from '@syncfusion/ej2-angular-grids';
-import { DataRequest, ApiHttpService, NotificationsService, AuthService, ViewModel, ViewType, ViewsComponent, UIComponent, CacheService, CallFuncService, SidebarModel, RequestOption, DialogModel, ButtonModel } from 'codx-core';
-import { map } from 'rxjs';
+import { Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DataRequest, AuthService, ViewModel, ViewType, UIComponent, CallFuncService, RequestOption, DialogModel } from 'codx-core';
+import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add-post/popup-add-post.component';
 import { PopupAddPostComponents } from '../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
-import { ApproveDetailComponent } from './approve-detail/approve-detail.component';
 
 @Component({
   selector: 'lib-approve',
@@ -83,33 +77,35 @@ export class ApproveComponent extends UIComponent {
     },
   ]
   constructor
-    (
-      private auth: AuthService,
-      private callFuc: CallFuncService,
-      private injector: Injector
-    ) {
+  (
+    private auth: AuthService,
+    private callFuc: CallFuncService,
+    private injector: Injector
+  ) 
+  {
     super(injector);
   }
   onInit(): void {
-    // this.deleteData();
     this.user = this.auth.userValue;
     this.router.params.subscribe((param) => {
-      this.funcID = param["funcID"];
-      this.cache.functionList(this.funcID).subscribe((func: any) => 
+      if(param)
       {
-        if(func)
-        {
-          this.functionName = func.customName;
-          this.cache.gridViewSetup(func.formName, func.gridViewName).
-          subscribe((grd: any) => {
-            if (grd) 
-            {
-              this.gridViewSetUp = grd;
-            }
-          });
-        }
-      });
-      this.loadDataTab(this.funcID);
+        this.funcID = param["funcID"];
+        this.cache.functionList(this.funcID).subscribe((func: any) => {
+          if(func)
+          {
+            this.functionName = func.customName;
+            this.cache.gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) 
+              {
+                this.gridViewSetUp = grd;
+              }
+            });
+          }
+        });
+        this.loadDataTab(this.funcID);
+      }
     });
   }
   ngAfterViewInit(): void {
@@ -135,21 +131,20 @@ export class ApproveComponent extends UIComponent {
         "ERM.Business.WP",
         "NewsBusiness",
         "GetDataByApproSatusAsync",
-        [model] )
+        [model])
         .subscribe(
-       (res: any) => {
-         if (res) {
-           this.tabAsside.map((tab: any) => {
-            tab.total = res[tab.value];
-           });
-         }
-         this.detectorRef.detectChanges();
-       }
-     );
+        (res: any) => {
+          if (res) {
+            this.tabAsside.map((tab: any) => {
+              tab.total = res[tab.value];
+            });
+          }
+          this.detectorRef.detectChanges();
+        });
     }
   }
   selectedChange(event: any) {
-    if (event?.data)
+    if (event?.data?.recID)
     {
       this.selectedID = event.data.recID;
       this.detectorRef.detectChanges();
@@ -170,13 +165,13 @@ export class ApproveComponent extends UIComponent {
       }
     });
   }
-
   clickMF(event: any, data: any) 
   {
     if(event.functionID)
     {
       let headerText = event.text + " " + this.functionName;
-      switch (event.functionID) {
+      switch (event.functionID) 
+      {
         case 'SYS02': //delete
           this.deletedPost(data);
           break;
@@ -206,17 +201,18 @@ export class ApproveComponent extends UIComponent {
               this.assemblyName,
               "CommentsBusiness",
               "GetPostByIDAsync",
-              [data.recID]).subscribe((res: any) => {
+              [data.recID])
+              .subscribe((res: any) => {
                 if (res) {
                   let obj = {
-                    post: res,
+                    data: res,
                     status: 'edit',
                     headerText: headerText,
                   };
                   let option = new DialogModel();
                   option.DataService = this.view.dataService;
                   option.FormModel = this.view.formModel;
-                  let popup =  this.callfc.openForm(PopupAddPostComponents,headerText, 700, 550, '', obj, '', option);
+                  let popup =  this.callfc.openForm(PopupAddPostComponent,headerText, 700, 550, '', obj, '', option);
                   popup.closed.subscribe((res: any) => {
                     if (res?.event) 
                     {

@@ -418,10 +418,7 @@ export class CodxEpService {
       [resourceType, startDate, endDate]
     );
   }
-  getAvailableDriver(
-    startDate: string,
-    endDate: string
-  ) {
+  getAvailableDriver(startDate: string, endDate: string) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
@@ -458,7 +455,7 @@ export class CodxEpService {
       'SYS',
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
-      'GetEmailTemplateAsync',
+      'GetViewEmailTemplateAsyncLogic',
       templateID
     );
   }

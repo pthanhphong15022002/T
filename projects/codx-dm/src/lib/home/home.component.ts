@@ -347,6 +347,7 @@ export class HomeComponent extends UIComponent {
     });
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
+        this.getDataFolder(this.dmSV.folderID);
         var result = this.dmSV.listFolder;
         if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
           result = result.concat(this.dmSV.listFiles);
@@ -389,7 +390,10 @@ export class HomeComponent extends UIComponent {
     if (item.folderName != null) return className;
     else return `${className} noDrop`;
   }
-
+  testClick(e:any)
+  {
+    debugger
+  }
   _beginDrapDrop() {
     var that = this;
     setTimeout(() => {

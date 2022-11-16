@@ -30,7 +30,7 @@
       " hideMoreF="0">
     </codx-attachment>
   </div>
-  <div class="tab-horizone">
+  <div class="tab-horizone form-group">
     <div class="d-flex align-items-center mb-1">
       <codx-label class="me-2 cursor-pointer fw-bold" [formModel]="formModel" [fiedName]="'agencyName'"
         [class.text-primary]="activeDiv == 'dv'" (click)="hideDept('dv')">
@@ -68,7 +68,7 @@
       </span>
     </div>
   </div>
-  <div class="row mt-3">
+  <div class="row form-group">
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="CategoryID" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="categoryID"
@@ -81,20 +81,23 @@
       </codx-input>
     </div>
   </div>
-  <div class="row mt-3">
-    <div class="col-4">
+  <div class="row form-group">
+    <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label>
       <!-- Bùa r nhờ Quang fix sau -->
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchNo" [disabled]="true">
       </codx-input>
     </div>
-    <div class="col-4">
+    <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="RefNo" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refNo" ControlName="refNo">
       </codx-input>
     </div>
-    <div class="col-4">
+
+  </div>
+  <div class="row form-group">
+    <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="RefDate" class="fw-bold"></codx-label>
       <!-- Bùa r nhờ Quang fix sau -->
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
@@ -102,8 +105,6 @@
         (valueChange)="valueChangeDate($event)">
       </codx-input>
     </div>
-  </div>
-  <div class="row mt-3">
     <div class="col-3">
       <codx-label [formModel]="form.formModel" fiedName="Pages" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="pages" [min]="0"
@@ -122,7 +123,7 @@
     <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="title" class="h-105px">
     </codx-input>
   </div>
-  <div class="form-group row mt-3">
+  <div class="form-group row form-group">
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="Urgency" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="urgency">
@@ -155,7 +156,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="form-group row form-group">
     <div class="col">
       <codx-label [formModel]="form.formModel" fiedName="SendMode"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="sendMode"></codx-input>

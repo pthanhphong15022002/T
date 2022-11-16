@@ -66,6 +66,7 @@ export class PopupAddStationeryComponent extends UIComponent {
   ];
   tmpTitle = '';
   autoNumDisable = false;
+  imgRecID: any;
 
   constructor(
     private injector: Injector,
@@ -80,6 +81,11 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.tmpTitle = dt?.data[2];
     this.dialog = dialog;
     this.formModel = this.dialog.formModel;
+    if (this.isAdd) {
+      this.imgRecID = null;
+    } else {
+      this.imgRecID = this.data.recID;
+    }
   }
 
   onInit(): void {
@@ -89,8 +95,8 @@ export class PopupAddStationeryComponent extends UIComponent {
       .subscribe((autoN) => {
         if (autoN) {
           if (!autoN?.stop) {
-            this.autoNumDisable = true;            
-          }          
+            this.autoNumDisable = true;
+          }
         }
       });
     this.columnsGrid = [
