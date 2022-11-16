@@ -60,6 +60,7 @@
             field="categoryID"
             [formModel]="formModel"
             [Group]="form.formGroup"
+            [disabled]="disableCategoryID == '1'"
           >
           </codx-input>
         </div>
@@ -92,8 +93,7 @@
           <codx-input
             #checkbox
             type="switch"
-            id="switch"
-            [checked]="data?.confirmControl"
+            [checked]="data?.confirmControl == '0' ? false : true"
             labelPosition="After"
             field="confirmControl"
             class="test-switch"
@@ -117,7 +117,7 @@
             #checkbox
             type="switch"
             id="switch"
-            [checked]="data?.areaControl"
+            [checked]="data?.areaControl == '1' ? true : false"
             labelPosition="After"
             field="areaControl"
             class="test-switch"
@@ -141,8 +141,10 @@
           </codx-label>
           <codx-input
             field="signatureType"
-            [formModel]="formModel"
-            [Group]="form.formGroup"
+            [crrValue]="data.signatureType"
+            type="valuelist"
+            [refValue]="grvSetup['SignatureType']['referedValue']"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>

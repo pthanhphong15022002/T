@@ -3,7 +3,7 @@
   [autoSort]="false" [autoSearch]="false" [selectedFirst]="false" (selectedChange)="onSelectionChanged($event)"
   [button]="button" (buttonClick)="addFile($event)" (viewChanged)="changeView($event)"
   (viewChanging)="viewChanging($event)" (filterChange)="filterChange($event)"  [autoFilter]="false"
-  (onLoading)="onLoading($event)" (sortChanged)="sortChanged($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)">
+  (onLoading)="onLoading($event)" (sortChanged)="sortChanged($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)" >
 </codx-views>
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>

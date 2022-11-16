@@ -57,6 +57,7 @@ import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-n
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
+import { InformationComponent } from './personals/information/information.component';
 
 export const routes: Routes = [
   {
@@ -115,6 +116,7 @@ const Component: Type<any>[] = [
   EditExperenceComponent,
   EditRelationComponent,
   TasksComponent,
+  InformationComponent,
 ];
 
 @NgModule({
@@ -137,7 +139,7 @@ const Component: Type<any>[] = [
     NgbModule,
   ],
   exports: [RouterModule],
-  declarations: [Component, EditSkillComponent, PopAddSkillComponent],
+  declarations: [Component, EditSkillComponent, PopAddSkillComponent, InformationComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,

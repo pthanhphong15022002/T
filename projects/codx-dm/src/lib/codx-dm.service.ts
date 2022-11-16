@@ -66,7 +66,7 @@ export class CodxDMService {
   public titleEmptyAction = 'Dọn sạch thùng rác';
   public titleNodaTa = 'Không có tài liệu';
   public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
-  public titleShareBy = 'Tài liệu được chia sẻ';
+  public titleShareBy = 'Tài liệu chia sẻ';
   public titleRequestShare = 'Tài liệu yêu cầu';
   public titleRequestBy = 'Tài liệu được yêu cầu';
 
@@ -451,7 +451,7 @@ export class CodxDMService {
   }
 
   openItem(data: any) {
-    if (data.fileName == undefined) {
+    if (!data.fileName) {
       if (!data.read) {
         this.notificationsService.notifyCode('DM059');
         return;
@@ -676,13 +676,13 @@ export class CodxDMService {
           //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
           //list = "DMT0226;DMT0227;DMT0230;DMT0231";
           if (type == 'DM_FolderInfo') {
-            if(this.dmFavoriteID == "2") list = 'DMT0227';
-            else list = 'DMT0226;DMT0227'
+            if(this.dmFavoriteID == "2") list ='DMT0226;DMT0227';
+            else list = 'DMT0227'
           } 
           else 
           {
-            if(this.dmFavoriteID == "2") list = 'DMT0231';
-            else list = 'DMT0230;DMT0231'
+            if(this.dmFavoriteID == "2") list = 'DMT0230;DMT0231';
+            else list = 'DMT0231'
           }
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
             e[i].disabled = false;

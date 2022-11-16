@@ -593,6 +593,16 @@ export class CodxEsService {
       [categoryID]
     );
   }
+
+  checkCategoryName(model: any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'CheckCategoryNameAsync',
+      [model]
+    );
+  }
   //#endregion
 
   //#region ES_ApprovalSteps
@@ -748,6 +758,20 @@ export class CodxEsService {
     );
   }
 
+  updateFieldApprovalStepAsync(
+    tranID: string,
+    fieldName: string,
+    value: string
+  ) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'UpdateFieldAsync',
+      [tranID, fieldName, value]
+    );
+  }
+
   //#endregion
 
   //#region EmailTemplate
@@ -767,7 +791,7 @@ export class CodxEsService {
       'SYS',
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
-      'GetEmailTemplateAsync',
+      'GetViewEmailTemplateAsyncLogic',
       templateID
     );
   }
@@ -875,7 +899,7 @@ export class CodxEsService {
     );
   }
 
-  saveUSBSignPDF(transRecID, sfID, fileID, fileBase64Content, cmt) {
+  saveUSBSignedPDF(transRecID, sfID, fileID, fileBase64Content, cmt) {
     let data = [transRecID, sfID, fileID, fileBase64Content, cmt];
     return this.api.execSv(
       'es',
@@ -1221,8 +1245,28 @@ export class CodxEsService {
     );
   }
 
-  SignAsync(stepNo, isAwait, userID, sfID, mode, comment) {
-    let data = [stepNo, isAwait, userID, sfID, mode, comment];
+  SignAsync(
+    stepNo,
+    isAwait,
+    userID,
+    sfID,
+    signType,
+    supplier,
+    hasCA,
+    mode,
+    comment
+  ) {
+    let data = [
+      stepNo,
+      isAwait,
+      userID,
+      sfID,
+      signType,
+      supplier,
+      hasCA,
+      mode,
+      comment,
+    ];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',

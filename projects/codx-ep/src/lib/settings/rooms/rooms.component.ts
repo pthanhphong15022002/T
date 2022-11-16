@@ -55,8 +55,6 @@ export class RoomsComponent extends UIComponent {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '1';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
@@ -179,7 +177,7 @@ export class RoomsComponent extends UIComponent {
       });
     });
 
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
 

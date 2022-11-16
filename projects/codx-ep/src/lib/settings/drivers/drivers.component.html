@@ -4,8 +4,6 @@
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
   (buttonClick)="click($event)"
@@ -19,6 +17,7 @@
   <ng-template #resourceNameCol let-data>
     <div class="d-flex flex-row align-items-center">
       <codx-img
+        [objectName]="data.resourceName"
         [objectId]="data?.recID"
         [funcId]="funcID"
         [objectType]="'EP_Resources'"
@@ -34,7 +33,9 @@
   <ng-template #locationCol let-data>
     <div class="d-flex flex-column justify-content-start">
       <!-- <span>{{data?.category| vll: "VL005" : 'text' | async}}</span>  -->
-      <span>{{ data?.companyName }}</span>
+      <span class="text-truncate" [title]="data?.companyName">{{
+        data?.companyName
+      }}</span>
     </div>
   </ng-template>
   <ng-template #popupDevice let-dialog>
@@ -128,9 +129,10 @@
   </ng-template>
 
   <ng-template #carCol let-data>
-    <div class="d-flex flex-row align-items-center">
+    <div *ngIf="data.linkID" class="d-flex flex-row align-items-center">
       <codx-img
         [objectId]="data.carRecID"
+        [objectName]="data.carName"
         imageType="circle"
         [imgOn]="data.modifiedOn"
         [width]="50"

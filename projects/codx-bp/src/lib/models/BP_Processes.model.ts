@@ -27,7 +27,7 @@ export class BP_Processes {
   views: number;
   attachments: number;
   comments: number;
-  rattings: string;
+  rattings: BP_ProcessesRating[];
   positionID: string;
   deptID: string;
   divisionID: string;
@@ -59,8 +59,10 @@ export class BP_ProcessSteps {
   perUnit: string;
   eventBase: string;
   reminder: string;
-  reminderBy: string;
+  isAlert: boolean;
+  isEmail: boolean;
   note: string;
+  color: string;
   stopOn: Date;
   attachments: number;
   comments: number;
@@ -119,7 +121,9 @@ export class BP_ProcessPermissions {
   assign: boolean;
   share: boolean;
   upload: boolean;
+  isActive: boolean;
   download: boolean;
+  nemberType: string;
   startDate: Date;
   endDate: Date;
   approveStatus: string;
@@ -133,6 +137,17 @@ export class BP_ProcessPermissions {
   modifiedOn: Date;
   modifiedBy: string;
   form: string;
+}
+
+export class BP_ProcessesRating{
+  id: string;
+  recID: string;
+  objectID: string;
+  objectName: string;
+  positionName: string;
+  comment: string;
+  ratting: number;
+  createOn: Date;
 }
 
 export class tmpPermission{
@@ -149,4 +164,13 @@ export class tmpPermission{
   byPermission: BP_ProcessPermissions[];
   ccPermission: BP_ProcessPermissions[];
   fromPermission: BP_ProcessPermissions[];
+}
+
+export class ColumnsModel{
+   headerText :string;
+   keyField :string;
+   color :string;
+   showItemCount :boolean =true ;
+   allowDrag :boolean = true;
+   allowDrop :boolean = true;
 }

@@ -1,16 +1,18 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Injector,
   Input,
   OnChanges,
   Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
-
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 @Component({
   selector: 'approval-room-view-detail',
   templateUrl: 'approval-room-view-detail.component.html',
@@ -21,6 +23,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;  
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -35,6 +38,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
   active = 1;
   files = [];
 
+  tabControl: TabModel[] = [];
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,    
@@ -46,7 +50,21 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
   onInit(): void {
     this.itemDetailStt = 1;
   }
-
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      //{ name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      {
+        name: 'ReferencesOD',
+        textDefault: 'Tham chiếu',
+        isActive: false,
+        template: this.reference,
+      },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&
@@ -83,6 +101,14 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
     this.active = 1;
   }
 
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   clickMF(value, datas: any = null) {
     
     let funcID = value?.functionID;
@@ -127,11 +153,11 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
           .subscribe(async (res:any) => {
             if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
-                this.notificationsService.notifyCode('ES007');//đã duyệt
+                this.notificationsService.notifyCode('SYS034');//đã duyệt
                 data.approveStatus="5"
               }
               if(status=="4"){
-                this.notificationsService.notifyCode('ES007');//bị hủy
+                this.notificationsService.notifyCode('SYS034');//bị hủy
                 data.approveStatus="4";
               }                           
               this.updateStatus.emit(data);

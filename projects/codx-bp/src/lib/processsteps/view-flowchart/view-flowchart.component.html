@@ -1,4 +1,4 @@
-<div class="viewfile">
+<div class="viewfile mb-5" >
   <div
     class="viewfile-toolbar h-100 d-flex align-items-center justify-content-between"
   >
@@ -31,22 +31,19 @@
         ></codx-label>
         <div class="view-more ms-2"></div>
       </div>
-      <!-- <div *ngIf="isClose" class="d-flex align-items-center cursor-pointer me-2" (click)="close()">
-          <span class="icon-close"></span>
-        </div> -->
     </div>
   </div>
 </div>
-<div id="dm_viewFile">
-  <div class="viewfile-content" id="viewfiledalog">
-    <img  [src]="linkFile" class="w-100 h-100"/>
+<div>
+  <pinch-zoom
+    [properties]="pzProperties"
+    [double-tap]="true"
+    [backgroundColor]="'none'"
+    [draggableImage]="true"
+  >
+    <img [src]="linkFile"  [style]="'height:'+heightFlowChart+'px'"/>
+  </pinch-zoom>
+  <!-- [overflow]="'visible'" -->
+  <div [hidden]="true" id="output"></div>
+</div>
 
-  </div>
-  <div id="output"></div>
-</div>
-<div
-  class="w-100 h-100 d-flex align-items-center text-center divLoading"
-  *ngIf="isShow"
->
-  <div class="loaderFileDialog"></div>
-</div>

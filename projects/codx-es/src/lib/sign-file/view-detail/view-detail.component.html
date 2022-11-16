@@ -9,6 +9,7 @@
   (clickMF)="openFormFuncID($event)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
   class="h-100"
+  *ngIf="isAfterRender"
 >
   <ng-template #header>
     <div class="d-flex justify-content-between flex-grow-1 mb-3">
@@ -131,7 +132,8 @@
     </div>
     <div class="mb-2">
       <ng-container *ngIf="files.length > 0">
-        <codx-thumbnail [files]="files" displayThumb="simple"> </codx-thumbnail>
+        <codx-thumbnail [files]="files" displayThumb="simple" [hideHover]="'0'">
+        </codx-thumbnail>
       </ng-container>
     </div>
   </ng-template>
@@ -140,18 +142,18 @@
     <div class="tab-horizone h-od-tab h-100">
       <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink>
+          <a class="ps-0" ngbNavLink>
             <div class="d-flex align-item-center">
-              <i
-                class="icon-info icon-16 me-2"
+              <span
+                class="icon-info icon-18 me-2"
                 [ngClass]="{ 'text-primary': itemDetailStt === 1 }"
-              ></i
+              ></span
               ><span>
                 <codx-label
                   name="lblAbstract"
                   [formModel]="itemDetailTemplate.formModel"
                   default="Mô tả ngắn gọn"
-                  class="ms-1 fw-bold"
+                  class="fw-bold"
                 ></codx-label>
               </span>
             </div>
@@ -167,16 +169,16 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
-              <i
-                class="icon-format_list_numbered icon-16 me-2"
+              <span
+                class="icon-format_list_numbered icon-18 me-2"
                 [ngClass]="{ 'text-primary': itemDetailStt === 2 }"
-              ></i
+              ></span
               ><span>
                 <codx-label
                   name="lblBusiness"
                   [formModel]="itemDetailTemplate.formModel"
                   default="Công việc"
-                  class="ms-1 fw-bold"
+                  class="fw-bold"
                 ></codx-label>
               </span>
             </div>
@@ -202,16 +204,16 @@
         <li [ngbNavItem]="3">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
-              <i
-                class="icon-people_alt icon-16 me-2"
+              <span
+                class="icon-people_alt icon-18 me-2"
                 [ngClass]="{ 'text-primary': itemDetailStt === 3 }"
-              ></i
+              ></span
               ><span>
                 <codx-label
                   name="lblApprovalTrans"
                   [formModel]="itemDetailTemplate.formModel"
                   default="Quy trình duyệt"
-                  class="ms-1 fw-bold"
+                  class="fw-bold"
                 ></codx-label>
               </span>
             </div>

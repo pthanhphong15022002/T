@@ -1,15 +1,19 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Injector,
   Input,
   OnChanges,
   Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
 import { DataRequest, UIComponent, ViewsComponent } from 'codx-core';
-import { CodxEpService } from '../../../codx-ep.service';
+import moment from 'moment';
+import { CodxEpService } from '../../../codx-ep.service';import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
 @Component({
   selector: 'booking-car-view-detail',
@@ -20,6 +24,7 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();  
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
@@ -32,22 +37,62 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   @Input() hideMF = false;
   @Input() hideFooter = false;
   firstLoad = true;
+  
+  tabControl: TabModel[] = [];
   id: string;
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;  
-
+  routerRecID:any;
+  recID:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService
   ) {
-    super(injector);
+    super(injector);    
+    this.routerRecID = this.router.snapshot.params['id'];
+    if(this.routerRecID!=null){
+      this.hideFooter=true;
+    }
   }
 
   onInit(): void {
     this.itemDetailStt = 1;
+    let tempRecID:any;
+    if(this.routerRecID!=null){
+      tempRecID=this.routerRecID;
+    }
+    else{
+      tempRecID=this.itemDetail?.currentValue?.recID
+    }
+    this.api
+        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
+          tempRecID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.itemDetail = res;
+            this.detectorRef.detectChanges();
+          }
+        });
+      this.detectorRef.detectChanges();
+      this.setHeight();
   }
-
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      //{ name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      {
+        name: 'ReferencesOD',
+        textDefault: 'Tham chiếu',
+        isActive: false,
+        template: this.reference,
+      },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&
@@ -104,7 +149,17 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   changeDataMF(event, data: any) {
     
   }
-
+  sameDayCheck(sDate:any, eDate:any){
+    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;
   }

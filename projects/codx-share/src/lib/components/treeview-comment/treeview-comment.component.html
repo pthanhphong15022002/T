@@ -39,13 +39,13 @@
             </div>
             <ng-template #myVoted>
                 <div class="d-flex align-items-center justify-content-center text-hover-primary">
-                    <img *ngIf="dVll[dataComment.myVotedType]?.icon" 
-                        src="assets/themes/wp/default/img/{{dVll[dataComment.myVotedType]?.icon}}"
+                    <img *ngIf="dVll[dataComment.myVoteType]?.icon" 
+                        src="assets/themes/wp/default/img/{{dVll[dataComment.myVoteType]?.icon}}"
                         style="width: 18px; height: 18px">
                     <div>
                         <span class="fw-bold ms-2"
-                        [style.color]="dVll[dataComment.myVotedType]?.textColor">
-                        {{dVll[dataComment.myVotedType]?.text}}
+                        [style.color]="dVll[dataComment.myVoteType]?.textColor">
+                        {{dVll[dataComment.myVoteType]?.text}}
                         </span>
                     </div>
                 </div>

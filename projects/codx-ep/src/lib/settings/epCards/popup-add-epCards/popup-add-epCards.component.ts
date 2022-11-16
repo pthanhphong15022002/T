@@ -52,6 +52,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
   avatarID: any = null;
   funcID: any;
   autoNumDisable= false;
+  imgRecID: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -65,7 +66,12 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
-    
+    if(this.isAdd){
+      this.imgRecID=null;
+    }
+    else{
+      this.imgRecID=this.data.recID;
+    }
   }
 
   ngAfterViewInit(): void {}
@@ -74,15 +80,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.initForm();    
     this.codxEpService.getAutoNumberDefault(this.formModel.funcID).subscribe(autoN=>{
       if(autoN){
-        if(!autoN?.stop && this.isAdd){
-          //ktra tham so auto number stop =true == ko dùng auto number
-          // this.api.execSv("SYS", "ERM.Business.AD", "AutoNumbersBusiness", "GenAutoNumberAsync", [this.formModel.funcID]).subscribe(autoNumber=>{
-          //   if(autoNumber)
-          //   {
-          //     this.data.resourceID=autoNumber;
-          //     this.detectorRef.detectChanges();
-          //   }
-          // })
+        if(!autoN?.stop ){
           this.autoNumDisable=true;
         }
       }
@@ -117,7 +115,6 @@ export class PopupAddEpCardsComponent extends UIComponent {
       this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
       return;
     }
-    this.data.resourceType='7';
     let index:any
     if(this.isAdd){
       index=0;

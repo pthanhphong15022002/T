@@ -7,7 +7,6 @@ import {
 } from 'codx-core';
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
-import { CodxOdService } from '../codx-od.service';
 
 @Component({
   selector: 'codx-layout',
@@ -17,15 +16,15 @@ import { CodxOdService } from '../codx-od.service';
 })
 export class LayoutComponent extends LayoutBaseComponent {
 
-  module = 'OD';
+  module = 'OM';
   dialog!: DialogRef
   // override aside = true;
   // override asideFixed = false;
   // override asideTheme: 'dark' | 'light' | 'transparent' ='transparent';
-  // override toolbar = false;
+  override toolbar = false;
 
   constructor(inject: Injector,
-    private hideToolbar: CodxOdService,
+    //private hideToolbar: CodxOdService,
     private callfc: CallFuncService,
   ) {
     super(inject);
@@ -34,11 +33,11 @@ export class LayoutComponent extends LayoutBaseComponent {
   onInit() { }
 
   onAfterViewInit() {
-    this.hideToolbar.SetLayout.subscribe(res => {
-      if (res != null)
-        this.setToolbar(res);
+    // this.hideToolbar.SetLayout.subscribe(res => {
+    //   if (res != null)
+    //     this.setToolbar(res);
         
-    })
+    // })
   }
 
   openFormNoteDrawer() {

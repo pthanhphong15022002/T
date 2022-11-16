@@ -33,6 +33,7 @@ import { SearchingComponent } from './incomming/searching/searching.component';
 import { TabsComponent } from './incomming/tab/tabs.component';
 import { ODApprovelComponent } from './incomming/approvel/approvel.component';
 import { CompletedComponent } from './incomming/completed/completed.component';
+import { RefuseComponent } from './incomming/refuse/refuse.component';
 
 const routes: Routes = [
   {
@@ -99,7 +100,8 @@ const routes: Routes = [
     SearchingComponent,
     TabsComponent,
     ODApprovelComponent,
-    CompletedComponent
+    CompletedComponent,
+    RefuseComponent
   ],
   imports: [
     RouterModule.forChild(routes),

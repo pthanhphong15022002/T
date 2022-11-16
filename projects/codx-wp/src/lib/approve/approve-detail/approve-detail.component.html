@@ -1,20 +1,11 @@
-
-<codx-detail-tmp 
-    [header]="header"
-    [body]="body"
-    (clickMF)="clickMF($event)" 
-    [formModel]="formModel"
-    [dataItem]="data"
+<codx-detail-tmp [header]="header" [body]="body" (clickMF)="clickMF($event)" [formModel]="formModel" [dataItem]="data"
     [footer]="footer">
 </codx-detail-tmp>
 
 <ng-template #header>
     <div class="d-flex align-items-center">
         <div>
-            <codx-img  
-                [width]="40"
-                [objectId]="data?.createdBy" 
-                [objectType]="'AD_Users'">
+            <codx-img [width]="40" [objectId]="data?.createdBy" [objectType]="'AD_Users'">
             </codx-img>
         </div>
         <div class="d-flex flex-column w-100 ms-4 py-3">
@@ -26,19 +17,14 @@
                 </div>
                 <div>
                     <ng-container *ngIf="data?.approveStatus">
-                        <codx-vll 
-                            [name]="'CO003'"
-                            [classList]="'rounded-pill p-2 px-4 text-center'" 
-                            [value]="data.approveStatus"
-                            [showText]="true"
-                            [showBgColor]="true">
+                        <codx-vll [name]="'CO003'" [classList]="'rounded-pill p-2 px-4 text-center'"
+                            [value]="data.approveStatus" [showText]="true" [showBgColor]="true">
                         </codx-vll>
                     </ng-container>
                 </div>
             </div>
             <div class="nav">
-                <div *ngIf="data?.positionName"
-                    class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5">
+                <div *ngIf="data?.positionName" class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5">
                     <span>{{data.positionName}}</span>
                 </div>
                 <div *ngIf="data?.email" class="nav-item d-flex align-items-center nav-link text-dark p-0 me-5">
@@ -80,23 +66,20 @@
                 <div class="col-10">
                     <ng-container>
                         <span *ngIf="data?.category">
-                            <codx-vll 
-                                [name]="'L1494'"
-                                [value]="data.category"
-                                [classList]="'text-dark'" 
+                            <codx-vll [name]="'L1494'" [value]="data.category" [classList]="'text-dark'"
                                 [showText]="true">
                             </codx-vll>
                         </span>
                     </ng-container>
-                    <span class="ms-5 me-5">|</span>
+                    <span class="mx-2">|</span>
                     <span>
-                        <codx-label class="fw-bolder me-2" [formModel]="formModel" [fiedName]="'StartDate'">
+                        <codx-label class="fw-bolder" [formModel]="formModel" [fiedName]="'StartDate'">
                         </codx-label>
-                        <span class="ms-5 me-5">:</span>
+                        <span class="mx-2">:</span>
                         <span *ngIf="data?.startDate" class="text-muted">{{data.startDate | fmDT}} </span>
                         <span *ngIf="data?.endDate" class="text-muted">- {{data.endDate | fmDT}}</span>
                     </span>
-                    
+
                 </div>
             </div>
             <div class="row mt-2">
@@ -113,12 +96,8 @@
                 </div>
                 <div class="col-10">
                     <div class="w-50 h-50">
-                        <codx-img 
-                            [imageType]="'square'" 
-                            [isDefaulImg]="true" 
-                            [objectId]="data.recID" 
-                            [objectType]="data.entityName"
-                            [width]="200">
+                        <codx-img [imageType]="'square'" [isDefaulImg]="true" [objectId]="data.recID"
+                            [objectType]="data.entityName" [width]="200">
                         </codx-img>
                     </div>
                 </div>
@@ -128,14 +107,9 @@
                     <codx-label [formModel]="formModel" [fiedName]="'ShareControl'"></codx-label>
                 </div>
                 <div *ngIf="data?.shareControl" class="col-10">
-                    <codx-vll 
-                        [name]="'WP001'" 
-                        [value]="data.shareControl" 
-                        [classList]="'bg-secondary rounded-pill t-dark p-2'"
-                        [showText]="true" 
-                        [showBgColor]="true"
-                        [showIcon]="true"
-                        [icoCss]="'text-dark'">
+                    <codx-vll [name]="'WP001'" [value]="data.shareControl"
+                        [classList]="'bg-secondary rounded-pill t-dark p-2'" [showText]="true" [showBgColor]="true"
+                        [showIcon]="true" [icoCss]="'text-dark'">
                     </codx-vll>
                 </div>
             </div>
@@ -169,11 +143,7 @@
                 </div>
                 <div class="col-10">
                     <span *ngIf="data?.category">
-                        <codx-vll 
-                            [name]="'L1494'"
-                            [value]="data.category"
-                            [classList]="'text-dark'" 
-                            [showText]="true">
+                        <codx-vll [name]="'L1494'" [value]="data.category" [classList]="'text-dark'" [showText]="true">
                         </codx-vll>
                     </span>
                     <span>
@@ -188,14 +158,9 @@
                     <codx-label [formModel]="formModel" [fiedName]="'ShareControl'"></codx-label>
                 </div>
                 <div class="col-10" *ngIf="data?.shareControl">
-                    <codx-vll 
-                        [name]="'L1901'" 
-                        [value]="data.shareControl" 
-                        [classList]="'bg-secondary rounded-pill t-dark p-2'"
-                        [showText]="true" 
-                        [showBgColor]="true"
-                        [showIcon]="true"
-                        [icoCss]="'text-dark'">
+                    <codx-vll [name]="'L1901'" [value]="data.shareControl"
+                        [classList]="'bg-secondary rounded-pill t-dark p-2'" [showText]="true" [showBgColor]="true"
+                        [showIcon]="true" [icoCss]="'text-dark'">
                     </codx-vll>
                 </div>
             </div>

@@ -26,6 +26,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../approval-step/approval-step.component';
 import { PopupAddEmailTemplateComponent } from '../approval-step/popup-add-email-template/popup-add-email-template.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 export class defaultRecource {}
 @Component({
@@ -123,6 +124,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         .subscribe((gv) => {
           this.columnsGrid = [
             {
+              field: '',
+              headerText: '',
+              width: 20,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
+            {
               field: 'categoryID',
               headerText: gv
                 ? gv['CategoryID'].headerText || 'categoryID'
@@ -168,7 +176,6 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               template: this.process,
               width: 220,
             },
-            { field: '', headerText: '', width: 20, template: this.itemAction },
           ];
 
           this.views = [
@@ -209,21 +216,28 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         let data = {
           dialog: this.dialog,
           formGroup: null,
-          templateID: '5860917c-af36-4803-b90d-ed9f364985c6',
+          templateID: 'afc89b5d-ef88-4a02-a470-88843c4fa49e',
           showIsTemplate: true,
           showIsPublish: true,
           showSendLater: true,
           files: null,
+          isAddNew: false,
         };
 
-        this.callfunc.openForm(
-          PopupAddEmailTemplateComponent,
+        let popEmail = this.callfunc.openForm(
+          CodxEmailComponent,
           '',
           800,
           screen.height,
           '',
           data
         );
+
+        popEmail.closed.subscribe((res) => {
+          if (res.event) {
+            console.log(res.event);
+          }
+        });
         break;
     }
   }
@@ -247,6 +261,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
       popupAdd.closed.subscribe((res) => {
         if (!res?.event) this.viewBase.dataService.clear();
+        else {
+          this.viewBase.dataService.add(res.event).subscribe();
+        }
       });
     });
   }
@@ -272,11 +289,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         option
       );
       this.dialog.closed.subscribe((x) => {
-        if (!res?.event) this.viewBase.dataService.clear();
         if (x.event == null) {
+          this.viewBase.dataService.clear();
           this.viewBase.dataService
             .remove(this.viewBase.dataService.dataSelected)
             .subscribe();
+        } else {
+          this.viewBase.dataService.add(x.event).subscribe();
         }
       });
     });
@@ -297,6 +316,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           let popupEdit = this.callfunc.openSide(
             PopupAddCategoryComponent,
             {
+              disableCategoryID: '1',
               data: evt?.data,
               isAdd: false,
               headerText: evt.text + ' ' + this.funcList?.customName ?? '',
@@ -304,7 +324,12 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             option
           );
           popupEdit.closed.subscribe((res) => {
-            if (!res?.event) this.viewBase.dataService.clear();
+            if (res?.event == null) {
+              this.viewBase.dataService.dataSelected = evt.data;
+              this.viewBase.dataService.clear();
+            } else {
+              this.viewBase.dataService.update(res.event).subscribe();
+            }
           });
         });
     }

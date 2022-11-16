@@ -51,8 +51,6 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '7';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
@@ -419,30 +417,30 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     }
   }
   createCardTrans(currTrans: number) {
-    this.curPopupFG.patchValue({
-      userID: this.cardUserID,
-      transDate: this.cardDate,
-      note: this.cardNote,
-      resourceType: '2',
-      createBy: this.authService.userValue.userID,
-      transType: currTrans,
-      status: '1',
-      resourceID: this.currCardID,
-    });
+    // this.curPopupFG.patchValue({
+    //   userID: this.cardUserID,
+    //   transDate: this.cardDate,
+    //   note: this.cardNote,
+    //   resourceType: '2',
+    //   createBy: this.authService.userValue.userID,
+    //   transType: currTrans,
+    //   status: '1',
+    //   resourceID: this.currCardID,
+    // });
     this.api
       .execSv(
         'EP',
         'ERM.Business.EP',
         'ResourceTransBusiness',
-        'AddResourceTransAsync',
-        [this.curPopupFG.value]
+        'AddEPResourceTransAsync',
+        [this.currCardID,this.cardUserID,this.cardDate,this.cardNote,currTrans]
       )
       .subscribe((res) => {
         if (res) {
           this.selectedCard.status=currTrans;
           this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
           this.popupDialog.close();
-          this.notificationsService.notify('Cấp/Trả thẻ thành công', '1', 0); //EP_WAITING Đợi messcode từ BA         
+          this.notificationsService.notifyCode('SYS034');    
         }
         this.cardUserID=null;
         this.cardDate=null;

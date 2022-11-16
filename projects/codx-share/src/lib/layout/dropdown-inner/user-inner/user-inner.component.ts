@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostBinding,
@@ -19,6 +20,7 @@ import {
   AuthStore,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
+import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
   selector: 'codx-user-inner',
@@ -50,7 +52,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private tenantStore: TenantStore,
     private notifyService: NotificationsService,
     private cache: CacheService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private codxShareSV: CodxShareService,
+    private change: ChangeDetectorRef
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) this.functionList = res;
@@ -68,10 +72,21 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         gridViewName: this.functionList?.gridViewName,
       };
     }
+    this.refreshAvatar();
   }
 
   ngAfterViewInit() {
     MenuComponent.reinitialization();
+  }
+
+  refreshAvatar() {
+    //Nguyên thêm để refresh avatar khi change
+    this.codxShareSV.dataRefreshImage.subscribe((res) => {
+      if (res) {
+        this.user['modifiedOn'] = res?.modifiedOn;
+        this.change.detectChanges();
+      }
+    });
   }
 
   mouseEnter(ele: any, sub: any) {

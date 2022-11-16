@@ -8,8 +8,11 @@ import {
   OnInit,
   Optional,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { iframeMouseDown } from '@syncfusion/ej2-angular-richtexteditor';
 import {
   AlertConfirmInputConfig,
@@ -22,6 +25,7 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
@@ -33,15 +37,23 @@ import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popu
   styleUrls: ['./popup-add-approval-step.component.scss'],
 })
 export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
+  @ViewChild('tabInfo0', { static: true }) tabInfo0: TemplateRef<any>;
+  @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
+  @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
+  @ViewChild('tabAnother', { static: true }) tabAnother: TemplateRef<any>;
+
   @Output() close = new EventEmitter();
   @Input() transId = '';
   @Input() stepNo = 1;
   @Input() vllShare = 'ES014';
+  @Input() hideTabQuery = false;
   dataEdit: any;
 
   isAfterRender = false;
   isAdd = true;
   formModel: FormModel;
+
+  formModelCustom: FormModel;
   dialogApprovalStep: FormGroup;
 
   lstApproveMode: any;
@@ -79,7 +91,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       name: 'tabAnother',
     },
   ];
-
+  tabContent: any[];
   setTitle(e: any) {
     console.log(e);
   }
@@ -111,6 +123,31 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.eSign = data?.data?.eSign ?? false;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
+
+    this.hideTabQuery = data?.data.hideTabQuery ?? false;
+
+    this.tabContent = [
+      this.tabInfo0,
+      this.tabQuery,
+      this.tabEmail,
+      this.tabAnother,
+    ];
+    if (this.hideTabQuery) {
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
+        {
+          icon: 'icon-email',
+          text: 'Email/thông báo',
+          name: 'tabEmail',
+        },
+        {
+          icon: 'icon-tune',
+          text: 'Thông tin khác',
+          name: 'tabAnother',
+        },
+      ];
+      this.tabContent = [this.tabInfo0, this.tabEmail, this.tabAnother];
+    }
   }
 
   ngAfterViewInit(): void {
@@ -123,6 +160,9 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.formModelCustom = new FormModel();
+    this.formModelCustom.formName = 'ApprovalSteps_Approvers';
+    this.formModelCustom.gridViewName = 'grvApprovalSteps_Approvers';
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
@@ -333,7 +373,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       };
 
       this.callfc.openForm(
-        PopupAddEmailTemplateComponent,
+        CodxEmailComponent,
         '',
         800,
         screen.height,

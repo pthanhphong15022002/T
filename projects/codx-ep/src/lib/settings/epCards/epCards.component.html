@@ -1,10 +1,11 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="buttons" [moreFuncs]="moreFuncs"
+  [views]="views" [button]="buttons" [moreFuncs]="moreFuncs"
   [idField]="idField" [className]="className" [method]="method" (buttonClick)="click($event)"
   (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid">
   <ng-template #avatarCol let-data>
     <div class="h-50px m-4">
-      <codx-img [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle" 
+      <codx-img [objectId]="data?.recID" 
+      [objectName]="data.resourceName" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle" 
         width="50" [imgOn]="data.modifiedOn"></codx-img>
     </div>
 
@@ -63,6 +64,7 @@
             type="datetime" 
             format="d" 
             class="form-control test-datetime" 
+            [crrValue]="cardDate"
             (valueChange)="valueDateChange($event)"
           ></codx-input>
           <!-- <codx-input             

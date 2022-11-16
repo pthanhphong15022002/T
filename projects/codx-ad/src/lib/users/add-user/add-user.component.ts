@@ -81,7 +81,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   dataCopy: any;
   dataComment: any;
   contentComment: any;
-  date = new Date;
+  date = new Date();
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
@@ -342,7 +342,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res.save) {
           this.getHTMLFirstPost(this.adUser);
-          this.adService.createFirstPost(this.tmpPost).subscribe();
+          this.adService.createFirstPost(this.tmpPost).subscribe((res) => {
+          });
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
@@ -453,6 +454,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       category: '1',
       shareControl: '9',
       listTag: [],
+      createdOn: new Date(),
     };
   }
 

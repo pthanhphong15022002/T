@@ -342,9 +342,13 @@ export class CodxEpService {
       [funcID, objectId, objectType]
     );
   }
+
   getAutoNumberDefault(funcID: string): Observable<any> {
     return this.api.execSv(
-      "SYS", "ERM.Business.AD", "AutoNumbersBusiness", "GetAutoNumberByFuncIDAsync",
+      'SYS',
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'GetAutoNumberByFuncIDAsync',
       [funcID]
     );
   }
@@ -414,6 +418,15 @@ export class CodxEpService {
       [resourceType, startDate, endDate]
     );
   }
+  getAvailableDriver(startDate: string, endDate: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListAvailableDriverAsync',
+      [startDate, endDate]
+    );
+  }
   assignDriver(recID: string, driverID: string) {
     return this.api.execSv(
       'EP',
@@ -442,7 +455,7 @@ export class CodxEpService {
       'SYS',
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
-      'GetEmailTemplateAsync',
+      'GetViewEmailTemplateAsyncLogic',
       templateID
     );
   }

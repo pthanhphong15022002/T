@@ -138,7 +138,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     if (field && event.component) {
       this.data[field] = event.data;
       if (
-        field == 'fixedString' &&
+        field == 'stringFormat' &&
         !this.lstEnableSeparator.includes(event.data)
       ) {
         this.data.separator = '';

@@ -1,0 +1,77 @@
+<codx-form
+    [headerText]="titleForm"
+    [dialog]="dialog"
+    [bodyCss]="'bgEDEDED okr-add-body'"
+    [body]="body"
+>
+</codx-form>
+<ng-template #body>
+    <div class="bg-white h-100 w-100 px-8">
+        <div #header class="om-h-header d-flex justify-content-between align-items-center py-10">
+            <div #title>
+                <codx-label  [default]="titleAdd" field="lblOmTitleAdd" class="fs-2 fw-bold"></codx-label>
+                <div #subtitle>
+                </div>
+            </div>
+            <codx-dropdown-calendar cssPopup="h-500px w-800px " cssClass="w-100 om-calendar fs-6 fw-bold" class="me-20">
+            </codx-dropdown-calendar >
+        </div>
+        <div #body class="om-h-body">
+            <form [formGroup]="okrForm"  >
+                <div formArrayName="okrFormArray">
+                    <div *ngFor="let g of okrFormArray.controls; let i=index " class="py-3">
+                        <div [formGroupName]="i">
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center om-add-btn w-70">
+                                    <i class="fa-solid fa-bullseye me-3 fs-3" ></i>
+                                    <input #nameInput type="text" class="om-input w-100" formControlName ='okrName' [placeholder]="'Muc tiêu ' +(i+1)"/>
+                                </div>
+                                <div class="d-flex align-items-center w-30">
+                                    <label class="cursor-pointer mb-0">
+                                        <input type="checkbox" class="check-with-label invisible" formControlName ='testcheckbox'/>
+                                        <i class="icon-language ms-3 om-fs-3 "></i>
+                                    </label>
+                                    
+                                    <!-- <select class="om-select" formControlName ='confidence'>
+                                        <option value="">&#xf119;</option>
+                                        <option>Hi, &#xf043;</option>
+                                        <option>Hi, &#xf044;</option>
+                                        <option>Hi, &#xf045;</option>
+                                        <option>Hi, &#xf046;</option>
+                                    </select> -->
+                                </div>
+                            </div>
+                            <div [formArrayName]="'targets'">
+                                <div *ngFor="let kr of getTargets(g); let x=index " class="py-3">
+                                    <div class="d-flex align-items-center ps-10" [formGroupName]="x">
+                                        <div class="d-flex align-items-center w-70">
+                                            <i class="icon-drag_indicator me-3 fs-3" ></i>
+                                            <span class="fw-bold me-1">KR{{(x+1)}}:</span>
+                                            <input #commentInput type="text" class="om-input w-100" formControlName ='comment' [placeholder]="'Kết quả chính ' +(x+1)"/>
+                                        </div>
+                                        <div class="w-30">
+                                            <input #commentInput type="number" class="om-input w-10 ms-5" formControlName ='target' [placeholder]="'Chỉ tiêu ' +(x+1)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center cursor-pointer om-add-btn py-3 ps-10" (click)="addKRForm(i)">
+                                <i class="icon-add_circle_outline me-3 om-fs-3"></i>
+                                <codx-label default="Thêm KR" fiedName="lblAddKR"></codx-label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="d-flex align-items-center cursor-pointer om-add-btn" (click)="addORKForm()">
+                <i class="fa-solid fa-bullseye me-3 fs-3"></i>
+                <codx-label default="Thêm mục tiêu" fiedName="lblAddTarget" class="om-border-bottom-add fw-bold" ngClass="w-70"></codx-label>
+            </div>
+
+        </div>
+        <div #footer class="d-flex justify-content-end" style="height:35px">
+            <button type="button" class="btn btn-primary" (click)="save()"><codx-label default="Lưu" fiedName="lblSave"></codx-label></button>
+        </div>
+    </div>
+  
+</ng-template>

@@ -1,6 +1,16 @@
-<codx-views #view [funcID]="funcID" [autoLoad]="true" entityName="HR_OrganizationUnits" idField="orgUnitID"
-  [views]="views" [selectedFirst]="true" (selectedChange)="onSelectionChanged($event)" [button]="button"
-  (buttonClick)="btnClick($event)" (viewChanged)="changeView($event)" [viewActiveType]="1"></codx-views>
+<codx-views #view 
+  [funcID]="funcID" 
+  [autoLoad]="true" 
+  entityName="HR_OrganizationUnits" 
+  idField="orgUnitID"
+  [views]="views" 
+  [selectedFirst]="true" 
+  (selectedChange)="onSelectionChanged($event)" 
+  [button]="button"
+  (buttonClick)="btnClick($event)" 
+  (viewChanged)="changeView($event)" 
+  [viewActiveType]="1">
+</codx-views>
 
 <ng-template #templateRight>
   <ng-container *ngTemplateOutlet="currView"></ng-container>
@@ -42,8 +52,8 @@
           <div class="d-flex org-dinhbien">
             <div #h class="mx-6 d-flex flex-column align-items-center"
               (click)="loadEmployList(h, data.departmentCode, '')">
-              <h4 class="text-gray-700 mb-2">{{ data.headcounts }}</h4>
-              <span class="text-gray-700">
+              <div class="fs-2 fw-bold text-dark mb-2">{{ data.headcounts }}</div>
+              <span class="text-gray-500">
                 <codx-label fiedName="headcounts" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
                   default="Định biên">
                 </codx-label>
@@ -51,8 +61,8 @@
             </div>
             <div #c class="mx-6 d-flex flex-column align-items-center"
               (click)="loadEmployList(c, data.departmentCode, '50')">
-              <h4 class="text-gray-700 mb-2 text-primary">{{ data.counts }}</h4>
-              <span class="text-gray-700">
+              <div class="fs-2 fw-bold mb-2 text-primary">{{ data.counts }}</div>
+              <span class="text-gray-500">
                 <codx-label fiedName="counts" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
                   default="Chính thức">
                 </codx-label>
@@ -60,8 +70,8 @@
             </div>
             <div #o class="mx-6 d-flex flex-column align-items-center"
               (click)="loadEmployList(o, data.departmentCode, '30')">
-              <h4 class="text-gray-700 mb-2 text-warning">{{ data.onboard }}</h4>
-              <span class="text-gray-700">
+              <div class="fs-2 fw-bold mb-2 text-warning">{{ data.onboard }}</div>
+              <span class="text-gray-500">
                 <codx-label fiedName="onboard" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
                   default="Onbroard">
                 </codx-label>
@@ -69,8 +79,8 @@
             </div>
             <div #f class="mx-6 d-flex flex-column align-items-center"
               (click)="loadEmployList(f, data.departmentCode, '70')">
-              <h4 class="text-gray-700 mb-2 text-danger">{{ data.offboard }}</h4>
-              <span class="text-gray-700">
+              <div class="fs-2 fw-bold mb-2 text-danger">{{ data.offboard }}</div>
+              <span class="text-gray-500">
                 <codx-label fiedName="offboard" formName="OrganizationUnits" gridViewName="grvOrganizationUnits"
                   default="Offboard">
                 </codx-label>

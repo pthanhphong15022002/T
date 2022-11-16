@@ -5,7 +5,7 @@
   [formModel]="formModel"
   [subHeader]=""
   [footer]="footer"
-  [dialog]="dialog"
+  [dialog]="dialogRef"
   (buttonClick)="buttonClick($event)"
   (setTitle)="setTitle($event)"
   [tabContent]="[tabGeneralInfo, tabQuotaInfo, tabMoreInfo]"
@@ -68,6 +68,7 @@
               ControlName="resourceID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              [disabled]="autoNumDisable"
             ></codx-input>
           </div>
         </div>
@@ -129,12 +130,14 @@
             <codx-img
               #imageUpLoad
               [width]="100"
-              imageType="circle" 
+              imageType="circle"
               [objectType]="'EP_Resources'"
+              [objectName]="data.resourceName"
               aria-disabled="false"
               [funcId]="formModel?.funcID"
               [isAllowEdit]="true"
-              [objectId]="data?.recID"
+              [objectId]="imgRecID"
+              [objectName]="data.resourceName"
             >
             </codx-img>
           </div>

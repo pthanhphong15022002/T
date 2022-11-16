@@ -1,27 +1,13 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [subHeaderText]="subHeaderText"
-  [subHeader]="subHeader"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  [formModel]="formModel"
-  [data]="dispatch"
->
+<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [subHeader]="subHeader" [body]="body"
+  [footer]="footer" [dialog]="dialog" [formModel]="formModel" [data]="dispatch">
 </codx-form>
 <ng-template #subHeader>
   <div class="d-flex align-items-center">
-    <div
-      *ngIf="
+    <div *ngIf="
         this.dispatch?.status == '1' || this.dispatch?.status == '2';
         else elseSelected
-      "
-    >
-      <span
-        class="btn btn-sm btn-primary btn-pill"
-        (click)="openFormUploadFile()"
-      >
+      ">
+      <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
         <i class="icon-cloud_upload icon-16 me-2"></i>Chọn file
       </span>
     </div>
@@ -35,59 +21,29 @@
 </ng-template>
 <ng-template popup adde #body>
   <div class="py-2">
-    <codx-attachment
-      #attachment
-      [objectType]="formModel?.entityName"
-      hideImageUpload="0"
-      showMessage="0"
-      hideBtnSave="1"
-      hideFolder="1"
-      hideUploadBtn="1"
-      hideDes="1"
-      [functionID]="formModel?.funcID"
-      (fileAdded)="fileAdded($event)"
-      (fileDelete)="handleDelete($event)"
-      (fileCount)="getfileCount($event)"
-      (fileGet)="getfileCount($event)"
-      isDeleteTemp="1"
-      [objectId]="dispatch?.recID"
-      [allowMultiFile]="0"
-      [idBrowse]="'add'"
-      [hideDelete]="
+    <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0"
+      hideBtnSave="1" hideFolder="1" hideUploadBtn="1" hideDes="1" [functionID]="formModel?.funcID"
+      (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
+      (fileGet)="getfileCount($event)" isDeleteTemp="1" [objectId]="dispatch?.recID" [allowMultiFile]="0"
+      [idBrowse]="'add'" [hideDelete]="
         this.dispatch?.status == '1' || this.dispatch?.status == '2' ? '1' : '0'
-      "
-      hideMoreF="0"
-    >
+      " hideMoreF="0">
     </codx-attachment>
   </div>
-  <div class="tab-horizone">
+  <div class="tab-horizone form-group">
     <div class="d-flex align-items-center mb-1">
-      <codx-label
-        class="me-2 cursor-pointer fw-bold"
-        [formModel]="formModel"
-        [fiedName]="'agencyName'"
-        [class.text-primary]="activeDiv == 'dv'"
-        (click)="hideDept('dv')"
-      >
+      <codx-label class="me-2 cursor-pointer fw-bold" [formModel]="formModel" [fiedName]="'agencyName'"
+        [class.text-primary]="activeDiv == 'dv'" (click)="hideDept('dv')">
       </codx-label>
       <ng-container *ngIf="!hidepb">
         <span class="me-2">|</span>
-        <codx-label
-          class="cursor-pointer text-primary fw-bold"
-          [class.text-primary]="activeDiv == 'pb'"
-          default="Phòng ban"
-          (click)="hideDept('pb')"
-        ></codx-label>
+        <codx-label class="cursor-pointer text-primary fw-bold" [class.text-primary]="activeDiv == 'pb'"
+          default="Phòng ban" (click)="hideDept('pb')"></codx-label>
       </ng-container>
     </div>
     <div class="align-items-start" style="display: flex" [hidden]="showAgency">
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="agencyName"
-        style="width: 100%"
-        (valueChange)="changeValueAgency($event)"
-      >
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="agencyName" style="width: 100%"
+        (valueChange)="changeValueAgency($event)">
       </codx-input>
       <!--  (valueChange)="changeValueAgency($event)" -->
       <!--   <codx-input
@@ -98,234 +54,126 @@
         (valueChange)="changeValueAgencyText($event)"
       >
       </codx-input> -->
-      <codx-label ></codx-label>
-      <span class="btn btn-primary ms-3" (click)="openFormAgency('agency')"
-        ><codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label></span
-      >
+      <codx-label></codx-label>
+      <span class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('agency')">
+        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label>
+      </span>
     </div>
     <div class="align-items-start" style="display:flex" [hidden]="!showAgency">
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deptName"  style="width:100%"
-      (valueChange)="changeValueDept($event)">
-    </codx-input>
-      <span class="btn btn-primary ms-3" (click)="openFormAgency('dept')"><codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label></span>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deptName" style="width:100%"
+        (valueChange)="changeValueDept($event)">
+      </codx-input>
+      <span class="btn btn-primary btn-32 ms-2" (click)="openFormAgency('dept')">
+        <codx-label [default]="'Thêm'" [fiedName]="'lblAdd'"></codx-label>
+      </span>
     </div>
   </div>
-  <div class="row mt-3">
+  <div class="row form-group">
     <div class="col-6">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="CategoryID"
-        class="fw-bold"
-      ></codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="categoryID"
-        (valueChange)="changeCbb($event)"
-      >
+      <codx-label [formModel]="form.formModel" fiedName="CategoryID" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="categoryID"
+        (valueChange)="changeCbb($event)">
       </codx-input>
     </div>
     <div class="col-6">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="Source"
-        class="fw-bold"
-      ></codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="source"
-      >
+      <codx-label [formModel]="form.formModel" fiedName="Source" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="source">
       </codx-input>
     </div>
   </div>
-  <div class="row mt-3">
-    <div class="col-4">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="RefNo"
-        class="fw-bold"
-      ></codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="refNo"
-        ControlName="refNo"
-      >
-      </codx-input>
-    </div>
-    <div class="col-4">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="RefDate"
-        class="fw-bold"
-      ></codx-label>
+  <div class="row form-group">
+    <div class="col-6">
+      <codx-label [formModel]="form.formModel" fiedName="DispatchNo" class="fw-bold"></codx-label>
       <!-- Bùa r nhờ Quang fix sau -->
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
-      <codx-input
-        type="datetime"
-        format="d"
-        field="refDate"
-        [crrValue]="dispatch?.refDate"
-        (valueChange)="valueChangeDate($event)"
-      >
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchNo" [disabled]="true">
       </codx-input>
     </div>
-    <div class="col-2">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="Pages"
-        class="fw-bold"
-      ></codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="pages"
-        [min]="0"
-        [showSpinButton]="false"
-      >
+    <div class="col-6">
+      <codx-label [formModel]="form.formModel" fiedName="RefNo" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refNo" ControlName="refNo">
       </codx-input>
     </div>
-    <div class="col-2">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="Copies"
-        class="fw-bold"
-      ></codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="copies"
-        [min]="0"
-        [showSpinButton]="false"
-      >
+
+  </div>
+  <div class="row form-group">
+    <div class="col-6">
+      <codx-label [formModel]="form.formModel" fiedName="RefDate" class="fw-bold"></codx-label>
+      <!-- Bùa r nhờ Quang fix sau -->
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="refDate" [format]="'d'">   </codx-input>-->
+      <codx-input type="datetime" format="d" field="refDate" [crrValue]="dispatch?.refDate"
+        (valueChange)="valueChangeDate($event)">
+      </codx-input>
+    </div>
+    <div class="col-3">
+      <codx-label [formModel]="form.formModel" fiedName="Pages" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="pages" [min]="0"
+        [showSpinButton]="false">
+      </codx-input>
+    </div>
+    <div class="col-3">
+      <codx-label [formModel]="form.formModel" fiedName="Copies" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="copies" [min]="0"
+        [showSpinButton]="false">
       </codx-input>
     </div>
   </div>
   <div class="form-group mt-3">
-    <codx-label
-      [formModel]="form.formModel"
-      fiedName="Title"
-      class="fw-bold"
-    ></codx-label>
-    <codx-input
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      field="title"
-      class="h-105px"
-    >
+    <codx-label [formModel]="form.formModel" fiedName="Title" class="fw-bold"></codx-label>
+    <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="title" class="h-105px">
     </codx-input>
   </div>
-  <div class="form-group row mt-3">
+  <div class="form-group row form-group">
     <div class="col-6">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="Urgency"
-        class="fw-bold"
-      ></codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="urgency"
-      >
+      <codx-label [formModel]="form.formModel" fiedName="Urgency" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="urgency">
       </codx-input>
     </div>
     <div class="col-6">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="Security"
-        class="fw-bold"
-      ></codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="security"
-      >
+      <codx-label [formModel]="form.formModel" fiedName="Security" class="fw-bold"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="security">
       </codx-input>
     </div>
   </div>
   <div class="form-group">
-    <codx-label
-      [formModel]="form.formModel"
-      fiedName="departmentID"
-      class="fw-bold"
-    ></codx-label>
+    <codx-label [formModel]="form.formModel" fiedName="departmentID" class="fw-bold"></codx-label>
     <div class="d-flex">
-      <codx-input
-        type="Combobox"
-        name="combobox"
-        [refValue]="
+      <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['DepartmentID']['referedValue'] : null
-        "
-        refType="P"
-        field="departmentID"
-        [showInput]="true"
-        [crrValue]="dispatch?.departmentID"
-        [ngClass]="'w-100'"
-        (valueChange)="changeValueBUID($event)"
-      >
+        " refType="P" field="departmentID" [showInput]="true" [crrValue]="dispatch?.departmentID" [ngClass]="'w-100'"
+        (valueChange)="changeValueBUID($event)">
       </codx-input>
     </div>
   </div>
   <div class="form-group">
-    <codx-label
-      [formModel]="form.formModel"
-      fiedName="Owner"
-      [default]="form.formModel.funcID == 'ODT41' ? 'Người gửi' : null"
-    ></codx-label>
+    <codx-label [formModel]="form.formModel" fiedName="Owner"
+      [default]="form.formModel.funcID == 'ODT41' ? 'Người gửi' : null"></codx-label>
     <div class="d-flex">
-      <codx-input
-        type="Combobox"
-        name="combobox"
-        [refValue]="
+      <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
-        "
-        [multiple]="false"
-        [crrValue]="this.dispatch.owner"
-        [showInput]="true"
-        refType="P"
-        field="popup"
-        [ngClass]="'w-100'"
-        (valueChange)="changeValueOwner($event)"
-      >
+        " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" field="popup"
+        [ngClass]="'w-100'" (valueChange)="changeValueOwner($event)">
       </codx-input>
     </div>
   </div>
-  <div class="form-group row mt-3">
+  <div class="form-group row form-group">
     <div class="col">
       <codx-label [formModel]="form.formModel" fiedName="SendMode"></codx-label>
-      <codx-input
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        field="sendMode"
-      ></codx-input>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="sendMode"></codx-input>
     </div>
     <div class="col">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="DispatchOn"
-      ></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="DispatchOn"></codx-label>
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="dispatchOn" [format]="'d'">     </codx-input>-->
-      <codx-input
-        type="datetime"
-        format="d"
-        field="dispatchOn"
-        [crrValue]="dispatch?.dispatchOn"
-        (valueChange)="valueChangeDate($event)"
-      >
+      <codx-input type="datetime" format="d" field="dispatchOn" [crrValue]="dispatch?.dispatchOn"
+        (valueChange)="valueChangeDate($event)">
       </codx-input>
     </div>
     <div class="col" *ngIf="form.formModel.funcID != 'ODT41'">
       <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline" [format]="'d'">
       </codx-input> -->
-      <codx-input
-        type="datetime"
-        format="d"
-        field="deadline"
-        [crrValue]="dispatch?.deadline"
-        (valueChange)="valueChangeDate($event)"
-      >
+      <codx-input type="datetime" format="d" field="deadline" [crrValue]="dispatch?.deadline"
+        (valueChange)="valueChangeDate($event)">
       </codx-input>
     </div>
   </div>

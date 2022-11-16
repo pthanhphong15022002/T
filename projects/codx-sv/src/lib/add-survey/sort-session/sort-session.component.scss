@@ -1,0 +1,37 @@
+// .sort-session {
+//   hr {
+//     background-color: gray !important;
+//     height: 2px !important;
+//     margin: 0 !important;
+//   }
+
+//   .icon-menu {
+//     color: #c0c0c0;
+//     height: fit-content !important;
+//     padding-top: 2%;
+//     cursor: pointer;
+//   }
+
+//   .b-l {
+//     border: 0px solid #e2e3ee;
+//     border-left-color: #3699ff !important;
+//     border-left-width: 3px !important;
+//   }
+
+//   .action-menu {
+//     position: unset !important;
+//     box-shadow: none !important;
+//   }
+// }
+.has-action-menu:hover {
+  border: 0px solid #e2e3ee;
+  border-left-color: #3699ff !important;
+  border-left-width: 3px !important;
+}
+
+.icon-menu {
+  color: #c0c0c0;
+  height: fit-content !important;
+  padding-top: 2%;
+  cursor: pointer;
+}

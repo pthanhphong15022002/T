@@ -34,6 +34,8 @@ import { PopupStatusMeetingComponent } from './popup-status-meeting/popup-status
 import { Observable, of } from 'rxjs';
 import moment from 'moment';
 import { PopupTabsViewsDetailsComponent } from '../popup-tabs-views-details/popup-tabs-views-details.component';
+import { PopupAddResourcesComponent } from './popup-add-resources/popup-add-resources.component';
+import { PopupRescheduleMeetingComponent } from './popup-reschedule-meeting/popup-reschedule-meeting.component';
 @Component({
   selector: 'codx-tmmeetings',
   templateUrl: './tmmeetings.component.html',
@@ -114,10 +116,8 @@ export class TMMeetingsComponent
 
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.api.execSv('CO',
-    //   'CO',
-    //   'MeetingsBusiness',
-    //   'SetAutoStatusMeetingAsync').subscribe();
+  //  this.tmService.RPASendMailMeeting('TM_0024', this.funcID).subscribe();
+
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
@@ -342,7 +342,7 @@ export class TMMeetingsComponent
 
   convertHtmlAgency(data: any) {
     var date = data.startDate;
-    var desc = '<div class="d-flex align-items-center ms-1" >';
+    var desc = '<div class="d-flex align-items-center ms-2" >';
     var day = '';
     var toDay = '<div class="d-flex flex-column me-2" >';
     if (date) {
@@ -354,14 +354,14 @@ export class TMMeetingsComponent
         date1.getDay() == 0 ? 'Chủ nhật' : 'Thứ ' + (date1.getDay() + 1);
 
       day +=
-        '<div class="fs-2hx fw-bold text-gray-800 me-2 lh-1">' +
+        '<div class="fs-2qx fw-bold text-gray-800 me-3 lh-1">' +
         myDay +
         '</div>';
       toDay +=
-        '<div class="text-dark fw-bold">' +
+        '<div class="fs-7 text-dark fw-bold">' +
         day1 +
         '</div>' +
-        '<div class="fw-lighter">' +
+        '<div class="fs-8 text-gray-600">' +
         'Tháng ' +
         month +
         ', ' +
@@ -435,6 +435,12 @@ export class TMMeetingsComponent
         break;
       case 'TMT05013':
         this.updateStatusMeeting(e.data, data);
+        break;
+      case 'TMT05014':
+        this.updateTimeMeeting(data);
+        break;
+      case 'TMT05015':
+        this.updateResources(data);
         break;
     }
   }
@@ -605,6 +611,52 @@ export class TMMeetingsComponent
   }
   //#region end
 
+  //#region Doi lich hop, Them nguoi tham gia
+  updateTimeMeeting(data) {
+    var obj = {
+      title: this.titleAction,
+      data: data,
+      funcID: this.funcID,
+    };
+    this.dialog = this.callfc.openForm(
+      PopupRescheduleMeetingComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      } else this.view.dataService.dataSelected = null;
+    });
+  }
+
+  updateResources(data) {
+    var obj = {
+      title: this.titleAction,
+      data: data,
+      funcID: this.funcID,
+    };
+    this.dialog = this.callfc.openForm(
+      PopupAddResourcesComponent,
+      '',
+      880,
+      500,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      } else this.view.dataService.dataSelected = null;
+    });
+  }
+  //#endregion
+
   //#region double click  view detail
   doubleClick(data) {
     this.viewDetail(data);
@@ -630,8 +682,7 @@ export class TMMeetingsComponent
       .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'UpdateMeetingsAsync', data)
       .subscribe((res) => {
         if (res) {
-          this.view.dataService.update(data).subscribe()
-          ;
+          this.view.dataService.update(data).subscribe();
         }
       });
   }
@@ -642,7 +693,7 @@ export class TMMeetingsComponent
         this.onDragDrop(e.data);
         break;
       case 'dbClick':
-      case 'edit': 
+      case 'edit':
         this.viewDetail(e?.data);
         break;
     }
@@ -676,7 +727,7 @@ export class TMMeetingsComponent
 
     return current_day;
   }
-  openLinkMeeting(data){
-    window.open(data?.link)
+  openLinkMeeting(data) {
+    window.open(data?.link);
   }
 }

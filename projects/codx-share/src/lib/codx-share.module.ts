@@ -125,7 +125,9 @@ import { ListChatBoxComponent } from './layout/components/list-chat-box/list-cha
 import { CodxAssignTempComponent } from './components/codx-assign-temp/codx-assign-temp.component';
 import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 import { CodxCompetencesComponent } from './components/codx-competences/codx-competences.component';
-import { LazyLoadImageModule} from 'ng-lazyload-image'; 
+import { LazyLoadImageModule} from 'ng-lazyload-image';
+import { CodxEmailComponent } from './components/codx-email/codx-email.component'; 
+import { CoreModule } from '@core/core.module';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -220,7 +222,7 @@ const T_Component: Type<any>[] = [
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe, AttachmentComponent, DialogthumbComponent],
+  declarations: [T_Component, T_Pipe, AttachmentComponent, DialogthumbComponent, CodxEmailComponent],
   imports: [
     CommonModule,
     NgbModule,
@@ -229,6 +231,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
+    CoreModule,
     DateRangePickerModule,
     TabModule,
     UploaderModule,

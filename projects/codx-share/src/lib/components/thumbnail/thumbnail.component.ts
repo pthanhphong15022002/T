@@ -23,6 +23,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() hideDelete = '1';
   @Input() isDeleteTemp = '0';
   @Input() hideMoreF = '1';
+  @Input() hideHover = '1';
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
@@ -195,7 +196,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   openFile(id) {
     //var data = JSON.parse(file);
     this.fileService.getFile(id).subscribe(data => {
-      debugger;
       var option = new DialogModel();
       option.IsFull = true;
       this.fileName = data.fileName;

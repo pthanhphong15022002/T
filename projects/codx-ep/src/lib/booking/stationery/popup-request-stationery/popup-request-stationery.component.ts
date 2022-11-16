@@ -19,6 +19,7 @@ import {
   UserModel,
   AuthStore,
   CRUDService,
+  AuthService,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -67,7 +68,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   lstStationery = [];
 
   user: UserModel;
-
+  grvStationery;
   model?: FormModel;
   groupStationery;
   radioGroupCheck: boolean;
@@ -110,6 +111,16 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     this.epService.getStationeryGroup().subscribe((res) => {
       this.groupStationery = res;
+    });
+
+    this.cache.functionList('EPS24').subscribe((res) => {
+      if (res) {
+        this.cache
+          .gridViewSetup(res.formName, res.gridViewName)
+          .subscribe((gv) => {
+            this.grvStationery = gv;
+          });
+      }
     });
 
     this.initForm();

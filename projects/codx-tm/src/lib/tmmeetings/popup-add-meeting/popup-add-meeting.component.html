@@ -54,7 +54,7 @@
       <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
   </div>
-  <div *ngIf="isRoom==false" class="form-group">
+  <div *ngIf="!isRoom" class="form-group">
     <div>
       <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
       </codx-label>
@@ -63,7 +63,7 @@
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
-  <div *ngIf="isRoom == true" class="form-group">
+  <div *ngIf="isRoom" class="form-group">
     <div class="d-flex justify-content-between align-items-center">
       <codx-label fiedName="Location" [formModel]="form.formModel" default="Địa điểm">
       </codx-label>
@@ -185,7 +185,7 @@
       <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="meeting?.recID" hideFolder="1"
         hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
         [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
-        (fileCount)="getfileCount($event)" displayThumb="full">
+        (fileCount)="getfileCount($event)" displayThumb="full" showMessage="0">
       </codx-attachment>
     </div>
   </ng-container>
@@ -258,23 +258,12 @@
     <div class="form-group">
       <div class="d-flex align-items-end justify-content-between mb-2">
         <div class="d-flex me-2">
-          <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung họp">
+          <codx-label fiedName="Reminder" [formModel]="form.formModel" default="Nhắc nhở trước cuộc họp(phút)">
           </codx-label>
-          <!-- <codx-label fiedName="Repeated" formName="TMMeetings" default="Lặp lại">
-          </codx-label> -->
         </div>
-        <!-- <div class="flex">
-            <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false"
-              labelPosition="Before"></codx-input>
-          </div> -->
-
-        <button type="button" class="btn btn-sm btn-icon btn-light">
-          <span class="icon-check_box icon-18"></span>
-        </button>
+        <codx-input type="text" name="reminder" field="reminder" (valueChange)="valueChange($event)" [crrValue]="meeting.reminder"></codx-input>
       </div>
-      <codx-input field="memo" type="textarea" class="meeting-des" headerposition="none" format="ed"
-        [crrValue]="meeting?.memo" (valueChange)="changeMemo($event)">
-      </codx-input>
+
     </div>
   </ng-container>
 </ng-template>
@@ -325,8 +314,8 @@
           (valueChange)="valueChange($event)">
         </codx-input>
         dung cái này dính edit ko view được
-       --> 
-  
+       -->
+
       </div>
     </ng-container>
   </ng-container>

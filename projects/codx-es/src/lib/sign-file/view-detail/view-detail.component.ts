@@ -75,6 +75,7 @@ export class ViewDetailComponent implements OnInit {
   user: any; //user loggin
   dataReferences: any = [];
   vllRefType: string = 'TM018';
+  isAfterRender: boolean = false;
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
@@ -139,8 +140,9 @@ export class ViewDetailComponent implements OnInit {
 
   initForm() {
     this.dataReferences = [];
-    console.log(1);
-
+    if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
+      this.itemDetailTemplate.formModel = this.formModel;
+    }
     this.cache.valueList('TM018').subscribe((res) => {
       console.log('TM018', res);
     });
@@ -175,7 +177,6 @@ export class ViewDetailComponent implements OnInit {
                     this.esService
                       .getod(this.itemDetail?.recID)
                       .subscribe((res) => {
-                        console.log('1111111111111', res);
                         res.refType = this.itemDetail?.refType;
                         let item = this.dataReferences.filter((p) => {
                           p.recID == res.recID;
@@ -225,6 +226,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
     }
+    this.isAfterRender = true;
     // this.setHeight();
   }
 
@@ -474,6 +476,34 @@ export class ViewDetailComponent implements OnInit {
       });
   }
 
+  viewSFile(datas: any, mF: any) {
+    this.view.dataService.edit(datas).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      let dialogAdd = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        mF?.text,
+        700,
+        650,
+        this.funcID,
+        {
+          modeView: '2',
+          isAddNew: false,
+          dataSelected: datas,
+          formModel: this.view?.formModel,
+          option: option,
+          headerText: mF?.text,
+        },
+        '',
+        dialogModel
+      );
+    });
+  }
+
   viewFile(datas: any, mF: any) {
     this.view.dataService.edit(datas).subscribe((res: any) => {
       let option = new SidebarModel();
@@ -489,7 +519,7 @@ export class ViewDetailComponent implements OnInit {
         650,
         this.funcID,
         {
-          modeView: true,
+          modeView: '1',
           isAddNew: false,
           dataSelected: datas,
           formModel: this.view?.formModel,

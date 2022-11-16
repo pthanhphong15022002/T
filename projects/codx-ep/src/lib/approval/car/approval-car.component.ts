@@ -14,6 +14,7 @@ import { PopupAddBookingCarComponent } from '../../booking/car/popup-add-booking
 import { CodxEpService } from '../../codx-ep.service';
 import { DriverModel } from '../../models/bookingAttendees.model';
 import { PopupDriverAssignComponent } from './popup-driver-assign/popup-driver-assign.component';
+import moment from 'moment';
 
 @Component({
   selector: 'approval-car',
@@ -60,7 +61,7 @@ export class ApprovalCarsComponent extends UIComponent {
   driverID:any;
   listDriver=[];
   driver:any;
-  fields: Object = { text: 'driverName', value: 'driverID' };
+  fields:any;
   popupTitle: any;
   constructor(
     private injector: Injector,
@@ -104,6 +105,7 @@ export class ApprovalCarsComponent extends UIComponent {
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
       code: { name: 'code' },
+      status: 'approveStatus',
     };
 
     this.resourceField = {
@@ -144,6 +146,7 @@ export class ApprovalCarsComponent extends UIComponent {
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           statusColorRef: 'EP022',
+          
         },
       },
     ];
@@ -189,12 +192,12 @@ export class ApprovalCarsComponent extends UIComponent {
           .subscribe((res: any) => {
             if (res?.msgCodeError == null && res?.rowCount >= 0) {
               if (status == '5') {
-                this.notificationsService.notifyCode('ES007'); //đã duyệt
+                this.notificationsService.notifyCode('SYS034'); //đã duyệt
                 data.approveStatus = '5';
                 data.status = '5';
               }
               if (status == '4') {
-                this.notificationsService.notifyCode('ES007'); //bị hủy
+                this.notificationsService.notifyCode('SYS034'); //bị hủy
                 data.approveStatus = '4';
                 data.status = '4';
               }
@@ -206,11 +209,15 @@ export class ApprovalCarsComponent extends UIComponent {
           });
       });
   }
-
+  setPopupTitle(data:any){
+    if(data){
+      this.popupTitle=data;
+    }
+  }
   assignDriver(data: any) {
     let startDate= new Date(data.startDate);
     let endDate= new Date(data.endDate);
-    this.codxEpService.getAvailableResources('3', startDate.toUTCString(), endDate.toUTCString())
+    this.codxEpService.getAvailableDriver(startDate.toUTCString(), endDate.toUTCString())
     .subscribe((res:any)=>{
       if(res){
         this.cbbDriver=[];
@@ -237,8 +244,7 @@ export class ApprovalCarsComponent extends UIComponent {
           }
         });
       }
-    })
-       
+    })       
   }
 
   cbxChange(evt:any){}
@@ -279,14 +285,27 @@ export class ApprovalCarsComponent extends UIComponent {
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if(data.status==5 && data.driverName!=null && data.driverName!='')
-            func.disabled = false;
+            if(data.status==5 && data.driverName==null)
+              func.disabled = false;
+            else{
+              func.disabled = true;
+            }
           }
         });
       }
     }
   }
-
+  sameDayCheck(sDate:any, eDate:any){
+    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   updateStatus(data: any) {
     this.view.dataService.update(data).subscribe();
   }

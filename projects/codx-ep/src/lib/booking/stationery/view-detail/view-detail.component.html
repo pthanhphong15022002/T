@@ -4,7 +4,7 @@
   [dataItem]="itemDetail"
   [header]="header"
   [body]="body"
-  [footer]="!hideFooter ? footer : null"
+  [footer]="hideFooter ? null : footer"
   [hideMF]="hideMF"
   (clickMF)="childClickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
@@ -118,6 +118,7 @@
                     imageType="circle"
                     width="35"
                     objectType="EP_Resources"
+                    [objectName]="item.resourceName"
                   ></codx-img>
                 </div>
                 <div class="ms-2">
@@ -150,11 +151,10 @@
     </div>
   </ng-template>
 
-  <ng-template #footer>
-    <approval-tabs></approval-tabs>
-  </ng-template>
 </codx-detail-tmp>
-
+<ng-template #footer>
+  <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
+</ng-template>
 <ng-template #defaulEmpt>
   <div class="w-100 h-100 container">
     <div class="list-empty card card-flush h-100">

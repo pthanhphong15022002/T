@@ -21,6 +21,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
   UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -490,7 +491,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         });
     }
-    if(!this.isAdd){
+    if((this.isAdd && this.data.resourceID!=null) || !this.isAdd){
       this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
         if(res){
           this.roomCapacity= res.capacity;
@@ -542,7 +543,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     return '';
   }
 
-  beforeSave(option: any) {
+  beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [
@@ -556,6 +557,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {   
+    // let roleCheck=0;
+    // if(this.curUser.roleType!="1"){
+    //   this.attendeesList.forEach(item=>{
+    //     if(item.roleType=="1"){
+    //       roleCheck=roleCheck+1;        
+    //     }      
+    //   });
+    //   if(roleCheck<1){
+    //     this.notificationsService.notify('Chưa có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
+    //     return;
+    //   }
+    // }
+    this.data.reminder=15;
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -563,8 +577,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.fGroupAddBookingRoom,
         this.formModel
       );
+      return;
     }
     if (!this.bookingOnCheck()) {
+      this.notificationsService.notifyCode('EP001');
+      return;
+    }
+    if (this.data.startDate< new Date()) {
       this.notificationsService.notifyCode('EP001');
       return;
     }
@@ -601,7 +620,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     //ktra link online
     if(this.data.online && (this.data.onlineUrl==null || this.data.onlineUrl==''))
     {
-      this.notificationsService.alertCode('EP012').subscribe((x)=>{
+      this.notificationsService.alertCode('Chưa có đường dẫn cho cuộc họp online!').subscribe((x)=>{//EP_WAIT đợi messagecode từ BA
         if (x.event.status == 'N') {
           return;
         } else {
@@ -646,6 +665,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.tmpAttendeesList,
           this.data.startDate.toUTCString(),
           this.data.endDate.toUTCString(),
+          this.data.recID
         ]
       )
       .subscribe((res) => {
@@ -670,7 +690,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
   startSave(approval) {
     this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
+      .save((opt: RequestOption) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe(async (res) => {
         if (res.save || res.update) {
           if (!res.save) {
@@ -690,7 +710,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
           if (approval) {
             (
-              await this.codxEpService.getCategoryByEntityName(
+              this.codxEpService.getCategoryByEntityName(
                 this.formModel.entityName
               )
             ).subscribe((res: any) => {
@@ -724,6 +744,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.dialogRef && this.dialogRef.close(this.returnData);
           }
         } else {
+          
           return;
         }
       });
@@ -757,7 +778,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.changeDetectorRef.detectChanges();
   }
   //Date time validate
@@ -785,8 +806,26 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   bookingOnCheck() {
-    let selectDate = new Date(this.data.bookingOn);
+    let selectDate = new Date(this.data.bookingOn);        
     let tmpCrrDate = new Date();
+    this.data.startDate= new Date(
+      selectDate.getFullYear(),
+      selectDate.getMonth(),
+      selectDate.getDate(),
+      this.data.startDate.getHours(),
+      this.data.startDate.getMinutes(),
+      0,
+      0
+    );
+    this.data.endDate= new Date(
+      selectDate.getFullYear(),
+      selectDate.getMonth(),
+      selectDate.getDate(),
+      this.data.endDate.getHours(),
+      this.data.endDate.getMinutes(),
+      0,
+      0
+    );
     let crrDate = new Date(
       tmpCrrDate.getFullYear(),
       tmpCrrDate.getMonth(),
@@ -964,7 +1003,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   UpdateAttendeesList() {
-    this.attendeesList = [];
     if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
       this.lstUser.forEach((item) => {
         this.attendeesList.push(item);
@@ -986,59 +1024,59 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
       }
     });
-    this.data.attendees = this.attendeesList.length + 1;
+    
     this.changeDetectorRef.detectChanges();
   }
 
-  cbbDataOptionalUser: any;
-  valueCbxUserOptionalChange(event) {
-    if (event == null) {
-      this.isPopupOptionalUserCbb = false;
-      return;
-    }
-    this.cbbDataUser = event;
-    if (event?.dataSelected) {
-      this.lstUserOptional = [];
-      this.attendeesList = [];
-      event.dataSelected.forEach((people) => {
-        let tempAttender = new BookingAttendees();
-        tempAttender.userID = people.UserID;
-        tempAttender.userName = people.UserName;
-        tempAttender.status = '1';
-        tempAttender.roleType = '3';
-        tempAttender.optional = true;
-        this.listRoles.forEach((element) => {
-          if (element.value == tempAttender.roleType) {
-            tempAttender.icon = element.icon;
-            tempAttender.roleName = element.text;
-          }
-        });
-        this.lstUserOptional.push(tempAttender);
-      });
-      for (let i = 0; i < this.lstUserOptional.length; ++i) {
-        for (let j = 0; j < this.lstUser.length; ++j) {
-          if (this.lstUserOptional[i].userID == this.lstUser[j].userID) {
-            this.lstUser.splice(j, 1);
-          }
-        }
-      }
-      this.UpdateAttendeesList();
-      this.changeDetectorRef.detectChanges();
-      this.isPopupOptionalUserCbb = false;
-    }
-  }
+  //cbbDataOptionalUser: any;
+  // valueCbxUserOptionalChange(event) {
+  //   if (event == null) {
+  //     this.isPopupOptionalUserCbb = false;
+  //     return;
+  //   }
+  //   this.cbbDataUser = event;
+  //   if (event?.dataSelected) {
+  //     this.lstUserOptional = [];
+  //     this.attendeesList = [];
+  //     event.dataSelected.forEach((people) => {
+  //       let tempAttender = new BookingAttendees();
+  //       tempAttender.userID = people.UserID;
+  //       tempAttender.userName = people.UserName;
+  //       tempAttender.status = '1';
+  //       tempAttender.roleType = '3';
+  //       tempAttender.optional = true;
+  //       this.listRoles.forEach((element) => {
+  //         if (element.value == tempAttender.roleType) {
+  //           tempAttender.icon = element.icon;
+  //           tempAttender.roleName = element.text;
+  //         }
+  //       });
+  //       this.lstUserOptional.push(tempAttender);
+  //     });
+  //     for (let i = 0; i < this.lstUserOptional.length; ++i) {
+  //       for (let j = 0; j < this.lstUser.length; ++j) {
+  //         if (this.lstUserOptional[i].userID == this.lstUser[j].userID) {
+  //           this.lstUser.splice(j, 1);
+  //         }
+  //       }
+  //     }
+  //     this.UpdateAttendeesList();
+  //     this.changeDetectorRef.detectChanges();
+  //     this.isPopupOptionalUserCbb = false;
+  //   }
+  // }
 
-  cbbDataUser: any;
+  cbbDataUser='';
   valueCbxUserChange(event) {
+    
     if (event == null) {
       this.isPopupUserCbb = false;
       return;
     }
-    this.cbbDataUser = event;
     if (event?.dataSelected) {
       this.lstUser = [];
-      this.attendeesList = [];
       event.dataSelected.forEach((people) => {
+        
         let tempAttender = new BookingAttendees();
         tempAttender.userID = people.UserID;
         tempAttender.userName = people.UserName;
@@ -1051,22 +1089,44 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             tempAttender.roleName = element.text;
           }
         });
-        this.lstUser.push(tempAttender);
+        this.attendeesList.push(tempAttender);
       });
-
-      if (this.lstUser.length > 0 && this.lstUserOptional.length > 0) {
-        for (let i = 0; i < this.lstUser.length; ++i) {
-          for (let j = 0; j < this.lstUserOptional.length; ++j) {
-            if (this.lstUser[i].userID == this.lstUserOptional[j].userID) {
-              this.lstUserOptional.splice(j, 1);
+      this.attendeesList.forEach((item) => {
+        if (item.userID == this.curUser.userID) {
+          this.attendeesList.splice(this.attendeesList.indexOf(item), 1);
+        }
+      });
+      this.attendeesList=this.filterArray(this.attendeesList);
+      this.data.attendees = this.attendeesList.length + 1;
+      this.changeDetectorRef.detectChanges();
+      let tmpDataCBB='';
+      // this.attendeesList.forEach(item=>{
+      //   tmpDataCBB=tmpDataCBB+";"+item.userID;        
+      // });
+      let roleCheck=0;
+      if(this.curUser.roleType!="1"){
+        this.attendeesList.forEach(item=>{
+          if(item.roleType=="1"){
+            roleCheck=roleCheck+1;        
+          }      
+        });
+        if(roleCheck<1){
+          this.curUser.roleType='1';
+          this.listRoles.forEach((element) => {
+            if (element.value == this.curUser.roleType) {
+              this.curUser.icon = element.icon;
+              this.curUser.roleName = element.text;
             }
-          }
+          });
         }
       }
-      this.UpdateAttendeesList();
-      this.changeDetectorRef.detectChanges();
+      this.cbbDataUser=tmpDataCBB;
       this.isPopupUserCbb = false;
+      this.changeDetectorRef.detectChanges();
     }
+  }
+  filterArray(arr) {
+    return [...new Map(arr.map(item => [item["userID"], item])).values()];
   }
   //Stationery & Room
   valueCbxRoomChange(event?) {
@@ -1099,7 +1159,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.isPopupStationeryCbb = false;
       return;
     }
-    this.lstStationery = [];
     event.dataSelected.forEach((item) => {
       let tempStationery: {
         id: string;
@@ -1118,6 +1177,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       };
       this.lstStationery.push(tempStationery);
     });
+    this.lstStationery=[...new Map(this.lstStationery.map(item => [item["id"], item])).values()]
 
     this.changeDetectorRef.detectChanges();
     this.isPopupStationeryCbb = false;
@@ -1142,135 +1202,65 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
   }
+  
   showPopover(p, userID) {
-    if (this.popover) this.popover.close();
+    // if (this.popover) this.popover.close();
     if (userID) this.idUserSelected = userID;
     p.open();
     this.popover = p;
   }
   selectRoseType(idUserSelected, value) {
-    this.attendeesList.forEach((res) => {
-      if (res.userID == idUserSelected) {
-        res.roleType = value;
+    if(value=="1"){
+      if(this.curUser.roleType=="1"){
+        this.curUser.roleType="3";
         this.listRoles.forEach((role) => {
-          if (role?.value == res?.roleType) {
-            res.icon = role.icon;
+          if (this.curUser.roleType == role.value) {
+            this.curUser.icon = role.icon;
           }
         });
+        this.detectorRef.detectChanges();
       }
-    });
-    this.changeDetectorRef.detectChanges();
-
-    this.popover.close();
-  }
-  eventApply(e) {
-    var listUserID = '';
-    var listDepartmentID = '';
-    var listUserIDByOrg = '';
-    var type = 'U';
-    e?.data?.forEach((obj) => {
-      type = obj.objectType;
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
-      }
-    });
-    if (listUserID != '') {
-      listUserID = listUserID.substring(0, listUserID.length - 1);
-      //this.valueUser(listUserID);
+      else{
+        this.attendeesList.forEach(att=>{
+          if(att.roleType == "1"){
+            att.roleType="3";
+            this.listRoles.forEach((role) => {
+              if (att.roleType == role.value) {
+                att.icon = role.icon;
+              }
+            });
+            this.detectorRef.detectChanges();     
+          }      
+        });
+      }      
     }
 
-    if (listDepartmentID != '')
-      listDepartmentID = listDepartmentID.substring(
-        0,
-        listDepartmentID.length - 1
-      );
-    // if (listDepartmentID != '') {
-    //   this.tmSv
-    //     .getListUserIDByListOrgIDAsync([listDepartmentID, type])
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         listUserIDByOrg += res;
-    //         if (listUserID != '') listUserIDByOrg += ';' + listUserID;
-    //         this.valueUser(listUserIDByOrg);
-    //       }
-    //     });
-    // }
+    if(idUserSelected==this.curUser.userID){
+      this.curUser.roleType=value;
+      this.listRoles.forEach((role) => {
+        if (this.curUser.roleType == role.value) {
+          this.curUser.icon = role.icon;
+        }
+      });      
+      this.changeDetectorRef.detectChanges();
+    }
+    else{
+      this.attendeesList.forEach((res) => {
+        if (res.userID == idUserSelected) {
+          res.roleType = value;
+          this.listRoles.forEach((role) => {
+            if (role?.value == res?.roleType) {
+              res.icon = role.icon;
+            }
+          });
+        }
+      });      
+      this.changeDetectorRef.detectChanges();
+    }    
+    this.changeDetectorRef.detectChanges();
+    this.popover.close();
+
   }
-
-  // valueUser(resourceID) {
-  //   if (resourceID != '') {
-  //     if (this.resources != null) {
-  //       var user = this.resources;
-  //       var array = resourceID.split(';');
-  //       var id = '';
-  //       var arrayNew = [];
-  //       user.forEach((e) => {
-  //         id += e.resourceID + ';';
-  //       });
-  //       if (id != '') {
-  //         id = id.substring(0, id.length - 1);
-
-  //         array.forEach((element) => {
-  //           if (!id.split(';').includes(element)) arrayNew.push(element);
-  //         });
-  //       }
-  //       if (arrayNew.length > 0) {
-  //         resourceID = arrayNew.join(';');
-  //         id += ';' + resourceID;
-  //         this.getListUser(resourceID);
-  //       }
-  //     } else {
-  //       this.getListUser(resourceID);
-  //     }
-  //   }
-  // }
-
-  // getListUser(resource) {
-  //   while (resource.includes(' ')) {
-  //     resource = resource.replace(' ', '');
-  //   }
-  //   var arrUser = resource.split(';');
-  //   this.listUserID = this.listUserID.concat(arrUser);
-  //   this.api
-  //     .execSv<any>(
-  //       'HR',
-  //       'ERM.Business.HR',
-  //       'EmployeesBusiness',
-  //       'GetListEmployeesByUserIDAsync',
-  //       JSON.stringify(resource.split(';'))
-  //     )
-  //     .subscribe((res) => {
-  //       if (res && res.length > 0) {
-  //         for (var i = 0; i < res.length; i++) {
-  //           let emp = res[i];
-  //           var tmpResource = new CO_Resources();
-  //           if (emp.userID == this.user.userID) {
-  //             tmpResource.resourceID = emp?.userID;
-  //             tmpResource.resourceName = emp?.userName;
-  //             tmpResource.positionName = emp?.positionName;
-  //             tmpResource.roleType = 'A';
-  //             tmpResource.taskControl = true;
-  //             this.resources.push(tmpResource);
-  //           } else {
-  //             tmpResource.resourceID = emp?.userID;
-  //             tmpResource.resourceName = emp?.userName;
-  //             tmpResource.positionName = emp?.positionName;
-  //             tmpResource.roleType = 'P';
-  //             tmpResource.taskControl = true;
-  //             this.resources.push(tmpResource);
-  //           }
-  //           this.meeting.resources = this.resources;
-  //         }
-  //       }
-  //     });
-  // }
-
   connectMeetingNow() {
     this.codxEpService
       .connectMeetingNow(

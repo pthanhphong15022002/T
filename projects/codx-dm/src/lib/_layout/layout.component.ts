@@ -161,16 +161,17 @@ db.DM_FolderInfo.updateMany(
     breadcumb.push(title);
     breadcumb.push(subtitle);
     this.dmSV.idMenuActive = id;
+    this.dmSV.page =0;
     this.dmSV.breadcumb.next(breadcumb);
     this.dmSV.menuIdActive.next(id);
     this.dmSV.menuActive.next(title);
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id);
-    this.dmSV.dmFavoriteID = subid;
+    this.dmSV.dmFavoriteID = "2";
     this.folderService.options.funcID = id;
     this.folderService.options.favoriteID = subid;
     this.folderService.getFolders('').subscribe(async (list) => {
-      if (list != null) {
+      if (list) {
         this.dmSV.listFolder = list[0];
         this.dmSV.ChangeData.next(true);
         this.changeDetectorRef.detectChanges();

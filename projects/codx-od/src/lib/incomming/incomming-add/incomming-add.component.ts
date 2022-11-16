@@ -96,10 +96,11 @@ export class IncommingAddComponent implements OnInit {
       this.dispatch.copies = 1;
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
-      this.dispatch.owner = null;
       if (this.type == 'add') {
         this.dispatch.dispatchType = this.data?.dispatchType;
         this.dispatch.agencyName = null;
+        // this.dispatch.departmentID = "BGĐ"
+        // this.getDispathOwner("BGĐ");
         if(this.formModel?.funcID == "ODT41") this.dispatch.owner = user?.userID
       }
       this.dispatch.createdOn = new Date();
@@ -168,14 +169,17 @@ export class IncommingAddComponent implements OnInit {
   //Nơi nhận
   changeValueBUID(event: any) {
     this.dispatch.departmentID = event?.data?.value[0];
-    if (event.data?.value[0]) {
-      this.api
+    if (event.data?.value[0]) this.getDispathOwner(event.data?.value[0]);
+  }
+  getDispathOwner(data:any)
+  {
+    this.api
         .execSv(
           'HR',
           'ERM.Business.HR',
           'OrganizationUnitsBusiness',
           'GetUserByDept',
-          [event.data?.value[0], null, null]
+          [data, null, null]
         )
         .subscribe((item: any) => {
           if (item != null && item.length > 0) {
@@ -189,7 +193,6 @@ export class IncommingAddComponent implements OnInit {
             this.dispatch.owner = '';
           }
         });
-    }
   }
   getInforByUser(id:any) : Observable<any>
   {
@@ -258,7 +261,8 @@ export class IncommingAddComponent implements OnInit {
     /////////////////////////////////////////////////////////
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if (this.type == 'add' || this.type == 'copy') {
-      this.dispatch.status = '1';
+      if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
+      else this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       if (this.type == 'copy') 
       {
@@ -274,7 +278,6 @@ export class IncommingAddComponent implements OnInit {
       }
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
-      this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       this.odService
         .saveDispatch(this.dataRq, this.dispatch)

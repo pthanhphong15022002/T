@@ -1,5 +1,4 @@
-<codx-views #view entityName="HR_Employees" idField="employeeID" [views]="views" [viewActiveType]="'16'"
-  [autoLoad]="false">
+<codx-views #view entityName="HR_Employees" idField="employeeID" [views]="views" [autoLoad]="false">
 </codx-views>
 
 <ng-template #panelContent>
@@ -594,7 +593,6 @@
                     <ng-container swiperSlide *ngFor="let item of trainingPersonal">
                       <ng-container>
                         <div class="process-item swiper-slide">
-                          <div class="line"></div>
                           <span class="yeartoyear btn btn-sm">{{
                             item.completeOn
                             }}</span>

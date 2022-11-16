@@ -135,6 +135,7 @@
   <codx-card-img
     cardCss="border w-200px h-100 card-vpp"
     [imageObjType]="'EP_Resources'"
+    [imageObjName]="data?.resourceName"
     [imageId]="data?.recID"
     [rootData]="data"
     [footer]="cardItemFooter"
@@ -149,24 +150,34 @@
       {{ data?.resourceName }}
     </div>
     <div class="text-start">
-      {{ data?.costPrice | currency: "VND":"symbol":"3.0" }}
+      {{
+        data?.costPrice == 0
+          ? (0 | currency: "VND")
+          : (data?.costPrice | currency: "VND":"symbol":"3.0")
+      }}
     </div>
     <div class="d-flex justify-content-between align-items-end mt-2">
       <div class="d-flex align-items-end me-2 codx-badge mb-3">
-        <div class="d-flex align-items-center position-relative me-4"  [title]="'hello'">
-          <span
-            class="icon-view_agenda icon-20 text-gray-400"
-           
-          ></span>
+        <div
+          class="d-flex align-items-center position-relative me-4"
+          [title]="grvStationery['CurrentQty'].headerText"
+        >
+          <span class="icon-view_agenda icon-20 text-gray-400"></span>
           <span>{{ data?.currentQty }}</span>
         </div>
-        <div class="d-flex align-items-center position-relative me-4">
+        <div
+          class="d-flex align-items-center position-relative me-4"
+          [title]="grvStationery['ReservedQty'].headerText"
+        >
           <span
             class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
           ></span>
           <span>{{ data?.reservedQty }}</span>
         </div>
-        <div class="d-flex align-items-center position-relative me-4">
+        <div
+          class="d-flex align-items-center position-relative me-4"
+          [title]="grvStationery['AvailableQty'].headerText"
+        >
           <span
             class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
           ></span>
@@ -297,16 +308,16 @@
           <div class="form-group col-6">
             <codx-label
               class="d-flex justify-content-start"
-              fiedName="BUID"
+              fiedName="OrgUnitID"
               [formModel]="formModel"
             >
             </codx-label>
             <codx-input
               [disabled]="dialogAddBookingStationery?.value.category === '1'"
               type="combobox"
-              field="bUID"
-              refValue="BusinessUnits"
-              [crrValue]="dialogAddBookingStationery?.value.bUID"
+              field="orgUnitID"
+              refValue="OrganizationUnits"
+              [crrValue]="dialogAddBookingStationery?.value.orgUnitID"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -378,6 +389,7 @@
                   imageType="circle"
                   width="35"
                   objectType="EP_Resources"
+                  [objectName]="item.resourceName"
                 ></codx-img>
               </div>
               <div class="ms-2">
@@ -388,11 +400,7 @@
                 </div>
 
                 <div class="d-flex flex-row flex-grow-1">
-                  <codx-label
-                    class="text-gray-600"
-                    fiedName="BUID"
-                    [formModel]="formModel"
-                  ></codx-label
+                  <codx-label name="lblUMID" default="Đơn vị tính"></codx-label
                   >:
                   <span class="d-block ms-2 fw-bold">{{ item?.umid }}</span>
                 </div>

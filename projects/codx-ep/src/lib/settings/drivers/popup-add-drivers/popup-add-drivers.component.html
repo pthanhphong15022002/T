@@ -21,6 +21,26 @@
       </codx-input>
     </div>
 
+    <div class="form-group">
+      <!-- <codx-label fiedName="Email" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        ControlName="email"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      >
+      </codx-input> -->
+      <codx-label default="Email" name="lblEmail"></codx-label>
+      <codx-input
+        type="text"
+        field="email"
+        placeholder="Email"
+        (valueChange)="emailChange($event)"
+        [crrValue]="data.email"
+      >
+      </codx-input>
+    </div>
+
     <div class="row">
       <!-- <div class="col-4 form-group">
       <codx-label
@@ -117,7 +137,8 @@
         aria-disabled="false"
         [isAllowEdit]="true"
         [funcId]="formModel?.funcID"
-        [objectId]="data?.recID"
+        [objectName]="data.resourceName"
+        [objectId]="imgRecID"
       >
       </codx-img>
     </div>

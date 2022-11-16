@@ -97,6 +97,7 @@ export class ApprovalRoomsComponent extends UIComponent {
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
+      status: 'approveStatus',
     };
 
     this.resourceField = {
@@ -189,12 +190,12 @@ export class ApprovalRoomsComponent extends UIComponent {
     .subscribe((res:any) => {
       if (res?.msgCodeError == null && res?.rowCount>=0) {
         if (status == '5') {
-          this.notificationsService.notifyCode('ES007'); //đã duyệt
+          this.notificationsService.notifyCode('SYS034'); //đã duyệt
           data.approveStatus = '5';
           data.status = '5';
         }
         if (status == '4') {
-          this.notificationsService.notifyCode('ES007'); //bị hủy
+          this.notificationsService.notifyCode('SYS034'); //bị hủy
           data.approveStatus = '4';
           data.status = '4';
         }                          
@@ -204,6 +205,14 @@ export class ApprovalRoomsComponent extends UIComponent {
       }
     });
      
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
   }
   changeDataMF(event, data:any) {        
     if(event!=null && data!=null){

@@ -79,15 +79,15 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
       this.funcList = func;
     });
+
+    this.formModel = this.viewBase?.formModel;
   }
 
   views: Array<ViewModel> = [];
   moreFunc: Array<ButtonModel> = [];
   ngOnInit(): void {
     this.layout.showIconBack = true;
-    this.esService.getFormModel(this.funcID).then((fm) => {
-      if (fm) this.formModel = fm;
-    });
+    this.formModel = this.viewBase?.formModel;
   }
 
   button: ButtonModel;
@@ -114,11 +114,22 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   }
   onLoading(evt: any) {
     let formModel = this.viewBase.formModel;
+    console.log(this.formModel);
+
     if (formModel) {
       this.cacheSv
         .gridViewSetup(formModel?.formName, formModel?.gridViewName)
         .subscribe((gv) => {
+          console.log(gv);
+
           this.columnsGrid = [
+            {
+              field: '',
+              headerText: '',
+              width: 20,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
             {
               field: 'email',
               headerText: gv ? gv['Email'].headerText || 'Email' : 'Email',
@@ -139,7 +150,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 ? gv['SignatureType'].headerText || 'SignatureType'
                 : 'SignatureType',
               template: this.signatureType,
-              width: 150,
+              width: 140,
             },
             {
               field: 'supplier',
@@ -155,7 +166,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 ? gv['Signature1'].headerText || 'Signature1'
                 : 'Signature1',
               template: this.imageSignature1,
-              width: 150,
+              width: 130,
               textAlign: 'Center',
             },
             {
@@ -164,23 +175,22 @@ export class SignatureComponent implements OnInit, AfterViewInit {
                 ? gv['Signature2'].headerText || 'Signature2'
                 : 'Signature2',
               template: this.imageSignature2,
-              width: 150,
+              width: 130,
               textAlign: 'Center',
             },
             {
               field: 'stamp',
               headerText: gv ? gv['Stamp'].headerText || 'Stamp' : 'Stamp',
               template: this.imageStamp,
-              width: 150,
+              width: 130,
               textAlign: 'Center',
             },
             {
               field: 'otpControl',
               headerText: gv ? gv['OTPControl'].headerText || 'Icon' : 'Icon',
               template: this.oTPControl,
-              width: 150,
+              width: 130,
             },
-            { field: '', headerText: '', width: 20, template: this.itemAction },
           ];
           this.views = [
             {

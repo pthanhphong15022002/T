@@ -4,7 +4,7 @@
   [dataItem]="itemDetail"
   [header]="header"
   [body]="body"
-  [footer]="!hideFooter ? footer : null"
+  [footer]="hideFooter ? null : footer"
   (clickMF)="childClickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
 >
@@ -84,15 +84,15 @@
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
-          {{ itemDetail?.startHour }}
+          {{ showHour(itemDetail?.startDate) }}
         </span>
         <span
-          *ngIf="itemDetail?.startHour && itemDetail?.endHour"
+          *ngIf="itemDetail?.startDate && itemDetail?.endDate"
           class="ms-1 me-1 text-gray-600"
           >{{ "-" }}</span
         >
         <span class="text-gray-600">
-          {{ itemDetail?.endHour }}
+          {{ showHour(itemDetail?.endDate) }}
         </span>
       </div>
     </div>
@@ -190,6 +190,7 @@
                         imageType="circle"
                         width="35"
                         objectType="EP_Resources"
+                        [objectName]="item.itemName"
                       >
                       </codx-img>
                     </div>
@@ -240,7 +241,7 @@
   </ng-template>
 
   <ng-template #footer>
-    <approval-tabs></approval-tabs>
+    <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
   </ng-template>
 </codx-detail-tmp>
 
@@ -382,3 +383,4 @@
     </codx-label>
   </ng-container>
 </ng-template>
+

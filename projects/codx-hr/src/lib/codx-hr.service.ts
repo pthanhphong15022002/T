@@ -93,6 +93,7 @@ export class CodxHrService {
       .callSv(
         'HR',
         'ERM.Business.HR',
+        
         'OrganizationUnitsBusiness',
         'GetDataDiagramAsync',
         [orgUnitID, numberLV, parentID, onlyDepartment]
@@ -114,4 +115,45 @@ export class CodxHrService {
       data
     );
   }
+
+  saveEmployeeSelfInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeSelfInfoAsync',
+      data
+    );
+  }
+
+  saveEmployeeContactInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeContactInfoAsync',
+      data
+    )
+  }
+
+  saveEmployeeUnionAndPartyInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeUnionAndPartyInfoAsync',
+      data
+    )
+  }
+
+  saveEmployeeAssurTaxBankAccountInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'UpdateEmployeeAssurTaxBankInfoAsync',
+      data
+    )
+  }
+
 }

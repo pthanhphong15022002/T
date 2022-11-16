@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
-import { tmpInforSentEMail } from './models/BP_Processes.model';
+import { DataRequest } from 'codx-core/public-api';
+import {
+  BehaviorSubject,
+  catchError,
+  finalize,
+  map,
+  Observable,
+  of,
+} from 'rxjs';
+import { BP_Processes, tmpInforSentEMail } from './models/BP_Processes.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +17,8 @@ import { tmpInforSentEMail } from './models/BP_Processes.model';
 export class CodxBpService {
   viewProcesses = new BehaviorSubject<any>(null);
   constructor(private api: ApiHttpService) {}
-
+  public bpProcesses = new BehaviorSubject<BP_Processes>(null);
+  isFileEditing = this.bpProcesses.asObservable();
   getListFunctionMenuCreatedStepAsync(funcID) {
     return this.api.exec<any>(
       'BP',
@@ -54,13 +63,63 @@ export class CodxBpService {
     );
   }
   updateDataDrapDrop(data) {
-    return this.api
-    .exec<any>('BP', 'ProcessStepsBusiness', 'UpdateProcessStepWithDropDrapAsync', data)
+    return this.api.exec<any>(
+      'BP',
+      'ProcessStepsBusiness',
+      'UpdateProcessStepWithDropDrapAsync',
+      data
+    );
   }
-  
+
+  updatePermissionProcess(data){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdatePermissionProcessAsync',
+      data
+    )
+  }
+
+  getOwnersByParentID(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessStepsBusiness',
+      'GetOwnersByParentIDAsync',
+      data
+    );
+  }
+
+  setViewRattings(recID: string, ratting: string, comment: string){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'SetViewRattingAsync',
+      [recID, ratting, comment]
+    );
+  }
+
+  loadUserName(id: string){
+    return this.api.exec<any>(
+      'AD',
+      'UsersBusiness',
+      'GetAsync',
+      id
+    );
+  }
+
   public listTags = new BehaviorSubject<any>(null);
   isListTags = this.listTags.asObservable();
 
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
+
+  searchDataProcess(gridModel,searchKey): Observable<any> {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'GetProcessesByKeyAsync',
+      [gridModel,searchKey]
+    );
+    //.subscribe((res)=>{ console.log(res)});
+  }
 }

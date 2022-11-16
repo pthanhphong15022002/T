@@ -18,7 +18,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   service = "WP";
   assemblyName = "ERM.Business.WP"
   className = "CommentsBusiness"
-  method = "GetListPostAsync";
+  // method = "GetListPostAsync";
   totalPage: number = 0;
   pageIndex = 0;
   user: any;

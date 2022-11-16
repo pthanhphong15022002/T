@@ -165,8 +165,8 @@ export class PatternComponent extends UIComponent implements OnInit {
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
-      this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
+      var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+      dialog.closed.subscribe((e) => {
         if (e?.event?.data?.save) {
           this.lstPattern.splice(this.lstPattern.length - 1, 1);
           this.lstPattern.push(e.event?.data?.save);
@@ -178,7 +178,11 @@ export class PatternComponent extends UIComponent implements OnInit {
               else this.lstPattern[index].isDefault = false;
             });
           }
+          var data = e?.event?.data?.save;
+          data['modifiedOn'] = new Date();
+          this.view.dataService.update(data).subscribe();
         }
+        this.view.dataService.clear();
       });
     });
     this.change.detectChanges();
@@ -201,8 +205,8 @@ export class PatternComponent extends UIComponent implements OnInit {
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
-        this.dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
-        this.dialog.closed.subscribe((e) => {
+        var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+        dialog.closed.subscribe((e) => {
           if (e?.event?.data.update) {
             this.lstPattern.forEach((dt, index) => {
               if (dt.recID == e.event.data.update.recID)
@@ -222,7 +226,11 @@ export class PatternComponent extends UIComponent implements OnInit {
               });
               this.lstFile = arr;
             }
+            var data = e?.event?.data?.update;
+            data['modifiedOn'] = new Date();
+            this.view.dataService.update(data).subscribe();
           }
+          this.view.dataService.clear();
         });
       });
     this.change.detectChanges();
@@ -234,10 +242,7 @@ export class PatternComponent extends UIComponent implements OnInit {
       .delete([this.view.dataService.dataSelected])
       .subscribe((res: any) => {
         if (res.data) {
-          this.lstFile.forEach((dt) => {
-            if (dt.objectID == res.data.recID)
-              this.patternSV.deleteFile(res.data.recID);
-          });
+          this.patternSV.deleteFile(res.data.recID).subscribe();
           this.lstPattern.splice(index, 1);
         }
       });

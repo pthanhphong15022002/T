@@ -136,7 +136,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-    this.data.requester = this.authService?.userValue?.userName;
+    if(this.isAdd){
+
+      this.data.requester = this.authService?.userValue?.userName;
+    }
     if(this.isAdd && this.optionalData!=null){
       this.data.resourceID = this.optionalData.resourceId;
       this.data.bookingOn=this.optionalData.startDate;
@@ -420,7 +423,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.bookingOn = this.data.startDate;
       this.detectorRef.detectChanges();
     }
-    if(!this.isAdd){
+    if((this.isAdd && this.data.resourceID!=null) || !this.isAdd){
       this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
         if(res){
           this.carCapacity= res.capacity;
@@ -452,6 +455,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
+    this.data.reminder=15;
     this.data.bookingOn=this.data.startDate;
     this.data.stopOn=this.data.endDate;
     this.fGroupAddBookingCar.patchValue(this.data);
@@ -621,7 +625,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         this.driver = this.tempAtender;
         this.tempDriver = this.driver;
         this.driverValidator(
-          this.tempDriver.userID,
+          this.tempDriver?.userID,
           this.data.startDate,
           this.data.endDate,
           this.data.recID
@@ -662,7 +666,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
   }
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
   checkedChange(event: any, device: any) {
@@ -681,7 +685,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     if (this.tempDriver != null) {
       this.driverValidator(
-        this.tempDriver.userID,
+        this.tempDriver?.userID,
         this.data.startDate,
         this.data.endDate,
         this.data.recID
@@ -695,7 +699,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     this.data.startDate = new Date(evt.data.fromDate);
     this.driverValidator(
-      this.tempDriver.userID,
+      this.tempDriver?.userID,
       this.data.startDate,
       this.data.endDate,
       this.data.recID
@@ -738,7 +742,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
     this.data.endDate = new Date(evt.data.fromDate);
     this.driverValidator(
-      this.tempDriver.userID,
+      this.tempDriver?.userID,
       this.data.startDate,
       this.data.endDate,
       this.data.recID
@@ -778,18 +782,21 @@ export class PopupAddBookingCarComponent extends UIComponent {
   openPopupCbb() {
     this.isPopupCbb = true;
   }
+  filterArray(arr) {
+    return [...new Map(arr.map(item => [item["userID"], item])).values()]
+  }
   valueCbxUserChange(event) {
     //this.cbbData=event.id; gán data đã chọn cho combobox
     if (event?.dataSelected) {
-      this.lstPeople = [];
-      event.dataSelected.forEach((people) => {
+      //this.lstPeople = [];
+      event.dataSelected.forEach((people) => {        
         this.tempAtender = {
           userID: people.UserID,
           userName: people.UserName,
           status: '1',
           objectType: 'AD_Users',
           roleType: '3',
-          objectID: undefined,          
+          objectID: people.UserID,          
           icon:'',
         };
         this.listRoles.forEach((element) => {
@@ -801,9 +808,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.lstPeople.push(this.tempAtender);
         }
       });
+      
+      this.lstPeople=this.filterArray(this.lstPeople);
+      
       if (this.lstPeople.length > 0) {
         this.data.attendees = this.lstPeople.length + 1;
       }
+      
       this.isPopupCbb = false;
       this.detectorRef.detectChanges();
     }

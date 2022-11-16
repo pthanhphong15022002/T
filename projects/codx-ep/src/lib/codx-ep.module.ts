@@ -1,3 +1,4 @@
+
 import { PopupAddQuotaComponent } from './settings/stationery/popup-add-quota/popup-add-quota.component';
 import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
@@ -65,10 +66,6 @@ const routes: Route[] = [
         component: BookingCarComponent,
       },
       {
-        path: 'cardtrans/:funcID',
-        component: CardTransComponent,
-      },
-      {
         path: 'bookingstationery/:funcID',
         component: BookingStationeryComponent,
       },
@@ -83,6 +80,10 @@ const routes: Route[] = [
       {
         path: 'approvestationery/:funcID',
         component: ApprovalStationeryComponent,
+      },
+      {
+        path: 'cardtrans/:funcID',
+        component: CardTransComponent,
       },
       {
         path: 'settings',

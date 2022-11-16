@@ -29,9 +29,9 @@
         <div class="row">
           <div
             *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
-            class="d-flex flex-row flex-wrap"
+            class="d-flex flex-row justify-content-between"
           >
-            <div class="d-flex justify-content-start">
+            <div class="d-flex flex-wrap">
               <div
                 class="d-flex justify-content-start"
                 *ngFor="let item of tmplstDevice"
@@ -242,7 +242,7 @@
             </div>
           </div>
         </div>
-        <ng-container *ngIf="isPopupOptionalUserCbb">
+        <!-- <ng-container *ngIf="isPopupOptionalUserCbb">
           <codx-combobox-popup
             [comboboxName]="'Users'"
             [field]="'cbbUser'"
@@ -254,7 +254,7 @@
             (clickSave)="valueCbxUserOptionalChange($event)"
           >
           </codx-combobox-popup>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container *ngIf="isPopupUserCbb">
           <codx-combobox-popup
@@ -326,7 +326,7 @@
             >
               <span
                 class="symbol-label bg-light-primary text-primary fs-8 fw-bolder"
-                >+{{ lstUser?.length + lstUserOptional?.length - 2 }}</span
+                >+{{ attendeesList.length - 2 }}</span
               >
             </span>
           </div>
@@ -430,11 +430,20 @@
             [objectId]="curUser?.userID"
             objectType="AD_Users"
           ></codx-img>
+          <div role="button" class="pe-auto" (click)="showPopover(p, curUser.userID)">
           <span
+            popoverClass="userPopoverClass"
+            [ngbPopover]="popoverSelectRoles"
+            placement="right"
+            #p="ngbPopover"
+            autoClose="true"
             class="position-absolute"
             inlineSVG="./assets/themes/ep/default/img/{{ curUser.icon }}"
             style="bottom: -5px;right:-4px"
-          ></span>
+          >
+        
+          </span>
+        </div>
         </div>
 
         <div class="d-flex flex-column flex-grow-1">
@@ -442,7 +451,7 @@
             {{ curUser?.userName }}
           </div>
           <div>
-            <span class="text-muted">{{ curUser.roleName }}</span>
+            <span class="text-muted">{{ curUser.roleType | vll: "EP009":"text" | async }}</span>
           </div>
         </div>
 
@@ -470,17 +479,22 @@
             [objectId]="item.userID"
             objectType="AD_Users"
           ></codx-img>
-          <span
+          <div role="button" class="pe-auto" (click)="showPopover(p, item.userID)">
+            <span
             popoverClass="userPopoverClass"
             [ngbPopover]="popoverSelectRoles"
             placement="right"
             #p="ngbPopover"
-            (mouseenter)="showPopover(p, item.userID)"
+            
             autoClose="outside"
             class="position-absolute"
             inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
             style="bottom: -5px;right:-4px"
-          ></span>
+          >
+        
+        </span>
+          </div>
+          
 
           <!-- <span class="symbol-badge badge badge-sm badge-circle bg-primary top-100 start-100 text-white fs-8">P</span> -->
         </div>
@@ -570,6 +584,7 @@
             imageType="circle" 
             width="50"
             objectType="EP_Resources"
+            [objectName]="item.text"
           ></codx-img>
         </div>
         <div class="flex-grow-2">
@@ -693,11 +708,12 @@
     <ng-container *ngIf="form && form.formGroup">
       <div class="d-flex justify-content-between">
         <a
+          (click)="popupUploadFile($event)"
           class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
         >
           <span
             class="icon-cloud_upload btn-text-primary me-2"
-            (click)="popupUploadFile($event)"
+            
           ></span>
           <codx-label
             fiedName="lblUploadFile"
@@ -808,18 +824,37 @@
 </codx-layout-add>
 
 <ng-template #popoverSelectRoles>
-  <div class="d-flex flex-column mb-1 w-150px">
-    <ng-container *ngFor="let item of listRoles">
-      <div
-        class="d-flex align-items-center btn btn-sm btn-white"
-        (click)="selectRoseType(idUserSelected, item.value)"
-        style="cursor: pointer"
-      >
-        <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
-        <div class="fs-7 ms-2 text-gray-600">
-          {{ item.text }}
+  <div class="d-flex flex-column mb-1 w-150px" >
+    <ng-container *ngIf="attendeesList && attendeesList.length>0">
+      <ng-container *ngFor="let item of listRoles">
+        <div
+          class="d-flex align-items-center btn btn-sm btn-white"
+          (click)="selectRoseType(idUserSelected, item.value)"
+          style="cursor: pointer"
+        >
+          <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
+          <div class="fs-7 ms-2 text-gray-600">
+            {{ item.text }}
+          </div>
         </div>
-      </div>
+      </ng-container>
     </ng-container>
+    
+    
+    <ng-container *ngIf="attendeesList && attendeesList.length==0">
+      <ng-container>
+        <div
+          class="d-flex align-items-center btn btn-sm btn-white"
+          (click)="selectRoseType(idUserSelected, listRoles[0].value)"
+          style="cursor: pointer"
+        >
+          <span inlineSVG="./assets/themes/ep/default/img/{{ listRoles[0].icon }}"></span>
+          <div class="fs-7 ms-2 text-gray-600">
+            {{ listRoles[0].text }}
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
   </div>
 </ng-template>

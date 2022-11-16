@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { drillThroughClosed } from '@syncfusion/ej2-pivotview';
 import {
   ApiHttpService,
   AuthStore,
@@ -56,6 +57,7 @@ export class PopupAddSprintsComponent implements OnInit {
 
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @Output() loadData = new EventEmitter();
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -75,7 +77,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
-    
+
     //đã bổ sung nên có thể xóa
     // if (this.funcID == 'TMT0301') this.master.iterationType == '1';
     // else if (this.funcID == 'TMT0302') this.master.iterationType == '0';
@@ -122,7 +124,7 @@ export class PopupAddSprintsComponent implements OnInit {
     if (
       this.master.iterationType == '1' &&
       (this.master.projectID == null || this.master.projectID.trim() == '')
-    ){
+    ) {
       return this.notiService.notifyCode('TM035');
       // let headerText = this.gridViewSetup['IterationName']?.headerText ?? 'IterationName';
       // return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
@@ -139,7 +141,7 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
-    
+
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -149,37 +151,28 @@ export class PopupAddSprintsComponent implements OnInit {
       });
     else {
       this.saveMaster(isAdd);
-    }  
+    }
   }
 
   saveMaster(isAdd: boolean) {
-    //comnet tạm
-    // this.imageAvatar
-    //   .updateFileDirectReload(this.master.iterationID)
-    //   .subscribe((up) => {
-      // !isAdd ? null : this.master.iterationType == '1' ? 0 : 1
     this.dialog.dataService
-      .save(
-        (option: any) => this.beforeSave(option, isAdd),
-        !isAdd ? null : 0 
-      )
+      .save((option: any) => this.beforeSave(option, isAdd), !isAdd ? null : 0)
       .subscribe((res) => {
         if (res) {
           this.attachment?.clearData();
           var dt = isAdd ? res.save : res.update;
+          (this.dialog.dataService as CRUDService).update(dt).subscribe();
           if (this.imageAvatar) {
             this.imageAvatar
               .updateFileDirectReload(this.master.iterationID)
               .subscribe((up) => {
-                (this.dialog.dataService as CRUDService).update(dt).subscribe();
-                
+                if (up) {
+                  this.dialog.close(dt);
+                } else this.dialog.close();
               });
-
-          }
-          this.dialog.close();
-        }
+          } else this.dialog.close();
+        } else this.dialog.close();
       });
-    // });
   }
 
   //#endregion
@@ -239,7 +232,7 @@ export class PopupAddSprintsComponent implements OnInit {
     this.tmSv.getSprints(iterationID).subscribe((res) => {
       if (res) {
         this.master = res;
-        this.showLabelAttachment = this.master.attachments > 0? true : false ;
+        this.showLabelAttachment = this.master.attachments > 0 ? true : false;
         if (this.master.resources) this.getListUser(this.master.resources);
         else this.listUserDetail = [];
         this.changeDetectorRef.detectChanges();

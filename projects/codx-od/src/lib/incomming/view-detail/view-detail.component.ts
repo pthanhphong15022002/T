@@ -54,6 +54,7 @@ import { AddLinkComponent } from '../addlink/addlink.component';
 import { CompletedComponent } from '../completed/completed.component';
 import { ForwardComponent } from '../forward/forward.component';
 import { IncommingAddComponent } from '../incomming-add/incomming-add.component';
+import { RefuseComponent } from '../refuse/refuse.component';
 import { SendEmailComponent } from '../sendemail/sendemail.component';
 import { SharingComponent } from '../sharing/sharing.component';
 import { UpdateExtendComponent } from '../update/update.component';
@@ -436,7 +437,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       });
       datas = this.view.dataService.data[index];
     }
-    if (funcID != 'recallUser' && funcID != 'ODT201' && funcID != 'SYS02')
+    if (funcID != 'recallUser' && funcID != 'ODT201' && funcID != 'SYS02' && this.view.dataService.dataSelected.recID != datas.recID)
       this.view.dataService.onAction.next({ type: 'update', data: datas });
     delete datas._uuid;
     delete datas.__loading;
@@ -513,6 +514,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
           this.view.dataService.dataSelected.recID = res?.recID;
+          this.view.dataService.dataSelected.dispatchNo = res?.dispatchNo
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(
@@ -526,20 +528,14 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             option
           );
           this.dialog.closed.subscribe((x) => {
-            if (x.event == null) {
-              //this.view.dataService.delete([this.view.dataService.dataSelected]).subscribe();
-              this.view.dataService.remove(res?.recID).subscribe();
-              this.view.dataService.onAction.next({
-                type: 'update',
-                data: datas,
-              });
-            } else
+            if (x.event) {
               this.view.dataService.add(x.event, 0).subscribe((item) => {
                 this.view.dataService.onAction.next({
                   type: 'update',
                   data: x.event,
                 });
               });
+            } 
           });
         });
         break;
@@ -864,7 +860,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             600,
             400,
             null,
-            { data: datas },
+            { data: datas  },
             '',
             option
           )
@@ -874,6 +870,50 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
               this.view.dataService.update(datas).subscribe();
             }
           });
+        break;
+      }
+      //Trả lại
+      case "ODT113":
+        {
+          var option = new DialogModel();
+          option.FormModel = this.formModel;
+          this.callfunc
+          .openForm(
+            RefuseComponent,
+            null,
+            600,
+            400,
+            null,
+            { data: datas , headerText:"Trả lại" , status:"4"},
+            '',
+            option
+          )
+          .closed.subscribe((x) => {
+            if (x.event) this.view.dataService.update(x.event).subscribe();
+          });
+          // this.refuse(datas);
+          break;
+        }
+      //Chuyển lại
+      case "ODT114":
+      {
+        var option = new DialogModel();
+        option.FormModel = this.formModel;
+        this.callfunc
+        .openForm(
+          RefuseComponent,
+          null,
+          600,
+          400,
+          null,
+          { data: datas , headerText:"Chuyển lại" , status:"3"},
+          '',
+          option
+        )
+        .closed.subscribe((x) => {
+          if (x.event) this.view.dataService.update(x.event).subscribe();
+        });
+        // this.refuse(datas);
         break;
       }
       default:
@@ -1022,6 +1062,22 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         elm.disabled = true;
       });
     }
+    var approvelCL = e.filter(
+      (x: { functionID: string }) => x.functionID == 'ODT114' 
+    );
+    if(approvelCL[0])
+      approvelCL[0].disabled = true;
+    //Trả lại
+    if(data?.status == "4")
+    {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT113' 
+      );
+      if(approvel[0])
+        approvel[0].disabled = true;
+      if(approvelCL[0])
+        approvelCL[0].disabled = false;
+    }
     //data?.isblur = true
   }
   //Gửi duyệt
@@ -1137,5 +1193,10 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       return 'icon-access_alarm';
     }
     return '';
+  }
+  //Từ chối
+  refuse(datas:any)
+  {
+    //datas = this.
   }
 }

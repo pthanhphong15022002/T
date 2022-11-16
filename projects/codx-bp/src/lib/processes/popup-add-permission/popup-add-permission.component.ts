@@ -1,6 +1,11 @@
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import { FileUpload, Permission } from '@shared/models/file.model';
-import { DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
+import {
+  DialogData,
+  DialogRef,
+  ApiHttpService,
+  NotificationsService,
+} from 'codx-core';
 import {
   BP_Processes,
   BP_ProcessPermissions,
@@ -28,12 +33,11 @@ export class PopupAddPermissionComponent implements OnInit {
   sentEmail: any;
   postblog: any;
   process: BP_Processes;
-  per= new tmpPermission();
+  per = new tmpPermission();
   permission: BP_ProcessPermissions[];
   toPermission: BP_ProcessPermissions[];
   byPermission: BP_ProcessPermissions[];
   ccPermission: BP_ProcessPermissions[];
-  fromPermission: BP_ProcessPermissions[];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -57,7 +61,6 @@ export class PopupAddPermissionComponent implements OnInit {
     this.per.toPermission = this.toPermission;
     this.per.byPermission = this.byPermission;
     this.per.ccPermission = this.ccPermission;
-    this.per.fromPermission = this.fromPermission;
     for (var i = 0; i < this.per.toPermission.length; i++) {
       this.per.toPermission[i].startDate = this.startDate;
       this.per.toPermission[i].endDate = this.endDate;
@@ -68,17 +71,23 @@ export class PopupAddPermissionComponent implements OnInit {
         this.per.toPermission[i].download = true;
         this.per.toPermission[i].upload = true;
         this.per.toPermission[i].read = true;
+        this.per.toPermission[i].share = this.share;
+        this.per.toPermission[i].download = this.download;
+        this.per.toPermission[i].autoCreat = false;
+        this.per.toPermission[i].nemberType = '3';
       } else {
         this.per.toPermission[i].read = true;
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
+        this.per.toPermission[i].autoCreat = false;
+        this.per.toPermission[i].nemberType = '2';
       }
       if (!this.isShare) {
-        this.per.form = 'request';
+        this.per.form = '3';
         this.per.titleEmail = this.requestTitle;
         this.per.contentEmail = this.shareContent;
       } else {
-        this.per.form = 'share';
+        this.per.form = '2';
         this.per.titleEmail = '';
         this.per.contentEmail = this.shareContent;
       }
@@ -86,15 +95,30 @@ export class PopupAddPermissionComponent implements OnInit {
       this.per.sendEmail = this.sentEmail;
       this.per.postBlog = this.postblog;
       this.per.urlPath = this.getPath();
-      this.api.execSv<any>('BP','BP','ProcessesBusiness','RequestOrShareProcessAsync',this.per).subscribe(res=>{
-        console.log(res);
-        if (this.per.form == "share")
-          this.notificationsService.notify('Chia sẻ thành công');
-        else
-          this.notificationsService.notify('Đã yêu cầu cấp quyền');
-      })
+
     }
-    this.dialog.close();
+    this.api
+        .execSv<any>(
+          'BP',
+          'BP',
+          'ProcessesBusiness',
+          'RequestOrShareProcessAsync',
+          [this.per]
+        )
+        .subscribe((res) => {
+          if (res) {
+            if (this.per.form == '2')
+              this.notificationsService.notify('Chia sẻ thành công');
+            else this.notificationsService.notify('Đã yêu cầu cấp quyền');
+          } else {
+            if (this.per.form == '2')
+              this.notificationsService.notify('Chia sẻ không thành công');
+            else
+              this.notificationsService.notify(
+                'Yêu cầu cấp quyền không thành công'
+              );
+          }
+        });
 
   }
   //#endregion
@@ -107,11 +131,12 @@ export class PopupAddPermissionComponent implements OnInit {
       var data = $event.data;
       for (var i = 0; i < data.length; i++) {
         var item = data[i];
-        var perm = new BP_ProcessPermissions;
+        var perm = new BP_ProcessPermissions();
         perm.startDate = this.startDate;
         perm.endDate = this.endDate;
         perm.objectName = item.text;
         perm.objectID = item.id;
+        perm.isActive = true;
         perm.objectType = item.objectType;
         perm.read = true;
         list.push(Object.assign({}, perm));
@@ -130,10 +155,7 @@ export class PopupAddPermissionComponent implements OnInit {
           this.byPermission = [];
           this.byPermission = list;
           break;
-        case 'from':
-          this.fromPermission = [];
-          this.fromPermission = list;
-          break;
+
       }
       this.changeDetectorRef.detectChanges();
     }
@@ -183,7 +205,7 @@ export class PopupAddPermissionComponent implements OnInit {
   }
 
   getPath() {
-    var index = window.location.href.indexOf("?");
+    var index = window.location.href.indexOf('?');
     var url = window.location.href;
     if (index > -1) {
       url = window.location.href.substring(0, index);

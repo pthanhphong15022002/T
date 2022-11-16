@@ -17,7 +17,6 @@ export class LayoutNoAsideComponent extends LayoutBaseComponent {
   module = '';
   override aside = false;
   override toolbarFixed = false;
-  dialog!: DialogRef;
   //override asideFixed = true;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   //override toolbar = false;
@@ -40,7 +39,6 @@ export class LayoutNoAsideComponent extends LayoutBaseComponent {
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
-    this.dialog = this.callfc.openSide(NoteDrawerComponent, '', option);
-    this.dialog.closed.subscribe();
+    this.callfc.openSide(NoteDrawerComponent, '', option);
   }
 }

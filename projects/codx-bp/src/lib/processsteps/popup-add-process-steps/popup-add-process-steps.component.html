@@ -1,258 +1,164 @@
-<codx-form
-  #form
-  [headerText]="title"
-  subHeaderText=""
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  [formModel]="formModelMenu"
-  [data]="processSteps"
->
+<codx-form #form [headerText]="title" subHeaderText="" [subHeader]="subHeader" [body]="body" [footer]="footer"
+  [dialog]="dialog" [formModel]="formModelMenu" [data]="processSteps">
+  <ng-template #subHeader>
+    <div class="ms-4" *ngIf="stepType == 'A'">
+      <codx-input class="ms-4" type="colorpicker" [showText]="false" [modeSwitcher]="false"
+        [crrValue]="processSteps?.color" field="color" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </ng-template>
   <ng-template #body>
     <div class="card-form">
       <div class="form-group" *ngIf="stepType == 'P'">
         <div>
-          <codx-label
-            fiedName="StepName"
-            [formModel]="form.formModel"
-            default="Tên công đoạn"
-          >
+          <codx-label fiedName="StepName" [formModel]="form.formModel" default="Tên công đoạn">
           </codx-label>
         </div>
-        <codx-input
-          field="stepName"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input field="stepName" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="form-group row" *ngIf="stepType == 'P'">
         <div class="col-3">
-          <codx-label
-            fiedName="Duration"
-            [formModel]="form.formModel"
-            default="Thời gian chuẩn"
-          >
+          <codx-label fiedName="Duration" [formModel]="form.formModel" default="Thời gian chuẩn">
           </codx-label>
-          <codx-input
-            field="duration"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-            [showSpinButton]="false"
-          >
+          <codx-input field="duration" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)" [showSpinButton]="false">
           </codx-input>
         </div>
         <div class="col-3">
-          <codx-label
-            fiedName="Interval"
-            [formModel]="form.formModel"
-            default="Dựa trên"
-          >
+          <codx-label fiedName="Interval" [formModel]="form.formModel" default="Dựa trên">
           </codx-label>
-          <codx-input
-            field="interval"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
+          <codx-input field="interval" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="form-group" *ngIf="stepType != 'P'">
-        <codx-label
-          fiedName="ParentID"
-          [formModel]="form.formModel"
-          default="Công đoạn"
-        >
+        <codx-label fiedName="ParentID" [formModel]="form.formModel" default="Bước công đoạn">
         </codx-label>
-        <codx-input
-          field="parentID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChangeCbx($event)"
-        >
-        </codx-input>
-      
-      </div>
-      <div class="form-group" *ngIf="stepType != 'P'">
-        <codx-label
-          name="StepName"
-          [formModel]="form.formModel"
-          default="Tên bước công đoạn"
-        ></codx-label>
-        <codx-input
-          field="stepName"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input field="parentID" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChangeCbx($event)">
         </codx-input>
       </div>
-      <div
-        class="form-group"
-        *ngIf="stepType == 'C'"
-        (keyup.enter)="enterRefrence()"
-      >
-        <codx-label
-          name="Reference"
-          [formModel]="form.formModel"
-          default="Đầu mục thực hiện"
-        ></codx-label>
-        <codx-input
-          type="text"
-          [crrValue]="textChange"
-          (valueChange)="valueChangeRefrence($event)"
-        >
+      <div class="form-group" *ngIf="stepType != 'P' && stepType != 'E' && stepType != 'M'">
+        <codx-label name="StepName" [formModel]="form.formModel" default="Tên bước công đoạn"></codx-label>
+        <codx-input field="stepName" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="form-group" *ngIf="stepType == 'C'" (keyup.enter)="enterRefrence()">
+        <codx-label name="Reference" [formModel]="form.formModel" default="Đầu
+          mục thực hiện"></codx-label>
+        <codx-input type="text" [crrValue]="textChange" (valueChange)="valueChangeRefrence($event)">
         </codx-input>
       </div>
 
-      <div
-        class="form-group"
-        *ngIf="stepType == 'I'"
-        (keyup.enter)="enterRefrence()"
-      >
-        <codx-label
-          name="Reference"
-          [formModel]="form.formModel"
-          default="Bảng khảo sát"
-        ></codx-label>
-        <codx-input
-          type="text"
-          [crrValue]="textChange"
-          (valueChange)="valueChangeRefrence($event)"
-        >
+      <div class="form-group" *ngIf="stepType == 'Q'" (keyup.enter)="enterRefrence()">
+        <div class="d-flex justify-content-between align-items-center mail">
+          <codx-label name="Reference" [formModel]="form.formModel" default="Bảng khảo sát"></codx-label>
+          <a class="d-flex justify-content-end align-items-center" *ngIf="stepType === 'Q'" (click)="viewDetailSurveys($event)">
+            <span class="">Nội dung khảo sát</span>
+            <span class="icon-assignment icon-20 text-primary-600 me-2 m-2"></span>
+          </a>
+        </div>
+
+        <codx-input type="text" [crrValue]="textChange" (valueChange)="valueChangeRefrence($event)">
         </codx-input>
       </div>
-      <ng-container *ngIf="referenceText?.length > 0">
-        <div *ngFor="let item of referenceText; let i = index" class="m-5">
-          <div class="text-hover-primary cursor-pointer" >
-            <span>{{ i + 1 }}</span
-            ><span>
-              <codx-label name="lblSymboy" default="."></codx-label> </span
-            ><span  [ngbPopover]="deleteReference"
-            placement="left"
-            #p="ngbPopover"
-            (mouseenter)="showPoppoverDeleteRef(p, i)"
-            autoClose="outside"
-            placement="right">{{ item }}</span>
+
+      <ng-container *ngIf="referenceText?.length> 0">
+        <div *ngFor="let item of referenceText; let i= index" class="m-5">
+          <div class="text-hover-primary cursor-pointer">
+            <span>{{ i + 1 }}</span><span>
+              <codx-label name="lblSymboy" default="."></codx-label>
+            </span><span [ngbPopover]="deleteReference" placement="left" #p="ngbPopover"
+              (mouseenter)="showPoppoverDeleteRef(p, i)" autoClose="outside" placement="right">{{ item }}</span>
           </div>
         </div>
       </ng-container>
-      <div class="form-group" *ngIf="stepType != 'M' && stepType != 'C'">
-        <codx-label
-          name="Memo"
-          [formModel]="form.formModel"
-          default="Mô tả"
-        ></codx-label>
-        <codx-input
-          field="memo"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
+      <div class="form-group" *ngIf="stepType != 'M' && stepType != 'C' && stepType != 'Q'">
+        <div class="d-flex justify-content-between align-items-center mail">
+          <codx-label name="Memo" [formModel]="form.formModel" default="Mô tả"></codx-label>
+          <a class="d-flex justify-content-end align-items-center" *ngIf="stepType == 'E'" (click)="handelMail()">
+            <span class="">Nội dung gởi mail</span>
+            <span class="icon-email icon-20 text-primary-600 me-2 m-2"></span>
+          </a>
+        </div>
+
+        <codx-input field="memo" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
+
+      <ng-container *ngIf="stepType == 'M'">
+        <div class="form-group">
+          <codx-label fiedName="" [formModel]="form.formModel" default="Sự kiện">
+          </codx-label>
+          <codx-input field="note" [height]="'50'" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </ng-container>
+
       <div class="form-group row" *ngIf="stepType != 'P'">
         <div class="col-4 form-group">
-          <codx-label
-            fiedName="Duration"
-            [formModel]="form.formModel"
-            default="Thời gian (=giờ)"
-          >
+          <codx-label fiedName="Duration" [formModel]="form.formModel" default="Thời gian (=giờ)">
           </codx-label>
-          <codx-input
-            field="duration"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-            [showSpinButton]="false"
-          >
+          <codx-input field="duration" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)" [showSpinButton]="false">
           </codx-input>
         </div>
         <div class="col-4">
-          <codx-label
-            fiedName="Interval"
-            [formModel]="form.formModel"
-            default="Dựa trên"
-          >
+          <codx-label fiedName="Interval" [formModel]="form.formModel" default="Dựa trên">
           </codx-label>
-          <codx-input
-            field="interval"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
+          <codx-input field="interval" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <div class="col-4" *ngIf="stepType == 'E'">
+          <codx-label fiedName="Reminder" [formModel]="form.formModel" default="Nhắc nhở">
+          </codx-label>
+          <codx-input field="reminder" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
+
       <div class="form-group row" *ngIf="stepType == 'M'">
         <div class="col-4 form-group">
-          <codx-label
-            fiedName="Reminder"
-            [formModel]="form.formModel"
-            default="Nhắc nhở"
-          >
+          <codx-label fiedName="Reminder" [formModel]="form.formModel" default="Nhắc nhở">
           </codx-label>
-          <codx-input
-            field="reminder"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
+          <codx-input field="reminder" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
         <div class="col-4 form-group row">
           <div class="d-flex align-items-center col-6 mt-5">
-            <codx-input
-              type="switch"
-              class="test-check"
-              [checked]="isAlert"
-              (valueChange)="valueChangeSwitch($event)"
-            >
+            <codx-input type="switch" class="test-check" [checked]="this.processSteps?.isAlert" field="isAlert"
+              (valueChange)="valueChangeAlert($event)">
             </codx-input>
             <span>
-              <codx-label
-                name="lblAlert"
-                [formModel]="form.formModel"
-                default="Alert"
-              >
+              <codx-label name="lblAlert" [formModel]="form.formModel" default="Alert">
               </codx-label>
             </span>
           </div>
           <div class="d-flex align-items-center col-6 mt-5">
-            <codx-input
-              type="switch"
-              class="test-check"
-              [checked]="isEmail"
-              (valueChange)="valueChangeSwitch($event)"
-            >
+            <codx-input type="switch" class="test-check" [checked]="this.processSteps?.isEmail" field="isEmail"
+              (valueChange)="valueChangeAlert($event)">
             </codx-input>
             <span>
-              <codx-label
-                name="lblEmail"
-                [formModel]="form.formModel"
-                default="Email"
-              >
+              <codx-label name="lblEmail" [formModel]="form.formModel" default="Email">
               </codx-label>
             </span>
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <codx-label
-          fiedName="Location"
-          [formModel]="form.formModel"
-          default="Địa điểm"
-        >
+      <div class="form-group" *ngIf="stepType != 'E'">
+        <codx-label fiedName="Location" [formModel]="form.formModel" default="Địa điểm">
         </codx-label>
-        <codx-input
-          field="location"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
+        <codx-input field="location" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <ng-container>
@@ -260,91 +166,59 @@
           <div class="d-flex align-items-center mb-3">
             <!-- <span class="icon-person icon-18 me-2 text-primary"></span> -->
             <div class="fw-bold text-primary mt-1">
-              <codx-label
-                fiedName="Owners"
-                [formModel]="form.formModel"
-                default="Vai trò/ bộ phận thực hiện"
-              >
+              <codx-label fiedName="Owners" [formModel]="form.formModel" default="Vai trò/ bộ phận thực hiện">
               </codx-label>
             </div>
           </div>
-          <codx-input
-            type="Share"
-            [refValue]="vllShare"
-            field="Owners"
-            [dataShared]="[]"
-            multiple="true"
-            [showInput]="false"
-            (valueChange)="eventApply($event)"
-            [disabled]="readOnly"
-          ></codx-input>
+          <codx-input type="Share" [refValue]="vllShare" field="Owners" [dataShared]="[]" multiple="true"
+            [showInput]="false" (valueChange)="eventApply($event)" [disabled]="readOnly"></codx-input>
         </div>
-        <div *ngIf="listOwnerDetails.length > 0" class="mt-3">
+        <div *ngIf="listOwnerDetails.length> 0" class="mt-3">
           <ng-container *ngFor="let item of listOwnerDetails; index as i">
-            <div class="d-flex justify-content-between user-mini-nav align-items-center"
-              style="background-color: #f4f7ff">
+            <div class="d-flex justify-content-between user-mini-nav
+              align-items-center" style="background-color: #f4f7ff">
               <span>
                 <codx-img [width]="25" class="me-2" [objectId]="item?.id" objectType="AD_Users">
                 </codx-img>
-              </span><span class="text-dark fw-bold"> {{ item?.name }} </span><span class="mt-1"><a
-                  (click)="onDeleteOwner(item?.id,i)" style="cursor: pointer">
-                  <span class="icon-close icon-16 text-danger ms-3"></span> </a></span>
+              </span><span class="text-dark fw-bold"> {{
+                item?.name }} </span><span class="mt-1"><a (click)="onDeleteOwner(item?.id, i)" style="cursor: pointer">
+                  <span class="icon-close icon-16 text-danger ms-3"></span>
+                </a></span>
             </div>
           </ng-container>
         </div>
       </ng-container>
-
-      <div class="form-group" *ngIf="stepType == 'M' || stepType == 'C'">
-        <codx-label
-          fiedName="Note"
-          [formModel]="form.formModel"
-          default="Ghi chú"
-        >
-        </codx-label>
-        <codx-input
-          field="note"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-
+      <ng-container *ngIf="
+        stepType == 'M' ||
+        stepType == 'C' ||
+        stepType == 'E' ||
+        stepType == 'Q'
+        ">
+        <div class="form-group">
+          <div class="note">
+            <codx-label fiedName="note-label" [formModel]="form.formModel" default="Ghi chú">
+            </codx-label>
+          </div>
+          <codx-input field="note" [height]="100" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+      </ng-container>
       <ng-container>
-        <div
-          class="d-flex align-items-center justify-content-between mt-4"
-          *ngIf="showLabelAttachment"
-          style="float: left; clear: left"
-        >
+        <div class="d-flex align-items-center justify-content-between mt-4" *ngIf="showLabelAttachment"
+          style="float: left; clear: left">
           <div class="d-flex align-items-center mb-2">
             <div class="fw-bold text-primary">
-              <codx-label
-                fiedName="lblAttachments"
-                [formModel]="form.formModel"
-                default="Tài liệu"
-              >
+              <codx-label fiedName="lblAttachments" [formModel]="form.formModel" default="Tài liệu">
               </codx-label>
             </div>
           </div>
         </div>
         <div>
-          <codx-attachment
-            #attachment
-            [objectType]="dialog.formModel.entityName"
-            [objectId]="processSteps?.recID"
-            hideFolder="1"
-            hideImageUpload="0"
-            hideImageThumb="0"
-            hideUploadBtn="1"
-            hideDes="1"
-            type="inline"
-            allowMultiFile="1"
-            [formModel]="dialog.formModel"
-            [functionID]="funcID"
-            (fileAdded)="fileAdded($event)"
-            (fileCount)="getfileCount($event)"
-            displayThumb="full"
-          >
+          <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="processSteps?.recID"
+            hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
+            allowMultiFile="1" [formModel]="dialog.formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)"
+            (fileCount)="getfileCount($event)" displayThumb="full" showMessage="0">
           </codx-attachment>
         </div>
       </ng-container>
@@ -352,21 +226,10 @@
   </ng-template>
   <ng-template #footer>
     <!-- <div class="d-flex justify-content-between mt-4" > -->
-    <button
-      style="float: left"
-      *ngIf="stepType != 'P'"
-      type="button"
-      class="btn btn-light-primary me-3"
-      [disabled]="readOnly"
-      (click)="addFile($event)"
-    >
-      <i class="icon-cloud_upload fs-5"></i
-      ><span>
-        <codx-label
-          name="UploadFile"
-          formName="Tasks"
-          default="Upload File"
-        ></codx-label>
+    <button style="float: left" *ngIf="stepType != 'P'" type="button" class="btn btn-light-primary me-3"
+      [disabled]="readOnly" (click)="addFile($event)">
+      <i class="icon-cloud_upload fs-5"></i><span>
+        <codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label>
       </span>
     </button>
     <button type="button" class="btn btn-primary" (click)="saveData()">
@@ -377,17 +240,9 @@
 
   <ng-template #deleteReference>
     <ng-container>
-      <a
-        class="d-flex align-item-center"
-        (click)="clickDelete(crrIndex)"
-        style="cursor: pointer"
-      >
+      <a class="d-flex align-item-center" (click)="clickDelete(crrIndex)" style="cursor: pointer">
         <span class="icon-close icon-16 text-danger"></span>
-        <codx-label
-          class="text-danger"
-          name="Delete"
-          default="Xóa"
-        ></codx-label>
+        <codx-label class="text-danger" name="Delete" default="Xóa"></codx-label>
       </a>
     </ng-container>
   </ng-template>

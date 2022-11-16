@@ -22,7 +22,7 @@
   <codx-vll
     [showText]="true"
     [showBgColor]="true"
-    [formModel]="formModel"
+    [formModel]="viewBase.formModel"
     [field]="'SignatureType'"
     [value]="data.signatureType"
     class="badge badge-light badge-square badge-md fs-7"
@@ -35,19 +35,19 @@
     <codx-vll
       [showText]="true"
       [showBgColor]="true"
-      [formModel]="formModel"
+      [formModel]="viewBase.formModel"
       [field]="'Supplier'"
       [value]="data.supplier"
       class="badge badge-light badge-square badge-md fs-7"
     >
     </codx-vll>
-    <codx-mfunc
+    <!-- <codx-mfunc
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
       [dataItem]="data"
     >
-    </codx-mfunc>
+    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -131,19 +131,18 @@
     <codx-vll
       [showText]="true"
       [showBgColor]="true"
-      [formModel]="formModel"
+      [formModel]="viewBase.formModel"
       [field]="'OTPControl'"
       [value]="data.otpControl"
       class="badge badge-light badge-square badge-md fs-7"
     >
     </codx-vll>
-    <codx-mfunc
+    <!-- <codx-mfunc
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
-      type="hover"
       [dataItem]="data"
     >
-    </codx-mfunc>
+    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -152,7 +151,6 @@
     [formModel]="viewBase.formModel"
     (clickMF)="clickMF($event, data)"
     [dataItem]="data"
-    [type]="'hover'"
   >
   </codx-mfunc>
 </ng-template>

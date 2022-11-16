@@ -42,9 +42,6 @@ export class CardTransComponent
     private callFuncService: CallFuncService,
   ) {
     super(injector);
-    
-  }
-  onInit(): void {
     this.funcID = this.router.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
@@ -54,9 +51,13 @@ export class CardTransComponent
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;        
-        this.initForm();
+        
       }
     });
+  }
+  onInit(): void {    
+    
+    this.initForm();
     this.button={
       id:'btnAdd',
     }
@@ -65,8 +66,8 @@ export class CardTransComponent
   initForm() {
     this.codxEpService
       .getFormGroup(
-        this.formModel.formName,
-        this.formModel.gridViewName
+        this.formModel?.formName,
+        this.formModel?.gridViewName
       )
       .then((item) => {
         this.fGroupResourceTran = item;    
@@ -130,7 +131,7 @@ export class CardTransComponent
   openPopupCardFunction(template: any) {
     
     let time = new Date();
-    this.popupDialog = this.callfc.openForm(template, '', 550, 350);
+    this.popupDialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
   click(evt: ButtonModel) {
@@ -149,9 +150,10 @@ export class CardTransComponent
       [this.view.dataService.dataSelected,this.formModel,this.popupTitle,this.funcID,this.view.dataService]
         
     );
-      // this.dialog.closed.subscribe((returnData) => {
-      //   if (!returnData.event) this.view.dataService.clear();        
-      // });
+      this.dialog.closed.subscribe((returnData) => {
+        this.view.dataService.clear();        
+        this.view.dataService.dataSelected=null;
+      });
     });
   }
   createCardTrans() {

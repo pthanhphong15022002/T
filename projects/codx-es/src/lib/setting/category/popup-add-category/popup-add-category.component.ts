@@ -51,6 +51,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   isAddAutoNumber = true;
   isClose = true;
   transID: String = '';
+  disableCategoryID: string;
 
   headerText = '';
   subHeaderText = '';
@@ -69,27 +70,39 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   parentRecID: string;
   oldRecID: string;
 
+  //test to update signtype for all step
+  isChangeSignatureType: boolean = false;
+  signatureType: string;
+
+  oUpdate: any = null; //update item in grid
+
   constructor(
     private esService: CodxEsService,
     private cache: CacheService,
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
-    private codxService: CodxService,
     private notify: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.data = dialog?.dataService?.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
+    this.signatureType = dialog?.dataService?.dataSelected?.signatureType;
     this.isAdd = data?.data?.isAdd;
     this.formModel = this.dialog.formModel;
     this.headerText = data?.data?.headerText;
     this.type = data?.data?.type;
     this.oldRecID = data?.data?.oldRecID;
+    this.disableCategoryID = data?.data?.disableCategoryID ?? '0';
   }
 
   ngAfterViewInit(): void {
     this.dialog.closed.subscribe((res) => {
+      if (res.event == null && this.oUpdate != null) {
+        //update gridView dont use btb Save when close form
+        this.dialog.dataService.update(this.oUpdate).subscribe();
+      }
+
       this.esService.setLstDeleteStep(null);
       this.esService.setApprovalStep(null);
       if (this.isSaved) {
@@ -102,9 +115,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         //delete autoNumer đã thiết lập
         this.esService
           .deleteAutoNumber(this.data.categoryID)
-          .subscribe((resDelete) => {
-            console.log('result delete auto', resDelete);
-          });
+          .subscribe((resDelete) => {});
 
         //delete EmailTemplate da thiet lap
         this.esService.deleteEmailTemplate().subscribe((res1) => {
@@ -123,6 +134,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService
         .copyApprovalStep(this.oldRecID, this.data.recID)
         .subscribe((res) => {
+          console.log(this.data);
           console.log(res);
         });
     }
@@ -141,15 +153,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     });
     if (this.isAdd) {
       this.data.countStep = 0;
-      this.data.signatureType = '1';
-      this.data.icon = 'icon-text_snippet';
-      this.data.color = '#0078FF';
-
-      this.form?.formGroup?.patchValue({
-        signatureType: '1',
-        icon: 'icon-text_snippet',
-        color: '#0078FF',
-      });
 
       this.esService
         .getSettingByPredicate(
@@ -161,19 +164,32 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
             this.settingDataValue = JSON.parse(setting.dataValue);
             console.log(this.settingDataValue);
             if (this.settingDataValue) {
+              let lstTrueFalse = ['AllowEditAreas'];
               for (const key in this.settingDataValue) {
-                console.log(key);
                 let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
                 this.data[fieldName] = this.settingDataValue[key];
-                if (key == 'AllowEditAreas') {
+
+                if (lstTrueFalse.includes(key)) {
                   this.data[fieldName] =
                     this.settingDataValue[key] == '0' ? false : true;
+                  if (key == 'AreaControl') {
+                    console.log('AreaControl', this.data[fieldName]);
+                  }
+                } else {
+                  this.data[fieldName] = this.settingDataValue[key];
                 }
+                //this.data[fieldName] = this.settingDataValue[key];
+                this.form.formGroup.patchValue({
+                  fieldName: this.data[fieldName],
+                });
               }
+              console.log(this.data);
+              this.cr.detectChanges();
             }
-            console.log(this.data);
           }
         });
+    } else {
+      console.log(this.data);
     }
     this.form?.formGroup?.addControl(
       'countStep',
@@ -210,9 +226,106 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field && event?.component) {
-      this.data[event['field']] = event.data;
-      this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+      console.log('value change', event);
+
+      let fieldName =
+        event.field.charAt(0).toUpperCase() + event.field.slice(1);
+      switch (event?.field) {
+        case 'areaControl': {
+          this.data[event['field']] = event.data == true ? '1' : '0';
+          this.form?.formGroup?.patchValue({
+            [event['field']]: this.data[event['field']],
+          });
+          break;
+        }
+        case 'confirmControl': {
+          if (this.data?.countStep > 0) {
+            this.notify.alertCode('ES023').subscribe((x) => {
+              //open popup confirm
+              let lastValue = JSON.parse(
+                JSON.stringify(this.data.confirmControl)
+              );
+
+              if (x.event?.status == 'Y') {
+                this.data.confirmControl = event?.data ? '1' : '0';
+                this.form?.formGroup?.patchValue({
+                  [event['field']]: event.data,
+                });
+                this.esService
+                  .updateFieldApprovalStepAsync(
+                    this.data.recID,
+                    fieldName,
+                    event.data
+                  )
+                  .subscribe();
+
+                this.esService.updateCategory(this.data).subscribe((res) => {
+                  if (res) {
+                    this.oUpdate = res;
+                  }
+                });
+              } else {
+                // back data
+                this.data.confirmControl = event?.data ? '1' : '0';
+                this.data.confirmControl = lastValue == '1' ? true : false;
+                this.cr.detectChanges();
+              }
+            });
+          } else {
+            this.data[event['field']] = event.data ? '1' : '0';
+            this.form?.formGroup?.patchValue({
+              [event['field']]: this.data[event['field']],
+            });
+          }
+          break;
+        }
+        case 'signatureType': {
+          if (this.data?.countStep > 0) {
+            this.notify.alertCode('ES023').subscribe((x) => {
+              //open popup confirm
+              let lastValue = JSON.parse(
+                JSON.stringify(this.data.signatureType)
+              );
+
+              if (x.event?.status == 'Y') {
+                this.data[event['field']] = event.data;
+                this.form?.formGroup?.patchValue({
+                  [event['field']]: event.data,
+                });
+                this.esService
+                  .updateFieldApprovalStepAsync(
+                    this.data.recID,
+                    fieldName,
+                    event.data
+                  )
+                  .subscribe();
+
+                this.esService.updateCategory(this.data).subscribe((res) => {
+                  if (res) {
+                    this.oUpdate = res;
+                  }
+                });
+              } else {
+                this.data[event['field']] = event.data;
+                this.cr.detectChanges();
+                this.data.signatureType = lastValue;
+                this.cr.detectChanges();
+              }
+            });
+          } else {
+            this.data[event['field']] = event.data;
+            this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+          }
+          break;
+        }
+        default: {
+          this.data[event['field']] = event.data;
+          this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+        }
+      }
     }
+
+    console.log('value change', event);
     this.cr.detectChanges();
   }
 
@@ -242,18 +355,28 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
 
     this.dialog.dataService.dataSelected = this.data;
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), 0)
-      .subscribe((res) => {
-        if (res.update || res.save) {
-          let resData = res.save;
-          if (res.update) resData = res.update;
+    if (
+      (this.isAdd && this.isSaved == false) ||
+      (this.isSaved == false && this.type == 'copy')
+    ) {
+      this.esService.addNewCategory(this.data).subscribe((res) => {
+        if (res) {
           this.isSaved = true;
           if (isClose) {
-            this.dialog && this.dialog.close(resData);
+            this.dialog && this.dialog.close(res);
           }
         }
       });
+    } else {
+      this.esService.updateCategory(this.data).subscribe((res) => {
+        if (res) {
+          this.isSaved = true;
+          if (isClose) {
+            this.dialog && this.dialog.close(res);
+          }
+        }
+      });
+    }
   }
 
   openAutoNumPopup() {
@@ -291,7 +414,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
-    if (this.viewAutoNumber == '') {
+    if (this.data.eSign && this.viewAutoNumber == '') {
       let headerText = this.grvSetup['AutoNumber']?.headerText ?? 'AutoNumber';
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;

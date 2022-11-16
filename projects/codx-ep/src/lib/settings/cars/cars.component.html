@@ -1,53 +1,66 @@
 <codx-views
-  #view  
+  #view
   [funcID]="funcID"
   [service]="service"
   [assemblyName]="assemblyName"
   [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
   [views]="views"
   [button]="buttons"
   (buttonClick)="click($event)"
   [moreFuncs]="moreFuncs"
   [idField]="idField"
   [className]="className"
-  [method]="method"  
-  (onLoading)="onLoading($event)" 
+  [method]="method"
+  (onLoading)="onLoading($event)"
   [viewActiveType]="viewType.grid"
 >
 </codx-views>
-<ng-template #resourceNameCol let-data>  
+<ng-template #resourceNameCol let-data>
   <div class="d-flex flex-row align-items-center">
-    <codx-img 
-      [objectId]="data?.recID"       
-      [funcId]="funcID"       
+    <codx-img
+      [objectId]="data?.recID"
+      [funcId]="funcID"
       [objectType]="'EP_Resources'"
-      imageType="circle" 
-      width="60" 
+      [objectName]="data.resourceName"
+      imageType="circle"
+      width="60"
       [imgOn]="data.modifiedOn"
-    ></codx-img>  
+    ></codx-img>
     <div class="ms-2 d-flex flex-column">
-      <span class="fw-bold">{{data.resourceName}} - {{data.code}}</span>
+      <span class="fw-bold"
+        >{{ data.resourceName
+        }}<span *ngIf="data.code != null"> - {{ data.code }}</span></span
+      >
       <div class="d-flex flex-row">
-        <codx-label [default]="grvCars?.Ranking?.headerText" name="lblCategory" class="text-gray-600"></codx-label>
+        <codx-label
+          [default]="grvCars?.Ranking?.headerText"
+          name="lblCategory"
+          class="text-gray-600"
+        ></codx-label>
         <span>:</span>
-        <span class="fw-bold ms-1">{{ data.ranking| vll: "EP005" : 'text' | async}}</span>
+        <span class="fw-bold ms-1">{{
+          data.ranking | vll: "EP005":"text" | async
+        }}</span>
       </div>
       <div class="d-flex flex-row">
-        <codx-label [default]="grvCars?.Capacity?.headerText" name="lblCategory" class="text-gray-600"></codx-label>
+        <codx-label
+          [default]="grvCars?.Capacity?.headerText"
+          name="lblCategory"
+          class="text-gray-600"
+        ></codx-label>
         <span>:</span>
-        <span class="fw-bold ms-1">{{ data.capacity}}</span>
+        <span class="fw-bold ms-1">{{ data.capacity }}</span>
       </div>
     </div>
-  </div>  
+  </div>
 </ng-template>
-<ng-template #locationCol let-data>  
+<ng-template #locationCol let-data>
   <div class="d-flex flex-column justify-content-start">
     <!-- <span>{{data.category| vll: "VL005" : 'text' | async}}</span>  -->
-    <span>{{data.companyName}}</span> 
+    <span class="text-truncate" [title]="data?.companyName">{{
+      data?.companyName
+    }}</span>
   </div>
-  
 </ng-template>
 <ng-template #popupDevice let-dialog>
   <div class="modal-header">
@@ -67,9 +80,7 @@
           aria-label="Close"
           (click)="dialog.close()"
         >
-          <span
-            class="icon-close icon-20 text-dark text-hover-primary"
-          ></span>
+          <span class="icon-close icon-20 text-dark text-hover-primary"></span>
         </button>
       </div>
       <div class="text-dark-50">
@@ -85,13 +96,14 @@
     <div class="py-2" *ngFor="let item of carsEquipments">
       <div class="d-flex flex-stack">
         <div class="d-flex">
-          <span class="text-dark me-2 p-1" [className]="item.icon"
-          [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
+          <span
+            class="text-dark me-2 p-1"
+            [className]="item.icon"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"
+          >
           </span>
           <div class="d-flex flex-column justify-content-center">
-            <span href="#" class="text-dark fw-bolder">{{
-              item.text
-            }}</span>
+            <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
           </div>
         </div>
         <div class="d-flex justify-content-end">
@@ -100,30 +112,36 @@
               class="form-check-input w-35px h-20px"
               type="switch"
               id="googleswitch"
-              [checked]="item.isSelected"  
-              [disabled]="true"              
+              [checked]="item.isSelected"
+              [disabled]="true"
             ></codx-input>
             <label class="form-check-label" for="googleswitch"></label>
           </div>
         </div>
       </div>
     </div>
-  </div>    
+  </div>
 </ng-template>
-<ng-template #equipmentsCol let-data>  
-    <div (click)="openPopupDevice(popupDevice, data?.equipments)" class="btn d-flex justify-content-center align-items-center">    
-      <i class="icon-devices"></i>
-      <span class=" ms-1 fw-bold">{{data?.equipmentQty}}</span>
-      <codx-label [default]="grvCars?.Equipments?.headerText" class=" ms-1 fw-bold" name="lblDevice"></codx-label>
-    </div>  
-  
-</ng-template>  
+<ng-template #equipmentsCol let-data>
+  <div
+    (click)="openPopupDevice(popupDevice, data?.equipments)"
+    class="btn d-flex justify-content-center align-items-center"
+  >
+    <i class="icon-devices"></i>
+    <span class="ms-1 fw-bold">{{ data?.equipmentQty }}</span>
+    <codx-label
+      [default]="grvCars?.Equipments?.headerText"
+      class="ms-1 fw-bold"
+      name="lblDevice"
+    ></codx-label>
+  </div>
+</ng-template>
 <ng-template #ownerCol let-data>
   <div class="d-flex has-action-menu align-items-center">
     <codx-img [objectId]="data.owner" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data.ownerName }}</div>
-    </div>      
+    </div>
     <codx-mfunc
       [dataItem]="data"
       [formModel]="formModel"
@@ -134,11 +152,16 @@
 </ng-template>
 
 <ng-template #linkCol let-data>
-  <div class="d-flex has-action-menu align-items-center">
-    <codx-img [objectId]="data.driverRecID" imageType="circle"  [width]="35" [objectType]="'EP_Resources'"></codx-img>
+  <div *ngIf="data.linkID" class="d-flex has-action-menu align-items-center">
+    <codx-img
+      [objectId]="data.driverRecID"
+      [objectName]="data.driverName"
+      imageType="circle"
+      [width]="35"
+      [objectType]="'EP_Resources'"
+    ></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data.driverName }}</div>
-    </div>   
+    </div>
   </div>
 </ng-template>
-

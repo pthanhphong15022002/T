@@ -14,9 +14,9 @@
         (valueChange)="valueCbxCarChange($event)">
       </codx-input>
       <div class="row">
-        <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row ">
-          <div class="d-flex justify-content-start">
-            <div class="d-flex  flex-wrap" *ngFor="let item of tmplstDevice">
+        <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
+          <div class="d-flex justify-content-start flex-wrap">
+            <div class="d-flex" *ngFor="let item of tmplstDevice">
               <div class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
                 <span class="me-1 ps-2"  [className]="item.icon"
                 [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
@@ -138,7 +138,7 @@
       <div class="symbol-group symbol-group-check symbol-hover flex-nowrap">
         <div class="" *ngIf="driver != null">
           <div class="symbol symbol-30px symbol-circle">
-            <codx-img [objectId]="driver.objectID" width="30" [objectType]="driver.objectType"></codx-img>
+            <codx-img [objectId]="driver.objectID" width="30" [objectName]="driver.driverName" [objectType]="driver.objectType"></codx-img>
             <span
                 class="position-absolute"
                 inlineSVG="./assets/themes/ep/default/img/{{ driver.icon }}"
@@ -203,7 +203,7 @@
   </div>
   <div class="d-flex align-items-center mb-4 position-relative" *ngIf="driver != null">
     <div class="symbol symbol-30px symbol-circle me-4">
-      <codx-img [objectId]="driver.objectID" [width]="30" [objectType]="driver.objectType"></codx-img>
+      <codx-img [objectId]="driver.objectID" [objectName]="driver.driverName" [width]="30" [objectType]="driver.objectType"></codx-img>
       <span class="position-absolute"inlineSVG="./assets/themes/ep/default/img/{{ driver.icon }}" style="bottom: -5px;right:-4px"></span>
       <!-- <span class="symbol-badge badge badge-sm badge-circle bg-warning top-100 start-100 text-white fs-8">D</span> -->
     </div>

@@ -141,13 +141,12 @@ export class DynamicFormComponent extends UIComponent {
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
-              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', dt?.data)
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt?.data,'ODS21'])
               .subscribe();
           }
         });
     });
   }
-
   private edit(evt?, mFunc?) {
     this.dataSelected = this.viewBase.dataService.dataSelected;
     if (evt) this.dataSelected = evt;
@@ -168,6 +167,17 @@ export class DynamicFormComponent extends UIComponent {
         },
         option
       );
+      //Xử lý riêng của OD
+      if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
+        this.dialog.closed.subscribe((item) => {
+          var dt = item?.event?.update?.data;
+          if (dt && dt?.approval) {
+            //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
+            this.api
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt,'ODS21'])
+              .subscribe();
+          }
+        });
     });
   }
 
@@ -202,6 +212,12 @@ export class DynamicFormComponent extends UIComponent {
     this.viewBase.dataService.delete([delItem]).subscribe((res) => {
       this.dataSelected = res;
     });
+    //Xử lý riêng OD
+    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
+      this.api
+          .execSv('ES', 'ES', 'CategoriesBusiness', 'DeleteCategoyAsync', [delItem?.categoryID])
+          .subscribe();
+    
   }
 
   private export(evt: any) {

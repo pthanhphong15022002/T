@@ -1,47 +1,66 @@
-import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, ViewModel, ViewType } from 'codx-core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'lib-aprpermission',
   templateUrl: './aprpermission.component.html',
-  styleUrls: ['./aprpermission.component.css']
+  styleUrls: ['./aprpermission.component.css'],
 })
-export class AprpermissionComponent implements OnInit {
+export class AprpermissionComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   funcID: any;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   columnsGrid = [];
-
+  read = false;
+  lstPermissions = [];
   @ViewChild('view') codxview!: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
-  @ViewChild('itemPetitioner', { static: true })
-  itemPetitioner: TemplateRef<any>;
-  @ViewChild('itemRequestDate', { static: true })
-  itemRequestDate: TemplateRef<any>;
-  @ViewChild('itemPermission', { static: true })
-  itemPermission: TemplateRef<any>;
+  @ViewChild('itemOwner', { static: true })
+  itemOwner: TemplateRef<any>;
+  @ViewChild('itemCreatedOn', { static: true })
+  itemCreatedOn: TemplateRef<any>;
+  @ViewChild('itemPermissions', { static: true })
+  itemPermissions: TemplateRef<any>;
   @ViewChild('itemDescription', { static: true })
   itemDescription: TemplateRef<any>;
 
   constructor(
+    inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-  ) { }
+    private activedRouter: ActivatedRoute
+  ) {
+    super(inject);
+  }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.button = {
       id: 'btnAdd',
     };
     this.columnsGrid = [
       { headerTemplate: this.itemProcessName, width: 300 },
-      { headerTemplate: this.itemPetitioner, width: 300 },
-      { headerTemplate: this.itemRequestDate, width: 100 },
-      { headerTemplate: this.itemPermission, width: 100 },
-      { headerTemplate: this.itemDescription, width: 300 },
+      { headerTemplate: this.itemOwner, width: 250 },
+      { headerTemplate: this.itemCreatedOn, width: 250 },
+      { headerTemplate: this.itemPermissions, width: 250 },
+      { headerTemplate: this.itemDescription, width: 250 },
+      { field: '', headerText: '', width: 100 },
       { field: '', headerText: '', width: 100 },
     ];
   }
@@ -49,6 +68,7 @@ export class AprpermissionComponent implements OnInit {
   ngAfterViewInit(): void {
     this.views = [
       {
+        id: '1',
         type: ViewType.grid,
         active: true,
         sameData: true,
@@ -61,6 +81,61 @@ export class AprpermissionComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  //#region html & xem them
+  convertHtmlAgency(position: any) {
+    var desc = '<div class="d-flex">';
+    if (position)
+      desc +=
+        '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' +
+        position +
+        '</span></div>';
+
+    return desc + '</div>';
+  }
+
+  toggleContent(p, data) {
+    this.lstPermissions = [];
+    this.read = true;
+    var read = '';
+    if (data.read) {
+      read = 'Xem';
+      this.lstPermissions.push(read);
+    }
+    if (data.download) {
+      read = 'Download';
+      this.lstPermissions.push(read);
+    }
+    if (data.create) {
+      read = 'Tạo thư mục';
+      this.lstPermissions.push(read);
+    }
+    if (data.update) {
+      read = 'Chỉnh sửa';
+      this.lstPermissions.push(read);
+    }
+    if (data.delete) {
+      read = 'Xóa';
+      this.lstPermissions.push(read);
+    }
+    if (data.share) {
+      read = 'Chia sẻ';
+      this.lstPermissions.push(read);
+    }
+    if (data.assign) {
+      read = 'Chia sẻ quyền';
+      this.lstPermissions.push(read);
+    }
+    if (data.upload) {
+      read = 'Upload';
+      this.lstPermissions.push(read);
+    }
+    if (this.lstPermissions.length > 0) {
+      p.open();
+    } else {
+      p.close();
+    }
+  }
+  //#endregion
   click(evt: ButtonModel) {
     // this.titleAction = evt.text;
     // switch (evt.id) {
@@ -70,12 +145,7 @@ export class AprpermissionComponent implements OnInit {
     // }
   }
 
-  permission($event) {
+  permission($event) {}
 
-  }
-
-  clickMF(e: any, data?: any) {
-
-  }
-
+  clickMF(e: any, data?: any) {}
 }

@@ -34,6 +34,7 @@ export class CO_Meetings{
     online: boolean;
     avataResource: string;
     userName: string;
+    reminder: number;
 }
 
 export class CO_Resources{
@@ -71,13 +72,14 @@ export class EP_Boooking{
   reasonID:string='';
   approveStatus:string;
   resourceType:string;
+  refID: string;
 }
 export class EP_BookingAttendees {
   userID: string;
   userName: string;
   roleType: string;
   status: string;
-  optional: boolean; 
+  optional: boolean;
 }
 export class TabControl{
   name: 'Nội dung họp' | 'Thảo luận' |string;
