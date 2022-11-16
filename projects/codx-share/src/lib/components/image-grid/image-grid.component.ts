@@ -5,32 +5,17 @@ import {
   EventEmitter,
   Injector,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChange,
-  SimpleChanges,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-
-import { Subscription } from 'rxjs';
 import 'lodash';
 import {
   AuthService,
   CallFuncService,
-  DialogModel,
-  FilesService,
-  NotificationsService,
 } from 'codx-core';
 import { ErmComponent } from '../ermcomponent/erm.component';
-import { isBuffer } from 'util';
 import { environment } from 'src/environments/environment';
-import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { AttachmentComponent } from '../attachment/attachment.component';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 @Component({
   selector: 'codx-file',
   templateUrl: './image-grid.component.html',
@@ -73,10 +58,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     if (this.objectID) {
       this.getFileByObjectID();
     } 
-    // else 
-    // {
-    //   this.convertFile();
-    // }
   }
   getFileByObjectID() {
     this.api
@@ -89,7 +70,6 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       )
       .subscribe((result: any[]) => {
         if (result.length > 0) {
-          debugger
           result.forEach((f: any) => {
             switch(f['referType'])
             {

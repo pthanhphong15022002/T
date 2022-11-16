@@ -60,9 +60,10 @@ export class WP_Comments{
     public shares:any
     public news:any
     public images:number
+    public files:any
 
     constructor(){
-        this.recID = "";
+        this.recID = Util.uid();
         this.refID = "";
         this.comments = "";
         this.content = "";
@@ -92,5 +93,6 @@ export class WP_Comments{
         this.shareName = "";
         this.tagName = "";
         this.tag = 0;
+        this.files = null;
     }
 }

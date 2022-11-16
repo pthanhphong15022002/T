@@ -317,6 +317,10 @@
     margin-left: -7px;
   }
 
+  .title-des-hover:hover {
+    background-color: rgb(238, 248, 248);
+  }
+
   .question {
     width: 439px !important;
   }
@@ -507,5 +511,14 @@
 
   .d-none {
     display: none !important;
+  }
+
+  .MF{
+    width: 300px !important;
+    min-height: 150px !important;
+  }
+
+  .mt-30px {
+    margin-top: 30px;
   }
 }
