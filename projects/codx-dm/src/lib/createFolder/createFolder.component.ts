@@ -577,6 +577,7 @@ export class CreateFolderComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
+    debugger;
     this.folderName = this.folderName.trim();
     this.fileEditing.folderName = this.folderName;
     this.fileEditing.approval = this.approval;
@@ -591,6 +592,7 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;
+    this.fileEditing.subFolder = this.listSubFolder;
     var that = this;
     if (this.id == '' || this.id == null) {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
@@ -725,6 +727,7 @@ export class CreateFolderComponent implements OnInit {
     );
     dialog.closed.subscribe(item=>{
       if(item.event)
+      debugger;
         this.listSubFolder = item.event;
       this.changeDetectorRef.detectChanges();
     })
