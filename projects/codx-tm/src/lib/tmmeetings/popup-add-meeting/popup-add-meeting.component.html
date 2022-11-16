@@ -258,23 +258,12 @@
     <div class="form-group">
       <div class="d-flex align-items-end justify-content-between mb-2">
         <div class="d-flex me-2">
-          <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung họp">
+          <codx-label fiedName="Reminder" [formModel]="form.formModel" default="Nhắc nhở trước cuộc họp(phút)">
           </codx-label>
-          <!-- <codx-label fiedName="Repeated" formName="TMMeetings" default="Lặp lại">
-          </codx-label> -->
         </div>
-        <!-- <div class="flex">
-            <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false"
-              labelPosition="Before"></codx-input>
-          </div> -->
-
-        <button type="button" class="btn btn-sm btn-icon btn-light">
-          <span class="icon-check_box icon-18"></span>
-        </button>
+        <codx-input type="text" name="reminder" field="reminder" (valueChange)="valueChange($event)" [crrValue]="meeting.reminder"></codx-input>
       </div>
-      <codx-input field="memo" type="textarea" class="meeting-des" headerposition="none" format="ed"
-        [crrValue]="meeting?.memo" (valueChange)="changeMemo($event)">
-      </codx-input>
+
     </div>
   </ng-container>
 </ng-template>
