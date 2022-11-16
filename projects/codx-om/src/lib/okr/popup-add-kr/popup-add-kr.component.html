@@ -1,0 +1,219 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="formModel"
+  [data]="data"
+  *ngIf="isAfterRender"
+>
+  <ng-template #body>
+    <div class="form-group">
+      <codx-label default="Mục tiêu" fiedName="" [formModel]="form.formModel">
+      </codx-label>
+      <codx-combobox
+        
+      >
+      </codx-combobox>
+    </div>
+
+    <div class="form-group">
+      <codx-label default="Tên KR" fiedName="" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        type="text"
+      >
+      </codx-input>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-4">
+        <codx-label default="Thang đo KR" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-combobox
+          
+        >
+        </codx-combobox>
+      </div>
+
+      <div class="form-group col-4">
+        <codx-label default="Chỉ tiêu" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          type="text"
+        >
+        </codx-input>
+      </div>
+
+      <div class="form-group col-4">
+        <codx-label default="Đơn vị tính" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-combobox
+          
+        >
+        </codx-combobox>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="form-group col-4">
+        <codx-label default="Loại chỉ tiêu" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-combobox
+          
+        >
+        </codx-combobox>
+      </div>
+
+      <div class="form-group col-4">
+        <codx-label default="Phân bố chỉ tiêu" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          type="text"
+        >
+        </codx-input>
+      </div>
+
+      <div class="form-group col-4">
+        <codx-label default="Phân bố btn" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <button class="btn btn-outline-primary d-flex flex-row justify-content-center" (click)="onSaveForm()">
+          <span class="icon-airplay btn-text-primary me-2"></span>
+          <codx-label
+            name="lbl"
+            class="fw-normal"
+            default="Phân bố chỉ tiêu"
+            [formModel]="form.formModel"
+          ></codx-label>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="form-group col-4">
+        <codx-label default="Tần suất" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-combobox
+          
+        >
+        </codx-combobox>
+      </div>
+
+      <div class="form-group col-6">
+        <codx-label default="Qui định cập nhật dữ liệu" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          type="text"
+        >
+        </codx-input>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="form-group col-4">
+        <codx-label default="Nguồn dữ liệu" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-combobox
+          
+        >
+        </codx-combobox>
+      </div>
+
+      <div class="form-group col-6">
+        <codx-label default="Cách thức cập nhật" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          type="text"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group col-2 d-flex flex-column justify-content-end">
+        <span role="button" class="icon-settings text-primary "></span>
+      </div>
+      
+    </div>
+
+    <div class="form-group">
+      <codx-label default="Ghi chứ" fiedName="" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input
+        type="text"
+      >
+      </codx-input>
+    </div>
+    <div class="row">
+      <div class="form-group col-10 d-flex align-items-center">      
+        <codx-label default="Liên kết mục tiêu" fiedName="" [formModel]="form.formModel">
+        </codx-label>
+      </div>
+      <div class="form-group col-2 d-flex justify-content-end">
+        <span role="button" class="icon-settings text-primary "></span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-template #popupDevice let-dialogRef>
+    <div class="modal-header">
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 id="modal-basic-title">
+            <codx-label
+              name="lbl"
+              default="Kế hoạch chỉ tiêu"
+              [formModel]="form.formModel"
+            ></codx-label>
+          </h2>
+          <button
+            type="button"
+            class="btn btn-xs btn-icon btn-light btn-hover-primary"
+            aria-label="Close"
+            (click)="dialogRef.close()"
+          >
+            <span
+              class="icon-close icon-20 text-dark text-hover-primary"
+            ></span>
+          </button>
+        </div>
+        <div class="text-dark-50">
+          <codx-label
+            name="lblChooseCarEquipments"
+            default="Chọn các thiết bị đã tích hợp sẵn trong xe"
+            [formModel]="form.formModel"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="py-2">
+        <div class="d-flex flex-stack">
+          <div class="d-flex">
+            
+          </div>
+          <div class="d-flex justify-content-end">
+            <div class="form-check form-check-solid form-switch">
+              
+              <label class="form-check-label" for="googleswitch"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

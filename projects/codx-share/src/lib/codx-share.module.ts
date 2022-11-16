@@ -127,6 +127,7 @@ import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-
 import { CodxCompetencesComponent } from './components/codx-competences/codx-competences.component';
 import { LazyLoadImageModule} from 'ng-lazyload-image';
 import { CodxEmailComponent } from './components/codx-email/codx-email.component'; 
+import { CoreModule } from '@core/core.module';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -230,6 +231,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
+    CoreModule,
     DateRangePickerModule,
     TabModule,
     UploaderModule,

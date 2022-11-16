@@ -943,4 +943,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   getfileCount(e) {}
+
+  showIconByStepType(stepType){
+     var type = this.button?.items.find(x=>x.id==stepType)
+     return type?.icon
+  }
 }
