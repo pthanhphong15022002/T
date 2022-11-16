@@ -46,9 +46,8 @@
                 </div>
                 <codx-input
                   type="text"
-                  class="form-control"
                   field="legalName"
-                  [crrValue]="data.legalName"
+                  [crrValue]="data?.legalName"
                   placeholder="Tên công ty"
                   (valueChange)="valueChange($event)"
                 >
@@ -312,10 +311,9 @@
                       >
                     </div>
                   </div>
-                  <div class="col-7">
+                  <div class="col-7" *ngIf="urlEmbedSafe">
                     <div class="contact-map">
                       <iframe
-                        *ngIf="urlEmbedSafe"
                         class="contact-map-size"
                         [src]="urlEmbedSafe"
                         allowfullscreen=""

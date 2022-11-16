@@ -1,5 +1,5 @@
 <codx-form #form [headerText]="data.processName" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
-  [dialog]="dialog" class="dialog-property" >
+  [dialog]="dialog" class="dialog-property">
   <ng-template #header>
     <div class="offcanvas-header w-100">
       <div class="btn-extand d-flex align-items-center"
@@ -35,7 +35,9 @@
                   <span class="fw-bolb w-100px">
                     <codx-label name="" default="Người tạo:"> </codx-label>
                   </span>
-                  <span class="text-dark">{{ data.userName }}</span>
+                  <span class="text-dark">
+                    <div >{{data.createdBy}}</div>
+                  </span>
                 </div>
                 <div class="d-flex align-items-center">
                   <span class="me-1 icon-16 icon-access_alarm"></span><span #createdOn> {{
@@ -214,49 +216,46 @@
             <div class="mb-4">
               <!-- <ng-container *ngFor="let view of fileEditing.views; let i = index"> -->
               <!--begin::Foot-->
-              <ng-container *ngIf="process.rattings">
-                <ng-container *ngFor="let view of process.rattings; let i = index">
-                    <div *ngIf="view.ratting > 0"
-                        class="d-flex flex-column py-3 w-100 border-bottom user-rating">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="me-3">
-                                <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users"
-                                    imgCss="w-30px me-3" [imageWidth]="30" [title]="view.objectName"
-                                    [subTitle]="view.positionName">
-                                </codx-temp-full>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <div
-                                    class="task-date text-gray-600 d-flex flex-column align-items-center">
-                                    <div class="text-gray-500 fs-7 mb-1">
-                                        <span class="text-gray-600 me-2" #createOn>
-                                            {{
-                                              view.createOn | formatvalue
-                                              : view.formModel
-                                              : "createOn"
-                                              : createOn
+              <ng-container *ngIf="rattings">
+                <ng-container *ngFor="let view of rattings; let i = index">
+                  <div *ngIf="view.ratting > 0" class="d-flex flex-column py-3 w-100 border-bottom user-rating">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="me-3">
+                        <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users" imgCss="w-30px me-3"
+                          [imageWidth]="30" [title]="view.objectName" [subTitle]="view.positionName">
+                        </codx-temp-full>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <div class="task-date text-gray-600 d-flex flex-column align-items-center">
+                          <div class="text-gray-500 fs-7 mb-1">
+                            <span class="text-gray-600 me-2" #createdOn>
+                              {{
+                                              view.createdOn | formatvalue
+                                              : dialog.formModel
+                                              : "createdOn"
+                                              : createdOn
                                               : "Processes"
                                               : "grvProcesses"
                                               | async
                                               }}
-                                          </span>
-                                    </div>
-                                    <div class="d-flex user-rated">
-                                        <span [ngClass]="setClassRating(1, view.ratting)"></span>
-                                        <span [ngClass]="setClassRating(2, view.ratting)"></span>
-                                        <span [ngClass]="setClassRating(3, view.ratting)"></span>
-                                        <span [ngClass]="setClassRating(4, view.ratting)"></span>
-                                        <span [ngClass]="setClassRating(5, view.ratting)"></span>
-                                    </div>
-                                </div>
-                            </div>
+                            </span>
+                          </div>
+                          <div class="d-flex user-rated">
+                            <span [ngClass]="setClassRating(1, view.ratting)"></span>
+                            <span [ngClass]="setClassRating(2, view.ratting)"></span>
+                            <span [ngClass]="setClassRating(3, view.ratting)"></span>
+                            <span [ngClass]="setClassRating(4, view.ratting)"></span>
+                            <span [ngClass]="setClassRating(5, view.ratting)"></span>
+                          </div>
                         </div>
-                        <div class="rating-comment mt-1">
-                            {{view.comment}}
-                        </div>
+                      </div>
                     </div>
+                    <div class="rating-comment mt-1">
+                      {{view.comment}}
+                    </div>
+                  </div>
                 </ng-container>
-            </ng-container>
+              </ng-container>
 
 
 
@@ -280,34 +279,85 @@
                     </codx-label>
                   </div>
                 </ng-template>
-                <!-- <ng-template #content>
-                                    <div class="pt-5 extend-more-content pe-3">
-                                        <ng-container
-                                            *ngIf="(fileEditing.history && fileEditing.history.length>0 ), else defaulEmpt">
-                                            <div *ngFor="let his of fileEditing.history; let i = index">
-                                                <ng-container *ngIf="his.fileName != null && his.fileName != ''">
-                                                    <div class="d-flex history-item pb-4 line-hor">
-                                                        <img *ngIf="his.extension != null && his.extension != ''"
-                                                            alt="{{his.fileName}}" class="max-h-20px me-2"
-                                                            src="../../../assets/codx/dms/{{getAvatar(his.extension)}}">
-                                                        <div class="d-flex flex-column flex-grow-1">
-                                                            <div class="d-flex justify-content-between">
-                                                                <div class="text-dark fw-bold">{{his.fileName}}</div>
-                                                                <div class="text-gray-500 ms-3">{{his.createdOn |
-                                                                    timefrom}}</div>
-                                                            </div>
-                                                            <div class="text-primary fs-7">{{his.userName}}
-                                                            </div>
-                                                            <div class="text-gray-600">{{his.coment}}</div>
-                                                        </div>
-                                                    </div>
-                                                </ng-container>
-                                            </div>
-                                        </ng-container>
-                                    </div>
-                                </ng-template> -->
+                <ng-template #content>
+                  <div class="pt-5 extend-more-content pe-3">
+                    <ng-container *ngIf="(process.versions && process.versions.length>0 ), else defaulEmpt">
+                      <div *ngFor="let item of process.versions; index as i">
+                        <div class="d-flex flex-row py-5">
+                          <div class="d-flex flex-column">
+                            <div class="p-2"><span class="me-1 icon-28 icon-history"></span></div>
+                          </div>
+                          <div class="d-flex flex-column">
+                            <div class="p-2">
+                              <div *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
+                                <codx-label [formModel]="dialog.formModel" default="Phiên bản đầu tiên"></codx-label>
+                              </div>
+                              <ng-template #firstVersionNo>
+                                <h4>
+                                  Phiên bản:
+                                  <span #versionNo>
+                                    {{
+                                                            item?.versionNo
+                                                              | formatvalue
+                                                                : form.formModel
+                                                                : "versionNo"
+                                                                : versionNo
+                                                                : "Processes"
+                                                                : "grvProcesses"
+                                                              | async
+                                                          }}
+                                  </span>
+                                </h4>
+                              </ng-template>
+                            </div>
+                            <div class="p-2">
+                              <span class="text-primary"><codx-label [formModel]="dialog.formModel" default="Cập nhật bởi,"></codx-label> {{ item.createdBy }} </span>
+                              <span class="text-dark fw-bold"> |</span>
+                              <span class="text-primary" #createdOn>
+                                {{
+                                  item?.createdOn
+                                    | formatvalue
+                                      : form.formModel
+                                      : "createdOn"
+                                      : createdOn
+                                      : "Processes"
+                                      : "grvProcesses"
+                                    | async
+                                }}
+                              </span>
+
+                            </div>
+                            <div class="p-2">{{ item.comment }}</div>
+                          </div>
+                          <div class="d-flex flex-column">
+                            <div class="justify-content-end p-2">
+                              <codx-label name="lblActivedOn" fiedName="ActivedOn" [formModel]="dialog.formModel" default="Ngày hiệu lực">
+                              </codx-label>
+                            </div>
+                            <div class="justify-content-end p-2">
+                              <span #activedOn>
+                                {{
+                                                        item?.activedOn
+                                                          | formatvalue
+                                                            : form.formModel
+                                                            : "activedOn"
+                                                            : activedOn
+                                                            : "Processes"
+                                                            : "grvProcesses"
+                                                          | async
+                                                      }}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-template>
               </e-tabitem>
-              <!-- <e-tabitem>
+
+              <!--Chưa biết lịch sử này là cái gì-->
+              <e-tabitem>
                 <ng-template #headerText>
                   <div>
                     <codx-label name="History" default="Lịch sử"> </codx-label>
@@ -316,34 +366,45 @@
                 <ng-template #content>
                   <div class="pt-5 extend-more-content pe-3">
                     <ng-container *ngIf="
-                        fileEditing?.history && fileEditing?.history.length > 0;
+                        process?.versions && process?.versions.length > 0;
                         else defaulEmpt
                       ">
                       <div *ngFor="
-                          let history of fileEditing.history;
+                          let history of process.versions;
                           let i = index
                         " class="history-item pb-6 line-hor">
                         <div class="d-flex">
                           <div class="me-3">
                             <codx-temp-full [imageId]="history.createdBy" imageObjType="AD_Users" imgCss="w-35px"
-                              [imageWidth]="35">
+                              [imageWidth]="35" >
                             </codx-temp-full>
                           </div>
                           <div class="d-flex flex-column flex-grow-1">
                             <div class="task-date text-gray-500">
-                              <span>{{ history.createdOn | timefrom }}</span>
+                              <span #createdOn>
+                                {{
+                                  history?.createdOn
+                                                          | formatvalue
+                                                            : form.formModel
+                                                            : "createdOn"
+                                                            : createdOn
+                                                            : "Processes"
+                                                            : "grvProcesses"
+                                                          | async
+                                                      }}
+                              </span>
                             </div>
                             <div class="task-name">
-                              {{ history.description }}
+                              {{ history.versionNo }}
                             </div>
-                            <div class="task-name">{{ history.note }}</div>
+                            <div class="task-name">{{ history.comment }}</div>
                           </div>
                         </div>
                       </div>
                     </ng-container>
                   </div>
                 </ng-template>
-              </e-tabitem> -->
+              </e-tabitem>
             </e-tabitems>
           </ejs-tab>
         </div>

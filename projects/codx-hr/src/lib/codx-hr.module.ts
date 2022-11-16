@@ -64,6 +64,12 @@ import { EmployeeWorkingLisenceComponent } from './employee-profile/employee-wor
 import { EmployeeVisaInfoComponent } from './employee-profile/employee-visa-info/employee-visa-info.component';
 import { EmployeeVisaFormComponent } from './employee-profile/employee-visa-form/employee-visa-form.component';
 import { TmpGridViewComponent } from './employee-list/employee-profile/tmp-grid-view/tmp-grid-view.component';
+import { EmployeeAwardsDetailComponent } from './employee-profile/employee-awards-detail/employee-awards-detail.component';
+import { EmployeeAwardsInfoComponent } from './employee-profile/employee-awards-info/employee-awards-info.component';
+import { EmployeeDisciplinesInfoComponent } from './employee-profile/employee-disciplines-info/employee-disciplines-info.component';
+import { EmployeeDisciplinesDetailComponent } from './employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
+import { EmployeeAllocatedPropertyDetailComponent } from './employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
+import { EmployeeAllocatedPropertyComponent } from './employee-profile/employee-allocated-property/employee-allocated-property.component';
 
 export const routes: Routes = [
   {
@@ -238,6 +244,12 @@ const T_Component: Type<any>[] = [
   EmployeeVisaInfoComponent,
   EmployeeVisaFormComponent,
   TmpGridViewComponent,
+  EmployeeAwardsDetailComponent,
+  EmployeeAwardsInfoComponent,
+  EmployeeDisciplinesDetailComponent,
+  EmployeeDisciplinesInfoComponent,
+  EmployeeAllocatedPropertyComponent,
+  EmployeeAllocatedPropertyDetailComponent,
 ];
 @NgModule({
   imports: [

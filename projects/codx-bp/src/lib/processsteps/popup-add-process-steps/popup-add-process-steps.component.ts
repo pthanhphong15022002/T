@@ -5,6 +5,7 @@ import {
   ViewChild,
   Component,
   ChangeDetectorRef,
+  Injector,
 } from '@angular/core';
 import {
   AuthStore,
@@ -15,19 +16,21 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  UIComponent,
 } from 'codx-core';
 import { FormControlName } from '@angular/forms';
 import { CodxBpService } from '../../codx-bp.service';
 import {  BP_ProcessOwners,  BP_ProcessSteps} from '../../models/BP_Processes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
   selector: 'lib-popup-add-process-steps',
   templateUrl: './popup-add-process-steps.component.html',
   styleUrls: ['./popup-add-process-steps.component.css'],
 })
-export class PopupAddProcessStepsComponent implements OnInit {
+export class PopupAddProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('form') form: FormControlName;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
@@ -41,12 +44,14 @@ export class PopupAddProcessStepsComponent implements OnInit {
   funcID: any;
   title = '';
   action = '';
+  recIdEmail = '';
   textChange = '';
   titleActon = '';
   stepType = 'C';
   vllShare = 'TM003';
   readOnly = false;
   isHaveFile = false;
+  isNewEmails = true;
   showLabelAttachment = false;
   listUser = [];
   listOwnerID = [];
@@ -56,18 +61,19 @@ export class PopupAddProcessStepsComponent implements OnInit {
   formModelMenu :FormModel ;
   crrIndex = 0;
 
-
   constructor(
+    private inject: Injector,
     private bpService: CodxBpService,
-    private api: ApiHttpService,
+    // private api: ApiHttpService,
     private authStore: AuthStore,
-    private cache: CacheService,
+    // private cache: CacheService,
     private changeDef: ChangeDetectorRef,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(inject);
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );   
@@ -93,15 +99,19 @@ export class PopupAddProcessStepsComponent implements OnInit {
         this.listOwnerID =  this.processSteps.owners.map((item) => {
           return item?.objectID ? item.objectID : null ;
         }) 
-      }         
+      } 
+      if(this.stepType === "E" && this.processSteps.reference){
+        this.isNewEmails = false;
+        this.recIdEmail = this.processSteps.reference;
+      }   
     }
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.loadData();   
-    if(this.listOwnerID.length > 0){
-      this.getListUser();
-    }
+      if(this.listOwnerID.length > 0){
+        this.getListUser();
+      }
   }
 
   loadData() {
@@ -113,28 +123,42 @@ export class PopupAddProcessStepsComponent implements OnInit {
   handelMail() {
     let data = {
       dialog: this.dialog,
-      formGroup: null,
-      templateID: '5860917c-af36-4803-b90d-ed9f364985c6',
+      formGroup: true,
+      templateID: this.recIdEmail,
       showIsTemplate: true,
       showIsPublish: true,
       showSendLater: true,
       files: null,
+      isAddNew: this.isNewEmails,
     };
-        
-    this.callfunc.openForm(
-      PopupAddEmailTemplateComponent,
+
+    let popEmail = this.callfunc.openForm(
+      CodxEmailComponent,
       '',
       800,
       screen.height,
       '',
       data
     );
-    }
+
+    popEmail.closed.subscribe((res) => {
+      this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
+      if (res.event) {
+        // this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
+      }
+    });
+  }
+    
   //#region
 
   //endregio
 
   //#region method
+
+  viewDetailSurveys(e) {
+    let url = 'sv/surveys/SVT01';
+    this.codxService.navigate('', url);
+  }
 
   async saveData() {
     this.processSteps.owners = this.owners;
@@ -162,7 +186,6 @@ export class PopupAddProcessStepsComponent implements OnInit {
       op.method = 'AddProcessStepAsync';
       data = [this.processSteps, this.owners];
     }
-
     op.data = data;
     return true;
   }
