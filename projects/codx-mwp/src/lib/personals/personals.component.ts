@@ -49,6 +49,12 @@ export class PersonalsComponent implements OnInit {
     },
   ];
 
+  public headerText: Object = [
+    { text: 'Twitter', iconCss: 'e-twitter' },
+    { text: 'Facebook', iconCss: 'e-facebook' },
+    { text: 'WhatsApp', iconCss: 'e-whatsapp' },
+  ];
+
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
