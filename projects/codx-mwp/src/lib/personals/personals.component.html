@@ -1,18 +1,10 @@
 <div class="page-pw h-100">
-  <div
-    class="pw-profile"
-    style="
+  <div class="pw-profile" style="
       background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
-    "
-  >
+    ">
     <div class="d-flex align-items-center avatar">
-      <codx-img
-        class="me-4"
-        [objectType]="'AD_Users'"
-        [objectId]="employeeInfo.userID"
-        [objectName]="employeeInfo.userName"
-        [width]="60"
-      >
+      <codx-img class="me-4" [objectType]="'AD_Users'" [objectId]="employeeInfo.userID"
+        [objectName]="employeeInfo.userName" [width]="60">
       </codx-img>
       <div class="d-flex flex-column">
         <div class="fs-6 fw-bold text-dark">{{ employeeInfo?.userName }}</div>
