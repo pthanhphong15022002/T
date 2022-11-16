@@ -458,7 +458,7 @@ export class PdfComponent
       let idx = this.lstCA?.findIndex(
         (ca) => ca.certificate.commonName == curSelectedSignerInfo?.email
       );
-      if (idx != -1) {
+      if (idx && idx != -1) {
         isCA = true;
         this.goToSelectedCA(this.lstCA[idx], idx);
       }
@@ -516,7 +516,6 @@ export class PdfComponent
           ? this.lstSignDateType[1]
           : this.lstSignDateType[0];
         this.curSelectedAnnotID = area.recID;
-        this.detectorRef.detectChanges();
       }
       this.detectorRef.detectChanges();
     }
@@ -1023,32 +1022,35 @@ export class PdfComponent
             if (
               !this.curSelectedArea.id().includes('CertificateAuthencation')
             ) {
-              this.curSelectedAnnotID = this.curSelectedArea.id();
-              this.tr?.resizeEnabled(
-                this.isEditable == false
-                  ? false
-                  : this.curSelectedArea.draggable()
+              let tmpArea = this.lstAreas.find(
+                (area) => area.recID == this.curSelectedArea.id()
               );
-              this.tr?.draggable(
-                this.isEditable == false
-                  ? false
-                  : this.curSelectedArea.draggable()
-              );
+              this.goToSelectedAnnotation(tmpArea);
 
-              let attrs = this.curSelectedArea?.attrs;
-              let name: tmpAreaName = JSON.parse(attrs.name);
-              this.tr?.enabledAnchors(
-                this.isEditable == false
-                  ? []
-                  : name.Type == 'img'
-                  ? this.checkIsUrl(name.LabelValue)
-                    ? this.fullAnchor
-                    : this.textAnchor
-                  : this.textAnchor
-              );
-              this.tr?.forceUpdate();
-              this.tr?.nodes([this.curSelectedArea]);
-              layerChildren.add(this.tr);
+              //   this.isEditable == false
+              //     ? false
+              //     : this.curSelectedArea.draggable()
+              // );
+              // this.tr?.draggable(
+              //   this.isEditable == false
+              //     ? false
+              //     : this.curSelectedArea.draggable()
+              // );
+
+              // let attrs = this.curSelectedArea?.attrs;
+              // let name: tmpAreaName = JSON.parse(attrs.name);
+              // this.tr?.enabledAnchors(
+              //   this.isEditable == false
+              //     ? []
+              //     : name.Type == 'img'
+              //     ? this.checkIsUrl(name.LabelValue)
+              //       ? this.fullAnchor
+              //       : this.textAnchor
+              //     : this.textAnchor
+              // );
+              // this.tr?.forceUpdate();
+              // this.tr?.nodes([this.curSelectedArea]);
+              // layerChildren.add(this.tr);
             } else {
               let idx = this.curSelectedArea
                 .id()
@@ -1428,6 +1430,9 @@ export class PdfComponent
 
   changeAnnotPro(type, recID, newUrl = null) {
     // switch (type.toString()) {
+    let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea?.attrs?.name);
+    let textContent = '';
+
     if (this.imgConfig.includes(type)) {
       if (!newUrl) return;
       else {
@@ -1474,12 +1479,11 @@ export class PdfComponent
     // [3, 4, 5, 6, 7]
     else {
       if (type != '5') {
-        this.curSelectedArea.text(this.formAnnot.value.content);
+        textContent = this.formAnnot.value.content;
       } else {
-        this.curSelectedArea.text(this.curSignDateType);
+        textContent = this.curSignDateType;
       }
-      this.curSelectedArea.attrs.fontSize = this.formAnnot.value.fontSize;
-      this.curSelectedArea.attrs.fontFamily = this.formAnnot.value.fontStyle;
+      let transformable = this.curSelectedArea.draggable();
       let style = 'normal';
       if (this.isBold && this.isItalic) {
         style.replace('normal', '');
@@ -1496,6 +1500,26 @@ export class PdfComponent
       this.curSelectedArea.attrs.textDecoration = this.isUnd
         ? 'line-through'
         : '';
+      let position = this.curSelectedArea.getPosition();
+      var textArea = new Konva.Text({
+        text: textContent,
+        fontSize: this.curAnnotFontSize,
+        fontFamily: this.curAnnotFontStyle,
+        x: position.x,
+        y: position.y,
+        draggable: transformable,
+        name: JSON.stringify(tmpName),
+        id: recID,
+        align: 'left',
+      });
+      this.curSelectedArea.destroy();
+      this.curSelectedArea = textArea;
+      let curLayer = this.lstLayer.get(tmpName.PageNumber + 1);
+
+      this.tr?.nodes([this.curSelectedArea]);
+      curLayer.add(this.curSelectedArea);
+      curLayer?.add(this.tr);
+      curLayer?.draw();
     }
 
     this.curSelectedArea.draw();
@@ -1506,15 +1530,12 @@ export class PdfComponent
     let x = this.curSelectedArea.position().x;
     let w = this.xScale;
     let h = this.yScale;
-    let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea.attrs.name);
 
     let tmpArea: tmpSignArea = {
       signer: tmpName.Signer,
       labelType: tmpName.LabelType,
-      labelValue: this.imgConfig.includes(type)
-        ? newUrl
-        : this.curSelectedArea.attrs.text,
-      isLock: this.curSelectedArea.draggable(),
+      labelValue: this.imgConfig.includes(type) ? newUrl : textContent,
+      isLock: !this.curSelectedArea.draggable(),
       allowEditAreas: this.signerInfo.allowEditAreas,
       signDate:
         tmpName.LabelType != '5'
@@ -1529,16 +1550,12 @@ export class PdfComponent
         pageNumber: this.curPage - 1,
       },
       stepNo: tmpName.StepNo,
-      fontStyle: this.imgConfig.includes(type)
-        ? ''
-        : this.curSelectedArea.attrs.fontFamily,
+      fontStyle: this.imgConfig.includes(type) ? '' : this.curAnnotFontStyle,
       fontFormat: this.imgConfig.includes(type)
         ? ''
-        : this.curSelectedArea.attrs.fontStyle +
-          this.curSelectedArea.attrs.textDecoration,
-      fontSize: this.imgConfig.includes(type)
-        ? ''
-        : this.curSelectedArea.attrs.fontSize,
+        : this.curAnnotFontStyle + this.curSelectedArea.attrs?.textDecoration ??
+          '',
+      fontSize: this.imgConfig.includes(type) ? '' : this.curAnnotFontSize,
       signatureType: 2,
       comment: '',
       createdBy: tmpName.Signer,

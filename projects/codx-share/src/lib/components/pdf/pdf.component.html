@@ -534,7 +534,11 @@
                       >
                         <div
                           class="text-content form-control my-2 ms-12"
-                          *ngIf="area.labelType == 6"
+                          *ngIf="
+                            area.labelType == 6 &&
+                            curAnnotFontSize &&
+                            curAnnotFontStyle
+                          "
                         >
                           <input
                             type="text"
@@ -559,16 +563,16 @@
 
                         <div
                           class="date-content my-2 ms-12"
-                          *ngIf="area.labelType == 5"
+                          *ngIf="area.labelType == 5 && curAnnotDateFormat"
                         >
                           <ejs-dropdownlist
                             class="me-2 min-w-70px"
                             id="dateFormatsDropdownList"
                             [dataSource]="lstAnnotDateFormat"
-                            [value]="curAnnotDateFormat"
-                            formControlName="dateFormat"
+                            [(value)]="curAnnotDateFormat"
                           >
                           </ejs-dropdownlist>
+                          <!-- formControlName="dateFormat" -->
                         </div>
                         <div class="d-flex my-2 ms-12">
                           <div
@@ -605,24 +609,28 @@
                           </div>
                           <div
                             class="text-format d-flex align-items-center"
-                            *ngIf="!imgConfig.includes(area.labelType)"
+                            *ngIf="
+                              !imgConfig.includes(area.labelType) &&
+                              curAnnotFontStyle &&
+                              curAnnotFontSize
+                            "
                           >
                             <ejs-dropdownlist
                               class="me-2 min-w-70px"
                               id="fontStylesDropdownList"
                               [dataSource]="lstAnnotFontStyle"
-                              [value]="curAnnotFontStyle"
-                              formControlName="fontStyle"
+                              [(value)]="curAnnotFontStyle"
                             >
                             </ejs-dropdownlist>
+                            <!-- formControlName="fontStyle" -->
                             <ejs-dropdownlist
                               class="me-2 w-100px"
                               id="fontSizesDropdownList"
                               [dataSource]="lstAnnotFontSize"
-                              [value]="curAnnotFontSize"
-                              formControlName="fontSize"
+                              [(value)]="curAnnotFontSize"
                             >
                             </ejs-dropdownlist>
+                            <!-- formControlName="fontSize" -->
                           </div>
                           <div
                             class="btn-format d-flex align-items-center"

@@ -168,6 +168,36 @@
               </div>
             </ng-template>
           </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div
+                class="d-flex align-items-center"
+                (click)="activeMF('INFORMATION')"
+              >
+                <img
+                  src="../assets/themes/mwp/default/light/img/{{
+                    !headerMF.STORAGE ? 'mwp_storage' : 'mwp_storage_active'
+                  }}.svg"
+                  alt=""
+                />
+                <span class="fw-bolder ms-2">
+                  <codx-label
+                    fiedName="Information"
+                    formName="Comments"
+                    default="Thông tin cá nhân"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <div
+                class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
+              >
+                <app-information></app-information>
+              </div>
+            </ng-template>
+          </e-tabitem>
         </e-tabitems>
       </ejs-tab>
     </div>
