@@ -26,6 +26,7 @@ import {
   FormModel,
   AuthService,
 } from 'codx-core';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { WP_Comments } from '../../../models/WP_Comments.model';
 import { PopupAddPostComponent } from './popup-add-post/popup-add-post.component';
 import { PopupAddPostComponents } from './popup-add/popup-add.component';
@@ -39,52 +40,51 @@ import { PopupSavePostComponent } from './popup-save/popup-save.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class ListPostComponent implements OnInit, AfterViewInit {
-
-  service = "WP";
-  assemblyName = "ERM.Business.WP"
-  className = "CommentsBusiness"
-  method = "GetListPostAsync";
+  service = 'WP';
+  assemblyName = 'ERM.Business.WP';
+  className = 'CommentsBusiness';
+  method = 'GetListPostAsync';
   user: any;
   showEmojiPicker = false;
   dataVll = [];
   title: string = '';
   strEmtyData: string = '';
-  function:any = null;  
-  defaultMoreFC:any[] = [];
-  gridViewSetup:any = null;
+  function: any = null;
+  defaultMoreFC: any[] = [];
+  gridViewSetup: any = null;
   predicateWP: string = '';
   dataValueWP: string = '';
-  predicateFD: string = "Category =@0 && Stop=false";
-  dataValueFD: string = "3";
+  predicateFD: string = 'Category =@0 && Stop=false';
+  dataValueFD: string = '3';
   lstData: any;
   lstUserShare: any[] = [];
   lstUserTag: any = [];
   CARDTYPE_EMNUM = {
-    Commendation: "1",
-    Thankyou: "2",
-    CommentForChange: "3",
-    SuggestionImprovement: "4",
-    Share: "5",
-    Congratulation: "6",
-    Radio: "7"
+    Commendation: '1',
+    Thankyou: '2',
+    CommentForChange: '3',
+    SuggestionImprovement: '4',
+    Share: '5',
+    Congratulation: '6',
+    Radio: '7',
   };
   CATEGORY = {
-    POST: "1",
-    COMMENTS: "2",
-    FEEDBACK: "3",
-    SHARE: "4",
-  }
-  
-  @Input() funcID: string = "";
+    POST: '1',
+    COMMENTS: '2',
+    FEEDBACK: '3',
+    SHARE: '4',
+  };
+
+  @Input() funcID: string = '';
   @Input() dataService: CRUDService = null;
-  @Input() objectID: string = "";
+  @Input() objectID: string = '';
   @Input() predicates: any;
   @Input() dataValues: any;
   @Input() isShowCreate = true;
-  @Input() module: "WP" | "FD" = "WP";
+  @Input() module: 'WP' | 'FD' = 'WP';
   @Input() formModel: FormModel = null;
-  @Input() formName: string = "";
-  @Input() gridViewName: string = "";
+  @Input() formName: string = '';
+  @Input() gridViewName: string = '';
   @Input() moreFunc: any = null;
   @Input() moreFuncTmp: TemplateRef<any> = null;
   @ViewChild('listview') listview: CodxListviewComponent;
@@ -98,19 +98,28 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     private notifySvr: NotificationsService,
     private route: ActivatedRoute,
     private codxService: CodxService,
-
-  ) {
-  }
-  ngAfterViewInit() {
-
-  }
+    private codxShareSV: CodxShareService
+  ) {}
+  ngAfterViewInit() {}
 
   ngOnInit(): void {
     this.user = this.authStore.userValue;
-    this.getSetUp("WP");
+    this.getSetUp('WP');
     this.getValueList();
     // this.clearData();
+    this.refreshAvatar();
   }
+
+  refreshAvatar() {
+    //Nguyên thêm để refresh avatar khi change
+    this.codxShareSV.dataRefreshImage.subscribe((res) => {
+      if (res) {
+        this.user['modifiedOn'] = res?.modifiedOn;
+        this.dt.detectChanges();
+      }
+    });
+  }
+
   getValueList() {
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
@@ -138,7 +147,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
   }
   getSetUp(funcID: string) {
-    if (funcID){
+    if (funcID) {
       // get function
       this.cache.functionList(funcID).subscribe((func) => {
         if (func) {
@@ -149,48 +158,53 @@ export class ListPostComponent implements OnInit, AfterViewInit {
           this.formModel.gridViewName = func.gridViewName;
           this.formModel.entityName = func.entityName;
           // get gridviewSetup
-          this.cache.gridViewSetup(func.formName, func.gridViewName).subscribe((grd: any) => {
-            if (grd) 
-            {
-              console.log('gridViewSetup',grd)
-              this.gridViewSetup = grd;
-            }
-          });
+          this.cache
+            .gridViewSetup(func.formName, func.gridViewName)
+            .subscribe((grd: any) => {
+              if (grd) {
+                console.log('gridViewSetup', grd);
+                this.gridViewSetup = grd;
+              }
+            });
           // get more function
-          this.cache.moreFunction(func.formName,func.gridViewName).subscribe((mFC:any) => {
-            if(mFC)
-            {
-              console.log(mFC)
-              this.defaultMoreFC = mFC;
-            }
-          });
+          this.cache
+            .moreFunction(func.formName, func.gridViewName)
+            .subscribe((mFC: any) => {
+              if (mFC) {
+                console.log(mFC);
+                this.defaultMoreFC = mFC;
+              }
+            });
         }
       });
     }
   }
-  changeMoreFunction(arrMoreFc)
-  { // set moreFucntion
-    if(arrMoreFc){
-      arrMoreFc.forEach((x:any) =>{
-        if(x.functionID == "WP000" || !this.defaultMoreFC.some(e => e.functionID == x.functionID)){
+  changeMoreFunction(arrMoreFc) {
+    // set moreFucntion
+    if (arrMoreFc) {
+      arrMoreFc.forEach((x: any) => {
+        if (
+          x.functionID == 'WP000' ||
+          !this.defaultMoreFC.some((e) => e.functionID == x.functionID)
+        ) {
           x.disabled = true;
         }
       });
     }
   }
-  clickMF(event:any,post:any){
-    if(event && post){
-      switch(event.functionID){
-        case "WP001": // cập nhật
+  clickMF(event: any, post: any) {
+    if (event && post) {
+      switch (event.functionID) {
+        case 'WP001': // cập nhật
           this.openPopupEdit(post);
-          break;        
-        case "WP002": // xóa
+          break;
+        case 'WP002': // xóa
           this.removePost(post);
           break;
-        case "WP003": // chia sẻ
+        case 'WP003': // chia sẻ
           this.openPopupShare(post);
           break;
-        case "WP004": // lưu vào sổ tay
+        case 'WP004': // lưu vào sổ tay
           this.openPopupSave(post);
           break;
         default:
@@ -200,76 +214,55 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   beforDelete(option: RequestOption, data: any) {
     if (!option || !data) return false;
-    option.service = "WP";
-    option.assemblyName = "ERM.Business.WP";
-    option.className = "CommentsBusiness";
-    option.methodName = "DeletePostAsync";
+    option.service = 'WP';
+    option.assemblyName = 'ERM.Business.WP';
+    option.className = 'CommentsBusiness';
+    option.methodName = 'DeletePostAsync';
     option.data = data;
     return true;
   }
-  removePost(data: any) 
-  {
+  removePost(data: any) {
     // xóa bài viết
-    if(data)
-    {
-      (this.listview.dataService as CRUDService).
-      delete([data], true, (op: any) => this.beforDelete(op, data), '', 'WP022', '', 'WP023').
-      subscribe((res) => {
-        if (res) {
-          if (data.files) //xóa files
-          {
-            this.api.execSv("DM",
-              "ERM.Business.DM",
-              "FileBussiness",
-              "DeleteByObjectIDAsync",
-              [data.recID, 'WP_Comments', true]
-            ).subscribe();
+    if (data) {
+      (this.listview.dataService as CRUDService)
+        .delete(
+          [data],
+          true,
+          (op: any) => this.beforDelete(op, data),
+          '',
+          'WP022',
+          '',
+          'WP023'
+        )
+        .subscribe((res) => {
+          if (res) {
+            if (data.files) {
+              //xóa files
+              this.api
+                .execSv(
+                  'DM',
+                  'ERM.Business.DM',
+                  'FileBussiness',
+                  'DeleteByObjectIDAsync',
+                  [data.recID, 'WP_Comments', true]
+                )
+                .subscribe();
+            }
           }
-        }
-      });
+        });
     }
   }
   openPopupAdd() {
     let data = new WP_Comments();
-    data.shareControl = "9";
-    data.refType = "WP_Comments"
+    data.shareControl = '9';
+    data.refType = 'WP_Comments';
     data.createdBy = this.user.userID;
     data.createdName = this.user.userName;
-    let moreFcAdd = this.defaultMoreFC.find(x => x.functionID == "WP000");
+    let moreFcAdd = this.defaultMoreFC.find((x) => x.functionID == 'WP000');
     var obj = {
       data: data,
       status: 'create',
-      headerText: moreFcAdd.customName + " " + this.function.description
-    };
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    let popup = this.callFC.openForm(
-      PopupAddPostComponent,
-      '',
-      700,
-      550,
-      '',
-      obj,
-      '',
-      option
-    )
-    popup.closed.subscribe((res:any)=>{
-      if(res?.event?.recID)
-      {
-        (this.listview.dataService as CRUDService).add(res.event).subscribe();
-        this.notifySvr.notifyCode("WP024");
-      }
-    });
-
-  }
-  openPopupEdit(post: any) {
-    let moreFcEdit = this.defaultMoreFC.find(x => x.functionID == "WP001");
-    let data = JSON.parse(JSON.stringify(post));
-    let obj = {
-      data: data,
-      status: 'edit',
-      headerText: moreFcEdit.customName + " " + this.function.description
+      headerText: moreFcAdd.customName + ' ' + this.function.description,
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -284,21 +277,47 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       '',
       option
     );
-    popup.closed.subscribe((res:any) => {
-      if(res?.event?.recID)
-      {
+    popup.closed.subscribe((res: any) => {
+      if (res?.event?.recID) {
         (this.listview.dataService as CRUDService).add(res.event).subscribe();
-        this.notifySvr.notifyCode("WP021");
+        this.notifySvr.notifyCode('WP024');
       }
     });
   }
-  openPopupShare(post: any) 
-  {
-    if (post){
-      let moreFcShare = this.defaultMoreFC.find(x => x.functionID == "WP003");
+  openPopupEdit(post: any) {
+    let moreFcEdit = this.defaultMoreFC.find((x) => x.functionID == 'WP001');
+    let data = JSON.parse(JSON.stringify(post));
+    let obj = {
+      data: data,
+      status: 'edit',
+      headerText: moreFcEdit.customName + ' ' + this.function.description,
+    };
+    let option = new DialogModel();
+    option.DataService = this.listview.dataService as CRUDService;
+    option.FormModel = this.listview.formModel;
+    let popup = this.callFC.openForm(
+      PopupAddPostComponent,
+      '',
+      700,
+      550,
+      '',
+      obj,
+      '',
+      option
+    );
+    popup.closed.subscribe((res: any) => {
+      if (res?.event?.recID) {
+        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        this.notifySvr.notifyCode('WP021');
+      }
+    });
+  }
+  openPopupShare(post: any) {
+    if (post) {
+      let moreFcShare = this.defaultMoreFC.find((x) => x.functionID == 'WP003');
       let data = new WP_Comments();
-      data.shareControl = "9";
-      data.refType = 'WP_Comments'
+      data.shareControl = '9';
+      data.refType = 'WP_Comments';
       data.refID = post.recID;
       data.createdBy = this.user.userID;
       data.createdName = this.user.userName;
@@ -306,7 +325,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       var obj = {
         data: data,
         status: 'share',
-        headerText: moreFcShare.customName + " " + this.function.description
+        headerText: moreFcShare.customName + ' ' + this.function.description,
       };
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
@@ -321,19 +340,17 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         '',
         option
       );
-      popup.closed.subscribe((res:any)=>{
-        if(res?.event?.recID)
-        {
+      popup.closed.subscribe((res: any) => {
+        if (res?.event?.recID) {
           (this.listview.dataService as CRUDService).add(res.event).subscribe();
-          this.notifySvr.notifyCode("WP020");
+          this.notifySvr.notifyCode('WP020');
         }
       });
     }
   }
   openPopupSave(post: any) {
-    if(post)
-    {
-      let moreFcSave = this.defaultMoreFC.find(x => x.functionID == "WP003");
+    if (post) {
+      let moreFcSave = this.defaultMoreFC.find((x) => x.functionID == 'WP003');
       let data = JSON.parse(JSON.stringify(post));
       var obj = {
         data: data,
@@ -366,7 +383,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.codxService.navigate('', "wp/news/WPT02/" + data.category + '/' + data.recID);
+          this.codxService.navigate(
+            '',
+            'wp/news/WPT02/' + data.category + '/' + data.recID
+          );
         }
       });
   }
@@ -374,16 +394,23 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file: any) 
-  {
-    if (file)
-    {
-      debugger
+  clickViewDetail(file: any) {
+    if (file) {
+      debugger;
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;
       option.IsFull = true;
-      this.callFC.openForm(PopupDetailComponent, '', 0, 0, '', file, '', option);
+      this.callFC.openForm(
+        PopupDetailComponent,
+        '',
+        0,
+        0,
+        '',
+        file,
+        '',
+        option
+      );
     }
   }
   clickShowComment(data: any) {
@@ -395,7 +422,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  clearData(){
+  clearData() {
     this.api
       .execSv(
         'WP',
@@ -403,7 +430,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         'CommentsBusiness',
         'DeleteDataCommentsAsync'
       )
-      .subscribe((res) => {
-      });
+      .subscribe((res) => {});
   }
 }
