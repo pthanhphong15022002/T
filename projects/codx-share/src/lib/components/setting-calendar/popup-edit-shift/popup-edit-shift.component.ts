@@ -69,7 +69,7 @@ export class PopupEditShiftComponent extends UIComponent {
       ])
       .subscribe((res) => {
         this.detectorRef.detectChanges();
-        this.dialog.close();
+        this.dialog.close({ test: 'test' });
       });
   }
 }

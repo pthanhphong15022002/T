@@ -152,7 +152,7 @@
     <div class="text-start">
       {{
         data?.costPrice == 0
-          ? (0 |  currency: "VND")
+          ? (0 | currency: "VND")
           : (data?.costPrice | currency: "VND":"symbol":"3.0")
       }}
     </div>
@@ -308,16 +308,16 @@
           <div class="form-group col-6">
             <codx-label
               class="d-flex justify-content-start"
-              fiedName="BUID"
+              fiedName="OrgUnitID"
               [formModel]="formModel"
             >
             </codx-label>
             <codx-input
               [disabled]="dialogAddBookingStationery?.value.category === '1'"
               type="combobox"
-              field="bUID"
-              refValue="BusinessUnits"
-              [crrValue]="dialogAddBookingStationery?.value.bUID"
+              field="orgUnitID"
+              refValue="OrganizationUnits"
+              [crrValue]="dialogAddBookingStationery?.value.orgUnitID"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -400,11 +400,7 @@
                 </div>
 
                 <div class="d-flex flex-row flex-grow-1">
-                  <codx-label
-                    class="text-gray-600"
-                    fiedName="BUID"
-                    [formModel]="formModel"
-                  ></codx-label
+                  <codx-label name="lblUMID" default="Đơn vị tính"></codx-label
                   >:
                   <span class="d-block ms-2 fw-bold">{{ item?.umid }}</span>
                 </div>

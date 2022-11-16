@@ -53,6 +53,7 @@ export class PopupAddRoomsComponent extends UIComponent {
   lstEquipment = [];
   moreFunc:any;
   functionList:any;
+  imgRecID:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -72,7 +73,10 @@ export class PopupAddRoomsComponent extends UIComponent {
       this.data.preparator= this.authService.userValue.userID;
       this.data.capacity=null;
       this.data.area=null;
-      
+      this.imgRecID=null;
+    }
+    else{
+      this.imgRecID=this.data.recID;
     }
   }
 
