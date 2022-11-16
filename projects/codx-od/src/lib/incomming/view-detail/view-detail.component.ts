@@ -429,7 +429,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null) {
-    debugger;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
     else {

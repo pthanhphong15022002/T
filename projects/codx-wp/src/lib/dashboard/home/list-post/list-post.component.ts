@@ -378,7 +378,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   {
     if (file)
     {
-      debugger
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;

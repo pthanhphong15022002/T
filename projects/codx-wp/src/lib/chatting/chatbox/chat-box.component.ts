@@ -216,7 +216,6 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
         
       }
 
-      debugger;
       event.message = this.mesDelete;
       this.detectorRef.detectChanges();
     });
@@ -232,7 +231,6 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
         this.receiverId,
       ])
       .subscribe((resp: any) => {
-        debugger;
         if (resp) {
           this.groupId = resp.groupID;
           this.groupType = resp.groupType;
@@ -270,7 +268,6 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
         this.pageIndex,
       ])
       .subscribe((resp: any[]) => {
-        debugger;
         if (resp) {
           let messageList = resp[0];
 

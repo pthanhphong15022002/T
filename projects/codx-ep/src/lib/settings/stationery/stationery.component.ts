@@ -296,7 +296,6 @@ export class StationeryComponent extends UIComponent implements AfterViewInit {
         this.view.dataService,
       ])
       .closed.subscribe((x) => {
-        debugger;
         if (!x.event) this.view.dataService.clear();
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService
