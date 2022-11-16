@@ -25,8 +25,8 @@ export class AprpermissionComponent
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   columnsGrid = [];
-  read = false;
   lstPermissions = [];
+  popoverList: any;
   @ViewChild('view') codxview!: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
@@ -95,43 +95,47 @@ export class AprpermissionComponent
 
   toggleContent(p, data) {
     this.lstPermissions = [];
-    this.read = true;
     var read = '';
-    if (data.read) {
-      read = 'Xem';
-      this.lstPermissions.push(read);
+    if(data != null){
+      this.popoverList?.close();
+      if (data.read == true) {
+        read = 'Xem';
+        this.lstPermissions.push(read);
+      }
+      if (data.download ) {
+        read = 'Download';
+        this.lstPermissions.push(read);
+      }
+      if (data.create) {
+        read = 'Tạo thư mục';
+        this.lstPermissions.push(read);
+      }
+      if (data.update) {
+        read = 'Chỉnh sửa';
+        this.lstPermissions.push(read);
+      }
+      if (data.delete) {
+        read = 'Xóa';
+        this.lstPermissions.push(read);
+      }
+      if (data.share) {
+        read = 'Chia sẻ';
+        this.lstPermissions.push(read);
+      }
+      if (data.assign) {
+        read = 'Chia sẻ quyền';
+        this.lstPermissions.push(read);
+      }
+      if (data.upload) {
+        read = 'Upload';
+        this.lstPermissions.push(read);
+      }
+      if (this.lstPermissions.length > 0) {
+        p.open();
+      }
     }
-    if (data.download) {
-      read = 'Download';
-      this.lstPermissions.push(read);
-    }
-    if (data.create) {
-      read = 'Tạo thư mục';
-      this.lstPermissions.push(read);
-    }
-    if (data.update) {
-      read = 'Chỉnh sửa';
-      this.lstPermissions.push(read);
-    }
-    if (data.delete) {
-      read = 'Xóa';
-      this.lstPermissions.push(read);
-    }
-    if (data.share) {
-      read = 'Chia sẻ';
-      this.lstPermissions.push(read);
-    }
-    if (data.assign) {
-      read = 'Chia sẻ quyền';
-      this.lstPermissions.push(read);
-    }
-    if (data.upload) {
-      read = 'Upload';
-      this.lstPermissions.push(read);
-    }
-    if (this.lstPermissions.length > 0) {
-      p.open();
-    } else {
+
+     else {
       p.close();
     }
   }
