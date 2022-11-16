@@ -1,4 +1,4 @@
-import { CodxHrService } from './../../codx-hr.service';
+import { CodxHrService } from './../../codx-hr.service'; 
 import { Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import{
@@ -17,7 +17,6 @@ import{
 })
 export class PopupAddEmployeesPartyInfoComponent extends UIComponent implements OnInit {
   formModel: FormModel
-  grvSetup
   dialog: DialogRef
   data
   isAfterRender = false
@@ -42,14 +41,14 @@ export class PopupAddEmployeesPartyInfoComponent extends UIComponent implements 
    }
 
   onInit(): void {
-    this.cache
-      .gridViewSetup(
-        this.dialog?.FormModel?.formName,
-        this.dialog?.FormModel?.gridViewName
-      )
-      .subscribe((res) => {
-        this.grvSetup = res;
-      })
+    // this.cache
+    //   .gridViewSetup(
+    //     this.dialog?.FormModel?.formName,
+    //     this.dialog?.FormModel?.gridViewName
+    //   )
+    //   .subscribe((res) => {
+    //     this.grvSetup = res;
+    //   })
   }
 
   ngAfterViewInit(){
