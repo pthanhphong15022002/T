@@ -6,6 +6,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { tempShift } from '../models/BS_CalendarWeekdays.model';
 
 @Component({
   selector: 'popup-edit-shift',
@@ -67,9 +68,14 @@ export class PopupEditShiftComponent extends UIComponent {
         this.startTime,
         this.endTime,
       ])
-      .subscribe((res) => {
+      .subscribe((res: tempShift) => {
         this.detectorRef.detectChanges();
-        this.dialog.close({ test: 'test' });
+        this.dialog.close({
+          calendarID: res.calendarID,
+          shiftType: res.shiftType,
+          startTime: res.startTime,
+          endTime: res.endTime,
+        });
       });
   }
 }

@@ -8,7 +8,13 @@ import {
   ScrollComponent,
   CRUDService,
 } from 'codx-core';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, Injector } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild,
+  Injector,
+} from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -34,7 +40,8 @@ export class VideoComponent implements OnInit {
 
   @ViewChild('listView') listview: CodxListviewComponent;
 
-  constructor(private injector: Injector,
+  constructor(
+    private injector: Injector,
     private api: ApiHttpService,
     private cache: CacheService,
     private dt: ChangeDetectorRef,
@@ -42,8 +49,10 @@ export class VideoComponent implements OnInit {
     private authStore: AuthStore
   ) {
     this.cache.functionList('WP').subscribe((res) => {
-      this.functionList.entityName = res.entityName;
-      this.functionList.funcID = res.functionID;
+      if (res) {
+        this.functionList.entityName = res.entityName;
+        this.functionList.funcID = res.functionID;
+      }
     });
     this.user = this.authStore.get();
     this.dataValue = `WP_Comments;false;${this.user?.userID};video`;
@@ -86,6 +95,6 @@ export class VideoComponent implements OnInit {
   }
 
   getSrcVideo(data) {
-    return data['srcVideo'] = `${environment.urlUpload}/${data.pathDisk}`;
+    return (data['srcVideo'] = `${environment.urlUpload}/${data.pathDisk}`);
   }
 }
