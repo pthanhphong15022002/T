@@ -1,10 +1,18 @@
 <div class="page-pw h-100">
-  <div class="pw-profile" style="
+  <div
+    class="pw-profile"
+    style="
       background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
-    ">
+    "
+  >
     <div class="d-flex align-items-center avatar">
-      <codx-img class="me-4" [objectType]="'AD_Users'" [objectId]="employeeInfo.userID"
-        [objectName]="employeeInfo.userName" [width]="60">
+      <codx-img
+        class="me-4"
+        [objectType]="'AD_Users'"
+        [objectId]="employeeInfo.userID"
+        [objectName]="employeeInfo.userName"
+        [width]="60"
+      >
       </codx-img>
       <div class="d-flex flex-column">
         <div class="fs-6 fw-bold text-dark">{{ employeeInfo?.userName }}</div>
@@ -15,123 +23,179 @@
   </div>
   <div class="personal-container">
     <div class="pw-menu d-flex">
-      <!-- <div *ngFor="let item of moreFunc">
-        <a (click)="getMenu(item.functionID, item.smallIcon)">
-          <div *ngIf="funcID == 'MWP009'">
-            <div
-              class="d-flex align-items-center"
-              *ngIf="item.functionID == 'MWP0091'"
-            >
-              <img
-                src="../assets/themes/mwp/default/light/img/{{
-                  item.smallIcon
-                }}_active.svg"
-                alt=""
-              />
-              <span class="fw-bolder ms-2" style="color: #0078ff">
-                <codx-label
-                  name="lblDescription"
-                  formName="personals"
-                  default="{{ item.description }}"
-                >
-                </codx-label>
-              </span>
-            </div>
-            <div
-              class="d-flex align-items-center"
-              *ngIf="item.functionID != 'MWP0091'"
-            >
-              <img
-                src="../assets/themes/mwp/default/light/img/{{
-                  item.smallIcon
-                }}.svg"
-                alt=""
-              />
-              <span class="fw-bolder ms-2">
-                <codx-label
-                  name="lblDescription"
-                  formName="personals"
-                  default="{{ item.description }}"
-                >
-                </codx-label>
-              </span>
-            </div>
-          </div>
-          <div *ngIf="funcID != 'MWP009'">
-            <div class="d-flex align-items-center" *ngIf="active == false">
-              <img
-                src="../assets/themes/mwp/default/light/img/{{
-                  item.smallIcon
-                }}.svg"
-                alt=""
-              />
-              <span class="fw-bolder ms-2">
-                <codx-label
-                  name="lblDescription"
-                  formName="personals"
-                  default="{{ item.description }}"
-                >
-                </codx-label>
-              </span>
-            </div>
-            <div
-              class="d-flex align-items-center"
-              *ngIf="item.functionID == menuUrl || item.functionID == funcID"
-            >
-              <img
-                src="../assets/themes/mwp/default/light/img/{{
-                  item.smallIcon
-                }}_active.svg"
-                alt=""
-              />
-              <span class="fw-bolder ms-2" style="color: #0078ff">
-                <codx-label
-                  name="lblDescription"
-                  formName="personals"
-                  default="{{ item.description }}"
-                >
-                </codx-label>
-              </span>
-            </div>
-            <div
-              class="d-flex align-items-center"
-              *ngIf="item.functionID != menuUrl"
-            >
-              <img
-                src="../assets/themes/mwp/default/light/img/{{
-                  item.smallIcon
-                }}.svg"
-                alt=""
-                *ngIf="active == true"
-              />
-              <span class="fw-bolder ms-2" *ngIf="active == true">
-                <codx-label
-                  name="lblDescription"
-                  formName="personals"
-                  default="{{ item.description }}"
-                >
-                </codx-label>
-              </span>
-            </div>
-          </div>
-        </a>
-      </div> -->
       <ejs-tab id="tab_default" heightAdjustMode="Auto">
         <e-tabitems>
           <e-tabitem>
-            <ng-template #headerText>test template header</ng-template>
+            <ng-template #headerText>
+              <div class="d-flex align-items-center" (click)="activeMF('POST')">
+                <img
+                  src="../assets/themes/mwp/default/light/img/{{
+                    !headerMF.POST ? 'mwp_post' : 'mwp_post_active'
+                  }}.svg"
+                  alt=""
+                />
+                <span class="fw-bolder ms-2">
+                  <codx-label
+                    fiedName="Comment"
+                    formName="Comments"
+                    default="Bài viết"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </ng-template>
             <ng-template #content>
-              Twitter is an online social networking service that enables users
-              to send and read short 140-character messages called "tweets".
-              Registered users can read and post tweets, but those who are
-              unregistered can only read them. Users access Twitter through the
-              website interface, SMS or mobile device app Twitter Inc. is based
-              in San Francisco and has more than 25 offices around the world.
-              Twitter was created in March 2006 by Jack Dorsey, Evan Williams,
-              Biz Stone, and Noah Glass and launched in July 2006. The service
-              rapidly gained worldwide popularity, with more than 100 million
-              users posting 340 million tweets a day in 2012.The service also
-              handled 1.6 billion search queries per day.
+              <div class="pw-feed h-100 pw-md">
+                <app-posts></app-posts>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div
+                class="d-flex align-items-center"
+                (click)="activeMF('IMAGE')"
+              >
+                <img
+                  src="../assets/themes/mwp/default/light/img/{{
+                    !headerMF.IMAGE ? 'mwp_image' : 'mwp_image_active'
+                  }}.svg"
+                  alt=""
+                />
+                <span class="fw-bolder ms-2">
+                  <codx-label
+                    fiedName="Image"
+                    formName="Comments"
+                    default="Hình ảnh"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body">
+                <app-img></app-img>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div
+                class="d-flex align-items-center"
+                (click)="activeMF('VIDEO')"
+              >
+                <img
+                  src="../assets/themes/mwp/default/light/img/{{
+                    !headerMF.VIDEO ? 'mwp_video' : 'mwp_video_active'
+                  }}.svg"
+                  alt=""
+                />
+                <span class="fw-bolder ms-2">
+                  <codx-label
+                    fiedName="Video"
+                    formName="Comments"
+                    default="Video"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body">
+                <div class="px-5">
+                  <app-video></app-video>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div
+                class="d-flex align-items-center"
+                (click)="activeMF('NOTEBOOK')"
+              >
+                <img
+                  src="../assets/themes/mwp/default/light/img/{{
+                    !headerMF.NOTEBOOK
+                      ? 'mwp_notebooks'
+                      : 'mwp_notebooks_active'
+                  }}.svg"
+                  alt=""
+                />
+                <span class="fw-bolder ms-2">
+                  <codx-label
+                    fiedName="NoteBook"
+                    formName="Comments"
+                    default="Sổ tay"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body">
+                <app-note-books></app-note-books>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div
+                class="d-flex align-items-center"
+                (click)="activeMF('STORAGE')"
+              >
+                <img
+                  src="../assets/themes/mwp/default/light/img/{{
+                    !headerMF.STORAGE ? 'mwp_storage' : 'mwp_storage_active'
+                  }}.svg"
+                  alt=""
+                />
+                <span class="fw-bolder ms-2">
+                  <codx-label
+                    fiedName="Storage"
+                    formName="Comments"
+                    default="Kho lưu trữ"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <div
+                class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
+              >
+                <app-storage></app-storage>
+              </div>
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div
+                class="d-flex align-items-center"
+                (click)="activeMF('INFORMATION')"
+              >
+                <img
+                  src="../assets/themes/mwp/default/light/img/{{
+                    !headerMF.STORAGE ? 'mwp_storage' : 'mwp_storage_active'
+                  }}.svg"
+                  alt=""
+                />
+                <span class="fw-bolder ms-2">
+                  <codx-label
+                    fiedName="Information"
+                    formName="Comments"
+                    default="Thông tin cá nhân"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <div
+                class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
+              >
+                <app-information></app-information>
+              </div>
             </ng-template>
           </e-tabitem>
         </e-tabitems>

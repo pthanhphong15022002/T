@@ -1065,15 +1065,18 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     var approvelCL = e.filter(
       (x: { functionID: string }) => x.functionID == 'ODT114' 
     );
-    approvelCL[0].disabled = true;
+    if(approvelCL[0])
+      approvelCL[0].disabled = true;
     //Trả lại
     if(data?.status == "4")
     {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT113' 
       );
-      approvel[0].disabled = true;
-      approvelCL[0].disabled = false;
+      if(approvel[0])
+        approvel[0].disabled = true;
+      if(approvelCL[0])
+        approvelCL[0].disabled = false;
     }
     //data?.isblur = true
   }

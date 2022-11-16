@@ -390,7 +390,10 @@ export class HomeComponent extends UIComponent {
     if (item.folderName != null) return className;
     else return `${className} noDrop`;
   }
-
+  testClick(e:any)
+  {
+    debugger
+  }
   _beginDrapDrop() {
     var that = this;
     setTimeout(() => {
