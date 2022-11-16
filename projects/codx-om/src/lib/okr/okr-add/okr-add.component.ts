@@ -69,7 +69,6 @@ export class OkrAddComponent implements OnInit {
   {
     this.api.execSv("OM","OM","OKRBusiness","SaveOMAsync",this.okrForm.value.okrFormArray).subscribe();
     var a = this.okrForm.value
-    debugger;
 
   }
   newOKRs(): FormGroup {

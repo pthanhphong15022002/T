@@ -251,7 +251,6 @@ export class PopupAddPostComponent implements OnInit {
   }
   // edit post
   editPost(){
-    debugger
     if (!this.data.content && this.fileUpload.length == 0) {
       let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
       this.notifySvr.notify(mssgStr);

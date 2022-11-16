@@ -276,7 +276,6 @@ export class TreeviewCommentComponent implements OnInit {
   }
 
   addNode(dataNode: any, newNode: any, id: string) {
-    debugger;
       let idx = -1;
       let node = null;
       if(dataNode)
