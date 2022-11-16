@@ -121,6 +121,6 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
   }
 
   handleProvinceChange(value){
-
+    
   }
 }

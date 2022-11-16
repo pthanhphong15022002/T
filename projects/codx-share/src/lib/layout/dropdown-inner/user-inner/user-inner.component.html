@@ -14,6 +14,7 @@
       data-kt-menu-attach="parent"
       data-kt-menu-placement="bottom-end"
       data-kt-menu-flip="bottom"
+      [imgOn]="user?.modifiedOn"
     >
     </codx-img>
   </button>
@@ -31,6 +32,7 @@
             [isAllowEdit]="true"
             [width]="60"
             (reloadChanged)="avatarChanged($event)"
+            [imgOn]="_user?.modifiedOn"
           >
           </codx-img>
           <div class="d-flex flex-column">
