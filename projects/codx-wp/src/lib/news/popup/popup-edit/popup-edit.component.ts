@@ -73,7 +73,6 @@ export class PopupEditComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
     private cache: CacheService,
-    private dmSV: CodxDMService,
     @Optional() dd?: DialogData,
     @Optional() dialogRef?: DialogRef
 
@@ -94,26 +93,39 @@ export class PopupEditComponent implements OnInit {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
   clickUpdatePost() {
-    if(!this.data.category){
-      return this.notifSV.notify("Loại bài viết không được bỏ trống");
+    if (!this.data.category) {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Loại bài viết");
+      this.notifSV.notify(mssgCode);
+      return;
     }
     if(!this.data.startDate){
-      return this.notifSV.notify("Ngày bắt đầu không được bỏ trống");
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Ngày bắt đầu");
+      this.notifSV.notify(mssgCode);
+      return;
     }
-    if(!this.data.subject){
-      return this.notifSV.notify("Tiêu đề không được bỏ trống");
-    }
-    if(!this.data.subContent){
-      return this.notifSV.notify("Mô tả không được bỏ trống");
-    }if(!this.data.contents){
-      return this.notifSV.notify("Nội dung không được bỏ trống");
-    }
-    if(this.data.endDate){
-      let startDate = Date.parse(this.data.startDate);
-      let endDate = Date.parse(this.data.endDate);
+    if(this.data.endDate) // check endDate
+    {
+      let startDate = new Date(this.data.startDate);
+      let endDate = new Date(this.data.endDate);
       if(startDate > endDate){
         return this.notifSV.notify("Ngày kết thúc phải lớn hơn ngày bắt đầu");  
       }
+    }
+    if (!this.data.subject) {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Tiêu đề");
+      this.notifSV.notify(mssgCode);
+      return;
+    }
+    if (!this.data.subContent) {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Mô tả");
+      this.notifSV.notify(mssgCode);
+      return;
+    }
+    if (this.data.newsType == this.NEWSTYPE.POST && !this.data.contents) 
+    {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Nội dung");
+      this.notifSV.notify(mssgCode);
+      return;
     }
     let post = new WP_News();
     post.recID = this.data.recID;
@@ -159,28 +171,41 @@ export class PopupEditComponent implements OnInit {
       });
   }
   clickReleasePost() {
-    if(!this.data.category){
-      return this.notifSV.notify("Loại bài viết không được bỏ trống");
+    if (!this.data.category) {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Loại bài viết");
+      this.notifSV.notify(mssgCode);
+      return;
     }
     if(!this.data.startDate){
-      return this.notifSV.notify("Ngày bắt đầu không được bỏ trống");
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Ngày bắt đầu");
+      this.notifSV.notify(mssgCode);
+      return;
     }
-    if(!this.data.subject){
-      return this.notifSV.notify("Tiêu đề không được bỏ trống");
-    }
-    if(!this.data.subContent){
-      return this.notifSV.notify("Mô tả không được bỏ trống");
-    }if(!this.data.contents){
-      return this.notifSV.notify("Nội dung không được bỏ trống");
-    }
-    if(this.data.endDate){
-      let startDate = Date.parse(this.data.startDate);
-      let endDate = Date.parse(this.data.endDate);
+    if(this.data.endDate) // check endDate
+    {
+      let startDate = new Date(this.data.startDate);
+      let endDate = new Date(this.data.endDate);
       if(startDate > endDate){
         return this.notifSV.notify("Ngày kết thúc phải lớn hơn ngày bắt đầu");  
       }
     }
-    this.api.execSv(
+    if (!this.data.subject) {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Tiêu đề");
+      this.notifSV.notify(mssgCode);
+      return;
+    }
+    if (!this.data.subContent) {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Mô tả");
+      this.notifSV.notify(mssgCode);
+      return;
+    }
+    if (this.data.newsType == this.NEWSTYPE.POST && !this.data.contents) 
+    {
+      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Nội dung");
+      this.notifSV.notify(mssgCode);
+      return;
+    }
+    this.api.execSv( 
       "WP",
       "ERM.Business.WP",
       "NewsBusiness",

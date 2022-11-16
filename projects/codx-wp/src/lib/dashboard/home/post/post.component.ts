@@ -46,7 +46,7 @@ export class PostComponent extends UIComponent {
     sort.dir = "desc";
     arrSort.push(sort);
     this.dataService.setSort(arrSort);
-    this.dataService.pageSize = 7;
+    this.dataService.pageSize = 10;
   }
 
 

@@ -11,3 +11,10 @@ export class BS_CalendarWeekdays {
   endTime: any;
   data: Array<any>;
 }
+
+export class tempShift {
+  calendarID: string;
+  shiftType: string;
+  startTime: string;
+  endTime: string;
+}

@@ -1,29 +1,37 @@
 @import "/node_modules/codx-core/assets/sass/init";
 
 ::ng-deep {
+
   .e-device .e-dlg-content,
   .e-device .e-dlg-content * {
     font-size: inherit;
   }
+
   .e-dialog .e-dlg-content {
     overflow: hidden;
   }
+
   #js-licensing {
     display: none !important;
   }
+
   .fst-italic {
     font-style: italic !important;
   }
+
   .text-decoration-underline {
     text-decoration: underline !important;
   }
+
   codx-vll {
     font-size: 12px;
   }
+
   .symbol-32px {
     width: 32px;
     height: 32px;
   }
+
   .symbol-icon {
     font-size: 16px;
     background: #eaf0ff;
@@ -36,29 +44,35 @@
     background-position: center center;
     background-size: cover;
   }
+
   .form-control.form-control-transparent {
     background-color: transparent;
     border-color: transparent;
   }
+
   .main-content {
     width: 100% !important;
     height: 100% !important;
     position: relative !important;
   }
+
   .main-right,
   .main-left {
     transition: width 0.3s ease;
     background-color: white;
   }
+
   .main-left {
     // width: 240px;
     overflow: hidden;
     height: 100%;
   }
+
   .main-right {
     background-color: white;
     width: 350px;
   }
+
   .hideCol {
     width: 0 !important;
   }
@@ -71,27 +85,35 @@
   .e-toolbar .e-tbar-btn {
     background-color: transparent;
   }
+
   .e-pv-thumbnail-anchor-node {
     left: auto !important;
   }
+
   .e-pv-thumbnail-view {
     position: inherit;
   }
+
   /***tab****/
+  #sidebarContent {
+    padding-bottom: 5px;
+  }
+
   .tab-custom {
     .e-tab .e-tab-header {
       height: 42px;
       min-height: 42px;
-      margin-bottom: 20px;
     }
-    .e-tab .e-tab-header + .e-content {
+
+    .e-tab .e-tab-header+.e-content {
       padding: 0 20px;
       height: calc(100% - 60px) !important;
       overflow-y: auto;
     }
+
     .e-tab.e-fill-mode .e-content {
-      padding: 0 0px;
-      height: calc(100% - 60px) !important;
+      padding: 12px 0px;
+      height: calc(100% - 42px) !important;
       overflow-y: auto;
     }
 
@@ -101,18 +123,21 @@
       height: auto;
       margin: 0;
     }
+
     .e-tab .e-tab-header .e-toolbar-item .e-text-wrap {
       height: 42px;
       align-content: center;
       align-items: center;
       display: inline-flex;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-text-wrap {
       height: 42px;
       align-content: center;
       align-items: center;
       display: inline-flex;
     }
+
     .e-tab .e-tab-header .e-toolbar-item .e-tab-text {
       display: inherit;
       font-family: "Roboto", Arial, system-ui, -apple-system, "Segoe UI",
@@ -122,25 +147,31 @@
       font-weight: 500;
       text-transform: none;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text {
       font-weight: 500;
     }
+
     .e-tab .e-tab-header .e-toolbar-item {
       border: 0 !important;
     }
+
     .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
       color: $dark;
       border: 0;
       font-weight: 500;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
       color: $primary-dark;
     }
+
     .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover .e-tab-icon {
       color: $primary-dark;
     }
+
     .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
       height: 42px;
       margin: 0 2px 0 0;
@@ -151,12 +182,14 @@
       border-radius: 0 !important;
       border-bottom: 2px solid transparent !important;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active {
       border: 0 !important;
       margin: 0 2px 0 0;
       border-radius: 0 !important;
       border-bottom: 2px solid $primary-dark !important;
     }
+
     .e-tab .e-tab-header .e-toolbar-item:hover,
     .e-tab .e-tab-header .e-toolbar-item:focus {
       border: 0 !important;
@@ -164,34 +197,37 @@
       border-radius: 0 !important;
       border-bottom: 2px solid transparent !important;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap {
       border: 0;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-text,
-    .e-tab
-      .e-tab-header
-      .e-toolbar-item.e-active
-      .e-tab-wrap:hover
-      .e-tab-icon {
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-icon {
       color: $primary-dark;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
       color: $primary-dark;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active.e-ileft .e-tab-icon,
     .e-tab .e-tab-header .e-toolbar-item.e-active.e-iright .e-tab-icon {
       color: $primary-dark;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active.e-ileft .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item.e-active.e-iright .e-tab-text {
       color: $primary-dark;
     }
+
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text {
       background: transparent;
       border: 0px solid rgba(0, 0, 0, 0);
       border-radius: 0;
     }
+
     .e-pv-thumbnail-anchor-node {
       border: 1px solid #c9c9d4;
       border-radius: 3px;
@@ -199,17 +235,20 @@
       display: block;
       margin-bottom: 10px;
     }
+
     .e-pv-thumbnail-number {
       padding: 0;
       padding-top: 8px;
       text-align: right;
     }
+
     .e-pv-thumbnail {
       height: auto;
       margin: 0;
       width: auto;
     }
   }
+
   .main-center {
     .pdfviewer_Space {
       #pdfViewer_viewerMainContainer {
@@ -226,13 +265,16 @@
       border: 0 solid #dee2e6;
       box-shadow: none;
     }
+
     .e-toolbar .e-toolbar-items {
       background: transparent !important;
       min-height: 41px !important;
     }
+
     .e-toolbar .e-toolbar-item .e-tbar-btn.e-btn .e-icons.e-btn-icon {
       line-height: 26px !important;
     }
+
     .e-toolbar .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn {
       height: 26px;
       margin: 0 !important;
@@ -246,6 +288,7 @@
       margin-left: 2px;
       margin-right: 2px;
     }
+
     .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn:focus,
     .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn:active,
     .e-toolbar-items .e-toolbar-item .e-tbar-btn.e-btn:hover {
@@ -254,10 +297,12 @@
       border-radius: 3px !important;
       transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
+
     .e-toolbar .e-tbar-btn.e-btn .e-icons {
       padding: 0;
       color: $dark;
     }
+
     .e-toolbar .e-tbar-btn.e-btn:hover .e-icons,
     .e-toolbar .e-tbar-btn.e-btn:active .e-icons,
     .e-toolbar .e-tbar-btn.e-btn:focus .e-icons {
@@ -265,7 +310,9 @@
       padding: 0;
       border-radius: 0px !important;
     }
+
     .chooseSignFile {
+
       .e-input-group:not(.e-success):not(.e-warning):not(.e-error),
       .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
         border-color: transparent;
@@ -274,6 +321,7 @@
       }
     }
   }
+
   .e-input-group.e-input-focus:not(.e-success):not(.e-warning):not(.e-error),
   .e-input-group.e-control-wrapper.e-input-focus:not(.e-success):not(.e-warning):not(.e-error) {
     border-color: transparent;
@@ -281,6 +329,7 @@
     border-radius: 0px;
     box-shadow: none;
   }
+
   // .stepper-toolbar {
   //   .e-toolbar {
   //     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -349,16 +398,20 @@
       border-top: 0.5px solid #dee2e6 !important;
       padding: 0;
     }
+
     .e-listview .e-list-item:first-child,
     .e-list-group-item:first-child {
       border-top: 0 !important;
     }
+
     .e-listview.e-list-template .e-list-wrapper {
       text-align: right !important;
     }
+
     .e-listview .e-list-item.e-active {
       background-color: white !important;
     }
+
     .card-item.active .codx_cardcenter,
     .card-item:hover .codx_cardcenter,
     .card-item:focus .codx_cardcenter {
@@ -375,10 +428,12 @@
       cursor: pointer;
       padding: 1px;
     }
+
     #groupedList.e-listview {
       .e-listview .e-list-header {
         display: none !important;
       }
+
       .e-list-header {
         align-items: center;
         display: none !important;
@@ -389,19 +444,23 @@
       }
     }
   }
+
   .e-ddl.e-input-group .e-input-value,
   .e-ddl.e-input-group .e-input-value:focus {
     font-size: 13px !important;
   }
+
   ejs-autocomplete,
   ejs-combobox,
   ejs-dropdownlist {
     display: block;
   }
+
   .e-dropdownbase .e-list-parent {
     margin: 0;
     padding: 0;
   }
+
   #signatureDropdownList .e-list-item {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     background-color: #fff;
@@ -415,6 +474,7 @@
     padding-right: 16px;
     text-indent: 16px;
   }
+
   .e-bigger.e-small .e-dropdownbase .e-list-group-item,
   .e-bigger.e-small .e-dropdownbase .e-fixed-head,
   .e-dropdownbase.e-small.e-bigger .e-list-group-item,
@@ -423,12 +483,14 @@
     min-height: 30px;
     padding-left: 0px !important;
   }
+
   #signatureDropdownList_popup .e-list-item * {
     display: block;
     text-indent: 0 !important;
     line-height: 22px !important;
     font-size: 13px !important;
   }
+
   #signatureDropdownList_popup .e-input-focus .text-gray-700 {
     color: white !important;
   }
@@ -436,7 +498,9 @@
   .e-numeric {
     width: 40px !important;
   }
+
   .codx-card-custom {
+
     .e-input-group,
     .e-input-group.e-success,
     .e-input-group.e-warning,
@@ -449,6 +513,7 @@
       // border-bottom: 1px solid #ddd!important;
     }
   }
+
   .main-left {
     .e-listview .e-list-header {
       display: none !important;
@@ -458,33 +523,36 @@
   ngx-extended-pdf-viewer .pdfViewer.singlePageView .page {
     margin: 0 auto !important;
   }
+
   ngx-extended-pdf-viewer .html .unverified-signature-warning,
   ngx-extended-pdf-viewer .html .modified-background-warning {
     display: none !important;
   }
-  html[dir="ltr"]
-    ngx-extended-pdf-viewer
-    #outerContainer.sidebarOpen
-    #viewerContainer:not(.pdfPresentationMode) {
+
+  html[dir="ltr"] ngx-extended-pdf-viewer #outerContainer.sidebarOpen #viewerContainer:not(.pdfPresentationMode) {
     left: 0 !important;
   }
+
   ngx-extended-pdf-viewer .pdfViewer .page {
     // border: 0 !important;
     border-image: none !important;
   }
-  .reason_Info > p {
+
+  .reason_Info>p {
     margin: 0;
   }
+
   #thumbnailView {
     .image-container {
       margin: auto;
       text-align: center;
-      border: 1px solid #c9c9d4;
+      border: 1px solid #d9d9df;
       border-radius: 3px;
-      width: 180px !important;
+      width: 160px !important;
       height: 200px !important;
       margin-bottom: 8px;
     }
+
     .thumbnailImage {
       width: 150px !important;
       height: 175px !important;
@@ -492,11 +560,10 @@
       // display: block;
       // margin-bottom: 10px;
     }
-    .thumbnailSelectionRing {
-      border: 1px solid $primary-dark;
-    }
+
   }
 }
+
 .pdf-check-add {
   position: fixed;
   z-index: 105;

@@ -237,12 +237,25 @@ export class PopupSettingCalendarComponent extends UIComponent {
       startTime = this.ndShift.startTime;
       endTime = this.ndShift.endTime;
     }
-    this.callfc.openForm(PopupEditShiftComponent, '', 550, 200, '', [
-      this.calendarID,
-      shiftType,
-      startTime,
-      endTime,
-    ]);
+    this.callfc
+      .openForm(PopupEditShiftComponent, '', 550, 200, '', [
+        this.calendarID,
+        shiftType,
+        startTime,
+        endTime,
+      ])
+      .closed.subscribe((res) => {
+        if (res.event) {
+          const { shiftType, startTime, endTime } = res.event;
+          if (shiftType == '1') {
+            this.stShift.startTime = startTime;
+            this.stShift.endTime = endTime;
+          } else {
+            this.ndShift.startTime = startTime;
+            this.ndShift.endTime = endTime;
+          }
+        }
+      });
   }
 
   weekdayChange(e, item) {

@@ -302,6 +302,7 @@ export class ProcessesComponent
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
             });
+
             this.detectorRef.detectChanges();
           }
         });
@@ -393,7 +394,7 @@ export class ProcessesComponent
         break;
       case 'BPT103': // gán tạm cập nhật phiên bản
         //this.revisions(e.data, data);
-        this.Updaterevisions(e.data,data);
+        this.Updaterevisions(data);
         break;
       case 'BPT104':
         this.permission(data);
@@ -421,7 +422,7 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  Updaterevisions(more,data) {
+  Updaterevisions(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -438,7 +439,15 @@ export class ProcessesComponent
           [this.titleAction],
           option,
         );
-        this.dialog.closed.subscribe();
+       this.dialog.closed.subscribe(e=>{
+          if(e?.event && e?.event != null){
+            this.view.dataService.clear();
+            this.view.dataService.update(e?.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+       }
+
+       );
       });
   }
   revisions(more, data) {

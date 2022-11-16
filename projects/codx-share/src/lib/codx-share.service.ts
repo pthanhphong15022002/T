@@ -17,6 +17,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class CodxShareService {
   hideAside = new BehaviorSubject<any>(null);
+  dataRefreshImage = new BehaviorSubject<any>(null);
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -164,7 +165,7 @@ export class CodxShareService {
       'SYS',
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
-      'GetEmailTemplateAsync',
+      'GetViewEmailTemplateAsyncLogic',
       templateID
     );
   }
