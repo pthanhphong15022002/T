@@ -96,6 +96,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   endRoom: any;
   listRoom: TmpRoom[] = [];
   location: any;
+  reminder: any;
   fields: Object = { text: 'location', value: 'resourceID' };
   constructor(
     private changDetec: ChangeDetectorRef,
@@ -236,8 +237,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             }
           });
           console.log(this.listRoom);
+          this.changDetec.detectChanges();
         }
-        this.changDetec.detectChanges();
       });
   }
 
@@ -329,9 +330,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.dialog.close();
-        this.tmSv
-          .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
-          .subscribe();
+
       });
   }
   ///cần 1 đống mess Code
@@ -372,6 +371,14 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('CO002');
       return;
     }
+
+    var re = Number(this.meeting.reminder);
+
+    if(re <= 0 && re >= 60){
+      this.notiService.notify('Vui lòng chỉ được nhập trong khoảng từ 0 đến 60');
+      return;
+    }
+
     if (this.meeting.fromDate >= this.meeting.toDate) {
       this.notiService.notifyCode('CO003');
       return;
@@ -1003,6 +1010,10 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           var param = JSON.parse(res.dataValue);
+          if(this.action === 'add'){
+            this.reminder = param.Reminder;
+            this.meeting.reminder = this.reminder;
+          }
           this.calendarID = param.CalendarID;
           this.calendarID = this.calendarID != '' ? this.calendarID : 'STD'; //gan de tesst
           this.getTimeWork(new Date());
