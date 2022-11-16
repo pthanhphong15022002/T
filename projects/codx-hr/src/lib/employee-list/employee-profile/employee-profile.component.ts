@@ -1,3 +1,4 @@
+import { EmployeeAllocatedPropertyComponent } from './../../employee-profile/employee-allocated-property/employee-allocated-property.component';
 import { EmployeeAwardsInfoComponent } from './../../employee-profile/employee-awards-info/employee-awards-info.component';
 import { EmployeeDisciplinesInfoComponent } from './../../employee-profile/employee-disciplines-info/employee-disciplines-info.component';
 import { EmployeeVisaInfoComponent } from './../../employee-profile/employee-visa-info/employee-visa-info.component';
@@ -488,6 +489,25 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         isAdd: true,
         headerText: 'Khen thưởng'
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  addEmployeeAllocatedPropertyInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeAllocatedPropertyComponent,
+      {
+        isAdd: true,
+        headerText: 'Tài sản cấp phát'
       },
       option
     )

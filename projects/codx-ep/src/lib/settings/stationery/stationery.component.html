@@ -164,10 +164,14 @@
       {{ data?.resourceName }}
     </div>
     <div class="text-start">
-      {{ data?.costPrice | currency: "VND":"symbol":"3.0" }}
+      {{
+        data?.costPrice == 0
+          ? (0 | currency: "VND")
+          : (data?.costPrice | currency: "VND":"symbol":"3.0")
+      }}
     </div>
-    <div class="d-flex justify-content-between align-items-end mt-2">
-      <div class="d-flex align-items-end me-2 codx-badge mb-3">
+    <div class="d-flex justify-content-center">
+      <div class="d-flex align-items-end me-2 codx-badge m-3">
         <div
           class="d-flex align-items-center position-relative me-4"
           [title]="grvStationery['CurrentQty'].headerText"

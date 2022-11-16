@@ -31,79 +31,70 @@
           </div>
         </ng-template>
         <ng-template #content>
-          <div class="w-100 h-100 bg-body rounded-3 p-9 scroll-y">
+          <div class="w-100 h-100 bg-body rounded-3 p-9 scroll-y h-f">
             <!-- Account Information -->
-            <div class="col-6">
-              <div class="form-group">
-                <div class="fw-bold text-dark mb-1">
-                  <codx-label
-                    fiedName=""
-                    formName=""
-                    gridViewName=""
-                    default="Tên công ty"
-                  >
-                  </codx-label>
-                </div>
-                <codx-input
-                  type="text"
-                  field="legalName"
-                  [crrValue]="data?.legalName"
-                  placeholder="Tên công ty"
-                  (valueChange)="valueChange($event)"
+            <div class="form-group w-50">
+              <div class="fw-bold text-dark mb-1">
+                <codx-label
+                  fiedName=""
+                  formName=""
+                  gridViewName=""
+                  default="Tên công ty"
                 >
-                </codx-input>
+                </codx-label>
               </div>
-              <div class="form-group">
-                <div class="fw-bold text-dark mb-1">
-                  <codx-label
-                    fiedName=""
-                    formName=""
-                    gridViewName=""
-                    default="Web Address"
-                  >
-                  </codx-label>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    <codx-input
-                      type="text"
-                      field=""
-                      [crrValue]="data.companyCode"
-                      (valueChange)="txtToLower($event)"
-                      disabled="true"
-                    ></codx-input>
-                  </div>
-                  <div class="col-6 ps-0 pt-5">
-                    <codx-label
-                      fiedName=""
-                      class="text-italic text-gray-500"
-                      formName=""
-                      gridViewName=""
-                      default=".erm.com"
-                    ></codx-label>
-                  </div>
-                </div>
+              <codx-input
+                type="text"
+                field="legalName"
+                [crrValue]="data?.legalName"
+                placeholder="Tên công ty"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </div>
+            <div class="form-group w-40">
+              <div class="fw-bold text-dark mb-1">
+                <codx-label
+                  fiedName=""
+                  formName=""
+                  gridViewName=""
+                  default="Web Address"
+                >
+                </codx-label>
               </div>
-              <div class="form-group">
-                <div class="fw-bold text-dark mb-1">
-                  <codx-label
-                    fiedName="taxCode"
-                    formName=""
-                    gridViewName=""
-                    default="Mã số thuế"
-                  >
-                  </codx-label>
-                </div>
-                <div class="col-6">
+              <div class="row">
+                <div class="col-6" *ngIf="tenant">
                   <codx-input
                     type="text"
-                    class="form-control"
-                    field="taxCode"
-                    [crrValue]="data.taxCode"
-                    (valueChange)="valueChange($event)"
+                    field=""
+                    [crrValue]="tenant"
+                    (valueChange)="txtToLower($event)"
+                    disabled="true"
                   ></codx-input>
                 </div>
               </div>
+            </div>
+            <div class="form-group w-40">
+              <div class="fw-bold text-dark mb-1">
+                <codx-label
+                  fiedName="taxCode"
+                  formName=""
+                  gridViewName=""
+                  default="Mã số thuế"
+                >
+                </codx-label>
+              </div>
+              <div class="col-6">
+                <codx-input
+                  type="text"
+                  class="form-control"
+                  field="taxCode"
+                  [crrValue]="data.taxCode"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center pt-3">
               <div class="form-group">
                 <div class="d-flex">
                   <div class="img_option">
@@ -180,7 +171,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group ps-6">
                 <div class="d-flex">
                   <div class="img_optionFull">
                     <div class="container_img img_logoFull">
@@ -253,149 +244,149 @@
                 </div>
               </div>
             </div>
-            <!-- Contact Information -->
-            <div class="form-group">
-              <div class="body_detail p-6">
-                <div class="d-flex justify-content-between mb-3">
+          </div>
+          <!-- Contact Information -->
+          <div class="form-group">
+            <div class="body_detail p-6">
+              <div class="d-flex justify-content-between mb-3">
+                <codx-label
+                  fiedName=""
+                  class="fw-bold text-dark"
+                  formName=""
+                  gridViewName=""
+                  default="Liên hệ"
+                >
+                </codx-label>
+                <button
+                  class="btn btn-icon btn-white"
+                  (click)="clickEditContact(data)"
+                >
+                  <i class="icon-create icon-18"></i>
+                </button>
+              </div>
+              <div class="row">
+                <div class="col-5">
+                  <div class="fw-bold mb-2">
+                    <codx-label
+                      formName="CompanySetting"
+                      gridViewName=""
+                      [default]=""
+                    >
+                    </codx-label>
+                    {{ data.street }}
+                  </div>
+                  <div class="text-gray-600">
+                    <codx-label
+                      fiedName="phone"
+                      formName=""
+                      gridViewName=""
+                      [default]="'Tel: '"
+                    >
+                    </codx-label>
+                    {{ data.phone }} - {{ data.faxNo }}
+                  </div>
+                  <div class="text-gray-600">
+                    <codx-label [default]="'Email: '"></codx-label>
+                    <span class="url-contact text-primary">{{
+                      data.email
+                    }}</span>
+                  </div>
+                  <div class="text-gray-600">
+                    <codx-label
+                      fiedName=""
+                      formName=""
+                      gridViewName=""
+                      [default]="'Website: '"
+                    ></codx-label>
+                    <span class="url-contact text-primary">
+                      {{ data.webPage }}</span
+                    >
+                  </div>
+                </div>
+                <div class="col-7" *ngIf="urlEmbedSafe">
+                  <div class="contact-map">
+                    <iframe
+                      class="contact-map-size"
+                      [src]="urlEmbedSafe"
+                      allowfullscreen=""
+                      loading="lazy"
+                    ></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Personal Information -->
+          <div class="form-group">
+            <div class="body_detail p-6">
+              <div class="d-flex justify-content-between">
+                <div class="fw-bold text-dark">
                   <codx-label
                     fiedName=""
-                    class="fw-bold text-dark"
+                    class="title_contact"
                     formName=""
                     gridViewName=""
-                    default="Liên hệ"
+                    default="Người đại diện"
                   >
                   </codx-label>
-                  <button
-                    class="btn btn-icon btn-white"
-                    (click)="clickEditContact(data)"
-                  >
-                    <i class="icon-create icon-18"></i>
-                  </button>
                 </div>
-                <div class="row">
-                  <div class="col-5">
-                    <div class="fw-bold mb-2">
-                      <codx-label
-                        formName="CompanySetting"
-                        gridViewName=""
-                        [default]=""
-                      >
-                      </codx-label>
-                      {{ data.street }}
-                    </div>
-                    <div class="text-gray-600">
-                      <codx-label
-                        fiedName="phone"
-                        formName=""
-                        gridViewName=""
-                        [default]="'Tel: '"
-                      >
-                      </codx-label>
-                      {{ data.phone }} - {{ data.faxNo }}
-                    </div>
-                    <div class="text-gray-600">
-                      <codx-label [default]="'Email: '"></codx-label>
-                      <span class="url-contact text-primary">{{
-                        data.email
-                      }}</span>
-                    </div>
-                    <div class="text-gray-600">
-                      <codx-label
-                        fiedName=""
-                        formName=""
-                        gridViewName=""
-                        [default]="'Website: '"
-                      ></codx-label>
-                      <span class="url-contact text-primary">
-                        {{ data.webPage }}</span
-                      >
-                    </div>
-                  </div>
-                  <div class="col-7" *ngIf="urlEmbedSafe">
-                    <div class="contact-map">
-                      <iframe
-                        class="contact-map-size"
-                        [src]="urlEmbedSafe"
-                        allowfullscreen=""
-                        loading="lazy"
-                      ></iframe>
-                    </div>
-                  </div>
-                </div>
+                <button
+                  class="btn btn-icon btn-white"
+                  (click)="clickEditPersonal(data)"
+                >
+                  <i class="icon-create icon-18"></i>
+                </button>
               </div>
-            </div>
-            <!-- Personal Information -->
-            <div class="form-group">
-              <div class="body_detail p-6">
-                <div class="d-flex justify-content-between">
-                  <div class="fw-bold text-dark">
-                    <codx-label
-                      fiedName=""
-                      class="title_contact"
-                      formName=""
-                      gridViewName=""
-                      default="Người đại diện"
-                    >
-                    </codx-label>
-                  </div>
-                  <button
-                    class="btn btn-icon btn-white"
-                    (click)="clickEditPersonal(data)"
-                  >
-                    <i class="icon-create icon-18"></i>
-                  </button>
-                </div>
-                <div class="footer_content">
-                  <div class="row pb-5">
-                    <div class="col-6 ps-0">
-                      <div class="d-flex align-items-top">
-                        <div class="me-4">
-                          <div *ngIf="data.recID; else imgDefault_personal">
-                            <codx-img
-                              [objectId]="data.recID"
-                              [objectName]="data.contactName"
-                              [imgOn]="data?.modifiedOn"
-                              objectType="AD_CompanySettings"
-                              [width]="80"
-                            >
-                            </codx-img>
-                          </div>
-                          <ng-template #imgDefault_personal>
-                            <img
-                              class="img_avatar"
-                              src="../../../assets/img/avatar.png"
-                            />
-                          </ng-template>
+              <div class="footer_content">
+                <div class="row pb-5">
+                  <div class="col-6 ps-0">
+                    <div class="d-flex align-items-top">
+                      <div class="me-4">
+                        <div *ngIf="data.recID; else imgDefault_personal">
+                          <codx-img
+                            [objectId]="data.recID"
+                            [objectName]="data.contactName"
+                            [imgOn]="data?.modifiedOn"
+                            objectType="AD_CompanySettings"
+                            [width]="80"
+                          >
+                          </codx-img>
                         </div>
-                        <div class="d-flex flex-column space_personal">
-                          <div class="fw-bold text-dark fs-5">
-                            <span>{{ data.contactName }}</span>
-                          </div>
-                          <div class="text-italic text-gray-500">
-                            {{ data.jobTitle }}
-                          </div>
-                          <div class="d-flex">
-                            <codx-label
-                              fiedName=""
-                              class="me-2"
-                              formName=""
-                              gridViewName=""
-                              default="Email"
-                            >
-                            </codx-label
-                            ><span>{{ data.personalEmail }}</span>
-                          </div>
-                          <div class="d-flex">
-                            <codx-label
-                              fiedName=""
-                              class="me-2"
-                              formName=""
-                              gridViewName=""
-                              default="Phone: "
-                            >
-                            </codx-label
-                            ><span>{{ data.mobile }}</span>
-                          </div>
+                        <ng-template #imgDefault_personal>
+                          <img
+                            class="img_avatar"
+                            src="../../../assets/img/avatar.png"
+                          />
+                        </ng-template>
+                      </div>
+                      <div class="d-flex flex-column space_personal">
+                        <div class="fw-bold text-dark fs-5">
+                          <span>{{ data.contactName }}</span>
+                        </div>
+                        <div class="text-italic text-gray-500">
+                          {{ data.jobTitle }}
+                        </div>
+                        <div class="d-flex">
+                          <codx-label
+                            fiedName=""
+                            class="me-2"
+                            formName=""
+                            gridViewName=""
+                            default="Email"
+                          >
+                          </codx-label
+                          ><span>{{ data.personalEmail }}</span>
+                        </div>
+                        <div class="d-flex">
+                          <codx-label
+                            fiedName=""
+                            class="me-2"
+                            formName=""
+                            gridViewName=""
+                            default="Phone: "
+                          >
+                          </codx-label
+                          ><span>{{ data.mobile }}</span>
                         </div>
                       </div>
                     </div>
@@ -403,53 +394,51 @@
                 </div>
               </div>
             </div>
-            <!-- Bộ nhớ tài khoảng -->
-            <div class="form-group col-6">
-              <div class="body_detail p-6">
-                <div class="d-flex justify-content-between">
-                  <div class="fw-bold text-dark">
+          </div>
+          <!-- Bộ nhớ tài khoảng -->
+          <div class="form-group col-6">
+            <div class="body_detail p-6">
+              <div class="d-flex justify-content-between">
+                <div class="fw-bold text-dark">
+                  <codx-label
+                    fiedName=""
+                    class="title_contact"
+                    formName=""
+                    gridViewName=""
+                    default="Bộ nhớ tài khoản"
+                  >
+                  </codx-label>
+                </div>
+                <button class="btn btn-icon btn-white">
+                  <i class="icon-create icon-18"></i>
+                </button>
+              </div>
+              <div class="footer_content">
+                <div class="row pb-5">
+                  <div>
                     <codx-label
-                      fiedName=""
-                      class="title_contact"
-                      formName=""
-                      gridViewName=""
-                      default="Bộ nhớ tài khoản"
+                      default="Bộ nhớ tài khoản của bạn được chia sẽ trên các ứng dụng của hệ thống ERM"
                     >
                     </codx-label>
                   </div>
-                  <button class="btn btn-icon btn-white">
-                    <i class="icon-create icon-18"></i>
-                  </button>
-                </div>
-                <div class="footer_content">
-                  <div class="row pb-5">
-                    <div>
-                      <codx-label
-                        default="Bộ nhớ tài khoản của bạn được chia sẽ trên các ứng dụng của hệ thống ERM"
-                      >
-                      </codx-label>
-                    </div>
-                    <div class="bg-success-o-60">
-                      <div id="container">
-                        <div class="wrap">
-                          <div class="sliderwrap">
-                            <ejs-slider
-                              id="minrange"
-                              [type]="minType"
-                              [min]="0"
-                              [max]="formatBytes(data.storage)"
-                              [value]="formatBytes(data.memory)"
-                              [readonly]="true"
-                            >
-                            </ejs-slider>
-                          </div>
+                  <div class="bg-success-o-60">
+                    <div id="container">
+                      <div class="wrap">
+                        <div class="sliderwrap">
+                          <ejs-slider
+                            id="minrange"
+                            [type]="minType"
+                            [min]="0"
+                            [max]="formatBytes(data.storage)"
+                            [value]="formatBytes(data.memory)"
+                            [readonly]="true"
+                          >
+                          </ejs-slider>
                         </div>
                       </div>
                     </div>
-                    <div
-                      [innerHTML]="innerHTML(data.memory, data.storage)"
-                    ></div>
                   </div>
+                  <div [innerHTML]="innerHTML(data.memory, data.storage)"></div>
                 </div>
               </div>
             </div>

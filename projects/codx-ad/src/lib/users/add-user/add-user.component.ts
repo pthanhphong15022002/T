@@ -343,7 +343,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
         if (res.save) {
           this.getHTMLFirstPost(this.adUser);
           this.adService.createFirstPost(this.tmpPost).subscribe((res) => {
-            debugger;
           });
           this.imageUpload
             .updateFileDirectReload(res.save.userID)

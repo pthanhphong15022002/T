@@ -52,6 +52,7 @@ export class PopupAddDriversComponent
   CbxName: any;
   isAfterRender = false;
   returnData:any;
+  imgRecID: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -65,6 +66,12 @@ export class PopupAddDriversComponent
     this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    if(this.isAdd){
+      this.imgRecID=null;
+    }
+    else{
+      this.imgRecID=this.data.recID;
+    }
   }
 
   onInit(): void {

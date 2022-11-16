@@ -105,6 +105,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
           this.onUpdate();
         }
       });
+
   }
 
   onUpdate(){
@@ -115,6 +116,14 @@ export class PopupRescheduleMeetingComponent implements OnInit {
         this.notiService.notify('Cập nhật thành công');
         this.tmSv.changeBookingDateTime(this.meeting.recID, this.meeting.startDate.toUTCString(), this.meeting.endDate.toUTCString())
         this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.funcID).subscribe();
+        //dời phòng bên EP
+        // this.api.execSv(
+        //   'EP',
+        //   'ERM.Business.EP',
+        //   'BookingsBusiness',
+        //   'ChangeBookingDateTimeAsync',
+        //   [this.meeting.recID, this.meeting.startDate.toUTCString(), this.meeting.endDate.toUTCString()]
+        // ).subscribe(res=>{});
       }else
         this.dialog.close();
     })

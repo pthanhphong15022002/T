@@ -15,6 +15,7 @@ import {
 
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
+  AuthStore,
   CodxService,
   DialogModel,
   DialogRef,
@@ -37,7 +38,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'lib-company-setting',
   templateUrl: './company-setting.component.html',
-  styleUrls: ['./company-setting.component.css'],
+  styleUrls: ['./company-setting.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [LowerCasePipe],
 })
@@ -76,6 +77,7 @@ export class CompanySettingComponent
   @ViewChild('input') redel: ElementRef;
   @Input() childProperty: any[];
   optionMailHeader: any = 'mailheader';
+  tenant: any;
 
   constructor(
     private inject: Injector,
@@ -83,10 +85,13 @@ export class CompanySettingComponent
     private adService: CodxAdService,
     private changeDetectorRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private authStore: AuthStore
   ) {
     super(inject);
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    var auth = authStore as any;
+    this.tenant = auth.tenantStore?.activeTenant;
   }
 
   onInit(): void {

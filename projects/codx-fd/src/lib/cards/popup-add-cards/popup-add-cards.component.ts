@@ -447,7 +447,6 @@ export class PopupAddCardsComponent implements OnInit {
 
 
   eventApply(event: any) {
-    debugger
     if (!event) {
       return;
     }

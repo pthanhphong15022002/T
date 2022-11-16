@@ -709,7 +709,7 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 }
 
 .btn.btn-32:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
-  padding: 0.4rem calc(0.85rem + 1px) !important;
+  padding: 0.3275rem calc(0.85rem + 1px) !important;
 }
 
 .row-group {
@@ -976,6 +976,7 @@ codx-tag .codx-tag:hover {
   justify-content: center !important;
 }
 
+
 .float-left>div {
   float: left;
 }
@@ -1054,6 +1055,11 @@ codx-tag .codx-tag:hover {
   padding-right: 2px !important;
 
 }
+
+// codx-popup-container .share-box {
+//   border: 1px aqua solid !important;
+// }
+
 
 /******* tam ***/
 .codx-form .card-footer,

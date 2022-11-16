@@ -1,41 +1,30 @@
 <codx-form headerText="Chia sẻ văn bản" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
     <ng-template popup adde #body>
         <div class="request-to">
-            <div class="d-flex justify-content-between mb-2 p-2">
-                <div class="d-flex align-items-center flex-grow-1">
-                    <codx-label default="Đến" class="w-50px"></codx-label>
-                    <codx-input
-                        type="Combobox"
-                        [refValue]="gridViewSetup['Owner']['referedValue']"
-                        [showInput]="true"
-                        refType="P"
-                        field="popup"
-                        [ngClass]="'w-100'"
-                        (valueChange)="changeValueTo($event)"
-                    >
+            <div class="d-flex algin-items-center mb-3">
+                <div class="w-50px fw-bold text-dark">
+                    <codx-label default="Đến"></codx-label>
+                </div>
+                <div class="w-100">
+                    <codx-input type="Combobox" [refValue]="gridViewSetup['Owner']['referedValue']" [showInput]="true"
+                        refType="P" field="popup" [ngClass]="'w-100'" (valueChange)="changeValueTo($event)">
                     </codx-input>
                 </div>
             </div>
-            <div class="d-flex justify-content-between mb-2 p-2">
-                <div class="d-flex align-items-center flex-grow-1">
-                    <codx-label default="CC:" class="w-50px"></codx-label>
-                    <codx-input
-                        [refValue]="gridViewSetup['Owner']['referedValue']"
-                        type="combobox"
-                        refType="P"
-                        field="popup"
-                        [ngClass]="'w-100'"
-                        (valueChange)="changeValueCC($event)"
-                    >
+            <div class="d-flex algin-items-center mb-3">
+                <div class="w-50px fw-bold text-dark">
+                    <codx-label default="CC:"></codx-label>
+                </div>
+                <div class="w-100">
+                    <codx-input [refValue]="gridViewSetup['Owner']['referedValue']" type="combobox" refType="P"
+                        field="popup" [ngClass]="'w-100'" (valueChange)="changeValueCC($event)">
                     </codx-input>
                 </div>
             </div>
         </div>
         <ng-container *ngIf="data.files">
-            <codx-thumbnail
-                [files]="data.files"
-            ></codx-thumbnail>
-            </ng-container>
+            <codx-thumbnail [files]="data.files"></codx-thumbnail>
+        </ng-container>
         <!-- <div class="d-flex align-items-center justify-content-between mt-8 mb-8">
             <ng-container *ngIf="data.files != null && data.files.length>0">
                 <div class="d-flex  mt-8 mb-8" *ngFor="let item of data.files">
@@ -48,73 +37,38 @@
         </div> -->
         <div class="form-group mt-3">
             <codx-label default="Nội dung chia sẻ" class="text-primary"></codx-label>
-            <codx-input 
-                type="textarea" 
-                field="textarea" 
-                [Group]="shareForm"
-                ControlName="desc"
-            >
+            <codx-input type="textarea" field="textarea" [Group]="shareForm" ControlName="desc">
             </codx-input>
         </div>
-        <div class="d-flex align-items-center justify-content-between mt-8">
-            <codx-label default="Cho phép chỉnh sửa nội dung văn bản?"></codx-label>
-            <codx-input 
-                #checkbox 
-                type="switch" 
-                class="test-switch"
-                [Group]="shareForm"
-                ControlName="edit"
-            >
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <codx-label class="text-dark" default="Cho phép chỉnh sửa nội dung văn bản?"></codx-label>
+            <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="edit">
             </codx-input>
         </div>
-        <div class="d-flex align-items-center justify-content-between mt-8">
-            <codx-label default="Cho phép chia sẻ lại cho người khác"></codx-label>
-            <codx-input 
-                #checkbox 
-                type="switch" 
-                class="test-switch"
-                [Group]="shareForm"
-                ControlName="share"
-            >
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <codx-label class="text-dark" default="Cho phép chia sẻ lại cho người khác"></codx-label>
+            <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="share">
             </codx-input>
         </div>
-        <div class="d-flex align-items-center justify-content-between mt-8">
-            <codx-label default="Cho phép dowlnload hoặc in tài liệu?"></codx-label>
-            <codx-input 
-                #checkbox 
-                type="switch" 
-                class="test-switch"
-                [Group]="shareForm"
-                ControlName="download"
-            >
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <codx-label class="text-dark" default="Cho phép dowlnload hoặc in tài liệu?"></codx-label>
+            <codx-input #checkbox type="switch" class="test-switch" [Group]="shareForm" ControlName="download">
             </codx-input>
         </div>
-        <label class="text-primary mt-12">Giới hạn thời gian chia sẻ</label>
-        <div class="row p-4">
+        <label class="text-primary mt-6">Giới hạn thời gian chia sẻ</label>
+        <div class="row">
             <div class="col-6 d-flex align-items-center justify-content-between ">
                 <codx-label default='Từ ngày' class="w-100px"></codx-label>
-                <codx-input 
-                    type="dateTime" 
-                    format="d" 
-                    field="date"
-                    [Group]="shareForm"
-                    ControlName="formDate"
-                >
+                <codx-input type="dateTime" format="d" field="date" [Group]="shareForm" ControlName="formDate">
                 </codx-input>
             </div>
             <div class="col-6 d-flex align-items-center justify-content-between">
-                <codx-label default="Đến ngày"  class="w-100px"></codx-label>
-                <codx-input 
-                    type="dateTime" 
-                    format="d" 
-                    field="date"
-                    [Group]="shareForm"
-                    ControlName="toDate"
-                >
+                <codx-label default="Đến ngày" class="w-100px"></codx-label>
+                <codx-input type="dateTime" format="d" field="date" [Group]="shareForm" ControlName="toDate">
                 </codx-input>
             </div>
         </div>
-    
+
     </ng-template>
     <ng-template #footer>
         <div class="d-flex justify-content-end">

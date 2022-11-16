@@ -95,4 +95,16 @@ export class CodxMwpService {
       data
     );
   }
+
+  addNewSignature(data: any) {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddNewAsync', [
+      data,
+    ]);
+  }
+
+  editSignature(data: any) {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'EditAsync', [
+      data,
+    ]);
+  }
 }
