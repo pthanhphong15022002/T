@@ -1292,7 +1292,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       done
         .then((item) => {
           if (item.status == 0) {
-            debugger;
             var files = this.dmSV.listFiles;
             if (files == null) files = [];
             var res = item.data;

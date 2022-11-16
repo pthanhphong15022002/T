@@ -137,7 +137,6 @@ export class CodxCommentsComponent implements OnInit {
                     this.codxATM.objectType = this.objectType;
                     (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
                       if(result){
-                        debugger;
                         this.date = new Date();
                         this.fileUpload = result.data;
                         this.dt.detectChanges();
@@ -165,7 +164,6 @@ export class CodxCommentsComponent implements OnInit {
           }
           else
           { // add
-            debugger;
             this.message = "";
             if(this.fileUpload){
               this.codxATM.objectId = res.recID;
@@ -288,7 +286,6 @@ export class CodxCommentsComponent implements OnInit {
   }
 
   votePost(data: any, voteType = null) {
-    debugger
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
