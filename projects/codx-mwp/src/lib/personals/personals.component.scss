@@ -12,15 +12,15 @@
   height: calc(100vh - 202px);
 }
 
-.personal-container .pw-menu {
+.personal-container .e-tab-header {
   max-width: 720px;
 }
 
-.personal-container > div.pw-lg {
+.personal-container>div.pw-lg {
   max-width: 100%;
 }
 
-.personal-container > div.pw-md {
+.personal-container>div.pw-md {
   max-width: 720px;
   margin-left: auto;
   margin-right: auto;
@@ -44,7 +44,7 @@
   background-color: #fff;
 }
 
-.pw-menu {
+.pw-menu .e-tab-header {
   height: 48px;
   line-height: 48px;
   border-radius: 6px !important;
@@ -57,7 +57,7 @@
   justify-content: space-around;
 }
 
-.pw-menu a {
+.e-tab-header .pw-menu a {
   cursor: pointer;
 }
 
@@ -85,6 +85,7 @@ app-personals .pw-content {
 
 .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text {
   color: #0078ff !important;
+
   img {
     color: #0078ff !important;
   }
@@ -191,7 +192,7 @@ codx-card-img .card-icon-nowrap {
   justify-content: center;
 }
 
-.pw-content .list-empty > div {
+.pw-content .list-empty>div {
   align-self: center;
   align-items: stretch;
   height: 100%;

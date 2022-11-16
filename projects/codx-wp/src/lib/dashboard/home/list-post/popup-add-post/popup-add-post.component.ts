@@ -24,7 +24,7 @@ export class PopupAddPostComponent implements OnInit {
   data:WP_Comments = null;
   status: "create" | "edit" | "share" = "create"
   fileUpload:any[] = [];
-  mssgNoti:String = "";
+  mssgNoti:string = "";
   // emoji  
   showEmojiPicker:boolean = false;
   emojiMode = 'apple';
@@ -195,7 +195,7 @@ export class PopupAddPostComponent implements OnInit {
   // create Post 
   publishPost(){
     if (!this.data.content && this.fileUpload.length == 0) {
-      let mssgStr = Util.stringFormat('Nội dung');
+      let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
       this.notifySvr.notify(mssgStr);
       return;
     }
@@ -253,7 +253,7 @@ export class PopupAddPostComponent implements OnInit {
   editPost(){
     debugger
     if (!this.data.content && this.fileUpload.length == 0) {
-      let mssgStr = Util.stringFormat('Nội dung');
+      let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
       this.notifySvr.notify(mssgStr);
       return;
     }
