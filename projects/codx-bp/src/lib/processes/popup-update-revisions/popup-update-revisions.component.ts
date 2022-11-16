@@ -40,6 +40,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     private cache: CacheService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
+    private change: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -51,7 +52,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     // this.dateLanguage=dt.data[1].more;
     this.funcID = this.dialog.formModel.funcID;
     this.user = this.authStore.get();
-
+    this.revisions = this.getProcess.versions;
     this.title = this.titleAction;
   }
 
@@ -81,9 +82,11 @@ export class PopupUpdateRevisionsComponent implements OnInit {
       obj
       );
       dialogRevisions.closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          // this.view.dataService.update(e?.event).subscribe();
-          // this.detectorRef.detectChanges();
+        if (e?.event != null && e?.event.versions.length > 0) {
+          this.getProcess = e.event;
+          this.revisions = e?.event.versions;
+          this.change.detectChanges();
+          // this.dialog.close(e.event);
         }
       });
   }
